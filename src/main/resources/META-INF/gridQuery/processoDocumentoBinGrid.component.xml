@@ -1,0 +1,41 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: processoDocumentoBinGrid.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="processoDocumentoBinGrid" class="br.com.itx.component.grid.GridQuery">
+		<property name="ejbql">select o from ProcessoDocumentoBin o</property>
+		<property name="maxResults">16</property>
+		<property name="gridId">processoDocumentoBin</property>
+		<property name="key">idProcessoDocumentoBin</property>
+		<property name="columns">
+			<value>usuario : {properties : {order: nome}}</value>
+			<value>modeloDocumento</value>			
+			<value>dataInclusao: { valueType: date, properties : { pattern: "dd/MM/yy kk:mm" } }</value>			
+			<value>processoDocumento: { valueType: file }</value>			
+			<value>extensao</value>			
+			<value>md5Documento</value>			
+			<value>nomeArquivo</value>			
+<!--			<value>documentoSigiloso: { valueType: sim_nao }</value>			-->
+		</property>
+		<property name="restrictions">
+			<value>usuario = #{processoDocumentoBinSearch.usuario}</value>
+			<value>usuario.idUsuario = #{usuarioHome.id}</value>
+			<value>lower(modeloDocumento) like concat(lower(#{processoDocumentoBinSearch.modeloDocumento}),'%')</value>
+			<value>lower(extensao) like concat(lower(#{processoDocumentoBinSearch.extensao}),'%')</value>
+			<value>lower(md5Documento) like concat(lower(#{processoDocumentoBinSearch.md5Documento}),'%')</value>
+			<value>lower(nomeArquivo) like concat(lower(#{processoDocumentoBinSearch.nomeArquivo}),'%')</value>
+		</property>		
+		<property name="searchFields">
+			<value>usuario : {type : combo, properties: {items: usuarioItems}}</value>
+			<value>modeloDocumento</value>
+			<value>extensao</value>
+			<value>md5Documento</value>
+			<value>nomeArquivo</value>
+		</property>
+		<property name="order">extensao</property>
+	</component>
+	
+	<component name="processoDocumentoBinSearch" class="br.com.infox.ibpm.entity.ProcessoDocumentoBin" />	
+	
+</components>

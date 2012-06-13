@@ -1,0 +1,17 @@
+.pageBody {
+	padding-bottom: 0;
+}
+
+#areaPagina {
+	height: 400px;
+	padding:10px 40px 10px 40px;
+	overflow-y: scroll;
+}
+
+#pagina {
+	border: solid #404040;
+	min-height: 430px;
+	border-width: 1px 3px 3px 1px; 
+	background-color: white;
+	padding: 10px
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:p="http://jboss.com/products/seam/pdf">
+
+	<p:table columns="3" 
+			 widthPercentage="100" 
+			 widths="1 4 1.5"
+			 spacingBefore="#{wi:get(spacingBefore, '20')}" 
+			 spacingAfter="#{wi:get(spacingAfter, '30')}">
+			<p:cell borderWidth="0" verticalAlignment="left">
+			<p:html>
+			    <img src='${facesContext.externalContext.request.getRealPath("/")}/img/logoInfoxMini.png'
+			    	 width="50%" height="50%"/>
+			</p:html>
+			</p:cell>
+			<p:cell horizontalAlignment="center"
+					borderWidth="0">
+                    <p:font size="12">
+				<p:paragraph alignment="center">
+ 				       <p:text value="#{title}" />
+ 				</p:paragraph>       
+ 				<p:paragraph alignment="center">       
+				       <p:text value="#{subtitle}" />
+				</p:paragraph>    
+				    </p:font>
+				<p:paragraph alignment="center">    
+					<p:font size="10">
+					    <p:text value="#{nameReport}" />
+					</p:font>
+				</p:paragraph>				
+			</p:cell>
+			<p:cell borderWidth="0" verticalAlignment="middle" horizontalAlignment="right" >
+                <p:paragraph alignment="right">
+                    <p:font size="7">
+                    <p:text value="Emitido em: " />  
+                    <p:text value="#{currentTime}">
+						<s:convertDateTime pattern="dd/MM/yyyy HH:mm"/></p:text>
+					</p:font>
+				</p:paragraph>
+			</p:cell>
+	</p:table>
+	<p:table columns="1" 
+			 widthPercentage="100" 
+			 widths="1"
+			 spacingBefore="0" 
+			 spacingAfter="0">
+		<p:cell borderWidthTop="0.5" 
+				borderWidthBottom="0"
+				borderWidthLeft="0"
+				borderWidthRight="0">
+		</p:cell>	 
+    </p:table>
+</ui:composition>
+
+

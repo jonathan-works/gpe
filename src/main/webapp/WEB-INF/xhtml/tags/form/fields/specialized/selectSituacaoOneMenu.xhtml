@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:rich="http://richfaces.org/rich">
+
+	<ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}"/>
+	
+	<s:decorate id="#{id}Decoration"
+				template="#{template}"
+				rendered="#{wi:get(rendered, true)}">
+		<ui:define name="label">#{wi:get(label, 'Situação')}</ui:define>			
+		<h:selectOneMenu id="#{id}"
+						 value="#{value}" 
+						 style="width: 250px">
+			<f:selectItem itemLabel="[Todos]"/>
+			<f:selectItems	value="#{wi:get(items, util.splitAsList('true:Ativo,false:Inativo'))}" />
+		</h:selectOneMenu>
+	</s:decorate>
+
+</ui:composition>

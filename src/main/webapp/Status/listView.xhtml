@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:h="http://java.sun.com/jsf/html"
+			    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+
+		<ui:define name="title">#{messages['status.titlePage']}</ui:define>
+
+		<ui:param name="home" value="#{statusHome}" />
+
+		<ui:define name="searchGrid">
+			<h:messages globalOnly="true" 
+						styleClass="message"
+						id="globalMessages" />
+			<wi:datagrid bean="#{statusGrid}" 
+						 searchBean="#{statusSearch}"
+						 title="#{messages['status.titleGrid']}"
+						 headerToolBar="none"/>
+		</ui:define>
+		<ui:define name="form">
+			<c:if test="#{canEdit}">
+				<wi:form form="#{statusForm}"
+					formTitle="#{messages['status.titleForm']}"
+					persistSemNewInstance="true" />
+			</c:if>
+			<c:if test="#{not canEdit}">
+				<wi:view form="#{statusView}" columns="4"
+					title="#{messages['status.titleView']}" />
+			</c:if>
+		</ui:define>
+</ui:composition>

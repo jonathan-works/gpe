@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		        xmlns:ui="http://java.sun.com/jsf/facelets"
+		        xmlns:h="http://java.sun.com/jsf/html"
+		        xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:c="http://java.sun.com/jstl/core"
+		        xmlns:s="http://jboss.com/products/seam/taglib"
+		        xmlns:rich="http://richfaces.org/rich">
+		<c:forEach items="#{subMenu.children}" var="sub">
+			<rich:menuItem submitMode="server" value="#{sub.label}" 
+				action="#{conversationUtil.endBeforeRedirect(sub.url)}"
+				ajaxSingle="true"
+				rendered="#{empty sub.children}">
+			</rich:menuItem>
+	
+			<rich:menuGroup value="#{sub.label}" rendered="#{!empty sub.children}">
+				<ui:include src="/WEB-INF/xhtml/templates/subMenu.xhtml">
+					<ui:param name="subMenu" value="#{sub}" />
+				</ui:include>
+			</rich:menuGroup>
+		</c:forEach>	
+</ui:composition>

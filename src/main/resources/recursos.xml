@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<recursos>
+	<recurso identificador="/tables/iniciarProcesso" nome="Iniciar Processo"
+		 	 descricao="Recurso para visualizar a tabela que inicia os processos através de um fluxo."/>
+</recursos>

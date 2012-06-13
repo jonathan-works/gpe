@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+  
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:rich="http://richfaces.org/rich"
+			    xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:h="http://java.sun.com/jsf/html"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                       
+	<ui:define name="title">#{messages['natureza.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{naturezaAction}" />
+	
+	<ui:define name="searchGrid">
+	    <wi:dataTable values="#{naturezaList.list(15)}"
+					  bean="#{naturezaList}"
+					  tableTitle="#{messages['natureza.titleGrid']}"
+					  id="naturezaList"
+					  rowId="#{row.idNatureza}"
+					  actionInactive="naturezaAction.inactive">
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarNaturezaForm"
+							   formTitle="Pesquisar Natureza">
+					<wi:inputText id="natureza"
+								  value="#{naturezaList.entity.natureza}"
+								  label="#{messages['natureza.natureza']}"/>
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['natureza.ativo']}"
+											  value="#{naturezaList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			<ui:define name="headerToolBar">
+				<wi:toolBarReport />
+			</ui:define>
+			<ui:define name="toolBar">
+				<wi:toolBarEdit  />
+				<wi:toolBarInactive actionInactive="naturezaAction.inactive(row)" />
+			</ui:define>
+			<wi:columnOutputText columnId="natureza"
+								 columnHeader="#{messages['natureza.natureza']}"
+								 value="#{row.natureza}"/>
+			<wi:columnSituacao columnId="ativo"
+							   columnHeader="#{messages['natureza.ativo']}"
+						   	   columnWidth="15%"
+							   value="#{row.ativo}" />
+		</wi:dataTable>
+	</ui:define>
+
+	<ui:define name="form">
+		<wi:dataForm formId="naturezaForm"
+					 formTitle="#{messages['natureza.titleForm']}">
+			<wi:inputText id="natureza"
+						  value="#{naturezaAction.instance.natureza}"
+						  required="true"
+						  label="#{messages['natureza.natureza']}"/>
+			<wi:selectSituacaoRadio id="ativo"
+								    required="true"
+								    label="#{messages['natureza.ativo']}"
+								    value="#{naturezaAction.instance.ativo}" />
+		</wi:dataForm>
+	</ui:define>
+
+	<ui:define name="tabs">
+		<ui:param name="action" value="#{naturezaCategoriaFluxoAction}"/>
+		<rich:tab id="naturezaCatFluxoTab" 
+				  rendered="#{home.isManaged()}"
+				  eventsQueue="default" 
+				  switchType="ajax"
+				  label="#{messages['naturezaCategoriaFluxo.titleTab']}"
+				  action="#{action.init()}">
+			<s:div id="naturezaCatFluxoFormDiv">
+				<wi:dataForm formId="naturezaCatFluxoForm"
+						 	 formTitle="#{messages['naturezaCategoriaFluxo.titleForm']}">
+					<wi:selectOneMenuEntity id="categorias"
+											label="#{messages['naturezaCategoriaFluxo.categoria']}"
+											value="#{action.instance.categoria}"
+											items="#{action.categoriaList}"
+											required="true"
+											noSelectionLabel="Selecione uma #{messages['naturezaCategoriaFluxo.categoria']}"/>
+					<wi:selectOneMenuEntity id="fluxo"
+											label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+											value="#{action.instance.fluxo}"
+											items="#{action.fluxoList}"
+											required="true"
+											noSelectionLabel="Selecione uma #{messages['naturezaCategoriaFluxo.fluxo']}"/>
+					<ui:define name="buttons">
+						<wi:commandButton id="saveButton"
+										  action="naturezaCategoriaFluxoAction.persist"
+										  reRender="naturezaCatFluxoFormDiv, natCatFluxoDiv"
+										  value="Incluir"/>
+					</ui:define>
+				</wi:dataForm>
+			</s:div>
+			<s:div id="natCatFluxoDiv">
+				<h:form>
+					<rich:dataTable id="natCatFluxoTable"
+									value="#{action.naturezaCategoriaFluxoList}"
+									var="row"
+									rows="10"
+									title="Relacionados à #{home.instance.natureza}"
+									style="width: 60%">
+						<rich:column style="width: 10%">
+							<f:facet name="header">
+								<wi:toolBarRemove id="headerRemove"
+												  reRender="natCatFluxoDiv"
+											      actionRemove="naturezaCategoriaFluxoAction.removeAll()"
+											      title="Remover todos os Registros"/>
+							</f:facet>
+							<center>
+								<wi:toolBarRemove id="toolBarRemove"
+												  reRender="natCatFluxoDiv"
+											      actionRemove="naturezaCategoriaFluxoAction.remove(row)"/>
+							</center>
+						</rich:column>
+						<rich:column style="width: 45%">
+							<f:facet name="header">
+								<h:outputText value="#{messages['naturezaCategoriaFluxo.categoria']}" />
+							</f:facet>
+							<h:outputText value="#{row.categoria}"/>
+						</rich:column>
+						<rich:column style="width: 45%">
+							<f:facet name="header">
+								<h:outputText value="#{messages['naturezaCategoriaFluxo.fluxo']}" />
+							</f:facet>
+							<h:outputText value="#{row.fluxo}"/>
+						</rich:column>
+					</rich:dataTable>
+					<rich:datascroller for="natCatFluxoTable"
+									   lastPageMode="full"
+									   id="dsNatCatFluxoTable"
+									   align="left"
+									   renderIfSinglePage="false"/>
+				</h:form>
+			</s:div>
+		</rich:tab>
+		<ui:param name="actionLocalizacao" value="#{naturezaLocalizacaoAction}"/>
+		<rich:tab id="naturezaLocalizacaoTab" 
+				  rendered="#{home.isManaged()}"
+				  eventsQueue="default" 
+				  switchType="ajax"
+				  label="#{messages['naturezaLocalizacao.titleTab']}"
+				  action="#{actionLocalizacao.init()}">
+			<wi:dataForm formId="naturezaLocalizacaoForm"
+					 	 formTitle="#{messages['naturezaLocalizacao.titleForm']}">
+				<wi:tree id="localizacaoTree"
+						 label="#{messages['naturezaLocalizacao.localizacao']}"
+						 assignTo="naturezaLocalizacaoAction.instance.localizacao"
+						 tree="#{actionLocalizacao.localizacaoTreeHandler}"
+						 required="true"/>
+				<ui:define name="buttons">
+					<wi:commandButton id="saveLocalizacaoButton"
+									  action="naturezaLocalizacaoAction.persist"
+									  reRender="naturezaLocalizacaoForm, naturezaLocalizacaoDiv"
+									  value="Incluir"/>
+				</ui:define>
+			</wi:dataForm>
+			<s:div id="naturezaLocalizacaoDiv">
+				<h:form>
+					<rich:dataTable id="naturezaLocalizacaoTable"
+									value="#{actionLocalizacao.naturezaLocalizacaoList}"
+									var="row"
+									title="Relacionados à #{home.instance.natureza}"
+									rows="10"
+									style="width: 50%">
+						<rich:column style="width: 10%">
+							<f:facet name="header">
+								<wi:toolBarRemove id="headerRemoveLocalizacao"
+												  reRender="naturezaLocalizacaoDiv"
+											      actionRemove="naturezaLocalizacaoAction.removeAll()"
+											      title="Remover todos os Registros"/>
+							</f:facet>
+							<center>
+								<wi:toolBarRemove id="toolBarRemoveLocalizacao"
+												  reRender="naturezaLocalizacaoDiv"
+											      actionRemove="naturezaLocalizacaoAction.remove(row)"/>
+							</center>
+						</rich:column>
+						<rich:column style="width: 90%">
+							<f:facet name="header">
+								<h:outputText value="#{messages['naturezaLocalizacao.localizacao']}" />
+							</f:facet>
+							<h:outputText value="#{row.localizacao}"/>
+						</rich:column>
+					</rich:dataTable>
+					<rich:datascroller id="dsNaturezaLocalizacaoTable"
+									   for="naturezaLocalizacaoTable"
+									   lastPageMode="full"
+									   align="left"
+									   renderIfSinglePage="false"/>
+				</h:form>
+			</s:div>
+		</rich:tab>
+	</ui:define>
+
+</ui:composition>

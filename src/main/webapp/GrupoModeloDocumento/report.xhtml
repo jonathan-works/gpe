@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition 
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<wi:dataReport title="#{messages['grupoModeloDocumento.titlePage']}"
+							   columns="2"
+							   widths="5 #{empty grupoModeloDocumentoList.entity.ativo ? '1' :'0'}"
+							   headerText="#{grupoModeloDocumentoList.criteria}">
+				   
+		<wi:reportColumnHeader title="#{messages['grupoModeloDocumento.grupoModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{messages['grupoModeloDocumento.ativo']}" />
+				
+		<ui:repeat var="row" value="#{grupoModeloDocumentoList.list()}">
+			
+			<wi:reportColumn value="#{row.grupoModeloDocumento}" />
+			<wi:reportColumnSituacao />
+			
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>

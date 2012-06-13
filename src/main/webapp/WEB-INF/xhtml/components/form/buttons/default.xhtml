@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<!--
+	  IBPM - Ferramenta de produtividade Java
+	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+	 
+	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+	  Free Software Foundation; versão 2 da Licença.
+	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+	  
+	  Consulte a GNU GPL para mais detalhes.
+	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+	  veja em http://www.gnu.org/licenses/  
+	-->	
+	
+	<ui:composition>
+	
+		<ui:param name="props" value="#{form.buttons.properties}"/>
+		<ui:param name="reRenderSave" value="#{empty reRenderSave ? formId : reRenderSave}"/>
+		<ui:param name="mostrarNovo" value="#{empty mostrarNovo ? true : mostrarNovo}"/>
+		<ui:param name="mostrarVoltar" value="#{empty mostrarVoltar ? true : mostrarVoltar}"/>
+		<ui:param name="persistSemNewInstance" value="#{empty persistSemNewInstance ? false : persistSemNewInstance}"/>
+		
+		<s:div styleClass="actionButtons">
+		
+	        <h:commandButton id="saveH"
+							 eventsQueue="editQueue"					
+	            		 	 action="#{home.persist()}"
+	             		  	 value="Incluir" 
+	                 		 styleClass="dr-tbpnl-tb-inact"
+	                    	 rendered="#{!home.managed and !isUploadForm and persistSemNewInstance}">
+	        </h:commandButton>  	
+	          	 
+	        <a:commandButton id="save"
+	            		 	 action="#{home.persist()}"
+							 eventsQueue="editQueue"
+				 			 onclick="showLoading();"					
+				 			 oncomplete="hideLoading();#{oncomplete}"
+				   			 reRender="#{reRenderSave}"
+	                         value="Incluir" 
+	                   		 styleClass="dr-tbpnl-tb-inact"
+	                     	 rendered="#{!home.managed and !isUploadForm and !persistSemNewInstance}">
+			</a:commandButton>  			
+		
+	        <h:commandButton id="saveUpload"	
+	         				 eventsQueue="editQueue"	
+	              		 	 action="#{home.persist()}"
+	               		  	 value="Incluir" 
+	                   		 styleClass="dr-tbpnl-tb-inact"
+	            		   	 rendered="#{!home.managed and isUploadForm}">
+	        </h:commandButton>  
+	
+	        <h:commandButton id="updateUpload" 
+							 eventsQueue="editQueue"					
+	                         value="Gravar" 
+	                   		 styleClass="dr-tbpnl-tb-inact"
+	                       	 action="#{home.update()}"
+	                     	 rendered="#{home.managed and isUploadForm}">
+	        </h:commandButton>
+	
+	        <a:commandButton id="update" 
+							 action="#{home.update()}"
+			 				 eventsQueue="editQueue"		
+							 onclick="showLoading();"					
+							 oncomplete="hideLoading();#{oncomplete}"
+							 reRender="#{reRenderSave}"
+							 value="Gravar" 
+							 styleClass="dr-tbpnl-tb-inact"
+							 rendered="#{home.managed and !isUploadForm}">
+	        </a:commandButton>
+	
+			<a:region renderRegionOnly="false">
+				<a:commandButton id="new" 
+								 eventsQueue="editQueue"
+								 onclick="showLoading();" 
+								 oncomplete="hideLoading();#{oncomplete}"
+								 reRender="pageBody" 
+								 ajaxSingle="true" 
+								 value="Novo" 
+								 styleClass="dr-tbpnl-tb-inact" 
+								 action="#{home.newInstance}"
+								 rendered="#{home.managed and !isUploadForm and mostrarNovo}">
+				</a:commandButton>
+			</a:region>                        			                      
+            <ui:include src="voltar.xhtml" />
+            <ui:insert name="customButtons" />
+            
+	    </s:div>
+	
+	</ui:composition>
+</jsp:root>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:param name="titlePesq" value="#{empty titlePesq ? 'Pesquisar '.concat(title) : titlePesq}" />
+	<ui:param name="showLogicOperator" value="#{empty showLogicOperator ? false : showLogicOperator}" />
+	<ui:param name="showButtonLimpar" value="#{empty showButtonLimpar ? true : showButtonLimpar}" />
+	
+	<s:div id="#{gridId}Search">
+		<s:fragment rendered="#{!empty bean.searchFields or isM2M}">
+		<rich:simpleTogglePanel id="#{gridId}SearchFields" 
+				switchType="client"
+				opened="#{!isM2M or panelOpened}">
+			<f:facet name="header"> #{titlePesq}</f:facet>
+			<f:facet name="openMarker">
+				<h:graphicImage value="/img/search.gif"></h:graphicImage>
+			</f:facet>
+			<f:facet name="closeMarker">&#160;</f:facet>
+			<s:div style="overflow:visible;">
+			<a:form id="#{gridId}SearchForm" styleClass="edit">
+			<ui:param name="searchOpen" value="#{empty searchOpen ? true : searchOpen}" />
+				<h:inputHidden id="page" value="#{bean.page}" />
+				<h:inputHidden id="searching" value="true" />
+				<wi:repeat value="#{bean.searchFields}"
+					var="f">
+					<ui:param name="props" value="#{f.properties}"/>
+					<ui:param name="label" value="#{empty props.label ? f.label : props.label}"/>
+					<ui:param name="label" value="#{expressions.createValueExpression(label).value}" />
+					<c:if test="#{empty f.type}">
+						<a:include viewId="/WEB-INF/xhtml/components/grid/search/default.xhtml" />
+		            </c:if>
+					<c:if test="#{!empty f.type}">
+						<a:include viewId="/WEB-INF/xhtml/components/grid/search/#{f.type}.xhtml" />
+					</c:if> 
+				</wi:repeat>
+				
+				<wi:selectOneMenu id="#{gridId}LogicOperator" label="Mostrar resultado que atenda a:"
+					value="#{bean.restrictionLogicOperator}" 
+					rendered="#{showLogicOperator}"
+					showLock="false"
+					optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
+					items="#{'and,or'.split(',')}" />
+				<s:div styleClass="actionButtons" style="clear: both; width:250px"
+					rendered="#{empty props.showButton ? true : props.showButton}">
+		            <a:commandButton 
+		            	id="search"
+		            	action="#{util.invokeMethod(actionButtonPesquisar)}"
+		            	rendered="#{!empty bean.searchFields}"
+						styleClass="dr-tbpnl-tb-inact"
+		            	value="Pesquisar"
+		            	reRender="#{gridId}"
+						onclick="this.form['#{rich:clientId(gridId)}SearchForm:page'].value='1';showLoading();"
+						oncomplete="hideLoading();"
+					/>
+					<c:if test="#{showButtonLimpar}">
+						<a:commandButton onclick="j$('##{rich:clientId(gridId)}SearchForm').clearForm();showLoading();"
+										 oncomplete="hideLoading();"
+										 action="#{util.invokeMethod(actionButtonLimpar)}"
+										 reRender="#{wi:get(reRenderButtonLimpar, gridId.concat('Search'))}"
+ 				            		     id="clearButton"
+									     value="Limpar" 
+									     style="min-width:65px; width:65px;"
+									     styleClass="buttons dr-tbpnl-tb-inact"/>
+					</c:if>
+				</s:div>
+			</a:form>
+			</s:div>
+			<c:if test="#{showGrid and isM2M}">
+				<wi:datalist/>
+			</c:if>
+			
+		</rich:simpleTogglePanel>
+		</s:fragment>
+	</s:div>
+</ui:composition>

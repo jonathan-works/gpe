@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+	
+	<ui:param name="bin" value="#{empty bin ? c.value : bin}" />
+	<ui:param name="isModelo" value="#{not empty bin.modeloDocumento}" />
+	
+	
+	<div id="teste" style="width: 100%; text-align: center">	
+	<span class="#{row.ativo ? '' : 'inativo'}"></span>
+	<script>
+		function abrirPopUpRecibo(){
+			openPopUp('PopUpDocumentoBin', '');
+		}
+		
+	</script>
+		<s:link view="/Painel/documentoHTML.seam"
+			onclick="abrirPopUpRecibo();"
+			rendered="#{not empty bin.modeloDocumento}"
+			target="PopUpDocumentoBin">
+			<s:conversationPropagation type="none"/>
+			<f:param name="idBin" value="#{row.processoDocumentoBin.idProcessoDocumentoBin}" />
+			<f:param name="idProcessoDoc" value="#{row.idProcessoDocumento}" />
+			<h:graphicImage 
+				title="Visualizar"
+				url="/img/view.gif"
+			/>
+		</s:link>
+		
+		<s:link target="idPdf#{row}" 
+				rendered="#{!isModelo}"
+				action="#{processoDocumentoBinHome.setDownloadInstance()}"
+				onclick="openPopUp('idPdf#{row}', 'about:blank');">							
+			<h:graphicImage value="/img/pdf.gif"
+							title="#{bin.nomeArquivo} (#{util.getFormattedKb(bin.size)})" />
+			<f:param value="#{bin.idProcessoDocumentoBin}" name="idBin" />
+		</s:link> 
+		<s:link target="idJan#{row.idProcessoDocumento}"
+				rendered="#{not empty bin.signature}"
+				view="/Processo/Consulta/validaDocumento.xhtml"
+				onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');">
+			<h:graphicImage title="Validar Assinatura Digital"
+							alt="Validar Assinatura Digital" 
+							url="/img/lock.png" />
+			<f:param value="#{row.idProcessoDocumento}" name="idProcessoDocumento" />
+		</s:link> 
+		<s:link target="idJan#{row.idProcessoDocumento}"
+				rendered="#{empty bin.signature}"
+				view="/Processo/Consulta/assinaDocumento.xhtml"
+				onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');">
+			<h:graphicImage title="Assinar Documento"
+							alt="Assinar Documento" 
+							url="/img/lock_unlock.png" />
+			<f:param value="#{row.idProcessoDocumento}" name="idProcessoDocumento" />
+			<f:param value="#{util.urlRequest}?id=#{processoHome.id}&amp;tab=#{processoTrfHome.tab}&amp;cid=#{conversation.id}"
+					 name="urlOpenner" />
+		</s:link>
+		
+		<a:form>
+			<a:commandLink
+				action="#{processoDocumentoHome.excluir(row)}"
+				onclick="if(!confirm('Deseja realmente excluir documento do processo')) return false;"
+				rendered="#{processoTrfHome.isEmElaboracao()}"
+				reRender="pageBody"
+			>
+				<h:graphicImage 
+					title="Excluir"
+					url="/img/remove.png"
+				/>
+			</a:commandLink>
+		</a:form>
+	</div>
+	
+</ui:composition>

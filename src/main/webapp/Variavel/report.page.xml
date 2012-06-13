@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+
+	<begin-conversation join="true"/>
+   <param name="order" value="#{variavelGrid.order}"/>
+
+<action execute="#{variavelGrid.setMaxResults(10000)}"/>
+
+<!-- Parametros do searchField -->
+	<param name="ativo" value="#{variavelSearch.ativo}"/>		
+	<param name="variavel" value="#{variavelSearch.variavel}"/>		
+	<param name="valorVariavel" value="#{variavelSearch.valorVariavel}"/>		
+	<param value="#{variavelGrid.visibleColumnList}"/>
+
+</page>

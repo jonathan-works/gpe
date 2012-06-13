@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:rich="http://richfaces.org/rich">
+				
+	<a:region renderRegionOnly="#{wi:get(renderRegionOnly, false)}">
+	    <a:form id="#{formId}"
+	    		styleClass="edit"
+	    		enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}"
+	    		rendered="#{wi:get(rendered, true)}">
+	    	<ui:param name="panelWidth" value="#{wi:get(panelWidth, '100%')}"/>
+	    	<s:token allowMultiplePosts="true" requireSession="true" />		    		
+	        <rich:panel style="overflow:auto; width: #{panelWidth}; #{style}">
+	            <f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
+				<ui:insert />
+	            <s:div style="clear:both; vertical-align: bottom;" rendered="#{wi:get(requiredForm ,true)}">
+                   <img src="#{util.contextPath}#{a4jSkin.imgIconBalao}"/> 
+                   <div style="display: inline;">
+	                   <span class="required">*</span>
+	                   Campos Obrigatórios                                                       	
+                   </div>
+	            </s:div>
+			</rich:panel>
+			<div style="clear:both"/>
+			<ui:insert name="buttons">
+				<wi:commandButtonPersist />
+				<wi:commandButtonUpdate />
+				<wi:commandButtonNew />
+			</ui:insert>	
+			<wi:messages showDialogMessage="#{showDialogMessage}" timeCloseMSG="#{timeCloseMSG}"/>			
+		</a:form>
+	</a:region>
+
+</ui:composition>

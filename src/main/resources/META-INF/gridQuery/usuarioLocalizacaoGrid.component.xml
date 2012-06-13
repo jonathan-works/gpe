@@ -1,0 +1,32 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: usuarioLocalizacaoGrid.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="usuarioLocalizacaoGrid" class="br.com.itx.component.grid.GridQuery">
+		<property name="ejbql">select o from UsuarioLocalizacao o</property>
+		<property name="maxResults">16</property>
+		<property name="gridId">usuarioLocalizacao</property>
+		<property name="key">idUsuarioLocalizacao</property>
+		<property name="columns">
+			<value>usuario : {properties : {order: nome}}</value>
+			<value>estrutura : {properties : {order: localizacao}}</value>			
+			<value>localizacao : {properties : {order: localizacao}}</value>
+			<value>papel : {properties : {order: nome}}</value>
+			<value>responsavelLocalizacao: { valueType: sim_nao }</value>			
+		</property>
+		<property name="restrictions">
+			<value>usuario = #{usuarioHome.instance}</value>
+			<value>usuario = #{usuarioLocalizacaoSearch.usuario}</value>
+			<value>usuario.idUsuario = #{pessoaHome.id}</value>
+			<value>usuario.idUsuario = #{pessoaHome.instance.idUsuario}</value>
+			<value>usuario = #{pessoaServidorHome.definedInstance}</value>
+			<value>usuario = #{pessoaOficialJusticaHome.definedInstance}</value>
+			<value>localizacao = #{usuarioLocalizacaoSearch.localizacao}</value>
+			<value>localizacao.idLocalizacao = #{localizacaoHome.id}</value>
+			<value>papel = #{usuarioLocalizacaoSearch.papel}</value>
+		</property>		
+		<property name="order">papel</property>
+	</component>
+	
+</components>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->                    
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+			       
+	<ui:define name="title">#{messages['usuario.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{usuarioHome}" />
+	
+	<ui:define name="searchGrid">   
+	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
+	    <wi:datagrid bean="#{usuarioGrid}" 
+			    	 searchBean="#{usuarioSearch}" 
+			    	 title="#{messages['usuario.titleGrid']}"/>
+	</ui:define>
+	
+	<ui:define name="form" action="#{usuarioHome.newInstance()}">
+		<c:if test="#{canEdit}">
+			<wi:form form="#{usuarioForm}" 
+					 formTitle="#{messages['usuario.titleForm']}" 
+			         persistSemNewInstance="true"/>
+		</c:if>
+		<c:if test="#{not canEdit}">
+			<wi:view form="#{usuarioView}" columns="4" title="#{messages['usuario.titleView']}"/>
+		</c:if>
+	</ui:define>
+	
+	<ui:define name="tabs">
+	 	<rich:tab label="#{messages['endereco.titlePage']}"
+			      status=":status"
+				  id="endereco2"
+				  rendered="#{home.managed}"
+				  action="#{enderecoHome.newInstance()}">
+			<s:div>
+				<wi:ajaxDiv id="divGridEnd">
+					<c:if test="#{canEdit}">
+						<wi:form columns="3" 
+								 msgRendered="false"
+				   				 formTitle="Adicionar Endereço - #{(usuarioHome.instance)}"
+								 form="#{enderecoForm}"
+								 reRenderSave="divGridEnd"
+								 home="#{enderecoHome}"/>
+					</c:if>		
+					<wi:datalist home="#{enderecoHome}"
+								 bean="#{enderecoGrid}" 
+								 gridId="enderecoGridTab"
+								 toolBar="toolBarEditRemove"
+								 searchBean="#{enderecoSearch}"
+								 listReRender="divGridEnd"
+								 linkDetalhe="/Endereco/listView.xhtm"
+								 headerToolBar="none"
+								 columnList="nomeLogradouro, nomeBairro"
+								 title="#{messages['endereco.titlePage']} - #{(usuarioHome.instance)}"/>
+				</wi:ajaxDiv>
+			</s:div>
+		</rich:tab>
+		
+		<rich:tab id="localizacaoUsuario"
+				  label="#{messages['localizacao.usuarioLocalizacaoList']}"			
+				  status=":status" 
+				  rendered="#{home.managed}"			
+				  action="#{usuarioLocalizacaoHome.newInstance()}">
+			<s:div>
+				<wi:ajaxDiv id="divGridLU">
+						<wi:form columns="3" 
+								 msgRendered="false"
+								 formTitle="Adicionar Localização - #{(usuarioHome.instance)}"
+								 form="#{usuarioLocalizacaoForm}"							
+								 home="#{usuarioLocalizacaoHome}"							
+								 reRenderSave="divGridLU"							
+								 mostrarNovo="false" 
+								 mostrarVoltar="false" />
+						<wi:datalist home="#{usuarioLocalizacaoHome}"
+									 bean="#{usuarioLocalizacaoGrid}"
+									 gridId="usuarioLocalizacaoGridTab" 
+									 toolBar="toolBarEditRemove"
+									 listReRender="divGridLU"
+									 headerToolBar="none"
+									 columnList="localizacao, papel"
+									 title="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioHome.instance)}" />	
+				</wi:ajaxDiv>
+			</s:div>
+		</rich:tab>
+	
+	</ui:define> 
+	 
+</ui:composition>

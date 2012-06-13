@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+                xmlns:f="http://java.sun.com/jsf/core"
+		        xmlns:a="http://richfaces.org/a4j"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+                
+    <ui:define name="title">Ajuda</ui:define>
+
+	<ui:define name="baseBody">
+
+		<s:div id="formAjuda" style="width: 680px; float: left">
+			<wi:dataForm formId="ajudaForm" 
+									formTitle="Texto de ajuda">
+									
+				<wi:editor  id="texto" 
+								   label="Texto"
+								   width="660"
+								   height="450"
+								   value="#{ajudaHome.instance.texto}"/>
+								   
+				<ui:define name="buttons">
+				<a:loadScript src="/js/util.js" />
+					<wi:commandButton id="ajudaPersistButton"
+													  action="ajudaHome.persist"
+													  value="Gravar"
+													  reRender="gridAjuda">
+					</wi:commandButton>
+	
+				</ui:define>
+								
+			</wi:dataForm>
+		</s:div>
+		
+		<s:div id="gridAjuda" style="float: left; width: 300px;">
+			<wi:dataTable values="#{historicoAjudaList.list(15)}"
+									bean="#{historicoAjudaList}"
+									tableTitle="Histórico das revisões"
+									id="historicoAjudaId"
+									rowId="#{row.idHistoricoAjuda}"
+									toolBar="ajuda"
+									panelWidth="100%">
+									
+				<wi:columnDateTime columnId="dataRegistro"
+													columnHeader="Data"
+													value="#{row.dataRegistro}"
+													showTime="true"/>	
+									 
+				<wi:columnOutputText columnId="usuario"
+													 columnHeader="Usuário"
+													 value="#{row.usuario}" />
+
+				<ui:define name="toolBar">
+					<wi:toolBar id="recuperarRevisao"
+										url="/img/grid/copyLeft.gif" 
+										title="Recuperar revisão"
+										reRender="formAjuda"
+										action="ajudaHome.instance.setTexto(row.texto)"
+										limitToList="true"/>
+						<wi:toolBarTextPreview value="#{row.texto}" />
+				</ui:define>
+
+			</wi:dataTable>
+		</s:div>
+        
+        <a:include  viewId="/WEB-INF/xhtml/components/form/imageHelpUpload.xhtml" />
+
+	</ui:define> 
+</ui:composition>

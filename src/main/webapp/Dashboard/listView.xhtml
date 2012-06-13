@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- $Id: listView.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+				template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+                       
+	<ui:define name="title">#{messages['dashBoard.titlePage']}</ui:define>
+	
+	<ui:param name="action" value="#{dashBoardAction}"/>
+	
+	<ui:define name="body">
+		<a:region renderRegionOnly="true">
+			<a:form>
+				<rich:spacer height="30px"/>
+		  		<h:outputText value="Por Categoria:" 
+		  					  style="color: white; 
+		  					  		 font-weight: bold;
+		  					  		 font-size: 13pt;"/>
+				<rich:dataTable id="tarefaByCategoriaGrid"
+								value="#{action.categoriaList}"
+								var="row"
+								rows="10"
+								title="Por Categoria"
+								style="width: 80%">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<rich:column style="width: 15%"
+									 	 rowspan="2">
+								<h:outputText value="Categoria" />
+							</rich:column>
+							<rich:column style="width: 25%"
+									 	 rowspan="2">
+								<h:outputText value="Qtd em Andamento" />
+							</rich:column>
+							<rich:column style="width: 20%"
+										 rowspan="1"
+										 colspan="2">
+								<h:outputText value="Prazo Fluxo" />
+							</rich:column>
+							<rich:column style="width: 20%"
+										 rowspan="1"
+										 colspan="2">
+								<h:outputText value="Prazo Tarefa" />
+							</rich:column>
+							<rich:column style="width: 20%"
+										 rowspan="2">
+								<h:outputText value="C/ Prazo Tarefas > 100%" />
+							</rich:column>
+							<rich:column breakBefore="true">
+								<h:outputText value="Dentro" />
+							</rich:column>
+							<rich:column>
+								<h:outputText value="Fora" />
+							</rich:column>
+							<rich:column>
+								<h:outputText value="Dentro" />
+							</rich:column>
+							<rich:column>
+								<h:outputText value="Fora" />
+							</rich:column>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{row[0]}"/>
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{row[1]}"/>
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{(row[3]*100) div row[1]}">
+							<f:convertNumber maxFractionDigits="1"/>
+						</h:outputText>
+						<h:outputText value="%" />
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<ui:param name="foraPrazoFluxo" value="#{(row[1]-row[3])*100 div row[1]}"/>
+						<a:commandLink action="#{action.byProcessoForaPrazo(row[0], foraPrazoFluxo)}"
+									   ajaxSingle="true"
+									   reRender="gridByCurrentTask">
+							<h:outputText value="#{foraPrazoFluxo}">
+								<f:convertNumber maxFractionDigits="1"/>
+							</h:outputText>
+							<h:outputText value="%"/>
+						</a:commandLink>
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{(row[2]*100) div row[1]}">
+							<f:convertNumber maxFractionDigits="1"/>
+						</h:outputText>
+						<h:outputText value="%" />
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<ui:param name="foraPrazoTarefa" value="#{(row[1]-row[2])*100 div row[1]}"/>
+						<a:commandLink action="#{action.byProcessoForaTarefa(row[0], foraPrazoTarefa)}"
+									   ajaxSingle="true"
+									   reRender="gridByCurrentTask">
+							<h:outputText value="#{foraPrazoTarefa}">
+								<f:convertNumber maxFractionDigits="1"/>
+							</h:outputText>
+							<h:outputText value="%" />
+						</a:commandLink>
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{(row[4]*100) div row[1]}">
+							<f:convertNumber maxFractionDigits="1"/>
+						</h:outputText>
+						<h:outputText value="%" />
+					</rich:column>
+				</rich:dataTable>
+				<rich:datascroller for="tarefaByCategoriaGrid"
+								   lastPageMode="full"
+								   id="dsTarefaByCategoriaTable"
+								   align="left"
+								   renderIfSinglePage="false"/>
+				<rich:spacer height="30px"/>
+		  		<h:outputText value="Perto do Limite:" 
+		  					  style="color: white; 
+		  					  		 font-weight: bold;
+		  					  		 font-size: 13pt;"/>
+				<rich:dataTable id="tarefaPertoLimiteGrid"
+								value="#{action.tarefaPertoLimiteList}"
+								var="row"
+								rows="10"
+								title="Perto do Limite"
+								style="width: 80%">
+					<f:facet name="header">
+						<rich:columnGroup>
+							<rich:column style="width: 25%">
+								<h:outputText value="Fluxo" />
+							</rich:column>
+							<rich:column style="width: 15%">
+								<h:outputText value="Processo" />
+							</rich:column>
+							<rich:column style="width: 20%">
+								<h:outputText value="Tarefa" />
+							</rich:column>
+							<rich:column style="width: 20%">
+								<h:outputText value="% Tempo Gasto" />
+							</rich:column>
+							<rich:column style="width: 20%">
+								<h:outputText value="Tempo Previsto" />
+							</rich:column>
+						</rich:columnGroup>
+					</f:facet>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{row[0]}"/>
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{row[1].numeroProcesso}"/>
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{row[2]}"/>
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{row[3].porcentagem}%"/>
+					</rich:column>
+					<rich:column style="text-align:center;">
+						<h:outputText value="#{action.getTempo(row[3].tempoPrevisto)}"/>
+					</rich:column>
+				</rich:dataTable>
+				<rich:datascroller for="tarefaPertoLimiteGrid"
+								   lastPageMode="full"
+								   id="dsTarefaPertoLimiteTable"
+								   align="left"
+								   renderIfSinglePage="false"/>
+				<s:div id="gridByCurrentTask">
+					<s:div rendered="#{action.showForaPrazoGrid}">
+						<rich:spacer height="15px"/>
+						<rich:panel header="Por Tarefa"
+									style="width: 80%;">
+							<rich:spacer height="15px"/>
+					  		<h:outputText value="Fora do Prazo:"
+					  					  style="color: black; 
+					  					  		 font-weight: bold;
+					  					  		 font-size: 8pt;"/> 
+							<rich:dataTable id="tarefaForaPrazoGrid"
+											value="#{action.tarefaForaPrazoList}"
+											var="row"
+											rows="10"
+											title="Fora de Prazo"
+											style="width: 95%">
+								<f:facet name="header">
+									<rich:columnGroup>
+										<rich:column style="width: 25%">
+											<h:outputText value="Fluxo" />
+										</rich:column>
+										<rich:column style="width: 15%">
+											<h:outputText value="Processo" />
+										</rich:column>
+										<rich:column style="width: 20%">
+											<h:outputText value="Tarefa" />
+										</rich:column>
+										<rich:column style="width: 20%">
+											<h:outputText value="Tempo Previsto" />
+										</rich:column>
+										<rich:column style="width: 20%">
+											<h:outputText value="Tempo Gasto" />
+										</rich:column>
+									</rich:columnGroup>
+								</f:facet>
+								<rich:column style="text-align:center;">
+									<h:outputText value="#{row[0]}"/>
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="#{row[1].numeroProcesso}"/>
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="#{row[2]}"/>
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="#{action.getTempo(row[3].tempoPrevisto)}"/>
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="#{action.getTempo(row[3].tempoGasto)}"/>
+								</rich:column>
+							</rich:dataTable>
+							<rich:datascroller for="tarefaForaPrazoGrid"
+											   lastPageMode="full"
+											   id="dsTarefaForaPrazoTable"
+											   align="left"
+											   renderIfSinglePage="false"/>
+						</rich:panel>
+					</s:div>
+				</s:div>
+			</a:form>
+		</a:region>
+	</ui:define>
+
+</ui:composition>

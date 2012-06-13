@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:rich="http://richfaces.org/rich">
+
+	<!-- Mini-Relógio -->	
+	<span id="liveclock"
+		  style="color:#{a4jSkin.colorTextMenu}; text-align: right; position: absolute; width: 100%; top: 25px; height: 7px; z-index: 1; left: -5px; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold;">
+	</span>
+	<script>
+	   newClock('#{currentTime}');
+	</script>
+	
+	<!-- BANNER -->
+	<table class="banner">
+		<tr>
+			<th width="130px">
+				<a href="#{util.contextPath}/">
+					<h:graphicImage 
+					    rendered="#{!hideImage}"
+						url="#{a4jSkin.imgLogoMini}"/> 
+				</a>
+				<rich:spacer 
+				    height="86"
+					rendered="#{hideImage}" />
+			</th>
+			<th class="banner" style="font-size: 15pt; color:#{a4jSkin.colorTextMenu}">
+			    <font size="5" >#{nomeSistema} <br/></font> 
+	            <font size="4" >#{subNomeSistema} <br/></font> 		   
+			</th>
+			<th class="banner">
+			    <rich:spacer width="100px" />
+			</th>
+		</tr>
+	</table>
+	
+	<ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
+	<ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
+		
+</ui:composition>

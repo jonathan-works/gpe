@@ -1,0 +1,27 @@
+<jbpm-configuration>
+
+
+  <jbpm-context>
+    <service name="persistence">
+       <factory>
+          <bean class="org.jbpm.persistence.db.DbPersistenceServiceFactory">
+             <field name="isTransactionEnabled"><false/></field>
+          </bean>
+       </factory>
+    </service>
+    <service name="tx" factory="org.jbpm.tx.TxServiceFactory" />
+    <service name="message" factory="org.jbpm.msg.db.DbMessageServiceFactory" />
+    <service name="scheduler" factory="org.jbpm.scheduler.db.DbSchedulerServiceFactory" />
+    <service name="logging" factory="br.com.infox.ibpm.jbpm.logging.EmptyLoggingServiceFactory" />
+    <service name="authentication" factory="org.jbpm.security.authentication.DefaultAuthenticationServiceFactory" />
+  </jbpm-context>
+
+	<string name="jbpm.mail.smtp.host" value="mail.infox.com.br" /> 
+
+	<!-- Arquivo que define o calendario de dias e horas úteis. -->
+	<string name="resource.business.calendar" value="jbpm.business.calendar.properties" />
+	
+	<!-- Definicao dos tipos de no -->
+	<string name="resource.node.types" value="node.types.xml" />
+
+</jbpm-configuration>

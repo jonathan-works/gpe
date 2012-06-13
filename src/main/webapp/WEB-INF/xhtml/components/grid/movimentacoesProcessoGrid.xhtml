@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+
+	<rich:dataTable value="#{processoHandler.taskInstanceList}"
+					rowKeyVar="key" 
+					var="task">
+		<rich:column styleClass="defaultCell">
+			<f:facet name="header">Tarefa</f:facet>
+			<h:outputText value="#{task.name}" />
+		</rich:column>
+		
+		<rich:column styleClass="defaultCell">
+			<f:facet name="header">Localização / Usuário</f:facet>
+			<div style="width:50%; float:left">
+				<h:graphicImage url="/img/localizacao.gif"
+								rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
+				<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
+			</div>
+			<div style="width:50%; float:left">
+				<h:graphicImage url="/img/usuario.gif"
+								rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
+				<h:outputText value="#{userHandler.getUsuario(task.actorId)}" />
+			</div>
+		</rich:column>
+		
+		<rich:column style="text-align: center" 
+					 styleClass="defaultCell">
+			<f:facet name="header">Início</f:facet>
+			<h:outputText value="#{task.start}">
+				<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+			</h:outputText>
+		</rich:column>
+		
+		<rich:column style="text-align: center" 
+					 styleClass="defaultCell">
+			<f:facet name="header">Término</f:facet>
+			<h:outputText value="#{task.end}">
+				<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+			</h:outputText>
+		</rich:column>
+		
+		<rich:column style="text-align: center" 
+					 styleClass="defaultCell">
+			<f:facet name="header">Dados</f:facet>
+			<s:link target="_blank"
+					rendered="#{processoHandler.taskDocumentList.contains(task)}"
+					view="/Processo/Consulta/paginator.seam">
+				<h:graphicImage url="#{a4jSkin.imgIconView}" 
+								style="cursor:pointer" />
+				<h:graphicImage rendered="#{!empty processoHandler.getAnexos(task)}"
+								url="/img/anexo.gif" 
+								style="cursor:pointer" />
+				<f:param name="inicio" value="#{key + 1}" />
+			</s:link>
+		</rich:column>
+	</rich:dataTable>
+	
+</ui:composition>

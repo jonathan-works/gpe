@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->   
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			 	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">              
+      
+	<ui:define name="title">#{messages['fluxo.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{fluxoHome}" />
+	
+	<ui:define name="searchGrid">   
+	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
+	    <wi:datagrid 
+	    	bean="#{fluxoGrid}" 
+	    	searchBean="#{fluxoSearch}" 
+	    	title="#{messages['fluxo.titleGrid']}"
+	    	columnList="codFluxo,fluxo,publicado,dataInicioPublicacao,dataFimPublicacao, ativo"
+	    />
+	</ui:define>
+	
+	<ui:define name="form" action="#{fluxoHome.newInstance()}">
+		<c:if test="#{canEdit}">
+			<wi:form form="#{fluxoForm}" 
+			         formTitle="#{messages['fluxo.titleForm']}"
+	                 persistSemNewInstance="true"/>
+		</c:if>
+		<c:if test="#{not canEdit}">
+			<wi:view form="#{fluxoView}" columns="4" title="#{messages['fluxo.titleView']}"/>
+		</c:if>
+	</ui:define>
+	
+	<ui:define name="tabs">
+		<ui:param name="action" value="#{fluxoPapelAction}" />
+		<rich:tab id="fluxoPapelTab" 
+				  rendered="#{home.isManaged()}"
+				  eventsQueue="default" 
+				  switchType="ajax"
+				  label="#{messages['fluxoPapel.titleTab']}"
+				  action="#{action.init()}">
+			<wi:dataForm formId="fluxoPapelForm"
+					 	 formTitle="#{messages['fluxoPapel.titleForm']}">
+				<wi:tree id="papelTree"
+						 label="#{messages['fluxoPapel.papel']}"
+						 assignTo="fluxoPapelAction.instance.papel"
+						 tree="#{action.papelTreeHandler}"
+						 required="true"/>
+				<ui:define name="buttons">
+					<wi:commandButton id="savePapelButton"
+									  action="fluxoPapelAction.save"
+									  reRender="fluxoPapelForm, fluxoPapelDiv"
+									  value="Incluir"/>
+				</ui:define>
+			</wi:dataForm>
+			<s:div id="fluxoPapelDiv">
+				<h:form>
+					<rich:dataTable id="fluxoPapelTable"
+									value="#{action.fluxoPapelList}"
+									var="row"
+									rows="10"
+									style="width: 50%">
+						<rich:column style="width: 10%">
+							<f:facet name="header">
+								<wi:toolBarRemove id="headerRemove"
+												  reRender="fluxoPapelDiv"
+											      actionRemove="fluxoPapelAction.removeAll()"
+											      title="Remover todos os Registros"/>
+							</f:facet>
+							<center>
+								<wi:toolBarRemove id="toolBarRemove"
+												  reRender="fluxoPapelDiv"
+											      actionRemove="fluxoPapelAction.remove(row)"/>
+							</center>
+						</rich:column>
+						<rich:column style="width: 90%">
+							<f:facet name="header">
+								<h:outputText value="#{messages['fluxoPapel.papel']}" />
+							</f:facet>
+							<h:outputText value="#{row.papel}"/>
+						</rich:column>
+					</rich:dataTable>
+					<rich:datascroller id="dsFluxoPapelTable"
+									   for="fluxoPapelTable"
+									   lastPageMode="full"
+									   align="left"
+									   renderIfSinglePage="false"/>
+				</h:form>
+			</s:div>
+		</rich:tab>			
+	</ui:define> 
+ 
+</ui:composition>

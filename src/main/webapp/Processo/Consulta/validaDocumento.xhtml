@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+				template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->   
+	<ui:define name="baseBody"> 
+		<div class="pageBody">
+			<rich:panel id="mp_ass">
+				<f:facet name="header">
+					<h:outputText value="Dados do Documento" />
+				</f:facet>
+				<f:facet name="controls">
+		         		<span style="cursor:pointer; font-family: Verdana, Arial; 
+		         			padding-right: 22px"
+		         			onclick="Richfaces.hideModalPanel('mp_ass')">X</span>
+				</f:facet>
+				<div>
+			        <h:panelGrid columns="2" >
+			            <h:outputLabel value="Usuário: " for="usuario" />
+				        <h:outputText id="usuario" value="#{validaDocumentoHome.documento.usuarioInclusao}" />
+			        
+			        	<h:outputLabel value="Assinatura Válida?: " for="valido" />
+				        <h:outputText id="valido" value="#{validaDocumentoHome.valido ? 'SIM' : 'NÃO'}" />
+				        
+				        <h:outputLabel value="Nome: " for="nome" />
+				        <h:outputText id="nome" value="#{validaDocumentoHome.dadosCertificado.nome}" />
+				        
+			   	        <h:outputLabel value="Email: " for="email" />		   	        
+				        <h:outputText id="email" value="#{validaDocumentoHome.dadosCertificado.email}" />
+				        
+			   	        <h:outputLabel value="OU: " for="OU1" />		   	        
+				        <h:outputText id="OU1" value="#{validaDocumentoHome.dadosCertificado.ou1}" />
+				        
+				        <h:outputLabel value="OU: " for="OU2" />
+				        <h:outputText id="OU2" value="#{validaDocumentoHome.dadosCertificado.ou2}" />	
+		
+				        <h:outputLabel value="OU: " for="OU3" />
+				        <h:outputText id="OU3" value="#{validaDocumentoHome.dadosCertificado.ou3}" />
+		
+				        <h:outputLabel value="OU: " for="OU4" />
+				        <h:outputText id="OU4" value="#{validaDocumentoHome.dadosCertificado.ou4}" />
+				        
+			   	        <h:outputLabel value="Instituição Certificadora:" for="o" />
+				        <h:outputText id="o" value=" #{validaDocumentoHome.dadosCertificado.o}" />
+				        
+			   	        <h:outputLabel value="Certificado válido até:" for="validade" />
+				        <h:outputText id="validade" value="#{validaDocumentoHome.dadosCertificado.dataValidadeFim}" >
+				        	<s:convertDateTime pattern="dd/MM/yyyy"/>
+				        </h:outputText>			        
+				        
+			        </h:panelGrid>
+					<br /> 
+					<rich:messages id="msg" infoClass="formMessage" />
+				</div>				
+			</rich:panel>
+		</div>			
+	</ui:define>
+	
+</ui:composition>

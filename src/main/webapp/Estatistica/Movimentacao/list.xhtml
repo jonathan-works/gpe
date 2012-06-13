@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
+						    
+	<ui:param name="pageTitle" value="#{messages['estatisticaMovimentacao.titulo']}" />                       
+	<ui:define name="title">#{pageTitle}</ui:define>
+	<ui:param name="home" value="#{estatisticaMovimentacaoHome}" />
+	
+	<ui:param name="numProcessos" value="#{estatisticaMovimentacaoHome.numProcessosMov}" />
+	<ui:param name="tempoMedio" value="#{estatisticaMovimentacaoHome.tempoMedioMov}" />
+	<ui:param name="tempoMinimo" value="#{estatisticaMovimentacaoHome.tempoMinimoMov}" />
+	<ui:param name="tempoMaximo" value="#{estatisticaMovimentacaoHome.tempoMaximoMov}" />
+	
+	<ui:define name="body">
+	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
+	    
+	    <div class='leftPanel' style="width: 38%;">
+			<wi:dataForm formId="estatisticaMovimentacaoForm"
+						   				formTitle="Pesquisar"
+						   				requiredForm="false">
+				<wi:inputDataPeriodo id="periodo"
+													valueDateFrom="#{home.instance.dataInicio}"
+													valueDateTo="#{home.instance.dataFim}"
+				 									label="Período:"/>
+				 
+				<wi:tree id="fluxo" 
+							  label="Fluxo"
+							  assignTo="#{home.instance.fluxo}"
+							  tree="#{assuntoTree}"
+							  styleClass="campoPesquisa" />
+				<ui:define name="buttons">
+					<wi:commandButton id="consulta" 
+													value="Consulta" 
+													action="#{home.instance.setInPesquisa(true)}"
+													reRender="pageBody"/>
+					<wi:commandButton id="novaConsulta" 
+													value="Nova Consulta" 
+													action="#{home.limparTela('consultaProcessoForm')}"
+													reRender="pageBody"/>
+				</ui:define>			   				
+			</wi:dataForm>
+	    </div>
+	    
+	    <s:div id="rightPanelId" styleClass='rightPanel' style="width: 60%; right: 5px; float: right; !important">
+	    	<s:div rendered="#{estatisticaMovimentacaoHome.instance.inPesquisa}">
+	
+	 			<rich:simpleTogglePanel>
+		
+	 				<h:outputText value="#{numProcessos}" style="clear: both;"> <b>Número de Processos: </b></h:outputText>
+					<h:outputText value="#{tempoMedio}">  <br/> <b>Tempo Médio:  </b> </h:outputText>
+	 				<h:outputText value="#{tempoMinimo}"> <br/> <b>Tempo Mínimo: </b> </h:outputText>
+	 				<h:outputText value="#{tempoMaximo}"> <br/> <b>Tempo Máximo: </b> </h:outputText>
+	 				
+					<rich:dataTable id="lista"
+		    				value="#{estatisticaMovimentacaoHome.getGridEstatistica()}" var="var" 
+		                    style="margin-left: 1px; margin-top: 1px"	                    
+	             			onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				 			onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"			 				                    
+							>   
+		                    	                    	
+		    			<rich:column style="width:25%">
+		    				<f:facet name="header">Fluxo</f:facet>
+				    		<h:outputText value="#{var[0]}"/>
+		    			</rich:column>
+		    			
+		    			<rich:column style="width:25%">
+		    				<f:facet name="header">Tarefa</f:facet>
+				    		<h:outputText value="#{var[1]}"/>
+		    			</rich:column>	    			
+		    			
+		    			<rich:column style="text-align:center">
+		    				<f:facet name="header">Média</f:facet>
+				    		<h:outputText value="#{estatisticaMovimentacaoHome.millisecondToDay(var[2])}"/>
+		    			</rich:column>
+		    			
+		    			<rich:column style="text-align:center">
+		    				<f:facet name="header">Total</f:facet>
+				    		<h:outputText value="#{estatisticaMovimentacaoHome.millisecondToDay(var[3])}"/>
+		    			</rich:column>	  
+		    			
+		    			<rich:column style="text-align:center">
+		    				<f:facet name="header">Quantidade</f:facet>
+				    		<h:outputText value="#{var[4]}"/>
+		    			</rich:column>
+		    		</rich:dataTable>	
+	
+	 		 	</rich:simpleTogglePanel>
+			</s:div>
+		</s:div>
+	    
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+				template="/WEB-INF/xhtml/templates/template-sample.xhtml">
+                       
+	<ui:define name="title">#{messages['caixa.titlePage']}</ui:define>
+	<ui:param name="id" value="caixa#{id}"/>
+	
+	<ui:param name="home" value="#{caixaHome}" />
+		
+	<ui:define name="body">
+		<rich:tabPanel switchType="ajax" 
+			                   headerSpacing="2"
+						       selectedTab="#{caixaHome.tab}">
+			<rich:tab id="form" 
+					  rendered="#{(caixaHome.managed or (canEdit and (hideTabForm != true)))}" 
+					  label="#{canEdit ? 'Formulário' : 'Detalhes'}" 
+					  immediate="true"
+					  status=":status"
+					  disabled="#{disabledForm}"
+					  action="#{caixaHome.onClickFormTab}">
+				<wi:dataForm		
+						formId="caixaForm"
+						formTitle="#{messages['caixa.titleForm']}">
+						<wi:inputText	id="tarefa"
+												label="Tarefa"
+												value="#{caixaHome.instance.tarefa}"
+												required="true"
+												disabled="true"/>
+						<wi:inputText	id="nomeCaixa"
+												label="#{messages['caixa.nomeCaixa']}"
+												value="#{caixaHome.instance.nomeCaixa}"
+												length="100"/>
+						<wi:inputTextarea	id="dsCaixa"
+														label="#{messages['caixa.dsCaixa']}"
+														value="#{caixaHome.instance.dsCaixa}"/>						
+
+						<wi:selectOneMenu id="idTaskAnterior"
+														 label="Tarefa Anterior"
+										 				 value="#{caixaHome.idTarefaAnterior}"
+														 valueItems="#{caixaHome.getPreviousTasks(caixaHome.instance.tarefa.idTarefa)}"/>
+					 <ui:define name="buttons">
+						<wi:commandButtonUpdate />
+					</ui:define>
+				</wi:dataForm>		
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

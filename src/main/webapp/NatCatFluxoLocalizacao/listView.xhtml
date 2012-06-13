@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+  
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:h="http://java.sun.com/jsf/html"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                       
+	<ui:define name="title">#{messages['natCatFluxoLocalizacao.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{natCatFluxoLocalizacaoAction}" />
+	
+	<ui:define name="searchGrid">
+	    <wi:dataTable values="#{natCatFluxoLocalizacaoList.list(15)}"
+					  bean="#{natCatFluxoLocalizacaoList}"
+					  tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}"
+					  id="natCatFluxoLocalizacaoist"
+					  rowId="#{row.idNatCatFluxoLocalizacao}"
+					  actionInactive="natCatFluxoLocalizacaoAction.inactive">
+			<ui:define name="searchForm">
+				<ui:param name="entity" value="#{natCatFluxoLocalizacaoList.entity}" />
+				<wi:searchForm formId="pesquisarNatCatFluxoLocalizacaoForm"
+							   formTitle="Pesquisar">
+					<wi:selectOneMenuEntity id="natureza"
+										    value="#{entity.naturezaCategoriaFluxo.natureza}"
+										    label="#{messages['naturezaCategoriaFluxo.natureza']}"
+										    noSelectionLabel="Selecione um registro..."
+										    items="#{home.naturezaList}"/>
+					<wi:selectOneMenuEntity id="categoria"
+										    value="#{entity.naturezaCategoriaFluxo.categoria}"
+										    label="#{messages['naturezaCategoriaFluxo.categoria']}"
+										    noSelectionLabel="Selecione um registro..."
+										    items="#{home.categoriaList}"/>
+					<wi:selectOneMenuEntity id="fluxo"
+										    value="#{entity.naturezaCategoriaFluxo.fluxo}"
+										    label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+										    noSelectionLabel="Selecione um registro..."
+										    items="#{home.fluxoList}"/>
+					<wi:tree id="localizacao"
+							 label="#{messages['localizacao.localizacao']}"
+							 assignTo="natCatFluxoLocalizacaoList.entity.localizacao"
+							 tree="#{home.localizacaoTreeHandler}"/>
+					<wi:selectBooleanMenu id="heranca"
+										  label="#{messages['natCatFluxoLocalizacao.heranca']}"
+										  value="#{entity.heranca}" />
+				</wi:searchForm>
+			</ui:define>
+			<ui:define name="toolBar">
+				<wi:toolBarEdit />
+				<wi:toolBarRemove actionRemove="natCatFluxoLocalizacaoAction.remove(row)" />
+			</ui:define>
+			<ui:define name="headerToolBar">
+				<wi:toolBarReport />
+			</ui:define>
+			<wi:columnOutputText columnId="natureza"
+								 columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
+								 columnWidth="25%"
+								 value="#{row.naturezaCategoriaFluxo.natureza}"/>
+			<wi:columnOutputText columnId="categoria"
+								 columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+								 columnWidth="20%"
+								 value="#{row.naturezaCategoriaFluxo.categoria}"/>
+			<wi:columnOutputText columnId="fluxo"
+								 columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+								 columnWidth="20%"
+								 value="#{row.naturezaCategoriaFluxo.fluxo}"/>
+			<wi:columnOutputText columnId="localizacao"
+								 columnHeader="#{messages['localizacao.localizacao']}"
+								 columnWidth="20%"
+								 value="#{row.localizacao}"/>
+			<wi:columnBoolean columnId="heranca"
+							  columnHeader="#{messages['natCatFluxoLocalizacao.heranca']}"
+						   	  columnWidth="10%"
+							  value="#{row.heranca}" />
+		</wi:dataTable>
+	</ui:define>
+
+	<ui:define name="form">
+		<wi:dataForm formId="natCatFluxoLocalizacaoForm"
+					 formTitle="#{messages['natCatFluxoLocalizacao.titleForm']}">
+			<wi:selectOneMenuEntity id="naturezaCategoriaFluxo"
+								    value="#{home.instance.naturezaCategoriaFluxo}"
+								    required="true"
+								    label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
+								    noSelectionLabel="Selecione um registro..."
+								    items="#{home.naturezaCategoriaFluxoList}"/>
+			<wi:tree id="localizacao"
+					 assignTo="natCatFluxoLocalizacaoAction.instance.localizacao"
+					 label="#{messages['localizacao.localizacao']}"
+					 required="true"
+					 tree="#{home.localizacaoTreeHandler}"/>
+			<wi:selectBooleanCheckbox id="heranca"
+								      required="true"
+								      label="#{messages['natCatFluxoLocalizacao.heranca']}"
+								      value="#{home.instance.heranca}" />
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>

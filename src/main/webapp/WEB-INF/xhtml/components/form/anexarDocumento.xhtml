@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->	
+	<ui:composition>
+
+		<ui:param name="reRenderSaveForm" value="#{reRenderSave}" />
+		
+		<s:div style="clear: both">
+		   	<wi:inputText
+		   		id="#{f.id}inputProcessoDocumento" 
+				value="#{processoDocumentoHome.instance.processoDocumento}" 
+				disabled="false"
+				required="true"
+				label="Descrição">
+			</wi:inputText>	
+		</s:div>
+		<s:div id="divTipoDocumento">
+			<wi:selectOneMenuEntity 
+				id="#{f.id}tipoProcessoDocumento"
+				label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+				value="#{home.instance.tipoProcessoDocumento}"
+				items="#{tipoProcessoDocumentoInternoItems}" 
+				required="true"
+				noSelectionLabel="Selecione...">
+				<a:support event="onchange"
+						   action="#{processoDocumentoHome.onSelectProcessoDocumento()}"
+						   ajaxSingle="true"
+						   reRender="divEventsTree, usarModeloDiv"/>
+			</wi:selectOneMenuEntity>
+		</s:div>
+		
+		<s:div id="divEventsTree">
+			<wi:eventsTree agrupamentos="#{processoDocumentoHome.idAgrupamentos}"
+						   reRender="usarModeloDiv"
+						   tree="#{eventsTipoDocumentoTree}"
+						   inNewLine="true"
+						   rendered="#{processoDocumentoHome.renderEventTree}"/>
+		</s:div>
+		
+		<wi:selectBooleanCheckbox id="documentoSigiloso"
+								  inNewLine="true"
+								  value="#{processoDocumentoHome.instance.documentoSigiloso}"
+								  label="#{messages['processoDocumento.documentoSigiloso']}"/>
+
+		<s:div id="tipoDocumentoDiv">
+		
+			<wi:fileUploadBox id="uploadArquivo"
+				rendered="#{!home.modelo}"
+				label="Arquivo"
+				onchange="clearSign();">
+			</wi:fileUploadBox>
+			
+			<s:div id="usarModeloDiv" rendered="#{home.modelo}">
+			
+				<wi:selectOneMenuEntity id="modeloDocumentoCombo"
+					label="#{messages['modeloDocumento.modeloDocumento']}"
+					value="#{processoDocumentoHome.modeloDocumentoCombo}"
+					items="#{modeloDocumentoPeticaoItems}"
+					noSelectionLabel="Selecione...">
+					<a:support 
+						reRender="modeloDocumento"
+						event="onchange"
+						action="#{processoDocumentoHome.processarModelo()}"
+						ajaxSingle="true"
+						onsubmit="showLoading()"
+						oncomplete="hideLoading()" />
+				</wi:selectOneMenuEntity>
+				
+				<wi:editor id="modeloDocumento" 
+					label="Modelo"
+					value="#{processoDocumentoBinHome.instance.modeloDocumento}"
+					requiredField="false"
+					required="false"
+					showVariables="false"
+					onchange="clearSign()">
+				</wi:editor>
+				
+				<h:inputHidden id="certChain" 
+					value="#{processoDocumentoBinHome.certChain}" />					
+				<h:inputHidden id="signature" 
+					value="#{processoDocumentoBinHome.signature}" /> 
+					
+	            <a:jsFunction 
+	            	name="submitForm" 
+	            	action="#{home.persist()}" 
+	            	reRender="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao"
+	            	/>					
+					
+				<s:decorate id="#{id}DecorationCertificado" 
+					template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+				<ui:param name="inNewLine" value="true" />
+				<ui:param name="showLock" value="false" />
+				<s:div rendered="#{eventsTree.allRootsSelected}">
+					<applet width="140" height="25" id="certificacao" 
+						code="SmartCardSignerApplet" 
+						archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+						<param name="formId" value="#{formId}" />
+						<param name="signButtonCaption" value="Assinar Digitalmente" />
+						<param name="certificationChainField" 
+							value="#{form.formId}Form:#{id}:certChain" />
+						<param name="signatureField" 
+							value="#{form.formId}Form:#{id}:signature" />
+						<param name="urlDownload" value="#{util.urlProject}/certificado/" />
+						<param name="getDataFunction" value="getData()" />	
+						<param name="useBase64Function" value="useBase64()" />
+						<param name="functionPreSign" value="showLoading()" />	
+						<param name="functionPosSign" value="hideLoading();submitForm()" />		
+						<param name="dataAtual" value="#{currentDatetime}" />	
+						<param name="caListDownloadFile" value="#{util.urlProject}/downloadCaList.seam" />				
+					</applet> 
+				</s:div>
+				</s:decorate>					
+				
+			</s:div>
+			<script>
+			  function useBase64() {
+				  return '#{!home.modelo}';
+			  }
+			</script>   			
+		</s:div>
+		
+		<script>
+		  function getData() {
+				 var data;
+				 if (useBase64() == 'true') {
+					 data = $('#{form.formId}Form:#{id}:uploadArquivoDecoration:uploadArquivo').files[0].getAsDataURL();
+					 if (data != '') {
+						 data = data.split('base64,')[1];
+					 }
+				 } else {
+					 data = tinyMCE.editors['#{form.formId}Form:#{id}:modeloDocumentoDecoration:modeloDocumentoTextArea'].getContent();
+				 }
+			     return data;			     
+		  }			
+		  function clearSign() {
+			  //alert('limpando...');
+			  $('#{form.formId}Form:modelo:signature').value = "";
+			  $('#{form.formId}Form:modelo:certChain').value = "";
+		  }			
+		</script>
+				
+	</ui:composition>	
+</jsp:root>

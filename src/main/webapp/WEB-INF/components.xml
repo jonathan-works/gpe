@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id: components.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+<components xmlns="http://jboss.com/products/seam/components"
+            xmlns:core="http://jboss.com/products/seam/core"
+            xmlns:bpm="http://jboss.com/products/seam/bpm"
+            xmlns:async="http://jboss.com/products/seam/async"
+            xmlns:persistence="http://jboss.com/products/seam/persistence"
+            xmlns:security="http://jboss.com/products/seam/security"
+            xmlns:mail="http://jboss.com/products/seam/mail"
+            xmlns:web="http://jboss.com/products/seam/web"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation=
+                "http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd 
+                 http://jboss.com/products/seam/persistence http://jboss.com/products/seam/persistence-2.2.xsd 
+                 http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd
+                 http://jboss.com/products/seam/mail http://jboss.com/products/seam/mail-2.2.xsd
+                 http://jboss.com/products/seam/web http://jboss.com/products/seam/web-2.2.xsd
+                 http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">
+
+   <core:init debug="true" jndi-pattern="EPA/#{ejbName}/local"/>
+     
+	<web:hot-deploy-filter url-pattern="*.seam"/>
+     
+   <core:manager concurrent-request-timeout="2000" 
+                 conversation-timeout="300000" 
+                 conversation-id-parameter="cid"
+                 parent-conversation-id-parameter="pid"
+                 default-flush-mode="MANUAL"
+                 />
+    
+	<persistence:managed-persistence-context name="entityManagerLog"
+                  auto-create="true"
+                  persistence-unit-jndi-name="java:/EPAPersistenceUnit"
+                 />
+
+   <persistence:managed-persistence-context name="entityManager"
+                  auto-create="true"
+                  persistence-unit-jndi-name="java:/EPAPersistenceUnit"
+                 />
+
+	<async:quartz-dispatcher/>
+
+	<persistence:managed-persistence-context name="entityManagerBin"
+	          auto-create="true"
+	          persistence-unit-jndi-name="java:/EPABinPersistenceUnit" />
+                      
+   <event type="org.jboss.seam.security.notLoggedIn">
+       <action execute="#{redirect.captureCurrentView}"/>
+   </event>
+   <event type="org.jboss.seam.security.loginSuccessful">
+       <action execute="#{redirect.returnToCapturedView}"/>
+   </event>
+   
+   	<security:jpa-identity-store
+		user-class="br.com.infox.access.entity.UsuarioLogin"
+		role-class="br.com.infox.access.entity.Papel" />
+
+   <security:jpa-permission-store
+   		user-permission-class="br.com.infox.access.entity.Permissao"/>
+
+   <security:remember-me enabled="false" mode="disabled" />
+   
+  <mail:mail-session host="mail.infox.com.br" tls="false" port="25" debug="false"
+   		ssl="false" username="sistemaepa@infox.com.br" password="minot@uro" />
+   
+   <!-- ITX: Added -->
+   <component name="util" class="br.com.itx.component.Util"/>
+   
+   <bpm:jbpm>
+      <bpm:process-definitions></bpm:process-definitions>
+      <bpm:pageflow-definitions></bpm:pageflow-definitions>
+   </bpm:jbpm>
+   
+   <core:resource-loader>
+		<core:bundle-names>
+			<value>entity_messages</value>
+			<value>messages</value>
+		</core:bundle-names>
+	</core:resource-loader>	      
+   
+	<factory name="pagesDir" value="/" scope="application"/>
+	
+	<factory name="versao" value="2.0" scope="application"/>
+	
+	<factory name="dataSourceNameBin" value="EPABin" scope="application"/>
+	
+</components>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:wi= "http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+
+        <h:form id="papelForm">
+
+          <rich:panel header="Papéis">
+
+			<wi:inputText label="Identificador" 
+				value="#{papelHome.instance.identificador}"
+				required="true"
+				rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}"
+				id="identificador" />
+				
+			<wi:outputText label="Identificador" 
+				value="#{papelHome.instance.identificador}"
+				rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
+				id="identificadorOutput" />
+				
+			<wi:inputText label="Nome" 
+				value="#{papelHome.instance.nome}"
+				required="true"
+				id="nome" />
+
+		<ui:param name="targetListWidth" value="400"/>
+		<ui:param name="sourceListWidth" value="400"/>
+		<rich:tabPanel switchType="ajax" immediate="true"
+			rendered="#{papelHome.managed}"
+			style="width: 870px; clear: both;">
+			<rich:tab label="Papéis"
+					style="height: 200px" 
+					status=":status">
+				<a:region renderRegionOnly="true">
+					<wi:pickList id="papel"
+						targetLabel="Papéis dos quais recebe permissões:"
+						value="#{papelHome.papeis}"
+						itemValues="#{papelHome.getPapeisDisponiveis(true)}"
+						itemLabel="#{papelHome.getNome(var)}"
+					/>
+				</a:region>
+			</rich:tab>
+			<rich:tab label="Herdeiros" status=":status">
+		        <a:region renderRegionOnly="true">
+					<wi:pickList id="herdeiros"
+						targetLabel="Papéis para os quais cede permissões:"
+						value="#{papelHome.membros}"
+						itemValues="#{papelHome.getPapeisDisponiveis(false)}"
+						itemLabel="#{papelHome.getNome(var)}"
+					/>
+				</a:region>
+			</rich:tab>
+			<rich:tab label="Recursos" 
+					style="height: 200px" 
+					status=":status">
+				<a:region renderRegionOnly="true">
+					<wi:pickList id="recurso"
+						targetLabel="Recursos do sistema aos quais tem permissão:"
+						value="#{papelHome.recursos}"
+						itemValues="#{papelHome.recursosDisponiveis}"
+						itemLabel="#{papelHome.getNome(var)}"
+					/>
+				</a:region>
+			</rich:tab>
+		</rich:tabPanel>
+
+              <div style="clear: both;"/>
+
+          </rich:panel>
+
+          <s:div styleClass="actionButtons">
+                <a:commandButton id="save" 
+                	reRender="papelForm"
+                	styleClass="buttons dr-tbpnl-tb-inact"
+                	value="Gravar" action="#{papelHome.save}"/>
+
+                <a:commandButton id="new" 
+                	reRender="papelForm"
+                	styleClass="buttons dr-tbpnl-tb-inact"
+                	ajaxSingle="true"
+                	value="Novo" action="#{papelHome.newInstance()}"/>
+          </s:div>
+
+        </h:form>
+		<rich:messages styleClass="error errors"  />
+
+</ui:composition>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<!--
+	  IBPM - Ferramenta de produtividade Java
+	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+	 
+	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+	  Free Software Foundation; versão 2 da Licença.
+	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+	  
+	  Consulte a GNU GPL para mais detalhes.
+	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+	  veja em http://www.gnu.org/licenses/  
+	-->
+
+	#{props.length}?Tamanho do campo
+
+	<ui:composition>
+	
+		<s:decorate id="#{id}Decoration" 
+			template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+			rendered="#{empty rendered or rendered}">
+			
+			<ui:define name="label">#{label}</ui:define>
+			
+			<rich:fileUpload 	
+               	id="#{id}"
+               	ajaxSingle="true"
+               	status=":status"
+				allowFlash="true"
+               	required="#{empty required ? false : required}"
+               	acceptedTypes="#{empty acceptedTypes ? pdf : acceptedTypes}"
+               	maxFilesQuantity="#{empty maxFilesQuantity ? 1 : maxFilesQuantity }"
+            	fileUploadListener="#{fileHome.listener}"
+               	autoclear="#{autoclear}"
+               	immediateUpload="#{empty immediateUpload ? true : immediateUpload}"
+               	listWidth="#{empty listWidth ? '260px' : listWidth}" 
+               	listHeight="#{empty listHeight ? '58px' : listHeight}"
+               	noDuplicate="#{empty noDuplicate ? true : noDuplicate}"
+               	onupload="#{onupload}"
+               	onuploadcomplete="#{onuploadcomplete}"
+  				addControlLabel="Adicionar" 
+				clearAllControlLabel="Limpar" 
+				clearControlLabel=""
+               	stopControlLabel="Parar"
+               	stopEntryControlLabel="Parar"
+               	uploadControlLabel="Processar"
+               	cancelEntryControlLabel="Cancelar"
+               	doneLabel="Enviado"            
+               	sizeErrorLabel="Erro! Tamanho máximo 2MB."
+               	validator="nullValidator"
+               	validatorMessage="campo obrigatório."
+               	requiredMessage="erro, campo obrigatorio">
+               	<ui:insert />
+				<a:support 
+					ajaxSingle="true"
+					reRender="uploadBaseDiv"
+               		event="onuploadcomplete">
+				</a:support>	               	
+            </rich:fileUpload>
+            
+            
+			<script>
+			  function getData() {
+			     return document.getElementById('#{form.formId}Form:modelo:uploadArquivoDecoration:hiddenBase64').value;			     
+			  }
+			</script>     				
+
+
+
+			<s:div id="uploadBaseDiv">
+				<s:div rendered="#{!fileUpload.isEmpty() or true}">
+				#{currentTime}
+					<h:inputHidden id="hiddenBase64" value="#{fileUpload.dataB64}" />
+					#{!fileUpload.isEmpty()}	
+					
+					<applet width="70" height="25" id="certificacao" 
+						code="SmartCardSignerApplet" archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+						<param name="signButtonCaption" value="Certificar" />
+						<param name="urlDownload" value="#{util.urlProject}/certificado/" />
+						<param name="caListDownloadFile" value="#{util.urlProject}/downloadCaList.seam" />
+						#{util.urlProject}
+					</applet> 
+				</s:div>
+			</s:div>            
+						
+			<a href="javascript:alert(getData())">Teste</a>
+						
+		</s:decorate>
+	</ui:composition>
+</jsp:root>

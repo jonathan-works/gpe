@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:rich="http://richfaces.org/rich">
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+	<rich:dataTable value="#{values}" 
+		id="#{id}"
+		rowKeyVar="key"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+		onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+		styleClass="#{styleClass}"
+		style="#{style}"
+		var="row">
+		<rich:column style="padding:2px; width: 20px"
+			styleClass="dr-table-subheader rich-table-subheader">
+			<f:facet name="header">
+				<ui:insert name="headerToolBar" />
+			</f:facet>
+			<div onmouseover="firstChild.style.visibility='visible'"
+				onmouseout="firstChild.style.visibility='hidden'"
+				style="width: 99%; text-align: center;"
+				><div style="visibility: hidden;">
+					<ui:insert name="toolBar"/>
+				</div>
+			</div>
+		</rich:column>
+		<ui:insert name="columns"/>
+	</rich:dataTable>
+
+</ui:composition>

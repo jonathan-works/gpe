@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<!--
+	  IBPM - Ferramenta de produtividade Java
+	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+	 
+	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+	  Free Software Foundation; versão 2 da Licença.
+	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+	  
+	  Consulte a GNU GPL para mais detalhes.
+	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+	  veja em http://www.gnu.org/licenses/  
+	-->
+		
+	<ui:composition>
+	
+		<a:loadScript src="/js/imageUpload.js" />
+		
+		<ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+		<s:div 
+			rendered="#{rendered}"
+			style="float: left; padding-left:3px">
+			<rich:simpleTogglePanel 
+				id="uploadImagem"
+				switchType="ajax" opened="false"
+				label="Álbum de imagens"
+				onclick="configureDragDrop()">
+	            <rich:fileUpload 
+	            	fileUploadListener="#{imageFileUpload.listener}"
+	                id="upload"
+	                ajaxSingle="true"
+	                onupload="uploadHandler(event, '#{imageFileUpload.imagePath}')"
+					onuploadcomplete="insert()"
+	                autoclear="true"
+	                maxFilesQuantity="10"
+					addControlLabel="Nova imagem" 
+					clearAllControlLabel="Limpar todas" 
+					clearControlLabel="Limpar"
+	                stopEntryControlLabel="Parar" 
+	                uploadControlLabel="Processar"                
+	                listWidth="250px"
+	                listHeight="0px"
+	                immediateUpload="true"
+	                noDuplicate="true"
+	                status=":status"
+	                allowFlash="true"
+	                reRender="uploadImagem"
+	                acceptedTypes="jpg, gif, png">
+	            </rich:fileUpload>
+	            <h:form>
+		           	<rich:dataGrid 
+		           		style="margin-left: 1px; width: 251px;"
+		           		value="#{imageFileUpload.images}" 
+		           		elements="20"
+		           		columns="4" var="img">
+		            	<s:div style="text-align:center">
+			            	<img src="#{img}" 
+			            	style="width:50px;" 
+			            	title="Arraste para o documento" />
+		            	</s:div>
+			           	<f:facet name="footer">
+			                <rich:datascroller></rich:datascroller>
+			            </f:facet>
+		            	
+		           	</rich:dataGrid> 
+	            </h:form>
+		</rich:simpleTogglePanel> 
+		</s:div>
+	</ui:composition>
+</jsp:root>		

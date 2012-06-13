@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+
+	<!--
+	  IBPM - Ferramenta de produtividade Java
+	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+	 
+	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+	  Free Software Foundation; versão 2 da Licença.
+	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+	  
+	  Consulte a GNU GPL para mais detalhes.
+	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+	  veja em http://www.gnu.org/licenses/  
+	-->
+	
+	<f:subview id="#{id}eventSubView">
+		<s:div id="#{id}Div" style="overflow:auto; padding:1px">
+			<s:div style="width:200px; float:left" id="#{id}EventList">
+			<ui:decorate template="dataTable.xhtml">
+				<ui:param name="values" value="#{parent.eventList}" />
+				<ui:param name="styleClass" value="tabelaVariaveis" />
+				<ui:param name="parentId" value="#{id}" />
+				<ui:param name="id" value="#{id}Table" />
+				
+				<ui:define name="headerToolBar">
+					 <a:commandLink 
+					 		action="#{parent.addEvent()}"
+					 		ajaxSingle="true"
+					 		immediate="true"
+					 		reRender="#{parentId}Div">
+							<h:graphicImage url="/img/add.gif" 
+								title="Novo evento"
+								style="margin-right:5px" />
+					 </a:commandLink>
+				</ui:define>
+				<ui:define name="toolBar">
+					<h:graphicImage title="Excluir "
+						style="cursor:pointer" 
+						url="/img/remove.png">
+						<a:support event="onclick" 
+							action="#{parent.removeEvent(row)}"
+							ajaxSingle="true"
+							onclick="if(!confirm('Confirma?')) return false;"
+							reRender="#{parentId}Div"/>
+					</h:graphicImage>
+				</ui:define>
+				<ui:define name="columns">
+					<rich:column style="padding-left:2px">
+						<f:facet name="header">Eventos</f:facet>
+						 <a:commandLink ajaxSingle="true"
+						 	action="#{parent.setCurrentEvent(row)}"
+						 	value="#{messages['jbpm.'.concat(row.event.eventType)]}"
+						 	rendered="#{row.event.eventType != 'new-event'}"
+						 	style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
+						 	reRender="#{parentId}Div" />
+						<wi:selectOneMenu id="events" 
+							noSelectionLabel="Selecione..."
+							width="150px"
+							widthDiv="150px"
+							rendered="#{row.event.eventType == 'new-event'}"
+							items="#{parent.supportedEventTypes}"
+							optionLabel="#{messages['jbpm.'.concat(v)]}"
+							value="#{parent.eventType}">
+							<wi:ajaxSupport reRender="#{parentId}Div" />
+						</wi:selectOneMenu>
+					</rich:column>
+				</ui:define>
+			</ui:decorate>
+			
+			<ui:param name="event" value="#{parent.currentEvent}" />
+			<s:div style="padding-top:5px" rendered="#{!empty event}">
+				<ui:decorate template="dataTable.xhtml">
+					<ui:param name="values" value="#{event.actions}" />
+					<ui:param name="styleClass" value="tabelaVariaveis" />
+					<ui:param name="parentId" value="#{id}" />
+					<ui:param name="id" value="#{id}Actions" />
+					
+					<ui:define name="headerToolBar">
+						 <a:commandLink 
+						 		action="#{event.addAction()}"
+						 		ajaxSingle="true"
+						 		immediate="true"
+						 		reRender="#{parentId}Div">
+								<h:graphicImage url="/img/add.gif" 
+									title="Nova ação"
+									style="margin-right:5px" />
+						 </a:commandLink>
+					</ui:define>
+					<ui:define name="toolBar">
+						<h:graphicImage title="Excluir "
+							style="cursor:pointer" 
+							url="/img/remove.png">
+							<a:support event="onclick" 
+								action="#{event.removeAction(row)}"
+								ajaxSingle="true"
+								onclick="if(!confirm('Confirma?')) return false;"
+								reRender="#{parentId}Div"/>
+						</h:graphicImage>
+					</ui:define>
+					<ui:define name="columns">
+						<rich:column style="padding-left:2px">
+							<f:facet name="header">Ações</f:facet>
+							 <a:commandLink ajaxSingle="true"
+							 	action="#{event.setCurrentAction(row)}"
+							 	rendered="#{row.event.eventType != 'new-event'}"
+							 	style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
+							 	reRender="#{parentId}Div">
+							 	<a:outputPanel>
+							 		<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+								 		<h:graphicImage url="/img/jbpm/#{event.getIcon(row)}.gif" />
+								 		<h:outputText style="#{row == event.currentAction ? 'font-weight: bold' : ''}"
+								 			value="#{empty row.name ? 'Ação '.concat(key + 1) : row.name}" />
+							 		</h:panelGrid>
+							 	</a:outputPanel>
+							 </a:commandLink>
+							<wi:selectOneMenu id="events" 
+								width="100%"
+								widthDiv="100%"
+								rendered="#{row.event.eventType == 'new-event'}"
+								items="#{parent.supportedEventTypes}"
+								value="#{parent.eventType}">
+								<wi:ajaxSupport reRender="#{parentId}Div" />
+							</wi:selectOneMenu>
+						</rich:column>
+					</ui:define>
+				</ui:decorate>
+			</s:div>
+			</s:div>
+			
+			<s:div id="#{id}EventDiv"
+				style="float:left; margin-left:5px; width:500px">
+				<c:if test="#{!empty event.currentActionType and !empty event.currentAction}">
+					<ui:param name="eventDiv" value="#{id}Div" />
+					<wi:inputText id="#{id}ActionName"
+						value="#{event.currentAction.name}" 
+						label="Nome">
+						<wi:ajaxSupport reRender="#{eventDiv}" />
+					</wi:inputText>
+					<ui:include src="forms/#{event.currentActionType}.xhtml">
+						<ui:param name="widthDiv" value="100%" />
+						<ui:param name="height" value="height:100px" />
+					</ui:include>
+				</c:if>
+			</s:div>
+		</s:div>
+	</f:subview>
+	
+</ui:composition>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:a="http://richfaces.org/a4j"
+			    xmlns:c="http://java.sun.com/jstl/core"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
+
+	<!--
+	  IBPM - Ferramenta de produtividade Java
+	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+	 
+	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+	  Free Software Foundation; versão 2 da Licença.
+	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+	  
+	  Consulte a GNU GPL para mais detalhes.
+	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+	  veja em http://www.gnu.org/licenses/  
+	-->         
+	            
+	<ui:param name="pageTitle" value="#{messages['processo.titlePage']}" />
+	<ui:define name="title">#{pageTitle}</ui:define>
+	
+	<ui:param name="home" value="#{processoHome}" />
+	<ui:param name="showMenu" value="false" />
+	
+	<ui:define name="body">
+		<s:div id="script">
+		<f:verbatim>
+			<script type="text/javascript">
+		    	function verifyFields() { 
+		        	var taskCompleted = "#{util.getFromEventContext('taskCompleted')}";
+		        	if(taskCompleted != '') {
+			        	try {
+		        			opener.atualizaPainelFluxo();
+			        	} catch(e) {}
+			        	var canClosePanel = "#{util.getFromEventContext('canClosePanel')}";
+			        	if(canClosePanel != '') {
+			        		window.close();
+			        	} else {
+			        		location = location.href;
+			        	}
+		        	} else {
+		        		hideLoading();
+		        	}
+		    	}
+		    </script>
+		  </f:verbatim>
+		</s:div>
+		<style>
+			.positionImg {top: 63px;} 
+			.propertyView { min-width: 150px }
+		</style>
+		
+		<a:form>
+			<a:jsFunction name="renderButtons" reRender="taskButtonsDiv"/>
+		</a:form>
+		
+		<s:div rendered="#{processoHome.managed}">
+			<wi:view form="#{consultaSolicitacaoView}" 
+			         title="#{messages['consultaSolicitacaoGrid.titulo']} #{processoHome.instance} - #{taskInstance.name}"
+			         columns="4"
+			         opened="false"
+			         buttons="none">
+			</wi:view>
+		</s:div>
+		<rich:tabPanel switchType="ajax" 
+					   headerSpacing="2"
+					   selectedTab="#{home.tab}">
+				<rich:tab id="tabFluxo" 
+						  rendered="#{!processoHome.managed}" 
+						  label="Escolher fluxo" 
+						  status=":status" 
+						  action="#{processoHome.limpar()}">
+					<h:messages	id="globalMessages" 
+								globalOnly="true" 
+								styleClass="message" />
+					se estiver faltando algo aqui, favor relatar.
+				</rich:tab>
+			
+			<rich:tab id="tabEntrada"
+					  rendered="#{!empty taskInstanceView.fields}"
+					  label="Entrada" 
+					  status=":status">	
+				<s:div id="divDocAnterior">
+					<wi:form canEdit="true"
+					    	 formTitle="#{taskInstance.name}"
+					    	 home="#{taskInstanceHome}"
+					    	 form="#{taskInstanceView}" />
+				</s:div>
+			</rich:tab>	
+			
+			<rich:tab id="tabSaida" 
+					  rendered="#{processoHome.managed}"
+					  label="Saída" 
+					  status=":status">
+				<c:if test="#{empty taskPageAction.taskPagePath}">
+					<s:div id="taskInstanceDiv">
+						<wi:form canEdit="true"
+				    			 formTitle="#{taskInstance.name}"
+						    	 home="#{taskInstanceForm.home}"
+						    	 reRenderSave="taskInstanceDiv"
+						    	 form="#{taskInstaceForm}" />
+					</s:div>
+				</c:if>
+				<c:if test="#{not empty taskPageAction.taskPagePath}">
+					<ui:include src="#{taskPageAction.taskPagePath}" />
+				</c:if>
+			</rich:tab>			
+			
+			<rich:tab id="tabAnexar" 
+					  rendered="#{processoHome.managed}"
+					  label="Anexar Documento" 
+					  status=":status"
+					  action="#{processoDocumentoHome.newInstance()}">
+				<s:div id="divAnexarDocumentos">
+					<div id="anexarImagem" style="width: 25%; right:5px; position:absolute;">
+						<wi:imageUpload rendered="#{processoDocumentoHome.modelo}"/>
+					</div>
+					<div style="width: 75%; left:1px; ">
+						<wi:form isUploadForm="true"
+								 form="#{anexarDocumentoForm}" 
+								 formTitle="Cadastro do Documento" 
+								 home="#{processoDocumentoHome}"
+								 reRenderSave="divAnexarDocumentos"/>
+					</div>
+				</s:div>
+			</rich:tab>	
+			
+			<rich:tab id="tabAnexos" 
+					  rendered="#{processoHome.managed}"
+					  label="Documentos do Processo" 
+					  status=":status">
+				<s:div id="divDocumentosProcesso">
+					    <wi:datalist bean="#{documentoProcessoGrid}" 
+							    	 title="Documentos do Processo #{home.instance}"
+							    	 toolBar="none"
+							    	 headerToolBar="none"
+							    	 columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin">
+					    </wi:datalist>
+				</s:div>
+			</rich:tab>
+			
+			<rich:tab id="tabMovimentacoes" 
+					  rendered="#{processoHome.managed}"
+					  label="Movimentações do Processo"
+					  switchType="ajax" 
+					  status=":status">
+				<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+			</rich:tab>
+		</rich:tabPanel> 
+	</ui:define>
+
+</ui:composition>

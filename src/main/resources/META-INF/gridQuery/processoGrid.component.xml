@@ -1,0 +1,51 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: processoGrid.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="processoGrid" class="br.com.itx.component.grid.GridQuery">
+		<property name="ejbql">
+		<![CDATA[
+		select o from Processo o
+			where o.numeroProcesso <> ''
+		]]>
+		</property>
+		<property name="maxResults">10</property>
+		<property name="gridId">processo</property>
+		<property name="key">idProcesso</property>
+		<property name="columns">
+			<value>fluxo : {properties : {order: codFluxo}}</value>
+			<value>complemento</value>			
+			<value>numeroProcesso</value>			
+			<value>usuarioCadastroProcesso</value>			
+			<value>numeroProcessoOrigem</value>			
+			<value>dataInicio: { valueType: date, properties : { pattern: "dd/MM/yy kk:mm" } }</value>			
+		</property>
+		<property name="restrictions">
+			<value>fluxo = #{processoSearch.fluxo}</value>
+			<value>fluxo.idFluxo = #{fluxoHome.id}</value>
+			<value>o not in (select list from Processo obj join obj.processoConexoListForIdProcesso list
+					where obj.idProcesso = #{processoHome.definedInstance.idProcesso})
+			</value> 
+			<value>o not in (select list from PrioridadeProcesso obj join obj.processoList list
+					where obj.idPrioridadeProcesso = #{prioridadeProcessoHome.definedInstance.idPrioridadeProcesso})
+			</value> 
+			<value>o not in (select list from Processo obj join obj.processoConexoListForIdProcessoConexo list
+					where obj.idProcesso = #{processoHome.definedInstance.idProcesso})
+			</value> 
+			<value>lower(complemento) like concat(lower(#{processoSearch.complemento}),'%')</value>
+			<value>lower(numeroProcesso) like concat(lower(#{processoSearch.numeroProcesso}),'%')</value>
+			<value>usuarioCadastroProcesso = #{processoSearch.usuarioCadastroProcesso}</value>
+			<value>usuarioCadastroProcesso.idUsuario = #{usuarioHome.id}</value>
+			<value>lower(numeroProcessoOrigem) like concat(lower(#{processoSearch.numeroProcessoOrigem}),'%')</value>
+		</property>		
+		<property name="searchFields">
+			<value>fluxo : {type : combo, properties: {items: fluxoItems}}</value>
+			<value>numeroProcesso</value>
+		</property>
+		<property name="order">numeroProcesso</property>
+	</component>
+	
+	<component name="processoSearch" class="br.com.infox.ibpm.entity.Processo" />	
+	
+</components>

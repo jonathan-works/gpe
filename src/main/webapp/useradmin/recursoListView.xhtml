@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:wi= "http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+
+	<ui:param name="canEdit" value="#{s:hasPermission('seam.role', 'update')}" />
+
+	<ui:param name="home" value="#{papelHome}" />
+
+	<ui:define name="title">Cadastro de Recursos</ui:define>
+
+    <ui:define name="searchGrid">
+   
+		<wi:datagrid 
+	    	canRemove="#{s:hasPermission('seam.role', 'delete')}"
+	    	bean="#{recursoGrid}"
+	    	searchBean="#{recursoSearch}" 
+	    	title="Recursos"
+	    	headerToolBar="none"
+	    />
+    </ui:define>
+
+	<ui:define name="form">
+		<ui:include src="recursoEdit.xhtml" />
+	</ui:define>
+
+</ui:composition>

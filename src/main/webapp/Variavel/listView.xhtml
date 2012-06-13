@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+				template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+	
+		<!--
+		  IBPM - Ferramenta de produtividade Java
+		  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+		 
+		  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+		  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+		  Free Software Foundation; versão 2 da Licença.
+		  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+		  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+		  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+		  
+		  Consulte a GNU GPL para mais detalhes.
+		  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+		  veja em http://www.gnu.org/licenses/  
+		-->             
+		          
+	<ui:define name="title">
+		#{messages['variavel.titlePage']}
+	</ui:define>
+	
+	<ui:param name="home" value="#{variavelHome}" />
+	
+	<ui:define name="searchGrid">   
+	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
+	    <wi:datagrid 
+	    	bean="#{variavelGrid}" 
+	    	searchBean="#{variavelSearch}" 
+	    	title="#{messages['variavel.titleGrid']}"/>
+	</ui:define>
+	
+	<ui:define name="form">
+		<c:if test="#{canEdit}">
+			<wi:form form="#{variavelForm}" formTitle="#{messages['variavel.titleForm']}" 
+			         persistSemNewInstance="true"/>
+		</c:if>
+		<c:if test="#{not canEdit}">
+			<wi:view form="#{variavelView}" columns="4" title="#{messages['variavel.titleView']}"/>
+		</c:if>
+	</ui:define>
+
+	<ui:define name="tabs">
+		<rich:tab label="Tipos de Modelo de Documento"
+			rendered="#{home.managed}">
+			<wi:ajaxDiv id="divM2MVar">
+				<wi:m2mGrid 
+					title="Lista de Tipos de Modelo"
+					gridId="tipoModeloDocumentoList"
+					leftGrid="#{tipoModeloVariavelGrid}" 
+					useDatamodel="false"
+					addExpression="variavelTipoModeloHome.addTipoModeloVariavel(row, 'tipoModeloVariavelGrid')"
+					removeExpression="variavelTipoModeloHome.removeTipoModeloVariavel(row, 'tipoModeloDocumentoGrid')"
+					rightGrid="#{tipoModeloDocumentoGrid}"
+					searchBean="#{tipoModeloDocumentoSearch}" 
+					showLogicOperator="false" 
+					showButtonLimpar="false"
+					widthExterno="100%" />
+			</wi:ajaxDiv>
+		</rich:tab>
+	</ui:define> 	
+</ui:composition>

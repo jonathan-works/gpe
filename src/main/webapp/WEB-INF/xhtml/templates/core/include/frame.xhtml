@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->	
+
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:s="http://jboss.com/products/seam/taglib">
+
+    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />   
+         
+    <div class="bordaBox">   
+       <b class="b1"></b>      
+       <b class="b2"></b>       
+       <b class="b3"></b>        
+       <b class="b4"></b>      
+       <div class="conteudo">  			  
+	      <s:div styleClass="tituloPagina" >
+  		  	  <ui:insert name="title">#{title}</ui:insert>
+  		  </s:div>	
+		  <div class="subBorda">
+		  	  <div id="divOverflow" style="color: black">			  
+	              <!-- Aki ficara o conteudo da pagina -->
+				  <ui:insert />
+			  </div>				  	   								   						   	    
+		  </div>	
+	   </div>
+	   <b class="b4"></b>
+       <b class="b3"></b>
+       <b class="b2"></b>
+       <b class="b1"></b>   
+    </div> 
+ 
+    <script>
+    function ajusta() {
+		cl='.subBorda'  
+		jQuery(cl).css('height', document.body.clientHeight - jQuery(cl).offset().top - 40)
+	}
+	window.onresize=ajusta;
+	ajusta();
+	</script>	
+ 
+   
+</ui:composition>

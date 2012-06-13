@@ -1,0 +1,39 @@
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:c="http://java.sun.com/jstl/core"
+                 xmlns:s="http://jboss.com/products/seam/taglib"
+                 xmlns:rich="http://richfaces.org/rich">
+                 
+    <ui:param name="tipMessage" value="#{empty props.tipMessage ? tipMessage : props.tipMessage}"/>
+	<ui:param name="fieldId" value="#{empty fieldId ? f.id.replaceAll('\\.', '_') : fieldId}"/>
+	<ui:param name="inNewLine" value="#{empty inNewLine ? props.inNewLine : inNewLine}" />
+  
+    <div class="propertyView" 
+    	style="#{empty inNewLine ? '' : 'clear: both;'} width: #{widthDiv} !important; ">
+        <div class="name">
+            <ui:insert name="label"/>
+			<c:if test="#{not empty tipMessage}">
+				<h:graphicImage id="#{fieldId}ViewTipImg"
+								style="height:12px; margin-left:3px; margin-bottom:-2px" 
+								url="/img/help.gif"/>
+				<rich:toolTip for="#{fieldId}ViewTipImg" 
+							  style="background-color:#{richSkin.generalBackgroundColor}; 
+					   				border-color:#{richSkin.panelBorderColor}; padding:5px; font-weight:normal;"
+							  value="#{tipMessage}">
+				</rich:toolTip>
+			</c:if>
+        </div>
+        
+        <div class="value #{invalid?'errors':''}">
+            <s:validateAll>
+               		<ui:insert/>
+            </s:validateAll>
+        </div>
+        
+		<s:message styleClass="error"/>
+		
+    </div>
+    
+</ui:composition>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->   
+                    
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+							xmlns="http://www.w3.org/1999/xhtml"
+							xmlns:s="http://jboss.com/products/seam/taglib"
+							xmlns:ui="http://java.sun.com/jsf/facelets"
+							xmlns:f="http://java.sun.com/jsf/core"
+							xmlns:wi= "http://www.itx.com.br/jsf"
+							xmlns:h="http://java.sun.com/jsf/html"
+							xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+							template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
+    
+	<ui:param name="pageTitle" value="#{messages['consultaSolicitacao.titulo']}" />                       
+	<ui:define name="title">#{pageTitle}</ui:define>
+	
+	<ui:param name="home" value="#{consultaSolicitacaoHome}" />
+	
+	<ui:define name="body">
+	    
+	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
+	    <table width="100%" border="0" style="margin-top: 20px;">
+	    	<tr>
+	    		<td valign="top" width="30%">
+				    <div class='leftPanel'>
+						<wi:form form="#{consultaSolicitacaoForm}" formTitle="Pesquisa" />
+				    </div>
+	    		</td>
+	    		<td valign="top">	
+				    <s:div styleClass='rightPanel' >
+				    	<s:div rendered="#{consultaSolicitacaoHome.instance.inPesquisa}">
+							<div>	
+								<wi:datalist 
+									bean="#{consultaSolicitacaoGrid}" 
+									gridId="consultaSolicitacaoGrid"
+									title="#{messages['consultaSolicitacaoGrid.titulo']}"
+									datamodel="#{consultaSolicitacaoHome.resultList}"
+									useDatamodel="true"
+									searchBean="consultaSolicitacaoSearch"
+									
+									toolBar="toolBarSelect"
+									linkDetalhe="/Processo/Consulta/list.xhtm"
+									
+									headerToolBar="toolBar_pdf"
+									
+									pesqHome="#{consultaSolicitacaoHome}"
+									subList="movimentacaoProcessoList"
+								/>
+							</div>
+						</s:div>
+					</s:div>
+	    		</td>
+	    	</tr>
+	    </table>
+	    
+		<ui:remove>
+	    <s:div id="viewPanel" styleClass='rightPanel' 
+	    	   style="width: 60%; right: 10px; float: right;  margin-top: 10px; !important">      
+	    	<s:div rendered="#{not empty consultaSolicitacaoHome.idPesquisa}">
+				<wi:view form="#{consultaSolicitacaoView}" 
+				         title="#{messages['consultaSolicitacaoGrid.titulo']}"
+				         columns="3" 
+				         buttons="none">
+				</wi:view>
+			</s:div>
+		</s:div>
+		 </ui:remove>
+	    
+	</ui:define>
+
+</ui:composition>

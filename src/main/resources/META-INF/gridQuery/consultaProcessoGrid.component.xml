@@ -1,0 +1,32 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+	<component name="consultaProcessoGrid" class="br.com.itx.component.grid.GridQuery">
+		<property name="ejbql">select o from ProcessoEpa o</property>
+		<property name="maxResults">10</property>
+		<property name="gridId">consultaProcesso</property>
+		<property name="key">idProcesso</property>
+		<property name="columns">
+			<value>numeroProcesso</value>			
+			<value>usuarioCadastroProcesso</value>			
+			<value>dataInicio: { valueType: date, properties : { pattern: "dd/MM/yy kk:mm" } }</value>
+			<value>naturezaCategoriaFluxo.natureza : {properties:{header: #{messages['consultaProcesso.natureza']}}}</value>
+			<value>naturezaCategoriaFluxo.categoria : {properties:{header: #{messages['consultaProcesso.categoria']}}}</value>			
+		</property>
+		<property name="restrictions">
+			<value>o.idProcesso in (#{painelUsuarioHome.processoIdList})</value>  
+			<value>o.caixa.idCaixa = #{painelUsuarioHome.idCaixa}</value>
+			<value>o.numeroProcesso = #{consultaProcessoHome.instance.numeroProcesso}</value>
+			<value>o.naturezaCategoriaFluxo.natureza = #{consultaProcessoHome.instance.natureza}</value>
+			<value>o.naturezaCategoriaFluxo.categoria = #{consultaProcessoHome.instance.categoria}</value>
+			<value>exists ( select pe from ProcessoEpa pe
+						   inner join pe.naturezaCategoriaFluxo.categoria cat
+						   inner join cat.categoriaAssuntolist catAssuntoList
+						   where catAssuntoList.assunto = #{consultaProcessoHome.instance.assunto} and
+						   pe.idProcesso = o.idProcesso)</value>
+			<value><![CDATA[cast(o.dataInicio as date) >= #{consultaProcessoHome.instance.dataInicio} ]]></value>
+            <value><![CDATA[cast(o.dataInicio as date)<= #{consultaProcessoHome.instance.dataFim} ]]></value>
+		</property>		
+		<property name="order">o.numeroProcesso</property>
+	</component>
+		
+</components>

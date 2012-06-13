@@ -1,0 +1,16 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: eventoReport.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="eventoReport" class="br.com.itx.component.Report">
+		<property name="reportId">evento</property>
+		<property name="columns">
+			<value>codEvento</value>
+			<value>evento</value>
+			<value>complemento</value>
+			<value>observacao</value>	
+			<value>eventoSuperior</value>
+		</property> 
+	</component>
+</components>

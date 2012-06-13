@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                       
+	<ui:define name="title">#{messages['agrupamento.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{agrupamentoHome}"/>
+	
+	<ui:define name="searchGrid">
+	    <wi:dataTable values="#{agrupamentoList.list(15)}"
+					  bean="#{agrupamentoList}"
+					  tableTitle="#{messages['agrupamento.titleGrid']}"
+					  id="agrupamentoList"
+					  rowId="#{row.idAgrupamento}">
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarAgrupamentoForm"
+							   formTitle="Pesquisar Agrupamentos">
+					<wi:inputText id="agrupamento"
+									value="#{agrupamentoList.entity.agrupamento}"
+								  	label="#{messages['agrupamento.agrupamento']}"/>
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['agrupamento.ativo']}"
+											  value="#{agrupamentoList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+
+			<wi:columnOutputText columnId="agrupamento"
+								 columnHeader="#{messages['agrupamento.agrupamento']}"
+								 value="#{row.agrupamento}" />
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['agrupamento.ativo']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>			
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="agrupamentoForm"
+					 formTitle="#{messages['agrupamento.titleForm']}">
+			<wi:inputText id="agrupamento"
+						  required="true"
+						  label="#{messages['agrupamento.agrupamento']}"
+						  value="#{agrupamentoHome.instance.agrupamento}" />
+			<wi:selectSituacaoRadio id="ativo"
+								    label="#{messages['agrupamento.ativo']}"
+								    required="true"
+								    value="#{agrupamentoHome.instance.ativo}" />
+		</wi:dataForm>
+	</ui:define>
+	
+	<ui:define name="tabs">
+		<rich:tab id="tabEvento" 
+				  rendered="#{home.managed}" 
+				  label="#{messages['eventoAgrupamento.evento']}"
+				  immediate="true"
+				  status=":status"
+				  action="#{eventoAgrupamentoHome.newInstance()}">
+			<wi:dataForm formId="eventoAgrupamentoForm"
+						 formTitle="#{messages['eventoAgrupamento.titleForm']}">
+				<wi:tree id="evento"
+						 required="true"
+						 tree="#{eventoTree}"
+						 icon="/img/nivelTree.gif"
+			             iconLeaf="/img/file.gif"
+						 assignTo="eventoAgrupamentoHome.instance.evento"
+						 label="#{messages['eventoAgrupamento.evento']}"
+						 value="#{eventoAgrupamentoHome.instance.evento}" />
+				<wi:selectBooleanCheckbox id="multiplo"
+										  label="#{messages['eventoAgrupamento.multiplo']}"
+									      value="#{eventoAgrupamentoHome.instance.multiplo}" />
+				<ui:define name="buttons">
+					<wi:commandButton action="eventoAgrupamentoHome.persist"
+									  value="Incluir"
+									  id="persistEventoAgrupamento"
+									  reRender="eventoAgrupamentoListDiv, eventoAgrupamentoForm"/>
+				</ui:define>
+			</wi:dataForm>
+			<s:div id="eventoAgrupamentoListDiv">
+				<wi:dataTable values="#{eventoAgrupamentoList.list(15)}"
+							  bean="#{eventoAgrupamentoList}"
+							  tableTitle="#{messages['eventoAgrupamento.titleGrid']}"
+							  id="eventoAgrupamentoList">
+					<ui:define name="toolBar">
+						<wi:toolBarRemove actionRemove="eventoAgrupamentoHome.remove(row)"
+										  reRender="eventoAgrupamentoListDiv" />
+					</ui:define>
+					<wi:columnOutputText columnId="evento"
+										 columnHeader="#{messages['eventoAgrupamento.evento']}"
+										 value="#{row.evento}" />
+					<wi:columnOutputText columnId="caminhoCompleto"
+										 columnHeader="#{messages['evento.caminhoCompleto']}"
+										 value="#{row.evento.caminhoCompleto.replaceAll('\\|', '/')}" />
+					<wi:columnBoolean columnId="multiplo"
+									  columnHeader="#{messages['eventoAgrupamento.multiplo']}"
+									  value="#{row.multiplo}" />
+				</wi:dataTable>
+			</s:div>
+		</rich:tab>
+	</ui:define>
+
+</ui:composition>

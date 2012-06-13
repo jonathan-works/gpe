@@ -1,0 +1,14 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: modeloDocumentoReport.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="modeloDocumentoReport" class="br.com.itx.component.Report">
+		<property name="reportId">modeloDocumento</property>
+		<property name="columns">
+			<value>tipoModeloDocumento</value>			
+			<value>tituloModeloDocumento</value>			
+			<value>ativo: { valueType: sim_nao }</value>			
+		</property>
+	</component>
+</components>

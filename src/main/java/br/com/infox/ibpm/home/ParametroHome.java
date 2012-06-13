@@ -1,0 +1,100 @@
+/*
+ IBPM - Ferramenta de produtividade Java
+ Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+
+ Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+ sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+ Free Software Foundation; versão 2 da Licença.
+ Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+ ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+ 
+ Consulte a GNU GPL para mais detalhes.
+ Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+ veja em http://www.gnu.org/licenses/   
+*/
+package br.com.infox.ibpm.home;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage;
+
+import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.ibpm.entity.log.LogUtil;
+import br.com.itx.util.EntityUtil;
+
+
+@Name(ParametroHome.NAME)
+@BypassInterceptors
+public class ParametroHome
+		extends
+			AbstractParametroHome<Parametro> {
+
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "parametroHome";
+	public static final String ID_USUARIO_SISTEMA = "idUsuarioSistema";
+	
+	@Override
+	public String persist() {		 
+		String ret = null;
+		try{
+			ret = super.persist();
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		} 
+		return ret;	
+	}
+	
+	@Override
+	protected boolean beforePersistOrUpdate() {
+		getInstance().setUsuarioModificacao(Authenticator.getUsuarioLogado());
+		getInstance().setDataAtualizacao(new Date());
+		return true;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static String getParametro(String nome) {
+		EntityManager em = EntityUtil.getEntityManager();
+		List<Parametro> resultList = em.createQuery(
+			"select p from Parametro p where " +
+				"nomeVariavel = :nome").setParameter("nome", nome).getResultList();
+		if (!resultList.isEmpty()) {
+			return resultList.get(0).getValorVariavel();
+		}
+		throw new IllegalArgumentException();		
+	}
+	
+	public static String getFromContext(String nomeParametro, boolean validar) {
+		String value = (String) Contexts.getApplicationContext().get(nomeParametro);
+		if (validar && value == null) {
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
+					"Parâmetro não encontrado: " + nomeParametro);			
+		}
+		return value;
+	}
+	
+	public String getIdPagina() {
+		return LogUtil.getIdPagina();
+	}
+	
+	@Override
+	public String remove(Parametro obj) {
+		obj.setAtivo(Boolean.FALSE);
+		getInstance().setDataAtualizacao(new Date());
+		return super.remove(obj);
+	}
+
+	public static Usuario getUsuarioSistema() {
+		int idUsuarioSistema = Integer.parseInt(getParametro(ID_USUARIO_SISTEMA));
+		return EntityUtil.getEntityManager().find(Usuario.class, idUsuarioSistema);
+	}
+}

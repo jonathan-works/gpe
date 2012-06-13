@@ -1,0 +1,148 @@
+package br.com.infox.ibpm.component.tree;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.Query;
+
+import org.jboss.seam.core.Events;
+
+import br.com.infox.component.tree.EntityNode;
+
+public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
+	
+	private static final long serialVersionUID = 1L;
+	protected ArrayList<TarefasEntityNode<E>> rootNodes;
+	protected ArrayList<TarefasEntityNode<E>> nodes;
+	protected List<EntityNode<E>> caixas;
+	private List<Query> queryCaixas = new ArrayList<Query>();
+	
+	public TarefasEntityNode(Query queryChildren) {
+		super(queryChildren);
+	}
+
+	public TarefasEntityNode(List<Query> queryChildren, List<Query> queryCaixas) {
+		super(queryChildren);
+		this.setQueryCaixas(queryCaixas);
+	}
+
+	public TarefasEntityNode(EntityNode<Map<String,Object>> parent, 
+			Map<String,Object> entity,
+			List<Query> queryChildren, List<Query> queryCaixas) {
+		super(parent, entity, queryChildren);
+		this.queryCaixas = queryCaixas;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<EntityNode<E>> getCaixas() {
+		if (caixas == null) {
+			caixas = new ArrayList<EntityNode<E>>();
+			boolean parent = true;
+			for (Query query : queryCaixas) {
+				if (!isLeaf()) {
+					List<E> children = (List<E>) getCaixasList(query, entity); 
+					for (E n : children) {
+						if (!n.equals(ignore)) {
+							EntityNode<E> node = (EntityNode<E>) createChildNode((Map<String, Object>) n);
+							node.setIgnore((E) ignore);
+							node.setLeaf(!parent);
+							caixas.add(node);
+						}
+					}
+					parent = false;
+				}
+			}
+			
+			Events.instance().raiseEvent("entityNodesPostGetNodes", caixas);
+		}
+		return caixas;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TarefasEntityNode<E>> getRootsFluxos(Query queryRoots) {
+		if (rootNodes == null) {
+			rootNodes = new ArrayList<TarefasEntityNode<E>>();
+			List<E> roots = queryRoots.getResultList();
+			for (E e : roots) {
+				if (!e.equals(ignore)) {
+					TarefasEntityNode<Map<String, Object>> node = createRootNode((Map<String, Object>) e);
+					node.setIgnore(ignore);
+					rootNodes.add((TarefasEntityNode<E>) node);
+				}
+			}
+		}
+		return rootNodes;
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<TarefasEntityNode<E>> getNodesTarefas() {
+		if (nodes == null) {
+			nodes = new ArrayList<TarefasEntityNode<E>>();
+			boolean parent = true;
+			for (Query query : queryChildren) {
+				if (!isLeaf()) {
+					List<E> children = (List<E>) getChildrenList(query, entity); 
+					for (E n : children) {
+						if (!n.equals(ignore)) {
+							TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
+							node.setIgnore(ignore);
+							node.setLeaf(!parent);
+							nodes.add((TarefasEntityNode<E>) node);
+						}
+					}
+					parent = false;
+				}
+			}
+			
+			Events.instance().raiseEvent("entityNodesPostGetNodes", nodes);
+		}
+		return nodes;
+	}
+	
+	@Override
+	protected TarefasEntityNode<Map<String,Object>> createRootNode(Map<String,Object> n) {
+		return new TarefasEntityNode<Map<String,Object>>(null, n, getQueryChildren(), queryCaixas);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected List<Map<String,Object>> getChildrenList(Query query, Map<String,Object> entity) {
+		return query.setParameter("idFluxo", entity.get("idFluxo"))
+				.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected List<Map<String,Object>> getCaixasList(Query query, Map<String,Object> entity) {
+		return query.setParameter("taskId", entity.get("idTask"))
+				.getResultList();
+	}
+
+	@Override
+	public String getType() {
+		return (String) getEntity().get("type");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected TarefasEntityNode<Map<String,Object>> createChildNode(Map<String,Object> n) {
+		TarefasEntityNode node = new TarefasEntityNode(this, n, getQueryChildren(), queryCaixas);
+		return node;
+	}
+		
+	public Integer getTaskId() { 
+		if (getEntity() != null) {
+			return (Integer) getEntity().get("idTask");
+		}
+		return 0;
+	}
+
+	public void setQueryCaixas(List<Query> queryCaixas) {
+		this.queryCaixas = queryCaixas;
+	}
+
+	public List<Query> getQueryCaixas() {
+		return queryCaixas;
+	}
+
+}

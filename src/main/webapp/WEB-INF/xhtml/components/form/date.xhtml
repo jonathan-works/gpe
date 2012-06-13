@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:c="http://java.sun.com/jstl/core">
+	
+	<ui:param name="dataCorrenteMenor" value="#{empty dataCorrenteMenor ? props.dataCorrenteMenor : dataCorrenteMenor}"/>
+	<ui:param name="future" value="#{wi:get(props.future, false)}" />
+	<ui:param name="past" value="#{wi:get(props.past, false)}" />
+	
+	<a:loadScript src="/js/components.js"/>
+	<s:decorate id="#{id}Decoration"
+				template="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' :  template}"
+				rendered="#{empty rendered or rendered}">
+		<ui:define name="label">#{label}</ui:define>
+			<rich:calendar id="#{id}" 
+						   direction="auto"
+						   enableManualInput="#{empty props.enableManualInput ? (empty enableManualInput ? true : enableManualInput) : props.enableManualInput}"
+						   inputStyle="width: 100px" 
+						   disabled="#{empty props.disabled ? (disabled ? false : disabled) : props.disabled}"
+						   readonly="#{empty props.readonly ? (readonly ? false : readonly) : props.readonly}"
+						   required="#{required}" 
+						   value="#{value}" 
+						   showWeeksBar="#{wi:get(showWeeksBar, false)}"
+						   inputClass="#{id}maskDate"
+						   datePattern="#{empty props.pattern ? (empty pattern ? 'dd/MM/yyyy' : pattern) : props.pattern}"
+						   oninputblur="validarData(this); #{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}"
+						   onchanged="#{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}"
+						   reRender="#{empty props.reRender ? reRender : props.reRender}"
+						   style="width: 200px;"
+						   showApplyButton="#{empty props.showApplyButton ? (empty showApplyButton ? false : showApplyButton) : props.showApplyButton}">
+						   
+				<c:if test="#{future}" >
+					<f:validator validatorId="futureDateValidator" />
+				</c:if>
+				<c:if test="#{past}" >
+					<f:validator validatorId="pastDateValidator" />
+				</c:if>
+				<ui:insert />
+			</rich:calendar>
+		<c:if test="#{empty props.enableManualInput ? (empty enableManualInput ? true : enableManualInput) : props.enableManualInput}">
+			<wi:mask selector=".#{id}maskDate" mask="#{empty props.mask ? (empty mask ? '99/99/9999' : mask) : props.mask}"/>
+		</c:if>
+	</s:decorate>
+	
+</ui:composition>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informa??o Ltda.
+ 
+  Este programa ? software livre; voc? pode redistribu?-lo e/ou modific?-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; vers?o 2 da Licen?a.
+  Este programa ? distribu?do na expectativa de que seja ?til, por?m, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia impl?cita de COMERCIABILIDADE OU 
+  ADEQUA??O A UMA FINALIDADE ESPEC?FICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Voc? deve ter recebido uma c?pia da GNU GPL junto com este programa; se n?o, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+				
+	<c:if test="#{! empty form}">
+
+		<ui:param name="formId" value="#{empty formId ? form.formId.concat('Form') : formId}"/>
+		<ui:param name="formIdAcs" value="#{form.formId.concat('Form')}"/>
+		
+		<c:if test="#{not empty home}">
+			#{form.setHome(home.homeName)}
+		</c:if>
+		
+		<ui:param name="home" value="#{empty home ? form.home : home}"/>
+		<ui:param name="instance" value="#{home.instance}"/>
+		
+	    <c:if test="#{form.tabbed}">
+	    <rich:tabPanel switchType="client">
+			<wi:repeat value="#{form.rootFields}" var="rf">
+				<ui:param name="id" value="#{rf.id}"/>
+				<ui:param name="props" value="#{rf.properties}" />
+				<ui:param name="value" value="#{home.instance[id]}" />			
+				<ui:param name="label" 
+						  value="#{empty props.label ? rf.label : props.label}"/>
+				<ui:param name="label" 
+						  value="#{expressions.createValueExpression(label).value}" />
+				<ui:param name="rendered" 
+						  value="#{empty props.rendered ? rf.rendered : props.rendered}"/>
+				<ui:param name="rendered" 
+						  value="#{empty rendered ? true : rendered}"/>
+				<ui:param name="required" 
+						  value="#{empty props.required ? rf.required : props.required}"/>
+				<ui:param name="disabled" 
+						  value="#{props.disabled}"/>
+				<ui:param name="reRender" 
+						  value="#{empty props.reRender ? reRender : props.reRender}"/>
+				<ui:param name="readonly" 
+						  value="#{empty props.readonly ? false : util.eval(props.readonly)}"/>
+				<ui:param name="maxlength" 
+						  value="#{props.length}" />
+				<ui:param name="bypassUpdate" value="#{props.bypassUpdate}"/>
+				<ui:include id="#{rf.id}" 
+							src="/WEB-INF/xhtml/components/form/#{rf.type}.xhtml" />
+			</wi:repeat>
+		</rich:tabPanel>
+		</c:if>
+	    <c:if test="#{!form.tabbed}">
+			<wi:repeat value="#{form.fields}" var="f">			
+				<ui:param name="id" value="#{f.id}"/>
+				<ui:param name="props" value="#{f.properties}"/>
+				<ui:param name="value" value="#{home.instance[id]}" />			
+				<ui:param name="disabled" value="#{props.disabled}"/>
+				<ui:param name="label" 
+						  value="#{empty props.label ? f.label : props.label}"/>
+				<ui:param name="label" 
+						  value="#{expressions.createValueExpression(label).value}" />
+				<ui:param name="rendered" 
+						  value="#{empty props.rendered ? f.rendered : props.rendered}"/>
+				<ui:param name="rendered" 
+						  value="#{empty rendered ? true : rendered}"/>
+				<ui:param name="required" 
+						  value="#{empty props.required ? f.required : props.required}"/>
+				<ui:param name="bypassUpdate" 
+						  value="#{props.bypassUpdate}"/>
+				<ui:param name="reRender" 
+						  value="#{empty props.reRender ? reRender : props.reRender}"/>
+				<ui:param name="readonly" 
+						  value="#{empty props.readonly ? false : util.eval(props.readonly)}"/>
+				<ui:param name="maxlength" 
+						  value="#{props.length}" />
+				<ui:param name="type" 
+						  value="#{f.type.startsWith('documentoIdentificacaoHome') ? 'docsIdentificacao/'.concat(util.eval(f.type)) : f.type }" />
+				<a:include id="#{id}" 
+						   viewId="/WEB-INF/xhtml/components/form/#{type}.xhtml">
+				</a:include>
+			</wi:repeat>
+		</c:if>
+        <div style="clear:both">
+        	<s:div rendered="#{canEdit and !empty form.fields and form.hasRequiredField()}">           	                     
+               <img src="#{util.contextPath}#{a4jSkin.imgIconBalao}"/> 
+               <span class="required">*</span>
+               Campos Obrigatórios                                                       	
+            </s:div>
+        </div>
+	            
+		<c:if test="#{canEdit}">
+			<ui:param name="buttons" 
+					  value="#{form.buttons.id}#{empty modalPanelId ? '' : '_modal'}" />
+			<ui:include src="/WEB-INF/xhtml/components/form/buttons/#{buttons}.xhtml"/>
+		</c:if>
+		    
+		<f:verbatim>
+			<script>
+				if ($("#{formId}:#{formId}Messages")) {
+					setTimeout("if ($('#{formId}:#{formId}Messages')) $('#{formId}:#{formId}Messages').style.display='none'", 10000);
+				}
+
+				if ($("#{formId}:#{formId}MessagesTop")) {
+					setTimeout("if ($('#{formId}:#{formId}MessagesTop')) $('#{formId}:#{formId}MessagesTop').style.display='none'", 10000);
+				}
+			</script>
+		</f:verbatim>
+
+		<div style="clear:both"></div>
+		<s:fragment rendered="#{!empty focus}">
+			<script>
+				setTimeout("$('#{formId}:#{focus}:#{focus}Decoration:#{focus}').focus()", 100);
+			</script>
+		</s:fragment>
+	</c:if>
+
+</ui:composition>

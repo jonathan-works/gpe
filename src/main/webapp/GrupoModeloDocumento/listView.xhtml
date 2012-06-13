@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->                       
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+				template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	
+	<ui:define name="title">#{messages['grupoModeloDocumento.titlePage']}</ui:define>
+	<ui:param name="home" value="#{grupoModeloDocumentoHome}" />
+	
+	<ui:define name="searchGrid"> 
+		<wi:dataTable values="#{grupoModeloDocumentoList.list(15)}"
+								bean="#{grupoModeloDocumentoList}"
+								tableTitle="#{messages['grupoModeloDocumento.titleGrid']}"
+								id="grupoModeloDocumentoList"
+								rowId="#{row.idGrupoModeloDocumento}">
+			<ui:define name="searchForm">
+				<wi:searchForm formId="grupoModeloDocumentoSearchForm"
+										   formTitle="#{messages['grupoModeloDocumento.titleGrid']}">
+				
+					<wi:inputText id="grupoModeloDocumento"
+											label="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
+											value="#{grupoModeloDocumentoList.entity.grupoModeloDocumento}"
+											length="50" />			
+					<wi:selectSituacaoOneMenu id="ativo"
+																	value="#{grupoModeloDocumentoList.entity.ativo}" />								
+				</wi:searchForm>
+			</ui:define>
+			<ui:define name="headerToolBar">
+				<wi:toolBarReport  />
+			</ui:define>
+			<wi:columnOutputText columnId="grupoModeloDocumento"
+												   columnHeader="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
+												   value="#{row.grupoModeloDocumento}"/>					
+			<wi:columnSituacao  columnHeader="#{messages['grupoModeloDocumento.ativo']}" />					
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="grupoModeloDocumentoForm"
+					 formTitle="#{messages['grupoModeloDocumento.titleForm']}">
+								
+			<wi:inputText id="grupoModeloDocumento"
+						  label="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
+						  value="#{home.instance.grupoModeloDocumento}"
+						  required="true"
+						  length="50" />
+						  
+			<wi:selectSituacaoRadio id="ativo"
+								    label="#{messages['grupoModeloDocumento.ativo']}"
+								    value="#{home.instance.ativo}" />
+													 
+		</wi:dataForm>
+	</ui:define> 
+ 
+</ui:composition>

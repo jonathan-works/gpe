@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+
+<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:p="http://jboss.com/products/seam/pdf"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets">
+				
+	<c:if test="#{empty widths}">
+		<c:forEach begin="1" end="#{columns}">
+			<ui:param name="widths" value="#{widths}1 " />
+		</c:forEach>
+	</c:if>
+
+	<p:document title="#{title}"
+	            pageSize="A4"
+	            margins="#{wi:get(marginLeft,'60')} #{wi:get(marginRight,'30')} #{wi:get(marginTop,'40')} #{wi:get(marginBotton,'30')}"
+	            orientation="#{wi:get(orientation, 'portrait')}">
+		
+		<p:header borderWidthTop="0" 
+				  borderWidthBottom="0"
+				  alignment="center">
+			<ui:include src="reportHeader.xhtml">
+				<ui:param name="spacingBefore" value="0" />
+			</ui:include>
+		</p:header>
+		
+		<f:facet name="header">
+			<p:footer borderWidthTop="1" 
+					  borderColorTop="lightgray"
+					  borderWidthBottom="0" 
+					  alignment="center">
+					<p:paragraph spacingAfter="15"><p:pageNumber /></p:paragraph>
+			</p:footer>
+		</f:facet>
+		
+		<ui:include src="reportHeader.xhtml">
+			<ui:param name="spacingAfter" value="0" />
+		</ui:include>
+		<p:font size="8">
+			<p:paragraph spacingAfter="15">
+				<p:text value="#{headerText}" />
+			</p:paragraph>
+		</p:font>
+		<p:font size="#{wi:get(fontSize,10)}">
+			<p:table columns="#{columns}" 
+					 widthPercentage="#{wi:get(widthPercentage,100)}"
+					 headerRows="#{wi:get(headerRows,1)}" 
+					 widths="#{widths}">
+				
+				<ui:insert />					
+
+			</p:table>
+		</p:font>
+	
+	</p:document>
+	
+</ui:composition>

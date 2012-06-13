@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<style type="text/css">
+	    @media print{
+	      .onlyprint{display: block;visibility: visible;}
+	      .noprint{display: none;visibility: hidden;}
+	    }
+  	</style>
+	
+	<ui:param name="bin" value="#{empty bin ? c.value : bin}" />
+	<ui:param name="isModelo" value="#{not empty bin.modeloDocumento ? false : true}" />
+	<c:if test="#{isModelo}">
+		<script>
+			#{documentoValidacaoHashHome.IdPD(param.idProcessoDoc)}
+		</script>
+	
+		<h:outputText 
+		    value="#{processoDocumentoBinHome.instance.modeloDocumento}" 
+		    escape="false"/> <br/> 
+		        
+		<center>
+			<h:panelGroup id="panelGroupPai" >
+				<a:form>
+			   		<a:commandButton action="#{documentoValidacaoHashHome.gerarRegistro}" 
+			   						 id="btnimprimir" value="imprimir" oncomplete="window.print();" 
+			   						 reRender="panelGroupPai"  >
+			   		</a:commandButton>
+				</a:form>
+				<br/>
+		   		<s:div id="linkValidaHashDiv"  rendered="#{!empty documentoValidacaoHashHome.numeroHash}">
+			   		<script>
+			   			function redirectDocHash(){
+							window.location = '#{util.urlProject}/Painel/painel_usuario/documentoHashHTML.seam?hash=#{documentoValidacaoHashHome.numeroHash}&amp;idBin=#{idBin}&amp;idProcessoDoc=#{idProcessoDoc}'
+			   			}
+					</script>
+					<b>Para validar, utilize o link abaixo:</b><br/>
+					<a:commandLink  id="cLValida" 
+									value="#{util.urlProject}/Painel/painel_usuario/documentoHashHTML.seam?hash=#{documentoValidacaoHashHome.numeroHash}&amp;idBin=#{idBin}&amp;idProcessoDoc=#{idProcessoDoc}"
+									onclick="redirectDocHash();"
+									/>
+				</s:div>
+			</h:panelGroup>
+		</center>     
+		
+	</c:if>       
+
+</ui:composition>

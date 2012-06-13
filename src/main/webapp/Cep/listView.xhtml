@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ <!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    xmlns:a="http://richfaces.org/a4j"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                      
+	<ui:define name="title">#{messages['cep.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{cepHome}" />
+	
+	<ui:define name="searchGrid">   
+	    <wi:dataTable values="#{cepList.list(15)}"
+					  bean="#{cepList}"
+					  tableTitle="#{messages['cep.titleGrid']}"
+					  id="cepList"
+					  rowId="#{row.idCep}" >
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarCepForm"
+							   formTitle="#{messages['cep.titleSearchForm']}">
+					<wi:inputCep id="numeroCep"
+								 value="#{cepList.entity.numeroCep}"
+								 label="#{messages['cep.numeroCep']}"/>
+					<wi:inputText id="nomeLogradouro"
+								  label="#{messages['cep.nomeLogradouro']}"
+								  value="#{cepList.entity.nomeLogradouro}"/>
+					<wi:inputText id="nomeBairro"
+								  label="#{messages['cep.nomeBairro']}"
+								  value="#{cepList.entity.nomeBairro}"/>
+					<wi:selectOneMenuEntity id="estado"
+											label="#{messages['cep.municipio.estado']}"
+											value="#{cepList.estado}"
+											items="#{estadoItems}"
+											required="#{required}"
+											noSelectionLabel="Selecione...">
+						<a:support reRender="municipioSuggestSearchDiv"
+								   event="onchange"
+								   status=":status" 
+								   ajaxSingle="true" />
+					</wi:selectOneMenuEntity>
+					<s:div id="municipioSuggestSearchDiv">
+						<wi:suggest id="municipio"
+									bean="#{municipioSearchSuggest}"
+									disabled="#{empty cepList.estado}"
+									assignTo="cepList.entity.municipio"
+									label="#{messages['cep.municipio']}">
+						</wi:suggest>		
+					</s:div>
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['cep.ativo']}"
+											  value="#{cepList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="numeroCep"
+								 columnHeader="#{messages['cep.numeroCep']}"
+								 value="#{row.numeroCep}" />
+			<wi:columnOutputText columnId="municipio.estado"
+								 columnHeader="#{messages['cep.municipio.estado']}"
+								 value="#{row.municipio.estado}" />
+			<wi:columnOutputText columnId="municipio"
+								 columnHeader="#{messages['cep.municipio']}"
+								 value="#{row.municipio}" />
+			<wi:columnOutputText columnId="nomeLogradouro"
+								 columnHeader="#{messages['cep.nomeLogradouro']}"
+								 value="#{row.nomeLogradouro}" />
+			<wi:columnOutputText columnId="nomeBairro"
+								 columnHeader="#{messages['cep.nomeBairro']}"
+								 value="#{row.nomeBairro}" />
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['agrupamento.ativo']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="cepForm"
+					 formTitle="#{messages['cep.titleForm']}">
+			<wi:inputCep id="numeroCep"
+						 value="#{cepHome.instance.numeroCep}"
+						 required="true"
+						 label="#{messages['cep.numeroCep']}"/>
+			<wi:inputText id="nomeLogradouro"
+						  label="#{messages['cep.nomeLogradouro']}"
+						  required="true"
+						  value="#{cepHome.instance.nomeLogradouro}"/>
+			<wi:inputText id="nomeBairro"
+						  label="#{messages['cep.nomeBairro']}"
+						  required="true"
+						  value="#{cepHome.instance.nomeBairro}"/>
+			<wi:inputText id="complemente"
+						  label="#{messages['cep.complemento']}"
+						  value="#{cepHome.instance.complemento}"/>
+			<wi:selectOneMenuEntity id="estado"
+									label="#{messages['cep.municipio.estado']}"
+									value="#{cepHome.estado}"
+									items="#{estadoItems}"
+									required="true"
+									noSelectionLabel="Selecione...">
+				<a:support reRender="municipioSuggestDiv"
+						   event="onchange"
+						   status=":status" 
+						   ajaxSingle="true" />
+			</wi:selectOneMenuEntity>
+			<s:div id="municipioSuggestDiv">
+				<wi:suggest id="municipio"
+							bean="#{municipioSuggest}"
+							disabled="#{empty cepHome.estado}"
+							required="true"
+							assignTo="cepHome.instance.municipio"
+							label="#{messages['cep.municipio']}">
+				</wi:suggest>		
+			</s:div>
+			<wi:selectSituacaoRadio id="ativo"
+								    label="#{messages['cep.ativo']}"
+								    required="true"
+								    value="#{cepHome.instance.ativo}" />
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>

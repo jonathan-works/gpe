@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+	  login-required="true"
+>
+	<restrict>#{security.checkPage()}</restrict>
+	<description>TipoModeloDocumento: #{tipoModeloDocumentoHome.instance}</description>
+	
+	<begin-conversation join="true"/>
+	<param name="tipoModeloDocumento.order" value="#{tipoModeloDocumentoGrid.order}"/>
+	<param name="id" value="#{tipoModeloDocumentoHome.tipoModeloDocumentoIdTipoModeloDocumento}"/>
+
+<!-- Parametros para RESTFull -->
+	<param name="tab" value="#{tipoModeloDocumentoHome.tab}"/>
+	<param name="goBackUrl" value="#{tipoModeloDocumentoHome.goBackUrl}"/>
+	<param name="goBackId" value="#{tipoModeloDocumentoHome.goBackId}"/>
+	<param name="goBackTab" value="#{tipoModeloDocumentoHome.goBackTab}"/>		
+	<param name="grupoModeloDocumento" value="#{grupoModeloDocumentoSearch.idGrupoModeloDocumento}"/>			
+	<param name="tipoModeloDocumento" value="#{tipoModeloDocumentoSearch.tipoModeloDocumento}"/>		
+	<param name="abreviacao" value="#{tipoModeloDocumentoSearch.abreviacao}"/>		
+
+	<action if="#{empty tipoModeloDocumentoHome.tab}" execute="#{tipoModeloDocumentoHome.setTab('search')}"/>
+	<action if="#{param.newInstance == 'true'}" execute="#{variavelHome.newInstance()}"/>
+	<!-- Parametros para a ordem de grids -->
+	<param name="modeloDocumento.order" value="#{modeloDocumentoGrid.order}"/>	
+ 
+</page>

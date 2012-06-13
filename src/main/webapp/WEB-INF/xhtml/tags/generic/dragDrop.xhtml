@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:a="http://richfaces.org/a4j"
+                 xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:s="http://jboss.com/products/seam/taglib"
+                 xmlns:wi="http://www.itx.com.br/jsf">
+
+	<style>
+        .panelc {
+            width:25%;
+            vertical-align:top;         
+        }
+        
+        .dropTargetPanel {
+            width: 90%;
+        }
+
+        .headerClass {
+            text-align: center;
+            padding-top: 5px;
+        }
+    </style>
+    
+	<rich:dragIndicator id="#{id}Indicator" />
+	<a:form id="#{id}dragDropForm">
+		<h:panelGrid columnClasses="panelc" columns="4" width="100%">
+
+            <rich:panel id="#{id}Panel" style="width: 250px"> 
+                <f:facet name="header">
+                    <h:outputText value="#{headerDrag}" />
+                </f:facet>
+                
+                <rich:dataTable id="#{id}ListDrag" 
+	                			value="#{bean.dragEntityList.list(10)}"
+	                    		var="varDrag" 
+	                    		headerClass="headerClass">
+                    <rich:column>
+                        <a:outputPanel style="border:1px solid gray; padding:2px; cursor: pointer;"
+                        			   id="#{id}OutputPanel"
+                            		   layout="block">
+                            <rich:dragSupport dragIndicator="#{id}Indicator"
+                               				  dragType="TYPE" 
+                               				  dragValue="#{varDrag}" >
+                                <rich:dndParam name="label" value="#{labelDrag}" />
+                            </rich:dragSupport>
+                            <ui:insert name="contentDrag" />
+                        </a:outputPanel>
+                    </rich:column>
+                    
+                </rich:dataTable>
+                
+                <s:div rendered="#{bean.dragEntityList.previousExists or bean.dragEntityList.nextExists}">
+					<a:form ajaxSubmit="true">
+						<rich:inputNumberSlider	enableManualInput="false"
+												showArrows="true"
+												value="#{bean.dragEntityList.page}" 
+												step="1"
+												minValue="1"
+												width="250px"
+												maxValue="#{bean.dragEntityList.pageCount}"
+												showToolTip="true">
+							<a:support  ajaxSingle="true"
+										event="onchange"
+										status="status"
+										limitToList="true"
+										reRender="#{id}Panel"/>
+						</rich:inputNumberSlider>
+					</a:form>
+				</s:div>
+            </rich:panel>
+            
+            <rich:panel styleClass="dropTargetPanel">
+                <f:facet name="header">
+                    <h:outputText value="#{headerDrop}" />
+                </f:facet>
+                
+                <rich:dropSupport id="#{id}DropSupport" 
+                                  acceptedTypes="TYPE" 
+                                  dropValue="TYPE"
+                    			  dropListener="#{bean.processDrop}" 
+                    			  reRender="#{id}Panel,#{id}TableDrop">
+                </rich:dropSupport>
+
+                <rich:dataTable id="#{id}TableDrop" value="#{bean.dropList}" var="varDrop">
+                    <rich:column>
+                    	<wi:toolBar action="#{util.getComponentName(bean).concat('.dropList.remove(varDrop)')}"
+									onclick="if(!confirm('Deseja remover este registro?')) return false;"
+									url="/img/remove.png" 
+									title="Remover registro"
+									reRender="#{id}dragDropForm"
+									style="cursor:pointer" />
+			        </rich:column>
+                    <ui:insert name="contentDrop" />
+                </rich:dataTable>
+                
+            </rich:panel>
+            
+    	</h:panelGrid>
+			
+		<br />
+		<ui:insert name="buttons" >
+			<a:commandButton id="#{id}SaveButton"
+	       					 value="Gravar"
+	       					 action="#{util.invokeMethod(actionSave)}"
+	       					 style="#{buttonStyle}"
+						 	 styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}"
+	       					 reRender="pageBody" />
+	                					  
+	        <a:commandButton id="#{id}ResetButton"
+	            			 action="#{bean.dropList.clear()}" 
+			  				 value="Limpar"
+			  				 style="#{buttonStyle}"
+						 	 styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}" 
+			  				 reRender="#{id}Panel,#{id}TableDrop"/>
+		 </ui:insert>
+   	</a:form>
+	   
+</ui:composition>

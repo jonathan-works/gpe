@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+	IBPM - Ferramenta de produtividade Java
+	Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+	
+	Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+	sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+	Free Software Foundation; versão 2 da Licença.
+	Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+	NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+	ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+	
+	Consulte a GNU GPL para mais detalhes.
+	Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+	veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:s="http://jboss.com/products/seam/taglib"
+			xmlns:ui="http://java.sun.com/jsf/facelets"
+			xmlns:f="http://java.sun.com/jsf/core"
+			xmlns:h="http://java.sun.com/jsf/html"
+			xmlns:wi="http://www.itx.com.br/jsf"
+			xmlns:a="http://richfaces.org/a4j"> 
+    
+	<a:loadScript src="/js/components.js"/>
+	<ui:param name="showMessage" value="false" />
+
+	<s:decorate id="#{id}Decoration"
+				template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+				rendered="#{wi:get(rendered, true)}">
+	  
+		<ui:param name="idFrom" value="#{id}From"/>
+		<ui:param name="idTo" value="#{id}To"/>
+		<ui:param name="tipMessage" value="#{empty tipMessage ? 'A data inicial deve ser menor ou igual a data final.' : tipMessage}" />  
+		<ui:param name="idToValidador" value="document.getElementById('#{formId}:#{id}Decoration:#{idTo}Decoration:#{idTo}')" />
+		<ui:param name="idFromValidador" value="document.getElementById('#{formId}:#{id}Decoration:#{idFrom}Decoration:#{idFrom}')" />
+		<ui:param name="label" value="#{empty label ? 'Período' : label}" />
+		
+		<ui:define name="label">#{label}</ui:define>
+		
+		<h:outputText value="De:" style="width:22px; float:left" />
+		<wi:inputText id="#{idFrom}" 
+					label=""
+					value="#{valueDateFrom}" 
+					style="width:80px;float:left;"
+					template="/WEB-INF/xhtml/components/templates/base.xhtml"
+					size="7"
+					maxlength="7"
+					required="#{required or requiredFrom}"
+					onchange="validarData(this); 
+							validarPeriodoAnoMes(this, #{idToValidador}, false);
+							validarDataMaximaAtual(this);">
+			<wi:mask id="#{idFrom}" mask="99/9999"/>
+			<ui:insert />
+		</wi:inputText>
+		
+		<h:outputText value="Até:" style="width:25px;float:left;padding-left:20px;"/>
+		<wi:inputText  id="#{idTo}"
+					label=""
+					value="#{valueDateTo}"
+					style="width:80px;float:left;"
+					template="/WEB-INF/xhtml/components/templates/base.xhtml"
+					size="7" 
+					maxlength="7" 
+					required="#{required or requiredTo}"
+					onchange="validarData(this); 
+								validarPeriodoAnoMes(#{idFromValidador}, this, true);
+								validarDataMaxima(this);">
+			<wi:mask id="#{idTo}" mask="99/9999"/>
+			<ui:insert />
+		</wi:inputText> 
+		 
+	</s:decorate>   
+</ui:composition>

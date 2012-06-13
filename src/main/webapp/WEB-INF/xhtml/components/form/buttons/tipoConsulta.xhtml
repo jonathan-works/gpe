@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->	
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+               
+        <div style="float:left">
+	
+		<ui:param name="props" value="#{form.buttons.properties}"/>
+           <ui:param name="buttonReRender" value="#{empty buttonReRender ? 'pageBody' : buttonReRender}" />        
+           <a:commandButton id="consulta" 
+           				 status="status"
+						 value="Consulta" 
+						 styleClass="dr-tbpnl-tb-inact"
+						 action="#{home.instance.setInPesquisa(true)}"
+						 reRender="#{buttonReRender}"/>
+                         			  
+           <a:commandButton id="novaConsulta" 
+           				 status="status"
+						 style="width: 120px !important"
+						 value="Nova Consulta" 
+						 styleClass="dr-tbpnl-tb-inact"
+						 action="#{home.limparTela('consultaProcessoForm')}"
+						 reRender="#{buttonReRender}"/>
+
+       </div>
+
+</ui:composition>

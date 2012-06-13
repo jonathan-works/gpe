@@ -1,0 +1,34 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: documentoProcessoGrid.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+	<component name="documentoProcessoGrid" class="br.com.itx.component.grid.GridQuery">
+		<property name="ejbql">select o from ProcessoDocumento o</property>
+		<property name="maxResults">16</property>
+		<property name="gridId">documentoProcesso</property>
+		<property name="key">idProcessoDocumento</property>
+		<property name="columns">
+			<value>processo : {properties : {order: numeroProcesso}}</value>
+			<value>ativo: { valueType: sim_nao }</value>			
+			<value>usuarioInclusao</value>			
+			<value>dataInclusao: { valueType: date, properties : { pattern: "dd/MM/yy kk:mm" } }</value>			
+			<value>tipoProcessoDocumento : {properties : {order: tipoProcessoDocumento}}</value>
+			<value>processoDocumento</value>			
+			<value>processoDocumentoBin : { valueType: processoDocumentoBin, properties : {order: extensao}}</value>
+			<value>usuarioExclusao</value>			
+			<value>dataExclusao: { valueType: date, properties : { pattern: "dd/MM/yy kk:mm" } }</value>			
+			<value>motivoExclusao</value>			
+			<value>observacaoProcedimento</value>	
+			<value>numeroDocumento</value>
+			<value>processoDocumentoBin.sizeFormatado:{properties:{header: Tamanho}}</value>
+		</property>
+		<property name="restrictions">
+			<value>processo.idProcesso = #{processoHome.id}</value>		
+			<value>processo = #{processoHome.instance}</value>						
+		</property>		
+		<property name="searchFields">
+		</property>
+		<property name="order">dataInclusao desc</property>
+	</component>
+	
+</components>

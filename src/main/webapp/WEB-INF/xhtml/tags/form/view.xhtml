@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 	
+
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<ui:param name="useCustomTitle" value="#{empty useCustomTitle ? false : useCustomTitle}" />
+	<ui:param name="formId" value="#{empty formId ? form.formId.concat('View') : formId}" />
+   	<ui:param name="title" value="#{empty title ? formId : title}" />
+    <h:form id="#{formId}View" styleClass="edit">
+   	
+		<c:if test="#{not empty home}">
+			#{form.setHome(home.homeName)}
+		</c:if>    	
+
+       <rich:simpleTogglePanel switchType="client" opened="#{empty opened ? true : opened}">
+       	<c:if test="#{useCustomTitle}">
+        	<f:facet name="header">
+        		<ui:insert name="customTitle" />
+        	</f:facet>
+       	</c:if>
+		<c:if test="#{not useCustomTitle}">
+			<f:facet name="header">#{title}</f:facet>
+       	</c:if>        	
+		<ui:param name="home" value="#{form.home}" />
+		<ui:param name="instance" value="#{empty instance ? home.instance : instance}"/>
+		<ui:param name="columns" value="#{empty columns ? 1 : columns}" />
+		<h:panelGrid columns="#{columns}" width="100%" columnClasses="viewColumn">
+			<wi:repeat value="#{form.fields}" var="f">
+				<ui:param name="label" value="#{empty props.label ? f.label : props.label}"/>
+				<ui:param name="label" value="#{expressions.createValueExpression(label).value}" />
+				<a:include 
+					viewId="/WEB-INF/xhtml/components/view/#{f.type}.xhtml" />
+			</wi:repeat>
+	    </h:panelGrid>
+       </rich:simpleTogglePanel>
+            
+    </h:form>
+
+	<ui:param name="buttons" value="#{form.buttons.id}#{empty modalPanelId ? '' : '_modal'}" />
+	<ui:include src="/WEB-INF/xhtml/components/view/buttons/#{buttons}.xhtml"/>
+	<s:button
+		styleClass="dr-tbpnl-tb-inact"
+		rendered="#{not empty home.goBackUrl and (home.tab == 'form')}"
+		value="Voltar"
+		view="#{home.goBackUrl}">
+		<f:param name="id" value="#{home.goBackId}" />
+		<f:param name="tab" value="#{home.goBackTab}" />			
+	</s:button>	
+	
+	<ui:param name="isInView" value="true" />
+	<s:div rendered="#{form.showReferences}"
+		style="margin-top: 5px">
+		<ui:insert/>
+	</s:div>
+	
+</ui:composition>

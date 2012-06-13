@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+	
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+					
+	<ui:param name="customHeader" value="#{empty customHeader ? false : customHeader}" />
+	<ui:param name="gridId" value="#{empty gridId ? bean.gridId.concat('Grid') : gridId}" />
+	<ui:param name="panelWidth" value="#{empty panelWidth ? '97%' : panelWidth}" />
+	<ui:param name="gridIdAcs" value="#{bean.gridId.concat('Grid')}" />
+	<ui:param name="showDataList" value="#{empty showDataList ? true : showDataList}" />
+	<ui:param name="showMsg" value="#{empty showMsg ? true : showMsg}" />
+	<ui:param name="useLink" value="#{empty useLink ? false : useLink}" />
+	<ui:param name="link" value="#{link}" />
+	<ui:param name="treeMode" value="#{empty treeMode ? false : treeMode}" />
+	
+	<c:if test="#{not empty maxResults}">
+		#{bean.setMaxResults(maxResults)}
+	</c:if>
+
+	<s:div id="#{gridId}Div">
+   	<ui:param name="title" value="#{empty title ? gridId : title}" />
+		<rich:panel bodyClass="panel" rendered="#{showDataList}" style="float: left; margin-left: 1%; width:#{panelWidth}">
+		<f:facet name="header">
+			<h:outputText value="#{title}" />
+			<c:if test="#{useLink}">
+				<s:link 
+					title="Abrir Paginador"
+					target="painel"
+					value="#{title}"
+					view="#{link}"
+					onclick="openPopUp('painel', 'about:blank')">
+					<h:graphicImage 
+						url="/img/view.gif" 
+						style="cursor:pointer" />
+				</s:link>
+			</c:if>
+			<ui:insert name="customHeader"/>
+		</f:facet>
+		
+		<ui:param name="modalPanelId" value="#{gridId}Modal" />
+		<a:outputPanel id="#{gridId}">
+
+		<ui:param name="isInView" value="#{empty isInView ? false : isInView}" />
+		<ui:param name="toolBar" value="#{empty toolBar ? 'toolBar' : toolBar}" />
+		<ui:param name="headerToolBar" value="#{empty headerToolBar ? 'none' : headerToolBar}" />
+    	<ui:param name="title" value="#{empty title ? gridId : title}" />
+		
+		<div class="grid">
+		
+			<ui:param name="useDatamodel" value="#{empty useDatamodel ? false : useDatamodel}" />
+			<ui:param name="datamodel" value="#{useDatamodel ? datamodel : bean.resultList}" />
+			<ui:param name="columnList" value="#{empty bean.visibleColumnList ? columnList : bean.visibleColumnList}"/>
+			<ui:param name="columns" value="#{bean.getVisibleColumnList(columnList)}" />
+			<ui:param name="width" value="#{17 + (canEdit ? 34 : 0)}" />
+			<ui:param name="search" value="#{gridId}SearchForm:searching" />
+			<ui:param name="searching" value="#{param[search]}" />
+			<ui:param name="datalistHeight" value="#{empty datalistHeight ? '' : 'height: '.concat(datalistHeight).concat('; overflow: auto')}" />
+			<ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+			
+			<c:if test="#{treeMode}">
+				#{bean.setTreeMode(treeMode)}
+			</c:if>
+			
+			<div style="#{datalistHeight}">
+				<rich:messages id="#{gridId}Messages" 
+							   globalOnly="true" 
+							   infoClass="formMessage" 
+							   rendered="#{showMsg}"
+							   style="float:left; margin: 5px"
+							   errorClass="error formMessage" 
+							   warnStyle="display: none"/>
+				<f:verbatim>
+					<script>
+						if ($('#{gridId}Messages')) {
+							setTimeout("if ($('#{gridId}Messages')) $('#{gridId}Messages').style.display='none'", 5000);
+						}
+					</script>
+				</f:verbatim>
+				
+				<rich:dataTable 
+					id="#{gridId}List" 
+					rendered="#{rendered}"
+					rowKeyVar="key" 
+					var="row" 
+					value="#{datamodel}"
+					rows="#{empty rows ? bean.maxResults : rows}"
+					onRowMouseOut="this.style.backgroundColor=c"
+					style="margin-left: 1px; margin-top: 1px; clear: both;"			
+					onRowMouseOver="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">
+					<f:facet name="header">
+							<rich:columnGroup columnClasses="dr-table-subheadercell dr-table-subheader" rendered="#{customHeader}">
+									<ui:insert name="customHeader"></ui:insert>
+								</rich:columnGroup>
+					</f:facet>				
+					
+					<c:if test="#{(toolBar != 'none') or (headerToolBar != 'none')}">
+						<rich:column styleClass="columnDataListToolBar" rendered="#{empty isRightGrid}">
+							<f:facet name="header">
+								<c:if test="#{headerToolBar != 'none'}">
+									<a:include viewId="/WEB-INF/xhtml/components/grid/header/tools/#{headerToolBar}.xhtml" />
+								</c:if>
+								<c:if test="#{headerToolBar == 'none'}">
+									&#160;
+								</c:if>
+							</f:facet>									
+							<c:if test="#{toolBar != 'none'}">
+								<div class="transpToolBar">
+									<a:include viewId="/WEB-INF/xhtml/components/grid/tools/#{toolBar}.xhtml" />
+								</div>							
+							</c:if>							
+						</rich:column> 
+					</c:if>
+								
+					<c:forEach items="#{columns}" var="c">
+						<ui:param name="props" value="#{c.properties}" />
+						<ui:param name="parentStyle" value="#{empty props.parentStyle ? 'padding:2px 3px 0px 3px' : props.parentStyle}" />
+						<ui:param name="header" value="#{empty props.header ? c.header : expressions.createValueExpression(props.header).value}" />
+						<ui:param name="columnRendered" value="#{empty props.columnRendered ? true : util.eval(props.columnRendered)}" />
+						<rich:column style="#{parentStyle}; #{columnStyle}; border: solid 1px; border-color: #CCCCCC " rendered="#{columnRendered}">
+								<f:facet name="header" >
+									<ui:param value="#{empty props.order ? c.id : c.id.concat('.').concat(props.order)}" name="ord" />
+									<ui:param value="#{ord} asc" name="asc" />
+									<ui:param value="#{ord} desc" name="desc" />
+									<a:include viewId="/WEB-INF/xhtml/components/grid/header/#{c.headerType}.xhtml" />
+								</f:facet>
+							<a:include viewId="/WEB-INF/xhtml/components/grid/#{c.valueType}.xhtml" />
+						</rich:column>
+					</c:forEach>
+					
+					<f:facet name="footer">
+						<h:form rendered="#{useDatamodel}">
+							<rich:datascroller renderIfSinglePage="false"></rich:datascroller>
+						</h:form>
+					</f:facet>
+						
+				</rich:dataTable>
+			</div>
+			
+			<s:div rendered="#{bean.previousExists or bean.nextExists}"
+				   style="float: left;">
+				<a:form ajaxSubmit="true">
+					<rich:inputNumberSlider	enableManualInput="false"
+											showArrows="true"
+											value="#{bean.page}" 
+											step="1"
+											minValue="1"
+											width="250px"
+											maxValue="#{bean.pageCount}"
+											showToolTip="true">
+						<a:support  ajaxSingle="false"
+									event="onchange"
+									status="status"
+									limitToList="true"
+									reRender="#{gridId}"/>					
+					</rich:inputNumberSlider>
+				</a:form>
+		</s:div>
+		
+		<ui:param name="count" value="#{useDatamodel ? datamodel.size : bean.resultCount}" />
+					
+					<h:outputText 
+						value="Foram encontrados:  #{count} resultados" 
+							  style="float: right; margin-right: 1%;" 
+							  rendered="#{rendered}"/>
+		</div>	
+				
+		<!-- Inserir elementos no datalist -->
+		<ui:insert />	
+
+	</a:outputPanel>
+	</rich:panel>
+	</s:div>
+	
+</ui:composition>

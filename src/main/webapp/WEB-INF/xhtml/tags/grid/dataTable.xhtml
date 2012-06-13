@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+	
+	<style type="text/css">
+			.noMaskClass .rich-mpnl-mask-div{
+	        display:none;				       
+	    }
+    </style>
+	
+	<s:div id="#{id}SearchForm" style="float:left; overflow:visible;">
+		<ui:insert name="searchForm" />
+	</s:div>
+	<a:region renderRegionOnly="true">
+		<ui:param name="panelWidth" value="#{wi:get(panelWidth, '73%')}"/>
+		<rich:panel rendered="#{wi:get(showGrid, true)}"
+					bodyClass="panel" 
+					header="#{tableTitle}" 
+					id="#{id}Panel"
+					style="float: left; margin-left: 10px; width: #{panelWidth};#{style}">
+
+			<rich:messages 
+  			    id="#{id}Messages"			    
+				rendered="#{empty showMsg ? true : showMsg}" 				
+  			    globalOnly="true"			    
+  			    infoClass="formMessage"			    
+ 			    style="float:left; margin: 5px"
+  			    errorClass="error formMessage"	    
+  			    warnStyle="display: none" />	
+  			    
+			<f:verbatim>
+				<script>
+					if ($('#{id}Messages')) {
+						setTimeout("if ($('#{id}Messages')) $('#{id}Messages').style.display='none'", 5000);
+					}
+				</script>
+			</f:verbatim>  	
+
+			<rich:dataTable value="#{values}" 
+							id="#{id}"  
+							rowKeyVar="key"
+							onRowMouseOut="this.style.backgroundColor=c"
+							onRowMouseOver="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+							styleClass="#{styleClass}"
+							style="#{style}"
+							var="row">
+				<ui:param name="toolBarColumnWidth" value="#{wi:get(toolBarColumnWidth, '40px')}" />
+				<rich:column style="width: #{toolBarColumnWidth}; padding:2px 0px 0px 0px; 
+									text-align:center; 
+									border: solid 1px; border-color: #CCCCCC"
+									rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
+									rowspan="#{empty columnRowspan ? '1':columnRowspan}">
+					<f:facet name="header">
+						<s:div>
+							<ui:insert name="headerToolBar" />
+						</s:div>
+					</f:facet>
+					<ui:insert name="toolBar">
+						<wi:toolBarEdit  />
+						<wi:toolBarInactive  />
+					</ui:insert>
+				</rich:column>
+				<ui:insert/>
+			</rich:dataTable>
+			<h:outputText value="Foram encontrados:  #{bean.resultCount} resultados"
+						  style="float: right; margin-right: 1%;" 
+						  rendered="#{wi:get(showGridCount, true)}"/>
+			<s:div rendered="#{bean.previousExists or bean.nextExists}">
+				<a:form rendered="#{!inForm}" ajaxSubmit="true" >
+					<ui:include src="inputNumberSlider.xhtml" />
+				</a:form>
+				<s:div rendered="#{inForm}" >
+					<ui:include src="inputNumberSlider.xhtml" />
+				</s:div>
+			</s:div>
+		</rich:panel>
+	</a:region>
+		
+</ui:composition>

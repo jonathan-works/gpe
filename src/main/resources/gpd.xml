@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<root-container name="Ordem de Compra" width="747" height="815">
+  <node name="Início" x="48" y="48" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="Solicitação" x="48" y="156" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="Aprovação" x="48" y="264" width="132" height="36">
+    <edge>
+      <label x="-39" y="-12"/>
+    </edge>
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="Notificação" x="348" y="264" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="Aguardando Aprovação" x="348" y="348" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+    <edge>
+      <label x="11" y="-4"/>
+    </edge>
+  </node>
+  <node name="Compra" x="48" y="348" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="Reprovação" x="348" y="480" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="Término" x="48" y="480" width="132" height="36"/>
+  <deployment serverName="" serverPort="" serverDeployer="/gpd-deployer/upload">
+    <classesAndResources/>
+    <filesAndFolders>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/DecisionNode.xml"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/MailNode.xml"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/actionTemplates.properties"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/component/RegistraEstatistica.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/EntityAddressResolver.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/JbpmUtil.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/Mail.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/TaskControllerHandler.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/assignment/LocalizacaoAssignment.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/converter/NodeConverter.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/logging/EmptyLoggingService.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/logging/EmptyLoggingServiceFactory.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/node/DecisionNode.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/node/MailNode.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/node/NodeUtil.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/node/node.types.xml"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/validator/IdValidator.java"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/gpd.xml"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/jbpm.business.calendar.properties"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/jbpm.cfg.xml"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/jbpm.mail.templates.xml"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/log4j.xml"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/processdefinition.xml"/>
+      <element value="/FI-BPM/WEB-INF/src/jpdl/processimage.jpg"/>
+    </filesAndFolders>
+  </deployment>
+</root-container>

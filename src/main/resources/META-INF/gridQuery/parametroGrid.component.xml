@@ -1,0 +1,33 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: parametroGrid.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="parametroGrid" class="br.com.itx.component.grid.GridQuery">
+		<property name="ejbql">select o from Parametro o</property>
+		<property name="order">nomeVariavel</property>
+		<property name="maxResults">15</property>
+		<property name="gridId">parametro</property>
+		<property name="key">idParametro</property>
+		<property name="columns">	
+			<value>nomeVariavel</value>	
+			<value>descricaoVariavel</value>
+			<value>valorVariavel</value>
+			<value>dataAtualizacao: { valueType: date, properties : { pattern: "dd/MM/yy kk:mm" } }</value>			
+			<value>sistema: { valueType: sim_nao }</value>
+			<value>usuarioModificacao</value>
+			<value>ativo: {valueType: ativo}</value>	
+		</property>	
+		<property name="restrictions">
+			<value>lower(nomeVariavel) like concat('%', concat (lower(#{parametroSearch.nomeVariavel}),'%'))</value>
+			<value>ativo = #{parametroSearch.ativo}</value>
+		</property>			
+		<property name="searchFields">
+			<value>ativo: {type: comboSituacao}</value>
+			<value>nomeVariavel</value>
+		</property>
+	</component>
+	
+	<component name="parametroSearch" class="br.com.infox.ibpm.entity.Parametro" />	
+	
+</components>

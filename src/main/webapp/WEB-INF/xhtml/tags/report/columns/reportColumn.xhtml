@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+
+<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:p="http://jboss.com/products/seam/pdf"
+				xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:param name="columnAlign" value="#{wi:get(columnAlign,'left')}" />
+	<p:cell padding="3" horizontalAlignment="#{columnAlign}" colspan="#{wi:get(colspan,1)}">
+		<p:paragraph horizontalAlignment="#{columnAlign}">
+			<p:text horizontalAlignment="#{columnAlign}"
+					value="#{value}">
+				<ui:insert/>
+			</p:text>
+		</p:paragraph>
+	</p:cell>
+	
+</ui:composition>

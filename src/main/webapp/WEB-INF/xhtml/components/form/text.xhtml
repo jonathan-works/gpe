@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<!--
+	  IBPM - Ferramenta de produtividade Java
+	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+	 
+	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+	  Free Software Foundation; versão 2 da Licença.
+	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+	  
+	  Consulte a GNU GPL para mais detalhes.
+	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+	  veja em http://www.gnu.org/licenses/  
+	-->
+	
+	#{props.rows}?Quantidade de linhas do campo texto
+	#{props.length}?Quantidade de caracteres
+	#{props.disabled}?Desabilita o campo, true ou false
+	
+	<ui:composition>
+	
+		<s:decorate id="#{id}Decoration" 
+					template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+					rendered="#{empty rendered or rendered}">
+			<ui:define name="label">#{label}</ui:define>
+                <h:inputTextarea id="#{id}"
+								 styleClass="#{readonly ? 'readOnly' : ''}"
+								 readonly="#{readonly}"
+								 cols="#{empty cols ? 80 : cols}" 
+								 rows="#{empty rows ? props.rows : rows}"
+								 disabled="#{disabled}"
+								 required="#{required}"
+								 style="#{empty props.style ? (empty style ? 'width: 350px; height: 70px;' : style) : props.style}"
+								 value="#{value}" >
+					<ui:insert />
+				</h:inputTextarea>	
+		</s:decorate>
+		
+	</ui:composition>
+</jsp:root>

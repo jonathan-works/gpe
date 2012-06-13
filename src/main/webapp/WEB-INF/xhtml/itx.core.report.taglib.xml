@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE facelet-taglib PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+  "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
+      
+<facelet-taglib>
+	<namespace>http://www.itx.com.br/jsf</namespace>
+
+	<tag>
+		<tag-name>report</tag-name>
+		<source>tags/report/report.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>pdfTable</tag-name>
+		<source>tags/report/pdfTable.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>dataReport</tag-name>
+		<source>tags/report/dataReport.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>reportColumnHeader</tag-name>
+		<source>tags/report/columns/reportColumnHeader.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumn</tag-name>
+		<source>tags/report/columns/reportColumn.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumnList</tag-name>
+		<source>tags/report/columns/reportColumnList.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>reportColumnMonetary</tag-name>
+		<source>tags/report/columns/reportColumnMonetary.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumnDate</tag-name>
+		<source>tags/report/columns/reportColumnDate.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumnEnum</tag-name>
+		<source>tags/report/columns/reportColumnEnum.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumnBoolean</tag-name>
+		<source>tags/report/columns/reportColumnBoolean.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>reportColumnSituacao</tag-name>
+		<source>tags/report/columns/reportColumnSituacao.xhtml</source>
+	</tag>
+	
+</facelet-taglib>

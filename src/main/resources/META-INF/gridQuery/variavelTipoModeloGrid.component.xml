@@ -1,0 +1,22 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: variavelTipoModeloGrid.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="variavelTipoModeloGrid" class="br.com.itx.component.grid.GridQuery">
+		<property name="ejbql">select o from VariavelTipoModelo o</property>
+		<property name="maxResults">16</property>
+		<property name="gridId">variavelTipoModelo</property>
+		<property name="key">idVariavelTipoModelo</property>
+		<property name="columns">
+			<value>variavel: {properties: {header: 'Variável'}}</value>		
+			<value>variavel.valorVariavel: {properties: {header: 'Valor da Variável'}}</value>	
+		</property>
+		<property name="restrictions">
+			<value>o.tipoModeloDocumento = #{tipoModeloDocumentoHome.definedInstance}</value>
+		</property>		
+		<property name="searchFields">
+		</property>
+		<property name="order">variavel</property>
+	</component>
+</components>

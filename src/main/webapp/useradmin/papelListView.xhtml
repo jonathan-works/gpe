@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:wi= "http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+
+	<ui:param name="canEdit" value="#{s:hasPermission('seam.role', 'update')}" />
+
+	<ui:param name="home" value="#{papelHome}" />
+
+	<ui:define name="title">Cadastro de Papéis</ui:define>
+
+    <ui:define name="searchGrid">
+		<wi:datagrid 
+	    	canRemove="#{s:hasPermission('seam.role', 'delete')}"
+	    	bean="#{papelGrid}"
+	    	searchBean="#{papelSearch}" 
+	    	title="Papéis"
+	    	headerToolBar="none"
+	    />
+    </ui:define>
+
+	<ui:define name="form">
+		<ui:include src="papelEdit.xhtml" />
+	</ui:define>
+	
+	<ui:define name="tabs">
+		<rich:tab id="tabPapeis"
+			label="Visão Hierárquica"
+			status=":status">
+		   <h:form id="hForm">
+		   	   <a:commandButton  	   		
+			   	   	styleClass="dr-tbpnl-tb-inact"
+			   	   	value="Inverter"
+			   	   	reRender="hForm"
+		   	   		action="#{rolesTree.inverter()}">
+		   	   		<f:param name="cid" value="#{conversation.id}"/>
+		   	   </a:commandButton>
+			   <span style="font-weight: bold;}">
+			   	   <h:outputText rendered="#{rolesTree.invertida}" 
+			   	   		value="Estrutura dos papéis que cedem permissões "/>
+			   	   <h:outputText rendered="#{!rolesTree.invertida}" 
+			   	   		value="Estrutura dos papéis que recebem permissões "/>
+			   </span>
+			   <rich:tree data="#{item}"
+					ajaxSubmitSelection="true"
+					reRender="pageBody"
+					nodeSelectListener="#{rolesTree.selectListener}"
+			   		style="height:450px; overflow:auto">
+					<rich:recursiveTreeNodesAdaptor 
+						roots="#{rolesTree.roots}" 
+						var="item"
+						nodes="#{item.nodes}">
+						<rich:treeNode 
+							icon="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
+							iconLeaf="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
+						>
+							<h:outputText value="#{item.entity}" />
+						</rich:treeNode>
+					</rich:recursiveTreeNodesAdaptor>
+			   </rich:tree>
+		   </h:form>
+			
+		</rich:tab>
+	</ui:define>
+
+</ui:composition>

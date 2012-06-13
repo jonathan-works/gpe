@@ -1,0 +1,18 @@
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:ui="http://java.sun.com/jsf/facelets"
+			xmlns:s="http://jboss.com/products/seam/taglib">
+  
+    <div style="#{style}">
+        <div class="name">
+            <ui:insert name="label"/>
+        </div>
+        <div class="value #{invalid?'errors':''}">
+            <s:validateAll>
+               		<ui:insert/>
+            </s:validateAll>
+        </div>
+        
+		<s:message styleClass="error"/>
+    </div>
+
+</ui:composition>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+	<style>
+	.rich-table-footercell .propertyView {
+		margin-top:0;
+	}
+	.propertyView {
+		min-width: 215px;
+	}
+	</style>
+	<s:div id="mailDiv">
+		<ui:decorate template="../dataTable.xhtml">
+			<ui:param name="values" value="#{processBuilder.currentNode.listaEmail}" />
+			<ui:param name="id" value="listaEmail" />
+			<ui:param name="style" value="clear:both; width:99%; margin-top:5px;#{empty values ? 'border-collapse:separate':'' }" /> 
+	
+			<ui:define name="toolBar">
+				<h:graphicImage title="Excluir destinatário"
+					style="cursor:pointer"
+					url="/img/remove.png">
+					<a:support event="onclick" 
+						action="#{processBuilder.currentNode.removeListaEmail(row)}"
+						ajaxSingle="true"
+						onclick="if(!confirm('Confirma?')) return false;"
+						reRender="mailDiv"/>
+				</h:graphicImage>
+			</ui:define>
+			<ui:define name="columns"> 
+				<rich:column style="padding-left:2px">
+					<f:facet name="header">Estrutura</f:facet>
+					<h:outputText value="#{row.estrutura}"/>
+				</rich:column>
+				<rich:column style="padding-left:2px">
+					<f:facet name="header">Localização</f:facet>
+					<h:outputText value="#{row.localizacao}"/>
+				</rich:column>
+				<rich:column style="padding-left:2px">
+					<f:facet name="header">Papel</f:facet>
+					<h:outputText value="#{row.papel}"/>
+				</rich:column>
+				
+				<f:facet name="footer">
+				 <rich:columnGroup>
+				 	<rich:column>
+						<h:graphicImage title="Adicionar destinatários"
+							style="cursor:pointer" 
+							id="novoLocPapel"
+							url="/img/add.gif">
+							<a:support event="onclick" 
+								action="#{processBuilder.currentNode.addNewEmail()}"
+								ajaxSingle="true"
+								reRender="mailDiv"/>
+						</h:graphicImage>
+				 	</rich:column>
+					<rich:column style="padding-left:2px;">
+						<wi:tree tree="#{estruturaTree}" 
+							id="estruturaTree"
+							width="210" 
+							assignTo="processBuilder.currentNode.currentListaEmail.estrutura"
+							folderSelectable="true" />
+					</rich:column>
+					<rich:column style="padding-left:2px;">
+						<wi:tree tree="#{localizacaoTree}" 
+							id="localizacao"
+							width="210"
+							assignTo="processBuilder.currentNode.currentListaEmail.localizacao"
+							folderSelectable="true" />
+					</rich:column> 
+					<rich:column style="padding-left:2px;">
+						<wi:tree tree="#{papelTree}" 
+							id="papelTree"
+							width="210" 
+							assignTo="processBuilder.currentNode.currentListaEmail.papel"
+							folderSelectable="true" />
+					</rich:column>
+				</rich:columnGroup>
+				</f:facet>
+				
+				<f:facet name="header">
+					<h:outputText value="Destinatários" />
+				</f:facet>
+				
+			</ui:define>
+		</ui:decorate>	
+	
+		<ui:param name="isExpression" value="#{processBuilder.currentNode.to != null and
+								 			  processBuilder.currentNode.to.startsWith('#{mailResolver')}"/>
+	
+		<wi:inputText id="to" 
+					  label="Para"
+					  rendered="#{!isExpression}"
+					  value="#{processBuilder.currentNode.to}" >
+			<wi:ajaxSupport/>
+		</wi:inputText>
+	
+		<wi:inputText id="toExpession" 
+					  label="Para"
+					  rendered="#{isExpression}"
+					  disabled="true"
+					  readonly="true"
+					  value="[Gerado pela tabela acima...]" >
+		</wi:inputText>
+	
+		<wi:inputText id="subject" label="Assunto"
+			value="#{processBuilder.currentNode.subject}">
+			<wi:ajaxSupport/>
+		</wi:inputText>
+	
+		<wi:inputTextarea id="text" label="Texto" rows="5"
+			style="width: 700px; margin-bottom: 10px;"
+			value="#{processBuilder.currentNode.text}">
+			<wi:ajaxSupport/>
+		</wi:inputTextarea>
+	</s:div>
+
+</ui:composition>

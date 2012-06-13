@@ -1,0 +1,20 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: usuarioLocalizacaoForm.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="usuarioLocalizacaoForm" class="br.com.itx.component.Form">
+		<property name="formId">usuarioLocalizacao</property>
+		<property name="fields">
+			<value>localizacao: {required: true; type: tree, properties : {assignTo: 'usuarioLocalizacaoHome.localizacao', tree: localizacaoSetorTree } }</value>
+			<value>papel: { required: true; type: tree, properties : {assignTo: 'usuarioLocalizacaoHome.papel', tree: papelTree } }</value>			
+			<value>responsavelLocalizacao: { required: true, type: sim_nao }</value>
+		</property>
+		<property name="buttons">default</property>
+	</component>
+	
+	<component name="localizacaoSetorTree" class="br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler">
+		<property name="iconFolder">/img/globe16.png</property>
+	</component>		
+
+</components>

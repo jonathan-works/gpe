@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<head>    
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <title>#{nomeSistema}:&#160;<ui:insert name="title"/></title>
+		<link rel="icon" href="#{util.contextPath}/favicon.ico" type="image/x-icon" />		
+	    <ui:include src="include/cssPage.xhtml" />
+	    
+	    <ui:insert name="baseHead"/>
+	</head>
+	
+	<ui:include src="include/ajaxQueue.xhtml" />	
+	<ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
+	<ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
+	
+	<ui:param name="canEdit" value="#{empty canEdit ? home.editable : canEdit}" />
+	<body onbeforeunload="#{onbeforeunload}" onload="#{onload}" onunload="#{onunload}"> 
+		<ui:insert name="baseBody"/>
+	</body>
+	
+</html>

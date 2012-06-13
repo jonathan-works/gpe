@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+		xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:s="http://jboss.com/products/seam/taglib"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:a="http://richfaces.org/a4j"
+        xmlns:rich="http://richfaces.org/rich">
+
+	<!--
+	  IBPM - Ferramenta de produtividade Java
+	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+	 
+	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+	  Free Software Foundation; versão 2 da Licença.
+	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+	  
+	  Consulte a GNU GPL para mais detalhes.
+	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+	  veja em http://www.gnu.org/licenses/  
+	--> 
+	        
+	#{canEdit}?Condição de segurança do wiacs que indica se o usuario possue permissão para editar. A depender da permissão certos elementos irão ser exibidos ou não 
+	        
+	<ui:composition>
+	
+	<ui:param name='mainId' 	value = "#{empty treeModeEntityId ? row[bean.key] : treeModeEntityId}"></ui:param>
+	<ui:param name="idPopUp" 	value="popup_#{mainId}" />
+	
+		<a:form>
+			<a:region renderRegionOnly="false">
+				<div style="width: 50px">
+					<s:link	view="#{linkDetalhe}"
+							target="#{idPopUp}"
+							onclick="openPopUp('#{idPopUp}', 'about:blank');">
+						<s:conversationPropagation type="none"/>
+						<f:param name="id" value="#{mainId}" />
+						<h:graphicImage title="Visualizar"
+										url="/img/show.gif"
+										style="cursor:pointer !important"/>
+					</s:link>	
+					
+					<a:commandLink  action="#{home.remove(row)}"
+									rendered="#{canEdit}"
+									limitToList="true"
+									status=":status"
+									reRender=":#{gridId}"
+									onclick="if(!confirm('Confirma?')) return false;">
+						<h:graphicImage	url="/img/remove.png" 
+										title="Remover registro"
+										style="cursor:pointer"/>
+						<f:param name="firstResult" value="#{bean.firstResult}"/>
+						<f:param name="page" value="#{bean.page}"/>
+					</a:commandLink>	
+				</div>
+			</a:region>
+		</a:form>
+		
+	</ui:composition>
+	 
+</jsp:root>

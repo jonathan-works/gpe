@@ -1,0 +1,69 @@
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:s="http://jboss.com/products/seam/taglib"
+                 xmlns:c="http://java.sun.com/jstl/core"
+                 xmlns:wi="http://www.itx.com.br/jsf"
+                 xmlns:a="http://richfaces.org/a4j"
+                 xmlns:rich="http://richfaces.org/rich">
+
+    <ui:param name="widthDiv" value="#{empty props.widthDiv ? (empty widthDiv ? '250px' : widthDiv) : props.widthDiv}" />               
+	<ui:param name="inNewLine" value="#{empty inNewLine ? props.inNewLine : inNewLine}" />
+	<ui:param name="tipMessage" value="#{empty props.tipMessage ? tipMessage : props.tipMessage}"/>
+	<ui:param name="required" value="#{required or requiredField}" />
+	<ui:param name="showRequired" value="#{showRequired == false ? false : required and not empty label}"/>
+	<ui:param name="showLock" value="#{showLock == false ? false : not empty label}" />
+	<ui:param name="homeRef" value="#{empty homeRef ? home : homeRef}" />
+	<ui:param name="fieldName" value="#{(wi:get(fieldId, id)).toString().replaceAll('\\.', '_')}" />
+	<ui:param name="fieldId" value="field#{fieldName}"/>
+
+	<s:fragment rendered="#{!excludeFields.matches('.*\\b'.concat(id).concat('\\b.*'))}">
+    <div class="propertyView" 
+     	style="float: left; #{inNewLine != true ? '' : 'clear: both;'} width: #{widthDiv} !important; #{styleDiv}">
+        <s:div id="#{fieldId}Div" styleClass="name">    
+	        <s:label styleClass="#{invalid?'errors':''}">
+	            <ui:insert name="label"/>
+	            <s:span styleClass="required" 
+	            	rendered="#{showRequired}">*</s:span>
+	        </s:label>
+	        <c:if test="#{util.isAbstractChild(homeRef) and showLock}">
+		    	<a:commandLink action="#{home.toggleFields(fieldName, homeRef)}" ajaxSingle="true" 
+		    			reRender="#{fieldId}Div" 
+		    			tabindex="-1"
+		    			style="margin-left:5px; margin-top:15px">
+		        	<h:graphicImage url="/img/locked.gif" rendered="#{homeRef.lockedFields.contains(fieldName)}"
+		            					title="Limpar Valor ao Cadastrar"/>
+		            <h:graphicImage url="/img/unlocked.gif" rendered="#{!homeRef.lockedFields.contains(fieldName)}"
+		            					title="Manter Valor ao Cadastrar"/>
+		        </a:commandLink>
+	        </c:if>
+	        
+			<c:if test="#{not empty tipMessage}">
+				<h:graphicImage id="#{fieldId}EditTipImg"
+								style="height:12px; margin-left:3px; margin-bottom:-2px" 
+								url="/img/help.gif"/>
+				<rich:toolTip for="#{fieldId}EditTipImg" 
+							  value="#{tipMessage}"
+							  style="background-color:#{richSkin.generalBackgroundColor}; 
+					   				border-color:#{richSkin.panelBorderColor}; padding:5px; font-weight:normal;">
+				</rich:toolTip>
+			</c:if>
+				
+			<s:message styleClass="errorFields errors"
+						style="position: absolute; margin-top: -5px"
+						rendered="#{empty showMessage ? true : showMessage}"/>
+
+        </s:div>
+        <span class="value #{invalid?'errors':''}">
+            <s:validateAll>
+           		<s:div rendered="#{!obfuscate}">
+               		<ui:insert/>
+               	</s:div>
+               	<h:outputText value="ocultado" rendered="#{obfuscate}" />
+            </s:validateAll>
+        </span>
+
+    </div>
+    </s:fragment>
+</ui:composition>

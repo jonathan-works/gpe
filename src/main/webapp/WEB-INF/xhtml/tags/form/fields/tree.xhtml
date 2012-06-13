@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+
+	<a:loadScript src="/js/tree.js"></a:loadScript>
+	<ui:param name="id" value="#{wi:get(gridId, formId)}#{id}"/>
+	<ui:param name="width" value="#{wi:get(width, 248)}" />
+	<ui:param name="folderSelectable" value="#{wi:get(folderSelectable, tree.folderSelectable)}" />
+	<ui:param name="opened" value="#{wi:get(opened, false)}" />
+	<ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+
+	<s:decorate template="#{template}" 
+				id="#{id}TreeDecoration"
+				rendered="#{empty rendered or rendered}">
+
+		<ui:define name="label">#{label}</ui:define>
+		
+		<c:if test="#{!empty assignTo}">
+			#{tree.setExpression(assignTo)}
+		</c:if>
+		
+		<s:div id="#{id}Form"> 
+	
+			<!-- Usado para validacao de campo obrigatorio  -->
+			<s:div id="#{id}HiddenId">
+				<span id="#{id}LocatorHidden" />
+		 		<h:inputHidden id="#{id}Hidden" 
+					 		   required="#{required and empty tree.selected}" 
+					 		   rendered="#{required}"
+				 			   value="#{tree.selected}">
+		 			<s:convertEntity />	
+		 		</h:inputHidden>
+				<script>
+					var hiddenId = $('#{id}LocatorHidden').nextSibling.id;
+					if (#{empty tree.selected} &#38;&#38; hiddenId) {
+						$(hiddenId).value = -1;
+					}
+				</script>
+			</s:div>
+			
+			<ui:param name="border" value="#{invalid ? 'red' : 'inherit'}" />
+			
+			<s:div id="#{id}ClearDiv"
+				   style="float: right; border: solid 1px #ffff; height: 18px;
+					     border: solid 1px #{border}; text-align: right;">
+				<a:commandLink id="#{id}Close" 
+							   status="status"
+							   rendered="#{!empty tree.selected}"
+							   action="#{tree.clearTree(rich:clientId(id.concat('Tree')))}"
+							   immediate="true"
+							   reRender="#{id}Form">
+					<h:graphicImage value="#{a4jSkin.imgIconClear}" title="Limpar"/>
+				</a:commandLink>
+				<h:graphicImage value="#{a4jSkin.imgIconClearOff}" 
+								rendered="#{empty tree.selected}"
+								title="Limpar" />
+			</s:div>
+			
+			<span id="#{id}Locator" />
+			
+	 		<rich:simpleTogglePanel id="#{id}Panel"
+						 		    style="width: #{width - 20}px; 
+						 		           border: solid 1px white;"
+						 			headerClass="inputTreeHeader"
+						 			bodyClass="inputTreeBody"
+						 			oncomplete="setZIndex($('#{id}Locator').nextSibling.id)"
+						 			immediate="true"
+						 			bypassUpdates="true"
+						 			ajaxSingle="true"
+						 			reRender="#{id}Form"
+						 			switchType="client"
+						 			status=":status"
+						 			opened="#{opened}">
+	 			<f:facet name="header">
+	 				<s:div id="#{id}Label">#{tree.getSelectedView(tree.selected)}&#160;</s:div>
+	 			</f:facet>
+	 			<f:facet name="openMarker">
+	 				<rich:spacer/>
+	 			</f:facet>
+	 			<f:facet name="closeMarker">
+	 				<rich:spacer/>
+	 			</f:facet>
+	 			
+	 			<wi:treePanel switchType="#{switchType}"
+							  onselectFolder="if (#{folderSelectable}) {
+							  	  id = $('#{id}Locator').nextSibling.id; 
+								  SimpleTogglePanelManager.toggleOnClient(event,id);
+								  } else return false;"
+							  onclick="#{folderSelectable ? '' : 'return false;'};"
+							  onselected="id = $('#{id}Locator').nextSibling.id + '_header'; $(id).click();"/>			
+			</rich:simpleTogglePanel>
+
+		</s:div>
+		
+	</s:decorate>
+	
+</ui:composition>

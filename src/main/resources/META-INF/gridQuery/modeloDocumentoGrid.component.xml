@@ -1,0 +1,34 @@
+<components xmlns="http://jboss.com/products/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.2.xsd                   http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.2.xsd                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">	
+
+<!-- $Id: modeloDocumentoGrid.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+
+	<component name="modeloDocumentoGrid" class="br.com.itx.component.grid.GridQuery">
+		<property name="ejbql">select o from ModeloDocumento o</property>
+		<property name="maxResults">30</property>
+		<property name="gridId">modeloDocumento</property>
+		<property name="key">idModeloDocumento</property>
+		<property name="columns">
+			<value>idModeloDocumento</value>
+			<value>tipoModeloDocumento : {properties : {order: tipoModeloDocumento}}</value>
+			<value>tituloModeloDocumento</value>
+			<value>ativo: { valueType: ativo }</value>					
+		</property>
+		<property name="restrictions">
+			<value>tipoModeloDocumento.grupoModeloDocumento = #{modeloDocumentoHome.grupoModeloDocumento}</value>
+			<value>tipoModeloDocumento = #{tipoModeloDocumentoSuggest.instance}</value>
+			<value>tipoModeloDocumento.idTipoModeloDocumento = #{tipoModeloDocumentoHome.id}</value>
+			<value>lower(to_ascii(tituloModeloDocumento)) like concat('%',lower(to_ascii(#{modeloDocumentoSearch.tituloModeloDocumento})),'%')</value>
+			<value>o.ativo = #{modeloDocumentoSearch.ativo}</value>
+		</property>		
+		<property name="searchFields">
+			<value>ativo: {type : comboSituacao}</value>
+			<value>tipoModeloDocumento:{type: suggest, properties: {length: 100, handler: tipoModeloDocumentoSuggest}}</value>
+			<value>tituloModeloDocumento</value>
+		</property>
+		<property name="order">tituloModeloDocumento</property>
+	</component>
+	
+	<component name="modeloDocumentoSearch" class="br.com.infox.ibpm.entity.ModeloDocumento" />	
+	
+</components>

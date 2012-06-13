@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:wi= "http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<ui:param name="listsHeight" value="#{empty listsHeight ? '300px' : listsHeight}" />
+	<ui:param name="sourceListWidth" value="#{empty sourceListWidth ? '350' : sourceListWidth}" />
+	<h:outputText style="font-weight: bold; 
+			margin-top: 10px;
+			margin-left:#{sourceListWidth + 55}px;
+			position: absolute;" 
+		value="#{targetLabel}" />
+	<ui:param name="sourceListWidth" value="#{sourceListWidth}px" />
+	<ui:param name="targetListWidth" value="#{empty targetListWidth ? '350' : targetListWidth}" />
+	<h:graphicImage url="/img/search.gif" style="margin-top: 5px; margin-left:5px" />
+	<a:loadScript src="/js/jqueryExt.js" />
+	
+	<input id="#{id}Filtro" 
+		class="inputText"
+		style="margin-top: 5px; margin-left:8px; width:250px;"/>
+		<script>
+		var list = "##{rich:clientId(id).replaceAll(':', '\\\\\\\\:')}";
+		j$(document).ready(function(){
+		 j$("##{id}Filtro").keyup(function(){
+			 j$(list + 'internal_tab td').show();
+		   var s = j$(this).val();
+		   j$(list + 'internal_tab td:not(:Contains("' + s + '"))').hide();
+		 });
+		});
+		</script>
+		<rich:pickList id="#{id}"
+	       	value="#{value}"
+	       	copyAllControlLabel="Adiciona todos"
+	       	copyControlLabel="Adicionar"
+	       	removeAllControlLabel="Remover todos"
+	       	removeControlLabel="Remover"
+	       	listsHeight="#{listsHeight}"
+	       	moveControlsVerticalAlign="top"
+	       	sourceListWidth="#{sourceListWidth}"
+	       	targetListWidth="#{targetListWidth}"
+	       	switchByClick="true"
+	       	style="#{style}"
+	       	showButtonsLabel="false"> 
+	           <s:selectItems value="#{itemValues}" var="var" label="#{itemLabel}" />
+	           <ui:insert/>
+       </rich:pickList>
+       <rich:message for="#{id}List" />
+
+</ui:composition>

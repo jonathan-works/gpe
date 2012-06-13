@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+   
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:a="http://richfaces.org/a4j"
+			    xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich">
+	
+	<ui:param name="isM2M" value="true" />
+	
+	<ui:param name="customLeftGrid" value="#{empty customLeftGrid ? false : customLeftGrid}" />
+	<ui:param name="gridLeftTitle" value="#{empty gridLeftTitle ? title : gridLeftTitle}" />	
+    <ui:param name="gridRightTitle" value="#{empty gridRightTitle ? title : gridRightTitle}" />
+	
+	<ui:param name="headerToolBarRight" value="#{empty headerToolBarRight ? 'none' : headerToolBarRight}" />
+	<ui:param name="headerToolBarLeft" value="#{empty headerToolBarLeft ? 'none' : headerToolBarLeft}" />
+    <ui:param name="addRemoveReRender" value="#{gridId},l_#{gridId}" />
+    
+	<ui:param name="panelWidth" value="96%"/>
+	<ui:param name="leftPanelWidth" value="#{empty leftPanelWidth ? '49%' : leftPanelWidth}"/>
+	<ui:param name="rightPanelWidth" value="#{empty rightPanelWidth ? '49%' : rightPanelWidth}"/>
+
+	<ui:param name="leftToolBar" value="#{empty leftToolBar ? 'removeRow' : leftToolBar}"/>
+	<ui:param name="rightToolBar" value="#{empty rightToolBar ? 'addRow' : rightToolBar}"/>
+	<ui:param name="panelOpened" value="#{empty panelOpened ? true : panelOpened}"/>
+	
+	<ui:param name="widthExterno" value="#{empty widthExterno ? '93%' : widthExterno}" />
+	
+	<a:outputPanel ajaxRendered="true">
+	      <s:div style="width: #{canEdit ? leftPanelWidth : '100%'}; float: left">
+	         #{leftTitle}
+	      	 <s:div rendered="#{!customLeftGrid}">
+		         <wi:datalist bean="#{leftGrid}" 
+		            title="#{gridLeftTitle}"
+		            isLeftGrid = "true"
+		            customHeader="false"
+		            gridId="l_#{gridId}"
+		          	useDatamodel = "#{empty useDatamodel ? true : useDatamodel}"
+		          	headerToolBar = "#{headerToolBarLeft}"
+		          	toolBar = "#{leftToolBar}"
+		          	datamodel="#{datamodel}" 
+		          	columnList="#{columnLeftList}" />
+	      	 </s:div>      	
+	         <ui:insert name="customLeftGrid" />        	
+	      </s:div>
+      
+	      <s:div rendered="#{canEdit}" style="width: #{rightPanelWidth}; float: left; margin-left: 1%">
+	         <wi:datagrid bean="#{rightGrid}" 
+	            title="#{gridRightTitle}"
+	            toolBar = "#{rightToolBar}"
+	            headerToolBar = "#{headerToolBarRight}"
+	         	searchOpen = "false"
+	         	showSearchFields="true"
+	         	actionButtonLimpar="#{actionButtonLimpar}"
+	         	tableWidthExterno="#{widthExterno}"
+	         	columnList="#{columnRightList}">
+	         	<ui:insert/>
+	         </wi:datagrid>
+	      </s:div>    
+	</a:outputPanel>
+	
+</ui:composition>

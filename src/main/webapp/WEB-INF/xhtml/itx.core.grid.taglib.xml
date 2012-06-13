@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE facelet-taglib PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+  "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
+      
+<facelet-taglib>
+	<namespace>http://www.itx.com.br/jsf</namespace>
+
+	<tag>
+		<tag-name>dataTable</tag-name>
+		<source>tags/grid/dataTable.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>datagrid</tag-name>
+		<source>tags/grid/datagrid.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>datagridSearch</tag-name>
+		<source>tags/grid/datagridSearch.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>datalist</tag-name>
+		<source>tags/grid/datalist.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>m2mGrid</tag-name>
+		<source>tags/grid/m2mGrid.xhtml</source>
+	</tag>
+	
+	<!-- Columns --> 
+	
+	<tag>
+		<tag-name>column</tag-name>
+		<source>tags/grid/column.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>columnSituacao</tag-name>
+		<source>tags/grid/columns/columnSituacao.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnBoolean</tag-name>
+		<source>tags/grid/columns/columnBoolean.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>columnDateTime</tag-name>
+		<source>tags/grid/columns/columnDateTime.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnEnum</tag-name>
+		<source>tags/grid/columns/columnEnum.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnOutputText</tag-name>
+		<source>tags/grid/columns/columnOutputText.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnOutputTextIdent</tag-name>
+		<source>tags/grid/columns/columnOutputTextIdent.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnSelectBooleanCheckbox</tag-name>
+		<source>tags/grid/columns/columnSelectBooleanCheckbox.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnDataList</tag-name>
+		<source>tags/grid/columns/columnDataList.xhtml</source>
+	</tag>
+	
+	<!-- Tools -->
+	
+	<tag>
+		<tag-name>toolBar</tag-name>
+		<source>tags/grid/tools/toolBar.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarEdit</tag-name>
+		<source>tags/grid/tools/toolBarEdit.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarInactive</tag-name>
+		<source>tags/grid/tools/toolBarInactive.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarRemove</tag-name>
+		<source>tags/grid/tools/toolBarRemove.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarSelectRemove</tag-name>
+		<source>tags/grid/tools/toolBarSelectRemove.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarReport</tag-name>
+		<source>tags/grid/tools/toolBarReport.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>toolBarReportExcel</tag-name>
+		<source>tags/grid/tools/toolBarReportExcel.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>toolBarPrint</tag-name>
+		<source>tags/grid/tools/toolBarPrint.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>toolBarTextPreview</tag-name>
+		<source>tags/grid/tools/toolBarTextPreview.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>toolBarGraphicImage</tag-name>
+		<source>tags/grid/tools/toolBarGraphicImage.xhtml</source>
+	</tag>
+					
+</facelet-taglib>

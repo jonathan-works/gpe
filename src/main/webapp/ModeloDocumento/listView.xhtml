@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+				template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+
+	<ui:define name="title">#{messages['modeloDocumento.titlePage']}</ui:define>
+	<ui:param name="home" value="#{modeloDocumentoHome}" />
+
+	<ui:define name="searchGrid">
+	    <wi:dataTable values="#{modeloDocumentoList.list(15)}"
+					  bean="#{modeloDocumentoList}"
+					  tableTitle="#{messages['modeloDocumento.titleGrid']}"
+					  id="modeloDocumentoList"
+					  rowId="#{row.idModeloDocumento}">
+			<ui:define name="searchForm">
+				<wi:searchForm formId="modeloDocumentoSearchForm" 
+							   formTitle="#{messages['modeloDocumento.titleGrid']}">
+					<wi:selectOneMenuEntity id="tipoModeloDocumento"
+							 				label="#{messages['modeloDocumento.tipoModeloDocumento']}"
+								 		    value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
+							 				items="#{tipoModeloDocumentoItems}"
+							 				showLabelTodos="true"/>	
+					<wi:inputText id="tituloModeloDocumento"
+								  label="#{messages['modeloDocumento.tituloModeloDocumento']}"
+								  value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />							
+					<wi:selectSituacaoOneMenu id="situacao"
+										      label="#{messages['modeloDocumento.ativo']}"
+											  value="#{modeloDocumentoList.entity.ativo}" />												
+				</wi:searchForm>
+			</ui:define>
+			
+			<ui:define name="headerToolBar">
+				<wi:toolBarReport  />
+			</ui:define>
+			
+			<wi:columnOutputText columnId="tipoModeloDocumento"
+							     columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
+							     value="#{row.tipoModeloDocumento}"/>				
+			<wi:columnOutputText columnId="tituloModeloDocumento"
+							     columnHeader="#{messages['modeloDocumento.tituloModeloDocumento']}"
+							     value="#{row.tituloModeloDocumento}"/>				
+			
+			<wi:columnSituacao  columnHeader="#{messages['modeloDocumento.ativo']}" />					
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		
+		<wi:dataForm formId="modeloDocumentoForm" 
+					 formTitle="#{messages['modeloDocumento.titleForm']}">
+			<wi:selectOneMenuEntity id="tipoModeloDocumento"
+					 				label="#{messages['modeloDocumento.tipoModeloDocumento']}"
+						 		    value="#{modeloDocumentoHome.instance.tipoModeloDocumento}"
+					 				items="#{tipoModeloDocumentoItems}"
+					 				required="true"
+					 				showLabelSelecione="true"/>					 
+			<wi:inputText id="tituloModeloDocumento"
+						  label="#{messages['modeloDocumento.tituloModeloDocumento']}"
+						  value="#{modeloDocumentoHome.instance.tituloModeloDocumento}"
+						  required="true" />	
+			<wi:selectSituacaoRadio id="ativo"
+									label="#{messages['modeloDocumento.ativo']}"
+									value="#{modeloDocumentoHome.instance.ativo}"
+									required="true" />		
+			<wi:editor  id="modeloDocumento" 
+						label="#{messages['modeloDocumento.modeloDocumento']}"
+						value="#{modeloDocumentoHome.instance.modeloDocumento}"
+						showVariables="true"
+						required="true" />
+							
+			<wi:imageUpload />
+			
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+				template="/WEB-INF/xhtml/templates/templatePopUp.xhtml">
+					
+	<ui:define name="body">
+	
+		<style type="text/css">
+		    @media print{
+		      .onlyprint{display: block;visibility: visible;}
+		      .noprint{display: none;visibility: hidden;}
+		    }
+ 			</style>
+	
+		<s:div>
+			<wi:datalist bean="#{documentoProcessoAnexadoDocumentoGrid}" 
+								title="Documentos do Processo" 
+								toolBar="none"
+								headerToolBar="none"
+								useLink="true"
+								link="/Processo/ConsultaProcesso/Detalhe/paginator.seam"
+								columnList="processoDocumento,usuarioInclusao,dataInclusao,processoDocumentoBin.sizeFormatado">
+							</wi:datalist>
+		</s:div>
+		<div style="width: 100%; text-align: center">
+    		<button onclick="window.print();" class="noprint">Imprimir</button>
+    	</div>
+	</ui:define>	
+			          
+</ui:composition>		          

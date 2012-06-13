@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+<rich:panel bodyClass="panel"
+		style="width:706px; margin-left:3px; clear:both; margin-top:3px">
+	
+	<s:div id="timersDiv" style="width:200px; float:left;">
+
+		<ui:param name="node" value="#{processBuilder.nodeHandler}" />
+		<ui:decorate template="dataTable.xhtml">
+			<ui:param name="values" value="#{node.timerList}" />
+			<ui:param name="styleClass" value="tabelaVariaveis" />
+			<ui:param name="id" value="timersTable" />
+			<ui:param name="style" value="width:100%" />
+			<ui:define name="headerToolBar">
+				 <a:commandLink action="#{node.addTimer()}"
+				 		ajaxSingle="true"
+				 		immediate="true"
+				 		focus="name"
+				 		reRender="timersDiv,timerDiv">
+						<h:graphicImage url="/img/add.gif" 
+							title="Novo temporizador"
+							style="margin-right:5px" />
+				 </a:commandLink>
+			</ui:define>
+			<ui:define name="toolBar">
+				<h:graphicImage title="Excluir temporizador"
+					style="cursor:pointer" 
+					url="/img/remove.png">
+					<a:support event="onclick" 
+						action="#{node.removeTimer(row)}"
+						ajaxSingle="true"
+						onclick="if(!confirm('Confirma?')) return false;"
+						reRender="timersDiv"/>
+				</h:graphicImage>
+			</ui:define>
+			<ui:define name="columns">
+				<rich:column>
+					<f:facet name="header">Temporizadores</f:facet>
+					<ui:param name="current" value="#{row == processBuilder.nodeHandler.currentTimer}" />
+					<ui:param name="styleTimerName" 
+						value="#{current ? 'font-weight:bold' : ''}" />
+					<s:div style="margin-left:2px;">
+						 <a:commandLink action="#{node.setCurrentTimer(row)}"
+						 		ajaxSingle="true" reRender="timersDiv,timerDiv">
+							 	<h:outputText value="#{row.timerName}" style="#{styleTimerName}"/>
+						 </a:commandLink>
+					</s:div>
+				</rich:column>
+			</ui:define>
+		</ui:decorate>
+	
+	</s:div>
+	
+	<s:div id="timerDiv"
+		style="float:left; margin-left:5px">
+		<s:div rendered="#{!empty node.currentTimer}">
+			<ui:param name="timer" value="#{node.currentTimer}" />
+			<wi:inputText id="name" value="#{node.timerName}" label="Nome">
+				<wi:ajaxSupport reRender="timersTable"/>
+			</wi:inputText>
+			<wi:inputText id="duedate" value="#{node.dueDateValue}" 
+				style="width:50px"
+				widthDiv="50px"
+				label="Prazo">
+				<wi:ajaxSupport />
+			</wi:inputText>
+	
+			<wi:selectOneMenuEnum id="unit" value="#{node.dueDateUnit}"
+				style="width:100px"
+				widthDiv="100px"
+				label="Unidade"
+				items="#{node.dueDateDefaultUnit.values()}"
+				noSelectionLabel="[Selecione...]"
+				optionText="label">
+				<wi:ajaxSupport/>			
+			</wi:selectOneMenuEnum>
+			
+			<wi:selectBooleanCheckbox id="business" value="#{node.dueDateBusiness}"
+				style="width:30px"
+				widthDiv="40px"
+				label="Comercial?">
+				<wi:ajaxSupport />
+			</wi:selectBooleanCheckbox>
+			
+			<wi:selectOneMenu id="transition" value="#{timer.transitionName}"
+				label="Transição"
+				items="#{node.getTransitions()}"
+				noSelectionLabel="[Selecione...]">
+				<wi:ajaxSupport/>			
+			</wi:selectOneMenu>
+		</s:div>
+	</s:div>	
+
+</rich:panel>
+
+</ui:composition>

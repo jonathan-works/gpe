@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a="http://richfaces.org/a4j"
+	  xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:s="http://jboss.com/products/seam/taglib"
+      xmlns:wi= "http://www.itx.com.br/jsf">
+	<head>    
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <title>#{nomeSistema}:&#160;<ui:insert name="title"/></title>
+		<a:loadScript src="/js/liveclock.js" />
+		<a:loadScript src="/js/jqueryExt.js" /> 
+		<link rel="icon" href="#{util.contextPath}/favicon.ico" type="image/x-icon" />	
+		<ui:include src="cssPage.xhtml" /> 
+	</head>
+
+	<body>     
+	    <ui:param name="canEdit" value="#{home.editable}" />
+	    
+	    <ui:include src="header.xhtml" />
+		<ui:include src="ajaxQueue.xhtml" />
+	
+	    <ui:include src="menu.xhtml">
+	        <ui:param name="projectName" value="#{nomeSistema}"/>
+	    </ui:include>
+	
+		<s:div styleClass="pageBody" id="pageBody">  	 		
+			<wi:quadro>	
+				<rich:tabPanel switchType="ajax" 
+				               headerSpacing="2"
+							   selectedTab="#{home.tab}">			
+					<rich:tab action="#{home.newInstance}" 
+						      id="search" 
+						      label="Pesquisa" 
+						      status=":status">
+						<a:region renderRegionOnly="true">
+							<ui:insert name="searchGrid"/>
+						</a:region>
+					</rich:tab>				
+					<ui:insert name="tabs" />		
+				</rich:tabPanel>			
+			</wi:quadro>					
+		</s:div>	
+	</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

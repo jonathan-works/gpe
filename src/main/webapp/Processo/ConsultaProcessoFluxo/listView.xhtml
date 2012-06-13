@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+				template="/WEB-INF/xhtml/templates/template-sample.xhtml">
+                       
+	<ui:param name="pageTitle" value="#{messages['consultaProcesso.titulo']}" />                       
+	<ui:define name="title">#{pageTitle}</ui:define>
+	<ui:param name="home" value="#{consultaProcessoHome}" />
+	<ui:param name="canEdit" value="true" />
+	
+	<ui:define name="body">
+	
+		<h:commandButton 
+			id="botaoListDocProcess" 
+            value="Visualização de Petições/Documentos (Paginador)" 
+            onclick="openPopUp('listaDocumentoAdvogadoO', 'listProcessConsultado.seam?cid=#{conversation.id}');"
+            styleClass="dr-tbpnl-tb-inact"
+            style="width: 320px !important"
+    		rendered="false"
+   		/> 
+		<table width="100%" border="0" style="margin-top: 20px;">
+		  <tr>
+		    <td valign="top" width="30%">			    
+			    <div class="leftPanel">
+					<wi:form form="#{consultaProcessoFluxoForm}" formTitle="Pesquisa" />
+					<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
+		    	</div>    
+		    </td>
+		    <td valign="top" width="70%">			    
+			    <s:div styleClass="rightPanel">
+					<wi:datalist 
+						bean="#{consultaProcessoFluxoGrid}" 
+						gridId="consultaProcessoFluxoGrid"
+						title="#{messages['consultaProcessoGrid.titulo']}"
+						toolBar="toolBarSelect"
+						linkDetalhe="/Processo/ConsultaProcessoFluxo/Detalhe/list.seam"					
+						headerToolBar="empty"					
+						pesqHome="#{consultaProcessoHome}"/>
+				</s:div>		    
+		    </td>
+		  </tr>
+		</table>
+	</ui:define>
+</ui:composition>

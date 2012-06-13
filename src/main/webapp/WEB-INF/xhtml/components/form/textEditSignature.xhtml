@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:rich="http://richfaces.org/rich">
+		
+		<s:div id="testeEditSignatureDiv" >
+			<wi:selectOneMenuEntity id="tipoProcessoDocumento"
+						 label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+						 value="#{processoHome.tipoProcessoDocumento}"
+						 items="#{tipoProcessoDocumentoInternoItems}" 
+						 required="true"
+						 noSelectionLabel="Selecione...">
+				<a:support event="onchange"
+						   oncomplete="#{automaticEventsTree.carregaEventos()}"
+						   action="#{processoHome.onSelectProcessoDocumento()}"
+					   	   reRender="divEventsTreeTextEdit, divAppletId, appletAssinar"/>
+			</wi:selectOneMenuEntity>
+			
+			<br/>
+			
+			<s:div id="divEventsTreeTextEdit">
+				<wi:automaticEventsTree agrupamentos="#{processoHome.idAgrupamentos}"
+									    reRender="divAppletId"
+									    inNewLine="true"
+									    rendered="#{processoHome.renderEventsTree}"/>
+			</s:div>
+			
+			<s:div id="divAppletId"> 
+				<br />
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+				    	<td>
+				    		<s:div id="editorTextEditComboDiv">
+								<wi:editor id="#{id}Editor"
+										   value="#{processoHome.processoDocumentoBin.modeloDocumento}"/>
+							</s:div>
+				    	</td>
+				  	</tr>
+				  	<tr>
+				    	<td>
+				    		<a:jsFunction name="renderTransitions" reRender="taskButtonsDiv"/>
+					        <a:jsFunction name="submitForm" 
+					           	 		  action="#{home.assinarDocumento()}"
+					           	 		  oncomplete="window.location.reload()"/>					
+					
+							<h:inputHidden id="#{id}certChain" value="#{processoHome.certChain}" />					
+							<h:inputHidden id="#{id}signature" value="#{processoHome.signature}" />
+							 
+							<ui:param name="path" value="#{'taskInstanceForm:'.concat(id)
+														   .concat(':').concat(id)}"/>
+							<ui:param name="path2" value="#{'taskInstanceForm:'.concat(id)
+														   .concat(':').concat(id).concat('EditorDecoration:')
+														   .concat(id)}"/>										   
+							<ui:param name="idEditor" value="#{path2.concat('EditorTextArea')}"/>
+							<ui:param name="signature" value="#{path.concat('signature')}"/>
+							<ui:param name="certChain" value="#{path.concat('certChain')}"/>
+							
+							<s:div id="appletAssinar" rendered="#{not empty automaticEventsTree.eventoBeanList}">
+								<applet width="140" 
+										height="25" 
+										id="certificacao" 
+										code="SmartCardSignerApplet" 
+										archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+									<param name="formId" value="taskInstanceForm" />
+									<param name="signButtonCaption" value="Assinar Digitalmente" />
+									<param name="certificationChainField" value="#{certChain}" />
+									<param name="signatureField" value="#{signature}" />
+									<param name="urlDownload" value="#{util.urlProject}/certificado/" />
+									<param name="getDataFunction" value="getData()" />	
+									<param name="useBase64Function" value="useBase64()" />
+									<param name="functionPreSign" value="showLoading()" />	
+									<param name="functionPosSign" value="hideLoading();submitForm();" />		
+									<param name="dataAtual" value="#{currentDatetime}" />	
+									<param name="caListDownloadFile" value="#{util.urlProject}/downloadCaList.seam" />				
+								</applet> 
+								<script>
+									function useBase64() {
+										return 'false';
+									}
+									function getData() {
+										var data;
+										data = tinyMCE.editors['#{idEditor}'].getContent();
+										return data;			     
+									}			
+									function clearSign() {
+										$('#{signature}').value = "";
+										$('#{certChain}').value = "";
+									}
+								</script>   			
+							</s:div>
+				    	</td>
+				 	</tr>
+				</table>		
+			</s:div>	
+		</s:div>	
+</ui:composition>

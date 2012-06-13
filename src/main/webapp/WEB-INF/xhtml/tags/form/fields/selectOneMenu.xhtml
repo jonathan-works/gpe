@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+	
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:c="http://java.sun.com/jstl/core">
+				
+	<ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+	<ui:param name="noSelectionLabel" value="#{empty noSelectionLabel ? (showLabelSelecione ? 'Selecione...' : (showLabelTodos ? '[Todos]' : '' )) : noSelectionLabel }" />
+	
+	<s:decorate id="#{id}Decoration" 
+				template="#{template}"
+				rendered="#{wi:get(rendered, true)}">
+		<ui:define name="label">#{label}</ui:define>
+		<h:selectOneMenu id="#{id}"
+						 value="#{value}"
+						 style="#{style}"
+						 required="#{required}" 
+						 onchange="#{onchange}"
+						 readonly="#{readonly}"
+						 disabled="#{disabled}">
+			<c:if test="#{not empty valueItems}" >
+				<f:selectItems value="#{valueItems}"/>
+			</c:if>
+			<c:if test="#{empty valueItems}">
+				<s:selectItems value="#{items}"
+					var="v"
+					label="#{empty optionExpression ? (empty optionLabel ? v : optionLabel) : util.getSelectExpressionSelectItem(optionExpression, v)}"
+					hideNoSelectionLabel="#{hideNoSelectionLabel}"
+					noSelectionLabel="#{noSelectionLabel}"/>
+			</c:if>
+			<ui:insert />
+		</h:selectOneMenu>
+	</s:decorate>
+	
+</ui:composition>
