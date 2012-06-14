@@ -24,17 +24,19 @@
 	<a:loadScript src="/js/util.js" />
 	
 	<a:commandButton id="#{id}"
-					 action="#{util.invokeMethod(action)}"
-					 rendered="#{wi:get(rendered,true)}"
-					 limitToList="true"
-					 ajaxSingle="#{ajaxSingle}"
-					 onclick="showLoading();#{onclick}"
-					 oncomplete="hideLoading();#{oncomplete}"
-					 value="#{value}"
-					 reRender="#{reRender}"
-					 style="#{buttonStyle}"
-					 disabled="#{disabled}"
-					 styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}">
+		action="#{util.invokeMethod(action)}"
+		tabindex="#{tabindex}"
+		rendered="#{wi:get(rendered,true)}"
+		limitToList="true"
+		ajaxSingle="#{ajaxSingle}"
+		onclick="showLoading();#{onclick}"
+		oncomplete="hideLoading();#{oncomplete}"
+		value="#{value}"
+		reRender="#{reRender}"
+		eventsQueue="#{eventsQueue}"
+		style="#{buttonStyle}"
+		disabled="#{disabled}"
+		styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}">
 		<ui:insert />
 	</a:commandButton>	
 			   
