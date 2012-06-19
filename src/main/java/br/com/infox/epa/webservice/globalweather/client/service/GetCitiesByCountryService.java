@@ -56,7 +56,9 @@ public class GetCitiesByCountryService {
 				String url = MessageFormat.format(WEATHER, cidade, "brazil").replace(" ", "%20");
 				String xml = FileDataDownload.getUrlAsString(url);
 				xml = StringEscapeUtils.unescapeHtml(xml);	
-				return processaXMLClima(xml);
+				beanClima = processaXMLClima(xml);
+				mapBeanClima.put(cidade, beanClima);
+				return beanClima;
 			} catch (Exception e) {
 				FacesMessages.instance().add(Severity.ERROR, "Erro: " + e.getMessage(), e);
 				return null;
@@ -86,6 +88,7 @@ public class GetCitiesByCountryService {
 		beanClima.setLocation(getValueTag("Location", xml));
 		beanClima.setTime(getValueTag("Time", xml));
 		beanClima.setWind(getValueTag("Wind", xml));
+		beanClima.setRelativeHumidity(getValueTag("RelativeHumidity", xml));
 		beanClima.setTemperature(getValueTag("Temperature", xml));
 		beanClima.setPressure(getValueTag("Pressure", xml));
 		return beanClima;
