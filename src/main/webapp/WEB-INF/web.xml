@@ -52,6 +52,15 @@
 		<param-value>true</param-value>
 	</context-param>
 
+	<context-param>
+	  <param-name>com.sun.faces.serializeServerState</param-name>
+	  <param-value>true</param-value>
+	 </context-param>      
+	 <context-param>
+	  <param-name>com.sun.faces.compressViewState</param-name>
+	  <param-value>true</param-value>
+	 </context-param>
+
    <!-- Seam -->
     
    <listener>

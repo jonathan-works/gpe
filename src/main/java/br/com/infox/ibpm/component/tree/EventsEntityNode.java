@@ -20,15 +20,15 @@ public class EventsEntityNode extends EntityNode<Evento> {
 	protected List<EntityNode<Evento>> rootNodes;
 	private boolean isMultiplo;
 	
-	public EventsEntityNode(Query queryChildren) {
+	public EventsEntityNode(String queryChildren) {
 		super(queryChildren);
 	}
 
-	public EventsEntityNode(List<Query> queryChildren) {
+	public EventsEntityNode(String[] queryChildren) {
 		super(queryChildren);
 	}
 	
-	public EventsEntityNode(EntityNode<Evento> parent, Evento entity, List<Query> queryChildren) {
+	public EventsEntityNode(EntityNode<Evento> parent, Evento entity, String[] queryChildren) {
 		super(parent, entity, queryChildren);
 	}
 

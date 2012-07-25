@@ -12,16 +12,16 @@ public class LocalizacaoNodeSearch extends EntityNode<Localizacao> {
 	private static final long serialVersionUID = 1L;
 	private boolean showEstrutura;
 
-	public LocalizacaoNodeSearch(Query queryChildren) {
+	public LocalizacaoNodeSearch(String queryChildren) {
 		super(queryChildren);
 	}
 	
 	public LocalizacaoNodeSearch(LocalizacaoNodeSearch localizacaoNodeSearch,
-			Localizacao n, List<Query> queryChildren) {
+			Localizacao n, String[] queryChildren) {
 		super(localizacaoNodeSearch, n, queryChildren);
 	}
 
-	public LocalizacaoNodeSearch(List<Query> queryChildrenList) {
+	public LocalizacaoNodeSearch(String[] queryChildrenList) {
 		super(queryChildrenList);
 	}
 	
@@ -36,7 +36,7 @@ public class LocalizacaoNodeSearch extends EntityNode<Localizacao> {
 	}
 	
 	@Override
-	protected List<Localizacao> getChildrenList(Query query, Localizacao localizacao) {
+	protected List<Localizacao> getChildrenList(String query, Localizacao localizacao) {
 		List<Localizacao> list = null;
 		Localizacao estruturaFilho = localizacao == null ? null : localizacao.getEstruturaFilho();
 		if (showEstrutura) {

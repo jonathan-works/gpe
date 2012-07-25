@@ -1,3 +1,5 @@
+
+
 /*
  IBPM - Ferramenta de produtividade Java
  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -21,7 +23,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.jboss.seam.core.Events;
+import br.com.itx.util.EntityUtil;
 
 
 @SuppressWarnings("unchecked")
@@ -36,32 +38,30 @@ public class EntityNode<E> implements Serializable {
 	protected E entity;
 	protected E ignore;
 	private boolean leaf;
-	protected List<Query> queryChildren = new ArrayList<Query>();
+	
+	protected String[] queryChildren;
+	
 	protected List<EntityNode<E>> rootNodes;
-	protected List<EntityNode<E>> nodes;
+	private List<EntityNode<E>> nodes;
 	//Variavel para adição da selectBooleanCheckBox 
 	private Boolean selected = false;
-	private EntityNode<E> parent;
+	protected EntityNode<E> parent;
  
 	/**
 	 * 
 	 * @param queryChildren
 	 *            query que retorna os nós filhos da entidade selecionada
 	 */
-	public EntityNode(Query queryChildren) {
-		this.queryChildren.add(queryChildren);
+	public EntityNode(String queryChildren) {
+		this.queryChildren = new String[1];
+		this.queryChildren[0] = queryChildren;
 	}
 
-	public EntityNode(List<Query> queryChildren) {
+	public EntityNode(String[] queryChildren) {
 		this.queryChildren = queryChildren;
-		
-	}
-	
-	public EntityNode() {
-		
 	}
 
-	public EntityNode(EntityNode<E> parent, E entity, List<Query> queryChildren) {
+	public EntityNode(EntityNode<E> parent, E entity, String[] queryChildren) {
 		this.queryChildren = queryChildren;
 		this.parent = parent;
 		this.entity = entity;
@@ -76,7 +76,7 @@ public class EntityNode<E> implements Serializable {
 		if (nodes == null) {
 			nodes = new ArrayList<EntityNode<E>>();
 			boolean parent = true;
-			for (Query query : queryChildren) {
+			for (String query : queryChildren) {
 				if (!isLeaf()) {
 					List<E> children = getChildrenList(query, entity); 
 					for (E n : children) {
@@ -90,13 +90,12 @@ public class EntityNode<E> implements Serializable {
 					parent = false;
 				}
 			}
-			
-			Events.instance().raiseEvent("entityNodesPostGetNodes", nodes);
 		}
 		return nodes;
 	}
 
-	protected List<E> getChildrenList(Query query, E entity) {
+	protected List<E> getChildrenList(String hql, E entity) {
+		Query query = EntityUtil.createQuery(hql);
 		return query.setParameter(PARENT_NODE, entity).getResultList();
 	}
 
@@ -178,12 +177,12 @@ public class EntityNode<E> implements Serializable {
 	public EntityNode<E> getParent() {
 		return parent;
 	}
-	
-	protected List<Query> getQueryChildren() {
-		return queryChildren;
-	}
 
 	public boolean canSelect() {
 		return true;
+	}
+	
+	public String[] getQueryChildren() {
+		return queryChildren;
 	}
 }

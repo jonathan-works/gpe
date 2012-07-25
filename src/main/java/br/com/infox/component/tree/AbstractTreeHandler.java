@@ -38,7 +38,7 @@ import br.com.itx.util.EntityUtil;
 
 
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable{
+public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable {
 
 	private static final LogProvider log = Logging.getLogProvider(AbstractTreeHandler.class);	
 	
@@ -104,11 +104,10 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 	 * 
 	 * @return
 	 */
-	protected List<Query> getQueryChildrenList() {
-		List<Query> list = new ArrayList<Query>();
-		Query queryChildren = getEntityManager().createQuery(getQueryChildren());
-		list.add(queryChildren);
-		return list;
+	protected String[] getQueryChildrenList() {
+		String[] children = new String[1];
+		children[0] = getQueryChildren();
+		return children;
 	}
 	
 	protected EntityManager getEntityManager() {

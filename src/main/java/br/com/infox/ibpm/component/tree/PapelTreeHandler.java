@@ -62,9 +62,8 @@ public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
 	@Override
 	public List<EntityNode<Papel>> getRoots() {
 		List<EntityNode<Papel>> nodes = new ArrayList<EntityNode<Papel>>();
-		List<Query> queries = new ArrayList<Query>();
-		queries.add(getEntityManager().createQuery(getQueryChildren()));
-		EntityNode<Papel> node = new EntityNode<Papel>(null, getPapelAtual(), queries);
+		String[] hql = new String[]{getQueryChildren()};
+		EntityNode<Papel> node = new EntityNode<Papel>(null, getPapelAtual(), hql);
 		nodes.add(node);
 		return nodes;
 	}

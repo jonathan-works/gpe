@@ -1,9 +1,11 @@
 package br.com.infox.core.action.list;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
 
-public class SearchField {
+public class SearchField implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private String fieldName;
 	private SearchCriteria criteria;
 	private String expression;

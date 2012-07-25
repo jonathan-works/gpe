@@ -787,7 +787,7 @@
 		<hibernate.validator.version>3.1.0.GA</hibernate.validator.version>
 		<project.build.sourceEncoding>ISO-8859-1
 		</project.build.sourceEncoding>
-		<richfaces.version>3.3.1.GA</richfaces.version>
+		<richfaces.version>3.3.3.Final</richfaces.version>
 		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
 		<hibernate.show_sql>true</hibernate.show_sql>
 		<hibernate.format_sql>true</hibernate.format_sql>

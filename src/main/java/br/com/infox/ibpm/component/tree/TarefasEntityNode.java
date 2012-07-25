@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import org.jboss.seam.core.Events;
 
 import br.com.infox.component.tree.EntityNode;
+import br.com.itx.util.EntityUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	
@@ -18,18 +19,18 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	protected List<EntityNode<E>> caixas;
 	private List<Query> queryCaixas = new ArrayList<Query>();
 	
-	public TarefasEntityNode(Query queryChildren) {
+	public TarefasEntityNode(String queryChildren) {
 		super(queryChildren);
 	}
 
-	public TarefasEntityNode(List<Query> queryChildren, List<Query> queryCaixas) {
+	public TarefasEntityNode(String[] queryChildren, List<Query> queryCaixas) {
 		super(queryChildren);
 		this.setQueryCaixas(queryCaixas);
 	}
 
 	public TarefasEntityNode(EntityNode<Map<String,Object>> parent, 
 			Map<String,Object> entity,
-			List<Query> queryChildren, List<Query> queryCaixas) {
+			String[] queryChildren, List<Query> queryCaixas) {
 		super(parent, entity, queryChildren);
 		this.queryCaixas = queryCaixas;
 	}
@@ -80,7 +81,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		if (nodes == null) {
 			nodes = new ArrayList<TarefasEntityNode<E>>();
 			boolean parent = true;
-			for (Query query : queryChildren) {
+			for (String query : queryChildren) {
 				if (!isLeaf()) {
 					List<E> children = (List<E>) getChildrenList(query, entity); 
 					for (E n : children) {
@@ -107,7 +108,8 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected List<Map<String,Object>> getChildrenList(Query query, Map<String,Object> entity) {
+	protected List<Map<String,Object>> getChildrenList(String hql, Map<String,Object> entity) {
+		Query query = EntityUtil.createQuery(hql);
 		return query.setParameter("idFluxo", entity.get("idFluxo"))
 				.getResultList();
 	}

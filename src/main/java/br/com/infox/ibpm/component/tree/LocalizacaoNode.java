@@ -14,12 +14,12 @@ public class LocalizacaoNode extends LocalizacaoNodeSearch {
 
 	private static final long serialVersionUID = 1L;
 
-	public LocalizacaoNode(List<Query> queryChildrenList) {
+	public LocalizacaoNode(String[] queryChildrenList) {
 		super(queryChildrenList);
 	}
 
 	public LocalizacaoNode(LocalizacaoNode localizacaoNode, Localizacao n,
-			List<Query> queryChildren) {
+			String[] queryChildren) {
 		super(localizacaoNode, n, queryChildren);
 	}
 

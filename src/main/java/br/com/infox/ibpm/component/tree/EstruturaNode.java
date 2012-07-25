@@ -11,12 +11,12 @@ public class EstruturaNode extends EntityNode<Localizacao> {
 
 	private static final long serialVersionUID = 1L;
 
-	public EstruturaNode(List<Query> queryChildren) {
+	public EstruturaNode(String[] queryChildren) {
 		super(queryChildren);
 	}
 
 	public EstruturaNode(EstruturaNode estruturaNode, Localizacao n,
-			List<Query> queryChildren) {
+			String[] queryChildren) {
 		super(estruturaNode, n, queryChildren);
 	}
 

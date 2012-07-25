@@ -116,8 +116,8 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	
 	private List<Query> getQueryCaixasList() {
 		List<Query> list = new ArrayList<Query>();
-		Query queryChildren = getEntityManager().createQuery(getQueryCaixas());
-		list.add(queryChildren);
+		Query query = getEntityManager().createQuery(getQueryCaixas());
+		list.add(query);
 		return list;
 	}
 	
