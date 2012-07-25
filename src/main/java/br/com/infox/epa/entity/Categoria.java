@@ -1,5 +1,6 @@
 package br.com.infox.epa.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,8 @@ import br.com.infox.epa.query.CategoriaQuery;
 				@NamedQuery(name=CategoriaQuery.LIST_PROCESSO_EPA_BY_CATEGORIA,
 						    query=CategoriaQuery.LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY)
 			  })
-public class Categoria {
+public class Categoria implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	public static final String TABLE_NAME = "tb_categoria";
 

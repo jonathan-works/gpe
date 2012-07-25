@@ -17,7 +17,9 @@ import org.hibernate.validator.NotNull;
 
 @Entity
 @Table(name=Natureza.TABLE_NAME, schema="public")
-public class Natureza {
+public class Natureza implements java.io.Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String TABLE_NAME = "tb_natureza";
 

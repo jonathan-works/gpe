@@ -1,10 +1,5 @@
 package br.com.infox.component.tree;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Query;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
