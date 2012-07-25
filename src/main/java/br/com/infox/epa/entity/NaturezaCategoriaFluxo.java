@@ -1,5 +1,6 @@
 package br.com.infox.epa.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,9 @@ import br.com.infox.ibpm.entity.Fluxo;
 				@NamedQuery(name=NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA,
 						    query=NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA_QUERY)
 			  })
-public class NaturezaCategoriaFluxo {
+public class NaturezaCategoriaFluxo implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 
 	public static final String TABLE_NAME = "tb_natureza_categoria_fluxo";
 	

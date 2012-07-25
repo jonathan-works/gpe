@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import br.com.infox.ibpm.entity.Usuario;
@@ -22,7 +23,10 @@ import br.com.infox.type.TipoOperacaoLogEnum;
 import br.com.infox.util.DateUtil;
 
 
-public class ConsultaEntidadeLog {
+public class ConsultaEntidadeLog implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
 	private String ip;
 	private String nomeEntidade;
 	private Date dataInicio;

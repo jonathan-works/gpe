@@ -31,7 +31,7 @@ import br.com.infox.ibpm.entity.Localizacao;
     	@NamedQuery(name=NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL,
 			    query=NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL_QUERY)
 	  })
-public class NatCatFluxoLocalizacao implements java.io.Serializable{
+public class NatCatFluxoLocalizacao implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
