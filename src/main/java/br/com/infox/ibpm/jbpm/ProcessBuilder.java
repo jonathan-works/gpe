@@ -394,7 +394,8 @@ public class ProcessBuilder implements Serializable {
 	}
 
 	private void updatePrazoTarefaAtual(Fluxo fluxo) {
-		String nameNode = currentNode.getName();
+		// variável currentNode estava chegando não inicializada em alguns casos
+		String nameNode = (currentNode == null) ? null : currentNode.getName();
 		PrazoTask prazoTask = prazoTaskMap.get(nameNode);
 		if (prazoTask != null) {
 			prazoTask.setPrazo(prazo);
