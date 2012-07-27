@@ -69,7 +69,9 @@
 					
 					<wi:inputDataPeriodo id="periodo"
 					                     valueDateFrom="#{entidadeLogList.instance.dataInicio}"
-					                     valueDateTo="#{entidadeLogList.instance.dataFim}"/>
+					                     valueDateTo="#{entidadeLogList.instance.dataFim}"
+					                     validatePastDateFrom="true"
+					                     validatePastDateTo="true"/>
 										  
 					<s:div styleClass="actionButtons" style="clear: both; width:250px">					  
 						<wi:commandButton id="consulta"
