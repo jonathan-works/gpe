@@ -59,8 +59,9 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	
 	//Campos Adicionados
 //	private TipoDoDocumentoEnum utilizado;
-	private Boolean anexar;
+	private Boolean anexar = Boolean.FALSE;
 	private Boolean numera = Boolean.FALSE;
+	private Boolean sistema = Boolean.FALSE;
 	private String tipoProcessoDocumentoObservacao;
 	private String mascara;
 	private VisibilidadeEnum visibilidade;
@@ -205,6 +206,14 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	
 	public void setAgrupamento(Agrupamento agrupamento) {
 		this.agrupamento = agrupamento;
+	}
+
+	@Column( name="in_sistema")
+	public Boolean getSistema() {
+		return sistema;
+	}
+	public void setSistema(Boolean Sistema) {
+		this.sistema = Sistema;
 	}
 
 	@Override

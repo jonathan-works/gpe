@@ -13,7 +13,9 @@
 			<value>numera : {type: numeravelMascara}</value>
 			<value>tipoProcessoDocumentoObservacao: {properties: {length: 200}}</value>
 			<value>visibilidade: {type: radio, properties: {valueList: "A:Ambos,I:Interno,E:Externo", direction: H} }}</value>
-			<value>publico: {type: radioBoolean}</value>
+			<value>publico : {type: radioBoolean}</value>
+			<value>anexar : {type: radioBoolean}</value>
+			<value>sistema : {type: radioBoolean}</value>
 			<value>agrupamento: {type: combo, properties : { items: agrupamentoItems , noSelectionLabel: 'Selecione...'} }</value>
 		</property>
 	</component>
