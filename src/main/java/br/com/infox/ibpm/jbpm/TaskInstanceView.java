@@ -96,15 +96,19 @@ public class TaskInstanceView implements Serializable{
 					ff.setRequired(var.isRequired() + "");
 					ff.setLabel(VariableHandler.getLabel(name));
 					Object value = taskInstance.getVariable(var.getVariableName());
+					Map<String, Object> properties = new HashMap<String, Object>();
 					if(type.startsWith("textEdit")) {
 						ff.setType("textEditComboReadonly");
 						if (value != null) {
-							ProcessoHome.instance().carregarDadosFluxoEntrada((Integer) value);
+							ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, (Integer) value);
+							if(processoDocumento != null){
+								properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
+								properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
+							}
 						}
 					} else {
 						ff.setType(type);
 					}
-					Map<String, Object> properties = new HashMap<String, Object>();
 					properties.put("readonly", !var.isWritable());
 					if (value == null && !var.isWritable() && "textEdit".equals(type)) {
 						properties.put("rendered", "false");
