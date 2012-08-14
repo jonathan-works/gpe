@@ -267,6 +267,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return destino;
 	}
 	
+	// TODO: Verificar este método retornando uma constante
 	public int getMovimentacaoInicial() {
 		return 0;
 	}
@@ -438,7 +439,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, Usuario usuarioLogado) throws Exception {
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
 			limparAssinatura();
-			throw new Exception("O cadastro do usuário não está assinado.");	
+			throw new Exception("O cadastro do usuário não está assinado.");
 		}
 		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
 			limparAssinatura();
@@ -573,7 +574,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return faltaAssinatura;		
 	}
 	
-	public Boolean getPessoaAssinatura(ProcessoDocumentoBin processoDocumentoBin){
+	public Boolean getPessoaAssinatura(ProcessoDocumentoBin processoDocumentoBin)	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT pa.pessoa as pessoa ");
 		sb.append("FROM ProcessoDocumentoBinPessoaAssinatura pa ");
@@ -581,10 +582,10 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		sb.append("AND exists(select o.idUsuario from PessoaMagistrado o) ");		
 		javax.persistence.Query query = EntityUtil.getEntityManager().createQuery(sb.toString());
 		query.setParameter("processoDocumentoBin", processoDocumentoBin);
-		if(query.getResultList().size() > 0){
+		if(query.getResultList().size() > 0)	{
 			Boolean flag = Boolean.TRUE; 
 		return flag;
-		}else{
+		}	else	{
 			return false;
 		}
 	}
@@ -711,7 +712,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			}	
 		}
 
-	
+	//TODO: ver uso deste método
 	public void teste(){
 		System.out.println("paginator");
 		processoDocumentoBin = pdFluxo.getProcessoDocumentoBin();
