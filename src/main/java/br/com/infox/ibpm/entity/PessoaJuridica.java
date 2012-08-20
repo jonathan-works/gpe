@@ -20,7 +20,7 @@ public class PessoaJuridica implements Serializable {
 	private String razaoSocial;
 	private Boolean ativo;
 
-	@SequenceGenerator(name="generator", sequenceName="core.sq_tb_pessoa_juridica")
+	@SequenceGenerator(name="generator", sequenceName="sq_tb_pessoa_juridica")
 	@Id
 	@GeneratedValue(generator="generator")
 	@Column(name="id_pessoa_juridica", unique=true, nullable=false)
