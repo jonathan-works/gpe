@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ <!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    xmlns:a="http://richfaces.org/a4j"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                      
+	<ui:define name="title">#{messages['pj.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{pjHome}" />
+	
+	<ui:define name="searchGrid">   
+	    <wi:dataTable values="#{pjList.list(15)}"
+					  bean="#{pjList}"
+					  tableTitle="#{messages['pj.titleGrid']}"
+					  id="pjList"
+					  rowId="#{row.idPessoaJuridica}" >
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarPjForm"
+							   formTitle="#{messages['pj.titleSearchForm']}">
+					<wi:inputCnpj id="cnpj"
+									value="#{pjList.entity.cnpj}"
+									label="#{messages['pj.cnpj']}"/>
+					<wi:inputText id="nomePessoa"
+								  label="#{messages['pj.nome']}"
+								  value="#{pjList.entity.nome}"
+								  maxlength="150" />
+					<wi:inputText id="razaoSocial"
+								  label="#{messages['pj.razaoSocial']}"
+								  value="#{pjList.entity.razaoSocial}"
+								  maxlength="100" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="nomePessoa"
+								 columnHeader="#{messages['pj.nome']}"
+								 value="#{row.nome}" />
+			<wi:columnOutputText columnId="razaoSocial"
+								 columnHeader="#{messages['pj.razaoSocial']}"
+								 value="#{row.razaoSocial}" />
+			<wi:columnOutputText columnId="cnpj"
+								 columnHeader="#{messages['pj.cnpj']}"
+								 value="#{row.cnpj}" />
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['agrupamento.ativo']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="cboForm"
+					 formTitle="#{messages['pj.titleForm']}">
+			<wi:inputCnpj id="cnpj"
+						  value="#{pjHome.instance.cnpj}"
+						  label="#{messages['pj.cnpj']}"/>
+			<wi:inputText id="nomePessoa"
+						  label="#{messages['pj.nome']}"
+						  value="#{pjHome.instance.nome}"
+						  maxlength="150" />
+			<wi:inputText id="razaoSocial"
+						  label="#{messages['pj.razaoSocial']}"
+						  value="#{pjHome.instance.razaoSocial}"
+						  maxlength="100" />
+			<wi:selectSituacaoRadio id="ativo"
+								    label="#{messages['agrupamento.ativo']}"
+								    required="true"
+								    value="#{pjHome.instance.ativo}" />
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>
