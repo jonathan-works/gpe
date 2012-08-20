@@ -8,7 +8,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.validator.Length;
 
 @Entity
-@Table(schema="core", name=PessoaJuridica.TABLE_NAME)
+@Table(schema="public", name=PessoaJuridica.TABLE_NAME)
 public class PessoaJuridica implements Serializable {
 
 	public static final String TABLE_NAME = "tb_pessoa_juridica";

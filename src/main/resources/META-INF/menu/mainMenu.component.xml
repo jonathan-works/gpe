@@ -16,13 +16,15 @@
 
 			<value>Cadastros Básicos/assunto.menuText:/Assunto/listView.seam</value>
 			<value>Cadastros Básicos/cbo.menuText:/CBO/listView.seam</value>
-			<value>Cadastros Básicos/cnae.menuText:/CNAE/listView.seam</value>
+			<value>Cadastros Básicos/cna.menuText:/CNAE/listView.seam</value>
 			<value>Cadastros Básicos/Modelo de Documento/Grupo:/GrupoModeloDocumento/listView.seam</value>
 			<value>Cadastros Básicos/Modelo de Documento/Modelo:/ModeloDocumento/listView.seam</value>
 			<value>Cadastros Básicos/Modelo de Documento/Tipo:/TipoModeloDocumento/listView.seam</value>
 			<value>Cadastros Básicos/fluxo.menuText:/Fluxo/listView.seam</value>
 			<value>Cadastros Básicos/localizacao.menuText:/Localizacao/listView.seam</value>
 			<value>Cadastros Básicos/parametro.menuText:/Parametro/listView.seam</value>
+			<value>Cadastros Básicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
+			<value>Cadastros Básicos/pj.menuText:/PessoaJuridica/listView.seam</value>
 			<value>Cadastros Básicos/Tabelas Básicas/cep.menuText:/Cep/listView.seam</value>
 			<value>Cadastros Básicos/variavel.menuText:/Variavel/listView.seam?newInstance=true</value>
 
