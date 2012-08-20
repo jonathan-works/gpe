@@ -30,7 +30,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.util.StopWatch;
 import org.richfaces.component.UITree;
-import org.richfaces.component.html.HtmlTree;
+import org.richfaces.component.html.HtmlTreeNode;
 import org.richfaces.event.NodeSelectedEvent;
 import org.richfaces.function.RichFunction;
 
@@ -137,7 +137,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 
 	@SuppressWarnings("unchecked")
 	public void selectListener(NodeSelectedEvent ev) {
-		HtmlTree tree = (HtmlTree) ev.getSource();
+		HtmlTreeNode tree = (HtmlTreeNode) ev.getSource();
 		treeId = tree.getId();
 		EntityNode<E> en = (EntityNode<E>) tree.getData(); 
 		setSelected((E) en.getEntity());
