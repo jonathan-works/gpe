@@ -135,7 +135,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	public void selectListener(NodeSelectedEvent nodeSelectedEvent)
 			throws AbortProcessingException {
 		HtmlTreeNode tree = (HtmlTreeNode) nodeSelectedEvent.getSource();
-		//treeId = tree.getId();
+		treeId = tree.getId();
 		UITree uiTree = tree.getUITree();
 		EntityNode<Map<String,Object>> en = (EntityNode<Map<String,Object>>) uiTree.getRowData(); 
 		setSelected((Map<String,Object>) en.getEntity());
