@@ -72,12 +72,10 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 
 	private void clearUITree() {
 		if (treeId != null) {
-			UITree tree = (UITree) RichFunction.findComponent(treeId);
-			if (tree != null) {
-				tree.setSelected();
-				tree.setRowKey(null);
-				tree.setSelected();
-			}
+			UITree tree = (HtmlTree) RichFunction.findComponent(treeId);
+			tree.setSelected();
+			tree.setRowKey(null);
+			tree.setSelected();
 		}
 	}
 
