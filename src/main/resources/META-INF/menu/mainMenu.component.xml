@@ -8,8 +8,9 @@
 		<property name="items">
 
 			<value>Cadastros Auxiliares/Eventos/agrupamento.menuText:/Agrupamento/listView.seam</value>
-			<value>Cadastros Auxiliares/Eventos/evento.menuText:/Evento/listView.seam</value>
 			<value>Cadastros Auxiliares/categoria.menuText:/Categoria/listView.seam</value>
+			<value>Cadastros Auxiliares/Eventos/evento.menuText:/Evento/listView.seam</value>
+			<value>Cadastros Auxiliares/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
 			<value>Cadastros Auxiliares/natureza.menuText:/Natureza/listView.seam</value>
 			<value>Cadastros Auxiliares/natCatFluxoLocalizacao.menuText:/NatCatFluxoLocalizacao/listView.seam</value>
 			<value>Cadastros Auxiliares/tipoProcessoDocumento.menuText:/TipoProcessoDocumento/listView.seam</value>
@@ -25,8 +26,11 @@
 			<value>Cadastros Básicos/parametro.menuText:/Parametro/listView.seam</value>
 			<value>Cadastros Básicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
 			<value>Cadastros Básicos/pj.menuText:/PessoaJuridica/listView.seam</value>
+			<value>Cadastros Básicos/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value>
 			<value>Cadastros Básicos/Tabelas Básicas/cep.menuText:/Cep/listView.seam</value>
 			<value>Cadastros Básicos/variavel.menuText:/Variavel/listView.seam?newInstance=true</value>
+			
+			
 
 			<value>Controle de Acesso/Papeis:/useradmin/papelListView.seam</value>		
 			<value>Controle de Acesso/Recursos:/useradmin/recursoListView.seam</value>
