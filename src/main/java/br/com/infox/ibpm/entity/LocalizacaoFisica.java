@@ -7,7 +7,7 @@ import javax.persistence.*;
 import org.hibernate.validator.Length;
 
 @Entity
-@Table(schema="core", name=LocalizacaoFisica.TABLE_NAME)
+@Table(schema="public", name=LocalizacaoFisica.TABLE_NAME)
 public class LocalizacaoFisica implements Serializable {
 
 	public static final String TABLE_NAME = "tb_localizacao_fisica";

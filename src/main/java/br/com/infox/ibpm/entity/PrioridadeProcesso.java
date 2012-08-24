@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@Table(schema="core", name=PrioridadeProcesso.TABLE_NAME)
+@Table(schema="public", name=PrioridadeProcesso.TABLE_NAME)
 public class PrioridadeProcesso implements Serializable {
 	
 	public static final String TABLE_NAME = "tb_prioridade_processo";
