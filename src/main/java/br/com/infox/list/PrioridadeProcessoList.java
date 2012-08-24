@@ -1,0 +1,52 @@
+package br.com.infox.list;
+
+import java.util.Map;
+
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
+import br.com.infox.core.action.list.EntityList;
+import br.com.infox.core.action.list.SearchCriteria;
+import br.com.infox.ibpm.entity.PrioridadeProcesso;
+
+@Name(PrioridadeProcessoList.NAME)
+@BypassInterceptors
+@Scope(ScopeType.PAGE)
+public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso>{
+
+	
+	public static final String NAME = "prioridadeProcessoList";
+
+	private static final long serialVersionUID = 1L;
+	
+	private static final String DEFAULT_EJBQL = "select o from PrioridadeProcesso o";
+	private static final String DEFAULT_ORDER = "peso";
+	
+	
+	@Override
+	protected void addSearchFields() {
+		addSearchField("peso", SearchCriteria.maior);
+		addSearchField("descricaoPrioridade", SearchCriteria.contendo);
+		addSearchField("ativo", SearchCriteria.igual);
+		
+	}
+
+	@Override
+	protected String getDefaultEjbql() {
+		return DEFAULT_EJBQL;
+	}
+
+	@Override
+	protected String getDefaultOrder() {
+		return DEFAULT_ORDER;
+	}
+
+	@Override
+	protected Map<String, String> getCustomColumnsOrder() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
