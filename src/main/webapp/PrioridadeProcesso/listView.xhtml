@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ <!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    xmlns:a="http://richfaces.org/a4j"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                      
+	<ui:define name="title">#{messages['prioridadeProcesso.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{prioridadeProcessoHome}" />
+	
+	<ui:define name="searchGrid">   
+	    <wi:dataTable values="#{prioridadeProcessoList.list(15)}"
+					  bean="#{prioridadeProcessoList}"
+					  tableTitle="#{messages['prioridadeProcesso.titleGrid']}"
+					  id="prioridadeProcessoList"
+					  rowId="#{row.idPrioridade}" >
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarPrioridadeProcessoForm"
+							   formTitle="#{messages['prioridadeProcesso.titleSearchForm']}">
+					<wi:inputText id="descricaoPrioridadeProcesso"
+								  label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
+								  value="#{prioridadeProcessoList.entity.descricaoPrioridade}"
+								  maxlength="150" />
+					<wi:inputNumber id="peso"
+								 value="#{prioridadeProcessoList.entity.peso}"
+								 label="#{messages['prioridadeProcesso.peso']}"/>
+					
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['agrupamento.ativo']}"
+											  value="#{prioridadeProcessoList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="peso"
+								 columnHeader="#{messages['prioridadeProcesso.peso']}"
+								 value="#{row.peso}" />
+			<wi:columnOutputText columnId="descricaoPrioridade"
+								 columnHeader="#{messages['prioridadeProcesso.descricaoPrioridade']}"
+								 value="#{row.descricaoPrioridade}" />
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['agrupamento.ativo']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="prioridadeProcessoForm"
+					 formTitle="#{messages['prioridadeProcesso.titleForm']}">
+			<wi:inputNumber id="peso"
+						 value="#{prioridadeProcessoHome.instance.peso}"
+						 required="true"
+						 label="#{messages['prioridadeProcesso.peso']}"/>
+			<wi:inputText id="descricaoPrioridade"
+						  label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
+						  required="true"
+						  value="#{prioridadeProcessoHome.instance.descricaoPrioridade}"
+						  maxlength="150" />
+			<wi:selectSituacaoRadio id="ativo"
+								    label="#{messages['agrupamento.ativo']}"
+								    required="true"
+								    value="#{prioridadeProcessoHome.instance.ativo}" />
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>
