@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(schema="public", name=PrioridadeProcesso.TABLE_NAME)
 public class PrioridadeProcesso implements Serializable {
 	
-	public static final String TABLE_NAME = "tb_prioridade_processo";
+	public static final String TABLE_NAME = "tb_prioridade";
 	private static final long serialVersionUID = 1L;
 	
 	private Integer idPrioridade;
@@ -16,10 +16,10 @@ public class PrioridadeProcesso implements Serializable {
 	private Integer peso;
 	private Boolean ativo;
 	
-	@SequenceGenerator(name="generator", sequenceName="core.sq_tb_prioridade_processo")
+	@SequenceGenerator(name="generator", sequenceName="sq_tb_prioridade")
 	@Id
 	@GeneratedValue(generator="generator")
-	@Column(name="id_prioridade_processo")
+	@Column(name="id_prioridade")
 	public Integer getIdPrioridade() {
 		return idPrioridade;
 	}
