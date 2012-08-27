@@ -16,7 +16,7 @@ public class PrioridadeProcesso implements Serializable {
 	private Integer peso;
 	private Boolean ativo;
 	
-	@SequenceGenerator(name="generator", sequenceName="core.sq_tb_prioridade_processo")
+	@SequenceGenerator(name="generator", sequenceName="sq_tb_prioridade_processo")
 	@Id
 	@GeneratedValue(generator="generator")
 	@Column(name="id_prioridade_processo")
