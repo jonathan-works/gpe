@@ -64,7 +64,7 @@ public class LocalizacaoFisica implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return descricaoSala + "[Prateleira=" + nrPrateleira + ", Caixa="
+		return descricaoSala + " [Prateleira=" + nrPrateleira + ", Caixa="
 				+ nrCaixa + "]";
 	}
 	
