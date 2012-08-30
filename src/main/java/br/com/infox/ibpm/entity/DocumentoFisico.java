@@ -10,7 +10,7 @@ import org.hibernate.validator.Length;
 import br.com.infox.ibpm.query.DocumentoFisicoQuery;
 
 @Entity
-@Table(schema="core", name=DocumentoFisico.TABLE_NAME)
+@Table(schema="public", name=DocumentoFisico.TABLE_NAME)
 @NamedQueries(value={
 		@NamedQuery(name=DocumentoFisicoQuery.LIST_BY_PROCESSO,
 				    query=DocumentoFisicoQuery.LIST_BY_PROCESSO_QUERY)
@@ -26,7 +26,7 @@ public class DocumentoFisico implements Serializable {
 	private String descricaoDocumentoFisico;
 	private Boolean ativo=true;
 	
-	@SequenceGenerator(name="generator", sequenceName="core.sq_tb_documento_fisico")
+	@SequenceGenerator(name="generator", sequenceName="sq_tb_documento_fisico")
 	@Id
 	@GeneratedValue(generator="generator")
 	@Column(name="id_documento_fisico", unique=true, nullable=false)

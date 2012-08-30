@@ -158,7 +158,87 @@
 					  status=":status">
 				<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
 			</rich:tab>
-		</rich:tabPanel> 
-	</ui:define>
-
+			
+	<!-- Modificar a partir daqui -->
+			
+			<ui:param name="action" value="#{localizacaoDocumentoFisicoAction}" />
+			<rich:tab id="documentoFisicoTab" 
+					  rendered="#{home.isManaged()}"
+					  eventsQueue="default" 
+					  switchType="ajax"
+					  label="#{messages['documentoFisico.titleTab']}"
+					  action="#{action.init()}">
+				<wi:dataForm formId="documentoFisicoForm"
+						 	 formTitle="#{messages['documentoFisico.titleForm']}">
+					<wi:selectOneMenuEntity id="localizacaoFisica"
+											label="#{messages['documentoFisico.localizacaoFisica']}"
+											value="#{action.instance.localizacaoFisica}"
+											items="#{action.localizacaoFisicaList}"
+											required="true"
+											noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}"/>
+							 
+					<!-- Adicionar aqui os campos de Descrição do docuemtno físicos e (in)atividade -->		 
+					<wi:inputText id="descricaoDocumentoFisico"
+								  label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
+								  required="true"
+								  value="#{action.instance.descricaoDocumentoFisico}"
+								  maxlength="150" />
+					<!-- End -->
+					<ui:define name="buttons">
+						<wi:commandButton id="saveDocumentoFisicoButton"
+										  action="localizacaoDocumentoFisicoAction.save"
+										  reRender="documentoFisicoForm, documentoFisicoDiv"
+										  value="Incluir"/>
+					</ui:define>
+				</wi:dataForm>
+				<s:div id="documentoFisicoDiv">
+					<h:form>
+						<rich:dataTable id="documentoFisicoTable"
+										value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+										var="row"
+										rows="10"
+										style="width: 75%">
+							<rich:column style="width: 10%">
+								<f:facet name="header">
+									<wi:toolBarRemove id="headerInactivate"
+													  reRender="documentoFisicoDiv"
+												      actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
+												      title="Inativar todos os Registros"/>
+								</f:facet>
+								<center>
+									<wi:toolBarRemove id="toolBarInactivate"
+													  reRender="documentoFisicoDiv"
+												      actionRemove="localizacaoDocumentoFisicoAction.inactive(row)"/>
+								</center>
+							</rich:column>
+							<rich:column style="width: 40%">
+								<f:facet name="header">
+									<h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />
+								</f:facet>
+								<h:outputText value="#{row.localizacaoFisica}"/>
+							</rich:column>
+							
+							<!-- Inserir aqui as colunas de descrição e atividade -->
+							<rich:column style="width: 40%">
+								<f:facet name="header">
+									<h:outputText value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
+								</f:facet>
+								<h:outputText value="#{row.descricaoDocumentoFisico}"/>
+							</rich:column>
+							<!-- End -->
+							
+						</rich:dataTable>
+						<rich:datascroller id="dsDocumentoFisicoTable"
+										   for="documentoFisicoTable"
+										   lastPageMode="full"
+										   align="left"
+										   renderIfSinglePage="false"/>
+					</h:form>
+				</s:div>
+			</rich:tab>	
+		</rich:tabPanel> 		
+	</ui:define> 
+	<!-- End  -->
+	
+		
 </ui:composition>
