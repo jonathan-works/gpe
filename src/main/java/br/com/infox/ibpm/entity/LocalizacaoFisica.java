@@ -19,7 +19,7 @@ public class LocalizacaoFisica implements Serializable {
 	private String descricaoSala;
 	private Boolean ativo;
 	
-	@SequenceGenerator(name="generator", sequenceName="core.sq_tb_localizacao_fisica")
+	@SequenceGenerator(name="generator", sequenceName="sq_tb_localizacao_fisica")
 	@Id
 	@GeneratedValue(generator="generator")
 	@Column(name="id_localizacao_fisica", unique=true, nullable=false)
