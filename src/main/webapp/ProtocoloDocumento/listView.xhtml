@@ -29,6 +29,8 @@
                       
 	<ui:define name="title">#{messages['protocoloDocumento.titlePage']}</ui:define>
 	
+	<a:loadScript src="/js/components.js"/>
+	
 	<ui:param name="home" value="#{protocoloDocumentoHome}" />
 	<ui:param name="action" value="#{documentoFisicoAction}" />
 	
@@ -39,8 +41,11 @@
 					  id="protocoloDocumentoList"
 					  rowId="#{row.idProtocoloDocumento}">
 			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarProtocoloDocuemntoForm"
+				<wi:searchForm formId="pesquisarProtocoloDocumentoForm"
 							   formTitle="#{messages['protocoloDocumento.titleSearchForm']}">
+					
+					<ui:param name="idDataEntrada" value="dataEntrada" />
+					<ui:param name="idDataSaida" value="dataSaida" />
 					
 					<wi:selectOneMenuEntity id="documentoFisico"
 											label="#{messages['protocoloDocumento.documentoFisico']}"
@@ -50,16 +55,19 @@
 											
 					<wi:inputText id="pessoa"
 								 value="#{protocoloDocumentoList.entity.nomePessoa}"
-								 label="#{messages['protocoloDocumento.nomePessoa']}"/>			 
-					<wi:inputDate id="dataEntrada"
+								 label="#{messages['protocoloDocumento.nomePessoa']}"/>
+					<wi:inputDate id="#{idDataEntrada}"
 								value="#{protocoloDocumentoList.entity.dataEntrada}"
 								label="#{messages['protocoloDocumento.dataEntrada']}"/>
-					<wi:inputDate id="dataSaida"
+					<wi:inputDate id="#{idDataSaida}"
 								value="#{protocoloDocumentoList.entity.dataSaida}"
-								label="#{messages['protocoloDocumento.dataSaida']}"/>
+								label="#{messages['protocoloDocumento.dataSaida']}"
+								onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
+								oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"/>
 					<wi:selectSituacaoOneMenu id="ativo"
 											  label="#{messages['agrupamento.ativo']}"
 											  value="#{protocoloDocumentoList.entity.ativo}" />
+					
 				</wi:searchForm>
 			</ui:define>
 			
@@ -93,6 +101,9 @@
 	<ui:define name="form">
 		<wi:dataForm formId="protocoloDocumentoForm"
 					 formTitle="#{messages['protocoloDocumento.titleForm']}">
+						
+			<ui:param name="idDataEntrada" value="dataEntradaForm" />
+			<ui:param name="idDataSaida" value="dataSaidaForm" />
 			
 			<wi:selectOneMenuEntity id="documentoFisico"
 									label="#{messages['protocoloDocumento.documentoFisico']}"
@@ -100,16 +111,17 @@
 									items="#{action.documentoFisicoList}"
 									required="true"
 									noSelectionLabel="#{messages['protocoloDocumento.selectDocumentoFisico']}"/>
-											
 			<wi:inputText id="pessoa"
 						 value="#{protocoloDocumentoHome.instance.nomePessoa}"
 						 label="#{messages['protocoloDocumento.nomePessoa']}"/>			 
-			<wi:inputDate id="dataEntrada"
-						value="#{protocoloDocumentoHome.instance.dataEntrada}"
-						label="#{messages['protocoloDocumento.dataEntrada']}"/>
-			<wi:inputDate id="dataSaida"
-						value="#{protocoloDocumentoHome.instance.dataSaida}"
-						label="#{messages['protocoloDocumento.dataSaida']}"/>
+			<wi:inputDate id="#{idDataEntrada}"
+						  value="#{protocoloDocumentoHome.instance.dataEntrada}"
+						  label="#{messages['protocoloDocumento.dataEntrada']}"/>
+			<wi:inputDate id="#{idDataSaida}"
+						  value="#{protocoloDocumentoHome.instance.dataSaida}"
+						  label="#{messages['protocoloDocumento.dataSaida']}"
+						  onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
+						  oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"/>
 			<wi:selectSituacaoRadio id="ativo"
 						label="#{messages['agrupamento.ativo']}"
 						required="true"

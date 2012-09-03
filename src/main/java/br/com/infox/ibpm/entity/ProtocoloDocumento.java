@@ -22,7 +22,7 @@ public class ProtocoloDocumento implements Serializable {
 	private Date dataSaida;
 	private Boolean ativo;
 	
-	@SequenceGenerator(name="generator", sequenceName="sq_tb_protocolo_documento")
+	@SequenceGenerator(name="generator", sequenceName="public.sq_tb_protocolo_documento")
 	@Id
 	@GeneratedValue(generator="generator")
 	@Column(name="id_protocolo_documento")
@@ -60,7 +60,7 @@ public class ProtocoloDocumento implements Serializable {
 		this.dataEntrada = dataEntrada;
 	}
 	
-	@Column(name="dt_saida", nullable=false)
+	@Column(name="dt_saida", nullable=true)
 	public Date getDataSaida() {
 		return dataSaida;
 	}
