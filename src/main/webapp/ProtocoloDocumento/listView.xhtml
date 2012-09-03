@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ <!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+<!-- =) -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:a="http://richfaces.org/a4j"
+			    
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                      
+	<ui:define name="title">#{messages['protocoloDocumento.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{protocoloDocumentoHome}" />
+	<ui:param name="action" value="#{documentoFisicoAction}" />
+	
+	<ui:define name="searchGrid">   
+	    <wi:dataTable values="#{protocoloDocumentoList.list(15)}"
+					  bean="#{protocoloDocumentoList}"
+					  tableTitle="#{messages['protocoloDocumento.titleGrid']}"
+					  id="protocoloDocumentoList"
+					  rowId="#{row.idProtocoloDocumento}">
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarProtocoloDocuemntoForm"
+							   formTitle="#{messages['protocoloDocumento.titleSearchForm']}">
+					
+					<wi:selectOneMenuEntity id="documentoFisico"
+											label="#{messages['protocoloDocumento.documentoFisico']}"
+											value="#{protocoloDocumentoList.entity.documentoFisico}"
+											items="#{action.documentoFisicoList}"
+											noSelectionLabel="#{messages['protocoloDocumento.selectDocumentoFisico']}"/>
+											
+					<wi:inputText id="pessoa"
+								 value="#{protocoloDocumentoList.entity.nomePessoa}"
+								 label="#{messages['protocoloDocumento.nomePessoa']}"/>			 
+					<wi:inputDate id="dataEntrada"
+								value="#{protocoloDocumentoList.entity.dataEntrada}"
+								label="#{messages['protocoloDocumento.dataEntrada']}"/>
+					<wi:inputDate id="dataSaida"
+								value="#{protocoloDocumentoList.entity.dataSaida}"
+								label="#{messages['protocoloDocumento.dataSaida']}"/>
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['agrupamento.ativo']}"
+											  value="#{protocoloDocumentoList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="documentoFisico" 
+								 columnHeader="#{messages['protocoloDocumento.documentoFisico']}"
+								 value="#{row.documentoFisico}"/>
+			<wi:columnOutputText columnId="pessoa"
+								 columnHeader="#{messages['protocoloDocumento.nomePessoa']}"
+								 value="#{row.nomePessoa}" />
+			<wi:columnOutputText columnId="dataEntrada"
+								 columnHeader="#{messages['protocoloDocumento.dataEntrada']}"
+								 value="#{row.dataEntrada}">
+				<ui:define name="outputText">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</ui:define>
+			</wi:columnOutputText>			 
+			<wi:columnOutputText columnId="dataSaida"
+								 columnHeader="#{messages['protocoloDocumento.dataSaida']}"
+								 value="#{row.dataSaida}">
+				<ui:define name="outputText">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</ui:define>
+			</wi:columnOutputText>
+
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['agrupamento.ativo']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="protocoloDocumentoForm"
+					 formTitle="#{messages['protocoloDocumento.titleForm']}">
+			
+			<wi:selectOneMenuEntity id="documentoFisico"
+									label="#{messages['protocoloDocumento.documentoFisico']}"
+									value="#{protocoloDocumentoHome.instance.documentoFisico}"
+									items="#{action.documentoFisicoList}"
+									required="true"
+									noSelectionLabel="#{messages['protocoloDocumento.selectDocumentoFisico']}"/>
+											
+			<wi:inputText id="pessoa"
+						 value="#{protocoloDocumentoHome.instance.nomePessoa}"
+						 label="#{messages['protocoloDocumento.nomePessoa']}"/>			 
+			<wi:inputDate id="dataEntrada"
+						value="#{protocoloDocumentoHome.instance.dataEntrada}"
+						label="#{messages['protocoloDocumento.dataEntrada']}"/>
+			<wi:inputDate id="dataSaida"
+						value="#{protocoloDocumentoHome.instance.dataSaida}"
+						label="#{messages['protocoloDocumento.dataSaida']}"/>
+			<wi:selectSituacaoRadio id="ativo"
+						label="#{messages['agrupamento.ativo']}"
+						required="true"
+						value="#{protocoloDocumentoHome.instance.ativo}" />
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>

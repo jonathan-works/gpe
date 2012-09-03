@@ -27,6 +27,7 @@
 			<value>Cadastros Básicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
 			<value>Cadastros Básicos/pj.menuText:/PessoaJuridica/listView.seam</value>
 			<value>Cadastros Básicos/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value>
+			<value>Cadastros Básicos/protocoloDocumento.menuText:/ProtocoloDocumento/listView.seam</value>
 			<value>Cadastros Básicos/Tabelas Básicas/cep.menuText:/Cep/listView.seam</value>
 			<value>Cadastros Básicos/variavel.menuText:/Variavel/listView.seam?newInstance=true</value>
 			

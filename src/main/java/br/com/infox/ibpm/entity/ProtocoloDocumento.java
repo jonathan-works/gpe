@@ -9,7 +9,7 @@ import org.hibernate.validator.Length;
 import com.sun.istack.internal.NotNull;
 
 @Entity
-@Table(schema="core", name=ProtocoloDocumento.NAME)
+@Table(schema="public", name=ProtocoloDocumento.NAME)
 public class ProtocoloDocumento implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -22,7 +22,7 @@ public class ProtocoloDocumento implements Serializable {
 	private Date dataSaida;
 	private Boolean ativo;
 	
-	@SequenceGenerator(name="generator", sequenceName="core.sq_tb_protocolo_documento")
+	@SequenceGenerator(name="generator", sequenceName="sq_tb_protocolo_documento")
 	@Id
 	@GeneratedValue(generator="generator")
 	@Column(name="id_protocolo_documento")
