@@ -16,15 +16,19 @@
 package br.com.infox.ibpm.home;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
+import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.entity.Variavel;
+import br.com.itx.util.ComponentUtil;
 
 @Name(ModeloDocumentoHome.NAME)
 @BypassInterceptors
@@ -79,4 +83,24 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		}
 		return list;
 	}
+
+	@Override
+	protected boolean beforePersistOrUpdate() {
+		HistoricoModeloDocumentoHome home = new HistoricoModeloDocumentoHome();
+		home.newInstance();
+		HistoricoModeloDocumento historico = home.getInstance();
+		
+		ModeloDocumento oldEntity = getOldEntity();
+		historico.setAtivo(oldEntity.getAtivo());
+		historico.setTituloModeloDocumento(oldEntity.getTituloModeloDocumento());
+		historico.setDescricaoModeloDocumento(oldEntity.getModeloDocumento());
+		historico.setDataAlteracao(new Date());
+		historico.setModeloDocumento(instance);
+		historico.setUsuarioAlteracao((Usuario) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
+		//home.update();
+		getEntityManager().persist(historico);
+		
+		return super.beforePersistOrUpdate();
+	}
+	
 }

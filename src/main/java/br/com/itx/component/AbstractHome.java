@@ -66,6 +66,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	private String goBackTab = null;
 	private T oldEntity;
 	
+	public T getOldEntity() {
+		return oldEntity;
+	}
+
 	protected String getInactiveSuccess() {
 		return MSG_INACTIVE_SUCCESS;
 	}	
