@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = HistoricoModeloDocumento.TABLE_NAME, schema="core")
+@Table(name = HistoricoModeloDocumento.TABLE_NAME, schema="public")
 public class HistoricoModeloDocumento implements java.io.Serializable {
 
 	public static final String TABLE_NAME = "tb_modelo_documento_historico";
@@ -28,7 +28,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 	private String descricaoModeloDocumento;
 	private Boolean ativo;
 	
-	@SequenceGenerator(name = "generator", sequenceName = "core.sq_tb_modelo_documento_historico")
+	@SequenceGenerator(name = "generator", sequenceName = "sq_tb_modelo_documento_historico")
 	@Id
 	@GeneratedValue(generator = "generator")
 	@Column(name = "id_modelo_documento_historico", unique = true, nullable = false)
