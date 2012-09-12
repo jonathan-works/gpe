@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Não está funcionando ainda -->
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml"
+	xmlns:a="http://richfaces.org/a4j">
+	
+	<ui:define name="title">#{messages['historicoModeloDocumento.titlePage']}</ui:define>
+	
+	<ui:define name="body">
+			<a:form css="maxwidth:512px">
+				<s:div>
+					<wi:inputText id="#{rowId}Titulo" 
+								  label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+								  value="#{historicoModeloDocumentoAction.selecionado.tituloModeloDocumento}"
+								  readonly="true"/>
+
+					<wi:inputText id="#{rowId}Situacao"
+								  label="#{messages['modeloDocumento.ativo']}"
+								  value="#{historicoModeloDocumentoAction.selecionado.ativo ? 'Ativo' : 'Inativo'}"
+								  readonly="true"/>
+				</s:div>
+				<s:div>
+					<wi:editor id="#{rowId}ModeloDocumento"	 
+							   value="#{historicoModeloDocumentoAction.selecionado.descricaoModeloDocumento}"
+							   label="#{messages['historicoModeloDocumento.modeloDocumento']}"
+							   readonly="true"/>
+				</s:div>
+				<s:div>
+					<wi:commandButton action="historicoModeloDocumentoAction.restaurarSelecionado"
+									  oncomplete="window.close()"
+									  value="Restaurar"
+									  id="restaurarHistoricoSelecionado"/>
+				</s:div>
+			</a:form>
+	</ui:define>
+	
+</ui:composition>
