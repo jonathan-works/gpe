@@ -17,79 +17,129 @@
 -->
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-				template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml"
+	xmlns:a="http://richfaces.org/a4j">
 
 	<ui:define name="title">#{messages['modeloDocumento.titlePage']}</ui:define>
 	<ui:param name="home" value="#{modeloDocumentoHome}" />
 
 	<ui:define name="searchGrid">
-	    <wi:dataTable values="#{modeloDocumentoList.list(15)}"
-					  bean="#{modeloDocumentoList}"
-					  tableTitle="#{messages['modeloDocumento.titleGrid']}"
-					  id="modeloDocumentoList"
-					  rowId="#{row.idModeloDocumento}">
+		<wi:dataTable values="#{modeloDocumentoList.list(15)}"
+			bean="#{modeloDocumentoList}"
+			tableTitle="#{messages['modeloDocumento.titleGrid']}"
+			id="modeloDocumentoList" rowId="#{row.idModeloDocumento}">
 			<ui:define name="searchForm">
-				<wi:searchForm formId="modeloDocumentoSearchForm" 
-							   formTitle="#{messages['modeloDocumento.titleGrid']}">
+				<wi:searchForm formId="modeloDocumentoSearchForm"
+					formTitle="#{messages['modeloDocumento.titleGrid']}">
 					<wi:selectOneMenuEntity id="tipoModeloDocumento"
-							 				label="#{messages['modeloDocumento.tipoModeloDocumento']}"
-								 		    value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
-							 				items="#{tipoModeloDocumentoItems}"
-							 				showLabelTodos="true"/>	
+						label="#{messages['modeloDocumento.tipoModeloDocumento']}"
+						value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
+						items="#{tipoModeloDocumentoItems}" showLabelTodos="true" />
 					<wi:inputText id="tituloModeloDocumento"
-								  label="#{messages['modeloDocumento.tituloModeloDocumento']}"
-								  value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />							
+						label="#{messages['modeloDocumento.tituloModeloDocumento']}"
+						value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
 					<wi:selectSituacaoOneMenu id="situacao"
-										      label="#{messages['modeloDocumento.ativo']}"
-											  value="#{modeloDocumentoList.entity.ativo}" />												
+						label="#{messages['modeloDocumento.ativo']}"
+						value="#{modeloDocumentoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
-			
+
 			<ui:define name="headerToolBar">
-				<wi:toolBarReport  />
+				<wi:toolBarReport />
 			</ui:define>
-			
+
 			<wi:columnOutputText columnId="tipoModeloDocumento"
-							     columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
-							     value="#{row.tipoModeloDocumento}"/>				
+				columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
+				value="#{row.tipoModeloDocumento}" />
 			<wi:columnOutputText columnId="tituloModeloDocumento"
-							     columnHeader="#{messages['modeloDocumento.tituloModeloDocumento']}"
-							     value="#{row.tituloModeloDocumento}"/>				
-			
-			<wi:columnSituacao  columnHeader="#{messages['modeloDocumento.ativo']}" />					
+				columnHeader="#{messages['modeloDocumento.tituloModeloDocumento']}"
+				value="#{row.tituloModeloDocumento}" />
+
+			<wi:columnSituacao
+				columnHeader="#{messages['modeloDocumento.ativo']}" />
 		</wi:dataTable>
 	</ui:define>
-	
+
 	<ui:define name="form">
-		
-		<wi:dataForm formId="modeloDocumentoForm" 
-					 formTitle="#{messages['modeloDocumento.titleForm']}">
+		<wi:dataForm formId="modeloDocumentoForm"
+			formTitle="#{messages['modeloDocumento.titleForm']}">
 			<wi:selectOneMenuEntity id="tipoModeloDocumento"
-					 				label="#{messages['modeloDocumento.tipoModeloDocumento']}"
-						 		    value="#{modeloDocumentoHome.instance.tipoModeloDocumento}"
-					 				items="#{tipoModeloDocumentoItems}"
-					 				required="true"
-					 				showLabelSelecione="true"/>					 
+				label="#{messages['modeloDocumento.tipoModeloDocumento']}"
+				value="#{modeloDocumentoHome.instance.tipoModeloDocumento}"
+				items="#{tipoModeloDocumentoItems}" required="true"
+				showLabelSelecione="true" />
 			<wi:inputText id="tituloModeloDocumento"
-						  label="#{messages['modeloDocumento.tituloModeloDocumento']}"
-						  value="#{modeloDocumentoHome.instance.tituloModeloDocumento}"
-						  required="true" />	
+				label="#{messages['modeloDocumento.tituloModeloDocumento']}"
+				value="#{modeloDocumentoHome.instance.tituloModeloDocumento}"
+				required="true" />
 			<wi:selectSituacaoRadio id="ativo"
-									label="#{messages['modeloDocumento.ativo']}"
-									value="#{modeloDocumentoHome.instance.ativo}"
-									required="true" />		
-			<wi:editor  id="modeloDocumento" 
-						label="#{messages['modeloDocumento.modeloDocumento']}"
-						value="#{modeloDocumentoHome.instance.modeloDocumento}"
-						showVariables="true"
-						required="true" />
-							
+				label="#{messages['modeloDocumento.ativo']}"
+				value="#{modeloDocumentoHome.instance.ativo}" required="true" />
+			<wi:editor id="modeloDocumento"
+				label="#{messages['modeloDocumento.modeloDocumento']}"
+				value="#{modeloDocumentoHome.instance.modeloDocumento}"
+				showVariables="true" required="true" />
+
 			<wi:imageUpload />
-			
+
 		</wi:dataForm>
+	</ui:define>
+
+	<ui:define name="tabs">
+		<rich:tab id="historicoModeloDocumento" rendered="#{true}"
+			eventsQueue="default" switchType="ajax"
+			label="#{messages['historicoModeloDocumento.titleTab']}">
+			<wi:dataTable values="#{historicoModeloDocumentoList.list(20)}"
+				bean="#{historicoModeloDocumentoList}"
+				tableTitle="#{messages['modeloDocumento.titleGrid']}"
+				id="historicoModeloDocumentoList">
+				<ui:define name="searchForm">
+					<wi:searchForm formId="historicoModeloDocumentoSearchForm"
+						formTitle="#{messages['modeloDocumento.titleGrid']}">
+						<wi:selectOneMenuEntity id="modeloDocumento"
+							label="#{messages['historicoModeloDocumento.modeloDocumento']}"
+							value="#{historicoModeloDocumentoList.entity.modeloDocumento}"
+							items="#{historicoModeloDocumentoAction.modeloDocumentoList}"
+							showLabelTodos="true" />
+						<wi:selectOneMenuEntity id="usuarioAlteracao"
+							label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
+							value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
+							items="#{historicoModeloDocumentoAction.usuarioAlteracaoList}"
+							showLabelTodos="true" />
+						<wi:inputDate id="dataAlteracao"
+								value="#{historicoModeloDocumentoList.entity.dataAlteracao}"
+								label="#{messages['historicoModeloDocumento.dataAlteracao']}"/>
+						<wi:inputText id="historicoTituloModeloDocumento"
+							label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+							value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
+						
+					</wi:searchForm>
+				</ui:define>
+				
+				<wi:columnOutputText columnId="tituloModeloDocumento" 
+									 columnHeader="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+									 value="#{row.tituloModeloDocumento}"/>
+				<wi:columnOutputText columnId="usuario" 
+									 columnHeader="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
+									 value="#{row.usuarioAlteracao}" />
+				<wi:columnOutputText columnId="dataAlteracao"
+									 columnHeader="#{messages['historicoModeloDocumento.dataAlteracao']}"
+									 value="#{row.dataAlteracao}">
+					<ui:define name="outputText">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+					</ui:define>
+				</wi:columnOutputText>
+				<ui:define name="toolBar">
+					<ui:param name="target" value="restaurar.seam?cid=#{conversation.id}" />
+					<wi:toolBarPopUp action="#{historicoModeloDocumentoAction.setSelecionado(row)}" />
+				</ui:define>
+									 
+			</wi:dataTable>
+		</rich:tab>
 	</ui:define>
 
 </ui:composition>

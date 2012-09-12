@@ -92,6 +92,11 @@
 	</tag>
 	
 	<tag>
+		<tag-name>toolBarPopUp</tag-name>
+		<source>components/grid/tools/toolBarPopUp.xhtml</source>
+	</tag>
+	
+	<tag>
 		<tag-name>toolBarInactive</tag-name>
 		<source>tags/grid/tools/toolBarInactive.xhtml</source>
 	</tag>

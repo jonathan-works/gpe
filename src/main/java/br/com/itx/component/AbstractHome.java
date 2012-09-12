@@ -69,6 +69,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public T getOldEntity() {
 		return oldEntity;
 	}
+	public void setOldEntity(T oldEntity)	{
+		this.oldEntity = oldEntity;
+	}
 
 	protected String getInactiveSuccess() {
 		return MSG_INACTIVE_SUCCESS;
