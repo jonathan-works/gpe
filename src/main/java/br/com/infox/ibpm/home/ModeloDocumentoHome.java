@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -88,7 +89,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	}
 	
 	public HistoricoModeloDocumento setHistorico(ModeloDocumento oldEntity)	{
-		HistoricoModeloDocumentoHome home = new HistoricoModeloDocumentoHome();
+		HistoricoModeloDocumentoHome home = (HistoricoModeloDocumentoHome) Component.getInstance(HistoricoModeloDocumentoHome.NAME);
 		home.newInstance();
 		HistoricoModeloDocumento historico = home.getInstance();
 		

@@ -1,6 +1,8 @@
 package br.com.infox.epa.action.crud;
 
 import java.util.List;
+
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -40,7 +42,7 @@ public class HistoricoModeloDocumentoAction extends AbstractHome<HistoricoModelo
 			return;
 		
 		ModeloDocumento modelo = selecionado.getModeloDocumento();
-		ModeloDocumentoHome modeloHome = new ModeloDocumentoHome();
+		ModeloDocumentoHome modeloHome = (ModeloDocumentoHome)Component.getInstance(ModeloDocumentoHome.NAME);
 		
 		ModeloDocumento oldEntity = new ModeloDocumento();
 		oldEntity.setAtivo(modelo.getAtivo());

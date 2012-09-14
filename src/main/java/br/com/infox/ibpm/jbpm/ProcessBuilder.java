@@ -375,18 +375,20 @@ public class ProcessBuilder implements Serializable {
 		FluxoHome fluxoHome = FluxoHome.instance();
 		if (fluxoHome != null && fluxoHome.isManaged()) {
 			String xmlDef = JpdlXmlWriter.toString(instance);
+			
 			updatePrazoTarefaAtual(fluxoHome.getInstance());
-			if((fluxoHome.getInstance().getXml() == null && xmlDef != null) ||
-			   (fluxoHome.getInstance().getXml() != null &&
-			    !fluxoHome.getInstance().getXml().equals(xmlDef))) {
+			
+			String xmlFluxo = fluxoHome.getInstance().getXml();
+			
+			if(	(xmlFluxo == null && xmlDef != null) 
+				|| (xmlFluxo != null && !xmlFluxo.equals(xmlDef))) {
 				//verifica a consistencia do fluxo para evitar salva-lo com erros.
 				parseInstance(xmlDef);
 				needToPublic = true;
-			} else {
-				return;
+				modifyNodesAndTasks();
+				fluxoHome.getInstance().setXml(xmlDef);
 			}
-			modifyNodesAndTasks();
-			fluxoHome.getInstance().setXml(xmlDef);
+			
 			EntityUtil.flush();
 			FacesMessages.instance().add("Fluxo salvo com sucesso!");
 		}
@@ -395,12 +397,12 @@ public class ProcessBuilder implements Serializable {
 
 	private void updatePrazoTarefaAtual(Fluxo fluxo) {
 		// variável currentNode estava chegando não inicializada em alguns casos
-		String nameNode = (currentNode == null) ? null : currentNode.getName();
-		PrazoTask prazoTask = prazoTaskMap.get(nameNode);
-		if (prazoTask != null) {
-			prazoTask.setPrazo(prazo);
-			prazoTask.setTipoPrazo(tipoPrazo);
+		Tarefa t = JbpmUtil.getTarefa(currentTask.getTask().getName(), fluxo.getFluxo());
+		if(t != null) {
+			t.setPrazo(prazo);
+			t.setTipoPrazo(tipoPrazo);
 		}
+		
 	}
 
 	private void modifyNodesAndTasks() {
@@ -436,7 +438,7 @@ public class ProcessBuilder implements Serializable {
 				JbpmUtil.getGraphSession().deployProcessDefinition(instance);
 				JbpmUtil.getJbpmSession().flush();
 				Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
-				updatePrazoTask();
+				//updatePrazoTask();
 				FacesMessages.instance().clear();
 				FacesMessages.instance().add("Fluxo publicado com sucesso!");
 			} catch (Exception e) {
