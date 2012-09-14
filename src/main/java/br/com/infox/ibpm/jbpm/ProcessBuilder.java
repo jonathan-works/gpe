@@ -376,7 +376,7 @@ public class ProcessBuilder implements Serializable {
 		if (fluxoHome != null && fluxoHome.isManaged()) {
 			String xmlDef = JpdlXmlWriter.toString(instance);
 			
-			updatePrazoTarefaAtual(fluxoHome.getInstance());
+			//updatePrazoTarefaAtual(fluxoHome.getInstance());
 			
 			String xmlFluxo = fluxoHome.getInstance().getXml();
 			
@@ -389,20 +389,10 @@ public class ProcessBuilder implements Serializable {
 				fluxoHome.getInstance().setXml(xmlDef);
 			}
 			
-			EntityUtil.flush();
+			updatePrazoTask();
 			FacesMessages.instance().add("Fluxo salvo com sucesso!");
 		}
 		layout = null;
-	}
-
-	private void updatePrazoTarefaAtual(Fluxo fluxo) {
-		// variável currentNode estava chegando não inicializada em alguns casos
-		Tarefa t = JbpmUtil.getTarefa(currentTask.getTask().getName(), fluxo.getFluxo());
-		if(t != null) {
-			t.setPrazo(prazo);
-			t.setTipoPrazo(tipoPrazo);
-		}
-		
 	}
 
 	private void modifyNodesAndTasks() {
@@ -445,6 +435,21 @@ public class ProcessBuilder implements Serializable {
 				e.printStackTrace();
 			}
 			needToPublic = false;
+		}
+	}
+	
+	private void updatePrazoTarefas()	{
+		Fluxo fluxoInstance = FluxoHome.instance().getInstance();
+		Set<Entry<String,PrazoTask>> entrySet = prazoTaskMap.entrySet();
+		EntityManager entityManager = EntityUtil.getEntityManager();
+		for (Entry<String, PrazoTask> entry : entrySet) {
+			Tarefa t = JbpmUtil.getTarefa(entry.getKey(), fluxoInstance.getFluxo());
+			if(t != null) {
+				PrazoTask prazoTask = entry.getValue();
+				t.setPrazo(prazoTask.getPrazo());
+				t.setTipoPrazo(prazoTask.getTipoPrazo());
+				entityManager.flush();
+			}
 		}
 	}
 	
@@ -762,35 +767,33 @@ public class ProcessBuilder implements Serializable {
 		if(currentNode == null) {
 			prazo = null;
 			tipoPrazo = null;
+			return;
+		}
+		
+		PrazoTask prazoTask = new PrazoTask();
+		if(lastNode != null && prazo != null && tipoPrazo != null) {
+			prazoTask.setPrazo(prazo);
+			prazoTask.setTipoPrazo(tipoPrazo);
+			prazoTaskMap.put(lastNode.getName(), prazoTask);
+		}
+		
+		prazoTask = prazoTaskMap.get(currentNode.getName());
+		if (prazoTask != null)	{
+			prazo = prazoTask.getPrazo();
+			tipoPrazo = prazoTask.getTipoPrazo();
 		} else {
-			if(lastNode == null) {
-				lastNode = currentNode;
-			}
-			PrazoTask prazoTask = new PrazoTask();
-			if(prazo != null && tipoPrazo != null) {
+			Tarefa t = JbpmUtil.getTarefa(currentNode.getName(), 
+											FluxoHome.instance().getInstance().getFluxo());
+			if (t == null)	{
+				prazo = null;
+				tipoPrazo = null;
+			} else {
+				prazo = t.getPrazo();
+				tipoPrazo = t.getTipoPrazo();
+				prazoTask = new PrazoTask();
 				prazoTask.setPrazo(prazo);
 				prazoTask.setTipoPrazo(tipoPrazo);
-				prazoTaskMap.put(lastNode.getName(), prazoTask);
-			}
-			prazoTask = prazoTaskMap.get(currentNode.getName());
-			if(prazoTask == null) {
-				Fluxo f = FluxoHome.instance().getInstance();
-				Tarefa t = JbpmUtil.getTarefa(currentNode.getName(), 
-											  f.getFluxo());
-				if(t != null) {
-					prazo = t.getPrazo();
-					tipoPrazo = t.getTipoPrazo();
-					prazoTask = new PrazoTask();
-					prazoTask.setPrazo(prazo);
-					prazoTask.setTipoPrazo(tipoPrazo);
-					prazoTaskMap.put(lastNode.getName(), prazoTask);
-				} else {
-					prazo = null;
-					tipoPrazo = null;
-				}
-			} else {
-				prazo = prazoTask.getPrazo();
-				tipoPrazo = prazoTask.getTipoPrazo();
+				prazoTaskMap.put(currentNode.getName(), prazoTask);
 			}
 		}
 	}
