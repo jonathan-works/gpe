@@ -89,7 +89,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	}
 	
 	public HistoricoModeloDocumento setHistorico(ModeloDocumento oldEntity)	{
-		HistoricoModeloDocumentoHome home = (HistoricoModeloDocumentoHome) Component.getInstance(HistoricoModeloDocumentoHome.NAME);
+		HistoricoModeloDocumentoHome home = (HistoricoModeloDocumentoHome)Component.getInstance(HistoricoModeloDocumentoHome.NAME);
 		home.newInstance();
 		HistoricoModeloDocumento historico = home.getInstance();
 		
@@ -100,12 +100,13 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		historico.setModeloDocumento(instance);
 		
 		historico.setUsuarioAlteracao((Usuario) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
+		home.persist();
 		return historico;
 	}
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {
-		getEntityManager().persist(setHistorico(getOldEntity()));
+		setHistorico(getOldEntity());
 		
 		return super.beforePersistOrUpdate();
 	}
