@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- $Id: listView.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+                       
+	<ui:define name="title">#{messages['dashBoard.titlePage']}</ui:define>
+	
+	<ui:param name="list" value="#{processoEpaManager.listAllNotEnded()}"/>
+	
+	<ui:define name="body">
+		<s:div>
+			<wi:dataTable values="#{list}"
+				tableTitle="#{messages['dashBoard.titleGrid']}"
+				id="dashBoardList" rowId="#{row.idProcesso}">
+	
+				<ui:define name="toolBar">
+					Botões de Notificação
+				</ui:define>
+				<ui:define name="headerToolBar">
+				</ui:define>
+				<wi:columnOutputText columnId="usuarioCadastroProcesso"
+					columnHeader="#{messages['dashboard.usuarioCadastroProcesso']}"
+					value="#{row.usuarioCadastroProcesso}" 
+					hideOrder="true"/>
+				<wi:columnOutputText columnId="nomeFluxo"
+					columnHeader="#{messages['dashboard.nomeFluxo']}"
+					value="#{row.naturezaCategoriaFluxo.fluxo.fluxo}"
+					hideOrder="true" />
+				<wi:columnOutputText columnId="porcentagemProcesso"
+					columnHeader="#{messages['dashboard.porcentagem']}"
+					value="#{row.porcentagem}"
+					hideOrder="true" />
+				<wi:columnOutputText columnId="dataInicioProcesso"
+					columnHeader="#{messages['dashboard.dataInicioProcesso']}"
+					value="#{row.dataInicio}" 
+					hideOrder="true"/>
+				<wi:columnOutputText columnId="previsaoTermino"
+					columnHeader="#{messages['dashboard.previsaoTermino']}"
+					value="dataPrevista"
+					hideOrder="true"/>
+			</wi:dataTable>
+		</s:div>
+	</ui:define>
+
+</ui:composition>
