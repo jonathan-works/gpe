@@ -6,46 +6,57 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:f="http://java.sun.com/jsf/core"
 				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 				template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
                        
 	<ui:define name="title">#{messages['dashBoard.titlePage']}</ui:define>
 	
-	<ui:param name="list" value="#{processoEpaManager.listAllNotEnded()}"/>
+	<ui:param name="action" value="#{dashBoardAction}"/>
 	
 	<ui:define name="body">
-		<s:div>
-			<wi:dataTable values="#{list}"
-				tableTitle="#{messages['dashBoard.titleGrid']}"
-				id="dashBoardList" rowId="#{row.idProcesso}">
-	
-				<ui:define name="toolBar">
-					Botões de Notificação
+		<wi:dataTable values="#{fluxoLocalizacaoList.list(2)}"
+			tableTitle="#{messages['dashBoard.titleGrid']}"
+			id="fluxoLocalizacaoList" 
+			rowId="#{row.idFluxo}">
+
+			<ui:define name="toolBar">
+				-
+			</ui:define>
+			<ui:define name="headerToolBar">
+				<wi:toolBarReport />
+			</ui:define>
+			<wi:columnOutputText columnId="usuarioCadastroProcesso"
+				columnHeader="#{messages['dashboard.usuarioCadastroProcesso']}"
+				value="" 
+				hideOrder="true">
+				<ui:define name="outputText">
+					<wi:commandLink action="" oncomplete="openPopUp('s', 'null');">
+						#{row.usuarioCadastroProcesso}
+					</wi:commandLink>
 				</ui:define>
-				<ui:define name="headerToolBar">
-				</ui:define>
-				<wi:columnOutputText columnId="usuarioCadastroProcesso"
-					columnHeader="#{messages['dashboard.usuarioCadastroProcesso']}"
-					value="#{row.usuarioCadastroProcesso}" 
-					hideOrder="true"/>
-				<wi:columnOutputText columnId="nomeFluxo"
-					columnHeader="#{messages['dashboard.nomeFluxo']}"
-					value="#{row.naturezaCategoriaFluxo.fluxo.fluxo}"
-					hideOrder="true" />
-				<wi:columnOutputText columnId="porcentagemProcesso"
-					columnHeader="#{messages['dashboard.porcentagem']}"
-					value="#{row.porcentagem}"
-					hideOrder="true" />
-				<wi:columnOutputText columnId="dataInicioProcesso"
-					columnHeader="#{messages['dashboard.dataInicioProcesso']}"
-					value="#{row.dataInicio}" 
-					hideOrder="true"/>
-				<wi:columnOutputText columnId="previsaoTermino"
-					columnHeader="#{messages['dashboard.previsaoTermino']}"
-					value="dataPrevista"
-					hideOrder="true"/>
-			</wi:dataTable>
-		</s:div>
+			</wi:columnOutputText>
+			<wi:columnOutputText columnId="nomeFluxo"
+				columnHeader="#{messages['dashboard.nomeFluxo']}"
+				value="#{row.fluxo}"
+				hideOrder="true" />
+			<wi:columnOutputText columnId="porcentagemProcesso"
+				columnHeader="#{messages['dashboard.porcentagem']}"
+				value="porcentagemFluxo"
+				hideOrder="true" />
+			<wi:columnOutputText columnId="dataInicioProcesso"
+				columnHeader="#{messages['dashboard.dataInicioProcesso']}"
+				value="row.dataInicio" 
+				hideOrder="true"/>
+			<wi:columnOutputText columnId="previsaoTermino"
+				columnHeader="#{messages['dashboard.previsaoTermino']}"
+				value="dataPrevista"
+				hideOrder="true"/>
+		</wi:dataTable>
 	</ui:define>
 
 </ui:composition>
