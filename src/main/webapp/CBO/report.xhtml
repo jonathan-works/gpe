@@ -33,7 +33,7 @@
 		<ui:repeat var="row" value="#{cboList.list()}">
 			<wi:reportColumn value="#{row.codCbo}" />
 			<wi:reportColumn value="#{row.descricaoCbo}" />
-			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}" 
+			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}"
 							 columnAlign="center"/>
 		</ui:repeat>
 
