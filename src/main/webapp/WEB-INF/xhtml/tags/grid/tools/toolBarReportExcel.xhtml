@@ -32,14 +32,12 @@
 		</s:link>
 	</c:if>
 	
-	<c:if test="#{not empty actionExcel}" >
-		<h:form enctype="multipart/form-data">
-			<h:commandLink action="#{util.invokeMethod(actionExcel)}">
-				<h:graphicImage url="/img/excel.png" 
-							title="Gerar Excel"
-							style="cursor:pointer; padding:0px 1px;" />																
-			</h:commandLink>
-		</h:form>
-	  </c:if>
+	<h:form enctype="multipart/form-data">
+		<h:commandLink action="#{util.invokeMethod(action)}">
+			<h:graphicImage url="/img/excel.png" 
+						title="Gerar Excel"
+						style="cursor:pointer; padding:0px 1px;" />																
+		</h:commandLink>
+	</h:form>
 	        
 </ui:composition>

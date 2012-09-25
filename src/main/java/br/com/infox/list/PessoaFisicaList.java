@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.PessoaFisica;
+import br.com.itx.util.ComponentUtil;
 
 @Name(PessoaFisicaList.NAME)
 @BypassInterceptors
@@ -44,5 +45,9 @@ public class PessoaFisicaList extends EntityList<PessoaFisica>{
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
+	}
+	
+	public static PessoaFisicaList instance() {
+		return ComponentUtil.getComponent(PessoaFisicaList.NAME);
 	}
 }

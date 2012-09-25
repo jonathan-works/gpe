@@ -25,7 +25,7 @@ public class PessoaFisica implements Serializable {
 	private Date dataNascimento;
 	private Boolean ativo;
 	
-	@SequenceGenerator(name="generator", sequenceName="sq_tb_pessoa_fisica")
+	@SequenceGenerator(name="generator", sequenceName="public.sq_tb_pessoa_fisica")
 	@Id
 	@GeneratedValue(generator="generator")
 	@Column(name="id_pessoa_fisica")
