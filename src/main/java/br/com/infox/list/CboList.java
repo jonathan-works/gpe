@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Cbo;
+import br.com.itx.util.ComponentUtil;
 
 @Name(CboList.NAME)
 @BypassInterceptors
@@ -45,5 +46,9 @@ public class CboList extends EntityList<Cbo> {
 		return null;
 	}
 	
+	
+	public static CboList instance() {
+		return ComponentUtil.getComponent(CboList.NAME);
+	}
 	
 }
