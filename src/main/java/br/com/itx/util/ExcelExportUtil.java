@@ -63,7 +63,7 @@ public class ExcelExportUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append(new Util().getContextRealPath());
 		sb.append("/WEB-INF/temp/");
-		sb.append(MessageFormat.format("{1,date,kkmmss}", new Date()));
+		sb.append(MessageFormat.format("{0,date,kkmmss}", new Date()));
 		sb.append(RandomStringUtils.randomAlphanumeric(6));
 		sb.append(".xls");
 		return sb.toString();

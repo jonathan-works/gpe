@@ -21,17 +21,16 @@
 				xmlns:f="http://java.sun.com/jsf/core"
 				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:p="http://jboss.com/products/seam/pdf">
-
 	<p:table columns="3" 
 			 widthPercentage="100" 
 			 widths="1 4 1.5"
 			 spacingBefore="#{wi:get(spacingBefore, '20')}" 
 			 spacingAfter="#{wi:get(spacingAfter, '30')}">
 			<p:cell borderWidth="0" verticalAlignment="left">
-			<p:html>
-			    <img src='#{a4jSkin.imgLogoMini}'
-			    	 width="50%" height="50%"/>
-			</p:html>
+				<p:html>
+				    <img src='${facesContext.externalContext.request.getRealPath("/")}#{a4jSkin.imgLogoMini}'
+				    	 width="7%" height="7%"/>
+				</p:html>
 			</p:cell>
 			<p:cell horizontalAlignment="center"
 					borderWidth="0">
