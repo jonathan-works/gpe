@@ -2,6 +2,7 @@
 
 package br.com.infox.ibpm.home;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,9 @@ import br.com.itx.util.EntityUtil;
 @BypassInterceptors
 @Scope(ScopeType.CONVERSATION)
 @SuppressWarnings("unchecked")
-public class PainelUsuarioHome {
-	
+public class PainelUsuarioHome implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	public static final String NAME = "painelUsuarioHome"; 
 
 	private Map<String, Object> selected;

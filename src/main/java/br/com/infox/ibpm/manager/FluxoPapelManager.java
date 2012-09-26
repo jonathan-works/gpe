@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.manager;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -15,7 +16,8 @@ import br.com.infox.ibpm.entity.FluxoPapel;
 @Name(FluxoPapelManager.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class FluxoPapelManager {
+public class FluxoPapelManager implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "fluxoPapelManager";
 

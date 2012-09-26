@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.action.crud;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,7 +19,8 @@ import br.com.infox.ibpm.manager.FluxoPapelManager;
 
 @Name(FluxoPapelAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel>{
+public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "fluxoPapelAction";
 

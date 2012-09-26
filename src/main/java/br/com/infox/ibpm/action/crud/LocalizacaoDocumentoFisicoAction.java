@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.action.crud;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,7 +22,8 @@ import br.com.infox.list.LocalizacaoFisicaList;
 @Name(LocalizacaoDocumentoFisicoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class LocalizacaoDocumentoFisicoAction extends
-		AbstractCrudAction<DocumentoFisico> {
+		AbstractCrudAction<DocumentoFisico> implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "localizacaoDocumentoFisicoAction";
 

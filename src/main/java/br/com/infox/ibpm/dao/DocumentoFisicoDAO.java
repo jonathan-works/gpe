@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.dao;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,9 @@ import br.com.infox.ibpm.query.DocumentoFisicoQuery;
 @Name(DocumentoFisicoDAO.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class DocumentoFisicoDAO extends GenericDAO {
+public class DocumentoFisicoDAO extends GenericDAO implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	public static final String NAME = "documentoFisicoDAO";
 	
 	/**

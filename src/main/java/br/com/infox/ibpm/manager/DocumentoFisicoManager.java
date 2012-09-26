@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.manager;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -15,7 +16,9 @@ import br.com.infox.ibpm.entity.Processo;
 @Name(DocumentoFisicoManager.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class DocumentoFisicoManager {
+public class DocumentoFisicoManager implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "documentoFisicoManager";
 
