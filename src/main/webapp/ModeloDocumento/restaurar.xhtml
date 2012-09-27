@@ -32,6 +32,10 @@
 	<ui:define name="body">
 			<a:form css="maxwidth:512px">
 				<s:div>
+					<wi:commandButton action="historicoModeloDocumentoAction.restaurarSelecionado"
+									  oncomplete="window.close()"
+									  value="Restaurar"
+									  id="restaurarHistoricoSelecionado"/>
 					<wi:inputText id="#{rowId}Titulo" 
 								  label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
 								  value="#{historicoModeloDocumentoAction.selecionado.tituloModeloDocumento}"
@@ -41,18 +45,12 @@
 								  label="#{messages['modeloDocumento.ativo']}"
 								  value="#{historicoModeloDocumentoAction.selecionado.ativo ? 'Ativo' : 'Inativo'}"
 								  readonly="true"/>
-				</s:div>
-				<s:div>
-					<wi:editor id="#{rowId}ModeloDocumento"	 
-							   value="#{historicoModeloDocumentoAction.selecionado.descricaoModeloDocumento}"
-							   label="#{messages['historicoModeloDocumento.modeloDocumento']}"
-							   readonly="true"/>
-				</s:div>
-				<s:div>
-					<wi:commandButton action="historicoModeloDocumentoAction.restaurarSelecionado"
-									  oncomplete="window.close()"
-									  value="Restaurar"
-									  id="restaurarHistoricoSelecionado"/>
+					<s:div id="editorROModeloDocumento" >
+						<wi:editor id="#{rowId}ModeloDocumento"	 
+								   value="#{historicoModeloDocumentoAction.selecionado.descricaoModeloDocumento}"
+								   label="#{messages['historicoModeloDocumento.modeloDocumento']}"
+								   readonly="true"/>
+					</s:div>
 				</s:div>
 			</a:form>
 	</ui:define>
