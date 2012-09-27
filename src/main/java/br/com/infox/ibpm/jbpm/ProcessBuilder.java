@@ -376,8 +376,6 @@ public class ProcessBuilder implements Serializable {
 		if (fluxoHome != null && fluxoHome.isManaged()) {
 			String xmlDef = JpdlXmlWriter.toString(instance);
 			
-			//updatePrazoTarefaAtual(fluxoHome.getInstance());
-			
 			String xmlFluxo = fluxoHome.getInstance().getXml();
 			
 			if(	(xmlFluxo == null && xmlDef != null) 
@@ -428,28 +426,12 @@ public class ProcessBuilder implements Serializable {
 				JbpmUtil.getGraphSession().deployProcessDefinition(instance);
 				JbpmUtil.getJbpmSession().flush();
 				Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
-				//updatePrazoTask();
 				FacesMessages.instance().clear();
 				FacesMessages.instance().add("Fluxo publicado com sucesso!");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			needToPublic = false;
-		}
-	}
-	
-	private void updatePrazoTarefas()	{
-		Fluxo fluxoInstance = FluxoHome.instance().getInstance();
-		Set<Entry<String,PrazoTask>> entrySet = prazoTaskMap.entrySet();
-		EntityManager entityManager = EntityUtil.getEntityManager();
-		for (Entry<String, PrazoTask> entry : entrySet) {
-			Tarefa t = JbpmUtil.getTarefa(entry.getKey(), fluxoInstance.getFluxo());
-			if(t != null) {
-				PrazoTask prazoTask = entry.getValue();
-				t.setPrazo(prazoTask.getPrazo());
-				t.setTipoPrazo(prazoTask.getTipoPrazo());
-				entityManager.flush();
-			}
 		}
 	}
 	
