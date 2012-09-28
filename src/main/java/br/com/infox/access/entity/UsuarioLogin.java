@@ -1,5 +1,6 @@
 package br.com.infox.access.entity;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,15 +30,15 @@ import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
+import br.com.infox.access.query.UsuarioLoginQuery;
 import br.com.itx.util.StringUtil;
 
 @Entity
 @Table(name = "tb_usuario_login", schema="public" , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
-@NamedQuery(name="usuarioLogadoByLogin", 
-		query="select u from UsuarioLogin u where login = :login")
+@NamedQuery(name=UsuarioLoginQuery.USUARIO_LOGIN_NAME, query=UsuarioLoginQuery.USUARIO_LOGIN_QUERY)
 @Inheritance(strategy=InheritanceType.JOINED)
 @BypassInterceptors
-public class UsuarioLogin implements java.io.Serializable {
+public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,6 +49,7 @@ public class UsuarioLogin implements java.io.Serializable {
 	private String nome;
 	private String assinatura;
 	private String certChain;
+	private Boolean ldap;
 	private Boolean ativo;
 
 	private Set<Papel> papelSet = new TreeSet<Papel>();
@@ -196,6 +198,16 @@ public class UsuarioLogin implements java.io.Serializable {
 		int result = 1;
 		result = prime * result + ((getIdUsuario() == null) ? 0 : getIdUsuario().hashCode());
 		return result;
+	}
+
+	@Column(name = "in_ldap")
+	@NotNull
+	public Boolean getLdap() {
+		return ldap;
+	}
+
+	public void setLdap(Boolean ldap) {
+		this.ldap = ldap;
 	}
 	
 }

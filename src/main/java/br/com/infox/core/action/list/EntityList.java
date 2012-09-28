@@ -25,7 +25,7 @@ import br.com.infox.entity.PesquisaCampo;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
-public abstract class EntityList<E> extends EntityQuery<E> {
+public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	private static final String FIELD_EXPRESSION = "#'{'{0}List.entity.{1}}";
 
@@ -217,7 +217,7 @@ public abstract class EntityList<E> extends EntityQuery<E> {
 	 * 
 	 * @param restriction - String da restriction com ou sem expressões
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void setRestrictions() {
 		List<ValueExpression> valueExpressionList = new ArrayList<ValueExpression>();
 		for(SearchField s: searchFieldMap.values()) {
