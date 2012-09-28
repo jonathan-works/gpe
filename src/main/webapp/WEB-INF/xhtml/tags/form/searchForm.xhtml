@@ -85,6 +85,7 @@
 	<wi:modalPanel id="#{formId}ModalPanel" 
 				   labelHeader="Salvar a pesquisa atual"
 				   width="900"
+				   rendered="#{empty showSalvarPesquisa ? true : showSalvarPesquisa}"
 				   height="500">
 		<s:div id="#{formId}modalPesquisaDiv">
 			<a:form id="#{formId}ModalForm">

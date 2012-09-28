@@ -18,10 +18,10 @@
 		
 		<rich:tabPanel switchType="ajax" 
 	                   headerSpacing="2"
-				       selectedTab="#{home.tab}">		
+	                   selectedTab="#{selectedTab}">		
 			<rich:tab id="search"
 				      label="Pesquisa"
-				      action="#{home.onClickSearchTab}" 
+				      action="#{action.onClickSearchTab}" 
 				      rendered="#{showSearchTab}"
 				      status=":status">
 				<a:region renderRegionOnly="true">
@@ -37,7 +37,7 @@
 					  immediate="true"
 					  status=":status"
 					  disabled="#{wi:get(disabledForm, false)}"
-					  action="#{home.onClickFormTab}">
+					  action="#{action.onClickFormTab}">
 				<a:region renderRegionOnly="true">
 					<ui:insert name="form"/>
 				</a:region>

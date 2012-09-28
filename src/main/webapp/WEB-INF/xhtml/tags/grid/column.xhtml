@@ -34,8 +34,8 @@
 		<f:facet name="header">
 			<h:panelGroup>
 				<ui:param name="hideOrder" value="#{wi:get(hideOrder, false)}" />
-				<ui:param name="orderAsc" value="#{!bean.orderedColumn.endsWith(' desc')}" />
-				<ui:param name="selectedOrder" value="#{bean.orderedColumn.startsWith(columnId.concat(' '))}"/>
+				<ui:param name="orderAsc" value="#{not hideOrder and !bean.orderedColumn.endsWith(' desc')}" />
+				<ui:param name="selectedOrder" value="#{not hideOrder and bean.orderedColumn.startsWith(columnId.concat(' '))}"/>
 				<a:form rendered="#{!inForm}" style="margin-left: 5px" >
 					<ui:include src="columnOrder.xhtml" />
 				</a:form>

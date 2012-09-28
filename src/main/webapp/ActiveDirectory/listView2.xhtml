@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:h="http://java.sun.com/jsf/html"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">#{messages['activeDirectory.titlePage']}</ui:define>
+	<ui:param name="action" value="#{activeDirectoryAction}" />
+
+	<ui:define name="body">
+		<a:form id="paramID">
+			<s:div id="parametrosId">
+
+				<wi:outputText id="domain"
+					value="#{empty action.getLDAPDomain() ?'Domínio não informado':action.getLDAPDomain()}"
+					label="#{messages['activeDirectory.domain']}" />
+
+				<wi:outputText id="host"
+					value="#{(action.getLDAPHost() == null)?'Host não informado':action.getLDAPHost()}"
+					label="#{messages['activeDirectory.host']}" />
+					
+				<wi:outputText id="login"
+					value="#{(action.getLDAPLogin() == null)?'Login não informada':action.getLDAPLogin()}"
+					label="#{messages['activeDirectory.login']}" />
+
+				<wi:outputText id="authentication"
+					value="#{(action.getLDAPAuthentication() == null)?'Autenticação não informada':action.getLDAPAuthentication()}"
+					label="#{messages['activeDirectory.authentication']}" />
+			</s:div>
+			<s:div id="importeID">
+				<wi:commandButton id="importarId" 
+								  value="Importar Usuários" 
+								  reRender="importeID,activeId,activeDirectoryList"
+								  action="activeDirectoryAction.importarUsuariosAD()" />
+				
+				<wi:messages formId="paramID" />
+			</s:div>
+			
+		</a:form>
+
+		<s:div id="activeId">
+			<wi:dataTable values="#{action.listUsuariosAD()}"
+				tableTitle="#{messages['activeDirectory.titleGrid']}"
+				id="activeDirectoryList">
+
+				<ui:define name="toolBar">
+					<wi:toolBarRemove
+						actionRemove="activeDirectoryAction.removeUsuarioAD(row)"
+						reRender="activeId" />
+				</ui:define>
+
+				<wi:columnOutputText columnId="idNome"
+					columnHeader="#{messages['activeDirectory.nome']}"
+					value="#{row.nome}" />
+				<wi:columnOutputText columnId="idlogin"
+					columnHeader="#{messages['activeDirectory.login']}"
+					value="#{row.login}" />
+				<wi:columnOutputText columnId="idEmail"
+					columnHeader="#{messages['activeDirectory.email']}"
+					value="#{row.email}" />
+				<wi:column columnId="cpfColumnID"
+					columnHeader="#{messages['activeDirectory.cpf']}"
+					value="#{row.cpf}">
+					<wi:inputCpf id="cpfId" />
+				</wi:column>
+				<wi:columnSituacao columnId="ativo"
+					columnHeader="#{messages['activeDirectory.ativo']}"
+					value="#{row.ativo}" />
+			</wi:dataTable>
+		</s:div>
+		<h:form>
+			<s:div id="confirmeID">
+				<wi:commandButton id="idConfirmar" value="Confirmar Importação"
+					action="activeDirectoryAction.confirmarImportacaoUsuariosAD()" />
+			</s:div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
