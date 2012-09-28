@@ -51,20 +51,14 @@ public class Usuario extends UsuarioLogin implements java.io.Serializable  {
 	private Boolean provisorio;
 	private String cpf;
 
-	private List<ProcessoDocumentoBin> processoDocumentoBinList = new ArrayList<ProcessoDocumentoBin>(
-			0);
+	private List<ProcessoDocumentoBin> processoDocumentoBinList = new ArrayList<ProcessoDocumentoBin>(0);
 	private List<Fluxo> fluxoList = new ArrayList<Fluxo>(0);
-	private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(
-			0);
-	private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(
-			0);
-	private List<BloqueioUsuario> bloqueioUsuarioList = new ArrayList<BloqueioUsuario>(
-			0);
+	private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
+	private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(0);
+	private List<BloqueioUsuario> bloqueioUsuarioList = new ArrayList<BloqueioUsuario>(0);
 	private List<Endereco> enderecoList = new ArrayList<Endereco>(0);
-	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<ProcessoDocumento>(
-			0);
-	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao = new ArrayList<ProcessoDocumento>(
-			0);
+	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<ProcessoDocumento>(0);
+	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao = new ArrayList<ProcessoDocumento>(0);
 	private List<EntityLog> entityLogList = new ArrayList<EntityLog>(0);
 
 	public Usuario() {
