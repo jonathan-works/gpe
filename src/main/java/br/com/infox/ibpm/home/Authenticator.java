@@ -17,11 +17,13 @@
 */
 package br.com.infox.ibpm.home;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import javax.naming.ldap.LdapContext;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
@@ -35,7 +37,9 @@ import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Credentials;
@@ -44,6 +48,7 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
+import org.jboss.ws.extensions.security.SimplePrincipal;
 
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
@@ -52,6 +57,8 @@ import br.com.infox.core.certificado.CertificadoLog;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ldap.util.LdapUtil;
+import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
@@ -64,13 +71,15 @@ public class Authenticator {
 
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
 	private static final LogProvider log = Logging.getLogProvider(Authenticator.class);
-	private static final long serialVersionUID = 1L;
 	private String newPassword1;
 	private String newPassword2;
 	private String login;
 	private String assinatura;
 	private String certChain;
 	private String certChainStringLog;
+	
+	//Definindo o arquivo krb5.conf
+	//private final String KRB = "";
 	
 	//Variaveis de sessão
 	public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
@@ -110,6 +119,7 @@ public class Authenticator {
 			this.newPassword2 = newPassword2;
 	    }      
 	}
+	
 
 	@Observer(Identity.EVENT_POST_AUTHENTICATE)
 	public void postAuthenticate() throws LoginException {
@@ -145,6 +155,72 @@ public class Authenticator {
 				throw new LoginException(errorMessage);
 			}
 			Actor.instance().setId(usuario.getLogin());
+		}
+	}
+	
+/*
+String login = usuario.getLogin();
+		
+		IdentityManager identityManager = IdentityManager.instance();
+		boolean userExists = identityManager.getIdentityStore().userExists(login);
+		if (userExists) {
+			autenticaManualmenteNoSeamSecurity(login, identityManager);
+			Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
+			Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
+			return null;
+		}
+
+
+ */
+	
+	private void autenticaManualmenteNoSeamSecurity(String login, IdentityManager identityManager) {
+		Principal principal = new SimplePrincipal(login);
+		Identity identity = Identity.instance();
+		identity.acceptExternallyAuthenticatedPrincipal(principal);
+		Credentials credentials = (Credentials) Component.getInstance(Credentials.class);
+		credentials.clear();
+		credentials.setUsername(login);
+		identity.getCredentials().clear();
+		identity.getCredentials().setUsername(login);
+		List<String> roles = identityManager.getImpliedRoles(login);
+		if (roles != null) {
+			for (String role : roles) {
+				identity.addRole(role);
+			}
+		}
+	}
+	
+	public void login(){
+		
+		//verificar se o login existe
+		UsuarioHome home = UsuarioHome.instance();
+		Identity identity = Identity.instance();
+		Credentials credentials = identity.getCredentials();
+		String login = credentials.getUsername();
+		Usuario user = home.checkUserByLogin(login);
+		if(user == null) {
+			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
+		}
+		
+		//Autenticação via LDAP
+		if(user.getLdap() && ("sim".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()) ||
+							  "yes".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()))) {
+			LdapContext ldap = LdapUtil.autentiqueUsuarioAD(login, credentials.getPassword());
+			//Autenticado
+			if(ldap != null) {
+				IdentityManager identityManager = IdentityManager.instance();
+				//boolean userExists = identityManager.getIdentityStore().userExists(login);
+				autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
+				Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
+				Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
+				return;
+			}
+			else {
+				FacesMessages.instance().add(Severity.ERROR, "Senha inválido.");
+			}
+		}
+		else {
+			identity.login();
 		}
 	}
 	
@@ -198,7 +274,7 @@ public class Authenticator {
 		return sb.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public UsuarioLogin getUsuario(String login) {
 		String sql = "select o from br.com.infox.access.entity.UsuarioLogin o where o.login = :login";
 		EntityManager entityManager = EntityUtil.getEntityManager();

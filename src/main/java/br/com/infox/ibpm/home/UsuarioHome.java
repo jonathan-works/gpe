@@ -44,12 +44,13 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
-@Name("usuarioHome")
+@Name(UsuarioHome.NAME)
 @BypassInterceptors
 public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 
 	public static final String AFTER_SET_USUARIO_LOCALIZACAO_ATUAL_EVENT = "br.com.infox.ibpm.home.UsuarioHome.afterSetLocalizacaoAtual";
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "usuarioHome";
 	public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
 	
 	private String login;
@@ -109,6 +110,13 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
 				"Campo bloqueio preenchido incorretamente");
 		}
+	}
+	
+	public Usuario checkUserByLogin(String login) {
+		Query query = getEntityManager().createNamedQuery(UsuarioLogin.USUARIO_LOGIN_NAME);
+		query.setParameter(UsuarioLogin.PARAM_LOGIN, login);
+		Usuario usu = EntityUtil.getSingleResult(query);
+		return usu;
 	}
 	
 	@Override
@@ -178,6 +186,15 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		getInstance().setSenha(getInstance().getLogin());
 		String resultado = super.persist();
 		if (password == null) {
+			gerarNovaSenha();
+		}		
+		return resultado;
+	}
+	
+	public String persist(boolean senha) {
+		login = getInstance().getLogin();
+		String resultado = super.persist();
+		if (senha) {
 			gerarNovaSenha();
 		}		
 		return resultado;
