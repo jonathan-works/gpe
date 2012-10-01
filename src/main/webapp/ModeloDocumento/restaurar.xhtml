@@ -30,6 +30,9 @@
 	<ui:define name="title">#{messages['historicoModeloDocumento.titlePage']}</ui:define>
 	
 	<ui:define name="body">
+		<rich:panel bodyClass="panel" 
+					rendered="#{historicoModeloDocumentoAction.selecionado!=null}" 
+					style="float: left; margin-left: 1%; width:#{panelWidth}">
 			<a:form css="maxwidth:512px">
 				<s:div>
 					<wi:commandButton action="historicoModeloDocumentoAction.restaurarSelecionado"
@@ -53,6 +56,7 @@
 					</s:div>
 				</s:div>
 			</a:form>
+		</rich:panel>
 	</ui:define>
 	
 </ui:composition>
