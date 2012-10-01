@@ -33,12 +33,8 @@
 		<rich:panel bodyClass="panel" 
 					rendered="#{historicoModeloDocumentoAction.selecionado!=null}" 
 					style="float: left; margin-left: 1%; width:#{panelWidth}">
-			<a:form css="maxwidth:512px">
-				<s:div>
-					<wi:commandButton action="historicoModeloDocumentoAction.restaurarSelecionado"
-									  oncomplete="window.close()"
-									  value="Restaurar"
-									  id="restaurarHistoricoSelecionado"/>
+			<a:form>
+				<s:div css="width:512px">
 					<wi:inputText id="#{rowId}Titulo" 
 								  label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
 								  value="#{historicoModeloDocumentoAction.selecionado.tituloModeloDocumento}"
@@ -54,6 +50,10 @@
 								   label="#{messages['historicoModeloDocumento.modeloDocumento']}"
 								   readonly="true"/>
 					</s:div>
+					<wi:commandButton action="historicoModeloDocumentoAction.restaurarSelecionado"
+					  oncomplete="window.close()"
+					  value="Restaurar"
+					  id="restaurarHistoricoSelecionado"/>
 				</s:div>
 			</a:form>
 		</rich:panel>

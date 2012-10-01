@@ -20,6 +20,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml"
 	xmlns:a="http://richfaces.org/a4j">
@@ -52,13 +53,12 @@
 				<wi:toolBarReport />
 			</ui:define>
 
-			<wi:columnOutputText columnId="tipoModeloDocumento"
-				columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
-				value="#{row.tipoModeloDocumento}" />
 			<wi:columnOutputText columnId="tituloModeloDocumento"
 				columnHeader="#{messages['modeloDocumento.tituloModeloDocumento']}"
 				value="#{row.tituloModeloDocumento}" />
-
+			<wi:columnOutputText columnId="tipoModeloDocumento"
+				columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
+				value="#{row.tipoModeloDocumento}" />
 			<wi:columnSituacao
 				columnHeader="#{messages['modeloDocumento.ativo']}" />
 		</wi:dataTable>
@@ -90,34 +90,33 @@
 	</ui:define>
 
 	<ui:define name="tabs">
-		<rich:tab id="historicoModeloDocumento" rendered="#{true}"
-			eventsQueue="default" switchType="ajax"
-			label="#{messages['historicoModeloDocumento.titleTab']}">
-			<wi:dataTable values="#{historicoModeloDocumentoList.list(20)}"
+		<rich:tab id="historicoModeloDocumento" 
+					rendered="#{modeloDocumentoHome.isManaged()}"
+					eventsQueue="default" 
+					switchType="ajax"
+					label="#{messages['historicoModeloDocumento.titleTab']}">
+			<wi:dataTable values="#{historicoModeloDocumentoList.list(10)}"
 				bean="#{historicoModeloDocumentoList}"
 				tableTitle="#{messages['modeloDocumento.titleGrid']}"
 				id="historicoModeloDocumentoList">
 				<ui:define name="searchForm">
-					<wi:searchForm formId="historicoModeloDocumentoSearchForm"
-						formTitle="#{messages['modeloDocumento.titleGrid']}">
-						<wi:selectOneMenuEntity id="modeloDocumento"
-							label="#{messages['historicoModeloDocumento.modeloDocumento']}"
-							value="#{historicoModeloDocumentoList.entity.modeloDocumento}"
-							items="#{historicoModeloDocumentoAction.modeloDocumentoList}"
-							showLabelTodos="true" />
-						<wi:selectOneMenuEntity id="usuarioAlteracao"
-							label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
-							value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
-							items="#{historicoModeloDocumentoAction.usuarioAlteracaoList}"
-							showLabelTodos="true" />
-						<wi:inputDate id="dataAlteracao"
-								value="#{historicoModeloDocumentoList.entity.dataAlteracao}"
-								label="#{messages['historicoModeloDocumento.dataAlteracao']}"/>
-						<wi:inputText id="historicoTituloModeloDocumento"
-							label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
-							value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
-						
-					</wi:searchForm>
+					<s:div rendered="#{historicoModeloDocumentoList.getResultCount()>0}">
+						<wi:searchForm formId="historicoModeloDocumentoSearchForm"
+							formTitle="#{messages['modeloDocumento.titleGrid']}">
+							<wi:selectOneMenuEntity id="usuarioAlteracao"
+								label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
+								value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
+								items="#{historicoModeloDocumentoAction.usuarioAlteracaoList}"
+								showLabelTodos="true" />
+							<wi:inputDate id="dataAlteracao"
+									value="#{historicoModeloDocumentoList.entity.dataAlteracao}"
+									label="#{messages['historicoModeloDocumento.dataAlteracao']}"/>
+							<wi:inputText id="historicoTituloModeloDocumento"
+								label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+								value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
+							
+						</wi:searchForm>
+					</s:div>
 				</ui:define>
 				
 				<wi:columnOutputText columnId="tituloModeloDocumento" 
