@@ -307,13 +307,13 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.bouncycastle</groupId> -->
-		<!-- <artifactId>bcprov-jdk16</artifactId> -->
-		<!-- <version>1.45</version> -->
-		<!-- <type>jar</type> -->
-		<!-- <scope>compile</scope> -->
-		<!-- </dependency> -->
+		<dependency>
+		<groupId>org.bouncycastle</groupId>
+		<artifactId>bcprov-jdk16</artifactId>
+		<version>1.45</version>
+		<type>jar</type>
+		<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-highlighter</artifactId>

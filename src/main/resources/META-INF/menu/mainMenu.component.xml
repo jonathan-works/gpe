@@ -35,7 +35,9 @@
 
 			<value>Controle de Acesso/Papeis:/useradmin/papelListView.seam</value>		
 			<value>Controle de Acesso/Recursos:/useradmin/recursoListView.seam</value>
-			<value>Controle de Acesso/Usuários:/Usuario/listView.seam</value>			
+			<value>Controle de Acesso/Usuários:/Usuario/listView.seam</value>
+			<value>Controle de Acesso/Active Directory:/ActiveDirectory/listView.seam</value>
+						
 			
 			<value>Log/Consulta de Log:/Consulta/Log/list.seam</value>
 			
