@@ -75,7 +75,11 @@
 									rowspan="#{empty columnRowspan ? '1':columnRowspan}">
 					<f:facet name="header">
 						<s:div>
-							<ui:insert name="headerToolBar" />
+							<ui:insert name="headerToolBar">
+								<ui:param name="home" value="#{wi:get(home, '')}"/>
+								<wi:toolBarReport rendered="#{parametroHome.getParametro('exportarPDF')}" />
+								<wi:toolBarReportExcel rendered="#{parametroHome.getParametro('exportarXLS')}" action="#{home.exportarXLS()}"/>
+							</ui:insert>
 						</s:div>
 					</f:facet>
 					<ui:insert name="toolBar">

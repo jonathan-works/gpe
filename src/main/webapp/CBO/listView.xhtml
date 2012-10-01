@@ -51,11 +51,6 @@
 				</wi:searchForm>
 			</ui:define>
 			
-			<ui:define name="headerToolBar">
-				<wi:toolBarReport/>
-				<wi:toolBarReportExcel action="#{cboHome.exportarXLS()}"/>				   
-			</ui:define>
-			
 			<wi:columnOutputText columnId="codCbo"
 								 columnHeader="#{messages['cbo.codCbo']}"
 								 value="#{row.codCbo}" />

@@ -21,12 +21,13 @@
 							xmlns:ui="http://java.sun.com/jsf/facelets"
 							xmlns:h="http://java.sun.com/jsf/html"
 							xmlns:wi= "http://www.itx.com.br/jsf"> 
-		        
-	<s:link  view="#{empty reportPath ? util.viewIdDirectory.concat('report.xhtml') : reportPath}" 
-				target="_blank">
-		<h:graphicImage url="#{a4jSkin.imgIconPDF}" 
-					title="Gerar PDF"
-					style="cursor:pointer; padding:0px 1px;" />														
-	</s:link>
+	<s:span rendered="#{wi:get(rendered, 'true')}">
+		<s:link  view="#{empty reportPath ? util.viewIdDirectory.concat('report.xhtml') : reportPath}" 
+					target="_blank">
+			<h:graphicImage url="#{a4jSkin.imgIconPDF}" 
+						title="Gerar PDF"
+						style="cursor:pointer; padding:0px 1px;" />														
+		</s:link>
+	</s:span>
 
 </ui:composition>

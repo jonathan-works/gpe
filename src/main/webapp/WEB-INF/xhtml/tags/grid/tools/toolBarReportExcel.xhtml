@@ -22,22 +22,22 @@
 		        xmlns:h="http://java.sun.com/jsf/html"
 		        xmlns:c="http://java.sun.com/jstl/core"
 		        xmlns:wi= "http://www.itx.com.br/jsf"> 
-	
-	<c:if test="#{not empty reportPath}" > 
-		<s:link  view="#{empty reportPath ? util.viewIdDirectory.concat('excelReport.xhtml') : reportPath}" 
-					target="_blank">
+	<s:span rendered="#{wi:get(rendered, 'true')}">
+		<c:if test="#{not empty reportPath}" > 
+			<s:link  view="#{empty reportPath ? util.viewIdDirectory.concat('excelReport.xhtml') : reportPath}" 
+						target="_blank">
+					<h:graphicImage url="/img/excel.png" 
+								title="Gerar Excel"
+								style="cursor:pointer; padding:0px 1px;" />		
+			</s:link>
+		</c:if>
+		
+		<h:form enctype="multipart/form-data">
+			<h:commandLink action="#{util.invokeMethod(action)}">
 				<h:graphicImage url="/img/excel.png" 
 							title="Gerar Excel"
-							style="cursor:pointer; padding:0px 1px;" />		
-		</s:link>
-	</c:if>
-	
-	<h:form enctype="multipart/form-data">
-		<h:commandLink action="#{util.invokeMethod(action)}">
-			<h:graphicImage url="/img/excel.png" 
-						title="Gerar Excel"
-						style="cursor:pointer; padding:0px 1px;" />																
-		</h:commandLink>
-	</h:form>
-	        
+							style="cursor:pointer; padding:0px 1px;" />																
+			</h:commandLink>
+		</h:form>
+	</s:span>
 </ui:composition>
