@@ -18,9 +18,10 @@
 			input[type='text'],input[type='password'] {
 				border: 0px;
 				font-size: 12px;
-				background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputLogin}") !important;
 				background-repeat: no-repeat;
+				background-color: white;
 				color: black;
+				font-size: #{skinZoom.skinZoom};
 			}
 		</style>
 	</ui:define>
@@ -72,6 +73,7 @@
 								action="#{skinZoom.setTmNormal()}"> 
 								<h:graphicImage
 								style="width: 16px;	height: 16px;"
+								title="Tamanho Normal"
 								url="#{a4jSkin.imgIconZoomNormal}"/>
 							</h:commandLink> <br/>	
 							
@@ -79,6 +81,7 @@
 								action="#{skinZoom.setTmMedio()}"> 
 								<h:graphicImage 
 								style="width: 16px;	height: 16px;"
+								title="Tamanho Médio"
 								url="#{a4jSkin.imgIconZoomMedio}"/>
 							</h:commandLink> <br/>	
 							
@@ -86,6 +89,7 @@
 								action="#{skinZoom.setTmGrande()}"> 
 								<h:graphicImage 
 								style="width: 16px;	height: 16px;"
+								title="Tamanho Grande"
 								url="#{a4jSkin.imgIconZoomGrande}"/>
 							</h:commandLink> <br/>					
 						</td>
@@ -95,13 +99,24 @@
 									<f:facet name="header">Identificação</f:facet>
 									<p>#{not useCertLogin ? 'Informe o seu nome de usuário e senha' : 'Acessar com certificado digital'}</p>
 																			
-									<h:panelGrid columns="2"
-										rowClasses="prop" columnClasses="name,value">
-										<h:outputLabel for="username" rendered="#{not useCertLogin}">Usuário</h:outputLabel>
-										<h:inputText id="username" rendered="#{not useCertLogin}" value="#{credentials.username}" />
-										<h:outputLabel for="password" rendered="#{not useCertLogin}" style="margin-right:8px">Senha</h:outputLabel>
-										<h:inputSecret id="password" rendered="#{not useCertLogin}" value="#{credentials.password}" />
-									</h:panelGrid>
+									<table>
+										<tr>
+											<td>
+												<h:outputLabel for="username" rendered="#{not useCertLogin}" style="font-size: #{skinZoom.skinZoom}">Usuário</h:outputLabel>
+											</td>
+											<td>
+												<h:inputText id="username" rendered="#{not useCertLogin}" value="#{credentials.username}"/>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<h:outputLabel for="password" rendered="#{not useCertLogin}" style="font-size: #{skinZoom.skinZoom}">Senha</h:outputLabel>
+											</td>
+											<td>
+												<h:inputSecret id="password" rendered="#{not useCertLogin}" value="#{credentials.password}" />
+											</td>
+										</tr>
+									</table>
 									
 									<c:if test="#{not useCertLogin}">
 										<div id="novaSenha" style="display: none; padding-left: 7px">
@@ -123,7 +138,7 @@
 										value="Entrar" 
 										style="width: 80px"
 										styleClass="buttons dr-tbpnl-tb-inact"
-										action="#{authenticator.login()}" /> 
+										action="#{authenticator.login()}"/> 
 									
 									<script>
 										function mudar(){
@@ -212,7 +227,7 @@
 				
 			</h:form>
 			
-			<rich:modalPanel id="panelTeste" width="420" height="200">
+			<rich:modalPanel id="panelTeste" width="450" height="260">
 				<f:facet name="header">Requisitar Nova Senha</f:facet>			
 				<f:facet name="controls">
 					<h:panelGroup>
