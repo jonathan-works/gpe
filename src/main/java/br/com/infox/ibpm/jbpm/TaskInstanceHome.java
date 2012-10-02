@@ -121,13 +121,13 @@ public class TaskInstanceHome implements Serializable {
 					Object variable = JbpmUtil.instance().getConteudo(var, taskInstance);
 					String modelo = (String) ProcessInstance.instance().getContextInstance().getVariable(name + "Modelo");
 					Boolean assinado = Boolean.FALSE;
-					Integer id = (Integer) taskInstance.getVariable(var.getMappedName());
-					if (id != null){
-						AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
-						assinado = documentoService.isDocumentoAssinado(id);
-					}
 					Boolean isEditor = JbpmUtil.isTypeEditor(type);
 					if (isEditor){
+						Integer id = (Integer) taskInstance.getVariable(var.getMappedName());
+						if (id != null){
+							AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
+							assinado = documentoService.isDocumentoAssinado(id);
+						}
 						if ((id != null) && (!assinado) && var.isWritable()){
 							ProcessoHome.instance().carregarDadosFluxo(id);
 							instance.put(name, variable);
@@ -220,6 +220,8 @@ public class TaskInstanceHome implements Serializable {
 							}
 							
 							assinar = Boolean.FALSE;
+						} else {
+							Contexts.getBusinessProcessContext().set(var.getMappedName(), value);
 						}
 					}
 				}
@@ -350,7 +352,7 @@ public class TaskInstanceHome implements Serializable {
 	 * @param currentTaskId
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private boolean canOpenTask(long currentTaskId) {
 		JbpmUtil.getJbpmSession().flush();
 		Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
