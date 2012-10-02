@@ -652,7 +652,7 @@ public class ProcessBuilder implements Serializable {
 		this.currentTask = currentTask;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List getTypeList() {
 		if (typeList == null) {
 			String path = FacesUtil.getServletContext(null).getRealPath("/WEB-INF/xhtml/components/jbpmComponents.properties");

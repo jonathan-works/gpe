@@ -30,7 +30,6 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.entity.ProcessoDocumento;
-import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.itx.component.Form;
 import br.com.itx.component.FormField;

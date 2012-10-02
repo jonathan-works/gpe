@@ -28,19 +28,19 @@
 
 	<ui:param name="ajaxSingle" value="#{wi:get(ajaxSingle, true)}"/>
 
-	<c:if test="#{empty event}">
 		<a:support event="onchange"
-				   status=":status" 
+				   status=":status"
+				   rendered="#{empty event}" 
 				   ajaxSingle="#{ajaxSingle}"
 				   action="#{util.invokeMethod(action)}" 
 				   reRender="#{reRender}"
 				   onclick="#{onclick}"
 				   onsubmit="#{onsubmit}"
 				   oncomplete="#{oncomplete}"/>
-	</c:if>
 	<c:if test="#{event.equals('onclick')}">
 		<a:support event="onclick"
 				   status=":status" 
+				   rendered="#{empty event}"
 				   ajaxSingle="#{ajaxSingle}"
 				   action="#{util.invokeMethod(action)}" 
 				   reRender="#{reRender}"

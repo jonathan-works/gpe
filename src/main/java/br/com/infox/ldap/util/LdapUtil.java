@@ -61,31 +61,34 @@ public final class LdapUtil {
     }
 
 	private static Hashtable<String, String> gerarParametrosUsuarioPadraoLDAP() {
-		Hashtable<String, String> env = new Hashtable<String, String>();
-	    env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, "ldap://"+ ParametroUtil.getLDAPHost() + "/CN=users" + gereParametrosAD(ParametroUtil.getLDAPDomain()));
-        env.put(javax.naming.Context.SECURITY_AUTHENTICATION, "Simple");  
-        env.put(javax.naming.Context.SECURITY_PRINCIPAL, ParametroUtil.getLDAPLogin() + "@" + ParametroUtil.getLDAPDomain());
-        
-        if(ParametroUtil.getLDAPassword() == null || "".equals(ParametroUtil.getLDAPassword())) {
+		String host = ParametroUtil.getLDAPHost();
+		String domain = ParametroUtil.getLDAPDomain();
+		String password = ParametroUtil.getLDAPassword();
+        if(password == null || host == null || domain ==null || "".equals(password)) {
         	exibirMenssagemLDAP();
       	  return null;
         }
-        env.put(javax.naming.Context.SECURITY_CREDENTIALS, ParametroUtil.getLDAPassword());
+		Hashtable<String, String> env = new Hashtable<String, String>();
+	    env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, "ldap://"+ host + "/CN=users" + gereParametrosAD(domain));
+        env.put(javax.naming.Context.SECURITY_AUTHENTICATION, "Simple");  
+        env.put(javax.naming.Context.SECURITY_PRINCIPAL, ParametroUtil.getLDAPLogin() + "@" + domain);
+        env.put(javax.naming.Context.SECURITY_CREDENTIALS, password);
 		return env;
 	}
 	
 	private static Hashtable<String, String> gerarParametrosLDAP(String login, String pw) {
-		Hashtable<String, String> env = new Hashtable<String, String>();
-	    env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, "ldap://"+ ParametroUtil.getLDAPHost() + "/CN=users" + gereParametrosAD(ParametroUtil.getLDAPDomain()));
-        env.put(javax.naming.Context.SECURITY_AUTHENTICATION, "Simple");  
-        env.put(javax.naming.Context.SECURITY_PRINCIPAL, login + "@" + ParametroUtil.getLDAPDomain());
-        
-        if(ParametroUtil.getLDAPassword() == null || "".equals(ParametroUtil.getLDAPassword())) {
+		String host = ParametroUtil.getLDAPHost();
+		String domain = ParametroUtil.getLDAPDomain();
+        if(host == null || domain ==null) {
         	exibirMenssagemLDAP();
       	  return null;
         }
+		Hashtable<String, String> env = new Hashtable<String, String>();
+	    env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, "ldap://"+ host + "/CN=users" + gereParametrosAD(domain));
+        env.put(javax.naming.Context.SECURITY_AUTHENTICATION, "Simple");  
+        env.put(javax.naming.Context.SECURITY_PRINCIPAL, login + "@" + domain);
         env.put(javax.naming.Context.SECURITY_CREDENTIALS, pw);
 		return env;
 	}
