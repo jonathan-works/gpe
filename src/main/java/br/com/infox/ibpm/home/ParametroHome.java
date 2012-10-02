@@ -73,6 +73,18 @@ public class ParametroHome
 		throw new IllegalArgumentException();		
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static String getParametroOrFalse(String nome)	{
+		EntityManager em = EntityUtil.getEntityManager();
+		List<Parametro> resultList = em.createQuery(
+			"select p from Parametro p where " +
+				"nomeVariavel = :nome").setParameter("nome", nome).getResultList();
+		if (!resultList.isEmpty()) {
+			return resultList.get(0).getValorVariavel();
+		}
+		return "false";
+	}	
+	
 	public static String getFromContext(String nomeParametro, boolean validar) {
 		String value = (String) Contexts.getApplicationContext().get(nomeParametro);
 		if (validar && value == null) {

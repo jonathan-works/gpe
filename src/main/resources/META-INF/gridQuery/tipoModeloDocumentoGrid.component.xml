@@ -27,10 +27,10 @@
 			</value>
 		</property>		
 		<property name="searchFields">
-			<value>ativo: {type : comboSituacao}</value>
 			<value>grupoModeloDocumento:{type: suggest, properties: {length: 100, handler: grupoModeloDocumentoSuggest}}</value>
 			<value>tipoModeloDocumento</value>
 			<value>abreviacao</value>
+			<value>ativo: {type : comboSituacao}</value>
 		</property>
 		<property name="order">tipoModeloDocumento</property>
 	</component>
