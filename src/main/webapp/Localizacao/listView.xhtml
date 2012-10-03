@@ -100,77 +100,7 @@
 									 
 		</wi:dataTable>
 	</rich:tab>
-	<rich:tab label="#{messages['localizacaoTurno.tabTitle']}"
-		      status=":status"
-			  id="localizacaoTurno"
-			  action="#{localizacaoTurnoAction.init()}"
-			  rendered="#{home.managed}">
-
-		<wi:dataForm home="#{localizacaoTurnoAction}"
-					 formId="localizacaoTurnoForm"
-					 formTitle="Adicionar Turno à Localização - #{(localizacaoHome.instance)}">
-			<wi:inputTime id="horaInicio"
-						  labelTime="#{messages['localizacaoTurno.horaInicio']}"
-						  required="true"
-						  value="#{localizacaoTurnoAction.instance.horaInicio}"/>
-		    <wi:inputTime id="horaFim"
-						  labelTime="#{messages['localizacaoTurno.horaFim']}"
-						  required="true"
-						  value="#{localizacaoTurnoAction.instance.horaFim}"/>		
-			<ui:define name="buttons">
-				<wi:commandButton id="saveLocalizacaoTurnoButton"
-								  action="localizacaoTurnoAction.persist"
-								  reRender="localizacaoTurnoForm, localizacaoTurnoDiv"
-								  value="Incluir"/>
-			</ui:define>					
-		</wi:dataForm>
-		<br/>		
-	  	<s:div id="localizacaoTurnoDiv">
-	  		<h:form>
-		  		<rich:dataTable id="localizacaoTurnoTable"
-								value="#{localizacaoTurnoAction.localizacaoTurnoList}"
-								var="row"
-								title="Turno à Localização - #{(localizacaoHome.instance)}"
-								rows="10"
-								style="width: 50%">
-					<rich:column style="width: 10%">
-						<f:facet name="header">
-							<wi:toolBarRemove id="headerRemoveLocalizacaoTurno"
-											  reRender="localizacaoTurnoDiv"
-										      actionRemove="localizacaoTurnoAction.removeAll()"
-										      title="Remover todos os Registros"/>
-						</f:facet>
-						<center>
-							<wi:toolBarRemove id="toolBarRemoveLocalizacaoTurn"
-											  reRender="localizacaoTurnoDiv"
-										      actionRemove="localizacaoTurnoAction.remove(row)"/>
-						</center>
-					</rich:column>
-					<rich:column style="width: 45%">
-						<f:facet name="header">
-							<h:outputText value="#{messages['localizacaoTurno.horaInicio']}" />
-						</f:facet>
-						<h:outputText value="#{row.horaInicio}">
-							<s:convertDateTime pattern="kk:mm"/>
-						</h:outputText>
-					</rich:column>
-					<rich:column style="width: 45%">
-						<f:facet name="header">
-							<h:outputText value="#{messages['localizacaoTurno.horaFim']}" />
-						</f:facet>
-						<h:outputText value="#{row.horaFim}">
-							<s:convertDateTime pattern="kk:mm"/>
-						</h:outputText>
-					</rich:column>
-				</rich:dataTable>
-				<rich:datascroller id="dsLocalizacaoTurnoTable"
-								   for="localizacaoTurnoTable"
-								   lastPageMode="full"
-								   align="left"
-								   renderIfSinglePage="false"/>
-			</h:form>
-	  	</s:div>
-	</rich:tab>
+	
 </ui:define> 
  
 </ui:composition>
