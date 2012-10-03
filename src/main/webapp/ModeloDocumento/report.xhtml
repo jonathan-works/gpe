@@ -4,6 +4,23 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
+	<ui:param name="title" value="Modelo de Documento" />
 
+	<wi:dataReport subtitle="Resultado da Pesquisa dos Modelos de Documento"
+				   title="#{title}"
+				   columns="3">
+				   
+		<wi:reportColumnHeader title="#{messages['modeloDocumento.modeloDocumento']}" />
+		<wi:reportColumnHeader title="#{messages['modeloDocumento.tipoModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{messages['categoria.ativo']}"/>
+				
+		<ui:repeat var="row" value="#{modeloDocumentoList.list()}">
+			<wi:reportColumn value="#{row.tituloModeloDocumento}" />
+			<wi:reportColumn value="#{row.tipoModeloDocumento}" />
+			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}"
+							 columnAlign="center"/>
+		</ui:repeat>
+
+	</wi:dataReport>
 	
 </ui:composition>

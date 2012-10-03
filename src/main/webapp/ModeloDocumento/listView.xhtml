@@ -49,10 +49,6 @@
 				</wi:searchForm>
 			</ui:define>
 
-			<ui:define name="headerToolBar">
-				<wi:toolBarReport />
-			</ui:define>
-
 			<wi:columnOutputText columnId="tituloModeloDocumento"
 				columnHeader="#{messages['modeloDocumento.tituloModeloDocumento']}"
 				value="#{row.tituloModeloDocumento}" />
@@ -133,8 +129,8 @@
 					</ui:define>
 				</wi:columnOutputText>
 				<ui:define name="toolBar">
-					<ui:param name="target" value="restaurar.seam?cid=#{conversation.id}" />
-					<wi:toolBarPopUp action="#{historicoModeloDocumentoAction.setSelecionado(row)}" />
+					<wi:toolBarPopUp target="restaurar.seam?cid=#{conversation.id}"
+										action="#{historicoModeloDocumentoAction.setSelecionado(row)}" />
 				</ui:define>
 									 
 			</wi:dataTable>

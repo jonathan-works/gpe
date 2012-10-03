@@ -18,12 +18,18 @@ package br.com.infox.ibpm.home;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.faces.application.FacesMessage;
+
+import org.apache.lucene.demo.html.ParseException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
@@ -76,6 +82,19 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	}
 
 	@SuppressWarnings("unchecked")
+	private List<String> getValorVariaveis()	{
+		List list = new ArrayList<String>();
+		if (getInstance().getTipoModeloDocumento() != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("select o.valorVariavel from Variavel o ");
+			sb.append("join o.variavelTipoModeloList tipos ");
+			sb.append("where tipos.tipoModeloDocumento = :tipo");
+			list = getEntityManager().createQuery(sb.toString()).setParameter("tipo", getInstance().getTipoModeloDocumento()).getResultList();
+		}
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Variavel> getVariaveis() {
 		List list = new ArrayList<Variavel>();
 		if (getInstance().getTipoModeloDocumento() != null) {
@@ -88,7 +107,15 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		return list;
 	}
 	
-	public HistoricoModeloDocumento setHistorico(ModeloDocumento oldEntity)	{
+	public boolean setHistorico(ModeloDocumento oldEntity)	{
+		if ( !instance.hasChanges(oldEntity) ) {
+			return false;
+		}
+		if ( oldEntity== null )	{
+			return true;
+		}
+			
+		
 		HistoricoModeloDocumentoHome home = (HistoricoModeloDocumentoHome)Component.getInstance(HistoricoModeloDocumentoHome.NAME);
 		home.newInstance();
 		HistoricoModeloDocumento historico = home.getInstance();
@@ -98,15 +125,35 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		historico.setAtivo(oldEntity.getAtivo());
 		historico.setDataAlteracao(new Date());
 		historico.setModeloDocumento(instance);
-		
 		historico.setUsuarioAlteracao((Usuario) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
+		
 		home.persist();
-		return historico;
+		return true;
 	}
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {
-		setHistorico(getOldEntity());
+		Pattern pattern = Pattern.compile("#[{].+[}]");
+		Matcher matcher = pattern.matcher(instance.getModeloDocumento());
+		List<String> variaveis = getValorVariaveis();
+		boolean eliminarTodos = variaveis.size() == 0;
+		
+		while(matcher.find())	{
+			if (eliminarTodos)	{
+				System.out.println(matcher.group());
+				FacesMessages.instance().add("Variável "+matcher.group().substring(1)+" não cadastrada para este Tipo de Documento");
+				return false;
+			}
+			if(!variaveis.contains(matcher.group()))	{
+				System.out.println(matcher.group());
+				FacesMessages.instance().add("Variável "+matcher.group().substring(1)+" não cadastrada para este Tipo de Documento");
+				return false;
+			}
+		}
+		
+		if (!setHistorico(getOldEntity()))	{
+				return false;
+		}
 		
 		return super.beforePersistOrUpdate();
 	}

@@ -22,7 +22,7 @@
 		        xmlns:f="http://java.sun.com/jsf/core"
 		        xmlns:wi="http://www.itx.com.br/jsf">
 	<ui:param name="idPopUp" value="#{resultList[rowId]}" />
-	<wi:toolBar url="#{a4jSkin.imgIconView}" title="Selecionar" oncomplete="openPopUp('#{idPopUp}', '#{target}');">
+	<wi:toolBar url="#{a4jSkin.imgIconView}" title="Selecionar" oncomplete="openPopUp('#{idPopUp}', '#{wi:get(target,null)}');">
 		<f:param name="id" value="#{empty toolBarIdRow ? rowId : toolBarIdRow}" />
 	</wi:toolBar>
 
