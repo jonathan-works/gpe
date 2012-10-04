@@ -124,12 +124,14 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		super.newInstance();
 		getInstance().setAtivo(true);
 		getInstance().setBloqueio(false);
+		getInstance().setLdap(false);
 	}
 	
 	@Override
 	protected Usuario createInstance() {
 		Usuario usuario = super.createInstance();
-		usuario.setAtivo(true);		
+		usuario.setAtivo(true);
+		usuario.setLdap(false);
 		return usuario;
 	}
 	
