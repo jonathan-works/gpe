@@ -17,6 +17,7 @@ package br.com.infox.ibpm.entity;
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -50,6 +51,7 @@ public class Usuario extends UsuarioLogin implements java.io.Serializable  {
 	private Boolean bloqueio;
 	private Boolean provisorio;
 	private String cpf;
+	private Date dataExpiracao; //Data de previsão para expirar o usuário provisório
 
 	private List<ProcessoDocumentoBin> processoDocumentoBinList = new ArrayList<ProcessoDocumentoBin>(0);
 	private List<Fluxo> fluxoList = new ArrayList<Fluxo>(0);
@@ -63,6 +65,8 @@ public class Usuario extends UsuarioLogin implements java.io.Serializable  {
 
 	public Usuario() {
 		bloqueio = false;
+		provisorio = false;
+		dataExpiracao = null;
 	}
 
 	@Column(name = "in_bloqueio", nullable = false)
@@ -83,7 +87,16 @@ public class Usuario extends UsuarioLogin implements java.io.Serializable  {
 	public void setProvisorio(Boolean provisorio) {
 		this.provisorio = provisorio;
 	}
-		
+	
+	@Column(name = "dt_expiracao_usuario", nullable=true)
+	public Date getDataExpiracao() {
+		return dataExpiracao;
+	}
+
+	public void setDataExpiracao(Date dataExpiracao) {
+		this.dataExpiracao = dataExpiracao;
+	}
+
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
 	public List<ProcessoDocumentoBin> getProcessoDocumentoBinList() {

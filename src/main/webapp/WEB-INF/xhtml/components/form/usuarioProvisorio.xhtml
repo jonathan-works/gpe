@@ -15,48 +15,39 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-	
+-->	
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
 				xmlns:f="http://java.sun.com/jsf/core"
 				xmlns:h="http://java.sun.com/jsf/html"
 				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:c="http://java.sun.com/jstl/core"
 				xmlns:a="http://richfaces.org/a4j"
 				xmlns:rich="http://richfaces.org/rich">
 
-	<wi:inputText id="#{id}NomeUsuario"
-				  label="#{messages['usuario.nome']}"
-				  value="#{usuarioHome.instance.nome}"
-				  required="true"/>
-	
-	<wi:inputText id="#{id}Login"
-				  label="Login"
-				  value="#{usuarioHome.instance.login}"
-				  required="true"
-				  maxlength="15"/>	
-	
-	<wi:inputCpf id="#{id}cpf"
-				 label="CPF"
-				 value="#{usuarioHome.instance.cpf}"
-				 required="true"/>
-	
-	<wi:inputText id="#{id}Email"
-				  label="E-mail"
-				  value="#{usuarioHome.instance.email}"
-				  required="true">
-		<f:validator validatorId="emailValidator" />
-	</wi:inputText>
-	
-	<ui:include src="bloqueio.xhtml" />
-
-	<wi:selectOneRadio id="#{id}Ativo"	
-					   label="#{messages['usuario.ativo']}"
-					   value="#{usuarioHome.instance.ativo}"
-					   valueList="true:Ativo,false:Inativo"/>
-					   
-	<ui:include src="usuarioProvisorio.xhtml"/>
+	<s:decorate id="#{f.id}DecorationProvisorio" 
+				template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+				rendered="#{usuarioHome.managed}">
+		<ui:param name="showLock" value="false" />
 		
+		<wi:selectBooleanCheckbox id="#{id}Provisorio"
+							value="#{usuarioHome.instance.provisorio}"
+							label="#{messages['usuario.provisorio']}">
+			<a:support ajaxSingle="true"
+					   reRender="provisorioDiv"
+					   event="onchange" />
+		</wi:selectBooleanCheckbox>
+
+		<s:div id="provisorioDiv">
+			 <s:div rendered="#{usuarioHome.instance.provisorio}" >
+				<wi:inputDate id="#{id}DataExpiracao"
+							 label="#{messages['usuario.dataExpiracao']}"
+							 value="#{usuarioHome.instance.dataExpiracao}"
+							 required="true"/>
+			 </s:div>
+		</s:div>
+       	  
+	</s:decorate>
+			
 </ui:composition>

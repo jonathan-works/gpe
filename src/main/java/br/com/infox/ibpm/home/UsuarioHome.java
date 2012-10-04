@@ -112,6 +112,14 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		}
 	}
 	
+	/*
+	 * Apaga a data de Expiração quando o Usário passa de Provisório para permanente 
+	 * */
+	private void validarPermanencia(){
+		if (!getInstance().getProvisorio())
+			getInstance().setDataExpiracao(null);
+	}
+	
 	public Usuario checkUserByLogin(String login) {
 		Query query = getEntityManager().createNamedQuery(UsuarioLogin.USUARIO_LOGIN_NAME);
 		query.setParameter(UsuarioLogin.PARAM_LOGIN, login);
@@ -157,6 +165,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	@Override
 	public String update() {
 		validarBloqueio();
+		validarPermanencia();
 		Usuario usuario = getInstance();
 		if (usuario.getLogin() == null) {
 			usuario.setLogin(login);
