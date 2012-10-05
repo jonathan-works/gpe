@@ -31,30 +31,28 @@
 	
 	<ui:define name="body">
 		<rich:panel bodyClass="panel" 
-					rendered="#{historicoModeloDocumentoAction.selecionado!=null}" 
-					style="float: left; margin-left: 1%; width:#{panelWidth}">
+					rendered="#{historicoModeloDocumentoAction.selecionado != null}"
+					style="float: left;">
 			<a:form>
-				<s:div css="width:512px">
-					<wi:inputText id="#{rowId}Titulo" 
-								  label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
-								  value="#{historicoModeloDocumentoAction.selecionado.tituloModeloDocumento}"
-								  readonly="true"/>
+				<wi:inputText id="#{rowId}Titulo" 
+							  label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+							  value="#{historicoModeloDocumentoAction.selecionado.tituloModeloDocumento}"
+							  readonly="true"/>
 
-					<wi:inputText id="#{rowId}Situacao"
-								  label="#{messages['modeloDocumento.ativo']}"
-								  value="#{historicoModeloDocumentoAction.selecionado.ativo ? 'Ativo' : 'Inativo'}"
-								  readonly="true"/>
-					<s:div id="editorROModeloDocumento" >
-						<wi:editor id="#{rowId}ModeloDocumento"	 
-								   value="#{historicoModeloDocumentoAction.selecionado.descricaoModeloDocumento}"
-								   label="#{messages['historicoModeloDocumento.modeloDocumento']}"
-								   readonly="true"/>
-					</s:div>
-					<wi:commandButton action="historicoModeloDocumentoAction.restaurarSelecionado"
-					  oncomplete="window.close()"
-					  value="Restaurar"
-					  id="restaurarHistoricoSelecionado"/>
+				<wi:inputText id="#{rowId}Situacao"
+							  label="#{messages['modeloDocumento.ativo']}"
+							  value="#{historicoModeloDocumentoAction.selecionado.ativo ? 'Ativo' : 'Inativo'}"
+							  readonly="true"/>
+				<s:div id="editorROModeloDocumento" >
+					<wi:editor id="#{rowId}ModeloDocumento"	 
+							   value="#{historicoModeloDocumentoAction.selecionado.descricaoModeloDocumento}"
+							   label="#{messages['historicoModeloDocumento.modeloDocumento']}"
+							   readonly="true"/>
 				</s:div>
+				<wi:commandButton action="historicoModeloDocumentoAction.restaurarSelecionado"
+				  value="Restaurar"
+				  id="restaurarHistoricoSelecionado"
+				  oncomplete="window.close()"/>
 			</a:form>
 		</rich:panel>
 	</ui:define>

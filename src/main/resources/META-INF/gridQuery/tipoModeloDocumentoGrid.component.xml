@@ -10,8 +10,8 @@
 		<property name="key">idTipoModeloDocumento</property>
 		<property name="columns">
 			<value>idTipoModeloDocumento</value>
-			<value>grupoModeloDocumento : {properties : {order: grupoModeloDocumento}}</value>
-			<value>tipoModeloDocumento</value>			
+			<value>tipoModeloDocumento</value>
+			<value>grupoModeloDocumento : {properties : {order: grupoModeloDocumento}}</value>			
 			<value>abreviacao</value>			
 			<value>ativo: { valueType: ativo }</value>	
 		</property>

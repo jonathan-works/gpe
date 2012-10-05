@@ -43,75 +43,77 @@
 	    		enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}">
 						   	
 	        <rich:panel style="height:#{panelHeight}">
-	            <f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
-			    <c:if test="#{form.tabbed}">
-				    <rich:tabPanel switchType="client">
-						<wi:repeat value="#{form.rootFields}" var="rf">
-							<ui:param name="id" value="#{rf.id}"/>
-							<ui:param name="props" value="#{rf.properties}" />
+		       	<s:div style="max-width:800px">
+		            <f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
+				    <c:if test="#{form.tabbed}">
+					    <rich:tabPanel switchType="client">
+							<wi:repeat value="#{form.rootFields}" var="rf">
+								<ui:param name="id" value="#{rf.id}"/>
+								<ui:param name="props" value="#{rf.properties}" />
+								<ui:param name="value" value="#{home.instance[id]}" />
+								<ui:param name="label" 
+										  value="#{empty props.label ? rf.label : props.label}"/>
+								<ui:param name="label" 
+										  value="#{expressions.createValueExpression(label).value}" />
+								<ui:param name="rendered" 
+										  value="#{empty props.rendered ? rf.rendered : props.rendered}"/>
+								<ui:param name="rendered" 
+										  value="#{empty rendered ? true : rendered}"/>
+								<ui:param name="required" 
+										  value="#{empty props.required ? rf.required : props.required}"/>
+								<ui:param name="disabled" 
+										  value="#{props.disabled}"/>
+								<ui:param name="reRender" 
+										  value="#{empty props.reRender ? reRender : props.reRender}"/>
+								<ui:param name="readonly" 
+										  value="#{empty props.readonly ? false : util.eval(props.readonly)}"/>
+								<ui:param name="maxlength" 
+										  value="#{props.length}" />
+								<ui:param name="bypassUpdate" value="#{props.bypassUpdate}"/>
+								<ui:include id="#{rf.id}" 
+											src="/WEB-INF/xhtml/components/form/#{rf.type}.xhtml" />
+							</wi:repeat>
+						</rich:tabPanel>
+					</c:if>
+				    <c:if test="#{!form.tabbed}">
+						<wi:repeat value="#{form.fields}" var="f">
+							<ui:param name="id" value="#{f.id}"/>
+							<ui:param name="props" value="#{f.properties}"/>
 							<ui:param name="value" value="#{home.instance[id]}" />
+							<ui:param name="disabled" value="#{props.disabled}"/>
 							<ui:param name="label" 
-									  value="#{empty props.label ? rf.label : props.label}"/>
+									  value="#{empty props.label ? f.label : props.label}"/>
 							<ui:param name="label" 
 									  value="#{expressions.createValueExpression(label).value}" />
 							<ui:param name="rendered" 
-									  value="#{empty props.rendered ? rf.rendered : props.rendered}"/>
+									  value="#{empty props.rendered ? f.rendered : props.rendered}"/>
 							<ui:param name="rendered" 
 									  value="#{empty rendered ? true : rendered}"/>
 							<ui:param name="required" 
-									  value="#{empty props.required ? rf.required : props.required}"/>
-							<ui:param name="disabled" 
-									  value="#{props.disabled}"/>
+									  value="#{empty props.required ? f.required : props.required}"/>
+							<ui:param name="bypassUpdate" 
+									  value="#{props.bypassUpdate}"/>
 							<ui:param name="reRender" 
 									  value="#{empty props.reRender ? reRender : props.reRender}"/>
 							<ui:param name="readonly" 
 									  value="#{empty props.readonly ? false : util.eval(props.readonly)}"/>
 							<ui:param name="maxlength" 
 									  value="#{props.length}" />
-							<ui:param name="bypassUpdate" value="#{props.bypassUpdate}"/>
-							<ui:include id="#{rf.id}" 
-										src="/WEB-INF/xhtml/components/form/#{rf.type}.xhtml" />
+							<ui:param name="type" 
+									  value="#{f.type.startsWith('documentoIdentificacaoHome') ? 'docsIdentificacao/'.concat(util.eval(f.type)) : f.type }" />
+							<a:include id="#{id}" 
+									   viewId="/WEB-INF/xhtml/components/form/#{type}.xhtml">
+							</a:include>
 						</wi:repeat>
-					</rich:tabPanel>
-				</c:if>
-			    <c:if test="#{!form.tabbed}">
-					<wi:repeat value="#{form.fields}" var="f">
-						<ui:param name="id" value="#{f.id}"/>
-						<ui:param name="props" value="#{f.properties}"/>
-						<ui:param name="value" value="#{home.instance[id]}" /><!-- poderia não existir -->
-						<ui:param name="disabled" value="#{props.disabled}"/>
-						<ui:param name="label" 
-								  value="#{empty props.label ? f.label : props.label}"/>
-						<ui:param name="label" 
-								  value="#{expressions.createValueExpression(label).value}" />
-						<ui:param name="rendered" 
-								  value="#{empty props.rendered ? f.rendered : props.rendered}"/>
-						<ui:param name="rendered" 
-								  value="#{empty rendered ? true : rendered}"/>
-						<ui:param name="required" 
-								  value="#{empty props.required ? f.required : props.required}"/>
-						<ui:param name="bypassUpdate" 
-								  value="#{props.bypassUpdate}"/>
-						<ui:param name="reRender" 
-								  value="#{empty props.reRender ? reRender : props.reRender}"/>
-						<ui:param name="readonly" 
-								  value="#{empty props.readonly ? false : util.eval(props.readonly)}"/>
-						<ui:param name="maxlength" 
-								  value="#{props.length}" />
-						<ui:param name="type" 
-								  value="#{f.type.startsWith('documentoIdentificacaoHome') ? 'docsIdentificacao/'.concat(util.eval(f.type)) : f.type }" />
-						<a:include id="#{id}" 
-								   viewId="/WEB-INF/xhtml/components/form/#{type}.xhtml">
-						</a:include>
-					</wi:repeat>
-				</c:if>
-	            <div style="clear:both">
-	            	<s:div rendered="#{canEdit and !empty form.fields and form.hasRequiredField()}">           	                     
-	                   <img src="#{util.contextPath}#{a4jSkin.imgIconBalao}"/> 
-	                   <span class="required">*</span>
-	                   Campos Obrigatórios                                                       	
-	                </s:div>
-	            </div>
+					</c:if>
+		            <div style="clear:both">
+		            	<s:div rendered="#{canEdit and !empty form.fields and form.hasRequiredField()}">           	                     
+		                   <img src="#{util.contextPath}#{a4jSkin.imgIconBalao}"/> 
+		                   <span class="required">*</span>
+		                   Campos Obrigatórios                                                       	
+		                </s:div>
+		            </div>
+		       	</s:div>
 	        </rich:panel>
 	        
 			<c:if test="#{wi:get(canEdit, true)}">

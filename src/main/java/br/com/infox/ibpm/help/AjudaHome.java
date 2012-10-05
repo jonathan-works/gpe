@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
@@ -33,6 +34,7 @@ import org.hibernate.search.FullTextSession;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
@@ -66,6 +68,9 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	private List resultado;
 	private Ajuda anterior;
 	
+	@In
+	protected EntityManager entityManager;
+	
 	@Override
 	public Ajuda createInstance() {
 		instance = new Ajuda();
@@ -92,7 +97,8 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 			FullTextEntityManager em = (FullTextEntityManager) getEntityManager();
 			String[] fields = new String[]{"texto"};
 			MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, HelpUtil.getAnalyzer());
-			org.apache.lucene.search.Query query = parser.parse(getTextoPesquisa());
+			parser.setAllowLeadingWildcard(true);
+			org.apache.lucene.search.Query query = parser.parse("*"+getTextoPesquisa()+"*");
 			
 			FullTextQuery textQuery = em.createFullTextQuery(query, Ajuda.class);
 
