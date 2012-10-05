@@ -41,6 +41,15 @@
 					rendered="#{fluxoHome.managed}"
 					onclick="openPopUp('processDefinition', 'about:blank',1000,750);">
 			</s:link>
+			
+			<s:link view="/Fluxo/importar/importarXPDL.xhtml"
+					styleClass="buttons dr-tbpnl-tb-inact"
+					style="padding: 3px 12px 3px 12px; font-size: 13px;"
+					target="importarXPDL"
+					value="#{messages['importarXPDL.button']}"
+					rendered="#{fluxoHome.managed}"
+					onclick="openPopUp('importarXPDL', 'about:blank',1000,750);">
+			</s:link>
 		</ui:define>
 		
 	</ui:composition>

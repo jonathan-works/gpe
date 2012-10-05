@@ -19,7 +19,6 @@ import br.com.itx.component.grid.GridQuery;
  * @author luizruiz
  *
  */
-@SuppressWarnings("unchecked")
 public class SecurityGrid extends GridQuery {
 
 	private static final long serialVersionUID = 1L;
@@ -35,6 +34,7 @@ public class SecurityGrid extends GridQuery {
 	 * 	mais que isso lança RuntimeException
 	 * 
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List getResultList() {
 		List resultList = null;
@@ -91,6 +91,7 @@ public class SecurityGrid extends GridQuery {
 	 * Diferentemente do método sobrescrito, esse recebe todos os registros
 	 * que passaram na validação.
 	 */
+	@SuppressWarnings("rawtypes")
 	protected List truncList(List results) {
 		Integer mr = getMaxResults();
 		if (mr != null && results.size() > mr) {

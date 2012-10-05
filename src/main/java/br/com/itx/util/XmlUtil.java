@@ -17,6 +17,7 @@ package br.com.itx.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -37,6 +38,19 @@ public final class XmlUtil {
 		try {
 			SAXBuilder builder = getSAXBuilder();
 			if (file != null && file.isFile()) {
+				doc = builder.build(file);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}	
+		return doc;
+	}
+	
+	public static Document readDocument(InputStream file) {
+		Document doc = null;
+		try {
+			SAXBuilder builder = getSAXBuilder();
+			if (file != null) {
 				doc = builder.build(file);
 			}
 		} catch (Exception ex) {

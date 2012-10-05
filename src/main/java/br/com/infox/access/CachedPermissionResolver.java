@@ -65,7 +65,7 @@ public abstract class CachedPermissionResolver<T> implements PermissionResolver 
 	 * definido no método getPermission.
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void filterSetByAction(Set<Object> targets, String action) {
 		Set remove = new HashSet();
 		for (Object target : targets) {
