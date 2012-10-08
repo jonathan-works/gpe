@@ -156,12 +156,22 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 				int i = bloqueioUsuarioList.size() - 1;
 				ultimoBloqueio = bloqueioUsuarioList.get(i);
 			}
-			if (Boolean.TRUE.equals(u.getBloqueio())) {
-				estavaBloqueado = true;
-			}			
+			estavaBloqueado = u.getBloqueio();		
 		}
 	}
 	
+	/*
+	 * Regra do Bloqueio
+	 * 
+	 * Caso 1: Usuário já Bloqueado
+	 * 		1.1: Usuário será desbloqueado {Bloqueio é desfeito}
+	 * 		1.2: Usuário receberá novo bloqueio
+	 * 		{
+	 * 				Bloqueio antigo é desfeito
+	 * 				Novo bloqueio é criado
+	 * 		}
+	 * Caso 2: Usuário não Bloqueado será bloqueado
+	 * */
 	@Override
 	public String update() {
 		validarBloqueio();
@@ -170,20 +180,36 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		if (usuario.getLogin() == null) {
 			usuario.setLogin(login);
 		}
-		String saida = super.update();
-		if ((novoBloqueio != null) && (novoBloqueio.getDataPrevisaoDesbloqueio() != null)){
-			novoBloqueio.setDataBloqueio(new Date());
-			novoBloqueio.setUsuario(getInstance());
-			getInstance().getBloqueioUsuarioList().add(novoBloqueio);
-			ultimoBloqueio = novoBloqueio;
-			novoBloqueio = new BloqueioUsuario();
+		if (estavaBloqueado()){
+			desbloquear();
 		}
-		if (estavaBloqueado && getInstance().getBloqueio().equals(Boolean.FALSE)) {
-			ultimoBloqueio.setDataDesbloqueio(new Date());
-		}
-
-		return saida;		
+		if (getInstance().getBloqueio().equals(Boolean.TRUE))
+			bloquear();
+		return super.update();		
 	}
+	
+	public boolean estavaBloqueado(){
+		if (ultimoBloqueio != null)
+			return (ultimoBloqueio.getDataDesbloqueio() == null);
+		else
+			return false;
+	}
+	
+	public void desbloquear(){
+		ultimoBloqueio.setDataDesbloqueio(new Date());
+		super.update();
+	}
+	
+	public void bloquear(){
+		novoBloqueio.setDataBloqueio(new Date());
+		novoBloqueio.setUsuario(getInstance());
+		getInstance().getBloqueioUsuarioList().add(novoBloqueio);
+		ultimoBloqueio = novoBloqueio;
+		EntityUtil.getEntityManager().persist(ultimoBloqueio);
+		novoBloqueio = new BloqueioUsuario();
+	}
+	
+
 	
 	public String updateSemWiacs() {
 		return super.update();

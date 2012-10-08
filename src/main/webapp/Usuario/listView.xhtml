@@ -104,6 +104,22 @@
 				</wi:ajaxDiv>
 			</s:div>
 		</rich:tab>
+		
+		<rich:tab id="historicoBloqueioUsuario"
+				  label="#{messages['bloqueioUsuario.historicoBloqueioList']}"
+				  rendered="#{home.managed}">
+			<s:div>
+				<wi:ajaxDiv id="divHistoricoList">
+					<wi:datalist home="#{bloqueioUsuarioHome}"
+								 bean="#{bloqueioUsuarioGrid}"
+								 gridId="bloqueioUsuarioGridTab"
+								 toolBar="none"
+								 columnList="dataBloqueio, dataPrevisaoDesbloqueio, motivoBloqueio, dataDesbloqueio"
+					  			 title="#{messages['bloqueioUsuario.historicoBloqueio']}"
+					  			 id="historicoBloqueioList"/>
+				</wi:ajaxDiv>
+			</s:div>
+		</rich:tab>
 
 	</ui:define> 
 	 

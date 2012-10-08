@@ -24,7 +24,8 @@
 				xmlns:h="http://java.sun.com/jsf/html"
 				xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:c="http://java.sun.com/jstl/core">
 
 	<s:decorate id="#{f.id}Decoration" 
 				template="/WEB-INF/xhtml/components/templates/edit.xhtml"
@@ -38,8 +39,22 @@
 					   reRender="bloqueioDiv"
 					   event="onchange" />
 		</wi:selectBooleanCheckbox>
-	
-	    <s:div id="ultimoBloqueio" rendered="#{!empty usuarioHome.ultimoBloqueio}">
+
+		<s:div id="bloqueioDiv">
+			 <s:div rendered="#{usuarioHome.instance.bloqueio}" >
+				<wi:inputDate id="#{id}DataBloqueio"
+							 label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+							 value="#{usuarioHome.novoBloqueio.dataPrevisaoDesbloqueio}"
+							 future="true"
+							 required="true"/>
+				<wi:inputText id="#{id}MotivoBloqueio"
+							  label="#{messages['bloqueioUsuario.motivoBloqueio']}"
+							  value="#{usuarioHome.novoBloqueio.motivoBloqueio}"
+							  required="true"
+							  maxlength="50"/>
+			 </s:div>
+			 
+			 <s:div id="ultimoBloqueio" rendered="#{!empty usuarioHome.ultimoBloqueio}">
 	       	<table style="width: 500px"><tr><th style="text-align: left">
 	       	    	<h:outputText value="Bloqueado em:" /> 
 				</th><th style="text-align: left">
@@ -65,20 +80,9 @@
 				</td></tr>
 			</table>
       	    </s:div>
-
-		<s:div id="bloqueioDiv">
-			 <s:div rendered="#{usuarioHome.instance.bloqueio}" >
-				<wi:inputDate id="#{id}DataBloqueio"
-							 label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
-							 value="#{usuarioHome.novoBloqueio.dataPrevisaoDesbloqueio}"
-							 required="true"/>
-				<wi:inputText id="#{id}MotivoBloqueio"
-							  label="#{messages['bloqueioUsuario.motivoBloqueio']}"
-							  value="#{usuarioHome.novoBloqueio.motivoBloqueio}"
-							  required="true"
-							  maxlength="50"/>
-			 </s:div>
 		</s:div>
+
+		
        	  
 	</s:decorate>
 			

@@ -50,13 +50,13 @@
 		<f:validator validatorId="emailValidator" />
 	</wi:inputText>
 	
-	<ui:include src="bloqueio.xhtml" />
-
 	<wi:selectOneRadio id="#{id}Ativo"	
 					   label="#{messages['usuario.ativo']}"
 					   value="#{usuarioHome.instance.ativo}"
 					   valueList="true:Ativo,false:Inativo"/>
 					   
 	<ui:include src="usuarioProvisorio.xhtml"/>
+	
+	<ui:include src="bloqueio.xhtml" />
 		
 </ui:composition>
