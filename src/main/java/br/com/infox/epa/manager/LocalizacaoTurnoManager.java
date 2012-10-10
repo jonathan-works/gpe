@@ -1,10 +1,9 @@
 package br.com.infox.epa.manager;
 
-import static br.com.infox.util.DateUtil.calculateMinutesBetweenTimes;
-
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -16,7 +15,6 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epa.entity.LocalizacaoTurno;
-import br.com.infox.epa.entity.ProcessoEpaTarefa;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Name(LocalizacaoTurnoManager.NAME)
@@ -75,13 +73,7 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	 * @return true se existir choque de horario
 	 */
 	public boolean verificarTurnos(Localizacao l, Time inicio, Time fim) {
-		boolean b = false;
-		List<LocalizacaoTurno> ltList = localizacaoTurnoDAO.
-			listByHoraInicioFim(l, inicio, fim);
-		if(ltList != null && ltList.size() > 0) {
-			b = true;
-		}
-		return b;
+		return localizacaoTurnoDAO.	countByHoraInicioFim(l, inicio, fim) > 0;
 	}
 
 	/**
@@ -91,193 +83,17 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	 * tarefa.
 	 * @param fireTime - Hora de disparo da trigger
 	 * @param pt - ProcessoEpaTarefa a ser verificado o tempo gasto
-	 * @param lastFire - Hora da ultima verificação da trigger
 	 * @param lt - LocalizacaoTurno da tarefa em verificação.
+	 * @return minutos gastos dentro do turno informado
 	 */
-	public void verifyToCalculate(Calendar fireTime, ProcessoEpaTarefa pt, 
-								  LocalizacaoTurno lt) {
-		Calendar lastFire = Calendar.getInstance();
-		Calendar horaInicio = Calendar.getInstance();
-		Calendar horaFim = Calendar.getInstance();
-		horaInicio.setTime(lt.getHoraInicio());
-		horaFim.setTime(lt.getHoraFim());
-		lastFire.setTime(pt.getUltimoDisparo());
-		int hourDayFire = fireTime.get(Calendar.HOUR_OF_DAY);
-		int minuteFire = fireTime.get(Calendar.MINUTE);
-		int hourDayLastFire = lastFire.get(Calendar.HOUR_OF_DAY);
-		int minuteLastFire = lastFire.get(Calendar.MINUTE);
-		int hourDayInicio = horaInicio.get(Calendar.HOUR_OF_DAY);
-		int minuteInicio = horaInicio.get(Calendar.MINUTE);
-		int hourDayFim = horaFim.get(Calendar.HOUR_OF_DAY);
-		int minuteFim = horaFim.get(Calendar.MINUTE);
-		if(hourDayFire == 0 && hourDayLastFire == 23) {
-			if(hourDayFim == 23) {
-				hourDayFire = 24;
-			} else {
-				hourDayLastFire = -1;
-			}
+	public int calcularMinutosGastos(Date fireTime, Date lastFire, LocalizacaoTurno lt) {
+		long millisBegin = Math.max(lastFire.getTime(), lt.getHoraInicio().getTime());
+		long millisEnd = Math.min(fireTime.getTime(), lt.getHoraFim().getTime());
+		
+		if (millisBegin < millisEnd) {
+			return (int) (millisEnd - millisBegin)/(1000*60);
 		}
-		if((hourDayLastFire > hourDayInicio && hourDayLastFire < hourDayFim) &&
-				   (hourDayFire > hourDayInicio && hourDayFire < hourDayFim)) {
-			//increase fireTime - lastFire
-			int difference = calculateMinutesBetweenTimes(lastFire, fireTime);
-			pt.setTempoGasto(pt.getTempoGasto() + difference);
-			pt.setUltimoDisparo(fireTime.getTime());
-		} else if (hourDayLastFire > hourDayInicio && hourDayLastFire < hourDayFim
-				&& hourDayFire > hourDayFim) {
-			//increase horaFim - lastFire
-			Calendar dataFim = createDataWithEspecificHours(
-					lastFire, hourDayFim, minuteFim);
-			int difference = calculateMinutesBetweenTimes(lastFire, dataFim);
-			pt.setTempoGasto(pt.getTempoGasto() + difference);
-			pt.setUltimoDisparo(dataFim.getTime());
-		} else if(hourDayLastFire < hourDayInicio && hourDayFire > hourDayFim) {
-			//increase horaFim - horaInicio
-			int difference = calculateMinutesBetweenTimes(horaInicio, horaFim);
-			pt.setTempoGasto(pt.getTempoGasto() + difference);
-			Calendar dataFim = createDataWithEspecificHours(
-					lastFire, hourDayFim, minuteFim);
-			pt.setUltimoDisparo(dataFim.getTime());
-		} else if(hourDayLastFire < hourDayInicio && hourDayFire > hourDayInicio
-				&& hourDayFire < hourDayFim) {
-			Calendar dataInicio = createDataWithEspecificHours(
-					fireTime, hourDayInicio, minuteInicio);
-			int difference = calculateMinutesBetweenTimes(dataInicio, fireTime);
-			pt.setTempoGasto(pt.getTempoGasto() + difference);
-			pt.setUltimoDisparo(fireTime.getTime());
-		} else if(hourDayLastFire == hourDayInicio && hourDayFire != hourDayFim) {
-			if(minuteLastFire >= minuteInicio) {
-				if(hourDayFire > hourDayFim) {
-					Calendar dataFim = createDataWithEspecificHours(
-							lastFire, hourDayFim, minuteFim);
-					int difference = calculateMinutesBetweenTimes(lastFire, dataFim);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					pt.setUltimoDisparo(dataFim.getTime());
-				} else {
-					//increase fireTime - lastFire
-					int difference = calculateMinutesBetweenTimes(lastFire, fireTime);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					pt.setUltimoDisparo(fireTime.getTime());
-				}
-			} else {
-				if(hourDayFire > hourDayFim) {
-					//increase horaFim - horaInicio
-					int difference = calculateMinutesBetweenTimes(horaInicio, horaFim);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					Calendar dataFim = createDataWithEspecificHours(
-							lastFire, hourDayFim, minuteFim);
-					pt.setUltimoDisparo(dataFim.getTime());
-				} else {
-					Calendar dataInicio = createDataWithEspecificHours(
-							fireTime, hourDayInicio, minuteInicio);
-					int difference = calculateMinutesBetweenTimes(dataInicio, fireTime);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					pt.setUltimoDisparo(fireTime.getTime());
-				}
-			}
-		} else if(hourDayFire == hourDayFim && hourDayLastFire != hourDayInicio) {
-			if(minuteFire > minuteFim) {
-				if(hourDayLastFire > hourDayInicio) {
-					Calendar dataFim = createDataWithEspecificHours(
-							lastFire, hourDayFim, minuteFim);
-					int difference = calculateMinutesBetweenTimes(lastFire, dataFim);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					pt.setUltimoDisparo(dataFim.getTime());
-				} else {
-					//increase horaFim - horaInicio 
-					int difference = calculateMinutesBetweenTimes(horaInicio, horaFim);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					Calendar dataFim = createDataWithEspecificHours(
-							lastFire, hourDayFim, minuteFim);
-					pt.setUltimoDisparo(dataFim.getTime());
-				}
-			} else {
-				if(hourDayLastFire > hourDayInicio) {
-					//increase fireTime - lastFire
-					int difference = calculateMinutesBetweenTimes(lastFire, fireTime);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					
-				} else {
-					Calendar dataInicio = createDataWithEspecificHours(
-							fireTime, hourDayInicio, minuteInicio);
-					int difference = calculateMinutesBetweenTimes(dataInicio, fireTime);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					pt.setUltimoDisparo(fireTime.getTime());
-				}
-			}
-		} else if(hourDayFire == hourDayFim && hourDayLastFire == hourDayInicio){
-			if(minuteLastFire > minuteInicio) {
-				if(minuteFire > minuteFim) {
-					Calendar dataFim = createDataWithEspecificHours(
-							lastFire, hourDayFim, minuteFim);
-					int difference = calculateMinutesBetweenTimes(lastFire, dataFim);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					pt.setUltimoDisparo(dataFim.getTime());
-				} else {
-					//increase fireTime - lastFire
-					int difference = calculateMinutesBetweenTimes(lastFire, fireTime);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					pt.setUltimoDisparo(fireTime.getTime());
-				}
-			} else {
-				if(minuteFire > minuteFim) {
-					//increase horaFim - horaInicio
-					int difference = calculateMinutesBetweenTimes(horaInicio, horaFim);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					Calendar dataFim = createDataWithEspecificHours(
-							lastFire, hourDayFim, minuteFim);
-					pt.setUltimoDisparo(dataFim.getTime());
-				} else {
-					Calendar dataInicio = createDataWithEspecificHours(
-							fireTime, hourDayInicio, minuteInicio);
-					int difference = calculateMinutesBetweenTimes(dataInicio, fireTime);
-					pt.setTempoGasto(pt.getTempoGasto() + difference);
-					pt.setUltimoDisparo(fireTime.getTime());
-				}
-			}
-		}
-	}
-	
-	/**
-	 * 
-	 * @param inicio
-	 * @param fim
-	 * @return true se o intervalo não for valido
-	 */
-	public boolean verificarIntervalo(Time inicio, Time fim) {
-		Calendar dataInicio = Calendar.getInstance();
-		Calendar dataFim = Calendar.getInstance();
-		dataInicio.setTime(inicio);
-		dataFim.setTime(fim);
-		int hourDayInicio = dataInicio.get(Calendar.HOUR_OF_DAY);
-		int hourDayFim = dataFim.get(Calendar.HOUR_OF_DAY);
-		if(hourDayInicio > hourDayFim) {
-			return true;
-		} else if(hourDayFim == hourDayInicio) {
-			int minutoInicio = dataInicio.get(Calendar.MINUTE);
-			int minutoFim = dataFim.get(Calendar.MINUTE);
-			if(minutoInicio > minutoFim) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Cria uma data igual a data informada, porém substitui o 
-	 * horario da data criada pelo horario informado nos parametros.
-	 * @param dayFire - data que se deseja copiar.
-	 * @param hourDayFim - hora que será definida na data criada.
-	 * @param minuteFim - minuto que será definido na data criada.
-	 * @return Data copiada com os horários novos especificados.
-	 */
-	private Calendar createDataWithEspecificHours(Calendar dayFire,
-			int hourDayFim, int minuteFim) {
-		Calendar dataFim = Calendar.getInstance();
-		dataFim.setTimeInMillis(dayFire.getTimeInMillis());
-		dataFim.set(Calendar.HOUR_OF_DAY, hourDayFim);
-		dataFim.set(Calendar.MINUTE, minuteFim);
-		return dataFim;
+		return 0;
 	}
 	
 }

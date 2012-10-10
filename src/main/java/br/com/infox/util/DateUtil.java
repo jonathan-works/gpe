@@ -175,7 +175,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * Calcula a diferença em minutos entre as datas informadas
+	 * Calcula a diferença em minutos entre as datas (Calendar) informadas
 	 * nos parametros.
 	 * @param dataInicial
 	 * @param dataFim
@@ -184,6 +184,19 @@ public class DateUtil {
 	public static int calculateMinutesBetweenTimes(Calendar dataInicial, Calendar dataFim) {
 		long dataInicialMilli = dataInicial.getTimeInMillis();
 		long dataFimMilli = dataFim.getTimeInMillis();
+		return (int) (dataFimMilli-dataInicialMilli)/(1000*60);
+	}
+	
+	/**
+	 * Calcula a diferença em minutos entre as datas (Date) informadas
+	 * nos parametros.
+	 * @param dataInicial
+	 * @param dataFim
+	 * @return diferença em minutos entre as duas datas.
+	 */
+	public static int calculateMinutesBetweenTimes(Date dataInicial, Date dataFim) {
+		long dataInicialMilli = dataInicial.getTime();
+		long dataFimMilli = dataFim.getTime();
 		return (int) (dataFimMilli-dataInicialMilli)/(1000*60);
 	}
 	

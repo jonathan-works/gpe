@@ -1,6 +1,7 @@
 package br.com.infox.epa.processor;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.Component;
@@ -69,26 +70,24 @@ public class TarefaTimerProcessor {
 		if (trigger == null) {
 			return null;
 		}
-		List<ProcessoEpaTarefa> tarefas = processoEpaTarefaManager.getAllNotEnded();
-		if(tarefas != null && tarefas.size() > 0) {
-			Calendar fireTime = Calendar.getInstance();
-			fireTime.setTime(trigger.getPreviousFireTime());
-			for (ProcessoEpaTarefa pt : tarefas) {
-				List<Localizacao> byTaskInstance = processoLocalizacaoIbpmManager.
-						listByTaskInstance(pt.getTaskInstance());
-				for(Localizacao localizacao : byTaskInstance) {
-					for (LocalizacaoTurno lt : localizacao.getLocalizacaoTurnoList()) {
-						localizacaoTurnoManager.verifyToCalculate(fireTime, pt, lt);
-					}
+		Date fireTime = trigger.getPreviousFireTime();
+		for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getAllNotEnded()) {
+			List<Localizacao> byTaskInstance = processoLocalizacaoIbpmManager.
+					listByTaskInstance(pt.getTaskInstance());
+			int tempoGasto = 0;
+			for(Localizacao localizacao : byTaskInstance) {
+				for (LocalizacaoTurno lt : localizacao.getLocalizacaoTurnoList()) {
+					tempoGasto = localizacaoTurnoManager.calcularMinutosGastos(fireTime, pt.getUltimoDisparo(), lt);
 				}
-				pt.setUltimoDisparo(fireTime.getTime());
-				if(pt.getTempoPrevisto() == 0) {	
-					pt.setPorcentagem(-1);
-				} else {
-					pt.setPorcentagem((pt.getTempoGasto()*100)/pt.getTempoPrevisto());
-				}
-				processoEpaTarefaManager.update(pt);
 			}
+			pt.setTempoGasto(pt.getTempoGasto() + tempoGasto);
+			pt.setUltimoDisparo(fireTime);
+			if(pt.getTempoPrevisto() == 0) {	
+				pt.setPorcentagem(-1);
+			} else {
+				pt.setPorcentagem((pt.getTempoGasto()*100)/pt.getTempoPrevisto());
+			}
+			processoEpaTarefaManager.update(pt);
 		}
 		return null;
 	}

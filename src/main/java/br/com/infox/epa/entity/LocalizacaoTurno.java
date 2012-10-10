@@ -25,7 +25,9 @@ import br.com.infox.ibpm.entity.Localizacao;
 		@NamedQuery(name=LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO,
 					query=LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO_QUERY),
 		@NamedQuery(name=LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM,
-					query=LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM_QUERY)
+					query=LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM_QUERY),
+		@NamedQuery(name=LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM,
+					query=LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM_QUERY)
 })
 public class LocalizacaoTurno {
 

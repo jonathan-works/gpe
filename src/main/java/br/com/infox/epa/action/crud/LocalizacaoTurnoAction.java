@@ -1,7 +1,6 @@
 package br.com.infox.epa.action.crud;
 
 import java.sql.Time;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,8 +43,7 @@ public class LocalizacaoTurnoAction extends AbstractHome<LocalizacaoTurno> {
 		getInstance().setLocalizacao(localizacao);
 		Time horaInicio = instance.getHoraInicio();
 		Time horaFim = instance.getHoraFim();
-		boolean intervalo = localizacaoTurnoManager.verificarIntervalo(horaInicio, horaFim);
-		if(intervalo) {
+		if(horaInicio.before(horaFim)) {
 			FacesMessages.instance().add("Hora inicio deve ser menor que hora fim.");
 			return false;
 		}
@@ -55,11 +53,7 @@ public class LocalizacaoTurnoAction extends AbstractHome<LocalizacaoTurno> {
 			FacesMessages.instance().add("Choque de horário para a localização "+
 										 localizacao.getLocalizacao()+".");
 		} else {
-			Calendar inicio = Calendar.getInstance();
-			Calendar fim = Calendar.getInstance();
-			inicio.setTime(horaInicio);
-			fim.setTime(horaFim);
-			int tempoTurno = DateUtil.calculateMinutesBetweenTimes(inicio, fim);
+			int tempoTurno = DateUtil.calculateMinutesBetweenTimes(horaInicio, horaFim);
 			instance.setTempoTurno(tempoTurno);
 		}
 		return !choqueTurnos;

@@ -44,9 +44,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	}
 
 	public List<ProcessoEpaTarefa> getAllNotEnded() {
-		List<ProcessoEpaTarefa> resultList = getNamedResultList(
-									ProcessoEpaTarefaQuery.LIST_ALL_NOT_ENDED, null);
-		return resultList;
+		return getNamedResultList(ProcessoEpaTarefaQuery.LIST_ALL_NOT_ENDED, null);
 	}
 	
 	@SuppressWarnings("unchecked")
