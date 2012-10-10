@@ -33,8 +33,7 @@
 		<rich:simpleTogglePanel	id="uploadImagem"
 								switchType="ajax" 
 								opened="false"
-								label="Álbum de imagens"
-								onclick="configureDragDrop()">
+								label="Álbum de imagens">
             <rich:fileUpload fileUploadListener="#{imageFileUpload.listener}"
 			                 id="upload"
 			                 ajaxSingle="true"
@@ -52,7 +51,7 @@
 			                 immediateUpload="true"
 			                 noDuplicate="true"
 			                 status=":status"
-			                 allowFlash="true"
+			                 allowFlash="false"
 			                 reRender="uploadImagem"
 			                 acceptedTypes="jpg, gif, png">
             </rich:fileUpload>

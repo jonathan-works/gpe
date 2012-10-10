@@ -88,8 +88,6 @@ public class ImageFileHome {
 	}	
 
 	public void listener(UploadEvent e) {
-		//TODO retirar
-		System.out.println("Iniciando upload");
 		UploadItem uit = e.getUploadItem();
 		String[] imagesDir = getImagesDir();
 		String imageDir = imagesDir[imagesDir.length - 1];

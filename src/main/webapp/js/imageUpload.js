@@ -5,8 +5,7 @@ function uploadHandler(e, path) {
 }
 
 function insert() {
-	ed = tinymce.EditorManager.activeEditor;
-	setTimeout("ed.execCommand('mceInsertContent', false,'" +  img + "')",500);
+	setTimeout("tinymce.EditorManager.activeEditor.execCommand('mceInsertContent', false,'" +  img + "')",500);
 }
 
 function configureDragDrop() {
