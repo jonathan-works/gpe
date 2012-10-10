@@ -46,16 +46,17 @@ public class CarregarParametrosAplicacao {
 	@Create
 	public void init() {
 		StopWatch sw = new StopWatch(true);
-		List<Parametro> resultList = EntityUtil.getEntityList(Parametro.class);
-		EntityUtil.getEntityList(Parametro.class);
-		for (Parametro parametro : resultList) {
-			if (parametro.getAtivo() != null && parametro.getAtivo()) {
-				Contexts.getApplicationContext().set(parametro.getNomeVariavel().trim(), 
-						parametro.getValorVariavel());
-			}
+		for (Parametro parametro : getParametroAtivoList()) {
+			Contexts.getApplicationContext().set(parametro.getNomeVariavel().trim(), 
+					parametro.getValorVariavel());
 		}
 		log.info(".init(): " + sw.getTime());
-		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Parametro> getParametroAtivoList() {
+		String hql = "select o from Parametro o where o.ativo = true";
+		return EntityUtil.createQuery(hql).getResultList();
 	}
 	
 }
