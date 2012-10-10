@@ -27,7 +27,7 @@ NodeArea=Class.create({
 		this.cid = cid;
 	},
 	
-	addToMap: function(id, coords, title, vars) {
+	addToMap: function(id, coords, title, vars, cond) {
 		area = this.map.appendChild(new Element('area', 
 				{id:'_'+id, coords:coords, 
 					href:'javascript:openLink(' + id + ',' + this.cid + ')' , 
@@ -36,6 +36,7 @@ NodeArea=Class.create({
 		area.observe('mouseout', this.mouseout);
 		area.areaName = title;
 		area.vars = vars;
+		area.cond = cond;
 	},
 	
 	mouseover: function(event) {
@@ -73,6 +74,9 @@ NodeArea=Class.create({
 			ulOut.insert('<li>' + v.value.name + ' (' + v.value.type + ')' + '</li>');
 		});
 		d.show();
+		if (area.cond != null){
+			d.insert('<br/>Condição: ' + area.cond);
+		}
 	},
 
 	mouseout: function(event) {
