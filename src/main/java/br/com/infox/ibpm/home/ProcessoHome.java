@@ -47,6 +47,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
+import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.Fluxo;
@@ -63,6 +64,8 @@ import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
+import br.com.itx.component.Util;
+import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
@@ -74,6 +77,9 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	public static final String NAME = "processoHome";
 
+	private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações " +
+			"neste registro, verifique se ele não foi movimentado";
+	
 	public static final String EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO = "atualizarProcessoDocumentoFluxo";
 	public static final String AFTER_UPDATE_PD_FLUXO_EVENT = "afterUpdatePdFluxoEvent";
 	
@@ -96,6 +102,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private Integer idProcessoDocumento;
 
 	private long taskId;
+
+	private Boolean checkVisibilidade = true;
 
 	public void iniciarNovoFluxo(){
 		limpar();
@@ -521,6 +529,38 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private void limparAssinatura() {
 		certChain = null;
 		signature = null;
+	}
+	
+	public Boolean checarVisibilidade()	{
+		 if (!checkVisibilidade ) {
+				return true;
+			}
+			Integer id = null;
+			String numeroProcesso = null;
+			if (!isManaged()) {
+				id = ProcessoHome.instance().getInstance().getIdProcesso();
+				numeroProcesso = ProcessoHome.instance().getInstance().getNumeroProcesso();
+			} else {
+				id = getInstance().getIdProcesso();
+				numeroProcesso = getInstance().getNumeroProcesso();
+			}
+			
+			ControleFiltros.instance().iniciarFiltro();
+			Query query = getEntityManager().createQuery("select o from ProcessoLocalizacaoIbpm o" +
+															" where o.processo.idProcesso = :id" +
+																" and o.localizacao = :localizacao" +
+																" and o.papel = :papel");
+			query.setParameter("id", id);
+			query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
+			query.setParameter("papel", Authenticator.getPapelAtual());
+			Object result = EntityUtil.getSingleResult(query);
+			boolean check = result != null;
+			if(!check){
+				Util.setToEventContext("canClosePanel", true);
+				FacesMessages.instance().clear();
+				FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + numeroProcesso);
+			}
+			return check;
 	}
 	
 	public void carregarDadosFluxo(Integer idProcessoDocumento){

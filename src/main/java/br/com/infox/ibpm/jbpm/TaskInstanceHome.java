@@ -147,6 +147,11 @@ public class TaskInstanceHome implements Serializable {
 						}
 					}
 					if (!isEditor){
+						if (("numberMoney".equals(type)) 
+								&& (variable != null) 
+								&& (variable.getClass().equals(Float.class)))	{
+							variable = String.format("%.2f", variable);
+						}
 						instance.put(name, variable);
 					}
 					
@@ -205,6 +210,12 @@ public class TaskInstanceHome implements Serializable {
 					String type = var.getMappedName().split(":")[0];
 					String name = var.getMappedName().split(":")[1];
 					Object value = getValueFromInstanceMap(name);
+					
+					if (type.equals("numberMoney"))	{
+						if ( value != null )	{
+							value = Float.parseFloat(((String)value).replace(".", "").replace(",", "."));
+						}
+					}
 					
 					if (var.isWritable()) {
 						if (JbpmUtil.isTypeEditor(type)){

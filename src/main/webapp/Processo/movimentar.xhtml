@@ -33,6 +33,7 @@
 	
 	<ui:param name="home" value="#{processoHome}" />
 	<ui:param name="showMenu" value="false" />
+	<ui:param name="checkPermission" value="#{processoHome.checarVisibilidade()}" />
 	
 	<ui:define name="body">
 		<s:div id="script">
@@ -65,8 +66,7 @@
 		<a:form>
 			<a:jsFunction name="renderButtons" reRender="taskButtonsDiv"/>
 		</a:form>
-		
-		<s:div rendered="#{processoHome.managed}">
+		<s:div rendered="#{processoHome.managed and checkPermission}">
 			<wi:view form="#{consultaSolicitacaoView}" 
 			         title="#{messages['consultaSolicitacaoGrid.titulo']} #{processoHome.instance} - #{taskInstance.name}"
 			         columns="4"
@@ -76,7 +76,8 @@
 		</s:div>
 		<rich:tabPanel switchType="ajax" 
 					   headerSpacing="2"
-					   selectedTab="#{home.tab}">
+					   selectedTab="#{home.tab}"
+					   rendered="#{checkPermission}">
 				<rich:tab id="tabFluxo" 
 						  rendered="#{!processoHome.managed}" 
 						  label="Escolher fluxo" 
@@ -236,7 +237,11 @@
 					</h:form>
 				</s:div>
 			</rich:tab>	
-		</rich:tabPanel> 		
+		</rich:tabPanel>
+		<c:if test="#{!checkPermission}">
+			<wi:outputText id="error" value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
+			<a:jsFunction name="closeWindow">window.close();</a:jsFunction>
+		</c:if>
 	</ui:define> 
 	<!-- End  -->
 	

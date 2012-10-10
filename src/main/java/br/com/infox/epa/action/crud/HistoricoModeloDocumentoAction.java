@@ -36,7 +36,6 @@ public class HistoricoModeloDocumentoAction extends AbstractHome<HistoricoModelo
 		this.selecionado = selecionado;
 	}
 	
-	///TODO: Encontrar meio melhor de realizar este processo, funciona, mas joga uma NullPointerException vinda do Controller.debug
 	public void restaurarSelecionado()	{
 		if (selecionado==null)
 			return;
