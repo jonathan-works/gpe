@@ -20,42 +20,81 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
 
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.component.Util;
+import br.com.itx.util.FileUtil;
 
 
 @Name("helpFileUpload")
 @BypassInterceptors
 public class HelpFileHome {
 
-	private static final String IMAGES_DIR = "/img/help";
-	private static final long serialVersionUID = 1L;
+	private static final String IMAGES_DIR = "/img/help/";
+	private static final LogProvider log = Logging.getLogProvider(ImageFileHome.class);
 
-	public String getImagesDir() {
-		return new Util().getContextRealPath() + IMAGES_DIR;
+	private String getUserImageDir() {
+		UsuarioLocalizacao usuarioLoc = (UsuarioLocalizacao) 
+			Contexts.getSessionContext().get(Authenticator.USUARIO_LOCALIZACAO_ATUAL);
+		if (usuarioLoc != null) {
+			String locId = Integer.toString(usuarioLoc.getLocalizacao().getIdLocalizacao());
+			return "localizacao" + "/" + locId;
+		} else {
+			log.warn("Diretório de imagens do usuário: null");
+			return null;
+		}
+	}
+	
+	public String[] getImagesDir() {
+		String path = new Util().getContextRealPath() + IMAGES_DIR;
+		String userImageDir = getUserImageDir();
+		if (userImageDir != null) {
+			String[] images = {path, path + userImageDir};
+			return images;
+		} else {
+			String[] images = {path};
+			return images;
+		}
 	}
 
-	public String getImagesPath() {
-		return new Util().getContextPath() + IMAGES_DIR;
+	public String[] getImagesPath() {
+		String path = new Util().getContextPath() + IMAGES_DIR;
+		String userImageDir = getUserImageDir();
+		if (userImageDir != null) {
+			String[] images = {path, path + userImageDir};
+			return images;
+		} else {
+			String[] images = {path};
+			return images;
+		}
 	}
+	
+	public String getImagePath() {
+		String[] imagesPath = getImagesPath();
+		return imagesPath[imagesPath.length - 1];
+	}	
 
 	public void listener(UploadEvent e) {
-		//TODO retirar
-		System.out.println("Iniciando upload");
+		System.out.println("Listener");
 		UploadItem uit = e.getUploadItem();
-		File fileDestino = new File(getImagesDir(), uit.getFileName());
+		String[] imagesDir = getImagesDir();
+		String imageDir = imagesDir[imagesDir.length - 1];
+		File fileDestino = new File(imageDir, uit.getFileName());
 		try {
 			saveFile(uit.getData(), fileDestino);
-			//TODO retirar
-			System.out.println("Upload feito com sucesso: " + fileDestino.getName());
 		} catch (IOException e1) {
-			e1.printStackTrace();
 			FacesMessages.instance().add(
 					"Erro ao adicionar arquivo: " +	e1.getMessage());
 		}
@@ -68,10 +107,20 @@ public class HelpFileHome {
 	 * @param fileDestino
 	 * @throws IOException
 	 */
-	private void saveFile(byte[] bytesOrigem, File fileDestino) throws IOException {
+	private void saveFile(byte[] bytesOrigem, File fileDestino)
+			throws IOException {
+		System.out.println("Iniciado salvar");
 		if (fileDestino.exists()) {
-			fileDestino.delete();
+			if (fileDestino.length() != bytesOrigem.length) {
+				fileDestino = new File(getNewFileConflict(
+						fileDestino.getAbsolutePath()));
+			} else {
+				String msg = "Arquivo já existente.";
+				System.out.println(msg);
+				throw new IOException(msg);
+			}
 		}
+
 		fileDestino.createNewFile();
 		OutputStream out = null;
 		try {
@@ -79,30 +128,55 @@ public class HelpFileHome {
 			out.write(bytesOrigem);
 			out.flush();
 		} finally {
-			if (out != null) {
-				out.close();
-			}
+			FileUtil.close(out);
 		}
+		log.info("Upload feito com sucesso: "
+				+ getUserImageDir() + "/" + fileDestino.getName());
 	}
 	
-	public String[] getImages() {
-		File dir = new File(getImagesDir());
-		if (!dir.canRead()) {
-			return null;
-		}
-		String[] files = dir.list(new FilenameFilter() {
-
-			public boolean accept(File dir, String name) {
-				return (name.endsWith(".jpg") ||
-				name.endsWith(".png") ||
-				name.endsWith(".gif"));
+	private String getNewFileConflict(String nome) {
+		int localPonto = nome.lastIndexOf(".");
+		String ext = nome.substring(localPonto);
+		String pre = nome.substring(0, localPonto);
+		return pre + "_" + ext;
+	}
+	
+	
+	public List<String> getImages() throws IOException {
+		createDir();
+		
+		List<String> files = new ArrayList<String>();
+		
+		for (int i = 0; i < getImagesDir().length; i++) {
+			File dir = new File(getImagesDir()[i]);
+			if (!dir.canRead()) {
+				return null;
 			}
-			
-		});
-		for (int i = 0; i < files.length; i++) {
-			files[i] = getImagesPath() + "/" + files[i];
+			String[] filesImg = dir.list(new FilenameFilter() {
+				
+				public boolean accept(File dir, String name) {
+					return (name.endsWith(".jpg") ||
+							name.endsWith(".png") ||
+							name.endsWith(".gif"));
+				}
+				
+			});
+			for (int j = 0; j < filesImg.length; j++) {
+				filesImg[j] = getImagesPath()[i] + "/" + filesImg[j];
+				files.add(filesImg[j]);
+			}
 		}
+
 		return files;
+	}
+	
+	private void createDir() {
+		for (int i = 0; i < getImagesDir().length; i++) {
+			File dir = new File(getImagesDir()[i]);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+		}		
 	}
 	
 }

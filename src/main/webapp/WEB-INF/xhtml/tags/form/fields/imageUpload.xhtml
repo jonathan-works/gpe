@@ -28,16 +28,18 @@
 	
 	<a:loadScript src="/js/imageUpload.js" />
 	
+	<ui:param name="imageBean" value="#{wi:get(imageBean, imageFileUpload)}" />
+	
 	<s:div rendered="#{wi:get(rendered, true)}"
-		   style="float: left; padding-left:3px">
+		   style="#{wi:get(style, 'float: left; padding-left:3px')}">
 		<rich:simpleTogglePanel	id="uploadImagem"
 								switchType="ajax" 
-								opened="false"
+								opened="#{wi:get(opened, 'false')}"
 								label="Álbum de imagens">
-            <rich:fileUpload fileUploadListener="#{imageFileUpload.listener}"
+            <rich:fileUpload fileUploadListener="#{imageBean.listener}"
 			                 id="upload"
 			                 ajaxSingle="true"
-			                 onupload="uploadHandler(event, '#{imageFileUpload.imagePath}')"
+			                 onupload="uploadHandler(event, '#{imageBean.imagePath}')"
 							 onuploadcomplete="insert()"
 			                 autoclear="true"
 			                 maxFilesQuantity="10"
@@ -57,7 +59,7 @@
             </rich:fileUpload>
             <h:form>
 	           	<rich:dataGrid	style="margin-left: 1px; width: 251px;"
-				           		value="#{imageFileUpload.images}" 
+				           		value="#{imageBean.images}" 
 				           		elements="20"
 				           		columns="4" var="img">
 	            	<s:div style="text-align:center">

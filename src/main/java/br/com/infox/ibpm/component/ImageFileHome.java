@@ -43,7 +43,6 @@ import br.com.itx.util.FileUtil;
 public class ImageFileHome {
 
 	private static final String IMAGES_DIR = "/img/";
-	private static final long serialVersionUID = 1L;
 	private static final LogProvider log = Logging.getLogProvider(ImageFileHome.class);
 
 	private String getUserImageDir() {

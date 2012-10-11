@@ -49,11 +49,13 @@
 					</wi:commandButton>
 	
 				</ui:define>
-								
+				<wi:imageUpload opened="true"
+								imageBean="#{helpFileUpload}"
+								style="position:absolute; float:left; left:690px; top:0px;"/>
 			</wi:dataForm>
 		</s:div>
 		
-		<s:div id="gridAjuda" style="float: left; width: 300px;">
+		<s:div id="gridAjuda" style="float: left; width: 300px; position: relative; top: 420px;">
 			<wi:dataTable values="#{historicoAjudaList.list(15)}"
 									bean="#{historicoAjudaList}"
 									tableTitle="Histórico das revisões"
@@ -80,11 +82,8 @@
 										limitToList="true"/>
 						<wi:toolBarTextPreview value="#{row.texto}" />
 				</ui:define>
-
 			</wi:dataTable>
 		</s:div>
-        
-        <a:include  viewId="/WEB-INF/xhtml/components/form/imageHelpUpload.xhtml" />
 
 	</ui:define> 
 </ui:composition>
