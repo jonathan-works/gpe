@@ -19,11 +19,11 @@ package br.com.infox.component.tree;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.EntityUtil;
 
 
@@ -54,11 +54,11 @@ public class EntityNode<E> implements Serializable {
 	}
 
 	public EntityNode(String[] queryChildrenList) {
-		this.queryChildrenList = Arrays.copyOf(queryChildrenList, queryChildrenList.length);
+		this.queryChildrenList = ArrayUtil.copyOf(queryChildrenList);
 	}
 
 	public EntityNode(EntityNode<E> parent, E entity, String[] queryChildrenList) {
-		this.queryChildrenList = queryChildrenList;
+		this.queryChildrenList = ArrayUtil.copyOf(queryChildrenList);
 		this.parent = parent;
 		this.entity = entity;
 	}
@@ -91,7 +91,7 @@ public class EntityNode<E> implements Serializable {
 	}
 	
 	protected String[] getQueryChildrenList() {
-		return Arrays.copyOf(queryChildrenList, queryChildrenList.length);
+		return ArrayUtil.copyOf(queryChildrenList);
 	}
 	
 	protected List<E> getChildrenList(String hql, E entity) {
@@ -183,6 +183,6 @@ public class EntityNode<E> implements Serializable {
 	}
 	
 	public String[] getQueryChildren() {
-		return queryChildrenList;
+		return ArrayUtil.copyOf(queryChildrenList);
 	}
 }
