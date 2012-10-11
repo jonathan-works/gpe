@@ -15,6 +15,8 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epa.entity.LocalizacaoTurno;
+import br.com.infox.epa.entity.ProcessoEpaTarefa;
+import br.com.infox.epa.type.DiaSemanaEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Name(LocalizacaoTurnoManager.NAME)
@@ -26,6 +28,13 @@ public class LocalizacaoTurnoManager extends GenericManager {
 
 	@In
 	private LocalizacaoTurnoDAO localizacaoTurnoDAO;
+	
+	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date horario) {
+		Calendar horarioCalendar = Calendar.getInstance();
+		horarioCalendar.setTime(horario);
+		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
+		return localizacaoTurnoDAO.getTurnoTarefa(pt, horario, DiaSemanaEnum.values()[diaSemana]);
+	}
 	
 	public List<LocalizacaoTurno> listByLocalizacao(Localizacao localizacao) {
 		return localizacaoTurnoDAO.listByLocalizacao(localizacao);

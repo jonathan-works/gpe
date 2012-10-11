@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import org.hibernate.validator.NotNull;
 
 import br.com.infox.epa.query.LocalizacaoTurnoQuery;
+import br.com.infox.epa.type.DiaSemanaEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Entity
@@ -27,7 +28,9 @@ import br.com.infox.ibpm.entity.Localizacao;
 		@NamedQuery(name=LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM,
 					query=LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM_QUERY),
 		@NamedQuery(name=LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM,
-					query=LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM_QUERY)
+					query=LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM_QUERY),
+		@NamedQuery(name=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO,
+					query=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY)
 })
 public class LocalizacaoTurno {
 
@@ -38,6 +41,7 @@ public class LocalizacaoTurno {
 	private Time horaInicio;
 	private Time horaFim;
 	private Integer tempoTurno;
+	private DiaSemanaEnum diaSemana;
 	
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_localizacao_turno")
 	@Id
@@ -92,4 +96,14 @@ public class LocalizacaoTurno {
 		return tempoTurno;
 	}
 
+	@Column(name="cd_dia_semana", nullable=false)
+	@NotNull
+	public DiaSemanaEnum getDiaSemana() {
+		return diaSemana;
+	}
+
+	public void setDiaSemana(DiaSemanaEnum diaSemana) {
+		this.diaSemana = diaSemana;
+	}
+	
 }

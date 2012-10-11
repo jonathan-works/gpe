@@ -1,6 +1,7 @@
 package br.com.infox.epa.dao;
 
 import java.sql.Time;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,9 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epa.entity.LocalizacaoTurno;
+import br.com.infox.epa.entity.ProcessoEpaTarefa;
 import br.com.infox.epa.query.LocalizacaoTurnoQuery;
+import br.com.infox.epa.type.DiaSemanaEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 
 /**
@@ -26,6 +29,22 @@ import br.com.infox.ibpm.entity.Localizacao;
 public class LocalizacaoTurnoDAO extends GenericDAO {
 
 	public static final String NAME = "localizacaoTurnoDAO";
+	
+	/**
+	 * Busca a LocalizacaoTurno da localização do processo em que o horário passado se
+	 * encaixa 
+	 * @param pt
+	 * @param horario
+	 * @return
+	 */
+	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date horario, DiaSemanaEnum diaSemana) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ID_TASK_INSTANCE, pt.getTaskInstance());
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, pt.getUltimoDisparo());
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM, horario);
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
+		return getNamedSingleResult(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
+	}
 
 	/**
 	 * Lista todos os registros filtrando por uma natureza.
