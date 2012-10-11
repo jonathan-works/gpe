@@ -19,6 +19,7 @@ package br.com.infox.component.tree;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -30,39 +31,34 @@ import br.com.itx.util.EntityUtil;
 public class EntityNode<E> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	/**
-	 * Indica o nome do parametro que contém o nivel pai dos nós a serem
-	 * retornados
-	 */
+	
 	public static final String PARENT_NODE = "parent";
-	protected E entity;
-	protected E ignore;
+	private E entity;
+	private E ignore;
 	private boolean leaf;
 	
-	protected String[] queryChildren;
+	private String[] queryChildrenList;
 	
-	protected List<EntityNode<E>> rootNodes;
+	private List<EntityNode<E>> rootNodes;
 	private List<EntityNode<E>> nodes;
 	//Variavel para adição da selectBooleanCheckBox 
 	private Boolean selected = false;
-	protected EntityNode<E> parent;
+	private EntityNode<E> parent;
  
 	/**
-	 * 
 	 * @param queryChildren
 	 *            query que retorna os nós filhos da entidade selecionada
 	 */
 	public EntityNode(String queryChildren) {
-		this.queryChildren = new String[1];
-		this.queryChildren[0] = queryChildren;
+		this.queryChildrenList = new String[] {queryChildren};
 	}
 
-	public EntityNode(String[] queryChildren) {
-		this.queryChildren = queryChildren;
+	public EntityNode(String[] queryChildrenList) {
+		this.queryChildrenList = Arrays.copyOf(queryChildrenList, queryChildrenList.length);
 	}
 
-	public EntityNode(EntityNode<E> parent, E entity, String[] queryChildren) {
-		this.queryChildren = queryChildren;
+	public EntityNode(EntityNode<E> parent, E entity, String[] queryChildrenList) {
+		this.queryChildrenList = queryChildrenList;
 		this.parent = parent;
 		this.entity = entity;
 	}
@@ -76,7 +72,7 @@ public class EntityNode<E> implements Serializable {
 		if (nodes == null) {
 			nodes = new ArrayList<EntityNode<E>>();
 			boolean parent = true;
-			for (String query : queryChildren) {
+			for (String query : queryChildrenList) {
 				if (!isLeaf()) {
 					List<E> children = getChildrenList(query, entity); 
 					for (E n : children) {
@@ -93,18 +89,22 @@ public class EntityNode<E> implements Serializable {
 		}
 		return nodes;
 	}
-
+	
+	protected String[] getQueryChildrenList() {
+		return Arrays.copyOf(queryChildrenList, queryChildrenList.length);
+	}
+	
 	protected List<E> getChildrenList(String hql, E entity) {
 		Query query = EntityUtil.createQuery(hql);
 		return query.setParameter(PARENT_NODE, entity).getResultList();
 	}
 
 	protected EntityNode<E> createChildNode(E n) {
-		return new EntityNode<E>(this, n, this.queryChildren);
+		return new EntityNode<E>(this, n, this.queryChildrenList);
 	}
 
 	protected EntityNode<E> createRootNode(E n) {
-		return new EntityNode<E>(null, n, this.queryChildren);
+		return new EntityNode<E>(null, n, this.queryChildrenList);
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public class EntityNode<E> implements Serializable {
 	public E getEntity() {
 		return entity;
 	}
-
+	
 	/**
 	 * 
 	 * @param queryRoots
@@ -183,6 +183,6 @@ public class EntityNode<E> implements Serializable {
 	}
 	
 	public String[] getQueryChildren() {
-		return queryChildren;
+		return queryChildrenList;
 	}
 }

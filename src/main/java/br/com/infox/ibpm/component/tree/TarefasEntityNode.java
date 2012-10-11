@@ -42,11 +42,11 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 			boolean parent = true;
 			for (Query query : queryCaixas) {
 				if (!isLeaf()) {
-					List<E> children = (List<E>) getCaixasList(query, entity); 
+					List<E> children = (List<E>) getCaixasList(query, getEntity()); 
 					for (E n : children) {
-						if (!n.equals(ignore)) {
+						if (!n.equals(getIgnore())) {
 							EntityNode<E> node = (EntityNode<E>) createChildNode((Map<String, Object>) n);
-							node.setIgnore((E) ignore);
+							node.setIgnore((E) getIgnore());
 							node.setLeaf(!parent);
 							caixas.add(node);
 						}
@@ -66,9 +66,9 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 			rootNodes = new ArrayList<TarefasEntityNode<E>>();
 			List<E> roots = queryRoots.getResultList();
 			for (E e : roots) {
-				if (!e.equals(ignore)) {
+				if (!e.equals(getIgnore())) {
 					TarefasEntityNode<Map<String, Object>> node = createRootNode((Map<String, Object>) e);
-					node.setIgnore(ignore);
+					node.setIgnore(getIgnore());
 					rootNodes.add((TarefasEntityNode<E>) node);
 				}
 			}
@@ -81,13 +81,13 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		if (nodes == null) {
 			nodes = new ArrayList<TarefasEntityNode<E>>();
 			boolean parent = true;
-			for (String query : queryChildren) {
+			for (String query : getQueryChildrenList()) {
 				if (!isLeaf()) {
-					List<E> children = (List<E>) getChildrenList(query, entity); 
+					List<E> children = (List<E>) getChildrenList(query, getEntity()); 
 					for (E n : children) {
-						if (!n.equals(ignore)) {
+						if (!n.equals(getIgnore())) {
 							TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
-							node.setIgnore(ignore);
+							node.setIgnore(getIgnore());
 							node.setLeaf(!parent);
 							nodes.add((TarefasEntityNode<E>) node);
 						}
