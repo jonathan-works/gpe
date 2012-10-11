@@ -12,7 +12,6 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.ibpm.entity.DocumentoFisico;
-import br.com.infox.ibpm.entity.FluxoPapel;
 import br.com.infox.ibpm.entity.LocalizacaoFisica;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.home.ProcessoHome;
