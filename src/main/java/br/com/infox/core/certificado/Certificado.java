@@ -21,6 +21,8 @@ import br.com.infox.core.certificado.util.ValidatorUtilities;
 import br.com.itx.util.ArrayUtil;
 
 public class Certificado {
+	
+	private static final int HEX_NUMBER = 16;
 
     private String c = null;
     private String cn = null;
@@ -115,7 +117,7 @@ public class Certificado {
     }
     
     public String getSerialNumberHex() {
-        return serialNumber.toString(16);
+        return serialNumber.toString(HEX_NUMBER);
     }
     
 
@@ -130,7 +132,7 @@ public class Certificado {
         return nomeCertificadora;
     }
     
-    private void processSubject() throws CertificadoException {
+    private final void processSubject() throws CertificadoException {
         Principal dados = mainCertificate.getSubjectDN();
         
         String dadosEmissor = mainCertificate.getIssuerDN().getName();
@@ -211,8 +213,8 @@ public class Certificado {
 	}
     
     public boolean isValidoParaSistema(List<String> acceptedCaList) {
-    	System.out.println("nomeCertificadora: " + nomeCertificadora);
-    	System.out.println(acceptedCaList);
+    	//System.out.println("nomeCertificadora: " + nomeCertificadora);
+    	//System.out.println(acceptedCaList);
         for (String name : acceptedCaList) {
 			if (name.equals(nomeCertificadora)) {
 				return true;
