@@ -57,14 +57,13 @@ import br.com.infox.ibpm.jbpm.node.DecisionNode;
 import br.com.itx.util.ReflectionsUtil;
 
 
-@SuppressWarnings("unchecked")
 public class JpdlXmlWriter {
 
 	static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
 	static final Namespace jbpmNamespace = new Namespace(null, JPDL_NAMESPACE);
 
 	private Writer writer = null;
-	private List problems = new ArrayList();
+	private List<String> problems = new ArrayList<String>();
 	private boolean useNamespace = true;
 	private Map<String, CreateTimerAction> timers;
 	
@@ -92,7 +91,7 @@ public class JpdlXmlWriter {
 	// newElement.add( jbpmNamespace );
 
 	public void write(ProcessDefinition processDefinition) {
-		problems = new ArrayList();
+		problems = new ArrayList<String>();
 		if (processDefinition == null)
 			throw new JbpmException("processDefinition is null");
 		try {
@@ -158,7 +157,7 @@ public class JpdlXmlWriter {
 		}
 		if (processDefinition.hasActions()) {
 			writeComment(root, "ACTIONS");
-			List namedProcessActions = getNamedProcessActions(processDefinition
+			List<Action> namedProcessActions = getNamedProcessActions(processDefinition
 					.getActions());
 			writeActions(root, namedProcessActions);
 		}
@@ -191,11 +190,11 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	private List getNamedProcessActions(Map actions) {
-		List namedProcessActions = new ArrayList();
-		Iterator iter = actions.values().iterator();
+	private List<Action> getNamedProcessActions(Map<String, Action> actions) {
+		List<Action> namedProcessActions = new ArrayList<Action>();
+		Iterator<Action> iter = actions.values().iterator();
 		while (iter.hasNext()) {
-			Action action = (Action) iter.next();
+			Action action = iter.next();
 			if ((action.getEvent() == null) && (action.getName() != null)) {
 				namedProcessActions.add(action);
 			}
@@ -219,11 +218,10 @@ public class JpdlXmlWriter {
 		return newElement;
 	}
 
-	private void writeNodes(Element parentElement, Collection nodes) {
-		Iterator iter = nodes.iterator();
+	private void writeNodes(Element parentElement, List<org.jbpm.graph.def.Node> nodes) {
+		Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
 		while (iter.hasNext()) {
-			org.jbpm.graph.def.Node node = (org.jbpm.graph.def.Node) iter
-					.next();
+			org.jbpm.graph.def.Node node = iter.next();
 			if (!(node instanceof StartState)) {
 				Element nodeElement = addElement(parentElement, ProcessFactory
 						.getTypeName(node));
@@ -338,9 +336,9 @@ public class JpdlXmlWriter {
 
 	private void writeTransitions(Element element, org.jbpm.graph.def.Node node) {
 		if (node.getLeavingTransitionsMap() != null) {
-			Iterator iter = node.getLeavingTransitionsList().iterator();
+			Iterator<Transition> iter = node.getLeavingTransitionsList().iterator();
 			while (iter.hasNext()) {
-				Transition transition = (Transition) iter.next();
+				Transition transition = iter.next();
 				writeTransition(element.addElement("transition"), transition);
 			}
 		}
@@ -366,9 +364,9 @@ public class JpdlXmlWriter {
 
 	private void writeEvents(Element element, GraphElement graphElement) {
 		if (graphElement.hasEvents()) {
-			Iterator iter = graphElement.getEvents().values().iterator();
+			Iterator<Event> iter = graphElement.getEvents().values().iterator();
 			while (iter.hasNext()) {
-				Event event = (Event) iter.next();
+				Event event = iter.next();
 				writeEvent(element.addElement("event"), event);
 			}
 		}
@@ -378,9 +376,9 @@ public class JpdlXmlWriter {
 		boolean valid = false;
 		eventElement.addAttribute("type", event.getEventType());
 		if (event.hasActions()) {
-			Iterator actionIter = event.getActions().iterator();
+			Iterator<Action> actionIter = event.getActions().iterator();
 			while (actionIter.hasNext()) {
-				Action action = (Action) actionIter.next();
+				Action action = actionIter.next();
 				valid |= writeAction(eventElement, action);
 			}
 		}
@@ -389,10 +387,10 @@ public class JpdlXmlWriter {
 		}
  	}
 
-	private void writeActions(Element parentElement, Collection actions) {
-		Iterator actionIter = actions.iterator();
+	private void writeActions(Element parentElement, List<Action> actions) {
+		Iterator<Action> actionIter = actions.iterator();
 		while (actionIter.hasNext()) {
-			Action action = (Action) actionIter.next();
+			Action action = actionIter.next();
 			writeAction(parentElement, action);
 		}
 	}
@@ -466,5 +464,4 @@ public class JpdlXmlWriter {
 		return ProcessFactory.getTypeName((org.jbpm.graph.def.Node) o);
 	}
 
-	// private static final Log log = LogFactory.getLog(JpdlXmlWriter.class);
 }

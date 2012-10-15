@@ -121,7 +121,6 @@ public class FluxoHome
 		return "updated";
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Fluxo> getFluxoList() { 
 		if(fluxoList == null) {
 			fluxoList = new ArrayList<Fluxo>();
