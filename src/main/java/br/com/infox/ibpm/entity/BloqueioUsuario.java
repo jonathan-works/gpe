@@ -40,7 +40,7 @@ public class BloqueioUsuario implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int idBloqueioUsuario;
+	private Integer idBloqueioUsuario;
 	private Usuario usuario;
 	private Date dataBloqueio;
 	private Date dataPrevisaoDesbloqueio;
@@ -54,11 +54,11 @@ public class BloqueioUsuario implements java.io.Serializable {
 	@Id
 	@GeneratedValue(generator = "generator")
 	@Column(name = "id_bloqueio_usuario", unique = true, nullable = false)
-	public int getIdBloqueioUsuario() {
+	public Integer getIdBloqueioUsuario() {
 		return this.idBloqueioUsuario;
 	}
 
-	public void setIdBloqueioUsuario(int idBloqueioUsuario) {
+	public void setIdBloqueioUsuario(Integer idBloqueioUsuario) {
 		this.idBloqueioUsuario = idBloqueioUsuario;
 	}
 	@ManyToOne(fetch = FetchType.LAZY)

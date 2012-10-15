@@ -20,6 +20,7 @@ package br.com.infox.ibpm.home;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -54,6 +55,7 @@ import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.certificado.CertificadoLog;
+import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
@@ -120,7 +122,6 @@ public class Authenticator {
 	    }      
 	}
 	
-
 	@Observer(Identity.EVENT_POST_AUTHENTICATE)
 	public void postAuthenticate() throws LoginException {
 		String errorMessage = null;
@@ -135,8 +136,43 @@ public class Authenticator {
 						+ "' não está corretamente cadastrado no sistema.";
 			} else if (!usuario.getAtivo()) {
 				errorMessage = "O usuário " + usuario.getNome()
-						+ " não está ativo.";
-			} 
+						+ " não está ativo.\n";
+			} else if (usuario.getBloqueio()){
+				String query = "select o from BloqueioUsuario o where o.dataBloqueio = (select max(b.dataBloqueio) from BloqueioUsuario b where b.usuario = :usuario)";
+				BloqueioUsuario bloqueio = EntityUtil.getSingleResult(EntityUtil.createQuery(query).setParameter("usuario", usuario));
+				Date desbloqueio = bloqueio.getDataPrevisaoDesbloqueio();
+				Date hoje = new Date();
+				if (desbloqueio.before(hoje)){
+					String queryDesbloqueio = 
+							"update public.tb_usuario set in_bloqueio=false where id_usuario = :usuario";
+					EntityUtil.getEntityManager().createNativeQuery(queryDesbloqueio)
+						.setParameter("usuario", usuario.getIdUsuario())
+						.executeUpdate();
+					String queryDataDesbloqueio = 
+							"UPDATE BloqueioUsuario b SET b.dataDesbloqueio = :hoje " +
+							"WHERE b.idBloqueioUsuario = :bloqueio";
+					EntityUtil.getEntityManager().createQuery(queryDataDesbloqueio)
+						.setParameter("hoje", hoje)
+						.setParameter("bloqueio", bloqueio.getIdBloqueioUsuario())
+						.executeUpdate();
+				} else{
+					errorMessage = "O usuário " + usuario.getNome()
+							+ " está bloqueado." +
+							"Por favor, contate o adminstrador do sistema";
+				}
+			} else if (usuario.getProvisorio()){
+				Date hoje = new Date();
+				hoje = new Date(hoje.getTime() + 999999999);
+				if (usuario.getDataExpiracao().before(hoje)){
+					String inativarProvisorio = 
+							"UPDATE UsuarioLogin u SET u.ativo = false " +
+							"WHERE u.idUsuario = " + usuario.getIdUsuario().toString();
+					EntityUtil.getEntityManager().createQuery(inativarProvisorio).executeUpdate();
+					errorMessage = "O usuário " + usuario.getNome()
+							+ " expirou. " +
+							"Por favor, contate o adminstrador do sistema";
+				}
+			}
 			
 			if (Strings.isEmpty(assinatura)) {
 				String msg = trocarSenha();
@@ -228,7 +264,7 @@ String login = usuario.getLogin();
 	public void loginFailed(Object obj) throws LoginException {
 		UsuarioLogin usuario = getUsuario(Identity.instance().getCredentials().getUsername());
 		if (usuario != null && !usuario.getAtivo()) {
-			throw new LoginException("Esté usuário não está ativo.");
+			throw new LoginException("Este usuário não está ativo.");
 		}
 		throw new LoginException("Usuário ou senha inválidos.");
 	}
