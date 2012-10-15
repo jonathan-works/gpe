@@ -2,14 +2,11 @@
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -80,20 +77,6 @@ public class ParametroUtil {
 		return getFromContext("ldap.password", false);
 	}
 
-	private <E> E getEntity(Class<E> clazz, String parametro) {
-		String id = getFromContext(parametro, true);
-		E retorno = null;
-		if (id != null) {
-			EntityManager em = (EntityManager) Component.getInstance("entityManager", ScopeType.CONVERSATION);
-			retorno = em.find(clazz, Integer.parseInt(id));
-		}
-		if (retorno == null) {
-			log.error(MessageFormat.format("getEntity({0}, {1}) não encontrou a entidade para o id={2}.",
-					clazz.getName(), parametro, id));
-		}
-		return retorno;
-	}
-
 	public static String getFromContext(String nomeParametro, boolean validar) {
 		String value = (String) Contexts.getApplicationContext().get(nomeParametro);
 		if (validar && value == null) {
@@ -108,28 +91,6 @@ public class ParametroUtil {
 		return ComponentUtil.getComponent(NAME);
 	}
 
-	@Create
-	public void validarParametros() {
-		/*
-		 * List<PropertyDescriptor> pdList =
-		 * EntityUtil.getPropertyDescriptors(this, Factory.class); Map<String,
-		 * Object> map = new HashMap<String, Object>(); for (PropertyDescriptor
-		 * pd : pdList) { Method readMethod = pd.getReadMethod(); String name =
-		 * readMethod.getName(); try { Object valor = readMethod.invoke(this,
-		 * new Object[0]); map.put(name, valor); } catch (Exception e) {
-		 * log.error("Erro ao executar metodo " + name, e); e.printStackTrace();
-		 * } } Set<Entry<String,Object>> entrySet = map.entrySet();
-		 * printLinha(); for (Entry<String, Object> entry : entrySet) { String
-		 * nome = entry.getKey(); Object valor = entry.getValue();
-		 * log.info(MessageFormat.format("{0} = {1}{2}", nome,
-		 * LogUtil.toStringForLog(valor), (valor != null ? "/" +
-		 * valor.getClass().getName() : ""))); if (valor == null) {
-		 * log.error("O metodo " + nome + " não retornou resultado."); } }
-		 * printLinha();
-		 */
-	}
-
-	@SuppressWarnings("unchecked")
 	public static String getParametro(String nome) {
 		EntityManager em = EntityUtil.getEntityManager();
 		List<Parametro> resultList = em.createQuery("select p from Parametro p where nomeVariavel = :nome")
@@ -138,13 +99,6 @@ public class ParametroUtil {
 			return resultList.get(0).getValorVariavel();
 		}
 		throw new IllegalArgumentException();
-	}
-
-	@SuppressWarnings("unused")
-	private void printLinha() {
-		log.info("");
-		log.info("============================================================================");
-		log.info("");
 	}
 
 	public String executarFactorys() {

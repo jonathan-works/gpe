@@ -100,9 +100,13 @@ public class EventHandler {
 				return false;
 			}
 			return ev.getEvent().getEventType().equals(this.getEvent().getEventType());
-		} else {
-			return false;
 		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.getEvent().getEventType().hashCode();
 	}
 	
 	public void addAction() {
@@ -149,5 +153,4 @@ public class EventHandler {
 	public void setTemplate() {
 		ActionTemplateHandler.instance().setCurrentActionTemplate(getExpression());
 	}
-	
 }

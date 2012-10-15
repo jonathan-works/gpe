@@ -282,7 +282,7 @@ public final class Entities {
         add("&euro", 8364);
     }
     
-    public static final String decodeEntity(String entity) {
+    public static String decodeEntity(String entity) {
 		if (entity.charAt(entity.length() - 1) == ';') { // remove trailing
 															// semicolon
 			entity = entity.substring(0, entity.length() - 1);
@@ -305,7 +305,7 @@ public final class Entities {
 		return "";
 	}
 
-    public static final String encode(String s) {
+    public static String encode(String s) {
         int length = s.length();
         StringBuffer buffer = new StringBuffer(length * 2);
         for (int i = 0; i < length; i++) {
@@ -325,7 +325,7 @@ public final class Entities {
         return buffer.toString();
     }
 
-    public static final String decode(String text) {
+    public static String decode(String text) {
 		int length = text.length();
         StringBuilder buffer = new StringBuilder(length * 2);
         int from = 0;
@@ -351,7 +351,7 @@ public final class Entities {
         return buffer.toString();
     }
     
-    private static final void add(String entity, int value) {
+    private static void add(String entity, int value) {
         DECODER.put(entity, Character.valueOf((char) value).toString());
         if (value < 0x100) {
             ENCODER[value] = entity;

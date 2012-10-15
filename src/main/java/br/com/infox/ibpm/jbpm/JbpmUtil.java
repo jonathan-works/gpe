@@ -72,7 +72,7 @@ public class JbpmUtil {
 	public static final int FROM_TASK_TRANSITION = 0;	
 	public static final int TO_TASK_TRANSITION = 1;
 	private static final String VAR_NOME_TAREFA_ANTERIOR = "nomeTarefaAnterior";
-	private static Map<String, String> messagesMap;	
+	private Map<String, String> messagesMap;	
 	
 	/**
 	 * Busca a localização de uma tarefa
@@ -124,7 +124,7 @@ public class JbpmUtil {
 		return getJbpmMessages();
 	}
 	
-	public static Map<String, String> getJbpmMessages() {
+	public synchronized Map<String, String> getJbpmMessages() {
 		if (messagesMap == null) {
 			messagesMap = new HashMap<String, String>();
 			List<JbpmVariavelLabel> l = EntityUtil.getEntityList(JbpmVariavelLabel.class);
@@ -139,16 +139,16 @@ public class JbpmUtil {
 	public void storeLabel(String name, String label) {
 		Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
 		String old = map.get(name);
-		if (old != null || !label.equals(old)) {
+		if (!label.equals(old)) {
 			map.put(name, label);
 			JbpmVariavelLabel j = new JbpmVariavelLabel();
 			j.setNomeVariavel(name);
 			j.setLabelVariavel(label);
 			EntityUtil.getEntityManager().persist(j);
 		}
-	}	
+	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<String> getProcessNames() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select pd.name ");
@@ -159,7 +159,6 @@ public class JbpmUtil {
 		return l;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<TaskInstance> getAllTasks() { 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ti from org.jbpm.taskmgmt.exe.TaskInstance ti ");
@@ -171,16 +170,14 @@ public class JbpmUtil {
 				.list();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> T getProcessVariable(String name) {
 		ProcessInstance processInstance = org.jboss.seam.bpm.ProcessInstance.instance();
 		if (processInstance != null) {
 			ContextInstance contextInstance = processInstance.getContextInstance();
 			T value = (T) contextInstance.getVariable(name);
 			return value;
-		} else {
-			return null;
 		}
+		return null;
 	}
 	
 	public static void setProcessVariable(String name, Object value) {
@@ -255,7 +252,6 @@ public class JbpmUtil {
 		return idProcesso != null ? EntityUtil.find(Processo.class, idProcesso) : null;
 	}		
 
-	@SuppressWarnings("unchecked")
 	public static List<Task> getTasksForLocalizacaoAtual() {
 		UsuarioLocalizacao loc = (UsuarioLocalizacao) Contexts.getSessionContext().get(
 				"usuarioLogadoLocalizacaoAtual");
