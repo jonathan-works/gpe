@@ -13,4 +13,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
 public @interface ChildList {
+	//Anotação para definir qual campo representa a lista de filhos da entidade 
 }

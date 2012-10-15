@@ -85,6 +85,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			membrosMap = new HashMap<String, Papel>();
 			final List<Principal> list = new ArrayList<Principal>();
 			new RunAsOperation(true) {
+				@Override
 				public void execute() {
 					list.addAll(IdentityManager.instance().listMembers(
 							getInstance().getIdentificador()));
@@ -128,6 +129,7 @@ public class PapelHome extends AbstractHome<Papel> {
 		return remove(instance);
 	}
 	
+	@Override
 	public String remove(Papel p) {
 		setInstance(p);
 		String ret = super.remove();
@@ -190,6 +192,7 @@ public class PapelHome extends AbstractHome<Papel> {
 				papelMap.put(p.getIdentificador(), p);
 			}
 			Collections.sort(assignableRoles, new Comparator<String>(){
+				@Override
 				public int compare(String o1, String o2) {
 					String n1 = papelMap.get(o1).toString();
 					String n2 = papelMap.get(o2).toString();
@@ -230,6 +233,7 @@ public class PapelHome extends AbstractHome<Papel> {
 				papelMap.put(p.getIdentificador(), p);
 			}
 			Collections.sort(recursosDisponiveis, new Comparator<String>(){
+				@Override
 				public int compare(String o1, String o2) {
 					String n1 = papelMap.get(o1).toString();
 					String n2 = papelMap.get(o2).toString();
@@ -258,7 +262,6 @@ public class PapelHome extends AbstractHome<Papel> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<Papel> getPapelList(List<String> idPapeis) {
 		if(idPapeis == null || idPapeis.isEmpty()) {
 			return new ArrayList<Papel>();
@@ -298,6 +301,7 @@ public class PapelHome extends AbstractHome<Papel> {
 	private void removeMembros(final String papel, List<String> roles) {
 		final List<Principal> listMembers = new ArrayList<Principal>();
 		new RunAsOperation(true) {
+			@Override
 			public void execute() {
 				listMembers.addAll(IdentityManager.instance().listMembers(papel));
 			}
@@ -357,7 +361,6 @@ public class PapelHome extends AbstractHome<Papel> {
 		instance.setNome(nome);
 		EntityUtil.flush();
 		clear();
-//		identificador = instance.getIdentificador();
 		return save;
 	}
 	
@@ -376,7 +379,6 @@ public class PapelHome extends AbstractHome<Papel> {
 		return ComponentUtil.getComponent("papelHome");
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Papel getPapel(String identificador) {
 		Query query = getEntityManager().createQuery(
 				"select o from Papel o where o.identificador = :identificador");
@@ -384,8 +386,7 @@ public class PapelHome extends AbstractHome<Papel> {
 		List<Papel> resultList = query.getResultList();
 		if (resultList.size() > 0) {
 			return resultList.get(0);
-		} else {
-			return null;
-		}
+		} 
+		return null;
 	}
 }

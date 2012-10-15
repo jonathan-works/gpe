@@ -41,6 +41,7 @@ public class UsuarioLoginHome extends AbstractHome<UsuarioLogin> {
 		return (Integer) getId();
 	}
 
+	@Override
 	public void newInstance() {
 		super.newInstance();
 		Contexts.removeFromAllContexts("org.jboss.seam.security.management.userAction");
@@ -59,6 +60,7 @@ public class UsuarioLoginHome extends AbstractHome<UsuarioLogin> {
 		return ComponentUtil.getComponent("org.jboss.seam.security.management.userAction");
 	}
 	
+	@Override
 	public String remove(UsuarioLogin u) {
 		setInstance(u);
 		String ret = super.remove();

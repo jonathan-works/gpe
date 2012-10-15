@@ -15,6 +15,7 @@ import br.com.infox.ibpm.home.Authenticator;
 public class ExceptionHandler extends br.com.itx.exception.ExceptionHandler {
 
 
+	@Override
 	protected void printErroInfo(Exception e) {
 		super.printErroInfo(e);
 		try {

@@ -30,8 +30,6 @@ public class SendmailCommand  {
 	
 	private static final LogProvider log = Logging.getLogProvider(SendmailCommand.class);
 
-	private static final long serialVersionUID = 1L;
-
 	public void execute(String templateFile) {
 		StopWatch sw = new StopWatch(true);
 		Renderer renderer = Renderer.instance();
