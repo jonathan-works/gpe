@@ -30,15 +30,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.persistence.EntityManager;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.Name;
@@ -47,8 +49,10 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.ui.util.Faces;
 import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
@@ -211,15 +215,15 @@ public class ProcessBuilder implements Serializable {
 		transitionsItems = null;
 	}
 
-	public void load(String id) {
+	public void load(String newId) {
 		this.id = null;
-		setId(id);
+		setId(newId);
 		FluxoHome fluxoHome = FluxoHome.instance();
 		if (fluxoHome != null && fluxoHome.isManaged()) {
 			getInstance().setName(fluxoHome.getInstance().getFluxo());
 			xml = fluxoHome.getInstance().getXml();
 			if (xml == null) {
-				this.id = id;
+				this.id = newId;
 				update();
 			} else {
 				try {
@@ -229,20 +233,20 @@ public class ProcessBuilder implements Serializable {
 					e.printStackTrace();
 				}
 				exists = true;
-				this.id = id;
+				this.id = newId;
 			}
 		}
 	}
 	
-	private ProcessDefinition parseInstance(String xml) {
-	    StringReader stringReader = new StringReader(xml);
+	private ProcessDefinition parseInstance(String newXml) {
+	    StringReader stringReader = new StringReader(newXml);
 	    JpdlXmlReader jpdlReader = new JpdlXmlReader(new InputSource(stringReader));
 		return jpdlReader.readProcessDefinition();
 	}
 
-	public void setId(String id) {
-		boolean changed = !id.equals(this.id);
-		this.id = id;
+	public void setId(String newId) {
+		boolean changed = !newId.equals(this.id);
+		this.id = newId;
 		if (changed || instance == null) {
 			try {
 				createInstance();
@@ -259,8 +263,8 @@ public class ProcessBuilder implements Serializable {
 		return instance;
 	}
 
-	public void setInstance(ProcessDefinition instance) {
-		this.instance = instance;
+	public void setInstance(ProcessDefinition newInstance) {
+		this.instance = newInstance;
 	}
 	
 	public List<EventHandler> getEventList() {
@@ -277,8 +281,8 @@ public class ProcessBuilder implements Serializable {
 		return currentEvent;
 	}
 	
-	public void setCurrentEvent(EventHandler currentEvent) {
-		this.currentEvent = currentEvent;
+	public void setCurrentEvent(EventHandler cEvent) {
+		this.currentEvent = cEvent;
 	}
 	
 	public void addEvent() {
@@ -344,8 +348,8 @@ public class ProcessBuilder implements Serializable {
 		return currentSwimlane;
 	}
 	
-	public void setCurrentSwimlane(SwimlaneHandler currentSwimlane) {
-		this.currentSwimlane = currentSwimlane;
+	public void setCurrentSwimlane(SwimlaneHandler cSwimlane) {
+		this.currentSwimlane = cSwimlane;
 	}
 	
 	public void addSwimlane() {
@@ -385,6 +389,7 @@ public class ProcessBuilder implements Serializable {
 				needToPublic = true;
 				modifyNodesAndTasks();
 				fluxoHome.getInstance().setXml(xmlDef);
+				fluxoHome.update();
 			}
 			
 			updatePrazoTask();
@@ -457,7 +462,7 @@ public class ProcessBuilder implements Serializable {
 			List<Node> list = instance.getNodes();
 			if (list != null) {
 				for (Node node : list) {
-					nodes.add((Node) node);
+					nodes.add(node);
 				}
 			}
 		} 
@@ -479,14 +484,14 @@ public class ProcessBuilder implements Serializable {
 		return nodesItems;
 	}
 	
-	public void setNodesItems(List<SelectItem> nodesItems) {
-		this.nodesItems = nodesItems;
+	public void setNodesItems(List<SelectItem> nodesList) {
+		this.nodesItems = nodesList;
 	}
 
 	public List<Node> getNodes(String type) {
 		List<Node> nodeList = new ArrayList<Node>(nodes);
 		for (Iterator<Node> iterator = nodeList.iterator(); iterator.hasNext();) {
-			Node n = (Node) iterator.next();
+			Node n = iterator.next();
 			if (type.equals("from") && (n instanceof EndState)) {
 				iterator.remove();
 			}
@@ -648,8 +653,8 @@ public class ProcessBuilder implements Serializable {
 		return currentTask;
 	}
 	
-	public void setCurrentTask(TaskHandler currentTask) {
-		this.currentTask = currentTask;
+	public void setCurrentTask(TaskHandler cTask) {
+		this.currentTask = cTask;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -676,6 +681,8 @@ public class ProcessBuilder implements Serializable {
 					
 				});
 			} catch (Exception e) {
+				FacesMessages.instance().add(Severity.ERROR, "Erro ao carregar a lista de componentes: {0}", e);
+				e.printStackTrace();
 			} finally {
 				FileUtil.close(input);
 			}
@@ -683,28 +690,28 @@ public class ProcessBuilder implements Serializable {
 		return typeList;
 	}
 	
-	public void setTypeList(List<String> typeList) {
-		this.typeList = typeList;
+	public void setTypeList(List<String> tList) {
+		this.typeList = tList;
 	}
 
-	private void verifyAvaliableTypes(List<String> typeList) {
+	private void verifyAvaliableTypes(List<String> tList) {
 		if(currentTask != null) {
 			for(VariableAccessHandler vah : currentTask.getVariables()) {
 				if(vah.getType().equals(TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
-					removeDifferentType(TaskPageAction.TASK_PAGE_COMPONENT_NAME, typeList);
+					removeDifferentType(TaskPageAction.TASK_PAGE_COMPONENT_NAME, tList);
 					break;
 				} else if(!vah.getType().equals("null")){
-					typeList.remove(TaskPageAction.TASK_PAGE_COMPONENT_NAME);
+					tList.remove(TaskPageAction.TASK_PAGE_COMPONENT_NAME);
 					break;
 				}
 			}
 		}
 	}
 
-	private void removeDifferentType(String name, List<String> typeList) {
-		for(Iterator<String> iterator = typeList.iterator(); iterator.hasNext();) {
+	private void removeDifferentType(String newName, List<String> tList) {
+		for(Iterator<String> iterator = tList.iterator(); iterator.hasNext();) {
 			String i = iterator.next();
-			if(!i.equals(name)) {
+			if(!i.equals(newName)) {
 				iterator.remove();
 			}
 		}
@@ -721,19 +728,19 @@ public class ProcessBuilder implements Serializable {
 		return currentNode;
 	}
 
-	public void setCurrentNode(Node currentNode) {
+	public void setCurrentNode(Node cNode) {
 		Node lastNode = this.currentNode;
-		this.currentNode = currentNode;
+		this.currentNode = cNode;
 		getTasks();
 		currentTask = null;
-		if (taskNodeMap != null && taskNodeMap.containsKey(currentNode)) {
-			List<TaskHandler> list = taskNodeMap.get(currentNode);
+		if (taskNodeMap != null && taskNodeMap.containsKey(cNode)) {
+			List<TaskHandler> list = taskNodeMap.get(cNode);
 			if (! list.isEmpty()) {
 				currentTask = list.get(0);
 			} 
-			setPrazoTasks(lastNode, currentNode);
+			setPrazoTasks(lastNode, cNode);
 		}
-		nodeHandler = new NodeHandler(currentNode);
+		nodeHandler = new NodeHandler(cNode);
 		newNodeType = "Task";
 		arrivingTransitions = null;
 		leavingTransitions = null;
@@ -745,8 +752,8 @@ public class ProcessBuilder implements Serializable {
 		Events.instance().raiseEvent(SET_CURRENT_NODE_EVENT);
 	}
 	
-	private void setPrazoTasks(Node lastNode, Node currentNode) {
-		if(currentNode == null) {
+	private void setPrazoTasks(Node lastNode, Node cNode) {
+		if(cNode == null) {
 			prazo = null;
 			tipoPrazo = null;
 			return;
@@ -759,12 +766,12 @@ public class ProcessBuilder implements Serializable {
 			prazoTaskMap.put(lastNode.getName(), prazoTask);
 		}
 		
-		prazoTask = prazoTaskMap.get(currentNode.getName());
+		prazoTask = prazoTaskMap.get(cNode.getName());
 		if (prazoTask != null)	{
 			prazo = prazoTask.getPrazo();
 			tipoPrazo = prazoTask.getTipoPrazo();
 		} else {
-			Tarefa t = JbpmUtil.getTarefa(currentNode.getName(), 
+			Tarefa t = JbpmUtil.getTarefa(cNode.getName(), 
 											FluxoHome.instance().getInstance().getFluxo());
 			if (t == null)	{
 				prazo = null;
@@ -775,7 +782,7 @@ public class ProcessBuilder implements Serializable {
 				prazoTask = new PrazoTask();
 				prazoTask.setPrazo(prazo);
 				prazoTask.setTipoPrazo(tipoPrazo);
-				prazoTaskMap.put(currentNode.getName(), prazoTask);
+				prazoTaskMap.put(cNode.getName(), prazoTask);
 			}
 		}
 	}
@@ -905,16 +912,16 @@ public class ProcessBuilder implements Serializable {
 		return newNodeName;
 	}
 	
-	public void setNewNodeName(String newNodeName) {
-		this.newNodeName = newNodeName;
+	public void setNewNodeName(String newName) {
+		this.newNodeName = newName;
 	}
 	
 	public String getNewNodeType() {
 		return newNodeType;
 	}
 	
-	public void setNewNodeType(String newNodeType) {
-		this.newNodeType = newNodeType;
+	public void setNewNodeType(String newNodeTypee) {
+		this.newNodeType = newNodeTypee;
 	}
 		
 	public void addNewNode() {
@@ -925,6 +932,7 @@ public class ProcessBuilder implements Serializable {
 				node = (Node)nodeType.newInstance();
 			} catch (Exception e) {
 				e.printStackTrace();
+				return;
 			}
 			node.setName(newNodeName);
 			instance.addNode(node);
@@ -964,7 +972,6 @@ public class ProcessBuilder implements Serializable {
 				node.addLeavingTransition(t);
 				newNodeTransition.setName(node.getName());
 				node.addArrivingTransition(oldT);
-				
 			}
 			
 			newNodeName = null;
@@ -1009,7 +1016,6 @@ public class ProcessBuilder implements Serializable {
 	}
 	
 	public void setTransitionsItems(List<SelectItem> transitionsItems) {
-		
 		this.transitionsItems = transitionsItems;
 	}
 	
@@ -1208,11 +1214,9 @@ public class ProcessBuilder implements Serializable {
 				currentNode.setName(nodeName);
 				String query = "select max(id_) from jbpm_node where processdefinition_ = " +
 				   			   ":idProcessDefinition and name_ = :nodeName";
-				List<Object> list = JbpmUtil.getJbpmSession().createSQLQuery(query)
-											  .setParameter("idProcessDefinition", 
-													  		getIdProcessDefinition())
-											  .setParameter("nodeName", this.nodeName)
-											  .list();
+				SQLQuery sql = JbpmUtil.getJbpmSession().createSQLQuery(query);
+				Query param = sql.setParameter("idProcessDefinition", getIdProcessDefinition()).setParameter("nodeName", nodeName);
+				List<Object> list = param.list();
 				if(list != null && list.size() > 0 && list.get(0) != null) {
 					modifiedNodes.put((BigInteger) list.get(0), nodeName);
 				}
@@ -1258,9 +1262,8 @@ public class ProcessBuilder implements Serializable {
 	@SuppressWarnings("unchecked")
 	private BigInteger getIdProcessDefinition() {
 		String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
-		List<Object> list = JbpmUtil.getJbpmSession().createSQLQuery(query)
-									  .setParameter("pdName", instance.getName())
-									  .list();
+		Query param = JbpmUtil.getJbpmSession().createSQLQuery(query).setParameter("pdName", instance.getName());
+		List<Object> list = param.list();
 		if(list == null || list.size() == 0) {
 			return null;
 		}
