@@ -22,8 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -65,7 +65,6 @@ import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.itx.component.Util;
-import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
@@ -77,9 +76,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	public static final String NAME = "processoHome";
 
-	private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações " +
-			"neste registro, verifique se ele não foi movimentado";
-	
 	public static final String EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO = "atualizarProcessoDocumentoFluxo";
 	public static final String AFTER_UPDATE_PD_FLUXO_EVENT = "afterUpdatePdFluxoEvent";
 	
