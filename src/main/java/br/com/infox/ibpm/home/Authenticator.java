@@ -162,7 +162,6 @@ public class Authenticator {
 				}
 			} else if (usuario.getProvisorio()){
 				Date hoje = new Date();
-				hoje = new Date(hoje.getTime() + 999999999);
 				if (usuario.getDataExpiracao().before(hoje)){
 					String inativarProvisorio = 
 							"UPDATE UsuarioLogin u SET u.ativo = false " +
@@ -193,21 +192,6 @@ public class Authenticator {
 			Actor.instance().setId(usuario.getLogin());
 		}
 	}
-	
-/*
-String login = usuario.getLogin();
-		
-		IdentityManager identityManager = IdentityManager.instance();
-		boolean userExists = identityManager.getIdentityStore().userExists(login);
-		if (userExists) {
-			autenticaManualmenteNoSeamSecurity(login, identityManager);
-			Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
-			Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
-			return null;
-		}
-
-
- */
 	
 	private void autenticaManualmenteNoSeamSecurity(String login, IdentityManager identityManager) {
 		Principal principal = new SimplePrincipal(login);
