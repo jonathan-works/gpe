@@ -79,7 +79,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public static final String EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO = "atualizarProcessoDocumentoFluxo";
 	public static final String AFTER_UPDATE_PD_FLUXO_EVENT = "afterUpdatePdFluxoEvent";
 	
-	private static final LogProvider log = Logging.getLogProvider(ProcessoHome.class);
+	private static final LogProvider LOG = Logging.getLogProvider(ProcessoHome.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -383,7 +383,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		if(value == null) {
 			value = modeloDocumentoFluxo;
 			if(value == null) {
-				value = new String();
+				value = "";
 			}
 		}
 		String modeloDocumento = String.valueOf(value);
@@ -802,7 +802,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public ProcessoEvento getUltimoProcessoEvento(Processo processo, String nomeAgrupamento) {
 		List<Evento> eventosAgrupamento = getEventosAgrupamento(nomeAgrupamento);
 		if (eventosAgrupamento == null || eventosAgrupamento.size() == 0) {
-			log.warn("Nenhum evento evento encontrado para o agrupamento: " + nomeAgrupamento);
+			LOG.warn("Nenhum evento evento encontrado para o agrupamento: " + nomeAgrupamento);
 			return null;
 		}
 		List<Evento> eventoListCompleto = new ArrayList<Evento>();
@@ -824,7 +824,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		ProcessoEvento processoEvento = getUltimoProcessoEvento(processo);
 		
 		if (processoEvento == null) {
-			log.info("verificaUltimoEvento: Não existem evento no processo: " + processo);
+			LOG.info("verificaUltimoEvento: Não existem evento no processo: " + processo);
 			return false;
 		}
 		
