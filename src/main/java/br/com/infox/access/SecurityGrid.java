@@ -101,9 +101,8 @@ public class SecurityGrid extends GridQuery {
 				to = results.size();
 			}
 			return results.subList(from, to);
-		} else {
-			return results;
-		}
+		} 
+		return results;
 	}
 
 }
