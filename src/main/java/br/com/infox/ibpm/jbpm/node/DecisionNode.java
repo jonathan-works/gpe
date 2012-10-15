@@ -53,6 +53,8 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
+import br.com.infox.ibpm.entity.Variavel;
+
 
 /**
  * decision node.
@@ -87,6 +89,7 @@ public class DecisionNode extends Node {
 		return NodeType.Decision;
 	}
 
+	@Override
 	public void read(Element decisionElement, JpdlXmlReader jpdlReader) {
 		String expression = decisionElement.attributeValue("expression");
 		Element decisionHandlerElement = decisionElement.element("handler");
@@ -99,6 +102,7 @@ public class DecisionNode extends Node {
 		}
 	}
 
+	@Override
 	public void execute(ExecutionContext executionContext) {
 		Transition transition = null;
 
@@ -200,6 +204,29 @@ public class DecisionNode extends Node {
 
 		log.debug("decision '" + name + "' is taking " + transition);
 		executionContext.leaveNode(transition);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Variavel)) {
+			return false;
+		}
+		DecisionNode other = (DecisionNode) obj;
+		return getId() == other.getId();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int)getId();
+		return result;
 	}
 
 	public List<DecisionCondition> getDecisionConditions() {

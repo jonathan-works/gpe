@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.security.cert.Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -21,7 +20,7 @@ public class CertificadoLog {
 	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
 	private static File logFileDir;
 	 
-	private static void initLogDir() throws IOException {
+	private synchronized static void initLogDir() throws IOException {
 		if (logFileDir == null || !logFileDir.exists()) {
 			logFileDir = new File(getLogDir() + getFilename());
 			if (!logFileDir.exists()) {
@@ -30,7 +29,7 @@ public class CertificadoLog {
 		}
 	}
 	
-	private static String getLogDir() throws IOException {
+	private static String getLogDir() {
 		String dir = new Util().getContextRealPath() + BARRA + "WEB-INF" + 
 			BARRA + "log" + BARRA;
 		File logDir = new File(dir);
@@ -55,14 +54,6 @@ public class CertificadoLog {
 			e.printStackTrace();
 		} finally {
 			FileUtil.close(writer);
-		}
-	}
-	
-	public static void executeLog(Certificate[] certChain) {
-		try {
-			executeLog("");
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}	
 

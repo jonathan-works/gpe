@@ -63,11 +63,10 @@ public class TaskHandler {
 		if (swimlaneName == null) {
 			task.setSwimlane(null);
 		} else {
-			TaskMgmtDefinition taskMgmtDefinition = task.getTaskMgmtDefinition();
-			if (taskMgmtDefinition == null) {
+			if (task.getTaskMgmtDefinition() == null) {
 				task.setTaskMgmtDefinition(new TaskMgmtDefinition());
 			}
-			Swimlane swimlane = taskMgmtDefinition.getSwimlane(swimlaneName);
+			Swimlane swimlane = task.getTaskMgmtDefinition().getSwimlane(swimlaneName);
 			task.setSwimlane(swimlane);
 		}
 	}

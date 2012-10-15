@@ -31,6 +31,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
 import br.com.infox.ibpm.entity.ListaEmail;
+import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.ibpm.jbpm.MailResolver;
 import br.com.itx.util.EntityUtil;
 
@@ -47,6 +48,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	private List<ListaEmail> listaEmail;
 	private ListaEmail currentListaEmail = new ListaEmail();
 
+	@Override
 	public void read(Element element, JpdlXmlReader jpdlReader) {
 		template = element.attributeValue("template");
 		actors = element.attributeValue("actors");
@@ -56,7 +58,6 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		super.read(element, jpdlReader);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void write(Element nodeElement) {
 		if (action != null) {
@@ -131,7 +132,6 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		createAction();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<ListaEmail> getListaEmail() {
 		if (listaEmail == null) {
 			if (to != null && to.startsWith("#{" + MailResolver.NAME)) {
@@ -186,6 +186,29 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		Expressions.instance().createMethodExpression("#{estruturaTree.clearTree}").invoke(new Object[0]);
 		Expressions.instance().createMethodExpression("#{localizacaoTree.clearTree}").invoke(new Object[0]);
 		Expressions.instance().createMethodExpression("#{papelTree.clearTree}").invoke(new Object[0]);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Variavel)) {
+			return false;
+		}
+		MailNode other = (MailNode) obj;
+		return getId() == other.getId();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int)getId();
+		return result;
 	}
 	
 }

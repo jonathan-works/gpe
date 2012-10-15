@@ -90,13 +90,12 @@ public class SwimlaneHandler {
 		buildExpression();
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Papel> getPapelList() {
 		if (papelList == null) {
 			papelList = new ArrayList<Papel>();
 			if (localizacao != null) {
 				EntityManager em = EntityUtil.getEntityManager();
-				papelList = (List<Papel>) em.createQuery("select distinct l.papel " +
+				papelList = em.createQuery("select distinct l.papel " +
 						"from UsuarioLocalizacao l " +
 						"where l.localizacao = :loc ")
 						.setParameter("loc", localizacao)
@@ -219,9 +218,13 @@ public class SwimlaneHandler {
 		if (obj instanceof SwimlaneHandler) {
 			SwimlaneHandler sh = (SwimlaneHandler) obj;
 			return this.getSwimlane().getName().equals(sh.getSwimlane().getName());
-		} else {
-			return false;
-		}
+		} 
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.getSwimlane().getName().hashCode();
 	}
 
 	@Override

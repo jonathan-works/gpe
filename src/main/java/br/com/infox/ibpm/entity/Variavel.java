@@ -127,10 +127,7 @@ public class Variavel implements java.io.Serializable {
 			return false;
 		}
 		Variavel other = (Variavel) obj;
-		if (getIdVariavel() != other.getIdVariavel()) {
-			return false;
-		}
-		return true;
+		return getIdVariavel() == other.getIdVariavel();
 	}
 
 	@Override

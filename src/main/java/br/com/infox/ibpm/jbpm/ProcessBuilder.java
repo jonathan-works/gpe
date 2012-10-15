@@ -380,8 +380,7 @@ public class ProcessBuilder implements Serializable {
 			
 			String xmlFluxo = fluxoHome.getInstance().getXml();
 			
-			if(	(xmlFluxo == null && xmlDef != null) 
-				|| (xmlFluxo != null && !xmlFluxo.equals(xmlDef))) {
+			if(xmlFluxo != null && !xmlFluxo.equals(xmlDef)) {
 				//verifica a consistencia do fluxo para evitar salva-lo com erros.
 				parseInstance(xmlDef);
 				needToPublic = true;
