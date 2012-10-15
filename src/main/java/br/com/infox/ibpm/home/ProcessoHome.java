@@ -156,13 +156,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	public void adicionarFluxo(Fluxo fluxo, Map<String, Object> variaveis){
 		iniciarProcessoJbpm(fluxo, variaveis);
-		
-//		Redirect redirect = Redirect.instance();
-//		redirect.setViewId("/Processo/movimentar.xhtml");
-//		redirect.setViewId("/Processo/ConsultaProcesso/Detalhe/list.xhtml");
-//		redirect.execute();
-		
-//		return processo;
 	}
 
 	public void iniciarProcessoJbpm(Fluxo fluxo, Map<String, Object> variaveis) {
@@ -197,8 +190,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		instance.setNumeroProcesso("");
 		Processo processo = getInstance();
 		persist();
-		
-//		RegistraEstatistica.instance().registraAssignTask(dataCadastro, instance);
 		
 		FacesMessages.instance().clear();
 		FacesMessages.instance().add(StatusMessage.Severity.INFO,
@@ -339,7 +330,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 				result = idDoc;
 			}
 		}
-//			setIdProcessoDocumento((Integer) JsfFunctions.get(idDoc, result));
 		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 		Events.instance().raiseEvent(AFTER_UPDATE_PD_FLUXO_EVENT, idProcessoDocumento);
 		return result;
