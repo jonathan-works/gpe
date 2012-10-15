@@ -65,6 +65,7 @@ public abstract class AbstractEnderecoHome<T> extends AbstractHome<Endereco> {
 		return super.remove();
 	}
 
+	@Override
 	public String remove(Endereco obj) {
 		setInstance(obj);
 		String ret = super.remove();
@@ -77,21 +78,6 @@ public abstract class AbstractEnderecoHome<T> extends AbstractHome<Endereco> {
 	public String persist() {
 		String action = super.persist();
 		if (action != null) {
-			/*
-			if (getInstance().getUsuario() != null) {
-				List<Endereco> usuarioList = getInstance().getUsuario()
-						.getEnderecoList();
-				if (!usuarioList.contains(instance)) {
-					getEntityManager().refresh(getInstance().getUsuario());
-				}
-			}
-			if (getInstance().getCep() != null) {
-				List<Endereco> cepList = getInstance().getCep().getEnderecoList();
-				if (!cepList.contains(instance)) {
-					getEntityManager().refresh(getInstance().getCep());
-				}
-			}
-			*/
 			newInstance();
 		}
 		return action;

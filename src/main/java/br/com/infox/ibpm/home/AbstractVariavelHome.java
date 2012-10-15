@@ -37,6 +37,7 @@ public abstract class AbstractVariavelHome<T> extends AbstractHome<Variavel> {
 		return variavel;
 	}
 
+	@Override
 	public String remove(Variavel obj) {
 		setInstance(obj);
 		String ret = super.remove();

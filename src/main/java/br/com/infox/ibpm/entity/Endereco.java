@@ -203,8 +203,7 @@ public class Endereco implements java.io.Serializable {
 	public String toString() {
 		if ( nomeLogradouro != null)
 			return nomeLogradouro;
-		else
-			return "";
+		return "";
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

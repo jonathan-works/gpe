@@ -68,6 +68,7 @@ public abstract class AbstractUsuarioLocalizacaoHome<T>
 		return super.remove();
 	}
 
+	@Override
 	public String remove(UsuarioLocalizacao obj) {
 		setInstance(obj);
 		String ret = super.remove();

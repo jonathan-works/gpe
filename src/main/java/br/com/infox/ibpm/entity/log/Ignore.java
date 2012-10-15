@@ -32,5 +32,5 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 @Retention(RUNTIME)
 public @interface Ignore {
-
+	//Definição das anotações utilizada pelo framework infox
 }

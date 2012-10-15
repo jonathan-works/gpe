@@ -62,6 +62,7 @@ public abstract class AbstractTipoModeloDocumentoHome<T>
 		return super.remove();
 	}
 
+	@Override
 	public String remove(TipoModeloDocumento obj) {
 		setInstance(obj);
 		getInstance().setAtivo(Boolean.FALSE);

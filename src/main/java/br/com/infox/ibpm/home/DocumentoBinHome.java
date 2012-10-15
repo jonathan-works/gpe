@@ -22,8 +22,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.DocumentoBin;
 import br.com.itx.component.AbstractHome;
@@ -33,7 +31,6 @@ import br.com.itx.util.ComponentUtil;
 @BypassInterceptors
 public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
 
-	private static final LogProvider log = Logging.getLogProvider(DocumentoBinHome.class);
 	private static final long serialVersionUID = 1L;
 	
 	@Override

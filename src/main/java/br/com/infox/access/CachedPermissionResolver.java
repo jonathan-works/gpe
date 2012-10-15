@@ -22,6 +22,8 @@ import org.jboss.seam.security.permission.PermissionResolver;
 
 public abstract class CachedPermissionResolver<T> implements PermissionResolver {
 
+	private static final String	UNCHECKED	= "unchecked";
+
 	/**
 	 * Verifica se a permissão é válida para o usuário.
 	 * Primeiramente busca no contexto escolhido para cache,
@@ -29,7 +31,8 @@ public abstract class CachedPermissionResolver<T> implements PermissionResolver 
 	 * guarda o resultado no contexto de cache definido pelo método
 	 * getContext.
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
+	@SuppressWarnings(UNCHECKED)
 	public boolean hasPermission(Object target, String action) {
 		if (! checkType(target)) {
 			return false;
@@ -65,7 +68,8 @@ public abstract class CachedPermissionResolver<T> implements PermissionResolver 
 	 * definido no método getPermission.
 	 * 
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	@SuppressWarnings({ "rawtypes", UNCHECKED })
 	public void filterSetByAction(Set<Object> targets, String action) {
 		Set remove = new HashSet();
 		for (Object target : targets) {

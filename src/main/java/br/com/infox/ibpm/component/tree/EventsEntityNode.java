@@ -38,11 +38,11 @@ public class EventsEntityNode extends EntityNode<Evento> {
 		return node;
 	}
 	
+	@Override
 	protected EventsEntityNode createChildNode(Evento n) {
 		return new EventsEntityNode(this, n, getQueryChildren());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<EntityNode<Evento>> getRoots(Query queryRoots) {
 		if (rootNodes == null) {

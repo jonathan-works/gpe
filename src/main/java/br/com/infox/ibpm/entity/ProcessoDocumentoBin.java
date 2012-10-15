@@ -63,7 +63,6 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 	private String signature;
 	private String certChain;
 	private List<ProcessoDocumento> processoDocumentoList = new ArrayList<ProcessoDocumento>(0);
-	private Date dataAssinatura;
 	
 	public ProcessoDocumentoBin() {
 	}
@@ -200,9 +199,8 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 			NumberFormat formatter = new DecimalFormat("###,##0.00");
 			float sizeF = size / 1024f;
 			return formatter.format(sizeF) + " Kb";
-		} else {
-			return "0 Kb";
-		}
+		} 
+		return "0 Kb";
 	}
 
 	@Column(name = "ds_nome_usuario_ultimo_assinar", length = 100)

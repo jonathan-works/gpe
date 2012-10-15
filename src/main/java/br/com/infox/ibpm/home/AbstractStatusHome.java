@@ -15,6 +15,7 @@ public abstract class AbstractStatusHome<T> extends AbstractHome<Status> {
 		return (Integer) getId();
 	}
 	
+	@Override
 	public String remove(Status obj) {
 		setInstance(obj);
 		String ret = super.remove();

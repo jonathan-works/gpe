@@ -29,7 +29,6 @@ import org.hibernate.CacheMode;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
-import org.hibernate.StatelessSession;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
@@ -59,12 +58,14 @@ import br.com.itx.util.HibernateUtil;
 @SuppressWarnings("unchecked")
 public class AjudaHome extends AbstractHome<Ajuda>  {
 
+	private static final String	RAWTYPES	= "rawtypes";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider log = Logging.getLogProvider(AjudaHome.class);
 	
 	private String viewId;
 	private Pagina pagina;
 	private String textoPesquisa;
+	@SuppressWarnings(RAWTYPES)
 	private List resultado;
 	private Ajuda anterior;
 	
@@ -88,6 +89,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		return instance;
 	}
 	
+	@SuppressWarnings(RAWTYPES)
 	public List getResultadoPesquisa() throws ParseException {
 		if (getTextoPesquisa() == null) {
 			return null;
@@ -253,6 +255,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 						texto = highlighted;
 					}
 				} catch (ParseException e) {
+					e.printStackTrace();
 				}	
 			}
 		}

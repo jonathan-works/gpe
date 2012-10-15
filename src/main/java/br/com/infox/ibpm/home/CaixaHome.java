@@ -49,7 +49,6 @@ public class CaixaHome extends AbstractCaixaHome<Caixa> {
 		return getPreviousTasks(EntityUtil.find(Tarefa.class, idTarefa));
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<SelectItem> getPreviousTasks(Tarefa tarefa) {
 		List<SelectItem> previousTasksItems = new ArrayList<SelectItem>();
 		Session session = JbpmUtil.getJbpmSession();

@@ -127,10 +127,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 		rootList = null;
 		super.clearTree();
 	}
-
-
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void selectListener(NodeSelectedEvent nodeSelectedEvent)
 			throws AbortProcessingException {
@@ -138,7 +135,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 		treeId = tree.getId();
 		UITree uiTree = tree.getUITree();
 		EntityNode<Map<String,Object>> en = (EntityNode<Map<String,Object>>) uiTree.getRowData(); 
-		setSelected((Map<String,Object>) en.getEntity());
+		setSelected(en.getEntity());
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}
 }

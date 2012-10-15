@@ -14,6 +14,7 @@ public abstract class AbstractTipoProcessoDocumentoPapelHome<T> extends Abstract
 		return (Integer) getId();
 	}
 	
+	@Override
 	public String remove(TipoProcessoDocumentoPapel obj) {
 		setInstance(obj);
 		String ret = super.remove();

@@ -35,6 +35,7 @@ public abstract class AbstractGrupoModeloDocumentoHome<T>
 		return grupoModeloDocumento;
 	}
 
+	@Override
 	public String remove(GrupoModeloDocumento obj) {
 		setInstance(obj);
 		getInstance().setAtivo(Boolean.FALSE);

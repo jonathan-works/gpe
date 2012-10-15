@@ -41,6 +41,7 @@ public abstract class AbstractTipoProcessoDocumentoHome<T>
 		return new TipoProcessoDocumento();
 	}
 
+	@Override
 	public String remove(TipoProcessoDocumento obj) {
 		setInstance(obj);
 		obj.setAtivo(Boolean.FALSE);

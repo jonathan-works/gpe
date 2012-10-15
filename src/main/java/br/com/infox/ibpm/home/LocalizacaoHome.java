@@ -141,25 +141,24 @@ public class LocalizacaoHome
 	public String update() {
 		verificaListas();
 		/*
-		 * Se o registro estiver como inativo na hora do update, todos os seus 
+		 * Se o registro estiver como inativo na hora do update, todos os seus
 		 * filhos serão inativados
 		 */
-		if (!getInstance().getAtivo()){
+		if (!getInstance().getAtivo()) {
 			inactiveRecursive(getInstance());
 			return "updated";
-		} else{
-			String ret = null;
-			try{
-				ret = super.update();
-				if (ret != null){
-					limparTrees();
-				}
-			}
-			catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-			return ret;	
 		}
+		String ret = null;
+		try {
+			ret = super.update();
+			if (ret != null) {
+				limparTrees();
+			}
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return ret;
 	}
 	
 	@Override
@@ -195,12 +194,12 @@ public class LocalizacaoHome
 	}
 	
 	/**
-	 * Verifica se a localização está vinculada a algum ItemTIpoDocumento. 
-	 * Se não estiver, realiza a inativação em cascata
+	 * Verifica se a localização está vinculada a algum ItemTIpoDocumento. Se
+	 * não estiver, realiza a inativação em cascata
 	 */
 	public String inactiveRecursive(Localizacao localizacao) {
-		if (localizacao.getItemTipoDocumentoList().size() <= 0){
-			if (localizacao.getLocalizacaoList().size()  > 0) {
+		if (localizacao.getItemTipoDocumentoList().size() <= 0) {
+			if (localizacao.getLocalizacaoList().size() > 0) {
 				inativarFilhos(localizacao);
 			}
 			localizacao.setAtivo(Boolean.FALSE);
@@ -209,13 +208,11 @@ public class LocalizacaoHome
 			refreshGrid("localizacaoGrid");
 			return ret;
 		}
-		else {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-					"Registro está em uso não poderá ser excluido!");
-			return "False";
-		}
+		FacesMessages.instance().add(StatusMessage.Severity.ERROR,
+				"Registro está em uso não poderá ser excluido!");
+		return "False";
 	}
-	
+
 	private void inativarFilhos(Localizacao localizacao){
 		localizacao.setAtivo(Boolean.FALSE);
 		
@@ -341,20 +338,21 @@ public class LocalizacaoHome
 		System.out.println(node);
 		return true;
 	}
-	
+
 	public boolean checkPermissaoLocalizacao(EntityNode<Localizacao> node) {
-		Localizacao locAtual = UsuarioHome.getUsuarioLocalizacaoAtual().getLocalizacao();
+		Localizacao locAtual = UsuarioHome.getUsuarioLocalizacaoAtual()
+				.getLocalizacao();
 		if (node.getEntity().getIdLocalizacao() == locAtual.getIdLocalizacao()) {
 			return true;
-		} else {
-			EntityNode<Localizacao> nodePai = node.getParent();
-			while (nodePai != null) {
-				if (nodePai.getEntity().getIdLocalizacao() == locAtual.getIdLocalizacao())
-					return true;
-				nodePai = nodePai.getParent();
+		}
+		EntityNode<Localizacao> nodePai = node.getParent();
+		while (nodePai != null) {
+			if (nodePai.getEntity().getIdLocalizacao() == locAtual.getIdLocalizacao()) {
+				return true;
 			}
+			nodePai = nodePai.getParent();
 		}
 		return false;
 	}
-	
+
 }

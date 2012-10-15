@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.faces.application.FacesMessage;
-
-import org.apache.lucene.demo.html.ParseException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -44,6 +41,8 @@ import br.com.itx.util.ComponentUtil;
 @Scope(ScopeType.PAGE)
 public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocumento> {
 
+	private static final String	RAWTYPES	= "rawtypes";
+	private static final String	UNCHECKED	= "unchecked";
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "modeloDocumentoHome";
 	
@@ -81,7 +80,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		return tipoModeloDocumento;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	private List<String> getValorVariaveis()	{
 		List list = new ArrayList<String>();
 		if (getInstance().getTipoModeloDocumento() != null) {
@@ -94,7 +93,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		return list;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	public List<Variavel> getVariaveis() {
 		List list = new ArrayList<Variavel>();
 		if (getInstance().getTipoModeloDocumento() != null) {

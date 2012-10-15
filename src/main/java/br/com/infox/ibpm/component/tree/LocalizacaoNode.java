@@ -50,8 +50,7 @@ public class LocalizacaoNode extends LocalizacaoNodeSearch {
 			EntityNode<Localizacao> no = new LocalizacaoNode(null, estrutura, getQueryChildren());
 			nodes.add(no);
 			return nodes;
-		} else {
-			return super.getRoots(queryRoots);
-		}
+		} 
+		return super.getRoots(queryRoots);
 	}
 }

@@ -63,6 +63,7 @@ public final class HelpUtil {
 			}
 			text = sb.toString();
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			FileUtil.close(reader);
 			FileUtil.close(br);

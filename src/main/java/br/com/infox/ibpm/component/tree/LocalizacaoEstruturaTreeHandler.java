@@ -71,7 +71,6 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 		return node;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void selectListener(NodeSelectedEvent ev) {
 		HtmlTree tree = (HtmlTree) ev.getSource();

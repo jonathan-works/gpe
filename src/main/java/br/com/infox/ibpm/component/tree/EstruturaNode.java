@@ -1,9 +1,5 @@
 package br.com.infox.ibpm.component.tree;
 
-import java.util.List;
-
-import javax.persistence.Query;
-
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.ibpm.entity.Localizacao;
 
@@ -26,10 +22,12 @@ public class EstruturaNode extends EntityNode<Localizacao> {
 		return getEntity().getEstrutura() ? "folder" : "leaf";
 	}
 
+	@Override
 	protected EntityNode<Localizacao> createChildNode(Localizacao n) {
 		return new EstruturaNode(this, n, getQueryChildren());
 	}
 
+	@Override
 	protected EntityNode<Localizacao> createRootNode(Localizacao n) {
 		return new EstruturaNode(null, n, getQueryChildren());
 	}

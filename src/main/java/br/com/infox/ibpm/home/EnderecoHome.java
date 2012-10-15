@@ -75,9 +75,8 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 	public boolean checkCep() {
 		if (this.getInstance().getCep() != null){
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	/**
@@ -96,9 +95,8 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 				|| (!Strings.isEmpty(endereco.getNomeBairro()))
 				|| (!Strings.isEmpty(endereco.getComplemento()))){
 				return true;
-			} else {
-				return false;
-			}		
+			} 
+		return false;
 	}
 	
 	@Override

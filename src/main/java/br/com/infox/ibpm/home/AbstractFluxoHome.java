@@ -56,6 +56,7 @@ public abstract class AbstractFluxoHome<T> extends AbstractHome<Fluxo> {
 		return super.remove();
 	}
 
+	@Override
 	public String remove(Fluxo obj) {
 		setInstance(obj);
 		String ret = super.remove();

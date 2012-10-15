@@ -28,6 +28,7 @@ public abstract class AbstractCaixaHome<T> extends AbstractHome<Caixa> {
 		return new Caixa();
 	}
 	
+	@Override
 	public String remove(Caixa obj) {
 		setInstance(obj);
 		String ret = remove();

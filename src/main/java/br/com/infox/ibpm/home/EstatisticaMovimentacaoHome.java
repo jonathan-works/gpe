@@ -72,7 +72,6 @@ public class EstatisticaMovimentacaoHome implements Serializable  {
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	public String getTempoMaximoMov() {
 		StringBuffer ejbql = new StringBuffer();
 		ejbql.append("select max(o.duracao) from Estatistica o ");
@@ -93,7 +92,6 @@ public class EstatisticaMovimentacaoHome implements Serializable  {
 		return resp;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public String getTempoMinimoMov() {
 		StringBuffer ejbql = new StringBuffer();
 		ejbql.append("select min(o.duracao) from Estatistica o ");
@@ -114,7 +112,6 @@ public class EstatisticaMovimentacaoHome implements Serializable  {
 		return resp;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public String getTempoMedioMov() {
 		StringBuffer ejbql = new StringBuffer();
 		ejbql.append("select cast(avg(o.duracao) as long) from Estatistica o ");
@@ -163,7 +160,8 @@ public class EstatisticaMovimentacaoHome implements Serializable  {
 		if (instance.getDataFim() != null ) { ejbql.append(" and o.dataFim <= :dataFim ");	}
 		if (getAssTree().getSelected() != null) { ejbql.append(" and assList.fluxo = :fluxo ");	}			
 	}
-	@SuppressWarnings("unchecked")
+
+	
 	public List<Object[]> getGridEstatistica() {
 		StringBuffer ejbql = new StringBuffer();
 		ejbql.append("select o.nomeFluxo, o.taskName, avg(o.duracao)," +

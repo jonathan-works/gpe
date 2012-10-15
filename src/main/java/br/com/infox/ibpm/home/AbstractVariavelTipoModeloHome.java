@@ -44,6 +44,7 @@ public abstract class AbstractVariavelTipoModeloHome<T> extends AbstractHome<Var
 		return super.remove();
 	}
 
+	@Override
 	public String remove(VariavelTipoModelo obj) {
 		setInstance(obj);
 		String ret = super.remove();
@@ -55,9 +56,6 @@ public abstract class AbstractVariavelTipoModeloHome<T> extends AbstractHome<Var
 	@Override
     public String persist() {
        String action = super.persist();
-//       if (action != null) {
-//         newInstance();
-//       }
        newInstance();
        return action;
     }

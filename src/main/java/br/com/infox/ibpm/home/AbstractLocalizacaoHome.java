@@ -67,6 +67,7 @@ public abstract class AbstractLocalizacaoHome<T> extends
 		return super.remove();
 	}
 
+	@Override
 	public String remove(Localizacao obj) {
 		setInstance(obj);
 		String ret = super.remove();
@@ -79,32 +80,13 @@ public abstract class AbstractLocalizacaoHome<T> extends
 	public String persist() {		
 		String action = super.persist();
 		if (action != null){
-			
-//			if (getInstance().getEndereco() != null) {
-//				List<Localizacao> enderecoList = getInstance().getEndereco().getLocalizacaoList();
-//				if (!enderecoList.contains(instance)) {
-//					getEntityManager().refresh(getInstance().getEndereco());
-//				}
-//			}
 			if (getInstance().getLocalizacaoPai() != null){
 				List<Localizacao> localizacaoPaiList = getInstance().getLocalizacaoPai().getLocalizacaoList();
 				if (!localizacaoPaiList.contains(instance)){
 					getEntityManager().refresh(getInstance().getLocalizacaoPai());
 				}
 			}
-			
-//			newInstance();
 		}
-		/*
-		else {
-		 	EnderecoHome enderecoHome = getComponent("enderecoHome");
-		 	Cep cep = enderecoHome.getCep();
-		 	enderecoHome.newInstance();
-		 	enderecoHome.setEndereco(cep);
-		 	System.out.println(enderecoHome.getInstance());
-			Contexts.removeFromAllContexts("cepSuggest");
-		}
-		*/
 		return action;
 	}
 	

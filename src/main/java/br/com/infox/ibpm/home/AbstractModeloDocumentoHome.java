@@ -52,6 +52,7 @@ public abstract class AbstractModeloDocumentoHome<T>
 		return super.remove();
 	}
 
+	@Override
 	public String remove(ModeloDocumento obj) {
 		setInstance(obj);
 		String ret = super.remove();

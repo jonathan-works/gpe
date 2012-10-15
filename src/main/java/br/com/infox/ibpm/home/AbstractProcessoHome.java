@@ -59,6 +59,7 @@ public abstract class AbstractProcessoHome<T> extends AbstractHome<Processo> {
 		return super.remove();
 	}
 
+	@Override
 	public String remove(Processo obj) {
 		setInstance(obj);
 		String ret = super.remove();

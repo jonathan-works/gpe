@@ -111,6 +111,7 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		return super.remove();
 	}
 
+	@Override
 	public String remove(ProcessoDocumento obj) {
 		setInstance(obj);
 		String ret = super.remove();
@@ -119,7 +120,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		return ret;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public String persist()
 	{
@@ -219,9 +219,8 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		String codData = getCodData(pd);
 		if (Strings.isEmpty(codIni) || Strings.isEmpty(codData)) {
 			return false;
-		} else {
-			return codData.equals(codIni);
-		}
+		} 
+		return codData.equals(codIni);
 	}
 
 	public String getCodData(ProcessoDocumento pd) {
@@ -273,13 +272,15 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	}
 	
 	public String getDocumentoBase64() {
-		if (getInstance() == null || !getInstance().getProcessoDocumentoBin().isBinario()) {
+		if (getInstance() == null
+				|| !getInstance().getProcessoDocumentoBin().isBinario()) {
 			return null;
-		} else {
-			byte[] binario = DocumentoBinHome.instance().getData(getInstance().getProcessoDocumentoBin().getIdProcessoDocumentoBin());
-			return binario != null ? Base64.encodeBytes(binario) : null;
-		} 
- 	}
+		}
+		byte[] binario = DocumentoBinHome.instance().getData(
+				getInstance().getProcessoDocumentoBin()
+						.getIdProcessoDocumentoBin());
+		return binario != null ? Base64.encodeBytes(binario) : null;
+	}
 
 	public void onSelectProcessoDocumento() {
 		AutomaticEventsTreeHandler.instance().clearTree();

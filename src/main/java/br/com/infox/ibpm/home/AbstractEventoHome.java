@@ -15,6 +15,7 @@ public abstract class AbstractEventoHome<T> extends AbstractHome<Evento> {
 		return (Integer) getId();
 	}
 
+	@Override
 	public String remove(Evento obj) {
 		setInstance(obj);
 		String ret = super.remove();

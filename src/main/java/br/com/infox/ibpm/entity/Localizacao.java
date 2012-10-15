@@ -183,9 +183,8 @@ public class Localizacao implements java.io.Serializable {
 				}
 			}
 			return null;
-		} else {
-			return getEndereco();
-		}
+		} 
+		return getEndereco();
 	}
 	
 	@Transient

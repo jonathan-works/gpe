@@ -29,6 +29,7 @@ public abstract class AbstractParametroHome<T>
 		return new Parametro();
 	}
 
+	@Override
 	public String remove(Parametro obj) {
 		setInstance(obj);
 		String ret = super.update();

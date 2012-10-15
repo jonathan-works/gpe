@@ -58,6 +58,7 @@ public abstract class AbstractBloqueioUsuarioHome<T>
 		return super.remove();
 	}
 
+	@Override
 	public String remove(BloqueioUsuario obj) {
 		setInstance(obj);
 		String ret = super.remove();

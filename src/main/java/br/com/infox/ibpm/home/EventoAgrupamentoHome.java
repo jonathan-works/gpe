@@ -76,7 +76,6 @@ public class EventoAgrupamentoHome extends AbstractEventoAgrupamentoHome<EventoA
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	private List<Evento> getPersistedEventoList() {
 		List<Evento> eventoList = new ArrayList<Evento>();
 		StringBuilder sb = new StringBuilder();
@@ -84,7 +83,7 @@ public class EventoAgrupamentoHome extends AbstractEventoAgrupamentoHome<EventoA
 		sb.append("where o.agrupamento.idAgrupamento = ?1");
 		Query hql = getEntityManager().createQuery(sb.toString());
 		hql.setParameter(1, instance.getAgrupamento().getIdAgrupamento());
-		List<EventoAgrupamento> eventoAgrupamentoList = (List<EventoAgrupamento>) hql.getResultList();
+		List<EventoAgrupamento> eventoAgrupamentoList = hql.getResultList();
 		for (EventoAgrupamento gea : eventoAgrupamentoList) {
 			eventoList.add(gea.getEvento());
 		}

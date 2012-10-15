@@ -182,6 +182,7 @@ public abstract class AbstractProcessoDocumentoBinHome<T>
 		return super.remove();
 	}
 
+	@Override
 	public String remove(ProcessoDocumentoBin obj) {
 		setInstance(obj);
 		String ret = super.remove();

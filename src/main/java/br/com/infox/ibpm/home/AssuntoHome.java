@@ -57,9 +57,8 @@ public class AssuntoHome extends AbstractHome<Assunto> {
 		if (!getInstance().getAtivo()){
 			RecursiveManager.inactiveRecursive(getInstance());
 			return "updated";
-		} else{
-			return super.update();
-		}
+		} 
+		return super.update();
 	}
 
 	@Override

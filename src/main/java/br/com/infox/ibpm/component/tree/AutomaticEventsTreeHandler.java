@@ -119,7 +119,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 						while (eventoAux != null){
 							for (EntityNode<Evento> root : rootList) {
 								if (root.getEntity().equals(eventoAux)){
-									setSelecao(eb.getEvento(), Boolean.TRUE, eb);
+									setSelecao(eb.getEvento(), eb);
 									if (!eventoBeanList.contains(eb))
 										eventoBeanList.add(eb);
 									eventoAux = null;
@@ -194,7 +194,6 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	 * informados.
 	 * @return Uma lista com os ids dos eventos agrupamentos concatenados
 	 */
-	@SuppressWarnings("unchecked")
 	private String getIdEventos(String agrupamentos) {
 		StringBuilder idList = new StringBuilder();
 		StringBuilder sb = new StringBuilder();
@@ -271,7 +270,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		}
 	}
 	
-	public void setSelecao(Evento selected, boolean isMultiplo, EventoBean eb) {
+	public void setSelecao(Evento selected, EventoBean eb) {
 		if (selected.getEventoList().isEmpty()) {
 			super.setSelected(selected);
 			Evento parent = getDad(selected);
@@ -310,7 +309,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		HtmlTree tree = (HtmlTree) ev.getSource();
 		treeId = tree.getId();
 		EventsEntityNode en = (EventsEntityNode) tree.getData(); 
-		setSelected((Evento) en.getEntity(), isMultiplo(en));
+		setSelected(en.getEntity(), isMultiplo(en));
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}	
 	
@@ -424,7 +423,6 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	 * e seta uma variável para verificar se existe ou não mais eventos a serem 
 	 * registrados nessa tarefa.
 	 */
-	@SuppressWarnings("unchecked")
 	public void registraEventos() {		
 		ProcessoDocumento pd = EntityUtil.find(ProcessoDocumento.class,ProcessoHome.instance().getIdProcessoDocumento());
 		if (pd != null){
@@ -449,6 +447,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		inserirEventosProcesso(pd);	
 	}
 
+	@SuppressWarnings("null")
 	private void inserirEventosProcesso(ProcessoDocumento pd) {
 		try {
 			if(eventoBeanList == null || eventoBeanList.size() == 0) {

@@ -43,6 +43,7 @@ public class EstruturaTreeHandler extends AbstractTreeHandler<Localizacao> {
 			+ EntityNode.PARENT_NODE;
 	} 
 	
+	@Override
 	protected EntityNode<Localizacao> createNode() {
 		return new EstruturaNode(getQueryChildrenList());
 	}

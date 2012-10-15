@@ -45,6 +45,7 @@ public abstract class AbstractUsuarioHome<T> extends AbstractHome<Usuario> {
 		return new Usuario();
 	}
 
+	@Override
 	public String remove(Usuario obj) {
 		setInstance(obj);
 		String ret = super.remove();

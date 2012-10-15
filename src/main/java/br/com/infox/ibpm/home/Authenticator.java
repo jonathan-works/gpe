@@ -80,9 +80,6 @@ public class Authenticator {
 	private String certChain;
 	private String certChainStringLog;
 	
-	//Definindo o arquivo krb5.conf
-	//private final String KRB = "";
-	
 	//Variaveis de sessão
 	public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
 	public static final String USUARIO_LOGADO = "usuarioLogado";
@@ -126,37 +123,36 @@ public class Authenticator {
 	public void postAuthenticate() throws LoginException {
 		String id = Identity.instance().getCredentials().getUsername();
 		if (id != null) {
-			JpaIdentityStore store =  (JpaIdentityStore) 
-					IdentityManager.instance().getIdentityStore();
+			JpaIdentityStore store = (JpaIdentityStore) IdentityManager
+					.instance().getIdentityStore();
 			Usuario usuario = (Usuario) store.lookupUser(id);
 			// retorna false caso o usuario do Sistema não esteja ativo
 			if (usuario == null) {
-				throw new LoginException("O usuário '" + id + "' não está corretamente cadastrado no sistema.");
-			} else {
-				if (!Strings.isEmpty(assinatura)) {
-					assinatura = null;
+				throw new LoginException("O usuário '" + id
+						+ "' não está corretamente cadastrado no sistema.");
+			}
+			if (!Strings.isEmpty(assinatura)) {
+				assinatura = null;
+			}
+
+			try {
+				validateUser(usuario);
+				if (isTrocarSenha()) {
+					trocarSenhaUsuario(usuario);
 				}
-				
-				try {
-					validateUser(usuario);
-					
-					if (isTrocarSenha()) {
-						trocarSenhaUsuario(usuario);
-					} else {
-						setUsuarioLogadoSessao(usuario);
-						obterLocalizacaoAtual(usuario);
-						
-						Actor.instance().setId(usuario.getLogin());
-					}
-		
-				} catch (LoginException e) {
-					Identity.instance().unAuthenticate();
-					throw e;
+				else {
+					setUsuarioLogadoSessao(usuario);
+					obterLocalizacaoAtual(usuario);
+					Actor.instance().setId(usuario.getLogin());
 				}
+			}
+			catch (LoginException e) {
+				Identity.instance().unAuthenticate();
+				throw e;
 			}
 		}
 	}
-	
+
 	private boolean isTrocarSenha() {
 		return newPassword1 != null && !newPassword1.trim().equals("");
 	}
@@ -164,6 +160,7 @@ public class Authenticator {
 	private void trocarSenhaUsuario(final Usuario usuario) throws LoginException {
 		if (newPassword1.equals(newPassword2)){
 			new RunAsOperation(true) {
+				@Override
 				public void execute() {
 					IdentityManager.instance().changePassword(usuario.getLogin(), newPassword1);
 				}
@@ -172,9 +169,8 @@ public class Authenticator {
 			EntityUtil.flush();
 			throw new LoginException("Senha alterada com sucesso.");
 		}
-		else {
-			throw new LoginException("Nova senha não confere com a confirmação!");		
-		}
+		
+		throw new LoginException("Nova senha não confere com a confirmação!");		
 	}
 	
 	private void validateUser(Usuario usuario) throws LoginException {
@@ -242,7 +238,6 @@ public class Authenticator {
 	}
 	
 	public void login(){
-		
 		//verificar se o login existe
 		UsuarioHome home = UsuarioHome.instance();
 		Identity identity = Identity.instance();
@@ -251,6 +246,7 @@ public class Authenticator {
 		Usuario user = home.checkUserByLogin(login);
 		if(user == null) {
 			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
+			return;
 		}
 		
 		//Autenticação via LDAP
@@ -260,23 +256,20 @@ public class Authenticator {
 			//Autenticado
 			if(ldap != null) {
 				IdentityManager identityManager = IdentityManager.instance();
-				//boolean userExists = identityManager.getIdentityStore().userExists(login);
 				autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
 				Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
 				Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
-				return;
 			}
 			else {
 				FacesMessages.instance().add(Severity.ERROR, "Senha inválido.");
+				return;
 			}
 		}
-		else {
-			identity.login();
-		}
+		identity.login();
 	}
 	
 	@Observer(Identity.EVENT_LOGIN_FAILED)
-	public void loginFailed(Object obj) throws LoginException {
+	public void loginFailed() throws LoginException {
 		UsuarioLogin usuario = getUsuario(Identity.instance().getCredentials().getUsername());
 		if (usuario != null && !usuario.getAtivo()) {
 			throw new LoginException("Este usuário não está ativo.");
@@ -334,9 +327,8 @@ public class Authenticator {
 		List resultList = query.getResultList();
 		if (resultList.size() > 0) {
 			return (UsuarioLogin) resultList.get(0);
-		} else {
-			return null;
-		}
+		} 
+		return null;
 	}
 	
 	public void unAuthenticate() {
@@ -386,17 +378,15 @@ public class Authenticator {
 	private boolean obterLocalizacaoAtual(Usuario usuario) throws LoginException {
 		List<UsuarioLocalizacao> listUsuarioLoc = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioLocalizacaoList()) ;
 		Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
-		if (listUsuarioLoc != null && listUsuarioLoc.size() > 0) {
+		if (listUsuarioLoc.size() > 0) {
 			UsuarioLocalizacao loc = listUsuarioLoc.get(0);
 			
 			EntityManager em = EntityUtil.getEntityManager();
 			loc = em.getReference(UsuarioLocalizacao.class, loc.getIdUsuarioLocalizacao());
 			setLocalizacaoAtual(loc);
 			return true;
-		} else {
-			throw new LoginException("O usuário " + 
-					usuario + " não possui Localização");
-		}
+		} 
+		throw new LoginException("O usuário " + usuario + " não possui Localização");
 	}
 	
 	/**
@@ -406,7 +396,6 @@ public class Authenticator {
 	 * 
 	 * @param loc
 	 */
-	@SuppressWarnings("unchecked")
 	public void setLocalizacaoAtual(UsuarioLocalizacao loc) {
 		Set<String> roleSet = (Set<String>) 
 				Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
@@ -439,7 +428,6 @@ public class Authenticator {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	public static List<Localizacao> getLocalizacoesFilhasAtuais() {
 		return (List<Localizacao>) Contexts.getSessionContext().get(LOCALIZACOES_FILHAS_ATUAIS);
 	}
@@ -522,7 +510,6 @@ public class Authenticator {
 		CertificadoLog.executeLog(msg);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoListItems() {
 		List<UsuarioLocalizacao> list = (List<UsuarioLocalizacao>) 
 			Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_LIST);
