@@ -1,5 +1,6 @@
 package br.com.infox.epa.action.crud;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,9 +37,15 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 	private List<Assunto> assuntoList;
 	private Categoria categoria;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean beforePersistOrUpdate() {
 		getInstance().setCategoria(categoria);
+		List<CategoriaAssunto> list = getEntityManager().createQuery("select o from CategoriaAssunto o where o.categoria=:categoria and o.assunto=:assunto").setParameter("assunto", getInstance().getAssunto()).setParameter("categoria", getInstance().getCategoria()).getResultList();
+		if (!list.isEmpty())	{
+			return false;
+		}
+		
 		return super.beforePersistOrUpdate();
 	}
 	
@@ -55,6 +62,7 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 		if(remove != null) {
 			categoriaAssuntoList.remove(obj);
 		}
+		newInstance();
 		return remove;
 	}
 
@@ -107,5 +115,34 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 		return categoria;
 	}
 
+	public List<Assunto> getFolhas(int idPai)	{
+		Assunto pai = getEntityManager().find(Assunto.class, idPai);
+		List<Assunto> list = pai.getAssuntoList();
+		
+		List<Assunto> result = new ArrayList<Assunto>();
+		if (list.size() == 0)	{
+			result.add(pai);
+			return result;
+		}
+		
+		for (Assunto filho : list) {
+			result.addAll(getFolhas(filho.getIdAssunto()));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public String persist() {
+		List<Assunto> folhas = getFolhas(getInstance().getAssunto().getIdAssunto());
+		
+		for (Assunto assunto : folhas) {
+			if (assunto.getAtivo())	{
+				getInstance().setAssunto(assunto);
+				super.persist();
+			}
+		}
+		return "persisted";
+	}
 	
 }

@@ -86,12 +86,10 @@
 			<s:div id="categoriaAssuntoFormDiv">
 				<wi:dataForm formId="categoriaAssuntoForm"
 						 	 formTitle="#{messages['categoriaAssunto.titleForm']}">
-					<wi:selectOneMenuEntity id="assunto"
-											label="#{messages['categoriaAssunto.assunto']}"
-											value="#{action.instance.assunto}"
-											items="#{action.assuntoList}"
-											required="true"
-											noSelectionLabel="Selecione uma #{messages['categoriaAssunto.assunto']}"/>
+					<wi:tree id="assuntoTree"
+							 assignTo="categoriaAssuntoAction.instance.assunto"
+							 tree="#{assuntoTree}"
+							 label="#{messages['categoriaAssunto.assunto']}"/>
 					<ui:define name="buttons">
 						<wi:commandButton id="saveButton"
 										  action="categoriaAssuntoAction.persist"
