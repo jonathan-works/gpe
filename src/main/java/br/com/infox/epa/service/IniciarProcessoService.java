@@ -1,10 +1,12 @@
 package br.com.infox.epa.service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
@@ -13,7 +15,7 @@ import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.core.Events;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epa.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
@@ -26,7 +28,10 @@ import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
 @Name(IniciarProcessoService.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class IniciarProcessoService extends GenericManager {
+public class IniciarProcessoService {
+	
+	@In
+	private ProcessoManager processoManager;
 
 	public static final String ON_CREATE_PROCESS = 
 		"br.com.infox.epa.IniciarProcessoService.ONCREATEPROCESS";
@@ -40,15 +45,13 @@ public class IniciarProcessoService extends GenericManager {
 	 * @param processo
 	 * @param fluxo
 	 */
-	public Long iniciarProcesso(Processo processo, Fluxo fluxo) {
-		if(processo != null) {
-			if(!contains(processo)) {
-				persist(processo);
-			}
-			return iniciarProcessoJbpm(processo, fluxo.getFluxo());
-		} else {
-			throw new NullPointerException();
-		}
+	public void iniciarProcesso(Processo processo, Fluxo fluxo) {
+		processo.setDataInicio(new Date());
+		Long idJbpm = iniciarProcessoJbpm(processo, fluxo.getFluxo());
+		processo.setIdJbpm(idJbpm);
+		processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
+		
+		processoManager.update(processo);
 	}
 	
 	/**

@@ -20,6 +20,7 @@ import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epa.entity.NaturezaLocalizacao;
 import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.epa.manager.NatCatFluxoLocalizacaoManager;
+import br.com.infox.epa.manager.ProcessoEpaManager;
 import br.com.infox.epa.service.IniciarProcessoService;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Usuario;
@@ -40,13 +41,15 @@ public class IniciarProcessoAction {
 	private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
 	@In
 	private IniciarProcessoService iniciarProcessoService;
+	@In
+	private ProcessoEpaManager processoEpaManager;
 	
 	private boolean renderedByAssunto;
 	private boolean renderedByLocalizacao;
 	private boolean renderedAssuntoLocalizacao;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
 	private Localizacao localizacao;
-	private ProcessoEpa	processoEpa;
+	private ProcessoEpa processoEpa;
 	
 	private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList;
 	private List<AssuntoBean> assuntoList;
@@ -61,21 +64,18 @@ public class IniciarProcessoAction {
 	}
 	
 	public void iniciarProcesso() {
-		try{
+		try {
 			Usuario usuarioLogado = Authenticator.getUsuarioLogado();
 			processoEpa = new ProcessoEpa();
-			processoEpa.setUsuarioCadastroProcesso(usuarioLogado);
 			processoEpa.setDataInicio(new Date());
+			processoEpa.setNumeroProcesso("");
+			processoEpa.setUsuarioCadastroProcesso(usuarioLogado);
 			processoEpa.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
 			processoEpa.setLocalizacao(localizacao);
-			processoEpa.setNumeroProcesso("");
-			processoEpa.setPorcentagem(0);
-			processoEpa.setTempoGasto(0);
-			Long idJbpm = iniciarProcessoService.iniciarProcesso(processoEpa, 
-											     naturezaCategoriaFluxo.getFluxo());
-			processoEpa.setIdJbpm(idJbpm);
-			processoEpa.setNumeroProcesso(String.valueOf(processoEpa.getIdProcesso()));
-			iniciarProcessoService.update(processoEpa);
+			processoEpaManager.persist(processoEpa);
+			
+			iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
+			
 			FacesMessages.instance().add(Severity.INFO, "Processo inserido com sucesso!");
 		} catch(TypeMismatchException tme) {
 			tme.printStackTrace();
