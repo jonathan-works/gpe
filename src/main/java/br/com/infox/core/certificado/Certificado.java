@@ -121,7 +121,7 @@ public class Certificado {
     }
     
 
-    public void setSerialNumber(BigInteger serialNumber) {
+    public final void setSerialNumber(BigInteger serialNumber) {
         this.serialNumber = serialNumber;
     }
 
@@ -132,7 +132,7 @@ public class Certificado {
         return nomeCertificadora;
     }
     
-    private final void processSubject() throws CertificadoException {
+    private void processSubject() throws CertificadoException {
         Principal dados = mainCertificate.getSubjectDN();
         
         String dadosEmissor = mainCertificate.getIssuerDN().getName();
@@ -238,6 +238,7 @@ public class Certificado {
 		System.out.println(col2);
 		List<String> urls = ValidatorUtilities.getCRLDistUrls(certificate);
 		System.out.println(urls);
+		reader.close();
 	}
     
 }
