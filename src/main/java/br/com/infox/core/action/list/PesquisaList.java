@@ -24,17 +24,22 @@ public class PesquisaList extends EntityList<Pesquisa> {
 	
 	private static final String DEFAULT_ORDER = "nome asc";
 	
+	@Override
 	protected String getDefaultEjbql() {
 		return DEFAULT_EJBQL;
 	}
 	
+	@Override
 	protected String getDefaultOrder() {
 		return DEFAULT_ORDER;
 	}
 	
+	@Override
 	protected void addSearchFields() {
+		//Caso haja algum campo de pesquisa, ou seja, a definição de algum critério de pesquisa
 	}
 
+	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("nome", "o.nome");
