@@ -11,6 +11,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.LocalizacaoTurnoDAO;
@@ -47,31 +49,18 @@ public class LocalizacaoTurnoManager extends GenericManager {
 				localizacaoTurnoList.add(lt);
 			}
 		}
-		return contarTempoUtilDia(localizacaoTurnoList);
+		return contarTempoUtilTurnos(localizacaoTurnoList);
 	}
 	
-	public int contarTempoUtilDia(List<LocalizacaoTurno> localizacaoTurnoList) {
-		boolean[] minutosDia = new boolean[1440];
+	public int contarTempoUtilTurnos(List<LocalizacaoTurno> localizacaoTurnoList) {
+		int minutos = 0;
 		for (LocalizacaoTurno lt : localizacaoTurnoList) {
-			Calendar inicio = Calendar.getInstance();
-			Calendar fim = Calendar.getInstance();
-			inicio.setTime(lt.getHoraInicio());
-			fim.setTime(lt.getHoraFim());
-			int minutoInicioDia = (inicio.get(Calendar.HOUR_OF_DAY)*60)+
-								   inicio.get(Calendar.MINUTE) - 1;
-			int minutoFimDia = (fim.get(Calendar.HOUR_OF_DAY)*60)+
-								fim.get(Calendar.MINUTE) - 1;
-			for(;minutoInicioDia<minutoFimDia;minutoInicioDia++) {
-				minutosDia[minutoInicioDia] = true;
-			}
+			DateTime dtInicio = new DateTime(lt.getHoraInicio());
+			DateTime dtFim = new DateTime(lt.getHoraFim());
+			
+			minutos += Minutes.minutesBetween(dtInicio, dtFim).getMinutes();
 		}
-		int minutoUtil = 0;
-		for (boolean b : minutosDia) {
-			if(b) {
-				minutoUtil++;
-			}
-		}
-		return minutoUtil;
+		return minutos;
 	}
 	
 	/**
