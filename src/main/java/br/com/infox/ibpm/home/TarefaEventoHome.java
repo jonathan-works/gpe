@@ -37,7 +37,6 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 		return ComponentUtil.getComponent(TarefaEventoHome.NAME);
 	}
 		
-	@SuppressWarnings("unchecked")
 	public TarefaEventoEnum[] getTarefaEventoItems() {
 		if(tarefaEventoItems == null || tarefaEventoItems.length == 0) {
 			if(ProcessBuilder.instance().getCurrentNode().getNodeType() == NodeType.Task) {
@@ -72,7 +71,6 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 		return tarefaEventoItems;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void carregarAgrupamentos() {
 		if(instance.getEvento().equals(TarefaEventoEnum.ET)) {
 			StringBuilder sb = new StringBuilder();
