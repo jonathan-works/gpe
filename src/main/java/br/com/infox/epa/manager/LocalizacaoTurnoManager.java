@@ -31,6 +31,12 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	@In
 	private LocalizacaoTurnoDAO localizacaoTurnoDAO;
 	
+	/**
+	 * Pesquisa o turno da localizacao da tarefa em que o horário informado se encontra
+	 * @param pt 
+	 * @param horario 
+	 * @return turno da localização da tarefa
+	 */
 	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date horario) {
 		Calendar horarioCalendar = Calendar.getInstance();
 		horarioCalendar.setTime(horario);
@@ -38,10 +44,20 @@ public class LocalizacaoTurnoManager extends GenericManager {
 		return localizacaoTurnoDAO.getTurnoTarefa(pt, horario, DiaSemanaEnum.values()[diaSemana]);
 	}
 	
+	/**
+	 * Lista todos os turnos da localização
+	 * @param localizacao
+	 * @return lista de turnos
+	 */
 	public List<LocalizacaoTurno> listByLocalizacao(Localizacao localizacao) {
 		return localizacaoTurnoDAO.listByLocalizacao(localizacao);
 	}
 	
+	/**
+	 * Contabiliza o tempo útil, em minutos,  dos turnos das localizações durante um dia
+	 * @param localizacaoList
+	 * @return
+	 */
 	public int contarTempoUtilDiaByLocalizacaoList(List<Localizacao> localizacaoList) {
 		List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<LocalizacaoTurno>();
 		for (Localizacao l : localizacaoList) {
@@ -52,18 +68,28 @@ public class LocalizacaoTurnoManager extends GenericManager {
 		return contarTempoUtilTurnos(localizacaoTurnoList);
 	}
 	
+	/**
+	 * Calcula o tempo útil total dos turnos, em minutos 
+	 * @param localizacaoTurnoList
+	 * @return
+	 */
 	public int contarTempoUtilTurnos(List<LocalizacaoTurno> localizacaoTurnoList) {
 		int minutos = 0;
 		for (LocalizacaoTurno lt : localizacaoTurnoList) {
-			DateTime dtInicio = new DateTime(lt.getHoraInicio());
-			DateTime dtFim = new DateTime(lt.getHoraFim());
-			
-			minutos += Minutes.minutesBetween(dtInicio, dtFim).getMinutes();
+			minutos += minutesBetween(lt.getHoraInicio(), lt.getHoraFim());
 		}
 		return minutos;
 	}
 	
+	private int minutesBetween(Date inicio, Date fim) {
+		DateTime dtInicio = new DateTime(inicio);
+		DateTime dtFim = new DateTime(fim);
+		return Minutes.minutesBetween(dtInicio, dtFim).getMinutes();
+	}
+	
 	/**
+	 * verifica se existe choque de horário entre os turnos da localização e o turno 
+	 * definido pelos parametros inicio e fim
 	 * 
 	 * @param l
 	 * @param inicio
