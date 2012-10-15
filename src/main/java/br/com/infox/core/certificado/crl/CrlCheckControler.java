@@ -55,7 +55,7 @@ public class CrlCheckControler {
 	
 	private static int threadCount = 0;
 	
-	public CrlCheckControler() {
+	static {
 		mapCrlCertObj = new HashMap<String, CrlCertObj>();
 	}
 	
