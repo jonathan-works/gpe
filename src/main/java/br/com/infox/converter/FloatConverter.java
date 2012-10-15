@@ -36,6 +36,7 @@ public class FloatConverter implements Converter {
 	
 	private static final NumberFormat formatter = new DecimalFormat("#,##0.00");
 
+	@Override
 	public Object getAsObject(FacesContext context, UIComponent component,
 			String value) throws ConverterException {
 		if (Strings.isEmpty(value)) {
@@ -50,6 +51,7 @@ public class FloatConverter implements Converter {
 		return valor;
 	}
 
+	@Override
 	public String getAsString(FacesContext context, UIComponent component,
 			Object value) throws ConverterException {
 		return value == null ? null : formatter.format(value);

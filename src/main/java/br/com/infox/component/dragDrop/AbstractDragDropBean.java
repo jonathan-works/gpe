@@ -16,7 +16,7 @@ public abstract class AbstractDragDropBean<T, Z> implements DragDropBean<Z> {
 	
 	public abstract Z processDrop(T obj);
 
-	@SuppressWarnings("unchecked")
+	@Override
 	public void processDrop(DropEvent dropEvent) {
 		Dropzone dropzone = (Dropzone) dropEvent.getComponent();
 		T dragValue = (T) dropEvent.getDragValue();

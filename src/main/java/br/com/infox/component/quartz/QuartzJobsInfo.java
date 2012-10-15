@@ -107,9 +107,8 @@ public class QuartzJobsInfo implements Serializable {
 			Matcher matcher = patternExpr.matcher(dataJobDetail);
 			if (matcher.find()) {
 				return matcher.group(1);
-			} else {
-				return dataJobDetail;
-			}
+			} 
+			return dataJobDetail;
 		}
 		return null;
 	}
@@ -192,7 +191,6 @@ public class QuartzJobsInfo implements Serializable {
 		EntityUtil.createQuery(hql).executeUpdate();
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getMapParametroTriggers() throws SchedulerException {
 		List<String> triggersNames = getTriggersNames();
 		if (triggersNames.isEmpty()) {

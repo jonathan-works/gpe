@@ -40,6 +40,7 @@ public class StringConverter implements Converter {
 			{(char) 8594, '-'} ////referente ao caractere: flecha
 	};
 
+	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException {
 		String saida = value;
 		for (char[] tupla : replaceCharTable) {
@@ -48,6 +49,7 @@ public class StringConverter implements Converter {
 		return Strings.nullIfEmpty(saida.trim());
 	}
 
+	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) throws ConverterException {
 		return value == null ? null : value.toString();
 	}

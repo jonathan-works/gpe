@@ -32,11 +32,13 @@ public class CpfConverter implements Converter {
 	
 	private static final int TAMANHO_CPF = 11;
 
+	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException {
 		String cpf = value.replaceAll("[-,\\.]", "").trim();
 		return cpf.isEmpty() ? null : cpf; 
 	}
 	
+	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) throws ConverterException {
 		String ret = (String) value;
 		if (ret == null || ret.length() != TAMANHO_CPF) { 

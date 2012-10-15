@@ -27,7 +27,6 @@ import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.EntityUtil;
 
 
-@SuppressWarnings("unchecked")
 public class EntityNode<E> implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -30,6 +30,7 @@ public class StringSearchConverter implements Converter{
 
 	private static char[] scapes = {'%'};
 	
+	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException {
 		StringConverter sc = new StringConverter();
 		String out = (String) sc.getAsObject(context, component, value);
@@ -41,6 +42,7 @@ public class StringSearchConverter implements Converter{
 		return out;
 	}
 	
+	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) throws ConverterException {
 		return value == null ? null : value.toString();
 	}

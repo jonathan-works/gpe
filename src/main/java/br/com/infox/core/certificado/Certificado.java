@@ -71,9 +71,8 @@ public class Certificado {
     public String getDocumentoIdentificador() {
     	if (cn.indexOf(':') > 0) {
     		return cn.split(":")[1];
-    	} else {
-    		return null;
-    	}
+    	} 
+    	return null;
     }
     
     public String getEmail() {

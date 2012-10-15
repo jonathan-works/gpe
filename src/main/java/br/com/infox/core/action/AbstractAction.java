@@ -185,7 +185,6 @@ public abstract class AbstractAction {
 	 * parametro informado.
 	 * @param o Registro que deseja inativar.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void inactiveRecursive(Object o) {
 		ComponentUtil.setValue(o, "ativo", false);
 		if(!RecursiveManager.isRecursive(o)) {

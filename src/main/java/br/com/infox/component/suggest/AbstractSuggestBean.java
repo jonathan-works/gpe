@@ -49,7 +49,7 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 
 	private String expression;
 	
-	@SuppressWarnings("unchecked")
+	@Override
 	public List<E> suggestList(Object typed) {
 		StopWatch sw = new StopWatch(true);
 		List<E> result = null;
@@ -67,7 +67,7 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Override
 	public E getInstance() {
 		if (expression == null) {
 			return instance;
@@ -75,6 +75,7 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 		return (E) Expressions.instance().createValueExpression(expression).getValue();
 	}
 	
+	@Override
 	public void setInstance(E instance) {
 		if (expression == null) {
 			this.instance = instance;
@@ -96,8 +97,7 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 		this.expression = "#{" + expression + "}";
 	}	
 
-	public void setDefaultValue(String obj) {}
-	
+	@Override
 	public String getDefaultValue() {
 		return getInstance() != null ? getInstance().toString() : "";
 	}

@@ -32,11 +32,13 @@ public class CnpjConverter implements Converter {
 	
 	private static final int TAMANHO_CNPJ = 14;
 
+	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException {
 		String cnpj = value.replaceAll("[-,/,\\.]", "").trim();
 		return cnpj.isEmpty() ? null : cnpj; 
 	}
 
+	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) throws ConverterException {
 		String ret = (String) value;
 		if (ret == null || ret.length() != TAMANHO_CNPJ) {

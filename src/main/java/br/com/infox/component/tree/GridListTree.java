@@ -24,7 +24,6 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
-@SuppressWarnings("unchecked")
 public class GridListTree <E> {
 
 	private String query;
@@ -61,11 +60,6 @@ public class GridListTree <E> {
 	}
 	
 	private void getChildren(E node, List<E> resultado){
-		
-//		PropertyDescriptor pd = new PropertyDescriptor("nameAtributeChildList", l.getClass());
-//		Method m = pd.getReadMethod();
-//		Object invoke = m.invoke(object, null);
-		
 		List<E> localizacaoList = getChildList(node);
 		for (E loc : localizacaoList) {
 			if (canAdd(loc)) {

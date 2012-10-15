@@ -110,6 +110,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		final Map<String, String> map = new HashMap<String, String>();
 		visitFields(new FieldCommand() {
 			
+			@Override
 			public void execute(SearchField s, Object object) {
 				map.put(s.getName(), EntityList.toString(object));
 			}
@@ -121,6 +122,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		final StringBuilder sb = new StringBuilder();
 		visitFields(new FieldCommand() {
 
+			@Override
 			public void execute(SearchField s, Object object) {
 
 				// Trata os tipos Booleanos
@@ -192,6 +194,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		return entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
 	}
 
+	@Override
 	public void setPage(Integer page) {
 		this.page = page;
 		int i = (page - 1) * (getMaxResults() != null ? getMaxResults() : 0);
@@ -201,6 +204,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		super.setFirstResult(i);
 	}
 	
+	@Override
 	public Integer getPage() {
 		return page;
 	}
@@ -241,7 +245,6 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void newInstance() {
 		try {
 			setEntity((E) EntityUtil.newInstance(getClass()));
@@ -262,7 +265,6 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * 
 	 * @return a entidade informado genericamente
 	 */
-	@SuppressWarnings("unchecked")
 	public E getEntity() {
 		if (entity == null) {
 			entity = (E) Contexts.getConversationContext().get(getEntityComponentName());

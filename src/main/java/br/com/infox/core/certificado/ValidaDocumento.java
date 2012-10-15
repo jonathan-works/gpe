@@ -18,7 +18,6 @@ package br.com.infox.core.certificado;
 import java.security.GeneralSecurityException;
 import java.security.cert.CertPath;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.seam.util.Base64;
@@ -94,12 +93,14 @@ public class ValidaDocumento {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void processReceivedCertificationChain()
 	throws ValidaDocumentoException {
 		String certChainBase64Encoded = removeBR(certificado);
 		try {
 			CertPath mCertPath = DigitalSignatureUtils.loadCertPathFromBase64String(
 					certChainBase64Encoded);
+			
 			List certsInChain = mCertPath.getCertificates();
 			X509Certificate[] mCertChain = (X509Certificate[]) certsInChain.toArray(new X509Certificate[certsInChain.size()]);
 			mCertificate = mCertChain[0];

@@ -60,6 +60,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 	
 	private List<EntityNode<E>> selectedNodesList = new ArrayList<EntityNode<E>>(0);
 	
+	@Override
 	public void clearTree() {
 		selectedNodesList = new ArrayList<EntityNode<E>>();
 		rootList = null;
@@ -84,6 +85,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		}
 	}
 
+	@Override
 	public List<EntityNode<E>> getRoots() {
 		if (rootList == null) {
 			StopWatch sw = new StopWatch(true);
@@ -117,6 +119,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		return EntityUtil.getEntityManager();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public E getSelected() {
 		if (expression == null) {
@@ -126,10 +129,12 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		try {
 			value = Expressions.instance().createValueExpression(expression).getValue();
 		} catch (Exception ignore) {
+			ignore.printStackTrace();
 		}
 		return (E) value;
 	}
 
+	@Override
 	public void setSelected(E selected) {
 		if (expression == null) {
 			this.selected = selected;
@@ -138,12 +143,12 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
 	public void selectListener(NodeSelectedEvent ev) {
 		HtmlTree tree = (HtmlTree) ev.getSource();
 		treeId = tree.getId();
 		EntityNode<E> en = (EntityNode<E>) tree.getData(); 
-		setSelected((E) en.getEntity());
+		setSelected(en.getEntity());
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}
 
@@ -155,26 +160,32 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 	
 	protected abstract String getQueryChildren();
 
+	@Override
 	public String getIconFolder() {
 		return iconFolder;
 	}
 
+	@Override
 	public void setIconFolder(String iconFolder) {
 		this.iconFolder = iconFolder;
 	}
 
+	@Override
 	public String getIconLeaf() {
 		return iconLeaf;
 	}
 
+	@Override
 	public void setIconLeaf(String iconLeaf) {
 		this.iconLeaf = iconLeaf;
 	}
 
+	@Override
 	public boolean isFolderSelectable() {
 		return folderSelectable;
 	}
 
+	@Override
 	public void setFolderSelectable(boolean folderSelectable) {
 		this.folderSelectable = folderSelectable;
 	}
@@ -194,16 +205,16 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 	 */
 	public String getSelectedView(E selected) {
 		String selecionado = "";
-		if(selected == null || selected.toString() == null) {
-			return selecionado;
-		} else {
-			if(selected.toString().length() > 25) {
-				selecionado = selected.toString().substring(0,25) + "...";
-			} else {
-				selecionado = selected.toString();
-			}
+		if (selected == null || selected.toString() == null) {
 			return selecionado;
 		}
+		if (selected.toString().length() > 25) {
+			selecionado = selected.toString().substring(0, 25) + "...";
+		}
+		else {
+			selecionado = selected.toString();
+		}
+		return selecionado;
 	}
 	
 	/**

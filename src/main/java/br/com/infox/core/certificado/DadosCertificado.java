@@ -62,7 +62,7 @@ public class DadosCertificado {
 		return dados.entrySet();
 	}
 	
-	public static DadosCertificado parse(X509Certificate cert) {  
+	public static DadosCertificado parse(X509Certificate cert) throws CertificadoException {  
 		DadosCertificado dadosCertificado = new DadosCertificado();
 		dadosCertificado.dados = new HashMap<String, String>();
 		try {  
@@ -154,7 +154,8 @@ public class DadosCertificado {
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
 		} catch (Exception e) {  
-			e.printStackTrace();  
+			e.printStackTrace();
+			throw new CertificadoException(e.getMessage());
 		} 
 		return dadosCertificado;
 	}  	

@@ -26,10 +26,12 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 */
 	private T instance;
 	
+	@Override
 	public void setInstance(T instance) {
 		this.instance = instance;
 	}
 
+	@Override
 	public T getInstance() {
 		if(instance == null) {
 			newInstance();
@@ -50,17 +52,21 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 * inserção ou atualização dos dados. 
 	 */
 	protected void afterSave() {
+		//Caso exista alguma ação a ser executada depois da atualização, 
+		//então ela deve ser implementada aqui.
 	}
 	
+	@Override
 	public String getTab() {
 		return tab;
 	}
 
+	@Override
 	public void setTab(String tab) {
 		this.tab = tab;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Override
 	public void setId(Object id) {
 		if(id != null) {
 			this.id = id;
@@ -70,6 +76,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 		}
 	}
 	
+	@Override
 	public Object getId() {
 		return id;
 	}
@@ -78,6 +85,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 * Indica se a instancia é gerenciavel ou não (já está no banco).
 	 * @return true se for gerenciavel.
 	 */
+	@Override
 	public boolean isManaged() {
 		return instance != null && contains(instance);
 	}
@@ -87,6 +95,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 * @return "persisted" ou "updated" se obtiver sucesso. Null caso 
 	 * ocorra alguma falha na execução ou na validação.
 	 */
+	@Override
 	public String save() {
 		String ret = null;
 		if(beforeSave()) {
@@ -115,7 +124,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 * Cria um novo objeto do tipo parametrizado para a variável
 	 * instance.
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public void newInstance() {
 		instance = (T) EntityUtil.newInstance(getClass());
 		id = null;
@@ -143,6 +152,9 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	/**
 	 * Ação executada ao entrar na aba de formulário.
 	 */
-	public void onClickFormTab() {}
+	public void onClickFormTab() {
+		//Caso haja alguma ação a ser executada assim que a navegação for para a aba de formulário,
+		//então deve ser implementada aqui.
+	}
 	
 }
