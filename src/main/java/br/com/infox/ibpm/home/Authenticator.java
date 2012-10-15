@@ -124,7 +124,6 @@ public class Authenticator {
 	
 	@Observer(Identity.EVENT_POST_AUTHENTICATE)
 	public void postAuthenticate() throws LoginException {
-		String errorMessage = null;
 		String id = Identity.instance().getCredentials().getUsername();
 		if (id != null) {
 			JpaIdentityStore store =  (JpaIdentityStore) 
@@ -132,67 +131,99 @@ public class Authenticator {
 			Usuario usuario = (Usuario) store.lookupUser(id);
 			// retorna false caso o usuario do Sistema não esteja ativo
 			if (usuario == null) {
-				errorMessage = "O usuário '" + id
-						+ "' não está corretamente cadastrado no sistema.";
-			} else if (!usuario.getAtivo()) {
-				errorMessage = "O usuário " + usuario.getNome()
-						+ " não está ativo.\n";
-			} else if (usuario.getBloqueio()){
-				String query = "select o from BloqueioUsuario o where o.dataBloqueio = (select max(b.dataBloqueio) from BloqueioUsuario b where b.usuario = :usuario)";
-				BloqueioUsuario bloqueio = EntityUtil.getSingleResult(EntityUtil.createQuery(query).setParameter("usuario", usuario));
-				Date desbloqueio = bloqueio.getDataPrevisaoDesbloqueio();
-				Date hoje = new Date();
-				if (desbloqueio.before(hoje)){
-					String queryDesbloqueio = 
-							"update public.tb_usuario set in_bloqueio=false where id_usuario = :usuario";
-					EntityUtil.getEntityManager().createNativeQuery(queryDesbloqueio)
-						.setParameter("usuario", usuario.getIdUsuario())
-						.executeUpdate();
-					String queryDataDesbloqueio = 
-							"UPDATE BloqueioUsuario b SET b.dataDesbloqueio = :hoje " +
-							"WHERE b.idBloqueioUsuario = :bloqueio";
-					EntityUtil.getEntityManager().createQuery(queryDataDesbloqueio)
-						.setParameter("hoje", hoje)
-						.setParameter("bloqueio", bloqueio.getIdBloqueioUsuario())
-						.executeUpdate();
-				} else{
-					errorMessage = "O usuário " + usuario.getNome()
-							+ " está bloqueado." +
-							"Por favor, contate o adminstrador do sistema";
+				throw new LoginException("O usuário '" + id + "' não está corretamente cadastrado no sistema.");
+			} else {
+				if (!Strings.isEmpty(assinatura)) {
+					assinatura = null;
 				}
-			} else if (usuario.getProvisorio()){
-				Date hoje = new Date();
-				if (usuario.getDataExpiracao().before(hoje)){
-					String inativarProvisorio = 
-							"UPDATE UsuarioLogin u SET u.ativo = false " +
-							"WHERE u.idUsuario = " + usuario.getIdUsuario().toString();
-					EntityUtil.getEntityManager().createQuery(inativarProvisorio).executeUpdate();
-					errorMessage = "O usuário " + usuario.getNome()
-							+ " expirou. " +
-							"Por favor, contate o adminstrador do sistema";
+				
+				try {
+					validateUser(usuario);
+					
+					if (isTrocarSenha()) {
+						trocarSenhaUsuario(usuario);
+					} else {
+						setUsuarioLogadoSessao(usuario);
+						obterLocalizacaoAtual(usuario);
+						
+						Actor.instance().setId(usuario.getLogin());
+					}
+		
+				} catch (LoginException e) {
+					Identity.instance().unAuthenticate();
+					throw e;
 				}
 			}
-			
-			if (Strings.isEmpty(assinatura)) {
-				String msg = trocarSenha();
-				if (!msg.equals("")) {
-					errorMessage = msg;		
-				}		
-			} else {
-				assinatura = null;
-			}
-
-			if (errorMessage == null){
-				setUsuarioLogadoSessao(usuario);
-				obterLocalizacaoAtual(usuario);
-			} else {
-				Identity.instance().unAuthenticate();
-				throw new LoginException(errorMessage);
-			}
-			Actor.instance().setId(usuario.getLogin());
 		}
 	}
 	
+	private boolean isTrocarSenha() {
+		return newPassword1 != null && !newPassword1.trim().equals("");
+	}
+	
+	private void trocarSenhaUsuario(final Usuario usuario) throws LoginException {
+		if (newPassword1.equals(newPassword2)){
+			new RunAsOperation(true) {
+				public void execute() {
+					IdentityManager.instance().changePassword(usuario.getLogin(), newPassword1);
+				}
+			}.run();
+			usuario.setProvisorio(false);
+			EntityUtil.flush();
+			throw new LoginException("Senha alterada com sucesso.");
+		}
+		else {
+			throw new LoginException("Nova senha não confere com a confirmação!");		
+		}
+	}
+	
+	private void validateUser(Usuario usuario) throws LoginException {
+		if (!usuario.getAtivo()) {
+			throw new LoginException("O usuário " + usuario.getNome() + " não está ativo.\n");
+		} else if (usuario.getBloqueio()){
+			String query = "select o from BloqueioUsuario o where o.dataBloqueio = (select max(b.dataBloqueio) from BloqueioUsuario b where b.usuario = :usuario)";
+			BloqueioUsuario bloqueio = EntityUtil.getSingleResult(EntityUtil.createQuery(query).setParameter("usuario", usuario));
+			Date desbloqueio = bloqueio.getDataPrevisaoDesbloqueio();
+			if (desbloqueio.before(new Date())){
+				desbloquearUsuario(bloqueio);
+			} else{
+				throw new LoginException("O usuário " + usuario.getNome()
+						+ " está bloqueado." +
+						"Por favor, contate o adminstrador do sistema");
+			}
+		} else if (usuario.getProvisorio()){
+			Date hoje = new Date();
+			if (usuario.getDataExpiracao().before(hoje)){
+				inativarUsuario(usuario);
+				throw new LoginException("O usuário " + usuario.getNome()
+						+ " expirou. " +
+						"Por favor, contate o adminstrador do sistema");
+			}
+		}
+	}
+
+	private void inativarUsuario(Usuario usuario) {
+		String inativarProvisorio = 
+				"UPDATE UsuarioLogin u SET u.ativo = false " +
+				"WHERE u.idUsuario = " + usuario.getIdUsuario().toString();
+		EntityUtil.getEntityManager().createQuery(inativarProvisorio).executeUpdate();
+	}
+	
+	private void desbloquearUsuario(BloqueioUsuario bloqueioUsuario) {
+		String queryDesbloqueio = 
+				"update public.tb_usuario set in_bloqueio=false where id_usuario = :usuario";
+		EntityUtil.getEntityManager().createNativeQuery(queryDesbloqueio)
+			.setParameter("usuario", bloqueioUsuario.getUsuario().getIdUsuario())
+			.executeUpdate();
+		String queryDataDesbloqueio = 
+				"UPDATE BloqueioUsuario b SET b.dataDesbloqueio = :hoje " +
+				"WHERE b.idBloqueioUsuario = :bloqueio";
+		EntityUtil.getEntityManager().createQuery(queryDataDesbloqueio)
+			.setParameter("hoje", new Date())
+			.setParameter("bloqueio", bloqueioUsuario.getIdBloqueioUsuario())
+			.executeUpdate();
+	}
+
 	private void autenticaManualmenteNoSeamSecurity(String login, IdentityManager identityManager) {
 		Principal principal = new SimplePrincipal(login);
 		Identity identity = Identity.instance();
@@ -366,33 +397,6 @@ public class Authenticator {
 			throw new LoginException("O usuário " + 
 					usuario + " não possui Localização");
 		}
-	}
-	
-	public String trocarSenha() {
-		String saida = "";
-		if (newPassword1 != null && !newPassword1.trim().equals("")) {
-			if (newPassword1.equals(newPassword2)){
-				final String login = Identity.instance().getCredentials().getUsername();
-				// tem que ser dessa forma porque o usuário pode não tem  
-				// a permissão seam.user:update
-				new RunAsOperation(true) {
-					public void execute() {
-						IdentityManager.instance().changePassword(login, newPassword1);
-					}
-				}.run();
-				String getByLogin = "select o from Usuario o where o.login like :login";
-				Query q = EntityUtil.getEntityManager().createQuery(getByLogin);
-				q.setParameter("login", login);
-				Usuario u = EntityUtil.getSingleResult(q);
-				u.setProvisorio(false);
-				EntityUtil.flush();
-				saida = "Senha alterada com sucesso.";
-			}
-			else {
-				saida = "Nova senha não confere com a confirmação!";		
-			}
-		}		
-		return saida;
 	}
 	
 	/**
