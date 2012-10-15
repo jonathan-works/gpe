@@ -21,13 +21,14 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.EVENT)
 public class CrlCheckControlerTeste {
 
+	private static final String	DATE_PATTERN	= "[yyyy-MM-dd mm:ss:SSS]: ";
 	private CrlCheckControler crlCheckControler;
 	private List<UsuarioLogin> users;
 	private int numeroVerificacoes = 0;
-	private static SimpleDateFormat sf = new SimpleDateFormat("[yyyy-MM-dd mm:ss:SSS]: ");
 	private static StringBuffer sbLogErros = new StringBuffer();
 	
 	public static void main(String[] args) {
+		SimpleDateFormat sf = new SimpleDateFormat(DATE_PATTERN);
 		System.out.println(sf.format(new Date()));
 	}
 	
@@ -79,11 +80,13 @@ public class CrlCheckControlerTeste {
 		
 		private Certificado c;
 
+		@Override
 		public void run() {
 			
 			try {
 				crlCheckControler.isCertificadoRevogado(c, null);
 			} catch (CrlCheckException e) {
+				SimpleDateFormat sf = new SimpleDateFormat(DATE_PATTERN);
 				sbLogErros.append(sf.format(new Date()));
 				String erro = e.getMessage();
 				sbLogErros.append(erro).append('\n');
