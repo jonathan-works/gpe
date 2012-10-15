@@ -26,8 +26,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -204,14 +205,14 @@ public class ScannerTest {
 		}
 	}
 
-	private void getClassesInJar(File location,
-			Set<String> packagePatterns) {
+	private void getClassesInJar(File location, Set<String> packagePatterns) {
+		JarFile jar = null;
 		try {
-			JarFile jar = new JarFile(location);
-			Enumeration entries = jar.entries();
+			jar = new JarFile(location);
+			Enumeration<JarEntry> entries = jar.entries();
 
 			while (entries.hasMoreElements()) {
-				ZipEntry entry = (ZipEntry) entries.nextElement();
+				ZipEntry entry = entries.nextElement();
 				String name = entry.getName();
 				if (!entry.isDirectory() && name.endsWith(".class")) {
 					if (matchesAny(name, packagePatterns)) {
@@ -221,6 +222,14 @@ public class ScannerTest {
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
+		} finally {
+			if (jar != null) {
+				try {
+					jar.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
