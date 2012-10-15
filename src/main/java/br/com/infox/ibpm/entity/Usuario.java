@@ -218,10 +218,7 @@ public class Usuario extends UsuarioLogin implements java.io.Serializable  {
 			return false;
 		}
 		Usuario other = (Usuario) obj;
-		if (getIdUsuario() != other.getIdUsuario()) {
-			return false;
-		}
-		return true;
+		return getIdUsuario().equals(other.getIdUsuario());
 	}
 
 	@Override

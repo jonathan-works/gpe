@@ -70,10 +70,7 @@ public class VariavelTipoModelo implements java.io.Serializable{
 			return false;
 		}
 		VariavelTipoModelo other = (VariavelTipoModelo) obj;
-		if (getIdVariavelTipoModelo() != other.getIdVariavelTipoModelo()) {
-			return false;
-		}
-		return true;
+		return getIdVariavelTipoModelo().equals(other.getIdVariavelTipoModelo());
 	}
 
 	@Override

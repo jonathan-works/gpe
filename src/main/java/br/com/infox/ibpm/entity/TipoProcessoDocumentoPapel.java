@@ -86,10 +86,7 @@ public class TipoProcessoDocumentoPapel implements java.io.Serializable {
 			return false;
 		}
 		TipoProcessoDocumentoPapel other = (TipoProcessoDocumentoPapel) obj;
-		if (getIdTipoProcessoDocumentoPapel() != other.getIdTipoProcessoDocumentoPapel()) {
-			return false;
-		}
-		return true;
+		return getIdTipoProcessoDocumentoPapel().equals(other.getIdTipoProcessoDocumentoPapel());
 	}
 
 	@Override

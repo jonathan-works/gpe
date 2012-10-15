@@ -133,10 +133,7 @@ public class SituacaoProcessoBpm implements java.io.Serializable {
 			return false;
 		}
 		SituacaoProcessoBpm other = (SituacaoProcessoBpm) obj;
-		if (getIdSituacaoProcesso() != other.getIdSituacaoProcesso()) {
-			return false;
-		}
-		return true;
+		return getIdSituacaoProcesso().equals(other.getIdSituacaoProcesso()); 
 	}
 
 	@Override

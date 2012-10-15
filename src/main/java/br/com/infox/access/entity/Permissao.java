@@ -97,10 +97,7 @@ public class Permissao implements Serializable {
 			return false;
 		}
 		Permissao other = (Permissao) obj;
-		if (getIdPermissao() != other.getIdPermissao()) {
-			return false;
-		}
-		return true;
+		return getIdPermissao().equals(other.getIdPermissao());
 	}
 
 	@Override

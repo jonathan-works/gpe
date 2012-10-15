@@ -186,10 +186,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 			return false;
 		}
 		UsuarioLogin other = (UsuarioLogin) obj;
-		if (getIdUsuario() != other.getIdUsuario()) {
-			return false;
-		}
-		return true;
+		return getIdUsuario().equals(other.getIdUsuario());
 	}
 
 	@Override
