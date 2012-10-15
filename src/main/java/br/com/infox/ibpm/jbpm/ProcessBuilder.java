@@ -34,7 +34,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.persistence.EntityManager;
@@ -52,7 +51,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.seam.ui.util.Faces;
 import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
@@ -669,6 +667,8 @@ public class ProcessBuilder implements Serializable {
 				typeList = new ArrayList(types.keySet());
 				verifyAvaliableTypes(typeList);
 				Collections.sort(typeList, new Comparator<String>() {
+					
+					@Override
 					public int compare(String o1, String o2) {
 						if(o1.equals("null")) {
 							return -1;
@@ -1109,7 +1109,7 @@ public class ProcessBuilder implements Serializable {
 		return layout;
 	}
 	
-	public void paintGraph(OutputStream out, Object data) throws IOException {
+	public void paintGraph(OutputStream out) throws IOException {
 		JbpmLayout layoutOut = getLayout();
 		if (layoutOut != null) {
 			layoutOut.paint(out);
@@ -1207,7 +1207,6 @@ public class ProcessBuilder implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setNodeName(String nodeName) {
 		if(this.nodeName != null && !this.nodeName.equals(nodeName)) {
 			if(currentNode != null) {
@@ -1232,7 +1231,6 @@ public class ProcessBuilder implements Serializable {
 		return nodeName;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setTaskName(String taskName) {
 		if(this.taskName != null && !this.taskName.equals(taskName)) {
 			if(currentTask != null && currentTask.getTask() != null) {
@@ -1259,7 +1257,6 @@ public class ProcessBuilder implements Serializable {
 		return taskName;
 	}
 
-	@SuppressWarnings("unchecked")
 	private BigInteger getIdProcessDefinition() {
 		String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
 		Query param = JbpmUtil.getJbpmSession().createSQLQuery(query).setParameter("pdName", instance.getName());

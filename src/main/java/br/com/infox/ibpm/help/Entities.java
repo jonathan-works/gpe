@@ -18,10 +18,14 @@ package br.com.infox.ibpm.help;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Entities {
+public final class Entities {
 
-    private static final Map<String, String> decoder = new HashMap<String, String>(300);
-    private static final String[] encoder = new String[0x100];
+    private static final Map<String, String> DECODER = new HashMap<String, String>(300);
+    private static final int NUMERO_DE_CARACTERES = 0x100; // Corresponde a 256 caracteres
+    private static final String[] ENCODER = new String[NUMERO_DE_CARACTERES];
+    
+    private Entities() {
+    }
 
     static {
         add("&nbsp", 160);
@@ -277,39 +281,38 @@ public class Entities {
         add("&rsaquo", 8250);
         add("&euro", 8364);
     }
-
+    
     public static final String decodeEntity(String entity) {
-        if (entity.charAt(entity.length() - 1) == ';') { // remove trailing semicolon
-            entity = entity.substring(0, entity.length() - 1);
-        }
-        if (entity.charAt(1) == '#') {
-            int start = 2;
-            int radix = 10;
-            if ((entity.charAt(2) == 'X') || (entity.charAt(2) == 'x')) {
-                start++;
-                radix = 16;
-            }
-            Character c = Character.valueOf((char) Integer.parseInt(entity.substring(start),
-                        radix));
-            return c.toString();
-        } else {
-            String s = (String) decoder.get(entity);
-            if (s != null) {
-                return s;
-            } else {
-                return "";
-            }
-        }
-    }
+		if (entity.charAt(entity.length() - 1) == ';') { // remove trailing
+															// semicolon
+			entity = entity.substring(0, entity.length() - 1);
+		}
+		if (entity.charAt(1) == '#') {
+			int start = 2;
+			int radix = 10;
+			if ((entity.charAt(2) == 'X') || (entity.charAt(2) == 'x')) {
+				start++;
+				radix = 16;
+			}
+			Character c = Character.valueOf((char) Integer.parseInt(
+					entity.substring(start), radix));
+			return c.toString();
+		}
+		String s = DECODER.get(entity);
+		if (s != null) {
+			return s;
+		}
+		return "";
+	}
 
     public static final String encode(String s) {
         int length = s.length();
         StringBuffer buffer = new StringBuffer(length * 2);
         for (int i = 0; i < length; i++) {
             char c = s.charAt(i);
-            int j = (int) c;
-            if ((j < 0x100) && (encoder[j] != null)) {
-                buffer.append(encoder[j]); // have a named encoding
+            int j = c;
+            if ((j < 0x100) && (ENCODER[j] != null)) {
+                buffer.append(ENCODER[j]); // have a named encoding
                 buffer.append(';');
             } else if (j < 0x80) {
                 buffer.append(c); // use ASCII value
@@ -349,9 +352,9 @@ public class Entities {
     }
     
     private static final void add(String entity, int value) {
-        decoder.put(entity, Character.valueOf((char) value).toString());
+        DECODER.put(entity, Character.valueOf((char) value).toString());
         if (value < 0x100) {
-            encoder[value] = entity;
+            ENCODER[value] = entity;
         }
     }
     

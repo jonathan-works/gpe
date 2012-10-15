@@ -49,7 +49,7 @@ import br.com.itx.util.EntityUtil;
 
 public class LogUtil {
 
-	public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+	private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
 	private static final LogProvider log = Logging.getLogProvider(LogUtil.class);
 
 	/**
@@ -61,9 +61,8 @@ public class LogUtil {
 		if (type.isArray() && 
 				type.getComponentType().getName().equals("byte")) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}	
 
 	/**
@@ -116,9 +115,9 @@ public class LogUtil {
 			Length lengthAnnotation = pd.getReadMethod().getAnnotation(Length.class);
 			if (lengthAnnotation == null || lengthAnnotation.max() > 300) {
 				return false;
-			} else {
-				return true;
 			}
+			
+				return true;
 		} else if (isBinario(classAtributo)) {
 			return false;
 		} else {
@@ -138,9 +137,8 @@ public class LogUtil {
 	public static boolean compareObj(Object object1, Object object2) {
 		if (object1 == null) {
 			return object2 == null;
-		} else {
-			return object1.equals(object2);
-		}
+		} 
+		return object1.equals(object2);
 	}
 	
 	public static Usuario getUsuarioLogado() {
@@ -190,7 +188,8 @@ public class LogUtil {
 		if (object == null) {
 			return null;
 		} else if (object instanceof Date) {
-			return DATE_FORMAT.format((Date) object);
+			SimpleDateFormat date = new SimpleDateFormat(DATE_PATTERN);
+			return date.format((Date) object);
 		} else if (EntityUtil.isEntity(object)) {
 			return EntityUtil.getEntityIdObject(object) + ": " + object.toString();
 		} else {

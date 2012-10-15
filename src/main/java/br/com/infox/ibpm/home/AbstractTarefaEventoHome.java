@@ -25,6 +25,7 @@ public abstract class AbstractTarefaEventoHome<T> extends AbstractHome<TarefaEve
 		return (Integer) getId();
 	}
 		
+	@Override
 	public String remove(TarefaEvento obj) {
 		instance = obj;
 		String remove = super.remove();
