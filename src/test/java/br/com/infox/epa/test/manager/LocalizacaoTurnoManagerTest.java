@@ -1,7 +1,9 @@
 package br.com.infox.epa.test.manager;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -69,6 +71,23 @@ public class LocalizacaoTurnoManagerTest {
 		calendar.set(Calendar.SECOND, second);
 		calendar.set(Calendar.MILLISECOND, 0);
 		return new Time(calendar.getTimeInMillis());
+	}
+	
+	@Test
+	public void contarTempoUtilDiaTest() {
+		List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<LocalizacaoTurno>();
+		
+		LocalizacaoTurno turnoOitoEMeiaAsDoze = new LocalizacaoTurno();
+		turnoOitoEMeiaAsDoze.setHoraInicio(buildTime(8, 30, 0));
+		turnoOitoEMeiaAsDoze.setHoraFim(buildTime(12, 0, 0));
+		localizacaoTurnoList.add(turnoOitoEMeiaAsDoze);
+		
+		LocalizacaoTurno turnoTrezeETrintaAsDezoito = new LocalizacaoTurno();
+		turnoTrezeETrintaAsDezoito.setHoraInicio(buildTime(13, 30, 0));
+		turnoTrezeETrintaAsDezoito.setHoraFim(buildTime(18, 0, 0));
+		localizacaoTurnoList.add(turnoTrezeETrintaAsDezoito);
+		
+		Assert.assertEquals(480, localizacaoTurnoManager.contarTempoUtilTurnos(localizacaoTurnoList));
 	}
 
 }
