@@ -81,7 +81,7 @@ public class TaskListenerService extends AbstractAction {
 	}
 	
 	@Observer(Event.EVENTTYPE_PROCESS_END)
-	public void onEndProcess(ExecutionContext context) {
+	public void onEndProcess() {
 		Processo processo = JbpmUtil.getProcesso();
 		processo.setDataFim(new Date());
 		processoEpaTarefaManager.update(processo);

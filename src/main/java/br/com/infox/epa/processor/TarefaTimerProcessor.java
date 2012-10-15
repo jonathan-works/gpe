@@ -18,7 +18,6 @@ import br.com.infox.epa.entity.ProcessoEpaTarefa;
 import br.com.infox.epa.manager.LocalizacaoTurnoManager;
 import br.com.infox.epa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epa.service.startup.TarefaTimerStarter;
-import br.com.infox.ibpm.manager.ProcessoLocalizacaoIbpmManager;
 import br.com.infox.timer.TimerUtil;
 
 /**
@@ -40,8 +39,6 @@ public class TarefaTimerProcessor {
 	private ProcessoEpaTarefaManager processoEpaTarefaManager;
 	@In
 	private LocalizacaoTurnoManager localizacaoTurnoManager;
-	@In
-	private ProcessoLocalizacaoIbpmManager processoLocalizacaoIbpmManager;
 	
 	public static TarefaTimerProcessor instance() {
 		return (TarefaTimerProcessor) Component.getInstance(NAME);

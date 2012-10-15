@@ -36,6 +36,7 @@ public class MunicipioSuggestBean extends AbstractSuggestBean<Municipio> {
 	public static final String NAME = "municipioSuggest";
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public String getEjbql() {
 		Estado estado = getEstado();
 		if(estado == null) {

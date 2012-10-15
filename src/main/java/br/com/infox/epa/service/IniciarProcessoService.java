@@ -80,8 +80,7 @@ public class IniciarProcessoService {
 					.getPooledActorsExpression();
 		Set<String> pooledActors = LocalizacaoAssignment.instance()
 					.getPooledActors(actorsExpression);
-		String[] actorIds = (String[]) pooledActors
-					.toArray(new String[pooledActors.size()]);
+		String[] actorIds = pooledActors.toArray(new String[pooledActors.size()]);
 		swimlaneInstance.setPooledActors(actorIds);
 		Events.instance().raiseEvent(ON_CREATE_PROCESS, taskInstance, processo);
 		return businessProcess.getProcessId();

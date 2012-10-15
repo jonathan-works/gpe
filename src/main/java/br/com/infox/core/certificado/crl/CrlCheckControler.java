@@ -103,7 +103,9 @@ public class CrlCheckControler {
 		while (t.isAlive()) {
 			try {
 				Thread.sleep(50);
-			} catch (InterruptedException e1) { }			
+			} catch (InterruptedException e1) { 
+				e1.printStackTrace();
+			}			
 			if (mt.getTime() >= timeout) {
 				throw new CrlCheckException("Time out: " + timeout + " ms.");
 			}
@@ -131,6 +133,7 @@ public class CrlCheckControler {
 		Runnable runnable = new Runnable() {
 			
 			
+			@Override
 			public void run() {
 				while (true) {
 					try {
@@ -183,6 +186,7 @@ public class CrlCheckControler {
 			this.crlCertObj = crlCertObj;
 		}
 
+		@Override
 		public void run() {
 			try {
 				crlCertObj.atualizarX509crl();

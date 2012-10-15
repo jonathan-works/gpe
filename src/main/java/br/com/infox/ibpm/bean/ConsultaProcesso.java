@@ -61,6 +61,7 @@ public class ConsultaProcesso implements Serializable {
 		this.inPesquisa = inPesquisa;
 	}
 
+	@Override
 	public String toString() {
 		return numeroProcesso;
 	}

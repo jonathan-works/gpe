@@ -42,7 +42,6 @@ public class TarefaEventoTree implements Serializable {
 		return (TarefaEventoTree) Component.getInstance(TarefaEventoTree.NAME);
 	}
 	
-	@SuppressWarnings("unchecked")
 	/**
 	 * Verifica se existe alguem Agrupamento para ser registrado naquela tarefa
 	 * e atribui ao currentEvent o tipo do evento corrente.

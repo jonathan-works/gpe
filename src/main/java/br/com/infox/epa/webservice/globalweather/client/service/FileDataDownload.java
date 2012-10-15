@@ -31,7 +31,7 @@ public class FileDataDownload {
 
     private File fileDownload;
 
-    public FileDataDownload(String fileAddress, File fileDownload) {
+    public FileDataDownload(File fileDownload) {
         this.fileDownload = fileDownload;
     }
 

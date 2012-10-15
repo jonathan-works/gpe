@@ -51,6 +51,7 @@ public class RegistraEstatistica implements Serializable {
 	
 	
 	public void registraAssignTask() {
+		//Fazer as atribuições das tarefas
 	}
 	
 	public void registraAssignTask(Date dataCadastro, Processo processo, 
@@ -69,7 +70,6 @@ public class RegistraEstatistica implements Serializable {
 		processo.getEstatisticaList().add(e);
 	}	
 	
-	@SuppressWarnings("unchecked")
 	private Fluxo getFluxo(String nomeFluxo) {
 		EntityManager em = EntityUtil.getEntityManager();
 		Query query = em.createQuery("select o from Fluxo o where o.fluxo = :nomeFluxo");
@@ -77,20 +77,16 @@ public class RegistraEstatistica implements Serializable {
 		List<Fluxo> resultList = query.getResultList();
 		if (resultList.size() > 0) {
 			return resultList.get(0);
-		} else {
-			throw new IllegalArgumentException("Fluxo não encontrado.");
-		}
+		} 
+		throw new IllegalArgumentException("Fluxo não encontrado.");
 	}	
 	
 	
 	public static Estatistica getUltimaEstatistica(Processo processo) {
 		if (processo.getEstatisticaList().size() > 0) {
 			return processo.getEstatisticaList().get(processo.getEstatisticaList().size() - 1);
-		} else {
-			return null;
-		}
-
-		
+		} 
+		return null;
 	}
 	
 	public static RegistraEstatistica instance() {

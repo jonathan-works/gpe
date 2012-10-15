@@ -44,6 +44,7 @@ public class IntervaloSelector extends Selector {
 			try {
 				this.intervalo = Integer.parseInt(intevalo);
 			} catch (NumberFormatException e) {
+				e.printStackTrace();
 			}
 		}
 	}

@@ -28,6 +28,7 @@ public class GrupoModeloDocumentoSuggestBean extends AbstractSuggestBean<GrupoMo
 
 	private static final long serialVersionUID = 1L;
 	
+	@Override
 	public String getEjbql() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o ");

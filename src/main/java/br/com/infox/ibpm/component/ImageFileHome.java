@@ -51,10 +51,9 @@ public class ImageFileHome {
 		if (usuarioLoc != null) {
 			String locId = Integer.toString(usuarioLoc.getLocalizacao().getIdLocalizacao());
 			return "localizacao" + "/" + locId;
-		} else {
-			log.warn("Diretório de imagens do usuário: null");
-			return null;
-		}
+		} 
+		log.warn("Diretório de imagens do usuário: null");
+		return null;
 	}
 	
 	public String[] getImagesDir() {
@@ -63,10 +62,9 @@ public class ImageFileHome {
 		if (userImageDir != null) {
 			String[] images = {path, path + userImageDir};
 			return images;
-		} else {
-			String[] images = {path};
-			return images;
-		}
+		} 
+		String[] images = {path};
+		return images;
 	}
 
 	public String[] getImagesPath() {
@@ -75,10 +73,9 @@ public class ImageFileHome {
 		if (userImageDir != null) {
 			String[] images = {path, path + userImageDir};
 			return images;
-		} else {
-			String[] images = {path};
-			return images;
-		}
+		} 
+		String[] images = {path};
+		return images;
 	}
 	
 	public String getImagePath() {
@@ -141,7 +138,7 @@ public class ImageFileHome {
 	}
 	
 	
-	public List<String> getImages() throws IOException {
+	public List<String> getImages() {
 		createDir();
 		
 		List<String> files = new ArrayList<String>();
@@ -153,6 +150,7 @@ public class ImageFileHome {
 			}
 			String[] filesImg = dir.list(new FilenameFilter() {
 				
+				@Override
 				public boolean accept(File dir, String name) {
 					return (name.endsWith(".jpg") ||
 							name.endsWith(".png") ||

@@ -48,6 +48,7 @@ public class TarefaTimerStarter {
 		try {
 			idIniciarFluxoTimer = TimerUtil.getParametro(ID_INICIAR_TASK_TIMER_PARAMETER);
 		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 		}
         if (idIniciarFluxoTimer == null) {
             Parametro p = new Parametro();

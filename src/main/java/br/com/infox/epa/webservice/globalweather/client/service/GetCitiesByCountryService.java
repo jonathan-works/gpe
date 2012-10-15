@@ -51,31 +51,33 @@ public class GetCitiesByCountryService {
 		BeanClima beanClima = mapBeanClima.get(cidade);
 		if (beanClima != null) {
 			return beanClima;
-		} else {
-			try {
-				String url = MessageFormat.format(WEATHER, cidade, "brazil").replace(" ", "%20");
-				String xml = FileDataDownload.getUrlAsString(url);
-				xml = StringEscapeUtils.unescapeHtml(xml);	
-				beanClima = processaXMLClima(xml);
-				mapBeanClima.put(cidade, beanClima);
-				return beanClima;
-			} catch (Exception e) {
-				FacesMessages.instance().add(Severity.ERROR, "Erro: " + e.getMessage(), e);
-				return null;
-			}
+		}
+		try {
+			String url = MessageFormat.format(WEATHER, cidade, "brazil")
+					.replace(" ", "%20");
+			String xml = FileDataDownload.getUrlAsString(url);
+			xml = StringEscapeUtils.unescapeHtml(xml);
+			beanClima = processaXMLClima(xml);
+			mapBeanClima.put(cidade, beanClima);
+			return beanClima;
+		}
+		catch (Exception e) {
+			FacesMessages.instance().add(Severity.ERROR,
+					"Erro: " + e.getMessage(), e);
+			return null;
 		}
 	}
 
 	public List<String> getCidadeListBrazil() {
 		try {
-			return getCidadeList("brazil");
+			return getCidadeList();
 		} catch (Exception e) {
 			FacesMessages.instance().add(Severity.ERROR, "Erro: " + e.getMessage(), e);
 			return null;
 		}
 	}
 
-	public List<String> getCidadeList(String nomePais) throws Exception { 
+	public List<String> getCidadeList() throws Exception { 
 		String urlAsString = FileDataDownload.getUrlAsString(MessageFormat.format(CITYS, "brazil"));
 		urlAsString = StringEscapeUtils.unescapeHtml(urlAsString);
 		List<String> processaXML = processaXML(urlAsString);
@@ -133,7 +135,7 @@ public class GetCitiesByCountryService {
 		System.setProperty("http.proxyHost", "wpad.infox.intranet");
 		System.setProperty("http.proxyPort", "8080");		
 		GetCitiesByCountryService service = new GetCitiesByCountryService();
-		List<String> cidadeList = service.getCidadeList("brazil");
+		List<String> cidadeList = service.getCidadeList();
 		System.out.println(cidadeList);
 	}
 

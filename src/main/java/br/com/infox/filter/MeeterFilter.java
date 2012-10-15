@@ -44,6 +44,7 @@ public class MeeterFilter extends AbstractFilter {
 
 	private static final LogProvider log = Logging.getLogProvider(MeeterFilter.class);	
 	
+	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		StopWatch sw = new StopWatch(true);

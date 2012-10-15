@@ -48,6 +48,7 @@ public class ProcessoTimerStarter {
 		try {
 			idIniciarFluxoTimer = TimerUtil.getParametro(ID_INICIAR_PROCESSO_TIMER_PARAMETER);
 		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 		}
         if (idIniciarFluxoTimer == null) {
             Parametro p = new Parametro();
