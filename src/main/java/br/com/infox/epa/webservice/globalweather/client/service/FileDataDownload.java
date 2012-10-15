@@ -17,12 +17,13 @@ package br.com.infox.epa.webservice.globalweather.client.service;
 */
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.com.itx.util.FileUtil;
 
 public class FileDataDownload {
 
@@ -44,35 +45,31 @@ public class FileDataDownload {
 
     public static String getUrlAsString(String fileAddress)
 			throws Exception {
-	StringBuilder sb = new StringBuilder();
-	URLConnection URLConn = null;
-
-	// URLConnection class represents a communication link between the
-	// application and a URL.
-	BufferedReader br = null;
-	try {
-		URL fileUrl;
-		fileUrl = new URL(fileAddress);
-		//The URLConnection object is created by invoking the
-
-		URLConn = fileUrl.openConnection();
-		br = new BufferedReader(new InputStreamReader(URLConn.getInputStream()));
-		String line = br.readLine();
-		while (line != null) {
-			sb.append(line);
-			line = br.readLine();
-		}
-	} catch (Exception e) {
-		throw new Exception(e);
-	} finally {
+		StringBuilder sb = new StringBuilder();
+		URLConnection URLConn = null;
+	
+		// URLConnection class represents a communication link between the
+		// application and a URL.
+		BufferedReader br = null;
 		try {
-			if (br != null) { br.close(); };
+			URL fileUrl;
+			fileUrl = new URL(fileAddress);
+			//The URLConnection object is created by invoking the
+	
+			URLConn = fileUrl.openConnection();
+			br = new BufferedReader(new InputStreamReader(URLConn.getInputStream()));
+			String line = br.readLine();
+			while (line != null) {
+				sb.append(line);
+				line = br.readLine();
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new Exception(e);
+		} finally {
+			FileUtil.close(br);
 		}
-	}
-	return sb.toString();
-}        
+		return sb.toString();
+	}        
     
     public static List<String> getUrlAsList(String fileAddress)
     			throws Exception {
@@ -97,11 +94,7 @@ public class FileDataDownload {
     	} catch (Exception e) {
     		throw new Exception(e);
     	} finally {
-    		try {
-    			br.close();
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
+    		FileUtil.close(br);
     	}
     	return list;
     }    

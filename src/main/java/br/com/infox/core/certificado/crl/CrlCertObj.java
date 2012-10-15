@@ -7,8 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -166,7 +164,9 @@ public class CrlCertObj {
 		} finally {
 			FileUtil.close(os);
 			FileUtil.close(inputStream);
-			os.flush();
+			if (os != null) {
+				os.flush();
+			}
 		}
         log.info(MessageFormat.format(
 						"O CRL do link ''{0}'' foi baixado para o arquivo ''{1}'' [{2} bytes]",

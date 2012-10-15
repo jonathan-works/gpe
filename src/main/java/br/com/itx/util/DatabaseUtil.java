@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 public class DatabaseUtil {
@@ -40,7 +38,7 @@ public class DatabaseUtil {
 			p.load(inStream);
 			return p;
 		} finally {
-			inStream.close();
+			FileUtil.close(inStream);
 		}
 	}
 	
@@ -48,14 +46,4 @@ public class DatabaseUtil {
 		return fileNameProperties;
 	}
 	
-	public static void close(Statement st) {
-		if (st != null) {
-			try {
-				st.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 }
