@@ -107,15 +107,16 @@ public class SwimlaneHandler {
 	}
 	
 	public void removeLocalPapel(UsuarioLocalizacao u) {
-		for (Iterator<UsuarioLocalizacao> i = localPapelList.iterator();
-			i.hasNext();) {
+		for (Iterator<UsuarioLocalizacao> i = localPapelList.iterator(); i
+				.hasNext();) {
 			UsuarioLocalizacao uloc = i.next();
 			Localizacao l = uloc.getLocalizacao();
 			Papel p = uloc.getPapel();
 			boolean mesmoPapel = false;
 			if (p == null) {
 				mesmoPapel = u.getPapel() == null;
-			} else {
+			}
+			else {
 				mesmoPapel = p.equals(u.getPapel());
 			}
 			if (l.equals(u.getLocalizacao()) && mesmoPapel) {

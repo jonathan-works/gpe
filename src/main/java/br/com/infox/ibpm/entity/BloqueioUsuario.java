@@ -123,10 +123,7 @@ public class BloqueioUsuario implements java.io.Serializable {
 			return false;
 		}
 		BloqueioUsuario other = (BloqueioUsuario) obj;
-		if (getIdBloqueioUsuario() != other.getIdBloqueioUsuario()) {
-			return false;
-		}
-		return true;
+		return getIdBloqueioUsuario() == other.getIdBloqueioUsuario();
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class ItemTipoDocumentoHome
 		return true;
 	}
 
-	private LocalizacaoTreeHandler getLocalizacaoTree(){
+	public LocalizacaoTreeHandler getLocalizacaoTree(){
 		return getComponent("localizacaoItemTipoDocumentoFormTree");
 	}
 	
@@ -83,6 +83,7 @@ public class ItemTipoDocumentoHome
 		return msg;
 	}
 	
+	@Override
 	public String remove(ItemTipoDocumento obj) {
     	getEntityManager().remove(obj);
     	EntityUtil.flush();

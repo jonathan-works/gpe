@@ -37,14 +37,15 @@ public final class LdapUtil {
 	}
 	
 	private static String gereParametrosAD(String domain) {
-		String nome = "";
+		StringBuilder nome = new StringBuilder();
 		StringTokenizer tokens = new StringTokenizer(domain, ".");
 		while(tokens.hasMoreTokens()) {
-			nome+= ",DC=" + tokens.nextToken();
+			nome.append(nome);
+			nome.append(",DC=");
+			nome.append(tokens.nextToken());
 		}
-		return nome;
+		return nome.toString();
 	}
-	//InitialLdapContext
 	
 	public static LdapContext autentiqueUsuarioAD(String nome, String pw){
 		LdapContext ctx = null;

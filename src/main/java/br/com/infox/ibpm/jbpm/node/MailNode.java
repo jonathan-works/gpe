@@ -31,7 +31,6 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
 import br.com.infox.ibpm.entity.ListaEmail;
-import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.ibpm.jbpm.MailResolver;
 import br.com.itx.util.EntityUtil;
 
@@ -196,7 +195,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Variavel)) {
+		if (!(obj instanceof MailNode)) {
 			return false;
 		}
 		MailNode other = (MailNode) obj;

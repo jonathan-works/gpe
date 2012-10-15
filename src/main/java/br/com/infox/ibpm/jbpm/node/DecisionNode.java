@@ -53,8 +53,6 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
-import br.com.infox.ibpm.entity.Variavel;
-
 
 /**
  * decision node.
@@ -214,7 +212,7 @@ public class DecisionNode extends Node {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Variavel)) {
+		if (!(obj instanceof DecisionNode)) {
 			return false;
 		}
 		DecisionNode other = (DecisionNode) obj;
