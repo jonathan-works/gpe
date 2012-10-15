@@ -24,21 +24,25 @@ public class NaturezaList extends EntityList<Natureza> {
 	private static final String DEFAULT_EJBQL = "select o from Natureza o";
 	private static final String DEFAULT_ORDER = "natureza";
 	 
+	@Override
 	protected void addSearchFields() {
 		addSearchField("natureza", SearchCriteria.contendo);
 		addSearchField("ativo", SearchCriteria.igual);
 	}
 
+	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("fluxo", "fluxo.fluxo");
 		return map;
 	}
 
+	@Override
 	protected String getDefaultEjbql() {
 		return DEFAULT_EJBQL;
 	}
 
+	@Override
 	protected String getDefaultOrder() {
 		return DEFAULT_ORDER;
 	}

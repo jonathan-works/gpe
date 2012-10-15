@@ -47,7 +47,6 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return getNamedResultList(ProcessoEpaTarefaQuery.LIST_ALL_NOT_ENDED, null);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
@@ -59,7 +58,6 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return resultList;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Object[]> listForaPrazoTarefa(Categoria c) {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
@@ -71,7 +69,6 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return resultList;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Object[]> listTarefaPertoLimite() {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)

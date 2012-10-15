@@ -58,21 +58,19 @@ public class GenericDAO {
 	 * @param clazz entidade
 	 * @return lista de todos os registros da entidade
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> List<T> findAll(Class<T> clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o from ").append(clazz.getName()).append(" o");
 		return entityManager.createQuery(sb.toString()).getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("cast")
 	protected <T> List<T> getNamedResultList(String namedQuery,
 			Map<String, Object> parameters) {
 		Query q = getNamedQuery(namedQuery, parameters);
 		return (List<T>) q.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
 	protected <T> T getNamedSingleResult(String namedQuery,
 			Map<String, Object> parameters) {
 		Query q = getNamedQuery(namedQuery, parameters);

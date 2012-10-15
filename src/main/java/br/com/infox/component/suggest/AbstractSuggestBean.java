@@ -98,6 +98,12 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 	}	
 
 	@Override
+	public void setDefaultValue(String obj) {
+		//A classe AbstractSuggestBean faz o warp deste método, dessa forma as implementações dessa classe
+		//só precisam sobre-escrever esse método se forem de fato realizar alguma ação.
+	}
+	
+	@Override
 	public String getDefaultValue() {
 		return getInstance() != null ? getInstance().toString() : "";
 	}

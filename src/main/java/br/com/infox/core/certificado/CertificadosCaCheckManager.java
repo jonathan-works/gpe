@@ -148,8 +148,7 @@ public class CertificadosCaCheckManager {
 			throw new CertificateException(msg);
 		}
 
-		X509Certificate[] aTrustedCertificates = (X509Certificate[]) listCertificadosCA
-				.toArray(new X509Certificate[listCertificadosCA.size()]);
+		X509Certificate[] aTrustedCertificates = listCertificadosCA.toArray(new X509Certificate[listCertificadosCA.size()]);
 
 		// valida se algum elemento da cadeia foi assinado pela lista das
 		// certificadoras da certSign
@@ -163,6 +162,7 @@ public class CertificadosCaCheckManager {
 				LOG.info("Certificado Verificado com sucesso. ");
 				return;
 			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -226,7 +226,7 @@ public class CertificadosCaCheckManager {
 		if (dirURL.getProtocol().equals("vfsfile")) {
 			dirURL = new URL("file", dirURL.getHost(), dirURL.getFile());
 		}
-		if (dirURL != null && dirURL.getProtocol().equals("file")) {
+		if (dirURL.getProtocol().equals("file")) {
 			/* A file path: easy enough */
 			List<URL> ret = new ArrayList<URL>();
 			for (File f : new File(dirURL.toURI()).listFiles()) {

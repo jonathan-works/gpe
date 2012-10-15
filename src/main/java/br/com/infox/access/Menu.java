@@ -81,6 +81,7 @@ public class Menu implements Serializable {
 	private void checkPage(final String pageRole, String name) {
 		if (! IdentityManager.instance().roleExists(pageRole)) {
 			new RunAsOperation(true) {
+				@Override
 				public void execute() {
 					IdentityManager.instance().createRole(pageRole);
 					EntityUtil.getEntityManager().flush();
@@ -99,6 +100,7 @@ public class Menu implements Serializable {
 			}
 			role.setNome("Página " + sb.toString());
 			new RunAsOperation(true) {
+				@Override
 				public void execute() {
 					IdentityManager.instance().addRoleToGroup("admin", pageRole);
 				}
@@ -114,7 +116,7 @@ public class Menu implements Serializable {
 			key = key.substring(1);
 		}
 		String[] groups = key.split("/");
-		MenuItem parent = null;
+		MenuItem parent = new MenuItem(null);
 		for (int i = 0; i < groups.length; i++) {
 			String label = groups[i];
 			if (!label.startsWith("#{messages['")) {
@@ -125,16 +127,19 @@ public class Menu implements Serializable {
 				int j = dropMenus.indexOf(item);
 				if (j != -1) {
 					parent = dropMenus.get(j);
-				} else {
+				}
+				else {
 					parent = item;
 					if (groups.length == 1) {
 						parent.setUrl(url);
 					}
 					dropMenus.add(parent);
 				}
-			} else if (i < (groups.length - 1)) {
+			}
+			else if (i < (groups.length - 1)) {
 				parent = parent.add(item);
-			} else {
+			}
+			else {
 				item.setUrl(url);
 				parent.getChildren().add(item);
 			}

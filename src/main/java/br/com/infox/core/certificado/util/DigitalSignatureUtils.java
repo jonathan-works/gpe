@@ -74,7 +74,9 @@ import br.com.infox.core.certificado.CertificadoException;
  */
 public final class DigitalSignatureUtils {
 
-    private static final String X509_CERTIFICATE_TYPE = "X.509";
+    private static final String	UNCHECKED	= "unchecked";
+	private static final String	RAWTYPES	= "rawtypes";
+	private static final String X509_CERTIFICATE_TYPE = "X.509";
     private static final String CERT_CHAIN_ENCODING = "PkiPath";
     private static final String DIGITAL_SIGNATURE_ALGORITHM_NAME = "SHA1withRSA";
     private static final String CERT_CHAIN_VALIDATION_ALGORITHM = "PKIX";
@@ -139,7 +141,7 @@ public final class DigitalSignatureUtils {
         return certPath;
     }
     
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	public static X509Certificate[] loadCertFromBase64String(String certChainBase64Encoded) throws CertificadoException {
 		CertPath mCertPath;
 		try {
@@ -227,7 +229,6 @@ public final class DigitalSignatureUtils {
      * @param aTrustedCACertificates a list of most trusted root CA certificates.
      * @throws CertPathValidatorException if the certification chain is invalid.
      */
-    @SuppressWarnings("unchecked")
 	public static void verifyCertificationChain(CertPath aCertChain,
         X509Certificate[] aTrustedCACertificates)
     throws GeneralSecurityException {
@@ -238,7 +239,7 @@ public final class DigitalSignatureUtils {
         }
 
         // Create a set of trust anchors from given trusted root CA certificates
-        HashSet trustAnchors = new HashSet();
+        HashSet<TrustAnchor> trustAnchors = new HashSet<TrustAnchor>();
         for (int i = 0; i < aTrustedCACertificates.length; i++) {
             TrustAnchor trustAnchor = new TrustAnchor(aTrustedCACertificates[i], null);
             trustAnchors.add(trustAnchor);
@@ -263,7 +264,7 @@ public final class DigitalSignatureUtils {
      * Removes the last certificate from given certification chain.
      * @return given cert chain without the last certificate in it.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ UNCHECKED, RAWTYPES })
 	private static CertPath removeLastCertFromCertChain(CertPath aCertChain)
     throws CertificateException {
         List certs = aCertChain.getCertificates();
@@ -288,7 +289,7 @@ public final class DigitalSignatureUtils {
      * @return Base64-encoded ASN.1 DER representation of given X.509 certification
      * chain.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ UNCHECKED, RAWTYPES })
 	public static String encodeX509CertChainToBase64(Certificate[] aCertificationChain)
     			throws CertificateException {
         List certList = Arrays.asList(aCertificationChain);

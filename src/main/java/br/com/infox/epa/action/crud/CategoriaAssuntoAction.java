@@ -37,7 +37,6 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 	private List<Assunto> assuntoList;
 	private Categoria categoria;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean beforePersistOrUpdate() {
 		getInstance().setCategoria(categoria);

@@ -38,6 +38,7 @@ import br.com.itx.component.MeasureTime;
 			return revoked;
 		}
 
+		@Override
 		public void run() {
 			try {
 				MeasureTime mt = new MeasureTime(true);
