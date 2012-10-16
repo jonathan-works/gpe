@@ -63,9 +63,8 @@ public class DatabaseCleanerFluxo {
 				for (Integer idModelos : getModeloDocumentoParametro(conn)) {
 					setModelos.add(idModelos);
 					modeloDocumentoList.add(idModelos);
-				};
+				}
 			} catch (SQLException e) {
-//				e.printStackTrace();
 			}
 		}
 	}
@@ -166,6 +165,7 @@ public class DatabaseCleanerFluxo {
 		DatabaseCleanerFluxo dcBin = new DatabaseCleanerFluxo(connBin);
 		dcBin.clearBin();
 		System.out.println("Limpeza do Banco Concluida com Sucesso.");
+		conn.close();
 	}
 	
 	//Busca os modelos de documento que são referenciados nos parâmetros
@@ -181,6 +181,7 @@ public class DatabaseCleanerFluxo {
 			Integer idModelo = resultSet.getInt(1);
 			listaModelos.add(idModelo);
 		}
+		resultSet.close();
 		return listaModelos;
 	}
 	
