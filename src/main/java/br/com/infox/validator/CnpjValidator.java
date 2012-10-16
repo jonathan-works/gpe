@@ -33,7 +33,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 public class CnpjValidator implements Validator {
 
 	public void validate(FacesContext context, UIComponent component,
-			Object value) throws ValidatorException {
+			Object value) {
 		try {		
 			String cnpjValue = (String) value;
 			cnpjValue = cnpjValue.replaceAll("\\.", "");
