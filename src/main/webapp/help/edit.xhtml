@@ -22,14 +22,12 @@
 				xmlns:wi= "http://www.itx.com.br/jsf"
                 xmlns:f="http://java.sun.com/jsf/core"
 		        xmlns:a="http://richfaces.org/a4j"
-                xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:rich="http://richfaces.org/rich"
                 template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
                 
     <ui:define name="title">Ajuda</ui:define>
 
 	<ui:define name="baseBody">
-
 		<s:div id="formAjuda" style="width: 680px; float: left">
 			<wi:dataForm formId="ajudaForm" 
 									formTitle="Texto de ajuda">
@@ -41,7 +39,7 @@
 								   value="#{ajudaHome.instance.texto}"/>
 								   
 				<ui:define name="buttons">
-				<a:loadScript src="/js/util.js" />
+				
 					<wi:commandButton id="ajudaPersistButton"
 													  action="ajudaHome.persist"
 													  value="Gravar"
@@ -49,9 +47,8 @@
 					</wi:commandButton>
 	
 				</ui:define>
-				<wi:imageUpload opened="true"
-								imageBean="#{helpFileUpload}"
-								style="position:absolute; float:left; left:690px; top:0px;"/>
+				<wi:imageUpload imageBean="#{helpFileUpload}"
+							style="position:absolute; float:left; left:690px; top:0px;"/>
 			</wi:dataForm>
 		</s:div>
 		
