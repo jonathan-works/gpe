@@ -41,7 +41,6 @@ import org.jdom.Element;
 import br.com.infox.ibpm.jbpm.JpdlXmlWriter;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
-import br.com.infox.ibpm.jbpm.node.DecisionNode;
 import br.com.itx.util.XmlUtil;
 
 @Name(ImportarXPDL.NAME)
@@ -124,7 +123,6 @@ public class ImportarXPDL implements Serializable {
 
 	@SuppressWarnings(RAWTYPES)
 	private void gereXML(String nome, List raias, List nos, List transicoes, String cdFluxo) {
-
 		try {
 			index = 1;
 			ProcessDefinition definition = ProcessDefinition.createNewProcessDefinition();
@@ -144,8 +142,12 @@ public class ImportarXPDL implements Serializable {
 			process.setXml(xml);
 			redirect.execute();
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (InvalidActivityException e) {
+			log.equals("Classe Java: ImportarXPDL. Erro msg: " + e.getMessage());
+			mensagemErro("Classe Java: ImportarXPDL. Erro msg: " + e.getMessage());
+		}
+		catch (ParallelNodeException e) {
+			log.equals("Classe Java: ImportarXPDL. Erro msg: " + e.getMessage());
 			mensagemErro("Classe Java: ImportarXPDL. Erro msg: " + e.getMessage());
 		}
 	}
@@ -291,11 +293,15 @@ public class ImportarXPDL implements Serializable {
 	private void createForkJoinNode(List<Node> lista, Node paralelo) throws ParallelNodeException {
 		Set<Transition> arrives = paralelo.getArrivingTransitions();
 		List<Transition> leaves = paralelo.getLeavingTransitions();
-		if ((arrives == null && leaves == null)
-				|| (arrives != null && arrives.size() > 1 && leaves != null && leaves.size() > 1)) {
+		if (arrives == null && leaves == null) {
 			throw new ParallelNodeException("Impossível verificar se o Nó ("
 					+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
-					+ ") é do tipo Join ou Fork.");
+					+ ") é do tipo Join ou Fork. Não há nenhuma transição de entreda ou de saída.");
+		}
+		else if (arrives != null && arrives.size() > 1 && leaves != null && leaves.size() > 1) {
+			throw new ParallelNodeException("Impossível verificar se o Nó ("
+					+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
+					+ ") é do tipo Join ou Fork. Existem várias transições de entrada e de saída.");
 		}
 		else if (arrives != null && leaves != null && arrives.size() == 1 && leaves.size() > 1) {
 			Fork node = new Fork();
@@ -322,8 +328,7 @@ public class ImportarXPDL implements Serializable {
 		for (Transition leave : leaves) {
 			node.addLeavingTransition(leave);
 		}
-		int index = lista.indexOf(parallel);
-		lista.set(index, node);
+		lista.set(lista.indexOf(parallel), node);
 	}
 
 	private Map<Node, Integer> getParallelNodes(List<Node> l) {
@@ -403,10 +408,10 @@ public class ImportarXPDL implements Serializable {
 		List impl = ele.getChildren("Implementation", ele.getNamespace());
 		List route = ele.getChildren("Route", ele.getNamespace());
 		if (event != null && !event.isEmpty()) {
-			tipo = createStartEndMailNode(tipo, event);
+			tipo = createStartEndMailNode(event);
 		}
 		else if (impl != null && !impl.isEmpty()) {
-			tipo = createTaskProcessState(tipo, impl);
+			tipo = createTaskProcessState(impl);
 		}
 		else if (route != null && !route.isEmpty()) {
 			tipo = createParallelDecisionNode(route);
@@ -432,42 +437,40 @@ public class ImportarXPDL implements Serializable {
 	}
 
 	@SuppressWarnings(RAWTYPES)
-	private String createTaskProcessState(String tipo, List impl) {
+	private String createTaskProcessState(List impl) {
 		Element temp = (Element) impl.get(0);
 		List task = temp.getChildren("Task", temp.getNamespace());
 		List sub = temp.getChildren("SubFlow", temp.getNamespace());
 		if (task != null && !task.isEmpty()) {
-			tipo = "Task";
+			return "Task";
 		}
 		else if (sub != null && !sub.isEmpty()) {
-			tipo = "ProcessState"; // SUB-PROCESSO
+			return "ProcessState"; // SUB-PROCESSO
 		}
-		return tipo;
+		return null;
 	}
 
 	@SuppressWarnings(RAWTYPES)
-	private String createStartEndMailNode(String tipo, List event) {
+	private String createStartEndMailNode(List event) {
 		Element temp = (Element) event.get(0);
 		List start = temp.getChildren("StartEvent", temp.getNamespace());
 		List end = temp.getChildren("EndEvent", temp.getNamespace());
 		List inter = temp.getChildren("IntermediateEvent", temp.getNamespace());
 		if (start != null && !start.isEmpty()) {
-			tipo = "StartState";
+			return "StartState";
 		}
 		else if (end != null && !end.isEmpty()) {
-			tipo = "EndState";
+			return "EndState";
 		}
 		else if (inter != null && !inter.isEmpty()) {
 			Element temp2 = (Element) event.get(0);
 			String value = temp2.getAttributeValue("Trigger", temp2.getNamespace());
 			if (value != null && "Message".equalsIgnoreCase(value)) {
-				tipo = "MailNode";
+				return "MailNode";
 			}
-			else {
-				tipo = "Node";
-			}
+			return "Node";
 		}
-		return tipo;
+		return null;
 	}
 
 	private Node gereNode(String type, String nome, ProcessDefinition definition) {
@@ -504,8 +507,11 @@ public class ImportarXPDL implements Serializable {
 				}
 			}
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (InstantiationException e) {
+			log.error("ImportarXPDL: " + e.getMessage());
+		}
+		catch (IllegalAccessException e) {
+			log.error("ImportarXPDL: " + e.getMessage());
 		}
 		return node;
 	}
@@ -601,40 +607,6 @@ public class ImportarXPDL implements Serializable {
 	private void mensagemErro(String msg) {
 		FacesMessages.instance().add(Severity.INFO, msg);
 		log.error(msg);
-	}
-
-	private class ParallelNode extends DecisionNode {
-
-		private static final long	serialVersionUID	= 1L;
-		private final String		name				= "[Temporary node - DecisionNode]";
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof ParallelNode)) {
-				return false;
-			}
-			ParallelNode other = (ParallelNode) obj;
-			return getId() == other.getId();
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + (int)getId();
-			return result;
-		}
-
-		@Override
-		public String toString() {
-			return name + this.getName();
-		}
 	}
 
 }
