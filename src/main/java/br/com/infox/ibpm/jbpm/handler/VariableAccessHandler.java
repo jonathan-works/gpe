@@ -16,6 +16,7 @@
 package br.com.infox.ibpm.jbpm.handler;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -40,8 +41,9 @@ import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
 
-public class VariableAccessHandler {
+public class VariableAccessHandler implements Serializable {
 
+	private static final long serialVersionUID = -4113688503786103974L;
 	private static final String PREFIX = "#{modeloDocumento.set('";
 	private VariableAccess variableAccess;
 	private String name;

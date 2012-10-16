@@ -2,6 +2,7 @@ package br.com.infox.core.dao;
 
 import static br.com.itx.util.EntityUtil.getSingleResult;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,7 +25,9 @@ import org.jboss.seam.annotations.Scope;
 @Name(GenericDAO.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class GenericDAO {
+public class GenericDAO implements Serializable {
+
+	private static final long serialVersionUID = 2513102779632819212L;
 
 	public static final String NAME = "genericDAO";
 	

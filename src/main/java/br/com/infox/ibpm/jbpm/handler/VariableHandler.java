@@ -16,6 +16,7 @@
 
 package br.com.infox.ibpm.jbpm.handler;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,9 +39,10 @@ import br.com.itx.util.ComponentUtil;
 
 @Name("variableHandler")
 @BypassInterceptors
-public class VariableHandler {
-
+public class VariableHandler implements Serializable {
 	
+	private static final long serialVersionUID = -6777955765635127593L;
+
 	private LogProvider log = Logging.getLogProvider(VariableHandler.class);
 	
 	private List<Variavel> variables;
