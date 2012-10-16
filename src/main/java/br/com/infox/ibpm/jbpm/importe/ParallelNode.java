@@ -1,11 +1,11 @@
 package br.com.infox.ibpm.jbpm.importe;
 
-import br.com.infox.ibpm.jbpm.node.DecisionNode;
+import org.jbpm.graph.def.Node;
 
-public class ParallelNode extends DecisionNode {
+public class ParallelNode extends Node {
 
 	private static final long	serialVersionUID	= 1L;
-	private final String		name				= "[Temporary node - DecisionNode]";
+	private final String		name				= "[Temporary node]";
 
 	@Override
 	public boolean equals(Object obj) {
