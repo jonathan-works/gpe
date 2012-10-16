@@ -1,5 +1,6 @@
 package br.com.infox.core.manager;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -23,7 +24,9 @@ import br.com.infox.core.dao.GenericDAO;
 @Name(GenericManager.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class GenericManager {
+public class GenericManager implements Serializable {
+
+	private static final long serialVersionUID = -5694962568615133171L;
 
 	public static final String NAME = "genericManager";
 	

@@ -1,5 +1,7 @@
 package br.com.infox.epa.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +29,9 @@ import br.com.infox.ibpm.entity.Localizacao;
 		@NamedQuery(name=NaturezaLocalizacaoQuery.LIST_BY_NATUREZA,
 					query=NaturezaLocalizacaoQuery.LIST_BY_NATUREZA_QUERY)
 })
-public class NaturezaLocalizacao {
+public class NaturezaLocalizacao implements Serializable {
+
+	private static final long serialVersionUID = 1332489326033901417L;
 
 	public static final String TABLE_NAME = "tb_natureza_localizacao";
 	

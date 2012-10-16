@@ -1,5 +1,6 @@
 package br.com.infox.epa.entity;
 
+import java.io.Serializable;
 import java.sql.Time;
 
 import javax.persistence.Column;
@@ -34,7 +35,9 @@ import br.com.infox.ibpm.entity.Localizacao;
 		@NamedQuery(name=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO,
 					query=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY)
 })
-public class LocalizacaoTurno {
+public class LocalizacaoTurno implements Serializable {
+
+	private static final long serialVersionUID = -1258132003358073362L;
 
 	public static final String TABLE_NAME = "tb_localizacao_turno";
 	
