@@ -155,7 +155,7 @@ public class DadosCertificado {
 			}
 		} catch (Exception e) {  
 			e.printStackTrace();
-			throw new CertificadoException(e.getMessage());
+			throw new CertificadoException(e);
 		} 
 		return dadosCertificado;
 	}  	

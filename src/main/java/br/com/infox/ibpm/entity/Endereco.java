@@ -201,9 +201,7 @@ public class Endereco implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		if ( nomeLogradouro != null)
-			return nomeLogradouro;
-		return "";
+		return nomeLogradouro != null ? nomeLogradouro : "";
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

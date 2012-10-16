@@ -7,6 +7,10 @@ public class CertificadoException extends Exception {
 	public CertificadoException(String message, Throwable cause) {
 		super(message, cause);
 	}
+	
+	public CertificadoException(Throwable cause) {
+		super(cause);
+	}
 
 	public CertificadoException(String message) {
 		super(message);
