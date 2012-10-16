@@ -59,7 +59,6 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	private String email;
 	private BloqueioUsuario ultimoBloqueio;
 	private BloqueioUsuario novoBloqueio = new BloqueioUsuario();
-	private boolean estavaBloqueado;
 	
 	public BloqueioUsuario getUltimoBloqueio() {
 		return ultimoBloqueio;
@@ -156,7 +155,6 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 				int i = bloqueioUsuarioList.size() - 1;
 				ultimoBloqueio = bloqueioUsuarioList.get(i);
 			}
-			estavaBloqueado = u.getBloqueio();		
 		}
 	}
 	
@@ -189,10 +187,10 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	}
 	
 	public boolean estavaBloqueado(){
-		if (ultimoBloqueio != null)
+		if (ultimoBloqueio != null) {
 			return (ultimoBloqueio.getDataDesbloqueio() == null);
-		else
-			return false;
+		}
+		return false;
 	}
 	
 	public void desbloquear(){
@@ -271,6 +269,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	public void gerarNovaSenha() {
 		password = RandomStringUtils.randomAlphabetic(8); 
 		new RunAsOperation(true) {
+			@Override
 			public void execute() {
 				IdentityManager.instance().changePassword(login, password);
 			}
@@ -284,6 +283,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	
 	public void gerarSenhaInicial() {
 		new RunAsOperation(true) {
+			@Override
 			public void execute() {
 				IdentityManager.instance().changePassword(getInstance().getLogin(), getInstance().getLogin());
 			}
@@ -296,7 +296,6 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	 * não encontre. A partir do usuário do wiacs é dado um setId utilizando a 'identificacao'.
 	 * @throws LoginException 
 	 */
-	@SuppressWarnings("unchecked")
 	public void requisitarNovaSenha() throws LoginException {
 		FacesMessages fm = FacesMessages.instance();
 		if (email == null || login == null) {

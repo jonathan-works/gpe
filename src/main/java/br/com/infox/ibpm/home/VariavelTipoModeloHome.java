@@ -18,7 +18,7 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 
 	private static final long serialVersionUID = 1L;
 	
-	public void addVariavelTipoModelo(Variavel obj, String gridId) {
+	public void addVariavelTipoModelo(Variavel obj) {
 		if (getInstance() != null) {
 			getInstance().setVariavel(obj);
 			
@@ -34,7 +34,7 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 		}
 	}
 	
-	public void removeVariavelTipoModelo(VariavelTipoModelo obj, String gridId) {
+	public void removeVariavelTipoModelo(VariavelTipoModelo obj) {
 		if (getInstance() != null) {
 
 			Variavel variavel = obj.getVariavel();
@@ -55,7 +55,7 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 		}
 	}	
 	
-	public void addTipoModeloVariavel(TipoModeloDocumento obj, String gridId) {
+	public void addTipoModeloVariavel(TipoModeloDocumento obj) {
 		if (getInstance() != null) {
 			getInstance().setTipoModeloDocumento(obj);
 			
@@ -71,7 +71,7 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 		}
 	}
 	
-	public void removeTipoModeloVariavel(VariavelTipoModelo obj, String gridId) {
+	public void removeTipoModeloVariavel(VariavelTipoModelo obj) {
 		if (getInstance() != null) {
 			TipoModeloDocumento tipoModeloDocumento = obj.getTipoModeloDocumento();
 			

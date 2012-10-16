@@ -44,7 +44,6 @@ public class CaixaEventoAction {
 	 * Método principal, onde ocorrerá a validação para verificar se o processo
 	 * se encaixa em alguma Caixa, para então adicioná-lo à ela.
 	 */
-	@SuppressWarnings("unchecked")
 	@Observer(Event.EVENTTYPE_TRANSITION)
  	public void filtrarProcessos(ExecutionContext context) {
 		try {

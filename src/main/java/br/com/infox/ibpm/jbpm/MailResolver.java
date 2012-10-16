@@ -21,7 +21,6 @@ public class MailResolver {
 
 	public static final String NAME = "mailResolver";
 	
-	@SuppressWarnings("unchecked")
 	public String resolve(int idGrupoEmail) {		
 		List<String> lista = EntityUtil.getEntityManager()
 			.createQuery("select distinct u.email from Usuario u " +

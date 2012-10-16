@@ -39,6 +39,8 @@ import org.richfaces.event.NodeSelectedEvent;
 @BypassInterceptors
 public class ActorTasksTree implements Serializable {
 
+	private static final String	RAWTYPES	= "rawtypes";
+
 	private static final String[] TASK_TYPES = {"Minhas tarefas", "Tarefas dos meus grupos"};
 
 	private static final long serialVersionUID = 1L;
@@ -50,6 +52,7 @@ public class ActorTasksTree implements Serializable {
 
 	private Task currentTask;
 
+	@SuppressWarnings(RAWTYPES)
 	public List getProcess(String type) {
 		if (processMap.get(type) == null) {
 			if (type.equals(TASK_TYPES[0])) {
@@ -61,6 +64,7 @@ public class ActorTasksTree implements Serializable {
 		return processMap.get(type);
 	}
 
+	@SuppressWarnings(RAWTYPES)
 	private List getMyTaskList() {
 		Session session = ManagedJbpmContext.instance().getSession();
 		StringBuilder sb = new StringBuilder();
@@ -76,6 +80,7 @@ public class ActorTasksTree implements Serializable {
 				.setParameter("actorId", Actor.instance().getId()).list();
 	}
 	
+	@SuppressWarnings(RAWTYPES)
 	private List getGroupTaskList() {
 		Session session = ManagedJbpmContext.instance().getSession();
 		StringBuilder sb = new StringBuilder();
@@ -111,6 +116,7 @@ public class ActorTasksTree implements Serializable {
 		return list;
 	}
 
+	@SuppressWarnings(RAWTYPES)
 	public List getTasks() {
 		Session session = ManagedJbpmContext.instance().getSession();
 		StringBuilder sb = new StringBuilder();

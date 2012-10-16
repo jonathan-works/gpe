@@ -52,7 +52,7 @@ public class ActorTaskList {
 			String process = task.getProcessInstance().getProcessDefinition().getName();
 			List<TaskInstance> tasks = tasksForProcess.get(process);
 			if (tasks == null) {
-				tasks = new ArrayList();
+				tasks = new ArrayList<TaskInstance>();
 				tasksForProcess.put(process, tasks);
 				processList.add(process);
 			}
@@ -90,6 +90,7 @@ public class ActorTaskList {
 		return map;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Transactional
 	public List<Entry<String, TaskInstance>> getPooledForType() {
 		Actor actor = Actor.instance();
@@ -97,7 +98,7 @@ public class ActorTaskList {
 		if (actorId == null) {
 			return null;
 		}
-		ArrayList groupIds = new ArrayList(actor.getGroupActorIds());
+		ArrayList<String> groupIds = new ArrayList<String>(actor.getGroupActorIds());
 		groupIds.add(actorId);
 		List<TaskInstance> taskInstances = ManagedJbpmContext.instance().getGroupTaskList(groupIds);
 		return new ArrayList(getMapForTypes(taskInstances).entrySet());

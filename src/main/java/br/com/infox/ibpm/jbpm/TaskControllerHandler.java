@@ -29,6 +29,7 @@ public class TaskControllerHandler extends TaskController implements
 	private static final long serialVersionUID = 1L;
 
 
+	@Override
 	public void initializeTaskVariables(TaskInstance taskInstance,
 			ContextInstance contextInstance, Token token) {
 		TaskController taskController = taskInstance.getTask().getTaskController();
@@ -39,6 +40,7 @@ public class TaskControllerHandler extends TaskController implements
 	}
 
 
+	@Override
 	public void submitTaskVariables(TaskInstance taskInstance,
 			ContextInstance contextInstance, Token token) {
 		super.submitParameters(taskInstance);

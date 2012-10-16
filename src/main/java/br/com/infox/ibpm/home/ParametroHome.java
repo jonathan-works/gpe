@@ -61,7 +61,6 @@ public class ParametroHome
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static String getParametro(String nome) {
 		EntityManager em = EntityUtil.getEntityManager();
 		List<Parametro> resultList = em.createQuery(
@@ -73,7 +72,6 @@ public class ParametroHome
 		throw new IllegalArgumentException();		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static String getParametroOrFalse(String nome)	{
 		EntityManager em = EntityUtil.getEntityManager();
 		List<Parametro> resultList = em.createQuery(

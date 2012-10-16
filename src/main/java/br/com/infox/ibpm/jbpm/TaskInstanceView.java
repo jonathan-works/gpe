@@ -99,7 +99,7 @@ public class TaskInstanceView implements Serializable{
 					if(type.startsWith("textEdit")) {
 						ff.setType("textEditComboReadonly");
 						if (value != null) {
-							ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, (Integer) value);
+							ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, value);
 							if(processoDocumento != null){
 								properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
 								properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());

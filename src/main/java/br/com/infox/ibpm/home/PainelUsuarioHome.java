@@ -87,7 +87,7 @@ public class PainelUsuarioHome implements Serializable {
 	}
 	
 	public void processoCaixa(DropEvent evt) {
-		Caixa caixa = EntityUtil.find(Caixa.class, (Integer) evt.getDropValue());
+		Caixa caixa = EntityUtil.find(Caixa.class, evt.getDropValue());
 		setProcessoCaixa(getProcessoIdList(evt.getDragValue()), caixa);
 		try {
 			Processo cpt = (Processo) evt.getDragValue();

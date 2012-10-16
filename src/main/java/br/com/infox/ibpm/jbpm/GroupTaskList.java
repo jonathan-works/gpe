@@ -34,7 +34,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 public class GroupTaskList extends ActorTaskList {
 	
 	
-	@SuppressWarnings("unchecked")
+	@Override
 	public List<TaskInstance> getTaskList() {
 		Actor actor = Actor.instance();
 		String actorId = actor.getId();

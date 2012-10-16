@@ -26,7 +26,6 @@ import br.com.infox.ibpm.jbpm.handler.ActionTemplateHandler;
 import br.com.itx.util.EntityUtil;
 
 
-@SuppressWarnings("unchecked")
 public abstract class AbstractEventoAction extends ActionTemplate {
 	
 	private static final long serialVersionUID = 1L;

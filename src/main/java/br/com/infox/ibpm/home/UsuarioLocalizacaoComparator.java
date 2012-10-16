@@ -14,6 +14,7 @@ import br.com.infox.ibpm.entity.UsuarioLocalizacao;
  */
 public class UsuarioLocalizacaoComparator implements Comparator<UsuarioLocalizacao> {
 	
+	@Override
 	public int compare(UsuarioLocalizacao o1, UsuarioLocalizacao o2) {
 		if (isAdmin(o1)) {
 			return Integer.MIN_VALUE;

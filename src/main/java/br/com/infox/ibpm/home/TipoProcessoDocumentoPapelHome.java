@@ -37,7 +37,6 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 		return super.remove();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Papel> papelItems() {
 		String ejbql = "select o from Papel o";
 		List<Papel> papeis = getEntityManager().createQuery(ejbql).getResultList();
