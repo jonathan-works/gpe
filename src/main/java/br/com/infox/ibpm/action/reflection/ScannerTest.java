@@ -36,6 +36,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import br.com.itx.util.FileUtil;
+
 
 public class ScannerTest {
 	private Map<String,String> mapPrefixes = new HashMap<String, String>();
@@ -223,13 +225,7 @@ public class ScannerTest {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} finally {
-			if (jar != null) {
-				try {
-					jar.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			FileUtil.close(jar);
 		}
 	}
 
