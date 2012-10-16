@@ -30,7 +30,7 @@ public class TarefaEventoTree implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final LogProvider log = Logging.getLogProvider(TarefaEventoTree.class);
+	private static final LogProvider LOG = Logging.getLogProvider(TarefaEventoTree.class);
 	
 	public static final String NAME = "tarefaEventoTree";
 	
@@ -168,7 +168,7 @@ public class TarefaEventoTree implements Serializable {
 			q.executeUpdate();
 		} catch (Exception ex) {
 			String action = "deletar da tabela processoTarefaEvento os eventos finalizados";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "onLeaveTask()", 

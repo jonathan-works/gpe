@@ -24,7 +24,7 @@ import br.com.itx.util.FileUtil;
 
 public class CrlCertObj {
 
-	private static final LogProvider log = Logging.getLogProvider(CrlCertObj.class);
+	private static final LogProvider LOG = Logging.getLogProvider(CrlCertObj.class);
 	
 	private List<String> urls;
 	private String url;
@@ -101,13 +101,13 @@ public class CrlCertObj {
 
 				x509crl = (X509CRL) certificatefactory.generateCRL(inputStream);			
 
-				log.info("Ceritificadora: " + x509crl.getIssuerDN() + " /  Arquivo: " + fileTmp.getAbsoluteFile());
+				LOG.info("Ceritificadora: " + x509crl.getIssuerDN() + " /  Arquivo: " + fileTmp.getAbsoluteFile());
 
 				
 				fileTmp.delete();
 
 			} catch (Exception e) {
-				log.info("Erro ao atualizar o X509crl: " + e.getMessage());
+				LOG.info("Erro ao atualizar o X509crl: " + e.getMessage());
 				if (fileTmp != null) {
 					fileTmp.delete();
 				}
@@ -135,7 +135,7 @@ public class CrlCertObj {
 			try {
 				inputStreamURL = UrlUtil.getInputStreamUrl(url);
 			} catch (IOException e) {
-				log.warn("Erro ao obter o link do CRL '" + url + "': " + e.getMessage());
+				LOG.warn("Erro ao obter o link do CRL '" + url + "': " + e.getMessage());
 			}
 			if (inputStreamURL != null) {
 				return url;
@@ -168,7 +168,7 @@ public class CrlCertObj {
 				os.flush();
 			}
 		}
-        log.info(MessageFormat.format(
+        LOG.info(MessageFormat.format(
 						"O CRL do link ''{0}'' foi baixado para o arquivo ''{1}'' [{2} bytes]",
 						url, fileName, size));
         return f;

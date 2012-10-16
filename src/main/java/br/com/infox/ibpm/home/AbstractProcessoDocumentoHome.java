@@ -46,7 +46,7 @@ public abstract class AbstractProcessoDocumentoHome<T>
 
 	private static final long serialVersionUID = 1L; 
 	public static final String PETICAO_INSERIDA = "peticaoInseridaMap";
-	private static final LogProvider log = Logging.getLogProvider(ProcessoDocumentoHome.class);
+	private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoHome.class);
 	private ModeloDocumento modeloDocumentoCombo;
 	private boolean isTruePanelRecibo = Boolean.FALSE;
 	private boolean isModelo = Boolean.TRUE;
@@ -197,7 +197,7 @@ public abstract class AbstractProcessoDocumentoHome<T>
 					o = Expressions.instance()
 						.createValueExpression(linhas[i]).getValue();
 				} catch (RuntimeException e) {
-					log.warn("Erro ao avaliar expressão na linha: '" + 
+					LOG.warn("Erro ao avaliar expressão na linha: '" + 
 							linhas[i] + "': " + e.getMessage(), e);
 				}
 				modeloProcessado.append(o);

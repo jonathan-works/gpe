@@ -72,7 +72,7 @@ import br.com.itx.util.HibernateUtil;
 public class Authenticator {
 
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
-	private static final LogProvider log = Logging.getLogProvider(Authenticator.class);
+	private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
 	private String newPassword1;
 	private String newPassword2;
 	private String login;
@@ -404,8 +404,8 @@ public class Authenticator {
 				Identity.instance().removeRole(r);
 			}
 		}
-		log.warn("Obter role da localizacao: " + loc);
-		log.warn("Obter role do papel: " + loc.getPapel());
+		LOG.warn("Obter role da localizacao: " + loc);
+		LOG.warn("Obter role do papel: " + loc.getPapel());
 		roleSet = RolesMap.instance().getChildrenRoles(loc.getPapel().getIdentificador());
 		for (String r : roleSet) {
 			Identity.instance().addRole(r);
@@ -506,7 +506,7 @@ public class Authenticator {
 	
 	public void executeLogCertificadoInvalido() {
 		String msg = "Login utilizado: " + login + " / " + certChainStringLog;
-		log.warn(msg);
+		LOG.warn(msg);
 		CertificadoLog.executeLog(msg);
 	}
 	

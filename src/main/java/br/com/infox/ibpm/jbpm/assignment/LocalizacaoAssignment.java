@@ -43,7 +43,7 @@ import br.com.itx.util.ComponentUtil;
 public class LocalizacaoAssignment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider log = Logging.getLogProvider(LocalizacaoAssignment.class);
+	private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoAssignment.class);
 	private static final String IBPM_QUERY_INSERT = "insert into public.tb_processo_localizacao_ibpm " +
 													"(id_task_jbpm, id_processinstance_jbpm, id_processo, " +
 													"id_localizacao, id_papel, in_contabilizar, id_task_instance) " +
@@ -92,7 +92,7 @@ public class LocalizacaoAssignment implements Serializable {
 		q.setParameter("idProcesso", processo.getIdProcesso());
 		if ( localizacaoPapel[0] == null) { 
 			String action = "inserir Localização. Não existe Localização com o id = " + s.split(":")[0];
-			log.warn(action);
+			LOG.warn(action);
 			throw new AplicationException(AplicationException.
 					createMessage(action,
 								  "getPooledActors()", 
@@ -163,7 +163,7 @@ public class LocalizacaoAssignment implements Serializable {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			String action = "inserir processo localização: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "onTaskCreate()", 

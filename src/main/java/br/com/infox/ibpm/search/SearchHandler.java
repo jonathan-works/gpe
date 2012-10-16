@@ -62,7 +62,7 @@ public class SearchHandler implements Serializable {
 	private int pageSize = 8;
 	private int page;
 	private int maxPageSize = 100;
-	private static final LogProvider log = Logging.getLogProvider(SearchHandler.class);
+	private static final LogProvider LOG = Logging.getLogProvider(SearchHandler.class);
 	
 	
 	public String getSearchText() {
@@ -128,7 +128,7 @@ public class SearchHandler implements Serializable {
 					m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
 					searchResult.add(m);
 				} else {
-					log.warn("Task não encontrada: " + taskId);
+					LOG.warn("Task não encontrada: " + taskId);
 				}
 			}
 		} catch (Exception e) {

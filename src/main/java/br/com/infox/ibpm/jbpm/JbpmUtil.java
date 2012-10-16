@@ -66,7 +66,7 @@ import br.com.itx.util.EntityUtil;
 public class JbpmUtil {
 
 
-	private static final LogProvider log = Logging.getLogProvider(JbpmUtil.class);
+	private static final LogProvider LOG = Logging.getLogProvider(JbpmUtil.class);
 	
 	public static final String NAME = "jbpmUtil";
 	public static final int FROM_TASK_TRANSITION = 0;	
@@ -230,7 +230,7 @@ public class JbpmUtil {
 			if (id != null){
 				ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, id);
 				if (processoDocumento == null) {
-					log.warn("ProcessoDocumento não encontrado: " + id);
+					LOG.warn("ProcessoDocumento não encontrado: " + id);
 				} else {
 					variable = processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
 				}

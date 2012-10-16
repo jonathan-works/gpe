@@ -51,7 +51,7 @@ public class CrlCheckControler {
 	
 	private static final int INTERVALO_UPDATE = 10 * 60 * 1000; 
 	
-	private static final LogProvider log = Logging.getLogProvider(CrlCheckControler.class);
+	private static final LogProvider LOG = Logging.getLogProvider(CrlCheckControler.class);
 	
 	private static int threadCount = 0;
 	
@@ -158,11 +158,11 @@ public class CrlCheckControler {
 						if (crlCertObj.isExpirado()) {
 							keysToUpdate.add(entry.getKey());
 						} else {
-							log.info("A CRL " + entry.getKey() + " expira em " + crlCertObj.getDataExpiracao());
+							LOG.info("A CRL " + entry.getKey() + " expira em " + crlCertObj.getDataExpiracao());
 						}
 					}
 					for (String key : keysToUpdate) {
-						log.info("Atualizando a Crl: " + key);
+						LOG.info("Atualizando a Crl: " + key);
 						CrlCertUpdatetJob updatetJob = new CrlCertUpdatetJob(mapCrlCertObj.get(key));
 						Thread t = new Thread(updatetJob, "CrlCertUpdatetJob: " + key);
 						t.start();
@@ -191,7 +191,7 @@ public class CrlCheckControler {
 			try {
 				crlCertObj.atualizarX509crl();
 			} catch (CrlCheckException e) {
-				log.warn(e.getMessage(), e);
+				LOG.warn(e.getMessage(), e);
 			}
 		}
 		

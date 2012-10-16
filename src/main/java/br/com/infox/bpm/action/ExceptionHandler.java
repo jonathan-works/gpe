@@ -21,14 +21,14 @@ public class ExceptionHandler extends br.com.itx.exception.ExceptionHandler {
 		try {
 			printUserInfo();
 		} catch (Exception eLocal) {
-			log.error(eLocal.getMessage());
+			LOG.error(eLocal.getMessage());
 		}
 	}
 	
 	private void printUserInfo() {
-		log.error("Usuario logado: " + Authenticator.getUsuarioLogado());
-		log.error("Localizacao: " + Authenticator.getLocalizacaoAtual());
-		log.error("Papel: " + Authenticator.getPapelAtual());
+		LOG.error("Usuario logado: " + Authenticator.getUsuarioLogado());
+		LOG.error("Localizacao: " + Authenticator.getLocalizacaoAtual());
+		LOG.error("Papel: " + Authenticator.getPapelAtual());
 		printLine();
 	}
 

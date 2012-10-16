@@ -43,7 +43,7 @@ import br.com.itx.util.FileUtil;
 public class ImageFileHome {
 
 	private static final String IMAGES_DIR = "/img/";
-	private static final LogProvider log = Logging.getLogProvider(ImageFileHome.class);
+	private static final LogProvider LOG = Logging.getLogProvider(ImageFileHome.class);
 
 	private String getUserImageDir() {
 		UsuarioLocalizacao usuarioLoc = (UsuarioLocalizacao) 
@@ -52,7 +52,7 @@ public class ImageFileHome {
 			String locId = Integer.toString(usuarioLoc.getLocalizacao().getIdLocalizacao());
 			return "localizacao" + "/" + locId;
 		} 
-		log.warn("Diretório de imagens do usuário: null");
+		LOG.warn("Diretório de imagens do usuário: null");
 		return null;
 	}
 	
@@ -126,7 +126,7 @@ public class ImageFileHome {
 		} finally {
 			FileUtil.close(out);
 		}
-		log.info("Upload feito com sucesso: "
+		LOG.info("Upload feito com sucesso: "
 				+ getUserImageDir() + "/" + fileDestino.getName());
 	}
 	

@@ -28,14 +28,14 @@ public class ControleFiltros {
 	
 	public static final String INICIALIZAR_FILTROS = "br.com.infox.cliente.component.inicializarFiltros";
 	public static final String NAME = "controleFiltros";
-	private static final LogProvider log = Logging.getLogProvider(ControleFiltros.class);
+	private static final LogProvider LOG = Logging.getLogProvider(ControleFiltros.class);
 	private boolean firstTime = true;
 	
 	@Observer({INICIALIZAR_FILTROS, TarefasTreeHandler.FILTER_TAREFAS_TREE})
 	public void iniciarFiltro() {	
 		MeasureTime mt = new MeasureTime(true);
 		if (!firstTime) {
-			log.info("Ignorando execução duplicada. " + mt.getTime());
+			LOG.info("Ignorando execução duplicada. " + mt.getTime());
 			return;
 		}
 		firstTime = false;
@@ -47,7 +47,7 @@ public class ControleFiltros {
 		HibernateUtil.setFilterParameter(SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, 
 				SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO, usuarioLocalizacaoAtual.getLocalizacao().getIdLocalizacao());
 		
-		log.info(MessageFormat.format(
+		LOG.info(MessageFormat.format(
 				"Filtro executado para usuário [{0} | {1}] ({2} ms)", usuarioLocalizacaoAtual.getUsuario(),
 				LogUtil.getIdPagina(), mt.getTime()));
 	}

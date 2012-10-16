@@ -42,7 +42,7 @@ import br.com.itx.component.AbstractHome;
 
 public final class ComponentUtil {
 	
-	private static final LogProvider log = Logging.getLogProvider(ComponentUtil.class);
+	private static final LogProvider LOG = Logging.getLogProvider(ComponentUtil.class);
 	
 	private ComponentUtil() { }
 
@@ -194,7 +194,7 @@ public final class ComponentUtil {
 			f.setAccessible(false);
 		}
 		catch (Exception e) {
-			log.warn("Exception ao tentar ler atributo privado", e);
+			LOG.warn("Exception ao tentar ler atributo privado", e);
 		}
 		return returnObj;
 	}	

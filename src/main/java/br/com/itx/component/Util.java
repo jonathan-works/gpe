@@ -70,7 +70,7 @@ import br.com.itx.util.FacesUtil;
 public class Util implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider log = Logging.getLogProvider(Util.class);
+	private static final LogProvider LOG = Logging.getLogProvider(Util.class);
 
 	/**
 	 * Retorna o caminho do projeto.
@@ -507,7 +507,7 @@ public class Util implements Serializable {
 			StringBuilder sb = new StringBuilder();
 			sb.append("#{").append(action).append("}");
 	        Expressions.instance().createMethodExpression(sb.toString()).invoke();
-	        log.info(MessageFormat.format("invokeMethod: {0} [{1} ms]", 
+	        LOG.info(MessageFormat.format("invokeMethod: {0} [{1} ms]", 
 	        		sb, mt.getTime()));
 		}
     }
@@ -579,7 +579,7 @@ public class Util implements Serializable {
 	public static void setMessage(Severity severity, String msg) {
 //		FacesMessages.instance().clearGlobalMessages();
 		FacesMessages.instance().add(severity, msg);
-		log.warn(msg);
+		LOG.warn(msg);
 	}
 	
 	/**

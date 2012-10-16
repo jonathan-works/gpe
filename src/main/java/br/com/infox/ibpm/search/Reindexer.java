@@ -52,12 +52,12 @@ import br.com.itx.util.FileUtil;
 @Scope(ScopeType.EVENT)
 public class Reindexer {
 	
-	private static final LogProvider log = Logging.getLogProvider(Reindexer.class);
+	private static final LogProvider LOG = Logging.getLogProvider(Reindexer.class);
 	
 	@SuppressWarnings("unchecked")
 	public void execute() {
 		MeasureTime mt = new MeasureTime().start();
-		log.warn("----------- Criando indices de documentos das tarefas -------------");
+		LOG.warn("----------- Criando indices de documentos das tarefas -------------");
 		Session session = ManagedJbpmContext.instance().getSession().getSessionFactory().openSession();
 		Util.commitTransction();
 		session.getTransaction().setTimeout(30 * 60);
@@ -73,7 +73,7 @@ public class Reindexer {
 			while (scroll.next()) {
 				i++;
 				if (i % 1000 == 0) {
-					log.warn("Indices Criados: " + i);
+					LOG.warn("Indices Criados: " + i);
 				}
 				TaskInstance ti = (TaskInstance) scroll.get(0);
 				Map<String, String> fields = new HashMap<String, String>();
@@ -85,7 +85,7 @@ public class Reindexer {
 		}
 		scroll.close();
 		session.getTransaction().commit();
-		log.warn(MessageFormat.format(
+		LOG.warn(MessageFormat.format(
 				"----------- indices de documentos de tarefas criadas: {0} ------------- {1} ms", 
 				i, mt.getTime()));
 	}

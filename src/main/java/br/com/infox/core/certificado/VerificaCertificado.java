@@ -12,7 +12,7 @@ import br.com.infox.core.certificado.util.DigitalSignatureUtils;
 
 public class VerificaCertificado {
 	
-	private static final LogProvider log = Logging.getLogProvider(VerificaCertificado.class);
+	private static final LogProvider LOG = Logging.getLogProvider(VerificaCertificado.class);
 	
 	public static void verificaValidadeCertificado(String certChainBase64Encoded) throws CertificadoException {
 		X509Certificate[] x509Certificates = DigitalSignatureUtils.loadCertFromBase64String(certChainBase64Encoded);
@@ -39,7 +39,7 @@ public class VerificaCertificado {
 					throw new CertificadoException("Certificado revogado");
 				}
 			} catch (CrlCheckException e) {
-				log.warn("Erro ao verificar Crl: " + e.getMessage());
+				LOG.warn("Erro ao verificar Crl: " + e.getMessage());
 			}
 		} catch (Exception e) {
 			throw new CertificadoException("Erro ao válidar certificado: " + e.getMessage(), e);

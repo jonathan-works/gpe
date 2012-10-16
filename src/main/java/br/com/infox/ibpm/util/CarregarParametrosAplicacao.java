@@ -41,7 +41,7 @@ import br.com.itx.util.EntityUtil;
 public class CarregarParametrosAplicacao {
 	
 	public static final String NAME = "carregarParametrosAplicacao";
-	private static final LogProvider log = Logging.getLogProvider(CarregarParametrosAplicacao.class);
+	private static final LogProvider LOG = Logging.getLogProvider(CarregarParametrosAplicacao.class);
 	
 	@Create
 	public void init() {
@@ -50,7 +50,7 @@ public class CarregarParametrosAplicacao {
 			Contexts.getApplicationContext().set(parametro.getNomeVariavel().trim(), 
 					parametro.getValorVariavel());
 		}
-		log.info(".init(): " + sw.getTime());
+		LOG.info(".init(): " + sw.getTime());
 	}
 	
 	@SuppressWarnings("unchecked")

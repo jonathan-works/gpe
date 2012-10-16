@@ -28,7 +28,7 @@ import org.jboss.util.StopWatch;
 
 public class SendmailCommand  {
 	
-	private static final LogProvider log = Logging.getLogProvider(SendmailCommand.class);
+	private static final LogProvider LOG = Logging.getLogProvider(SendmailCommand.class);
 
 	public void execute(String templateFile) {
 		StopWatch sw = new StopWatch(true);
@@ -40,10 +40,10 @@ public class SendmailCommand  {
 			renderer.render(templateFile);
 			String msg = "Email enviado com sucesso.";
 			fm.add(msg);
-			log.info(".execute(sendmail): " + sw.getTime());
+			LOG.info(".execute(sendmail): " + sw.getTime());
 		} catch (Exception e) {
 			fm.add("Erro ao enviar eMail", e);
-			log.error(".execute(sendmail): " + sw.getTime(), e);
+			LOG.error(".execute(sendmail): " + sw.getTime(), e);
 		} finally {
 			Security.setProperty("ssl.SocketFactory.provider", "");
 		}

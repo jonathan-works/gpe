@@ -33,7 +33,7 @@ import br.com.itx.util.EntityUtil;
  */
 public class CaixaEventoAction {
 
-	private static final LogProvider log = Logging.getLogProvider(CaixaEventoAction.class);
+	private static final LogProvider LOG = Logging.getLogProvider(CaixaEventoAction.class);
 
 	public static final String NAME = "caixaEvento";
 	private static final String PROCESSO = "processo";
@@ -77,7 +77,7 @@ public class CaixaEventoAction {
 				addProcessoCaixa(caixaList, proc);
 			}
 		} catch (Exception ex) {
-			log.warn("Erro ao filtrar os processos na caixa", ex);
+			LOG.warn("Erro ao filtrar os processos na caixa", ex);
 			throw new AplicationException(AplicationException.
 					createMessage("filtrar os processos na caixa: " + ex.getLocalizedMessage(), 
 								  "filtrarProcessos()", 

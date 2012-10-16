@@ -35,7 +35,7 @@ import br.com.itx.util.ArrayUtil;
  */
 public class ExecuteLog {
 	
-	private static final LogProvider log = Logging.getLogProvider(ExecuteLog.class);	
+	private static final LogProvider LOG = Logging.getLogProvider(ExecuteLog.class);	
 	private Object[] oldState;
 	private Object[] state;
 	private EntityPersister persister;
@@ -128,7 +128,7 @@ public class ExecuteLog {
 					logEnt.getLogDetalheList().add(detail);
 				}
 			} catch (Exception e) {
-				log.error("Erro ao logar", e);
+				LOG.error("Erro ao logar", e);
 				e.printStackTrace();
 			} 
 		}
@@ -140,7 +140,7 @@ public class ExecuteLog {
 		sb.append(".execute(): ").append(tipoOperacao.getLabel());
 		sb.append(" (").append(entidade.getClass().getName()).append("): ");
 		sb.append(sw.getTime());
-		log.info(sb.toString());
+		LOG.info(sb.toString());
 	}
 
 

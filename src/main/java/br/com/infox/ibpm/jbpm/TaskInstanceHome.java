@@ -74,7 +74,7 @@ public class TaskInstanceHome implements Serializable {
 	private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações " +
 								"neste registro, verifique se ele não foi movimentado";
 
-	private static final LogProvider log = Logging.getLogProvider(TaskInstanceHome.class);
+	private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -320,7 +320,7 @@ public class TaskInstanceHome implements Serializable {
 			this.currentTaskInstance = context.getTaskInstance();
 		} catch (Exception ex) {
 			String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "setCurrentTaskInstance()", 

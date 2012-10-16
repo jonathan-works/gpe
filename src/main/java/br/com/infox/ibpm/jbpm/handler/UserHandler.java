@@ -32,7 +32,7 @@ import br.com.itx.util.EntityUtil;
 @BypassInterceptors
 public class UserHandler {
 
-	private static final LogProvider log = Logging.getLogProvider(UserHandler.class);
+	private static final LogProvider LOG = Logging.getLogProvider(UserHandler.class);
 	
 	public String getNomeUsuario(TaskInstance task) {
 		String login = task.getActorId();
@@ -57,9 +57,9 @@ public class UserHandler {
 				.setParameter("login", login)
 				.getSingleResult();
 		} catch (NoResultException e) {
-			log.warn("Usuário não encontrado. Login: " + login);
+			LOG.warn("Usuário não encontrado. Login: " + login);
 		} catch (Exception e) {
-			log.error("Erro ao buscar usuário. Login: " + login, e);
+			LOG.error("Erro ao buscar usuário. Login: " + login, e);
 		}
 		return u;
 	}

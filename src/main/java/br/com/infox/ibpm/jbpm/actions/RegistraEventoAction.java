@@ -62,7 +62,7 @@ import br.com.itx.util.EntityUtil;
 @Startup
 public class RegistraEventoAction extends AbstractEventoAction {
 	
-	private static final LogProvider log = Logging.getLogProvider(RegistraEventoAction.class);
+	private static final LogProvider LOG = Logging.getLogProvider(RegistraEventoAction.class);
 	private static final long serialVersionUID = 1L;
 	private static final String FLUXO = "fluxo";
 	private static final String TAREFA = "tarefa";
@@ -164,7 +164,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 		} catch (Exception ex) {
 			String action = "registrar eventos da expressão definida no fluxo " +
 							"#{registraEventoAction.registra()}: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "registra()", 
@@ -216,7 +216,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 			}
 		} catch (Exception ex) {
 			String action = "verificar se existem novos eventos para serem registrados na tarefa: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "verificarEventos()", 
@@ -257,7 +257,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 			}
 		} catch (Exception ex) {
 			String action = "registrar os eventos da tarefa: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "registraTarefaEventos()", 
@@ -342,7 +342,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 			}
 		} catch (Exception ex) {
 			String action = "registrar o evento "+evento.getEvento()+": ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.createMessage(action+ex.getLocalizedMessage(), 
 					"registrarEvento()", 
 					"RegistraEventoAction",

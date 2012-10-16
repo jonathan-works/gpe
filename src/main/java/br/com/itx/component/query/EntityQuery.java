@@ -30,7 +30,7 @@ import br.com.itx.component.grid.GridQuery;
 
 public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 	
-	private static final LogProvider log = Logging.getLogProvider(EntityQuery.class);
+	private static final LogProvider LOG = Logging.getLogProvider(EntityQuery.class);
 
 	private static final long serialVersionUID = 1L;
 	
@@ -92,11 +92,11 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		mt.stop();
 		if (this instanceof GridQuery) {
 			GridQuery grid = (GridQuery) this;
-			log.info("Grid: " + grid.getGridId() + " - " + getEjbql() + " (" +
+			LOG.info("Grid: " + grid.getGridId() + " - " + getEjbql() + " (" +
 					resultListSuper.size() +
 					" registros): " + mt.getTime());					
 		} else {
-			log.info("getResultList(): " + getEjbql()  + " (" +
+			LOG.info("getResultList(): " + getEjbql()  + " (" +
 					resultListSuper.size() +
 					" registros): " + mt.getTime());			
 		}
@@ -108,7 +108,7 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		MeasureTime mt = new MeasureTime(true);
 		DataModel dataModel = super.getDataModel();
 		mt.stop();
-		log.info("getDataModel(): " + mt.getTime());			
+		LOG.info("getDataModel(): " + mt.getTime());			
 		return dataModel;
 	}
 	

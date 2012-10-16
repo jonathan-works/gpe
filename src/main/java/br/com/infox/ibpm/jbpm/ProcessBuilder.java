@@ -94,7 +94,7 @@ public class ProcessBuilder implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final LogProvider log = Logging.getLogProvider(ProcessBuilder.class);
+	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
 	
 	public static final String NAME = "processBuilder";
 	public static final String POST_DEPLOY_EVENT = "postDeployEvent";
@@ -1102,7 +1102,7 @@ public class ProcessBuilder implements Serializable {
 			try {
 				layout = new JbpmLayout(instance);
 			} catch (Exception e) {
-				log.error("Erro ao construir a imagem do fluxo: " +e.getMessage(), e);
+				LOG.error("Erro ao construir a imagem do fluxo: " +e.getMessage(), e);
 			}
 		}
 		return layout;
@@ -1120,7 +1120,7 @@ public class ProcessBuilder implements Serializable {
 		try {
 			return layoutOut != null ? layoutOut.getMap() : null;
 		} catch (Exception e) {
-			log.error("Erro ao construir a imagem do fluxo: " +e.getMessage(), e);
+			LOG.error("Erro ao construir a imagem do fluxo: " +e.getMessage(), e);
 			return null;
 		}
 	}

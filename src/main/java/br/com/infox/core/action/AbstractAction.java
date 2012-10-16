@@ -51,7 +51,7 @@ public abstract class AbstractAction {
 	 */
 	protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
-	private static final LogProvider log = Logging.getLogProvider(AbstractAction.class);
+	private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
 
 	protected <T> T find(Class<T> c, Object id) {
 		return genericManager.find(c, id);
@@ -82,15 +82,15 @@ public abstract class AbstractAction {
 		} catch (AssertionFailure e) {
 			/* Esperamos a versão 3.5 para resolver o bug do AssertionFailure onde 
 			 * o hibernate consegue persistir com sucesso, mas lança um erro. =[ */
-			log.warn(msg+" (" + getObjectClassName(o) + "): " + e.getMessage());
+			LOG.warn(msg+" (" + getObjectClassName(o) + "): " + e.getMessage());
 			Events.instance().raiseEvent("afterPersist");
 			ret = PERSISTED;
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
-			log.error(msg+" (" + getObjectClassName(o) + ")", e);			
+			LOG.error(msg+" (" + getObjectClassName(o) + ")", e);			
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
-			log.error(msg+" ("+ getObjectClassName(o) + ")", e);	
+			LOG.error(msg+" ("+ getObjectClassName(o) + ")", e);	
 		} catch (AplicationException e){
 			throw new AplicationException("Erro: " + e.getMessage());
 		} catch (Exception e) {
@@ -98,11 +98,11 @@ public abstract class AbstractAction {
 			if (cause instanceof ConstraintViolationException) {
 				instance().add(StatusMessage.Severity.ERROR,
 						"Registro já cadastrado!");
-				log.warn(msg+" (" + getObjectClassName(o) + ")", cause);					
+				LOG.warn(msg+" (" + getObjectClassName(o) + ")", cause);					
 			} else {
 				instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " +
 						e.getMessage(), e);
-				log.error(msg+" (" + getObjectClassName(o) + ")", e);
+				LOG.error(msg+" (" + getObjectClassName(o) + ")", e);
 			}
 		}
 		return ret;
@@ -166,7 +166,7 @@ public abstract class AbstractAction {
 				inactiveRecursive(o);
 				ret = flushObject(o, false);
 				instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
-				log.info(".inactive(" + o + ")" + getObjectClassName(o) + 
+				LOG.info(".inactive(" + o + ")" + getObjectClassName(o) + 
 						"): " + sw.getTime());
 			} catch(Exception e) {
 				e.printStackTrace();

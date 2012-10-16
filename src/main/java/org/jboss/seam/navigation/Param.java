@@ -25,7 +25,7 @@ import org.jboss.seam.log.Logging;
  * 
  */
 public final class Param {
-	private static final LogProvider log = Logging.getLogProvider(Param.class);
+	private static final LogProvider LOG = Logging.getLogProvider(Param.class);
 
 	public static final String INVALID_MESSAGE_ID = "org.jboss.seam.param.Invalid";
 	public static final String REQUIRED_MESSAGE_ID = "org.jboss.seam.param.Required";
@@ -128,7 +128,7 @@ public final class Param {
 				converter = getConverter();
 			} catch (RuntimeException re) {
 				// YUCK! due to bad JSF/MyFaces error handling
-				log.warn("could not create converter for: " + name, re);
+				LOG.warn("could not create converter for: " + name, re);
 				return null;
 			}
 
@@ -184,7 +184,7 @@ public final class Param {
 			converter = getConverter();
 		} catch (RuntimeException re) {
 			// YUCK! due to bad JSF/MyFaces error handling
-			log.warn("could not create converter for: " + name, re);
+			LOG.warn("could not create converter for: " + name, re);
 			return null;
 		}
 

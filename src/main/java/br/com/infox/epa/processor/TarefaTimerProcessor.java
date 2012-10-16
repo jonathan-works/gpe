@@ -45,7 +45,7 @@ public class TarefaTimerProcessor {
 	}	
 	
 	/**
-	 * Incrementa o tempo de cada tarefa, verificando seus turnos.
+	 * Incrementa o tempo de cada tarefa, verificando se está dentro do turno da sua localização.
 	 * @param cron - que está em execução
 	 * @return null
 	 */
@@ -67,35 +67,18 @@ public class TarefaTimerProcessor {
 		Date fireTime = trigger.getPreviousFireTime();
 		for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getAllNotEnded()) {
 			LocalizacaoTurno lt = localizacaoTurnoManager.getTurnoTarefa(pt, fireTime);
-			pt.setTempoGasto(pt.getTempoGasto() + localizacaoTurnoManager.calcularMinutosGastos(fireTime, pt.getUltimoDisparo(), lt));
-			pt.setUltimoDisparo(fireTime);
-			if(pt.getTempoPrevisto() == 0) {	
-				pt.setPorcentagem(-1);
-			} else {
-				pt.setPorcentagem((pt.getTempoGasto()*100)/pt.getTempoPrevisto());
+			if (lt != null) {
+				pt.setTempoGasto(pt.getTempoGasto() + localizacaoTurnoManager.calcularMinutosGastos(fireTime, pt.getUltimoDisparo(), lt));
+				pt.setUltimoDisparo(fireTime);
+				if(pt.getTempoPrevisto() == 0) {	
+					pt.setPorcentagem(-1);
+				} else {
+					pt.setPorcentagem((pt.getTempoGasto()*100)/pt.getTempoPrevisto());
+				}
+				processoEpaTarefaManager.update(pt);
 			}
-			processoEpaTarefaManager.update(pt);
 		}
 		
-
-		/*for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getAllNotEnded()) {
-			List<Localizacao> byTaskInstance = processoLocalizacaoIbpmManager.
-					listByTaskInstance(pt.getTaskInstance());
-			int tempoGasto = 0;
-			for(Localizacao localizacao : byTaskInstance) {
-				for (LocalizacaoTurno lt : localizacao.getLocalizacaoTurnoList()) {
-					tempoGasto = localizacaoTurnoManager.calcularMinutosGastos(fireTime, pt.getUltimoDisparo(), lt);
-				}
-			}
-			pt.setTempoGasto(pt.getTempoGasto() + tempoGasto);
-			pt.setUltimoDisparo(fireTime);
-			if(pt.getTempoPrevisto() == 0) {	
-				pt.setPorcentagem(-1);
-			} else {
-				pt.setPorcentagem((pt.getTempoGasto()*100)/pt.getTempoPrevisto());
-			}
-			processoEpaTarefaManager.update(pt);
-		}*/
 		return null;
 	}
 	

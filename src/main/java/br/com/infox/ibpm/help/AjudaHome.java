@@ -60,7 +60,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 
 	private static final String	RAWTYPES	= "rawtypes";
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider log = Logging.getLogProvider(AjudaHome.class);
+	private static final LogProvider LOG = Logging.getLogProvider(AjudaHome.class);
 	
 	private String viewId;
 	private Pagina pagina;
@@ -114,7 +114,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	}
 
 	public void reindex() {
-		log.info("----------- Criando indices -------------");
+		LOG.info("----------- Criando indices -------------");
 		FullTextEntityManager em = (FullTextEntityManager) getEntityManager();
 		Session session = HibernateUtil.getSession();
 		org.hibernate.Query query = session.createQuery("select a from Ajuda a");
@@ -126,11 +126,11 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		    em.index(a);
 		}
 		scroll.close();
-		log.info("----------- Indices criados -------------");
+		LOG.info("----------- Indices criados -------------");
 	}
 	
 	public void reindexNoTransaction() {
-		log.info("----------- Criando indices -------------");
+		LOG.info("----------- Criando indices -------------");
 		Util.commitTransction();
 		FullTextEntityManager em = (FullTextEntityManager) EntityUtil.getEntityManager();
 		FullTextSession fullTextSession = (FullTextSession) em.getDelegate();
@@ -143,7 +143,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 			fullTextSession.index(a);
 		}
 		scroll.close();
-		log.info("----------- Indices criados -------------");		
+		LOG.info("----------- Indices criados -------------");		
 	}
 
 	@Override

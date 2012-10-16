@@ -53,7 +53,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 
 	private static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
-	private static final LogProvider log = Logging.getLogProvider(AbstractHome.class);
+	private static final LogProvider LOG = Logging.getLogProvider(AbstractHome.class);
 
 	private static final long serialVersionUID = 1L;
 	
@@ -230,27 +230,27 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		} catch (AssertionFailure e) {
 			//Resolver o bug do AssertionFailure onde o hibernate consegue persistir com sucesso,
 			//mas lança um erro.
-			log.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
+			LOG.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
 			ret = "persisted";
 			updateOldInstance();
 			raiseEventHome("afterPersist");
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
-			log.error(".persist() (" + getInstanceClassName() + ")", e);			
+			LOG.error(".persist() (" + getInstanceClassName() + ")", e);			
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, getNonUniqueObjectExceptionMessage());
-			log.error(".persist() (" + getInstanceClassName() + ")", e);	
+			LOG.error(".persist() (" + getInstanceClassName() + ")", e);	
 		} catch (AplicationException e){
 			throw new AplicationException("Erro: " + e.getMessage(), e);
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
 				instance().add(StatusMessage.Severity.ERROR, getConstraintViolationExceptionMessage());
-				log.warn(".persist() (" + getInstanceClassName() + ")", cause);					
+				LOG.warn(".persist() (" + getInstanceClassName() + ")", cause);					
 			} else {
 				instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " +
 						e.getMessage(), e);
-				log.error(".persist() (" + getInstanceClassName() + ")", e);
+				LOG.error(".persist() (" + getInstanceClassName() + ")", e);
 			}
 		} 
 		if (ret == null) {
@@ -258,12 +258,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			try {
 				setInstance((T) EntityUtil.cloneEntity(getInstance(), false));
 			} catch (Exception e) {
-				log.warn(".persist() (" + getInstanceClassName() + "): " + 
+				LOG.warn(".persist() (" + getInstanceClassName() + "): " + 
 						Strings.toString(getInstance()), e);
 				newInstance();
 			}
 		} 
-		log.info(".persist() (" + getInstanceClassName() + "): " + sw.getTime());
+		LOG.info(".persist() (" + getInstanceClassName() + "): " + sw.getTime());
 		return ret;
 	}
 	
@@ -295,26 +295,26 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		} catch (AssertionFailure e) {
 			//Resolver o bug do AssertionFailure onde o hibernate consegue persistir com sucesso,
 			//mas lança um erro.
-			log.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
+			LOG.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
 			ret = "persisted";
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
-			log.error(msg, e);			
+			LOG.error(msg, e);			
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, getNonUniqueObjectExceptionMessage());
-			log.error(msg, e);			
+			LOG.error(msg, e);			
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
 				instance().add(StatusMessage.Severity.ERROR, "Erro de constraint: " + e.getLocalizedMessage());
-				log.warn(msg, cause);					
+				LOG.warn(msg, cause);					
 			} else {
 				instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " +
 						e.getMessage(), e);
-				log.error(msg, e);
+				LOG.error(msg, e);
 			}
 		}  
-		log.info(msg + sw.getTime());		
+		LOG.info(msg + sw.getTime());		
 		String name = getEntityClass().getName() + "." + "afterUpdate";
 		super.raiseEvent(name, getInstance(), oldEntity);
 		if (ret != null) {
@@ -406,7 +406,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		formName.append("Form");
 		UIComponent form = ComponentUtil.getUIComponent(formName.toString());
 		ComponentUtil.clearChildren(form);
-		log.info(".clearForm() (" + getInstanceClassName() + 
+		LOG.info(".clearForm() (" + getInstanceClassName() + 
 				"): " + sw.getTime());		
 	}
 	
@@ -423,7 +423,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		sb.append(getInstanceClassName());
 		sb.append("): ");
 		sb.append(sw.getTime());
-		log.info(sb.toString());			
+		LOG.info(sb.toString());			
 	}
 	
 	public String getHomeName() {
@@ -441,7 +441,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		getEntityManager().merge(instance);
 		getEntityManager().flush();
 		instance().add(StatusMessage.Severity.ERROR, getInactiveSuccess());
-		log.info(".inactive(" + instance + ")" + getInstanceClassName() + 
+		LOG.info(".inactive(" + instance + ")" + getInstanceClassName() + 
 				"): " + sw.getTime());		
 		return "update";
 	}

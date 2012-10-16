@@ -32,7 +32,7 @@ public abstract class TaskAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final LogProvider log = Logging.getLogProvider(TaskAction.class);
+	private static final LogProvider LOG = Logging.getLogProvider(TaskAction.class);
 	private String name;
 	private List<Transition> avaliableTransitions;
 	private TaskInstance taskInstance;
@@ -136,7 +136,7 @@ public abstract class TaskAction implements Serializable {
 			nextTaskInstance = context.getTaskInstance();
 		} catch (Exception ex) {
 			String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "setCurrentTaskInstance()", 

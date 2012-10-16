@@ -42,7 +42,7 @@ import org.jboss.util.StopWatch;
 @Filter
 public class MeeterFilter extends AbstractFilter {
 
-	private static final LogProvider log = Logging.getLogProvider(MeeterFilter.class);	
+	private static final LogProvider LOG = Logging.getLogProvider(MeeterFilter.class);	
 	
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
@@ -53,7 +53,7 @@ public class MeeterFilter extends AbstractFilter {
 		String ajaxPushHeader = hsr.getHeader(BaseFilter.AJAX_PUSH_KEY_HEADER);		
 		long time = sw.getTime();
 		if (ajaxPushHeader == null && time > 100) {
-			log.info(((HttpServletRequest)req).getRequestURI() +  ": " + time);
+			LOG.info(((HttpServletRequest)req).getRequestURI() +  ": " + time);
 		}
 	}
 

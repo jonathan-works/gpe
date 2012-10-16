@@ -31,7 +31,7 @@ import br.com.itx.util.EntityUtil;
 public class JbpmEventsHandler implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider log = Logging.getLogProvider(JbpmEventsHandler.class);
+	private static final LogProvider LOG = Logging.getLogProvider(JbpmEventsHandler.class);
 	public static final String NAME = "jbpmEventsHandler";
 	
 	@Observer(Event.EVENTTYPE_TASK_END)
@@ -49,7 +49,7 @@ public class JbpmEventsHandler implements Serializable {
 				.executeUpdate();
 		} catch (Exception ex) {
 			String action = "remover o processo da localizacao: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "removerProcessoLocalizacao()", 
@@ -69,7 +69,7 @@ public class JbpmEventsHandler implements Serializable {
 					  .executeUpdate();
 		} catch (Exception ex) {
 			String action = "limpar as variaveis do painel para atualização: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "refreshPainel()", 
@@ -90,7 +90,7 @@ public class JbpmEventsHandler implements Serializable {
 		inserirVersoesTarefas();
 		} catch (Exception ex) {
 			String action = "realizar atualização automáticas após publicação do fluxo: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "updatePostDeploy()", 
@@ -188,7 +188,7 @@ public class JbpmEventsHandler implements Serializable {
 					  .executeUpdate();
 		} catch (Exception ex) {
 			String action = "remover o processo da caixa: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "removeCaixaProcesso()", 
@@ -227,7 +227,7 @@ public class JbpmEventsHandler implements Serializable {
 			}
 		} catch (Exception ex) {
 			String action = "iniciar a tarefa: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "iniciarTask()", 

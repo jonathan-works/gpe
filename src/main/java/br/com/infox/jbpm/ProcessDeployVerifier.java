@@ -62,7 +62,7 @@ public class ProcessDeployVerifier {
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "processDeployVerifier";
-	private static final LogProvider log = Logging.getLogProvider(ProcessDeployVerifier.class);	
+	private static final LogProvider LOG = Logging.getLogProvider(ProcessDeployVerifier.class);	
 	
 	@Create
 	public void init() {
@@ -92,7 +92,7 @@ public class ProcessDeployVerifier {
 					JbpmUtil.getJbpmSession().flush();
 					Events.instance().raiseEvent(ProcessBuilder.POST_DEPLOY_EVENT, 
 							instance);
-					log.info(MessageFormat.format("Publicando fluxo {0}", f.getFluxo()));
+					LOG.info(MessageFormat.format("Publicando fluxo {0}", f.getFluxo()));
 				}
 			}
 		}
@@ -103,7 +103,7 @@ public class ProcessDeployVerifier {
 				e.printStackTrace();
 			}
 		}
-		log.info(MessageFormat.format("Tempo de publicacao: {0}", (new Date().getTime() - time)));
+		LOG.info(MessageFormat.format("Tempo de publicacao: {0}", (new Date().getTime() - time)));
 	}
 
 	private ProcessDefinition parseInstance(String xml) {

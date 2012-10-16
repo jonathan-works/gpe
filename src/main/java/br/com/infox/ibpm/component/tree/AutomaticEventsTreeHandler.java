@@ -56,7 +56,7 @@ import br.com.itx.util.EntityUtil;
 public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 
 	public static final String LISTA_EVENTO_VARIABLE = "listaEvento";
-	private static final LogProvider log = Logging.getLogProvider(AutomaticEventsTreeHandler.class);
+	private static final LogProvider LOG = Logging.getLogProvider(AutomaticEventsTreeHandler.class);
 	private static final long serialVersionUID = 1L;
 	
 	public static final String NAME = "automaticEventsTree";
@@ -520,7 +520,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 			Events.instance().raiseEvent(AFTER_REGISTER_EVENT);
 		} catch (Exception ex) {
 			String action = "registrar os eventos do tipo tarefa: ";
-			log.warn(action, ex);
+			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "registraEventos()", 

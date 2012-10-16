@@ -46,7 +46,7 @@ public final class EntityUtil implements Serializable {
 		
 	public static final String ENTITY_MANAGER_NAME = "entityManager";
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider log = Logging.getLogProvider(EntityUtil.class);
+	private static final LogProvider LOG = Logging.getLogProvider(EntityUtil.class);
 
 	private EntityUtil() { }
 	
@@ -226,7 +226,7 @@ public final class EntityUtil implements Serializable {
 					e.printStackTrace();
 				} 
 			} else {
-				log.error("Não foi encontrado um PropertyDescriptor para o " +
+				LOG.error("Não foi encontrado um PropertyDescriptor para o " +
 						"Id da entidade " + entidade.getClass().getName());
 			}
 		} 	

@@ -17,7 +17,7 @@ import br.com.itx.component.Util;
 @BypassInterceptors
 public class ExceptionHandler extends Exceptions {
 
-	protected static final LogProvider log = Logging.getLogProvider(ExceptionHandler.class);
+	protected static final LogProvider LOG = Logging.getLogProvider(ExceptionHandler.class);
 	private static Util util = new Util();
 	
 	@Override
@@ -30,14 +30,14 @@ public class ExceptionHandler extends Exceptions {
 		String urlRequest = getUrlRequest();
 		System.out.println(e.getMessage());
 		printLine();
-		log.error("e.getMessage(): " + e.getMessage());
-		log.error("Parâmetros: " + getRequestParams());
-		log.error("Url Requisição: " + urlRequest);
+		LOG.error("e.getMessage(): " + e.getMessage());
+		LOG.error("Parâmetros: " + getRequestParams());
+		LOG.error("Url Requisição: " + urlRequest);
 		printLine();
 	}
 
 	protected void printLine() {
-		log.error("---------------------------------------------");
+		LOG.error("---------------------------------------------");
 	}
 
 	private String getRequestParams() {

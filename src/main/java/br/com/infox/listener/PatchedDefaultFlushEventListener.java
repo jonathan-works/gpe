@@ -33,11 +33,11 @@ import org.slf4j.LoggerFactory;
 public class PatchedDefaultFlushEventListener extends DefaultFlushEventListener{
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = LoggerFactory.getLogger(PatchedDefaultFlushEventListener.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PatchedDefaultFlushEventListener.class);
 
     @Override
     protected void performExecutions(EventSource session) throws HibernateException {
-    	log.trace("executing flush");
+    	LOG.trace("executing flush");
     	session.getPersistenceContext().setFlushing(true);
         try {
             session.getJDBCContext().getConnectionManager().flushBeginning();
@@ -48,7 +48,7 @@ public class PatchedDefaultFlushEventListener extends DefaultFlushEventListener{
             session.getActionQueue().executeActions();
         }
         catch (HibernateException he) {
-            log.error("Could not synchronize database state with session", he);
+            LOG.error("Could not synchronize database state with session", he);
             throw he;
         }
         finally {

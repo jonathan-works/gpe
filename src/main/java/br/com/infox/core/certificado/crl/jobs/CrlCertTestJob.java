@@ -17,7 +17,7 @@ import br.com.itx.component.MeasureTime;
 	 */
 	public class CrlCertTestJob implements Runnable {
 		
-		private static final LogProvider log = Logging.getLogProvider(CrlCertTestJob.class);
+		private static final LogProvider LOG = Logging.getLogProvider(CrlCertTestJob.class);
 
 		private boolean revoked;
 		private Certificado certificado;
@@ -43,7 +43,7 @@ import br.com.itx.component.MeasureTime;
 			try {
 				MeasureTime mt = new MeasureTime(true);
 				revoked = crlThreadCheck.isCertificadoRevogado(certificado.getMainCertificate());
-				log.info(MessageFormat.format(
+				LOG.info(MessageFormat.format(
 						"Verificada a revogação do certificado {0}. ({1} ms)",
 						certificado.getCn(), mt.getTime()));
 				if (jobActionListner != null) {

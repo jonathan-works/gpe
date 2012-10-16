@@ -40,7 +40,7 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable {
 
-	private static final LogProvider log = Logging.getLogProvider(AbstractTreeHandler.class);	
+	private static final LogProvider LOG = Logging.getLogProvider(AbstractTreeHandler.class);	
 	
 	private static final long serialVersionUID = 1L;
 
@@ -93,7 +93,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 			EntityNode<E> entityNode = createNode();
 			entityNode.setIgnore(getEntityToIgnore());
 			rootList = entityNode.getRoots(queryRoots);
-			log.info(".getRoots(): " + sw.getTime());
+			LOG.info(".getRoots(): " + sw.getTime());
 		}
 		return rootList;
 	}

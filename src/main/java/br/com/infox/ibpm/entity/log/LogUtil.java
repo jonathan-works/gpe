@@ -50,7 +50,7 @@ import br.com.itx.util.EntityUtil;
 public class LogUtil {
 
 	private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
-	private static final LogProvider log = Logging.getLogProvider(LogUtil.class);
+	private static final LogProvider LOG = Logging.getLogProvider(LogUtil.class);
 
 	/**
 	 * Checa se a classe é um array de bytes.
@@ -215,7 +215,7 @@ public class LogUtil {
 					builder.append("; ");
 				}
 			}
-			log.info("toStringFields(Object component): " + t.getTime());
+			LOG.info("toStringFields(Object component): " + t.getTime());
 			return builder.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -235,7 +235,7 @@ public class LogUtil {
 					map.put(descriptor.getName(), field);
 				}
 			}
-			log.info("getFields(" + component.getClass().getName() + "): " + t.getTime());
+			LOG.info("getFields(" + component.getClass().getName() + "): " + t.getTime());
 			return map;
 		} catch (Exception e) {
 			return new HashMap<String, Object>();
