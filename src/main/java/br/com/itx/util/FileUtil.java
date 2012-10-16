@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.util.jar.JarFile;
 
 public final class FileUtil {
 	
@@ -77,16 +78,17 @@ public final class FileUtil {
 	}
 
 	private static void copy(File fromFile, File toFile) {
+		FileChannel fromChannel = null;
+		FileChannel toChannel = null;
 		try {
-		    FileChannel fromChannel = 
-		    	new FileInputStream(fromFile).getChannel();
-		    FileChannel toChannel = 
-		    	new FileOutputStream(toFile).getChannel();
+		    fromChannel = new FileInputStream(fromFile).getChannel();
+		    toChannel = new FileOutputStream(toFile).getChannel();
 		    toChannel.transferFrom(fromChannel, 0, fromChannel.size());
-		    fromChannel.close();
-		    toChannel.close();
 		} catch (IOException err) {
 			err.printStackTrace();
+		} finally {
+			FileUtil.close(fromChannel);
+		    FileUtil.close(toChannel);
 		}
 	}
 
@@ -137,6 +139,16 @@ public final class FileUtil {
 		if (stream != null) {
 			try {
 				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void close(JarFile jarFile) {
+		if (jarFile != null) {
+			try {
+				jarFile.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
