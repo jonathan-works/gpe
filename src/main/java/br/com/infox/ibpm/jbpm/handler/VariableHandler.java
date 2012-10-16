@@ -43,7 +43,7 @@ public class VariableHandler implements Serializable {
 	
 	private static final long serialVersionUID = -6777955765635127593L;
 
-	private LogProvider log = Logging.getLogProvider(VariableHandler.class);
+	private transient LogProvider log = Logging.getLogProvider(VariableHandler.class);
 	
 	private List<Variavel> variables;
 	private List<Variavel> taskVariables;
@@ -105,8 +105,9 @@ public class VariableHandler implements Serializable {
 		return (VariableHandler) Component.getInstance("variableHandler");
 	}
 
-	public class Variavel {
+	public class Variavel implements Serializable {
 		
+		private static final long serialVersionUID = 4536717298608507132L;
 		private final String type;
 		private final Object value;
 		private final String label;

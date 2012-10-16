@@ -32,7 +32,7 @@ public class GenericDAO implements Serializable {
 	public static final String NAME = "genericDAO";
 	
 	@In
-	protected EntityManager entityManager;
+	protected transient EntityManager entityManager;
 	
 	/**
 	 * Busca o registro na entidade informada.
