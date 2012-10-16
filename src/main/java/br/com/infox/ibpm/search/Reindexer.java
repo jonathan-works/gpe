@@ -30,8 +30,6 @@ import org.hibernate.Query;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -44,7 +42,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.search.Indexer;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
-import br.com.itx.util.EntityUtil;
 import br.com.itx.util.FileUtil;
 
 @Name("reindexer")
