@@ -29,7 +29,7 @@ import org.jdom.output.XMLOutputter;
 
 public final class XmlUtil {
 	
-	private static final String encoding = "ISO-8859-1";
+	private static final String ENCODING = "ISO-8859-1";
 	
 	private XmlUtil() { }
 	
@@ -73,7 +73,7 @@ public final class XmlUtil {
 				file.getParentFile().mkdirs();
 				FileOutputStream fout = new FileOutputStream(file);
 				try {
-					Writer writer = new OutputStreamWriter(fout, encoding);
+					Writer writer = new OutputStreamWriter(fout, ENCODING);
 					XMLOutputter jdom = new XMLOutputter();
 					Format format = jdom.getFormat();
 					defineFormat(format);
@@ -92,7 +92,7 @@ public final class XmlUtil {
 	public static void defineFormat(Format format) {
 		format.setOmitDeclaration(false);
 		format.setExpandEmptyElements(false);
-		format.setEncoding(encoding);
+		format.setEncoding(ENCODING);
 		format.setIndent("    ");
 		format.setTextMode(Format.TextMode.TRIM_FULL_WHITE);
 	}

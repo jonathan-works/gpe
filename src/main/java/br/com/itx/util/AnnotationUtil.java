@@ -44,10 +44,9 @@ public final class AnnotationUtil {
 	 * @param object Objeto em que será pesquisada o método que possui a anotação
 	 * @param annotationClass @interface da anotação a ser pesquisada.
 	 * @return Nome do atributo
-	 * @throws AnnotationException
 	 */
 	public static String getAnnotationField(Object object, Class<? extends Annotation> 
-											 annotationClass) throws AnnotationException {
+											 annotationClass) {
 		return getAnnotationField(object.getClass(), annotationClass);
 	}
 	
@@ -56,10 +55,9 @@ public final class AnnotationUtil {
 	 * @param classObj Classe em que será pesquisada o método que possui a anotação
 	 * @param annotationClass @interface da anotação a ser pesquisada.
 	 * @return Nome do atributo
-	 * @throws AnnotationException
 	 */
 	public static String getAnnotationField(Class<? extends Object> classObj, Class<? extends Annotation> 
-											 annotationClass) throws AnnotationException {
+											 annotationClass) {
 		for (Method m: classObj.getMethods()) { 
 			if(!m.isAnnotationPresent(annotationClass)) {
 				continue;
@@ -85,10 +83,9 @@ public final class AnnotationUtil {
 	 * @param object Objeto em que será pesquisada o método que possui a anotação
 	 * @param annotationClass anotação a ser pesquisada nos métodos do objeto
 	 * @return Valor do atributo
-	 * @throws AnnotationException
 	 */
 	public static Object getValue(Object object, Class<? extends Annotation> 
-											annotationClass) throws AnnotationException {
+											annotationClass) {
 		String fieldName = getAnnotationField(object, annotationClass);
 		return ComponentUtil.getValue(object, fieldName);
 	}
@@ -97,9 +94,8 @@ public final class AnnotationUtil {
 	 * Retorna o valor do Id da entidade.
 	 * @param object Objeto em que será pesquisada o método que possui a anotação
 	 * @return Valor do Id
-	 * @throws AnnotationException
 	 */
-	public static Object getIdValue(Object object) throws AnnotationException {
+	public static Object getIdValue(Object object) {
 		return getValue(object, Id.class);
 	}
 }

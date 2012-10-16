@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class DatabaseUtil {
 	
-	private static final String fileNameProperties = "/database.properties";
+	private static final String FILE_NAME_PROPERTIES = "/database.properties";
 	
 	/*
 	 * Retorna a conexão com a url, userName e password definidos 
@@ -43,7 +43,7 @@ public class DatabaseUtil {
 	}
 	
 	protected String getFileNameProperties() {
-		return fileNameProperties;
+		return FILE_NAME_PROPERTIES;
 	}
 	
 }
