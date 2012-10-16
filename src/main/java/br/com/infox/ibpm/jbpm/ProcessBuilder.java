@@ -130,7 +130,7 @@ public class ProcessBuilder implements Serializable {
 	private List<String> typeList;
 	private Properties types;
 	private String tab;
-	private JbpmLayout layout;
+	private transient JbpmLayout layout;
 	private String nodeName;
 	private String taskName;
 	private Map<BigInteger, String> modifiedTasks = new HashMap<BigInteger, String>();

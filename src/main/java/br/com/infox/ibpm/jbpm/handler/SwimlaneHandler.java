@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.jbpm.handler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,8 +35,9 @@ import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
 
-public class SwimlaneHandler {
+public class SwimlaneHandler implements Serializable {
 
+	private static final long serialVersionUID = 7688420965362230234L;
 	private Swimlane swimlane;
 	private Localizacao localizacao;
 	private Papel papel;

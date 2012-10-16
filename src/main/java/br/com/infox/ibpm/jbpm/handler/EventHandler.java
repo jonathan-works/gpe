@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.jbpm.handler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,9 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 
 
-public class EventHandler {
+public class EventHandler implements Serializable {
 
+	private static final long serialVersionUID = -7904557434535614157L;
 	private Event event;
 	private String expression;
 	private Action currentAction;

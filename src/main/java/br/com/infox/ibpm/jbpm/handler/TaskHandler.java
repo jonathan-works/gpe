@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.jbpm.handler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,9 @@ import br.com.infox.bpm.action.TaskPageAction;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 
 
-public class TaskHandler {
+public class TaskHandler implements Serializable {
 
+	private static final long serialVersionUID = 9033256144150197159L;
 	private Task task;
 	private String swimlaneName;
 	private boolean dirty;

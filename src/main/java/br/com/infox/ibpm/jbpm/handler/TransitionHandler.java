@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.jbpm.handler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +24,9 @@ import org.jbpm.graph.def.Transition;
 
 import br.com.infox.ibpm.jbpm.converter.NodeConverter;
 
-public class TransitionHandler {
+public class TransitionHandler implements Serializable {
+
+	private static final long serialVersionUID = 4373236937521654740L;
 
 	private Transition transition;
 	

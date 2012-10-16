@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.jbpm.handler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,9 +32,11 @@ import org.jbpm.taskmgmt.def.Task;
 import br.com.itx.util.ReflectionsUtil;
 
 
-public class NodeHandler {
+public class NodeHandler implements Serializable {
 
 	
+	private static final long serialVersionUID = -236376783694756255L;
+
 	public enum UnitsEnum {
 		
 		second("Segundo"), minute("Minuto"), hour("Hora"), day("Dia"),
