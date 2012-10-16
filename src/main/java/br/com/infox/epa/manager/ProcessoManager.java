@@ -12,6 +12,7 @@ import br.com.infox.core.manager.GenericManager;
 @AutoCreate
 public class ProcessoManager extends GenericManager {
 	
+	private static final long serialVersionUID = 8095772422429350875L;
 	public static final String NAME = "processoManager";
 	
 }

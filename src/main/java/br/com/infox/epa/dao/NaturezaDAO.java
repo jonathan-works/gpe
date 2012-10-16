@@ -17,6 +17,7 @@ import br.com.infox.core.dao.GenericDAO;
 @AutoCreate
 public class NaturezaDAO extends GenericDAO {
 
+	private static final long serialVersionUID = -6881232966845304018L;
 	public static final String NAME = "naturezaDAO";
 
 }

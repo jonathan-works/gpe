@@ -18,6 +18,8 @@ import br.com.infox.epa.entity.NaturezaLocalizacao;
 @AutoCreate
 public class NaturezaLocalizacaoManager extends GenericManager {
 
+	private static final long serialVersionUID = 2985338050214816668L;
+
 	public static final String NAME = "naturezaLocalizacaoManager";
 
 	@In

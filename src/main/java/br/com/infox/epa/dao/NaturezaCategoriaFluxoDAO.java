@@ -24,6 +24,7 @@ import br.com.infox.epa.query.NaturezaCategoriaFluxoQuery;
 @AutoCreate
 public class NaturezaCategoriaFluxoDAO extends GenericDAO {
 
+	private static final long serialVersionUID = -1456893293816945596L;
 	public static final String NAME = "naturezaCategoriaFluxoDAO";
 
 	/**

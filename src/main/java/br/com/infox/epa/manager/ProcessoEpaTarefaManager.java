@@ -18,6 +18,8 @@ import br.com.infox.epa.entity.ProcessoEpaTarefa;
 @AutoCreate
 public class ProcessoEpaTarefaManager extends GenericManager {
 
+	private static final long serialVersionUID = 7702766272346991620L;
+
 	public static final String NAME = "processoEpaTarefaManager";
 
 	@In

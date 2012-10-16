@@ -16,6 +16,8 @@ import br.com.infox.epa.dao.CategoriaDAO;
 @AutoCreate
 public class CategoriaManager extends GenericManager {
 
+	private static final long serialVersionUID = 2649821908249070536L;
+
 	public static final String NAME = "categoriaManager";
 
 	@In

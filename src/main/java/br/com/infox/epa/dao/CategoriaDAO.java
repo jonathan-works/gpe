@@ -20,6 +20,7 @@ import br.com.infox.epa.query.CategoriaQuery;
 @AutoCreate
 public class CategoriaDAO extends GenericDAO {
 
+	private static final long serialVersionUID = -7175831474709085125L;
 	public static final String NAME = "categoriaDAO";
 
 	public List<Object[]> listProcessoByCategoria() {

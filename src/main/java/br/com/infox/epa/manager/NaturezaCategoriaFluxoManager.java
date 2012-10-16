@@ -18,6 +18,8 @@ import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
 @AutoCreate
 public class NaturezaCategoriaFluxoManager extends GenericManager {
 
+	private static final long serialVersionUID = -1441750117108371132L;
+
 	public static final String NAME = "naturezaCategoriaFluxoManager";
 
 	@In

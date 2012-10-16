@@ -18,6 +18,8 @@ import br.com.infox.epa.entity.CategoriaAssunto;
 @AutoCreate
 public class CategoriaAssuntoManager extends GenericManager{
 
+	private static final long serialVersionUID = -3580636874720809514L;
+
 	public static final String NAME = "categoriaAssuntoManager";
 
 	@In

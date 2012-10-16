@@ -26,6 +26,7 @@ import br.com.infox.epa.query.ProcessoEpaTarefaQuery;
 @AutoCreate
 public class ProcessoEpaTarefaDAO extends GenericDAO {
 
+	private static final long serialVersionUID = 4132828408460655332L;
 	public static final String NAME = "processoEpaTarefaDAO";
 	
 	/**
@@ -54,8 +55,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		 .append("and c = :categoria");
 		Query q = entityManager.createQuery(s.toString());
 		q.setParameter("categoria", c);
-		List<Object[]> resultList = q.getResultList();
-		return resultList;
+		return q.getResultList();
 	}
 	
 	public List<Object[]> listForaPrazoTarefa(Categoria c) {
@@ -65,8 +65,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		 .append("and c = :categoria");
 		Query q = entityManager.createQuery(s.toString());
 		q.setParameter("categoria", c);
-		List<Object[]> resultList = q.getResultList();
-		return resultList;
+		return q.getResultList();
 	}
 	
 	public List<Object[]> listTarefaPertoLimite() {
@@ -75,8 +74,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		 .append("where pt.porcentagem <= 100 and pt.porcentagem >= 70 ")
 		 .append("and pt.dataFim is null");
 		Query q = entityManager.createQuery(s.toString());
-		List<Object[]> resultList = q.getResultList();
-		return resultList;
+		return q.getResultList();
 	}
 	
 }

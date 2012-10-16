@@ -21,6 +21,7 @@ import br.com.infox.epa.query.ProcessoEpaQuery;
 @AutoCreate
 public class ProcessoEpaDAO extends GenericDAO {
 
+	private static final long serialVersionUID = 8899227886410190168L;
 	public static final String NAME = "processoEpaDAO";
 
 	public List<ProcessoEpa> listAllNotEnded() {

@@ -23,6 +23,7 @@ import br.com.infox.ibpm.entity.Localizacao;
 @AutoCreate
 public class NatCatFluxoLocalizacaoDAO extends GenericDAO {
 
+	private static final long serialVersionUID = -4306540893162078405L;
 	public static final String NAME = "natCatFluxoLocalizacaoDAO";
 	
 	public void deleteByNatCatFluxoAndLocalizacao

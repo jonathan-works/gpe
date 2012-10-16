@@ -24,6 +24,7 @@ import br.com.infox.epa.query.NaturezaLocalizacaoQuery;
 @AutoCreate
 public class NaturezaLocalizacaoDAO extends GenericDAO {
 
+	private static final long serialVersionUID = 6988083662252576007L;
 	public static final String NAME = "naturezaLocalizacaoDAO";
 
 	/**

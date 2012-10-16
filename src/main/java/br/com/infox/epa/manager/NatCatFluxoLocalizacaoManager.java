@@ -27,6 +27,8 @@ import br.com.infox.ibpm.entity.Localizacao;
 @AutoCreate
 public class NatCatFluxoLocalizacaoManager extends GenericManager {
 
+	private static final long serialVersionUID = -9025640498790727799L;
+
 	public static final String NAME = "natCatFluxoLocalizacaoManager";
 
 	@In

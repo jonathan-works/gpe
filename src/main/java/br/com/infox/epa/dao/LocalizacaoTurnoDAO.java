@@ -28,6 +28,7 @@ import br.com.infox.ibpm.entity.Localizacao;
 @AutoCreate
 public class LocalizacaoTurnoDAO extends GenericDAO {
 
+	private static final long serialVersionUID = 4917008814431859631L;
 	public static final String NAME = "localizacaoTurnoDAO";
 	
 	/**

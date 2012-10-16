@@ -17,6 +17,8 @@ import br.com.infox.epa.entity.ProcessoEpa;
 @AutoCreate
 public class ProcessoEpaManager extends GenericManager {
 
+	private static final long serialVersionUID = 168832523707680478L;
+
 	public static final String NAME = "processoEpaManager";
 
 	@In
