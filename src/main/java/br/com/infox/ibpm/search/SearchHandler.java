@@ -17,7 +17,6 @@ package br.com.infox.ibpm.search;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +40,12 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.help.HelpUtil;
-import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
 import br.com.infox.search.Indexer;
-import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
 
@@ -141,24 +137,6 @@ public class SearchHandler implements Serializable {
 		resultSize = searchResult.size();
 	}
 	
-	@SuppressWarnings("unchecked")
-	private List<Long> getIdListOrdenadaTarefasVisiveis(List<Document> search) {
-		if (search.size() == 0) {
-			return Collections.emptyList();
-		}
-		List<Long> listIdTaskInstance = new ArrayList<Long>(search.size());
-		for (Document d : search) {
-			listIdTaskInstance.add(Long.parseLong(d.get("id")));
-		}
-		ControleFiltros.instance().iniciarFiltro();
-		javax.persistence.Query query = EntityUtil.createQuery("select o.idTaskInstance from SituacaoProcesso o where " +
-				"o.idTaskInstance in (:listIdTaskInstance)");
-		query.setParameter("listIdTaskInstance", listIdTaskInstance);
-		List<Long> list = query.getResultList();
-		Collections.sort(list);
-		return list;
-	}	
-
 	public static String getConteudo(TaskInstance ti) {
 		StringBuilder sb = new StringBuilder();
 		TaskController taskController = ti.getTask().getTaskController();
