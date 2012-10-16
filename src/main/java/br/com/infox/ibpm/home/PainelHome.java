@@ -55,9 +55,9 @@ public class PainelHome {
 		return em.createQuery(query).getResultList().size();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public List getList() {
-		EntityManager em = (EntityManager) EntityUtil.getEntityManager();
+		EntityManager em = EntityUtil.getEntityManager();
 		List list = em.createQuery(valores.get(acao).get("query")).getResultList();
 		return list;
 	}
