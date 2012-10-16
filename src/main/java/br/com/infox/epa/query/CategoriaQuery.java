@@ -8,7 +8,7 @@ package br.com.infox.epa.query;
  */
 public interface CategoriaQuery {
 
-	public static final String QUERY_PARAM_CATEGORIA = "categoria";
+	String QUERY_PARAM_CATEGORIA = "categoria";
 
 	String LIST_PROCESSO_EPA_BY_CATEGORIA = "listProcessoEpaByCategoria";
 	

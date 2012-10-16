@@ -2,12 +2,12 @@ package br.com.infox.core.action.list;
 
 public interface Pageable {
 	
-	public Integer getPage();
-	public void setPage(Integer page);
+	Integer getPage();
+	void setPage(Integer page);
 	
-	public Integer getPageCount();
+	Integer getPageCount();
 	
-	public boolean isPreviousExists();
-	public boolean isNextExists();
+	boolean isPreviousExists();
+	boolean isNextExists();
 
 }
