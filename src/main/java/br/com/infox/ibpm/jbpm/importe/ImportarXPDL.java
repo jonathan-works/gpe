@@ -48,6 +48,7 @@ import br.com.itx.util.XmlUtil;
 @BypassInterceptors
 public class ImportarXPDL implements Serializable {
 
+	private static final String	ERRO_MSG			= "ImportarXPDL. Erro msg: ";
 	private static final String	NAME_ATTRIBUTE		= "Name";
 	private static final String	PARALLEL			= "Parallel";
 	private static final String	RAWTYPES			= "rawtypes";
@@ -61,7 +62,7 @@ public class ImportarXPDL implements Serializable {
 	public static final String	ACTIVITES			= "Activities";
 	public static final String	TRANSITIONS			= "Transitions";
 	public static final String	NO_NAME				= "Indefinido ";
-	private Log					log					= Logging.getLog(this.getClass());
+	private static Log			LOG					= Logging.getLog(ImportarXPDL.class);
 	private int					index				= 1;
 
 	public void importarXPDL(byte[] bytes, String cdFluxo) {
@@ -77,6 +78,7 @@ public class ImportarXPDL implements Serializable {
 			mensagemErro("Erro ao importar arquivo XPDL. "
 					+ (cdFluxo == null || "".equals(cdFluxo) ? "Erro na gravação do fluxo."
 							: (bytes == null ? "Erro no upload do arquivo." : "")));
+			LOG.error("Erro ao importar arquivo XPDL.");
 		}
 	}
 
@@ -106,6 +108,7 @@ public class ImportarXPDL implements Serializable {
 			mensagemErro("XPDL inválido. "
 					+ (poolsList == null ? "Não há nenhuma piscina definida."
 							: "Não mais de uma piscina definida."));
+			LOG.error("XPDL inválido.");
 			return;
 		}
 		Element pools = poolsList.get(0);
@@ -143,12 +146,12 @@ public class ImportarXPDL implements Serializable {
 			redirect.execute();
 		}
 		catch (InvalidActivityException e) {
-			log.equals("Classe Java: ImportarXPDL. Erro msg: " + e.getMessage());
-			mensagemErro("Classe Java: ImportarXPDL. Erro msg: " + e.getMessage());
+			LOG.error(ERRO_MSG + e.getMessage(), e);
+			mensagemErro(ERRO_MSG + e.getMessage());
 		}
 		catch (ParallelNodeException e) {
-			log.equals("Classe Java: ImportarXPDL. Erro msg: " + e.getMessage());
-			mensagemErro("Classe Java: ImportarXPDL. Erro msg: " + e.getMessage());
+			LOG.error(ERRO_MSG + e.getMessage(), e);
+			mensagemErro(ERRO_MSG + e.getMessage());
 		}
 	}
 
@@ -294,28 +297,50 @@ public class ImportarXPDL implements Serializable {
 		Set<Transition> arrives = paralelo.getArrivingTransitions();
 		List<Transition> leaves = paralelo.getLeavingTransitions();
 		if (arrives == null && leaves == null) {
-			throw new ParallelNodeException("Impossível verificar se o Nó ("
-					+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
-					+ ") é do tipo Join ou Fork. Não há nenhuma transição de entreda ou de saída.");
+			throwsParallelExcption(paralelo);
 		}
 		else if (arrives != null && arrives.size() > 1 && leaves != null && leaves.size() > 1) {
-			throw new ParallelNodeException("Impossível verificar se o Nó ("
-					+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
-					+ ") é do tipo Join ou Fork. Existem várias transições de entrada e de saída.");
+			throwsParallelExceptionTransictions(paralelo);
 		}
 		else if (arrives != null && leaves != null && arrives.size() == 1 && leaves.size() > 1) {
-			Fork node = new Fork();
-			preencherNo(lista, paralelo, arrives, leaves, node);
+			createForknode(lista, paralelo, arrives, leaves);
 		}
 		else if (arrives != null && leaves != null && leaves.size() == 1 && arrives.size() > 1) {
-			Join node = new Join();
-			preencherNo(lista, paralelo, arrives, leaves, node);
+			createJoinNode(lista, paralelo, arrives, leaves);
 		}
 		else {
-			throw new ParallelNodeException("Impossível verificar se o Nó ("
-					+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
-					+ ") é do tipo Join ou Fork.");
+			throwParallelExcptionCheckImpossible(paralelo);
 		}
+	}
+
+	private void createJoinNode(List<Node> lista, Node paralelo, Set<Transition> arrives,
+			List<Transition> leaves) {
+		Join node = new Join();
+		preencherNo(lista, paralelo, arrives, leaves, node);
+	}
+
+	private void createForknode(List<Node> lista, Node paralelo, Set<Transition> arrives,
+			List<Transition> leaves) {
+		Fork node = new Fork();
+		preencherNo(lista, paralelo, arrives, leaves, node);
+	}
+
+	private void throwParallelExcptionCheckImpossible(Node paralelo) throws ParallelNodeException {
+		throw new ParallelNodeException("Impossível verificar se o Nó ("
+				+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
+				+ ") é do tipo Join ou Fork.");
+	}
+
+	private void throwsParallelExceptionTransictions(Node paralelo) throws ParallelNodeException {
+		throw new ParallelNodeException("Impossível verificar se o Nó ("
+				+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
+				+ ") é do tipo Join ou Fork. Existem várias transições de entrada e de saída.");
+	}
+
+	private void throwsParallelExcption(Node paralelo) throws ParallelNodeException {
+		throw new ParallelNodeException("Impossível verificar se o Nó ("
+				+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
+				+ ") é do tipo Join ou Fork. Não há nenhuma transição de entreda ou de saída.");
 	}
 
 	private void preencherNo(List<Node> lista, Node parallel, Set<Transition> arrives,
@@ -475,6 +500,63 @@ public class ImportarXPDL implements Serializable {
 
 	private Node gereNode(String type, String nome, ProcessDefinition definition) {
 		Node node = null;
+		Class<?> nodeType = retrieveNodeType(type);
+		try {
+			node = createNodeFromNodetype(type, nome, definition, nodeType);
+		}
+		catch (InstantiationException e) {
+			LOG.error("ImportarXPDL: " + e.getMessage(), e);
+		}
+		catch (IllegalAccessException e) {
+			LOG.error("ImportarXPDL: " + e.getMessage(), e);
+		}
+		return node;
+	}
+
+	private Node createNodeFromNodetype(String type, String nome, ProcessDefinition definition,
+			Class<?> nodeType) throws InstantiationException, IllegalAccessException {
+		if (nodeType == null) {
+			return null;
+		}
+		Node node = createNodefromType(type, nodeType);
+		assignNameToNode(nome, node);
+		assignTaksToNode(definition, node);
+		return node;
+	}
+
+	private void assignTaksToNode(ProcessDefinition definition, Node node) {
+		if (node instanceof TaskNode || node instanceof StartState || node instanceof ProcessState) {
+			addTask(node, definition);
+		}
+	}
+
+	private void assignNameToNode(String nome, Node node) {
+		if (nome != null && !nome.isEmpty()) {
+			node.setName(nome);
+		}
+		else {
+			if (node instanceof StartState || node instanceof EndState) {
+				node.setName((node instanceof StartState ? "Início" : "Fim"));
+			}
+			else {
+				node.setName(NO_NAME + index++);
+			}
+		}
+	}
+
+	private Node createNodefromType(String type, Class<?> nodeType) throws InstantiationException,
+			IllegalAccessException {
+		Node node;
+		if (PARALLEL.equalsIgnoreCase(type)) {
+			node = new ParallelNode();
+		}
+		else {
+			node = (Node) nodeType.newInstance();
+		}
+		return node;
+	}
+
+	private Class<?> retrieveNodeType(String type) {
 		Class<?> nodeType = null;
 		if (PARALLEL.equalsIgnoreCase(type)) {
 			nodeType = ParallelNode.class;
@@ -482,38 +564,7 @@ public class ImportarXPDL implements Serializable {
 		else {
 			nodeType = NodeTypes.getNodeType(getNodeType(type));
 		}
-		try {
-			if (nodeType != null) {
-				if (PARALLEL.equalsIgnoreCase(type)) {
-					node = new ParallelNode();
-				}
-				else {
-					node = (Node) nodeType.newInstance();
-				}
-				if (nome != null && !nome.isEmpty()) {
-					node.setName(nome);
-				}
-				else {
-					if (node instanceof StartState || node instanceof EndState) {
-						node.setName((node instanceof StartState ? "Início" : "Fim"));
-					}
-					else {
-						node.setName(NO_NAME + index++);
-					}
-				}
-				if (node instanceof TaskNode || node instanceof StartState
-						|| node instanceof ProcessState) {
-					addTask(node, definition);
-				}
-			}
-		}
-		catch (InstantiationException e) {
-			log.error("ImportarXPDL: " + e.getMessage());
-		}
-		catch (IllegalAccessException e) {
-			log.error("ImportarXPDL: " + e.getMessage());
-		}
-		return node;
+		return nodeType;
 	}
 
 	public void addTask(Node node, ProcessDefinition definition) {
@@ -576,7 +627,7 @@ public class ImportarXPDL implements Serializable {
 		return nodeType.substring(0, 1).toLowerCase() + nodeType.substring(1);
 	}
 
-	/*
+	/**
 	 * Metodo que adiciona o tratamento de eventos
 	 */
 	private void addEvents(ProcessDefinition definition) {
@@ -606,7 +657,5 @@ public class ImportarXPDL implements Serializable {
 
 	private void mensagemErro(String msg) {
 		FacesMessages.instance().add(Severity.INFO, msg);
-		log.error(msg);
 	}
-
 }
