@@ -253,12 +253,18 @@ public class CertificadosCaCheckManager {
 			String jarPath = dirURL.getPath().substring(5,
 					dirURL.getPath().indexOf("!")); // strip out only the JAR
 													// file
-			JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
-			Enumeration<JarEntry> entries = jar.entries(); // gives ALL entries
+			JarFile jar = null;
+			Enumeration<JarEntry> entries = null;
+			try {
+				jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+				entries = jar.entries(); // gives ALL entries
+			} finally {
+				FileUtil.close(jar);
+			}
 															// in jar
 			List<URL> result = new ArrayList<URL>(); // avoid duplicates in case
 														// it is a subdirectory
-			while (entries.hasMoreElements()) {
+			while (entries != null && entries.hasMoreElements()) {
 				String name = entries.nextElement().getName();
 				if (name.startsWith(path) && !name.equals(path)
 						&& name.matches(pattern)) { // filter according to the
