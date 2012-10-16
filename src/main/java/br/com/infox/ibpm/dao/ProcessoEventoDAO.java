@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.dao;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -20,7 +19,7 @@ import br.com.infox.ibpm.query.ProcessoEventoQuery;
 @Name(ProcessoEventoDAO.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class ProcessoEventoDAO extends GenericDAO implements Serializable {
+public class ProcessoEventoDAO extends GenericDAO {
 
 	private static final long serialVersionUID = 1L;
 

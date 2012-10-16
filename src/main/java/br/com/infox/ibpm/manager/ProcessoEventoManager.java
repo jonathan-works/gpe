@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.manager;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -22,7 +21,7 @@ import br.com.infox.ibpm.entity.ProcessoEvento;
 @Name(ProcessoEventoManager.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class ProcessoEventoManager extends GenericManager implements Serializable {
+public class ProcessoEventoManager extends GenericManager {
 
 	private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,5 @@
 package br.com.infox.epa.manager;
 
-import java.io.Serializable;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +24,7 @@ import br.com.infox.ibpm.entity.Localizacao;
 @Name(LocalizacaoTurnoManager.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class LocalizacaoTurnoManager extends GenericManager implements Serializable {
+public class LocalizacaoTurnoManager extends GenericManager {
 
 	private static final long serialVersionUID = -7441171561119813498L;
 

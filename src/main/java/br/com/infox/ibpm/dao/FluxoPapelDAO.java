@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.dao;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ import br.com.infox.ibpm.query.FluxoPapelQuery;
 @Name(FluxoPapelDAO.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class FluxoPapelDAO extends GenericDAO implements Serializable {
+public class FluxoPapelDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "fluxoPapelDAO";
 	
