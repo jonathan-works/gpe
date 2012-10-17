@@ -21,8 +21,10 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.List;
 
 import org.jdom.Document;
+import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -97,4 +99,22 @@ public final class XmlUtil {
 		format.setTextMode(Format.TextMode.TRIM_FULL_WHITE);
 	}
 	
+	public static List<Element> getChildren(Element element, String name) {
+		return element.getChildren(name, element.getNamespace());
+	}
+	
+	/**
+	 * Retorna torna o elemento filho na posição especificada no parâmetro index  
+	 * @param element
+	 * @param name
+	 * @param index
+	 * @return
+	 */
+	public static Element getChildByIndex(Element element, String name, int index) {
+		return getChildren(element, name).get(index);
+	}
+	
+	public static String getAttributeValue(Element element, String name) {
+		return element.getAttributeValue(name, element.getNamespace());
+	}
 }
