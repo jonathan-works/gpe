@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.security.cert.Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -57,6 +58,14 @@ public class CertificadoLog {
 		}
 	}	
 
+	public static void executeLog(Certificate[] certChain) {
+		try {
+			executeLog("");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
+	
 	public static String getTextLogFile() throws Exception {
 		initLogDir();
 		if (logFileDir != null && logFileDir.exists()) {
