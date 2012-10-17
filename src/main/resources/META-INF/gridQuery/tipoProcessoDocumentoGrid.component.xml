@@ -9,9 +9,9 @@
 		<property name="gridId">tipoProcessoDocumento</property>
 		<property name="key">idTipoProcessoDocumento</property>
 		<property name="columns">
-			<value>tipoProcessoDocumento</value>	
+			<value>tipoProcessoDocumento</value>
 			<value>inTipoDocumento:{valueType: enum}</value>
-			<value>visibilidade:{valueType: enum}</value>	
+			<value>visibilidade:{valueType: enum}</value>
 			<value>ativo: { valueType: ativo }</value>
 		</property>
 		<property name="restrictions">
@@ -22,11 +22,11 @@
 			<value>visibilidade = #{tipoProcessoDocumentoSearch.visibilidade}</value>
 		</property>		
 		<property name="searchFields">
-			<value>ativo: {type : comboSituacao}</value>
 			<value>tipoProcessoDocumento</value>	
 			<value>inTipoDocumento:{type: comboEnum, properties:{items: 'tipoProcessoDocumentoHome.tipoDocumentoEnumValues'}}</value>
 			<value>visibilidade:{type: comboEnum, properties:{items: 'tipoProcessoDocumentoHome.visibilidadeEnumValues'}}</value>		
 			<value>publico: {type : comboBoolean}</value>
+			<value>ativo: {type : comboSituacao}</value>
 		</property>
 		<property name="order">tipoProcessoDocumento</property>
 	</component>

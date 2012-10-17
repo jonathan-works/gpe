@@ -75,14 +75,17 @@
 					 formTitle="#{messages['pj.titleForm']}">
 			<wi:inputCnpj id="cnpj"
 						  value="#{pjHome.instance.cnpj}"
+						  required="true"
 						  label="#{messages['pj.cnpj']}"/>
 			<wi:inputText id="nomePessoa"
 						  label="#{messages['pj.nome']}"
+						  required="true"
 						  value="#{pjHome.instance.nome}"
 						  maxlength="150" />
 			<wi:inputText id="razaoSocial"
 						  label="#{messages['pj.razaoSocial']}"
 						  value="#{pjHome.instance.razaoSocial}"
+						  required="true"
 						  maxlength="100" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['agrupamento.ativo']}"

@@ -112,20 +112,22 @@
 									required="true"
 									noSelectionLabel="#{messages['protocoloDocumento.selectDocumentoFisico']}"/>
 			<wi:inputText id="pessoa"
-						 value="#{protocoloDocumentoHome.instance.nomePessoa}"
-						 label="#{messages['protocoloDocumento.nomePessoa']}"/>			 
+							value="#{protocoloDocumentoHome.instance.nomePessoa}"
+							required="true"
+							label="#{messages['protocoloDocumento.nomePessoa']}"/>
 			<wi:inputDate id="#{idDataEntrada}"
-						  value="#{protocoloDocumentoHome.instance.dataEntrada}"
-						  label="#{messages['protocoloDocumento.dataEntrada']}"/>
+							value="#{protocoloDocumentoHome.instance.dataEntrada}"
+							required="true"
+							label="#{messages['protocoloDocumento.dataEntrada']}"/>
 			<wi:inputDate id="#{idDataSaida}"
-						  value="#{protocoloDocumentoHome.instance.dataSaida}"
-						  label="#{messages['protocoloDocumento.dataSaida']}"
-						  onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
-						  oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"/>
+							value="#{protocoloDocumentoHome.instance.dataSaida}"
+							label="#{messages['protocoloDocumento.dataSaida']}"
+							onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
+							oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"/>
 			<wi:selectSituacaoRadio id="ativo"
-						label="#{messages['agrupamento.ativo']}"
-						required="true"
-						value="#{protocoloDocumentoHome.instance.ativo}" />
+									label="#{messages['agrupamento.ativo']}"
+									required="true"
+									value="#{protocoloDocumentoHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

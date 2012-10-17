@@ -75,12 +75,15 @@
 			<wi:inputText id="descricaoSala"
 						  label="#{messages['localizacaoFisica.descricaoSala']}"
 						  value="#{localizacaoFisicaHome.instance.descricaoSala}"
+						  required="true"
 						  maxlength="150" />
 			<wi:inputNumber id="nrPrateleira"
 						 value="#{localizacaoFisicaHome.instance.nrPrateleira}"
+						 required="true"
 						 label="#{messages['localizacaoFisica.nrPrateleira']}"/>
 			<wi:inputNumber id="nrCaixa"
 						 value="#{localizacaoFisicaHome.instance.nrCaixa}"
+						 required="true"
 						 label="#{messages['localizacaoFisica.nrCaixa']}"/>
 			<wi:selectSituacaoRadio id="ativo"
 									   label="#{messages['agrupamento.ativo']}"

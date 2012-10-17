@@ -41,12 +41,6 @@
 					<wi:inputCep id="numeroCep"
 								 value="#{cepList.entity.numeroCep}"
 								 label="#{messages['cep.numeroCep']}"/>
-					<wi:inputText id="nomeLogradouro"
-								  label="#{messages['cep.nomeLogradouro']}"
-								  value="#{cepList.entity.nomeLogradouro}"/>
-					<wi:inputText id="nomeBairro"
-								  label="#{messages['cep.nomeBairro']}"
-								  value="#{cepList.entity.nomeBairro}"/>
 					<wi:selectOneMenuEntity id="estado"
 											label="#{messages['cep.municipio.estado']}"
 											value="#{cepList.estado}"
@@ -66,6 +60,12 @@
 									label="#{messages['cep.municipio']}">
 						</wi:suggest>		
 					</s:div>
+					<wi:inputText id="nomeLogradouro"
+								  label="#{messages['cep.nomeLogradouro']}"
+								  value="#{cepList.entity.nomeLogradouro}"/>
+					<wi:inputText id="nomeBairro"
+								  label="#{messages['cep.nomeBairro']}"
+								  value="#{cepList.entity.nomeBairro}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
 											  label="#{messages['cep.ativo']}"
 											  value="#{cepList.entity.ativo}" />
