@@ -72,7 +72,7 @@ public class JbpmUtil {
 	public static final int FROM_TASK_TRANSITION = 0;	
 	public static final int TO_TASK_TRANSITION = 1;
 	private static final String VAR_NOME_TAREFA_ANTERIOR = "nomeTarefaAnterior";
-	private Map<String, String> messagesMap;	
+	private static Map<String, String> messagesMap;	
 	
 	/**
 	 * Busca a localização de uma tarefa
@@ -124,7 +124,7 @@ public class JbpmUtil {
 		return getJbpmMessages();
 	}
 	
-	public synchronized Map<String, String> getJbpmMessages() {
+	public static synchronized Map<String, String> getJbpmMessages() {
 		if (messagesMap == null) {
 			messagesMap = new HashMap<String, String>();
 			List<JbpmVariavelLabel> l = EntityUtil.getEntityList(JbpmVariavelLabel.class);
