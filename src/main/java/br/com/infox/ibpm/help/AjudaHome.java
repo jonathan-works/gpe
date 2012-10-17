@@ -255,8 +255,8 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 						texto = highlighted;
 					}
 				} catch (ParseException e) {
-					e.printStackTrace();
-				}	
+					LOG.error(e);
+				}
 			}
 		}
 		return texto;

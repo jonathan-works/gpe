@@ -32,6 +32,8 @@ import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.Scorer;
 import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.itx.util.FileUtil;
 
@@ -39,7 +41,7 @@ import br.com.itx.util.FileUtil;
 public final class HelpUtil {
 	
 	private static final String SEPARATOR = "<b> &#183;&#183;&#183;</b>";
-
+	private static final LogProvider LOG = Logging.getLogProvider(HelpUtil.class);
 
 	private HelpUtil() {}
 
@@ -63,7 +65,7 @@ public final class HelpUtil {
 			}
 			text = sb.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(e);
 		} finally {
 			FileUtil.close(reader);
 			FileUtil.close(br);
