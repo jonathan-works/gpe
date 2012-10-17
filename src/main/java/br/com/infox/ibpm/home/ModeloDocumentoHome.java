@@ -132,7 +132,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {
-		Pattern pattern = Pattern.compile("#[{].+[}]");
+		Pattern pattern = Pattern.compile("#[{][^{}]+[}]");
 		Matcher matcher = pattern.matcher(instance.getModeloDocumento());
 		List<String> variaveis = getValorVariaveis();
 		boolean eliminarTodos = variaveis.size() == 0;
