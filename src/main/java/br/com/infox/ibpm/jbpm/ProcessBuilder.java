@@ -1108,7 +1108,13 @@ public class ProcessBuilder implements Serializable {
 		return layout;
 	}
 	
-	public void paintGraph(OutputStream out) throws IOException {
+	/**
+	 * Parâmetro Object obj é utilizado pela página graph.xhtml pelo componente mediaOutput
+	 * @param out
+	 * @param obj
+	 * @throws IOException
+	 */
+	public void paintGraph(OutputStream out, Object obj) throws IOException {
 		JbpmLayout layoutOut = getLayout();
 		if (layoutOut != null) {
 			layoutOut.paint(out);
