@@ -179,7 +179,7 @@ public class UsuarioLocalizacaoHome
 	}
 	
 	@Observer("evtSelectLocalizacaoEstrutura")
-	public void setLocalizacaoEstrutura(Localizacao estrutura) {
+	public void setLocalizacaoEstrutura(Localizacao localizacao, Localizacao estrutura) {
 		setEstrutura(estrutura);
 	}
 
