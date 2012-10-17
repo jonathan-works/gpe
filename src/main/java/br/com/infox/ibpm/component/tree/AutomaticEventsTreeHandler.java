@@ -119,7 +119,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 						while (eventoAux != null){
 							for (EntityNode<Evento> root : rootList) {
 								if (root.getEntity().equals(eventoAux)){
-									setSelecao(eb.getEvento(), eb);
+									setSelecao(eb.getEvento(), true, eb);
 									if (!eventoBeanList.contains(eb))
 										eventoBeanList.add(eb);
 									eventoAux = null;
@@ -270,7 +270,8 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		}
 	}
 	
-	public void setSelecao(Evento selected, EventoBean eb) {
+	@SuppressWarnings("unused")
+	public void setSelecao(Evento selected, boolean isMultiplo, EventoBean eb) {
 		if (selected.getEventoList().isEmpty()) {
 			super.setSelected(selected);
 			Evento parent = getDad(selected);
