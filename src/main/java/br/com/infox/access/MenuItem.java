@@ -9,6 +9,7 @@ import org.jboss.seam.core.Interpolator;
 public class MenuItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final int PRIME = 31;
 
 	private String label;
 
@@ -70,7 +71,6 @@ public class MenuItem implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int PRIME = 31;
 		int result = 1;
 		result = PRIME * result + ((label == null) ? 0 : label.hashCode());
 		return result;

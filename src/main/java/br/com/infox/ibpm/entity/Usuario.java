@@ -195,8 +195,8 @@ public class Usuario extends UsuarioLogin{
 	public Localizacao[] getLocalizacoes() {
 		Localizacao[] locs = new Localizacao[usuarioLocalizacaoList.size()];
 		int i = 0;
-		for (UsuarioLocalizacao Uloc : usuarioLocalizacaoList) {
-			locs[i] = Uloc.getLocalizacao();
+		for (UsuarioLocalizacao uloc : usuarioLocalizacaoList) {
+			locs[i] = uloc.getLocalizacao();
 			i++;
 		}
 		return locs;

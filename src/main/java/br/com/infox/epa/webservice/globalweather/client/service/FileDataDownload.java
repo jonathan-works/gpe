@@ -74,7 +74,7 @@ public class FileDataDownload {
     
     public static List<String> getUrlAsList(String fileAddress) throws IOException {
     	List<String> list = new ArrayList<String>();
-    	URLConnection URLConn = null;
+    	URLConnection urlConn = null;
 
     	// URLConnection class represents a communication link between the
     	// application and a URL.
@@ -84,8 +84,8 @@ public class FileDataDownload {
     		fileUrl = new URL(fileAddress);
     		//The URLConnection object is created by invoking the
 
-    		URLConn = fileUrl.openConnection();
-    		br = new BufferedReader(new InputStreamReader(URLConn.getInputStream()));
+    		urlConn = fileUrl.openConnection();
+    		br = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
     		String line = br.readLine();
     		while (line != null) {
     			list.add(line);

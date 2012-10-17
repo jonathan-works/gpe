@@ -212,8 +212,8 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	public Boolean getSistema() {
 		return sistema;
 	}
-	public void setSistema(Boolean Sistema) {
-		this.sistema = Sistema;
+	public void setSistema(Boolean sistema) {
+		this.sistema = sistema;
 	}
 
 	@Override

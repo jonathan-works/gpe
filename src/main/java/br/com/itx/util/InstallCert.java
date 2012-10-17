@@ -87,9 +87,9 @@ public final class InstallCert {
 
 		File file = new File("jssecacerts");
 		if (!file.isFile()) {
-			char SEP = File.separatorChar;
-			File dir = new File(System.getProperty("java.home") + SEP + "lib"
-					+ SEP + "security");
+			char sep = File.separatorChar;
+			File dir = new File(System.getProperty("java.home") + sep + "lib"
+					+ sep + "security");
 			file = new File(dir, "jssecacerts");
 			if (!file.isFile()) {
 				file = new File(dir, "cacerts");
