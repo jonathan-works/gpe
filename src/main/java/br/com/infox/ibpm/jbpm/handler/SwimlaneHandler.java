@@ -215,19 +215,28 @@ public class SwimlaneHandler implements Serializable {
 	public boolean isDirty() {
 		return dirty;
 	}
-		
+	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof SwimlaneHandler) {
-			SwimlaneHandler sh = (SwimlaneHandler) obj;
-			return this.getSwimlane().getName().equals(sh.getSwimlane().getName());
-		} 
-		return false;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof SwimlaneHandler)) {
+			return false;
+		}
+		SwimlaneHandler other = (SwimlaneHandler) obj;
+		return this.getSwimlane().equals(other.getSwimlane());
 	}
 	
 	@Override
 	public int hashCode() {
-		return this.getSwimlane().getName().hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + this.getSwimlane().hashCode();
+		return result;
 	}
 
 	@Override
