@@ -96,19 +96,30 @@ public class EventHandler implements Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof EventHandler) {
-			EventHandler ev = (EventHandler) obj;
-			if (ev.getEvent().getEventType() == null) {
-				return false;
-			}
-			return ev.getEvent().getEventType().equals(this.getEvent().getEventType());
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof EventHandler)) {
+			return false;
+		}
+		EventHandler other = (EventHandler) obj;
+		if(other.getEvent() != null)
+			return this.getEvent().getEventType().equals(other.getEvent().getEventType());
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return this.getEvent().getEventType().hashCode();
+		final int prime = 31;
+		int result = 1;
+		if(this.getEvent().getEventType()!= null)
+			result = prime * result + this.getEvent().getEventType().hashCode();
+		else
+			result = prime * result + this.getEvent().hashCode();
+		return result;
 	}
 	
 	public void addAction() {
