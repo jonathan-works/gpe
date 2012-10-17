@@ -18,7 +18,7 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 
 	private static final long serialVersionUID = 1L;
 	
-	public void addVariavelTipoModelo(Variavel obj) {
+	public void addVariavelTipoModelo(Variavel obj, String gridId) {
 		if (getInstance() != null) {
 			getInstance().setVariavel(obj);
 			
