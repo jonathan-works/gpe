@@ -1,6 +1,8 @@
 package br.com.infox.epa.webservice.globalweather.client.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +14,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jboss.seam.annotations.Name;
@@ -21,6 +24,7 @@ import org.jboss.seam.util.Strings;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 @Name(GetCitiesByCountryService.NAME)
@@ -44,7 +48,7 @@ public class GetCitiesByCountryService {
 		this.cidade = cidade;
 	}
 
-	public BeanClima getClima() throws Exception {
+	public BeanClima getClima() {
 		if (Strings.isEmpty(cidade)) {
 			return null;
 		}
@@ -61,7 +65,7 @@ public class GetCitiesByCountryService {
 			mapBeanClima.put(cidade, beanClima);
 			return beanClima;
 		}
-		catch (Exception e) {
+		catch (IOException e) {
 			FacesMessages.instance().add(Severity.ERROR,
 					"Erro: " + e.getMessage(), e);
 			return null;
@@ -69,15 +73,15 @@ public class GetCitiesByCountryService {
 	}
 
 	public List<String> getCidadeListBrazil() {
-		try {
-			return getCidadeList();
-		} catch (Exception e) {
-			FacesMessages.instance().add(Severity.ERROR, "Erro: " + e.getMessage(), e);
-			return null;
-		}
+			try {
+				return getCidadeList();
+			} catch (Exception e) {
+				FacesMessages.instance().add(Severity.ERROR, "Erro: " + e.getMessage(), e);
+				return null;
+			}
 	}
 
-	public List<String> getCidadeList() throws Exception { 
+	public List<String> getCidadeList() throws ParserConfigurationException, SAXException, IOException { 
 		String urlAsString = FileDataDownload.getUrlAsString(MessageFormat.format(CITYS, "brazil"));
 		urlAsString = StringEscapeUtils.unescapeHtml(urlAsString);
 		List<String> processaXML = processaXML(urlAsString);
@@ -85,7 +89,7 @@ public class GetCitiesByCountryService {
 		return processaXML;
 	}
 
-	private BeanClima processaXMLClima(String xml) throws Exception {
+	private BeanClima processaXMLClima(String xml) {
 		BeanClima beanClima = new BeanClima();
 		beanClima.setLocation(getValueTag("Location", xml));
 		beanClima.setTime(getValueTag("Time", xml));
@@ -105,7 +109,7 @@ public class GetCitiesByCountryService {
 		return null;
 	}
 
-	private List<String> processaXML(String xml) throws Exception {
+	private List<String> processaXML(String xml) throws ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException {
 		List<String> dados = new ArrayList<String>();
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -131,7 +135,7 @@ public class GetCitiesByCountryService {
 		return dados;
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		System.setProperty("http.proxyHost", "wpad.infox.intranet");
 		System.setProperty("http.proxyPort", "8080");		
 		GetCitiesByCountryService service = new GetCitiesByCountryService();

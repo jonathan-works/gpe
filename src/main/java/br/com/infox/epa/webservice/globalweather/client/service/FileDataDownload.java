@@ -17,6 +17,7 @@ package br.com.infox.epa.webservice.globalweather.client.service;
 */
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -44,7 +45,7 @@ public class FileDataDownload {
     }
 
     public static String getUrlAsString(String fileAddress)
-			throws Exception {
+			throws IOException {
 		StringBuilder sb = new StringBuilder();
 		URLConnection URLConn = null;
 	
@@ -63,16 +64,15 @@ public class FileDataDownload {
 				sb.append(line);
 				line = br.readLine();
 			}
-		} catch (Exception e) {
-			throw new Exception(e);
+		} catch (IOException e) {
+			throw new IOException(e);
 		} finally {
 			FileUtil.close(br);
 		}
 		return sb.toString();
 	}        
     
-    public static List<String> getUrlAsList(String fileAddress)
-    			throws Exception {
+    public static List<String> getUrlAsList(String fileAddress) throws IOException {
     	List<String> list = new ArrayList<String>();
     	URLConnection URLConn = null;
 
@@ -91,8 +91,8 @@ public class FileDataDownload {
     			list.add(line);
     			line = br.readLine();
     		}
-    	} catch (Exception e) {
-    		throw new Exception(e);
+    	} catch (IOException e) {
+    		throw new IOException(e);
     	} finally {
     		FileUtil.close(br);
     	}
