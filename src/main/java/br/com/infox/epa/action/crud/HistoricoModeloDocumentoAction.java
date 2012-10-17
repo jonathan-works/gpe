@@ -60,12 +60,14 @@ public class HistoricoModeloDocumentoAction extends AbstractHome<HistoricoModelo
 		modeloHome.update();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void create() {
 		super.create();
 		javax.persistence.Query query = EntityUtil.createQuery(HistoricoModeloDocumentoQuery.LIST_MODELO_QUERY);
 		setModeloDocumentoList(query.getResultList());
 		query = EntityUtil.createQuery(HistoricoModeloDocumentoQuery.LIST_USUARIO_QUERY);
+		query.setParameter(HistoricoModeloDocumentoQuery.LIST_USUARIO_PARAM_MODELO, ((ModeloDocumentoHome)Component.getInstance(ModeloDocumentoHome.NAME)).getInstance());
 		setUsuarioAlteracaoList(query.getResultList());
 	}
 	
