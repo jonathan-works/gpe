@@ -85,7 +85,8 @@
 				  action="#{action.init()}">
 			<s:div id="naturezaCatFluxoFormDiv">
 				<wi:dataForm formId="naturezaCatFluxoForm"
-						 	 formTitle="#{messages['naturezaCategoriaFluxo.titleForm']}">
+						 	 formTitle="#{messages['naturezaCategoriaFluxo.titleForm']}: #{naturezaAction.instance}"
+						 	 label="teste">
 					<wi:selectOneMenuEntity id="categorias"
 											label="#{messages['naturezaCategoriaFluxo.categoria']}"
 											value="#{action.instance.categoria}"

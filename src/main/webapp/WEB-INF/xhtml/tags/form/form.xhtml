@@ -116,11 +116,15 @@
 		       	</s:div>
 	        </rich:panel>
 	        
+	        
 			<c:if test="#{wi:get(canEdit, true)}">
-				<ui:param name="buttons" 
-						  value="#{form.buttons.id}#{empty modalPanelId ? '' : '_modal'}" />
-				<ui:include src="/WEB-INF/xhtml/components/form/buttons/#{buttons}.xhtml"/>
+				<s:div id="divBotao">
+					<ui:param name="buttons" 
+							  value="#{form.buttons.id}#{empty modalPanelId ? '' : '_modal'}" />
+					<ui:include src="/WEB-INF/xhtml/components/form/buttons/#{buttons}.xhtml"/>
+				</s:div>
 			</c:if>
+			
 				
 			<wi:messages showDialogMessage="#{showDialogMessage}" timeCloseMSG="#{timeCloseMSG}"/>											
 
