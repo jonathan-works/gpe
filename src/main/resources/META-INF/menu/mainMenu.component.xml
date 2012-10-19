@@ -16,6 +16,7 @@
 			<value>Cadastros Auxiliares/tipoProcessoDocumento.menuText:/TipoProcessoDocumento/listView.seam</value>
 
 			<value>Cadastros Básicos/assunto.menuText:/Assunto/listView.seam</value>
+			<value>Cadastros Básicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
 			<value>Cadastros Básicos/cbo.menuText:/CBO/listView.seam</value>
 			<value>Cadastros Básicos/cna.menuText:/CNAE/listView.seam</value>
 			<value>Cadastros Básicos/Modelo de Documento/Grupo:/GrupoModeloDocumento/listView.seam</value>

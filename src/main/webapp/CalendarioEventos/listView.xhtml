@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ <!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    xmlns:a="http://richfaces.org/a4j"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                      
+	<ui:define name="title">#{messages['calendarioEventos.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{calendarioEventosHome}" />
+	<ui:param name="list" value="#{calendarioEventosList}" />
+	
+	<ui:define name="searchGrid">   
+	    <wi:dataTable values="#{list.list(15)}"
+					  bean="#{list}"
+					  tableTitle="#{messages['calendarioEventos.titleGrid']}"
+					  id="calendarioEventosList"
+					  rowId="#{row.idCalendarioEvento}" >
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarCalendarioEventosForm"
+							   formTitle="#{messages['calendarioEventos.titleSearchForm']}">
+					<wi:tree id="localizacao"
+							 label="#{messages['calendarioEventos.localizacao']}"
+							 assignTo="calendarioEventosList.entity.localizacao"
+							 tree="#{home.localizacaoTreeHandler}" />
+					<wi:inputText id="descricaoEvento"
+								  label="#{messages['calendarioEventos.descricaoEvento']}"
+								  value="#{list.entity.descricaoEvento}"
+								  maxlength="100" />
+					<wi:inputNumber id="dia"
+									label="#{messages['calendarioEventos.dia']}"
+									value="#{list.entity.dia}" />
+					<wi:inputNumber id="mes"
+									label="#{messages['calendarioEventos.mes']}"
+									value="#{list.entity.mes}" />
+					<wi:inputNumber id="ano"
+									label="#{messages['calendarioEventos.ano']}"
+									value="#{list.entity.ano}" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<ui:define name="toolBar">
+				<wi:toolBarEdit  />
+			</ui:define>
+			
+			<wi:columnOutputText columnId="localizacao"
+									columnHeader="#{messages['calendarioEventos.localizacao']}"
+									value="#{row.localizacao}" />
+			<wi:columnOutputText columnId="descricaoEvento"
+									columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
+									value="#{row.descricaoEvento}" />
+			<wi:columnOutputText columnId="diaEvento"
+								 columnHeader="#{messages['calendarioEventos.dia']}"
+								 value="#{row.dia}" />
+			<wi:columnOutputText columnId="mesEvento"
+								 columnHeader="#{messages['calendarioEventos.mes']}"
+								 value="#{row.mes}" />
+			<wi:columnOutputText columnId="anoEvento"
+								 columnHeader="#{messages['calendarioEventos.ano']}"
+								 value="#{row.ano}" />
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="calendarioEventosForm"
+					 formTitle="#{messages['calendarioEventos.titleForm']}">
+			<wi:tree id="localizacao"
+					 label="#{messages['calendarioEventos.localizacao']}"
+					 assignTo="calendarioEventosHome.instance.localizacao"
+					 tree="#{home.localizacaoTreeHandler}"/>
+			<wi:inputText id="descricaoEvento"
+						  label="#{messages['calendarioEventos.descricaoEvento']}"
+						  value="#{home.instance.descricaoEvento}"
+						  maxlength="100" />
+			<wi:inputNumber id="dia"
+							label="#{messages['calendarioEventos.dia']}"
+							value="#{home.instance.dia}" />
+			<wi:inputNumber id="mes"
+							label="#{messages['calendarioEventos.mes']}"
+							value="#{home.instance.mes}" />
+			<wi:inputNumber id="ano"
+							label="#{messages['calendarioEventos.ano']}"
+							value="#{home.instance.ano}" />
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>
