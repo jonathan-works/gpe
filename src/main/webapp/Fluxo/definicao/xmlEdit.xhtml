@@ -2,9 +2,8 @@
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf">
-
->
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:rich="http://richfaces.org/rich">
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -20,9 +19,10 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	<wi:inputTextarea id="xml"
-		style="width:800px; height:490px"
+	<wi:inputTextarea id="xmlTextArea"
+		style="width:auto !important; height:490px; position:relative"
 		value="#{processBuilder.xml}">
+		
 		<wi:ajaxSupport reRender="pageBody" />
 	</wi:inputTextarea>
 		

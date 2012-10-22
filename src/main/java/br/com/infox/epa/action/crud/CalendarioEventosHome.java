@@ -102,7 +102,7 @@ public class CalendarioEventosHome extends AbstractHome<CalendarioEventos>{
 			Calendar calendar = Calendar.getInstance();
 			
 			calendar.set(Calendar.DATE, cEventos.getDia());
-			calendar.set(Calendar.MONTH, cEventos.getMes());
+			calendar.set(Calendar.MONTH, cEventos.getMes()-1);
 			
 			if (cEventos.getAno() == null)	{
 				cEventos.setRepeteAno(Boolean.TRUE);

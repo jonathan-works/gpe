@@ -69,15 +69,9 @@
 			<wi:columnOutputText columnId="descricaoEvento"
 								 columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
 								 value="#{row.descricaoEvento}" />
-			<wi:columnOutputText columnId="diaEvento"
-								 columnHeader="#{messages['calendarioEventos.dia']}"
-								 value="#{row.dia}" />
-			<wi:columnOutputText columnId="mesEvento"
-								 columnHeader="#{messages['calendarioEventos.mes']}"
-								 value="#{row.mes}" />
-			<wi:columnOutputText columnId="anoEvento"
-								 columnHeader="#{messages['calendarioEventos.ano']}"
-								 value="#{row.ano}" />
+			<wi:columnOutputText columnId="dataEvento"
+								 columnHeader="#{messages['calendarioEventos.dataEvento']}"
+								 value="#{row.stringDataEvento}" />
 		</wi:dataTable>
 	</ui:define>
 	

@@ -1,6 +1,8 @@
 package br.com.infox.epa.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -105,6 +107,27 @@ public class CalendarioEventos implements Serializable {
 		this.repeteAno = repeteAno;
 	}
 
-	
+	@Transient
+	public String getStringDataEvento()	{
+		String result;
+		Calendar calendar = Calendar.getInstance();
+		
+		calendar.set(Calendar.DATE, dia);
+		calendar.set(Calendar.MONTH, mes-1);
+		
+		if (ano == null)	{
+			calendar.set(Calendar.YEAR, 0);
+		} else {
+			calendar.set(Calendar.YEAR, ano);
+		}
+		
+		if (ano == null)	{
+			result = new SimpleDateFormat("dd/MM/----").format(calendar.getTime());
+		} else {
+			result = new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
+		}
+		
+		return result;
+	}
 	
 }
