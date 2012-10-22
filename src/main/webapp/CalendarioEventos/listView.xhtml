@@ -64,11 +64,11 @@
 			</ui:define>
 			
 			<wi:columnOutputText columnId="localizacao"
-									columnHeader="#{messages['calendarioEventos.localizacao']}"
-									value="#{row.localizacao}" />
+								 columnHeader="#{messages['calendarioEventos.localizacao']}"
+								 value="#{row.localizacao}" />
 			<wi:columnOutputText columnId="descricaoEvento"
-									columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
-									value="#{row.descricaoEvento}" />
+								 columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
+								 value="#{row.descricaoEvento}" />
 			<wi:columnOutputText columnId="diaEvento"
 								 columnHeader="#{messages['calendarioEventos.dia']}"
 								 value="#{row.dia}" />
@@ -87,20 +87,22 @@
 			<wi:tree id="localizacao"
 					 label="#{messages['calendarioEventos.localizacao']}"
 					 assignTo="calendarioEventosHome.instance.localizacao"
-					 tree="#{home.localizacaoTreeHandler}"/>
+					 tree="#{home.localizacaoTreeHandler}"
+					 required="true" />
 			<wi:inputText id="descricaoEvento"
 						  label="#{messages['calendarioEventos.descricaoEvento']}"
 						  value="#{home.instance.descricaoEvento}"
-						  maxlength="100" />
-			<wi:inputNumber id="dia"
-							label="#{messages['calendarioEventos.dia']}"
-							value="#{home.instance.dia}" />
-			<wi:inputNumber id="mes"
-							label="#{messages['calendarioEventos.mes']}"
-							value="#{home.instance.mes}" />
-			<wi:inputNumber id="ano"
-							label="#{messages['calendarioEventos.ano']}"
-							value="#{home.instance.ano}" />
+						  maxlength="100"
+						  required="true" />
+			<wi:inputDate id="dataNascimento"
+							value="#{home.instance.dataEvento}"
+							label="#{messages['calendarioEventos.dataEvento']}"
+							required="true"/>
+			<wi:selectBooleanCheckbox id="periodico"
+								label="#{messages['calendarioEventos.periodico']}"
+								value="#{home.instance.repeteAno}"
+								required="true"/>
+			
 		</wi:dataForm>
 	</ui:define>
 

@@ -1,6 +1,7 @@
 package br.com.infox.epa.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.NotNull;
 
@@ -28,6 +30,8 @@ public class CalendarioEventos implements Serializable {
 	private Integer dia;
 	private Integer mes;
 	private Integer ano;
+	private Date dataEvento;
+	private Boolean repeteAno = Boolean.TRUE;
 	
 	@SequenceGenerator(name="generator", sequenceName="public.sq_tb_calendario_eventos")
 	@Id
@@ -84,5 +88,23 @@ public class CalendarioEventos implements Serializable {
 	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
+
+	@Transient
+	public Date getDataEvento() {
+		return dataEvento;
+	}
+	public void setDataEvento(Date dataEvento) {
+		this.dataEvento = dataEvento;
+	}
+
+	@Transient
+	public Boolean getRepeteAno() {
+		return repeteAno;
+	}
+	public void setRepeteAno(Boolean repeteAno) {
+		this.repeteAno = repeteAno;
+	}
+
+	
 	
 }

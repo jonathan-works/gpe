@@ -1,6 +1,9 @@
 package br.com.infox.epa.action.crud;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,5 +66,53 @@ public class CalendarioEventosHome extends AbstractHome<CalendarioEventos>{
 			LocalizacaoTreeHandler localizacaoTreeHandler) {
 		this.localizacaoTreeHandler = localizacaoTreeHandler;
 	}
+
+	private void setData()	{
+		CalendarioEventos cEventos = this.instance;
+		
+		if (cEventos.getDataEvento() == null)	{
+			return;
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		String[] stringData = sdf.format(cEventos.getDataEvento()).split("/");
+		
+		cEventos.setDia(Integer.parseInt(stringData[0]));
+		cEventos.setMes(Integer.parseInt(stringData[1]));
+		if (cEventos.getRepeteAno())	{
+			cEventos.setAno(null);
+		} else {
+			cEventos.setAno(Integer.parseInt(stringData[2]));
+		}
+	}
+	
+	@Override
+	protected boolean beforePersistOrUpdate() {
+		setData();
+		return super.beforePersistOrUpdate();
+	}
+	
+	@Override
+	public void setId(Object id) {
+		boolean changed = ((id != null) && !id.equals(getId()));
+		super.setId(id);
+		if (changed)	{
+			CalendarioEventos cEventos = instance;
+			Calendar calendar = Calendar.getInstance();
+			
+			calendar.set(Calendar.DATE, cEventos.getDia());
+			calendar.set(Calendar.MONTH, cEventos.getMes());
+			
+			if (cEventos.getAno() == null)	{
+				cEventos.setRepeteAno(Boolean.TRUE);
+				calendar.set(Calendar.YEAR, Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date())));
+			} else {
+				cEventos.setRepeteAno(Boolean.FALSE);
+				calendar.set(Calendar.YEAR, cEventos.getAno());
+			}
+			cEventos.setDataEvento(calendar.getTime());
+		}
+	}	
 	
 }
