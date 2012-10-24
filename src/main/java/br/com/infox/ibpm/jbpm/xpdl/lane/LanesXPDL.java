@@ -12,7 +12,7 @@ import br.com.itx.util.XmlUtil;
 
 public class LanesXPDL {
 
-	private final String ERRO_MSG = "O sistema e-PA não permite mais de uma piscina na definição dos fluxos.";
+	private static final String ERRO_MSG = "O sistema não permite mais de uma piscina na definição dos fluxos.";
 	private List<LaneXPDL>	lanes;
 	private String name;
 	private int index;
