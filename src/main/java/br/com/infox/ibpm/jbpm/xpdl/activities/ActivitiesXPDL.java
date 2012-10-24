@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -38,8 +39,6 @@ public class ActivitiesXPDL {
 	}
 	
 	private List<ActivityXPDL> createAtivitiesList(List<Element> list) throws ActivityNotAllowedXPDLException {
-		if (list == null)
-			return null;
 		List<ActivityXPDL> activities = new ArrayList<ActivityXPDL>();
 		for (Element ele : list) {
 			activities.add(ActivityXPDLFactory.getAtividade(ele, FluxoXPDL.NO_NAME + index++));
@@ -52,8 +51,6 @@ public class ActivitiesXPDL {
 	}
 	
 	public void assignActivitiesToProcessDefinition(ProcessDefinition definition) {
-		if (activities == null)
-			return;
 		for (ActivityXPDL activity : activities) {
 			Node node = activity.toNode();
 			node.setProcessDefinition(definition);
@@ -62,12 +59,10 @@ public class ActivitiesXPDL {
 	}
 	
 	public void changeParallelNodeInForkOrJoin(List<TransitionXPDL> transitions) throws ParallelNodeXPDLException {
-		if (activities != null) {
-			Map<ParallelActivityXPDL, Integer> parallels = getAllParallelXPDL(activities);
-			for (ParallelActivityXPDL parallel : parallels.keySet()) {
-				createForkJoinActivityXPDL(activities, parallel, parallels.get(parallel),
-						transitions);
-			}
+		Map<ParallelActivityXPDL, Integer> parallels = getAllParallelXPDL(activities);
+		for (Entry<ParallelActivityXPDL, Integer> entry : parallels.entrySet()) {
+			ParallelActivityXPDL parallel = entry.getKey();
+			createForkJoinActivityXPDL(activities, parallel, entry.getValue(), transitions);
 		}
 	}
 
@@ -156,8 +151,6 @@ public class ActivitiesXPDL {
 	}
 	
 	public void assignTaskToActivities(ProcessDefinition definition) {
-		if (activities == null)
-			return;
 		for (ActivityXPDL activity : activities) {
 			if(activity instanceof AssignTaskXPDL) {
 				AssignTaskXPDL assign = (AssignTaskXPDL)activity;
@@ -169,18 +162,13 @@ public class ActivitiesXPDL {
 	@Override
 	public String toString() {
 		StringBuilder temp = new StringBuilder();
-		if(activities == null) {
-			temp.append("[Lanes] #lanes: 0");
+		temp.append("[Lanes] #lanes: " + activities.size());
+		int i = 0;
+		while(i < activities.size() && i < 8) {
+			temp.append(activities.get(i++) + ", ");
 		}
-		else {
-			temp.append("[Lanes] #lanes: " + activities.size());
-			int i = 0;
-			while(i < activities.size() && i < 8) {
-				temp.append(activities.get(i++) + ", ");
-			}
-			if(i < activities.size())
-				temp.append(" ... ");
-		}
+		if(i < activities.size())
+			temp.append(" ... ");
 		return temp.toString();
 	}
 }
