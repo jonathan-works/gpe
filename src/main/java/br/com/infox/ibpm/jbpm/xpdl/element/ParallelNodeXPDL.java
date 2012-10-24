@@ -4,8 +4,8 @@ import org.jbpm.graph.def.Node;
 
 public class ParallelNodeXPDL extends Node {
 
-	private static final long	serialVersionUID	= 1L;
-	private final String		name				= "[Temporary node]";
+	private static final long serialVersionUID = 1L;
+	private static final String NAME = "[Temporary node]";
 
 	@Override
 	public boolean equals(Object obj) {
@@ -32,6 +32,6 @@ public class ParallelNodeXPDL extends Node {
 
 	@Override
 	public String toString() {
-		return name + this.getName();
+		return NAME + this.getName();
 	}
 }
