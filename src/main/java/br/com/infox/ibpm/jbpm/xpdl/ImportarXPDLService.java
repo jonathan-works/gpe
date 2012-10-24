@@ -36,7 +36,7 @@ public class ImportarXPDLService implements Serializable {
 		try {
 			return fluxoXPDL.toJPDL();
 		} catch (Exception e) {
-			LOG.equals(e);
+			LOG.error(e);
 		}
 		return null;
 	}
