@@ -31,8 +31,7 @@ public abstract class AbstractGrupoModeloDocumentoHome<T>
 
 	@Override
 	protected GrupoModeloDocumento createInstance() {
-		GrupoModeloDocumento grupoModeloDocumento = new GrupoModeloDocumento();
-		return grupoModeloDocumento;
+		return new GrupoModeloDocumento();
 	}
 
 	@Override
