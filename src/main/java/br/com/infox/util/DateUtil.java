@@ -64,6 +64,19 @@ public class DateUtil {
 	}
 	
 	/**
+	 * Metodo retorna um calendar com o horario igual a '00:00:00'
+	 * @param date
+	 * @return
+	 */
+	public static Calendar getBeginningOfDay() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(1970, 0, 1, 0, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar;
+	}
+	
+	/**
 	 * Metodo que recebe uma data e retorna essa data com as horas modificadas para
 	 * '00:00:00'
 	 * @param date
@@ -160,7 +173,7 @@ public class DateUtil {
 		data.add(Calendar.MONTH, diferenca);
 		return data;
 	}
-
+	
 	public static boolean isFimDeSemana(Calendar calendar) {
 		return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || 
 			   calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY; 
