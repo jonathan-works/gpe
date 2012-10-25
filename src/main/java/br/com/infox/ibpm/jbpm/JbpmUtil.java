@@ -37,8 +37,8 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.def.Node.NodeType;
+import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
@@ -92,8 +92,7 @@ public class JbpmUtil {
 				localizacaoId = localizacaoId.replaceAll("'", "");
 				localizacaoId = localizacaoId.split(":")[0];
 			}
- 			Localizacao localizacao = EntityUtil.find(Localizacao.class, new Integer(localizacaoId));
-			return localizacao;
+			return EntityUtil.find(Localizacao.class, new Integer(localizacaoId));
 		}
 		return null;
 	}
@@ -148,15 +147,14 @@ public class JbpmUtil {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	public List<String> getProcessNames() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select pd.name ");
 		sb.append("from org.jbpm.graph.def.ProcessDefinition as pd ");
 		sb.append("group by pd.name order by pd.name");
 		Session session = ManagedJbpmContext.instance().getSession();		
-		List l = session.createQuery(sb.toString()).list();
-		return l;
+		return session.createQuery(sb.toString()).list();
 	}
 	
 	public List<TaskInstance> getAllTasks() { 
@@ -174,8 +172,7 @@ public class JbpmUtil {
 		ProcessInstance processInstance = org.jboss.seam.bpm.ProcessInstance.instance();
 		if (processInstance != null) {
 			ContextInstance contextInstance = processInstance.getContextInstance();
-			T value = (T) contextInstance.getVariable(name);
-			return value;
+			return (T) contextInstance.getVariable(name);
 		}
 		return null;
 	}

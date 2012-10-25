@@ -58,11 +58,8 @@ public class LogUtil {
 	 * @return
 	 */
 	public static boolean isBinario(Class<?> type) {
-		if (type.isArray() && 
-				type.getComponentType().getName().equals("byte")) {
-			return true;
-		}
-		return false;
+		return type.isArray() && 
+				type.getComponentType().getName().equals("byte"); 
 	}	
 
 	/**
@@ -78,9 +75,8 @@ public class LogUtil {
 	}
 
 	private static Class<?> getType(Object entidade, String nomeAtributo) {
-		Class<?> classAtributo = Reflections.getField(entidade.getClass(), 
-				nomeAtributo).getType();
-		return classAtributo;
+		return Reflections
+					.getField(entidade.getClass(),nomeAtributo).getType();
 	}		
 
 	/**
@@ -96,8 +92,9 @@ public class LogUtil {
 	}
 
 	private static boolean isCollectionClass(Class<?> classAtributo) {
-		return ArrayList.class.equals(classAtributo) || List.class.equals(classAtributo) || 
-					Set.class.equals(classAtributo);
+		return ArrayList.class.equals(classAtributo) 
+				|| List.class.equals(classAtributo) 
+				|| Set.class.equals(classAtributo);
 	}		
 	
 	/**
@@ -113,15 +110,9 @@ public class LogUtil {
 			PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(
 					entidade.getClass().newInstance(), nomeAtributo);	
 			Length lengthAnnotation = pd.getReadMethod().getAnnotation(Length.class);
-			if (lengthAnnotation == null || lengthAnnotation.max() > 300) {
-				return false;
-			}
-			
-				return true;
-		} else if (isBinario(classAtributo)) {
-			return false;
+			return lengthAnnotation != null && lengthAnnotation.max() <= 300;
 		} else {
-			return true;
+			return !isBinario(classAtributo);
 		}
 	}	
 	
@@ -171,8 +162,7 @@ public class LogUtil {
 			return null;
 		}
 		String requestURL = request.getRequestURL().toString();
-		String viewId = requestURL.split(request.getContextPath())[1];
-		return viewId;
+		return requestURL.split(request.getContextPath())[1];
 	}
 
 	public static HttpServletRequest getRequest() {
@@ -180,8 +170,7 @@ public class LogUtil {
 		if (fc == null) {
 			return null;
 		} 
-		HttpServletRequest request = (HttpServletRequest) fc.getExternalContext().getRequest();
-		return request;
+		return (HttpServletRequest) fc.getExternalContext().getRequest();
 	}	
 	
 	public static String toStringForLog(Object object) {

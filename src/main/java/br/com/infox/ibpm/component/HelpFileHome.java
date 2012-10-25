@@ -60,22 +60,18 @@ public class HelpFileHome {
 		String path = new Util().getContextRealPath() + IMAGES_DIR;
 		String userImageDir = getUserImageDir();
 		if (userImageDir != null) {
-			String[] images = {path, path + userImageDir};
-			return images;
+			return new String[]{path, path + userImageDir};
 		} 
-		String[] images = {path};
-		return images;
+		return new String[]{path};
 	}
 
 	public String[] getImagesPath() {
 		String path = new Util().getContextPath() + IMAGES_DIR;
 		String userImageDir = getUserImageDir();
 		if (userImageDir != null) {
-			String[] images = {path, path + userImageDir};
-			return images;
+			return new String[]{path, path + userImageDir};
 		} 
-		String[] images = {path};
-		return images;
+		return new String[]{path};
 	}
 	
 	public String getImagePath() {
