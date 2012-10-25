@@ -18,11 +18,11 @@ import br.com.infox.ibpm.jbpm.xpdl.transition.IllegalTransitionXPDLException;
 
 public class ImportarXPDLTest {
 
-	private String				file3Pools		= "./test/3Pools.xpdl";
-	private String				fileSubProcess	= "./test/SubProcess.xpdl";
-	private String				fileSucess	= "./test/sucessFluxo.xpdl";
-	private ImportarXPDLService	importarXPDLService;
-	private int					MAX				= 0x10000;
+	private String file3Pools = "./test/3Pools.xpdl";
+	private String	fileSubProcess = "./test/SubProcess.xpdl";
+	private String	fileSucess = "./test/sucessFluxo.xpdl";
+	private ImportarXPDLService importarXPDLService;
+	private int MAX = 0x10000;
 
 	@Before
 	public void setup() {
