@@ -29,7 +29,7 @@ public class TurnoHandler {
 		horarioBeanMap = createHorarioBeanMap();
 	}
 	
-	private List<Time> createHorarios(Integer intervalInMinutes) {
+	private final List<Time> createHorarios(Integer intervalInMinutes) {
 		List<Time> horarioList = new ArrayList<Time>();
 		Calendar calendar = DateUtil.getBeginningOfDay();
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -41,7 +41,7 @@ public class TurnoHandler {
 		return horarioList;
 	}
 	
-	private Map<Time, Integer> createHorarioMap() {
+	private final Map<Time, Integer> createHorarioMap() {
 		Map<Time, Integer> map = new HashMap<Time, Integer>();
 		int i = 0;
 		for (Time horario: horarios) {
@@ -51,12 +51,12 @@ public class TurnoHandler {
 		return map;
 	}
 	
-	private Map<DiaSemanaEnum, List<HorarioBean>> createHorarioBeanMap() {
-		Map<DiaSemanaEnum, List<HorarioBean>> horarioMap = new HashMap<DiaSemanaEnum, List<HorarioBean>>();
+	private final Map<DiaSemanaEnum, List<HorarioBean>> createHorarioBeanMap() {
+		Map<DiaSemanaEnum, List<HorarioBean>> map = new HashMap<DiaSemanaEnum, List<HorarioBean>>();
 		for (DiaSemanaEnum dia: DiaSemanaEnum.values()) {
-			horarioMap.put(dia, createHorarioBeanList());
+			map.put(dia, createHorarioBeanList());
 		}
-		return horarioMap;
+		return map;
 	}
 
 	private List<HorarioBean> createHorarioBeanList() {
