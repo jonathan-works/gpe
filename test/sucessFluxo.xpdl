@@ -477,7 +477,7 @@
           </ConnectorGraphicsInfos>
           <ExtendedAttributes />
         </Transition>
-        <Transition Id="d358c1e2-5357-47c4-a59d-122f43ce4019" From="5ad213c0-5f96-4e74-93f9-47aa763caef9" To="086893dd-7ec7-4901-895e-dfdbe7b30a68" Name="Não">
+        <Transition Id="d358c1e2-5357-47c4-a59d-122f43ce4019" From="5ad213c0-5f96-4e74-93f9-47aa763caef9" To="086893dd-7ec7-4901-895e-dfdbe7b30a68" Name="Nao">
           <Condition Type="CONDITION">
             <Expression />
           </Condition>
