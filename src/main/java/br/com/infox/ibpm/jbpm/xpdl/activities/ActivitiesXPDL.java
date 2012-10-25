@@ -29,21 +29,22 @@ public class ActivitiesXPDL {
 
 	private List<Element> checkWorkflowSection(Element root) throws IllegalActivityXPDLException {
 		List<Element> workFlowList = XmlUtil.getChildren(root, "WorkflowProcesses");
-		if(workFlowList == null || workFlowList.isEmpty())
+		if(workFlowList == null || workFlowList.isEmpty()) {
 			throw new IllegalActivityXPDLException("Arquivo XPDL inválido. Não há a seção de definição dos Nós.");
-		if(workFlowList.size() > 1)
+		}
+		if(workFlowList.size() > 1) {
 			throw new IllegalActivityXPDLException("Arquivo XPDL inválido. Não há mais de uma seção de definição dos Nós.");
+		}
 		Element atividades = XmlUtil.getChildByIndex(workFlowList.get(0), "WorkflowProcess", 1);
-		List<Element> atividadesList = XmlUtil.getChildren(atividades, "Activities");
-		return atividadesList;
+		return XmlUtil.getChildren(atividades, "Activities");
 	}
 	
 	private List<ActivityXPDL> createAtivitiesList(List<Element> list) throws ActivityNotAllowedXPDLException {
-		List<ActivityXPDL> activities = new ArrayList<ActivityXPDL>();
+		List<ActivityXPDL> activityXPDLList = new ArrayList<ActivityXPDL>();
 		for (Element ele : list) {
-			activities.add(ActivityXPDLFactory.getAtividade(ele, FluxoXPDL.NO_NAME + index++));
+			activityXPDLList.add(ActivityXPDLFactory.getAtividade(ele, FluxoXPDL.NO_NAME + index++));
 		}
-		return activities;
+		return activityXPDLList;
 	}
 
 	public List<ActivityXPDL> getActivities() {
@@ -167,8 +168,9 @@ public class ActivitiesXPDL {
 		while(i < activities.size() && i < 8) {
 			temp.append(activities.get(i++) + ", ");
 		}
-		if(i < activities.size())
+		if(i < activities.size()) {
 			temp.append(" ... ");
+		}
 		return temp.toString();
 	}
 }
