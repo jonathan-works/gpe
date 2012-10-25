@@ -32,22 +32,25 @@ public class LanesXPDL {
 
 	private List<Element> checkNumberPools(Element root) throws IllegalNumberPoolsXPDLException {
 		List<Element> poolsList = XmlUtil.getChildren(root, "Pools");
-		if(poolsList == null || poolsList.isEmpty())
+		if(poolsList == null || poolsList.isEmpty()) {
 			throw new IllegalNumberPoolsXPDLException("Não há piscina definida. Impossível criar as raias.");
-		if(poolsList.size() > 1)
+		}
+		if(poolsList.size() > 1) {
 			throw new IllegalNumberPoolsXPDLException(ERRO_MSG);
+		}
 		return poolsList;
 	}
 	
 	private List<LaneXPDL> createLanesList(List<Element> list) {
-		if (list == null)
+		if (list == null) { 
 			return null;
-		List<LaneXPDL> lanes = new ArrayList<LaneXPDL>();
+		}
+		List<LaneXPDL> laneList = new ArrayList<LaneXPDL>();
 		for (Element ele : list) {
 			LaneXPDL lane = new LaneXPDL(ele, FluxoXPDL.NO_NAME + index++);
-			lanes.add(lane);
+			laneList.add(lane);
 		}
-		return lanes;
+		return laneList;
 	}
 
 	public List<LaneXPDL> getLanes() {
@@ -64,8 +67,9 @@ public class LanesXPDL {
 	}
 	
 	public void assignLanesToProcessDefinition(ProcessDefinition definition) {
-		if (lanes == null)
+		if (lanes == null) {
 			return;
+		}
 		for (LaneXPDL lane : lanes) {
 			definition.getTaskMgmtDefinition().addSwimlane(lane.toSwimlane());
 		}
@@ -80,8 +84,7 @@ public class LanesXPDL {
 		StringBuilder temp = new StringBuilder();
 		if(lanes == null) {
 			temp.append("[Lanes] #lanes: 0");
-		}
-		else {
+		} else {
 			temp.append("[Lanes] #lanes: " + lanes.size());
 			int i = 0;
 			while(i < lanes.size() && i < 5) {

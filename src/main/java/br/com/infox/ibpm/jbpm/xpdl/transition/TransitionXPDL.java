@@ -29,14 +29,18 @@ public class TransitionXPDL {
 	}
 	
 	private void checkAttributes(String name) throws IllegalTransitionXPDLException {
-		if(this.name == null || this.name.isEmpty())
+		if(this.name == null || this.name.isEmpty()) {
 			this.name = name;
-		if(from == null || from.isEmpty())
+		}
+		if(from == null || from.isEmpty()) {
 			throw new IllegalTransitionXPDLException("Transição ilegal. Nó de destino nulo");
-		if(to == null || to.isEmpty())
+		}
+		if(to == null || to.isEmpty()) {
 			throw new IllegalTransitionXPDLException("Transição ilegal. Nó de origem nulo");
-		if(to.equals(from))
+		}
+		if(to.equals(from)) {
 			throw new IllegalTransitionXPDLException("Transição ilegal. Transição cíclica para o mesmo nó.");
+		}
 	}
 	
 	public Transition toTransition(List<ActivityXPDL> list) {
@@ -65,8 +69,9 @@ public class TransitionXPDL {
 		int i = 0;
 		while(!find && i < list.size()) {
 			temp = list.get(i++);
-			if(temp.getId().equals(id))
+			if(temp.getId().equals(id)) {
 				find = true;
+			}
 		}
 		return temp;
 	}
@@ -95,8 +100,9 @@ public class TransitionXPDL {
 	public String toString() {
 		String newLine = System.getProperty("line.separator");
 		String string = "[TransictionXPDL] name: " + name;
-		if(transition != null)
+		if(transition != null) {
 			string += newLine + "[Trasintion] from: " + transition.getFrom() + newLine + " to: " + transition.getTo();
+		}
 		return string;
 	}
 }

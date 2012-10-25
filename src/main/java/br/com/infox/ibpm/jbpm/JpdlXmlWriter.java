@@ -68,8 +68,9 @@ public class JpdlXmlWriter {
 	private Map<String, CreateTimerAction> timers;
 	
 	public JpdlXmlWriter(Writer writer) {
-		if (writer == null)
+		if (writer == null) {
 			throw new JbpmException("writer is null");
+		}
 		this.writer = writer;
 	}
 
@@ -88,12 +89,11 @@ public class JpdlXmlWriter {
 		this.useNamespace = useNamespace;
 	}
 
-	// newElement.add( jbpmNamespace );
-
 	public void write(ProcessDefinition processDefinition) {
 		problems = new ArrayList<String>();
-		if (processDefinition == null)
+		if (processDefinition == null) {
 			throw new JbpmException("processDefinition is null");
+		}
 		try {
 			// collect the actions of the process definition
 			// we will remove each named event action and the remaining ones
@@ -124,11 +124,12 @@ public class JpdlXmlWriter {
 		Document document = DocumentHelper.createDocument();
 		Element root = null;
 
-		if (useNamespace)
+		if (useNamespace) {
 			root = document.addElement("process-definition", jbpmNamespace
 					.getURI());
-		else
+		} else {
 			root = document.addElement("process-definition");
+		}
 		addAttribute(root, "name", processDefinition.getName());
 
 		writeDescription(root, processDefinition.getDescription());
@@ -450,8 +451,7 @@ public class JpdlXmlWriter {
 	}
 
 	private Element addElement(Element element, String elementName) {
-		Element newElement = element.addElement(elementName);
-		return newElement;
+		return element.addElement(elementName);
 	}
 
 	private void addAttribute(Element e, String attributeName, String value) {

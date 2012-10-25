@@ -108,18 +108,13 @@ public class ModeloDocumento implements java.io.Serializable {
 	}
 
 	public boolean hasChanges(ModeloDocumento modelo)	{
-		if (modelo == null)
+		if (modelo == null) {
 			return true;
-		if (!modelo.modeloDocumento.equals(this.modeloDocumento))
-			return true;
-		if (!modelo.tipoModeloDocumento.equals(this.tipoModeloDocumento))
-			return true;
-		if (!modelo.tituloModeloDocumento.equals(this.tituloModeloDocumento))
-			return true;
-		if (!modelo.ativo.equals(this.ativo))
-			return true;
-		
-		return false;
+		}
+		return !modelo.modeloDocumento.equals(this.modeloDocumento) 
+		     || !modelo.tipoModeloDocumento.equals(this.tipoModeloDocumento)
+		     || !modelo.tituloModeloDocumento.equals(this.tituloModeloDocumento)
+		     || !modelo.ativo.equals(this.ativo);
 	}
 	
 	@Override

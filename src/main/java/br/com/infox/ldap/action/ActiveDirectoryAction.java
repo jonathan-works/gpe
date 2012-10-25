@@ -41,7 +41,7 @@ public class ActiveDirectoryAction implements Serializable{
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "activeDirectoryAction";
 	private Usuario entity = new Usuario();
-	private Usuario instance;
+	private Usuario instance = new Usuario();
 	private Endereco endereco;
 	private String tab;
 	private ListPaginator<Usuario> usuariosADList;
@@ -158,15 +158,17 @@ public class ActiveDirectoryAction implements Serializable{
 				SearchResult searchResult = results.next();
 				Attributes attributes = searchResult.getAttributes();
 				Attribute nome = attributes.get("displayname");
-				if (nome == null)
+				if (nome == null) {
 					continue;
+				}
 				Attribute log = attributes.get("userprincipalname");
 				Attribute mail = attributes.get("mail");
 				StringTokenizer tokens = new StringTokenizer((String) log.get(), "@");
 				
 				Usuario temp = preencherUsuario(nome, mail, tokens);
-				if(temp != null)
+				if(temp != null) {
 					usuarios.add(temp);
+				}
 			}
 			results.close();
 		} catch (Exception e) {
@@ -192,24 +194,25 @@ public class ActiveDirectoryAction implements Serializable{
 		UsuarioHome home = UsuarioHome.instance();
 		Usuario user = home.checkUserByLogin(usu.getLogin());
 
-		if (user != null && user.getLdap())
+		if (user != null && user.getLdap()) {
 			cadastrado = true;
+		}
 		if (!cadastrado) {
-			if (mail != null)
+			if (mail != null) {
 				usu.setEmail((String) mail.get());
+			}
 			usu.setNome((String) nome.get());
 			usu.setAtivo(true);
 			usu.setBloqueio(false);
 			usu.setProvisorio(false);
 			usu.setSenha((time + "").hashCode() + ""
 					+ (System.currentTimeMillis() + "").hashCode() + "");
-		} else
+		} else {
 			usu = user;
+		}
 		
-		if(search) {
-			if(!usu.getNome().toLowerCase().startsWith(entity.getNome().toLowerCase())) {
-				usu = null;
-			}
+		if(search && !usu.getNome().toLowerCase().startsWith(entity.getNome().toLowerCase())) {
+			usu = null;
 		}
 		return usu;
 	}
