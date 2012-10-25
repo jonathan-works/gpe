@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.jbpm.xpdl.lane;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import br.com.infox.ibpm.jbpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.jbpm.xpdl.activities.ActivityXPDL;
 import br.com.itx.util.XmlUtil;
 
-public class LanesXPDL {
+public class LanesXPDL implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final String ERRO_MSG = "O sistema não permite mais de uma piscina na definição dos fluxos.";
 	private List<LaneXPDL>	lanes;

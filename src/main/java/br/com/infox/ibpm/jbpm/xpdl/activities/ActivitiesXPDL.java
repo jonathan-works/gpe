@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.jbpm.xpdl.activities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +17,9 @@ import br.com.infox.ibpm.jbpm.xpdl.element.ParallelNodeXPDLException;
 import br.com.infox.ibpm.jbpm.xpdl.transition.TransitionXPDL;
 import br.com.itx.util.XmlUtil;
 
-public class ActivitiesXPDL {
+public class ActivitiesXPDL implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private List<ActivityXPDL>	activities;
 	private int index;
 	
