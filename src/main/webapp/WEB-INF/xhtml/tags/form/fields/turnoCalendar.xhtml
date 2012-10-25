@@ -36,66 +36,52 @@
 		}
 	</style>
 	
+	<a:loadScript src="/js/turnoCalendar.js" />
 	<script>
 	// <![CDATA[
-		var selectedRow = null;
-		var selectedCol = null;
+	            
+	    var turnoCalendar = new TurnoCalendar();
+	    
 		function markBeginOrEnd(row, col) {
-			var cell = jQuery('#td_' + row + "_" + col);
-			if (selectedCol == null && cell.hasClass('fixed-selected')) {
-				//remove fixed-selected
-				
-			} else if (selectedCol != col) {
-				// clique na linha e coluna inicial
-				selectedRow = row;
-				selectedCol = col;
-				
-				if (!cell.hasClass('fixed-selected')) {
-					cell.addClass('selected');
+			if (!turnoCalendar.isBeginMarked()) {
+				if (turnoCalendar.isSelected(row, col)) {
+					turnoCalendar.removeInterval(row, col);
+				} else {
+					turnoCalendar.markBegin(row, col);
 				}
 			} else {
-				// clique na linha e coluna final
-				jQuery('.selected').removeClass('selected');
-				checkInterval(row, col);
-				selectedRow = selectedCol = null;
+				turnoCalendar.markEnd(row, col);
 			}
 		}
 		
 		function markInterval(row, col) {
-			if (selectedCol == col) {
-				if (row > selectedRow) {
-					setSelectedInInterval(col, selectedRow, row);
-				} else {
-					setSelectedInInterval(col, row, selectedRow);
-				}
+			if (turnoCalendar.isBeginMarked()) {
+				turnoCalendar.markInterval(row, col);
 			}
 		}
 		
-		function setSelectedInInterval(col, fromRow, toRow) {
-			for (var row = fromRow; row <= toRow; row++) {
-				jQuery('#td_' + row + "_" + col).addClass('selected');
-			}
-		}
-		
-		function checkInterval(row, col) {
-			if (selectedCol == col) {
-				if (row > selectedRow) {
-					setCheckedInInterval(col, selectedRow, row);
-				} else {
-					setCheckedInInterval(col, row, selectedRow);
-				}
-			}
-		}
-		
-		function setCheckedInInterval(col, fromRow, toRow) {
-			for (var row = fromRow; row <= toRow; row++) {
-				jQuery('#td_' + row + "_" + col).addClass('fixed-selected');
-				jQuery("input[id$='check_" + row + "_" + col + "']")[0].checked = true;
+		var mouseX;
+		var mouseY;
+		jQuery(document).mousemove( function(e) {
+		    mouseX = e.pageX; 
+		    mouseY = e.pageY;
+	 	}); 
+		function showToolTip(row, col) {
+			var t = jQuery('#teste');
+			if (turnoCalendar.isSelected(row, col)) {
+				t.html(row + '_' + col);
+				t.css({'top':mouseY,'left':mouseX}).fadeIn();
+			} else if (t.css('display') == 'block') {
+				t.fadeOut();
 			}
 		}
 		
 	// ]]>
 	</script>
+	
+	<div id="teste" style="display: none; position: absolute">
+		teste
+	</div>
 	
 	<table class="rich-table" border="0" cellpadding="0" cellspacing="0">
 		<tr class="rich-table-subheader">
@@ -109,7 +95,7 @@
 		</tr>
 		<c:forEach items="#{handler.horarios}" var="horario" varStatus="rowStatus" begin="0" step="1">
 			<tr class="rich-table-row" onmouseover="rowColor=this.style.backgroundColor; this.style.backgroundColor='#f1f1f1'" onmouseout="this.style.backgroundColor=rowColor">
-				<td class="rich-table-cell">
+				<td class="rich-table-cell" style="width: 9%; font-weight: bold; text-align: center; background-color: #E4E4E4">
 					#{horario}
 				</td>
 				<c:forEach items="#{handler.diasSemana}" var="dia" varStatus="colStatus" begin="0" step="1">
@@ -117,8 +103,8 @@
 					<td id="td_#{rowStatus.index}_#{colStatus.index}" 
 						onclick="markBeginOrEnd(#{rowStatus.index}, #{colStatus.index})" 
 						class="rich-table-cell #{selected ? 'fixed-selected': ''}" 
-						style="cursor: pointer;"
-						onmouseover="jQuery('.selected').removeClass('selected'); markInterval(#{rowStatus.index}, #{colStatus.index}, 'selected');">
+						style="cursor: pointer; width: 13%"
+						onmouseover="markInterval(#{rowStatus.index}, #{colStatus.index}); showToolTip(#{rowStatus.index}, #{colStatus.index});">
 						
 						<h:selectBooleanCheckbox id="check_#{rowStatus.index}_#{colStatus.index}"
 												 style="display: none" 
