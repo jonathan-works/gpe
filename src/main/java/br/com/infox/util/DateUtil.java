@@ -46,6 +46,19 @@ public class DateUtil {
 	}
 	
 	/**
+	 * Metodo retorna um calendar com o horario igual a '23:59:59'
+	 * @param date
+	 * @return
+	 */
+	public static Calendar getEndOfDay() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(1970, 0, 1, 23, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar;
+	}
+	
+	/**
 	 * Metodo que recebe uma data e retorna essa data com as horas modificadas para
 	 * '23:59:59'
 	 * @param date
