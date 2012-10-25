@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition	xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
+
+
+	<style>
+		.selected {
+			background-color: #dd4422;
+		}
+		.fixed-selected {
+			background-color: #dd0000;
+		}
+	</style>
+	
+	<script>
+	// <![CDATA[
+		var selectedRow = null;
+		var selectedCol = null;
+		function markBeginOrEnd(row, col) {
+			var cell = jQuery('#td_' + row + "_" + col);
+			if (selectedCol == null && cell.hasClass('fixed-selected')) {
+				//remove fixed-selected
+				
+			} else if (selectedCol != col) {
+				// clique na linha e coluna inicial
+				selectedRow = row;
+				selectedCol = col;
+				
+				if (!cell.hasClass('fixed-selected')) {
+					cell.addClass('selected');
+				}
+			} else {
+				// clique na linha e coluna final
+				jQuery('.selected').removeClass('selected');
+				checkInterval(row, col);
+				selectedRow = selectedCol = null;
+			}
+		}
+		
+		function markInterval(row, col) {
+			if (selectedCol == col) {
+				if (row > selectedRow) {
+					setSelectedInInterval(col, selectedRow, row);
+				} else {
+					setSelectedInInterval(col, row, selectedRow);
+				}
+			}
+		}
+		
+		function setSelectedInInterval(col, fromRow, toRow) {
+			for (var row = fromRow; row <= toRow; row++) {
+				jQuery('#td_' + row + "_" + col).addClass('selected');
+			}
+		}
+		
+		function checkInterval(row, col) {
+			if (selectedCol == col) {
+				if (row > selectedRow) {
+					setCheckedInInterval(col, selectedRow, row);
+				} else {
+					setCheckedInInterval(col, row, selectedRow);
+				}
+			}
+		}
+		
+		function setCheckedInInterval(col, fromRow, toRow) {
+			for (var row = fromRow; row <= toRow; row++) {
+				jQuery('#td_' + row + "_" + col).addClass('fixed-selected');
+				jQuery("input[id$='check_" + row + "_" + col + "']")[0].checked = true;
+			}
+		}
+		
+	// ]]>
+	</script>
+	
+	<table class="rich-table" border="0" cellpadding="0" cellspacing="0">
+		<tr class="rich-table-subheader">
+			<th class="rich-table-subheadercell" style="width: 80px; border-bottom: solid 1px silver;"> -
+			</th>
+			<ui:repeat value="#{handler.diasSemana}" var="dia">				
+				<th class="rich-table-subheadercell" style="border-bottom: solid 1px silver;">
+					#{dia}
+				</th>
+			</ui:repeat>
+		</tr>
+		<c:forEach items="#{handler.horarios}" var="horario" varStatus="rowStatus" begin="0" step="1">
+			<tr class="rich-table-row" onmouseover="rowColor=this.style.backgroundColor; this.style.backgroundColor='#f1f1f1'" onmouseout="this.style.backgroundColor=rowColor">
+				<td class="rich-table-cell">
+					#{horario}
+				</td>
+				<c:forEach items="#{handler.diasSemana}" var="dia" varStatus="colStatus" begin="0" step="1">
+					<ui:param name="selected" value="#{handler.getHorarioBean(dia, horario).selected}" /> 	
+					<td id="td_#{rowStatus.index}_#{colStatus.index}" 
+						onclick="markBeginOrEnd(#{rowStatus.index}, #{colStatus.index})" 
+						class="rich-table-cell #{selected ? 'fixed-selected': ''}" 
+						style="cursor: pointer;"
+						onmouseover="jQuery('.selected').removeClass('selected'); markInterval(#{rowStatus.index}, #{colStatus.index}, 'selected');">
+						
+						<h:selectBooleanCheckbox id="check_#{rowStatus.index}_#{colStatus.index}"
+												 style="display: none" 
+												 value="#{selected}" />
+					</td>
+				</c:forEach>
+			</tr>
+		</c:forEach>
+	</table>
+	
+</ui:composition>

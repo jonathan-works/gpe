@@ -275,6 +275,11 @@
 		<source>tags/form/fields/specialized/inputTelefone.xhtml</source>
 	</tag>
 	
+	<tag>
+		<tag-name>turnoCalendar</tag-name>
+		<source>tags/form/fields/turnoCalendar.xhtml</source>
+	</tag>
+	
 </facelet-taglib>
 
 
