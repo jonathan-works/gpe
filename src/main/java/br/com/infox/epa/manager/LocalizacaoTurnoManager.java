@@ -43,7 +43,7 @@ public class LocalizacaoTurnoManager extends GenericManager {
 		Calendar horarioCalendar = Calendar.getInstance();
 		horarioCalendar.setTime(horario);
 		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
-		return localizacaoTurnoDAO.getTurnoTarefa(pt, horario, DiaSemanaEnum.values()[diaSemana]);
+		return localizacaoTurnoDAO.getTurnoTarefa(pt, horario, DiaSemanaEnum.values()[diaSemana-1]);
 	}
 	
 	/**
@@ -113,13 +113,27 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	 * @return minutos gastos dentro do turno informado
 	 */
 	public int calcularMinutosGastos(Date fireTime, Date lastFire, LocalizacaoTurno lt) {
-		long millisBegin = Math.max(lastFire.getTime(), lt.getHoraInicio().getTime());
-		long millisEnd = Math.min(fireTime.getTime(), lt.getHoraFim().getTime());
+		int minutesBegin = Math.max(getMinutesOfDay(lastFire), getMinutesOfDay(lt.getHoraInicio()));
+		int minutesEnd = Math.min(getMinutesOfDay(fireTime), getMinutesOfDay(lt.getHoraFim()));
 		
-		if (millisBegin < millisEnd) {
-			return (int) (millisEnd - millisBegin)/(1000*60);
+		if (minutesBegin < minutesEnd) {
+			return minutesEnd - minutesBegin;
 		}
 		return 0;
+	}
+
+	private int getMinutesOfDay(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR)*60);
+	}
+	
+	public static void main(String[] args) {
+		
+		Time t = new Time(new Date().getTime());
+		System.out.println(t);
+		System.out.println(t.getTime());
+		
 	}
 	
 }

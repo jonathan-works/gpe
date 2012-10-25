@@ -1,22 +1,19 @@
 package br.com.infox.epa.action.crud;
 
-import java.sql.Time;
-import java.util.Iterator;
-import java.util.List;
+import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.faces.FacesMessages;
 
+import br.com.infox.component.TurnoBean;
+import br.com.infox.component.TurnoHandler;
 import br.com.infox.epa.entity.LocalizacaoTurno;
 import br.com.infox.epa.manager.LocalizacaoTurnoManager;
-import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.home.LocalizacaoHome;
 import br.com.infox.util.DateUtil;
-import br.com.itx.component.AbstractHome;
+import br.com.itx.util.EntityUtil;
 
 /**
  * 
@@ -25,89 +22,58 @@ import br.com.itx.component.AbstractHome;
  */
 @Name(LocalizacaoTurnoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class LocalizacaoTurnoAction extends AbstractHome<LocalizacaoTurno> {
-
-	private static final long serialVersionUID = 1L;
+public class LocalizacaoTurnoAction {
 
 	public static final String NAME = "localizacaoTurnoAction";
 
 	@In
 	private LocalizacaoTurnoManager localizacaoTurnoManager; 
 	
-	private LocalizacaoTreeHandler localizacaoTreeHandler = new LocalizacaoTreeHandler();
-	private List<LocalizacaoTurno> localizacaoTurnoList;
 	private Localizacao localizacao;
 	
-	@Override
-	protected boolean beforePersistOrUpdate() {
-		getInstance().setLocalizacao(localizacao);
-		Time horaInicio = instance.getHoraInicio();
-		Time horaFim = instance.getHoraFim();
-		if(horaInicio.before(horaFim)) {
-			FacesMessages.instance().add("Hora inicio deve ser menor que hora fim.");
-			return false;
-		}
-		boolean choqueTurnos = localizacaoTurnoManager.verificarTurnos
-				(localizacao, horaInicio, horaFim);
-		if(choqueTurnos) {
-			FacesMessages.instance().add("Choque de horário para a localização "+
-										 localizacao.getLocalizacao()+".");
-		} else {
-			int tempoTurno = DateUtil.calculateMinutesBetweenTimes(horaInicio, horaFim);
-			instance.setTempoTurno(tempoTurno);
-		}
-		return !choqueTurnos;
+	private TurnoHandler turnoHandler;
+	
+	public void newInstance(Localizacao localizacao) {
+		this.localizacao = localizacao;
+		createTurnoHandler();
 	}
 	
-	@Override
-	protected String afterPersistOrUpdate(String ret) {
-		newInstance();
-		listByLocalizacao();
-		return ret;
+	private void createTurnoHandler() {
+		turnoHandler = new TurnoHandler(60);
+		for (LocalizacaoTurno localizacaoTurno: localizacaoTurnoManager.listByLocalizacao(localizacao)) {
+			turnoHandler.addIntervalo(localizacaoTurno.getDiaSemana(), localizacaoTurno.getHoraInicio(), localizacaoTurno.getHoraFim());
+		}
+	}
+
+	public TurnoHandler getTurnoHandler() {
+		return turnoHandler;
+	}
+
+	public void setTurnoHandler(TurnoHandler turnoHandler) {
+		this.turnoHandler = turnoHandler;
 	}
 	
-	@Override
-	public String remove(LocalizacaoTurno obj) {
-		String remove = super.remove(obj);
-		if(remove != null) {
-			localizacaoTurnoList.remove(obj);
-		}
-		return remove;
+	public void gravarTurnos() {
+		removerTurnosAnteriores();
+		inserirTurnosSelecionados();
 	}
 
-	public void removeAll() {
-		for (Iterator<LocalizacaoTurno> iterator = localizacaoTurnoList.iterator(); iterator.hasNext();) {
-			LocalizacaoTurno nt = iterator.next();
-			getEntityManager().remove(nt);
-			iterator.remove();
-		}
-		FacesMessages.instance().add("Registros removidos com sucesso!");
+	private void removerTurnosAnteriores() {
+		Query q = EntityUtil.createQuery("delete from LocalizacaoTurno o where o.localizacao = :localizacao"); 
+		q.setParameter("localizacao", localizacao);
+		q.executeUpdate();
 	}
-		
-	public void init() {
-		localizacao = LocalizacaoHome.instance().getInstance();
-		listByLocalizacao();
-	}
-
-	private void listByLocalizacao() {
-		localizacaoTurnoList = localizacaoTurnoManager.listByLocalizacao(localizacao);
-	}	
-
-	public void setLocalizacaoTreeHandler(LocalizacaoTreeHandler localizacaoTreeHandler) {
-		this.localizacaoTreeHandler = localizacaoTreeHandler;
-	}
-
-	public LocalizacaoTreeHandler getLocalizacaoTreeHandler() {
-		return localizacaoTreeHandler;
-	}
-
-	public void setLocalizacaoTurnoList(List<LocalizacaoTurno> localizacaoTurnoList) {
-		this.localizacaoTurnoList = localizacaoTurnoList;
-	}
-
-	public List<LocalizacaoTurno> getLocalizacaoTurnoList() {
-		return localizacaoTurnoList;
-	}
-
 	
+	private void inserirTurnosSelecionados() {
+		for (TurnoBean turno: turnoHandler.getTurnosSelecionados()) {
+			LocalizacaoTurno localizacaoTurno = new LocalizacaoTurno();
+			localizacaoTurno.setLocalizacao(localizacao);
+			localizacaoTurno.setDiaSemana(turno.getDiaSemana());
+			localizacaoTurno.setHoraInicio(turno.getHoraInicial());
+			localizacaoTurno.setHoraFim(turno.getHoraFinal());
+			localizacaoTurno.setTempoTurno(DateUtil.calculateMinutesBetweenTimes(turno.getHoraInicial(), turno.getHoraFinal()));
+			
+			localizacaoTurnoManager.persist(localizacaoTurno);
+		}
+	}
 }

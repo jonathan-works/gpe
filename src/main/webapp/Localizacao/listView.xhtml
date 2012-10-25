@@ -101,6 +101,18 @@
 		</wi:dataTable>
 	</rich:tab>
 	
+	<rich:tab label="#{messages['localizacao.localizacaoTurno']}"
+		      status=":status"
+			  id="localizacaoTurnoTab"
+			  action="#{localizacaoTurnoAction.newInstance(localizacaoHome.instance)}"
+			  rendered="#{home.managed}">
+		<a:form id="localizacaoTurnoForm">
+			<wi:turnoCalendar handler="#{localizacaoTurnoAction.turnoHandler}" /> 
+			
+			<a:commandButton action="#{localizacaoTurnoAction.gravarTurnos()}" value="Gravar" />
+		</a:form>
+	</rich:tab>
+	
 </ui:define> 
  
 </ui:composition>
