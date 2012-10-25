@@ -328,15 +328,14 @@ public class Util implements Serializable {
      */
 	@SuppressWarnings("unchecked")
 	public <C> C eval(String expression) {
-    	if (expression == null || expression.trim().length() == 0) {
-    		return null;
-    	} else {
-    		expression = expression.trim();
-    	}
-    	if (!expression.startsWith("#{")) {
-    		expression = "#{" + expression + "}";
-    	}
-		return (C) Expressions.instance().createValueExpression(expression).getValue();
+		if (expression == null || expression.trim().length() == 0) {
+			return null;
+		}
+		String expr = expression.trim();
+		if (!expr.startsWith("#{")) {
+			expr = "#{" + expr + "}";
+		}
+		return (C) Expressions.instance().createValueExpression(expr).getValue();
 	}	
     
     /**
