@@ -132,6 +132,9 @@ public class TurnoHandler {
 				begin = null;
 			}
 		}
+		if (begin != null) {
+			turnos.add(new TurnoBean(diaSemana, begin, new Time(DateUtil.getEndOfDay().getTimeInMillis())));
+		}
 		return turnos;
 	}
 	
