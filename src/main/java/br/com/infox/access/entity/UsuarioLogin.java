@@ -80,7 +80,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.senha = senha;
 	}
 
-	@Column(name = "ds_email", length = 100)
+	@Column(name = "ds_email", length = 100, unique = true, nullable = false)
 	@Length(max = 100)
 	public String getEmail() {
 		return this.email;

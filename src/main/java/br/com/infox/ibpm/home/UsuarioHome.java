@@ -60,46 +60,11 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	private BloqueioUsuario ultimoBloqueio;
 	private BloqueioUsuario novoBloqueio = new BloqueioUsuario();
 	
-	public BloqueioUsuario getUltimoBloqueio() {
-		return ultimoBloqueio;
-	}
-	
-	public BloqueioUsuario getNovoBloqueio() {
-		return novoBloqueio;
-	}
-		
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-	
-	public void setPasswordConfirm(String passwordConfirm) {
-		this.passwordConfirm = passwordConfirm;
-	}
-	
-	public String getPasswordConfirm() {
-		return passwordConfirm;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public String getPassword() {
-		return password;
-	}    
-	
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
+	/*
+	 * Testa se os campos do bloqueio foram preenchidos corretamente
+	 * Já é feita uma validação no xhtml
+	 * Essa segunda validação (em código) é realmente necessária?
+	 * */
 	private void validarBloqueio(){
 		if (getInstance().getBloqueio() &&
 				(novoBloqueio.getDataPrevisaoDesbloqueio() == null ||
@@ -111,8 +76,8 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		}
 	}
 	
-	/*
-	 * Apaga a data de Expiração quando o Usário passa de Provisório para permanente 
+	/**
+	 * Apaga a data de Expiração quando o Usário passa de Provisório para Permanente 
 	 * */
 	private void validarPermanencia(){
 		if (!getInstance().getProvisorio())
@@ -161,14 +126,12 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	/*
 	 * Regra do Bloqueio
 	 * 
-	 * Caso 1: Usuário já Bloqueado
-	 * 		1.1: Usuário será desbloqueado {Bloqueio é desfeito}
-	 * 		1.2: Usuário receberá novo bloqueio
-	 * 		{
-	 * 				Bloqueio antigo é desfeito
-	 * 				Novo bloqueio é criado
+	 * Caso 1: Bloquear usuário já Bloqueado {
+	 * 			1.1: Bloqueio antigo é desfeito
+	 * 			1.2: Novo bloqueio é criado
 	 * 		}
-	 * Caso 2: Usuário não Bloqueado será bloqueado
+	 * Caso 2: Bloquear usuário ativo
+	 * 			2.1: Novo bloqueio é criado
 	 * */
 	@Override
 	public String update() {
@@ -207,12 +170,9 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		novoBloqueio = new BloqueioUsuario();
 	}
 	
-
-	
 	public String updateSemWiacs() {
 		return super.update();
 	}
-	
 	
 	@Override
 	public String persist() {
@@ -234,7 +194,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		}		
 		return resultado;
 	}
-	
+	//TODO Mandar e-mail com login - quando o usuário esquece o login não há meio de recuperá-lo
 	private void enviarEmail() {
 		//obter o id do modelo do contexto da aplicação
 		Object objIdModelo = Contexts.getApplicationContext().get("idModeloEMailMudancaSenha");
@@ -297,22 +257,37 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	 * @throws LoginException 
 	 */
 	public void requisitarNovaSenha() throws LoginException {
+		
 		FacesMessages fm = FacesMessages.instance();
-		if (email == null || login == null) {
-			fm.add("É preciso informar o login e o e-mail do usuário");
-		} else {
-			String hsql = "select o from Usuario o " +
-				"where o.login = :login and o.email = :email";
-			Query query = getEntityManager().createQuery(hsql);
-			query.setParameter("login", login);
-			query.setParameter("email", email);
-			List<Usuario> list = query.getResultList();
-			if (list.size() == 0) {
-				fm.add("Usuário não encontrado");
-			} else {
-				setId(list.get(0).getIdUsuario());
-				gerarNovaSenha();
-			}
+		
+		if (email.isEmpty() && login.isEmpty()) {
+			fm.add("É preciso informar o login ou o e-mail do usuário");
+		}
+		else if (login != null){
+			recoverBy("login", login);
+		}else if (email != null){
+			recoverBy("email", email);
+		}
+	}
+	
+	private void recoverBy(String parametro, String valor){
+		FacesMessages fm = FacesMessages.instance();
+		
+		//O StringBuilder constrói a Query com base no parametro passado 
+		// deixando na forma "select o from Usuario o where o.parametro = :parametro"
+		StringBuilder sb = new StringBuilder();
+		sb.append("select o from Usuario o where o.");
+		sb.append(parametro);
+		sb.append(" = :");
+		sb.append(parametro);
+		Query query = getEntityManager().createQuery(sb.toString());
+		query.setParameter(parametro, valor);
+		Usuario usuario = (Usuario) query.getSingleResult();
+		if (usuario == null){
+			fm.add("Usuário não encontrado");
+		} else{
+			setId(usuario.getIdUsuario());
+			gerarNovaSenha();
 		}
 	}
 	
@@ -334,5 +309,46 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	 */
 	public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
 		return (UsuarioLocalizacao) Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_ATUAL);
-	}	
+	}
+		
+	//----Getters e Setters----
+	public BloqueioUsuario getUltimoBloqueio() {
+		return ultimoBloqueio;
+	}
+	
+	public BloqueioUsuario getNovoBloqueio() {
+		return novoBloqueio;
+	}
+		
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	
+	public void setPasswordConfirm(String passwordConfirm) {
+		this.passwordConfirm = passwordConfirm;
+	}
+	
+	public String getPasswordConfirm() {
+		return passwordConfirm;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public String getPassword() {
+		return password;
+	}    
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }
