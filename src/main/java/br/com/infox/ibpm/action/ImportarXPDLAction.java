@@ -49,9 +49,8 @@ public class ImportarXPDLAction {
 		redirect.setViewId("/Fluxo/definicao/processDefinition.xhtml");
 
 		ProcessBuilder process = ProcessBuilder.instance();
-		process.setId(cdFluxo);
-		process.load(cdFluxo);
 		process.setXml(xml);
+		process.updateFluxo();
 		redirect.execute();
 	}
 }

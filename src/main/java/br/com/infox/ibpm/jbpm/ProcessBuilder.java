@@ -395,6 +395,15 @@ public class ProcessBuilder implements Serializable {
 		layout = null;
 	}
 
+	public void updateFluxo() {
+		String xmlDef = JpdlXmlWriter.toString(instance);
+		FluxoHome fluxoHome = FluxoHome.instance();
+		fluxoHome.getInstance().setXml(xmlDef);
+		fluxoHome.update();
+		
+		needToPublic = true;
+	}
+	
 	private void modifyNodesAndTasks() {
 		String update;
 		Query q;
