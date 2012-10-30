@@ -7,13 +7,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.el.PropertyNotFoundException;
 
 import org.apache.commons.beanutils.ConvertUtils;
-import org.jboss.seam.annotations.Name;
+import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.ValueExpression;
@@ -365,7 +365,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	}
 
 	public String getEntityListName() {
-		return this.getClass().getAnnotation(Name.class).value();
+		return Component.getComponentName(this.getClass());
 	}
 
 	public Pesquisa getPesquisa() {
