@@ -25,7 +25,9 @@ import br.com.infox.ibpm.entity.Processo;
 @PrimaryKeyJoinColumn
 @NamedQueries(value={
 		@NamedQuery(name=ProcessoEpaQuery.LIST_ALL_NOT_ENDED,
-					query=ProcessoEpaQuery.LIST_ALL_NOT_ENDED_QUERY)
+					query=ProcessoEpaQuery.LIST_ALL_NOT_ENDED_QUERY),
+		@NamedQuery(name=ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO,
+					query=ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY)
 })
 public class ProcessoEpa extends Processo {
 

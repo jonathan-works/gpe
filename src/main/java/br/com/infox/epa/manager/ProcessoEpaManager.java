@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.ProcessoEpaDAO;
 import br.com.infox.epa.entity.ProcessoEpa;
+import br.com.infox.ibpm.entity.Fluxo;
 
 @Name(ProcessoEpaManager.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -26,6 +27,10 @@ public class ProcessoEpaManager extends GenericManager {
 
 	public List<ProcessoEpa> listAllNotEnded() {
 		return processoEpaDAO.listAllNotEnded();
+	}
+	
+	public List<ProcessoEpa> listNotEnded(Fluxo fluxo) {
+		return processoEpaDAO.listNotEnded(fluxo);
 	}
 	
 }
