@@ -25,6 +25,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -34,8 +36,14 @@ import javax.persistence.TemporalType;
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
+import br.com.infox.epa.query.FluxoQuery;
+
 @Entity
 @Table(name = "tb_fluxo", schema="public")
+@NamedQueries(value={
+	@NamedQuery(name=FluxoQuery.LIST_ATIVOS,
+			    query=FluxoQuery.LIST_ATIVOS_QUERY)
+  })
 public class Fluxo implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
