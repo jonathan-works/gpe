@@ -64,11 +64,17 @@ public class ProcessoTimerProcessor {
 		List<ProcessoEpa> listAllNotEnded = processoEpaManager.listAllNotEnded();
 		for (ProcessoEpa processoEpa : listAllNotEnded) {
 			Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
-			processoEpa.setTempoGasto(processoEpa.getTempoGasto() + 1);
-			if(f.getQtPrazo() != 0) {
+			
+			Integer tempoGasto = processoEpa.getTempoGasto();
+			if (tempoGasto == null) {
+				tempoGasto = 0;
+			}
+			processoEpa.setTempoGasto(tempoGasto + 1);
+			if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
 				processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100)/
 						f.getQtPrazo());
 			}
+			processoEpaManager.update(processoEpa);
 		}
 		return null;
 	}
