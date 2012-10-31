@@ -53,6 +53,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		}
 		setEjbql(getDefaultEjbql());
 		setOrderedColumn(getDefaultOrder());
+		setRestrictions();
 	}
 	
 	/**
@@ -92,7 +93,6 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		if (page > pageCount) {
 			setPage(pageCount);
 		}
-		setRestrictions();
 		return super.getResultList();
 	}
 
