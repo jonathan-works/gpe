@@ -21,11 +21,16 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 	
 	private static final String DEFAULT_EJBQL = "select o from ModeloDocumento o";
 	private static final String DEFAULT_ORDER = "tituloModeloDocumento";
+	private static final String R1 = "o.tipoModeloDocumento in (select t from TipoModeloDocumentoPapel tmdp" +
+																				" join tmdp.tipoModeloDocumento t" +
+																				" join tmdp.papel p" +
+																			" where p = #{usuarioLogadoLocalizacaoAtual.getPapel()})";
 	
 	protected void addSearchFields() {
 		addSearchField("ativo", SearchCriteria.igual);
 		addSearchField("tipoModeloDocumento", SearchCriteria.igual);
 		addSearchField("tituloModeloDocumento", SearchCriteria.contendo);
+		addSearchField("tipoModeloDocumento", SearchCriteria.igual, R1);
 	}
 
 	protected Map<String, String> getCustomColumnsOrder() {

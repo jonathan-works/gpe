@@ -139,7 +139,7 @@ public class Assunto implements java.io.Serializable {
 	
 	@Override
 	public String toString() {
-		return assunto;
+		return caminhoCompleto.replace('|', '>').substring(0, caminhoCompleto.length()-1);
 	}
 	
 	@Transient

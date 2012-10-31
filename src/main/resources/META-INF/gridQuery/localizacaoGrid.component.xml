@@ -23,9 +23,9 @@
 		-->
 		</property>
 		<property name="searchFields">
-			<value>ativo: {type : comboSituacao}</value>
-			<value>localizacaoPai : {type : tree , properties : { tree : localizacaoEstruturaSearchTreeHandler }}</value>
 			<value>localizacao</value>
+			<value>localizacaoPai : {type : tree , properties : { tree : localizacaoEstruturaSearchTreeHandler }}</value>
+			<value>ativo: {type : comboSituacao}</value>
 			<value>mostrarSomenteEstrutura : { type : radio, 
 						properties : { searchBean: 'localizacaoHome', 
 						valueList: 'true:Sim,false:Não', label: 'Mostrar Somente Estruturas'}}</value>

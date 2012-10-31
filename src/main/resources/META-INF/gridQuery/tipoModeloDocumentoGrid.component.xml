@@ -9,7 +9,6 @@
 		<property name="gridId">tipoModeloDocumento</property>
 		<property name="key">idTipoModeloDocumento</property>
 		<property name="columns">
-			<value>idTipoModeloDocumento</value>
 			<value>tipoModeloDocumento</value>
 			<value>grupoModeloDocumento : {properties : {order: grupoModeloDocumento}}</value>			
 			<value>abreviacao</value>			

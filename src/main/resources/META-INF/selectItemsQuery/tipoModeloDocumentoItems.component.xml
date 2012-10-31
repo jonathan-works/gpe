@@ -4,7 +4,12 @@
 
 
 	<component name="tipoModeloDocumentoItems" class="br.com.itx.component.SelectItemsQuery">
-		<property name="ejbql">select o from TipoModeloDocumento o</property>
-		<property name="order">tipoModeloDocumento</property>
+		<property name="ejbql">select t from TipoModeloDocumentoPapel tmdp
+											join tmdp.tipoModeloDocumento t
+											join tmdp.papel p</property>
+		<property name="order">t.tipoModeloDocumento</property>
+		<property name="restrictions">
+			<value>p = #{usuarioLogadoLocalizacaoAtual.getPapel()}</value>
+		</property>
 	</component>
 </components>

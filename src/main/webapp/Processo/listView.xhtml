@@ -47,12 +47,6 @@
 					</f:facet>
 					<h:outputText value="#{row.categoria}"/>
 				</rich:column>
-				<rich:column style="width: 30%">
-					<f:facet name="header">
-						<h:outputText value="#{messages['naturezaCategoriaFluxo.fluxo']}" />
-					</f:facet>
-					<h:outputText value="#{row.fluxo}"/>
-				</rich:column>
 			</rich:dataTable>
 			<rich:datascroller for="natCatFluxoTable"
 							   lastPageMode="full"
@@ -66,8 +60,8 @@
 								var="row"
 								rows="10"
 								rendered="#{action.renderedAssuntoLocalizacao}"
-								style="width: 20%">
-					<rich:column style="width: 20%">
+								style="width: auto">
+					<rich:column style="width: 15%">
 						<h:selectBooleanCheckbox id="checked"
 												 value="#{row.checked}">
 							<a:support event="onchange"
