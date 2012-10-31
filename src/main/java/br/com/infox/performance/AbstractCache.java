@@ -13,7 +13,7 @@ import br.com.itx.util.EntityUtil;
 public abstract class AbstractCache {
 
 	private Map<String, Cache> map = new HashMap<String, Cache>();
-	private static final LogProvider log = Logging.getLogProvider(AbstractCache.class);
+	private static final LogProvider LOG = Logging.getLogProvider(AbstractCache.class);
 
 	private Object getValue(String expressao, String identificador) {
 		MeasureTime mt = new MeasureTime(true);
@@ -70,22 +70,22 @@ public abstract class AbstractCache {
 	 * Loga os dados estatísticos sobre a execução do cache
 	 */
 	public void printEstatistica() {
-		if (log.isInfoEnabled()) {
-			log.info("----------------------------------");
+		if (LOG.isInfoEnabled()) {
+			LOG.info("----------------------------------");
 			for (Cache cache : map.values()) {
-				log.info(cache);
+				LOG.info(cache);
 			}
-			log.info("Quantidade de registros" + map.values().size());
-			log.info("----------------------------------");
+			LOG.info("Quantidade de registros" + map.values().size());
+			LOG.info("----------------------------------");
 		}
 	}
 
-	private class Cache {
-		String identificador;
-		String expressao;
-		Object resultado;
-		int count = 0;
-		long tempo = 0;
+	private static class Cache {
+		private String identificador;
+		private String expressao;
+		private Object resultado;
+		private int count = 0;
+		private long tempo = 0;
 
 		@Override
 		public String toString() {
