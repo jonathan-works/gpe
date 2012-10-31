@@ -1,5 +1,6 @@
 package br.com.infox.epa.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -29,7 +30,9 @@ import br.com.infox.ibpm.entity.Tarefa;
 			    @NamedQuery(name=ProcessoEpaTarefaQuery.LIST_ALL_NOT_ENDED,
 					    query=ProcessoEpaTarefaQuery.LIST_ALL_NOT_ENDED_QUERY)
 			  })
-public class ProcessoEpaTarefa {
+public class ProcessoEpaTarefa implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String TABLE_NAME = "tb_processo_epa_tarefa";
 	
