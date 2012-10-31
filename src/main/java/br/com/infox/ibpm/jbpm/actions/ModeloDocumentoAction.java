@@ -128,7 +128,12 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		StringBuffer sb = new StringBuffer();
 		
 		while(matcher.find())	{
-			matcher.appendReplacement(sb, map.get(matcher.group().substring(2,matcher.group().length()-1)));
+			String group = matcher.group();
+			String variableName = group.substring(2, group.length()-1);
+			String expression = map.get(variableName);
+			if (expression != null) {
+				matcher.appendReplacement(sb, expression);
+			}
 		}
 		matcher.appendTail(sb);
 		
