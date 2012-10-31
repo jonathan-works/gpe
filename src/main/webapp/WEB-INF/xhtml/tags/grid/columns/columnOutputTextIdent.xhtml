@@ -24,8 +24,7 @@
 		        xmlns:rich="http://richfaces.org/rich">
 
 	<ui:param name="qnt" value="#{wi:splitLength(fullPath, '\\|')}"/>
-	<wi:columnOutputText styleOutputText="#{qnt == 1 ? 'font-weight: bold' : ''}">
-		<rich:spacer width="#{20*(qnt-1)}px" />
-	</wi:columnOutputText>
+	<wi:columnOutputText styleOutputText="#{qnt == 1 ? 'font-weight: bold' : ''}; padding-left:#{20*(qnt-1)}px" />
+	
 	
 </ui:composition>
