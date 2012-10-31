@@ -222,7 +222,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * @param restriction - String da restriction com ou sem expressões
 	 */
 	@SuppressWarnings("rawtypes")
-	public void setRestrictions() {
+	public final void setRestrictions() {
 		List<ValueExpression> valueExpressionList = new ArrayList<ValueExpression>();
 		for(SearchField s: searchFieldMap.values()) {
 			valueExpressionList.add(Expressions.instance().createValueExpression(s.getExpression()));			
