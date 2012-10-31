@@ -15,7 +15,12 @@
  */
 package br.com.infox.ibpm.jbpm.actions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 
@@ -28,6 +33,8 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Expressions;
 
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.ibpm.jbpm.ActionTemplate;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
@@ -95,12 +102,45 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		return em;
 	}
 	
+	@SuppressWarnings("unchecked")
+	private Map<String, String> getVariaveis(TipoModeloDocumento tipo)	{
+		List<Variavel> list = new ArrayList<Variavel>();
+		if (tipo != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("select o from Variavel o ");
+			sb.append("join o.variavelTipoModeloList tipos ");
+			sb.append("where tipos.tipoModeloDocumento = :tipo");
+			list = getEntityManager().createQuery(sb.toString()).setParameter("tipo", tipo).getResultList();
+		}
+
+		Map<String, String> map = new HashMap<String, String>();
+		for (Variavel variavel : list) {
+			map.put(variavel.getVariavel(), variavel.getValorVariavel());
+		}
+		return map;
+	}
+	
+	private String validaVariaveis(String modelo, TipoModeloDocumento tipo)	{
+		Pattern pattern = Pattern.compile("#[{][^{}]+[}]");
+		Matcher matcher = pattern.matcher(modelo);
+		
+		Map<String, String> map = getVariaveis(tipo);
+		StringBuffer sb = new StringBuffer();
+		
+		while(matcher.find())	{
+			matcher.appendReplacement(sb, map.get(matcher.group().substring(2,matcher.group().length()-1)));
+		}
+		matcher.appendTail(sb);
+		
+		return sb.toString();
+	}
+	
 	public String getConteudo(ModeloDocumento modeloDocumento) {
 		if (modeloDocumento == null) {
 			return null;
 		}
 		StringBuilder modeloProcessado = new StringBuilder();		
-		String[] linhas = modeloDocumento.getModeloDocumento().split("\n");
+		String[] linhas = validaVariaveis(modeloDocumento.getModeloDocumento(), modeloDocumento.getTipoModeloDocumento()).split("\n");
 		for (int i = 0; i < linhas.length; i++) {
 			if (modeloProcessado.length() > 0) {
 				modeloProcessado.append('\n');

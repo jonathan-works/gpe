@@ -85,7 +85,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		List list = new ArrayList<String>();
 		if (getInstance().getTipoModeloDocumento() != null) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("select o.valorVariavel from Variavel o ");
+			sb.append("select o.variavel from Variavel o ");
 			sb.append("join o.variavelTipoModeloList tipos ");
 			sb.append("where tipos.tipoModeloDocumento = :tipo");
 			list = getEntityManager().createQuery(sb.toString()).setParameter("tipo", getInstance().getTipoModeloDocumento()).getResultList();
@@ -138,14 +138,14 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		boolean eliminarTodos = variaveis.size() == 0;
 		
 		while(matcher.find())	{
+			String match = matcher.group().substring(2,matcher.group().length()-1);
 			if (eliminarTodos)	{
-				System.out.println(matcher.group());
-				FacesMessages.instance().add("Variável "+matcher.group().substring(1)+" não cadastrada para este Tipo de Documento");
+				FacesMessages.instance().add("Variável "+match+" não cadastrada para este Tipo de Documento");
 				return false;
 			}
-			if(!variaveis.contains(matcher.group()))	{
-				System.out.println(matcher.group());
-				FacesMessages.instance().add("Variável "+matcher.group().substring(1)+" não cadastrada para este Tipo de Documento");
+					
+			if(!variaveis.contains(match))	{
+				FacesMessages.instance().add("Variável "+match+" não cadastrada para este Tipo de Documento");
 				return false;
 			}
 		}

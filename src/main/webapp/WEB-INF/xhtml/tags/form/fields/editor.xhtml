@@ -38,7 +38,7 @@
 			// Conteudo da lista de selecao
 			var contents = {
 				<a:repeat value="#{modeloDocumentoHome.variaveis}" var="v">
-					'#{v.variavel}' : '#{v.valorVariavel}' ,
+					'#{v.variavel}' : '\#{'+'#{v.variavel}'+'}' ,
 				</a:repeat>
 			};
 			// Label da lista de variáveis
