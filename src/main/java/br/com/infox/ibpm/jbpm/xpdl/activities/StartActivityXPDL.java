@@ -10,6 +10,8 @@ import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 
 public class StartActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public StartActivityXPDL(Element element, String name) {
 		super(element, name);
 	}

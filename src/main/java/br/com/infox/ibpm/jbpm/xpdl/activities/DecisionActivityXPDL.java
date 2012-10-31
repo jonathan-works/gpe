@@ -7,6 +7,8 @@ import br.com.infox.ibpm.jbpm.node.DecisionNode;
 
 public class DecisionActivityXPDL extends ActivityXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public DecisionActivityXPDL(Element element, String name) {
 		super(element, name);
 	}

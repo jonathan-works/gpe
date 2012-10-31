@@ -6,6 +6,8 @@ import org.jdom.Element;
 
 public class JoinActivityXPDL extends ActivityXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public JoinActivityXPDL(Element element, String name) {
 		super(element, name);
 	}

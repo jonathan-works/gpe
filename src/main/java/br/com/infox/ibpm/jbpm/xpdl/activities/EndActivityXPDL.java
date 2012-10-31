@@ -6,6 +6,8 @@ import org.jdom.Element;
 
 public class EndActivityXPDL extends ActivityXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public EndActivityXPDL(Element element, String name) {
 		super(element, name);
 	}

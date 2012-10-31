@@ -6,6 +6,8 @@ import org.jdom.Element;
 
 public class ForkActivityXPDL extends ActivityXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public ForkActivityXPDL(Element element, String name) {
 		super(element, name);
 	}

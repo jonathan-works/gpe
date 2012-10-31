@@ -7,6 +7,8 @@ import org.jdom.Element;
 
 public class SubProcessActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public SubProcessActivityXPDL(Element element, String name) {
 		super(element, name);
 	}

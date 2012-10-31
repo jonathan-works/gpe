@@ -7,6 +7,8 @@ import br.com.infox.ibpm.jbpm.xpdl.element.ParallelNodeXPDL;
 
 public class ParallelActivityXPDL extends ActivityXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public ParallelActivityXPDL(Element element, String name) {
 		super(element, name);
 	}

@@ -8,6 +8,8 @@ import org.jdom.Element;
 
 public class TaskActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public TaskActivityXPDL(Element element, String name) {
 		super(element, name);
 	}

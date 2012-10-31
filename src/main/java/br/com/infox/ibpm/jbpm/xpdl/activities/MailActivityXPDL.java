@@ -7,6 +7,8 @@ import br.com.infox.ibpm.jbpm.node.MailNode;
 
 public class MailActivityXPDL extends ActivityXPDL {
 
+	private static final long serialVersionUID = 1L;
+
 	public MailActivityXPDL(Element element, String name) {
 		super(element, name);
 	}
@@ -19,5 +21,4 @@ public class MailActivityXPDL extends ActivityXPDL {
 		}
 		return node;
 	}
-
 }

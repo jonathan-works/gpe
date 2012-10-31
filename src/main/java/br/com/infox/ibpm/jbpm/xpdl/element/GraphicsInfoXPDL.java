@@ -2,13 +2,15 @@ package br.com.infox.ibpm.jbpm.xpdl.element;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
 import org.jdom.Element;
 
 import br.com.itx.util.XmlUtil;
 
-public class GraphicsInfoXPDL {
+public class GraphicsInfoXPDL implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private Point2D position;
 	private float width;
 	private float height;
