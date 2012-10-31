@@ -91,7 +91,20 @@
 				</wi:searchForm>
 			</ui:define>
 			
-			<ui:define name="toolBar"/>
+			<ui:define name="headerToolBar">#{messages['entidadeLog.detalhe']}</ui:define>
+			<ui:define name="toolBar">
+				<s:link view="/Consulta/Log/detalheLog.seam"
+						onclick="abrirPopUp();"
+						target="comprovante">
+					<s:conversationPropagation type="none"/>
+					<f:param name="idPesquisa" value="#{row.idLog}" />
+					<h:graphicImage 
+						title="Visualizar"
+						url="#{a4jSkin.imgIconView}"
+						style="cursor:pointer !important"
+					/>
+				</s:link>
+			</ui:define>
 			
 			<wi:columnOutputText columnId="nomeEntidade"
 								 columnHeader="#{messages['entidadeLog.nomeEntidade']}"
@@ -112,23 +125,6 @@
 			<wi:columnEnum columnId="tipoOperacao"
 						   columnHeader="#{messages['entidadeLog.tipoOperacao']}"
 						   value="#{row.tipoOperacao}" />
-			<wi:column columnId="detalhe"
-					   hideOrder="true"
-					   columnHeader="#{messages['entidadeLog.detalhe']}">
-				<s:div style="width: 100%; text-align: center">
-					<s:link view="/Consulta/Log/detalheLog.seam"
-							onclick="abrirPopUp();"
-							target="comprovante">
-						<s:conversationPropagation type="none"/>
-						<f:param name="idPesquisa" value="#{row.idLog}" />
-						<h:graphicImage 
-							title="Visualizar"
-							url="#{a4jSkin.imgIconView}"
-							style="cursor:pointer !important"
-						/>
-					</s:link>
-				</s:div>
-			</wi:column>
 		</wi:dataTable>
 	</ui:define>
 </ui:composition>
