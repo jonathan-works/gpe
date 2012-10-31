@@ -39,11 +39,11 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	 * @param horario 
 	 * @return turno da localização da tarefa
 	 */
-	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date horario) {
+	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date data, Time horario) {
 		Calendar horarioCalendar = Calendar.getInstance();
 		horarioCalendar.setTime(horario);
 		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
-		return localizacaoTurnoDAO.getTurnoTarefa(pt, horario, DiaSemanaEnum.values()[diaSemana-1]);
+		return localizacaoTurnoDAO.getTurnoTarefa(pt, data, horario, DiaSemanaEnum.values()[diaSemana-1]);
 	}
 	
 	/**

@@ -38,12 +38,13 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	 * @param horario
 	 * @return
 	 */
-	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date horario, DiaSemanaEnum diaSemana) {
+	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date data, Time horario, DiaSemanaEnum diaSemana) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ID_TASK_INSTANCE, pt.getTaskInstance());
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, pt.getUltimoDisparo());
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, new Time(pt.getUltimoDisparo().getTime()));
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM, horario);
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DATA, data);
 		return getNamedSingleResult(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
 	}
 

@@ -1,5 +1,6 @@
 package br.com.infox.epa.processor;
 
+import java.sql.Time;
 import java.util.Date;
 
 import org.jboss.seam.Component;
@@ -66,7 +67,7 @@ public class TarefaTimerProcessor {
 		}
 		Date fireTime = trigger.getPreviousFireTime();
 		for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getAllNotEnded()) {
-			LocalizacaoTurno lt = localizacaoTurnoManager.getTurnoTarefa(pt, fireTime);
+			LocalizacaoTurno lt = localizacaoTurnoManager.getTurnoTarefa(pt, fireTime, new Time(fireTime.getTime()));
 			if (lt != null) {
 				pt.setTempoGasto(pt.getTempoGasto() + localizacaoTurnoManager.calcularMinutosGastos(fireTime, pt.getUltimoDisparo(), lt));
 				pt.setUltimoDisparo(fireTime);

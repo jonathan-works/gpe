@@ -11,6 +11,7 @@ public interface LocalizacaoTurnoQuery {
 	String QUERY_PARAM_LOCALIZACAO = "localizacao";
 	String QUERY_PARAM_HORA_INICIO = "horaInicio";
 	String QUERY_PARAM_HORA_FIM = "horaFim";
+	String QUERY_PARAM_DATA = "data";
 	String QUERY_PARAM_ID_TASK_INSTANCE = "idTaskInstance";
 	String QUERY_PARAM_DIA_SEMANA = "diaSemana";
 	
@@ -40,8 +41,14 @@ public interface LocalizacaoTurnoQuery {
 			"where (:" +QUERY_PARAM_HORA_INICIO+ " between lt.horaInicio and lt.horaFim or " +
 			"		:" +QUERY_PARAM_HORA_FIM+ " between lt.horaInicio and lt.horaFim) and" +
 			"	lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + " and " +
-			"   lt.localizacao in (select o.localizacao from ProcessoLocalizacaoIbpm o where " +
-			" 	 					o.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+" and " +
-			"	 					o.contabilizar = true)";
+			"   not exists(select o from CalendarioEventos o " +
+			"			   where o.localizacao = lt.localizacao and " +
+			"					 day(" + QUERY_PARAM_DATA + ") = o.dia and " +
+			"					 month(" + QUERY_PARAM_DATA + ") = o.mes and " +
+			"					 (o.ano is null or year(" + QUERY_PARAM_DATA + ") = o.ano)) and " +
+			"   exists (select o from ProcessoLocalizacaoIbpm o where " +
+			" 	 			   o.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+" and " +
+			"				   o.localizacao = lt.localizacao and	" +
+			"	 			   o.contabilizar = true)";
 	
 }
