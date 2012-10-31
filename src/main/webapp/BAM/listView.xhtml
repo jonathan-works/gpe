@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+    
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:a="http://richfaces.org/a4j"
+			    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+                       
+	<ui:define name="title">BAM</ui:define>
+
+	<ui:define name="body">
+		<style>
+			.red-tr {
+				background-color: red;
+			}
+			.yellow-tr {
+				background-color: yellow;
+			}
+		</style>
+		
+		<wi:dataForm formId="pesquisaFluxoForm"
+					 formTitle="Pesquisar Fluxo">
+			<wi:selectOneMenuEntity id="fluxoCombo"
+									label="Fluxo"
+									items="#{bamAction.fluxoList}"
+									showLabelSelecione="true"
+									value="#{processoEpaNaoFinalizadoList.fluxo}" />
+									
+			<ui:define name="buttons">
+				<wi:commandButton id="pesquisar"
+								  value="Pesquisar"
+								  reRender="processoList" />
+			</ui:define>
+		</wi:dataForm>
+		
+		<s:div id="processoList">
+			<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
+						  bean="#{processoEpaNaoFinalizadoList}"
+						  tableTitle="Processos"
+						  showGrid="#{not empty processoEpaNaoFinalizadoList.fluxo}"
+						  panelWidth="100%"
+						  rowClasses="#{processoEpaNaoFinalizadoList.rowClasses()}"
+						  onRowMouseOut=""
+						  onRowMouseOver=""
+						  id="processoDataTable">
+						  
+				<ui:define name="headerToolBar" />
+				<ui:define name="toolBar"> 
+					<wi:toolBar url="/img/edit.gif"
+								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
+								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
+								reRender="processoEpaTarefaModal"/>
+				</ui:define>
+				
+				<wi:columnOutputText columnId="nrProcesso"
+									 columnHeader="Número do Processo"
+									 value="#{row.numeroProcesso}" />
+									 
+				<wi:columnOutputText columnId="tempoGasto"
+									 columnHeader="Tempo Gasto (em dias)"
+									 value="#{row.tempoGasto}" />
+									 
+				<wi:columnOutputText columnId="prazoFluxo"
+									 columnHeader="Prazo (em dias)"
+									 value="#{row.naturezaCategoriaFluxo.fluxo.qtPrazo}" />
+
+				<ui:param name="porc" value="#{row.porcentagem > 100 ? '> 100' : row.porcentagem}" />
+				<wi:columnOutputText columnId="porcentagem"
+									 columnHeader="Porcentagem"
+									 value="#{not empty row.porcentagem ? row.porcentagem : 0}%" />
+				
+			</wi:dataTable>
+		</s:div>
+		
+		<wi:modalPanel id="processoEpaTarefaModal"
+					   labelHeader="Detalhe do Processo"
+					   width="600"
+					   height="400">
+			<wi:dataTable values="#{processoEpaTarefaList.list(15)}"
+						  bean="#{processoEpaTarefaList}"
+						  tableTitle="Tarefas"
+						  showToolbarColumn="false"
+						  panelWidth="97%"
+						  rowClasses="#{processoEpaTarefaList.rowClasses()}"
+						  onRowMouseOut=""
+						  onRowMouseOver=""
+						  id="processoTarefaDataTable">
+						  
+				<wi:columnOutputText columnId="tarefa"
+									 columnHeader="Tarefa"
+									 columnWidth="20%"
+									 value="#{row.tarefa.tarefa}" />
+									 
+				<wi:columnOutputText columnId="tempoGasto"
+									 columnHeader="Tempo Gasto (em minutos)"
+									 columnWidth="20%"
+									 value="#{row.tempoGasto}" />
+									 
+				<wi:columnOutputText columnId="tempoPrevisto"
+									 columnHeader="Tempo Previsto (em minutos)"
+									 columnWidth="20%"
+									 value="#{row.tempoPrevisto}" />
+									 
+				<ui:param name="prazoEstourado" value="#{row.porcentagem > 100}" />
+				<ui:param name="porc" value="#{prazoEstourado ? '> 100' : row.porcentagem}" />
+				<wi:columnOutputText columnId="porcentagem"
+									 columnHeader="Porcentagem"
+									 columnWidth="20%"
+									 value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}" />
+			</wi:dataTable>
+		</wi:modalPanel>
+	</ui:define>
+	 
+</ui:composition>
