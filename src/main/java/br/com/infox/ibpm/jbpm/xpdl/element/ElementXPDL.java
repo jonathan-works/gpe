@@ -1,11 +1,14 @@
 package br.com.infox.ibpm.jbpm.xpdl.element;
 
+import java.io.Serializable;
+
 import org.jdom.Element;
 
 import br.com.itx.util.XmlUtil;
 
-public class ElementXPDL {
+public class ElementXPDL implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private Element element;
 	private String id;
 	private String name;

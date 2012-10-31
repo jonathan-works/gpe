@@ -11,6 +11,7 @@ import br.com.infox.ibpm.jbpm.xpdl.lane.LaneXPDL;
 
 public abstract class ActivityXPDL extends ElementXPDL {
 	
+	private static final long serialVersionUID = 1L;
 	private List<ActivityXPDL> leaves;
 	private List<ActivityXPDL> arrives;
 	private LaneXPDL lane;

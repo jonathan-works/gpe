@@ -12,6 +12,7 @@ import br.com.infox.ibpm.jbpm.xpdl.element.ElementXPDL;
 
 public class LaneXPDL extends ElementXPDL{
 	
+	private static final long serialVersionUID = 1L;
 	private Swimlane swimlane;
 	
 	public LaneXPDL(Element element, String name) {

@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.jbpm.xpdl.transition;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jbpm.graph.def.Transition;
@@ -10,8 +11,9 @@ import br.com.infox.ibpm.jbpm.xpdl.activities.ActivityXPDL;
 import br.com.itx.util.XmlUtil;
 
 
-public class TransitionXPDL {
+public class TransitionXPDL implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private Element element;
 	private String id;
 	private String name;
