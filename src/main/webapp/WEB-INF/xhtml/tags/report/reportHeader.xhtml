@@ -28,8 +28,9 @@
 			 spacingAfter="#{wi:get(spacingAfter, '30')}">
 			<p:cell borderWidth="0" verticalAlignment="left">
 				<p:html>
-				    <img src='${facesContext.externalContext.request.getRealPath("/")}#{a4jSkin.imgLogoMini}'
-				    	 width="7%" height="7%"/>
+				    <img src='${facesContext.externalContext.request.getRealPath("/")}#{a4jSkin.imgLogoLogin}' 
+				    		width='30%'
+				    		height='30%'/>
 				</p:html>
 			</p:cell>
 			<p:cell borderWidth="0" verticalAlignment="bottom" horizontalAlignment="center">
@@ -37,7 +38,7 @@
 						 widths="1">
 					<p:cell borderWidth="0" horizontalAlignment="center" verticalAlignment="bottom">
 						<p:font size="12">
-			 				<p:paragraph alignment="center">       
+			 				<p:paragraph alignment="center">
 							       <p:text value="#{title}" />
 							</p:paragraph>
 						</p:font>
