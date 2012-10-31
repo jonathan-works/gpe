@@ -60,28 +60,8 @@
 			}
 		}
 		
-		var mouseX;
-		var mouseY;
-		jQuery(document).mousemove( function(e) {
-		    mouseX = e.pageX; 
-		    mouseY = e.pageY;
-	 	}); 
-		function showToolTip(row, col) {
-			var t = jQuery('#teste');
-			if (turnoCalendar.isSelected(row, col)) {
-				t.html(row + '_' + col);
-				t.css({'top':mouseY,'left':mouseX}).fadeIn();
-			} else if (t.css('display') == 'block') {
-				t.fadeOut();
-			}
-		}
-		
 	// ]]>
 	</script>
-	
-	<div id="teste" style="display: none; position: absolute">
-		teste
-	</div>
 	
 	<table class="rich-table" border="0" cellpadding="0" cellspacing="0">
 		<tr class="rich-table-subheader">
@@ -96,7 +76,7 @@
 		<c:forEach items="#{handler.horarios}" var="horario" varStatus="rowStatus" begin="0" step="1">
 			<tr class="rich-table-row" onmouseover="rowColor=this.style.backgroundColor; this.style.backgroundColor='#f1f1f1'" onmouseout="this.style.backgroundColor=rowColor">
 				<td class="rich-table-cell" style="width: 9%; font-weight: bold; text-align: center; background-color: #E4E4E4">
-					#{horario}
+					#{horario} - #{rowStatus.index lt handler.horarios.size()-1 ? handler.horarios.get(rowStatus.index + 1) : '00:00:00'}
 				</td>
 				<c:forEach items="#{handler.diasSemana}" var="dia" varStatus="colStatus" begin="0" step="1">
 					<ui:param name="selected" value="#{handler.getHorarioBean(dia, horario).selected}" /> 	
@@ -104,7 +84,7 @@
 						onclick="markBeginOrEnd(#{rowStatus.index}, #{colStatus.index})" 
 						class="rich-table-cell #{selected ? 'fixed-selected': ''}" 
 						style="cursor: pointer; width: 13%"
-						onmouseover="markInterval(#{rowStatus.index}, #{colStatus.index}); showToolTip(#{rowStatus.index}, #{colStatus.index});">
+						onmouseover="markInterval(#{rowStatus.index}, #{colStatus.index});">
 						
 						<h:selectBooleanCheckbox id="check_#{rowStatus.index}_#{colStatus.index}"
 												 style="display: none" 
