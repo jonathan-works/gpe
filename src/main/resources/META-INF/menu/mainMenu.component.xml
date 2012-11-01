@@ -6,46 +6,43 @@
 	<component name="mainMenu" class="br.com.infox.access.Menu" scope="session">
 
 		<property name="items">
-
-			<value>Cadastros Auxiliares/Eventos/agrupamento.menuText:/Agrupamento/listView.seam</value>
-			<value>Cadastros Auxiliares/categoria.menuText:/Categoria/listView.seam</value>
-			<value>Cadastros Auxiliares/Eventos/evento.menuText:/Evento/listView.seam</value>
-			<value>Cadastros Auxiliares/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
-			<value>Cadastros Auxiliares/natureza.menuText:/Natureza/listView.seam</value>
-			<value>Cadastros Auxiliares/natCatFluxoLocalizacao.menuText:/NatCatFluxoLocalizacao/listView.seam</value>
-			<value>Cadastros Auxiliares/tipoProcessoDocumento.menuText:/TipoProcessoDocumento/listView.seam</value>
-
-			<value>Cadastros Básicos/assunto.menuText:/Assunto/listView.seam</value>
-			<value>Cadastros Básicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
-			<value>Cadastros Básicos/cbo.menuText:/CBO/listView.seam</value>
-			<value>Cadastros Básicos/cna.menuText:/CNAE/listView.seam</value>
-			<value>Cadastros Básicos/Modelo de Documento/Grupo:/GrupoModeloDocumento/listView.seam</value>
-			<value>Cadastros Básicos/Modelo de Documento/Tipo:/TipoModeloDocumento/listView.seam</value>
-			<value>Cadastros Básicos/Modelo de Documento/Modelo:/ModeloDocumento/listView.seam</value>
-			<value>Cadastros Básicos/fluxo.menuText:/Fluxo/listView.seam</value>
-			<value>Cadastros Básicos/localizacao.menuText:/Localizacao/listView.seam</value>
-			<value>Cadastros Básicos/parametro.menuText:/Parametro/listView.seam</value>
-			<value>Cadastros Básicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
-			<value>Cadastros Básicos/pj.menuText:/PessoaJuridica/listView.seam</value>
-			<value>Cadastros Básicos/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value>
-			<value>Cadastros Básicos/protocoloDocumento.menuText:/ProtocoloDocumento/listView.seam</value>
-			<value>Cadastros Básicos/Tabelas Básicas/cep.menuText:/Cep/listView.seam</value>
-			<value>Cadastros Básicos/variavel.menuText:/Variavel/listView.seam?newInstance=true</value>
+			<value>menu.fluxos/assunto.menuText:/Assunto/listView.seam</value>
+			<value>menu.fluxos/categoria.menuText:/Categoria/listView.seam</value>
+			<value>menu.fluxos/menu.eventos/agrupamento.menuText:/Agrupamento/listView.seam</value>
+			<value>menu.fluxos/menu.eventos/evento.menuText:/Evento/listView.seam</value>
+			<value>menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
+			<value>menu.fluxos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
+			<value>menu.fluxos/natureza.menuText:/Natureza/listView.seam</value>
+			<value>menu.fluxos/natCatFluxoLocalizacao.menuText:/NatCatFluxoLocalizacao/listView.seam</value>
 			
+			<value>menu.documentos/menu.modeloDocumento/grupoModeloDocumento.menuText:/GrupoModeloDocumento/listView.seam</value>
+			<value>menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>
+			<value>menu.documentos/menu.modeloDocumento/modeloDocumento.menuText:/ModeloDocumento/listView.seam</value>
+			<value>menu.documentos/protocoloDocumento.menuText:/ProtocoloDocumento/listView.seam</value>
+			<value>menu.documentos/tipoProcessoDocumento.menuText:/TipoProcessoDocumento/listView.seam</value>
+			<value>menu.documentos/variavel.menuText:/Variavel/listView.seam?newInstance=true</value>
 			
-
-			<value>Controle de Acesso/Papeis:/useradmin/papelListView.seam</value>		
-			<value>Controle de Acesso/Recursos:/useradmin/recursoListView.seam</value>
-			<value>Controle de Acesso/Usuários:/Usuario/listView.seam</value>
-			<value>Controle de Acesso/Active Directory:/ActiveDirectory/listView.seam</value>
-						
+			<value>menu.cadBasicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
+			<value>menu.cadBasicos/cbo.menuText:/CBO/listView.seam</value>
+			<value>menu.cadBasicos/cep.menuText:/Cep/listView.seam</value>
+			<value>menu.cadBasicos/cnae.menuText:/CNAE/listView.seam</value>
+			<value>menu.cadBasicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
+			<value>menu.cadBasicos/pj.menuText:/PessoaJuridica/listView.seam</value>
 			
-			<value>Log/Consulta de Log:/Consulta/Log/list.seam</value>
+			<value>menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>		
+			<value>menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
+			<value>menu.contAcesso/usuario.menuText:/Usuario/listView.seam</value>
+			<value>menu.contAcesso/activeDirectory.menuText:/ActiveDirectory/listView.seam</value>
+			<value>menu.contAcesso/localizacao.menuText:/Localizacao/listView.seam</value>			
 			
-			<value>Painel/Painel do Usuário:/Painel/list.seam</value>
-			<value>Painel/Dashboard:/Dashboard/listView.seam</value>
+			<value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>
+			<value>menu.administracao/log.menuText:/Consulta/Log/list.seam</value>
 			
-			<value>Processo/Iniciar Processo:/Processo/listView.seam</value>
+			<value>menu.painel/painel.menuText:/Painel/list.seam</value>
+			<value>menu.painel/dashBoard.menuText:/Dashboard/listView.seam</value>
+			
+			<value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
+			<value>menu.processo/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value>
 			
 		</property>
 	</component>

@@ -29,18 +29,16 @@
 	
 	<h:commandButton id="botaoAnexarDocumento" 
               		 action="#{home.persist()}"
-              		 value="Anexar" 
+              		 value="#{messages['processo.anexarDocumentoBtn']}"
               		 styleClass="dr-tbpnl-tb-inact"/>
     				 
-    <a:commandButton
-			rendered="true"
-			ajaxSingle="true"
-			reRender="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao"
-			action="#{processoDocumentoHome.setModelo(not processoDocumentoHome.modelo)}"
-			value="#{processoDocumentoHome.modelo ? 'Associar Documento' : 'Novo Documento'}"
-			styleClass="dr-tbpnl-tb-inact"
-			style="width: #{processoDocumentoHome.modelo ? '200px' : '120px'} !important" >
-	</a:commandButton>
+    <a:commandButton rendered="true"
+					 ajaxSingle="true"
+					 reRender="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao, divAnexarImagem"
+					 action="#{processoDocumentoHome.setModelo(not processoDocumentoHome.modelo)}"
+					 value="#{processoDocumentoHome.modelo ? messages['processo.associarDocumentoBtn'] : messages['processo.redigirDocumentoBtn']}"
+					 styleClass="dr-tbpnl-tb-inact"
+					 style="width: #{processoDocumentoHome.modelo ? '200px' : '120px'} !important" />
     				 		
 </ui:composition>
 

@@ -28,19 +28,23 @@
 		#{home.setModelo(false)}
 		<ui:param name="reRenderSaveForm" value="#{reRenderSave}" />
 		
+		
+		<div id="anexarImagem" style="width: 25%; right:5px; position:absolute;">
+			<wi:imageUpload rendered="#{!home.modelo}"/>
+		</div>
 		<s:div style="clear: both">
 		   	<wi:inputText
 		   		id="#{f.id}inputProcessoDocumento" 
 				value="#{processoDocumentoHome.instance.processoDocumento}" 
 				disabled="false"
 				required="true"
-				label="Descrição">
+				label="#{messages['processo.anexarDocumentoDescricao']}">
 			</wi:inputText>	
 		</s:div>
 		<s:div id="divTipoDocumento">
 			<wi:selectOneMenuEntity 
 				id="#{f.id}tipoProcessoDocumento"
-				label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+				label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 				value="#{home.instance.tipoProcessoDocumento}"
 				items="#{tipoProcessoDocumentoInternoItems}" 
 				required="true"
