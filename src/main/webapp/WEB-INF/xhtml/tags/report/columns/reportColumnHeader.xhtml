@@ -18,12 +18,16 @@
 
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:p="http://jboss.com/products/seam/pdf"
-				xmlns:ui="http://java.sun.com/jsf/facelets">
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core">
 
 	<p:cell grayFill="#{wi:get(grayFill,0.9)}" 
 			horizontalAlignment="center"
 			colspan="#{wi:get(colspan,1)}">
 		<p:paragraph alignment="center">#{title}</p:paragraph>
+		<c:if test="#{wi:get(renderFilter, false)}">
+			<p:paragraph alignment="center">(#{wi:get(filter,'')})</p:paragraph>
+		</c:if>
 	</p:cell>
 	
 </ui:composition>

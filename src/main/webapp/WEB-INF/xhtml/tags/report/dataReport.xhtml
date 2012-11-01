@@ -24,9 +24,6 @@
 				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:ui="http://java.sun.com/jsf/facelets">
 				
-	<ui:param name="bean" value="#{wi:get(bean, null)}" />
-	<ui:param name="parameters" value="#{bean.getSearchParameters()}" /> 
-	
 	<c:if test="#{empty widths}">
 		<c:forEach begin="1" end="#{columns}">
 			<ui:param name="widths" value="#{widths}1 " />
@@ -50,16 +47,6 @@
 			<ui:param name="spacingAfter" value="0" />
 		</ui:include>
 		
-		<c:if test="#{parameters.size() > 0}">
-			<p:table columns="2">
-				<p:cell borderWidth="0">#{messages['dataReport.key']}</p:cell>
-				<p:cell borderWidth="0">#{messages['dataReport.value']}</p:cell>
-				<c:forEach var="row" items="#{parameters.keySet()}">
-					<p:cell borderWidth="0" >#{messages[bean.getEntityListName().concat('.').concat(row)]}</p:cell>
-					<p:cell borderWidth="0" >#{parameters.get(row)}</p:cell>
-				</c:forEach>
-			</p:table>
-		</c:if>
 		<p:font size="8">
 			<p:paragraph spacingAfter="15">
 				<p:text value="#{headerText}" />
