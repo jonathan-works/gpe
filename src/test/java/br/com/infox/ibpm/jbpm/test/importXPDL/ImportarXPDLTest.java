@@ -9,18 +9,21 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.infox.ibpm.jbpm.xpdl.ImportarXPDLService;
-import br.com.infox.ibpm.jbpm.xpdl.ImportarXPDLServiceException;
-import br.com.infox.ibpm.jbpm.xpdl.activities.ActivityNotAllowedXPDLException;
-import br.com.infox.ibpm.jbpm.xpdl.activities.IllegalActivityXPDLException;
-import br.com.infox.ibpm.jbpm.xpdl.lane.IllegalNumberPoolsXPDLException;
-import br.com.infox.ibpm.jbpm.xpdl.transition.IllegalTransitionXPDLException;
+import br.com.infox.ibpm.xpdl.FluxoXPDL;
+import br.com.infox.ibpm.xpdl.IllegalXPDLException;
+import br.com.infox.ibpm.xpdl.ImportarXPDLService;
+import br.com.infox.ibpm.xpdl.ImportarXPDLServiceException;
+import br.com.infox.ibpm.xpdl.activities.ActivityNotAllowedXPDLException;
+import br.com.infox.ibpm.xpdl.activities.IllegalActivityXPDLException;
+import br.com.infox.ibpm.xpdl.lane.IllegalNumberPoolsXPDLException;
+import br.com.infox.ibpm.xpdl.transition.IllegalTransitionXPDLException;
 
 public class ImportarXPDLTest {
 
-	private String file3Pools = "./test/3Pools.xpdl";
-	private String	fileSubProcess = "./test/SubProcess.xpdl";
-	private String	fileSucess = "./test/sucessFluxo.xpdl";
+	private static final String file3Pools = "./test/3Pools.xpdl";
+	private static final String fileSubProcess = "./test/SubProcess.xpdl";
+	private static final String fileSucess = "./test/sucessFluxo.xpdl";
+	private static final String CD_FLUXO = "cdFluxo";
 	private ImportarXPDLService importarXPDLService;
 	private int MAX = 0x10000;
 
@@ -30,11 +33,9 @@ public class ImportarXPDLTest {
 	}
 
 	@Test(expected = IllegalNumberPoolsXPDLException.class)
-	public void createFluxoXPDLTestWith3Pools() throws IOException, ImportarXPDLServiceException,
-			IllegalNumberPoolsXPDLException, ActivityNotAllowedXPDLException,
-			IllegalActivityXPDLException, IllegalTransitionXPDLException {
+	public void createFluxoXPDLTestWith3Pools() throws IOException, ImportarXPDLServiceException, IllegalXPDLException {
 		byte[] bytes = readFile(file3Pools);
-		importarXPDLService.createFluxoXPDL(bytes);
+		FluxoXPDL.createInstance(bytes);
 	}
 
 	@Test
@@ -42,7 +43,7 @@ public class ImportarXPDLTest {
 			IOException, IllegalNumberPoolsXPDLException, ActivityNotAllowedXPDLException,
 			IllegalActivityXPDLException, IllegalTransitionXPDLException {
 		byte[] bytes = readFile(fileSubProcess);
-		String xml = importarXPDLService.importarXPDLToJPDL(bytes);
+		String xml = importarXPDLService.importarXPDLToJPDL(bytes, CD_FLUXO);
 		Assert.assertNotNull(xml);
 	}
 	
@@ -51,7 +52,7 @@ public class ImportarXPDLTest {
 			IOException, IllegalNumberPoolsXPDLException, ActivityNotAllowedXPDLException,
 			IllegalActivityXPDLException, IllegalTransitionXPDLException {
 		byte[] bytes = readFile(fileSucess);
-		String xml = importarXPDLService.importarXPDLToJPDL(bytes);
+		String xml = importarXPDLService.importarXPDLToJPDL(bytes, CD_FLUXO);
 		Assert.assertNotNull(xml);
 	}
 
@@ -64,8 +65,11 @@ public class ImportarXPDLTest {
 			buffered[i++] = (byte) temp;
 			temp = fileStream.read();
 		}
-		if (i == MAX)
+		fileStream.close();
+ 		if (i == MAX) {
 			throw new OutOfMemoryError("Espaço alocado para leitura do arquivo foi insuficiente.");
+ 		}
+		
 		return Arrays.copyOf(buffered, i);
 	}
 
