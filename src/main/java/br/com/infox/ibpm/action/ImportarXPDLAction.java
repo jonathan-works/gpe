@@ -12,28 +12,26 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 
-import br.com.infox.ibpm.jbpm.xpdl.ImportarXPDLService;
-import br.com.infox.ibpm.jbpm.xpdl.ImportarXPDLServiceException;
-import br.com.infox.ibpm.jbpm.xpdl.activities.ActivityNotAllowedXPDLException;
-import br.com.infox.ibpm.jbpm.xpdl.activities.IllegalActivityXPDLException;
-import br.com.infox.ibpm.jbpm.xpdl.lane.IllegalNumberPoolsXPDLException;
-import br.com.infox.ibpm.jbpm.xpdl.transition.IllegalTransitionXPDLException;
+import br.com.infox.ibpm.xpdl.ImportarXPDLService;
+import br.com.infox.ibpm.xpdl.ImportarXPDLServiceException;
+import br.com.infox.ibpm.xpdl.activities.ActivityNotAllowedXPDLException;
+import br.com.infox.ibpm.xpdl.activities.IllegalActivityXPDLException;
+import br.com.infox.ibpm.xpdl.lane.IllegalNumberPoolsXPDLException;
+import br.com.infox.ibpm.xpdl.transition.IllegalTransitionXPDLException;
 
 @Name(ImportarXPDLAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ImportarXPDLAction {
 
-	public static final String	NAME	= "importarXPDLAction";
-	private static final Log	LOG		= Logging.getLog(ImportarXPDLAction.class);
+	public static final String NAME = "importarXPDLAction";
+	private static final Log LOG = Logging.getLog(ImportarXPDLAction.class);
 
 	@In
-	private ImportarXPDLService	importarXPDLService;
+	private ImportarXPDLService importarXPDLService;
 
-	public void importarXPDL(byte[] bytes, String cdFluxo) throws IllegalNumberPoolsXPDLException,
-			ActivityNotAllowedXPDLException, IllegalActivityXPDLException,
-			IllegalTransitionXPDLException {
+	public void importarXPDL(byte[] bytes, String cdFluxo) throws IllegalNumberPoolsXPDLException, ActivityNotAllowedXPDLException, IllegalActivityXPDLException,	 IllegalTransitionXPDLException {
 		try {
-			String xml = importarXPDLService.importarXPDLToJPDL(bytes);
+			String xml = importarXPDLService.importarXPDLToJPDL(bytes, cdFluxo);
 			redirectToProcessDefinition(cdFluxo, xml);
 		} catch (ImportarXPDLServiceException e) {
 			LOG.error("Erro ao importar arquivo XPDL." + e.getMessage());
