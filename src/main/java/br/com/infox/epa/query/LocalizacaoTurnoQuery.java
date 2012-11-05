@@ -43,9 +43,9 @@ public interface LocalizacaoTurnoQuery {
 			"	lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + " and " +
 			"   not exists(select o from CalendarioEventos o " +
 			"			   where o.localizacao = lt.localizacao and " +
-			"					 day(" + QUERY_PARAM_DATA + ") = o.dia and " +
-			"					 month(" + QUERY_PARAM_DATA + ") = o.mes and " +
-			"					 (o.ano is null or year(" + QUERY_PARAM_DATA + ") = o.ano)) and " +
+			"					 day(:" + QUERY_PARAM_DATA + ") = o.dia and " +
+			"					 month(:" + QUERY_PARAM_DATA + ") = o.mes and " +
+			"					 (o.ano is null or year(:" + QUERY_PARAM_DATA + ") = o.ano)) and " +
 			"   exists (select o from ProcessoLocalizacaoIbpm o where " +
 			" 	 			   o.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+" and " +
 			"				   o.localizacao = lt.localizacao and	" +
