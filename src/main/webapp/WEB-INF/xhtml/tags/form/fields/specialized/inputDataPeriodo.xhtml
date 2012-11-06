@@ -33,11 +33,11 @@
 						   required="#{required}"
 						   inputClass="#{id}maskDate"
 		                   datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
-		                   onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', true);
+		                   onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false, true);
 		                   			  #{validatePastDateFrom ? 'validarDataPassada(this)' : ''}
 		                   			  #{onchanged}"
 		                   oninputblur="validarData(this);
-		                   				validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', true);
+		                   				validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false, true);
 		                   				#{validatePastDateFrom ? 'validarDataPassada(this)' : ''}" />
 			<h:outputText value=" Até: " />
 			<rich:calendar id="#{idToForm}" 
@@ -50,11 +50,11 @@
 						   required="#{required}"
 						   inputClass="#{id}maskDate"
 						   datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}" 
-                           onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false);
+                           onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false, false);
                            			  #{validatePastDateTo ? 'validarDataPassada(this);' : ''}
                            			  #{onchanged}"
 		                   oninputblur="validarData(this);
-		                   				validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false);
+		                   				validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false, false);
 		                   				#{validatePastDateTo ? 'validarDataPassada(this)' : ''}"/>
            <ui:insert />
 	</s:decorate>

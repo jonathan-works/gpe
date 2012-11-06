@@ -15,14 +15,17 @@ function setMesmaData(di, df) {
 	}
 } 
 
-function validarPeriodo(di, df, mesmaData) {
+function validarPeriodo(di, df, mesmaData, dataInicio) {
 	if (mesmaData) {
 		setMesmaData(di, df);
 	}
 	 if (toDate($(di).value).getTime() > toDate($(df).value).getTime()) {
 	   alert("A data inicial deve ser menor ou igual a data final.");
-	   $(di).value = "";
-	   $(df).value = "";
+	   if (dataInicio)	{
+		   $(di).value = "";
+	   } else {
+		   $(df).value = "";
+	   }
 	 }
 }
 
