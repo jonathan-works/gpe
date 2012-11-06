@@ -272,15 +272,21 @@ public class SearchHandler implements Serializable {
     }
     
 	public String getTextoDestacado(Variavel v) {
-		if (v.getValue() == null){
+		Object value = v.getValue();
+		if (value == null){
 			return null;
 		}
+		
 		String texto = null;
-		if (JbpmUtil.isTypeEditor(v.getType())){
-			texto = JbpmUtil.instance().valorProcessoDocumento((Integer) v.getValue());
+		String type = v.getType();
+		if (JbpmUtil.isTypeEditor(type)){
+			texto = JbpmUtil.instance().valorProcessoDocumento((Integer) value);
+		} if("sim_nao".equals(type)) {
+			texto = (Boolean)value ? "Sim" : "Não";
 		} else {
-			texto = v.getValue().toString();
+			texto = value.toString();
 		}
+		
 		if (searchText != null) {
 			String[] fields = new String[]{"conteudo"};
 			QueryParser parser = new MultiFieldQueryParser(fields, HelpUtil.getAnalyzer());
