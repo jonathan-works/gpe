@@ -31,7 +31,7 @@
 				<rich:column style="width: 10%">
 					<a:commandLink action="#{action.onSelectNatCatFluxo(row)}"
 	                			   ajaxSingle="true"
-	                               reRender="assuntoLocalizacaoDiv">
+	                               reRender="itemDiv">
 	                    <h:graphicImage url="/img/start.gif"/>
 	                </a:commandLink>
 				</rich:column>
@@ -54,51 +54,40 @@
 							   align="left"
 							   renderIfSinglePage="false"/>
 			<br/>
-			<s:div id="assuntoLocalizacaoDiv">
-				<rich:dataTable id="assuntoTable"
-								value="#{action.assuntoList}"
+			<s:div id="itemDiv">
+				<rich:dataTable id="itemTable"
+								value="#{action.itemList}"
 								var="row"
 								rows="10"
-								rendered="#{action.renderedAssuntoLocalizacao}"
+								rendered="#{action.renderedByItem}"
 								style="width: auto">
 					<rich:column style="width: 15%">
 						<h:selectBooleanCheckbox id="checked"
 												 value="#{row.checked}">
 							<a:support event="onchange"
-									   action="#{action.onSelectAssunto()}"
+									   action="#{action.onSelectItem(row)}"
 									   ajaxSingle="true"
 									   reRender="renderedButtons"/>
 						</h:selectBooleanCheckbox>
 					</rich:column>
 					<rich:column style="width: 80%">
 						<f:facet name="header">
-							<h:outputText value="#{messages['assunto.assunto']}" />
+							<h:outputText value="#{messages['item.descricaoItem']}" />
 						</f:facet>
-						<h:outputText value="#{row.assunto}"/>
+						<h:outputText value="#{row.item}"/>
 					</rich:column>
 				</rich:dataTable>
-				<rich:datascroller for="assuntoTable"
+				<rich:datascroller for="itemTable"
 								   lastPageMode="full"
-								   id="dsAssuntoTable"
+								   id="dsItemTable"
 								   align="right"
 								   renderIfSinglePage="false"/>
-				<wi:selectOneMenuEntity id="localizacaoCombo"
-									    label="#{messages['localizacao.localizacao']}"
-										value="#{action.localizacao}"
-										rendered="#{action.renderedAssuntoLocalizacao}"
-										noSelectionLabel="Selecione um registro..."
-										items="#{action.localizacaoList}">
-					<a:support event="onchange"
-							   action="#{action.onSelectLocalizacao()}"
-							   ajaxSingle="true"
-							   reRender="renderedButtons"/>
-				</wi:selectOneMenuEntity>
 			</s:div>
 			<ui:define name="buttons">
 				<s:div id="renderedButtons">
 					<wi:commandButton id="iniciarProcessoButton"
 									  value="Iniciar Processo"
-									  rendered="#{action.renderedByAssunto and action.renderedByLocalizacao}"
+									  rendered="true"
 									  action="iniciarProcessoAction.iniciarProcesso()"
 									  oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); 
 									  			  window.location='#{util.contextPath}/Painel/list.seam';"/>

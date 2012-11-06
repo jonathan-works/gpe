@@ -23,8 +23,10 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
 import br.com.itx.util.EntityUtil;
 
 
@@ -46,6 +48,32 @@ public class UserHandler {
 		return null;
 	}
 
+	/*
+	 * O try/catch não será mais necessário quando o e-PP começar a rodar numa base limpa
+	 * ele foi necessário porque antes não eram guardados os usuários das tarefas finalizadas
+	 * assim, como existiam tarefas sem usuários na base antigo o getSingleResult lançava uma exceção
+	 * TODO retirar o try/catch
+	 * */
+	public String getUsuarioByTarefa(TaskInstance task){
+		UsuarioTaskInstance uti;
+		try{
+		uti = (UsuarioTaskInstance)  
+				EntityUtil.getEntityManager()
+				.createQuery("select o from UsuarioTaskInstance o where o.idTaskInstance = :idTaskInstance")
+				.setParameter("idTaskInstance", task.getId())
+				.getSingleResult();
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			return "";
+		}
+		UsuarioLogin user = (UsuarioLogin)
+				EntityUtil.getEntityManager()
+				.createQuery("select o from UsuarioLogin o where o.idUsuario = :idUsuario")
+				.setParameter("idUsuario", uti.getIdUsuario())
+				.getSingleResult();
+		return user.getNome();
+	}
+	
 	public Usuario getUsuario(String login) {
 		if (login == null || login.equals("")) {
 			return null;

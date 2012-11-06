@@ -27,7 +27,7 @@
 					text-align: left;">
 					<b>#{task.name}</b>
 					<br/>
-					<div style="width:30px; float:left">Por:</div>#{userHandler.getUsuario(task.actorId)}
+					<div style="width:30px; float:left">Por:</div>#{userHandler.getUsuarioByTarefa(task)}
 				<br/>
 				<div style="width:30px; float:left">Em:</div>
 				<h:outputText value="#{task.start}">

@@ -48,6 +48,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.ModeloDocumento;
@@ -340,6 +341,7 @@ public class TaskInstanceHome implements Serializable {
 			}
 			this.currentTaskInstance = null;
 			ProcessoHome.instance().setIdProcessoDocumento(null);
+			storeUsuario(tempTask.getId(), tempTask.getActorId());
 			update();
 			AutomaticEventsTreeHandler.instance().registraEventos();
 			BusinessProcess.instance().endTask(transition);
@@ -356,6 +358,24 @@ public class TaskInstanceHome implements Serializable {
 			Util.setToEventContext("taskCompleted", true);
 		}
 		return null;
+	}
+	
+	/**
+	 * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os usuários das tarefas em execução, 
+	 * apagando o usuário sempre que a tarefa é finalizada (ver tabela jbpm_taskinstance, campo actorid_)
+	 * Porém surgiu a necessidade de armazenar os usuários das tarefas já finalizas para exibir no 
+	 * histórico de Movimentação do Processo
+	 * @param idTask
+	 * @param actorId				 
+	 * */
+	private void storeUsuario(Long idTask, String actorId){
+		Query q = EntityUtil.getEntityManager().createQuery("select o from UsuarioLogin o where o.login = :actorId");
+		q.setParameter("actorId", actorId);
+		UsuarioLogin user = (UsuarioLogin) q.getSingleResult();		
+		UsuarioTaskInstance uti = new UsuarioTaskInstance();
+		uti.setIdTaskInstance(idTask);
+		uti.setIdUsuario(user.getIdUsuario());
+		EntityUtil.getEntityManager().persist(uti);
 	}
 	
 	/**

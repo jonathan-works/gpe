@@ -76,32 +76,32 @@
 	</ui:define>
 
 	<ui:define name="tabs">
-		<ui:param name="action" value="#{categoriaAssuntoAction}" />
-		<rich:tab id="categoriaAssuntoTab" 
+		<ui:param name="action" value="#{categoriaItemAction}" />
+		<rich:tab id="categoriaItemTab" 
 				  rendered="#{home.isManaged()}"
 				  eventsQueue="default" 
 				  switchType="ajax"
-				  label="#{messages['categoriaAssunto.titleTab']}"
+				  label="#{messages['categoriaItem.titleTab']}"
 				  action="#{action.init()}">
-			<s:div id="categoriaAssuntoFormDiv">
-				<wi:dataForm formId="categoriaAssuntoForm"
-						 	 formTitle="#{messages['categoriaAssunto.titleForm']}">
-					<wi:tree id="assuntoTree"
-							 assignTo="categoriaAssuntoAction.instance.assunto"
-							 tree="#{assuntoTree}"
-							 label="#{messages['categoriaAssunto.assunto']}"/>
+			<s:div id="categoriaItemFormDiv">
+				<wi:dataForm formId="categoriaItemForm"
+						 	 formTitle="#{messages['categoriaItem.titleForm']}">
+					<wi:tree id="itemTree"
+							 assignTo="categoriaItemAction.instance.item"
+							 tree="#{itemTree}"
+							 label="#{messages['categoriaItem.item']}"/>
 					<ui:define name="buttons">
 						<wi:commandButton id="saveButton"
-										  action="categoriaAssuntoAction.persist"
-										  reRender="categoriaAssuntoFormDiv, categoriaAssuntoDiv"
+										  action="categoriaItemAction.persist"
+										  reRender="categoriaItemFormDiv, categoriaItemDiv"
 										  value="Incluir"/>
 					</ui:define>
 				</wi:dataForm>
 			</s:div>
-			<s:div id="categoriaAssuntoDiv">
+			<s:div id="categoriaItemDiv">
 				<h:form>
-					<rich:dataTable id="categoriaAssuntoTable"
-									value="#{action.categoriaAssuntoList}"
+					<rich:dataTable id="categoriaItemTable"
+									value="#{action.categoriaItemList}"
 									var="row"
 									title="Relacionados à #{home.instance.categoria}"
 									rows="10"
@@ -109,18 +109,18 @@
 						<rich:column style="width: 10%">
 							<center>
 								<wi:toolBarRemove id="toolBarRemove"
-												  reRender="categoriaAssuntoDiv"
-											      actionRemove="categoriaAssuntoAction.remove(row)"/>
+												  reRender="categoriaItemDiv"
+											      actionRemove="categoriaItemAction.remove(row)"/>
 							</center>
 						</rich:column>
 						<rich:column style="width: 45%">
 							<f:facet name="header">
-								<h:outputText value="#{messages['categoriaAssunto.assunto']}" />
+								<h:outputText value="#{messages['categoriaItem.item']}" />
 							</f:facet>
-							<h:outputText value="#{row.assunto}"/>
+							<h:outputText value="#{row.item.caminhoCompletoToString()}"/>
 						</rich:column>
 					</rich:dataTable>
-					<rich:datascroller for="categoriaAssuntoTable"
+					<rich:datascroller for="categoriaItemTable"
 									   lastPageMode="full"
 									   id="dsNatCatFluxoTable"
 									   align="left"

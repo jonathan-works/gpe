@@ -14,21 +14,26 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.access.entity.Papel;
-import br.com.infox.epa.bean.AssuntoBean;
-import br.com.infox.epa.entity.CategoriaAssunto;
+import br.com.infox.epa.bean.ItemBean;
+import br.com.infox.epa.entity.CategoriaItem;
 import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epa.entity.NaturezaLocalizacao;
 import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.epa.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.epa.manager.ProcessoEpaManager;
 import br.com.infox.epa.service.IniciarProcessoService;
+import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.home.Authenticator;
+import br.com.itx.util.EntityUtil;
 
 /**
  * 
  * @author Daniel
+ *
+ */
+/**
+ * @author jonas
  *
  */
 @Name(IniciarProcessoAction.NAME)
@@ -44,23 +49,22 @@ public class IniciarProcessoAction {
 	@In
 	private ProcessoEpaManager processoEpaManager;
 	
-	private boolean renderedByAssunto;
-	private boolean renderedByLocalizacao;
-	private boolean renderedAssuntoLocalizacao;
+	private boolean renderedByItem;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
 	private Localizacao localizacao;
+	private Item itemDoProcesso;
 	private ProcessoEpa processoEpa;
-	
 	private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList;
-	private List<AssuntoBean> assuntoList;
-	private List<Localizacao> localizacaoList;
+	private List<ItemBean> itemList;
+	
+	private Papel papel;
 	
 	@Create
 	public void init() {
-		Localizacao l = Authenticator.getLocalizacaoAtual();
-		Papel p = Authenticator.getPapelAtual();
+		localizacao = Authenticator.getLocalizacaoAtual();
+		papel = Authenticator.getPapelAtual();
 		naturezaCategoriaFluxoList = natCatFluxoLocalizacaoManager.
-									 listByLocalizacaoAndPapel(l, p);
+									 listByLocalizacaoAndPapel(localizacao, papel);
 	}
 	
 	public void iniciarProcesso() {
@@ -72,6 +76,10 @@ public class IniciarProcessoAction {
 			processoEpa.setUsuarioCadastroProcesso(usuarioLogado);
 			processoEpa.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
 			processoEpa.setLocalizacao(localizacao);
+			//TODO fazer a listView do Processo carregar os itens disponíveis para aquele processo
+			//Item itemDoProcesso = EntityUtil.getEntityManager().find(Item.class, 23);
+			System.out.println(itemDoProcesso.caminhoCompletoToString());
+			processoEpa.setItemDoProcesso(itemDoProcesso);
 			processoEpaManager.persist(processoEpa);
 			
 			iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
@@ -92,35 +100,22 @@ public class IniciarProcessoAction {
 
 	public void onSelectNatCatFluxo(NaturezaCategoriaFluxo ncf) {
 		naturezaCategoriaFluxo = ncf;
-		setRenderedAssuntoLocalizacao(true);
-		setAssuntoList(new ArrayList<AssuntoBean>());
-		for(CategoriaAssunto ca : naturezaCategoriaFluxo.getCategoria()
-													    .getCategoriaAssuntolist()) {
-			getAssuntoList().add(new AssuntoBean(ca.getAssunto()));
-		}
-		localizacaoList = new ArrayList<Localizacao>();
-		for (NaturezaLocalizacao nl : naturezaCategoriaFluxo.getNatureza()
-														   .getNaturezaLocalizacaoList()) {
-			localizacaoList.add(nl.getLocalizacao());
-		}
-		
-	}
-	
-	public void onSelectAssunto() {
-		renderedByAssunto = hasSelectedAssunto();
-	}
-	
-	public void onSelectLocalizacao() {
-		if(localizacao != null) {
-			renderedByLocalizacao = true;
-		} else {
-			renderedByLocalizacao = false;
+		setRenderedByItem(true);
+		setItemList(new ArrayList<ItemBean>());
+		for(CategoriaItem ca : naturezaCategoriaFluxo.getCategoria()
+													    .getCategoriaItemList()) {
+			getItemList().add(new ItemBean(ca.getItem()));
 		}
 	}
 	
-	private boolean hasSelectedAssunto() {
-		for (AssuntoBean ab : assuntoList) {
-			if(ab.isChecked()) {
+	public void onSelectItem(ItemBean bean) {
+		itemDoProcesso = bean.getItem();
+		renderedByItem = hasSelectedItem();
+	}
+
+	private boolean hasSelectedItem() {
+		for (ItemBean ib : itemList) {
+			if(ib.isChecked()) {
 				return true;
 			}
 		}
@@ -135,53 +130,13 @@ public class IniciarProcessoAction {
 	public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
 		return naturezaCategoriaFluxoList;
 	}
-
-	public void setAssuntoList(List<AssuntoBean> assuntoList) {
-		this.assuntoList = assuntoList;
+	
+	public boolean isRenderedByItem() {
+		return renderedByItem;
 	}
-
-	public List<AssuntoBean> getAssuntoList() {
-		return assuntoList;
-	}
-
-	public void setLocalizacaoList(List<Localizacao> localizacaoList) {
-		this.localizacaoList = localizacaoList;
-	}
-
-	public List<Localizacao> getLocalizacaoList() {
-		return localizacaoList;
-	}
-
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
-
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
-
-	public void setRenderedAssuntoLocalizacao(boolean renderedAssuntoLocalizacao) {
-		this.renderedAssuntoLocalizacao = renderedAssuntoLocalizacao;
-	}
-
-	public boolean getRenderedAssuntoLocalizacao() {
-		return renderedAssuntoLocalizacao;
-	}
-
-	public void setRenderedByAssunto(boolean renderedByAssunto) {
-		this.renderedByAssunto = renderedByAssunto;
-	}
-
-	public boolean isRenderedByAssunto() {
-		return renderedByAssunto;
-	}
-
-	public void setRenderedByLocalizacao(boolean renderedByLocalizacao) {
-		this.renderedByLocalizacao = renderedByLocalizacao;
-	}
-
-	public boolean isRenderedByLocalizacao() {
-		return renderedByLocalizacao;
+	
+	public void setRenderedByItem(boolean renderedByItem) {
+		this.renderedByItem = renderedByItem;
 	}
 
 	public void setProcessoEpa(ProcessoEpa processoEpa) {
@@ -192,5 +147,12 @@ public class IniciarProcessoAction {
 		return processoEpa;
 	}
 
+	public List<ItemBean> getItemList() {
+		return itemList;
+	}
+
+	public void setItemList(List<ItemBean> itemList) {
+		this.itemList = itemList;
+	}
 	
 }

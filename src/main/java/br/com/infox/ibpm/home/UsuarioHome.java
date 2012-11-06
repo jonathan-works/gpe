@@ -263,9 +263,9 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		if (email.isEmpty() && login.isEmpty()) {
 			fm.add("É preciso informar o login ou o e-mail do usuário");
 		}
-		else if (login != null){
+		else if (!login.isEmpty()){
 			recoverBy("login", login);
-		}else if (email != null){
+		}else if (!email.isEmpty()){
 			recoverBy("email", email);
 		}
 	}

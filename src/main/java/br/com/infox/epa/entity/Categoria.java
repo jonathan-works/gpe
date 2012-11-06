@@ -35,8 +35,8 @@ public class Categoria implements Serializable{
 	private String categoria;
 	private Boolean ativo;
 	
-	private List<CategoriaAssunto> categoriaAssuntolist = new ArrayList<CategoriaAssunto>(0);
 	private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList = new ArrayList<NaturezaCategoriaFluxo>(0);
+	private List<CategoriaItem> categoriaItemList = new ArrayList<CategoriaItem>();
 	
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_categoria")
 	@Id
@@ -74,16 +74,15 @@ public class Categoria implements Serializable{
 	public String toString() {
 		return categoria;
 	}
-	
-	public void setCategoriaAssuntolist(List<CategoriaAssunto> categoriaAssuntolist) {
-		this.categoriaAssuntolist = categoriaAssuntolist;
-	}
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria")
-	public List<CategoriaAssunto> getCategoriaAssuntolist() {
-		return categoriaAssuntolist;
-	}
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria")
+	public List<CategoriaItem> getCategoriaItemList() {
+		return categoriaItemList;
+	}
+	public void setCategoriaItemList(List<CategoriaItem> categoriaItemList) {
+		this.categoriaItemList = categoriaItemList;
+	}
+	
 	public void setNaturezaCategoriaFluxoList(
 			List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
 		this.naturezaCategoriaFluxoList = naturezaCategoriaFluxoList;
@@ -93,5 +92,8 @@ public class Categoria implements Serializable{
 	public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
 		return naturezaCategoriaFluxoList;
 	}
+	
+
+	
 	
 }

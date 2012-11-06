@@ -26,7 +26,7 @@
 			<value><![CDATA[cast(o.dataInicio as date) >= #{consultaProcessoHome.instance.dataInicio} ]]></value>
             <value><![CDATA[cast(o.dataInicio as date)<= #{consultaProcessoHome.instance.dataFim} ]]></value>
 		</property>		
-		<property name="order">o.numeroProcesso</property>
+		<property name="order">o.dataInicio</property>
 	</component>
 		
 </components>

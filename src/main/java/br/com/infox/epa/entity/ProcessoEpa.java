@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import org.hibernate.validator.NotNull;
 
 import br.com.infox.epa.query.ProcessoEpaQuery;
+import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Processo;
 
@@ -38,6 +39,7 @@ public class ProcessoEpa extends Processo {
 	private Localizacao localizacao;
 	private Integer tempoGasto;
 	private Integer porcentagem;
+	private Item itemDoProcesso;
 	
 	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>();
 	
@@ -88,6 +90,16 @@ public class ProcessoEpa extends Processo {
 	@Column(name="nr_porcentagem")
 	public Integer getPorcentagem() {
 		return porcentagem;
+	}
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_item_processo", nullable=false)
+	public Item getItemDoProcesso() {
+		return itemDoProcesso;
+	}
+
+	public void setItemDoProcesso(Item itemDoProcesso) {
+		this.itemDoProcesso = itemDoProcesso;
 	}
 	
 }
