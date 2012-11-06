@@ -6,7 +6,6 @@
 	<component name="mainMenu" class="br.com.infox.access.Menu" scope="session">
 
 		<property name="items">
-			<value>menu.fluxos/assunto.menuText:/Assunto/listView.seam</value>
 			<value>menu.fluxos/categoria.menuText:/Categoria/listView.seam</value>
 			<value>menu.fluxos/menu.eventos/agrupamento.menuText:/Agrupamento/listView.seam</value>
 			<value>menu.fluxos/menu.eventos/evento.menuText:/Evento/listView.seam</value>
