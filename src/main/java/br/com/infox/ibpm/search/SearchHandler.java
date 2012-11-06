@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.search;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,59 +83,112 @@ public class SearchHandler implements Serializable {
 		return searchResult;
 	}
 	 
+	/**
+	 * Busca o processo pelo seu id
+	 * 
+	 * @return	Processo cuja id seja igual o valor buscado, ou null
+	 */
+	private Processo searchIdProcesso()	{
+		int prc = -1;
+		try {
+			prc = Integer.parseInt(searchText);
+		}	catch (NumberFormatException e) {
+			LOG.debug(e.getMessage());
+		}
+		return getEntityManager().find(Processo.class, prc);
+	}
+	
+	/**
+	 * Busca o processo pelo seu Numero de Processo
+	 * 
+	 * @return	Processo cujo valor do numeroProcesso seja igual ao texto de busca, ou null
+	 */
+	private Processo searchNrProcesso()	{
+		javax.persistence.Query query = EntityUtil.getEntityManager().createQuery(
+				"select p from Processo p where p.numeroProcesso = :processo")
+				.setParameter("processo", searchText);
+		return EntityUtil.getSingleResult(query); 
+	}
+	
+	/**
+	 * Método realiza uma busca e redireciona para a página de resultados da consulta
+	 * 
+	 * Método busca por número de processo, ou 
+	 * 
+	 * @return	TRUE se o resultado for um processo, FALSE do contrário
+	 */
+	public boolean searchProcesso()	{
+		Processo processo = null;
+		boolean hasProcesso = false;
+		if (searchText.matches(NUMERO_PROCESSO_PATTERN)) {
+			processo = searchNrProcesso();
+		} else {
+			processo = searchIdProcesso();
+		}
+		
+		hasProcesso = processo != null;
+		if (hasProcesso) {
+			visualizarProcesso(processo);
+		}
+		return hasProcesso;
+	}
+	
+	public void visualizarProcesso(Processo processo)	{
+		Redirect.instance().setConversationPropagationEnabled(false);
+		Redirect.instance().setViewId("/Processo/Consulta/list.xhtml");
+		Redirect.instance().setParameter("id", processo.getIdProcesso());
+		Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
+		Redirect.instance().execute();
+	}
+	
+	/**
+	 * Método que realiza a busca indexada pelo conteúdo do site
+	 * 
+	 * @throws IOException		Ao construir o Indexer
+	 * @throws ParseException	Ao retornar a busca no método getQuery do Indexer
+	 */
+	private void searchIndexer() throws IOException, ParseException	{
+		searchResult = new ArrayList<Map<String,Object>>();
+		Indexer indexer = new Indexer();
+		String[] fields = new String[]{"conteudo", "texto"};
+		Query query = indexer.getQuery(searchText, fields);
+		List<Document> search = indexer.search(searchText, fields, 200);
+		Session session = ManagedJbpmContext.instance().getSession();
+		
+		for (Document d : search) {
+			long taskId = Long.parseLong(d.get("id"));
+			TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
+			
+			if (ti == null) {
+				LOG.warn("Task não encontrada: " + taskId);
+			} else {
+				String s = HelpUtil.getBestFragments(query, getConteudo(ti));
+				Map<String, Object> m = new HashMap<String, Object>();
+				m.put("texto", s);
+				m.put("taskName", ti.getTask().getName());
+				m.put("taskId", ti.getId());
+				m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
+				searchResult.add(m);
+			}
+		}
+		resultSize = searchResult.size();
+	}
 	
 	public void search() {
 		if (searchText == null || "".equals(searchText.trim())) {
 			return;
-		} 
-		Processo processo = null;
-		try {
-			int prc = Integer.parseInt(searchText);
-			processo = getEntityManager().find(Processo.class, prc);
-		}  catch (Exception e) {
 		}
-		if (searchText.matches(NUMERO_PROCESSO_PATTERN)) {
-			javax.persistence.Query query = EntityUtil.getEntityManager().createQuery(
-					"select p from Processo p where p.numeroProcesso = :processo")
-					.setParameter("processo", searchText);
-			processo = EntityUtil.getSingleResult(query);
-			
-		}
-		if (processo != null) {
-			Redirect.instance().setConversationPropagationEnabled(false);
-			Redirect.instance().setViewId("/Processo/Consulta/list.xhtml");
-			Redirect.instance().setParameter("id", processo.getIdProcesso());
-			Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
-			Redirect.instance().execute();
-			return; 
+		if (searchProcesso())	{
+			return;
 		}
 		
-		searchResult = new ArrayList<Map<String,Object>>();
 		try {
-			Indexer indexer = new Indexer();
-			String[] fields = new String[]{"conteudo", "texto"};
-			Query query = indexer.getQuery(searchText, fields);
-			List<Document> search = indexer.search(searchText, fields, 200);
-			Session session = ManagedJbpmContext.instance().getSession();
-			for (Document d : search) {
-				long taskId = Long.parseLong(d.get("id"));
-				TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
-				if (ti != null) {
-					String s = HelpUtil.getBestFragments(query, getConteudo(ti));
-					Map<String, Object> m = new HashMap<String, Object>();
-					m.put("texto", s);
-					m.put("taskName", ti.getTask().getName());
-					m.put("taskId", ti.getId());
-					m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
-					searchResult.add(m);
-				} else {
-					LOG.warn("Task não encontrada: " + taskId);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			searchIndexer();
+		} catch (IOException e) {
+			LOG.debug(e.getMessage());
+		} catch (ParseException e) {
+			LOG.debug(e.getMessage());
 		}
-		resultSize = searchResult.size();
 	}
 	
 	public static String getConteudo(TaskInstance ti) {
@@ -237,6 +291,7 @@ public class SearchHandler implements Serializable {
 					texto = highlighted;
 				}
 			} catch (ParseException e) {
+				LOG.debug(e.getMessage());
 			}
 		}
 		return texto;

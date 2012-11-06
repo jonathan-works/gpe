@@ -42,6 +42,7 @@
 			<value>menu.painel/dashBoard.menuText:/Dashboard/listView.seam</value>
 			
 			<value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
+			<value>menu.processo/processo.consultarMenuText:/Processo/Consulta/listView.seam</value>
 			<value>menu.processo/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value>
 			
 		</property>

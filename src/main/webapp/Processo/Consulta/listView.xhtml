@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- $Id: listView.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+				template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+                       
+	<ui:define name="title">#{messages['processo.titlePage']}</ui:define>
+	
+	<ui:define name="body">
+		<wi:dataTable values="#{processoEpaList.list(15)}"
+					  bean="#{processoEpaList}"
+					  tableTitle="#{messages['processo.titleGrid']}"
+					  id="processoEpaList"
+					  rowId="#{row.idProcesso}" >
+			
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarProcessoEpaForm"
+							   formTitle="#{messages['processo.titleSearchForm']}">
+					<wi:inputNumber id="numeroProcesso"
+								 value="#{processoEpaList.entity.numeroProcesso}"
+								 label="#{messages['processo.numeroProcesso']}"/>
+					<wi:selectOneMenuEntity id="usuarioAlteracao"
+											label="#{messages['processo.usuarioCadastroProcesso']}"
+											value="#{processoEpaList.entity.usuarioCadastroProcesso}"
+											items="#{processoEpaList.listaUsuarios}"
+											showLabelTodos="true" />
+					<wi:inputDataPeriodo id="periodo"
+					                     valueDateFrom="#{processoEpaList.entity.dataInicio}"
+					                     valueDateTo="#{processoEpaList.entity.dataFim}"
+					                     validatePastDateFrom="true"
+					                     validatePastDateTo="true"/>
+				</wi:searchForm>
+			</ui:define>
+			
+			<ui:define name="toolBar">
+				<wi:toolBar url="#{a4jSkin.imgIconView}" 
+							title="Selecionar"
+							action="#{search.visualizarProcesso(row)}" >
+				</wi:toolBar>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="numeroProcesso"
+								 columnHeader="#{messages['processo.numeroProcesso']}"
+								 value="#{row.numeroProcesso}"
+								 hideOrder="true" />
+			<wi:columnOutputText columnId="usuarioCadastro"
+								 columnHeader="#{messages['processo.usuarioCadastroProcesso']}"
+								 value="#{row.usuarioCadastroProcesso}"
+								 hideOrder="true" />
+			<wi:columnDateTime columnId="dataInicioProcesso" 
+							   columnHeader="#{messages['processo.dataInicio']}"
+							   value="#{row.dataInicio}"
+							   hideOrder="true"/>
+			<wi:columnDateTime columnId="dataInicioProcesso" 
+							   columnHeader="#{messages['processo.dataFim']}"
+							   value="#{row.dataFim}"
+							   hideOrder="true" />
+			<wi:columnOutputText columnId="naturezaCategoriaFluxo"
+								 columnHeader="#{messages['processo.naturezaCategoriaFluxo']}"
+								 value="#{row.naturezaCategoriaFluxo}"
+								 hideOrder="true" />
+		</wi:dataTable>
+	</ui:define>
+	
+	
+</ui:composition>

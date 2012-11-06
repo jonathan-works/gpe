@@ -102,6 +102,12 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		return em;
 	}
 	
+	/**
+	 * Recupera variáveis atreladas a um tipo de documento.
+	 * 
+	 * @param tipo Tipo do Documento a que as variáveis são atribuídas
+	 * @return Mapa de Variáveis em que o Nome é a chave de busca e os valores são os resultados
+	 */
 	@SuppressWarnings("unchecked")
 	private Map<String, String> getVariaveis(TipoModeloDocumento tipo)	{
 		List<Variavel> list = new ArrayList<Variavel>();
@@ -120,39 +126,49 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		return map;
 	}
 	
-	private String validaVariaveis(String modelo, TipoModeloDocumento tipo)	{
-		Pattern pattern = Pattern.compile("#[{][^{}]+[}]");
-		Matcher matcher = pattern.matcher(modelo);
-		
-		Map<String, String> map = getVariaveis(tipo);
-		StringBuffer sb = new StringBuffer();
-		
-		while(matcher.find())	{
-			String group = matcher.group();
-			String variableName = group.substring(2, group.length()-1);
-			String expression = map.get(variableName);
-			if (expression != null) {
-				matcher.appendReplacement(sb, expression);
-			}
-		}
-		matcher.appendTail(sb);
-		
-		return sb.toString();
-	}
-	
+	/**
+	 * Realiza conversão de Modelo de Documento, para Documento final
+	 * 
+	 * Este método busca linha a linha pelos nomes das variáveis
+	 * do sistema para substitui-las por seus respectivos valores 
+	 * 
+	 * @param modeloDocumento	Modelo de Documento não nulo a ser usado na tarefa
+	 * @return					Documento contendo valores armazenados nas variáveis inseridas no modelo
+	 */
 	public String getConteudo(ModeloDocumento modeloDocumento) {
 		if (modeloDocumento == null) {
 			return null;
 		}
 		StringBuilder modeloProcessado = new StringBuilder();		
-		String[] linhas = validaVariaveis(modeloDocumento.getModeloDocumento(), modeloDocumento.getTipoModeloDocumento()).split("\n");
+		String[] linhas = modeloDocumento.getModeloDocumento().split("\n");
+		
+		StringBuffer sb = new StringBuffer();
+		Pattern pattern = Pattern.compile("#[{][^{}]+[}]");
+		Map<String, String> map = getVariaveis(modeloDocumento.getTipoModeloDocumento());
+		
 		for (int i = 0; i < linhas.length; i++) {
 			if (modeloProcessado.length() > 0) {
 				modeloProcessado.append('\n');
+				sb.delete(0, sb.length());
 			}
+			
+			Matcher matcher = pattern.matcher(linhas[i]);
+			
+			while(matcher.find())	{
+				String group = matcher.group();
+				String variableName = group.substring(2, group.length()-1);
+				String expression = map.get(variableName);
+				if (expression == null) {
+					matcher.appendReplacement(sb, "");
+				} else {
+					matcher.appendReplacement(sb, expression);
+				}
+			}
+			matcher.appendTail(sb);
+			
 			try {
 				String linha =(String) Expressions.instance()
-					.createValueExpression(linhas[i]).getValue();
+					.createValueExpression(sb.toString()).getValue();
 				modeloProcessado.append(linha);
 			} catch (RuntimeException e) {
 				modeloProcessado.append("Erro na linha: '" +linhas[i]);
