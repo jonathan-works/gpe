@@ -76,9 +76,6 @@ public class IniciarProcessoAction {
 			processoEpa.setUsuarioCadastroProcesso(usuarioLogado);
 			processoEpa.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
 			processoEpa.setLocalizacao(localizacao);
-			//TODO fazer a listView do Processo carregar os itens disponíveis para aquele processo
-			//Item itemDoProcesso = EntityUtil.getEntityManager().find(Item.class, 23);
-			System.out.println(itemDoProcesso.caminhoCompletoToString());
 			processoEpa.setItemDoProcesso(itemDoProcesso);
 			processoEpaManager.persist(processoEpa);
 			
@@ -100,17 +97,19 @@ public class IniciarProcessoAction {
 
 	public void onSelectNatCatFluxo(NaturezaCategoriaFluxo ncf) {
 		naturezaCategoriaFluxo = ncf;
-		setRenderedByItem(true);
 		setItemList(new ArrayList<ItemBean>());
 		for(CategoriaItem ca : naturezaCategoriaFluxo.getCategoria()
 													    .getCategoriaItemList()) {
 			getItemList().add(new ItemBean(ca.getItem()));
 		}
+		if (itemList.size() > 0) 
+			setRenderedByItem(true);
 	}
 	
 	public void onSelectItem(ItemBean bean) {
 		itemDoProcesso = bean.getItem();
 		renderedByItem = hasSelectedItem();
+		iniciarProcesso();
 	}
 
 	private boolean hasSelectedItem() {

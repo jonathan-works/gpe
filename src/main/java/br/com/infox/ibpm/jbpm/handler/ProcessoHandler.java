@@ -35,6 +35,8 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epa.entity.ProcessoEpa;
+import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.itx.util.EntityUtil;
 
@@ -137,6 +139,13 @@ public class ProcessoHandler implements Serializable {
 			taskInstanceList = null;
 			inicio = getTaskDocumentList().indexOf(taskInstance) + 1;
 		}
+	}
+	
+	public Item getItemDoProcesso(int idProcesso){
+		String query = "select o from ProcessoEpa o where o.idProcesso =:idProcesso";
+		ProcessoEpa pepa = (ProcessoEpa) EntityUtil.getEntityManager().createQuery(query)
+				.setParameter("idProcesso", idProcesso).getSingleResult();
+		return pepa.getItemDoProcesso();
 	}
 	
 }

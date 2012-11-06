@@ -22,17 +22,18 @@
 		<rich:spacer height="5%"/>
 		<wi:dataForm formId="iniciarProcesso"
 					 formTitle="#{messages['processo.titleFormIniciarProcesso']}"
-					 renderRegionOnly="true">
+					 renderRegionOnly="true"
+					 requiredForm="false">
 			<rich:dataTable id="natCatFluxoTable"
 							value="#{action.naturezaCategoriaFluxoList}"
 							var="row"
 							rows="10"
 							style="width: 60%">
-				<rich:column style="width: 10%">
+				<rich:column style="width: 2%">
 					<a:commandLink action="#{action.onSelectNatCatFluxo(row)}"
 	                			   ajaxSingle="true"
 	                               reRender="itemDiv">
-	                    <h:graphicImage url="/img/start.gif"/>
+	                    <h:graphicImage url="/img/jbpm/StartState.gif"/>
 	                </a:commandLink>
 				</rich:column>
 				<rich:column style="width: 30%">
@@ -60,21 +61,20 @@
 								var="row"
 								rows="10"
 								rendered="#{action.renderedByItem}"
-								style="width: auto">
-					<rich:column style="width: 15%">
-						<h:selectBooleanCheckbox id="checked"
-												 value="#{row.checked}">
-							<a:support event="onchange"
-									   action="#{action.onSelectItem(row)}"
-									   ajaxSingle="true"
-									   reRender="renderedButtons"/>
-						</h:selectBooleanCheckbox>
+								style="width: 30%">
+					<rich:column style="width: 10%">
+						<a:commandLink action="#{action.onSelectItem(row)}"
+                				   ajaxSingle="true"
+                				   oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); 
+								  			  window.location='#{util.contextPath}/Painel/list.seam';">
+                    		<h:graphicImage url="/img/start.gif"/>
+                		</a:commandLink>
 					</rich:column>
-					<rich:column style="width: 80%">
+					<rich:column style="width: 90%">
 						<f:facet name="header">
 							<h:outputText value="#{messages['item.descricaoItem']}" />
 						</f:facet>
-						<h:outputText value="#{row.item}"/>
+						<h:outputText value="#{row.item.caminhoCompletoToString()}"/>
 					</rich:column>
 				</rich:dataTable>
 				<rich:datascroller for="itemTable"
@@ -83,16 +83,7 @@
 								   align="right"
 								   renderIfSinglePage="false"/>
 			</s:div>
-			<ui:define name="buttons">
-				<s:div id="renderedButtons">
-					<wi:commandButton id="iniciarProcessoButton"
-									  value="Iniciar Processo"
-									  rendered="true"
-									  action="iniciarProcessoAction.iniciarProcesso()"
-									  oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); 
-									  			  window.location='#{util.contextPath}/Painel/list.seam';"/>
-				</s:div>
-			</ui:define>
+			<ui:define name="buttons" value="false"/>
 		</wi:dataForm>
 	</ui:define>
 
