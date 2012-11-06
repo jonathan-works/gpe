@@ -111,9 +111,14 @@ public class SearchHandler implements Serializable {
 	}
 	
 	/**
-	 * Método realiza uma busca e redireciona para a página de resultados da consulta
+	 * Método realiza busca de processos no sistema
 	 * 
-	 * Método busca por número de processo, ou 
+	 * 		Caso o texto de busca seja número de processo realiza uma busca
+	 * 	por este valor {@link #searchNrProcesso()}, caso não seja,
+	 * 	tenta uma busca de processo pelo ID {@link #searchIdProcesso()}
+	 * 
+	 * 		Se qualquer dos métodos de busca retornar um processo, este
+	 * 	é chamado na página {@link #visualizarProcesso(Processo)}
 	 * 
 	 * @return	TRUE se o resultado for um processo, FALSE do contrário
 	 */
@@ -133,6 +138,11 @@ public class SearchHandler implements Serializable {
 		return hasProcesso;
 	}
 	
+	/**
+	 * 	Método redireciona para visualização do processo escolhido no paginador
+	 * 
+	 * @param processo	Processo a ser visualizado no paginador
+	 */
 	public void visualizarProcesso(Processo processo)	{
 		Redirect.instance().setConversationPropagationEnabled(false);
 		Redirect.instance().setViewId("/Processo/Consulta/list.xhtml");
@@ -174,20 +184,28 @@ public class SearchHandler implements Serializable {
 		resultSize = searchResult.size();
 	}
 	
+	/**
+	 * Método que realiza busca no sistema de acordo com o texto contido
+	 * 
+	 *   Analisa se existe texto a ser buscado e confere se o texto a ser
+	 *   buscado é Numero de Processo, Id de Processo ({@link #searchProcesso()}),
+	 *   ou se é texto normal ({@link #searchIndexer()})
+	 */
 	public void search() {
 		if (searchText == null || "".equals(searchText.trim())) {
 			return;
 		}
-		if (searchProcesso())	{
-			return;
-		}
 		
-		try {
-			searchIndexer();
-		} catch (IOException e) {
-			LOG.debug(e.getMessage());
-		} catch (ParseException e) {
-			LOG.debug(e.getMessage());
+		boolean isProcesso = searchProcesso();
+		
+		if (!isProcesso)	{
+			try {
+				searchIndexer();
+			} catch (IOException e) {
+				LOG.debug(e.getMessage());
+			} catch (ParseException e) {
+				LOG.debug(e.getMessage());
+			}
 		}
 	}
 	
