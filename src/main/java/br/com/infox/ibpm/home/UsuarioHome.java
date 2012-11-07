@@ -178,8 +178,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	@Override
 	public String persist() {
 		login = getInstance().getLogin();
-		//TODO provisorio, criar usuario com senha igual ao login
-		getInstance().setSenha(getInstance().getLogin());
+
 		String resultado = super.persist();
 		if (password == null) {
 			gerarNovaSenha();
@@ -196,65 +195,81 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		return resultado;
 	}
 	
-	private void enviarEmail(String parametro)	{
-		String nomeParam = "";
+	/**
+	 * 	Método que recupera um modelo de documento pelo seu nome e envia {@link #enviarEmailModelo(ModeloDocumento)}}
+	 * 
+	 * @param nomeModeloDocumento		Nome do Modelo de Documento a enviar por e-mail
+	 * @return							true se o e-mail for enviado e false se falhar
+	 */
+	private boolean enviarModeloPorNome(String nomeModeloDocumento)	{
+		if (nomeModeloDocumento == null)	{
+			return false;
+		} else if ("false".equals(nomeModeloDocumento))	{
+			return false;
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("select o from ModeloDocumento o");
+		sb.append(" where o.tituloModeloDocumento = :titulo");
+		
+		ModeloDocumento modelo = (ModeloDocumento)getEntityManager().createQuery(sb.toString())
+														.setParameter("titulo", nomeModeloDocumento).getSingleResult();
+		if (modelo == null)	{
+			return false;
+		} else {
+			enviarEmailModelo(modelo);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * 	Inicia o processo de requisição de senha
+	 * 
+	 * 		Requisita nova senha baseada na informação fornecida pelo usuário
+	 * 	e tenta enviar com base na informação recuperada {@link #enviarModeloPorNome(String)}.
+	 * 
+	 * TODO:melhorar nome do método
+	 * 
+	 * @param parametro		Tipo da requisição de senha
+	 */
+	private void iniciarRequisicao(String parametro)	{
+		String nomeParam = null;
 		if ("login".equals(parametro))	{
 			nomeParam = "tituloModeloEmailMudancaSenha";
 		} else if("email".equals(parametro))	{
 			nomeParam = "tituloModeloEmailMudancaSenhaComLogin";
 		}
 		
-		String objNomeModelo = ParametroHome.getParametro(nomeParam);
+		String nomeModelo = ParametroHome.getParametroOrFalse(nomeParam);
 		
-		if (objNomeModelo != null)	{
-			StringBuilder sb = new StringBuilder();
-			sb.append("select o from ModeloDocumento o");
-			sb.append(" where o.tituloModeloDocumento = :titulo");
-			
-			ModeloDocumento modelo = (ModeloDocumento)getEntityManager().createQuery(sb.toString())
-															.setParameter("titulo", objNomeModelo).getSingleResult();
-			enviarEmailModelo(modelo);
-		} else {
+		if (!enviarModeloPorNome(nomeModelo)) {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema '" +
-					nomeParam + "' não foi definido");
+					nomeParam + "' não foi definido ou possui um valor inválido");
 		}
 	}
 	
+	/**
+	 * Envia e-mail baseado em um Modelo de Documento
+	 * 
+	 * @param modelo	Modelo do e-mail a ser enviado
+	 */
 	private void enviarEmailModelo(ModeloDocumento modelo)	{
-		FacesMessages fm = FacesMessages.instance();
-		if (modelo != null) {
-			ModeloDocumentoAction action = (ModeloDocumentoAction) Component.getInstance(ModeloDocumentoAction.NAME); 
-			String body = action.getConteudo(modelo);
+		if (modelo == null)	{
+			return;
+		}
+		
+		ModeloDocumentoAction action = (ModeloDocumentoAction) Component.getInstance(ModeloDocumentoAction.NAME); 
+		String conteudo = action.getConteudo(modelo);
 
-			// busca o componente para ser utilizado no template de email
-			EMailData data = ComponentUtil.getComponent(EMailData.NAME);
-			data.setUseHtmlBody(true);
-			data.setBody(body);
-			data.getRecipientList().clear();
-			data.getRecipientList().add(getInstance());
-			data.setSubject("Senha do Sistema");
-			fm.add("Senha gerada com sucesso.");
-			new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
-		} else {
-			fm.add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema " +
-			"'idModeloEMailMudancaSenha' está definido com valor inválido");				
-		}
-	}
-	
-	//TODO Mandar e-mail com login - quando o usuário esquece o login não há meio de recuperá-lo
-	private void enviarEmail() {
-		//obter o id do modelo do contexto da aplicação
-		Object objIdModelo = Contexts.getApplicationContext().get("idModeloEMailMudancaSenha");
-		if (objIdModelo != null) {
-			String idModelo = objIdModelo.toString(); 
-			ModeloDocumento modelo = getEntityManager().find(ModeloDocumento.class, new Integer(idModelo));
-			
-			enviarEmailModelo(modelo);
-			
-		} else {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema " +
-					"'idModeloEMailMudancaSenha' não foi definido");
-		}
+		EMailData data = ComponentUtil.getComponent(EMailData.NAME);
+		data.setUseHtmlBody(true);
+		data.setBody(conteudo);
+		data.getRecipientList().clear();
+		data.getRecipientList().add(getInstance());
+		data.setSubject("Senha do Sistema");
+		FacesMessages.instance().add("Senha gerada com sucesso.");
+		new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
 	}
 	
 	public void gerarNovaSenha(String parametro)	{
@@ -265,19 +280,12 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 				IdentityManager.instance().changePassword(login, password);
 			}
 		}.run();
-		getInstance().setProvisorio(true);
-		EntityManager em = EntityUtil.getEntityManager();
-		em.merge(getInstance());
-		em.flush();
-		if (parametro == null)	{
-			enviarEmail();
-		} else {
-			enviarEmail(parametro);
-		}
+
+		iniciarRequisicao(parametro);
 	}
 	
 	public void gerarNovaSenha() {
-		gerarNovaSenha(null);
+		gerarNovaSenha("email");
 	}
 	
 	public void gerarSenhaInicial() {
@@ -296,11 +304,8 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	 * @throws LoginException 
 	 */
 	public void requisitarNovaSenha() throws LoginException {
-		
-		FacesMessages fm = FacesMessages.instance();
-		
 		if (email.isEmpty() && login.isEmpty()) {
-			fm.add("É preciso informar o login ou o e-mail do usuário");
+			FacesMessages.instance().add("É preciso informar o login ou o e-mail do usuário");
 		}
 		else if (!login.isEmpty()){
 			recoverBy("login", login);
@@ -310,8 +315,6 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	}
 	
 	private void recoverBy(String parametro, String valor){
-		FacesMessages fm = FacesMessages.instance();
-		
 		//O StringBuilder constrói a Query com base no parametro passado 
 		// deixando na forma "select o from Usuario o where o.parametro = :parametro"
 		StringBuilder sb = new StringBuilder();
@@ -323,7 +326,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		query.setParameter(parametro, valor);
 		Usuario usuario = (Usuario) query.getSingleResult();
 		if (usuario == null){
-			fm.add("Usuário não encontrado");
+			FacesMessages.instance().add("Usuário não encontrado");
 		} else{
 			setId(usuario.getIdUsuario());
 			gerarNovaSenha(parametro);
