@@ -1,7 +1,6 @@
 package br.com.infox.epa.manager;
 
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -47,27 +46,24 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	}
 	
 	/**
+	 * Verifica se existe algum turno da localizacao da tarefa em que no dia informado
+	 * @param pt 
+	 * @param horario 
+	 * @return turno da localização da tarefa
+	 */
+	public boolean contemTurnoTarefaDia(ProcessoEpaTarefa pt, Date data) {
+		Calendar horarioCalendar = Calendar.getInstance();
+		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
+		return localizacaoTurnoDAO.contemTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana-1]);
+	}
+	
+	/**
 	 * Lista todos os turnos da localização
 	 * @param localizacao
 	 * @return lista de turnos
 	 */
 	public List<LocalizacaoTurno> listByLocalizacao(Localizacao localizacao) {
 		return localizacaoTurnoDAO.listByLocalizacao(localizacao);
-	}
-	
-	/**
-	 * Contabiliza o tempo útil, em minutos,  dos turnos das localizações durante um dia
-	 * @param localizacaoList
-	 * @return
-	 */
-	public int contarTempoUtilDiaByLocalizacaoList(List<Localizacao> localizacaoList) {
-		List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<LocalizacaoTurno>();
-		for (Localizacao l : localizacaoList) {
-			for (LocalizacaoTurno lt : l.getLocalizacaoTurnoList()) {
-				localizacaoTurnoList.add(lt);
-			}
-		}
-		return contarTempoUtilTurnos(localizacaoTurnoList);
 	}
 	
 	/**

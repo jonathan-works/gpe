@@ -15,6 +15,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.entity.ProcessoEpaTarefa;
 import br.com.infox.epa.query.ProcessoEpaTarefaQuery;
+import br.com.infox.ibpm.type.PrazoEnum;
 
 /**
  * Classe DAO para a entidade ProcessoEpaTarefa
@@ -44,8 +45,10 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return result;		
 	}
 
-	public List<ProcessoEpaTarefa> getAllNotEnded() {
-		return getNamedResultList(ProcessoEpaTarefaQuery.LIST_ALL_NOT_ENDED, null);
+	public List<ProcessoEpaTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put(ProcessoEpaTarefaQuery.QUERY_PARAM_TIPO_PRAZO, tipoPrazo);
+		return getNamedResultList(ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
 	}
 	
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {

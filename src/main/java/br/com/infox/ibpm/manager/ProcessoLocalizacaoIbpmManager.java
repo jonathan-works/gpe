@@ -1,7 +1,6 @@
 package br.com.infox.ibpm.manager;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -23,7 +22,7 @@ public class ProcessoLocalizacaoIbpmManager implements Serializable {
 	@In
 	private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	
-	public List<Localizacao> listByTaskInstance(Long idTaskInstance) {
+	public Localizacao listByTaskInstance(Long idTaskInstance) {
 		return processoLocalizacaoIbpmDAO.listByTaskInstance(idTaskInstance);
 	}
 	

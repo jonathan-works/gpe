@@ -19,6 +19,7 @@ import br.com.infox.epa.entity.ProcessoEpaTarefa;
 import br.com.infox.epa.manager.LocalizacaoTurnoManager;
 import br.com.infox.epa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epa.service.startup.TarefaTimerStarter;
+import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.timer.TimerUtil;
 
 /**
@@ -66,15 +67,15 @@ public class TarefaTimerProcessor {
 			return null;
 		}
 		Date fireTime = trigger.getPreviousFireTime();
-		for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getAllNotEnded()) {
+		for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getTarefaNotEnded(PrazoEnum.H)) {
 			LocalizacaoTurno lt = localizacaoTurnoManager.getTurnoTarefa(pt, fireTime, new Time(fireTime.getTime()));
 			if (lt != null) {
 				pt.setTempoGasto(pt.getTempoGasto() + localizacaoTurnoManager.calcularMinutosGastos(fireTime, pt.getUltimoDisparo(), lt));
 				pt.setUltimoDisparo(fireTime);
-				if(pt.getTempoPrevisto() == 0) {	
+				if (pt.getTempoPrevisto() == 0) {
 					pt.setPorcentagem(-1);
 				} else {
-					pt.setPorcentagem((pt.getTempoGasto()*100)/pt.getTempoPrevisto());
+					pt.setPorcentagem((pt.getTempoGasto()*100)/(pt.getTarefa().getPrazo()*60));
 				}
 				processoEpaTarefaManager.update(pt);
 			}

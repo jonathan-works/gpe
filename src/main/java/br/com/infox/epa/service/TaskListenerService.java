@@ -3,7 +3,6 @@ package br.com.infox.epa.service;
 import static br.com.infox.ibpm.jbpm.JbpmUtil.getTarefa;
 
 import java.util.Date;
-import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -17,7 +16,6 @@ import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.epa.entity.ProcessoEpaTarefa;
 import br.com.infox.epa.manager.LocalizacaoTurnoManager;
 import br.com.infox.epa.manager.ProcessoEpaTarefaManager;
-import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
@@ -49,8 +47,7 @@ public class TaskListenerService extends AbstractAction {
 		}
 	}
 
-	private void createProcessoEpa(Processo p,
-			TaskInstance taskInstance) {
+	private void createProcessoEpa(Processo p, TaskInstance taskInstance) {
 		String task = taskInstance.getTask().getName();
 		String procDefName = taskInstance.getProcessInstance()
 							   .getProcessDefinition().getName();
@@ -62,12 +59,6 @@ public class TaskListenerService extends AbstractAction {
 		pt.setTaskInstance(taskInstance.getId());
 		pt.setUltimoDisparo(new Date());
 		pt.setTempoGasto(0);
-		
-		List<Localizacao> localizacaoList = processoLocalizacaoIbpmManager.
-			listByTaskInstance(taskInstance.getId());
-		int tempoPrevisto = localizacaoTurnoManager.
-			contarTempoUtilDiaByLocalizacaoList(localizacaoList);
-		pt.setTempoPrevisto(tempoPrevisto);
 
 		persist(pt);
 	}

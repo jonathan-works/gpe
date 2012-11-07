@@ -3,6 +3,7 @@ package br.com.infox.epa.query;
 public interface ProcessoEpaTarefaQuery {
 
 	String QUERY_PARAM_TASKINSTANCE = "taskInstance";
+	String QUERY_PARAM_TIPO_PRAZO = "tipoPrazo";
 	
 	String GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE = "getProcessoEpaTarefaByTaskInstance";
 	
@@ -10,10 +11,10 @@ public interface ProcessoEpaTarefaQuery {
 		"select o from ProcessoEpaTarefa o where o.taskInstance = :"+
 		QUERY_PARAM_TASKINSTANCE;
 	
-	String LIST_ALL_NOT_ENDED = "listAllProcessoEpaTarefaNotEnded";
+	String TAREFA_NOT_ENDED_BY_TIPO_PRAZO = "listAllProcessoEpaTarefaNotEnded";
 	
-	String LIST_ALL_NOT_ENDED_QUERY = "select o from ProcessoEpaTarefa o where " +
-								"o.dataFim is null";
+	String TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY = "select o from ProcessoEpaTarefa o " +
+									  			  "where o.dataFim is null and o.tarefa.tipoPrazo = :" + QUERY_PARAM_TIPO_PRAZO;
 
 	String QUERY_FORA_FLUXO = 
 		 "select f.fluxo, p, t.tarefa, pt from ProcessoEpaTarefa pt "+

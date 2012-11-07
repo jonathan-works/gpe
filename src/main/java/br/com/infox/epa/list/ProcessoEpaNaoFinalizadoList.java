@@ -32,7 +32,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 	
 	private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o " +
 												   "where o.dataFim is null";
-	private static final String DEFAULT_ORDER = "o.porcentagem asc, o.idProcesso";
+	private static final String DEFAULT_ORDER = "coalesce(o.porcentagem, 0) desc, o.idProcesso";
 	
 	private static final String R1 = "o.naturezaCategoriaFluxo.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
 	

@@ -1,7 +1,6 @@
 package br.com.infox.ibpm.dao;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -20,13 +19,11 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoLocalizacaoIbpmDAO";
 
-	public List<Localizacao> listByTaskInstance(Long idTaskInstance) {
+	public Localizacao listByTaskInstance(Long idTaskInstance) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK_INSTANCE, 
 				idTaskInstance);
-		List<Localizacao> resultList = getNamedResultList(
-				ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE, parameters);
-		return resultList;
+		return getNamedSingleResult(ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE, parameters);
 	}
 	
 }

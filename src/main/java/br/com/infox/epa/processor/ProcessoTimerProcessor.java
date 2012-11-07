@@ -1,5 +1,6 @@
 package br.com.infox.epa.processor;
 
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.Component;
@@ -14,9 +15,14 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import br.com.infox.epa.entity.ProcessoEpa;
+import br.com.infox.epa.entity.ProcessoEpaTarefa;
+import br.com.infox.epa.manager.LocalizacaoTurnoManager;
 import br.com.infox.epa.manager.ProcessoEpaManager;
+import br.com.infox.epa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epa.service.startup.ProcessoTimerStarter;
 import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.ibpm.entity.Tarefa;
+import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.timer.TimerUtil;
 
 /**
@@ -36,6 +42,10 @@ public class ProcessoTimerProcessor {
 	
 	@In
 	private ProcessoEpaManager processoEpaManager;
+	@In
+	private ProcessoEpaTarefaManager processoEpaTarefaManager;
+	@In
+	private LocalizacaoTurnoManager localizacaoTurnoManager;
 	
 	public static ProcessoTimerProcessor instance() {
 		return (ProcessoTimerProcessor) Component.getInstance(NAME);
@@ -61,6 +71,12 @@ public class ProcessoTimerProcessor {
 		if (trigger == null) {
 			return null;
 		}
+		updateTempoGastoProcessoEpa();
+		updateTempoGastoProcessoEpaTarefa(trigger.getPreviousFireTime());
+		return null;
+	}
+
+	private void updateTempoGastoProcessoEpa() {
 		List<ProcessoEpa> listAllNotEnded = processoEpaManager.listAllNotEnded();
 		for (ProcessoEpa processoEpa : listAllNotEnded) {
 			Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
@@ -76,7 +92,24 @@ public class ProcessoTimerProcessor {
 			}
 			processoEpaManager.update(processoEpa);
 		}
-		return null;
 	}
 	
+	private void updateTempoGastoProcessoEpaTarefa(Date fireTime) {
+		for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getTarefaNotEnded(PrazoEnum.D)) {
+			if (localizacaoTurnoManager.contemTurnoTarefaDia(pt, fireTime)) {
+				Tarefa tarefa = pt.getTarefa();
+				
+				Integer tempoGasto = pt.getTempoGasto();
+				if (tempoGasto == null) {
+					tempoGasto = 0;
+				}
+				pt.setTempoGasto(tempoGasto + 1);
+				if(tarefa.getPrazo() != null && tarefa.getPrazo() != 0) {
+					pt.setPorcentagem((pt.getTempoGasto()*100)/
+							tarefa.getPrazo());
+				}
+				processoEpaTarefaManager.update(pt);
+			}
+		}
+	}
 }

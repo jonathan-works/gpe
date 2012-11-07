@@ -12,6 +12,7 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.entity.ProcessoEpaTarefa;
+import br.com.infox.ibpm.type.PrazoEnum;
 
 @Name(ProcessoEpaTarefaManager.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -29,8 +30,8 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		return processoEpaTarefaDAO.getByTaskInstance(taskInstance);
 	}
 	
-	public List<ProcessoEpaTarefa> getAllNotEnded() {
-		return processoEpaTarefaDAO.getAllNotEnded();
+	public List<ProcessoEpaTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
+		return processoEpaTarefaDAO.getTarefaNotEnded(tipoPrazo);
 	}
 	
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {

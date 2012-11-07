@@ -27,8 +27,8 @@ import br.com.infox.ibpm.entity.Tarefa;
 @NamedQueries(value={
 				@NamedQuery(name=ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE,
 						    query=ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY),
-			    @NamedQuery(name=ProcessoEpaTarefaQuery.LIST_ALL_NOT_ENDED,
-					    query=ProcessoEpaTarefaQuery.LIST_ALL_NOT_ENDED_QUERY)
+			    @NamedQuery(name=ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO,
+					    query=ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY)
 			  })
 public class ProcessoEpaTarefa implements Serializable {
 

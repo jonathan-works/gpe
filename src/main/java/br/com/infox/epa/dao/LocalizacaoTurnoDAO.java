@@ -1,6 +1,7 @@
 package br.com.infox.epa.dao;
 
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,31 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, new Time(pt.getUltimoDisparo().getTime()));
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM, horario);
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DATA, data);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(data);
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
+		return getNamedSingleResult(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
+	}
+	
+	/**
+	 * Busca a LocalizacaoTurno da localização do processo em que o dia passado se
+	 * encaixa 
+	 * @param pt
+	 * @return
+	 */
+	public boolean contemTurnoTarefaDia(ProcessoEpaTarefa pt, Date data, DiaSemanaEnum diaSemana) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ID_TASK_INSTANCE, pt.getTaskInstance());
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(data);
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
 		return getNamedSingleResult(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
 	}
 
