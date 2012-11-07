@@ -22,10 +22,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Expressions;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.security.RunAsOperation;
@@ -40,6 +40,7 @@ import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -194,39 +195,69 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		}		
 		return resultado;
 	}
+	
+	private void enviarEmail(String parametro)	{
+		String nomeParam = "";
+		if ("login".equals(parametro))	{
+			nomeParam = "tituloModeloEmailMudancaSenha";
+		} else if("email".equals(parametro))	{
+			nomeParam = "tituloModeloEmailMudancaSenhaComLogin";
+		}
+		
+		String objNomeModelo = ParametroHome.getParametro(nomeParam);
+		
+		if (objNomeModelo != null)	{
+			StringBuilder sb = new StringBuilder();
+			sb.append("select o from ModeloDocumento o");
+			sb.append(" where o.tituloModeloDocumento = :titulo");
+			
+			ModeloDocumento modelo = (ModeloDocumento)getEntityManager().createQuery(sb.toString())
+															.setParameter("titulo", objNomeModelo).getSingleResult();
+			enviarEmailModelo(modelo);
+		} else {
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema '" +
+					nomeParam + "' não foi definido");
+		}
+	}
+	
+	private void enviarEmailModelo(ModeloDocumento modelo)	{
+		FacesMessages fm = FacesMessages.instance();
+		if (modelo != null) {
+			ModeloDocumentoAction action = (ModeloDocumentoAction) Component.getInstance(ModeloDocumentoAction.NAME); 
+			String body = action.getConteudo(modelo);
+
+			// busca o componente para ser utilizado no template de email
+			EMailData data = ComponentUtil.getComponent(EMailData.NAME);
+			data.setUseHtmlBody(true);
+			data.setBody(body);
+			data.getRecipientList().clear();
+			data.getRecipientList().add(getInstance());
+			data.setSubject("Senha do Sistema");
+			fm.add("Senha gerada com sucesso.");
+			new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
+		} else {
+			fm.add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema " +
+			"'idModeloEMailMudancaSenha' está definido com valor inválido");				
+		}
+	}
+	
 	//TODO Mandar e-mail com login - quando o usuário esquece o login não há meio de recuperá-lo
 	private void enviarEmail() {
 		//obter o id do modelo do contexto da aplicação
 		Object objIdModelo = Contexts.getApplicationContext().get("idModeloEMailMudancaSenha");
-		FacesMessages fm = FacesMessages.instance();
 		if (objIdModelo != null) {
 			String idModelo = objIdModelo.toString(); 
 			ModeloDocumento modelo = getEntityManager().find(ModeloDocumento.class, new Integer(idModelo));
-			if (modelo != null) {
-				String body = modelo.getModeloDocumento();
-				//processa o modelo avaliando as expressões
-				body = (String) Expressions.instance().createValueExpression(body).getValue();
-				
-				// busca o componente para ser utilizado no template de email
-				EMailData data = ComponentUtil.getComponent(EMailData.NAME);
-				data.setUseHtmlBody(true);
-				data.setBody(body);
-				data.getRecipientList().clear();
-				data.getRecipientList().add(getInstance());
-				data.setSubject("Senha do Sistema");
-				fm.add("Senha gerada com sucesso.");
-				new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
-			} else {
-				fm.add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema " +
-				"'idModeloEMailMudancaSenha' está definido com valor inválido");				
-			}
+			
+			enviarEmailModelo(modelo);
+			
 		} else {
-			fm.add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema " +
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema " +
 					"'idModeloEMailMudancaSenha' não foi definido");
 		}
 	}
 	
-	public void gerarNovaSenha() {
+	public void gerarNovaSenha(String parametro)	{
 		password = RandomStringUtils.randomAlphabetic(8); 
 		new RunAsOperation(true) {
 			@Override
@@ -237,8 +268,16 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		getInstance().setProvisorio(true);
 		EntityManager em = EntityUtil.getEntityManager();
 		em.merge(getInstance());
-		em.flush();		
-		enviarEmail();
+		em.flush();
+		if (parametro == null)	{
+			enviarEmail();
+		} else {
+			enviarEmail(parametro);
+		}
+	}
+	
+	public void gerarNovaSenha() {
+		gerarNovaSenha(null);
 	}
 	
 	public void gerarSenhaInicial() {
@@ -287,7 +326,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 			fm.add("Usuário não encontrado");
 		} else{
 			setId(usuario.getIdUsuario());
-			gerarNovaSenha();
+			gerarNovaSenha(parametro);
 		}
 	}
 	

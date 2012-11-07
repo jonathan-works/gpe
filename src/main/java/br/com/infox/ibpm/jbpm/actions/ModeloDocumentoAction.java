@@ -42,11 +42,13 @@ import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
 
 
-@Name("modeloDocumento")
+@Name(ModeloDocumentoAction.NAME)
 @Scope(ScopeType.SESSION)
 @BypassInterceptors
 @Startup
 public class ModeloDocumentoAction extends ActionTemplate {
+	
+	public static final String NAME = "modeloDocumento";
 	
 	private static final long serialVersionUID = 1L;
 	
