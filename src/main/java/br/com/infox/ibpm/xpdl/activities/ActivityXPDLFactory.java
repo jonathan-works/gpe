@@ -10,7 +10,7 @@ public class ActivityXPDLFactory {
 	
 	private static final String	PARALLEL = "Parallel";
 	
-	public static ActivityXPDL getAtividade(Element element, String name) throws ActivityNotAllowedXPDLException {
+	public static ActivityXPDL createInstance(Element element, String name) throws ActivityNotAllowedXPDLException {
 		ActivityXPDL activity = null;
 		if (isStartState(element)) {
 			activity = new StartActivityXPDL(element, name);
@@ -36,9 +36,9 @@ public class ActivityXPDLFactory {
 	
 	private static boolean isSystemNode(Element element) {
 		List<Element> eventList = XmlUtil.getChildren(element, "Event");
-		if(eventList != null && !eventList.isEmpty()) {
+		if(!eventList.isEmpty()) {
 			List<Element> intermediate = XmlUtil.getChildren(eventList.get(0), "IntermediateEvent");
-			if(intermediate != null && !intermediate.isEmpty()) {
+			if (!intermediate.isEmpty()) {
 				String value = XmlUtil.getAttributeValue(intermediate.get(0), "Trigger");
 				return "None".equals(value);
 			}
@@ -48,8 +48,8 @@ public class ActivityXPDLFactory {
 
 	private static boolean isParallelNode(Element element) {
 		List<Element> routeList = XmlUtil.getChildren(element, "Route");
-		if(routeList != null && !routeList.isEmpty()) {
-			String gateway =XmlUtil.getAttributeValue(routeList.get(0), "GatewayType");
+		if(!routeList.isEmpty()) {
+			String gateway = XmlUtil.getAttributeValue(routeList.get(0), "GatewayType");
 			return PARALLEL.equalsIgnoreCase(gateway);
 		}
 		return false;
@@ -57,7 +57,7 @@ public class ActivityXPDLFactory {
 
 	private static boolean isDecisionNode(Element element) {
 		List<Element> routeList = XmlUtil.getChildren(element, "Route");
-		if(routeList != null && !routeList.isEmpty()) {
+		if(!routeList.isEmpty()) {
 			String gateway = XmlUtil.getAttributeValue(routeList.get(0), "GatewayType");
 			return gateway == null || gateway.isEmpty();
 		}
@@ -66,11 +66,11 @@ public class ActivityXPDLFactory {
 
 	private static boolean isMailNode(Element element) {
 		List<Element> eventList = XmlUtil.getChildren(element, "Event");
-		if(eventList != null && !eventList.isEmpty()) {
+		if(!eventList.isEmpty()) {
 			List<Element> intermediate = XmlUtil.getChildren(eventList.get(0), "IntermediateEvent");
-			if(intermediate != null && !intermediate.isEmpty()) {
+			if(!intermediate.isEmpty()) {
 				String value = XmlUtil.getAttributeValue(intermediate.get(0), "Trigger");
-				return value != null && "Message".equalsIgnoreCase(value);
+				return "Message".equalsIgnoreCase(value);
 			}
 		}
 		return false;
@@ -78,9 +78,9 @@ public class ActivityXPDLFactory {
 
 	private static boolean isTaskNode(Element element) {
 		List<Element> implList = XmlUtil.getChildren(element, "Implementation");
-		if(implList != null && !implList.isEmpty()) {
+		if(!implList.isEmpty()) {
 			List<Element> taskList = XmlUtil.getChildren(implList.get(0), "Task");
-			return taskList != null && !taskList.isEmpty();
+			return !taskList.isEmpty();
 		}
 		return false;
 	}
@@ -92,27 +92,27 @@ public class ActivityXPDLFactory {
 	 */
 	private static boolean isProcessState(Element element) {
 		List<Element> implList = XmlUtil.getChildren(element, "Implementation");
-		if(implList != null && !implList.isEmpty()) {
+		if(!implList.isEmpty()) {
 			List<Element> subFlow = XmlUtil.getChildren(implList.get(0), "SubFlow");
-			return subFlow != null && !subFlow.isEmpty();
+			return !subFlow.isEmpty();
 		}
 		return false;
 	}
 
 	private static boolean isEndState(Element element) {
 		List<Element> eventList = XmlUtil.getChildren(element, "Event");
-		if(eventList != null && !eventList.isEmpty()) {
+		if(!eventList.isEmpty()) {
 			List<Element> endEvent = XmlUtil.getChildren(eventList.get(0), "EndEvent");
-			return endEvent != null && !endEvent.isEmpty();
+			return !endEvent.isEmpty();
 		}
 		return false;
 	}
 
 	private static boolean isStartState(Element element) {
 		List<Element> eventList = XmlUtil.getChildren(element, "Event");
-		if(eventList != null && !eventList.isEmpty()) {
+		if(!eventList.isEmpty()) {
 			List<Element> startEventList = XmlUtil.getChildren(eventList.get(0), "StartEvent");
-			return startEventList != null && !startEventList.isEmpty();
+			return !startEventList.isEmpty();
 		}
 		return false;
 	}

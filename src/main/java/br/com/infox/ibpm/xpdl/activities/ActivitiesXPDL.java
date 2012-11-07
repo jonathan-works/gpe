@@ -13,6 +13,7 @@ import org.jbpm.graph.def.Transition;
 import org.jdom.Element;
 
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
+import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 import br.com.infox.ibpm.xpdl.element.ParallelNodeXPDLException;
 import br.com.infox.ibpm.xpdl.transition.TransitionXPDL;
 import br.com.itx.util.XmlUtil;
@@ -22,12 +23,22 @@ public class ActivitiesXPDL implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private List<ActivityXPDL>	activities;
 	
-	public ActivitiesXPDL(Element root) throws ActivityNotAllowedXPDLException, IllegalActivityXPDLException {
-		List<Element> atividades = checkWorkflowSection(root);
-		activities = createAtivitiesList(XmlUtil.getChildren(atividades.get(0), "Activity"));
+	public ActivitiesXPDL(List<ActivityXPDL> activities) {
+		this.activities = activities;
 	}
 
-	private List<Element> checkWorkflowSection(Element root) throws IllegalActivityXPDLException {
+	private static List<ActivityXPDL> createAtivitiesList(List<Element> list) throws ActivityNotAllowedXPDLException {
+		List<ActivityXPDL> activityXPDLList = new ArrayList<ActivityXPDL>();
+		int index = 0;
+		for (Element ele : list) {
+			activityXPDLList.add(ActivityXPDLFactory.createInstance(ele, FluxoXPDL.NO_NAME + index));
+			index++;
+		}
+		return activityXPDLList;
+	}
+	
+	
+	public static ActivitiesXPDL createInstance(Element root) throws IllegalXPDLException {
 		List<Element> workFlowList = XmlUtil.getChildren(root, "WorkflowProcesses");
 		if(workFlowList == null || workFlowList.isEmpty()) {
 			throw new IllegalActivityXPDLException("Arquivo XPDL inválido. Não há a seção de definição dos Nós.");
@@ -35,18 +46,12 @@ public class ActivitiesXPDL implements Serializable {
 		if(workFlowList.size() > 1) {
 			throw new IllegalActivityXPDLException("Arquivo XPDL inválido. Não há mais de uma seção de definição dos Nós.");
 		}
-		Element atividades = XmlUtil.getChildByIndex(workFlowList.get(0), "WorkflowProcess", 1);
-		return XmlUtil.getChildren(atividades, "Activities");
-	}
-	
-	private List<ActivityXPDL> createAtivitiesList(List<Element> list) throws ActivityNotAllowedXPDLException {
-		List<ActivityXPDL> activityXPDLList = new ArrayList<ActivityXPDL>();
-		int index = 0;
-		for (Element ele : list) {
-			activityXPDLList.add(ActivityXPDLFactory.getAtividade(ele, FluxoXPDL.NO_NAME + index));
-			index++;
-		}
-		return activityXPDLList;
+		Element activitiesElement = XmlUtil.getChildByIndex(workFlowList.get(0), "WorkflowProcess", 1);
+		List<Element> activitiesList = XmlUtil.getChildren(activitiesElement, "Activities");
+		
+		List<ActivityXPDL> activityXPDLList = createAtivitiesList(XmlUtil.getChildren(activitiesList.get(0), "Activity"));
+		
+		return new ActivitiesXPDL(activityXPDLList);
 	}
 
 	public List<ActivityXPDL> getActivities() {
@@ -93,15 +98,10 @@ public class ActivitiesXPDL implements Serializable {
 		} else if (arrives != null && leaves != null && leaves.size() == 1 && arrives.size() > 1) {
 			createJoinNode(lista, parallelTransitions, parallel, position);
 		} else {
-			throwParallelExceptionCheckImpossible(parallel);
+			throw new ParallelNodeXPDLException("Impossível verificar se o Nó ("
+					+ (parallel.getName() != null ? parallel.getName() : "Paralelo")
+					+ ") é do tipo Join ou Fork.");
 		}
-	}
-
-	private void throwParallelExceptionCheckImpossible(ParallelActivityXPDL paralelo)
-			throws ParallelNodeXPDLException {
-		throw new ParallelNodeXPDLException("Impossível verificar se o Nó ("
-				+ (paralelo.getName() != null ? paralelo.getName() : "Paralelo")
-				+ ") é do tipo Join ou Fork.");
 	}
 
 	private void createJoinNode(List<ActivityXPDL> lista,
@@ -160,19 +160,5 @@ public class ActivitiesXPDL implements Serializable {
 				assign.assignTask(definition);
 			}
 		}
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder temp = new StringBuilder();
-		temp.append("[Lanes] #lanes: " + activities.size());
-		int i = 0;
-		while(i < activities.size() && i < 8) {
-			temp.append(activities.get(i++) + ", ");
-		}
-		if(i < activities.size()) {
-			temp.append(" ... ");
-		}
-		return temp.toString();
 	}
 }

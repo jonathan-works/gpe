@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.test.importXPDL;
+package br.com.infox.ibpm.test.importXPDL;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -6,17 +6,11 @@ import java.util.Arrays;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.xpdl.IllegalXPDLException;
-import br.com.infox.ibpm.xpdl.ImportarXPDLService;
-import br.com.infox.ibpm.xpdl.ImportarXPDLServiceException;
-import br.com.infox.ibpm.xpdl.activities.ActivityNotAllowedXPDLException;
-import br.com.infox.ibpm.xpdl.activities.IllegalActivityXPDLException;
 import br.com.infox.ibpm.xpdl.lane.IllegalNumberPoolsXPDLException;
-import br.com.infox.ibpm.xpdl.transition.IllegalTransitionXPDLException;
 
 public class ImportarXPDLTest {
 
@@ -24,35 +18,27 @@ public class ImportarXPDLTest {
 	private static final String fileSubProcess = "./test/SubProcess.xpdl";
 	private static final String fileSucess = "./test/sucessFluxo.xpdl";
 	private static final String CD_FLUXO = "cdFluxo";
-	private ImportarXPDLService importarXPDLService;
 	private int MAX = 0x10000;
 
-	@Before
-	public void setup() {
-		importarXPDLService = new ImportarXPDLService();
-	}
-
 	@Test(expected = IllegalNumberPoolsXPDLException.class)
-	public void createFluxoXPDLTestWith3Pools() throws IOException, ImportarXPDLServiceException, IllegalXPDLException {
+	public void createFluxoXPDLTestWith3Pools() throws IOException, IllegalXPDLException {
 		byte[] bytes = readFile(file3Pools);
 		FluxoXPDL.createInstance(bytes);
 	}
 
 	@Test
-	public void importarFluxoXPDLTestWithSubProcess() throws ImportarXPDLServiceException,
-			IOException, IllegalNumberPoolsXPDLException, ActivityNotAllowedXPDLException,
-			IllegalActivityXPDLException, IllegalTransitionXPDLException {
+	public void importarFluxoXPDLTestWithSubProcess() throws IOException, IllegalXPDLException {
 		byte[] bytes = readFile(fileSubProcess);
-		String xml = importarXPDLService.importarXPDLToJPDL(bytes, CD_FLUXO);
+		FluxoXPDL fluxoXPDL = FluxoXPDL.createInstance(bytes);
+		String xml = fluxoXPDL.toJPDL(CD_FLUXO);
 		Assert.assertNotNull(xml);
 	}
 	
 	@Test
-	public void importarFluxoXPDLTestWithSucess() throws ImportarXPDLServiceException,
-			IOException, IllegalNumberPoolsXPDLException, ActivityNotAllowedXPDLException,
-			IllegalActivityXPDLException, IllegalTransitionXPDLException {
+	public void importarFluxoXPDLTestWithSucess() throws IOException, IllegalXPDLException {
 		byte[] bytes = readFile(fileSucess);
-		String xml = importarXPDLService.importarXPDLToJPDL(bytes, CD_FLUXO);
+		FluxoXPDL fluxoXPDL = FluxoXPDL.createInstance(bytes);
+		String xml = fluxoXPDL.toJPDL(CD_FLUXO);
 		Assert.assertNotNull(xml);
 	}
 

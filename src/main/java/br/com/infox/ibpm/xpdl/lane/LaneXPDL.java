@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.xpdl.lane;
 
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,13 +40,16 @@ public class LaneXPDL extends ElementXPDL {
 	 */
 	public List<ActivityXPDL> findActivitiesBelongingToLane(List<ActivityXPDL> list) {
 		List<ActivityXPDL> belonging = new ArrayList<ActivityXPDL>();
-		Rectangle2D rectangle = this.getGraphics().getRectangle();
 		for(ActivityXPDL act:list) {
-			if(rectangle.contains(act.getGraphics().getRectangle())) {
+			if(contains(act)) {
 				belonging.add(act);
 			}
 		}
 		return belonging;
+	}
+	
+	public boolean contains(ElementXPDL element) {
+		return getGraphics().getRectangle().contains(element.getGraphics().getRectangle());
 	}
 	
 	@Override

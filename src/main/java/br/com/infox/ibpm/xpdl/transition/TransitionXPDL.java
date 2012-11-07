@@ -7,6 +7,7 @@ import org.jbpm.graph.def.Transition;
 import org.jdom.Element;
 
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
+import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
 import br.com.itx.util.XmlUtil;
 
@@ -14,35 +15,41 @@ import br.com.itx.util.XmlUtil;
 public class TransitionXPDL implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private Element element;
 	private String id;
 	private String name;
 	private String to;
 	private String from;
 	private Transition transition;
 	
-	public TransitionXPDL(Element element, String name) throws IllegalTransitionXPDLException {
-		this.element = element;
-		this.name = XmlUtil.getAttributeValue(element, "Name");
-		id = XmlUtil.getAttributeValue(element, "Id");
-		from = XmlUtil.getAttributeValue(element, "From");
-		to = XmlUtil.getAttributeValue(element, "To");
-		checkAttributes(name);
+	private TransitionXPDL(String id, String name, String to, String from) throws IllegalTransitionXPDLException {
+		this.id = id;
+		this.name = name;
+		this.to = to;
+		this.from = from;
 	}
 	
-	private void checkAttributes(String name) throws IllegalTransitionXPDLException {
-		if(this.name == null || this.name.isEmpty()) {
-			this.name = name;
+	public static TransitionXPDL createInstance(Element element, String name) throws IllegalXPDLException {
+		String id = XmlUtil.getAttributeValue(element, "Id");
+		
+		String elementName = XmlUtil.getAttributeValue(element, "Name");
+		if(elementName == null || elementName.isEmpty()) {
+			elementName = name;
 		}
+		
+		String from = XmlUtil.getAttributeValue(element, "From");
 		if(from == null || from.isEmpty()) {
 			throw new IllegalTransitionXPDLException("Transição ilegal. Nó de destino nulo");
 		}
+		
+		String to = XmlUtil.getAttributeValue(element, "To");
 		if(to == null || to.isEmpty()) {
 			throw new IllegalTransitionXPDLException("Transição ilegal. Nó de origem nulo");
 		}
 		if(to.equals(from)) {
 			throw new IllegalTransitionXPDLException("Transição ilegal. Transição cíclica para o mesmo nó.");
 		}
+		
+		return new TransitionXPDL(id, elementName, to, from);
 	}
 	
 	public Transition toTransition(List<ActivityXPDL> list) {
@@ -79,10 +86,6 @@ public class TransitionXPDL implements Serializable {
 		return name;
 	}
 	
-	public Element getElement() {
-		return element;
-	}
-
 	public String getId() {
 		return id;
 	}

@@ -9,6 +9,7 @@ import org.jbpm.graph.def.Transition;
 import org.jdom.Element;
 
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
+import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
 import br.com.itx.util.XmlUtil;
 
@@ -16,24 +17,30 @@ public class TransitionsXPDL implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private List<TransitionXPDL>	transitions;
-	private int index;
+	private List<TransitionXPDL> transitions;
 
-	public TransitionsXPDL(Element root) throws IllegalTransitionXPDLException {
-		index = 1;
+	public TransitionsXPDL(List<TransitionXPDL> transitions) {
+		this.transitions = transitions;
+	}
+	
+	private static List<TransitionXPDL> createTransitionList(List<Element> list) throws IllegalXPDLException {
+		List<TransitionXPDL> activities = new ArrayList<TransitionXPDL>();
+		int index = 0;
+		for (Element ele : list) {
+			activities.add(TransitionXPDL.createInstance(ele, FluxoXPDL.NO_NAME + index));
+			index++;
+		}
+		return activities;
+	}
+	
+	public static TransitionsXPDL createInstance(Element root) throws IllegalXPDLException {
 		List<Element> workFlowList = XmlUtil.getChildren(root, "WorkflowProcesses");
 		List<Element> workflows = XmlUtil.getChildren(workFlowList.get(0), "WorkflowProcess");
 		List<Element> transitionsList = XmlUtil.getChildren(workflows.get(1), "Transitions");
 		List<Element> transitionList = XmlUtil.getChildren(transitionsList.get(0), "Transition");
-		transitions = createTransitionList(transitionList);
-	}
-	
-	private List<TransitionXPDL> createTransitionList(List<Element> list) throws IllegalTransitionXPDLException {
-		List<TransitionXPDL> activities = new ArrayList<TransitionXPDL>();
-		for (Element ele : list) {
-			activities.add(new TransitionXPDL(ele, FluxoXPDL.NO_NAME + index++));
-		}
-		return activities;
+		List<TransitionXPDL> transitionXPDLList = createTransitionList(transitionList);
+		
+		return new TransitionsXPDL(transitionXPDLList);
 	}
 	
 	public void createTransition(List<ActivityXPDL> atividades) {
@@ -45,11 +52,11 @@ public class TransitionsXPDL implements Serializable {
 	public void assignTransitionToNode() {
 		List<ActivityXPDL> empty = new ArrayList<ActivityXPDL>();
 		for (TransitionXPDL activity : getTransitions()) {
-				Transition transition = activity.toTransition(empty);
-				Node from = transition.getFrom();
-				Node to = transition.getTo();
-				from.addLeavingTransition(transition);
-				to.addArrivingTransition(transition);
+			Transition transition = activity.toTransition(empty);
+			Node from = transition.getFrom();
+			Node to = transition.getTo();
+			from.addLeavingTransition(transition);
+			to.addArrivingTransition(transition);
 		}
 	}
 

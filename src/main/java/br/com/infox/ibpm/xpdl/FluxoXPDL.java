@@ -2,6 +2,7 @@ package br.com.infox.ibpm.xpdl;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.util.List;
 
 import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
@@ -12,8 +13,10 @@ import org.jdom.Element;
 
 import br.com.infox.ibpm.jbpm.JpdlXmlWriter;
 import br.com.infox.ibpm.xpdl.activities.ActivitiesXPDL;
+import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
 import br.com.infox.ibpm.xpdl.element.ParallelNodeXPDLException;
-import br.com.infox.ibpm.xpdl.lane.LanesXPDL;
+import br.com.infox.ibpm.xpdl.lane.LaneXPDL;
+import br.com.infox.ibpm.xpdl.lane.LanesXPDLFactory;
 import br.com.infox.ibpm.xpdl.transition.TransitionsXPDL;
 import br.com.itx.util.XmlUtil;
 
@@ -22,11 +25,11 @@ public class FluxoXPDL implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NO_NAME = "Indefinido ";
 
-	private LanesXPDL lanes;
+	private List<LaneXPDL> lanes;
 	private ActivitiesXPDL activities;
 	private TransitionsXPDL transitions;
 
-	private FluxoXPDL(LanesXPDL lanes, ActivitiesXPDL activities, TransitionsXPDL transitions) throws IllegalXPDLException {
+	private FluxoXPDL(List<LaneXPDL> lanes, ActivitiesXPDL activities, TransitionsXPDL transitions) throws IllegalXPDLException {
 		this.lanes = lanes;
 		this.activities = activities;
 		this.transitions = transitions;
@@ -51,15 +54,28 @@ public class FluxoXPDL implements Serializable {
 		definition.setName(cdFluxo);
 		definition.setDescription("Fluxo importado via arquivo xpdl.");
 
-		lanes.assignLanesToProcessDefinition(definition);
+		for (LaneXPDL lane : lanes) {
+			definition.getTaskMgmtDefinition().addSwimlane(lane.toSwimlane());
+		}
+		
 		transitions.createTransition(activities.getActivities());
-		lanes.assignActivitiesToLane(activities.getActivities());
+		assignActivitiesToLane(activities.getActivities());
+		
 		activities.changeParallelNodeInForkOrJoin(transitions.getTransitions());
 		transitions.assignTransitionToNode();
 		activities.assignActivitiesToProcessDefinition(definition);
 		activities.assignTaskToActivities(definition);
 		addEvents(definition);
 		return definition;
+	}
+	
+	public void assignActivitiesToLane(List<ActivityXPDL> activities) {
+		for (LaneXPDL lane : lanes) {
+			List<ActivityXPDL> list = lane.findActivitiesBelongingToLane(activities);
+			for (ActivityXPDL activity : list) {
+				activity.setLane(lane);
+			}
+		}
 	}
 
 	/**
@@ -83,9 +99,19 @@ public class FluxoXPDL implements Serializable {
 	 * @return instância do FluxoXPDL
 	 */
 	public static FluxoXPDL createInstance(Element root) throws IllegalXPDLException {
-		LanesXPDL lanes = LanesXPDL.createInstance(root);
-		ActivitiesXPDL activities = new ActivitiesXPDL(root);
-		TransitionsXPDL transitions = new TransitionsXPDL(root);
+		List<LaneXPDL> lanes = LanesXPDLFactory.getLanes(root);
+		
+		ActivitiesXPDL activities = ActivitiesXPDL.createInstance(root);
+		for (ActivityXPDL activity: activities.getActivities()) {
+			for (LaneXPDL lane: lanes) {
+				if (lane.contains(activity)) {
+					activity.setLane(lane);
+					break;
+				}
+			}
+		}
+		
+		TransitionsXPDL transitions = TransitionsXPDL.createInstance(root);
 		return new FluxoXPDL(lanes, activities, transitions);
 	}
 
