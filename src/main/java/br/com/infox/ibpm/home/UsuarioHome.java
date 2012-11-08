@@ -12,13 +12,12 @@
  Consulte a GNU GPL para mais detalhes.
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
-*/
+ */
 package br.com.infox.ibpm.home;
 
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
@@ -44,7 +43,6 @@ import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
-
 @Name(UsuarioHome.NAME)
 @BypassInterceptors
 public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
@@ -53,45 +51,47 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioHome";
 	public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
-	
+
 	private String login;
 	private String password;
 	private String passwordConfirm;
 	private String email;
 	private BloqueioUsuario ultimoBloqueio;
 	private BloqueioUsuario novoBloqueio = new BloqueioUsuario();
-	
+
 	/*
-	 * Testa se os campos do bloqueio foram preenchidos corretamente
-	 * Já é feita uma validação no xhtml
-	 * Essa segunda validação (em código) é realmente necessária?
-	 * */
-	private void validarBloqueio(){
-		if (getInstance().getBloqueio() &&
-				(novoBloqueio.getDataPrevisaoDesbloqueio() == null ||
-				novoBloqueio.getMotivoBloqueio().equals(""))){
+	 * Testa se os campos do bloqueio foram preenchidos corretamente Já é feita
+	 * uma validação no xhtml Essa segunda validação (em código) é realmente
+	 * necessária?
+	 */
+	private void validarBloqueio() {
+		if (getInstance().getBloqueio()
+				&& (novoBloqueio.getDataPrevisaoDesbloqueio() == null || novoBloqueio
+						.getMotivoBloqueio().equals(""))) {
 			getInstance().setBloqueio(false);
 			this.novoBloqueio = new BloqueioUsuario();
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-				"Campo bloqueio preenchido incorretamente");
+					"Campo bloqueio preenchido incorretamente");
 		}
 	}
-	
+
 	/**
-	 * Apaga a data de Expiração quando o Usário passa de Provisório para Permanente 
+	 * Apaga a data de Expiração quando o Usário passa de Provisório para
+	 * Permanente
 	 * */
-	private void validarPermanencia(){
+	private void validarPermanencia() {
 		if (!getInstance().getProvisorio())
 			getInstance().setDataExpiracao(null);
 	}
-	
+
 	public Usuario checkUserByLogin(String login) {
-		Query query = getEntityManager().createNamedQuery(UsuarioLogin.USUARIO_LOGIN_NAME);
+		Query query = getEntityManager().createNamedQuery(
+				UsuarioLogin.USUARIO_LOGIN_NAME);
 		query.setParameter(UsuarioLogin.PARAM_LOGIN, login);
 		Usuario usu = EntityUtil.getSingleResult(query);
 		return usu;
 	}
-	
+
 	@Override
 	public void newInstance() {
 		super.newInstance();
@@ -99,7 +99,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		getInstance().setBloqueio(false);
 		getInstance().setLdap(false);
 	}
-	
+
 	@Override
 	protected Usuario createInstance() {
 		Usuario usuario = super.createInstance();
@@ -107,33 +107,31 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		usuario.setLdap(false);
 		return usuario;
 	}
-	
+
 	@Override
 	public void setId(Object id) {
 		boolean changed = id != null && !id.equals(getId());
 		super.setId(id);
-		if (changed){
+		if (changed) {
 			ultimoBloqueio = null;
 			Usuario u = getInstance();
 			login = getInstance().getLogin();
-			List<BloqueioUsuario> bloqueioUsuarioList = u.getBloqueioUsuarioList();
-			if (!bloqueioUsuarioList.isEmpty()){
+			List<BloqueioUsuario> bloqueioUsuarioList = u
+					.getBloqueioUsuarioList();
+			if (!bloqueioUsuarioList.isEmpty()) {
 				int i = bloqueioUsuarioList.size() - 1;
 				ultimoBloqueio = bloqueioUsuarioList.get(i);
 			}
 		}
 	}
-	
+
 	/*
 	 * Regra do Bloqueio
 	 * 
-	 * Caso 1: Bloquear usuário já Bloqueado {
-	 * 			1.1: Bloqueio antigo é desfeito
-	 * 			1.2: Novo bloqueio é criado
-	 * 		}
-	 * Caso 2: Bloquear usuário ativo
-	 * 			2.1: Novo bloqueio é criado
-	 * */
+	 * Caso 1: Bloquear usuário já Bloqueado { 1.1: Bloqueio antigo é desfeito
+	 * 1.2: Novo bloqueio é criado } Caso 2: Bloquear usuário ativo 2.1: Novo
+	 * bloqueio é criado
+	 */
 	@Override
 	public String update() {
 		validarBloqueio();
@@ -142,27 +140,27 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		if (usuario.getLogin() == null) {
 			usuario.setLogin(login);
 		}
-		if (estavaBloqueado()){
+		if (estavaBloqueado()) {
 			desbloquear();
 		}
 		if (getInstance().getBloqueio().equals(Boolean.TRUE))
 			bloquear();
-		return super.update();		
+		return super.update();
 	}
-	
-	public boolean estavaBloqueado(){
+
+	public boolean estavaBloqueado() {
 		if (ultimoBloqueio != null) {
 			return (ultimoBloqueio.getDataDesbloqueio() == null);
 		}
 		return false;
 	}
-	
-	public void desbloquear(){
+
+	public void desbloquear() {
 		ultimoBloqueio.setDataDesbloqueio(new Date());
 		super.update();
 	}
-	
-	public void bloquear(){
+
+	public void bloquear() {
 		novoBloqueio.setDataBloqueio(new Date());
 		novoBloqueio.setUsuario(getInstance());
 		getInstance().getBloqueioUsuarioList().add(novoBloqueio);
@@ -170,96 +168,110 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		EntityUtil.getEntityManager().persist(ultimoBloqueio);
 		novoBloqueio = new BloqueioUsuario();
 	}
-	
+
 	public String updateSemWiacs() {
 		return super.update();
 	}
-	
-	@Override
-	public String persist() {
-		login = getInstance().getLogin();
 
-		String resultado = super.persist();
-		if (password == null) {
-			gerarNovaSenha();
-		}		
-		return resultado;
+	@Override
+	protected boolean beforePersistOrUpdate() {
+		login = getInstance().getLogin();
+		
+		return login != null;
 	}
 	
+	@Override
+	protected String afterPersistOrUpdate(String ret) {
+		if (password == null) {
+			gerarNovaSenha();
+		}
+		return ret;
+	}
+
 	public String persist(boolean senha) {
 		login = getInstance().getLogin();
 		String resultado = super.persist();
 		if (senha) {
 			gerarNovaSenha();
-		}		
+		}
 		return resultado;
 	}
-	
+
 	/**
-	 * 	Método que recupera um modelo de documento pelo seu nome e envia {@link #enviarEmailModelo(ModeloDocumento)}}
+	 * Método que recupera um modelo de documento pelo seu nome e envia
+	 * {@link #enviarEmailModelo(ModeloDocumento)}
 	 * 
-	 * @param nomeModeloDocumento		Nome do Modelo de Documento a enviar por e-mail
-	 * @return							true se o e-mail for enviado e false se falhar
+	 * @param nomeModeloDocumento
+	 *            Nome do Modelo de Documento a enviar por e-mail
+	 * @return true se o e-mail for enviado e false se falhar
 	 */
-	private boolean enviarModeloPorNome(String nomeModeloDocumento)	{
-		if (nomeModeloDocumento == null)	{
+	private boolean enviarModeloPorNome(String nomeModeloDocumento) {
+		if (nomeModeloDocumento == null) {
 			return false;
-		} else if ("false".equals(nomeModeloDocumento))	{
+		} else if ("false".equals(nomeModeloDocumento)) {
 			return false;
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o from ModeloDocumento o");
 		sb.append(" where o.tituloModeloDocumento = :titulo");
-		
-		ModeloDocumento modelo = (ModeloDocumento)getEntityManager().createQuery(sb.toString())
-														.setParameter("titulo", nomeModeloDocumento).getSingleResult();
-		if (modelo == null)	{
+
+		ModeloDocumento modelo = (ModeloDocumento) getEntityManager()
+				.createQuery(sb.toString())
+				.setParameter("titulo", nomeModeloDocumento).getSingleResult();
+		if (modelo == null) {
 			return false;
 		} else {
 			enviarEmailModelo(modelo);
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
-	 * 	Inicia o processo de requisição de senha
+	 * Inicia o processo de requisição de senha
 	 * 
-	 * 		Requisita nova senha baseada na informação fornecida pelo usuário
-	 * 	e tenta enviar com base na informação recuperada {@link #enviarModeloPorNome(String)}.
+	 * Requisita nova senha baseada na informação fornecida pelo usuário e tenta
+	 * enviar com base na informação recuperada
+	 * {@link #enviarModeloPorNome(String)}.
 	 * 
 	 * TODO:melhorar nome do método
 	 * 
-	 * @param parametro		Tipo da requisição de senha
+	 * @param parametro
+	 *            Tipo da requisição de senha
 	 */
-	private void iniciarRequisicao(String parametro)	{
+	private void iniciarRequisicao(String parametro) {
 		String nomeParam = null;
-		if ("login".equals(parametro))	{
+		if ("login".equals(parametro)) {
 			nomeParam = "tituloModeloEmailMudancaSenha";
-		} else if("email".equals(parametro))	{
+		} else if ("email".equals(parametro)) {
 			nomeParam = "tituloModeloEmailMudancaSenhaComLogin";
 		}
-		
+
 		String nomeModelo = ParametroHome.getParametroOrFalse(nomeParam);
-		
+
 		if (!enviarModeloPorNome(nomeModelo)) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro no envio do e-mail. O parâmetro de sistema '" +
-					nomeParam + "' não foi definido ou possui um valor inválido");
+			FacesMessages.instance().add(
+					StatusMessage.Severity.ERROR,
+					"Erro no envio do e-mail. O parâmetro de sistema '"
+							+ nomeParam
+							+ "' não foi definido ou possui um valor inválido");
 		}
 	}
-	
+
 	/**
 	 * Envia e-mail baseado em um Modelo de Documento
 	 * 
-	 * @param modelo	Modelo do e-mail a ser enviado
+	 * @param modelo
+	 *            Modelo do e-mail a ser enviado
 	 */
-	private void enviarEmailModelo(ModeloDocumento modelo)	{
-		if (modelo == null)	{
+	private void enviarEmailModelo(ModeloDocumento modelo) {
+		if (modelo == null) {
 			return;
 		}
-		
-		ModeloDocumentoAction action = (ModeloDocumentoAction) Component.getInstance(ModeloDocumentoAction.NAME); 
+
+		ModeloDocumentoAction action = (ModeloDocumentoAction) Component
+				.getInstance(ModeloDocumentoAction.NAME);
 		String conteudo = action.getConteudo(modelo);
 
 		EMailData data = ComponentUtil.getComponent(EMailData.NAME);
@@ -271,9 +283,9 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		FacesMessages.instance().add("Senha gerada com sucesso.");
 		new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
 	}
-	
-	public void gerarNovaSenha(String parametro)	{
-		password = RandomStringUtils.randomAlphabetic(8); 
+
+	public void gerarNovaSenha(String parametro) {
+		password = RandomStringUtils.randomAlphabetic(8);
 		new RunAsOperation(true) {
 			@Override
 			public void execute() {
@@ -283,40 +295,44 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 
 		iniciarRequisicao(parametro);
 	}
-	
+
 	public void gerarNovaSenha() {
 		gerarNovaSenha("email");
 	}
-	
+
 	public void gerarSenhaInicial() {
 		new RunAsOperation(true) {
 			@Override
 			public void execute() {
-				IdentityManager.instance().changePassword(getInstance().getLogin(), getInstance().getLogin());
+				IdentityManager.instance().changePassword(
+						getInstance().getLogin(), getInstance().getLogin());
 			}
 		}.run();
 	}
-	
+
 	/**
-	 * Metodo que gera uma nova senha para usuário. Este metodo faz isso buscando 
-	 * na base do wiacs o usuário pelo login e email e retorna uma mensagem de erro caso
-	 * não encontre. A partir do usuário do wiacs é dado um setId utilizando a 'identificacao'.
-	 * @throws LoginException 
+	 * Metodo que gera uma nova senha para usuário. Este metodo faz isso
+	 * buscando na base do wiacs o usuário pelo login e email e retorna uma
+	 * mensagem de erro caso não encontre. A partir do usuário do wiacs é dado
+	 * um setId utilizando a 'identificacao'.
+	 * 
+	 * @throws LoginException
 	 */
 	public void requisitarNovaSenha() throws LoginException {
 		if (email.isEmpty() && login.isEmpty()) {
-			FacesMessages.instance().add("É preciso informar o login ou o e-mail do usuário");
-		}
-		else if (!login.isEmpty()){
+			FacesMessages.instance().add(
+					"É preciso informar o login ou o e-mail do usuário");
+		} else if (!login.isEmpty()) {
 			recoverBy("login", login);
-		}else if (!email.isEmpty()){
+		} else if (!email.isEmpty()) {
 			recoverBy("email", email);
 		}
 	}
-	
-	private void recoverBy(String parametro, String valor){
-		//O StringBuilder constrói a Query com base no parametro passado 
-		// deixando na forma "select o from Usuario o where o.parametro = :parametro"
+
+	private void recoverBy(String parametro, String valor) {
+		// O StringBuilder constrói a Query com base no parametro passado
+		// deixando na forma
+		// "select o from Usuario o where o.parametro = :parametro"
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o from Usuario o where o.");
 		sb.append(parametro);
@@ -325,43 +341,44 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		Query query = getEntityManager().createQuery(sb.toString());
 		query.setParameter(parametro, valor);
 		Usuario usuario = (Usuario) query.getSingleResult();
-		if (usuario == null){
+		if (usuario == null) {
 			FacesMessages.instance().add("Usuário não encontrado");
-		} else{
+		} else {
 			setId(usuario.getIdUsuario());
 			gerarNovaSenha(parametro);
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static String gerarHashSenha(UsuarioLogin usuarioLogin) {
 		String hash = new PasswordHash().generateSaltedHash(
-				usuarioLogin.getLogin(),
-				usuarioLogin.getLogin(), "SHA");
+				usuarioLogin.getLogin(), usuarioLogin.getLogin(), "SHA");
 		return hash;
 	}
-	
+
 	public static UsuarioHome instance() {
 		return ComponentUtil.getComponent("usuarioHome");
 	}
-	
+
 	/**
 	 * Atalho para a localização atual
+	 * 
 	 * @return a localização atual do usuário
 	 */
 	public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
-		return (UsuarioLocalizacao) Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_ATUAL);
+		return (UsuarioLocalizacao) Contexts.getSessionContext().get(
+				USUARIO_LOCALIZACAO_ATUAL);
 	}
-		
-	//----Getters e Setters----
+
+	// ----Getters e Setters----
 	public BloqueioUsuario getUltimoBloqueio() {
 		return ultimoBloqueio;
 	}
-	
+
 	public BloqueioUsuario getNovoBloqueio() {
 		return novoBloqueio;
 	}
-		
+
 	public String getLogin() {
 		return login;
 	}
@@ -369,23 +386,23 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	
+
 	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
 	}
-	
+
 	public String getPasswordConfirm() {
 		return passwordConfirm;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getPassword() {
 		return password;
-	}    
-	
+	}
+
 	public String getEmail() {
 		return email;
 	}
