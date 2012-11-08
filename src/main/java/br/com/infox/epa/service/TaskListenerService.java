@@ -59,6 +59,11 @@ public class TaskListenerService extends AbstractAction {
 		pt.setTaskInstance(taskInstance.getId());
 		pt.setUltimoDisparo(new Date());
 		pt.setTempoGasto(0);
+		if (tarefa.getPrazo() != null) {
+			pt.setTempoPrevisto(tarefa.getPrazo());
+		} else {
+			pt.setTempoPrevisto(0);
+		}
 
 		persist(pt);
 	}

@@ -71,14 +71,14 @@ public class TarefaTimerProcessor {
 			LocalizacaoTurno lt = localizacaoTurnoManager.getTurnoTarefa(pt, fireTime, new Time(fireTime.getTime()));
 			if (lt != null) {
 				pt.setTempoGasto(pt.getTempoGasto() + localizacaoTurnoManager.calcularMinutosGastos(fireTime, pt.getUltimoDisparo(), lt));
-				pt.setUltimoDisparo(fireTime);
 				if (pt.getTempoPrevisto() == 0) {
 					pt.setPorcentagem(-1);
 				} else {
 					pt.setPorcentagem((pt.getTempoGasto()*100)/(pt.getTarefa().getPrazo()*60));
 				}
-				processoEpaTarefaManager.update(pt);
 			}
+			pt.setUltimoDisparo(fireTime);
+			processoEpaTarefaManager.update(pt);
 		}
 		
 		return null;

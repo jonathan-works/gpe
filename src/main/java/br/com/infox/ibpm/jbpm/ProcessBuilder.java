@@ -456,9 +456,10 @@ public class ProcessBuilder implements Serializable {
 				PrazoTask prazoTask = entry.getValue();
 				t.setPrazo(prazoTask.getPrazo());
 				t.setTipoPrazo(prazoTask.getTipoPrazo());
-				entityManager.flush();
+				entityManager.merge(t);
 			}
 		}
+		entityManager.flush();
 	}
 
 	@Factory("processNodes")
