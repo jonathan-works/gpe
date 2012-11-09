@@ -24,17 +24,12 @@
 	<wi:dataReport subtitle="Resultado da Pesquisa "
 				   title="#{title}"
 				   columns="3"
-				   widths="1 5 1">
+				   widths="1 5 1"
+				   headerText="#{cboList.criteria}">
 
-		<wi:reportColumnHeader title="#{messages['cbo.codCbo']}" 
-								filter="#{cboList.entity.codCbo}"
-								renderFilter="#{cboList.entity.codCbo != null}"/>
-		<wi:reportColumnHeader title="#{messages['cbo.descricaoCbo']}" 
-								filter="#{cboList.entity.descricaoCbo}"
-								renderFilter="#{cboList.entity.descricaoCbo != null}"/>
-		<wi:reportColumnHeader title="#{messages['categoria.ativo']}" 
-								filter="#{cboList.entity.ativo ? 'Ativo' : 'Inativo'}"
-								renderFilter="#{cboList.entity.ativo != null}"/>
+		<wi:reportColumnHeader title="#{messages['cbo.codCbo']}"/>
+		<wi:reportColumnHeader title="#{messages['cbo.descricaoCbo']}"/>
+		<wi:reportColumnHeader title="#{messages['categoria.ativo']}"/>
 
 		<ui:repeat var="row" value="#{cboList.list()}">
 			<wi:reportColumn value="#{row.codCbo}" />

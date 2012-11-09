@@ -45,13 +45,14 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 	@Override
 	public void setId(Object id) {
 		super.setId(id);
+		NatCatFluxoLocalizacao tempInstance = getInstance();
 		if(oldInstance == null || oldInstance.getIdNatCatFluxoLocalizacao() != 
-								  getInstance().getIdNatCatFluxoLocalizacao()) {
+									tempInstance.getIdNatCatFluxoLocalizacao()) {
 			oldInstance = new NatCatFluxoLocalizacao();
-			oldInstance.setIdNatCatFluxoLocalizacao(getInstance().getIdNatCatFluxoLocalizacao());
-			oldInstance.setHeranca(getInstance().getHeranca());
-			oldInstance.setNaturezaCategoriaFluxo(getInstance().getNaturezaCategoriaFluxo());
-			oldInstance.setLocalizacao(getInstance().getLocalizacao());
+			oldInstance.setIdNatCatFluxoLocalizacao(tempInstance.getIdNatCatFluxoLocalizacao());
+			oldInstance.setHeranca(tempInstance.getHeranca());
+			oldInstance.setNaturezaCategoriaFluxo(tempInstance.getNaturezaCategoriaFluxo());
+			oldInstance.setLocalizacao(tempInstance.getLocalizacao());
 		}
 	}
 

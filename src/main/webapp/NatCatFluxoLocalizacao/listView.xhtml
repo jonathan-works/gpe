@@ -33,7 +33,7 @@
 	    <wi:dataTable values="#{natCatFluxoLocalizacaoList.list(15)}"
 					  bean="#{natCatFluxoLocalizacaoList}"
 					  tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}"
-					  id="natCatFluxoLocalizacaoist"
+					  id="natCatFluxoLocalizacaoList"
 					  rowId="#{row.idNatCatFluxoLocalizacao}"
 					  actionInactive="natCatFluxoLocalizacaoAction.inactive">
 			<ui:define name="searchForm">
@@ -91,6 +91,7 @@
 		</wi:dataTable>
 	</ui:define>
 
+	
 	<ui:define name="form">
 		<wi:dataForm formId="natCatFluxoLocalizacaoForm"
 					 formTitle="#{messages['natCatFluxoLocalizacao.titleForm']}">

@@ -25,7 +25,6 @@ import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.home.Authenticator;
-import br.com.itx.util.EntityUtil;
 
 /**
  * 

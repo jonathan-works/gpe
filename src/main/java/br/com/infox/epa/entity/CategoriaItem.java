@@ -1,5 +1,6 @@
 package br.com.infox.epa.entity;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +16,6 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.validator.NotNull;
 
-import br.com.infox.epa.query.CategoriaAssuntoQuery;
 import br.com.infox.epa.query.CategoriaItemQuery;
 import br.com.infox.ibpm.entity.Item;
 
@@ -28,7 +28,8 @@ import br.com.infox.ibpm.entity.Item;
 		@NamedQuery(name=CategoriaItemQuery.LIST_BY_CATEGORIA,
 				    query=CategoriaItemQuery.LIST_BY_CATEGORIA_QUERY)
 	})
-public class CategoriaItem {
+public class CategoriaItem implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	public static final String TABLE_NAME = "tb_categoria_item";
 	
