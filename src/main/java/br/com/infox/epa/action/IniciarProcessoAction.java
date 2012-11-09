@@ -6,14 +6,12 @@ import java.util.List;
 
 import org.hibernate.TypeMismatchException;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.access.entity.Papel;
 import br.com.infox.epa.bean.ItemBean;
 import br.com.infox.epa.entity.CategoriaItem;
 import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
@@ -50,25 +48,14 @@ public class IniciarProcessoAction {
 	
 	private boolean renderedByItem;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
-	private Localizacao localizacao;
 	private Item itemDoProcesso;
 	private ProcessoEpa processoEpa;
-	private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList;
 	private List<ItemBean> itemList;
-	
-	private Papel papel;
-	
-	@Create
-	public void init() {
-		localizacao = Authenticator.getLocalizacaoAtual();
-		papel = Authenticator.getPapelAtual();
-		naturezaCategoriaFluxoList = natCatFluxoLocalizacaoManager.
-									 listByLocalizacaoAndPapel(localizacao, papel);
-	}
 	
 	public void iniciarProcesso() {
 		try {
 			Usuario usuarioLogado = Authenticator.getUsuarioLogado();
+			Localizacao localizacao = Authenticator.getLocalizacaoAtual();
 			processoEpa = new ProcessoEpa();
 			processoEpa.setDataInicio(new Date());
 			processoEpa.setNumeroProcesso("");
@@ -96,13 +83,14 @@ public class IniciarProcessoAction {
 
 	public void onSelectNatCatFluxo(NaturezaCategoriaFluxo ncf) {
 		naturezaCategoriaFluxo = ncf;
-		setItemList(new ArrayList<ItemBean>());
+		itemList = new ArrayList<ItemBean>();
 		for(CategoriaItem ca : naturezaCategoriaFluxo.getCategoria()
 													    .getCategoriaItemList()) {
-			getItemList().add(new ItemBean(ca.getItem()));
+			itemList.add(new ItemBean(ca.getItem()));
 		}
-		if (itemList.size() > 0) 
+		if (itemList.size() > 0)	{ 
 			setRenderedByItem(true);
+		}
 	}
 	
 	public void onSelectItem(ItemBean bean) {
@@ -120,19 +108,9 @@ public class IniciarProcessoAction {
 		return false;
 	}
 	
-	public void setNaturezaCategoriaFluxoList(
-			List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
-		this.naturezaCategoriaFluxoList = naturezaCategoriaFluxoList;
-	}
-
-	public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
-		return naturezaCategoriaFluxoList;
-	}
-	
 	public boolean isRenderedByItem() {
 		return renderedByItem;
 	}
-	
 	public void setRenderedByItem(boolean renderedByItem) {
 		this.renderedByItem = renderedByItem;
 	}
@@ -140,7 +118,6 @@ public class IniciarProcessoAction {
 	public void setProcessoEpa(ProcessoEpa processoEpa) {
 		this.processoEpa = processoEpa;
 	}
-
 	public ProcessoEpa getProcessoEpa() {
 		return processoEpa;
 	}
@@ -148,7 +125,6 @@ public class IniciarProcessoAction {
 	public List<ItemBean> getItemList() {
 		return itemList;
 	}
-
 	public void setItemList(List<ItemBean> itemList) {
 		this.itemList = itemList;
 	}
