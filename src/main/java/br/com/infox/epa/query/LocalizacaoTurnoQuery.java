@@ -54,8 +54,8 @@ public interface LocalizacaoTurnoQuery {
 			"				   o.localizacao = lt.localizacao and	" +
 			"	 			   o.contabilizar = true)";
 	
-	String LOCALIZACAO_TURNO_BY_TAREFA_DIA = "localizacaoTurnoByTarefaDia";
-	String LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY = 
+	String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA = "localizacaoTurnoByTarefaDia";
+	String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY = 
 			"select count(lt) from LocalizacaoTurno lt " +
 			"where lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + " and " +
 			"   not exists(select o from CalendarioEventos o " +

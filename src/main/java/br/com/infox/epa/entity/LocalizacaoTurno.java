@@ -34,8 +34,8 @@ import br.com.infox.ibpm.entity.Localizacao;
 					query=LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM_QUERY),
 		@NamedQuery(name=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO,
 					query=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY),
-		@NamedQuery(name=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_DIA,
-					query=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY)
+		@NamedQuery(name=LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA,
+					query=LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY)
 })
 public class LocalizacaoTurno implements Serializable {
 

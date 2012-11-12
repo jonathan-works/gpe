@@ -54,7 +54,7 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	public boolean contemTurnoTarefaDia(ProcessoEpaTarefa pt, Date data) {
 		Calendar horarioCalendar = Calendar.getInstance();
 		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
-		return localizacaoTurnoDAO.contemTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana-1]);
+		return localizacaoTurnoDAO.countTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana-1]) > 0;
 	}
 	
 	/**
