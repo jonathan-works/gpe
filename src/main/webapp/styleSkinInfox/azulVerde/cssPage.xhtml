@@ -1,0 +1,303 @@
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+		        xmlns:a="http://richfaces.org/a4j">
+    
+	    <a:loadStyle src="/styleSkinInfox/padrao.css" /> 
+	      
+		<style type="text/css">	
+				
+		    div{
+	            font-size: #{skinZoom.skinZoom} !important; 
+	        }
+	        		
+			/*Classes para linhas zebradas da tabela*/
+			.even-row {
+			   background-color: #e7e7e7;
+			}
+			.odd-row {
+			   background-color: #f7f7f7;
+			}
+		    						
+			/* CSS para as Paginas */	
+			html, body {
+				height: 100%;
+				background: #c3d9e4; /* Cor fixa para Browsers antigos */
+				background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIxMyUiIHN0b3AtY29sb3I9IiNjM2Q5ZTQiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjYWNjOGJlIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==); /* IE9 SVG */
+				background: -moz-linear-gradient(top,  #c3d9e4 13%, #acc8be 100%); 
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(13%,#c3d9e4), color-stop(100%,#acc8be)); 
+				background: -webkit-linear-gradient(top,  #c3d9e4 13%,#acc8be 100%); 
+				background: -o-linear-gradient(top,  #c3d9e4 13%,#acc8be 100%); 
+				background: -ms-linear-gradient(top,  #c3d9e4 13%,#acc8be 100%);
+				background: linear-gradient(to bottom,  #c3d9e4 13%,#acc8be 100%); 
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c3d9e4', endColorstr='#acc8be',GradientType=0 );
+			}	
+								
+			.subBorda{	  
+				width: 99%;
+				padding: 3px;	
+				background: #bbcec2; /* Cor fixa para Browsers antigos */
+				background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjEwMCUiIHkyPSIwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjYmJjZWMyIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNzUlIiBzdG9wLWNvbG9yPSIjODBhOTkxIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzgwYTk5MSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=); 	/* IE9 SVG */
+				background: -moz-linear-gradient(45deg,  #bbcec2 0%, #80a991 75%, #80a991 100%); 
+				background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,#bbcec2), color-stop(75%,#80a991), color-stop(100%,#80a991)); 
+				background: -webkit-linear-gradient(45deg,  #bbcec2 0%,#80a991 75%,#80a991 100%);
+				background: -o-linear-gradient(45deg,  #bbcec2 0%,#80a991 75%,#80a991 100%); 
+				background: -ms-linear-gradient(45deg,  #bbcec2 0%,#80a991 75%,#80a991 100%);
+				background: linear-gradient(45deg,  #bbcec2 0%,#80a991 75%,#80a991 100%); 
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bbcec2', endColorstr='#80a991',GradientType=1 );
+				margin:0 auto;
+				padding-top: 10px;
+				
+				background-color:#{a4jSkin.bgColorSubBorderPage};
+				color:#FFFFFF;
+				font-size: 14pt; 
+				text-align: left;
+					 				
+				-webkit-border-top-right-radius: 7px;
+				-webkit-border-top-left-radius: 7px;
+				-moz-border-radius-topleft: 7px;
+				-moz-border-radius-topright: 7px;		    
+			}
+			
+			table.banner {
+				margin: 0px 0px 0px 0px;
+				border-bottom-width: 0px;
+			    width: 100%;
+				background: #c7d8cd; /* Cor fixa para Browsers antigos */
+				background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2M3ZDhjZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjkwJSIgc3RvcC1jb2xvcj0iI2RiZTVkZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=); /* IE9 SVG */
+				background: -moz-linear-gradient(top,  #c7d8cd 0%, #dbe5de 90%); 
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c7d8cd), color-stop(90%,#dbe5de)); 
+				background: -webkit-linear-gradient(top,  #c7d8cd 0%,#dbe5de 90%); 
+				background: -o-linear-gradient(top,  #c7d8cd 0%,#dbe5de 90%); 
+				background: -ms-linear-gradient(top,  #c7d8cd 0%,#dbe5de 90%); 
+				background: linear-gradient(to bottom,  #c7d8cd 0%,#dbe5de 90%); 
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c7d8cd', endColorstr='#dbe5de',GradientType=0 );			    
+			}
+			
+			th.banner, td.banner {	
+				color: #555555;
+				font-size: 20pt;
+			}
+
+			/* CSS para os Forms */
+			select {
+				border: 0px;
+				background-image: url("#{util.contextPath}#{a4jSkin.imgBgSelect}");
+				background-repeat: no-repeat;
+				background-position: top;
+				background-color: transparent;
+				/*Add o width para teste*/
+				width: 250px;
+			}	
+					
+			option{
+			    background-color:#{a4jSkin.bgColorSelect};		    
+			}	
+			
+					
+			
+			/* Foi separada essa classe CSS para manter combatibilidade entres os componentes 
+				.inputText, .rich-calendar-input  {
+					border: 0px;
+					font-size: 12px;
+					background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
+					background-repeat: no-repeat;
+					background-position: top left;			
+					color: black;		
+				}
+			*/		
+			.rich-calendar-input  {
+				border: 0px;
+				font-size: 12px;
+				background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
+				background-repeat: no-repeat;
+				background-position: top left;			
+				color: black;
+				height: 15px;				
+			}
+			
+			.inputText {
+				border: 0px;
+				font-size: 12px;
+				background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
+				background-repeat: no-repeat;
+				background-position: top left;			
+				color: black;
+				/*Add o width e height para teste*/
+				width: 250px;
+				height: 15px;		
+			}
+				
+			
+			
+			textarea, select {
+				border: 1px solid #{a4jSkin.borderColorInputTextareaSelect};
+				font-size: 12px;
+				background:#{a4jSkin.bgColorInputTextareaSelect};
+				color: black;
+			}
+						
+			.inputTextMiniW69 {
+				border: 0px;
+				font-size: 12px;
+				background-image:url("#{util.contextPath}#{a4jSkin.inputTextMiniW69}");
+				background-repeat: no-repeat;
+				background-position: top left;			
+				color: black;
+			}
+			
+			.inputTextMiniW25 {
+				border: 0px;
+				font-size: 12px;
+				background-image:url("#{util.contextPath}#{a4jSkin.inputTextMiniW25}");
+				background-repeat: no-repeat;
+				background-position: top left;			
+				color: black;
+			}
+			
+			.foneDDD {
+				border: 0px;
+				font-size: 12px;
+				background-image:url("#{util.contextPath}#{a4jSkin.inputTextMiniW25}");
+				background-repeat: no-repeat;
+				background-position: top left;			
+				color: black;
+			}
+			
+			.foneNormal {
+				border: 0px;
+				font-size: 12px;
+				background-image:url("#{util.contextPath}#{a4jSkin.inputTextMiniW100}");
+				background-repeat: no-repeat;
+				background-position: top left;			
+				color: black;
+			}
+
+			input[type='submit'],input[type='button'], .buttons {
+				height: 22px !important;
+				min-width: 80px;
+				margin: 5px;
+				padding: 0px 12px 3px;
+				background-color: transparent;					
+				border: solid 1px #{a4jSkin.borderColorButton};
+				-webkit-border-radius: 6px;
+				-moz-border-radius: 6px;								
+			}
+			
+			.linkButton {
+				padding: 3px 12px;
+				font-size: 14px;
+			}
+			
+			.inputTreeHeader {
+				background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputTree}");
+				background-repeat: no-repeat;
+				background-position: right;			
+				background-color: white !important;
+				color: black !important;
+				border: none !important;
+				font-size: 12px;
+				font-weight: normal;
+				text-align: left;		
+			}
+			
+			.inputTreeBody {
+				background-color: white;
+				padding: 1px !important;
+				border: solid 1px #{a4jSkin.borderColorInputTree};
+				min-width: 224px !important;
+				z-index: 10;
+				max-height: 300px !important;
+				position: absolute;
+			}
+			
+			.suggest {
+				background-image: url("#{util.contextPath}#{a4jSkin.imgBgSuggest}") !important;				
+				background-repeat: no-repeat;
+				background-position: top;				
+				padding-right: 20px;
+				border: 0px solid;
+			}
+				
+			/* Pagina do Login*/
+			.modSup{
+				width: 350px;
+				height: 39px;
+				background-image: url("#{util.contextPath}#{a4jSkin.imgBgModSup}");
+				background-repeat: no-repeat;
+			}	
+			.modInf{
+			    width: 350px;
+				height: 39px;
+				background-image: url("#{util.contextPath}#{a4jSkin.imgBgModInf}");
+				background-repeat: no-repeat;
+			}	
+			.modEsq{
+			    width:40px;
+				height:172px;
+				background-image:url("#{util.contextPath}#{a4jSkin.imgBgModEsq}");
+				background-repeat:no-repeat;
+			}	
+			.modDir{
+			    width:450px;
+			    height:172px;
+			    font-family: Arial, Helvetica, sans-serif; 
+			    font-weight: bold; 
+			    color: #FFFFFF; 
+			    font-size: 24px;
+				background-image:url("#{util.contextPath}#{a4jSkin.imgBgModDir}");
+				background-repeat:no-repeat;
+			}
+			.modCentral{
+			    width:350px;
+				background-image:url("#{util.contextPath}#{a4jSkin.imgBgModCentral}");
+				background-repeat:repeat-y;
+			}	
+			
+			
+			
+			
+			
+			
+			
+			
+			.modPesqEsq{ 
+			    width: 38px;
+				height: 25px;
+				margin-top:0px;
+			    background-image: url("#{util.contextPath}#{a4jSkin.imgBgPesqCanto}");
+				background-repeat:no-repeat;
+			}
+			
+			.modPesqBg{
+			    background-image: url("#{util.contextPath}#{a4jSkin.imgBgPesqMeio}");
+				background-repeat:repeat-x;
+			}
+			
+			.modPesqInputText{
+			    border: 0px;			    				    
+			    width:134px;
+			    height: 16px;		   
+			    background-color:transparent;
+			    background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputTextPesq}");
+			    background-repeat: no-repeat;			    
+			    font-size: 11px; 
+			    color:white;
+			    padding-left:3px;			    
+			}	
+			
+			.required {
+				color: #{a4jSkin.bgColorRequired};
+				padding-left: 2px;
+			}
+			
+			#papeisUsuarioForm option {
+				background-color: #{a4jSkin.additionalBackgroundColor};
+				color: #{a4jSkin.headerTextColor};
+				text-align: left;
+			}
+																
+	    </style>
+	    
+</ui:composition>
