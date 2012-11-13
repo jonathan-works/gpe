@@ -129,4 +129,10 @@ public class IniciarProcessoAction {
 		this.itemList = itemList;
 	}
 	
+	public boolean necessitaPartes(){
+		if (naturezaCategoriaFluxo != null)
+			return naturezaCategoriaFluxo.getNatureza().getHasPartes();
+		else return false;
+	}
+	
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:wi= "http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j">
+    
+   	<h:form id="itemProcessoForm">
+   		<s:div id="itemDiv">
+			<rich:dataTable id="itemTable"
+							value="#{action.itemList}"
+							var="row"
+							rows="10"
+							rendered="#{action.renderedByItem}"
+							style="width: auto; min-width:100px">
+				<rich:column style="width: 10%">
+					<c:if test="#{!action.necessitaPartes()}">
+						<a:commandLink action="#{action.onSelectItem(row)}"
+                				   ajaxSingle="true"
+                				   oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); 
+								  			  window.location='#{util.contextPath}/Painel/list.seam';">
+                    		<h:graphicImage url="/img/start.gif"/>
+                		</a:commandLink>
+               		</c:if>
+               		<c:if test="#{action.necessitaPartes()}">
+               			<a:commandLink action="#{action.onSelectItem(row)}"
+                				   ajaxSingle="true">
+                    		<h:graphicImage url="/img/start.gif"/>
+                    	</a:commandLink>
+               		</c:if>
+				</rich:column>
+				<rich:column style="width: 90%">
+					<f:facet name="header">
+						<h:outputText value="#{messages['item.descricaoItem']}" />
+					</f:facet>
+					<h:outputText value="#{row.item.caminhoCompletoToString()}"/>
+				</rich:column>
+			</rich:dataTable>
+			<rich:datascroller for="itemTable"
+							   lastPageMode="full"
+							   id="dsItemTable"
+							   align="right"
+							   renderIfSinglePage="false"/>
+		</s:div>
+	</h:form>
+</ui:composition>

@@ -1,38 +1,24 @@
 package br.com.infox.ibpm.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.validator.Length;
 
+import br.com.infox.epa.type.TipoPessoaEnum;
+
 @Entity
 @Table(schema="public", name=PessoaJuridica.TABLE_NAME)
-public class PessoaJuridica implements Serializable {
+@PrimaryKeyJoinColumn(name="id_pessoa_juridica", columnDefinition = "integer")
+public class PessoaJuridica extends Pessoa {
 
 	public static final String TABLE_NAME = "tb_pessoa_juridica";
 	private static final long serialVersionUID = 1L;
 	
-	private int idPessoaJuridica;
 	private String cnpj;
-	private String nome;
 	private String razaoSocial;
-	private Boolean ativo;
-
-	@SequenceGenerator(name="generator", sequenceName="sq_tb_pessoa_juridica")
-	@Id
-	@GeneratedValue(generator="generator")
-	@Column(name="id_pessoa_juridica", unique=true, nullable=false)
-	public int getIdPessoaJuridica() {
-		return idPessoaJuridica;
-	}
-	public void setIdPessoaJuridica(int idPessoaJuridica) {
-		this.idPessoaJuridica = idPessoaJuridica;
+	
+	public PessoaJuridica(){
+		setTipoPessoa(TipoPessoaEnum.J);
 	}
 	
 	@Column(name="nr_cnpj", nullable=false, unique=true, length=20)
@@ -44,15 +30,6 @@ public class PessoaJuridica implements Serializable {
 		this.cnpj = cnpj;
 	}
 	
-	@Column(name="nm_pessoa_juridica", nullable=false, length=150)
-	@Length(max=150)
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	
 	@Column(name="nm_razao_social", nullable=false, length=100)
 	@Length(max=100)
 	public String getRazaoSocial() {
@@ -62,11 +39,4 @@ public class PessoaJuridica implements Serializable {
 		this.razaoSocial = razaoSocial;
 	}
 	
-	@Column(name="in_ativo", nullable=false)
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
 }

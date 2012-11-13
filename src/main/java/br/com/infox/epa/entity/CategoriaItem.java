@@ -66,7 +66,6 @@ public class CategoriaItem implements Serializable{
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_categoria", nullable=false)
-	@NotNull
 	public Categoria getCategoria() {
 		return categoria;
 	}

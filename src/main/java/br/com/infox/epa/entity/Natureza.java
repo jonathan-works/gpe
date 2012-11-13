@@ -25,6 +25,7 @@ public class Natureza implements java.io.Serializable {
 
 	private int idNatureza;
 	private String natureza;
+	private Boolean hasPartes;
 	private Boolean ativo;
 	
 	private List<NaturezaLocalizacao> naturezaLocalizacaoList = 
@@ -44,8 +45,6 @@ public class Natureza implements java.io.Serializable {
 	}
 	
 	@Column(name="ds_natureza", length=30, nullable=false)
-	@NotNull
-	@Length(max=30)
 	public String getNatureza() {
 		return natureza;
 	}
@@ -54,8 +53,14 @@ public class Natureza implements java.io.Serializable {
 		this.natureza = natureza;
 	}
 	
+	@Column(name="in_partes", nullable=false)
+	public Boolean getHasPartes() {
+		return hasPartes;
+	}
+	public void setHasPartes(Boolean hasPartes) {
+		this.hasPartes = hasPartes;
+	}
 	@Column(name="in_ativo", nullable=false)
-	@NotNull
 	public Boolean getAtivo() {
 		return ativo;
 	}

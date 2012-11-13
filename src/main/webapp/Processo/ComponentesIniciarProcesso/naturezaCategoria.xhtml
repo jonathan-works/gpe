@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:wi= "http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich">
+    
+    	<h:form id="NaturezaCategoriaForm">
+    		<s:div rendered="#{!action.renderedByItem}">
+				<wi:dataTable 
+						  values="#{natCatProcessoList.list(15)}"
+						  bean="#{natCatProcessoList}"
+						  tableTitle=""
+						  id="natCatProcessoList"
+						  rowId="#{row.idNaturezaCategoriaFluxo}"
+						  style="width:auto; min-width:500px;">
+					<ui:define name="headerToolBar" />
+					<ui:define name="toolBar">
+						<wi:toolBar action="#{action.onSelectNatCatFluxo(row)}"
+									url="/img/jbpm/StartState.gif"
+		                			ajaxSingle="true"
+		                            reRender="itemDiv, natCatProcessoDiv, isCadastrandoPartes" />
+					</ui:define>
+					<wi:columnOutputText columnId="natureza"
+										 columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
+										 value="#{row.natureza}" />
+					<wi:columnOutputText columnId="categoria"
+										 columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+										 value="#{row.categoria}" />
+									 
+				</wi:dataTable>
+			</s:div>
+		</h:form>
+</ui:composition>

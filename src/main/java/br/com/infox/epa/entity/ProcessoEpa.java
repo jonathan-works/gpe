@@ -19,6 +19,7 @@ import org.hibernate.validator.NotNull;
 import br.com.infox.epa.query.ProcessoEpaQuery;
 import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;
 
 @Entity
@@ -42,6 +43,7 @@ public class ProcessoEpa extends Processo {
 	private Item itemDoProcesso;
 	
 	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>();
+	private List<ParteProcesso> partes;
 	
 	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
 		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
@@ -101,5 +103,20 @@ public class ProcessoEpa extends Processo {
 	public void setItemDoProcesso(Item itemDoProcesso) {
 		this.itemDoProcesso = itemDoProcesso;
 	}
+	
+	public boolean hasPartes(){
+		return naturezaCategoriaFluxo.getNatureza().getHasPartes();
+	}
+
+	@OneToMany(mappedBy="processo", fetch=FetchType.LAZY)
+	public List<ParteProcesso> getPartes() {
+		return partes;
+	}
+
+	public void setPartes(List<ParteProcesso> partes) {
+		this.partes = partes;
+	}
+	
+	
 	
 }
