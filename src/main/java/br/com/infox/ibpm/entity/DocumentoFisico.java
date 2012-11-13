@@ -3,7 +3,6 @@ package br.com.infox.ibpm.entity;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.ws.rs.DefaultValue;
 
 import org.hibernate.validator.Length;
 
@@ -65,7 +64,6 @@ public class DocumentoFisico implements Serializable {
 	}
 	
 	@Column(name="in_ativo", nullable=false)
-	@DefaultValue(value="true")
 	public Boolean getAtivo() {
 		return this.ativo;
 	}
