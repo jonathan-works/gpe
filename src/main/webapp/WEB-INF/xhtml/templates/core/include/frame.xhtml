@@ -22,7 +22,7 @@
                  xmlns:f="http://java.sun.com/jsf/core"
                  xmlns:s="http://jboss.com/products/seam/taglib">
 
-    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />   
+    <ui:include src="#{a4jSkin.cssPage}" />   
          
     <div class="bordaBox">   
        <b class="b1"></b>      
@@ -33,7 +33,7 @@
 	      <s:div styleClass="tituloPagina" >
   		  	  <ui:insert name="title">#{title}</ui:insert>
   		  </s:div>	
-		  <div class="subBorda">
+		  <div class="subBorda	">
 		  	  <div id="divOverflow" style="color: black">			  
 	              <!-- Aki ficara o conteudo da pagina -->
 				  <ui:insert />

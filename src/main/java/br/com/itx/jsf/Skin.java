@@ -37,12 +37,11 @@ public class Skin extends Selector {
 
 	private static final long serialVersionUID = 1L;
 
-	private String skin = "skin/azul";
+	private String skin = "skin/azulVerde";
 	
 	private List<SelectItem> skins;
 	
-	private static final String[] SKINS = {"verde", "azul", "cinza",
-		"altoContraste"}; 
+	private static final String[] SKINS = {"azulVerde", "cinza", "altoContraste"}; 
 	
 	public Skin() {
 		Util util = (Util) Component.getInstance("util");
