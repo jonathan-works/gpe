@@ -35,5 +35,9 @@ public class FluxoManager extends GenericManager{
 	public List<Fluxo> getFluxoList() {
 		return fluxoDAO.getFluxoList();
 	}
+
+	public boolean contemProcessoAtrasado(Fluxo fluxo) {
+		return fluxoDAO.quantidadeProcessosAtrasados(fluxo) > 0;
+	}
 	
 }

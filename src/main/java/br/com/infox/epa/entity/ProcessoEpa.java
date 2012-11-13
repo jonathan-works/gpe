@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
 import org.hibernate.validator.NotNull;
 
 import br.com.infox.epa.query.ProcessoEpaQuery;
+import br.com.infox.epa.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.ParteProcesso;
@@ -41,6 +44,7 @@ public class ProcessoEpa extends Processo {
 	private Integer tempoGasto;
 	private Integer porcentagem;
 	private Item itemDoProcesso;
+	private SituacaoPrazoEnum situacaoPrazo;
 	
 	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>();
 	private List<ParteProcesso> partes;
@@ -103,6 +107,17 @@ public class ProcessoEpa extends Processo {
 	public void setItemDoProcesso(Item itemDoProcesso) {
 		this.itemDoProcesso = itemDoProcesso;
 	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name="st_prazo", nullable=false)
+	@NotNull
+	public SituacaoPrazoEnum getSituacaoPrazo() {
+		return situacaoPrazo;
+	}
+
+	public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
+		this.situacaoPrazo = situacaoPrazo;
+	}
 	
 	public boolean hasPartes(){
 		return naturezaCategoriaFluxo.getNatureza().getHasPartes();
@@ -116,7 +131,6 @@ public class ProcessoEpa extends Processo {
 	public void setPartes(List<ParteProcesso> partes) {
 		this.partes = partes;
 	}
-	
 	
 	
 }

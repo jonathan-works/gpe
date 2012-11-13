@@ -15,10 +15,12 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import br.com.infox.epa.entity.LocalizacaoTurno;
+import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.epa.entity.ProcessoEpaTarefa;
 import br.com.infox.epa.manager.LocalizacaoTurnoManager;
 import br.com.infox.epa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epa.service.startup.TarefaTimerStarter;
+import br.com.infox.epa.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.timer.TimerUtil;
 
@@ -76,6 +78,11 @@ public class TarefaTimerProcessor {
 				} else {
 					pt.setPorcentagem((pt.getTempoGasto()*100)/(pt.getTarefa().getPrazo()*60));
 				}
+			}
+			
+			ProcessoEpa processoEpa = pt.getProcessoEpa();
+			if (pt.getPorcentagem() > 100 && processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
+				processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
 			}
 			pt.setUltimoDisparo(fireTime);
 			processoEpaTarefaManager.update(pt);

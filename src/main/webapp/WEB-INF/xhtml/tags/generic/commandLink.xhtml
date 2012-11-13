@@ -29,7 +29,7 @@
 					disabled="#{disabled}"
 					oncomplete="#{oncomplete}"
 					ajaxSingle="#{ajaxSingle}"
-					limitToList="#{limitToList}"
+					limitToList="#{wi:get(limitToList, true)}"
 					rendered="#{wi:get(rendered, true)}">
 		<ui:insert />				
 	</a:commandLink>

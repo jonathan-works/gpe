@@ -1,6 +1,8 @@
 package br.com.infox.epa.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -30,6 +32,12 @@ public class FluxoDAO extends GenericDAO {
 	 */
 	public List<Fluxo> getFluxoList() {
 		return getNamedResultList(FluxoQuery.LIST_ATIVOS, null);
+	}
+	
+	public Long quantidadeProcessosAtrasados(Fluxo fluxo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(FluxoQuery.FLUXO_PARAM, fluxo);
+		return getNamedSingleResult(FluxoQuery.COUNT_PROCESSOS_ATRASADOS, map);
 	}
 	
 }

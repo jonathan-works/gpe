@@ -42,7 +42,10 @@ import br.com.infox.epa.query.FluxoQuery;
 @Table(name = "tb_fluxo", schema="public")
 @NamedQueries(value={
 	@NamedQuery(name=FluxoQuery.LIST_ATIVOS,
-			    query=FluxoQuery.LIST_ATIVOS_QUERY)
+			    query=FluxoQuery.LIST_ATIVOS_QUERY),
+	@NamedQuery(name=FluxoQuery.COUNT_PROCESSOS_ATRASADOS,
+			    query=FluxoQuery.COUNT_PROCESSOS_ATRASADOS_QUERY)
+			    
   })
 public class Fluxo implements java.io.Serializable {
 

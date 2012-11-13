@@ -47,9 +47,9 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 		List<Object> classes = new ArrayList<Object>();
 		for (ProcessoEpaTarefa row: list(15)) {
 			if (row.getPorcentagem() != null && row.getPorcentagem() > 100) {
-				classes.add("red-tr");
+				classes.add("red-back");
 			} else {
-				classes.add("white-tr");
+				classes.add("white-back");
 			}
 		}
 		return StringUtil.concatList(classes, ",");

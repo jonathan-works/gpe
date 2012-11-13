@@ -20,6 +20,7 @@ import br.com.infox.epa.manager.LocalizacaoTurnoManager;
 import br.com.infox.epa.manager.ProcessoEpaManager;
 import br.com.infox.epa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epa.service.startup.ProcessoTimerStarter;
+import br.com.infox.epa.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.type.PrazoEnum;
@@ -90,6 +91,9 @@ public class ProcessoTimerProcessor {
 				processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100)/
 						f.getQtPrazo());
 			}
+			if (processoEpa.getPorcentagem() > 100) {
+				processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+			}
 			processoEpaManager.update(processoEpa);
 		}
 	}
@@ -107,6 +111,11 @@ public class ProcessoTimerProcessor {
 				if(tarefa.getPrazo() != null && tarefa.getPrazo() != 0) {
 					pt.setPorcentagem((pt.getTempoGasto()*100)/
 							tarefa.getPrazo());
+				}
+				
+				ProcessoEpa processoEpa = pt.getProcessoEpa();
+				if (pt.getPorcentagem() > 100 && processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
+					processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
 				}
 				processoEpaTarefaManager.update(pt);
 			}

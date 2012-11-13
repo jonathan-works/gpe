@@ -36,7 +36,7 @@
 	        <rich:panel style="overflow:auto; width: #{panelWidth}; #{style}">
 	            <f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 				<ui:insert />
-	            <s:div style="clear:both; vertical-align: bottom;" rendered="#{wi:get(requiredForm ,true)}">
+	            <s:div style="clear:both; vertical-align: bottom;" rendered="#{wi:get(requiredForm,true)}">
                    <img src="#{util.contextPath}#{a4jSkin.imgIconBalao}"/> 
                    <div style="display: inline;">
 	                   <span class="required">*</span>

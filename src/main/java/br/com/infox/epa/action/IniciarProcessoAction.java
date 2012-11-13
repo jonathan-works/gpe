@@ -19,6 +19,7 @@ import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.epa.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.epa.manager.ProcessoEpaManager;
 import br.com.infox.epa.service.IniciarProcessoService;
+import br.com.infox.epa.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Usuario;
@@ -57,6 +58,7 @@ public class IniciarProcessoAction {
 			Usuario usuarioLogado = Authenticator.getUsuarioLogado();
 			Localizacao localizacao = Authenticator.getLocalizacaoAtual();
 			processoEpa = new ProcessoEpa();
+			processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
 			processoEpa.setDataInicio(new Date());
 			processoEpa.setNumeroProcesso("");
 			processoEpa.setUsuarioCadastroProcesso(usuarioLogado);

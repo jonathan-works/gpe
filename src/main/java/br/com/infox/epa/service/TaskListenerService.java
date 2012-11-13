@@ -20,6 +20,7 @@ import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.manager.ProcessoLocalizacaoIbpmManager;
+import br.com.infox.ibpm.type.PrazoEnum;
 
 @Name(TaskListenerService.NAME)
 public class TaskListenerService extends AbstractAction {
@@ -59,10 +60,13 @@ public class TaskListenerService extends AbstractAction {
 		pt.setTaskInstance(taskInstance.getId());
 		pt.setUltimoDisparo(new Date());
 		pt.setTempoGasto(0);
-		if (tarefa.getPrazo() != null) {
-			pt.setTempoPrevisto(tarefa.getPrazo());
-		} else {
+		
+		pt.setTempoPrevisto(tarefa.getPrazo());
+		if (pt.getTempoPrevisto() == null) {
 			pt.setTempoPrevisto(0);
+		}
+		if (tarefa.getTipoPrazo() == PrazoEnum.H) {
+			pt.setTempoPrevisto(pt.getTempoPrevisto() * 60);
 		}
 
 		persist(pt);

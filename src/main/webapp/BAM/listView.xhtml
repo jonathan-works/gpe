@@ -21,6 +21,7 @@
 				xmlns:wi= "http://www.itx.com.br/jsf"
 				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
 				xmlns:c="http://java.sun.com/jstl/core"
 				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:a="http://richfaces.org/a4j"
@@ -30,42 +31,68 @@
 
 	<ui:define name="body">
 		<style>
-			.red-tr {
-				background-color: red;
+			.circ {
+				width:15px;
+				height:15px;
+				border:0px;
+				border-radius:15px;
 			}
-			.yellow-tr {
+			
+			.yellow-back {
 				background-color: yellow;
+			}
+			
+			.red-back {
+				background-color: red;
 			}
 		</style>
 		
 		<wi:dataForm formId="pesquisaFluxoForm"
-					 formTitle="Pesquisar Fluxo">
-			<wi:selectOneMenuEntity id="fluxoCombo"
-									label="Fluxo"
-									items="#{bamAction.fluxoList}"
-									showLabelSelecione="true"
-									value="#{processoEpaNaoFinalizadoList.fluxo}" />
-									
-			<ui:define name="buttons">
-				<wi:commandButton id="pesquisar"
-								  value="Pesquisar"
-								  reRender="processoList" />
-			</ui:define>
+					 formTitle="Pesquisar Fluxo"
+					 requiredForm="false">
+					 
+			 <wi:inputText value="#{processoEpaNaoFinalizadoList.fluxoName}" styleDiv="margin:0px; padding-right: 0px" id="statesinput" />
+             <h:graphicImage value="/img/arrow.png"
+                 onclick="#{rich:component('suggestion')}.callSuggestion(true)"
+                 alt="" />
+					 
+			<rich:suggestionbox id="suggestion" 
+								height="200"  
+								width="250" 
+					            suggestionAction="#{bamAction.getFluxoSuggest}" 
+					            var="row"
+					            for="statesinput"
+					            fetchValue="#{row.fluxo}">
+	            <h:column>
+	                <h:graphicImage value="/img/balao.png" rendered="#{bamAction.contemProcessoAtrasado(row)}" />
+	            </h:column>
+	            <h:column>
+	                <h:outputText value="#{row.fluxo}" />
+	            </h:column>
+	        </rich:suggestionbox>
+	        
+	        <wi:commandButton id="pesquisar"
+							  value="Pesquisar"
+							  action="#{processoEpaNaoFinalizadoList.setFluxo(null)}"
+							  reRender="processoList" />
+								  
+			<ui:define name="buttons"/>
 		</wi:dataForm>
 		
 		<s:div id="processoList">
 			<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
 						  bean="#{processoEpaNaoFinalizadoList}"
-						  tableTitle="Processos"
+						  tableTitle="Processos - Prazo: #{processoEpaNaoFinalizadoList.fluxo.qtPrazo} (dias)"
 						  showGrid="#{not empty processoEpaNaoFinalizadoList.fluxo}"
 						  panelWidth="100%"
-						  rowClasses="#{processoEpaNaoFinalizadoList.rowClasses()}"
 						  onRowMouseOut=""
 						  onRowMouseOver=""
 						  id="processoDataTable">
 						  
 				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar"> 
+					<div style="float: left;" class="#{row.porcentagem > 100 ? 'circ red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'circ yellow-back' : '')}">
+					</div>
 					<wi:toolBar url="/img/edit.gif"
 								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
 								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
@@ -80,53 +107,81 @@
 									 columnHeader="Tempo Gasto (em dias)"
 									 value="#{row.tempoGasto}" />
 									 
-				<wi:columnOutputText columnId="prazoFluxo"
-									 columnHeader="Prazo (em dias)"
-									 value="#{row.naturezaCategoriaFluxo.fluxo.qtPrazo}" />
-
 				<ui:param name="porc" value="#{row.porcentagem > 100 ? '> 100' : row.porcentagem}" />
 				<wi:columnOutputText columnId="porcentagem"
 									 columnHeader="Porcentagem"
-									 value="#{not empty row.porcentagem ? row.porcentagem : 0}%" />
+									 value="#{not empty row.porcentagem ? porc : 0}%" />
 				
 			</wi:dataTable>
 		</s:div>
 		
 		<wi:modalPanel id="processoEpaTarefaModal"
 					   labelHeader="Detalhe do Processo"
-					   width="600"
+					   width="800"
 					   height="400">
 			<wi:dataTable values="#{processoEpaTarefaList.list(15)}"
 						  bean="#{processoEpaTarefaList}"
 						  tableTitle="Tarefas"
-						  showToolbarColumn="false"
+						  showToolbarColumn="false" 
 						  panelWidth="97%"
+						  showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
 						  rowClasses="#{processoEpaTarefaList.rowClasses()}"
 						  onRowMouseOut=""
 						  onRowMouseOver=""
 						  id="processoTarefaDataTable">
-						  
+				
 				<wi:columnOutputText columnId="tarefa"
 									 columnHeader="Tarefa"
-									 columnWidth="20%"
 									 value="#{row.tarefa.tarefa}" />
 									 
-				<wi:columnOutputText columnId="tempoGasto"
-									 columnHeader="Tempo Gasto (em minutos)"
-									 columnWidth="20%"
-									 value="#{row.tempoGasto}" />
-									 
-				<wi:columnOutputText columnId="tempoPrevisto"
-									 columnHeader="Tempo Previsto (em minutos)"
-									 columnWidth="20%"
-									 value="#{row.tempoPrevisto}" />
-									 
+				<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
+				<rich:column styleClass="defaultCell">
+					<f:facet name="header">Localização / Usuário</f:facet>
+					<div style="width:50%; float:left">
+						<h:graphicImage url="/img/localizacao.gif"
+										rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
+						<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
+					</div>
+					<div style="width:50%; float:left">
+						<h:graphicImage url="/img/usuario.gif"
+										rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
+						<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
+					<c:if test="#{empty userHandler.getUsuario(task.actorId)}">
+						<h:outputText value="#{userHandler.getUsuarioByTarefa(task)}" />
+					</c:if>
+					</div>
+				</rich:column>
+				
 				<ui:param name="prazoEstourado" value="#{row.porcentagem > 100}" />
 				<ui:param name="porc" value="#{prazoEstourado ? '> 100' : row.porcentagem}" />
 				<wi:columnOutputText columnId="porcentagem"
 									 columnHeader="Porcentagem"
-									 columnWidth="20%"
 									 value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}" />
+									 
+									 
+				<rich:column style="text-align: center" 
+							 styleClass="defaultCell">
+					<f:facet name="header">Início</f:facet>
+					<h:outputText value="#{task.start}">
+						<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+					</h:outputText>
+				</rich:column>
+				
+				<rich:column style="text-align: center" 
+							 styleClass="defaultCell">
+					<f:facet name="header">Término</f:facet>
+					<h:outputText value="#{task.end}">
+						<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+					</h:outputText>
+				</rich:column>
+				
+				<wi:columnOutputText columnId="tempoGasto"
+									 columnHeader="Tempo Gasto"
+									 value="#{row.tempoGasto}  (#{processoEpaTarefa.tarefa.tipoPrazo == 'D' ? 'dias' : 'minutos'})" />
+									 
+				<wi:columnOutputText columnId="tempoPrevisto"
+									 columnHeader="Tempo Previsto"
+									 value="#{row.tempoPrevisto}  (#{processoEpaTarefa.tarefa.tipoPrazo == 'D' ? 'dias' : 'minutos'})" />
 			</wi:dataTable>
 		</wi:modalPanel>
 	</ui:define>

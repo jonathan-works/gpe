@@ -1,7 +1,5 @@
 package br.com.infox.epa.list;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Query;
@@ -15,7 +13,6 @@ import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.util.EntityUtil;
-import br.com.itx.util.StringUtil;
 
 /**
  * EntityList que consulta todos os processos não finalizados de um determinado fluxo
@@ -29,10 +26,13 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 	public static final String NAME = "processoEpaNaoFinalizadoList";
 
 	private Fluxo fluxo;
+	private String fluxoName;
 	
 	private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o " +
 												   "where o.dataFim is null";
-	private static final String DEFAULT_ORDER = "coalesce(o.porcentagem, 0) desc, o.idProcesso";
+	private static final String DEFAULT_ORDER = "case when o.situacaoPrazo = 'PAT' then 0" +
+												   "    when o.situacaoPrazo = 'TAT' then 1" +
+												   "    else 2 end asc, o.idProcesso";
 	
 	private static final String R1 = "o.naturezaCategoriaFluxo.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
 	
@@ -63,6 +63,11 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 	}
 
 	public Fluxo getFluxo() {
+		if (fluxoName != null && fluxo == null) {
+			Query q = EntityUtil.createQuery("select o from Fluxo o where o.fluxo = :name");
+			q.setParameter("name", fluxoName);
+			fluxo = EntityUtil.getSingleResult(q);
+		}
 		return fluxo;
 	}
 
@@ -78,18 +83,12 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 		return (Long) query.getSingleResult() > 0;
 	}
 	
-	public String rowClasses() {
-		List<Object> classes = new ArrayList<Object>();
-		for (ProcessoEpa row: list(15)) {
-			if (row.getPorcentagem() != null && row.getPorcentagem() > 100) {
-				classes.add("red-tr");
-			} else if (contemTarefaForaPrazo(row)){
-				classes.add("yellow-tr");
-			} else {
-				classes.add("white-tr");
-			}
-		}
-		return StringUtil.concatList(classes, ",");
+	public String getFluxoName() {
+		return fluxoName;
+	}
+
+	public void setFluxoName(String fluxoName) {
+		this.fluxoName = fluxoName;
 	}
 
 }
