@@ -6,7 +6,7 @@
 				xmlns:wi="http://www.itx.com.br/jsf"
 			    xmlns:h="http://java.sun.com/jsf/html"
 			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-				template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+				template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -28,87 +28,129 @@
 
 <ui:define name="searchGrid">   
     <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
-    <wi:datagrid 
-    	bean="#{tipoModeloDocumentoGrid}" 
-    	searchBean="#{tipoModeloDocumentoSearch}" 
-    	title="#{messages['tipoModeloDocumento.titleGrid']}"
-    	actionButtonLimpar="#{home.newInstance()}"
-    />
+    
+    <wi:dataTable	values="#{tipoModeloDocumentoList.list(15)}"
+					bean="#{tipoModeloDocumentoList}"
+					tableTitle="#{messages['tipoModeloDocumento.titleGrid']}"
+					id="tipoModeloDocumentoList"
+					rowId="#{row.idTipoModeloDocumento}" >
+
+		<ui:define name="searchForm">
+			<wi:searchForm	formId="pesquisarTipoModeloDocumentoForm"
+							formTitle="#{messages['tipoModeloDocumento.titleSearchForm']}">
+				<wi:suggest id="grupoModeloDocumento"
+							bean="#{grupoModeloDocumentoSuggest}"
+							assignTo="tipoModeloDocumentoList.entity.grupoModeloDocumento"
+							label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}" />
+				<wi:inputText id="tipoModeloDocumento"
+							  label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+							  value="#{tipoModeloDocumentoList.entity.tipoModeloDocumento}" />
+				<wi:inputText id="abreviacao"
+							  label="#{messages['tipoModeloDocumento.abreviacao']}"
+							  value="#{tipoModeloDocumentoList.entity.abreviacao}" />
+				<wi:selectSituacaoOneMenu id="ativo"
+										  label="#{messages['tipoModeloDocumento.ativo']}"
+										  value="#{tipoModeloDocumentoList.entity.ativo}" />
+			</wi:searchForm>
+		</ui:define>					
+					
+		<wi:columnOutputText	columnHeader="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
+								value="#{row.grupoModeloDocumento}" />
+		<wi:columnOutputText	columnHeader="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+								value="#{row.tipoModeloDocumento}" />
+		<wi:columnOutputText	columnHeader="#{messages['tipoModeloDocumento.abreviacao']}"
+								value="#{row.abreviacao}" />
+		<wi:columnSituacao	columnHeader="#{messages['tipoModeloDocumento.ativo']}"
+							value="#{row.ativo}" />
+    </wi:dataTable>
+    
 </ui:define>
 
 <ui:define name="form">
-	<c:if test="#{canEdit}">
-		<wi:form form="#{tipoModeloDocumentoForm}" 
-		formTitle="#{messages['tipoModeloDocumento.titleForm']}"
-		persistSemNewInstance="#{true}" />
-	</c:if>
-	<c:if test="#{not canEdit}">
-		<wi:view form="#{tipoModeloDocumentoView}" columns="4" title="#{messages['tipoModeloDocumento.titleView']}"/>
-	</c:if>
+	<wi:dataForm formId="tipoModeloDocumentoForm"
+				 formTitle="#{messages['tipoModeloDocumento.titleForm']}">
+		<wi:suggest id="grupoModeloDocumento"
+							bean="#{grupoModeloDocumentoSuggest}"
+							assignTo="tipoModeloDocumentoHome.instance.grupoModeloDocumento"
+							label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}" 
+							required="true" />
+		<wi:inputText id="tipoModeloDocumento"
+					  label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+					  value="#{tipoModeloDocumentoHome.instance.tipoModeloDocumento}"
+					  required="true" />
+		<wi:inputText id="abreviacao"
+					  label="#{messages['tipoModeloDocumento.abreviacao']}"
+					  value="#{tipoModeloDocumentoHome.instance.abreviacao}"
+					  required="true" />
+		<wi:selectSituacaoRadio id="ativo"
+							    label="#{messages['tipoModeloDocumento.ativo']}"
+							    required="true"
+							    value="#{tipoModeloDocumentoHome.instance.ativo}" />
+	</wi:dataForm>
 </ui:define>
 
-		<ui:define name="tabs">
-					<rich:tab label="#{messages['tipoModeloDocumento.modeloDocumentoList']}"
-					    status=":status"
-						id="modeloDocumento"
-						rendered="#{home.managed}">
-							<wi:datalist bean="#{modeloDocumentoGrid}" 
-								gridId="modeloDocumentoGridTab"
-								toolBar="toolBarTab"
-								searchBean="#{modeloDocumentoSearch}" 
-								linkDetalhe="/ModeloDocumento/listView.seam"
-								goBackUrl="/TipoModeloDocumento/listView.seam"
-								goBackId="#{home.id}"	
-								goBackTab="modeloDocumento"
-								headerToolBar="none"
-								columnList="ativo,tipoModeloDocumento,tituloModeloDocumento"
-								title="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoHome.instance)}"							
-							/>
-					</rich:tab>
+<ui:define name="tabs">
+			<rich:tab label="#{messages['tipoModeloDocumento.modeloDocumentoList']}"
+			    status=":status"
+				id="modeloDocumento"
+				rendered="#{home.managed}">
+					<wi:datalist bean="#{modeloDocumentoGrid}" 
+						gridId="modeloDocumentoGridTab"
+						toolBar="toolBarTab"
+						searchBean="#{modeloDocumentoSearch}" 
+						linkDetalhe="/ModeloDocumento/listView.seam"
+						goBackUrl="/TipoModeloDocumento/listView.seam"
+						goBackId="#{home.id}"	
+						goBackTab="modeloDocumento"
+						headerToolBar="none"
+						columnList="ativo,tipoModeloDocumento,tituloModeloDocumento"
+						title="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoHome.instance)}"							
+					/>
+			</rich:tab>
 
-					<rich:tab label="Variáveis"
-					    status=":status"
-						id="variaveis"
-						rendered="#{home.managed}">
-						<wi:ajaxDiv id="divM2MtipoDoc">
-							<wi:m2mGrid 
-								title="Variáveis" 
-								gridId="variavelTipoModelo"
-								leftGrid="#{variavelTipoModeloGrid}" 
-								useDatamodel="false"
-								addExpression="variavelTipoModeloHome.addVariavelTipoModelo(row)"
-								removeExpression="variavelTipoModeloHome.removeVariavelTipoModelo(row)"
-								rightGrid="#{variavelGrid}"
-								searchBean="#{variavelSearch}" 
-								showLogicOperator="false" 
-								showButtonLimpar="true"
-								actionButtonLimpar="#{variavelHome.newInstance()}"
-								widthExterno="100%" />
-						</wi:ajaxDiv>
-						
-					</rich:tab>
-					
-					<rich:tab label="Papéis"
-						action="#{tipoModeloDocumentoPapelHome.newInstance()}"
-					    status=":status"
-						id="papeis"
-						rendered="#{home.managed}">
-						
-						<wi:ajaxDiv id="divPapeis">
-							<wi:form form="#{tipoModeloDocumentoPapelForm}" 
-								home="#{tipoModeloDocumentoPapelHome}"
-								formTitle="Papeis"
-								reRenderSave="divPapeis" />
+			<rich:tab label="Variáveis"
+			    status=":status"
+				id="variaveis"
+				rendered="#{home.managed}">
+				<wi:ajaxDiv id="divM2MtipoDoc">
+					<wi:m2mGrid 
+						title="Variáveis" 
+						gridId="variavelTipoModelo"
+						leftGrid="#{variavelTipoModeloGrid}" 
+						useDatamodel="false"
+						addExpression="variavelTipoModeloHome.addVariavelTipoModelo(row)"
+						removeExpression="variavelTipoModeloHome.removeVariavelTipoModelo(row)"
+						rightGrid="#{variavelGrid}"
+						searchBean="#{variavelSearch}" 
+						showLogicOperator="false" 
+						showButtonLimpar="true"
+						actionButtonLimpar="#{variavelHome.newInstance()}"
+						widthExterno="100%" />
+				</wi:ajaxDiv>
+				
+			</rich:tab>
+			
+			<rich:tab label="Papéis"
+				action="#{tipoModeloDocumentoPapelHome.newInstance()}"
+			    status=":status"
+				id="papeis"
+				rendered="#{home.managed}">
+				
+				<wi:ajaxDiv id="divPapeis">
+					<wi:form form="#{tipoModeloDocumentoPapelForm}" 
+						home="#{tipoModeloDocumentoPapelHome}"
+						formTitle="Papeis"
+						reRenderSave="divPapeis" />
 
-							<wi:datalist bean="#{tipoModeloDocumentoPapelGrid}" 
-								toolBar="toolBarRemove"
-								headerToolBar="none"
-										 reRenderRemove="divPapeis"
-										 home="#{tipoModeloDocumentoPapelHome}"
-										 title="Papéis associados ao tipo de modelo #{(tipoModeloDocumentoHome.instance)}"/>	
-						</wi:ajaxDiv>
-					</rich:tab>					
+					<wi:datalist bean="#{tipoModeloDocumentoPapelGrid}" 
+						toolBar="toolBarRemove"
+						headerToolBar="none"
+								 reRenderRemove="divPapeis"
+								 home="#{tipoModeloDocumentoPapelHome}"
+								 title="Papéis associados ao tipo de modelo #{(tipoModeloDocumentoHome.instance)}"/>	
+				</wi:ajaxDiv>
+			</rich:tab>					
 
-		</ui:define> 
+</ui:define> 
  
 </ui:composition>

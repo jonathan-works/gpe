@@ -15,53 +15,22 @@
 */
 package br.com.infox.ibpm.home;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.contexts.Contexts;
 
-import br.com.infox.ibpm.component.suggest.GrupoModeloDocumentoSuggestBean;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.itx.util.ComponentUtil;
 
-@Name("tipoModeloDocumentoHome")
+@Name(TipoModeloDocumentoHome.NAME)
 @BypassInterceptors
 public class TipoModeloDocumentoHome
 		extends
 			AbstractTipoModeloDocumentoHome<TipoModeloDocumento> {
+	
+	public static final String NAME = "tipoModeloDocumentoHome";
 
 	private static final long serialVersionUID = 1L;
 
-
-	@Override
-	public void newInstance() {
-		Contexts.removeFromAllContexts("grupoModeloDocumentoSuggest");	
-		super.newInstance();
-	}
-	
-	@Override
-	public void setId(Object id) {
-		boolean changed = id != null && !id.equals(getId());
-		super.setId(id);
-		if (changed) {
-			getGrupoModeloDocumentoSuggest().setInstance(getInstance().getGrupoModeloDocumento());
-		}
-		if (id == null) {
-			getGrupoModeloDocumentoSuggest().setInstance(null);
-		} 
-	}
-	
-	@Override
-	protected boolean beforePersistOrUpdate() {
-		getInstance().setGrupoModeloDocumento(getGrupoModeloDocumentoSuggest().getInstance());
-		return super.beforePersistOrUpdate();
-	}
-	 
-	private GrupoModeloDocumentoSuggestBean getGrupoModeloDocumentoSuggest() {
-		GrupoModeloDocumentoSuggestBean grupoModeloDocumentoSuggest = (GrupoModeloDocumentoSuggestBean) Component.getInstance("grupoModeloDocumentoSuggest");
-		return grupoModeloDocumentoSuggest ;
-	}
-	
 	public static TipoModeloDocumentoHome instance() {
 		return ComponentUtil.getComponent("tipoModeloDocumentoHome");
 	}

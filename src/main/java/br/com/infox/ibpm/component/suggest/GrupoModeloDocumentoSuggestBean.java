@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.component.suggest;
 
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
@@ -22,9 +23,11 @@ import br.com.infox.component.suggest.AbstractSuggestBean;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 
 
-@Name("grupoModeloDocumentoSuggest")
+@Name(GrupoModeloDocumentoSuggestBean.NAME)
 @BypassInterceptors
+@Install(precedence=Install.FRAMEWORK)
 public class GrupoModeloDocumentoSuggestBean extends AbstractSuggestBean<GrupoModeloDocumento> {
+	public static final String NAME = "grupoModeloDocumentoSuggest"; 
 
 	private static final long serialVersionUID = 1L;
 	

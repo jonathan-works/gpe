@@ -22,7 +22,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:s="http://jboss.com/products/seam/taglib"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-	template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
 	xmlns:a="http://richfaces.org/a4j">
 
 	<ui:define name="title">#{messages['modeloDocumento.titlePage']}</ui:define>
@@ -56,7 +56,8 @@
 				columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
 				value="#{row.tipoModeloDocumento}" />
 			<wi:columnSituacao
-				columnHeader="#{messages['modeloDocumento.ativo']}" />
+				columnHeader="#{messages['modeloDocumento.ativo']}"
+				value="#{row.ativo}"/>
 		</wi:dataTable>
 	</ui:define>
 
@@ -66,7 +67,8 @@
 			<wi:selectOneMenuEntity id="tipoModeloDocumento"
 				label="#{messages['modeloDocumento.tipoModeloDocumento']}"
 				value="#{modeloDocumentoHome.instance.tipoModeloDocumento}"
-				items="#{tipoModeloDocumentoItems}" required="true"
+				items="#{tipoModeloDocumentoItems}"
+				required="true"
 				showLabelSelecione="true" />
 			<wi:inputText id="tituloModeloDocumento"
 				label="#{messages['modeloDocumento.tituloModeloDocumento']}"
@@ -74,11 +76,13 @@
 				required="true" />
 			<wi:selectSituacaoRadio id="ativo"
 				label="#{messages['modeloDocumento.ativo']}"
-				value="#{modeloDocumentoHome.instance.ativo}" required="true" />
+				value="#{modeloDocumentoHome.instance.ativo}"
+				required="true" />
 			<wi:editor id="modeloDocumento"
 				label="#{messages['modeloDocumento.modeloDocumento']}"
 				value="#{modeloDocumentoHome.instance.modeloDocumento}"
-				showVariables="true" required="true" />
+				showVariables="true"
+				required="true" />
 
 			<wi:imageUpload imageBean="#{imageFileUpload}" />
 
