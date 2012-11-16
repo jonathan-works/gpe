@@ -43,23 +43,88 @@
 			background-color:#FFFFFF; 
 			border-left:1px solid #999; 
 			border-right:1px solid #999;
-		}	
+		}
+		
+		.banner {
+			margin: 0px 0px 0px 0px;
+			height: 85px;
+			width: 100%;
+			border-bottom-width: 0px;
+		}
+		
+		.banner div {
+			position:absolute;
+		}
+		
+		.banner .left {
+			width:25%;
+			min-width:179px;
+			left:0px;
+			top:0px;
+			height:85px;
+		}
+		
+		.banner .center {
+			width:50%;
+			min-width:358px;
+			left:25%;
+			text-align:center;
+			font-size: 20pt;
+			top:0px;
+			height:85px;
+		}
+		
+		.banner .center .title {
+			width:100%;
+			padding-top:15px;
+		}
+
+		.banner .right {
+			width:25%;
+			min-width:179px;
+			left:75%;
+			height:85px;
+		}
+
+		.banner .clock {
+			right:5%;
+			top:30%;
+			text-align: right;
+			font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+			font-size: 10pt;
+			font-weight: bold;
+		}
+		
+		div.rich-panel {
+			margin:20px 0 0 10px;
+			max-width:98%;
+			padding-top:2px;
+		}
 		
 		.bordaBox .tituloPagina {		
-			text-align: left; 
 			font-weight: bold;
 			font-size: 14pt;
 			color: #ffffff;
 			position:absolute;
-			right: 5%;
-			margin-top: 4px;	
+			margin-top: 3px;
+		}
+		
+		.bordaBox {
+			text-align: left;
+		}
+		
+		.tituloPagina {
+			width:99%;
+			text-align: center;
 		}
 		
 		#divOverflow {
 			position:relative;
-			width:100%;
-			height:100%;
+			max-width:100%;
+			min-width:859px;
+			height:97%;
 			overflow:auto;
+			margin-top:14px;
 		}
 		
 		/* CSS para a Pagina */									
@@ -85,9 +150,97 @@
 			color: #888888;
 		}
 		
-		#login input, #login textarea, #login select {
-			width: 200px;
+		/* Layout Tela de Login */
+		/* Início */
+		.corpoSuperior, .corpoInferior {
+			height:50%;
 		}
+		
+		.logo, .logo_inferior, .login {
+			width:50%;
+			text-align:center;
+		}
+		
+		.logo {
+ 			position:absolute;
+ 			float:left;
+			bottom:50%
+		}
+		.logo_inferior {
+			position:relative;
+			float:left;
+			bottom:0%;
+		}
+		.login {
+			position: absolute;
+			float: right;
+			bottom: 50%;
+			right: 0px;
+		}
+		
+		.bg_login label.label_login {
+		    padding-left: 0;
+		    padding-top: 8px;
+		    position: absolute;
+		    text-align: left;
+		}
+		
+		.bg_login {
+			height:140px;
+			width:350px;
+			border-radius: 10px 10px 0px 0px;
+		}
+		
+		.newPasswd {
+			position:absolute;
+			top:13px;
+			left:350px;
+			height:127px;
+			width:240px;
+			border-radius:0px 10px 0px 0px;
+		}
+		
+		.newPasswd label.label_login {
+		    padding-left: 0;
+		    padding-top: 8px;
+		    position: absolute;
+		    text-align: left;
+		}
+		
+		.newPasswd .input_login {
+			margin-top:25px;
+			padding-left:0px;
+		}
+		
+		.login .input_login {
+			font-size: 20px !important;
+			border-radius: 7px;
+			max-width: 200px;
+		}
+		
+		.bg_login .input_login {
+			margin-top: 25px;
+			padding-left:4px;
+		}
+		.login_inferior {
+			position:relative;
+			float:right;
+			width:50%;
+			text-align:center;
+			bottom:0%;
+		}
+		.bg_login_inferior {
+			height: 140px;
+			width: 350px;
+		}
+		.bg_login_inferior .input_button {
+			padding-left:10px;
+			padding-right:10px;
+			border-radius:5px;
+			font-size: 16px;
+			margin-top: 25px;
+		}
+		/* Fim */
 		
 		.propertyView {
 			min-width: 250px;
@@ -176,15 +329,16 @@
 			margin-top: 0;
 		}
 		
+		html, body {
+			width:100%;
+			height:100%;
+		}
+		
 		body {
 			margin: 0px;
 			font-family: Arial, sans-serif;
 			color: #616161;
 			background-color: #E6ECF4;
-		}
-		
-		.pageBody {
-			padding: 15px;
 		}
 		
 		.panel {

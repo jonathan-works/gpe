@@ -14,130 +14,78 @@
 	template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
 	
 	<ui:define name="baseHead">
-		<style type="text/css">	
-			input[type='text'],input[type='password'] {
-				border: 0px;
-				font-size: 12px;
-				background-repeat: no-repeat;
-				background-color: white;
-				color: black;
-				font-size: #{skinZoom.skinZoom};
-			}
-		</style>
+		
 	</ui:define>
 
-	<ui:define name="baseBody"> 
-		<s:div styleClass="pageBody" id="pageBody">
-			<ui:param name="useCertLogin"  value="#{loginComCertificado or producao}" />  
+	<ui:define name="baseBody">
+			<ui:param name="useCertLogin"  value="#{loginComCertificado or producao}" />
 			
-		    <rich:modalPanel id="skinPanel" height="100">
-	 
-				<f:facet name="header">Esquema de cores da aplicação</f:facet>
-				<f:facet name="controls">
-					<h:panelGroup>
-						<h:graphicImage value="/img/closeMP.gif"
-							onclick="Richfaces.hideModalPanel('skinPanel')"/>
-					</h:panelGroup>				
-				</f:facet>
-				<s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml">			
-					<ui:define name="label">
-						<h:outputText value="Escolha o esquema:" styleClass="label" />
-					</ui:define>
-					<h:form>
-						<h:selectOneMenu value="#{wiSkin.skin}" style="width: 250px"
-							onchange="this.form.submit();">
-							<f:selectItems value="#{wiSkin.skinList}" />
-						</h:selectOneMenu>
-					</h:form>
-				</s:decorate>			
-			</rich:modalPanel>			
-		     
 			<h:form id="login">
-			    <br/><br/><br/><br/>
-			    <table border="0" align="center" cellpadding="0" cellspacing="0">
-					<tr>
-						<td width="40">&nbsp;</td>
-						<td width="350" class="modSup">&nbsp;</td>
-						<td width="450">&nbsp;</td>
-					</tr>
-					<tr>
-						<td valign="top" align="center" class="modEsq">					
-							<br/><br/>
-							<h:graphicImage 
-								url="#{a4jSkin.imgIconPalette}" 
-								style="cursor:pointer"
-								title="Alterar o esquema de cores"
-								onclick="Richfaces.showModalPanel('skinPanel')" /><br/>
-																				
-							<h:commandLink 
-								action="#{skinZoom.setTmNormal()}"> 
-								<h:graphicImage
-								style="width: 16px;	height: 16px;"
-								title="Tamanho Normal"
-								url="#{a4jSkin.imgIconZoomNormal}"/>
-							</h:commandLink> <br/>	
-							
-							<h:commandLink 
-								action="#{skinZoom.setTmMedio()}"> 
-								<h:graphicImage 
-								style="width: 16px;	height: 16px;"
-								title="Tamanho Médio"
-								url="#{a4jSkin.imgIconZoomMedio}"/>
-							</h:commandLink> <br/>	
-							
-							<h:commandLink 
-								action="#{skinZoom.setTmGrande()}"> 
-								<h:graphicImage 
-								style="width: 16px;	height: 16px;"
-								title="Tamanho Grande"
-								url="#{a4jSkin.imgIconZoomGrande}"/>
-							</h:commandLink> <br/>					
-						</td>
-						<td class="modCentral" align="center">								
-							<div id="divLogin" style="display: block;">					
-								<rich:panel	styleClass="painelLog" headerClass="painelLoginHeader">
-									<f:facet name="header">Identificação</f:facet>
-									<p>#{not useCertLogin ? 'Informe o seu nome de usuário e senha' : 'Acessar com certificado digital'}</p>
-																			
-									<table>
-										<tr>
-											<td>
-												<h:outputLabel for="username" rendered="#{not useCertLogin}" style="font-size: #{skinZoom.skinZoom}">Usuário</h:outputLabel>
-											</td>
-											<td>
-												<h:inputText id="username" rendered="#{not useCertLogin}" value="#{credentials.username}"/>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<h:outputLabel for="password" rendered="#{not useCertLogin}" style="font-size: #{skinZoom.skinZoom}">Senha</h:outputLabel>
-											</td>
-											<td>
-												<h:inputSecret id="password" rendered="#{not useCertLogin}" value="#{credentials.password}" />
-											</td>
-										</tr>
-									</table>
-									
-									<c:if test="#{not useCertLogin}">
-										<div id="novaSenha" style="display: none; padding-left: 7px">
-											<h:outputLabel for="newPassword1"
-												style="margin-right:18px; font-weight: bold">Nova Senha</h:outputLabel>
-											<h:inputSecret id="newPassword1"
-												value="#{authenticator.newPassword1}" /> <br></br><br></br>	
-											<h:outputLabel for="newPassword2"
-												style="margin-right:11px; font-weight: bold">Confirmação</h:outputLabel>
-											<h:inputSecret id="newPassword2"
-												value="#{authenticator.newPassword2}"/>							
-									    </div>
-									</c:if>						  
-								</rich:panel>
-															
+				<div id="corpoSuperior" class="corpoSuperior">
+					<div id="logo" class="logo">
+					    <h:graphicImage style="width: 373px; height: 141px;"
+										title="Logo"
+										url="img/logo_login.png"/>
+				    </div>
+					<div id="login" class="login">
+						<div id="bg_login" class="bg_login">
+							<h:outputLabel for="username"
+										   rendered="#{not useCertLogin}"
+										   class="label_login">
+								Usuário
+							</h:outputLabel>
+							<h:inputText id="username"
+										 value="#{credentials.username}"
+										 class="input_login"
+										 rendered="#{not useCertLogin}"
+										 placeholder="Usuário"/><br />
+							<h:outputLabel for="password"
+									       rendered="#{not useCertLogin}"
+									       class="label_login">
+								Senha
+							</h:outputLabel>
+							<h:inputSecret id="password" 
+										   value="#{credentials.password}"
+										   rendered="#{not useCertLogin}"
+										   class="input_login" />
+						</div>
+						<c:if test="#{not useCertLogin}">
+							<div id="novaSenha" 
+								 style="display: none;"
+								 class="newPasswd" >
+								<h:outputLabel for="newPassword1"
+											   rendered="#{not useCertLogin}"
+											   class="label_login">
+									Nova Senha
+								</h:outputLabel>
+								<h:inputSecret id="newPassword1"
+											   class="input_login"
+											   value="#{authenticator.newPassword1}" /><br/>
+								<h:outputLabel for="newPassword2"
+											   rendered="#{not useCertLogin}"
+											   class="label_login">
+									Confirmação
+								</h:outputLabel>	
+								<h:inputSecret id="newPassword2"
+											   class="input_login"
+											   value="#{authenticator.newPassword2}"/>							
+							</div>
+						</c:if>
+					</div>
+				</div>
+				<div id="corpoInferior" class="corpoInferior">
+				    <div id="logo_baixo" class="logo_inferior">
+				    	<h:graphicImage style="width: 373px; height: 84px;"
+										title="Sombra Logo"
+										url="img/logo_login_sombra.png"/>
+				    </div>
+					<div id="login_inferior" class="login_inferior">
+						<div id="bg_login_inferior" class="bg_login_inferior">
 								<c:if test="#{not useCertLogin}">
 									<h:commandButton
 										id="btnEntrar"
 										value="Entrar" 
-										style="width: 80px"
-										styleClass="buttons dr-tbpnl-tb-inact"
+										class="input_button"
 										action="#{authenticator.login()}"/> 
 									
 									<script>
@@ -156,11 +104,11 @@
 										}
 							        </script>
 							
-							        <input class="buttons dr-tbpnl-tb-inact" id="btnTrocar"
+							        <input class="input_button" id="btnTrocar"
 										type="button" value="Trocar Senha" style="width: 110px"
 										onclick="mudar()" /> 
 									
-									<input class="buttons dr-tbpnl-tb-inact"
+									<input class="input_button"
 										id="btnTrocarSenha" type="button" value="Requisitar Nova Senha"
 										style="width: 170px" 
 										onclick="Richfaces.showModalPanel('panelTeste')" />
@@ -179,19 +127,10 @@
 										functionPosSignOk="checkValidacao();"	
 										loginMode="true" />
 								</c:if>
-							</div>								
-						</td>
-						<td class="modDir" valign="top">
-							<h:graphicImage url="#{a4jSkin.imgLogoLogin}" style="left:10px"/>	
-						</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td class="modInf">&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-				</table>
-			 		
+					        </div>
+					  </div>
+				</div>
+				
 				<h:inputHidden id="signature" 
 					rendered="#{useCertLogin}"
 					value="#{authenticator.assinatura}" />
@@ -223,7 +162,7 @@
 				  function checkValidacao() {
 					  submitForm();
 				  }	
-				</script>     				
+				</script>
 				
 			</h:form>
 			
@@ -264,7 +203,7 @@
 			</rich:modalPanel>
 			
 			<rich:modalPanel id="mp_formValidar" height="100" width="250"
-				rendered="#{useCertLogin}" resizeable="false">
+							 rendered="#{useCertLogin}" resizeable="false">
 				<f:facet name="header">
 					<h:outputText value="Aguarde a incialização do SmartCard." />
 				</f:facet>
@@ -273,8 +212,7 @@
 				</div>
 			</rich:modalPanel>					
 					
-			<br /> <rich:messages></rich:messages>	
-		</s:div>
+			<br /> <rich:messages></rich:messages>
 	</ui:define>
 	
 </ui:composition>
