@@ -3,6 +3,7 @@ package br.com.infox.epa.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -46,8 +47,8 @@ public class ProcessoEpa extends Processo {
 	private Item itemDoProcesso;
 	private SituacaoPrazoEnum situacaoPrazo;
 	
-	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>();
-	private List<ParteProcesso> partes;
+	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
+	private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
 	
 	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
 		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
@@ -123,7 +124,7 @@ public class ProcessoEpa extends Processo {
 		return naturezaCategoriaFluxo.getNatureza().getHasPartes();
 	}
 
-	@OneToMany(mappedBy="processo", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="processo", fetch=FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	public List<ParteProcesso> getPartes() {
 		return partes;
 	}

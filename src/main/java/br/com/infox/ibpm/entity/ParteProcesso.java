@@ -25,6 +25,14 @@ public class ParteProcesso implements Serializable {
 	private ProcessoEpa processo;
 	private Pessoa pessoa;
 	
+	public ParteProcesso() {
+	}
+	
+	public ParteProcesso(ProcessoEpa processo, Pessoa pessoa) {
+		this.processo = processo;
+		this.pessoa = pessoa;
+	}
+	
 	@SequenceGenerator(name="generator", sequenceName="public.sq_tb_parte_processo")
 	@Id
 	@Column(name="id_parte_processo")

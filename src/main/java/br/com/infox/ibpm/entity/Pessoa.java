@@ -30,8 +30,6 @@ public class Pessoa implements Serializable {
 	private TipoPessoaEnum tipoPessoa;
 	private String nome;
 	private Boolean ativo;
-
-	private List<ParteProcesso> parteProcessos;
 	
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_pessoa")
 	@Id
@@ -68,14 +66,6 @@ public class Pessoa implements Serializable {
 	}
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
-	}
-	
-	@OneToMany(mappedBy="pessoa", fetch=FetchType.LAZY)
-	public List<ParteProcesso> getProcessos() {
-		return parteProcessos;
-	}
-	public void setProcessos(List<ParteProcesso> parteProcessos) {
-		this.parteProcessos = parteProcessos;
 	}
 	
 }

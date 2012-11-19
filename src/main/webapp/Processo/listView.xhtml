@@ -21,17 +21,14 @@
 	<ui:define name="body">
 		<s:div id="isCadastrandoPartes">
 			<rich:spacer height="5%"/>
-			<wi:dataForm formId="iniciarProcesso"
-						 formTitle="#{messages['processo.titleFormIniciarProcesso']}"
-						 renderRegionOnly="true"
-						 requiredForm="false">
+			<rich:panel id="iniciarProcesso"
+						header="#{messages['processo.titleFormIniciarProcesso']}"
+						style="overflow:auto; margin-top: 14px">
 					 
 				<ui:include src="ComponentesIniciarProcesso/naturezaCategoria.xhtml"/>
 				<ui:include src="ComponentesIniciarProcesso/itemProcesso.xhtml"/>
-
-				
-				<ui:define name="buttons" value="false"/>
-			</wi:dataForm>
+				<ui:include src="ComponentesIniciarProcesso/partesProcesso.xhtml"/>
+			</rich:panel>
 		</s:div>
 		
 	</ui:define>

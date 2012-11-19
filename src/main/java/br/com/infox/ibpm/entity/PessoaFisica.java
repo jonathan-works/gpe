@@ -9,7 +9,7 @@ import br.com.infox.epa.type.TipoPessoaEnum;
 @Entity
 @Table(schema="public", name=PessoaFisica.TABLE_NAME)
 @PrimaryKeyJoinColumn(name="id_pessoa_fisica", columnDefinition = "integer")
-public class PessoaFisica extends Pessoa {
+public class PessoaFisica extends Pessoa{
 
 	public static final String TABLE_NAME = "tb_pessoa_fisica";
 	private static final long serialVersionUID = 1L;
@@ -37,4 +37,30 @@ public class PessoaFisica extends Pessoa {
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PessoaFisica other = (PessoaFisica) obj;
+		if (cpf == null) {
+			if (other.cpf != null)
+				return false;
+		} else if (!cpf.equals(other.cpf))
+			return false;
+		return true;
+	}
+
 }

@@ -1,0 +1,41 @@
+<ui:composition	xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">			
+	<s:div id="includePessoaJuridicaDiv">
+		<wi:dataForm formId="pessoaJuridicaForm"
+					 formTitle="#{messages['pessoaJuridica.titleForm']}"
+					 panelWidth="70%">
+			<wi:inputCnpj id="cnpj"
+						 value="#{pessoaJuridicaHome.instance.cnpj}"
+						 label="#{messages['pessoaJuridica.cnpj']}"
+						 assignTo="#{pessoaJuridicaHome.instance.cnpj}"
+						 required="true">
+				<a:support event="onblur"
+							ajaxSingle="true"
+							reRender="nome, razao"
+							limitToList="true"
+							action="#{action.carregaPessoa('J', pessoaJuridicaHome.instance.cnpj)}"/>
+			</wi:inputCnpj>
+			<wi:inputText id="nome"
+						 value="#{pessoaJuridicaHome.instance.nome}"
+						 label="#{messages['pessoaJuridica.nome']}"
+						 required="true"/>	 
+			<wi:inputText id="razao"
+						value="#{pessoaJuridicaHome.instance.razaoSocial}"
+						label="#{messages['pessoaJuridica.razaoSocial']}"
+						required="true"/>
+			<ui:define name="buttons">
+				<wi:commandButton id="saveButton"
+								  action="#{action.incluir('J')}"
+								  reRender="includePessoaJuridicaDiv, pessoasListDiv, storeDiv"
+								  value="Incluir"/>
+				<wi:commandButtonNew />
+			</ui:define>
+		</wi:dataForm>
+	</s:div>
+</ui:composition>

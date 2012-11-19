@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
@@ -51,4 +52,10 @@ public class PessoaFisicaHome extends AbstractHome<PessoaFisica> {
 		map.put("pessoaFisica", pessoaFisicaBeanList);
 		ExcelExportUtil.downloadXLS(urlTemplate, map, DOWNLOAD_XLS_NAME);
 	}
+	
+	@Observer("evtCarregarPessoaFisica")
+	public void setPessoaFisica(PessoaFisica pessoa){
+		setInstance(pessoa);
+	}
+	
 }
