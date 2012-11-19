@@ -171,6 +171,15 @@
 			float:left;
 			bottom:0%;
 		}
+		
+		.reqSenha {
+			text-align: center;
+		}
+		
+		.reqSenhaInferior {
+			text-align: center;
+		}
+		
 		.login {
 			position: absolute;
 			float: right;
@@ -212,7 +221,11 @@
 			padding-left:0px;
 		}
 		
-		.login .input_login {
+		.reqSenha .label_login {
+			font-size: 16px;
+		}
+		
+		.login .input_login, .reqSenha .input_login {
 			font-size: 20px !important;
 			border-radius: 7px;
 			max-width: 200px;
@@ -232,6 +245,7 @@
 		.bg_login_inferior {
 			height: 140px;
 			width: 350px;
+			border-radius: 0px 0px 10px 10px;
 		}
 		.bg_login_inferior .input_button {
 			padding-left:10px;
