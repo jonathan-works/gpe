@@ -3,13 +3,14 @@ package br.com.infox.ibpm.xpdl.activities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.EndState;
 import org.jdom.Element;
 
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
@@ -22,7 +23,7 @@ public class ActivitiesXPDL implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private List<ActivityXPDL>	activities;
-	
+	 
 	public ActivitiesXPDL(List<ActivityXPDL> activities) {
 		this.activities = activities;
 	}
@@ -56,14 +57,6 @@ public class ActivitiesXPDL implements Serializable {
 
 	public List<ActivityXPDL> getActivities() {
 		return activities;
-	}
-	
-	public void assignActivitiesToProcessDefinition(ProcessDefinition definition) {
-		for (ActivityXPDL activity : activities) {
-			Node node = activity.toNode();
-			node.setProcessDefinition(definition);
-			definition.addNode(node);
-		}
 	}
 	
 	public void changeParallelNodeInForkOrJoin(List<TransitionXPDL> transitions) throws ParallelNodeXPDLException {
@@ -110,10 +103,10 @@ public class ActivitiesXPDL implements Serializable {
 		Transition transition = null;
 		for (TransitionXPDL trans : parallelTransitions) {
 			if (trans.getFrom().equals(parallel.getId())) {
-				transition = trans.toTransition(lista);
+				transition = trans.toTransition();
 				transition.setFrom(node.toNode());
 			} else if (trans.getTo().equals(parallel.getId())) {
-				transition = trans.toTransition(lista);
+				transition = trans.toTransition();
 				transition.setTo(node.toNode());
 			}
 		}
@@ -128,10 +121,10 @@ public class ActivitiesXPDL implements Serializable {
 		Transition transition = null;
 		for (TransitionXPDL trans : parallelTransitions) {
 			if (trans.getFrom().equals(parallel.getId())) {
-				transition = trans.toTransition(lista);
+				transition = trans.toTransition();
 				transition.setFrom(node.toNode());
 			} else if (trans.getTo().equals(parallel.getId())) {
-				transition = trans.toTransition(lista);
+				transition = trans.toTransition();
 				transition.setTo(node.toNode());
 			}
 		}
@@ -152,13 +145,25 @@ public class ActivitiesXPDL implements Serializable {
 		}
 		return lista;
 	}
-	
-	public void assignTaskToActivities(ProcessDefinition definition) {
-		for (ActivityXPDL activity : activities) {
-			if(activity instanceof AssignTaskXPDL) {
-				AssignTaskXPDL assign = (AssignTaskXPDL)activity;
-				assign.assignTask(definition);
+
+	public void adjustEndState() {
+		Node endState = null;
+		Iterator<ActivityXPDL> iter = activities.iterator();
+		while (iter.hasNext()) {
+			Node node = iter.next().toNode();
+			if (node instanceof EndState) {
+				if (endState == null) {
+					endState = node;
+					endState.setName("Término");
+				} else {
+					iter.remove();
+					
+					for (Transition t: node.getArrivingTransitions()) {
+						t.setTo(endState);
+					}
+				}
 			}
 		}
 	}
+	
 }

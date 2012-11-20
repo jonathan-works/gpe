@@ -15,31 +15,29 @@ public class TaskActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 	}
 
 	@Override
-	public Node toNode() {
+	public TaskNode toNode() {
 		if (node == null) {
 			node = new TaskNode();
 			node.setName(this.getName());
 		}
-		return node;
+		return (TaskNode) node;
 	}
 
 	@Override
 	public void assignTask(ProcessDefinition definition) {
-		if (node != null) {
-			TaskNode temp = (TaskNode)node;
-			Task t = new Task();
-			t.setProcessDefinition(definition);
-			t.setTaskMgmtDefinition(definition.getTaskMgmtDefinition());
-			t.setName(temp.getName());
-			if (getLane() != null) {
-				t.setSwimlane(getLane().toSwimlane());
-			} else {
-				t.setSwimlane(definition.getTaskMgmtDefinition().getSwimlanes().values().iterator()
-						.next());
-			}
-			temp.setEndTasks(true);
-			temp.addTask(t);
+		TaskNode temp = toNode();
+		Task t = new Task();
+		t.setProcessDefinition(definition);
+		t.setTaskMgmtDefinition(definition.getTaskMgmtDefinition());
+		t.setName(temp.getName());
+		if (getLane() != null) {
+			t.setSwimlane(getLane().toSwimlane());
+		} else {
+			t.setSwimlane(definition.getTaskMgmtDefinition().getSwimlanes().values().iterator()
+					.next());
 		}
+		temp.setEndTasks(true);
+		temp.addTask(t);
 	}
 
 }

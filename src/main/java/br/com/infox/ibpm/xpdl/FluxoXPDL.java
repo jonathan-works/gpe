@@ -7,6 +7,7 @@ import java.util.List;
 import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
+import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -14,6 +15,7 @@ import org.jdom.Element;
 import br.com.infox.ibpm.jbpm.JpdlXmlWriter;
 import br.com.infox.ibpm.xpdl.activities.ActivitiesXPDL;
 import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
+import br.com.infox.ibpm.xpdl.activities.AssignTaskXPDL;
 import br.com.infox.ibpm.xpdl.element.ParallelNodeXPDLException;
 import br.com.infox.ibpm.xpdl.lane.LaneXPDL;
 import br.com.infox.ibpm.xpdl.lane.LanesXPDLFactory;
@@ -58,13 +60,17 @@ public class FluxoXPDL implements Serializable {
 			definition.getTaskMgmtDefinition().addSwimlane(lane.toSwimlane());
 		}
 		
-		transitions.createTransition(activities.getActivities());
-		assignActivitiesToLane(activities.getActivities());
-		
 		activities.changeParallelNodeInForkOrJoin(transitions.getTransitions());
-		transitions.assignTransitionToNode();
-		activities.assignActivitiesToProcessDefinition(definition);
-		activities.assignTaskToActivities(definition);
+		
+		for (ActivityXPDL activity : activities.getActivities()) {
+			Node node = activity.toNode();
+			definition.addNode(node);
+			if(activity instanceof AssignTaskXPDL) {
+				AssignTaskXPDL assign = (AssignTaskXPDL) activity;
+				assign.assignTask(definition);
+			}
+		}
+		
 		addEvents(definition);
 		return definition;
 	}
@@ -111,7 +117,9 @@ public class FluxoXPDL implements Serializable {
 			}
 		}
 		
-		TransitionsXPDL transitions = TransitionsXPDL.createInstance(root);
+		TransitionsXPDL transitions = TransitionsXPDL.createInstance(root, activities.getActivities());
+		activities.adjustEndState();
+		
 		return new FluxoXPDL(lanes, activities, transitions);
 	}
 

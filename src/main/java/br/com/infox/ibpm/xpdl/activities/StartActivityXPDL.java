@@ -6,8 +6,6 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.taskmgmt.def.Task;
 import org.jdom.Element;
 
-import br.com.infox.ibpm.jbpm.handler.TaskHandler;
-
 public class StartActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 
 	private static final long serialVersionUID = 1L;
@@ -27,20 +25,17 @@ public class StartActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 	
 	@Override
 	public void assignTask(ProcessDefinition definition) {
-		if (node != null) {
-			Task t = new Task();
-			t.setProcessDefinition(definition);
-			t.setTaskMgmtDefinition(definition.getTaskMgmtDefinition());
-			t.setName(node.getName());
-			if (getLane() != null) {
-				t.setSwimlane(getLane().toSwimlane());
-			} else {
-				t.setSwimlane(definition.getTaskMgmtDefinition().getSwimlanes().values().iterator()
-						.next());
-			}
-			TaskHandler startTaskHandler = new TaskHandler(t);
-			definition.getTaskMgmtDefinition().setStartTask(startTaskHandler.getTask());
+		Task task = new Task();
+		task.setProcessDefinition(definition);
+		task.setTaskMgmtDefinition(definition.getTaskMgmtDefinition());
+		task.setName(getName());
+		if (getLane() != null) {
+			task.setSwimlane(getLane().toSwimlane());
+		} else {
+			task.setSwimlane(definition.getTaskMgmtDefinition().getSwimlanes().values().iterator()
+					.next());
 		}
+		definition.getTaskMgmtDefinition().setStartTask(task);
 	}
 
 }

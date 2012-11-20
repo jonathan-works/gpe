@@ -33,11 +33,13 @@ public class ImportarXPDLAction {
 		redirect.setParameter("id", cdFluxo);
 		redirect.setParameter("tab", "Propriedades");
 		redirect.setParameter("nodeIndex", "0");
+		redirect.setConversationPropagationEnabled(true);
 		redirect.setViewId("/Fluxo/definicao/processDefinition.xhtml");
 
 		ProcessBuilder process = ProcessBuilder.instance();
-		process.setXml(xml);
-		process.updateFluxo();
+		process.setXml(xml); 
+		process.updateFluxo(cdFluxo);
+		
 		redirect.execute();
 	}
 }

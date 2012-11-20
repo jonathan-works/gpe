@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.xpdl.activities;
 
-import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.ProcessState;
 import org.jdom.Element;
@@ -14,23 +13,21 @@ public class SubProcessActivityXPDL extends ActivityXPDL implements AssignTaskXP
 	}
 
 	@Override
-	public Node toNode() {
+	public ProcessState toNode() {
 		if(node == null) {
 			node = new ProcessState();
 			node.setName(this.getName());
 		}
-		return node;
+		return (ProcessState) node;
 	}
 	
 	@Override
 	public void assignTask(ProcessDefinition definition) {
-		if (node != null) {
-			ProcessState temp = (ProcessState)node;
-			ProcessDefinition subProc = ProcessDefinition.createNewProcessDefinition();
-			subProc.setDescription(temp.getName());
-			subProc.setName(temp.getName());
-			temp.setSubProcessDefinition(subProc);
-		}
+		ProcessState temp = toNode();
+		ProcessDefinition subProc = ProcessDefinition.createNewProcessDefinition();
+		subProc.setDescription(temp.getName());
+		subProc.setName(temp.getName());
+		temp.setSubProcessDefinition(subProc);
 	}
 
 }

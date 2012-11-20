@@ -216,7 +216,11 @@ public class DecisionNode extends Node {
 			return false;
 		}
 		DecisionNode other = (DecisionNode) obj;
-		return getId() == other.getId();
+		if (getId() != 0) {
+			return getId() == other.getId();
+		} else {
+			return getName().equals(other.getName());
+		}
 	}
 
 	@Override

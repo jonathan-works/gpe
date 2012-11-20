@@ -52,20 +52,24 @@ public class TransitionXPDL implements Serializable {
 		return new TransitionXPDL(id, elementName, to, from);
 	}
 	
-	public Transition toTransition(List<ActivityXPDL> list) {
-		if(transition == null) {
-			ActivityXPDL fromNode = findNodeById(list, from);
-			ActivityXPDL toNode = findNodeById(list, to);
-			fromNode.setTransitionTo(toNode);
-			transition = new Transition();
-			if(getName().startsWith(FluxoXPDL.NO_NAME)) {
-				transition.setName(toNode.getName());
-			} else {
-				transition.setName(getName());
-			}
-			transition.setFrom(fromNode.toNode());
-			transition.setTo(toNode.toNode());
+	public void setActivities(List<ActivityXPDL> activities) {
+		ActivityXPDL fromNode = findNodeById(activities, from);
+		ActivityXPDL toNode = findNodeById(activities, to);
+		fromNode.setTransitionTo(toNode);
+		transition = new Transition();
+		if(getName().startsWith(FluxoXPDL.NO_NAME)) {
+			transition.setName(toNode.getName());
+		} else {
+			transition.setName(getName());
 		}
+		fromNode.toNode().addLeavingTransition(transition);
+		transition.setFrom(fromNode.toNode());
+		
+		toNode.toNode().addArrivingTransition(transition);
+		transition.setTo(toNode.toNode());
+	}
+	
+	public Transition toTransition() {
 		return transition;
 	}
 	
@@ -107,4 +111,5 @@ public class TransitionXPDL implements Serializable {
 		}
 		return string;
 	}
+
 }

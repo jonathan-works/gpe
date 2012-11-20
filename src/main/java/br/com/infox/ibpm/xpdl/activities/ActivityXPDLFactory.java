@@ -29,7 +29,7 @@ public class ActivityXPDLFactory {
 		} else if (isSystemNode(element)) {
 			activity = new SystemActivityXPDL(element, name);
 		} else {
-			throw new ActivityNotAllowedXPDLException("tipo de nó não permitido no e-PA. Nome do nó: '" + XmlUtil.getAttributeValue(element, "Name") + "'.");
+			throw new ActivityNotAllowedXPDLException("Tipo de nó não permitido no sistema. Nome do nó: '" + XmlUtil.getAttributeValue(element, "Name") + "'.");
 		}
 		return activity;
 	}
