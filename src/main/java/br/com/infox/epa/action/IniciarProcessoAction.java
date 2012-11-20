@@ -111,10 +111,11 @@ public class IniciarProcessoAction {
 		}
 	}
 	
-	public void onSelectItem(ItemBean bean, boolean hasPartes) {
+	
+	public void onSelectItem(ItemBean bean) {
 		itemDoProcesso = bean.getItem();
 		renderedByItem = hasSelectedItem();
-		if (!hasPartes) 
+		if (!necessitaPartes()) 
 			iniciarProcesso();
 		else{
 			renderizarCadastroPartes = true;
@@ -162,6 +163,7 @@ public class IniciarProcessoAction {
 				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
 			else
 				pessoaFisicaList.add(p);
+			pf.setInstance(null);
 		}
 		else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
 			PessoaJuridicaHome pj = (PessoaJuridicaHome) Component.getInstance("pessoaJuridicaHome");
@@ -176,6 +178,7 @@ public class IniciarProcessoAction {
 				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
 			else
 				pessoaJuridicaList.add(p);
+			pj.setInstance(null);
 		} else return;
 	}
 	

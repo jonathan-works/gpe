@@ -20,7 +20,7 @@
 							style="width: auto; min-width:100px">
 				<rich:column style="width: 10%">
 					<c:if test="#{!action.necessitaPartes()}">
-						<a:commandLink action="#{action.onSelectItem(row, false)}"
+						<a:commandLink action="#{action.onSelectItem(row)}"
                 				   ajaxSingle="true"
                 				   oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); 
 								  			  window.location='#{util.contextPath}/Painel/list.seam';">
@@ -28,7 +28,7 @@
                 		</a:commandLink>
                		</c:if>
                		<c:if test="#{action.necessitaPartes()}">
-               			<a:commandLink action="#{action.onSelectItem(row, true)}"
+               			<a:commandLink action="#{action.onSelectItem(row)}"
                 				   ajaxSingle="true"
                 				   reRender="itemDiv, partesForm">
                     		<h:graphicImage url="/img/start.gif"/>

@@ -157,8 +157,6 @@
 				<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
 			</rich:tab>
 			
-	<!-- Modificar a partir daqui -->
-			
 			<ui:param name="action" value="#{localizacaoDocumentoFisicoAction}" />
 			<rich:tab id="documentoFisicoTab" 
 					  rendered="#{home.isManaged()}"
@@ -174,14 +172,12 @@
 											items="#{action.localizacaoFisicaList}"
 											required="true"
 											noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}"/>
-							 
-					<!-- Adicionar aqui os campos de Descrição do docuemtno físicos e (in)atividade -->		 
+							 	 
 					<wi:inputText id="descricaoDocumentoFisico"
 								  label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
 								  required="true"
 								  value="#{action.instance.descricaoDocumentoFisico}"
 								  maxlength="150" />
-					<!-- End -->
 					<ui:define name="buttons">
 						<wi:commandButton id="saveDocumentoFisicoButton"
 										  action="localizacaoDocumentoFisicoAction.save"
@@ -216,14 +212,12 @@
 								<h:outputText value="#{row.localizacaoFisica}"/>
 							</rich:column>
 							
-							<!-- Inserir aqui as colunas de descrição e atividade -->
 							<rich:column style="width: 40%">
 								<f:facet name="header">
 									<h:outputText value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
 								</f:facet>
 								<h:outputText value="#{row.descricaoDocumentoFisico}"/>
 							</rich:column>
-							<!-- End -->
 							
 						</rich:dataTable>
 						<rich:datascroller id="dsDocumentoFisicoTable"
@@ -233,14 +227,21 @@
 										   renderIfSinglePage="false"/>
 					</h:form>
 				</s:div>
+			</rich:tab>
+			
+			<rich:tab id="tabPartesDoProcesso"
+					  label="#{messages['parteProcesso.partes']}"
+					  switchType="ajax" 
+					  status=":status"
+					  rendered="#{processoHandler.hasPartes()}">
+				<ui:include src="parteProcessoGrid.xhtml" />
 			</rich:tab>	
 		</rich:tabPanel>
 		<c:if test="#{!checkPermission}">
 			<wi:outputText id="error" value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
 			<a:jsFunction name="closeWindow">window.close();</a:jsFunction>
 		</c:if>
-	</ui:define> 
-	<!-- End  -->
+	</ui:define>
 	
 		
 </ui:composition>

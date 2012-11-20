@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.hibernate.Filter;
 import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.persistence.FullTextHibernateSessionProxy;
 
 public final class HibernateUtil {
@@ -75,5 +76,13 @@ public final class HibernateUtil {
 			session.disableFilter(s);
 		}
 	}
+	
+	public static Object removeProxy(Object object) {
+		if (object instanceof HibernateProxy) {
+			object = ((HibernateProxy) object).getHibernateLazyInitializer().getImplementation();
+		}
+		return object;
+	}
+
 	
 }
