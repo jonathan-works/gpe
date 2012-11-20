@@ -286,13 +286,16 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 
 	public void gerarNovaSenha(String parametro) {
 		password = RandomStringUtils.randomAlphabetic(8);
+		getInstance().setSenha(password);
 		new RunAsOperation(true) {
 			@Override
 			public void execute() {
 				IdentityManager.instance().changePassword(login, password);
 			}
 		}.run();
-
+		
+		EntityUtil.getEntityManager().flush();
+		
 		iniciarRequisicao(parametro);
 	}
 
