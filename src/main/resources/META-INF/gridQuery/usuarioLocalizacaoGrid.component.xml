@@ -18,10 +18,8 @@
 		<property name="restrictions">
 			<value>usuario = #{usuarioHome.instance}</value>
 			<value>usuario = #{usuarioLocalizacaoSearch.usuario}</value>
-			<value>usuario.idUsuario = #{pessoaHome.id}</value>
-			<value>usuario.idUsuario = #{pessoaHome.instance.idUsuario}</value>
-			<value>usuario = #{pessoaServidorHome.definedInstance}</value>
-			<value>usuario = #{pessoaOficialJusticaHome.definedInstance}</value>
+			<value>usuario.idUsuario = #{usuarioHome.id}</value>
+			<value>usuario.idUsuario = #{usuarioHome.instance.idUsuario}</value>
 			<value>localizacao = #{usuarioLocalizacaoSearch.localizacao}</value>
 			<value>localizacao.idLocalizacao = #{localizacaoHome.id}</value>
 			<value>papel = #{usuarioLocalizacaoSearch.papel}</value>
