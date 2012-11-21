@@ -18,8 +18,14 @@
 	</ui:define>
 
 	<ui:define name="baseBody">
+		<s:div id="pageBody" styleClass="pageBody" style="width:100%; height:100%">
 			<ui:param name="useCertLogin"  value="#{loginComCertificado or producao}" />
-			
+			<div style="position:absolute; top:0px; right:0px" >
+				<ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
+					<ui:param name="id" value="login" />
+				    <ui:param name="mostrarMenu" value="true" />
+				</ui:include>
+			</div>
 			<h:form id="login">
 				<div id="corpoSuperior" class="corpoSuperior">
 					<div id="logo" class="logo">
@@ -221,6 +227,7 @@
 			</rich:modalPanel>					
 					
 			<br /> <rich:messages></rich:messages>
+		</s:div>
 	</ui:define>
 	
 </ui:composition>
