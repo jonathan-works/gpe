@@ -380,7 +380,7 @@ public class ProcessBuilder implements Serializable {
 			
 			String xmlFluxo = fluxoHome.getInstance().getXml();
 			
-			if(xmlFluxo != null && !xmlFluxo.equals(xmlDef)) {
+			if(xmlFluxo == null || !xmlFluxo.equals(xmlDef)) {
 				//verifica a consistencia do fluxo para evitar salva-lo com erros.
 				parseInstance(xmlDef);
 				needToPublic = true;
@@ -1254,11 +1254,7 @@ public class ProcessBuilder implements Serializable {
 				currentTask.getTask().setName(taskName);
 				String query = "select max(id_) from jbpm_task where processdefinition_ = " +
 							   ":idProcessDefinition and name_ = :taskName";
-				List<Object> list = JbpmUtil.getJbpmSession().createSQLQuery(query)
-											  .setParameter("idProcessDefinition", 
-													  		getIdProcessDefinition())
-											  .setParameter("taskName", this.taskName)
-											  .list();
+				List<Object> list = JbpmUtil.getJbpmSession().createSQLQuery(query).setParameter("idProcessDefinition", getIdProcessDefinition()).setParameter("taskName", this.taskName).list();
 				if(list != null && list.size() > 0 && list.get(0) != null) {
 					modifiedTasks.put((BigInteger) list.get(0), taskName);
 				}
