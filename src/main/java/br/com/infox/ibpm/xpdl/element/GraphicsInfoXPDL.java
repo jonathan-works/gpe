@@ -19,12 +19,12 @@ public class GraphicsInfoXPDL implements Serializable {
 	
 	public static GraphicsInfoXPDL createInstance(Element element) {
 		Element info = XmlUtil.getChildByIndex(element, "NodeGraphicsInfo", 0);
-		double height = Integer.parseInt(info.getAttributeValue("Height"));
-		double width = Integer.parseInt(info.getAttributeValue("Width"));
+		double height = Double.parseDouble(info.getAttributeValue("Height"));
+		double width = Double.parseDouble(info.getAttributeValue("Width"));
 		
 		Element coordinates = XmlUtil.getChildByIndex(info, "Coordinates", 0);
-		double x = Float.parseFloat(coordinates.getAttributeValue("XCoordinate"));
-		double y = Float.parseFloat(coordinates.getAttributeValue("YCoordinate"));
+		double x = Double.parseDouble(coordinates.getAttributeValue("XCoordinate"));
+		double y = Double.parseDouble(coordinates.getAttributeValue("YCoordinate"));
 		Point2D position = new Point2D.Double(x,y);
 		
 		return new GraphicsInfoXPDL(position, width, height);
