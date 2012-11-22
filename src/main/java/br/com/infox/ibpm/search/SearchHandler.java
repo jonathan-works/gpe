@@ -299,7 +299,7 @@ public class SearchHandler implements Serializable {
 		String type = v.getType();
 		if (JbpmUtil.isTypeEditor(type)){
 			texto = JbpmUtil.instance().valorProcessoDocumento((Integer) value);
-		} if("sim_nao".equals(type)) {
+		} else if("sim_nao".equals(type)) {
 			texto = (Boolean)value ? "Sim" : "Não";
 		} else {
 			texto = value.toString();
