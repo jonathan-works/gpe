@@ -48,43 +48,39 @@
 		.banner {
 			margin: 0px 0px 0px 0px;
 			height: 85px;
-			width: 100%;
 			border-bottom-width: 0px;
 		}
 		
 		.banner .left, .banner .center, .banner .right {
-			position:absolute;
+			position:relative;
 			overflow:hidden;
 		}
 		
 		.banner .left {
-			width:25%;
-			min-width:179px;
-			left:0px;
-			top:0px;
-			height:85px;
+		    height: 85px;
+		    left: 0;
+		    top: 0;
+		    width: 290px;
 		}
 		
 		.banner .center {
-			width:50%;
-			min-width:358px;
-			left:25%;
-			text-align:center;
-			font-size: 20pt;
-			top:0px;
-			height:85px;
+		    font-size: 20pt;
+		    height: 85px;
+		    top: -85px;
+		    left: 0px;
+		    text-align: center;
+		    width: 100%;
 		}
 		
 		.banner .center .title {
-			width:100%;
 			padding-top:15px;
 		}
 
 		.banner .right {
-			width:25%;
-			min-width:179px;
-			left:75%;
-			height:85px;
+		    float: right;
+		    height: 85px;
+		    top: -170px;
+		    width: 290px;
 		}
 
 		.banner .clock {
@@ -347,6 +343,7 @@
 		html, body {
 			width:100%;
 			height:100%;
+			min-width:880px;
 		}
 		
 		body {
@@ -576,7 +573,7 @@
 		    border-radius: 5px 5px 5px 5px;
 		    height: 30px;
 		    text-align: right;
-		    width: 284px;
+		    width: 100%;
 		}
 		.formPesquisa label {
 		    font-size: 11px;
@@ -585,7 +582,7 @@
 		    top: -1px;
 		}
 		.formPesquisa input[type="text"] {
-		    width: 150px;
+		    width: 40%;
 		}
 		.formPesquisa input[type="image"] {
 		    position: relative;
@@ -594,9 +591,11 @@
 		
 		.banner .divBg {
         	float:right;
-        	width:340px;
+        	width:100%;
+        	max-width:352px;
         	height:28px;
-        	border-bottom-left-radius: 28px
+        	border-bottom-left-radius: 28px;
+        	overflow:hidden;
 		}
 		
 		.palette div {
