@@ -59,14 +59,14 @@
 		.banner .left {
 		    height: 85px;
 		    left: 0;
-		    top: 0;
+		    top: -85px;
 		    width: 290px;
 		}
 		
 		.banner .center {
 		    font-size: 20pt;
 		    height: 85px;
-		    top: -85px;
+		    top: 0px;
 		    left: 0px;
 		    text-align: center;
 		    width: 100%;
