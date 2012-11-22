@@ -112,16 +112,16 @@
 		
 		.tituloPagina {
 			width:99%;
+			min-width: 871px;
 			text-align: center;
 		}
 		
 		#divOverflow {
 			position:relative;
-			max-width:100%;
-			min-width:859px;
+			width:100%;
 			height:97%;
 			overflow:auto;
-			margin-top:14px;
+			margin-top:0.8%;
 		}
 		
 		/* CSS para a Pagina */									
@@ -557,6 +557,7 @@
 		
 		.subBorda {
 			width: 99%;
+			height: 100%;
 			padding: 3px;
 			margin:0 auto;
 			padding-top: 10px;
