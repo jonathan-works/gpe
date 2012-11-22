@@ -101,6 +101,14 @@
 				</wi:ajaxDiv>
 			</rich:tab>
 			</ui:remove>
+			
+			<rich:tab id="tabPartesDoProcesso"
+					  label="#{messages['parteProcesso.partes']}"
+					  switchType="ajax" 
+					  status=":status"
+					  rendered="#{processoHandler.hasPartes()}">
+				<ui:include src="/Processo/parteProcessoGrid.xhtml" />
+			</rich:tab>	
 
 
 		</rich:tabPanel>

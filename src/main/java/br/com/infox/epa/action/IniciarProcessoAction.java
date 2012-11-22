@@ -58,7 +58,7 @@ public class IniciarProcessoAction {
 	private List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
 	private List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
 	
-	private void iniciarProcesso() {
+	public void iniciarProcesso() {
 		try {
 			Usuario usuarioLogado = Authenticator.getUsuarioLogado();
 			Localizacao localizacao = Authenticator.getLocalizacaoAtual();
@@ -180,16 +180,6 @@ public class IniciarProcessoAction {
 				pessoaJuridicaList.add(p);
 			pj.setInstance(null);
 		} else return;
-	}
-	
-	public void gravar(){
-		iniciarProcesso();
-		for (Pessoa p : pessoaFisicaList) {
-			processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-		}
-		for (Pessoa p : pessoaJuridicaList) {
-			processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-		}
 	}
 	
 	public void removePessoaFisica(PessoaFisica obj) {

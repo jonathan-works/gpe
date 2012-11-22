@@ -70,6 +70,7 @@
 									   id="dsPessoasFisicasTable"
 									   align="left"
 									   renderIfSinglePage="false"/>
+					<br/>				   
 				</s:div>
 			    <s:div id="pessoasJuridicasListDiv">
 					<rich:dataTable id="pessoasJuridicasTable"
@@ -110,7 +111,7 @@
 				</s:div>
 				<s:div id="storeDiv">
 					<wi:commandButton id="storeButton"
-								  action="#{action.gravar()}"
+								  action="#{action.iniciarProcesso()}"
 								  rendered="#{!action.pessoaFisicaList.isEmpty() || !action.pessoaJuridicaList.isEmpty()}"
 								  reRender="includePessoaFisicaDiv, pessoasFisicasListDiv"
 								  value="Iniciar Processo"
