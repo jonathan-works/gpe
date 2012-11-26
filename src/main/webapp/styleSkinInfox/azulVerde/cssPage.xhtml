@@ -8,10 +8,6 @@
 	      
 		<style type="text/css">	
 				
-		    div{
-	            font-size: #{skinZoom.skinZoom} !important; 
-	        }
-	        		
 			/*Classes para linhas zebradas da tabela*/
 			.even-row {
 			   background-color: #e7e7e7;
@@ -70,20 +66,16 @@
 
 			/* CSS para os Forms */
 			select {
-				border: 0px;
 				background-image: url("#{util.contextPath}#{a4jSkin.imgBgSelect}");
 				background-repeat: no-repeat;
 				background-position: top;
 				background-color: transparent;
 				/*Add o width para teste*/
-				width: 250px;
 			}	
 					
 			option{
 			    background-color:#{a4jSkin.bgColorSelect};		    
 			}	
-			
-					
 			
 			/* Foi separada essa classe CSS para manter combatibilidade entres os componentes 
 				.inputText, .rich-calendar-input  {
@@ -96,85 +88,46 @@
 				}
 			*/		
 			.rich-calendar-input  {
-				border: 0px;
-				font-size: 12px;
 				background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
 				background-repeat: no-repeat;
 				background-position: top left;			
 				color: black;
-				height: 15px;				
 			}
 			
 			.inputText {
-				border: 0px;
-				font-size: 12px;
 				background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
 				background-repeat: no-repeat;
 				background-position: top left;			
 				color: black;
 				/*Add o width e height para teste*/
-				width: 250px;
-				height: 15px;		
 			}
-				
-			
 			
 			textarea, select {
 				border: 1px solid #{a4jSkin.borderColorInputTextareaSelect};
-				font-size: 12px;
 				background:#{a4jSkin.bgColorInputTextareaSelect};
 				color: black;
 			}
-						
+
 			.inputTextMiniW69 {
-				border: 0px;
-				font-size: 12px;
 				background-image:url("#{util.contextPath}#{a4jSkin.inputTextMiniW69}");
-				background-repeat: no-repeat;
-				background-position: top left;			
-				color: black;
 			}
 			
-			.inputTextMiniW25 {
-				border: 0px;
-				font-size: 12px;
+			.inputTextMiniW25, .foneDDD {
 				background-image:url("#{util.contextPath}#{a4jSkin.inputTextMiniW25}");
-				background-repeat: no-repeat;
-				background-position: top left;			
-				color: black;
-			}
-			
-			.foneDDD {
-				border: 0px;
-				font-size: 12px;
-				background-image:url("#{util.contextPath}#{a4jSkin.inputTextMiniW25}");
-				background-repeat: no-repeat;
-				background-position: top left;			
-				color: black;
 			}
 			
 			.foneNormal {
-				border: 0px;
-				font-size: 12px;
 				background-image:url("#{util.contextPath}#{a4jSkin.inputTextMiniW100}");
+			}
+
+			.inputTextMiniW69, .inputTextMiniW25, .foneDDD, .foneNormal {
 				background-repeat: no-repeat;
 				background-position: top left;			
 				color: black;
 			}
 
 			input[type='submit'],input[type='button'], .buttons {
-				height: 22px !important;
-				min-width: 80px;
-				margin: 5px;
-				padding: 0px 12px 3px;
 				border: solid 1px #{a4jSkin.borderColorButton};
-				-webkit-border-radius: 6px;
-				-moz-border-radius: 6px;								
-			}
-			
-			.linkButton {
-				padding: 3px 12px;
-				font-size: 14px;
 			}
 			
 			.inputTreeHeader {
@@ -183,28 +136,17 @@
 				background-position: right;			
 				background-color: white !important;
 				color: black !important;
-				border: none !important;
-				font-size: 12px;
-				font-weight: normal;
-				text-align: left;		
 			}
 			
 			.inputTreeBody {
 				background-color: white;
-				padding: 1px !important;
 				border: solid 1px #{a4jSkin.borderColorInputTree};
-				min-width: 224px !important;
-				z-index: 10;
-				max-height: 300px !important;
-				position: absolute;
 			}
 			
 			.suggest {
 				background-image: url("#{util.contextPath}#{a4jSkin.imgBgSuggest}") !important;				
 				background-repeat: no-repeat;
 				background-position: top;				
-				padding-right: 20px;
-				border: 0px solid;
 			}
 				
 			/* Pagina do Login*/
@@ -276,48 +218,31 @@
 			
 			.reqSenha label {
 			    color: #616161;
-			    font-family: Arial,sans-serif;
-			    margin: 0;
 			}
 			
 			.modSup{
-				width: 350px;
-				height: 39px;
 				background-image: url("#{util.contextPath}#{a4jSkin.imgBgModSup}");
 				background-repeat: no-repeat;
 			}	
 			.modInf{
-			    width: 350px;
-				height: 39px;
 				background-image: url("#{util.contextPath}#{a4jSkin.imgBgModInf}");
 				background-repeat: no-repeat;
 			}	
 			.modEsq{
-			    width:40px;
-				height:172px;
 				background-image:url("#{util.contextPath}#{a4jSkin.imgBgModEsq}");
 				background-repeat:no-repeat;
 			}	
 			.modDir{
-			    width:450px;
-			    height:172px;
-			    font-family: Arial, Helvetica, sans-serif; 
-			    font-weight: bold; 
 			    color: #FFFFFF; 
-			    font-size: 24px;
 				background-image:url("#{util.contextPath}#{a4jSkin.imgBgModDir}");
 				background-repeat:no-repeat;
 			}
 			.modCentral{
-			    width:350px;
 				background-image:url("#{util.contextPath}#{a4jSkin.imgBgModCentral}");
 				background-repeat:repeat-y;
 			}	
 			
 			.modPesqEsq{ 
-			    width: 38px;
-				height: 25px;
-				margin-top:0px;
 			    background-image: url("#{util.contextPath}#{a4jSkin.imgBgPesqCanto}");
 				background-repeat:no-repeat;
 			}
@@ -328,26 +253,19 @@
 			}
 			
 			.modPesqInputText{
-			    border: 0px;			    				    
-			    width:134px;
-			    height: 16px;		   
 			    background-color:transparent;
 			    background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputTextPesq}");
 			    background-repeat: no-repeat;			    
-			    font-size: 11px; 
 			    color:white;
-			    padding-left:3px;			    
 			}	
 			
 			.required {
 				color: #{a4jSkin.bgColorRequired};
-				padding-left: 2px;
 			}
 			
 			#papeisUsuarioForm option {
 				background-color: #{a4jSkin.additionalBackgroundColor};
 				color: #{a4jSkin.headerTextColor};
-				text-align: left;
 			}
 			
 			.painelUsuario select {

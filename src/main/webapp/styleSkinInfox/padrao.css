@@ -16,7 +16,6 @@
                   
 		/* CSS para as Bordas Arredondadas */			
 		.bordaBox {
-			background: transparent; 
 			margin:0 auto;
 		}
 		.bordaBox .b1, .bordaBox .b2, .bordaBox .b3, .bordaBox .b4, .bordaBox .b1b, .bordaBox .b2b, .bordaBox .b3b, .bordaBox .b4b {
@@ -24,6 +23,11 @@
 			overflow:hidden; 
 			font-size:1px;
 		}
+		
+		div{
+            font-size: #{skinZoom.skinZoom} !important; 
+        }
+		
 		.bordaBox .b1, .bordaBox .b2, .bordaBox .b3, .bordaBox .b1b, .bordaBox .b2b, .bordaBox .b3b {
 			height:1px;
 		}
@@ -59,17 +63,19 @@
 		.banner .left {
 		    height: 85px;
 		    left: 0;
-		    top: -85px;
+		    top: 0px;
 		    width: 290px;
+		    z-index: 1;
 		}
 		
 		.banner .center {
 		    font-size: 20pt;
 		    height: 85px;
-		    top: 0px;
+		    top: -85px;
 		    left: 0px;
 		    text-align: center;
 		    width: 100%;
+		    z-index: 0;
 		}
 		
 		.banner .center .title {
@@ -81,6 +87,7 @@
 		    height: 85px;
 		    top: -170px;
 		    width: 290px;
+		    z-index: 1;
 		}
 
 		.banner .clock {
@@ -286,7 +293,7 @@
  		.propertyView input, .propertyView select {
 			width: 250px;
 		}
-		*/ 
+		*/
 		
 		.readOnly {
 			color: gray !important;
@@ -616,4 +623,116 @@
 		
 		.painelUsuario label {
 			font-weight: bold;
+		}
+		
+		select {
+			border: 0px;
+			width: 250px;
+		}
+		
+		textArea, select {
+			font-size: 12px;
+		}
+		
+		.rich-calendar-input  {
+			border: 0px;
+			font-size: 12px;
+			height: 15px;				
+		}
+		
+		.inputText {
+			border: 0px;
+			font-size: 12px;
+			/*Add o width e height para teste*/
+			width: 250px;
+			height: 15px;		
+		}
+		
+		.inputTextMiniW69, .inputTextMiniW25, .foneDDD, .foneNormal {
+			border: 0px;
+			font-size: 12px;
+		}
+		
+		input[type='submit'],input[type='button'], .buttons {
+			height: 22px !important;
+			min-width: 80px;
+			margin: 5px;
+			padding: 0px 12px 3px;
+			-webkit-border-radius: 6px;
+			-moz-border-radius: 6px;								
+		}
+		
+		.linkButton {
+			padding: 3px 12px;
+			font-size: 14px;
+		}
+		
+		.inputTreeHeader {
+			border: none !important;
+			font-size: 12px;
+			font-weight: normal;
+			text-align: left;		
+		}
+		
+		.inputTreeBody {
+			padding: 1px !important;
+			min-width: 224px !important;
+			z-index: 10;
+			max-height: 300px !important;
+			position: absolute;
+		}
+			
+		.suggest {
+			padding-right: 20px;
+			border: 0px solid;
+		}
+		
+		.reqSenha label {
+		    font-family: Arial,sans-serif;
+		    margin: 0;
+		}
+		
+		.modSup{
+			width: 350px;
+			height: 39px;
+		}	
+		.modInf{
+		    width: 350px;
+			height: 39px;
+		}	
+		.modEsq{
+		    width:40px;
+			height:172px;
+		}	
+		.modDir{
+		    width:450px;
+		    height:172px;
+		    font-family: Arial, Helvetica, sans-serif; 
+		    font-weight: bold; 
+		    font-size: 24px;
+		}
+		.modCentral{
+		    width:350px;
+		}	
+		
+		.modPesqEsq{ 
+		    width: 38px;
+			height: 25px;
+			margin-top:0px;
+		}
+		
+		.modPesqInputText{
+		    border: 0px;			    				    
+		    width:134px;
+		    height: 16px;		   
+		    font-size: 11px; 
+		    padding-left:3px;			    
+		}	
+		
+		.required {
+			padding-left: 2px;
+		}
+		
+		#papeisUsuarioForm option {
+			text-align: left;
 		}
