@@ -15,7 +15,6 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<!-- =) -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 			    xmlns:s="http://jboss.com/products/seam/taglib"
 			    xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -31,13 +30,14 @@
 		<rich:panel style="height:98%;">
 		    <wi:dataTable values="#{tempoMedioTarefaList.list(15)}"
 						  bean="#{tempoMedioTarefaList}"
-						  tableTitle="#{tempoMedioTarefaList.entity.tempoMedioProcesso} #{tempoMedioTarefaList.entity.tempoMedioProcesso.tempoMedio}"
+						  tableTitle="#{tempoMedioTarefaList.entity.tempoMedioProcesso} #{tempoMedioTarefaList.entity.tempoMedioProcesso.tempoMedioTotalDias} (dias). Previsto: #{tempoMedioTarefaList.entity.tempoMedioProcesso.naturezaCategoriaFluxo.fluxo.qtPrazo} (dias)"
 						  id="tempoMedioTarefaList"
 						  rowId="#{row.idTarefa}"
 						  showGrid="#{tempoMedioTarefaList.entity.tempoMedioProcesso != null}">
 				<ui:define name="searchForm">
 					<wi:searchForm formId="pesquisarTempoMedioProcesso"
-								   formTitle="#{messages['tempoMedioProcesso.titleSearchForm']}">
+								   formTitle="#{messages['tempoMedioProcesso.titleSearchForm']}"
+								   opened="true">
 						<wi:selectOneMenuEntity id="naturezaCategoriaFluxo"
 												label="#{messages['tempoMedioTarefaList.tempoMedioProcesso']}"
 												value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}"
@@ -53,9 +53,13 @@
 				<wi:columnOutputText columnId="nomeTarefa"
 									 columnHeader="#{messages['temposMedios.descricaoTarefa']}"
 									 value="#{row.nomeTarefa}" />
-				<wi:columnOutputText columnId="tempoMedioTotalHoras"
+				<wi:columnOutputText columnId="tempoMedio"
 									 columnHeader="#{messages['temposMedios.tempoMedio']}"
 									 value="#{row.tempoMedio}" />
+				<wi:columnOutputText columnId="tempoMedioTotalHoras"
+									 columnHeader="#{messages['temposMedios.prazo']}"
+									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo}"
+									 hideOrder="true" />
 			</wi:dataTable>
 		</rich:panel>
 	</ui:define>

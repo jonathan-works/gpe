@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import br.com.infox.ibpm.entity.Tarefa;
+
 @Entity
 @Table(name=TempoMedioTarefa.TABLE_NAME, schema="public")
 public class TempoMedioTarefa implements Serializable {
@@ -19,8 +21,9 @@ public class TempoMedioTarefa implements Serializable {
 	public static final String TABLE_NAME = "vs_tempo_medio_tarefa";
 
 	private Integer idTarefa;
-	private TempoMedioProcesso tempoMedioProcesso;
+	private Tarefa tarefa;
 	private String nomeTarefa;
+	private TempoMedioProcesso tempoMedioProcesso;
 	private String tempoMedio;
 
 	@Id
@@ -33,6 +36,16 @@ public class TempoMedioTarefa implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="id_tarefa", insertable=false, updatable=false)
+	public Tarefa getTarefa() {
+		return tarefa;
+	}
+	public void setTarefa(Tarefa tarefa) {
+		this.tarefa = tarefa;
+		this.nomeTarefa = tarefa.getTarefa();
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="id_natureza_categoria_fluxo", insertable=false, updatable=false)
 	public TempoMedioProcesso getTempoMedioProcesso() {
 		return tempoMedioProcesso;
@@ -42,9 +55,9 @@ public class TempoMedioTarefa implements Serializable {
 		this.tempoMedioProcesso = tempoMedioProcesso;
 	}
 	
-	@Column(name="ds_tarefa", insertable=false, updatable=false)
+	@Transient
 	public String getNomeTarefa() {
-		return nomeTarefa;
+		return this.nomeTarefa;
 	}
 	public void setNomeTarefa(String nomeTarefa) {
 		this.nomeTarefa = nomeTarefa;
