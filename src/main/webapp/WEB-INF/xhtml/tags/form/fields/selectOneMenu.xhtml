@@ -27,7 +27,7 @@
 				xmlns:c="http://java.sun.com/jstl/core">
 				
 	<ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
-	<ui:param name="noSelectionLabel" value="#{empty noSelectionLabel ? (showLabelSelecione ? 'Selecione...' : (showLabelTodos ? '[Todos]' : '' )) : noSelectionLabel }" />
+	<ui:param name="noSelectionLabel" value="#{ empty showLabel ? (empty noSelectionLabel ? (showLabelSelecione ? 'Selecione...' : (showLabelTodos ? '[Todos]' : '' )) : noSelectionLabel) : showLabel }" />
 	
 	<s:decorate id="#{id}Decoration" 
 				template="#{template}"
