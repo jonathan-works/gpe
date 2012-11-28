@@ -2,6 +2,7 @@ package br.com.infox.list;
 
 import java.util.Map;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -10,6 +11,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Cnae;
+import br.com.itx.util.ComponentUtil;
 
 @Name(CnaeList.NAME)
 @BypassInterceptors
@@ -45,5 +47,7 @@ public class CnaeList extends EntityList<Cnae> {
 		return null;
 	}
 	
-	
+	public static CnaeList instance(){
+		return ComponentUtil.getComponent(CnaeList.NAME);
+	}
 }

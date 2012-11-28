@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.entity;
 
+import java.text.DateFormat;
 import java.util.Date;
 import javax.persistence.*;
 import org.hibernate.validator.Length;
@@ -36,6 +37,11 @@ public class PessoaFisica extends Pessoa{
 	}
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
+	}
+	
+	@Transient
+	public String getDataFormatada(){
+		return DateFormat.getDateInstance().format(dataNascimento);
 	}
 
 	@Override

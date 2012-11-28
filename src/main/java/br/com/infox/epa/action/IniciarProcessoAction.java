@@ -81,7 +81,6 @@ public class IniciarProcessoAction {
 			processoEpaManager.persist(processoEpa);
 			
 			iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
-			System.out.println(processoEpa.getIdProcesso());
 			
 			FacesMessages.instance().add(Severity.INFO, "Processo inserido com sucesso!");
 		} catch(TypeMismatchException tme) {
@@ -134,16 +133,17 @@ public class IniciarProcessoAction {
 	
 	public void carregaPessoa(String tipoPessoa, String codigo){
 		StringBuilder sb = new StringBuilder();
+		Pessoa pessoa;
 		sb.append("select o from ");
 		if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
 			sb.append("PessoaFisica o where o.cpf = :cpf");
 			Query query = EntityUtil.createQuery(sb.toString()).setParameter("cpf", codigo);
-			PessoaFisica pessoa = EntityUtil.getSingleResult(query);
+			pessoa = EntityUtil.getSingleResult(query);
 			Events.instance().raiseEvent("evtCarregarPessoaFisica", pessoa);
 		} else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")){
 			sb.append("PessoaJuridica o where o.cnpj = :cnpj");
 			Query query = EntityUtil.createQuery(sb.toString()).setParameter("cnpj", codigo);
-			PessoaJuridica pessoa = EntityUtil.getSingleResult(query);
+			pessoa = EntityUtil.getSingleResult(query);
 			Events.instance().raiseEvent("evtCarregarPessoaJuridica", pessoa);
 		} else return;
 		

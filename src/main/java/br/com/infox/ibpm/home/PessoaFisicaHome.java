@@ -27,6 +27,7 @@ public class PessoaFisicaHome extends AbstractHome<PessoaFisica> {
 	
 	public static final String NAME = "pessoaFisicaHome";
 	private static final long serialVersionUID = 1L;
+	
 	public static final String TEMPLATE = "/PessoaFisica/pessoaFisicaTemplate.xls";
 	private static final String DOWNLOAD_XLS_NAME = "PessoaFisica.xls";
 	private List<PessoaFisica> pessoaFisicaBeanList = new ArrayList<PessoaFisica>();
