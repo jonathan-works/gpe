@@ -30,7 +30,7 @@
 		<rich:panel style="height:98%;">
 		    <wi:dataTable values="#{tempoMedioTarefaList.list(15)}"
 						  bean="#{tempoMedioTarefaList}"
-						  tableTitle="#{tempoMedioTarefaList.entity.tempoMedioProcesso} #{tempoMedioTarefaList.entity.tempoMedioProcesso.tempoMedioTotalDias} (dias). Previsto: #{tempoMedioTarefaList.entity.tempoMedioProcesso.naturezaCategoriaFluxo.fluxo.qtPrazo} (dias)"
+						  tableTitle="#{tempoMedioTarefaList.entity.labelTempoProcesso} (dias). Previsto: #{tempoMedioTarefaList.entity.tempoMedioProcesso.prazo} (dias)"
 						  id="tempoMedioTarefaList"
 						  rowId="#{row.idTarefa}"
 						  showGrid="#{tempoMedioTarefaList.entity.tempoMedioProcesso != null}">
@@ -50,15 +50,15 @@
 					
 				</ui:define>
 				
-				<wi:columnOutputText columnId="nomeTarefa"
+				<wi:columnOutputText columnId="tarefa.tarefa"
 									 columnHeader="#{messages['temposMedios.descricaoTarefa']}"
-									 value="#{row.nomeTarefa}" />
+									 value="#{row.tarefa.tarefa}" />
 				<wi:columnOutputText columnId="tempoMedio"
 									 columnHeader="#{messages['temposMedios.tempoMedio']}"
 									 value="#{row.tempoMedio}" />
 				<wi:columnOutputText columnId="tempoMedioTotalHoras"
 									 columnHeader="#{messages['temposMedios.prazo']}"
-									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo}"
+									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.label}"
 									 hideOrder="true" />
 			</wi:dataTable>
 		</rich:panel>

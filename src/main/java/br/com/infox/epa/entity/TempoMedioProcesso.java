@@ -65,6 +65,11 @@ public class TempoMedioProcesso implements Serializable {
 	}
 	
 	@Transient
+	public String getPrazo() {
+		return this.naturezaCategoriaFluxo.getFluxo().getQtPrazo().toString();
+	}
+	
+	@Transient
 	public String getTempoMedioTotalHoras() {
 		String[] tempo = tempoMedio.split(":");
 		return String.valueOf(Integer.parseInt(tempo[0])*24 + Integer.parseInt(tempo[1]));

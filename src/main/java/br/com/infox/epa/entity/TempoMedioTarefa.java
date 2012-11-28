@@ -91,6 +91,11 @@ public class TempoMedioTarefa implements Serializable {
 		String[] tempo = tempoMedio.split(":");
 		return String.valueOf(Integer.parseInt(tempo[0])*24 + Integer.parseInt(tempo[1]));
 	}
+
+	@Transient
+	public String getLabelTempoProcesso() {
+		return tempoMedioProcesso+" "+tempoMedioProcesso.getTempoMedioTotalDias();
+	}
 	
 	@Override
 	public String toString() {
