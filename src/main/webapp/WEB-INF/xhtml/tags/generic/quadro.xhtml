@@ -22,7 +22,7 @@
                  xmlns:f="http://java.sun.com/jsf/core"
                  xmlns:s="http://jboss.com/products/seam/taglib">
 
-    <ui:include src="#{a4jSkin.cssPage}" />   
+    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />   
          
     <div class="bordaBox">   
        <b class="b1"></b>      
@@ -44,16 +44,7 @@
        <b class="b3"></b>
        <b class="b2"></b>
        <b class="b1"></b>   
-    </div> 
- 
-    <script>
-		function ajusta() {
-			cl='.subBorda'  
-			jQuery(cl).css('height', document.body.clientHeight - jQuery(cl).offset().top - 40)
-		}
-		window.onresize=ajusta;
-		ajusta();
-	</script>	
+    </div> 	
  
    
 </ui:composition>

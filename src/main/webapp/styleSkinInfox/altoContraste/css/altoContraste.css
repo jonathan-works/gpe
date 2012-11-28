@@ -1,0 +1,137 @@
+/*Classes para linhas zebradas da tabela*/
+.banner .clock, .banner .center, .banner label, .banner select {
+	color:#000;
+}
+   
+.banner .divBg {
+	background-color:#000;
+	color:#FFF;
+}
+
+.banner .divBg label {
+	color:#FFF;
+}
+   
+/* CSS para as Paginas */	
+html, body {
+	background: #FFF; /* Cor fixa para Browsers antigos */
+}	
+
+.subBorda {	  
+	background: #000; /* Cor fixa para Browsers antigos */
+	color:#FFF;
+}
+
+.banner {
+	background: #FFF; /* Cor fixa para Browsers antigos */
+}
+
+th.banner, td.banner {	
+	color: #FFF;
+}
+
+/* CSS para os Forms */
+select {
+	background-repeat: no-repeat;
+	background-position: top;
+	background-color: transparent;
+	/*Add o width para teste*/
+}	
+		
+.rich-calendar-input  {
+	background-repeat: no-repeat;
+	background-position: top left;			
+	color: #000;
+}
+
+.inputText {
+	background-repeat: no-repeat;
+	background-position: top left;			
+	color: #000;
+}
+
+textarea, select {
+	color: #000;
+}
+
+.inputTextMiniW69, .inputTextMiniW25, .foneDDD, .foneNormal {
+	background-repeat: no-repeat;
+	background-position: top left;			
+	color: #000;
+}
+
+input[type='submit'],input[type='button'], .buttons, input[type='text'] {
+	background-color: transparent;					
+}
+
+.inputTreeHeader {
+	background-repeat: no-repeat;
+	background-position: right;			
+	background-color: #FFF !important;
+	color: #000 !important;
+}
+
+.inputTreeBody {
+	background-color: #FFF;
+}
+
+.suggest {
+	background-repeat: no-repeat;
+	background-position: top;				
+}
+	
+/* Pagina do Login*/
+
+.corpoSuperior, .bg_login_inferior {
+	background: #FFF;
+}
+
+.bg_login, .corpoInferior, .newPasswd {
+	background: #000;
+}
+
+.login .input_login, .reqSenha .input_login {
+	background: #FFF; /* Old browsers */
+	border: 2px solid #FFF;
+}
+.bg_login_inferior .input_button {
+	background:#FFF;
+	border:1px solid #000;
+	color:#000;
+}
+
+.reqSenha label {
+    color: #FFF;
+    font-family: Arial,sans-serif;
+    margin: 0;
+}
+
+.reqSenha label {
+    color: #FFF;
+}
+
+.bg_login label.label_login, .newPasswd label.label_login {
+	color:#FFF;
+}
+
+.modSup{
+	background-repeat: no-repeat;
+}	
+
+.modPesqEsq{ 
+	background-repeat:no-repeat;
+}
+
+.modPesqBg{
+	background-repeat:repeat-x;
+}
+
+.modPesqInputText{
+    background-color:transparent;
+    background-repeat: no-repeat;			    
+    color:#FFF;
+}	
+
+.painelUsuario select {
+	background-color:transparent;
+}
