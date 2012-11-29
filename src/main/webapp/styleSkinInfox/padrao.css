@@ -79,7 +79,6 @@
 .banner .left, .banner .center, .banner .right {
 	position:relative;
 	overflow:hidden;
-	min-height:451px;
 }
 
 .banner .left {

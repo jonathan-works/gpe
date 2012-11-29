@@ -14,32 +14,57 @@
 				var popUp = window.open(url, id, featurePopUp);	
 				popUp.moveTo(0, 0);
 			}
+    		
+    		function ajustarConteudo() {
+    			$("divOverflow").setStyle('height:'+Math.floor(window.innerHeight-155)+'px');
+    		}
+    		
+    		if (!window.onresize) {
+				window.onresize=ajustarConteudo;
+    		}
+    		
+    		if (!window.onload) {
+				window.onload=ajustarConteudo;
+    		}
 		</script>
 	      
 		<style type="text/css">	
 			div	{
-				font-size: #{skinZoom.skinZoom} !important; 
+				font-size: #{skinZoom.skinZoom} !important;
 			}
 			
 			select {
 				background-image: url("#{util.contextPath}#{a4jSkin.imgBgSelect}");
+				background-color:transparent;
+				background-repeat: no-repeat;
+				background-position: top;
 			}
 			
 			option {
 			    background-color:#{a4jSkin.bgColorSelect};		    
 			}
 			
-			.rich-calendar-input  {
+			.rich-calendar-input, .inputText {
+				color:#000;
 				background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
+				background-repeat:no-repeat;
+				background-position:top left;
 			}
 			
-			.inputText {
-				background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
+			.painelUsuario select {
+				border:none;
 			}
 			
 			textarea, select {
+				color:#000;
 				border: 1px solid #{a4jSkin.borderColorInputTextareaSelect};
 				background:#{a4jSkin.bgColorInputTextareaSelect};
+			}
+			
+			.inputTextMiniW69, .inputTextMiniW25, .foneDDD, .foneNormal {
+				color:#000;
+				background-repeat:no-repeat;
+				background-position:top left;
 			}
 			
 			.inputTextMiniW69 {
@@ -55,30 +80,43 @@
 			}
 			
 			input[type='submit'],input[type='button'], .buttons {
+				background-color: transparent;
 				border: solid 1px #{a4jSkin.borderColorButton};
 			}
 			
 			.inputTreeHeader {
+				background-repeat: no-repeat;
+				background-position: right;			
+				background-color:#FFF !important;
+				color:#000 !important;
 				background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputTree}");
 			}
 			
 			.inputTreeBody {
+				background-color:#FFF;
 				border: solid 1px #{a4jSkin.borderColorInputTree};
 			}
 			
 			.suggest {
-				background-image: url("#{util.contextPath}#{a4jSkin.imgBgSuggest}") !important;				
+				background-image: url("#{util.contextPath}#{a4jSkin.imgBgSuggest}") !important;
+				background-repeat: no-repeat;
+				background-position: top;				
 			}
 			
 			.modPesqEsq{ 
+				background-repeat:no-repeat;
 			    background-image: url("#{util.contextPath}#{a4jSkin.imgBgPesqCanto}");
 			}
 			
 			.modPesqBg{
+				background-repeat:repeat-x;
 			    background-image: url("#{util.contextPath}#{a4jSkin.imgBgPesqMeio}");
 			}
 			
 			.modPesqInputText{
+				background-repeat:no-repeat;
+			    background-color:transparent;
+			    color:#FFF;
 			    background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputTextPesq}");
 			}
 			
