@@ -16,7 +16,11 @@
 			}
     		
     		function ajustarConteudo() {
-    			$("divOverflow").setStyle('height:'+Math.floor(window.innerHeight-155)+'px');
+    			var obj = $("divOverflow");
+    			if (obj) {
+    					obj.setStyle('height:'+Math.floor(window.innerHeight-155)+'px');	
+    			}
+    			
     		}
     		
     		if (!window.onresize) {
