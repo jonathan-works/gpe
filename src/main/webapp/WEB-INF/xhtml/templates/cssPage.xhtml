@@ -14,22 +14,6 @@
 				var popUp = window.open(url, id, featurePopUp);	
 				popUp.moveTo(0, 0);
 			}
-    		
-    		function ajustarConteudo() {
-    			var obj = $("divOverflow");
-    			if (obj) {
-    					obj.setStyle('height:'+Math.floor(window.innerHeight-155)+'px');	
-    			}
-    			
-    		}
-    		
-    		if (!window.onresize) {
-				window.onresize=ajustarConteudo;
-    		}
-    		
-    		if (!window.onload) {
-				window.onload=ajustarConteudo;
-    		}
 		</script>
 	      
 		<style type="text/css">	
