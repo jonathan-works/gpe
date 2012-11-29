@@ -30,28 +30,28 @@
 	<ui:param name="home" value="#{pessoaJuridicaHome}" />
 	
 	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{pjList.list(15)}"
-					  bean="#{pjList}"
+	    <wi:dataTable values="#{pessoaJuridicaList.list(15)}"
+					  bean="#{pessoaJuridicaList}"
 					  tableTitle="#{messages['pj.titleGrid']}"
-					  id="pjList"
+					  id="pessoaJuridicaList"
 					  rowId="#{row.idPessoa}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarPjForm"
 							   formTitle="#{messages['pj.titleSearchForm']}">
 					<wi:inputCnpj id="cnpj"
-									value="#{pjList.entity.cnpj}"
+									value="#{pessoaJuridicaList.entity.cnpj}"
 									label="#{messages['pj.cnpj']}"/>
 					<wi:inputText id="nomePessoa"
 								  label="#{messages['pj.nome']}"
-								  value="#{pjList.entity.nome}"
+								  value="#{pessoaJuridicaList.entity.nome}"
 								  maxlength="150" />
 					<wi:inputText id="razaoSocial"
 								  label="#{messages['pj.razaoSocial']}"
-								  value="#{pjList.entity.razaoSocial}"
+								  value="#{pessoaJuridicaList.entity.razaoSocial}"
 								  maxlength="100" />
 					<wi:selectSituacaoOneMenu id="ativo"
 											  label="#{messages['agrupamento.ativo']}"
-											  value="#{pjList.entity.ativo}" />
+											  value="#{pessoaJuridicaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
 			

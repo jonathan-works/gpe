@@ -10,13 +10,14 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.PessoaJuridica;
+import br.com.itx.util.ComponentUtil;
 
 @Name(PessoaJuridicaList.NAME)
 @BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class PessoaJuridicaList extends EntityList<PessoaJuridica> {
 
-	public static final String NAME = "pjList";
+	public static final String NAME = "pessoaJuridicaList";
 
 	private static final long serialVersionUID = 1L;
 	
@@ -44,6 +45,10 @@ public class PessoaJuridicaList extends EntityList<PessoaJuridica> {
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
+	}
+	
+	public static PessoaJuridicaList instance(){
+		return ComponentUtil.getComponent(PessoaJuridicaList.NAME);
 	}
 	
 	

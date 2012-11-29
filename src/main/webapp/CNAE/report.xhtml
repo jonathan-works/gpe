@@ -19,23 +19,22 @@
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<ui:param name="title" value="#{messages['calendarioEventos.reportPage']}" />
+	<ui:param name="title" value="#{messages['cnae.titlePage']}" />
 
-	<wi:dataReport subtitle="#{messages['calendarioEventos.searchResult']}"
-				   title="calendarioEventos.titlePage"
-				   columns="4"
-				   widths="2 4 2 2">
-				   
-		<wi:reportColumnHeader title="#{messages['calendarioEventos.localizacao']}" />
-		<wi:reportColumnHeader title="#{messages['calendarioEventos.descricaoEvento']}" />
-		<wi:reportColumnHeader title="#{messages['calendarioEventos.dataEvento']}" />
-		<wi:reportColumnHeader title="#{messages['calendarioEventos.repeteAno']}"/>
-				
-		<ui:repeat var="row" value="#{calendarioEventosList.list()}">
-			<wi:reportColumn value="#{row.localizacao}"/>
-			<wi:reportColumn value="#{row.descricaoEvento}"/>
-			<wi:reportColumn value="#{row.stringDataEvento}"/>
-			<wi:reportColumn value="#{row.repeteAno ? 'Sim' : 'Não'}"
+	<wi:dataReport subtitle="Resultado da Pesquisa "
+				   title="#{title}"
+				   columns="3"
+				   widths="1 5 1"
+				   headerText="#{cnaeList.criteria}">
+
+		<wi:reportColumnHeader title="#{messages['cnae.codCnae']}"/>
+		<wi:reportColumnHeader title="#{messages['cnae.descricaoCnae']}"/>
+		<wi:reportColumnHeader title="#{messages['categoria.ativo']}"/>
+
+		<ui:repeat var="row" value="#{cnaeList.list()}">
+			<wi:reportColumn value="#{row.codCnae}" />
+			<wi:reportColumn value="#{row.descricaoCnae}" />
+			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}"
 							 columnAlign="center"/>
 		</ui:repeat>
 

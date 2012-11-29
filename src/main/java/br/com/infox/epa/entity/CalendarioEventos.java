@@ -1,6 +1,7 @@
 package br.com.infox.epa.entity;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

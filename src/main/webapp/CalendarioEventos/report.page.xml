@@ -5,11 +5,11 @@
 
 	<begin-conversation join="true" />
 
-	<param name="order" value="#{cboList.order}" />
-	<param name="restrictionLogicOperator" value="#{cboList.restrictionLogicOperator}" />
+	<param name="order" value="#{calendarioEventosList.order}" />
+	<param name="restrictionLogicOperator" value="#{calendarioEventosList.restrictionLogicOperator}" />
 	
-	<param name="codCbo" value="#{cboList.entity.codCbo}"/>
-	<param name="descricaoCbo" value="#{cboList.entity.descricaoCbo}"/>
-	<param name="ativo" value="#{cboList.entity.ativo}"/>
+	<param name="localizacao" value="#{calendarioEventosList.entity.localizacao}"/>
+	<param name="evento" value="#{calendarioEventosList.entity.descricaoEvento}"/>
+	<param name="periodico" value="#{calendarioEventosList.entity.repeteAno}"/>
 
 </page>

@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Evento;
+import br.com.itx.util.ComponentUtil;
 
 @Name(EventoList.NAME)
 @BypassInterceptors
@@ -55,6 +56,10 @@ public class EventoList extends EntityList<Evento> {
 
 	protected String getDefaultOrder() {
 		return DEFAULT_ORDER;
+	}
+	
+	public static EventoList instance(){
+		return ComponentUtil.getComponent(EventoList.NAME);
 	}
 
 }
