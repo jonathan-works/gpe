@@ -27,6 +27,7 @@
 .even-row {
    background-color: #e7e7e7;
 }
+
 .odd-row {
    background-color: #f7f7f7;
 }
@@ -34,15 +35,32 @@
 .bordaBox .b1, .bordaBox .b2, .bordaBox .b3, .bordaBox .b1b, .bordaBox .b2b, .bordaBox .b3b {
 	height:1px;
 }
+
 .bordaBox .b2, .bordaBox .b3, .bordaBox .b4 {
 	background:#FFFFFF; 
 	border-left:1px solid #999; 
 	border-right:1px solid #999;
 }
-.bordaBox .b1 {	margin:0 5px; background:#999; }
-.bordaBox .b2 {	margin:0 3px; border-width:0 2px; }
-.bordaBox .b3 { margin:0 2px; }
-.bordaBox .b4 { height:2px; margin:0 1px; }
+
+.bordaBox .b1 {	
+	margin:0 5px;
+	background:#999;
+}
+
+.bordaBox .b2 {	
+	margin:0 3px; 
+	border-width:0 2px;
+}
+
+.bordaBox .b3 { 
+	margin:0 2px;
+}
+
+.bordaBox .b4 { 
+	height:2px;
+	margin:0 1px; 
+}
+
 .bordaBox .conteudo {
 	padding:5px;
 	display:block; 
@@ -61,6 +79,7 @@
 .banner .left, .banner .center, .banner .right {
 	position:relative;
 	overflow:hidden;
+	min-height:451px;
 }
 
 .banner .left {
@@ -116,7 +135,7 @@ div.rich-panel {
 	margin-top: 3px;
 }
 
-.bordaBox {
+.bordaBox, #papeisUsuarioForm option {
 	text-align: left;
 }
 
@@ -193,13 +212,6 @@ a:hover {
 	right: 0px;
 }
 
-.bg_login label.label_login {
-    padding-left: 0;
-    padding-top: 8px;
-    position: absolute;
-    text-align: left;
-}
-
 .bg_login {
 	height:140px;
 	width:350px;
@@ -215,7 +227,7 @@ a:hover {
 	border-radius:0px 10px 0px 0px;
 }
 
-.newPasswd label.label_login {
+label.label_login {
     padding-left: 0;
     padding-top: 8px;
     position: absolute;
@@ -719,8 +731,4 @@ input[type='submit'],input[type='button'], .buttons {
 
 .required {
 	padding-left: 2px;
-}
-
-#papeisUsuarioForm option {
-	text-align: left;
 }
