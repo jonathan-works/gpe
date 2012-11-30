@@ -176,100 +176,112 @@ a:hover {
 
 /* Layout Tela de Login */
 /* Início */
+.seletorSkinsLogin {
+	position:absolute; 
+	top:0px; 
+	right:0px;
+	z-index:1;
+}
+
 .corpoSuperior, .corpoInferior {
-	height:50%;
+ 	height: 50%;
+    position: absolute;
+    width: 100%;
+    z-index: 0;
+}
+
+.corpoInferior {
+    bottom: 0;
+}
+.corpoSuperior {
+    top: 0;
+}
+
+.blocoCentralLogin {
+    height: 282px;
+    left: 50%;
+    margin-left: -362px;
+    margin-top: -141px;
+    position: absolute;
+    top: 50%;
+    width: 724px;
+    z-index: 1;
 }
 
 .logo, .logo_inferior, .login {
-	width:50%;
-	text-align:center;
+    text-align: center;
 }
-
 .logo {
-	position:absolute;
-	float:left;
-	bottom:50%
+    left: 0;
+    position: absolute;
+    top: 0;
 }
 .logo_inferior {
-	position:relative;
-	float:left;
-	bottom:0%;
+    position: absolute;
+    top: 141px;
 }
-
 .reqSenha {
-	text-align: center;
+    text-align: center;
 }
-
 .reqSenhaInferior {
-	text-align: center;
+    text-align: center;
 }
-
 .login {
-	position: absolute;
-	float: right;
-	bottom: 50%;
-	right: 0px;
+    left: 373px;
+    position: absolute;
 }
-
 .bg_login {
-	height:140px;
-	width:350px;
-	border-radius: 10px 10px 0px 0px;
+    border-radius: 10px 10px 0 0;
+    height: 140px;
+    width: 350px;
 }
-
 .newPasswd {
-	position:absolute;
-	top:13px;
-	left:350px;
-	height:127px;
-	width:240px;
-	border-radius:0px 10px 0px 0px;
+    border-radius: 0 10px 0 0;
+    height: 127px;
+    left: 350px;
+    position: absolute;
+    top: 13px;
+    width: 240px;
 }
-
 label.label_login {
     padding-left: 0;
     padding-top: 8px;
     position: absolute;
     text-align: left;
 }
-
 .newPasswd .input_login {
-	margin-top:25px;
-	padding-left:0px;
+    margin-top: 25px;
+    padding-left: 0;
 }
-
 .reqSenha .label_login {
-	font-size: 16px;
+    font-size: 16px;
 }
-
 .login .input_login, .reqSenha .input_login {
-	font-size: 20px !important;
-	border-radius: 7px;
-	max-width: 200px;
+    border-radius: 7px 7px 7px 7px;
+    font-size: 20px !important;
+    max-width: 200px;
 }
-
 .bg_login .input_login {
-	margin-top: 25px;
-	padding-left:4px;
+    margin-top: 25px;
+    padding-left: 4px;
 }
 .login_inferior {
-	position:relative;
-	float:right;
-	width:50%;
-	text-align:center;
-	bottom:0%;
+    left: 373px;
+    position: absolute;
+    text-align: center;
+    top: 141px;
 }
 .bg_login_inferior {
-	height: 140px;
-	width: 350px;
-	border-radius: 0px 0px 10px 10px;
+    border-radius: 0 0 10px 10px;
+    height: 140px;
+    width: 350px;
 }
 .bg_login_inferior .input_button {
-	padding-left:10px;
-	padding-right:10px;
-	border-radius:5px;
-	font-size: 16px;
-	margin-top: 25px;
+    border-radius: 5px 5px 5px 5px;
+    font-size: 16px;
+    margin-top: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 /* Fim */
 

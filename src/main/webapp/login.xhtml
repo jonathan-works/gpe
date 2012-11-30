@@ -20,14 +20,16 @@
 	<ui:define name="baseBody">
 		<s:div id="pageBody" styleClass="pageBody" style="width:100%; height:100%">
 			<ui:param name="useCertLogin"  value="#{loginComCertificado or producao}" />
-			<div style="position:absolute; top:0px; right:0px" >
+			<div id="seletorSkinLogin" class="seletorSkinsLogin" >
 				<ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
 					<ui:param name="id" value="login" />
 				    <ui:param name="mostrarMenu" value="true" />
 				</ui:include>
 			</div>
 			<h:form id="login">
-				<div id="corpoSuperior" class="corpoSuperior">
+				<div id="corpoInferior" class="corpoInferior" />
+				<div id="corpoSuperior" class="corpoSuperior" />
+				<div id="blocoCentralLogin" class="blocoCentralLogin" >
 					<div id="logo" class="logo">
 					    <h:graphicImage style="width: 373px; height: 141px;"
 										title="Logo"
@@ -77,9 +79,7 @@
 							</div>
 						</c:if>
 					</div>
-				</div>
-				<div id="corpoInferior" class="corpoInferior">
-				    <div id="logo_baixo" class="logo_inferior">
+					<div id="logo_baixo" class="logo_inferior">
 				    	<h:graphicImage style="width: 373px; height: 84px;"
 										title="Sombra Logo"
 										url="#{a4jSkin.imgLogoLoginSombra}"/>
