@@ -41,6 +41,7 @@ import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
@@ -344,7 +345,11 @@ public class TaskInstanceHome implements Serializable {
 			storeUsuario(tempTask.getId(), tempTask.getActorId());
 			update();
 			AutomaticEventsTreeHandler.instance().registraEventos();
-			BusinessProcess.instance().endTask(transition);
+			try {
+				BusinessProcess.instance().endTask(transition);
+			} catch(JbpmException e) {
+				
+			}
 			if (this.currentTaskInstance == null) {
 				Util.setToEventContext("canClosePanel", true);
 			} else {
