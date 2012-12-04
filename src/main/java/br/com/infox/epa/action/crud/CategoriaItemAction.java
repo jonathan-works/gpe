@@ -15,6 +15,7 @@ import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.entity.CategoriaItem;
 import br.com.infox.epa.manager.CategoriaItemManager;
 import br.com.infox.ibpm.entity.Item;
+import br.com.infox.ibpm.home.CategoriaHome;
 import br.com.itx.component.AbstractHome;
 
 /**
@@ -79,7 +80,7 @@ public class CategoriaItemAction extends AbstractHome<CategoriaItem> {
 	}
 		
 	public void init() {
-		CategoriaAction naturezaAction = (CategoriaAction) Component.getInstance(CategoriaAction.NAME);
+		CategoriaHome naturezaAction = (CategoriaHome) Component.getInstance(CategoriaHome.NAME);
 		categoria = naturezaAction.getInstance();
 		listByCategoria();
 		itemList = categoriaItemManager.findAll(Item.class);

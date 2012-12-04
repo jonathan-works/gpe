@@ -27,7 +27,7 @@
                        
 	<ui:define name="title">#{messages['categoria.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{categoriaAction}" />
+	<ui:param name="home" value="#{categoriaHome}" />
 	
 	<ui:define name="searchGrid">
 	    <wi:dataTable values="#{categoriaList.list(15)}"
@@ -35,7 +35,7 @@
 					  tableTitle="#{messages['categoria.titleGrid']}"
 					  id="categoriaList"
 					  rowId="#{row.idCategoria}"
-					  actionInactive="categoriaAction.inactive">
+					  actionInactive="categoriaHome.inactive">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCategoriaForm"
 							   formTitle="Pesquisar Categoria">
@@ -49,7 +49,7 @@
 			</ui:define>
 			<ui:define name="toolBar">
 				<wi:toolBarEdit  />
-				<wi:toolBarInactive actionInactive="categoriaAction.inactive(row)" />
+				<wi:toolBarInactive actionInactive="categoriaHome.inactive(row)" />
 			</ui:define>
 			<wi:columnOutputText columnId="categoria"
 								 columnHeader="#{messages['categoria.categoria']}"
@@ -65,20 +65,20 @@
 		<wi:dataForm formId="categoriaForm"
 					 formTitle="#{messages['categoria.titleForm']}">
 			<wi:inputText id="categoria"
-						  value="#{categoriaAction.instance.categoria}"
+						  value="#{categoriaHome.instance.categoria}"
 						  required="true"
 						  label="#{messages['categoria.categoria']}"/>
 			<wi:selectSituacaoRadio id="ativo"
 								    required="true"
 								    label="#{messages['categoria.ativo']}"
-								    value="#{categoriaAction.instance.ativo}" />
+								    value="#{categoriaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 
 	<ui:define name="tabs">
 		<ui:param name="action" value="#{categoriaItemAction}" />
 		<rich:tab id="categoriaItemTab" 
-				  rendered="#{home.isManaged()}"
+				  rendered="#{categoriaHome.isManaged()}"
 				  eventsQueue="default" 
 				  switchType="ajax"
 				  label="#{messages['categoriaItem.titleTab']}"
@@ -103,7 +103,7 @@
 					<rich:dataTable id="categoriaItemTable"
 									value="#{action.categoriaItemList}"
 									var="row"
-									title="Relacionados à #{home.instance.categoria}"
+									title="Relacionados à #{categoriaHome.instance.categoria}"
 									rows="10"
 									style="width: 60%">
 						<rich:column style="width: 10%">

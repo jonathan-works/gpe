@@ -7,8 +7,8 @@
 	  
 	<begin-conversation join="true" />
 
-	<param name="id" value="#{categoriaAction.id}"
+	<param name="id" value="#{categoriaHome.id}"
 		   converterId="integerConverter" />
-	<param name="tab" value="#{categoriaAction.tab}" />
+	<param name="tab" value="#{categoriaHome.tab}" />
 		   
 </page>

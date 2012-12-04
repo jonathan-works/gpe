@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epa.entity.Categoria;
+import br.com.itx.util.ComponentUtil;
 
 @Name(CategoriaList.NAME)
 @BypassInterceptors
@@ -45,6 +46,10 @@ public class CategoriaList extends EntityList<Categoria> {
 	@Override
 	protected String getDefaultOrder() {
 		return DEFAULT_ORDER;
+	}
+	
+	public static CategoriaList instance(){
+		return ComponentUtil.getComponent(CategoriaList.NAME);
 	}
 	
 }
