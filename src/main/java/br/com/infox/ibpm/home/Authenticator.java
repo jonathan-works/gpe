@@ -421,6 +421,7 @@ public class Authenticator {
 		
 		if (!getUsuarioLogado().getProvisorio()) {
 			Redirect redirect = Redirect.instance();
+			redirect.getParameters().clear();
 			redirect.setViewId("/Painel/list.seam");
 			redirect.setParameter("cid", null);
 			redirect.execute();
