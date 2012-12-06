@@ -99,7 +99,7 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 		return resultList;
 	}
 	
-	public int countByHoraInicioFim(Localizacao l, 
+	public Integer countByHoraInicioFim(Localizacao l, 
 			Time horaInicio, Time horaFim) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_LOCALIZACAO, l);

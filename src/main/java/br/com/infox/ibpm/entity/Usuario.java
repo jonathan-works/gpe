@@ -62,6 +62,8 @@ public class Usuario extends UsuarioLogin{
 	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao = new ArrayList<ProcessoDocumento>(0);
 	private List<EntityLog> entityLogList = new ArrayList<EntityLog>(0);
 
+	private Boolean temContaTwitter;
+	
 	public Usuario() {
 		bloqueio = false;
 		provisorio = false;
@@ -233,8 +235,18 @@ public class Usuario extends UsuarioLogin{
 	}
 
 	@Column(name="nr_cpf", nullable=false, length=15)
-	@NotNull
 	public String getCpf() {
 		return cpf;
 	}
+
+	@Column(name="in_twitter", nullable=false)
+	public Boolean getTemContaTwitter() {
+		return temContaTwitter;
+	}
+
+	public void setTemContaTwitter(Boolean temContaTwitter) {
+		this.temContaTwitter = temContaTwitter;
+	}
+	
+	
 }

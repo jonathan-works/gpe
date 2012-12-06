@@ -2,11 +2,20 @@ package br.com.infox.ibpm.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.hibernate.validator.Length;
+import org.hibernate.validator.NotNull;
 
-import com.sun.istack.internal.NotNull;
 
 @Entity
 @Table(schema="public", name=ProtocoloDocumento.NAME)

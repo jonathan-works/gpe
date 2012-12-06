@@ -45,6 +45,8 @@
 			
 			<value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
 			<value>menu.processo/processo.consultarMenuText:/Processo/Consulta/listView.seam</value>
+			
+			<value>menu.usuario/contaTwitter.twitterMenuText:/ContaTwitter/listView.seam</value>
 			<!-- <value>menu.processo/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value> -->
 			
 		</property>

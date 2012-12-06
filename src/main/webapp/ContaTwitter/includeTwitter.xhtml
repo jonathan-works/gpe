@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:wi= "http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j">
+    
+    <s:div id="includeTwitterDiv">
+    	<wi:dataForm formId="twitterAccountForm"
+					 formTitle="#{messages['contaTwitter.titleForm']}"
+					 panelWidth="70%">
+			<wi:inputText id="pin"
+						 value="#{home.pin}"
+						 label="#{messages['contaTwitter.pin']}"
+						 assignTo="#{home.pin}"
+						 required="false">
+						 <a:support event="onblur" 
+						 			ajaxSingle="true"
+									limitToList="true"
+									action="#{home.save(home.pin)}"/>
+			</wi:inputText>
+			<ui:define name="buttons">
+				<wi:commandButton id="includeButton"
+								  onclick="window.open('#{home.getAuthorizationURL()}', 'Autorizar Aplicação' ,'');"
+								  value="Incluir Twitter"/>
+				<wi:commandButton id="aButton"
+								  action="#{contaTwitterHome.carrega()}"
+								  value="Salvar"/>
+			</ui:define>
+		</wi:dataForm>
+	</s:div>
+</ui:composition>
+    
