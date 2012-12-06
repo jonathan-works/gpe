@@ -38,6 +38,7 @@ public class EMailData {
 	private String body;
 	private boolean useHtmlBody = false;
 	private List<UsuarioLogin> recipientList = new ArrayList<UsuarioLogin>(0);
+	private List<String> jbpmRecipientList = new ArrayList<String>();
 	
 	public String getFromName() {
 		return fromName;
@@ -82,6 +83,13 @@ public class EMailData {
 	
 	public void setUseHtmlBody(boolean useHtmlBody) {
 		this.useHtmlBody = useHtmlBody;
+	}
+	
+	public List<String> getJbpmRecipientList() {
+		return jbpmRecipientList;
+	}
+	public void setJbpmRecipientList(List<String> jbpmRecipientList) {
+		this.jbpmRecipientList = jbpmRecipientList;
 	}
 	
 	public List<UsuarioLogin> getRecipientList() {

@@ -26,12 +26,15 @@ import javax.persistence.EntityManager;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Expressions;
 
+import br.com.infox.command.EMailData;
+import br.com.infox.command.SendmailCommand;
+import br.com.infox.epa.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.Variavel;
@@ -39,19 +42,40 @@ import br.com.infox.ibpm.jbpm.ActionTemplate;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.itx.component.Util;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
 @Name(ModeloDocumentoAction.NAME)
 @Scope(ScopeType.SESSION)
-@BypassInterceptors
 @Startup
 public class ModeloDocumentoAction extends ActionTemplate {
 	
 	public static final String NAME = "modeloDocumento";
-	
 	private static final long serialVersionUID = 1L;
 	
+	@In
+	private ModeloDocumentoManager modeloDocumentoManager;
+	
+	private ModeloDocumento modeloJbpm;
+	
+	public List<ModeloDocumento> getModeloDocumentoList() {
+		if (modeloDocumentoManager == null) {
+			modeloDocumentoManager = (ModeloDocumentoManager)Component.getInstance("modeloDocumentoManager");
+		}
+		
+		return modeloDocumentoManager.getModeloDocumentoList();
+	}
+
+	public ModeloDocumento getModeloJbpm() {
+		return modeloJbpm;
+	}
+	public void setModeloJbpm(ModeloDocumento modeloJbpm) {
+		this.modeloJbpm = modeloJbpm;
+	}
+
+
+
 	@Override
 	public String getExpression() {
 		return "modeloDocumento.set";
@@ -128,6 +152,22 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		return map;
 	}
 	
+	public String getConteudo(int idModeloDocumento)	{
+		return getConteudo(getModeloDocumento(idModeloDocumento));
+	}
+	
+	public ModeloDocumento getModeloDocumento(int idModeloDocumento)	{
+		return (ModeloDocumento) getEntityManager().createQuery("select o from ModeloDocumento o where o.idModeloDocumento = :id").setParameter("id", idModeloDocumento).getSingleResult();
+	}
+
+	public String getConteudo(String tituloModeloDocumento) {
+		return getConteudo(getModeloDocumento(tituloModeloDocumento));		
+	}
+
+	public ModeloDocumento getModeloDocumento(String tituloModeloDocumento)	{
+		return (ModeloDocumento) getEntityManager().createQuery("select o from ModeloDocumento o where o.tituloModeloDocumento = :titulo").setParameter("titulo", tituloModeloDocumento).getSingleResult();
+	}
+	
 	/**
 	 * Realiza conversão de Modelo de Documento, para Documento final
 	 * 
@@ -161,7 +201,7 @@ public class ModeloDocumentoAction extends ActionTemplate {
 				String variableName = group.substring(2, group.length()-1);
 				String expression = map.get(variableName);
 				if (expression == null) {
-					matcher.appendReplacement(sb, "");
+					matcher.appendReplacement(sb, group);
 				} else {
 					matcher.appendReplacement(sb, expression);
 				}

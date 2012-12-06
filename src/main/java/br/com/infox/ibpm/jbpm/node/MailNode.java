@@ -31,18 +31,20 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
 import br.com.infox.ibpm.entity.ListaEmail;
+import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.jbpm.MailResolver;
+import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.util.EntityUtil;
 
 
 public class MailNode extends org.jbpm.graph.node.MailNode {
 
 	private static final long serialVersionUID = 1L;
-	private String text;
 	private String subject;
 	private String to;
 	private String actors;
 	private String template;
+	private ModeloDocumento modeloDocumento;
 	private int idGrupo;
 	private List<ListaEmail> listaEmail;
 	private ListaEmail currentListaEmail = new ListaEmail();
@@ -53,7 +55,13 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		actors = element.attributeValue("actors");
 		to = element.attributeValue("to");
 		subject = jpdlReader.getProperty("subject", element);
-		text = jpdlReader.getProperty("text", element);
+		String text = jpdlReader.getProperty("text", element);
+		try {
+			modeloDocumento = ModeloDocumentoAction.instance().getModeloDocumento(Integer.parseInt(text));	
+		}catch (NumberFormatException e) {
+			System.out.println(e.getMessage());
+		}
+		
 		super.read(element, jpdlReader);
 	}
 
@@ -81,17 +89,17 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	private void createAction() {
 		JpdlXmlReader jpdlReader = new JpdlXmlReader(new StringReader(""));
 		Delegation delegation = jpdlReader.createMailDelegation(template,
-				actors, to, subject, text);
+				actors, to, subject, String.valueOf(modeloDocumento.getIdModeloDocumento()));
 		delegation.setProcessDefinition(this.getProcessDefinition());
 		this.action = new Action(delegation);
 	}
 
-	public String getText() {
-		return text;
+	public ModeloDocumento getModeloDocumento() {
+		return modeloDocumento;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setModeloDocumento(ModeloDocumento modeloDocumento) {
+		this.modeloDocumento = modeloDocumento;
 		createAction();
 	}
 

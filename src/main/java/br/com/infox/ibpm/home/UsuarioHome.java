@@ -270,9 +270,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 			return;
 		}
 
-		ModeloDocumentoAction action = (ModeloDocumentoAction) Component
-				.getInstance(ModeloDocumentoAction.NAME);
-		String conteudo = action.getConteudo(modelo);
+		String conteudo = ModeloDocumentoAction.instance().getConteudo(modelo);
 
 		EMailData data = ComponentUtil.getComponent(EMailData.NAME);
 		data.setUseHtmlBody(true);

@@ -18,16 +18,11 @@ package br.com.infox.ibpm.home;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.faces.FacesMessages;
-
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
@@ -81,19 +76,6 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	}
 
 	@SuppressWarnings({ UNCHECKED, RAWTYPES })
-	private List<String> getValorVariaveis()	{
-		List list = new ArrayList<String>();
-		if (getInstance().getTipoModeloDocumento() != null) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("select o.variavel from Variavel o ");
-			sb.append("join o.variavelTipoModeloList tipos ");
-			sb.append("where tipos.tipoModeloDocumento = :tipo");
-			list = getEntityManager().createQuery(sb.toString()).setParameter("tipo", getInstance().getTipoModeloDocumento()).getResultList();
-		}
-		return list;
-	}
-	
-	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	public List<Variavel> getVariaveis() {
 		List list = new ArrayList<Variavel>();
 		if (getInstance().getTipoModeloDocumento() != null) {
@@ -132,24 +114,6 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {
-		Pattern pattern = Pattern.compile("#[{][^{}]+[}]");
-		Matcher matcher = pattern.matcher(instance.getModeloDocumento());
-		List<String> variaveis = getValorVariaveis();
-		boolean eliminarTodos = variaveis.size() == 0;
-		
-		while(matcher.find())	{
-			String match = matcher.group().substring(2,matcher.group().length()-1);
-			if (eliminarTodos)	{
-				FacesMessages.instance().add("Variável "+match+" não cadastrada para este Tipo de Documento");
-				return false;
-			}
-					
-			if(!variaveis.contains(match))	{
-				FacesMessages.instance().add("Variável "+match+" não cadastrada para este Tipo de Documento");
-				return false;
-			}
-		}
-		
 		if (!setHistorico(getOldEntity()))	{
 				return false;
 		}

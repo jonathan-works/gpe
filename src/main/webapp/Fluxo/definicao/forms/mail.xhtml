@@ -110,6 +110,14 @@
 		<ui:param name="isExpression" value="#{processBuilder.currentNode.to != null and
 								 			  processBuilder.currentNode.to.startsWith('#{mailResolver')}"/>
 	
+		<wi:selectOneMenuEntity id="modeloDocumento"
+						label="#{messages['processDefinition.modeloDocumento']}"
+						value="#{processBuilder.currentNode.modeloDocumento}"
+						reRender="editorModeloDocumento"
+						items="#{modeloDocumento.modeloDocumentoList}" showLabelTodos="true">
+			<wi:ajaxSupport/>
+		</wi:selectOneMenuEntity>
+	
 		<wi:inputText id="to" 
 					  label="Para"
 					  rendered="#{!isExpression}"
@@ -129,12 +137,14 @@
 			value="#{processBuilder.currentNode.subject}">
 			<wi:ajaxSupport/>
 		</wi:inputText>
-	
-		<wi:inputTextarea id="text" label="Texto" rows="5"
-			style="width: 700px; margin-bottom: 10px;"
-			value="#{processBuilder.currentNode.text}">
+		
+		<wi:editor	id="editorModeloDocumento"	 
+					value="#{processBuilder.currentNode.modeloDocumento.modeloDocumento}"
+					label="#{messages['processBuilder.modeloDocumento']}"
+					readonly="true">
 			<wi:ajaxSupport/>
-		</wi:inputTextarea>
+		</wi:editor>
+	
 	</s:div>
 
 </ui:composition>
