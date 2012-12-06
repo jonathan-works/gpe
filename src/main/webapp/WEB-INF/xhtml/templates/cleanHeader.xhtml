@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:rich="http://richfaces.org/rich">
+	
+	<!-- BANNER -->
+	<div class="banner">
+		<div class="left">
+			<a href="#{util.contextPath}/">
+				<h:graphicImage rendered="#{!hideImage}"
+	                            url="#{a4jSkin.imgLogoTopo}" /> 
+			</a>
+		</div>
+		<div class="center">
+			<div class="title">
+			    <font size="5" >#{nomeSistema}</font><br />
+	            <font size="4" >#{subNomeSistema}</font>
+            </div>
+        </div>
+        <div class="right">
+			<!-- Mini-Relógio -->
+			<div class="clock"
+				 style="height: 17px; width: 67px; position: absolute; top: 30px; right: 2px;">
+				<span id="liveclock" />
+				<script>
+				   newClock('#{currentTime}');
+				</script>
+			</div>
+			<div style="position:absolute; top:48px; right:2px">
+				<ui:include src="/WEB-INF/xhtml/templates/painelUsuario.xhtml">
+					<ui:param name="selectable" value="false" />
+				</ui:include>
+			</div>
+        	
+		</div>
+	</div>
+	
+	<ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
+	<ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
+		
+</ui:composition>
