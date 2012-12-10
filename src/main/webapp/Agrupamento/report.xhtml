@@ -19,25 +19,21 @@
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<ui:param name="title" value="#{messages['pessoaJuridica.titlePage']}" />
+	<ui:param name="title" value="#{messages['agrupamento.titlePage']}" />
 
 	<wi:dataReport subtitle="Resultado da Pesquisa "
 				   title="#{title}"
-				   columns="4"
-				   widths="2 4 3 1"
-				   headerText="#{pessoaJuridicaList.criteria}">
+				   columns="2"
+				   widths="3 1"
+				   headerText="#{agrupamentoList.criteria}">
 
-		<wi:reportColumnHeader title="#{messages['pessoaJuridica.cnpj']}"/>
-		<wi:reportColumnHeader title="#{messages['pessoaJuridica.nome']}"/>
-		<wi:reportColumnHeader title="#{messages['pessoaJuridica.razaoSocial']}"/>
-		<wi:reportColumnHeader title="#{messages['categoria.ativo']}"/>
+		<wi:reportColumnHeader title="#{messages['agrupamento.descricaoCbo']}"/>
+		<wi:reportColumnHeader title="#{messages['agrupamento.ativo']}"/>
 
-		<ui:repeat var="row" value="#{pessoaJuridicaList.list()}">
-			<wi:reportColumn value="#{row.cnpj}" />
-			<wi:reportColumn value="#{row.nome}" />
-			<wi:reportColumn value="#{row.razaoSocial}" />
+		<ui:repeat var="row" value="#{agrupamentoList.list()}">
+			<wi:reportColumn value="#{row.agrupamento}" />
 			<wi:reportColumnSituacao value="#{row.ativo}"
-							 		 columnAlign="center"/>
+							 columnAlign="center"/>
 		</ui:repeat>
 
 	</wi:dataReport>

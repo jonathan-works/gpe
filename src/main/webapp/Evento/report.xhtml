@@ -25,7 +25,8 @@
 	<wi:dataReport subtitle="Resultado dos Eventos Pesquisados"
 				   title="#{messages['evento.titlePage']}"
 				   columns="4"
-				   widths="4 2 2 1">
+				   widths="4 2 2 1"
+				   headerText="#{eventoList.criteria}">
 				   
 		<wi:reportColumnHeader title="#{messages['evento.evento']}" />
 		<wi:reportColumnHeader title="#{messages['evento.eventoSuperior']}" />
@@ -37,7 +38,7 @@
 			<wi:reportColumn value="#{row.evento}" />
 			<wi:reportColumn value="#{row.eventoSuperior}" />
 			<wi:reportColumn value="#{row.observacao}" />
-			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}" 
+			<wi:reportColumnSituacao value="#{row.ativo}" 
 							 columnAlign="center"/>
 			
 		</ui:repeat>

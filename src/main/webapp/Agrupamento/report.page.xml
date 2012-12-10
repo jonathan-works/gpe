@@ -5,10 +5,10 @@
 
 	<begin-conversation join="true" />
 
-	<param name="order" value="#{categoriaList.order}" />
-	<param name="restrictionLogicOperator" value="#{categoriaList.restrictionLogicOperator}" />
+	<param name="order" value="#{agrupamentoList.order}" />
+	<param name="restrictionLogicOperator" value="#{agrupamentoList.restrictionLogicOperator}" />
 	
-	<param name="categoria" value="#{categoriaList.entity.categoria}"/>
-	<param name="ativo" value="#{categoriaList.entity.ativo}"/>
+	<param name="descricaoCbo" value="#{agrupamentoList.entity.agrupamento}"/>
+	<param name="ativo" value="#{agrupamentoList.entity.ativo}"/>
 
 </page>

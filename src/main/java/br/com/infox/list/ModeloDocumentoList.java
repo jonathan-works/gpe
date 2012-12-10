@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.itx.util.ComponentUtil;
 
 @Name(ModeloDocumentoList.NAME)
 @BypassInterceptors
@@ -25,6 +26,10 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 																				" join tmdp.tipoModeloDocumento t" +
 																				" join tmdp.papel p" +
 																			" where p = #{usuarioLogadoLocalizacaoAtual.getPapel()})";
+	
+	public static final ModeloDocumentoList instance() {
+		return ComponentUtil.getComponent(NAME);
+	}
 	
 	protected void addSearchFields() {
 		addSearchField("ativo", SearchCriteria.igual);

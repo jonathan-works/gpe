@@ -134,7 +134,7 @@ public class PapelHome extends AbstractHome<Papel> {
 		setInstance(p);
 		String ret = super.remove();
 		newInstance();
-		GridQuery grid = (GridQuery) Component.getInstance("papelGrid");
+		GridQuery grid = ComponentUtil.getComponent("papelGrid");
 		grid.refresh();
 		RolesMap.instance().clear();
 		return ret;

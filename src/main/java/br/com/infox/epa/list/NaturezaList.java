@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epa.entity.Natureza;
+import br.com.itx.util.ComponentUtil;
 
 @Name(NaturezaList.NAME)
 @BypassInterceptors
@@ -23,11 +24,16 @@ public class NaturezaList extends EntityList<Natureza> {
 	
 	private static final String DEFAULT_EJBQL = "select o from Natureza o";
 	private static final String DEFAULT_ORDER = "natureza";
-	 
+
+	public static final NaturezaList instance() {
+		return ComponentUtil.getComponent(NaturezaList.NAME);
+	}
+	
 	@Override
 	protected void addSearchFields() {
 		addSearchField("natureza", SearchCriteria.contendo);
 		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("hasPartes", SearchCriteria.igual);
 	}
 
 	@Override

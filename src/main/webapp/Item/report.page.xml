@@ -5,7 +5,10 @@
 	
 	<begin-conversation join="true" />
 	
-	<param name="order" value="#{itemList.order}" />
-	<param name="restrictionLogicOperator" value="#{itemList.restrictionLogicOperator}" />
+	<param name="order" value="#{grupoModeloDocumentoList.order}" />
+	<param name="restrictionLogicOperator" value="#{grupoModeloDocumentoList.restrictionLogicOperator}" />
+	
+	<param name="grupoModeloDocumento" value="#{grupoModeloDocumento.entity.grupoModeloDocumento}" />
+	<param name="ativo" value="#{grupoModeloDocumento.entity.ativo}" />
 	
 </page>

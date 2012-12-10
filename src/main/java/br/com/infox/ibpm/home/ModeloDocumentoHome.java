@@ -29,6 +29,7 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.entity.Variavel;
+import br.com.infox.list.ModeloDocumentoList;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ModeloDocumentoHome.NAME)
@@ -39,11 +40,28 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	private static final String	RAWTYPES	= "rawtypes";
 	private static final String	UNCHECKED	= "unchecked";
 	private static final long serialVersionUID = 1L;
+	private static final String TEMPLATE = "/ModeloDocumento/modeloDocumentoTemplate.xls";
+	private static final String DOWNLOAD_XLS_NAME = "ModelosDocumento.xls";
 	public static final String NAME = "modeloDocumentoHome";
 	
 	private GrupoModeloDocumento grupoModeloDocumento;
 	private TipoModeloDocumento tipoModeloDocumento;
-	 
+	
+	@Override
+	public List<ModeloDocumento> getBeanList() {
+		return ModeloDocumentoList.instance().list();
+	}
+	
+	@Override
+	public String getTemplate() {
+		return TEMPLATE;
+	}
+	
+	@Override
+	public String getDownloadXlsName() {
+		return DOWNLOAD_XLS_NAME;
+	}
+	
 	@Override
 	public void setId(Object id) {
 		boolean changed = id != null && !id.equals(getId());

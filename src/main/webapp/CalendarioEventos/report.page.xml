@@ -10,6 +10,8 @@
 	
 	<param name="localizacao" value="#{calendarioEventosList.entity.localizacao}"/>
 	<param name="evento" value="#{calendarioEventosList.entity.descricaoEvento}"/>
-	<param name="periodico" value="#{calendarioEventosList.entity.repeteAno}"/>
+	<param name="dia" value="#{calendarioEventosList.entity.dia}" />
+	<param name="mes" value="#{calendarioEventosList.entity.mes}" />
+	<param name="ano" value="#{calendarioEventosList.entity.ano}" />
 
 </page>

@@ -34,7 +34,7 @@
 		<ui:repeat var="row" value="#{cnaeList.list()}">
 			<wi:reportColumn value="#{row.codCnae}" />
 			<wi:reportColumn value="#{row.descricaoCnae}" />
-			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}"
+			<wi:reportColumnSituacao value="#{row.ativo}"
 							 columnAlign="center"/>
 		</ui:repeat>
 

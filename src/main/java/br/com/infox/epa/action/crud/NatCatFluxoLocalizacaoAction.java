@@ -13,6 +13,7 @@ import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epa.entity.Natureza;
 import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epa.list.NatCatFluxoLocalizacaoList;
 import br.com.infox.epa.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.Fluxo;
@@ -29,6 +30,8 @@ import br.com.itx.util.EntityUtil;
 public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocalizacao> {
 
 	private static final long serialVersionUID = 1L;
+	private static final String TEMPLATE = "/NatCatFluxoLocalizacao/NatCatFluxoLocalizacaoTemplate.xls";
+	private static final String DOWNLOAD_XLS_NAME = "NatCatFluxoLoc.xls";
 
 	public static final String NAME = "natCatFluxoLocalizacaoAction";
 
@@ -41,6 +44,21 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 	private List<Categoria> categoriaList;
 	private List<Fluxo> fluxoList;
 	private NatCatFluxoLocalizacao oldInstance;
+	
+	@Override
+	public List<NatCatFluxoLocalizacao> getBeanList() {
+		return NatCatFluxoLocalizacaoList.instance().list();
+	}
+	
+	@Override
+	public String getTemplate() {
+		return TEMPLATE;
+	}
+	
+	@Override
+	public String getDownloadXlsName() {
+		return DOWNLOAD_XLS_NAME;
+	}
 	
 	@Override
 	public void setId(Object id) {

@@ -4,6 +4,27 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<wi:report bean="#{tipoModeloDocumentoReport}" />
+	<ui:param name="title" value="Naturezas" />
+
+	<wi:dataReport subtitle="Resultado dos Naturezas Pesquisados"
+				   title="#{nomeSistema}"
+				   columns="4"
+				   widths="1 1 1 1"
+				   headerText="#{tipoModeloDocumentoList.criteria}">
+				   
+		<wi:reportColumnHeader title="#{messages['tipoModeloDocumento.grupoModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{messages['tipoModeloDocumento.tipoModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{messages['tipoModeloDocumento.abreviacao']}" />
+		<wi:reportColumnHeader title="#{messages['tipoModeloDocumento.ativo']}" />
+				
+		<ui:repeat var="row" value="#{tipoModeloDocumentoList.list()}">
+			<wi:reportColumn value="#{row.grupoModeloDocumento}" />
+			<wi:reportColumn value="#{row.tipoModeloDocumento}" />
+			<wi:reportColumn value="#{row.abreviacao}" />
+			<wi:reportColumnSituacao value="#{row.ativo}" 
+							 		 columnAlign="center"/>
+		</ui:repeat>
+
+	</wi:dataReport>
 	
 </ui:composition>

@@ -15,25 +15,42 @@
 */
 package br.com.infox.ibpm.home;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.epa.list.TipoModeloDocumentoList;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.itx.util.ComponentUtil;
 
 @Name(TipoModeloDocumentoHome.NAME)
 @BypassInterceptors
-public class TipoModeloDocumentoHome
-		extends
-			AbstractTipoModeloDocumentoHome<TipoModeloDocumento> {
+public class TipoModeloDocumentoHome 
+		extends	AbstractTipoModeloDocumentoHome<TipoModeloDocumento> {
+	private static final long serialVersionUID = 1L;
+	private static final String TEMPLATE = "/ModeloDocumento/modeloDocumentoTemplate.xls";
+	private static final String DOWNLOAD_XLS_NAME = "ModelosDocumento.xls";
 	
 	public static final String NAME = "tipoModeloDocumentoHome";
 
-	private static final long serialVersionUID = 1L;
-
-	public static TipoModeloDocumentoHome instance() {
-		return ComponentUtil.getComponent("tipoModeloDocumentoHome");
+	public static final TipoModeloDocumentoHome instance() {
+		return ComponentUtil.getComponent(NAME);
 	}
 	
+	@Override
+	public List<TipoModeloDocumento> getBeanList() {
+		return TipoModeloDocumentoList.instance().list();
+	}
+	
+	@Override
+	public String getTemplate() {
+		return TEMPLATE;
+	}
+	
+	@Override
+	public String getDownloadXlsName() {
+		return DOWNLOAD_XLS_NAME;
+	}
 	
 }

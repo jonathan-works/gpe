@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.itx.util.ComponentUtil;
 
 
 @Name(TipoModeloDocumentoList.NAME)
@@ -21,6 +22,10 @@ public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
 
 	private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o";
 	private static final String DEFAULT_ORDER = "grupoModeloDocumento";
+	
+	public static final TipoModeloDocumentoList instance() {
+		return ComponentUtil.getComponent(NAME);
+	}
 	
 	@Override
 	protected void addSearchFields() {

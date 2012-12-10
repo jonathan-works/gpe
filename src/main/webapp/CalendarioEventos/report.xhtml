@@ -23,20 +23,18 @@
 
 	<wi:dataReport subtitle="#{messages['calendarioEventos.searchResult']}"
 				   title="calendarioEventos.titlePage"
-				   columns="4"
-				   widths="2 4 2 2">
+				   columns="3"
+				   widths="2 4 2"
+				   headerText="#{calendarioEventosList.criteria}">
 				   
 		<wi:reportColumnHeader title="#{messages['calendarioEventos.localizacao']}" />
 		<wi:reportColumnHeader title="#{messages['calendarioEventos.descricaoEvento']}" />
 		<wi:reportColumnHeader title="#{messages['calendarioEventos.dataEvento']}" />
-		<wi:reportColumnHeader title="#{messages['calendarioEventos.repeteAno']}"/>
 				
 		<ui:repeat var="row" value="#{calendarioEventosList.list()}">
 			<wi:reportColumn value="#{row.localizacao}"/>
 			<wi:reportColumn value="#{row.descricaoEvento}"/>
 			<wi:reportColumn value="#{row.stringDataEvento}"/>
-			<wi:reportColumn value="#{row.repeteAno ? 'Sim' : 'Não'}"
-							 columnAlign="center"/>
 		</ui:repeat>
 
 	</wi:dataReport>

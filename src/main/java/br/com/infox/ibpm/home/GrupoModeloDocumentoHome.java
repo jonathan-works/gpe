@@ -12,22 +12,40 @@
  Consulte a GNU GPL para mais detalhes.
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
-*/
+ */
 package br.com.infox.ibpm.home;
+
+import java.util.List;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
-
+import br.com.infox.list.GrupoModeloDocumentoList;
 
 @Name(GrupoModeloDocumentoHome.NAME)
 @BypassInterceptors
-public class GrupoModeloDocumentoHome
-		extends
-			AbstractGrupoModeloDocumentoHome<GrupoModeloDocumento> {
+public class GrupoModeloDocumentoHome extends
+		AbstractGrupoModeloDocumentoHome<GrupoModeloDocumento> {
 
 	private static final long serialVersionUID = 1L;
+	private static final String TEMPLATE = "/PessoaJuridica/pessoaJuridicaTemplate.xls";
+	private static final String DOWNLOAD_XLS_NAME = "PessoaJuridica.xls";
+
 	public static final String NAME = "grupoModeloDocumentoHome";
-	
+
+	@Override
+	public String getDownloadXlsName() {
+		return DOWNLOAD_XLS_NAME;
+	}
+
+	@Override
+	public String getTemplate() {
+		return TEMPLATE;
+	}
+
+	@Override
+	public List<GrupoModeloDocumento> getBeanList() {
+		return GrupoModeloDocumentoList.instance().list();
+	}
 }

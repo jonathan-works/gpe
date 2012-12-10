@@ -36,7 +36,7 @@
 			<wi:reportColumn value="#{row.cpf}" />
 			<wi:reportColumn value="#{row.nome}" />
 			<wi:reportColumn value="#{row.dataNascimento}" />
-			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}"
+			<wi:reportColumnSituacao value="#{row.ativo}"
 							 columnAlign="center"/>
 		</ui:repeat>
 

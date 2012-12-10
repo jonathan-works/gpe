@@ -19,19 +19,20 @@
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<ui:param name="title" value="Categorias" />
+	<ui:param name="title" value="#{messages['categoria.titlePage']}" />
 
 	<wi:dataReport subtitle="Resultado das Categorias Pesquisadas"
-				   title="#{nomeSistema}"
+				   title="#{title}"
 				   columns="2"
-				   widths="4 2">
+				   widths="4 2"
+				   headerText="#{categoriaList.criteria}" >
 				   
 		<wi:reportColumnHeader title="#{messages['categoria.categoria']}" />
 		<wi:reportColumnHeader title="#{messages['categoria.ativo']}" />
 				
 		<ui:repeat var="row" value="#{categoriaList.list()}">
 			<wi:reportColumn value="#{row.categoria}" />
-			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}" 
+			<wi:reportColumnSituacao value="#{row.ativo}" 
 							 columnAlign="center"/>
 		</ui:repeat>
 

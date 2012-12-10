@@ -23,16 +23,19 @@
 
 	<wi:dataReport subtitle="Resultado dos Naturezas Pesquisados"
 				   title="#{nomeSistema}"
-				   columns="2"
-				   widths="4 2">
+				   columns="3"
+				   widths="4 2 2"
+				   headerText="#{naturezaList.criteria}">
 				   
 		<wi:reportColumnHeader title="#{messages['natureza.natureza']}" />
 		<wi:reportColumnHeader title="#{messages['natureza.ativo']}" />
+		<wi:reportColumnHeader title="#{messages['natureza.hasPartes']}" />
 				
 		<ui:repeat var="row" value="#{naturezaList.list()}">
 			<wi:reportColumn value="#{row.natureza}" />
-			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}" 
+			<wi:reportColumnSituacao value="#{row.ativo}" 
 							 columnAlign="center"/>
+			<wi:reportColumnBoolean value="#{row.hasPartes}" />
 		</ui:repeat>
 
 	</wi:dataReport>

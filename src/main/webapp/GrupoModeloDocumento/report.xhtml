@@ -15,7 +15,7 @@
 		<ui:repeat var="row" value="#{grupoModeloDocumentoList.list()}">
 			
 			<wi:reportColumn value="#{row.grupoModeloDocumento}" />
-			<wi:reportColumnSituacao />
+			<wi:reportColumnSituacao value="#{row.ativo}" />
 			
 		</ui:repeat>
 

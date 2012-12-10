@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
+import br.com.itx.util.ComponentUtil;
 
 @Name(GrupoModeloDocumentoList.NAME)
 @BypassInterceptors
@@ -21,6 +22,10 @@ public class GrupoModeloDocumentoList extends EntityList<GrupoModeloDocumento> {
 	
 	private static final String DEFAULT_EJBQL = "select o from GrupoModeloDocumento o";
 	private static final String DEFAULT_ORDER = "grupoModeloDocumento";
+	
+	public static final GrupoModeloDocumentoList instance() {
+		return ComponentUtil.getComponent(NAME);
+	}
 	
 	protected void addSearchFields() {
 		addSearchField("grupoModeloDocumento", SearchCriteria.contendo);

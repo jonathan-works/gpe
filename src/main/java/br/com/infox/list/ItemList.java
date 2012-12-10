@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Item;
+import br.com.itx.util.ComponentUtil;
 
 @Name(ItemList.NAME)
 @BypassInterceptors
@@ -31,6 +32,10 @@ public class ItemList extends EntityList<Item> {
 									"#{itemList.entity.itemPai.caminhoCompleto}, '%')";
 
 
+	public static final ItemList instance() {
+		return ComponentUtil.getComponent(ItemList.NAME);
+	}
+	
 	protected void addSearchFields() {
 		addSearchField("descricaoItem", SearchCriteria.contendo);
 		addSearchField("itemPai", SearchCriteria.contendo, R1);

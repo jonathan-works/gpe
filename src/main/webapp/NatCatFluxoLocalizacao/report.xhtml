@@ -23,16 +23,23 @@
 
 	<wi:dataReport subtitle="Resultado das Categorias Pesquisadas"
 				   title="#{nomeSistema}"
-				   columns="2"
-				   widths="4 2">
+				   columns="5"
+				   widths="1 1 1 1 1"
+				   headerText="#{natCatFluxoLocalizacaoList.criteria}">
 				   
-		<wi:reportColumnHeader title="#{messages['categoria.categoria']}" />
-		<wi:reportColumnHeader title="#{messages['categoria.ativo']}" />
+		<wi:reportColumnHeader title="#{messages['naturezaCategoriaFluxo.natureza']}" />
+		<wi:reportColumnHeader title="#{messages['naturezaCategoriaFluxo.categoria']}" />
+		<wi:reportColumnHeader title="#{messages['naturezaCategoriaFluxo.fluxo']}" />
+		<wi:reportColumnHeader title="#{messages['naturezaCategoriaFluxo.localizacao']}" />
+		<wi:reportColumnHeader title="#{messages['naturezaCategoriaFluxo.heranca']}" />
 				
-		<ui:repeat var="row" value="#{categoriaList.list()}">
-			<wi:reportColumn value="#{row.categoria}" />
-			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}" 
-							 columnAlign="center"/>
+		<ui:repeat var="row" value="#{natCatFluxoLocalizacaoList.list()}">
+			<wi:reportColumn value="#{row.naturezaCategoriaFluxo.natureza}" />
+			<wi:reportColumn value="#{row.naturezaCategoriaFluxo.categoria}" />
+			<wi:reportColumn value="#{row.naturezaCategoriaFluxo.fluxo}" />
+			<wi:reportColumn value="#{row.localizacao}" />
+			<wi:reportColumnBoolean value="#{row.heranca}" 
+							 		columnAlign="center"/>
 		</ui:repeat>
 
 	</wi:dataReport>

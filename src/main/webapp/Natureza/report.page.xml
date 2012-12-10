@@ -9,6 +9,7 @@
 	<param name="restrictionLogicOperator" value="#{naturezaList.restrictionLogicOperator}" />
 	<param name="ativo" value="#{naturezaList.entity.ativo}" />
 	<param name="natureza" value="#{naturezaList.entity.natureza}" />
+	<param name="hasPartes" value="#{naturezaList.entity.hasPartes}" />
 	
 
 </page>

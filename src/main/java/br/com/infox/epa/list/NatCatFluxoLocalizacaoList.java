@@ -11,6 +11,7 @@ import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epa.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
+import br.com.itx.util.ComponentUtil;
 
 @Name(NatCatFluxoLocalizacaoList.NAME)
 @BypassInterceptors
@@ -23,7 +24,11 @@ public class NatCatFluxoLocalizacaoList extends EntityList<NatCatFluxoLocalizaca
 	
 	private static final String DEFAULT_EJBQL = "select o from NatCatFluxoLocalizacao o";
 	private static final String DEFAULT_ORDER = "o.naturezaCategoriaFluxo.natureza";
-	 
+
+	public static final NatCatFluxoLocalizacaoList instance() {
+		return ComponentUtil.getComponent(NAME);
+	}
+	
 	@Override
 	protected void addSearchFields() {
 		addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.igual);

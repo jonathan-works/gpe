@@ -5,14 +5,13 @@
       xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
 
 	<begin-conversation join="true"/>
-   <param name="order" value="#{tipoModeloDocumentoGrid.order}"/>
-
-<action execute="#{tipoModeloDocumentoGrid.setMaxResults(10000)}"/>
+	<param name="order" value="#{tipoModeloDocumentoList.order}"/>
+	<param name="restrictionLogicOperator" value="#{tipoModeloDocumentoList.restrictionLogicOperator}" />
 
 <!-- Parametros do searchField -->
-	<param name="grupoModeloDocumento" value="#{grupoModeloDocumentoSearch.idGrupoModeloDocumento}"/>			
-	<param name="tipoModeloDocumento" value="#{tipoModeloDocumentoSearch.tipoModeloDocumento}"/>		
-	<param name="abreviacao" value="#{tipoModeloDocumentoSearch.abreviacao}"/>		
-	<param value="#{tipoModeloDocumentoGrid.visibleColumnList}"/>
+	<param name="grupoModeloDocumento" value="#{tipoModeloDocumentoList.entity.grupoModeloDocumento}"/>			
+	<param name="tipoModeloDocumento" value="#{tipoModeloDocumentoList.entity.tipoModeloDocumento}"/>		
+	<param name="abreviacao" value="#{tipoModeloDocumentoList.entity.abreviacao}"/>		
+	<param name="ativo" value="#{tipoModeloDocumentoList.entity.ativo}"/>
 
 </page>
