@@ -12,9 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
-
 @Entity
 @Table(name=Natureza.TABLE_NAME, schema="public")
 public class Natureza implements java.io.Serializable {

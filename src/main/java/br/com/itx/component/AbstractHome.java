@@ -528,7 +528,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	private void exportarXLS (String template, List<T> beanList) throws ExcelExportException {
 		String urlTemplate = new Util().getContextRealPath() + template;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(getEntityClass().getName(), beanList);
+		StringBuilder className = new StringBuilder(getEntityClass().getSimpleName());
+		className = className.replace(0, 1, className.substring(0, 1).toLowerCase());
+		map.put(className.toString(), beanList);
 		ExcelExportUtil.downloadXLS(urlTemplate, map, getDownloadXlsName());
 	}
 	

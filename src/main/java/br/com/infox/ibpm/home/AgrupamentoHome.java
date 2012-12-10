@@ -16,8 +16,8 @@ public class AgrupamentoHome extends AbstractHome<Agrupamento> {
 
 	public static final String NAME = "agrupamentoHome";
 	private static final long serialVersionUID = 1L;
-	private static final String TEMPLATE = "/CBO/CboTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "Cbo.xls";
+	private static final String TEMPLATE = "/Agrupamento/AgrupamentoTemplate.xls";
+	private static final String DOWNLOAD_XLS_NAME = "Agrupamento.xls";
 
 	@Override
 	public List<Agrupamento> getBeanList() {
