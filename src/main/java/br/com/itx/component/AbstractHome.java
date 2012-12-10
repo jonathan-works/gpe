@@ -42,6 +42,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jboss.util.StopWatch;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.exception.ExcelExportException;
@@ -508,12 +509,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		return null;
 	}
 	
-	public List<T> getBeanList() {
+	public EntityList<T> getBeanList() {
 		return null;
 	}
 	
 	public void exportarXLS() {
-		List<T> beanList = getBeanList();
+		List<T> beanList = getBeanList().list(10000);
 		try {
 			if (beanList == null || beanList.isEmpty()) {
 				FacesMessages.instance().add(Severity.INFO, "Não há dados para exportar!");
