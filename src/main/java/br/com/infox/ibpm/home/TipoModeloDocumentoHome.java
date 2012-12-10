@@ -15,11 +15,9 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.util.List;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epa.list.TipoModeloDocumentoList;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.itx.util.ComponentUtil;
@@ -29,8 +27,8 @@ import br.com.itx.util.ComponentUtil;
 public class TipoModeloDocumentoHome 
 		extends	AbstractTipoModeloDocumentoHome<TipoModeloDocumento> {
 	private static final long serialVersionUID = 1L;
-	private static final String TEMPLATE = "/ModeloDocumento/modeloDocumentoTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "ModelosDocumento.xls";
+	private static final String TEMPLATE = "/TipoModeloDocumento/tipoModeloDocumentoTemplate.xls";
+	private static final String DOWNLOAD_XLS_NAME = "TiposModeloDocumento.xls";
 	
 	public static final String NAME = "tipoModeloDocumentoHome";
 
@@ -39,8 +37,8 @@ public class TipoModeloDocumentoHome
 	}
 	
 	@Override
-	public List<TipoModeloDocumento> getBeanList() {
-		return TipoModeloDocumentoList.instance().list();
+	public EntityList<TipoModeloDocumento> getBeanList() {
+		return TipoModeloDocumentoList.instance();
 	}
 	
 	@Override

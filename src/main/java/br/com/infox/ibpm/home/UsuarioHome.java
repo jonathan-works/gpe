@@ -21,7 +21,6 @@ import java.util.List;
 import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;

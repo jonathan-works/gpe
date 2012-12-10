@@ -15,12 +15,11 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.util.List;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.annotations.manager.RecursiveManager;
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.component.tree.ItemTreeHandler;
 import br.com.infox.ibpm.entity.Item;
 import br.com.infox.list.ItemList;
@@ -37,8 +36,8 @@ public class ItemHome extends AbstractHome<Item> {
 	public static final String NAME = "itemHome";
 	
 	@Override
-	public List<Item> getBeanList() {
-		return ItemList.instance().list();
+	public EntityList<Item> getBeanList() {
+		return ItemList.instance();
 	}
 	
 	@Override

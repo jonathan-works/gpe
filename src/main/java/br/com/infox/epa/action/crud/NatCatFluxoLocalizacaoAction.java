@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epa.entity.Natureza;
@@ -46,8 +47,8 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 	private NatCatFluxoLocalizacao oldInstance;
 	
 	@Override
-	public List<NatCatFluxoLocalizacao> getBeanList() {
-		return NatCatFluxoLocalizacaoList.instance().list();
+	public EntityList<NatCatFluxoLocalizacao> getBeanList() {
+		return NatCatFluxoLocalizacaoList.instance();
 	}
 	
 	@Override

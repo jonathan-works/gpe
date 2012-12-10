@@ -1,10 +1,9 @@
 package br.com.infox.ibpm.home;
 
-import java.util.List;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.Agrupamento;
 import br.com.infox.list.AgrupamentoList;
 import br.com.itx.component.AbstractHome;
@@ -20,8 +19,8 @@ public class AgrupamentoHome extends AbstractHome<Agrupamento> {
 	private static final String DOWNLOAD_XLS_NAME = "Agrupamento.xls";
 
 	@Override
-	public List<Agrupamento> getBeanList() {
-		return AgrupamentoList.instance().list();
+	public EntityList<Agrupamento> getBeanList() {
+		return AgrupamentoList.instance();
 	}
 	
 	@Override

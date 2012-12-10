@@ -1,11 +1,10 @@
 package br.com.infox.epa.action.crud;
 
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epa.entity.Natureza;
 import br.com.infox.epa.list.NaturezaList;
 import br.com.itx.component.AbstractHome;
@@ -36,8 +35,8 @@ public class NaturezaAction extends AbstractHome<Natureza> {
 	}
 	
 	@Override
-	public List<Natureza> getBeanList() {
-		return NaturezaList.instance().list();
+	public EntityList<Natureza> getBeanList() {
+		return NaturezaList.instance();
 	}
 
 }

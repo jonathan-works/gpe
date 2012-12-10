@@ -1,10 +1,9 @@
 package br.com.infox.ibpm.home;
 
-import java.util.List;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.component.tree.EventoTreeHandler;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.list.EventoList;
@@ -20,8 +19,8 @@ public class EventoHome extends AbstractEventoHome<Evento>{
 	public static final String NAME = "eventoHome";
 	
 	@Override
-	public List<Evento> getBeanList() {
-		return EventoList.instance().list();
+	public EntityList<Evento> getBeanList() {
+		return EventoList.instance();
 	}
 	
 	@Override

@@ -23,6 +23,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
@@ -48,8 +50,8 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	private TipoModeloDocumento tipoModeloDocumento;
 	
 	@Override
-	public List<ModeloDocumento> getBeanList() {
-		return ModeloDocumentoList.instance().list();
+	public EntityList<ModeloDocumento> getBeanList() {
+		return ModeloDocumentoList.instance();
 	}
 	
 	@Override

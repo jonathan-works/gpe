@@ -1,11 +1,11 @@
 package br.com.infox.ibpm.home;
 
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.Cbo;
 import br.com.infox.list.CboList;
 import br.com.itx.component.AbstractHome;
@@ -22,8 +22,8 @@ public class CboHome extends AbstractHome<Cbo>{
 	private static final String DOWNLOAD_XLS_NAME = "Cbo.xls";
 
 	@Override
-	public List<Cbo> getBeanList() {
-		return CboList.instance().list();
+	public EntityList<Cbo> getBeanList() {
+		return CboList.instance();
 	}
 	
 	@Override

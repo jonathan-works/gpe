@@ -1,11 +1,11 @@
 package br.com.infox.ibpm.home;
 
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.Cnae;
 import br.com.infox.list.CnaeList;
 import br.com.itx.component.AbstractHome;
@@ -21,8 +21,8 @@ public class CnaeHome extends AbstractHome<Cnae>{
 	private static final String DOWNLOAD_XLS_NAME = "Cnae.xls";
 
 	@Override
-	public List<Cnae> getBeanList() {
-		return CnaeList.instance().list();
+	public EntityList<Cnae> getBeanList() {
+		return CnaeList.instance();
 	}
 	
 	@Override

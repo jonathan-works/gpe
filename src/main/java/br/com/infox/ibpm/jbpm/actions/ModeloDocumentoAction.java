@@ -32,8 +32,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.core.Expressions;
 
-import br.com.infox.command.EMailData;
-import br.com.infox.command.SendmailCommand;
 import br.com.infox.epa.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;

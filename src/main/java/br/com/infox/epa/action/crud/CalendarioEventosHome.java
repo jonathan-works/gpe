@@ -3,13 +3,12 @@ package br.com.infox.epa.action.crud;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epa.entity.CalendarioEventos;
 import br.com.infox.epa.list.CalendarioEventosList;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
@@ -85,8 +84,8 @@ public class CalendarioEventosHome extends AbstractHome<CalendarioEventos>{
 	}
 
 	@Override
-	public List<CalendarioEventos> getBeanList() {
-		return CalendarioEventosList.instance().list();
+	public EntityList<CalendarioEventos> getBeanList() {
+		return CalendarioEventosList.instance();
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package br.com.infox.ibpm.home;
 
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.list.PessoaFisicaList;
 import br.com.itx.component.AbstractHome;
@@ -22,8 +22,8 @@ public class PessoaFisicaHome extends AbstractHome<PessoaFisica> {
 	public static final String NAME = "pessoaFisicaHome";
 	
 	@Override
-	public List<PessoaFisica> getBeanList() {
-		return PessoaFisicaList.instance().list();
+	public EntityList<PessoaFisica> getBeanList() {
+		return PessoaFisicaList.instance();
 	}
 	
 	@Override

@@ -1,10 +1,10 @@
 package br.com.infox.ibpm.home;
 
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.list.CategoriaList;
 import br.com.itx.component.AbstractHome;
@@ -25,8 +25,8 @@ public class CategoriaHome extends AbstractHome<Categoria> {
 	private static final String DOWNLOAD_XLS_NAME = "Categoria.xls";
 	
 	@Override
-	public List<Categoria> getBeanList() {
-		return CategoriaList.instance().list();
+	public EntityList<Categoria> getBeanList() {
+		return CategoriaList.instance();
 	}
 	
 	@Override
