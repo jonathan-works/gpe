@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import twitter4j.auth.AccessToken;
 
+import br.com.infox.epa.type.TipoTwitterEnum;
 import br.com.infox.ibpm.entity.Usuario;
 
 @Entity
@@ -15,20 +16,13 @@ public class ContaTwitter implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tb_conta_twitter";
 	
-	private Usuario usuarioSistema;
 	private long idTwitter;
 	private String screenName;
 	private String usuarioToken;
 	private String usuarioSecretToken;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="id_usuario")
-	public Usuario getUsuarioSistema() {
-		return usuarioSistema;
-	}
-	public void setUsuarioSistema(Usuario usuarioSistema) {
-		this.usuarioSistema = usuarioSistema;
-	}
+	private TipoTwitterEnum tipoTwitter;
+	private Usuario usuario;
+	private Localizacao localizacao;
 	
 	@Id
 	@Column(name="id_twitter", nullable=false, unique=true)
@@ -63,6 +57,32 @@ public class ContaTwitter implements Serializable {
 		this.usuarioSecretToken = usuarioSecretToken;
 	}
 	
+	@Column(name="tp_conta_twitter", nullable=false, columnDefinition="varchar(1)", length = 1)
+	@Enumerated(EnumType.STRING)
+	public TipoTwitterEnum getTipoTwitter() {
+		return tipoTwitter;
+	}
+	public void setTipoTwitter(TipoTwitterEnum tipoTwitter) {
+		this.tipoTwitter = tipoTwitter;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="id_usuario", nullable=true)
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="id_localizacao", nullable=true)
+	public Localizacao getLocalizacao() {
+		return localizacao;
+	}
+	public void setLocalizacao(Localizacao localizacao) {
+		this.localizacao = localizacao;
+	}
 	@Transient
 	public AccessToken getAccessToken(){
 		return new AccessToken(usuarioToken, usuarioSecretToken);

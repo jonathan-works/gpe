@@ -11,6 +11,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
+import br.com.infox.epa.type.TipoTwitterEnum;
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.Usuario;
@@ -26,11 +27,10 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	private static final long serialVersionUID = 203098369650080L;
 	public static final String NAME = "contaTwitterHome";
 	
-	Twitter twitter = new TwitterFactory().getInstance();
-	RequestToken requestToken;
-	AccessToken accessToken;
-	String authorizationUrl;
-	String pin;
+	private Twitter twitter = TwitterUtil.getInstance().getFactory().getInstance();
+	private RequestToken requestToken;
+	private AccessToken accessToken;
+	private String pin;
 	
 	public boolean usuarioLogadoHasTwitter(){
 		return Authenticator.getUsuarioLogado().getTemContaTwitter();
@@ -56,7 +56,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	public void getAutorizacao(String pin){
 		try {
 			accessToken = null;
-			while (accessToken == null){
+			//while (accessToken == null){
 				try{
 					if (pin.length() > 0)
 						accessToken = twitter.getOAuthAccessToken(requestToken, pin);
@@ -69,10 +69,11 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 				    	te.printStackTrace();
 				    }
 				}
-			}
+			//}
 			newInstance();
 			Usuario usuario = Authenticator.getUsuarioLogado();
-			this.instance.setUsuarioSistema(usuario);
+			this.instance.setUsuario(usuario);
+			this.instance.setTipoTwitter(TipoTwitterEnum.U);
 			this.instance.setAccessToken(accessToken);
 			
 			if (!usuario.getTemContaTwitter())	{
@@ -106,7 +107,12 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	}
 	
 	public void setContaTwitter(){
-		String hql = "select o from ContaTwitter o where o.usuarioSistema = :usuario";
+		try {
+			TwitterUtil.getInstance().sendNews("news");
+		} catch (TwitterException e) {
+			e.printStackTrace();
+		}
+		String hql = "select o from ContaTwitter o where o.usuario = :usuario";
 		ContaTwitter conta = (ContaTwitter) EntityUtil.createQuery(hql)
 				.setParameter("usuario", Authenticator.getUsuarioLogado())
 				.getSingleResult();
