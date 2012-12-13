@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.home;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -19,7 +20,6 @@ import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.util.TwitterUtil;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.util.EntityUtil;
 
 @Name(ContaTwitterHome.NAME)
 @BypassInterceptors
@@ -70,33 +70,35 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	@Override
 	protected boolean beforePersistOrUpdate() {
 		this.instance.setAccessToken(accessToken);
-		switch (this.instance.getTipoTwitter()) {
-		case U:
-		case S:
-			this.instance.setUsuario(usuario);
-			break;
-		case L:
-			break;
-		}
+		this.instance.setUsuario(usuario);
+		this.instance.setLocalizacao(localizacao);
 		return true;
 	}
 	
 	@Override
 	protected String afterPersistOrUpdate(String ret) {
 		if ("persisted".equals(ret) || "updated".equals(ret))	{
+			EntityManager em = getEntityManager();
 			switch (this.instance.getTipoTwitter()) {
 			case U:
+				if (!usuario.getTemContaTwitter())	{
+					usuario.setTemContaTwitter(true);
+					em.merge(usuario);
+				}
+				break;
 			case S:
 				if (!usuario.getTemContaTwitter())	{
 					usuario.setTemContaTwitter(true);
-					EntityManager em = getEntityManager(); 
 					em.merge(usuario);
-					em.flush();
+					TwitterUtil.restart();
 				}
 				break;
 			case L:
+				localizacao.setTemContaTwitter(true);
+				em.merge(localizacao);
 				break;
 			}
+			em.flush();
 		}
 		return ret;
 	}
@@ -106,7 +108,9 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 			accessToken = null;
 			try {
 				accessToken = getAccessToken(pin);
-				switch (Enum.valueOf(TipoTwitterEnum.class, tipoAutorizacao)) {
+				TipoTwitterEnum tipo = Enum.valueOf(TipoTwitterEnum.class, tipoAutorizacao);
+				this.instance.setTipoTwitter(tipo);
+				switch (tipo) {
 				case L:
 					localizacao = LocalizacaoHome.instance().getInstance();
 					break;
@@ -141,15 +145,27 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	public String remove() {
 		if ("removed".equals(super.remove()))	{
 			EntityManager em = getEntityManager();
-			//------------
-			Usuario usr = instance.getUsuario(); 
-			usr.setTemContaTwitter(false);
-			em.merge(usr);
-			//-------------
+			switch (instance.getTipoTwitter()) {
+			case U:
+			case S:
+				Usuario usr = instance.getUsuario(); 
+				usr.setTemContaTwitter(false);
+				em.merge(usr);	
+				break;
+			case L:
+				Localizacao loc = instance.getLocalizacao();
+				loc.setTemContaTwitter(false);
+				em.merge(loc);
+				break;
+			}
 			em.flush();
 		}
 		newInstance();
 		return "removed";
+	}
+	
+	public void setRequesting(boolean requesting) {
+		this.requesting = requesting;
 	}
 	
 	public boolean isRequesting() {
@@ -167,16 +183,13 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 		default:
 			break;
 		}
-		
-		String hql = "select o from ContaTwitter o " +
-						"where o.usuario = :usuario " +
-						"or o.localizacao = :localizacao";
-		ContaTwitter conta = (ContaTwitter) EntityUtil.createQuery(hql)
-				.setParameter("usuario", usuario)
-				.setParameter("localizacao", localizacao)
-				.getSingleResult();
-		
-		if (conta != null) {	
+		ContaTwitter conta = null;
+		try {
+			conta = TwitterUtil.getInstance().getContaTwitter(usuario);
+		} catch (NoResultException e) {
+			e.printStackTrace();
+		}
+		if (conta != null) {
 			setId(conta.getIdTwitter());
 		}
 	}
