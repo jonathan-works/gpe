@@ -62,6 +62,8 @@ public class Localizacao implements java.io.Serializable {
 	private List<ItemTipoDocumento> itemTipoDocumentoList = new ArrayList<ItemTipoDocumento>(0);
 	private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
 	private List<Localizacao> localizacaoList = new ArrayList<Localizacao>(0);
+	
+	private Boolean temContaTwitter;
 
 	public Localizacao() {
 	}
@@ -173,6 +175,15 @@ public class Localizacao implements java.io.Serializable {
 		this.estruturaFilho = estruturaFilho;
 	}
 	
+	@Column(name="in_twitter", nullable=false)
+	public Boolean getTemContaTwitter() {
+		return temContaTwitter;
+	}
+
+	public void setTemContaTwitter(Boolean temContaTwitter) {
+		this.temContaTwitter = temContaTwitter;
+	}
+
 	@Transient
 	public Endereco getEnderecoCompleto() {
 		if (getEndereco() == null) {

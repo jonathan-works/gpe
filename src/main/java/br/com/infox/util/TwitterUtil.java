@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.infox.ibpm.entity.ContaTwitter;
+import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -17,6 +20,10 @@ import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
+/**
+ * @author jonas
+ *
+ */
 public class TwitterUtil {
 	
 	private static TwitterUtil instance = init();
@@ -29,9 +36,9 @@ public class TwitterUtil {
 		builder.setOAuthConsumerSecret(ParametroUtil.getParametro("oauthConsumerSecret"));
 		factory = new TwitterFactory(builder.build());
 	}
-	
-//  ============================= Métodos que utilizam com o twitter da aplicação =============================
-	
+/*	
+       =================================== Métodos que utilizam com o twitter da aplicação =======================================
+*/	
 	/**
 	 * Atualiza o status do Twitter cadastrado para a aplicação. Todos os usuários que seguem a aplicação recebem essa atualização.
 	 * @param news o conteúdo da atualização
@@ -115,8 +122,9 @@ public class TwitterUtil {
 		return aplicacao.destroyFriendship(contaTwitter.getIdTwitter());
 	}
 	
-	
-//  ========== Métodos que utilizam com o twitter dos usuários ==========
+/*	
+	========================================= Métodos que utilizam o twitter dos usuários ===========================================
+ */
 	
 	/**
 	 * Atualiza o status do usuário cuja conta é passada como parâmetro
@@ -192,24 +200,6 @@ public class TwitterUtil {
 	/**
 	 * Atualiza o status do sender com uma mensagem para cada receiver da lista que for passada e fazendo também uma "mention" a cada um deles
 	 * @param sender a conta que postará o tweet
-	 * @param receivers a lista com os screenNames das contas que serão citadas nas mensgens
-	 * @param message o conteúdo da mensagem
-	 * @return o status resultante da postagem
-	 * @throws TwitterException Quando não for possível conectar ao Twitter ou a String resultante da postagem possuir mais de 140 caracteres
-	 */
-	public List<Status> sendMessages(ContaTwitter sender, List<String> receiversScreenNames, String message) throws TwitterException{
-		List<Status> statusList = new ArrayList<Status>();
-		Twitter twitter = createTwitter(sender);
-		for (String screenName : receiversScreenNames){
-			String newMessage = "@" + screenName + " " + message;
-			statusList.add(twitter.updateStatus(newMessage));
-		}
-		return statusList;
-	}
-	
-	/**
-	 * Atualiza o status do sender com uma mensagem para cada receiver da lista que for passada e fazendo também uma "mention" a cada um deles
-	 * @param sender a conta que postará o tweet
 	 * @param receivers a lista de contas que serão citadas nas mensgens
 	 * @param message o conteúdo da mensagem
 	 * @return o status resultante da postagem
@@ -224,32 +214,132 @@ public class TwitterUtil {
 		}
 		return statusList;
 	}
-	
+
+	/**
+	 * Envia uma mensagem direta e privativa (DM) do sender para o receiver
+	 * @param sender a conta que envia a DM
+	 * @param receiver a conta que recebe a DM
+	 * @param message o conteúdo da mensagem
+	 * @return a DirectMessage resultante da operação
+	 * @throws TwitterException uando não for possível conectar ao Twitter ou quando o receiver não segue o sender (caso
+	 * em que o twitter não permite o envio de DMs) ou ainda quando a String resultante da postagem possuir mais de 140 caracteres
+	 */
 	public DirectMessage sendDirectMessage(ContaTwitter sender, ContaTwitter receiver, String message) throws TwitterException{
 		return createTwitter(sender).sendDirectMessage(receiver.getIdTwitter(), message);
 	}
+		
+	/**
+	 * Método que faz com que a conta de Twitter passada passe a seguir o twitter da aplicação 
+	 * @param contaTwitter
+	 * @throws IllegalStateException
+	 * @throws TwitterException
+	 */
+	public void followApplication(ContaTwitter contaTwitter) throws TwitterException{
+		createTwitter(contaTwitter).createFriendship(aplicacao.getId(), true);
+	}
 	
-	public void followApplication(ContaTwitter contaTwitter) throws IllegalStateException, TwitterException{
+	/**
+	 * Método que faz com que a conta de Twitter passada pare de seguir o twitter da aplicação
+	 * @param contaTwitter
+	 * @throws IllegalStateException
+	 * @throws TwitterException
+	 */
+	public void unfollowApplication(ContaTwitter contaTwitter) throws TwitterException{
 		createTwitter(contaTwitter).createFriendship(aplicacao.getId(), true);
 	}
 	
 //  =================== Métodos que afetam o Twitter da aplicação e dos usuários ao mesmo tempo	
 	
-	public void mutualFollow(ContaTwitter contaTwitter) throws IllegalStateException, TwitterException{
+	/**
+	 * Faz com que o usuário passado passe a seguir a aplicação e aplicação também passe a seguir o usuário
+	 * @param contaTwitter
+	 * @return o usuário do twitter que passou a ser seguido
+	 * @throws IllegalStateException
+	 * @throws TwitterException
+	 */
+	public User mutualApplicationFollow(ContaTwitter contaTwitter) throws IllegalStateException, TwitterException{
 		Twitter twitter = createTwitter(contaTwitter);
 		twitter.createFriendship(aplicacao.getId(), true);
-		aplicacao.createFriendship(twitter.getId(), true);
+		return aplicacao.createFriendship(twitter.getId(), true);
 	}
 	
-//  ======================= Métodos Inicializadores e Auxiliares Públicos ===================
+	/**
+	 * Faz com que o usuário passado pare de seguir a aplicação e aplicação tambem pare de seguir o usuário
+	 * @param contaTwitter
+	 * @return o usuário do twitter que recebeu o unfollow
+	 * @throws IllegalStateException
+	 * @throws TwitterException
+	 */
+	public User mutualApplicationUnfollow(ContaTwitter contaTwitter) throws IllegalStateException, TwitterException{
+		Twitter twitter = createTwitter(contaTwitter);
+		twitter.createFriendship(aplicacao.getId(), true);
+		return aplicacao.createFriendship(twitter.getId(), true);
+	}
+	
+//  ======================================== Getters ==============================================
+	
+	public static TwitterUtil getInstance() {
+		return instance;
+	}
+	
+	/**
+	 * Classe fábrica para criação de objetos Twitter
+	 * @return a instância da classe já configurada para a aplicação
+	 */
+	public TwitterFactory getFactory() {
+		return factory;
+	}
+	
+	/**
+	 * @return a conta do twitter do usuário logado ou null caso ela não exista
+	 */
+	public ContaTwitter getContaTwitterUsuarioLogado() {
+		return getContaTwitter(Authenticator.getUsuarioLogado());
+	}
+	
+	
+	/**
+	 * @param usuario
+	 * @return a conta do twitter do usuário passado como parametro ou null caso ela não exista 
+	 */
+	public ContaTwitter getContaTwitter(Usuario usuario){
+		ContaTwitter conta = null;
+		if (usuario.getTemContaTwitter()){
+			String hql = "select o from ContaTwitter o where o.usuario = :usuario";
+			conta = (ContaTwitter) EntityUtil.createQuery(hql)
+					.setParameter("usuario", usuario)
+					.getSingleResult();
+		}
+		return conta;
+	}
+	
+	/**
+	 * @param usuario
+	 * @return a conta do twitter da localização passada como parametro ou null caso a conta não exista 
+	 */
+	public ContaTwitter getContaTwitter(Localizacao localizacao){
+		ContaTwitter conta = null;
+		if (localizacao.getTemContaTwitter()){
+			String hql = "select o from ContaTwitter o where o.localizacao = :localizacao";
+			conta = (ContaTwitter) EntityUtil.createQuery(hql)
+					.setParameter("localizacao", localizacao)
+					.getSingleResult();
+		}
+		return conta;
+	}
+	
+/*	
+    ================================== Métodos Inicializadores e Auxiliares Públicos ========================================
+*/	
 	
 	public final static void restart(){
 		instance = init();
 	}
+
+/*	
+    =================================== Métodos Inicializadores e Auxiliares Privados ========================================
+*/	
 	
-//  ======================= Métodos Inicializadores e Auxiliares Privados ===================
-	
-	//TODO fazer com que esse método inicialize o twitter da aplicação (esperando definir melhor como o twitter da aplicação será salvo) 
 	private final void loadApplicationTwitter() {
 		Integer idUsuarioSistema = Integer.valueOf(ParametroUtil.getParametro("idUsuarioSistema"));
 		String hql = "select o from ContaTwitter o right join o.usuario u where u.idUsuario = :usuario";
@@ -265,12 +355,11 @@ public class TwitterUtil {
 		return twitter;
 	}
 	
-	//TODO
 	/**
 	 * Método estático para setar as configurações necessárias para a Factory que instancia os objetos Twitter
 	 * Utiliza os parâmetros do sistema "oauthConsumerKey" e "oauthConsumerSecret" que são gerados quando a aplicação
 	 * é registrada em https://dev.twitter.com/apps
-	 * @return 
+	 * @return uma instância do TwitterUtil
 	 * */
 	private final static TwitterUtil init(){
 		TwitterUtil result = null;
@@ -285,24 +374,7 @@ public class TwitterUtil {
 		return result;
 	}
 	
-	
-	
-//  ============== Métodos para testes locais - Remover antes de colocar em Produção ==========================	
-	
-	public TwitterFactory getFactory() {
-		return factory;
-	}
-
-	public static TwitterUtil getInstance() {
-		return instance;
-	}
-
-	public Twitter getAplicacao() {
-		if (aplicacao == null){
-			loadApplicationTwitter();
-		}
-		return aplicacao;
-	}
+//  ================ Métodos para testes locais - Remover antes de colocar em Produção ==========================	
 
 	//TODO remover esse método - utilizado somente para testes locais
 	private AccessToken loadAccessToken(){

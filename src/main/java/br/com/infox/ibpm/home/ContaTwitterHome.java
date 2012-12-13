@@ -42,7 +42,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	 * */
 	public String getAuthorizationURL(){
 		try {
-			requestToken = twitter.getOAuthRequestToken();
+			requestToken = twitter.getOAuthRequestToken("http://epa.infox.com.br/epa");
 			return requestToken.getAuthorizationURL();
 		} catch (TwitterException te){
 			te.printStackTrace();
@@ -107,16 +107,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	}
 	
 	public void setContaTwitter(){
-		try {
-			TwitterUtil.getInstance().sendNews("news");
-		} catch (TwitterException e) {
-			e.printStackTrace();
-		}
-		String hql = "select o from ContaTwitter o where o.usuario = :usuario";
-		ContaTwitter conta = (ContaTwitter) EntityUtil.createQuery(hql)
-				.setParameter("usuario", Authenticator.getUsuarioLogado())
-				.getSingleResult();
-		setInstance(conta);
+		setInstance(TwitterUtil.getInstance().getContaTwitterUsuarioLogado());
 	}
 	
 }
