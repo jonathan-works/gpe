@@ -37,6 +37,7 @@
 			
 			<value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>
 			<value>menu.administracao/log.menuText:/Consulta/Log/list.seam</value>
+			<value>menu.administracao/contaTwitter.twitterSysMenuText:/ContaTwitter/Sistema/listView.seam</value>
 			
 			<value>menu.painel/painel.menuText:/Painel/list.seam</value>
 			<value>menu.painel/dashBoard.menuText:/Dashboard/listView.seam</value>

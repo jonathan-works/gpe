@@ -2,7 +2,7 @@ package br.com.infox.epa.type;
 
 public enum TipoTwitterEnum {
 
-	U("Usuário"), L("Localização");
+	U("Usuário"), L("Localização"), S("Usuário do Sistema");
 	
 	private String label;
 	

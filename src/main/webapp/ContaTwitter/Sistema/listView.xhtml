@@ -62,9 +62,9 @@
 					<s:div rendered="#{!home.managed and home.requesting}"
 							id="includeTwitterDiv">
 						<wi:inputText id="pin"
-									 value="#{home.pin}"
-									 label="#{messages['contaTwitter.pin']}"
-									 required="false" />
+									  label="#{messages['contaTwitter.pin']}"
+									  value="#{home.pin}"
+									  required="false" />
 					</s:div>
 					<ui:define name="buttons">
 						<s:div rendered="#{!home.managed}" >
@@ -78,7 +78,7 @@
 											  value="Gravar"
 											  rendered="#{home.requesting}"
 											  reRender="idTwitterBody"
-											  action="#{home.getAutorizacao('U')}" />
+											  action="#{home.getAutorizacao('S')}" />
 						</s:div>
 					</ui:define>
 				</wi:dataForm>

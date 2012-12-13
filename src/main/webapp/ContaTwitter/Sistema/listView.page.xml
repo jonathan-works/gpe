@@ -7,7 +7,7 @@
 	  
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true" />
-	<action execute="#{contaTwitterHome.setContaTwitter('U')}"/>
+	<action execute="#{contaTwitterHome.setContaTwitter('S')}"/>
 	<param name="id" value="#{contaTwitterHome.id}"
 		   converterId="longConverter" />
 	<param name="tab" value="#{contaTwitterHome.tab}" />

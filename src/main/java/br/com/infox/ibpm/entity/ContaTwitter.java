@@ -26,10 +26,10 @@ public class ContaTwitter implements Serializable {
 	
 	@Id
 	@Column(name="id_twitter", nullable=false, unique=true)
-	public long getIdTwitter() {
+	public Long getIdTwitter() {
 		return idTwitter;
 	}
-	public void setIdTwitter(long idTwitter) {
+	public void setIdTwitter(Long idTwitter) {
 		this.idTwitter = idTwitter;
 	}
 	
@@ -94,4 +94,5 @@ public class ContaTwitter implements Serializable {
 		usuarioToken = accessToken.getToken();
 		usuarioSecretToken = accessToken.getTokenSecret();
 	}
+	
 }
