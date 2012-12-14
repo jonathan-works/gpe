@@ -54,7 +54,11 @@ import org.jboss.ws.extensions.security.SimplePrincipal;
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.core.certificado.Certificado;
+import br.com.infox.core.certificado.CertificadoException;
 import br.com.infox.core.certificado.CertificadoLog;
+import br.com.infox.core.certificado.DadosCertificado;
+import br.com.infox.core.certificado.VerificaCertificado;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Usuario;
@@ -64,6 +68,7 @@ import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
+import br.com.itx.util.StringUtil;
 
 
 @Name("authenticator")
@@ -305,6 +310,80 @@ public class Authenticator {
 		}
 		return list;
 	}
+	
+	private Usuario getUsuarioByCpf(String cpf) throws LoginException {
+		String hql = "select o from Usuario o " +
+					 "where o.cpf = :cpf ";
+		Query q = EntityUtil.createQuery(hql);
+		q.setParameter("cpf", cpf);
+		Usuario usuario = EntityUtil.getSingleResult(q);
+		if (usuario == null) {
+			throw new LoginException("Não foi possível encontrar um usuário que corresponda a este SmartCard. " +
+					"Favor verificar junto com a Secretária Judiciaria os dados de CPF e data de nascimento");
+		}
+		return usuario;
+	}	
+	
+	public String authenticateSC() throws LoginException {
+		String cpf = null;
+		try {
+			Certificado c = new Certificado(certChain);
+			DadosCertificado dadosCertificado = DadosCertificado.parse(c);
+			cpf = dadosCertificado.getValor(DadosCertificado.CPF);
+			if (Strings.isEmpty(cpf)) {
+				throw new LoginException("Cpf não encontrado no cartão.");
+			}
+			cpf = StringUtil.formartCpf(cpf);
+		} catch (Exception e) {
+			throw new LoginException(e.getMessage());
+		}
+		EntityManager em = EntityUtil.getEntityManager();
+		UsuarioLogin usuario = getUsuarioByCpf(cpf);
+		if (usuario == null) {
+			throw new LoginException("Usuário não encontrado");
+		} else {
+			checkValidadeCertificado(certChain);
+			assinatura = StringUtil.replaceQuebraLinha(assinatura);
+			if (!usuario.getAtivo()) {
+				throw new LoginException("Este usuário não está ativo.");
+			}			
+		}
+		
+		String login = usuario.getLogin();
+		
+		IdentityManager identityManager = IdentityManager.instance();
+		boolean userExists = identityManager.getIdentityStore().userExists(login);
+		if (userExists) {
+			autenticaManualmenteNoSeamSecurity(login, identityManager);
+			if (usuario.getCertChain() == null) {
+				//TODO isso é temporario ate que todo mundo tenha atualizado o certchain
+				usuario.setCertChain(certChain);
+				em.merge(usuario);
+				EntityUtil.flush(em);
+			}
+			Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
+			Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
+			return null;
+		}
+		return null;
+	}
+	
+	private void checkValidadeCertificado(String certChain) throws LoginException {
+		try {
+			VerificaCertificado.verificaValidadeCertificado(certChain);
+			VerificaCertificado.verificaRevogacaoCertificado(certChain);
+		} catch (CertificadoException e) {
+			LOG.warn("Certificado inválido: " + e.getMessage());
+			throw new LoginException(e.getMessage());	
+		}
+	}
+	
+	private void checkCertificadoUsuario(UsuarioLogin usuario) throws LoginException {
+		String assinaturaUsuario = StringUtil.replaceQuebraLinha(usuario.getAssinatura());
+		if (Strings.isEmpty(assinatura) || !assinatura.equals(assinaturaUsuario)) {
+			throw new LoginException("Assinatura inválida");
+		}
+	}	
 	
 	public static String getIdsLocalizacoesFilhas(Localizacao localizacao) {
 		StringBuilder sb = new StringBuilder();
