@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.persistence.Query;
+import javax.transaction.SystemException;
 
 import org.dom4j.Element;
 import org.jboss.seam.core.Expressions;
+import org.jboss.seam.transaction.Transaction;
 import org.jbpm.graph.action.ActionTypes;
 import org.jbpm.graph.def.Action;
 import org.jbpm.instantiation.Delegation;
@@ -32,6 +34,7 @@ import org.jbpm.jpdl.xml.JpdlXmlReader;
 
 import br.com.infox.ibpm.entity.ListaEmail;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.home.ListaEmailHome;
 import br.com.infox.ibpm.jbpm.MailResolver;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.util.EntityUtil;
@@ -183,8 +186,10 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 			listaEmail = new ArrayList<ListaEmail>();
 		}
 		this.listaEmail.add(currentListaEmail);
-		EntityUtil.getEntityManager().persist(currentListaEmail);
-		EntityUtil.getEntityManager().flush();
+		ListaEmailHome home = ListaEmailHome.instance();
+		home.setInstance(currentListaEmail);
+		home.persist();
+		
 		currentListaEmail = new ListaEmail();
 		if (to == null || "".equals(to)) {
 			to = MessageFormat.format("#'{'{0}.resolve({1})}", MailResolver.NAME,
