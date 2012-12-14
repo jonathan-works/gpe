@@ -1,8 +1,11 @@
 package br.com.infox.core.certificado;
 
 import java.security.cert.X509Certificate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -172,5 +175,18 @@ public class DadosCertificado {
 			sb.append(entry.getValue()).append(separadorHtml ? "<br/>" : "\n");
 		}
 		return sb.toString();
+	}
+
+	public Date getDataNascimento() {
+		String valor = getValor(DATA_NASCIMENTO);
+		if (valor != null) {
+			SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
+			try {
+				return format.parse(valor);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		} 
+		return null;
 	}
 }
