@@ -17,7 +17,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -34,6 +33,7 @@ import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.home.ParametroHome;
 import br.com.infox.ibpm.home.ProcessoDocumentoHome;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoHome;
@@ -56,7 +56,7 @@ import br.com.itx.util.EntityUtil;
 public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 
 	public static final String LISTA_EVENTO_VARIABLE = "listaEvento";
-	private static final LogProvider LOG = Logging.getLogProvider(AutomaticEventsTreeHandler.class);
+	private static final LogProvider log = Logging.getLogProvider(AutomaticEventsTreeHandler.class);
 	private static final long serialVersionUID = 1L;
 	
 	public static final String NAME = "automaticEventsTree";
@@ -119,7 +119,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 						while (eventoAux != null){
 							for (EntityNode<Evento> root : rootList) {
 								if (root.getEntity().equals(eventoAux)){
-									setSelecao(eb.getEvento(), true, eb);
+									setSelecao(eb.getEvento(), Boolean.TRUE, eb);
 									if (!eventoBeanList.contains(eb))
 										eventoBeanList.add(eb);
 									eventoAux = null;
@@ -194,7 +194,8 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	 * informados.
 	 * @return Uma lista com os ids dos eventos agrupamentos concatenados
 	 */
-	private String getIdEventos(String agrupamentos) {
+	@SuppressWarnings("unchecked")
+	protected String getIdEventos(String agrupamentos) {
 		StringBuilder idList = new StringBuilder();
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ea from EventoAgrupamento ea ")
@@ -232,8 +233,9 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	 */
 	public void removeEvento(Object obj) {
 		EventoBean eb = (EventoBean) obj;
+		Evento evento = EntityUtil.find(Evento.class, eb.getEvento().getIdEvento());
 		eventoBeanList.remove(eb);
-		Evento rootDad = getDad(eb.getEvento());
+		Evento rootDad = getDad(evento);
 		if(rootsSelectedMap.get(rootDad) != null && rootsSelectedMap.get(rootDad).size() <= 1) {
 			rootsSelectedMap.remove(rootDad);
 		} else if (rootsSelectedMap.get(rootDad) != null){
@@ -255,7 +257,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	 * não estejam em nenhum deles.
 	 */
 	public void setSelected(Evento selected, boolean isMultiplo) {
-		if (selected.getEventoList().isEmpty()) {
+		if (!possuiFilhos(selected)) {
 			super.setSelected(selected);
 			Evento parent = getDad(selected);
 			List<Evento> l = rootsSelectedMap.get(parent);
@@ -270,9 +272,15 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		}
 	}
 	
-	@SuppressWarnings("unused")
+	private boolean possuiFilhos(Evento evento) {
+		String hql = "select o.idEvento from Evento o where o.eventoSuperior = :evento";
+		Query query = getEntityManager().createQuery(hql);
+		query.setParameter("evento", evento);
+		return EntityUtil.getSingleResult(query) != null;
+	}
+	
 	public void setSelecao(Evento selected, boolean isMultiplo, EventoBean eb) {
-		if (selected.getEventoList().isEmpty()) {
+		if (!possuiFilhos(selected)) {
 			super.setSelected(selected);
 			Evento parent = getDad(selected);
 			List<Evento> l = rootsSelectedMap.get(parent);
@@ -310,7 +318,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		HtmlTree tree = (HtmlTree) ev.getSource();
 		treeId = tree.getId();
 		EventsEntityNode en = (EventsEntityNode) tree.getData(); 
-		setSelected(en.getEntity(), isMultiplo(en));
+		setSelected((Evento) en.getEntity(), isMultiplo(en));
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}	
 	
@@ -424,11 +432,12 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	 * e seta uma variável para verificar se existe ou não mais eventos a serem 
 	 * registrados nessa tarefa.
 	 */
+	@SuppressWarnings("unchecked")
 	public void registraEventos() {		
 		ProcessoDocumento pd = EntityUtil.find(ProcessoDocumento.class,ProcessoHome.instance().getIdProcessoDocumento());
 		if (pd != null){
-			AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
-			if(documentoService.isDocumentoAssinado(pd.getIdProcessoDocumento())){
+			AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
+			if(assinaturaDocumentoService.isDocumentoAssinado(pd.getIdProcessoDocumento())){
 				inserirEventosProcesso(pd);	
 				if(ProcessInstance.instance() != null && JbpmUtil.getProcessVariable(LISTA_EVENTO_VARIABLE) != null)
 					limparEventoTemporario((List<EventoBean>) JbpmUtil.getProcessVariable(LISTA_EVENTO_VARIABLE), pd);
@@ -448,13 +457,12 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		inserirEventosProcesso(pd);	
 	}
 
-	@SuppressWarnings("null")
 	private void inserirEventosProcesso(ProcessoDocumento pd) {
 		try {
 			if(eventoBeanList == null || eventoBeanList.size() == 0) {
 				return;
 			}
-			Usuario usuario = (Usuario) Contexts.getSessionContext().get(Authenticator.USUARIO_LOGADO);
+			Usuario usuario = Authenticator.getUsuarioLogado();
 			Processo processo = null;
 			
 			Integer idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
@@ -491,13 +499,18 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 				sb.append(", :idProcessoDocumento");
 			}
 			sb.append(")");
+			
+			String origem = ParametroHome.getParametro("aplicacaoSistema");
+						
 			Query q = EntityUtil.getEntityManager().createNativeQuery(sb.toString());
+			Date dataMovimento = new Date();
 			for (EventoBean eb : eventoBeanList) {
 				for (int i=0; i<eb.getQuantidade();i++) {
 					q.setParameter("processo", processo.getIdProcesso());
 					q.setParameter("evento", eb.getEvento().getIdEvento());
 					q.setParameter("usuario", usuario.getIdUsuario());
-					q.setParameter("data", new Date());
+					q.setParameter("data", dataMovimento);
+					q.setParameter("origem", origem);
 					Tarefa t = null;
 					if(taskInstance != null){
 						q.setParameter("idJbpm", taskInstance.getId());
@@ -521,7 +534,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 			Events.instance().raiseEvent(AFTER_REGISTER_EVENT);
 		} catch (Exception ex) {
 			String action = "registrar os eventos do tipo tarefa: ";
-			LOG.warn(action, ex);
+			log.warn(action, ex);
 			throw new AplicationException(AplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "registraEventos()", 
@@ -567,16 +580,23 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	 */
 	public Boolean verificaRegistroEventos(ProcessoDocumento documento) {
 		StringBuilder sql = new StringBuilder();		
-		sql.append("select o.processoDocumento ");
+		sql.append("select count(o.processoDocumento) ");
 		sql.append("from ProcessoEvento o where o.processo.idProcesso = :idProcesso ");
 		sql.append("and o.processoDocumento.idProcessoDocumento = :idProcessoDoc ");
 		Query q = EntityUtil.getEntityManager().createQuery(sql.toString());	
 		q.setParameter("idProcesso", documento.getProcesso().getIdProcesso());
 		q.setParameter("idProcessoDoc", documento.getIdProcessoDocumento());
-		if (q.getResultList().size() > 0) {
-			return true;
-		}				
-		return false;
+		long resultado = (Long) q.getSingleResult(); 
+		return resultado > 0;
 	}
+	
+	/**
+	 * Metodo que verifica se pelo menos um evento foi selecionado pelo usuario
+	 * @return
+	 */
+	public boolean possuiEventoBeanSelecionado() {
+		List<EventoBean> beanList = getEventoBeanList();
+		return beanList != null && !beanList.isEmpty();
+	}	
 	
 }
