@@ -36,6 +36,8 @@
 				<a:support event="onchange"
 						   oncomplete="#{automaticEventsTree.carregaEventos()}"
 						   action="#{processoHome.onSelectProcessoDocumento()}"
+						   ajaxSingle="true"
+						   limitToList="true"
 					   	   reRender="divEventsTreeTextEdit, divAppletId, appletAssinar"/>
 			</wi:selectOneMenuEntity>
 			
