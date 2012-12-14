@@ -78,12 +78,13 @@ public class TarefaTimerProcessor {
 				} else {
 					pt.setPorcentagem((pt.getTempoGasto()*100)/(pt.getTarefa().getPrazo()*60));
 				}
+
+				ProcessoEpa processoEpa = pt.getProcessoEpa();
+				if (pt.getPorcentagem() > 100 && processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
+					processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
+				}
 			}
 			
-			ProcessoEpa processoEpa = pt.getProcessoEpa();
-			if (pt.getPorcentagem() > 100 && processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
-				processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
-			}
 			pt.setUltimoDisparo(fireTime);
 			processoEpaTarefaManager.update(pt);
 		}
