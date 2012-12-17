@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ <!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    xmlns:a="http://richfaces.org/a4j"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                      
+	<ui:define name="title">#{messages['twitterTemplate.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{twitterTemplateHome}" />
+	
+	<ui:define name="searchGrid">   
+	    <wi:dataTable values="#{twitterTemplateList.list(15)}"
+					  bean="#{twitterTemplateList}"
+					  tableTitle="#{messages['twitterTemplate.titleGrid']}"
+					  id="twitterTemplateList"
+					  rowId="#{row.idTwitterTemplate}" >
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarTwitterTemplateForm"
+							   formTitle="#{messages['twitterTemplate.titleSearchForm']}">
+					<wi:inputText id="tituloTwitterTemplate"
+								 value="#{twitterTemplateList.entity.titulo}"
+								 label="#{messages['twitterTemplate.titulo']}"
+								 maxlength="50"/>
+					<wi:inputText id="mensagem"
+								  label="#{messages['twitterTemplate.mensagem']}"
+								  value="#{twitterTemplateList.entity.mensagem}"
+								  maxlength="123" />
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['agrupamento.ativo']}"
+											  value="#{twitterTemplateList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="tituloTemplate"
+								 columnHeader="#{messages['twitterTemplate.titulo']}"
+								 value="#{row.titulo}" />
+			<wi:columnOutputText columnId="mensagemTemplate"
+								 columnHeader="#{messages['twitterTemplate.mensagem']}"
+								 value="#{row.mensagem}" />
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['agrupamento.ativo']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="twitterTemplateForm"
+					 formTitle="#{messages['twitterTemplate.titleForm']}">
+			<wi:inputText id="titulo"
+						 value="#{twitterTemplateHome.instance.titulo}"
+						 required="true"
+						 label="#{messages['twitterTemplate.titulo']}"
+						 maxlength="123"/>
+			<wi:inputText id="mensagem"
+						  label="#{messages['twitterTemplate.mensagem']}"
+						  required="true"
+						  value="#{twitterTemplateHome.instance.mensagem}"
+						  maxlength="123" />
+			<wi:selectSituacaoRadio id="ativo"
+								    label="#{messages['agrupamento.ativo']}"
+								    required="true"
+								    value="#{twitterTemplateHome.instance.ativo}" />
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>

@@ -6,6 +6,7 @@ import java.util.List;
 
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.ibpm.entity.TwitterTemplate;
 import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.ParametroUtil;
@@ -213,6 +214,18 @@ public class TwitterUtil {
 			statusList.add(twitter.updateStatus(newMessage));
 		}
 		return statusList;
+	}
+	
+	/**
+	 * Atualiza o status do sender com uma mensagem para cada receiver da lista que for passada e fazendo também uma "mention" a cada um deles
+	 * @param sender a conta que postará o tweet
+	 * @param receivers a lista de contas que serão citadas nas mensgens
+	 * @param message o conteúdo da mensagem
+	 * @return o status resultante da postagem
+	 * @throws TwitterException Quando não for possível conectar ao Twitter ou a String resultante da postagem possuir mais de 140 caracteres
+	 */
+	public List<Status> sendMessage(ContaTwitter sender, List<ContaTwitter> receivers, TwitterTemplate template) throws TwitterException{
+		return sendMessage(sender, receivers, template.getMensagem());
 	}
 
 	/**
