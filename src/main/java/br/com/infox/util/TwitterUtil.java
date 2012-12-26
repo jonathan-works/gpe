@@ -71,6 +71,20 @@ public class TwitterUtil {
 		return aplicacao.retweetStatus(status.getId());
 	}
 	
+	public Status sendMessage(ContaTwitter receiver, String message) throws TwitterException {
+		String newMessage = "@" + receiver.getScreenName() + " " + message;
+		return aplicacao.updateStatus(newMessage);
+	}
+	
+	public List<Status> sendMessage(List<ContaTwitter> receivers, String message) throws TwitterException {
+		List<Status> statusList = new ArrayList<Status>();
+		for (ContaTwitter receiver : receivers){
+			String newMessage = "@" + receiver.getScreenName() + " " + message;
+			statusList.add(aplicacao.updateStatus(newMessage));
+		}
+		return statusList;
+	}
+	
 	/**
 	 * Envia uma mensagem direta (DM) do twitter da aplicação para o twitter passado 
 	 * @param receiver a conta do twitter que deverá receber a DM
