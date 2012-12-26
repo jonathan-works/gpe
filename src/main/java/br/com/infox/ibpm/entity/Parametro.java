@@ -33,6 +33,8 @@ import javax.persistence.TemporalType;
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
+import br.com.infox.access.entity.UsuarioLogin;
+
 
 @Entity
 @Table(name = "tb_parametro", schema="public")
@@ -46,7 +48,7 @@ public class Parametro implements java.io.Serializable {
 	private String valorVariavel;
 	private Date dataAtualizacao = new Date();
 	private Boolean sistema;	
-	private Usuario usuarioModificacao;
+	private UsuarioLogin usuarioModificacao;
 	private Boolean ativo;
 	private String esquemaTabelaId;
 
@@ -67,11 +69,11 @@ public class Parametro implements java.io.Serializable {
 	
 	@ManyToOne (fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_usuario_modificacao", nullable = true)
-	public Usuario getUsuarioModificacao() {
+	public UsuarioLogin getUsuarioModificacao() {
 		return this.usuarioModificacao;
 	}
 
-	public void setUsuarioModificacao(Usuario usuarioModificacao) {
+	public void setUsuarioModificacao(UsuarioLogin usuarioModificacao) {
 		this.usuarioModificacao = usuarioModificacao;
 	}
 

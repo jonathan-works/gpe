@@ -36,7 +36,7 @@
 			<value>lower(complemento) like concat(lower(#{processoSearch.complemento}),'%')</value>
 			<value>lower(numeroProcesso) like concat(lower(#{processoSearch.numeroProcesso}),'%')</value>
 			<value>usuarioCadastroProcesso = #{processoSearch.usuarioCadastroProcesso}</value>
-			<value>usuarioCadastroProcesso.idUsuario = #{usuarioHome.id}</value>
+			<value>usuarioCadastroProcesso.idPessoa = #{usuarioHome.id}</value>
 			<value>lower(numeroProcessoOrigem) like concat(lower(#{processoSearch.numeroProcessoOrigem}),'%')</value>
 		</property>		
 		<property name="searchFields">

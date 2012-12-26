@@ -1,6 +1,5 @@
 package br.com.infox.epa.list;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,11 +7,10 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epa.entity.ProcessoEpa;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 
 @Name(ProcessoEpaList.NAME)
 @BypassInterceptors
@@ -27,7 +25,7 @@ public class ProcessoEpaList extends EntityList<ProcessoEpa> {
 	private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.entity.dataInicio}";
 	private static final String R2 = "cast(dataFim as date)<= #{processoEpaList.entity.dataFim}";
 	
-	private List<Usuario> listaUsuarios;
+	private List<UsuarioLogin> listaUsuarios;
 	
 	@SuppressWarnings("unchecked")
 	private void iniciaListaUsuarios()	{
@@ -61,10 +59,10 @@ public class ProcessoEpaList extends EntityList<ProcessoEpa> {
 		return null;
 	}
 
-	public List<Usuario> getListaUsuarios() {
+	public List<UsuarioLogin> getListaUsuarios() {
 		return listaUsuarios;
 	}
-	public void setListaUsuarios(List<Usuario> listaUsuarios)	{
+	public void setListaUsuarios(List<UsuarioLogin> listaUsuarios)	{
 		this.listaUsuarios = listaUsuarios;
 	}
 

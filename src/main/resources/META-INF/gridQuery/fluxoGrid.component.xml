@@ -25,7 +25,7 @@
 			<value>o not in (select list from Variavel obj join obj.fluxoList list
 					where obj.idVariavel = #{variavelHome.definedInstance.idVariavel})
 			</value> 
-			<value>usuarioPublicacao.idUsuario = #{usuarioHome.id}</value>
+			<value>usuarioPublicacao.idPessoa = #{usuarioHome.id}</value>
 		</property>		
 		<property name="searchFields">
 			<value>ativo: {type: comboSituacao}</value>

@@ -57,7 +57,7 @@ import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.ProcessoEvento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
@@ -184,7 +184,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public Processo criarProcesso() {
 		Date dataCadastro = new Date();
 		newInstance();
-		Usuario usuario = getUsuarioLogado();
+		UsuarioLogin usuario = getUsuarioLogado();
 		instance.setUsuarioCadastroProcesso(usuario);
 		instance.setDataInicio(dataCadastro);
 		instance.setNumeroProcesso("");
@@ -202,7 +202,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		BusinessProcess.instance().createProcess(fluxo.getFluxo().trim());
 		Date dataCadastro = new Date();
 		newInstance();
-		Usuario usuario = getUsuarioLogado();
+		UsuarioLogin usuario = getUsuarioLogado();
 		instance.setUsuarioCadastroProcesso(usuario);
 		instance.setDataInicio(dataCadastro);
 		instance.setIdJbpm(BusinessProcess.instance().getProcessId());
@@ -231,9 +231,9 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return instance;
 	}
  
-	public Usuario getUsuarioLogado() {
-		Usuario usuario = (Usuario) Contexts.getSessionContext().get("usuarioLogado");
-		usuario = getEntityManager().find(usuario.getClass(), usuario.getIdUsuario());
+	public UsuarioLogin getUsuarioLogado() {
+		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
+		usuario = getEntityManager().find(usuario.getClass(), usuario.getIdPessoa());
 		return usuario;
 	}	
 	
@@ -430,7 +430,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 	}
 	
-	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, Usuario usuarioLogado) throws Exception {
+	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws Exception {
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
 			limparAssinatura();
 			throw new Exception("O cadastro do usuário não está assinado.");
@@ -444,7 +444,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	//Método para Inserir o documento do fluxo
 	public Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
-		Usuario usuarioLogado = getUsuarioLogado();
+		UsuarioLogin usuarioLogado = getUsuarioLogado();
 		if (assinado){
 			try {
 				verificaCertificadoUsuarioLogado(certChain, usuarioLogado);

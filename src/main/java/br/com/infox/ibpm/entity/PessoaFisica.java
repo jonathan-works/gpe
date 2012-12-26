@@ -3,6 +3,7 @@ package br.com.infox.ibpm.entity;
 import java.text.DateFormat;
 import java.util.Date;
 import javax.persistence.*;
+
 import org.hibernate.validator.Length;
 
 import br.com.infox.epa.type.TipoPessoaEnum;
@@ -17,6 +18,7 @@ public class PessoaFisica extends Pessoa{
 	
 	private String cpf;
 	private Date dataNascimento;
+	private String email;
 	
 	public PessoaFisica(){
 		setTipoPessoa(TipoPessoaEnum.F);
@@ -37,6 +39,16 @@ public class PessoaFisica extends Pessoa{
 	}
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
+	}
+	
+	@Column(name = "ds_email", length = 100, unique = true, nullable = false)
+	@Length(max = 100)
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	@Transient

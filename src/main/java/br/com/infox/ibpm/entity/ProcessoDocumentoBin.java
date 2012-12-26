@@ -41,6 +41,7 @@ import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.itx.util.ArrayUtil;
 
 @Entity
@@ -50,7 +51,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int idProcessoDocumentoBin;
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 	private String nomeUsuario;
 	private String usuarioUltimoAssinar;
 	private byte[] processoDocumento;
@@ -81,11 +82,11 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 	}
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario")
-	public Usuario getUsuario() {
+	public UsuarioLogin getUsuario() {
 		return this.usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioLogin usuario) {
 		this.usuario = usuario;
 	}
 

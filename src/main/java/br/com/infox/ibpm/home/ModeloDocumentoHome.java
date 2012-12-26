@@ -29,7 +29,7 @@ import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.list.ModeloDocumentoList;
 import br.com.itx.util.ComponentUtil;
@@ -126,7 +126,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		historico.setAtivo(oldEntity.getAtivo());
 		historico.setDataAlteracao(new Date());
 		historico.setModeloDocumento(instance);
-		historico.setUsuarioAlteracao((Usuario) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
+		historico.setUsuarioAlteracao((UsuarioLogin) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
 		
 		home.persist();
 		return true;

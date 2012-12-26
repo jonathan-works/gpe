@@ -19,6 +19,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.query.ProcessoEventoQuery;
  
 /**
@@ -39,7 +40,7 @@ public class ProcessoEvento implements java.io.Serializable {
 	private Processo processo;
 	private ProcessoDocumento processoDocumento;
 	private Evento evento;
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 	private Date dataAtualizacao;
 	private Long idJbpmTask;
 	private Long idProcessInstance;
@@ -97,11 +98,11 @@ public class ProcessoEvento implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario")
-	public Usuario getUsuario() {
+	public UsuarioLogin getUsuario() {
 		return usuario;
 	}
 	
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioLogin usuario) {
 		this.usuario = usuario;
 	}
 	

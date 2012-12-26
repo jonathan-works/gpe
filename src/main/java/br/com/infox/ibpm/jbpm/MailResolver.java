@@ -23,7 +23,7 @@ public class MailResolver {
 	
 	public String resolve(int idGrupoEmail) {		
 		List<String> lista = EntityUtil.getEntityManager()
-			.createQuery("select distinct u.email from Usuario u " +
+			.createQuery("select distinct u.email from UsuarioLogin u " +
 				"join u.usuarioLocalizacaoList ul " +
 				"where exists (" + 
 				"select o from ListaEmail o where o.idGrupoEmail = :idGrupoEmail and (" +

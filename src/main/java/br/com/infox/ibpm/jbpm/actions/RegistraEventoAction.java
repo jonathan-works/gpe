@@ -45,7 +45,7 @@ import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.entity.TarefaEvento;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.home.ParametroHome;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
@@ -142,7 +142,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 			sb.append("where o.idAgrupamento in (:idList)");
 			List<Evento> list = EntityUtil.getEntityManager().createQuery(sb.toString())
 										  .setParameter("idList", ids).getResultList();
-			Usuario usuario = (Usuario) Contexts.getSessionContext().get("usuarioLogado");
+			UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
 			
 			Processo processo = null;
 			try {
@@ -235,7 +235,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 	private boolean registrarTarefaEventos(TarefaEvento tarefaEvento) {
 		try {
 			if(tarefaEvento != null) {
-				Usuario usuario = (Usuario) Contexts.getSessionContext().get("usuarioLogado");
+				UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
 				Processo processo = JbpmUtil.getProcesso();
 				if(processo == null) {
 					processo = ProcessoHome.instance().getInstance();
@@ -273,7 +273,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 	 * @param evento - Evento a ser registrado
 	 * @param usuario - Usuario que está registrando esses eventos
 	 */
-	public void registrarEvento(Processo processo, Evento evento, Usuario usuario) {
+	public void registrarEvento(Processo processo, Evento evento, UsuarioLogin usuario) {
 		registrarEvento(processo, evento, usuario, new Date());
 	}
 	
@@ -284,7 +284,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 	 * @param usuario - Usuario que está registrando esses eventos
 	 * @param dataEvento - Momento em que o evento foi registrado
 	 */
-	public void registrarEvento(Processo processo, Evento evento, Usuario usuario, Date dataEvento) {
+	public void registrarEvento(Processo processo, Evento evento, UsuarioLogin usuario, Date dataEvento) {
 		try {
 			if(evento == null) {
 				return;
@@ -323,7 +323,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 			if(usuario == null) {
 				qInsert.setParameter("usuario", Integer.parseInt(ParametroHome.getParametro(ParametroHome.ID_USUARIO_SISTEMA)));
 			} else {
-				qInsert.setParameter("usuario", usuario.getIdUsuario());
+				qInsert.setParameter("usuario", usuario.getIdPessoa());
 			}
 			qInsert.setParameter("data", dataEvento);
 			if(processInstance != null && t != null) {

@@ -61,7 +61,7 @@ import br.com.infox.core.certificado.DadosCertificado;
 import br.com.infox.core.certificado.VerificaCertificado;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ldap.util.LdapUtil;
 import br.com.infox.util.ParametroUtil;
@@ -130,7 +130,7 @@ public class Authenticator {
 		if (id != null) {
 			JpaIdentityStore store = (JpaIdentityStore) IdentityManager
 					.instance().getIdentityStore();
-			Usuario usuario = (Usuario) store.lookupUser(id);
+			UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
 			// retorna false caso o usuario do Sistema não esteja ativo
 			if (usuario == null) {
 				throw new LoginException("O usuário '" + id
@@ -162,7 +162,7 @@ public class Authenticator {
 		return newPassword1 != null && !newPassword1.trim().equals("");
 	}
 	
-	private void trocarSenhaUsuario(final Usuario usuario) throws LoginException {
+	private void trocarSenhaUsuario(final UsuarioLogin usuario) throws LoginException {
 		if (newPassword1.equals(newPassword2)){
 			new RunAsOperation(true) {
 				@Override
@@ -178,7 +178,7 @@ public class Authenticator {
 		throw new LoginException("Nova senha não confere com a confirmação!");		
 	}
 	
-	private void validateUser(Usuario usuario) throws LoginException {
+	private void validateUser(UsuarioLogin usuario) throws LoginException {
 		if (!usuario.getAtivo()) {
 			throw new LoginException("O usuário " + usuario.getNome() + " não está ativo.\n");
 		} else if (usuario.getBloqueio()){
@@ -203,10 +203,10 @@ public class Authenticator {
 		}
 	}
 
-	private void inativarUsuario(Usuario usuario) {
+	private void inativarUsuario(UsuarioLogin usuario) {
 		String inativarProvisorio = 
 				"UPDATE UsuarioLogin u SET u.ativo = false " +
-				"WHERE u.idUsuario = " + usuario.getIdUsuario().toString();
+				"WHERE u.idUsuario = " + usuario.getIdPessoa().toString();
 		EntityUtil.getEntityManager().createQuery(inativarProvisorio).executeUpdate();
 	}
 	
@@ -214,7 +214,7 @@ public class Authenticator {
 		String queryDesbloqueio = 
 				"update public.tb_usuario set in_bloqueio=false where id_usuario = :usuario";
 		EntityUtil.getEntityManager().createNativeQuery(queryDesbloqueio)
-			.setParameter("usuario", bloqueioUsuario.getUsuario().getIdUsuario())
+			.setParameter("usuario", bloqueioUsuario.getUsuario().getIdPessoa())
 			.executeUpdate();
 		String queryDataDesbloqueio = 
 				"UPDATE BloqueioUsuario b SET b.dataDesbloqueio = :hoje " +
@@ -248,7 +248,7 @@ public class Authenticator {
 		Identity identity = Identity.instance();
 		Credentials credentials = identity.getCredentials();
 		String login = credentials.getUsername();
-		Usuario user = home.checkUserByLogin(login);
+		UsuarioLogin user = home.checkUserByLogin(login);
 		if(user == null) {
 			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
 			return;
@@ -311,12 +311,12 @@ public class Authenticator {
 		return list;
 	}
 	
-	private Usuario getUsuarioByCpf(String cpf) throws LoginException {
+	private UsuarioLogin getUsuarioByCpf(String cpf) throws LoginException {
 		String hql = "select o from Usuario o " +
 					 "where o.cpf = :cpf ";
 		Query q = EntityUtil.createQuery(hql);
 		q.setParameter("cpf", cpf);
-		Usuario usuario = EntityUtil.getSingleResult(q);
+		UsuarioLogin usuario = EntityUtil.getSingleResult(q);
 		if (usuario == null) {
 			throw new LoginException("Não foi possível encontrar um usuário que corresponda a este SmartCard. " +
 					"Favor verificar junto com a Secretária Judiciaria os dados de CPF e data de nascimento");
@@ -445,7 +445,7 @@ public class Authenticator {
 	 * Metodo que coloca o usuario logado na sessão
 	 * @param usuario
 	 */
-	private void setUsuarioLogadoSessao(Usuario usuario) {
+	private void setUsuarioLogadoSessao(UsuarioLogin usuario) {
 		Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
 		List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(
 				usuario.getUsuarioLocalizacaoList());
@@ -454,7 +454,7 @@ public class Authenticator {
 		Events.instance().raiseEvent(SET_USUARIO_LOCALIZACAO_LIST_EVENT, usuarioLocalizacaoList);
 	}
 	
-	private boolean obterLocalizacaoAtual(Usuario usuario) throws LoginException {
+	private boolean obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
 		List<UsuarioLocalizacao> listUsuarioLoc = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioLocalizacaoList()) ;
 		Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
 		if (listUsuarioLoc.size() > 0) {
@@ -547,9 +547,9 @@ public class Authenticator {
 	 * Atalho para o usuario logado
 	 * @return usuário logado
 	 */
-	public static Usuario getUsuarioLogado() {
-		Usuario usuario = (Usuario) Contexts.getSessionContext().get("usuarioLogado");
-		return EntityUtil.getEntityManager().find(usuario.getClass(), usuario.getIdUsuario());
+	public static UsuarioLogin getUsuarioLogado() {
+		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
+		return EntityUtil.getEntityManager().find(usuario.getClass(), usuario.getIdPessoa());
 	}
 	
 	public void setLogin(String login) {

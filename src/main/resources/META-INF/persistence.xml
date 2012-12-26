@@ -59,7 +59,6 @@
 		<class>br.com.infox.ibpm.entity.TipoModeloDocumentoPapel</class>
 		<class>br.com.infox.ibpm.entity.TipoProcessoDocumento</class>
 		<class>br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel</class>
-		<class>br.com.infox.ibpm.entity.Usuario</class>
 		<class>br.com.infox.ibpm.entity.UsuarioLocalizacao</class>
 		<class>br.com.infox.ibpm.entity.Variavel</class>
 		<class>br.com.infox.ibpm.entity.VariavelTipoModelo</class>
@@ -148,7 +147,6 @@
 		<class>br.com.infox.ibpm.entity.TipoModeloDocumentoPapel</class>
 		<class>br.com.infox.ibpm.entity.TipoProcessoDocumento</class>
 		<class>br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel</class>
-		<class>br.com.infox.ibpm.entity.Usuario</class>
 		<class>br.com.infox.ibpm.entity.UsuarioLocalizacao</class>
 		<class>br.com.infox.ibpm.entity.Variavel</class>
 		<class>br.com.infox.ibpm.entity.VariavelTipoModelo</class>

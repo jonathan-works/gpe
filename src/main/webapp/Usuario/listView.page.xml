@@ -20,9 +20,10 @@
 	<param name="nome" value="#{usuarioSearch.nome}"/>		
 	<param name="bloqueio" value="#{usuarioSearch.bloqueio}"/>		
 	<param name="ativo" value="#{usuarioSearch.ativo}"/>		
-	<param name="provisorio" value="#{usuarioSearch.provisorio}"/>		
+	<param name="provisorio" value="#{usuarioSearch.provisorio}"/>
+	<param name="cpf" value="#{usuarioHome.instance.cpf}"/>		
 
-	<action if="#{! usuarioHome.managed}" execute="#{usuarioHome.newInstance()}"/>
+
 	<action if="#{empty usuarioHome.tab}" execute="#{usuarioHome.setTab('search')}"/>
 
 	<!-- Parametros para a ordem de grids -->

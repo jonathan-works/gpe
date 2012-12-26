@@ -24,7 +24,6 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
 import br.com.itx.util.EntityUtil;
@@ -41,7 +40,7 @@ public class UserHandler {
 		if (login == null || login.equals("")) {
 			return getLocalizacao(task);
 		}
-		Usuario u = getUsuario(login);
+		UsuarioLogin u = getUsuario(login);
 		if (u != null) {
 			return u.getLogin();
 		}
@@ -74,14 +73,14 @@ public class UserHandler {
 		return user.getNome();
 	}
 	
-	public Usuario getUsuario(String login) {
+	public UsuarioLogin getUsuario(String login) {
 		if (login == null || login.equals("")) {
 			return null;
 		}
-		Usuario u = null;
+		UsuarioLogin u = null;
 		try {
-			u = (Usuario) EntityUtil.getEntityManager()
-				.createQuery("select u from Usuario u where login=:login")
+			u = (UsuarioLogin) EntityUtil.getEntityManager()
+				.createQuery("select u from UsuarioLogin u where login=:login")
 				.setParameter("login", login)
 				.getSingleResult();
 		} catch (NoResultException e) {

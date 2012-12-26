@@ -7,7 +7,7 @@ import java.util.List;
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.TwitterTemplate;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.EntityUtil;
@@ -315,7 +315,7 @@ public class TwitterUtil {
 	 * @param usuario
 	 * @return a conta do twitter do usuário passado como parametro ou null caso ela não exista 
 	 */
-	public ContaTwitter getContaTwitter(Usuario usuario){
+	public ContaTwitter getContaTwitter(UsuarioLogin usuario){
 		ContaTwitter conta = null;
 		if (usuario.getTemContaTwitter()){
 			String hql = "select o from ContaTwitter o where o.usuario = :usuario";
@@ -355,7 +355,7 @@ public class TwitterUtil {
 	
 	private final void loadApplicationTwitter() {
 		Integer idUsuarioSistema = Integer.valueOf(ParametroUtil.getParametro("idUsuarioSistema"));
-		String hql = "select o from ContaTwitter o right join o.usuario u where u.idUsuario = :usuario";
+		String hql = "select o from ContaTwitter o right join o.usuario u where u.idPessoa = :usuario";
 		ContaTwitter ct = (ContaTwitter) EntityUtil.createQuery(hql)
 				.setParameter("usuario", idUsuarioSistema)
 				.getSingleResult();

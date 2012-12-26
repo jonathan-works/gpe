@@ -18,7 +18,7 @@ package br.com.infox.ibpm.bean;
 import java.io.Serializable;
 import java.util.Date;
 
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.type.TipoOperacaoLogEnum;
 import br.com.infox.util.DateUtil;
 
@@ -31,7 +31,7 @@ public class ConsultaEntidadeLog implements Serializable{
 	private String nomeEntidade;
 	private Date dataInicio;
 	private Date dataFim = new Date();
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 	private TipoOperacaoLogEnum tipoOperacaoLogEnum = null;
 	private Boolean inPesquisa = false;
 	
@@ -52,10 +52,10 @@ public class ConsultaEntidadeLog implements Serializable{
 	public void setNomeEntidade(String nomeEntidade) {
 		this.nomeEntidade = nomeEntidade;
 	}
-	public Usuario getUsuario() {
+	public UsuarioLogin getUsuario() {
 		return usuario;
 	}
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioLogin usuario) {
 		this.usuario = usuario;
 	}
 	

@@ -37,7 +37,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.type.TipoOperacaoLogEnum;
 
 
@@ -52,7 +52,7 @@ public class EntityLog implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int idLog;
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 	private String urlRequisicao;
 	private String ip;
 	private String nomeEntidade;
@@ -79,11 +79,11 @@ public class EntityLog implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario")
-	public Usuario getUsuario() {
+	public UsuarioLogin getUsuario() {
 		return this.usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioLogin usuario) {
 		this.usuario = usuario;
 	}
 

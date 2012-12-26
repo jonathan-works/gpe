@@ -38,7 +38,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.validator.NotNull;
 
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.search.Reindexer;
 
 @Entity
@@ -53,7 +53,7 @@ public class Ajuda implements java.io.Serializable {
 	private Date dataRegistro;
 	private String texto;
 	private Pagina pagina;
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_ajuda")
 	@Id
@@ -101,11 +101,11 @@ public class Ajuda implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario", nullable = false)
 	@NotNull
-	public Usuario getUsuario() {
+	public UsuarioLogin getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioLogin usuario) {
 		this.usuario = usuario;
 	}
 

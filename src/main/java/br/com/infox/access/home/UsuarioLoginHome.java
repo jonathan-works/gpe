@@ -17,12 +17,13 @@ import br.com.itx.component.AbstractHome;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 
-@Name("usuarioLoginHome")
+@Name(UsuarioLoginHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class UsuarioLoginHome extends AbstractHome<UsuarioLogin> {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "usuarioLoginHome";
 	
 	private String papel;
   
@@ -86,6 +87,10 @@ public class UsuarioLoginHome extends AbstractHome<UsuarioLogin> {
 		this.papel = papel;
 		List<String> list = Arrays.asList(new String[] {papel});
 		getUserAction().setRoles(list);
+	}
+	
+	public UsuarioLoginHome instance (){
+		return ComponentUtil.getComponent(NAME);
 	}
 	
 }

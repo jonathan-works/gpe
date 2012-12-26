@@ -42,6 +42,8 @@ import javax.persistence.Transient;
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
+import br.com.infox.access.entity.UsuarioLogin;
+
 @Entity
 @Table(name=Processo.TABLE_NAME, schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -51,7 +53,7 @@ public class Processo implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int idProcesso;
-	private Usuario usuarioCadastroProcesso;
+	private UsuarioLogin usuarioCadastroProcesso;
 	private String nomeUsuarioCadastroProcesso;
 	private String numeroProcesso;
 	private String numeroProcessoOrigem;
@@ -88,11 +90,11 @@ public class Processo implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_cadastro_processo")
-	public Usuario getUsuarioCadastroProcesso() {
+	public UsuarioLogin getUsuarioCadastroProcesso() {
 		return this.usuarioCadastroProcesso;
 	}
 
-	public void setUsuarioCadastroProcesso(Usuario usuarioCadastroProcesso) {
+	public void setUsuarioCadastroProcesso(UsuarioLogin usuarioCadastroProcesso) {
 		this.usuarioCadastroProcesso = usuarioCadastroProcesso;
 	}
 

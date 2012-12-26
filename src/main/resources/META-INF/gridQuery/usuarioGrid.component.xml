@@ -4,13 +4,13 @@
 
 
 	<component name="usuarioGrid" class="br.com.itx.component.grid.GridQuery">
-		<property name="ejbql">select o from Usuario o</property>
+		<property name="ejbql">select o from UsuarioLogin o</property>
 		<property name="order">nome</property>
 		<property name="maxResults">16</property>
 		<property name="gridId">usuario</property>
-		<property name="key">idUsuario</property>
+		<property name="key">idPessoa</property>
 		<property name="columns">
-			<value>nome</value>			
+			<value>nome</value>	
 			<value>bloqueio: {valueType: sim_nao}</value>			
 			<value>ativo: {valueType: sim_nao}</value>			
 			<value>provisorio: {valueType: sim_nao}</value>			
@@ -23,6 +23,6 @@
 		</property>
 	</component>
 	
-	<component name="usuarioSearch" class="br.com.infox.ibpm.entity.Usuario" />	
+	<component name="usuarioSearch" class="br.com.infox.access.entity.UsuarioLogin" />	
 	
 </components>

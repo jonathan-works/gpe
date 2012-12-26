@@ -379,7 +379,7 @@ public class TaskInstanceHome implements Serializable {
 		UsuarioLogin user = (UsuarioLogin) q.getSingleResult();		
 		UsuarioTaskInstance uti = new UsuarioTaskInstance();
 		uti.setIdTaskInstance(idTask);
-		uti.setIdUsuario(user.getIdUsuario());
+		uti.setIdUsuario(user.getIdPessoa());
 		EntityUtil.getEntityManager().persist(uti);
 	}
 	

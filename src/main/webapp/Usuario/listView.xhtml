@@ -23,6 +23,8 @@
 				xmlns:c="http://java.sun.com/jstl/core"
 				xmlns:wi="http://www.itx.com.br/jsf"
 			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:a="http://richfaces.org/a4j"
 			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 			    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
 			       
@@ -39,9 +41,52 @@
 	
 	<ui:define name="form" action="#{usuarioHome.newInstance()}">
 		<c:if test="#{canEdit}">
-			<wi:form form="#{usuarioForm}" 
-					 formTitle="#{messages['usuario.titleForm']}" 
-			         persistSemNewInstance="true"/>
+			<wi:dataForm formId="usuarioForm"
+						 formTitle="#{messages['usuario.titleForm']}">
+				<wi:inputCpf id="cpf"
+							 label="CPF"
+							 value="#{usuarioHome.instance.cpf}"
+							 assignTo="#{usuarioHome.instance.cpf}"
+							 required="true">
+							 <a:support event="onblur"
+										ajaxSingle="true"
+										reRender="usuarioForm"
+										limitToList="true"
+										action="#{usuarioHome.searchByCpf(usuarioHome.instance.cpf)}"/>
+				</wi:inputCpf>
+			
+				<wi:inputText id="nomeUsuario"
+							  label="#{messages['usuario.nome']}"
+							  value="#{usuarioHome.instance.nome}"
+							  required="true"/>
+							  
+				<wi:inputDate id="dataNascimento"
+							  value="#{usuarioHome.instance.dataNascimento}"
+							  label="#{messages['pessoaFisica.dataNascimento']}"
+							  required="true"/>
+				
+				<wi:inputText id="email"
+							  label="E-mail"
+							  value="#{usuarioHome.instance.email}"
+							  required="true">
+					<f:validator validatorId="emailValidator" />
+				</wi:inputText>
+				
+				<wi:inputText id="login"
+							  label="Login"
+							  value="#{usuarioHome.instance.login}"
+							  required="true"
+							  maxlength="15"/>
+				
+				<wi:selectOneRadio id="ativo"	
+								   label="#{messages['usuario.ativo']}"
+								   value="#{usuarioHome.instance.ativo}"
+								   valueList="true:Ativo,false:Inativo"/>
+								   
+				<ui:include src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml"/>
+				
+				<ui:include src="/WEB-INF/xhtml/components/form/bloqueio.xhtml" />
+			</wi:dataForm>
 		</c:if>
 		<c:if test="#{not canEdit}">
 			<wi:view form="#{usuarioView}" columns="4" title="#{messages['usuario.titleView']}"/>
@@ -52,7 +97,7 @@
 	 	<rich:tab label="#{messages['endereco.titlePage']}"
 			      status=":status"
 				  id="endereco2"
-				  rendered="#{home.managed}"
+				  rendered="#{home.isManaged()}"
 				  action="#{enderecoHome.newInstance()}">
 			<s:div>
 				<wi:ajaxDiv id="divGridEnd">
@@ -81,7 +126,7 @@
 		<rich:tab id="localizacaoUsuario"
 				  label="#{messages['localizacao.usuarioLocalizacaoList']}"			
 				  status=":status" 
-				  rendered="#{home.managed}"			
+				  rendered="#{home.isManaged()}"			
 				  action="#{usuarioLocalizacaoHome.newInstance()}">
 			<s:div>
 				<wi:ajaxDiv id="divGridLU">
@@ -107,7 +152,7 @@
 		
 		<rich:tab id="historicoBloqueioUsuario"
 				  label="#{messages['bloqueioUsuario.historicoBloqueioList']}"
-				  rendered="#{home.managed}">
+				  rendered="#{home.isManaged()}">
 			<s:div>
 				<wi:ajaxDiv id="divHistoricoList">
 					<wi:datalist home="#{bloqueioUsuarioHome}"

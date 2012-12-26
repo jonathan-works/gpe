@@ -14,6 +14,7 @@ import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epa.bean.ItemBean;
 import br.com.infox.epa.entity.CategoriaItem;
 import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
@@ -29,7 +30,6 @@ import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Pessoa;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
-import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.PessoaFisicaHome;
 import br.com.infox.ibpm.home.PessoaJuridicaHome;
@@ -60,7 +60,7 @@ public class IniciarProcessoAction {
 	
 	public void iniciarProcesso() {
 		try {
-			Usuario usuarioLogado = Authenticator.getUsuarioLogado();
+			UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
 			Localizacao localizacao = Authenticator.getLocalizacaoAtual();
 			processoEpa = new ProcessoEpa();
 			processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.SAT);

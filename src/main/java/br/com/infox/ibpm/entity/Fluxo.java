@@ -36,6 +36,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epa.query.FluxoQuery;
 
 @Entity
@@ -52,7 +53,7 @@ public class Fluxo implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int idFluxo;
-	private Usuario usuarioPublicacao;
+	private UsuarioLogin usuarioPublicacao;
 	private String codFluxo;
 	private String fluxo;
 	private Boolean ativo;
@@ -82,11 +83,11 @@ public class Fluxo implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_publicacao")
-	public Usuario getUsuarioPublicacao() {
+	public UsuarioLogin getUsuarioPublicacao() {
 		return this.usuarioPublicacao;
 	}
 
-	public void setUsuarioPublicacao(Usuario usuarioPublicacao) {
+	public void setUsuarioPublicacao(UsuarioLogin usuarioPublicacao) {
 		this.usuarioPublicacao = usuarioPublicacao;
 	}
 

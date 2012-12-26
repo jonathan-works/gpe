@@ -27,7 +27,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.ibpm.entity.Parametro;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.log.LogUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -103,8 +103,8 @@ public class ParametroHome
 		return super.remove(obj);
 	}
 
-	public static Usuario getUsuarioSistema() {
+	public static UsuarioLogin getUsuarioSistema() {
 		int idUsuarioSistema = Integer.parseInt(getParametro(ID_USUARIO_SISTEMA));
-		return EntityUtil.getEntityManager().find(Usuario.class, idUsuarioSistema);
+		return EntityUtil.getEntityManager().find(UsuarioLogin.class, idUsuarioSistema);
 	}
 }

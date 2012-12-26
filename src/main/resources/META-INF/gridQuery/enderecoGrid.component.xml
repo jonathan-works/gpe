@@ -20,7 +20,7 @@
 		<property name="restrictions">
 			<value>usuario.ativo = #{true}</value>
 			<value>usuario = #{enderecoSearch.usuario}</value>
-			<value>usuario.idUsuario = #{usuarioHome.id}</value>
+			<value>usuario.idPessoa = #{usuarioHome.id}</value>
 			<value>cep = #{enderecoSearch.cep}</value>
 			<value>cep.idCep = #{cepHome.id}</value>
 			<value>lower(nomeLogradouro) like concat(lower(#{enderecoSearch.nomeLogradouro}),'%')</value>

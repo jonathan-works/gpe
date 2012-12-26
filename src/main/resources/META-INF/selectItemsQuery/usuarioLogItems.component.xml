@@ -4,9 +4,9 @@
 
 	<component name="usuarioLogItems" class="br.com.itx.component.SelectItemsQuery">
 		<property name="ejbql">
-			select o from Usuario o 
+			select o from UsuarioLogin o 
 			where o.entityLogList.size > 0
 		</property>
-		<property name="order">idUsuario</property>
+		<property name="order">idPessoa</property>
 	</component>
 </components>

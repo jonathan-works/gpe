@@ -1,10 +1,14 @@
 package br.com.infox.access.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +20,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
@@ -31,42 +40,56 @@ import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
 import br.com.infox.access.query.UsuarioLoginQuery;
+import br.com.infox.ibpm.entity.BloqueioUsuario;
+import br.com.infox.ibpm.entity.Endereco;
+import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.ibpm.entity.PessoaFisica;
+import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.entity.log.EntityLog;
 import br.com.itx.util.StringUtil;
 
 @Entity
-@Table(name = "tb_usuario_login", schema="public" , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
+@Table(name=UsuarioLogin.TABLE_NAME, schema="public" , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
 @NamedQuery(name=UsuarioLoginQuery.USUARIO_LOGIN_NAME, query=UsuarioLoginQuery.USUARIO_LOGIN_QUERY)
 @Inheritance(strategy=InheritanceType.JOINED)
 @BypassInterceptors
-public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
+@PrimaryKeyJoinColumn(name="id_pessoa", columnDefinition = "integer")
+public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Serializable {
 
 	private static final long serialVersionUID = 1L;
+	public static final String TABLE_NAME = "tb_usuario_login"; 
 
-	private Integer idUsuario;
 	private String senha;
-	private String email;
 	private String login;
-	private String nome;
 	private String assinatura;
 	private String certChain;
 	private Boolean ldap;
-	private Boolean ativo;
+	private Boolean bloqueio;
+	private Boolean provisorio;
+	private Date dataExpiracao; //Data de previsão para expirar o usuário provisório
+	private Boolean temContaTwitter;
 
 	private Set<Papel> papelSet = new TreeSet<Papel>();
+	
+	private List<ProcessoDocumentoBin> processoDocumentoBinList = new ArrayList<ProcessoDocumentoBin>(0);
+	private List<Fluxo> fluxoList = new ArrayList<Fluxo>(0);
+	private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
+	private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(0);
+	private List<BloqueioUsuario> bloqueioUsuarioList = new ArrayList<BloqueioUsuario>(0);
+	private List<Endereco> enderecoList = new ArrayList<Endereco>(0);
+	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<ProcessoDocumento>(0);
+	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao = new ArrayList<ProcessoDocumento>(0);
+	private List<EntityLog> entityLogList = new ArrayList<EntityLog>(0);
 
 
 	public UsuarioLogin() {
-	}
-
-	@Id
-	@GeneratedValue
-	@Column(name = "id_usuario", unique = true, nullable = false)
-	public Integer getIdUsuario() {
-		return this.idUsuario;
-	}
-
-	public void setIdUsuario(Integer idUsuario) {
-		this.idUsuario = idUsuario;
+		bloqueio = false;
+		provisorio = false;
+		dataExpiracao = null;
 	}
 
 	@Column(name = "ds_senha", length = 100)
@@ -80,16 +103,6 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.senha = senha;
 	}
 
-	@Column(name = "ds_email", length = 100, unique = true, nullable = false)
-	@Length(max = 100)
-	public String getEmail() {
-		return this.email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	@Column(name = "ds_login", unique = true, nullable = false, length = 100)
 	@NotNull
 	@Length(max = 100)
@@ -100,18 +113,6 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 
 	public void setLogin(String login) {
 		this.login = login;
-	}
-
-	@Column(name = "ds_nome", nullable = false, length = 100)
-	@NotNull
-	@Length(max = 100)
-	@UserFirstName
-	public String getNome() {
-		return this.nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
 	}
 	
 	@Column(name = "ds_assinatura_usuario")
@@ -132,18 +133,6 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 	public void setCertChain(String certChain) {
 		this.certChain = certChain;
 	}
-	
-
-	@Column(name = "in_ativo", nullable = false)
-	@NotNull
-	@UserEnabled
-	public Boolean getAtivo() {
-		return this.ativo;
-	}
-
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
 
 	@UserRoles
 	@ManyToMany
@@ -155,11 +144,6 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 	
 	public void setPapelSet(Set<Papel> papelSet) {
 		this.papelSet = papelSet;
-	}
-	
-	@Override
-	public String toString() {
-		return nome;
 	}
 	
 	@Transient
@@ -179,21 +163,21 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (getIdUsuario() == null) {
+		if (getIdPessoa() == null) {
 			return false;
 		}
 		if (!(obj instanceof UsuarioLogin)) {
 			return false;
 		}
 		UsuarioLogin other = (UsuarioLogin) obj;
-		return getIdUsuario().equals(other.getIdUsuario());
+		return getIdPessoa().equals(other.getIdPessoa());
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getIdUsuario() == null) ? 0 : getIdUsuario().hashCode());
+		result = prime * result + ((getIdPessoa() == null) ? 0 : getIdPessoa().hashCode());
 		return result;
 	}
 
@@ -205,6 +189,164 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 
 	public void setLdap(Boolean ldap) {
 		this.ldap = ldap;
+	}
+	
+	@Column(name = "in_bloqueio", nullable = false)
+	@NotNull
+	public Boolean getBloqueio() {
+		return this.bloqueio;
+	}
+
+	public void setBloqueio(Boolean bloqueio) {
+		this.bloqueio = bloqueio;
+	}
+
+	@Column(name = "in_provisorio")
+	public Boolean getProvisorio() {
+		return this.provisorio;
+	}
+
+	public void setProvisorio(Boolean provisorio) {
+		this.provisorio = provisorio;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "dt_expiracao_usuario", nullable=true)
+	public Date getDataExpiracao() {
+		return dataExpiracao;
+	}
+
+	public void setDataExpiracao(Date dataExpiracao) {
+		this.dataExpiracao = dataExpiracao;
+	}
+
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
+	public List<ProcessoDocumentoBin> getProcessoDocumentoBinList() {
+		return this.processoDocumentoBinList;
+	}
+
+	public void setProcessoDocumentoBinList(
+			List<ProcessoDocumentoBin> processoDocumentoBinList) {
+		this.processoDocumentoBinList = processoDocumentoBinList;
+	}
+
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuarioPublicacao")
+	public List<Fluxo> getFluxoList() {
+		return this.fluxoList;
+	}
+
+	public void setFluxoList(List<Fluxo> fluxoList) {
+		this.fluxoList = fluxoList;
+	}
+	
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
+	@OrderBy("idUsuarioLocalizacao")
+	public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
+		return this.usuarioLocalizacaoList;
+	}
+
+	public void setUsuarioLocalizacaoList(
+			List<UsuarioLocalizacao> usuarioLocalizacaoList) {
+		this.usuarioLocalizacaoList = usuarioLocalizacaoList;
+	}
+	
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuarioCadastroProcesso")
+	public List<Processo> getProcessoListForIdUsuarioCadastroProcesso() {
+		return this.processoListForIdUsuarioCadastroProcesso;
+	}
+
+	public void setProcessoListForIdUsuarioCadastroProcesso(
+			List<Processo> processoListForIdUsuarioCadastroProcesso) {
+		this.processoListForIdUsuarioCadastroProcesso = processoListForIdUsuarioCadastroProcesso;
+	}
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
+	public List<BloqueioUsuario> getBloqueioUsuarioList() {
+		return this.bloqueioUsuarioList;
+	}
+
+	public void setBloqueioUsuarioList(List<BloqueioUsuario> bloqueioUsuarioList) {
+		this.bloqueioUsuarioList = bloqueioUsuarioList;
+	}
+
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
+	public List<Endereco> getEnderecoList() {
+		return this.enderecoList;
+	}
+
+	public void setEnderecoList(List<Endereco> enderecoList) {
+		this.enderecoList = enderecoList;
+	}
+
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuarioInclusao")
+	public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioInclusao() {
+		return this.processoDocumentoListForIdUsuarioInclusao;
+	}
+
+	public void setProcessoDocumentoListForIdUsuarioInclusao(
+			List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao) {
+		this.processoDocumentoListForIdUsuarioInclusao = processoDocumentoListForIdUsuarioInclusao;
+	}
+	
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuarioExclusao")
+	public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioExclusao() {
+		return this.processoDocumentoListForIdUsuarioExclusao;
+	}
+
+	public void setProcessoDocumentoListForIdUsuarioExclusao(
+			List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao) {
+		this.processoDocumentoListForIdUsuarioExclusao = processoDocumentoListForIdUsuarioExclusao;
+	}
+
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")	
+	public List<EntityLog> getEntityLogList() {
+		return entityLogList;
+	}
+	
+	public void setEntityLogList(List<EntityLog> entityLogList) {
+		this.entityLogList = entityLogList;
+	}
+	
+	@Transient
+	public Localizacao[] getLocalizacoes() {
+		Localizacao[] locs = new Localizacao[usuarioLocalizacaoList.size()];
+		int i = 0;
+		for (UsuarioLocalizacao uloc : usuarioLocalizacaoList) {
+			locs[i] = uloc.getLocalizacao();
+			i++;
+		}
+		return locs;
+	}
+
+	@Column(name="in_twitter", nullable=false)
+	public Boolean getTemContaTwitter() {
+		if (temContaTwitter == null)
+			temContaTwitter = false;
+		return temContaTwitter;
+	}
+
+	public void setTemContaTwitter(Boolean temContaTwitter) {
+		this.temContaTwitter = temContaTwitter;
+	}
+	
+	public UsuarioLogin loadDataFromPessoaFisica (PessoaFisica pessoa) {
+		setCpf(pessoa.getCpf());
+		setDataNascimento(pessoa.getDataNascimento());
+		setEmail(pessoa.getEmail());
+		setIdPessoa(pessoa.getIdPessoa());
+		setNome(pessoa.getNome());
+		setTipoPessoa(pessoa.getTipoPessoa());
+		setAtivo(pessoa.getAtivo());
+		setTemContaTwitter(false);
+		return this;
 	}
 	
 }

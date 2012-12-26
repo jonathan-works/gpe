@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.com.infox.access.entity.UsuarioLogin;
+
 @Entity
 @Table(name = HistoricoModeloDocumento.TABLE_NAME, schema="public")
 public class HistoricoModeloDocumento implements java.io.Serializable {
@@ -22,7 +24,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 	
 	private int idHistoricoModeloDocumento;
 	private ModeloDocumento modeloDocumento;
-	private Usuario usuarioAlteracao;
+	private UsuarioLogin usuarioAlteracao;
 	private Date dataAlteracao;
 	private String tituloModeloDocumento;
 	private String descricaoModeloDocumento;
@@ -51,10 +53,10 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_usuario_alteracao")
-	public Usuario getUsuarioAlteracao() {
+	public UsuarioLogin getUsuarioAlteracao() {
 		return usuarioAlteracao;
 	}
-	public void setUsuarioAlteracao(Usuario usuarioAlteracao) {
+	public void setUsuarioAlteracao(UsuarioLogin usuarioAlteracao) {
 		this.usuarioAlteracao = usuarioAlteracao;
 	}
 

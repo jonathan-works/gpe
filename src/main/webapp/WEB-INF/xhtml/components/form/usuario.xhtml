@@ -26,6 +26,18 @@
 				xmlns:c="http://java.sun.com/jstl/core"
 				xmlns:a="http://richfaces.org/a4j"
 				xmlns:rich="http://richfaces.org/rich">
+				
+	<wi:inputCpf id="#{id}cpf"
+				 label="CPF"
+				 value="#{usuarioHome.instance.cpf}"
+				 assignTo="#{usuarioHome.instance.cpf}"
+				 required="true">
+				 <a:support event="onblur"
+							ajaxSingle="true"
+							reRender="nome, dataNascimentoDecoration"
+							limitToList="true"
+							action="#{usuarioHome.searchByCpf(usuarioHome.instance.cpf)}"/>
+	</wi:inputCpf>
 
 	<wi:inputText id="#{id}NomeUsuario"
 				  label="#{messages['usuario.nome']}"
@@ -36,12 +48,7 @@
 				  label="Login"
 				  value="#{usuarioHome.instance.login}"
 				  required="true"
-				  maxlength="15"/>	
-	
-	<wi:inputCpf id="#{id}cpf"
-				 label="CPF"
-				 value="#{usuarioHome.instance.cpf}"
-				 required="true"/>
+				  maxlength="15"/>
 	
 	<wi:inputText id="#{id}Email"
 				  label="E-mail"

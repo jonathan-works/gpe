@@ -17,7 +17,7 @@ import twitter4j.auth.RequestToken;
 import br.com.infox.epa.type.TipoTwitterEnum;
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.util.TwitterUtil;
 import br.com.itx.component.AbstractHome;
 
@@ -33,7 +33,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	private RequestToken requestToken;
 	private AccessToken accessToken;
 	private Localizacao localizacao;
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 	private String pin;
 	private boolean requesting = false;
 	
@@ -118,7 +118,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 					usuario = Authenticator.getUsuarioLogado();
 					break;
 				case S:
-					usuario = getEntityManager().find(Usuario.class, Integer.parseInt(ParametroHome.getParametro("idUsuarioSistema")));
+					usuario = getEntityManager().find(UsuarioLogin.class, Integer.parseInt(ParametroHome.getParametro("idUsuarioSistema")));
 					break;
 				}
 				persist();
@@ -148,7 +148,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 			switch (instance.getTipoTwitter()) {
 			case U:
 			case S:
-				Usuario usr = instance.getUsuario(); 
+				UsuarioLogin usr = instance.getUsuario(); 
 				usr.setTemContaTwitter(false);
 				em.merge(usr);	
 				break;
@@ -178,7 +178,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 			usuario = Authenticator.getUsuarioLogado();
 			break;
 		case S:
-			usuario = getEntityManager().find(Usuario.class, Integer.parseInt(ParametroHome.getParametro("idUsuarioSistema")));
+			usuario = getEntityManager().find(UsuarioLogin.class, Integer.parseInt(ParametroHome.getParametro("idUsuarioSistema")));
 			break;
 		default:
 			break;

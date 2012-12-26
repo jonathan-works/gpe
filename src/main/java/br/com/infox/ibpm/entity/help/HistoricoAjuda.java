@@ -33,7 +33,7 @@ import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.validator.NotNull;
 
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name = "tb_historico_ajuda", schema="public")
@@ -46,7 +46,7 @@ public class HistoricoAjuda implements java.io.Serializable {
 	private Date dataRegistro;
 	private String texto;
 	private Pagina pagina;
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_historico_ajuda")
 	@Id
@@ -94,11 +94,11 @@ public class HistoricoAjuda implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario", nullable = false)
 	@NotNull
-	public Usuario getUsuario() {
+	public UsuarioLogin getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioLogin usuario) {
 		this.usuario = usuario;
 	}
 	

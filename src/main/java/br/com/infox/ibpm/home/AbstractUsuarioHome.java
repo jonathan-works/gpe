@@ -23,12 +23,12 @@ import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.itx.component.AbstractHome;
 
 
-public abstract class AbstractUsuarioHome<T> extends AbstractHome<Usuario> {
+public abstract class AbstractUsuarioHome<T> extends AbstractHome<UsuarioLogin> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,12 +41,12 @@ public abstract class AbstractUsuarioHome<T> extends AbstractHome<Usuario> {
 	}
 
 	@Override
-	protected Usuario createInstance() {
-		return new Usuario();
+	protected UsuarioLogin createInstance() {
+		return new UsuarioLogin();
 	}
 
 	@Override
-	public String remove(Usuario obj) {
+	public String remove(UsuarioLogin obj) {
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
@@ -57,11 +57,6 @@ public abstract class AbstractUsuarioHome<T> extends AbstractHome<Usuario> {
 	public List<Fluxo> getFluxoList() {
 		return getInstance() == null ? null : getInstance().getFluxoList();
 	}
-
-//	public List<MeioContato> getMeioContatoList() {
-//		return getInstance() == null ? null : getInstance()
-//				.getMeioContatoList();
-//	}
 
 	public List<Endereco> getEnderecoList() {
 		return getInstance() == null ? null : getInstance().getEnderecoList();

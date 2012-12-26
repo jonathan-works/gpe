@@ -31,7 +31,7 @@ import br.com.infox.ibpm.entity.EventoAgrupamento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.Tarefa;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ParametroHome;
 import br.com.infox.ibpm.home.ProcessoDocumentoHome;
@@ -462,7 +462,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 			if(eventoBeanList == null || eventoBeanList.size() == 0) {
 				return;
 			}
-			Usuario usuario = Authenticator.getUsuarioLogado();
+			UsuarioLogin usuario = Authenticator.getUsuarioLogado();
 			Processo processo = null;
 			
 			Integer idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
@@ -508,7 +508,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 				for (int i=0; i<eb.getQuantidade();i++) {
 					q.setParameter("processo", processo.getIdProcesso());
 					q.setParameter("evento", eb.getEvento().getIdEvento());
-					q.setParameter("usuario", usuario.getIdUsuario());
+					q.setParameter("usuario", usuario.getIdPessoa());
 					q.setParameter("data", dataMovimento);
 					q.setParameter("origem", origem);
 					Tarefa t = null;

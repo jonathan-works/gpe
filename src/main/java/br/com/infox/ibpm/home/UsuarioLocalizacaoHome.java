@@ -31,7 +31,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.itx.util.ComponentUtil;
 
@@ -116,7 +116,7 @@ public class UsuarioLocalizacaoHome
 			refreshGrid("usuarioLocalizacaoGrid");
 			return null;
 		}
-		Usuario usuario = getInstance().getUsuario();
+		UsuarioLogin usuario = getInstance().getUsuario();
 		usuario.getUsuarioLocalizacaoList().add(getInstance());
 		String msg = super.persist();
 		getInstance().setUsuario(usuario);
@@ -164,7 +164,7 @@ public class UsuarioLocalizacaoHome
 	@Override
 	public String remove(UsuarioLocalizacao obj) {
 		setInstance(obj);
-		Usuario usuario = getInstance().getUsuario();
+		UsuarioLogin usuario = getInstance().getUsuario();
 		String msg = super.remove(obj);
 		getInstance().setUsuario(usuario);
 		return msg;

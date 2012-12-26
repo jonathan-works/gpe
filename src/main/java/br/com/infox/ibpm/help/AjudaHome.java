@@ -43,7 +43,7 @@ import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.help.Ajuda;
 import br.com.infox.ibpm.entity.help.HistoricoAjuda;
 import br.com.infox.ibpm.entity.help.Pagina;
@@ -153,7 +153,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 			page = inserirPagina();
 		}
 		Context session = Contexts.getSessionContext();
-		Usuario user =  (Usuario) session.get("usuarioLogado");
+		UsuarioLogin user =  (UsuarioLogin) session.get("usuarioLogado");
 		instance.setUsuario(user);
 		instance.setDataRegistro(new Date());
 		instance.setPagina(page);

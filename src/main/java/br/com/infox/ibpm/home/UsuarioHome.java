@@ -21,6 +21,7 @@ import java.util.List;
 import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
+import org.hibernate.classic.Session;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
@@ -36,7 +37,7 @@ import br.com.infox.command.EMailData;
 import br.com.infox.command.SendmailCommand;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.ModeloDocumento;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.util.ComponentUtil;
@@ -44,7 +45,7 @@ import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioHome.NAME)
 @BypassInterceptors
-public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
+public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 
 	public static final String AFTER_SET_USUARIO_LOCALIZACAO_ATUAL_EVENT = "br.com.infox.ibpm.home.UsuarioHome.afterSetLocalizacaoAtual";
 	private static final long serialVersionUID = 1L;
@@ -57,11 +58,12 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	private String email;
 	private BloqueioUsuario ultimoBloqueio;
 	private BloqueioUsuario novoBloqueio = new BloqueioUsuario();
+	private boolean pessoaFisicaCadastrada = false;
 
 	/*
-	 * Testa se os campos do bloqueio foram preenchidos corretamente Já é feita
-	 * uma validação no xhtml Essa segunda validação (em código) é realmente
-	 * necessária?
+	 * Testa se os campos do bloqueio foram preenchidos corretamente 
+	 * Já é feita uma validação no xhtml 
+	 * Essa segunda validação (em código) é realmente necessária?
 	 */
 	private void validarBloqueio() {
 		if (getInstance().getBloqueio()
@@ -75,19 +77,18 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	}
 
 	/**
-	 * Apaga a data de Expiração quando o Usário passa de Provisório para
-	 * Permanente
+	 * Apaga a data de Expiração quando o Usário passa de Provisório para Permanente
 	 * */
 	private void validarPermanencia() {
 		if (!getInstance().getProvisorio())
 			getInstance().setDataExpiracao(null);
 	}
 
-	public Usuario checkUserByLogin(String login) {
+	public UsuarioLogin checkUserByLogin(String login) {
 		Query query = getEntityManager().createNamedQuery(
 				UsuarioLogin.USUARIO_LOGIN_NAME);
 		query.setParameter(UsuarioLogin.PARAM_LOGIN, login);
-		Usuario usu = EntityUtil.getSingleResult(query);
+		UsuarioLogin usu = EntityUtil.getSingleResult(query);
 		return usu;
 	}
 
@@ -100,8 +101,8 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	}
 
 	@Override
-	protected Usuario createInstance() {
-		Usuario usuario = super.createInstance();
+	protected UsuarioLogin createInstance() {
+		UsuarioLogin usuario = super.createInstance();
 		usuario.setAtivo(true);
 		usuario.setLdap(false);
 		return usuario;
@@ -113,7 +114,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		super.setId(id);
 		if (changed) {
 			ultimoBloqueio = null;
-			Usuario u = getInstance();
+			UsuarioLogin u = getInstance();
 			login = getInstance().getLogin();
 			List<BloqueioUsuario> bloqueioUsuarioList = u
 					.getBloqueioUsuarioList();
@@ -135,7 +136,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	public String update() {
 		validarBloqueio();
 		validarPermanencia();
-		Usuario usuario = getInstance();
+		UsuarioLogin usuario = getInstance();
 		if (usuario.getLogin() == null) {
 			usuario.setLogin(login);
 		}
@@ -145,6 +146,75 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		if (getInstance().getBloqueio().equals(Boolean.TRUE))
 			bloquear();
 		return super.update();
+	}
+	
+	public String updateSemWiacs() {
+		return super.update();
+	}
+
+	@Override
+	protected boolean beforePersistOrUpdate() {
+		login = getInstance().getLogin();
+		return login != null;
+	}
+	
+	@Override
+	protected String afterPersistOrUpdate(String ret) {
+		if (password == null) {
+			gerarNovaSenha();
+		}
+		return ret;
+	}
+
+	public String persist(boolean senha) {
+		login = getInstance().getLogin();
+		String resultado = super.persist();
+		if (senha) {
+			gerarNovaSenha();
+		}
+		return resultado;
+	}
+	
+	@Override
+	public String persist() {
+		login = getInstance().getLogin();
+		String resultado;
+		if (!pessoaFisicaCadastrada){
+			resultado = super.persist();
+		} else{
+			/*
+			 * Uma vez que o UsuarioLogin herda de PessoFisica p hibernate não consegue fazer o mapeamento
+			 * para persistir o usuarioLogin se já existir a pessoaFisica correspondente no banco, por isso foi
+			 * preciso inserir em SQL nativo
+			 * */
+			StringBuilder sb = new StringBuilder();
+			sb.append("INSERT INTO ");
+			sb.append(UsuarioLogin.TABLE_NAME);
+			sb.append(" (id_pessoa, ds_login, ds_senha, ds_assinatura_usuario, ds_cert_chain_usuario, " +
+						"in_ldap, in_bloqueio, dt_expiracao_usuario, in_provisorio, in_twitter)");
+			sb.append(" values (:idPessoa, :login, :senha, :assinatura, :cert_chain, :ldap, :bloqueio, null, :provisorio, :twitter)");
+			Query query = getEntityManager().createNativeQuery(sb.toString(), UsuarioLogin.class);
+			
+			/*
+			 * Não remover -> Sem o session.evict o find(UsuarioLogin.class) do getEntityManager 
+			 * retorna uma PessoaFisica ao invés do UsuárioLogin por conta do cache
+			 * */
+			Session session = (Session) getEntityManager().getDelegate();
+			session.evict(getEntityManager().find(PessoaFisica.class, instance.getIdPessoa()));
+			
+			query.setParameter("idPessoa", instance.getIdPessoa())
+					.setParameter("login", login)
+					.setParameter("senha", instance.getSenha())
+					.setParameter("assinatura", instance.getAssinatura())
+					.setParameter("cert_chain", instance.getCertChain())
+					.setParameter("ldap", instance.getLdap())
+					.setParameter("bloqueio", instance.getBloqueio())
+					.setParameter("provisorio", instance.getProvisorio())
+					.setParameter("twitter", instance.getTemContaTwitter()).executeUpdate();
+			resultado = "persisted";
+			instance = getEntityManager().find(UsuarioLogin.class, instance.getIdPessoa());
+		}
+		return resultado;
 	}
 
 	public boolean estavaBloqueado() {
@@ -166,34 +236,6 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		ultimoBloqueio = novoBloqueio;
 		EntityUtil.getEntityManager().persist(ultimoBloqueio);
 		novoBloqueio = new BloqueioUsuario();
-	}
-
-	public String updateSemWiacs() {
-		return super.update();
-	}
-
-	@Override
-	protected boolean beforePersistOrUpdate() {
-		login = getInstance().getLogin();
-		
-		return login != null;
-	}
-	
-	@Override
-	protected String afterPersistOrUpdate(String ret) {
-		if (password == null) {
-			gerarNovaSenha();
-		}
-		return ret;
-	}
-
-	public String persist(boolean senha) {
-		login = getInstance().getLogin();
-		String resultado = super.persist();
-		if (senha) {
-			gerarNovaSenha();
-		}
-		return resultado;
 	}
 
 	/**
@@ -268,7 +310,7 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		if (modelo == null) {
 			return;
 		}
-
+		pessoaFisicaCadastrada = false;
 		String conteudo = ModeloDocumentoAction.instance().getConteudo(modelo);
 
 		EMailData data = ComponentUtil.getComponent(EMailData.NAME);
@@ -332,19 +374,19 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	private void recoverBy(String parametro, String valor) {
 		// O StringBuilder constrói a Query com base no parametro passado
 		// deixando na forma
-		// "select o from Usuario o where o.parametro = :parametro"
+		// "select o from UsuarioLogin o where o.parametro = :parametro"
 		StringBuilder sb = new StringBuilder();
-		sb.append("select o from Usuario o where o.");
+		sb.append("select o from UsuarioLogin o where o.");
 		sb.append(parametro);
 		sb.append(" = :");
 		sb.append(parametro);
 		Query query = getEntityManager().createQuery(sb.toString());
 		query.setParameter(parametro, valor);
-		Usuario usuario = (Usuario) query.getSingleResult();
+		UsuarioLogin usuario = (UsuarioLogin) query.getSingleResult();
 		if (usuario == null) {
 			FacesMessages.instance().add("Usuário não encontrado");
 		} else {
-			setId(usuario.getIdUsuario());
+			setId(usuario.getIdPessoa());
 			gerarNovaSenha(parametro);
 		}
 	}
@@ -369,7 +411,27 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 		return (UsuarioLocalizacao) Contexts.getSessionContext().get(
 				USUARIO_LOCALIZACAO_ATUAL);
 	}
-
+	
+	public void searchByCpf(String cpf){
+		String hql = "select o from UsuarioLogin o where o.cpf = :cpf";
+		Query query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
+		UsuarioLogin ul = EntityUtil.getSingleResult(query);
+		if (ul == null){
+			hql = "select o from PessoaFisica o where o.cpf = :cpf";
+			query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
+			PessoaFisica pf = EntityUtil.getSingleResult(query);
+			if (pf != null){
+				pessoaFisicaCadastrada = true;
+				instance = getInstance().loadDataFromPessoaFisica(pf);
+			}
+			else {
+				pessoaFisicaCadastrada = false;
+				}
+		} else{
+			instance = ul;
+		}
+	}
+	
 	// ----Getters e Setters----
 	public BloqueioUsuario getUltimoBloqueio() {
 		return ultimoBloqueio;
@@ -410,4 +472,5 @@ public class UsuarioHome extends AbstractUsuarioHome<Usuario> {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 }

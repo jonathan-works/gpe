@@ -21,7 +21,7 @@ import org.hibernate.validator.NotNull;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name = "tb_processo_evento_temp", schema = "public")
@@ -33,7 +33,7 @@ public class ProcessoEventoTemp implements java.io.Serializable {
 	private Evento evento;
 	private ProcessoDocumento processoDocumento;
 	private Processo processo;
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 	private Date dataInsercao;
 	private Long idJbpmTask;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -74,11 +74,11 @@ public class ProcessoEventoTemp implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario")
-	public Usuario getUsuario() {
+	public UsuarioLogin getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioLogin usuario) {
 		this.usuario = usuario;
 	}
 

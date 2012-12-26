@@ -27,7 +27,7 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.ibpm.component.suggest.CepSuggestBean;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Endereco;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.itx.util.ComponentUtil;
 
 
@@ -118,7 +118,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 	
 	@Override
 	public String persist() {
-		Usuario pessoaLogada = (Usuario) 
+		UsuarioLogin pessoaLogada = (UsuarioLogin) 
 					Contexts.getSessionContext().get("usuarioLogado");
 
 		//setando data e hora da alteração
@@ -145,7 +145,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 //			getInstance().setCodUf(getInstance().getCep().getMunicipio().getEstado().getCodEstado());
 			//setando data e hora da alteração
 			getInstance().setDataAlteracao(new Date());
-			Usuario pessoaLogada = (Usuario) 
+			UsuarioLogin pessoaLogada = (UsuarioLogin) 
 					Contexts.getSessionContext().get("usuarioLogado");
 
 			getInstance().setUsuarioCadastrador( pessoaLogada );

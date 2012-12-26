@@ -22,7 +22,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.list.ListPaginator;
 import br.com.infox.ibpm.entity.Endereco;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.EnderecoHome;
 import br.com.infox.ibpm.home.UsuarioHome;
@@ -40,11 +40,11 @@ public class ActiveDirectoryAction implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "activeDirectoryAction";
-	private Usuario entity = new Usuario();
-	private Usuario instance = new Usuario();
+	private UsuarioLogin entity = new UsuarioLogin();
+	private UsuarioLogin instance = new UsuarioLogin();
 	private Endereco endereco;
 	private String tab;
-	private ListPaginator<Usuario> usuariosADList;
+	private ListPaginator<UsuarioLogin> usuariosADList;
 	private UsuarioLocalizacao usuarioLocalizacao;
 	
 	public String getLDAPDomain() {
@@ -103,12 +103,12 @@ public class ActiveDirectoryAction implements Serializable{
 	}
 	
 	public void newInstance() {
-		entity = new Usuario();
+		entity = new UsuarioLogin();
 		entity.setAtivo(true);
 		entity.setBloqueio(false);
 		entity.setLdap(true);
 		
-		instance = new Usuario();
+		instance = new UsuarioLogin();
 		instance.setAtivo(true);
 		instance.setBloqueio(false);
 		instance.setLdap(true);
@@ -129,14 +129,14 @@ public class ActiveDirectoryAction implements Serializable{
 		home.setInstance(usuarioLocalizacao);
 	}
 	
-	public ListPaginator<Usuario> getUsuariosADList() {
+	public ListPaginator<UsuarioLogin> getUsuariosADList() {
 		if (usuariosADList == null) {
-			usuariosADList = new ListPaginator<Usuario>(listarUsuariosAD(), 20);
+			usuariosADList = new ListPaginator<UsuarioLogin>(listarUsuariosAD(), 20);
 		}
 		return usuariosADList;
 	}
 	
-	public void setUsuariosADList(ListPaginator<Usuario> list) {
+	public void setUsuariosADList(ListPaginator<UsuarioLogin> list) {
 		usuariosADList = null;
 	}
 	
@@ -150,9 +150,9 @@ public class ActiveDirectoryAction implements Serializable{
 		home.remove(usu);
 	}
 	
-	public List<Usuario> listarUsuariosAD() {
+	public List<UsuarioLogin> listarUsuariosAD() {
 		NamingEnumeration<SearchResult> results = LdapUtil.pesquisarUsuariosLDAP();
-		List<Usuario> usuarios = new ArrayList<Usuario>();
+		List<UsuarioLogin> usuarios = new ArrayList<UsuarioLogin>();
 		try {
 			while (results.hasMore()) {
 				SearchResult searchResult = results.next();
@@ -165,7 +165,7 @@ public class ActiveDirectoryAction implements Serializable{
 				Attribute mail = attributes.get("mail");
 				StringTokenizer tokens = new StringTokenizer((String) log.get(), "@");
 				
-				Usuario temp = preencherUsuario(nome, mail, tokens);
+				UsuarioLogin temp = preencherUsuario(nome, mail, tokens);
 				if(temp != null) {
 					usuarios.add(temp);
 				}
@@ -178,7 +178,7 @@ public class ActiveDirectoryAction implements Serializable{
 		return usuarios;
 	}
 
-	private Usuario preencherUsuario(Attribute nome, Attribute mail, StringTokenizer tokens) throws NamingException {
+	private UsuarioLogin preencherUsuario(Attribute nome, Attribute mail, StringTokenizer tokens) throws NamingException {
 		long time = System.currentTimeMillis();
 		boolean search = false;
 		boolean cadastrado = false;
@@ -186,13 +186,13 @@ public class ActiveDirectoryAction implements Serializable{
 				&& !"".equals(entity.getNome())) {
 			search = true;
 		}
-		Usuario usu;
-		usu = new Usuario();
+		UsuarioLogin usu;
+		usu = new UsuarioLogin();
 		usu.setLogin(tokens.nextToken());
 
 		// Verifica se o usuário já foi cadastrado
 		UsuarioHome home = UsuarioHome.instance();
-		Usuario user = home.checkUserByLogin(usu.getLogin());
+		UsuarioLogin user = home.checkUserByLogin(usu.getLogin());
 
 		if (user != null && user.getLdap()) {
 			cadastrado = true;
@@ -217,20 +217,20 @@ public class ActiveDirectoryAction implements Serializable{
 		return usu;
 	}
 	
-	public Usuario getEntity() {
+	public UsuarioLogin getEntity() {
 		return entity;
 	}
 
-	public void setEntity(Usuario entity) {
+	public void setEntity(UsuarioLogin entity) {
 		this.entity = entity;
 		setTab("form");
 	}
 
-	public Usuario getInstance() {
+	public UsuarioLogin getInstance() {
 		return instance;
 	}
 
-	public void setInstance(Usuario instance) {
+	public void setInstance(UsuarioLogin instance) {
 		this.instance = instance;
 		
 	}

@@ -7,7 +7,7 @@ import javax.persistence.*;
 import twitter4j.auth.AccessToken;
 
 import br.com.infox.epa.type.TipoTwitterEnum;
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name=ContaTwitter.NAME, schema="public")
@@ -21,7 +21,7 @@ public class ContaTwitter implements Serializable {
 	private String usuarioToken;
 	private String usuarioSecretToken;
 	private TipoTwitterEnum tipoTwitter;
-	private Usuario usuario;
+	private UsuarioLogin usuario;
 	private Localizacao localizacao;
 	
 	@Id
@@ -68,10 +68,10 @@ public class ContaTwitter implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="id_usuario", nullable=true)
-	public Usuario getUsuario() {
+	public UsuarioLogin getUsuario() {
 		return usuario;
 	}
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioLogin usuario) {
 		this.usuario = usuario;
 	}
 	

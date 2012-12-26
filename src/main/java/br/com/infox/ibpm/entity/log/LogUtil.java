@@ -41,7 +41,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
 
-import br.com.infox.ibpm.entity.Usuario;
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.type.TipoOperacaoLogEnum;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.util.EntityUtil;
@@ -132,10 +132,10 @@ public class LogUtil {
 		return object1.equals(object2);
 	}
 	
-	public static Usuario getUsuarioLogado() {
-		Usuario usuario = (Usuario) Contexts.getSessionContext().get("usuarioLogado");
+	public static UsuarioLogin getUsuarioLogado() {
+		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
 		if (usuario != null){
-			usuario = EntityUtil.getEntityManager().find(Usuario.class, usuario.getIdUsuario());
+			usuario = EntityUtil.getEntityManager().find(UsuarioLogin.class, usuario.getIdPessoa());
 		}
 		return usuario;
 	}			

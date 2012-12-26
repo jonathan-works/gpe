@@ -8,10 +8,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epa.query.HistoricoModeloDocumentoQuery;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
-import br.com.infox.ibpm.entity.Usuario;
 import br.com.infox.ibpm.home.ModeloDocumentoHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
@@ -25,7 +25,7 @@ public class HistoricoModeloDocumentoAction extends AbstractHome<HistoricoModelo
 	private static final long serialVersionUID = 1L;
 
     private List<ModeloDocumento> modeloDocumentoList;
-    private List<Usuario> usuarioAlteracaoList;
+    private List<UsuarioLogin> usuarioAlteracaoList;
     private HistoricoModeloDocumento selecionado;
 	
     public HistoricoModeloDocumento getSelecionado() {
@@ -71,11 +71,11 @@ public class HistoricoModeloDocumentoAction extends AbstractHome<HistoricoModelo
 		setUsuarioAlteracaoList(query.getResultList());
 	}
 	
-	public List<Usuario> getUsuarioAlteracaoList() {
+	public List<UsuarioLogin> getUsuarioAlteracaoList() {
 		return usuarioAlteracaoList;
 	}
 
-	public void setUsuarioAlteracaoList(List<Usuario> usuarioAlteracaoList) {
+	public void setUsuarioAlteracaoList(List<UsuarioLogin> usuarioAlteracaoList) {
 		this.usuarioAlteracaoList = usuarioAlteracaoList;
 	}
 	
