@@ -37,7 +37,6 @@
 			<ui:param name="values" value="#{processBuilder.currentNode.listaEmail}" />
 			<ui:param name="id" value="listaEmail" />
 			<ui:param name="style" value="clear:both; width:99%; margin-top:5px;#{empty values ? 'border-collapse:separate':'' }" /> 
-	
 			<ui:define name="toolBar">
 				<h:graphicImage title="Excluir destinatário"
 					style="cursor:pointer"
@@ -99,51 +98,74 @@
 					</rich:column>
 				</rich:columnGroup>
 				</f:facet>
-				
 				<f:facet name="header">
 					<h:outputText value="Destinatários" />
 				</f:facet>
 				
 			</ui:define>
-		</ui:decorate>	
-	
+		</ui:decorate>
+		<wi:selectOneRadio id="usaTwitter"
+						   value="#{processBuilder.currentNode.usaTwitter}"
+						   valueList="false:Não enviar Tweet,true:Enviar Tweet">
+			<a:support reRender="mailDiv"
+			           event="onchange"
+			           ajaxSingle="true" />
+		</wi:selectOneRadio>
 		<ui:param name="isExpression" value="#{processBuilder.currentNode.to != null and
-								 			  processBuilder.currentNode.to.startsWith('#{mailResolver')}"/>
-	
-		<wi:selectOneMenuEntity id="modeloDocumento"
-						label="#{messages['processDefinition.modeloDocumento']}"
-						value="#{processBuilder.currentNode.modeloDocumento}"
-						reRender="editorModeloDocumento"
-						items="#{modeloDocumento.modeloDocumentoList}" showLabelTodos="true">
-			<wi:ajaxSupport/>
-		</wi:selectOneMenuEntity>
-	
-		<wi:inputText id="to" 
-					  label="Para"
-					  rendered="#{!isExpression}"
-					  value="#{processBuilder.currentNode.to}" >
-			<wi:ajaxSupport/>
-		</wi:inputText>
-	
-		<wi:inputText id="toExpession" 
-					  label="Para"
-					  rendered="#{isExpression}"
-					  disabled="true"
-					  readonly="true"
-					  value="[Gerado pela tabela acima...]" >
-		</wi:inputText>
-	
-		<wi:inputText id="subject" label="Assunto"
-			value="#{processBuilder.currentNode.subject}">
-			<wi:ajaxSupport/>
-		</wi:inputText>
+								 			  processBuilder.currentNode.to.startsWith('{')}"/>
+		<s:div id="twitterDiv" 
+		       rendered="#{processBuilder.currentNode.usaTwitter}"
+		       width="50%">
+			<wi:selectOneMenuEntity id="modeloTwitter"
+									label="Modelo Twitter.."
+									value="#{processBuilder.currentNode.modeloTwitter}"
+									reRender="twitterDiv"
+									items="#{twitterTemplateList.list()}"
+									showLabelTodos="true">
+				<wi:ajaxSupport/>
+			</wi:selectOneMenuEntity>
+			<wi:inputTextarea id="editorModeloTwitter"
+						      readonly="true"
+							  value="#{processBuilder.currentNode.modeloTwitter.mensagem}">
+			</wi:inputTextarea>
+		</s:div>
+		<s:div id="modeloDocDiv">
+			<wi:selectOneMenuEntity id="modeloDocumento"
+							label="#{messages['processDefinition.modeloDocumento']}"
+							value="#{processBuilder.currentNode.modeloDocumento}"
+							reRender="editorModeloDocumento"
+							items="#{modeloDocumento.modeloDocumentoList}"
+							showLabelTodos="true">
+				<wi:ajaxSupport/>
+			</wi:selectOneMenuEntity>
 		
-		<wi:editor	id="editorModeloDocumento"	 
-					value="#{processBuilder.currentNode.modeloDocumento.modeloDocumento}"
-					label="#{messages['processBuilder.modeloDocumento']}"
-					readonly="true">
-			<wi:ajaxSupport/>
-		</wi:editor>
+			<wi:inputText id="to" 
+						  label="Para"
+						  rendered="#{!isExpression}"
+						  value="#{processBuilder.currentNode.to}" >
+				<wi:ajaxSupport/>
+			</wi:inputText>
+		
+			<wi:inputText id="toExpession" 
+						  label="Para"
+						  rendered="#{isExpression}"
+						  disabled="true"
+						  readonly="true"
+						  value="[Gerado pela tabela acima...]" >
+			</wi:inputText>
+		
+			<wi:inputText id="subject" label="Assunto"
+				value="#{processBuilder.currentNode.subject}">
+				<wi:ajaxSupport/>
+			</wi:inputText>
+			
+			<wi:editor	id="editorModeloDocumento"	 
+						value="#{processBuilder.currentNode.modeloDocumento.modeloDocumento}"
+						label="#{messages['processBuilder.modeloDocumento']}"
+						readonly="true">
+				<wi:ajaxSupport/>
+			</wi:editor>
+		</s:div>
 	
 	</s:div>
 

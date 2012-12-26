@@ -18,25 +18,20 @@ package br.com.infox.ibpm.jbpm.node;
 import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
-
+import java.util.Map;
 import javax.persistence.Query;
-import javax.transaction.SystemException;
-
 import org.dom4j.Element;
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.transaction.Transaction;
 import org.jbpm.graph.action.ActionTypes;
 import org.jbpm.graph.def.Action;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
-
 import br.com.infox.ibpm.entity.ListaEmail;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.TwitterTemplate;
 import br.com.infox.ibpm.home.ListaEmailHome;
-import br.com.infox.ibpm.jbpm.MailResolver;
-import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.util.EntityUtil;
 
 
@@ -48,6 +43,8 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	private String actors;
 	private String template;
 	private ModeloDocumento modeloDocumento;
+	private TwitterTemplate modeloTwitter;
+	private Boolean usaTwitter;
 	private int idGrupo;
 	private List<ListaEmail> listaEmail;
 	private ListaEmail currentListaEmail = new ListaEmail();
@@ -58,12 +55,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		actors = element.attributeValue("actors");
 		to = element.attributeValue("to");
 		subject = jpdlReader.getProperty("subject", element);
-		String text = jpdlReader.getProperty("text", element);
-		try {
-			modeloDocumento = ModeloDocumentoAction.instance().getModeloDocumento(Integer.parseInt(text));	
-		}catch (NumberFormatException e) {
-			System.out.println(e.getMessage());
-		}
+		initMailContent(jpdlReader.getProperty("text", element));
 		
 		super.read(element, jpdlReader);
 	}
@@ -89,10 +81,45 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		}
 	}
 
+	private void initMailContent(String parametros) {
+		if (parametros == null || parametros.length() < 3) {
+			return;
+		}
+		String result = parametros.substring(1, parametros.length()-1);
+		
+		for (String string : result.split(", ")) {
+			String[] att = string.split("=");
+			if (att.length < 2) {
+				continue;
+			} else if ("idModeloDocumento".equals(att[0])) {
+				modeloDocumento = EntityUtil.find(ModeloDocumento.class, Integer.parseInt(att[1]));
+			} else if ("idTwitterTemplate".equals(att[0]))	{
+				modeloTwitter = EntityUtil.find(TwitterTemplate.class, Integer.parseInt(att[1]));
+				usaTwitter = true;
+			}
+		}
+	}
+	
+	/**
+	 * Método que lista atributos em um Map<K,V> e devolve uma saída
+	 * no formato "{Chave1=Valor1, Chave2=Valor2, ..., ChaveN=ValorN}"
+	 * @return String formatada com dados referentes às mensagens MailNode.
+	 */
+	private String getParametros() {
+		Map<String, String> parametros = new HashMap<String, String>();
+		if (modeloDocumento != null) {
+			parametros.put("idModeloDocumento", String.valueOf(modeloDocumento.getIdModeloDocumento()));
+		}
+		if (modeloTwitter != null && usaTwitter) {
+			parametros.put("idTwitterTemplate", String.valueOf(modeloTwitter.getIdTwitterTemplate()));
+		}
+		return parametros.toString();
+	}
+	
 	private void createAction() {
 		JpdlXmlReader jpdlReader = new JpdlXmlReader(new StringReader(""));
 		Delegation delegation = jpdlReader.createMailDelegation(template,
-				actors, to, subject, String.valueOf(modeloDocumento.getIdModeloDocumento()));
+				actors, to, subject, getParametros());
 		delegation.setProcessDefinition(this.getProcessDefinition());
 		this.action = new Action(delegation);
 	}
@@ -100,16 +127,34 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	public ModeloDocumento getModeloDocumento() {
 		return modeloDocumento;
 	}
-
 	public void setModeloDocumento(ModeloDocumento modeloDocumento) {
 		this.modeloDocumento = modeloDocumento;
 		createAction();
 	}
 
+	public Boolean getUsaTwitter() {
+		if (usaTwitter == null) {
+			usaTwitter = false;
+		}
+			
+		return this.usaTwitter;
+	}
+
+	public void setUsaTwitter(Boolean usaTwitter) {
+		this.usaTwitter = usaTwitter;
+	}
+	
+	public TwitterTemplate getModeloTwitter() {
+		return modeloTwitter;
+	}
+	public void setModeloTwitter(TwitterTemplate modeloTwitter) {
+		this.modeloTwitter = modeloTwitter;
+		createAction();
+	}
+	
 	public String getSubject() {
 		return subject;
 	}
-
 	public void setSubject(String subject) {
 		this.subject = subject;
 		createAction();
@@ -118,7 +163,6 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	public String getTo() {
 		return to;
 	}
-
 	public void setTo(String to) {
 		this.to = to;
 		createAction();
@@ -127,7 +171,6 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	public String getActors() {
 		return actors;
 	}
-
 	public void setActors(String actors) {
 		this.actors = actors;
 		createAction();
@@ -144,15 +187,20 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	
 	public List<ListaEmail> getListaEmail() {
 		if (listaEmail == null) {
-			if (to != null && to.startsWith("#{" + MailResolver.NAME)) {
-				StringTokenizer st = new StringTokenizer(to, "()");
-				st.nextToken();
-				String id = st.nextToken();
-				idGrupo = Integer.parseInt(id);
-				listaEmail = EntityUtil.createQuery("select o from ListaEmail o " +
-						"where o.idGrupoEmail = :idGrupo")
-					.setParameter("idGrupo", idGrupo)
-					.getResultList();
+			if (to != null) {
+				String result = to.substring(1, to.length()-1);
+				
+				for (String string : result.split(", ")) {
+					String[] att = string.split("=");
+					if (att.length < 2) {
+						continue;
+					} else if ("idGrupo".equals(att[0])) {
+						listaEmail = EntityUtil.createQuery("select o from ListaEmail o " +
+								"where o.idGrupoEmail = :idGrupo")
+								.setParameter("idGrupo", Integer.parseInt(att[1]))
+								.getResultList();
+					}
+				}
 			}
 		}
 		return listaEmail;
@@ -192,8 +240,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		
 		currentListaEmail = new ListaEmail();
 		if (to == null || "".equals(to)) {
-			to = MessageFormat.format("#'{'{0}.resolve({1})}", MailResolver.NAME,
-					idGrupo);
+			to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
 		}
 		Expressions.instance().createMethodExpression("#{estruturaTree.clearTree}").invoke(new Object[0]);
 		Expressions.instance().createMethodExpression("#{localizacaoTree.clearTree}").invoke(new Object[0]);

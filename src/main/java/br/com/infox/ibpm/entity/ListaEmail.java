@@ -58,7 +58,7 @@ public class ListaEmail implements java.io.Serializable {
 		this.idListaEmail = id;
 	}
 
-	@Column(name = "id_grupo_email", unique = true, nullable = false)
+	@Column(name = "id_grupo_email", unique = false, nullable = false)
 	public int getIdGrupoEmail() {
 		return this.idGrupoEmail;
 	}

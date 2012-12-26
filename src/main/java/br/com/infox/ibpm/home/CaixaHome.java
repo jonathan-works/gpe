@@ -16,6 +16,7 @@ import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(CaixaHome.NAME)
@@ -107,7 +108,7 @@ public class CaixaHome extends AbstractCaixaHome<Caixa> {
 	}
 	
 	public static CaixaHome instance() {
-		return (CaixaHome) Contexts.getConversationContext().get(NAME);
+		return ComponentUtil.getComponent(NAME);
 	}
 
 	public Integer getIdTarefaSearch() {

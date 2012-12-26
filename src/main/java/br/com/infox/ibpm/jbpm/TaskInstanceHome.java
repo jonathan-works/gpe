@@ -348,7 +348,7 @@ public class TaskInstanceHome implements Serializable {
 			try {
 				BusinessProcess.instance().endTask(transition);
 			} catch(JbpmException e) {
-				
+				e.printStackTrace();
 			}
 			if (this.currentTaskInstance == null) {
 				Util.setToEventContext("canClosePanel", true);

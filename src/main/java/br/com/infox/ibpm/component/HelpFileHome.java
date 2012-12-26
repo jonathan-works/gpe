@@ -38,12 +38,13 @@ import br.com.itx.component.Util;
 import br.com.itx.util.FileUtil;
 
 
-@Name("helpFileUpload")
+@Name(HelpFileHome.NAME)
 @BypassInterceptors
 public class HelpFileHome {
-
 	private static final String IMAGES_DIR = "/img/help/";
 	private static final LogProvider LOG = Logging.getLogProvider(ImageFileHome.class);
+	
+	public static final String NAME = "helpFileUpload";
 
 	private String getUserImageDir() {
 		UsuarioLocalizacao usuarioLoc = (UsuarioLocalizacao) 
@@ -80,7 +81,6 @@ public class HelpFileHome {
 	}	
 
 	public void listener(UploadEvent e) {
-		System.out.println("Listener");
 		UploadItem uit = e.getUploadItem();
 		String[] imagesDir = getImagesDir();
 		String imageDir = imagesDir[imagesDir.length - 1];
@@ -102,14 +102,12 @@ public class HelpFileHome {
 	 */
 	private void saveFile(byte[] bytesOrigem, File fileDestino)
 			throws IOException {
-		System.out.println("Iniciado salvar");
 		if (fileDestino.exists()) {
 			if (fileDestino.length() != bytesOrigem.length) {
 				fileDestino = new File(getNewFileConflict(
 						fileDestino.getAbsolutePath()));
 			} else {
 				String msg = "Arquivo já existente.";
-				System.out.println(msg);
 				throw new IOException(msg);
 			}
 		}

@@ -7,6 +7,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.ibpm.entity.ContaTwitter;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 /**
@@ -21,25 +23,33 @@ public class MailResolver {
 
 	public static final String NAME = "mailResolver";
 	
-	public String resolve(int idGrupoEmail) {		
-		List<String> lista = EntityUtil.getEntityManager()
-			.createQuery("select distinct u.email from UsuarioLogin u " +
-				"join u.usuarioLocalizacaoList ul " +
-				"where exists (" + 
-				"select o from ListaEmail o where o.idGrupoEmail = :idGrupoEmail and (" +
-				"(ul.localizacao = o.localizacao and (ul.papel = o.papel or o.papel is null) and (ul.estrutura = o.estrutura or o.estrutura is null)) " +
-				"or (ul.papel = o.papel and (ul.localizacao = o.localizacao or o.localizacao is null) and (ul.estrutura = o.estrutura or o.estrutura is null)) " +
-				"or (ul.estrutura = o.estrutura and (ul.localizacao = o.localizacao or o.localizacao is null) and (ul.papel = o.papel or o.papel is null))))")
-			.setParameter("idGrupoEmail", idGrupoEmail)
-			.getResultList();	
-		StringBuilder ret = new StringBuilder();
-		for(String s : lista) {
-			if (ret.length() > 0) {
-				ret.append(";");
-			}
-			ret.append(s);
-		}
-		return ret.toString();
+	private static final String QUERY = "select distinct u.email from UsuarioLogin u " +
+			"join u.usuarioLocalizacaoList ul ";
+	private static final String QUERY_TWITTER = "select distinct c from ContaTwitter c " +
+			"join c.usuario u " +
+			"join u.usuarioLocalizacaoList ul ";
+	private static final String QUERY_CONDITION = "where exists (" + 
+								"select o from ListaEmail o where o.idGrupoEmail = :idGrupoEmail and (" +
+								"(ul.localizacao = o.localizacao and (ul.papel = o.papel or o.papel is null) and (ul.estrutura = o.estrutura or o.estrutura is null)) " +
+								"or (ul.papel = o.papel and (ul.localizacao = o.localizacao or o.localizacao is null) and (ul.estrutura = o.estrutura or o.estrutura is null)) " +
+								"or (ul.estrutura = o.estrutura and (ul.localizacao = o.localizacao or o.localizacao is null) and (ul.papel = o.papel or o.papel is null))))";;
+	
+	public static MailResolver instance() {
+		return ComponentUtil.getComponent(NAME);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ContaTwitter> listaContasTwitter(int idGrupoEmail) {
+		return EntityUtil.getEntityManager().createQuery(QUERY_TWITTER+QUERY_CONDITION)
+				.setParameter("idGrupoEmail", idGrupoEmail)
+				.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> resolve(int idGrupoEmail) {		
+		return EntityUtil.getEntityManager().createQuery(QUERY+QUERY_CONDITION)
+				.setParameter("idGrupoEmail", idGrupoEmail)
+				.getResultList();
 	}
 	
 }

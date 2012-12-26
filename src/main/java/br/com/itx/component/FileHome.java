@@ -34,12 +34,13 @@ import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.Crypto;
 
-@Name("fileHome")
+@Name(FileHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class FileHome implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "fileHome";
 
 	private byte[] data;
 	private String fileName;
@@ -91,7 +92,7 @@ public class FileHome implements Serializable {
 	}
 	
 	public static FileHome instance() {
-		return ComponentUtil.getComponent("fileHome");
+		return ComponentUtil.getComponent(NAME);
 	}
 	
 	public void clear() {
