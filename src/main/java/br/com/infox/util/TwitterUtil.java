@@ -71,11 +71,25 @@ public class TwitterUtil {
 		return aplicacao.retweetStatus(status.getId());
 	}
 	
+	/**
+	 * Atualiza o status do twitter da aplicacao com uma mensagem que faz uma "mention" direta ao receiver
+	 * @param receiver a conta que será citada na mensagem
+	 * @param message o conteúdo da mensagem
+	 * @return o status resultante da postagem
+	 * @throws TwitterException Quando não for possível conectar ao Twitter ou a String resultante da postagem possuir mais de 140 caracteres
+	 */
 	public Status sendMessage(ContaTwitter receiver, String message) throws TwitterException {
 		String newMessage = "@" + receiver.getScreenName() + " " + message;
 		return aplicacao.updateStatus(newMessage);
 	}
 	
+	/**
+	 * Atualiza o status do twitter da aplicacao com uma mensagem para cada receiver da lista que for passada e fazendo também uma "mention" a cada um deles
+	 * @param receivers a lista de contas que serão citadas nas mensgens
+	 * @param message o conteúdo da mensagem
+	 * @return o status resultante da postagem
+	 * @throws TwitterException Quando não for possível conectar ao Twitter ou a String resultante da postagem possuir mais de 140 caracteres
+	 */
 	public List<Status> sendMessage(List<ContaTwitter> receivers, String message) throws TwitterException {
 		List<Status> statusList = new ArrayList<Status>();
 		for (ContaTwitter receiver : receivers){
