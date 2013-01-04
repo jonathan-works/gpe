@@ -41,6 +41,19 @@
 	                         value="Gravar" 
 	                         styleClass="dr-tbpnl-tb-inact"
 	                         action="#{taskInstanceHome.update(home)}"/>
+	        
+	       	<!-- Implementar -->                 
+	        <a:commandButton id="unlock"
+	        				 ajaxSingle="true" 
+            				 status="none"
+	            		     rendered="#{processoHome.managed}"
+							 onmouseup="showLoading()"
+						 	 oncomplete="#{oncomplete};hideLoading()"
+							 eventsQueue="editQueue"					
+						   	 reRender="#{reRenderSave}"
+	                         value="Liberar Tarefa" 
+	                         styleClass="dr-tbpnl-tb-inact"
+	                         action="#{taskInstanceHome.removeUsuario()}"/>
 
             <a:commandButton id="persist" 
 	            		   	 rendered="#{!empty form.fields and !processoHome.managed}"

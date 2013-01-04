@@ -24,7 +24,8 @@
 				xmlns:h="http://java.sun.com/jsf/html"
 				xmlns:a="http://richfaces.org/a4j"
 				xmlns:rich="http://richfaces.org/rich"
-				xmlns:c="http://java.sun.com/jstl/core">
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:wi= "http://www.itx.com.br/jsf">
 
 	<rich:dataTable value="#{processoHandler.taskInstanceList}"
 					rowKeyVar="key" 
@@ -41,14 +42,21 @@
 								rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
 				<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
 			</div>
-			<div style="width:50%; float:left">
+			<s:div id="usuarioTarefaDiv" style="width:50%; float:left">
 				<h:graphicImage url="/img/usuario.gif"
 								rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
-				<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
-			<c:if test="#{empty userHandler.getUsuario(task.actorId)}">
-				<h:outputText value="#{userHandler.getUsuarioByTarefa(task)}" />
-			</c:if>
-			</div>
+				<h:outputText value="#{userHandler.getUsuarioByTarefa(task)} "/>
+				<a:form id="unlockForm">
+					<a:commandLink action="#{taskInstanceHome.removeUsuario()}"
+									reRender="usuarioTarefaDiv"
+									rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
+						<h:graphicImage url="/img/unlocked.gif"
+										title="Liberar Tarefa">
+										
+						</h:graphicImage>
+					</a:commandLink>
+				</a:form>
+			</s:div>
 		</rich:column>
 		
 		<rich:column style="text-align: center" 

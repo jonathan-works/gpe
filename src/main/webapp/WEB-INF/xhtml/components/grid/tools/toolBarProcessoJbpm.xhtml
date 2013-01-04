@@ -29,7 +29,7 @@
 	-->   
 	      
 	<ui:composition>
-		<div style="width: 32px">
+		<div style="width: 48px">
 		<a:form>
 			<a:outputPanel>
 				<ui:param name="actorId" value="#{row.actorId}"/>
@@ -41,12 +41,23 @@
 					reRender="tarefasTree,painelProcessos"
 					dragType="task#{painelUsuarioHome.taskId}" 
 					dragValue="#{row}">
-					<rich:dndParam name="label" value="Processo: #{row.numeroProcesso}" />
+					<ui:param name="owner" value="#{userHandler.getActorIdTarefaAtual(row[bean.key])}"/> 				
+				<rich:dndParam name="label" value="Processo: #{row.numeroProcesso}" />
 				</rich:dragSupport>
 				<h:graphicImage url="/img/annotate.gif" title="Mover para caixa" />
 			 </a:outputPanel>
+			 <a:commandLink ajaxSingle="true"
+				rendered="true"
+				target="#{row[bean.key]}popUpFluxo"
+				onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
+				>
+				<f:param name="idProcesso" value="#{row[bean.key]}" />
+				<f:param name="taskId" value="#{painelUsuarioHome.taskId}" />
+				<h:graphicImage url="/img/view.gif" 
+					title="Visualizar a tarefa" />
+			</a:commandLink>
 			<a:commandLink ajaxSingle="true"
-				rendered="#{empty actorId or actorId == actor.id}"
+				rendered="#{owner == null}"
 				target="#{row[bean.key]}popUpFluxo"
 				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
 				>
@@ -55,10 +66,19 @@
 				<h:graphicImage url="/img/edit.gif" 
 					title="Abrir a tarefa" />
 			</a:commandLink>
+			<a:commandLink ajaxSingle="true"
+				rendered="#{owner == actor.id}"
+				target="#{row[bean.key]}popUpFluxo"
+				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
+				>
+				<f:param name="idProcesso" value="#{row[bean.key]}" />
+				<f:param name="taskId" value="#{painelUsuarioHome.taskId}" />
+				<h:graphicImage url="/img/task.gif" 
+					title="Continuar a tarefa" />
+			</a:commandLink>
 			<h:graphicImage url="/img/role.gif"
-					rendered="#{!empty actorId and actorId != actor.id}" 
-					title="Processo bloqueado pelo servidor #{actorId}" />
-
+					rendered="#{(owner != actor.id and owner != null)}" 
+					title="Processo bloqueado pelo servidor #{owner}" />
 		</a:form>
 		</div>
 	</ui:composition> 

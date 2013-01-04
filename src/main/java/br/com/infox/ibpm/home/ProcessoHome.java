@@ -240,6 +240,10 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public void iniciarTarefaProcesso() {
 		JbpmEventsHandler.instance().iniciarTask(instance);
 	}
+	
+	public void visualizarTarefaProcesso(){
+		JbpmEventsHandler.instance().visualizarTask(instance);
+	}
 
 	public Boolean acessarFluxo(){
 		if(getInstance().getActorId() == null ||

@@ -47,6 +47,7 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.JbpmVariavelLabel;
 import br.com.infox.ibpm.entity.Localizacao;
@@ -55,6 +56,7 @@ import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.Status;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -426,6 +428,10 @@ public class JbpmUtil {
 	
 	public static boolean isTypeEditor(String type) {
 		return type.startsWith("textEditCombo") || type.equals("textEditSignature");
-	}	
+	}
+	
+	public static boolean isUsuarioLogadoResponsavelLocalizacao(){
+		return Authenticator.getUsuarioLocalizacaoAtual().getResponsavelLocalizacao();
+	}
 	
 }

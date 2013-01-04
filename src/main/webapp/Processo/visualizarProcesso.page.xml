@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+	  login-required="true"
+>
+	
+	<description>Processo: #{processoHome.instance}</description>
+	
+	<begin-conversation join="true"/>
+
+<!-- Parametros para RESTFull -->
+	<param name="tab" value="#{processoHome.tab}"/>
+	<param name="goBackUrl" value="#{processoHome.goBackUrl}"/>
+	<param name="goBackId" value="#{processoHome.goBackId}"/>
+	<param name="goBackTab" value="#{processoHome.goBackTab}"/>		
+
+	<param name="idBin" value="#{processoDocumentoBinHome.processoDocumentoBinIdProcessoDocumentoBin}"/>
+	<param name="idProcesso" value="#{processoHome.processoIdProcesso}"/>	
+	<action execute="#{processoHome.visualizarTarefaProcesso()}"/>
+ 
+</page>

@@ -106,33 +106,15 @@
 					  status=":status">
 				<c:if test="#{empty taskPageAction.taskPagePath}">
 					<s:div id="taskInstanceDiv">
-						<wi:form canEdit="true"
+						<wi:form canEdit="false"
 				    			 formTitle="#{taskInstance.name}"
 						    	 home="#{taskInstanceForm.home}"
 						    	 reRenderSave="taskInstanceDiv"
 						    	 form="#{taskInstaceForm}" />
 					</s:div>
 				</c:if>
-				<c:if test="#{not empty taskPageAction.taskPagePath}">
-					<ui:include src="#{taskPageAction.taskPagePath}" />
-				</c:if>
+				
 			</rich:tab>			
-			
-			<rich:tab id="tabAnexar" 
-					  rendered="#{processoHome.managed}"
-					  label="Anexar Documento" 
-					  status=":status"
-					  action="#{processoDocumentoHome.newInstance()}">
-				<s:div id="divAnexarDocumentos">
-					<div style="width: 75%; left:1px; ">
-						<wi:form isUploadForm="true"
-								 form="#{anexarDocumentoForm}" 
-								 formTitle="Cadastro do Documento" 
-								 home="#{processoDocumentoHome}"
-								 reRenderSave="divAnexarDocumentos" />
-					</div>
-				</s:div>
-			</rich:tab>	
 			
 			<rich:tab id="tabAnexos" 
 					  rendered="#{processoHome.managed}"
@@ -163,27 +145,7 @@
 					  switchType="ajax"
 					  label="#{messages['documentoFisico.titleTab']}"
 					  action="#{action.init()}">
-				<wi:dataForm formId="documentoFisicoForm"
-						 	 formTitle="#{messages['documentoFisico.titleForm']}">
-					<wi:selectOneMenuEntity id="localizacaoFisica"
-											label="#{messages['documentoFisico.localizacaoFisica']}"
-											value="#{action.instance.localizacaoFisica}"
-											items="#{action.localizacaoFisicaList}"
-											required="true"
-											noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}"/>
-							 	 
-					<wi:inputText id="descricaoDocumentoFisico"
-								  label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
-								  required="true"
-								  value="#{action.instance.descricaoDocumentoFisico}"
-								  maxlength="150" />
-					<ui:define name="buttons">
-						<wi:commandButton id="saveDocumentoFisicoButton"
-										  action="localizacaoDocumentoFisicoAction.save"
-										  reRender="documentoFisicoForm, documentoFisicoDiv"
-										  value="Incluir"/>
-					</ui:define>
-				</wi:dataForm>
+				
 				<s:div id="documentoFisicoDiv">
 					<h:form>
 						<rich:dataTable id="documentoFisicoTable"
@@ -191,19 +153,6 @@
 										var="row"
 										rows="10"
 										style="width: 75%">
-							<rich:column style="width: 10%">
-								<f:facet name="header">
-									<wi:toolBarRemove id="headerInactivate"
-													  reRender="documentoFisicoDiv"
-												      actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
-												      title="Inativar todos os Registros"/>
-								</f:facet>
-								<center>
-									<wi:toolBarRemove id="toolBarInactivate"
-													  reRender="documentoFisicoDiv"
-												      actionRemove="localizacaoDocumentoFisicoAction.inactive(row)"/>
-								</center>
-							</rich:column>
 							<rich:column style="width: 40%">
 								<f:facet name="header">
 									<h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />

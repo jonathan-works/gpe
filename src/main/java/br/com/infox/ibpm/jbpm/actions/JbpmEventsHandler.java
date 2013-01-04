@@ -18,9 +18,11 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -197,6 +199,31 @@ public class JbpmEventsHandler implements Serializable {
 		}
 	}
 	
+	public void visualizarTask(Processo processo){
+		try {
+			if (processo != null && processo.getIdJbpm() != null &&
+					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
+				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
+				String sql = "select o.idTaskInstance from SituacaoProcesso o " +
+				"where o.idProcesso = :id " +
+				"group by o.idTaskInstance";
+				Query q = getEntityManager().createQuery(sql);
+				q.setParameter("id", processo.getIdProcesso());
+				Long taskId = EntityUtil.getSingleResult(q);
+				if (taskId != null) {
+					BusinessProcess.instance().setTaskId(taskId);
+				}
+			}
+		} catch (Exception ex) {
+			StringBuilder action = new StringBuilder("Visualizar Tarefa: ");
+			action.append(ex.getLocalizedMessage());
+			action.append("iniciarTask()");
+			action.append("JbpmEventsHandler");
+			action.append("BPM");
+			LOG.warn(action.toString(), ex);
+		}
+	}
+	
 	public void iniciarTask(Processo processo) {
 		try {
 			if (processo != null && processo.getIdJbpm() != null &&
@@ -208,7 +235,7 @@ public class JbpmEventsHandler implements Serializable {
 				Query q = getEntityManager().createQuery(sql);
 				q.setParameter("id", processo.getIdProcesso());
 				Long taskId = EntityUtil.getSingleResult(q);
-	
+				
 				if (taskId != null) {
 					BusinessProcess.instance().setTaskId(taskId);
 					TaskInstance ti = (TaskInstance) JbpmUtil.getJbpmSession()
@@ -218,10 +245,11 @@ public class JbpmEventsHandler implements Serializable {
 							BusinessProcess.instance().startTask();
 						}
 						String actorId = Actor.instance().getId();
+						
 						processo.setActorId(actorId);
+						storeUsuario(taskId, actorId);
 						getEntityManager().merge(processo);
 						EntityUtil.flush();
-						System.out.println("Tarefa: " + BusinessProcess.instance().getTaskId());
 					}
 				}
 			}
@@ -233,6 +261,26 @@ public class JbpmEventsHandler implements Serializable {
 								  "iniciarTask()", 
 								  "JbpmEventsHandler", 
 								  "BPM"));
+		}
+	}
+	
+	/**
+	 * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os usuários das tarefas em execução, 
+	 * apagando o usuário sempre que a tarefa é finalizada (ver tabela jbpm_taskinstance, campo actorid_)
+	 * Porém surgiu a necessidade de armazenar os usuários das tarefas já finalizas para exibir no 
+	 * histórico de Movimentação do Processo
+	 * @param idTask
+	 * @param actorId				 
+	 * */
+	private void storeUsuario(Long idTask, String actorId){
+		if (getEntityManager().find(UsuarioTaskInstance.class, idTask) == null){
+			Query q = EntityUtil.getEntityManager().createQuery("select o from UsuarioLogin o where o.login = :actorId");
+			q.setParameter("actorId", actorId);
+			UsuarioLogin user = (UsuarioLogin) q.getSingleResult();		
+			UsuarioTaskInstance uti = new UsuarioTaskInstance();
+			uti.setIdTaskInstance(idTask);
+			uti.setIdUsuario(user.getIdPessoa());
+			EntityUtil.getEntityManager().persist(uti);
 		}
 	}
 	

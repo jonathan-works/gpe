@@ -42,7 +42,7 @@ import br.com.infox.annotations.PathDescriptor;
 import br.com.infox.annotations.Recursive;
 
 @Entity
-@Table(name = "tb_item", schema="public")
+@Table(name = Item.TABLE_NAME, schema="public")
 @Recursive
 public class Item implements java.io.Serializable {
 

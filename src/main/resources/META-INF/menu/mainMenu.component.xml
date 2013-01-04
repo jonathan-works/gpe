@@ -21,6 +21,7 @@
 			<!-- <value>menu.documentos/protocoloDocumento.menuText:/ProtocoloDocumento/listView.seam</value> -->
 			<value>menu.documentos/tipoProcessoDocumento.menuText:/TipoProcessoDocumento/listView.seam</value>
 			<value>menu.documentos/variavel.menuText:/Variavel/listView.seam?newInstance=true</value>
+			<value>menu.documentos/localizacaFisica.menuText:/LocalizacaoFisica/listView.seam</value>
 			
 			<value>menu.cadBasicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
 			<value>menu.cadBasicos/cbo.menuText:/CBO/listView.seam</value>

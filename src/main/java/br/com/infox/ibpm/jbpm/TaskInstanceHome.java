@@ -77,9 +77,7 @@ public class TaskInstanceHome implements Serializable {
 								"neste registro, verifique se ele não foi movimentado";
 
 	private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
-	
 	private static final long serialVersionUID = 1L;
-	
 	public static final String NAME = "taskInstanceHome"; 
 
 	//TODO mudar o nome dessa variavel e o conteudo ficar #{HIDDEN_TRANSITION}
@@ -87,27 +85,16 @@ public class TaskInstanceHome implements Serializable {
 	private static final String OCCULT_TRANSITION = "#{true}";
 	
 	private TaskInstance taskInstance;
-	
 	private Map<String, Object> instance;
-
 	private String variavelDocumento;
-	
 	private Long taskId;
-
 	private List<Transition> availableTransitions;
-
 	private List<Transition> leavingTransitions;
-
 	private ModeloDocumento modeloDocumento;
-	
 	private String varName;
-	
 	private String name;
-	
 	private Boolean assinar = Boolean.FALSE;
-
 	private TaskInstance currentTaskInstance;
-	
 	public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 	
 	public void createInstance() {
@@ -342,7 +329,6 @@ public class TaskInstanceHome implements Serializable {
 			}
 			this.currentTaskInstance = null;
 			ProcessoHome.instance().setIdProcessoDocumento(null);
-			storeUsuario(tempTask.getId(), tempTask.getActorId());
 			update();
 			AutomaticEventsTreeHandler.instance().registraEventos();
 			try {
@@ -365,22 +351,12 @@ public class TaskInstanceHome implements Serializable {
 		return null;
 	}
 	
-	/**
-	 * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os usuários das tarefas em execução, 
-	 * apagando o usuário sempre que a tarefa é finalizada (ver tabela jbpm_taskinstance, campo actorid_)
-	 * Porém surgiu a necessidade de armazenar os usuários das tarefas já finalizas para exibir no 
-	 * histórico de Movimentação do Processo
-	 * @param idTask
-	 * @param actorId				 
-	 * */
-	private void storeUsuario(Long idTask, String actorId){
-		Query q = EntityUtil.getEntityManager().createQuery("select o from UsuarioLogin o where o.login = :actorId");
-		q.setParameter("actorId", actorId);
-		UsuarioLogin user = (UsuarioLogin) q.getSingleResult();		
-		UsuarioTaskInstance uti = new UsuarioTaskInstance();
-		uti.setIdTaskInstance(idTask);
-		uti.setIdUsuario(user.getIdPessoa());
-		EntityUtil.getEntityManager().persist(uti);
+	public void removeUsuario(){
+		UsuarioTaskInstance uti = EntityUtil.getEntityManager().find(UsuarioTaskInstance.class, BusinessProcess.instance().getTaskId());
+		if (uti != null){
+			EntityUtil.getEntityManager().remove(uti);
+			EntityUtil.getEntityManager().flush();
+		}
 	}
 	
 	/**

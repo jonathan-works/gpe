@@ -16,6 +16,7 @@
 package br.com.infox.ibpm.jbpm.handler;
 
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
@@ -24,6 +25,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
 import br.com.itx.util.EntityUtil;
@@ -46,6 +49,23 @@ public class UserHandler {
 		}
 		return null;
 	}
+	
+	public String getActorIdTarefaAtual(Integer idProcesso){
+		try {
+		Long idTaskInstance = getIdTaskAtual(idProcesso); 
+		String hql = "select ul from UsuarioLogin ul where ul.idPessoa = (" +
+				"select uti.idUsuario from UsuarioTaskInstance uti where uti.idTaskInstance = :idTaskInstance)";
+		Query query = EntityUtil.createQuery(hql).setParameter("idTaskInstance", idTaskInstance);
+		UsuarioLogin ul = EntityUtil.getSingleResult(query);
+		if (ul!= null) 
+			return ul.getLogin();
+		else return null;
+		} catch (NoResultException nre){
+			//TODO Verificar porque o Painel de Usuário ainda tenta buscar a tarefa que foi finalizada e passada para o próximo nó do fluxo
+			nre.printStackTrace();
+			return null;
+		}
+	}
 
 	/*
 	 * O try/catch não será mais necessário quando o e-PP começar a rodar numa base limpa
@@ -67,7 +87,7 @@ public class UserHandler {
 		}
 		UsuarioLogin user = (UsuarioLogin)
 				EntityUtil.getEntityManager()
-				.createQuery("select o from UsuarioLogin o where o.idUsuario = :idUsuario")
+				.createQuery("select o from UsuarioLogin o where o.idPessoa = :idUsuario")
 				.setParameter("idUsuario", uti.getIdUsuario())
 				.getSingleResult();
 		return user.getNome();
@@ -94,6 +114,11 @@ public class UserHandler {
 	private String getLocalizacao(TaskInstance task) {
 		String localizacao = JbpmUtil.instance().getLocalizacao(task).getCaminho();
 		return "Local: " + localizacao;
+	}
+	
+	private Long getIdTaskAtual(Integer idProcesso){
+		String hql = "select o.idTaskInstance from SituacaoProcesso o where o.idProcesso = :idProcesso";
+		return (Long) EntityUtil.createQuery(hql).setParameter("idProcesso", idProcesso).getSingleResult();
 	}
 	
 }
