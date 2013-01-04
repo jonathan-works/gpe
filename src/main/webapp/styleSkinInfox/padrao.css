@@ -740,3 +740,11 @@ input[type='submit'],input[type='button'], .buttons {
 .required {
 	padding-left: 2px;
 }
+
+.expressionDiv div {
+	display: inline;
+}
+
+.conclusionSelect {
+	display: block;
+}

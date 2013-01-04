@@ -22,9 +22,7 @@ import java.util.Set;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.node.Fork;
-import org.jbpm.graph.node.Join;
-import org.jbpm.graph.node.ProcessState;
+import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
@@ -33,6 +31,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 public class TaskHandlerVisitor {
 
 	private boolean isMapped;
+	private List<String> types;
 	private List<String> variableList = new ArrayList<String>();
 	private List<Task> visitedTasks = new ArrayList<Task>();
 
@@ -40,17 +39,24 @@ public class TaskHandlerVisitor {
 		this.isMapped = isMapped;
 	}
 	
+	public TaskHandlerVisitor (boolean isMapped, List<String> types) {
+		this.isMapped = isMapped;
+		this.types = types;
+	}
+	
 	public List<String> getVariables() {
 		return variableList;
+	}
+	
+	public void visit(Node n) {
+		addVariables(n.getArrivingTransitions());
 	}
 	
 	public void visit(Task t) {
 		visitedTasks.add(t);
 		Node n = (Node) t.getParent();
+		visit((Node) t.getParent());
 		Set<Transition> transitions = n.getArrivingTransitions();
-		if (transitions == null) {
-			return;
-		}
 		addVariables(transitions);
 	}
 
@@ -60,41 +66,53 @@ public class TaskHandlerVisitor {
 		}
 		for (Transition transition : transitions) {
 			Node from = transition.getFrom();
-			if (from instanceof TaskNode) {
+			NodeType type = from.getNodeType();
+			if (NodeType.Task.equals(type)) {
 				TaskNode tn = (TaskNode) from;
 				addTaskNodeVariables(tn);
-			} else if ((from instanceof Fork)
-					|| (from instanceof Join)
-					|| (from instanceof ProcessState)) {
+			}
+			switch (type) {
+			case StartState:
+				break;
+			default:
 				addVariables(from.getArrivingTransitions());
+				break;
 			}
 		}
 	}
 
 	private void addTaskNodeVariables(TaskNode tn) {
+		boolean filtered = types != null && types.size() > 0;
 		for (Task tsk : tn.getTasks()) {
 			TaskController tc = tsk.getTaskController();
 			if (tc != null) {
 				List<VariableAccess> accesses = tc.getVariableAccesses();
 				for (VariableAccess v : accesses) {
-					if (v.isWritable() && !v.getMappedName().startsWith("page:")) {
+					String mappedName = v.getMappedName();
+					if (v.isWritable() && !mappedName.startsWith("page:")) {
 						String name;
 						if (isMapped) {
-							name = v.getMappedName();
+							name = mappedName;
 						} else {
 							name = v.getVariableName();
 						}
-						if (name != null && ! "".equals(name) && !variableList.contains(name)) {
-							variableList.add(name);
+						if (name != null && !"".equals(name)
+								&& !variableList.contains(name)) {
+							if (filtered) {
+								if (types.contains(mappedName.split(":")[0])) {
+									variableList.add(name);
+								}
+							} else {
+								variableList.add(name);
+							}
 						}
 					}
 				}
 			}
-			if (! visitedTasks.contains(tsk)) {
+			if (!visitedTasks.contains(tsk)) {
 				visit(tsk);
 			}
 		}
 	}
-
 
 }

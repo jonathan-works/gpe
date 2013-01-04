@@ -37,11 +37,12 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.itx.util.ComponentUtil;
 
 
-@Name("variableHandler")
+@Name(VariableHandler.NAME)
 @BypassInterceptors
 public class VariableHandler implements Serializable {
-	
 	private static final long serialVersionUID = -6777955765635127593L;
+	
+	public static final String NAME = "variableHandler";
 
 	private transient LogProvider log = Logging.getLogProvider(VariableHandler.class);
 	
@@ -102,7 +103,7 @@ public class VariableHandler implements Serializable {
 	}
 
 	public static VariableHandler instance() {
-		return (VariableHandler) Component.getInstance("variableHandler");
+		return (VariableHandler) Component.getInstance(NAME);
 	}
 
 	public class Variavel implements Serializable {

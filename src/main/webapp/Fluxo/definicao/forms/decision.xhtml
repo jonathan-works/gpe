@@ -2,7 +2,9 @@
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf">
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:c="http://java.sun.com/jstl/core">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -19,8 +21,21 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --> 
-	<wi:inputTextarea id="expression" 
-		label="Expressão"
-		value="#{processBuilder.currentNode.decisionExpression}" />
+	
+	<ui:include src="/js/expressionWizard.xhtml" />
+	
+	<s:div id="expressions" style="float:left; width:526px">
+		<s:div id="expression" styleClass="expressionDiv">
+			<script type="text/javascript">
+				initExpressions();
+				inputId = "form:nodes:expressionDecoration:expression";
+			</script>
+		</s:div>
+		
+		<wi:inputTextarea id="expression" 
+			label="Expressão"
+			value="#{processBuilder.currentNode.decisionExpression}" />
+		
+	</s:div>
 
 </ui:composition>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:c="http://java.sun.com/jstl/core">
+
+<!-- Injecao do jQuery mais recente para nao conflitar com o jQuery trazido pelo richfaces -->
+<script type="text/javascript">var $rfjquery = jQuery.noConflict();</script>
+<script type="text/javascript" src="#{util.contextPath}/js/jquery-1.8.3.js"></script>
+
+<!-- Codigo do Wizard -->
+<script language="javascript" charset="ISO-8859-1">
+nj = jQuery.noConflict();
+$ = $rfjquery;
+//<![CDATA[
+var booleanVariableList=new Array();
+var numberVariableList=new Array();
+var transitionList=new Array();
+var inputId;
+
+function setInputId(id)	{
+	inputId = id;
+}
+
+function initVariableList() {
+	booleanVariableList.clear();
+	numberVariableList.clear();
+	transitionList.clear();
+	booleanVariableList = #{processBuilder.currentNode.getBooleanVariables()};
+	numberVariableList = #{processBuilder.currentNode.getNumberVariables()};
+	transitionList = #{processBuilder.currentNode.getLeavingTransitionList()};
+}
+
+function getNumber() {
+	var valor = "s";
+	while (true) {
+		valor = window.prompt("Insira um valor", "0");
+		valor = valor.replace(".", "");
+		valor = valor.replace(",", ".");
+		valor = parseFloat(valor);
+		if ((!isNaN(valor)) && (isFinite(valor))) {
+			break;
+		}
+	}
+	return valor;
+}
+
+function reset(element) {
+	if (element.hasClass("booleanSelect")) {
+		element.html(booleanSelect());
+	} else if (element.hasClass("aritOperSelect")) {
+		element.html(aritOperSelect());
+	} else if (element.hasClass("conclusionSelect")) {
+		element.html(conclusionSelect());
+	}
+}
+
+function spanLink(label) {
+	parent = document.createElement("div");
+	element = parent.appendChild(document.createElement("span"));
+	element.innerHTML = label;
+	element.setAttribute("href", "javascript:void(0)");
+
+	return parent.innerHTML;
+}
+
+function setTextArea(text) {
+	nj("*[id$='"+inputId+"']").html("#"+"{"+text+"}");
+}
+
+function onSelectExpWiz(selected) {
+	pNode = selected.parentNode;
+	if (selected.value == "") {
+	} else if (selected.value == "or") {
+		selected.parentNode.innerHTML = spanLink("( ") + booleanSelect()
+				+ spanLink(" || ") + booleanSelect() + spanLink(" )");
+	} else if (selected.value == "and") {
+		selected.parentNode.innerHTML = spanLink("( ") + booleanSelect()
+				+ spanLink(" && ") + booleanSelect() + spanLink(" )");
+	} else if (selected.value == "not") {
+		selected.parentNode.innerHTML = spanLink("!") + booleanSelect();
+	} else if (selected.value == "operacao") {
+		selected.parentNode.innerHTML = aritOperSelect();
+	} else if (selected.value == "aritExp") {
+		selected.parentNode.innerHTML = spanLink("( ") + aritComparSelect()
+				+ spanLink(" )");
+	} else if (selected.value == "num") {
+		selected.parentNode.innerHTML = spanLink(getNumber());
+	} else if (selected.value == "if") {
+		selected.parentNode.innerHTML = spanLink("( ") + booleanSelect()
+				+ spanLink(" ? ") + conclusionSelect() + spanLink(" : ")
+				+ conclusionSelect() + spanLink(" )");
+	} else if ((selected.value == "==") || (selected.value == "!=")
+			|| (selected.value == ">=") || (selected.value == ">")
+			|| (selected.value == "<=") || (selected.value == "<")
+			|| (selected.value == "+") || (selected.value == "-")
+			|| (selected.value == "/") || (selected.value == "*")) {
+		selected.parentNode.innerHTML = spanLink("( ") + aritOperSelect()
+				+ spanLink(" " + selected.value + " ") + aritOperSelect()
+				+ spanLink(" )");
+	} else {
+		selected.parentNode.innerHTML = spanLink(selected.value);
+	}
+	
+	nj(".expressionDiv span").click(function() {
+		nj(this).parent().css("background-color", "");
+		nj(this).parent().css("cursor", "");
+		reset(nj(this).parent());
+	});
+	nj(".expressionDiv span").hover(function() {
+		nj(this).parent().css("background-color", "grey");
+		nj(this).parent().css("cursor", "pointer");
+	}, function() {
+		nj(this).parent().css("background-color", "");
+		nj(this).parent().css("cursor", "");
+	});
+	jNode = nj(pNode).parents().filter(".expressionDiv");
+	
+	if (jNode.find("select").size() == 0) {
+		setTextArea(jNode.text());
+	}
+	
+}
+
+function addOption(value, label, parentNode) {
+	result = document.createElement("option")
+	result.value = value;
+	result.innerHTML = label;
+	return parentNode.appendChild(result);
+}
+
+function aritComparSelect() {
+	parent = document.createElement("div");
+	element = parent.appendChild(document.createElement("div"));
+	element.setAttribute("class", "aritComparSelect");
+	element = element.appendChild(document.createElement("select"));
+	element.setAttribute("onchange", "onSelectExpWiz(this)");
+	addOption("", "Comparação", element);
+
+	return parent.innerHTML;
+}
+
+function aritOperSelect() {
+	parent = document.createElement("div");
+	element = parent.appendChild(document.createElement("div"));
+	element.setAttribute("class", "aritOperSelect");
+	element = element.appendChild(document.createElement("select"));
+	element.setAttribute("onchange", "onSelectExpWiz(this)");
+	addOption("", "Operação Aritmética", element);
+	addOption("+", "Soma", element);
+	addOption("-", "Subtração", element);
+	addOption("*", "Multiplicação", element);
+	addOption("/", "Divisão", element);
+	addOption("num", "Inserir Número", element);
+	for(var i=0; i < numberVariableList.length; i++) {
+		item = numberVariableList[i];
+		addOption(item, "  "+item, element);
+	}
+	return parent.innerHTML;
+}
+
+function booleanSelect() {
+	parent = document.createElement("div");
+	element = parent.appendChild(document.createElement("div"));
+	element.setAttribute("class", "booleanSelect");
+	element = element.appendChild(document.createElement("select"));
+	element.setAttribute("onchange", "onSelectExpWiz(this)");
+
+	addOption("", "Valor Lógico", element);
+	addOption("true", "Verdadeiro", element);
+	addOption("false", "Falso", element);
+	addOption("or", "Disjunção (Ou)", element);
+	addOption("and", "Conjunção (E)", element);
+	addOption("not", "Negação", element);
+	addOption("", "-Comparações Aritméticas-", element);
+	addOption("==", "Igual a", element);
+	addOption("!=", "Diferente de", element);
+	addOption(">=", "Maior ou Igual a", element);
+	addOption(">", "Maior que", element);
+	addOption("<=", "Menor ou Igual a", element);
+	addOption("<", "Menor que", element);	
+	for(var i=0; i < booleanVariableList.length; i++) {
+		item = booleanVariableList[i];
+		addOption(item, item, element);
+	}
+
+	return parent.innerHTML;
+}
+
+function conclusionSelect() {
+	parent = document.createElement("div");
+	element = parent.appendChild(document.createElement("div"));
+	element.setAttribute("class", "conclusionSelect");
+	element = element.appendChild(document.createElement("select"));
+	element.setAttribute("onchange", "onSelectExpWiz(this)");
+
+	addOption("", "Selecione uma Transição", element);
+	addOption("if", "Nova Condição", element);
+	for(var i=0; i < transitionList.length; i++) {
+		item = transitionList[i];
+		addOption("'"+item+"'", item, element);
+	}
+
+	return parent.innerHTML;
+}
+
+function initialExpression() {
+	initVariableList();
+	return booleanSelect() + " ? " + conclusionSelect() + " : "
+			+ conclusionSelect();
+}
+
+function initExpressions() {
+	nj(".expressionDiv").html(initialExpression());
+}
+//]]>
+</script>
+</ui:composition>

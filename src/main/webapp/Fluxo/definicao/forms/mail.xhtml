@@ -115,7 +115,8 @@
 								 			  processBuilder.currentNode.to.startsWith('{')}"/>
 		<s:div id="twitterDiv" 
 		       rendered="#{processBuilder.currentNode.usaTwitter}"
-		       width="50%">
+		       width="50%"
+		       style="float:left;">
 			<wi:selectOneMenuEntity id="modeloTwitter"
 									label="Modelo Twitter.."
 									value="#{processBuilder.currentNode.modeloTwitter}"
@@ -129,7 +130,7 @@
 							  value="#{processBuilder.currentNode.modeloTwitter.mensagem}">
 			</wi:inputTextarea>
 		</s:div>
-		<s:div id="modeloDocDiv">
+		<s:div id="modeloDocDiv" style="float:left;">
 			<wi:selectOneMenuEntity id="modeloDocumento"
 							label="#{messages['processDefinition.modeloDocumento']}"
 							value="#{processBuilder.currentNode.modeloDocumento}"

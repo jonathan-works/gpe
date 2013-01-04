@@ -37,6 +37,7 @@
  */
 package br.com.infox.ibpm.jbpm.node;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -53,19 +54,64 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
+import br.com.infox.ibpm.jbpm.handler.TaskHandlerVisitor;
+
 
 /**
  * decision node.
  */
 public class DecisionNode extends Node {
-
-	static final long serialVersionUID = 1L;
-
-	List<DecisionCondition> decisionConditions = null;
-	Delegation decisionDelegation = null;
-	String decisionExpression = null;
+	private static final long serialVersionUID = 1L;
+	
+	private List<DecisionCondition> decisionConditions = null;
+	private Delegation decisionDelegation = null;
+	private String decisionExpression = null;
+	private List<String> booleanVariables = null;
+	private List<String> numberVariables = null;
+	private List<String> leavingTransitionList = null;
 
 	// ------ Customizacao
+	
+	public List<String> getNumberVariables() {
+		if (numberVariables == null) {
+			List<String> list = new ArrayList<String>();
+			list.add("number");
+			list.add("numberMoney");
+			TaskHandlerVisitor visitor = new TaskHandlerVisitor(false, list);
+			visitor.visit(this);
+			numberVariables = new ArrayList<String>();
+			for (String string : visitor.getVariables()) {
+				numberVariables.add("\""+string+"\"");
+			}
+		}
+		return numberVariables;
+	}
+	
+	public List<String> getLeavingTransitionList() {
+		if (leavingTransitionList == null)	{
+			leavingTransitionList = new ArrayList<String>();
+			for (Transition transition : leavingTransitions) {
+				leavingTransitionList.add("\""+transition.getName()+"\"");
+			}
+		}
+		
+		return leavingTransitionList;
+	}
+	
+	public List<String> getBooleanVariables() {
+		if (booleanVariables == null) {
+			List<String> list = new ArrayList<String>();
+			list.add("sim_nao");
+			TaskHandlerVisitor visitor = new TaskHandlerVisitor(false, list);
+			visitor.visit(this);
+			booleanVariables = new ArrayList<String>();
+			for (String string : visitor.getVariables()) {
+				booleanVariables.add("\""+string+"\"");
+			}
+		}
+		return booleanVariables;
+	}
+	
 	public String getDecisionExpression() {
 		return decisionExpression;
 	}

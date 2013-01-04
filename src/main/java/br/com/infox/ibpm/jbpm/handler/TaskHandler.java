@@ -171,10 +171,26 @@ public class TaskHandler implements Serializable {
 		ProcessBuilder.instance().setTypeList(null);
 	}
 
-	public List<String> getPreviousVariables() {
-		TaskHandlerVisitor visitor = new TaskHandlerVisitor(false);
+	private List<String> populatePreviousVariables(TaskHandlerVisitor visitor)	{
 		accept(visitor);
 		return visitor.getVariables();
+	}
+	
+	public List<String> getPreviousVariables() {
+		return populatePreviousVariables(new TaskHandlerVisitor(false));
+	}
+	
+	public List<String> getPreviousNumberVariables() {
+		List<String> types = new ArrayList<String>();
+		types.add("number");
+		types.add("numberMoney");
+		return populatePreviousVariables(new TaskHandlerVisitor(false, types));
+	}
+	
+	public List<String> getPreviousBoolVariables() {
+		List<String> types = new ArrayList<String>();
+		types.add("sim_nao");
+		return populatePreviousVariables(new TaskHandlerVisitor(false, types));
 	}
 	
 	public Boolean hasTaskPage() {
@@ -194,7 +210,7 @@ public class TaskHandler implements Serializable {
 	}
 	
 	public void accept(TaskHandlerVisitor visitor) {
-		visitor.visit(this.task); 
+		visitor.visit(this.task);
 	}
 
 }
