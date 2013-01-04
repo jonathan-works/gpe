@@ -414,31 +414,4 @@ public class TwitterUtil {
 		}
 		return result;
 	}
-	
-//  ================ Métodos para testes locais - Remover antes de colocar em Produção ==========================	
-
-	//TODO remover esse método - utilizado somente para testes locais
-	private AccessToken loadAccessToken(){
-	    String token = "980311075-QPU70Kmu7DJE44eBV0CzsyJje2rQel7y4q35EBAF";
-	    String tokenSecret = "qehADZbdRPYrvdpHjuh5xDtNdhKDNPo3v5lGZEC5ng";
-	    return new AccessToken(token, tokenSecret);
-	}
-	
-	//TODO remover esse método - utilizado somente para testes locais
-	private AccessToken loadAccessToken2(){
-	    String token = "811368666-5eQBz3BeMlo6J7dpaqorJu6egiqyPb4VeecLrNdV";
-	    String tokenSecret = "G50BaEgzWHIX9fsLzfEY2zhc75F0hVicoiJB7YbyYPA";
-	    return new AccessToken(token, tokenSecret);
-	}
-	
-	//TODO remover esse método - utilizado somente para testes locais
-	public static void main(String[] args) throws TwitterException, IOException {
-//		ContaTwitter ct = new ContaTwitter();
-//		ct.setAccessToken(loadAccessToken2());
-//		sendMessage(ct, "InfoxPP", "seu processo foi finalizado");
-//		ct.setScreenName("infoxPP");
-//		updateStatus(ct, "Testando o e-PP");
-//		followApplication(ct);
-//		sendNewsFavorite("new teste3");
-	}
 }
