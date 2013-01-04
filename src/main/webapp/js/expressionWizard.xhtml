@@ -4,8 +4,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:c="http://java.sun.com/jstl/core">
+                xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <!-- Injecao do jQuery mais recente para nao conflitar com o jQuery trazido pelo richfaces -->
 <script type="text/javascript">var $rfjquery = jQuery.noConflict();</script>
@@ -35,9 +34,9 @@ function initVariableList() {
 }
 
 function getNumber() {
-	var valor = "s";
+	var valor = ".";
 	while (true) {
-		valor = window.prompt("Insira um valor", "0");
+		valor = window.prompt("#{messages['expressionWizard.numberPrompt']}", "0");
 		valor = valor.replace(".", "");
 		valor = valor.replace(",", ".");
 		valor = parseFloat(valor);
@@ -84,9 +83,6 @@ function onSelectExpWiz(selected) {
 		selected.parentNode.innerHTML = spanLink("!") + booleanSelect();
 	} else if (selected.value == "operacao") {
 		selected.parentNode.innerHTML = aritOperSelect();
-	} else if (selected.value == "aritExp") {
-		selected.parentNode.innerHTML = spanLink("( ") + aritComparSelect()
-				+ spanLink(" )");
 	} else if (selected.value == "num") {
 		selected.parentNode.innerHTML = spanLink(getNumber());
 	} else if (selected.value == "if") {
@@ -122,7 +118,6 @@ function onSelectExpWiz(selected) {
 	if (jNode.find("select").size() == 0) {
 		setTextArea(jNode.text());
 	}
-	
 }
 
 function addOption(value, label, parentNode) {
@@ -132,29 +127,21 @@ function addOption(value, label, parentNode) {
 	return parentNode.appendChild(result);
 }
 
-function aritComparSelect() {
-	parent = document.createElement("div");
-	element = parent.appendChild(document.createElement("div"));
-	element.setAttribute("class", "aritComparSelect");
-	element = element.appendChild(document.createElement("select"));
-	element.setAttribute("onchange", "onSelectExpWiz(this)");
-	addOption("", "Comparação", element);
-
-	return parent.innerHTML;
-}
-
 function aritOperSelect() {
 	parent = document.createElement("div");
 	element = parent.appendChild(document.createElement("div"));
 	element.setAttribute("class", "aritOperSelect");
 	element = element.appendChild(document.createElement("select"));
 	element.setAttribute("onchange", "onSelectExpWiz(this)");
-	addOption("", "Operação Aritmética", element);
-	addOption("+", "Soma", element);
-	addOption("-", "Subtração", element);
-	addOption("*", "Multiplicação", element);
-	addOption("/", "Divisão", element);
-	addOption("num", "Inserir Número", element);
+	
+	addOption("", "#{messages['expressionWizard.aritSelect.null']}", element);
+	addOption("+", "#{messages['expressionWizard.aritSelect.plus']}", element);
+	addOption("-", "#{messages['expressionWizard.aritSelect.minus']}", element);
+	addOption("*", "#{messages['expressionWizard.aritSelect.mult']}", element);
+	addOption("/", "#{messages['expressionWizard.aritSelect.div']}", element);
+	addOption("","",element);
+	addOption("num", "#{messages['expressionWizard.aritSelect.numb']}", element);
+	addOption("","",element);
 	for(var i=0; i < numberVariableList.length; i++) {
 		item = numberVariableList[i];
 		addOption(item, "  "+item, element);
@@ -169,19 +156,20 @@ function booleanSelect() {
 	element = element.appendChild(document.createElement("select"));
 	element.setAttribute("onchange", "onSelectExpWiz(this)");
 
-	addOption("", "Valor Lógico", element);
-	addOption("true", "Verdadeiro", element);
-	addOption("false", "Falso", element);
-	addOption("or", "Disjunção (Ou)", element);
-	addOption("and", "Conjunção (E)", element);
-	addOption("not", "Negação", element);
-	addOption("", "-Comparações Aritméticas-", element);
-	addOption("==", "Igual a", element);
-	addOption("!=", "Diferente de", element);
-	addOption(">=", "Maior ou Igual a", element);
-	addOption(">", "Maior que", element);
-	addOption("<=", "Menor ou Igual a", element);
-	addOption("<", "Menor que", element);	
+	addOption("", "#{messages['expressionWizard.booleanSelect.null']}", element);
+	addOption("true", "#{messages['expressionWizard.booleanSelect.true']}", element);
+	addOption("false", "#{messages['expressionWizard.booleanSelect.false']}", element);
+	addOption("or", "#{messages['expressionWizard.booleanSelect.or']}", element);
+	addOption("and", "#{messages['expressionWizard.booleanSelect.and']}", element);
+	addOption("not", "#{messages['expressionWizard.booleanSelect.not']}", element);
+	addOption("", "", element);
+	addOption("==", "#{messages['expressionWizard.booleanSelect.equals']}", element);
+	addOption("!=", "#{messages['expressionWizard.booleanSelect.notEqual']}", element);
+	addOption(">=", "#{messages['expressionWizard.booleanSelect.gte']}", element);
+	addOption(">", "#{messages['expressionWizard.booleanSelect.gt']}", element);
+	addOption("<=", "#{messages['expressionWizard.booleanSelect.lte']}", element);
+	addOption("<", "#{messages['expressionWizard.booleanSelect.lt']}", element);
+	addOption("", "", element);
 	for(var i=0; i < booleanVariableList.length; i++) {
 		item = booleanVariableList[i];
 		addOption(item, item, element);
@@ -197,8 +185,9 @@ function conclusionSelect() {
 	element = element.appendChild(document.createElement("select"));
 	element.setAttribute("onchange", "onSelectExpWiz(this)");
 
-	addOption("", "Selecione uma Transição", element);
-	addOption("if", "Nova Condição", element);
+	addOption("", "#{messages['expressionWizard.condSelect.null']}", element);
+	addOption("if", "#{messages['expressionWizard.condSelect.cond']}", element);
+	addOption("","",element);
 	for(var i=0; i < transitionList.length; i++) {
 		item = transitionList[i];
 		addOption("'"+item+"'", item, element);
