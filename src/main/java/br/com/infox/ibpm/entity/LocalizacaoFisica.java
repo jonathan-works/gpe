@@ -1,22 +1,30 @@
 package br.com.infox.ibpm.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
 import org.hibernate.validator.Length;
 
+import br.com.infox.annotations.HierarchicalPath;
+import br.com.infox.annotations.Parent;
+import br.com.infox.annotations.PathDescriptor;
+import br.com.infox.annotations.Recursive;
+
 @Entity
 @Table(schema="public", name=LocalizacaoFisica.TABLE_NAME)
+@Recursive
 public class LocalizacaoFisica implements Serializable {
 
 	public static final String TABLE_NAME = "tb_localizacao_fisica";
 	private static final long serialVersionUID = 1L;
 
 	private int idLocalizacaoFisica;
-	private Integer nrPrateleira;
-	private Integer nrCaixa;
-	private String descricaoSala;
+	private LocalizacaoFisica localizacaoFisicaPai;
+	private String descricao;
+	private String caminhoCompleto;
 	private Boolean ativo;
 	
 	@SequenceGenerator(name="generator", sequenceName="sq_tb_localizacao_fisica")
@@ -30,31 +38,33 @@ public class LocalizacaoFisica implements Serializable {
 		this.idLocalizacaoFisica = idLocalizacaoFisica;
 	}
 	
-	@Column(name="nr_prateleira", nullable=false)
-	public Integer getNrPrateleira() {
-		return nrPrateleira;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_localizacao_fisica_pai")
+	@Parent
+	public LocalizacaoFisica getLocalizacaoFisicaPai() {
+		return localizacaoFisicaPai;
 	}
-	public void setNrPrateleira(Integer nrPrateleira) {
-		this.nrPrateleira = nrPrateleira;
+	public void setLocalizacaoFisicaPai(LocalizacaoFisica localizacaoFisicaPai) {
+		this.localizacaoFisicaPai = localizacaoFisicaPai;
 	}
-	
-	@Column(name="nr_caixa", nullable=false)
-	public Integer getNrCaixa() {
-		return nrCaixa;
-	}
-	public void setNrCaixa(Integer nrCaixa) {
-		this.nrCaixa = nrCaixa;
-	}
-	
-	@Column(name="ds_sala", nullable=false, length=150)
+	@Column(name="ds_localizacao_fisica", nullable=false, length=150)
 	@Length(max=150)
-	public String getDescricaoSala() {
-		return descricaoSala;
+	@PathDescriptor
+	public String getDescricao() {
+		return descricao;
 	}
-	public void setDescricaoSala(String descricaoSala) {
-		this.descricaoSala = descricaoSala;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 	
+	@Column(name="ds_caminho_completo", unique=true)
+	@HierarchicalPath
+	public String getCaminhoCompleto() {
+		return caminhoCompleto;
+	}
+	public void setCaminhoCompleto(String caminhoCompleto) {
+		this.caminhoCompleto = caminhoCompleto;
+	}
 	@Column(name="in_ativo", nullable=false)
 	public Boolean getAtivo() {
 		return this.ativo;
@@ -62,10 +72,25 @@ public class LocalizacaoFisica implements Serializable {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
+	
 	@Override
 	public String toString() {
-		return descricaoSala + " [Prateleira=" + nrPrateleira + ", Caixa="
-				+ nrCaixa + "]";
+		return descricao;
+	}
+	
+	public String caminhoCompletoToString()	{
+		return caminhoCompleto.replace('|', '/').substring(0, caminhoCompleto.length()-1);
+	}
+	
+	@Transient
+	public List<LocalizacaoFisica> getListLocalizacaoFisicaAtePai() {
+		List<LocalizacaoFisica> list = new ArrayList<LocalizacaoFisica>();
+		LocalizacaoFisica pai = getLocalizacaoFisicaPai();
+		while (pai != null) {
+			list.add(pai);
+			pai = pai.getLocalizacaoFisicaPai();
+		}
+		return list;
 	}
 	
 }

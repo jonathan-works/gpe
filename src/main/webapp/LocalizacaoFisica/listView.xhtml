@@ -38,57 +38,49 @@
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarlocalizacaoFisicaForm"
 							   formTitle="#{messages['localizacaoFisica.titleSearchForm']}">
-					<wi:inputText id="descricaoSala"
-								  label="#{messages['localizacaoFisica.descricaoSala']}"
-								  value="#{localizacaoFisicaList.entity.descricaoSala}"
+					<wi:inputText id="descricao"
+								  label="#{messages['localizacaoFisica.descricao']}"
+								  value="#{localizacaoFisicaList.entity.descricao}"
 								  maxlength="150" />
-					<wi:inputNumber id="nrPrateleira"
-								 value="#{localizacaoFisicaList.entity.nrPrateleira}"
-								 label="#{messages['localizacaoFisica.nrPrateleira']}"/>
-					<wi:inputNumber id="nrCaixa"
-								 value="#{localizacaoFisicaList.entity.nrCaixa}"
-								 label="#{messages['localizacaoFisica.nrCaixa']}"/>
+					<wi:tree id="localizacaoFisicaPai"
+							 assignTo="localizacaoFisicaList.entity.localizacaoFisicaPai"
+							 tree="#{localizacaoFisicaTree}"
+							 icon="/img/nivelTree.gif"
+							 iconLeaf="/img/file.gif"
+							 label="#{messages['localizacaoFisica.localizacaoFisicaPai']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
 											  label="#{messages['agrupamento.ativo']}"
 											  value="#{localizacaoFisicaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
 			
-			<wi:columnOutputText columnId="descricaoSala"
-								 columnHeader="#{messages['localizacaoFisica.descricaoSala']}"
-								 value="#{row.descricaoSala}" />
-			<wi:columnOutputText columnId="nrPrateleira"
-								 columnHeader="#{messages['localizacaoFisica.nrPrateleira']}"
-								 value="#{row.nrPrateleira}" />
-			<wi:columnOutputText columnId="nrCaixa"
-								 columnHeader="#{messages['localizacaoFisica.nrCaixa']}"
-								 value="#{row.nrCaixa}" />
+			<wi:columnOutputTextIdent columnId="descricao"
+									  columnHeader="#{messages['localizacaoFisica.descricao']}"
+									  value="#{row.descricao}"
+									  fullPath="#{row.caminhoCompleto}"/>
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['localizacaoFisica.ativo']}"
+							columnWidth="10%"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
-		<wi:dataForm formId="localizacaoFisicaForm"
-					 formTitle="#{messages['localizacaoFisica.titleForm']}">
-			<wi:inputText id="descricaoSala"
-						  label="#{messages['localizacaoFisica.descricaoSala']}"
-						  value="#{localizacaoFisicaHome.instance.descricaoSala}"
-						  required="true"
-						  maxlength="150" />
-			<wi:inputNumber id="nrPrateleira"
-						 value="#{localizacaoFisicaHome.instance.nrPrateleira}"
-						 required="true"
-						 label="#{messages['localizacaoFisica.nrPrateleira']}"/>
-			<wi:inputNumber id="nrCaixa"
-						 value="#{localizacaoFisicaHome.instance.nrCaixa}"
-						 required="true"
-						 label="#{messages['localizacaoFisica.nrCaixa']}"/>
+		<wi:dataForm formId="localizacaoFisicaForm" formTitle="#{messages['localizacaoFisica.titleForm']}">
+			<wi:inputText id="descricao"
+								  required="true"
+								  label="#{messages['localizacaoFisica.descricao']}"
+								  value="#{localizacaoFisicaHome.instance.descricao}"/>
+		  	<wi:tree id="localizacaoFisicaPai"
+						 assignTo="localizacaoFisicaHome.instance.localizacaoFisicaPai"
+						 tree="#{localizacaoFisicaTree}"
+						 icon="/img/nivelTree.gif"
+						 iconLeaf="/img/file.gif"
+						 label="#{messages['localizacaoFisica.pai']}"/>
 			<wi:selectSituacaoRadio id="ativo"
-									   label="#{messages['agrupamento.ativo']}"
-									   required="true"
-									   value="#{localizacaoFisicaHome.instance.ativo}" />
+								    label="#{messages['localizacaoFisica.ativo']}"
+								    required="true"
+								    value="#{localizacaoFisicaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

@@ -25,7 +25,6 @@ import br.com.infox.ibpm.entity.Item;
 import br.com.infox.list.ItemList;
 import br.com.itx.component.AbstractHome;
 
-
 @Name(ItemHome.NAME)
 @BypassInterceptors
 public class ItemHome extends AbstractHome<Item> {
@@ -83,5 +82,4 @@ public class ItemHome extends AbstractHome<Item> {
 			((ItemTreeHandler)getComponent("itemTree")).setSelected(getInstance().getItemPai());
 		}
 	}
-	
 }

@@ -54,17 +54,6 @@ public class LocalizacaoDocumentoFisicoAction extends
 		}
 		return inactive;
 	}
-
-	/*for (Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
-			FluxoPapel nl = iterator.next();
-			try {
-				genericManager.remove(nl);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			iterator.remove();
-		}
-		FacesMessages.instance().add("Registros removidos com sucesso!");*/
 	
 	public void inactiveAll() {
 		for (Iterator<DocumentoFisico> iterator = getDocumentoFisicoList()

@@ -1,5 +1,6 @@
 package br.com.infox.list;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -10,6 +11,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.LocalizacaoFisica;
+import br.com.itx.util.ComponentUtil;
 
 @Name(LocalizacaoFisicaList.NAME)
 @BypassInterceptors
@@ -21,13 +23,15 @@ public class LocalizacaoFisicaList extends EntityList<LocalizacaoFisica> {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String DEFAULT_EJBQL = "select o from LocalizacaoFisica o";
-	private static final String DEFAULT_ORDER = "descricaoSala";
+	private static final String DEFAULT_ORDER = "o.caminhoCompleto";
+	
+	private static final String R1 = "o.caminhoCompleto like concat(" +
+			"#{localizacaoFisicaList.entity.localizacaoFisicaPai.caminhoCompleto}, '%')";
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("nrPrateleira", SearchCriteria.igual);
-		addSearchField("nrCaixa", SearchCriteria.igual);
-		addSearchField("descricaoSala", SearchCriteria.contendo);
+		addSearchField("descricao", SearchCriteria.contendo);
+		addSearchField("localizacaoFisicaPai", SearchCriteria.contendo, R1);
 		addSearchField("ativo", SearchCriteria.igual);
 	}
 	
@@ -43,8 +47,12 @@ public class LocalizacaoFisicaList extends EntityList<LocalizacaoFisica> {
 	
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("localizacaoFisicaPai", "localizacaoFisicaPai.descricao");
+		return map;
 	}
 	
-	
+	public static final LocalizacaoFisicaList instance() {
+		return ComponentUtil.getComponent(LocalizacaoFisicaList.NAME);
+	}
 }

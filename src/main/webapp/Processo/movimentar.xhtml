@@ -165,10 +165,12 @@
 					  action="#{action.init()}">
 				<wi:dataForm formId="documentoFisicoForm"
 						 	 formTitle="#{messages['documentoFisico.titleForm']}">
-					<wi:selectOneMenuEntity id="localizacaoFisica"
+					<wi:tree id="localizacaoFisica"
+											assignTo="localizacaoDocumentoFisicoAction.instance.localizacaoFisica"
+											tree="#{localizacaoFisicaTree}"
 											label="#{messages['documentoFisico.localizacaoFisica']}"
-											value="#{action.instance.localizacaoFisica}"
-											items="#{action.localizacaoFisicaList}"
+											
+											
 											required="true"
 											noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}"/>
 							 	 
