@@ -15,8 +15,6 @@
 */
 package br.com.infox.ibpm.component;
 
-import java.io.File;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -37,7 +35,7 @@ public class ImageFileHome extends AbstractImageFileHome {
 	
 	@Override
 	public String getBaseImagesPath() {
-		return "/img/";
+		return "/img/imageFile/";
 	}
 	
 }
