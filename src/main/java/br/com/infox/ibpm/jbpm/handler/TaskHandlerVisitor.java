@@ -34,6 +34,7 @@ public class TaskHandlerVisitor {
 	private List<String> types;
 	private List<String> variableList = new ArrayList<String>();
 	private List<Task> visitedTasks = new ArrayList<Task>();
+	private List<Transition> visitedTransitions = new ArrayList<Transition>();
 
 	public TaskHandlerVisitor (boolean isMapped) {
 		this.isMapped = isMapped;
@@ -65,6 +66,11 @@ public class TaskHandlerVisitor {
 			return;
 		}
 		for (Transition transition : transitions) {
+			if (visitedTransitions.contains(transition))	{
+				continue;
+			} else {
+				visitedTransitions.add(transition);
+			}
 			Node from = transition.getFrom();
 			NodeType type = from.getNodeType();
 			if (NodeType.Task.equals(type)) {

@@ -35,14 +35,16 @@ function initVariableList() {
 
 function getNumber() {
 	var valor = ".";
+	message = "#{messages['expressionWizard.numberPrompt']}";
 	while (true) {
-		valor = window.prompt("#{messages['expressionWizard.numberPrompt']}", "0");
+		valor = window.prompt(message, "0");
 		valor = valor.replace(".", "");
 		valor = valor.replace(",", ".");
 		valor = parseFloat(valor);
 		if ((!isNaN(valor)) && (isFinite(valor))) {
 			break;
 		}
+		message = "#{messages['expressionWizard.numberPromptError']}";
 	}
 	return valor;
 }
