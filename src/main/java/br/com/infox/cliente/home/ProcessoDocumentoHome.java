@@ -34,7 +34,7 @@ public class ProcessoDocumentoHome
 	private static final long serialVersionUID = 1L;
 
 	public static IProcessoDocumentoHome instance() {
-		return ComponentUtil.getComponent("processoDocumentoHome");
+		return ComponentUtil.getComponent(NAME);
 	}
 	
 	@Override
