@@ -27,11 +27,12 @@ import br.com.infox.ibpm.entity.DocumentoBin;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
-@Name("documentoBinHome")
+@Name(DocumentoBinHome.NAME)
 @BypassInterceptors
 public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "documentoBinHome";
 	
 	@Override
 	protected String getPersistenceContextName() {
@@ -52,8 +53,9 @@ public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
 	 * @return True caso não aconteça nenhum erro.
 	 */
 	public boolean setData(int idDocumentoBin, byte[] file) {
-		getInstance().setIdDocumentoBin(idDocumentoBin);
-		getInstance().setDocumentoBin(file);
+		DocumentoBin instance = getInstance();
+		instance.setIdDocumentoBin(idDocumentoBin);
+		instance.setDocumentoBin(file);
 		boolean ret = persistData();
 		newInstance();
 		return ret;
@@ -73,7 +75,7 @@ public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
 	}
 	
 	public static DocumentoBinHome instance() {
-		return ComponentUtil.getComponent("documentoBinHome");
+		return ComponentUtil.getComponent(NAME);
 	}
 
 }

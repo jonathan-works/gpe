@@ -128,20 +128,21 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		if (procDocBinHome.persist() == null) {
 			return null;
 		}
-		getInstance().setProcessoDocumentoBin(procDocBinHome.getInstance());
-		getInstance().setUsuarioInclusao(Authenticator.getUsuarioLogado());	
-		getInstance().setProcesso(ProcessoHome.instance().getInstance());
+		ProcessoDocumento instance = getInstance();
+		instance.setProcessoDocumentoBin(procDocBinHome.getInstance());
+		instance.setUsuarioInclusao(Authenticator.getUsuarioLogado());	
+		instance.setProcesso(ProcessoHome.instance().getInstance());
 		setJbpmTask();
 		
 		String ret = super.persist();
 		if (ret != null) {
-			setIdDocumentoRerender(getInstance().getIdProcessoDocumento());
+			setIdDocumentoRerender(instance.getIdProcessoDocumento());
 			if (isModelo) {
 				List<Integer> lista = (List<Integer>) Contexts.getSessionContext().get(PETICAO_INSERIDA);
 				if (lista == null) {
 					lista = new ArrayList<Integer>();
 				}
-				lista.add(getInstance().getProcesso().getIdProcesso());
+				lista.add(instance.getProcesso().getIdProcesso());
 				Contexts.getSessionContext().set(PETICAO_INSERIDA, lista);
 			}
 		}	

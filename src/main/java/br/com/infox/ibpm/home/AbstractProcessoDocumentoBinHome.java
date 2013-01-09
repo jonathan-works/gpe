@@ -103,16 +103,17 @@ public abstract class AbstractProcessoDocumentoBinHome<T>
 			ret = super.persist();
 		} else {
 			FileHome file = FileHome.instance();
-			if (isDocumentoBinValido(file)) {			
-				getInstance().setUsuario(Authenticator.getUsuarioLogado());
-				getInstance().setExtensao(file.getFileType());
-				getInstance().setMd5Documento(file.getMD5());
-				getInstance().setNomeArquivo(file.getFileName());
-				getInstance().setSize(file.getSize());
-				getInstance().setModeloDocumento(null);
+			if (isDocumentoBinValido(file)) {
+				ProcessoDocumentoBin instance = getInstance();
+				instance.setUsuario(Authenticator.getUsuarioLogado());
+				instance.setExtensao(file.getFileType());
+				instance.setMd5Documento(file.getMD5());
+				instance.setNomeArquivo(file.getFileName());
+				instance.setSize(file.getSize());
+				instance.setModeloDocumento(null);
 				ret = super.persist();
-				DocumentoBinHome docBinHome = DocumentoBinHome.instance();
-				docBinHome.setData(getInstance().getIdProcessoDocumentoBin(), file.getData());
+
+				DocumentoBinHome.instance().setData(instance.getIdProcessoDocumentoBin(), file.getData());
 			}
 		}
 		if (ret == null) {
