@@ -49,7 +49,6 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.ModeloDocumento;

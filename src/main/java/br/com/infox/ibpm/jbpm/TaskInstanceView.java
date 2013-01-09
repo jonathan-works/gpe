@@ -55,12 +55,12 @@ import br.com.itx.util.EntityUtil;
  *
  */
 
-@Name("taskInstanceView")
+@Name(TaskInstanceView.NAME)
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class TaskInstanceView implements Serializable{
-
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "taskInstanceView";
 
 	private Form form;
 
@@ -91,6 +91,7 @@ public class TaskInstanceView implements Serializable{
 					String name = tokens[1];
 					FormField ff = new FormField();
 					ff.setFormId(form.getFormId());
+					ff.setFormHome(form.getHomeName());
 					ff.setId(var.getVariableName());
 					ff.setRequired(var.isRequired() + "");
 					ff.setLabel(VariableHandler.getLabel(name));
@@ -107,6 +108,7 @@ public class TaskInstanceView implements Serializable{
 						}
 					} else {
 						ff.setType(type);
+						ff.setValue(value);
 					}
 					properties.put("readonly", !var.isWritable());
 					if (value == null && !var.isWritable() && "textEdit".equals(type)) {

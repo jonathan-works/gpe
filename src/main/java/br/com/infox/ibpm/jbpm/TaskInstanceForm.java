@@ -62,12 +62,13 @@ import br.com.itx.util.EntityUtil;
  *
  */
 
-@Name("taskInstaceForm")
+@Name(TaskInstanceForm.NAME)
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class TaskInstanceForm implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "taskInstaceForm";
 	public static final String TASK_BUTTONS = "taskButtons";
 	public static final String TASK_BUTTONS_EVENTS = "taskButtonsEvents";
 	
