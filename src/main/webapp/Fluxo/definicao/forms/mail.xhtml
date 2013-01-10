@@ -134,7 +134,7 @@
 			<wi:selectOneMenuEntity id="modeloDocumento"
 							label="#{messages['processDefinition.modeloDocumento']}"
 							value="#{processBuilder.currentNode.modeloDocumento}"
-							reRender="editorModeloDocumento"
+							reRender="editorModeloDocumentoDiv"
 							items="#{modeloDocumento.modeloDocumentoList}"
 							showLabelTodos="true">
 				<wi:ajaxSupport/>
@@ -159,13 +159,15 @@
 				value="#{processBuilder.currentNode.subject}">
 				<wi:ajaxSupport/>
 			</wi:inputText>
-			
-			<wi:editor	id="editorModeloDocumento"	 
-						value="#{processBuilder.currentNode.modeloDocumento.modeloDocumento}"
-						label="#{messages['processBuilder.modeloDocumento']}"
-						readonly="true">
-				<wi:ajaxSupport/>
-			</wi:editor>
+			<s:div id="editorModeloDocumentoDiv">
+				<wi:editor	id="editorModeloDocumento"
+							rendered="#{processBuilder.currentNode.modeloDocumento != null}"
+							value="#{processBuilder.currentNode.modeloDocumento.modeloDocumento}"
+							label="#{messages['processBuilder.modeloDocumento']}"
+							readonly="true">
+					<wi:ajaxSupport/>
+				</wi:editor>
+			</s:div>
 		</s:div>
 	
 	</s:div>

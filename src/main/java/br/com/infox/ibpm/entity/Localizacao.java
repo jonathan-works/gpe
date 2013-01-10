@@ -63,7 +63,7 @@ public class Localizacao implements java.io.Serializable {
 	private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
 	private List<Localizacao> localizacaoList = new ArrayList<Localizacao>(0);
 	
-	private Boolean temContaTwitter;
+	private Boolean temContaTwitter=false;
 
 	public Localizacao() {
 	}
