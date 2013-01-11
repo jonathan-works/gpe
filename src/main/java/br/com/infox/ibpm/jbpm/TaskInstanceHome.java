@@ -199,9 +199,15 @@ public class TaskInstanceHome implements Serializable {
 					String name = var.getMappedName().split(":")[1];
 					Object value = getValueFromInstanceMap(name);
 					
-					if (type.equals("numberMoney"))	{
+					if ("numberMoney".equals(type))	{
 						if ( value != null )	{
-							value = Float.parseFloat(((String)value).replace(".", "").replace(",", "."));
+							String val = String.valueOf(value);
+							
+							try {
+								value = Float.parseFloat(val);
+							} catch (NumberFormatException e) {
+								value = Float.parseFloat(val.replace(".", "").replace(",", "."));
+							}
 						}
 					}
 					
