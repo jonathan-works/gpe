@@ -6,19 +6,13 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets">
 
-<!-- Injecao do jQuery mais recente para nao conflitar com o jQuery trazido pelo richfaces -->
-<script type="text/javascript">var $rfjquery = jQuery.noConflict();</script>
-<script type="text/javascript" src="#{util.contextPath}/js/jquery-1.8.3.js"></script>
-
-<!-- Codigo do Wizard -->
 <script language="javascript" charset="ISO-8859-1">
-nj = jQuery.noConflict();
-$ = $rfjquery;
 //<![CDATA[
 var booleanVariableList=new Array();
 var numberVariableList=new Array();
 var transitionList=new Array();
 var inputId;
+var expressionDiv;
 
 function setInputId(id)	{
 	inputId = id;
@@ -50,13 +44,29 @@ function getNumber() {
 }
 
 function reset(element) {
-	if (element.hasClass("booleanSelect")) {
-		element.html(booleanSelect());
-	} else if (element.hasClass("aritOperSelect")) {
-		element.html(aritOperSelect());
-	} else if (element.hasClass("conclusionSelect")) {
-		element.html(conclusionSelect());
+	element.style.backgroundColor="";
+	element.style.cursor="";
+	if (element.classList.contains("booleanSelect")) {
+		element.innerHTML=booleanSelect();
+	} else if (element.classList.contains("aritOperSelect")) {
+		element.innerHTML=aritOperSelect();
+	} else if (element.classList.contains("conclusionSelect")) {
+		element.innerHTML=conclusionSelect();
 	}
+}
+
+function onMouseOverSpan(event) {
+	event.parentNode.style.backgroundColor="#cecece";
+	event.parentNode.style.cursor="pointer";
+}
+
+function onMouseExitSpan(event) {
+	event.parentNode.style.backgroundColor="";
+	event.parentNode.style.cursor="";
+}
+
+function onMouseClickSpan(event) {
+	reset(event.parentNode);
 }
 
 function spanLink(label) {
@@ -64,12 +74,15 @@ function spanLink(label) {
 	element = parent.appendChild(document.createElement("span"));
 	element.innerHTML = label;
 	element.setAttribute("href", "javascript:void(0)");
+	element.setAttribute("onmouseover", "onMouseOverSpan(this)");
+	element.setAttribute("onmouseout", "onMouseExitSpan(this)");
+	element.setAttribute("onclick", "onMouseClickSpan(this)");
 
 	return parent.innerHTML;
 }
 
 function setTextArea(text) {
-	nj("*[id$='"+inputId+"']").html("#"+"{"+text+"}");
+	document.getElementById(inputId).innerHTML="#"+"{"+text+"}";
 }
 
 function onSelectExpWiz(selected) {
@@ -103,23 +116,10 @@ function onSelectExpWiz(selected) {
 		selected.parentNode.innerHTML = spanLink(selected.value);
 	}
 	
-	nj(".expressionDiv span").click(function() {
-		nj(this).parent().css("background-color", "");
-		nj(this).parent().css("cursor", "");
-		reset(nj(this).parent());
-	});
-	nj(".expressionDiv span").hover(function() {
-		nj(this).parent().css("background-color", "grey");
-		nj(this).parent().css("cursor", "pointer");
-	}, function() {
-		nj(this).parent().css("background-color", "");
-		nj(this).parent().css("cursor", "");
-	});
-	jNode = nj(pNode).parents().filter(".expressionDiv");
-	
-	if (jNode.find("select").size() == 0) {
-		setTextArea(jNode.text());
+	if (expressionDiv.getElementsByTagName("select").length == 0) {
+		setTextArea(expressionDiv.textContent);
 	}
+	
 }
 
 function addOption(value, label, parentNode) {
@@ -204,8 +204,11 @@ function initialExpression() {
 			+ conclusionSelect();
 }
 
-function initExpressions() {
-	nj(".expressionDiv").html(initialExpression());
+function initExpressions(id) {
+	if (id) {
+		expressionDiv = document.getElementById(id);
+		expressionDiv.innerHTML = initialExpression();
+	}
 }
 //]]>
 </script>
