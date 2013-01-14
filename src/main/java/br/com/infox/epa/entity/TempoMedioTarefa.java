@@ -1,9 +1,12 @@
 package br.com.infox.epa.entity;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -12,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import br.com.infox.ibpm.entity.Tarefa;
+import br.com.infox.ibpm.type.PrazoEnum;
 
 @Entity
 @Table(name=TempoMedioTarefa.TABLE_NAME, schema="public")
@@ -24,7 +28,9 @@ public class TempoMedioTarefa implements Serializable {
 	private Tarefa tarefa;
 	private String nomeTarefa;
 	private TempoMedioProcesso tempoMedioProcesso;
-	private String tempoMedio;
+	private Float tempoMedio;
+	private PrazoEnum tipoPrazo;
+	private Integer prazo;
 
 	@Id
 	@Column(name = "id_tarefa", nullable=false, insertable=false, updatable=false)
@@ -63,49 +69,33 @@ public class TempoMedioTarefa implements Serializable {
 		this.nomeTarefa = nomeTarefa;
 	}
 	
-	@Column(name="ds_tempo_medio", insertable=false, updatable=false)
-	public String getTempoMedio() {
-		StringBuilder sb = new StringBuilder();
-		String[] aux = tempoMedio.split(":");
-		
-		sb.append(aux[0]);
-		sb.append("d ");
-		sb.append(aux[1]);
-		sb.append("h");
-		sb.append(aux[2]);
-		sb.append("m");
-		
-		return sb.toString();
+	@Column(name="nr_tempo_medio", insertable=false, updatable=false)
+	public Float getTempoMedio() {
+		return this.tempoMedio;
 	}
-	public void setTempoMedio(String tempoMedio) {
+	public void setTempoMedio(Float tempoMedio) {
 		this.tempoMedio = tempoMedio;
 	}
 	
-	@Transient
-	public String getTempoMedioTotalDias() {
-		return this.tempoMedio.split(":")[0];
+	@Column(name="tp_prazo")
+	@Enumerated(EnumType.STRING)
+	public PrazoEnum getTipoPrazo() {
+		return tipoPrazo;
+	}
+	public void setTipoPrazo(PrazoEnum tipoPrazo) {
+		this.tipoPrazo = tipoPrazo;
 	}
 	
-	@Transient
-	public String getTempoMedioTotalHoras() {
-		String[] tempo = tempoMedio.split(":");
-		return String.valueOf(Integer.parseInt(tempo[0])*24 + Integer.parseInt(tempo[1]));
+	@Column(name="nr_prazo")
+	public Integer getPrazo() {
+		return prazo;
 	}
-
-	@Transient
-	public String getLabelTempoProcesso() {
-		return tempoMedioProcesso+" "+tempoMedioProcesso.getTempoMedioTotalDias();
+	public void setPrazo(Integer prazo) {
+		this.prazo = prazo;
 	}
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(tempoMedioProcesso.toString());
-		sb.append(" - ");
-		sb.append(this.tempoMedio.split(":")[0]);
-		sb.append("d");
-		
-		return sb.toString();
+		return MessageFormat.format("{0} - {1}d", this.tempoMedioProcesso, this.tempoMedio);
 	}
 }

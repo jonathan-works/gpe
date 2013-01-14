@@ -30,7 +30,7 @@
 		<rich:panel style="height:98%;">
 		    <wi:dataTable values="#{tempoMedioTarefaList.list(15)}"
 						  bean="#{tempoMedioTarefaList}"
-						  tableTitle="#{tempoMedioTarefaList.entity.labelTempoProcesso} (dias). Previsto: #{tempoMedioTarefaList.entity.tempoMedioProcesso.prazo} (dias)"
+						  tableTitle="#{tempoMedioTarefaList.entity.tempoMedioProcesso}"
 						  id="tempoMedioTarefaList"
 						  rowId="#{row.idTarefa}"
 						  showGrid="#{tempoMedioTarefaList.entity.tempoMedioProcesso != null}">
@@ -50,15 +50,15 @@
 					
 				</ui:define>
 				
-				<wi:columnOutputText columnId="tarefa.tarefa"
+				<wi:columnOutputText columnId="nomeTarefa"
 									 columnHeader="#{messages['temposMedios.descricaoTarefa']}"
-									 value="#{row.tarefa.tarefa}" />
+									 value="#{row.nomeTarefa}" />
 				<wi:columnOutputText columnId="tempoMedio"
 									 columnHeader="#{messages['temposMedios.tempoMedio']}"
 									 value="#{row.tempoMedio}" />
-				<wi:columnOutputText columnId="tempoMedioTotalHoras"
+				<wi:columnOutputText columnId="prazo"
 									 columnHeader="#{messages['temposMedios.prazo']}"
-									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.label}"
+									 value="#{row.prazo} #{row.tipoPrazo.label}"
 									 hideOrder="true" />
 			</wi:dataTable>
 		</rich:panel>

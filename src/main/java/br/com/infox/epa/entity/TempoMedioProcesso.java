@@ -1,6 +1,7 @@
 package br.com.infox.epa.entity;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ public class TempoMedioProcesso implements Serializable {
 
 	private Integer idNaturezaCategoriaFluxo;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
-	private String tempoMedio;
+	private Float tempoMedio;
 
 	@Id
 	@Column(name = "id_natureza_categoria_fluxo", nullable=false, insertable=false, updatable=false)
@@ -41,27 +42,12 @@ public class TempoMedioProcesso implements Serializable {
 		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
 	}
 	
-	@Column(name="ds_tempo_medio", insertable=false, updatable=false)
-	public String getTempoMedio() {
-		StringBuilder sb = new StringBuilder();
-		String[] aux = tempoMedio.split(":");
-		
-		sb.append(aux[0]);
-		sb.append("d ");
-		sb.append(aux[1]);
-		sb.append("h");
-		sb.append(aux[2]);
-		sb.append("m");
-		
-		return sb.toString();
+	@Column(name="nr_tempo_medio", insertable=false, updatable=false)
+	public Float getTempoMedio() {
+		return this.tempoMedio;
 	}
-	public void setTempoMedio(String tempoMedio) {
+	public void setTempoMedio(Float tempoMedio) {
 		this.tempoMedio = tempoMedio;
-	}
-	
-	@Transient
-	public String getTempoMedioTotalDias() {
-		return this.tempoMedio.split(":")[0];
 	}
 	
 	@Transient
@@ -69,14 +55,8 @@ public class TempoMedioProcesso implements Serializable {
 		return this.naturezaCategoriaFluxo.getFluxo().getQtPrazo().toString();
 	}
 	
-	@Transient
-	public String getTempoMedioTotalHoras() {
-		String[] tempo = tempoMedio.split(":");
-		return String.valueOf(Integer.parseInt(tempo[0])*24 + Integer.parseInt(tempo[1]));
-	}
-	
 	@Override
 	public String toString() {
-		return this.naturezaCategoriaFluxo.toString();
+		return MessageFormat.format("{0} - {1}d", this.naturezaCategoriaFluxo.toString(), this.tempoMedio);
 	}
 }
