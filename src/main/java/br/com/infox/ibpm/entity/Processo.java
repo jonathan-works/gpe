@@ -214,7 +214,7 @@ public class Processo implements java.io.Serializable {
 				e = estatisticaList.get(estatisticaList.size() - 1);
 			}
 		} catch (Exception e2) {
-			// TODO: handle exception
+			e2.printStackTrace();
 		}
 		return e;
 	}

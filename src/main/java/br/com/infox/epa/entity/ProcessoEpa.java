@@ -27,7 +27,7 @@ import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;
 
 @Entity
-@Table(name=ProcessoEpa.NAME, schema="public")
+@Table(name=ProcessoEpa.TABLE_NAME, schema="public")
 @PrimaryKeyJoinColumn
 @NamedQueries(value={
 		@NamedQuery(name=ProcessoEpaQuery.LIST_ALL_NOT_ENDED,
@@ -38,7 +38,7 @@ import br.com.infox.ibpm.entity.Processo;
 public class ProcessoEpa extends Processo {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "tb_processo_epa";
+	public static final String TABLE_NAME = "tb_processo_epa";
 
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
 	private Localizacao localizacao;
