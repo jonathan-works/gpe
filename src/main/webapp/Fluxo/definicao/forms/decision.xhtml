@@ -4,7 +4,9 @@
 				xmlns:ui="http://java.sun.com/jsf/facelets"
 				xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:s="http://jboss.com/products/seam/taglib"
-				xmlns:c="http://java.sun.com/jstl/core">
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:rich="http://richfaces.org/rich">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -24,18 +26,23 @@
 	
 	<ui:include src="/js/expressionWizard.xhtml" />
 	
-	<s:div id="expressions" style="float:left; width:526px">
-		<s:div id="expressionDiv" styleClass="expressionDiv">
-			<script type="text/javascript">
-				initExpressions("form:nodes:expressionDiv");
-				inputId = "form:nodes:expressionDecoration:expression";
-			</script>
+	<rich:panel bodyClass="panel"
+				style="clear:both; overflow:visible; padding:0px; margin:0px; width:721px; float:left;">
+		<f:facet name="header">
+            <h:outputText value="Wizard de Expressões"/>
+        </f:facet>
+		<s:div id="expressions" style="margin:5px">
+			<s:div id="expressionDiv" styleClass="expressionDiv">
+				<script type="text/javascript">
+					initExpressions("form:nodes:expressionDiv", "form:nodes:expressionDecoration:expression", "/EPA_2/img/help.gif");
+				</script>
+			</s:div>
+			
+			<wi:inputTextarea id="expression" 
+			                  label="Expressão"
+							  value="#{processBuilder.currentNode.decisionExpression}" />
+			
 		</s:div>
-		
-		<wi:inputTextarea id="expression" 
-			label="Expressão"
-			value="#{processBuilder.currentNode.decisionExpression}" />
-		
-	</s:div>
+	</rich:panel>
 
 </ui:composition>
