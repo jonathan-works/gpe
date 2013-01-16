@@ -210,7 +210,7 @@
 								<f:facet name="header">
 									<h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />
 								</f:facet>
-								<h:outputText value="#{row.localizacaoFisica}"/>
+								<h:outputText value="#{row.localizacaoFisica.caminhoCompletoToString()}"/>
 							</rich:column>
 							
 							<rich:column style="width: 40%">
