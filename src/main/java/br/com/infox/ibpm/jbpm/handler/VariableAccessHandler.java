@@ -289,7 +289,7 @@ public class VariableAccessHandler implements Serializable {
 		visitor.visit(task);
 		for (String v : visitor.getVariables()) {
 			if (v.endsWith(":" + name)) {
-				type = v.split(":")[0];
+				setType( v.split(":")[0]);
 				setWritable(false);
 			}
 		}
