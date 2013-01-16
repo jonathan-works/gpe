@@ -22,6 +22,7 @@ public class TempoMedioProcesso implements Serializable {
 	private Integer idNaturezaCategoriaFluxo;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
 	private Float tempoMedio;
+	private Integer prazo;
 
 	@Id
 	@Column(name = "id_natureza_categoria_fluxo", nullable=false, insertable=false, updatable=false)
@@ -50,13 +51,21 @@ public class TempoMedioProcesso implements Serializable {
 		this.tempoMedio = tempoMedio;
 	}
 	
+	@Column(name="qt_prazo", insertable=false, updatable=false)
+	public Integer getPrazo() {
+		return this.prazo;
+	}
+	public void setPrazo(Integer prazo) {
+		this.prazo = prazo;
+	}
+	
 	@Transient
-	public String getPrazo() {
-		return this.naturezaCategoriaFluxo.getFluxo().getQtPrazo().toString();
+	public String getTempoMedioFormatado() {
+		return String.format("%.2f", this.tempoMedio);
 	}
 	
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0} - {1}d", this.naturezaCategoriaFluxo.toString(), this.tempoMedio);
+		return MessageFormat.format("{0}", this.naturezaCategoriaFluxo.toString());
 	}
 }
