@@ -285,12 +285,12 @@ public class VariableAccessHandler implements Serializable {
 	}
 	
 	public void copyVariable() {
-		setWritable(false);
 		TaskHandlerVisitor visitor = new TaskHandlerVisitor(true);
 		visitor.visit(task);
 		for (String v : visitor.getVariables()) {
 			if (v.endsWith(":" + name)) {
 				type = v.split(":")[0];
+				setWritable(false);
 			}
 		}
 	}
