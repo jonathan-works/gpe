@@ -149,13 +149,17 @@ function addOption(value, label, parentNode) {
 	return parentNode.appendChild(result);
 }
 
-function addListToSelectElement(list, element) {
+function addListToSelectElement(list, element, transition) {
 	for(var i=0; i < list.length; i++) {
 		if (i==0) {
 			addOption("", "", element);
 		}
 		item = list[i];
-		addOption(item, item, element);
+		if (transition) {
+			addOption("'"+item+"'", item, element);
+		} else {
+			addOption(item, item, element);	
+		}
 	}
 }
 
@@ -209,7 +213,7 @@ function conclusionSelect() {
 	element.onchange = onSelectExpWiz;
 	addOption("", "#{messages['expressionWizard.condSelect.null']}", element);
 	addOption("if", "#{messages['expressionWizard.condSelect.cond']}", element);
-	addListToSelectElement( transitionList, element);
+	addListToSelectElement( transitionList, element, true);
 
 	return parent;
 }
