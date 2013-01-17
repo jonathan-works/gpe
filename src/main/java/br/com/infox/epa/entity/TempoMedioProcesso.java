@@ -61,6 +61,9 @@ public class TempoMedioProcesso implements Serializable {
 	
 	@Transient
 	public String getTempoMedioFormatado() {
+		if (this.tempoMedio == null) {
+			return "0";
+		}
 		return String.format("%.2f", this.tempoMedio);
 	}
 	
