@@ -34,10 +34,9 @@
 		<s:div id="expressions" style="margin:5px">
 			<s:div id="expressionDiv" styleClass="expressionDiv">
 				<script type="text/javascript">
-					initExpressions("form:nodes:expressionDiv", "form:nodes:expressionDecoration:expression", "/EPA_2/img/help.gif");
+					initExpressions("form:nodes:expressionDiv", "form:nodes:expressionDecoration:expression", "#{util.contextPath}/img/help.gif");
 				</script>
 			</s:div>
-			
 			<wi:inputTextarea id="expression" 
 			                  label="Expressão"
 							  value="#{processBuilder.currentNode.decisionExpression}" />
