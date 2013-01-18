@@ -104,13 +104,13 @@
 				
 			</ui:define>
 		</ui:decorate>
-		<wi:selectOneRadio id="usaTwitter"
-						   value="#{processBuilder.currentNode.usaTwitter}"
-						   valueList="false:Não enviar Tweet,true:Enviar Tweet">
+		<wi:selectBooleanCheckbox id="usaTwitter"
+								  value="#{processBuilder.currentNode.usaTwitter}"
+								  label="#{messages['processBuilder.usaTwitter']}" >
 			<a:support reRender="mailDiv"
 			           event="onchange"
 			           ajaxSingle="true" />
-		</wi:selectOneRadio>
+		</wi:selectBooleanCheckbox>
 		<ui:param name="isExpression" value="#{processBuilder.currentNode.to != null and
 								 			  processBuilder.currentNode.to.startsWith('{')}"/>
 		<s:div id="twitterDiv" 
@@ -132,7 +132,7 @@
 		</s:div>
 		<s:div id="modeloDocDiv" style="float:left;">
 			<wi:selectOneMenuEntity id="modeloDocumento"
-							label="#{messages['processDefinition.modeloDocumento']}"
+							label="#{messages['processBuilder.tituloModeloDocumento']}"
 							value="#{processBuilder.currentNode.modeloDocumento}"
 							reRender="editorModeloDocumentoDiv"
 							items="#{modeloDocumento.modeloDocumentoList}"
