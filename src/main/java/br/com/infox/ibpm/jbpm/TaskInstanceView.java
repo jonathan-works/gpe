@@ -106,6 +106,9 @@ public class TaskInstanceView implements Serializable{
 								properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
 							}
 						}
+					} else if ("numberMoney".equalsIgnoreCase(type)){
+						ff.setType(type);
+						ff.setValue(String.format("%.2f", value));
 					} else {
 						ff.setType(type);
 						ff.setValue(value);
