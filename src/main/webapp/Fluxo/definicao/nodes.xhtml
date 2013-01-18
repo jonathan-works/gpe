@@ -84,7 +84,9 @@
 							value="#{current ? 'font-weight:bold' : ''}" />
 						 <a:commandLink action="#{processBuilder.setCurrentNode(row)}"
 						 		style="float:left;"
-						 		reRender="divNodesGeral">
+						 		reRender="divNodesGeral"
+						 		ajaxSingle="true"
+						 		limitToList="true">
 						 		<a:outputPanel>
 						 			<h:panelGrid columns="2" cellspacing="0" cellpadding="0">
 										<h:graphicImage url="/img/jbpm/#{processBuilder.getIcon(row)}.gif" 
