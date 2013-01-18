@@ -46,13 +46,17 @@
 		
 		<wi:inputNumber id="prazo"
 			label="Prazo para Término"
-			value="#{processBuilder.prazo}"/>
+			value="#{processBuilder.prazo}">
+			<wi:ajaxSupport />
+		</wi:inputNumber>
 			
 		<wi:selectOneMenuEnum id="tipoPrazo"
 							  label="Unidade"
 							  value="#{processBuilder.tipoPrazo}"
 							  items="#{processBuilder.tipoPrazoList}"
-							  noSelectionLabel="Selecione um registro..." />
+							  noSelectionLabel="Selecione um registro...">
+			<wi:ajaxSupport />
+		</wi:selectOneMenuEnum>
 	</s:div>	
 
 <a:region>
