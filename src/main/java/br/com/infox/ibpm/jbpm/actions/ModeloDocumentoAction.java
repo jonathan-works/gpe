@@ -100,8 +100,10 @@ public class ModeloDocumentoAction extends ActionTemplate {
 			return;
 		}
 		parameters = getExpressionParameters(expression);
-		ProcessBuilder.instance().getCurrentTask().setCurrentVariable(
-				(String) parameters[0]);
+		if (parameters.length > 0) {
+			ProcessBuilder.instance().getCurrentTask().setCurrentVariable(
+					(String) parameters[0]);
+		}
 	}
 
 	public void set(String variavel, int... idModeloDocumento) {

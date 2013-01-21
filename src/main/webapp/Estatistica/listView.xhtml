@@ -28,9 +28,10 @@
 	
 	<ui:define name="body">
 		<rich:panel style="height:98%;">
+			<ui:param name="tempoMedioProcesso" value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}" />
 		    <wi:dataTable values="#{tempoMedioTarefaList.list(15)}"
 						  bean="#{tempoMedioTarefaList}"
-						  tableTitle="#{tempoMedioTarefaList.entity.tempoMedioProcesso}"
+						  tableTitle="[#{tempoMedioProcesso}] Tempo médio: #{tempoMedioProcesso.getTempoMedioFormatado()} dia(s). Prazo: #{tempoMedioProcesso.prazo} dia(s)"
 						  id="tempoMedioTarefaList"
 						  rowId="#{row.idTarefa}"
 						  showGrid="#{tempoMedioTarefaList.entity.tempoMedioProcesso != null}">

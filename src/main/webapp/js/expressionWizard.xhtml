@@ -11,12 +11,10 @@
 var booleanVariableList=new Array();
 var numberVariableList=new Array();
 var transitionList=new Array();
-var inputId;
+var input;
 var expressionDiv;
-
-function setInputId(id)	{
-	inputId = id;
-}
+var clear = false;
+var imageSrc = "";
 
 function initVariableList() {
 	booleanVariableList.clear();
@@ -47,73 +45,95 @@ function reset(element) {
 	element.style.backgroundColor="";
 	element.style.cursor="";
 	if (element.classList.contains("booleanSelect")) {
-		element.innerHTML=booleanSelect();
+		element.innerHTML = "";
+		element.appendChild( booleanSelect() );
 	} else if (element.classList.contains("aritOperSelect")) {
-		element.innerHTML=aritOperSelect();
+		element.innerHTML = "";
+		element.appendChild( aritOperSelect() );
 	} else if (element.classList.contains("conclusionSelect")) {
-		element.innerHTML=conclusionSelect();
+		element.innerHTML = "";
+		element.appendChild( conclusionSelect() );
+	} else if (element.classList.contains("expressionDiv")) {
+		expressionDiv.innerHTML = "";
+		expressionDiv.appendChild( addImageWiz() );
+		clear = false;
 	}
 }
 
 function onMouseOverSpan(event) {
-	event.parentNode.style.backgroundColor="#cecece";
-	event.parentNode.style.cursor="pointer";
+	var parent = event.currentTarget.parentNode;
+	parent.style.backgroundColor="#bbcec2";
+	parent.style.cursor="pointer";
 }
 
 function onMouseExitSpan(event) {
-	event.parentNode.style.backgroundColor="";
-	event.parentNode.style.cursor="";
+	var parent = event.currentTarget.parentNode;
+	parent.style.backgroundColor="";
+	parent.style.cursor="";
 }
 
 function onMouseClickSpan(event) {
-	reset(event.parentNode);
+	reset(event.currentTarget.parentNode);
 }
 
-function spanLink(label) {
-	parent = document.createElement("div");
-	element = parent.appendChild(document.createElement("span"));
+function spanLink(label, display) {
+	var element = document.createElement("span");
 	element.innerHTML = label;
-	element.setAttribute("href", "javascript:void(0)");
-	element.setAttribute("onmouseover", "onMouseOverSpan(this)");
-	element.setAttribute("onmouseout", "onMouseExitSpan(this)");
-	element.setAttribute("onclick", "onMouseClickSpan(this)");
+	if (display) {
+		element.style.display = display;
+	}
+	element.onmouseover = onMouseOverSpan;
+	element.onmouseout = onMouseExitSpan;
+	element.onclick = onMouseClickSpan;
 
-	return parent.innerHTML;
+	return element;
 }
 
 function setTextArea(text) {
-	document.getElementById(inputId).innerHTML="#"+"{"+text+"}";
+	input.innerHTML="#"+"{"+text+"}";
 }
 
-function onSelectExpWiz(selected) {
-	pNode = selected.parentNode;
-	if (selected.value == "") {
-	} else if (selected.value == "or") {
-		selected.parentNode.innerHTML = spanLink("( ") + booleanSelect()
-				+ spanLink(" || ") + booleanSelect() + spanLink(" )");
-	} else if (selected.value == "and") {
-		selected.parentNode.innerHTML = spanLink("( ") + booleanSelect()
-				+ spanLink(" && ") + booleanSelect() + spanLink(" )");
-	} else if (selected.value == "not") {
-		selected.parentNode.innerHTML = spanLink("!") + booleanSelect();
-	} else if (selected.value == "operacao") {
-		selected.parentNode.innerHTML = aritOperSelect();
-	} else if (selected.value == "num") {
-		selected.parentNode.innerHTML = spanLink(getNumber());
-	} else if (selected.value == "if") {
-		selected.parentNode.innerHTML = spanLink("( ") + booleanSelect()
-				+ spanLink(" ? ") + conclusionSelect() + spanLink(" : ")
-				+ conclusionSelect() + spanLink(" )");
-	} else if ((selected.value == "==") || (selected.value == "!=")
-			|| (selected.value == ">=") || (selected.value == ">")
-			|| (selected.value == "<=") || (selected.value == "<")
-			|| (selected.value == "+") || (selected.value == "-")
-			|| (selected.value == "/") || (selected.value == "*")) {
-		selected.parentNode.innerHTML = spanLink("( ") + aritOperSelect()
-				+ spanLink(" " + selected.value + " ") + aritOperSelect()
-				+ spanLink(" )");
+function onSelectExpWiz(event) {
+	var sValue = event.currentTarget.value;
+	var pNode = event.currentTarget.parentNode;
+	if (sValue != "") {
+		pNode.innerHTML = "";
+	}
+	if (sValue == "or") {
+		pNode.appendChild( spanLink("( "));
+		pNode.appendChild( booleanSelect() );
+		pNode.appendChild( spanLink(" || "));
+		pNode.appendChild( booleanSelect() );
+		pNode.appendChild( spanLink(" )"));
+	} else if (sValue == "and") {
+		pNode.appendChild( spanLink("( "));
+		pNode.appendChild( booleanSelect() );
+		pNode.appendChild( spanLink(" && "));
+		pNode.appendChild( booleanSelect() );
+		pNode.appendChild( spanLink(" )"));
+	} else if (sValue == "not") {
+		pNode.appendChild( spanLink("!") );
+		pNode.appendChild( booleanSelect() );
+	} else if (sValue == "operacao") {
+		pNode.appendChild( aritOperSelect() );
+	} else if (sValue == "num") {
+		pNode.appendChild( spanLink( getNumber() ) );
+	} else if (sValue == "if") {
+		pNode.appendChild( spanLink("( ") );
+		expression(pNode);
+		pNode.appendChild( spanLink(" )") );
+	} else if ((sValue == "==") || (sValue == "!=")
+			|| (sValue == ">=") || (sValue == ">")
+			|| (sValue == "<=") || (sValue == "<")
+			|| (sValue == "+") || (sValue == "-")
+			|| (sValue == "/") || (sValue == "*")) {
+		pNode.appendChild( spanLink("( ") );
+		pNode.appendChild( aritOperSelect() );
+		pNode.appendChild( spanLink(" " + sValue + " ") );
+		pNode.appendChild( aritOperSelect() );
+		pNode.appendChild( spanLink(" )") );
 	} else {
-		selected.parentNode.innerHTML = spanLink(selected.value);
+		pNode.appendChild( spanLink(sValue) );
 	}
 	
 	if (expressionDiv.getElementsByTagName("select").length == 0) {
@@ -129,12 +149,25 @@ function addOption(value, label, parentNode) {
 	return parentNode.appendChild(result);
 }
 
+function addListToSelectElement(list, element, transition) {
+	for(var i=0; i < list.length; i++) {
+		if (i==0) {
+			addOption("", "", element);
+		}
+		item = list[i];
+		if (transition) {
+			addOption("'"+item+"'", item, element);
+		} else {
+			addOption(item, item, element);	
+		}
+	}
+}
+
 function aritOperSelect() {
-	parent = document.createElement("div");
-	element = parent.appendChild(document.createElement("div"));
-	element.setAttribute("class", "aritOperSelect");
-	element = element.appendChild(document.createElement("select"));
-	element.setAttribute("onchange", "onSelectExpWiz(this)");
+	var parent = document.createElement("div");
+	parent.classList.add("aritOperSelect");
+	var element = parent.appendChild(document.createElement("select"));
+	element.onchange = onSelectExpWiz;
 	
 	addOption("", "#{messages['expressionWizard.aritSelect.null']}", element);
 	addOption("+", "#{messages['expressionWizard.aritSelect.plus']}", element);
@@ -143,21 +176,18 @@ function aritOperSelect() {
 	addOption("/", "#{messages['expressionWizard.aritSelect.div']}", element);
 	addOption("","",element);
 	addOption("num", "#{messages['expressionWizard.aritSelect.numb']}", element);
-	addOption("","",element);
-	for(var i=0; i < numberVariableList.length; i++) {
-		item = numberVariableList[i];
-		addOption(item, "  "+item, element);
-	}
-	return parent.innerHTML;
+	addListToSelectElement( numberVariableList, element);
+	
+	return parent;
 }
 
 function booleanSelect() {
-	parent = document.createElement("div");
-	element = parent.appendChild(document.createElement("div"));
-	element.setAttribute("class", "booleanSelect");
-	element = element.appendChild(document.createElement("select"));
-	element.setAttribute("onchange", "onSelectExpWiz(this)");
-
+	var parent = document.createElement("div");
+	console.trace("1");
+	parent.classList.add("booleanSelect");
+	var element = parent.appendChild(document.createElement("select"));
+	element.onchange = onSelectExpWiz;
+	
 	addOption("", "#{messages['expressionWizard.booleanSelect.null']}", element);
 	addOption("true", "#{messages['expressionWizard.booleanSelect.true']}", element);
 	addOption("false", "#{messages['expressionWizard.booleanSelect.false']}", element);
@@ -171,45 +201,65 @@ function booleanSelect() {
 	addOption(">", "#{messages['expressionWizard.booleanSelect.gt']}", element);
 	addOption("<=", "#{messages['expressionWizard.booleanSelect.lte']}", element);
 	addOption("<", "#{messages['expressionWizard.booleanSelect.lt']}", element);
-	addOption("", "", element);
-	for(var i=0; i < booleanVariableList.length; i++) {
-		item = booleanVariableList[i];
-		addOption(item, item, element);
-	}
+	addListToSelectElement( booleanVariableList, element);
 
-	return parent.innerHTML;
+	return parent;
 }
 
 function conclusionSelect() {
-	parent = document.createElement("div");
-	element = parent.appendChild(document.createElement("div"));
-	element.setAttribute("class", "conclusionSelect");
-	element = element.appendChild(document.createElement("select"));
-	element.setAttribute("onchange", "onSelectExpWiz(this)");
-
+	var parent = document.createElement("div");
+	parent.classList.add("conclusionSelect");
+	var element = parent.appendChild(document.createElement("select"));
+	element.onchange = onSelectExpWiz;
 	addOption("", "#{messages['expressionWizard.condSelect.null']}", element);
 	addOption("if", "#{messages['expressionWizard.condSelect.cond']}", element);
-	addOption("","",element);
-	for(var i=0; i < transitionList.length; i++) {
-		item = transitionList[i];
-		addOption("'"+item+"'", item, element);
-	}
+	addListToSelectElement( transitionList, element, true);
 
-	return parent.innerHTML;
+	return parent;
 }
 
-function initialExpression() {
+function expression(parent) {
+	parent.appendChild( booleanSelect() );
+	parent.appendChild( spanLink(" ? ") );
+	parent.appendChild( conclusionSelect() );
+	parent.appendChild( spanLink(" : ") );
+	parent.appendChild( conclusionSelect() );
+	return parent;
+}
+
+function initialExpression(parent) {
 	initVariableList();
-	return booleanSelect() + " ? " + conclusionSelect() + " : "
-			+ conclusionSelect();
+	return expression(parent);
 }
 
-function initExpressions(id) {
-	if (id) {
-		expressionDiv = document.getElementById(id);
-		expressionDiv.innerHTML = initialExpression();
+function _initWizard() {
+	if (clear) {
+		expressionDiv.innerHTML = imageSrc;
+		clear = false;
+	} else {
+		expressionDiv.innerHTML = "";
+		initialExpression( expressionDiv );
+		clear = true;
 	}
 }
+
+function addImageWiz(src) {
+	var image = document.createElement("img");
+	image.src = imageSrc;
+	image.onclick = _initWizard;
+	image.style.cursor = "pointer";
+	image.title = "Wizard de Expressões";
+	return image;
+}
+
+function initExpressions(expressionId, inputId, wizardImageSrc) {
+	expressionDiv = document.getElementById(expressionId);
+	input = document.getElementById(inputId);
+	expressionDiv.innerHTML = "";
+	imageSrc = wizardImageSrc;
+	expressionDiv.appendChild( addImageWiz() );
+}
+
 //]]>
 </script>
 </ui:composition>

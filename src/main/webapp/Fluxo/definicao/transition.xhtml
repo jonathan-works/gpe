@@ -132,8 +132,7 @@
 			<f:facet name="header">Nome</f:facet>
 			<h:inputText value="#{transition.name}" 
 				required="true"
-				style="width:130px; float:left"
-				rendered="#{true or empty transition.name}">
+				style="width:130px; float:left">
 				<wi:ajaxSupport reRender="transition#{type}Table" />
 			</h:inputText>
 			<a:commandLink reRender="nodesDiv"

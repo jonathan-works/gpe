@@ -285,12 +285,13 @@ public class VariableAccessHandler implements Serializable {
 	}
 	
 	public void copyVariable() {
-		setWritable(false);
 		TaskHandlerVisitor visitor = new TaskHandlerVisitor(true);
 		visitor.visit(task);
 		for (String v : visitor.getVariables()) {
 			if (v.endsWith(":" + name)) {
-				type = v.split(":")[0];
+				this.label = getLabel();
+				setType( v.split(":")[0]);
+				setWritable(false);
 			}
 		}
 	}
@@ -344,13 +345,16 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setLabel(String label) {
 		label = label.trim();
-		if (! label.equals(this.label)) {
+		if (! label.equals(this.label) && !"".equals(label)) {
 			this.label = label;
 			JbpmUtil.instance().storeLabel(name, label);
 		}
 	}
 
 	public String getLabel() {
-		return VariableHandler.getLabel(name);
+		if (!"".equals(name)) {
+			this.label = VariableHandler.getLabel(name);
+		}
+		return this.label;
 	}
 }
