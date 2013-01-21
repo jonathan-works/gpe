@@ -27,12 +27,12 @@
 	<s:div id="swimlanesDiv">
 		<s:div style="width:200px; float:left;">
 		<ui:decorate template="dataTable.xhtml">
-			<ui:param name="values" value="#{processBuilder.swimlanes}" />
+			<ui:param name="values" value="#{swinlaneFitter.swimlanes}" />
 			<ui:param name="styleClass" value="tabelaVariaveis" />
 			<ui:param name="id" value="swimlanesTable" />
 			<ui:param name="style" value="width:100%" />
 			<ui:define name="headerToolBar">
-				<a:commandLink action="#{processBuilder.addSwimlane()}"
+				<a:commandLink action="#{swinlaneFitter.addSwimlane()}"
 					ajaxSingle="true"
 					focus="swimlaneName"
 					reRender="swimlanesDiv">
@@ -47,7 +47,7 @@
 					style="cursor:pointer" 
 					url="/img/remove.png">
 					<a:support event="onclick" 
-						action="#{processBuilder.removeSwimlane(row)}"
+						action="#{swinlaneFitter.removeSwimlane(row)}"
 						ajaxSingle="true"
 						onclick="if(!confirm('Confirma?')) return false;"
 						reRender="swimlanesDiv"/>
@@ -56,10 +56,10 @@
 			<ui:define name="columns">
 				<rich:column style="padding-left:2px">
 					<f:facet name="header">Raias</f:facet>
-					<ui:param name="current" value="#{row == processBuilder.currentSwimlane}" />
+					<ui:param name="current" value="#{row == swinlaneFitter.currentSwimlane}" />
 					<ui:param name="styleNodeName" 
 						value="#{current ? 'font-weight:bold' : ''}" />
-					 <a:commandLink action="#{processBuilder.setCurrentSwimlane(row)}"
+					 <a:commandLink action="#{swinlaneFitter.setCurrentSwimlane(row)}"
 					 		ajaxSingle="true"
 					 		style="float:left;"
 					 		reRender="swimlanesDiv">
@@ -70,16 +70,16 @@
 		</ui:decorate>
 		</s:div>
 
-		<s:div id="swimlaneDiv" rendered="#{!empty processBuilder.currentSwimlane}"
+		<s:div id="swimlaneDiv" rendered="#{!empty swinlaneFitter.currentSwimlane}"
 			style="width:680px; float:left; margin-left:5px">
 			
 			<wi:inputText id="swimlaneName" label="Nome da raia"
-				value="#{processBuilder.currentSwimlane.name}">
+				value="#{swinlaneFitter.currentSwimlane.name}">
 				<wi:ajaxSupport reRender="swimlanesDiv"/>
 			</wi:inputText>
 
 			<ui:decorate template="dataTable.xhtml">
-				<ui:param name="values" value="#{processBuilder.currentSwimlane.localPapelList}" />
+				<ui:param name="values" value="#{swinlaneFitter.currentSwimlane.localPapelList}" />
 				<ui:param name="id" value="localPapeis" />
 				<ui:param name="style" value="width:500px; margin-top:5px" />
 
@@ -88,7 +88,7 @@
 						style="cursor:pointer" 
 						url="/img/remove.png">
 						<a:support event="onclick" 
-							action="#{processBuilder.currentSwimlane.removeLocalPapel(row)}"
+							action="#{swinlaneFitter.currentSwimlane.removeLocalPapel(row)}"
 							ajaxSingle="true"
 							onclick="if(!confirm('Confirma?')) return false;"
 							reRender="swimlanesDiv"/>
@@ -116,7 +116,7 @@
 								id="novoLocPapel"
 								url="/img/add.gif">
 								<a:support event="onclick" 
-									action="#{processBuilder.currentSwimlane.addLocalPapel()}"
+									action="#{swinlaneFitter.currentSwimlane.addLocalPapel()}"
 									ajaxSingle="true"
 									reRender="swimlanesDiv"/>
 							</h:graphicImage>
@@ -124,18 +124,18 @@
 						<rich:column style="padding-left:2px;padding-bottom:6px">
 							<wi:tree tree="#{estruturaTree}" 
 								id="localizacao"
-								assignTo="processBuilder.currentSwimlane.localizacao"
+								assignTo="swinlaneFitter.currentSwimlane.localizacao"
 								folderSelectable="false" />
 						</rich:column>
 						<rich:column style="padding-left:2px;padding-bottom:6px">
 							<wi:tree tree="#{papelTree}" 
 								id="papelTree"
-								assignTo="processBuilder.currentSwimlane.papel"
+								assignTo="swinlaneFitter.currentSwimlane.papel"
 								folderSelectable="true" />
 						</rich:column>
 						<rich:column style="padding-left:2px;padding-bottom:6px;width :20px;">
 							<wi:selectBooleanCheckbox id="papelTree"
-								value="#{processBuilder.currentSwimlane.contabilizar}">
+								value="#{swinlaneFitter.currentSwimlane.contabilizar}">
 								<a:support event="onclick" 
 									ajaxSingle="true"
 									reRender="papelTree"/>

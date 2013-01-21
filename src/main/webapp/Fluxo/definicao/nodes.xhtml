@@ -244,8 +244,8 @@
 						 		<ui:define name="label">Na transição:</ui:define>
 						 		<h:selectOneMenu id="after"	
 												 style="min-width: 250px;"
-												 value="#{processBuilder.newNodeTransition}">
-									<f:selectItems value="#{processBuilder.transitionsItems}"/>
+												 value="#{transitionFitter.newNodeTransitionName}">
+									<f:selectItems value="#{transitionFitter.getTransitionsItems(processBuilder.getNodes())}"/>
 									<wi:ajaxSupport/>
 								</h:selectOneMenu>
 						 	</s:decorate>	
@@ -270,7 +270,7 @@
 			<a:commandLink id="#{type}Link" 
 				reRender="actionTemplate"
 				onclick="idTextarea='form:nodes:conditionInputDecoration:conditionInput'"
-				action="#{actionTemplateHandler.setCurrentActionTemplate(processBuilder.currentTransition.condition)}" >
+				action="#{actionTemplateHandler.setCurrentActionTemplate(transitionFitter.getCurrentTransition().condition)}" >
 				<h:graphicImage url="/img/jbpm/wizard.gif" 
 					title="Assistente para expressão"
 					style="position: absolute; margin-left: 80px; margin-top: 3px;"/>
@@ -280,7 +280,7 @@
 			</a:commandLink>
 			<div style="padding: 10px">
 				<wi:inputTextarea id="conditionInput" 
-					value="#{processBuilder.currentTransition.condition}" 
+					value="#{transitionFitter.getCurrentTransition().condition}" 
 					widthDiv="500px"
 					style="width:100%"
 					label="Expressão:">

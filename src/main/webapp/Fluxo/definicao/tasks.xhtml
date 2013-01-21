@@ -30,12 +30,12 @@
 	<s:div id="tasksDiv" style="width:200px; float:left;">
 
 		<ui:decorate template="dataTable.xhtml">
-			<ui:param name="values" value="#{processBuilder.tasks}" />
+			<ui:param name="values" value="#{taskFitter.tasks}" />
 			<ui:param name="styleClass" value="tabelaVariaveis" />
 			<ui:param name="id" value="tasksTable" />
 			<ui:param name="style" value="width:100%" />
 			<ui:define name="headerToolBar">
-				 <a:commandLink action="#{processBuilder.addTask()}"
+				 <a:commandLink action="#{taskFitter.addTask()}"
 				 		ajaxSingle="true"
 				 		immediate="true"
 				 		focus="taskName"
@@ -50,7 +50,7 @@
 					style="cursor:pointer" 
 					url="/img/remove.png">
 					<a:support event="onclick" 
-						action="#{processBuilder.removeTask(row)}"
+						action="#{taskFitter.removeTask(row)}"
 						ajaxSingle="true"
 						onclick="if(!confirm('Confirma?')) return false;"
 						reRender="tasksDiv"/>
@@ -59,11 +59,11 @@
 			<ui:define name="columns">
 				<rich:column>
 					<f:facet name="header">Tarefas</f:facet>
-					<ui:param name="current" value="#{row == processBuilder.currentTask}" />
+					<ui:param name="current" value="#{row == taskFitter.currentTask}" />
 					<ui:param name="styleTaskName" 
 						value="#{current ? 'font-weight:bold' : ''}" />
 					<s:div style="margin-left:2px;">
-						 <a:commandLink action="#{processBuilder.setCurrentTask(row)}"
+						 <a:commandLink action="#{taskFitter.setCurrentTask(row)}"
 						 		ajaxSingle="true" reRender="tasksDiv,taskDiv">
 							 	<h:outputText value="#{row.task.name}" style="#{styleTaskName}"/>
 						 </a:commandLink>
@@ -74,9 +74,9 @@
 	
 	</s:div>
 	
-		<s:fragment rendered="#{!empty processBuilder.currentTask}">
+		<s:fragment rendered="#{!empty taskFitter.currentTask}">
 			<ui:include src="task.xhtml">
-				<ui:param name="t" value="#{processBuilder.currentTask}" />
+				<ui:param name="t" value="#{taskFitter.currentTask}" />
 			</ui:include>
 		</s:fragment>
 

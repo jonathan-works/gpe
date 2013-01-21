@@ -101,7 +101,7 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		}
 		parameters = getExpressionParameters(expression);
 		if (parameters.length > 0) {
-			ProcessBuilder.instance().getCurrentTask().setCurrentVariable(
+			ProcessBuilder.instance().getTaskFitter().getCurrentTask().setCurrentVariable(
 					(String) parameters[0]);
 		}
 	}

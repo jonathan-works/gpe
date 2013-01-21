@@ -37,7 +37,7 @@ public abstract class AbstractTarefaEventoHome<T> extends AbstractHome<TarefaEve
 	}
 	
 	public Tarefa getTarefaAtual() {
-		TaskHandler task = ProcessBuilder.instance().getCurrentTask();
+		TaskHandler task = ProcessBuilder.instance().getTaskFitter().getCurrentTask();
 		if(tarefaAtual != null || task == null || task.getTask() == null) {
 			return tarefaAtual;
 		}
