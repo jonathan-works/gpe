@@ -9,6 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
@@ -20,6 +23,8 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FacesUtil;
 import br.com.itx.util.FileUtil;
 
+@Name(TypeFitter.NAME)
+@Scope(ScopeType.CONVERSATION)
 public class TypeFitter implements Serializable, Fitter{
 
 	private static final long serialVersionUID = 1L;
@@ -29,32 +34,6 @@ public class TypeFitter implements Serializable, Fitter{
 	private Properties types;
 	
 	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
-	
-	private void verifyAvaliableTypes(List<String> tList) {
-		TaskHandler currentTask = pb.getTaskFitter().getCurrentTask();
-		if (currentTask != null) {
-			for (VariableAccessHandler vah : currentTask.getVariables()) {
-				if (vah.getType().equals(
-						TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
-					removeDifferentType(
-							TaskPageAction.TASK_PAGE_COMPONENT_NAME, tList);
-					break;
-				} else if (!vah.getType().equals("null")) {
-					tList.remove(TaskPageAction.TASK_PAGE_COMPONENT_NAME);
-					break;
-				}
-			}
-		}
-	}
-	
-	private void removeDifferentType(String newName, List<String> tList) {
-		for (Iterator<String> iterator = tList.iterator(); iterator.hasNext();) {
-			String i = iterator.next();
-			if (!i.equals(newName)) {
-				iterator.remove();
-			}
-		}
-	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List getTypeList() {
@@ -103,6 +82,32 @@ public class TypeFitter implements Serializable, Fitter{
 			getTypeList();
 		}
 		return (String) types.get(type);
+	}
+	
+	private void verifyAvaliableTypes(List<String> tList) {
+		TaskHandler currentTask = pb.getTaskFitter().getCurrentTask();
+		if (currentTask != null) {
+			for (VariableAccessHandler vah : currentTask.getVariables()) {
+				if (vah.getType().equals(
+						TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
+					removeDifferentType(
+							TaskPageAction.TASK_PAGE_COMPONENT_NAME, tList);
+					break;
+				} else if (!vah.getType().equals("null")) {
+					tList.remove(TaskPageAction.TASK_PAGE_COMPONENT_NAME);
+					break;
+				}
+			}
+		}
+	}
+	
+	private void removeDifferentType(String newName, List<String> tList) {
+		for (Iterator<String> iterator = tList.iterator(); iterator.hasNext();) {
+			String i = iterator.next();
+			if (!i.equals(newName)) {
+				iterator.remove();
+			}
+		}
 	}
 
 	@Override

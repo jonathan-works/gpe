@@ -35,7 +35,7 @@
 		</wi:inputText>
 		 
 		<wi:selectOneMenu id="swimlaneTask" 
-			items ="#{swinlaneFitter.swimlaneList}"
+			items ="#{swimlaneFitter.swimlaneList}"
 			label="Atribuir a"
 			style="width:100%"
 			widthDiv="230px"
@@ -160,8 +160,8 @@
 		<rich:column style="width:110px">
 			<f:facet name="header">Tipo</f:facet>
 			<wi:selectOneMenu id="type" value="#{var.type}" 
-				items="#{processBuilder.typeList}"
-				optionLabel="#{processBuilder.getTypeLabel(v)}"
+				items="#{typeFitter.typeList}"
+				optionLabel="#{typeFitter.getTypeLabel(v)}"
 				widthDiv="100%"
 				style="width:100%">
 				<a:support event="onchange" 

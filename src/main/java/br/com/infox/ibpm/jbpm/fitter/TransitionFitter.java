@@ -42,7 +42,7 @@ public class TransitionFitter implements Serializable, Fitter {
 	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 
 	public void changeTransition(TransitionHandler th, String type) {
-		Node oldNodeTransition = pb.getOldNodeTransition();
+		Node oldNodeTransition = pb.getNodeFitter().getOldNodeTransition();
 		Transition t = th.getTransition();
 		if (type.equals("from")) {
 			if (t.getFrom() != null) {
@@ -70,9 +70,8 @@ public class TransitionFitter implements Serializable, Fitter {
 		}
 	}
 	
-	//TODO modificar para visibilidade privada assim que possível
 	public void checkTransitions() {
-		List<Node> nodes = pb.getNodes();
+		List<Node> nodes = pb.getNodeFitter().getNodes();
 		clear();
 		Map<Node, String> nodeMessageMap = new HashMap<Node, String>();
 		for (Node n : nodes) {
@@ -89,11 +88,11 @@ public class TransitionFitter implements Serializable, Fitter {
 				}
 			}
 		}
-		pb.setNodeMessageMap(nodeMessageMap);
+		pb.getNodeFitter().setNodeMessageMap(nodeMessageMap);
 	}
 	
 	public void addTransition(String type) {
-		Node currentNode = pb.getCurrentNode();
+		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		Transition t = new Transition("");
 		if (type.equals("from")) {
 			currentNode.addArrivingTransition(t);
@@ -112,7 +111,7 @@ public class TransitionFitter implements Serializable, Fitter {
 	}
 
 	public void removeTransition(TransitionHandler th, String type) {
-		Node currentNode = pb.getCurrentNode();
+		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		Transition t = th.getTransition();
 		if (type.equals("from") && t.getFrom() != null) {
 			t.getFrom().removeLeavingTransition(t);
@@ -155,7 +154,7 @@ public class TransitionFitter implements Serializable, Fitter {
 	}
 
 	public List<TransitionHandler> getArrivingTransitions() {
-		Node currentNode = pb.getCurrentNode();
+		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		if (arrivingTransitions == null) {
 			if (currentNode != null
 					&& currentNode.getArrivingTransitions() != null) {
@@ -167,7 +166,7 @@ public class TransitionFitter implements Serializable, Fitter {
 	}
 
 	public List<TransitionHandler> getLeavingTransitions() {
-		Node currentNode = pb.getCurrentNode();
+		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		if (leavingTransitions == null) {
 			if (currentNode != null
 					&& currentNode.getLeavingTransitions() != null) {
@@ -179,7 +178,7 @@ public class TransitionFitter implements Serializable, Fitter {
 	}
 	
 	public List<TransitionHandler> getTransitions() {
-		List<Node> nodes = pb.getNodes();
+		List<Node> nodes = pb.getNodeFitter().getNodes();
 		if (transitionList == null) {
 			transitionList = new ArrayList<TransitionHandler>();
 			for (Node n : nodes) {

@@ -29,7 +29,7 @@
 	
 	<s:div id="timersDiv" style="width:200px; float:left;">
 
-		<ui:param name="node" value="#{processBuilder.nodeHandler}" />
+		<ui:param name="node" value="#{nodeFitter.nodeHandler}" />
 		<ui:decorate template="dataTable.xhtml">
 			<ui:param name="values" value="#{node.timerList}" />
 			<ui:param name="styleClass" value="tabelaVariaveis" />
@@ -60,7 +60,7 @@
 			<ui:define name="columns">
 				<rich:column>
 					<f:facet name="header">Temporizadores</f:facet>
-					<ui:param name="current" value="#{row == processBuilder.nodeHandler.currentTimer}" />
+					<ui:param name="current" value="#{row == nodeFitter.nodeHandler.currentTimer}" />
 					<ui:param name="styleTimerName" 
 						value="#{current ? 'font-weight:bold' : ''}" />
 					<s:div style="margin-left:2px;">

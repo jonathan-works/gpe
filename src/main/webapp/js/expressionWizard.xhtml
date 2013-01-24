@@ -20,9 +20,9 @@ function initVariableList() {
 	booleanVariableList.clear();
 	numberVariableList.clear();
 	transitionList.clear();
-	booleanVariableList = #{processBuilder.currentNode.getBooleanVariables()};
-	numberVariableList = #{processBuilder.currentNode.getNumberVariables()};
-	transitionList = #{processBuilder.currentNode.getLeavingTransitionList()};
+	booleanVariableList = #{nodeFitter.currentNode.getBooleanVariables()};
+	numberVariableList = #{nodeFitter.currentNode.getNumberVariables()};
+	transitionList = #{nodeFitter.currentNode.getLeavingTransitionList()};
 }
 
 function getNumber() {

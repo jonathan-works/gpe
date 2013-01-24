@@ -92,11 +92,11 @@
 		<rich:column style="width:150px" rendered="#{type=='from'}">
 			<f:facet name="header">Nó Origem</f:facet>
 			<h:selectOneMenu id="from" 
-							 valueChangeListener="#{processBuilder.transitionChangeListener}"
+							 valueChangeListener="#{nodeFitter.transitionChangeListener}"
 							 style="width:100%"
 							 rendered="#{empty transition.from}"
 							 value="#{transition.from}" >
-				<f:selectItems value="#{processBuilder.getNodesTransitionItems(type)}" var="v"/>
+				<f:selectItems value="#{nodeFitter.getNodesTransitionItems(type)}" var="v"/>
 					<a:support event="onchange"
 							   ajaxSingle="true"
 							   reRender="transitionName,nodesDiv"
@@ -112,11 +112,11 @@
 			<f:facet name="header">Nó Destino</f:facet>
 			<h:selectOneMenu id="to" 
 							 style="width:100%"
- 							 valueChangeListener="#{processBuilder.transitionChangeListener}"
+ 							 valueChangeListener="#{nodeFitter.transitionChangeListener}"
 							 rendered="#{empty transition.to}"
 							 required="true"
 							 value="#{transition.to}" >
-				<f:selectItems	value="#{processBuilder.getNodesTransitionItems(type)}" var="v"/>
+				<f:selectItems	value="#{nodeFitter.getNodesTransitionItems(type)}" var="v"/>
 				<a:support event="onchange"
 						   ajaxSingle="true"
 						   reRender="transitionName,nodesDiv"
@@ -139,7 +139,7 @@
 				title="Ir para o nó"
 				ajaxSingle="true"
 				style="float:right"
-				action="#{processBuilder.setCurrentNode(transition, type)}" >
+				action="#{nodeFitter.setCurrentNode(transition, type)}" >
 				<h:graphicImage url="/img/jbpm/up.gif" rendered="#{type == 'from'}" />
 				<h:graphicImage url="/img/jbpm/down.gif" rendered="#{type == 'to'}" />
 			</a:commandLink>

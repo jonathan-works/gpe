@@ -13,7 +13,9 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.ProcessDefinition;
 
+import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.EventHandler;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.ReflectionsUtil;
 
 @Name(EventFitter.NAME)
@@ -27,10 +29,13 @@ public class EventFitter implements Serializable, Fitter{
 	private List<EventHandler> eventList;
 	private EventHandler currentEvent;
 	
+	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+	
 	/**
 	 * Metodo que adiciona o tratamento de eventos 
 	 */
-	public void addEvents(ProcessDefinition processDefinition) {
+	public void addEvents() {
+		ProcessDefinition processDefinition = pb.getInstance();
 		for (String e : ProcessDefinition.supportedEventTypes) {
 			addEvent(processDefinition, e, "br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)", new Script());
 		}
@@ -67,16 +72,16 @@ public class EventFitter implements Serializable, Fitter{
 		return currentEvent.getEvent().getEventType();
 	}
 	
-	public void setEventType(ProcessDefinition processDefinition, String type) {
+	public void setEventType(String type) {
 		Event event = currentEvent.getEvent();
-		processDefinition.removeEvent(event);
+		pb.getInstance().removeEvent(event);
 		ReflectionsUtil.setValue(event, "eventType", type);
-		processDefinition.addEvent(event);
+		pb.getInstance().addEvent(event);
 	}
 	
-	public List<EventHandler> getEventList(ProcessDefinition processDefinition) {
+	public List<EventHandler> getEventList() {
 		if (eventList == null) {
-			eventList = EventHandler.createList(processDefinition);
+			eventList = EventHandler.createList(pb.getInstance());
 			if (eventList.size() == 1) {
 				setCurrentEvent(eventList.get(0));
 			}
@@ -84,11 +89,11 @@ public class EventFitter implements Serializable, Fitter{
 		return eventList;
 	}
 	
-	public List<String> getSupportedEventTypes(ProcessDefinition processDefinition) {
+	public List<String> getSupportedEventTypes() {
 		List<String> list = new ArrayList<String>();
-		String[] eventTypes = processDefinition.getSupportedEventTypes();
+		String[] eventTypes = pb.getInstance().getSupportedEventTypes();
 		List<String> currentEvents = new ArrayList<String>();
-		Collection<Event> values = processDefinition.getEvents().values();
+		Collection<Event> values = pb.getInstance().getEvents().values();
 		for (Event event : values) {
 			currentEvents.add(event.getEventType());
 		}

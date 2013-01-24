@@ -17,6 +17,7 @@ import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.entity.TarefaEvento;
 import br.com.infox.ibpm.entity.TarefaEventoAgrupamento;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.type.TarefaEventoEnum;
@@ -40,7 +41,7 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 		
 	public TarefaEventoEnum[] getTarefaEventoItems() {
 		if(tarefaEventoItems == null || tarefaEventoItems.length == 0) {
-			if(ProcessBuilder.instance().getCurrentNode().getNodeType() == NodeType.Task) {
+			if(ProcessBuilder.instance().getNodeFitter().getCurrentNode().getNodeType() == NodeType.Task) {
 				if(isManaged()) {
 					return TarefaEventoEnum.values();
 				}
@@ -95,7 +96,7 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 		}
 	}
 	
-	@Observer(ProcessBuilder.SET_CURRENT_NODE_EVENT)
+	@Observer(NodeFitter.SET_CURRENT_NODE_EVENT)
 	public void onSetCurrentNode() {
 		setTab("search");
 		newInstance();

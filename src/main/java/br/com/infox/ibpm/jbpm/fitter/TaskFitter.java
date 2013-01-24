@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.Query;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -49,7 +50,7 @@ public class TaskFitter implements Serializable, Fitter {
 	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	
 	public void addTask() {
-		Node currentNode = pb.getCurrentNode();
+		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		ProcessDefinition process = pb.getInstance();
 		if (currentNode instanceof TaskNode) {
 			getTasks();
@@ -70,7 +71,7 @@ public class TaskFitter implements Serializable, Fitter {
 	}
 
 	public void removeTask(TaskHandler t) {
-		Node currentNode = pb.getCurrentNode();
+		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		if (currentNode instanceof TaskNode) {
 			TaskNode tn = (TaskNode) currentNode;
 			tn.getTasks().remove(t.getTask());
@@ -169,29 +170,46 @@ public class TaskFitter implements Serializable, Fitter {
 	public void setModifiedTasks(Map<BigInteger, String> modifiedTasks) {
 		this.modifiedTasks = modifiedTasks;
 	}
+	
+	public void modifyTasks(){
+		String update;
+		Query q;
+		if (modifiedTasks.size() > 0) {
+			update = "update jbpm_task set name_ = :taskName where id_ = :taskId";
+			q = JbpmUtil.getJbpmSession().createSQLQuery(update);
+			for (Entry<BigInteger, String> e : modifiedTasks.entrySet()) {
+				q.setParameter("taskName", e.getValue());
+				q.setParameter("taskId", e.getKey());
+				q.executeUpdate();
+			}
+		}
+		JbpmUtil.getJbpmSession().flush();
+		modifiedTasks = new HashMap<BigInteger, String>();
+	}
 
 	public List<TaskHandler> getTasks() {
-		Node currentNode = pb.getCurrentNode();
+		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		Map<Node, List<TaskHandler>> taskNodeMap = pb.getTaskNodeMap();
 		List<TaskHandler> taskList = new ArrayList<TaskHandler>();
 		if (currentNode instanceof TaskNode) {
 			TaskNode node = (TaskNode) currentNode;
 			if (taskNodeMap == null) {
-				taskNodeMap = new HashMap<Node, List<TaskHandler>>();
+				pb.setTaskNodeMap(new HashMap<Node, List<TaskHandler>>());
+				taskNodeMap = pb.getTaskNodeMap();
 			}
 			taskList = taskNodeMap.get(node);
 			if (taskList == null) {
 				taskList = TaskHandler.createList(node);
 				taskNodeMap.put(node, taskList);
 			}
-			if (!taskList.isEmpty() && currentTask == null) {
+			if (! taskList.isEmpty() && currentTask == null) {
 				setCurrentTask(taskList.get(0));
 			}
 		} else if (currentNode instanceof StartState) {
 			Task startTask = pb.getInstance().getTaskMgmtDefinition().getStartTask();
 			startTaskHandler = new TaskHandler(startTask);
 			taskList.add(startTaskHandler);
-			if (!taskList.isEmpty() && currentTask == null) {
+			if (! taskList.isEmpty() && currentTask == null) {
 				setCurrentTask(taskList.get(0));
 			}
 		}

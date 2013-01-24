@@ -227,13 +227,13 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
+ 		<dependency>
 			<groupId>br.com.infox.epa</groupId>
 			<artifactId>jbpmgraph</artifactId>
 			<version>1.0.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
+ 			<type>jar</type>
+ 			<scope>compile</scope>
+ 		</dependency>
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-jpdl</artifactId>

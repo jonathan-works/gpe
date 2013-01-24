@@ -14,12 +14,12 @@ import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.SwimlaneHandler;
 import br.com.itx.util.ComponentUtil;
 
-@Name(SwinlaneFitter.NAME)
+@Name(SwimlaneFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class SwinlaneFitter implements Serializable, Fitter {
+public class SwimlaneFitter implements Serializable, Fitter {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "swinlaneFitter";
+	public static final String NAME = "swimlaneFitter";
 	
 	private List<SwimlaneHandler> swimlanes;
 	private SwimlaneHandler currentSwimlane;
