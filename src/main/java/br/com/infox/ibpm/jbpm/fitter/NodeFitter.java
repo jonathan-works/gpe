@@ -390,6 +390,9 @@ public class NodeFitter implements Serializable, Fitter{
 		if (nodeType.equals("MailNode")) {
 			return "mail-node";
 		}
+		if (nodeType.equals("Decision")) {
+			return "decision";
+		}
 		if (nodeType.equals("StartState")) {
 			return "start-state";
 		}
