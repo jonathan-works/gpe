@@ -484,7 +484,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		doc.setDataInclusao(new Date());
 		doc.setUsuarioInclusao(usuarioLogado);
 		doc.setProcesso(getInstance());
-		doc.setProcessoDocumento(label);
+		if (label == null) {
+			doc.setProcessoDocumento("null");
+		} else {
+			doc.setProcessoDocumento(label);
+		}
 
 		//TODO verificar se a regra abaixo será mantida, se será criado um parametro ou se o componente textEditor será extinto.
 		/*
