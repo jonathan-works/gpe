@@ -6,6 +6,7 @@
 				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:f="http://java.sun.com/jsf/core"
 				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
 				xmlns:rich="http://richfaces.org/rich">
 
 <!--
@@ -24,7 +25,11 @@
   veja em http://www.gnu.org/licenses/  
 --> 
 	
-	<ui:include src="/js/expressionWizard.xhtml" />
+	<ui:include src="/js/expressionWizard.xhtml">
+		<ui:param name="expressionId" value="form:nodes:expressionDiv" />
+		<ui:param name="inputId" value="form:nodes:expressionDecoration:expression" />
+		<ui:param name="imageSrc" value="#{util.contextPath}/img/jbpm/wizard.gif" />
+	</ui:include>
 	
 	<rich:panel bodyClass="panel"
 				style="clear:both; overflow:visible; padding:0px; margin:0px; width:721px; float:left;">
@@ -33,15 +38,13 @@
         </f:facet>
 		<s:div id="expressions" style="margin:5px">
 			<s:div id="expressionDiv" styleClass="expressionDiv">
-				<script type="text/javascript">
-					new ExpressionWizard({	"expressionId":"form:nodes:expressionDiv",
-											"inputId":"form:nodes:expressionDecoration:expression",
-											"imageSrc":"#{util.contextPath}/img/jbpm/wizard.gif"});
-				</script>
 			</s:div>
 			<wi:inputTextarea id="expression" 
 			                  label="Expressão"
-							  value="#{nodeFitter.currentNode.decisionExpression}" />
+							  value="#{nodeFitter.currentNode.decisionExpression}">
+				<a:support status=":status"
+						   event="onchange" reRender="expression"/>
+			</wi:inputTextarea>
 			
 		</s:div>
 	</rich:panel>

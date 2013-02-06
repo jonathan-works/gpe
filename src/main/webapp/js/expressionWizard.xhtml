@@ -5,9 +5,9 @@
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets">
-
 <script language="javascript" charset="ISO-8859-1">
 //<![CDATA[
+           
 function ExpressionWizard(args) {
 	/* Variables */
 	// private 
@@ -24,13 +24,14 @@ function ExpressionWizard(args) {
 	// private 
 	var onMouseOverSpan = function(event) {
 		var parent = event.currentTarget.parentNode;
-		parent.style.backgroundColor="#bbcec2";
+		event.currentTarget.style.backgroundColor = "#bbcec2";
+		parent.style.backgroundColor = "#D4F2D6";
 		parent.style.cursor="pointer";
 	};
 	
 	var onMouseExitSpan = function(event) {
 		var parent = event.currentTarget.parentNode;
-		parent.style.backgroundColor="";
+		event.currentTarget.style.backgroundColor = parent.style.backgroundColor="";
 		parent.style.cursor="";
 	};
 	
@@ -163,6 +164,9 @@ function ExpressionWizard(args) {
 	
 	var setTextArea = function(text) {
 		_inputDiv.innerHTML="#"+"{"+text+"}";
+		if (_inputDiv.onchange) {
+			_inputDiv.onchange();
+		}
 	};
 	
 	var addOption = function(value, label, parentNode) {
@@ -278,6 +282,10 @@ function ExpressionWizard(args) {
 	
 	__constructor(args);
 }
+
+new ExpressionWizard({	"expressionId":"#{expressionId}",
+						"inputId":"#{inputId}",
+						"imageSrc":"#{imageSrc}"});
 //]]>
 </script>
 </ui:composition>
