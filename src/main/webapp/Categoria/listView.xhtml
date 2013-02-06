@@ -38,7 +38,7 @@
 					  actionInactive="categoriaHome.inactive">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCategoriaForm"
-							   formTitle="Pesquisar Categoria">
+							   formTitle="#{messages['categoria.titleSearchForm']}">
 					<wi:inputText id="categoria"
 								  value="#{categoriaList.entity.categoria}"
 								  label="#{messages['categoria.categoria']}"/>
@@ -69,7 +69,7 @@
 						  required="true"
 						  label="#{messages['categoria.categoria']}"/>
 			<wi:selectSituacaoRadio id="ativo"
-								    required="true"
+								    required="false"
 								    label="#{messages['categoria.ativo']}"
 								    value="#{categoriaHome.instance.ativo}" />
 		</wi:dataForm>
@@ -77,15 +77,15 @@
 
 	<ui:define name="tabs">
 		<ui:param name="action" value="#{categoriaItemAction}" />
-		<rich:tab id="categoriaItemTab" 
+		<rich:tab id="categoriaItemTab"
 				  rendered="#{categoriaHome.isManaged()}"
-				  eventsQueue="default" 
+				  eventsQueue="default"
 				  switchType="ajax"
 				  label="#{messages['categoriaItem.titleTab']}"
 				  action="#{action.init()}">
 			<s:div id="categoriaItemFormDiv">
 				<wi:dataForm formId="categoriaItemForm"
-						 	 formTitle="#{messages['categoriaItem.titleForm']}">
+						 	 formTitle="#{messages['categoriaItem.titleForm']} #{categoriaHome.instance.categoria}">
 					<wi:tree id="itemTree"
 							 assignTo="categoriaItemAction.instance.item"
 							 tree="#{itemTree}"
@@ -103,7 +103,7 @@
 					<rich:dataTable id="categoriaItemTable"
 									value="#{action.categoriaItemList}"
 									var="row"
-									title="Relacionados à #{categoriaHome.instance.categoria}"
+									title="#{messages['categoriaItem.titleDataTable']} #{categoriaHome.instance.categoria}"
 									rows="10"
 									style="width: 60%">
 						<rich:column style="width: 10%">
