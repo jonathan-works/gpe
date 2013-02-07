@@ -39,7 +39,7 @@
 			<ui:define name="searchForm">
 				<ui:param name="entity" value="#{natCatFluxoLocalizacaoList.entity}" />
 				<wi:searchForm formId="pesquisarNatCatFluxoLocalizacaoForm"
-							   formTitle="Pesquisar">
+							   formTitle="#{messages['natCatFluxoLocalizacao.titleSearchForm']}">
 					<wi:selectOneMenuEntity id="natureza"
 										    value="#{entity.naturezaCategoriaFluxo.natureza}"
 										    label="#{messages['naturezaCategoriaFluxo.natureza']}"
