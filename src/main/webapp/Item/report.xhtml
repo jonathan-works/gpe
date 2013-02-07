@@ -25,10 +25,9 @@
 	<ui:param name="title" value="Items" />
 
 
-	<wi:dataReport subtitle="#{messages['item.titlePage']}"
-				   title=""
+	<wi:dataReport title="#{messages['item.reportTitle']}"
 				   columns="4"
-				   widths="2 4 2 #{empty itemList.entity.ativo ? '1' :'0'}"
+				   widths="2 4 2 1"
 				   headerText="#{itemList.criteria}">
 				   
 		<wi:reportColumnHeader title="#{messages['item.codigoItem']}" />
