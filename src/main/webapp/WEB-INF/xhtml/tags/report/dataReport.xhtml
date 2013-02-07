@@ -29,6 +29,8 @@
 			<ui:param name="widths" value="#{widths}1 " />
 		</c:forEach>
 	</c:if>
+    <ui:param name="title" value="" />
+    <ui:param name="subtitle" value="#{wi:get(subtitle, messages['report.subtitle'])}" />
 
 	<p:document title="#{title}"
 	            pageSize="A4"
