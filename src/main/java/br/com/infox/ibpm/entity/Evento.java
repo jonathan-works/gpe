@@ -176,7 +176,7 @@ public class Evento implements java.io.Serializable {
 		this.status = status;
 	}
 
-	@Column(name="ds_caminho_completo")
+	@Column(name="ds_caminho_completo", unique=true)
 	@HierarchicalPath
 	public String getCaminhoCompleto() {
 		return caminhoCompleto;
