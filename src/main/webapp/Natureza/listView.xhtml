@@ -38,16 +38,16 @@
 					  actionInactive="naturezaAction.inactive">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarNaturezaForm"
-							   formTitle="Pesquisar Natureza">
+							   formTitle="#{messages['natureza.searchForm']}">
 					<wi:inputText id="natureza"
 								  value="#{naturezaList.entity.natureza}"
 								  label="#{messages['natureza.natureza']}"/>
-					<wi:selectSituacaoOneMenu id="ativo"
+					<wi:selectBooleanMenu id="hasPartes"
+                                          label="#{messages['natureza.hasPartes']}"
+                                          value="#{naturezaList.entity.hasPartes}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
 											  label="#{messages['natureza.ativo']}"
 											  value="#{naturezaList.entity.ativo}" />
-					<wi:selectSituacaoOneMenu id="hasPartes"
-											  label="#{messages['natureza.hasPartes']}"
-											  value="#{naturezaList.entity.hasPartes}" />
 				</wi:searchForm>
 			</ui:define>
 			<ui:define name="toolBar">
@@ -57,14 +57,14 @@
 			<wi:columnOutputText columnId="natureza"
 								 columnHeader="#{messages['natureza.natureza']}"
 								 value="#{row.natureza}"/>
-			<wi:columnSituacao columnId="ativo"
+			<wi:columnBoolean columnId="hasPartes"
+                               columnHeader="#{messages['natureza.hasPartes']}"
+                               columnWidth="15%"
+                               value="#{row.hasPartes}" />
+            <wi:columnSituacao columnId="ativo"
 							   columnHeader="#{messages['natureza.ativo']}"
 						   	   columnWidth="15%"
 							   value="#{row.ativo}" />
-			<wi:columnBoolean columnId="hasPartes"
-							   columnHeader="#{messages['natureza.hasPartes']}"
-						   	   columnWidth="15%"
-							   value="#{row.hasPartes}" />				   
 		</wi:dataTable>
 	</ui:define>
 
@@ -75,14 +75,12 @@
 						  value="#{naturezaAction.instance.natureza}"
 						  required="true"
 						  label="#{messages['natureza.natureza']}"/>
+            <wi:selectBooleanRadio id="hasPartes"
+                                    label="#{messages['natureza.hasPartes']}"
+                                    value="#{naturezaAction.instance.hasPartes}" />
 			<wi:selectSituacaoRadio id="ativo"
-								    required="true"
 								    label="#{messages['natureza.ativo']}"
 								    value="#{naturezaAction.instance.ativo}" />
-			<wi:selectBooleanRadio id="hasPartes"
-								    required="true"
-								    label="#{messages['natureza.hasPartes']}"
-								    value="#{naturezaAction.instance.hasPartes}" />
 		</wi:dataForm>
 	</ui:define>
 
@@ -103,16 +101,16 @@
 											value="#{action.instance.categoria}"
 											items="#{action.categoriaList}"
 											required="true"
-											noSelectionLabel="Selecione uma #{messages['naturezaCategoriaFluxo.categoria']}"/>
+											noSelectionLabel="#{messages['naturezaCategoriaFluxo.categoriaCombo']}"/>
 					<wi:selectOneMenuEntity id="fluxo"
 											label="#{messages['naturezaCategoriaFluxo.fluxo']}"
 											value="#{action.instance.fluxo}"
 											items="#{action.fluxoList}"
 											required="true"
-											noSelectionLabel="Selecione uma #{messages['naturezaCategoriaFluxo.fluxo']}"/>
+											noSelectionLabel="#{messages['naturezaCategoriaFluxo.fluxoCombo']}"/>
 					<ui:define name="buttons">
 						<wi:commandButton id="saveButton"
-										  action="naturezaCategoriaFluxoAction.persist"
+										  action="naturezaCategoriaFluxoAction.persist()"
 										  reRender="naturezaCatFluxoFormDiv, natCatFluxoDiv"
 										  value="Incluir"/>
 					</ui:define>
