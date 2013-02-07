@@ -52,7 +52,7 @@ public class Item implements java.io.Serializable {
 	private Item itemPai;
 	private String codigoItem;
 	private String descricaoItem;
-	private Boolean ativo = Boolean.TRUE;
+	private Boolean ativo;
 	private String caminhoCompleto;
 	private List<Item> itemList = new ArrayList<Item>(0);
 
