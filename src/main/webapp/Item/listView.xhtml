@@ -32,19 +32,13 @@
 					  rowId="#{row.idItem}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarItemForm"
-							   formTitle="#{messages['item.titleForm']}">
+							   formTitle="#{messages['item.searchForm']}">
 					<wi:inputText id="codigoItem"
 								  value="#{itemList.entity.codigoItem}"
 								  label="#{messages['item.codigoItem']}"/>
 					<wi:inputText id="descricaoItem"
 								  value="#{itemList.entity.descricaoItem}"
 								  label="#{messages['item.descricaoItem']}"/>
-					<wi:tree id="itemPai"
-							 assignTo="itemList.entity.itemPai"
-							 tree="#{itemTree}"
-							 icon="/img/nivelTree.gif"
-							 iconLeaf="/img/file.gif"
-							 label="#{messages['item.itemPai']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
 											  label="#{messages['item.ativo']}"
 											  value="#{itemList.entity.ativo}" />
@@ -54,7 +48,7 @@
 								 columnHeader="#{messages['item.codigoItem']}"
 								 columnWidth="20%"
 								 value="#{row.codigoItem}" />
-			<wi:columnOutputTextIdent columnId="descricao"
+			<wi:columnOutputTextIdent columnId="caminhoCompleto"
 									  columnHeader="#{messages['item.descricaoItem']}"
 									  value="#{row.descricaoItem}"
 									  fullPath="#{row.caminhoCompleto}"/>
@@ -68,6 +62,7 @@
 	<ui:define name="form">
 		<wi:dataForm formId="itemForm" formTitle="#{messages['item.titleForm']}">
 			<wi:inputText id="codigoItem"
+                                  required="true"
 								  label="#{messages['item.codigoItem']}"
 								  value="#{itemHome.instance.codigoItem}" />
 			<wi:inputText id="descricao"
@@ -82,7 +77,6 @@
 						 label="#{messages['item.itemPai']}"/>
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['item.ativo']}"
-								    required="true"
 								    value="#{itemHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
