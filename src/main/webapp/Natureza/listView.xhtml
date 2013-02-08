@@ -42,12 +42,12 @@
 					<wi:inputText id="natureza"
 								  value="#{naturezaList.entity.natureza}"
 								  label="#{messages['natureza.natureza']}"/>
+				    <wi:selectSituacaoOneMenu id="hasPartes"
+									label="#{messages['natureza.hasPartes']}"
+							  		value="#{naturezaList.entity.hasPartes}" />
 					<wi:selectSituacaoOneMenu id="ativo"
 											  label="#{messages['natureza.ativo']}"
 											  value="#{naturezaList.entity.ativo}" />
-					<wi:selectSituacaoOneMenu id="hasPartes"
-											  label="#{messages['natureza.hasPartes']}"
-											  value="#{naturezaList.entity.hasPartes}" />
 				</wi:searchForm>
 			</ui:define>
 			<ui:define name="toolBar">
@@ -57,14 +57,14 @@
 			<wi:columnOutputText columnId="natureza"
 								 columnHeader="#{messages['natureza.natureza']}"
 								 value="#{row.natureza}"/>
+			<wi:columnBoolean columnId="hasPartes"
+							   columnHeader="#{messages['natureza.hasPartes']}"
+						   	   columnWidth="15%"
+							   value="#{row.hasPartes}" />
 			<wi:columnSituacao columnId="ativo"
 							   columnHeader="#{messages['natureza.ativo']}"
 						   	   columnWidth="15%"
 							   value="#{row.ativo}" />
-			<wi:columnBoolean columnId="hasPartes"
-							   columnHeader="#{messages['natureza.hasPartes']}"
-						   	   columnWidth="15%"
-							   value="#{row.hasPartes}" />				   
 		</wi:dataTable>
 	</ui:define>
 
@@ -75,14 +75,14 @@
 						  value="#{naturezaAction.instance.natureza}"
 						  required="true"
 						  label="#{messages['natureza.natureza']}"/>
-			<wi:selectSituacaoRadio id="ativo"
-								    required="true"
-								    label="#{messages['natureza.ativo']}"
-								    value="#{naturezaAction.instance.ativo}" />
 			<wi:selectBooleanRadio id="hasPartes"
 								    required="true"
 								    label="#{messages['natureza.hasPartes']}"
 								    value="#{naturezaAction.instance.hasPartes}" />
+			<wi:selectSituacaoRadio id="ativo"
+								    required="true"
+								    label="#{messages['natureza.ativo']}"
+								    value="#{naturezaAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 
