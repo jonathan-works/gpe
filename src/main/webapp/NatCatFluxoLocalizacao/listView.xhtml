@@ -100,7 +100,7 @@
 								    required="true"
 								    label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
 								    noSelectionLabel="Selecione um registro..."
-								    items="#{home.naturezaCategoriaFluxoList}"/>
+								    items="#{home.getActivedNaturezaCategoriaFluxoList()}"/>
 			<wi:tree id="localizacao"
 					 assignTo="natCatFluxoLocalizacaoAction.instance.localizacao"
 					 label="#{messages['localizacao.localizacao']}"

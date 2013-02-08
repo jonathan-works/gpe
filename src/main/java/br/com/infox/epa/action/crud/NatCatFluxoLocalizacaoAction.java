@@ -1,5 +1,6 @@
 package br.com.infox.epa.action.crud;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -133,6 +134,16 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 
 	public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
 		return naturezaCategoriaFluxoList;
+	}
+
+	public List<NaturezaCategoriaFluxo> getActivedNaturezaCategoriaFluxoList() {
+		List <NaturezaCategoriaFluxo> ativos = new ArrayList<NaturezaCategoriaFluxo>();
+		for (NaturezaCategoriaFluxo ncf : naturezaCategoriaFluxoList){
+			if (ncf.getNatureza().getAtivo()){
+				ativos.add(ncf);
+			}
+		}
+		return ativos;
 	}
 
 	public void setNaturezaList(List<Natureza> naturezaList) {
