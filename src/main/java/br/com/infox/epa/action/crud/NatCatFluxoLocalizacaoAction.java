@@ -139,7 +139,7 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 	public List<NaturezaCategoriaFluxo> getActivedNaturezaCategoriaFluxoList() {
 		List <NaturezaCategoriaFluxo> ativos = new ArrayList<NaturezaCategoriaFluxo>();
 		for (NaturezaCategoriaFluxo ncf : naturezaCategoriaFluxoList){
-			if (ncf.getNatureza().getAtivo()){
+			if (ncf.isAtivo()){
 				ativos.add(ncf);
 			}
 		}
