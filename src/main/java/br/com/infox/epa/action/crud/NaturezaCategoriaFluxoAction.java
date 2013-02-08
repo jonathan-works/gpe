@@ -14,6 +14,7 @@ import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.entity.Natureza;
 import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epa.manager.NaturezaCategoriaFluxoManager;
+import br.com.infox.epa.query.NaturezaCategoriaFluxoQuery;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
@@ -74,12 +75,13 @@ public class NaturezaCategoriaFluxoAction extends AbstractHome<NaturezaCategoria
 		FacesMessages.instance().add("Registros removidos com sucesso!");
 	}
 		
-	public void init() {
+	@SuppressWarnings("unchecked")
+    public void init() {
 		NaturezaAction naturezaAction = (NaturezaAction) Component.getInstance(NaturezaAction.NAME);
 		natureza = naturezaAction.getInstance();
 		listByNatureza();
-		categoriaList = naturezaCategoriaFluxoManager.findAll(Categoria.class);
-		fluxoList = EntityUtil.getEntityList(Fluxo.class);
+		categoriaList = getEntityManager().createQuery(NaturezaCategoriaFluxoQuery.LIST_CATEGORIA_ATIVO_QUERY).getResultList();
+		fluxoList = getEntityManager().createQuery(NaturezaCategoriaFluxoQuery.LIST_FLUXO_ATIVO_QUERY).getResultList();
 		newInstance();
 	}
 
