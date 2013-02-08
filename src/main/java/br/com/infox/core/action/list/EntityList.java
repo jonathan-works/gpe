@@ -158,7 +158,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		sb.append(Messages.instance().get(MessageFormat.format(
 				"{0}.{1}", getEntityName(), s[0])));
 		sb.append(" ");
-		sb.append(s.length > 1 && s[1].equals("desc") ? "descrescente" : "crescente");
+		sb.append(s.length > 1 && s[1].equals("desc") ? "decrescente" : "crescente");
 				
 		return sb.toString();
 	}
