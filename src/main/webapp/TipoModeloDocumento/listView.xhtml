@@ -54,13 +54,17 @@
 			</wi:searchForm>
 		</ui:define>					
 					
-		<wi:columnOutputText	columnHeader="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
+		<wi:columnOutputText	columnId="grupoModeloDocumento"
+                                columnHeader="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
 								value="#{row.grupoModeloDocumento}" />
-		<wi:columnOutputText	columnHeader="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+		<wi:columnOutputText	columnId="tipoModeloDocumento"
+                                columnHeader="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
 								value="#{row.tipoModeloDocumento}" />
-		<wi:columnOutputText	columnHeader="#{messages['tipoModeloDocumento.abreviacao']}"
+		<wi:columnOutputText	columnId="abreviacao"
+                                columnHeader="#{messages['tipoModeloDocumento.abreviacao']}"
 								value="#{row.abreviacao}" />
-		<wi:columnSituacao	columnHeader="#{messages['tipoModeloDocumento.ativo']}"
+		<wi:columnSituacao	columnId="ativo"
+                            columnHeader="#{messages['tipoModeloDocumento.ativo']}"
 							value="#{row.ativo}" />
     </wi:dataTable>
     
@@ -84,7 +88,6 @@
 					  required="true" />
 		<wi:selectSituacaoRadio id="ativo"
 							    label="#{messages['tipoModeloDocumento.ativo']}"
-							    required="true"
 							    value="#{tipoModeloDocumentoHome.instance.ativo}" />
 	</wi:dataForm>
 </ui:define>
@@ -103,18 +106,18 @@
 						goBackId="#{home.id}"	
 						goBackTab="modeloDocumento"
 						headerToolBar="none"
-						columnList="ativo,tipoModeloDocumento,tituloModeloDocumento"
+						columnList="tipoModeloDocumento,tituloModeloDocumento,ativo"
 						title="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoHome.instance)}"							
 					/>
 			</rich:tab>
 
-			<rich:tab label="Variáveis"
+			<rich:tab label="#{messages['tipoModeloDocumento.variaveis']}"
 			    status=":status"
 				id="variaveis"
 				rendered="#{home.managed}">
 				<wi:ajaxDiv id="divM2MtipoDoc">
 					<wi:m2mGrid 
-						title="Variáveis" 
+						title="#{messages['tipoModeloDocumento.variaveis']}" 
 						gridId="variavelTipoModelo"
 						leftGrid="#{variavelTipoModeloGrid}" 
 						useDatamodel="false"
@@ -130,16 +133,19 @@
 				
 			</rich:tab>
 			
-			<rich:tab label="Papéis"
+			<rich:tab label="#{messages['tipoModeloDocumento.papeis']}"
 				action="#{tipoModeloDocumentoPapelHome.newInstance()}"
 			    status=":status"
 				id="papeis"
 				rendered="#{home.managed}">
-				
-				<wi:ajaxDiv id="divPapeis">
+				<rich:panel rendered="true"
+                            bodyClass="panel" 
+                            header="#{messages['tipoModeloDocumento.titleForm']}" 
+                            id="papeisPanel"
+                            style="float: left; margin-left: 10px;margin-top:0px; width: 500px">
 					<wi:form form="#{tipoModeloDocumentoPapelForm}" 
 						home="#{tipoModeloDocumentoPapelHome}"
-						formTitle="Papeis"
+						formTitle="#{messages['tipoModeloDocumento.papeis']}"
 						reRenderSave="divPapeis" />
 
 					<wi:datalist bean="#{tipoModeloDocumentoPapelGrid}" 
@@ -147,8 +153,8 @@
 						headerToolBar="none"
 								 reRenderRemove="divPapeis"
 								 home="#{tipoModeloDocumentoPapelHome}"
-								 title="Papéis associados ao tipo de modelo #{(tipoModeloDocumentoHome.instance)}"/>	
-				</wi:ajaxDiv>
+								 title="#{messages['tipoModeloDocumento.papeisFormTitle']} #{(tipoModeloDocumentoHome.instance)}"/>	
+				</rich:panel>
 			</rich:tab>					
 
 </ui:define> 
