@@ -49,7 +49,6 @@ public class LocalizacaoFisicaHome extends AbstractHome<LocalizacaoFisica>{
 	public String update() {
 		if (!getInstance().getAtivo()){
 			RecursiveManager.inactiveRecursive(getInstance());
-			return "updated";
 		} 
 		return super.update();
 	}

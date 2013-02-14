@@ -70,7 +70,6 @@ public class ItemHome extends AbstractHome<Item> {
 	public String update() {
 		if (!getInstance().getAtivo()){
 			RecursiveManager.inactiveRecursive(getInstance());
-			return "updated";
 		} 
 		return super.update();
 	}
