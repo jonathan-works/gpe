@@ -37,7 +37,7 @@
 					  rowId="#{row.idCep}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCepForm"
-							   formTitle="#{messages['cep.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputCep id="numeroCep"
 								 value="#{cepList.entity.numeroCep}"
 								 label="#{messages['cep.numeroCep']}"/>
@@ -98,7 +98,7 @@
 	
 	<ui:define name="form">
 		<wi:dataForm formId="cepForm"
-					 formTitle="#{messages['cep.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputCep id="numeroCep"
 						 value="#{cepHome.instance.numeroCep}"
 						 required="true"
@@ -136,7 +136,6 @@
 			</s:div>
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['cep.ativo']}"
-								    required="true"
 								    value="#{cepHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
