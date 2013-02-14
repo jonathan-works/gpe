@@ -19,10 +19,7 @@
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<ui:param name="title" value="#{messages['calendarioEventos.reportPage']}" />
-
-	<wi:dataReport subtitle="#{messages['calendarioEventos.searchResult']}"
-				   title="calendarioEventos.titlePage"
+	<wi:dataReport title="#{messages['calendarioEventos.reportPage']}"
 				   columns="3"
 				   widths="2 4 2"
 				   headerText="#{calendarioEventosList.criteria}">

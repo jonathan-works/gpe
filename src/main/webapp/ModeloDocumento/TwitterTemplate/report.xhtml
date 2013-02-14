@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ui:composition 
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<wi:dataReport title="#{messages['twitterTemplate.reportTitle']}"
+				   columns="3"
+				   widths="4 4 1"
+				   headerText="#{twitterTemplateList.criteria}">
+				   
+		<wi:reportColumnHeader title="#{messages['twitterTemplate.titulo']}" />
+		<wi:reportColumnHeader title="#{messages['twitterTemplate.mensagem']}" />
+		<wi:reportColumnHeader title="#{messages['twitterTemplate.ativo']}"/>
+				
+		<ui:repeat var="row" value="#{twitterTemplateList.list()}">
+			<wi:reportColumn value="#{row.titulo}" />
+			<wi:reportColumn value="#{row.mensagem}" />
+			<wi:reportColumnSituacao value="#{row.ativo}"
+							 columnAlign="center"/>
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>

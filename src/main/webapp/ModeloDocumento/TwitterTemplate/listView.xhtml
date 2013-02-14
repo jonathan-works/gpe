@@ -37,7 +37,7 @@
 					  rowId="#{row.idTwitterTemplate}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarTwitterTemplateForm"
-							   formTitle="#{messages['twitterTemplate.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="tituloTwitterTemplate"
 								 value="#{twitterTemplateList.entity.titulo}"
 								 label="#{messages['twitterTemplate.titulo']}"
@@ -47,26 +47,26 @@
 								  value="#{twitterTemplateList.entity.mensagem}"
 								  maxlength="123" />
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['twitterTemplate.ativo']}"
 											  value="#{twitterTemplateList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
 			
-			<wi:columnOutputText columnId="tituloTemplate"
+			<wi:columnOutputText columnId="titulo"
 								 columnHeader="#{messages['twitterTemplate.titulo']}"
 								 value="#{row.titulo}" />
-			<wi:columnOutputText columnId="mensagemTemplate"
+			<wi:columnOutputText columnId="mensagem"
 								 columnHeader="#{messages['twitterTemplate.mensagem']}"
 								 value="#{row.mensagem}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['twitterTemplate.ativo']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
 		<wi:dataForm formId="twitterTemplateForm"
-					 formTitle="#{messages['twitterTemplate.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="titulo"
 						 value="#{twitterTemplateHome.instance.titulo}"
 						 required="true"
@@ -79,7 +79,6 @@
 						  maxlength="123" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['agrupamento.ativo']}"
-								    required="true"
 								    value="#{twitterTemplateHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
