@@ -20,6 +20,9 @@ public class LocalizacaoFisicaHome extends AbstractHome<LocalizacaoFisica>{
 	public static final String NAME = "localizacaoFisicaHome";
 	private static final long serialVersionUID = 1L;
 	
+	private static final String TEMPLATE = "/LocalizacaoFisica/LocalizacaoFisicaTemplate.xls";
+	private static final String DOWNLOAD_XLS_NAME = "LocalizacaoFisica.xls";
+	
 	@Override
 	public EntityList<LocalizacaoFisica> getBeanList() {
 		return LocalizacaoFisicaList.instance();
@@ -57,5 +60,15 @@ public class LocalizacaoFisicaHome extends AbstractHome<LocalizacaoFisica>{
 		if(isManaged()) {
 			((LocalizacaoFisicaTreeHandler)getComponent("localizacaoFisicaTree")).setSelected(getInstance().getLocalizacaoFisicaPai());
 		}
+	}
+	
+	@Override
+	public String getTemplate() {
+		return TEMPLATE;
+	}
+	
+	@Override
+	public String getDownloadXlsName() {
+		return DOWNLOAD_XLS_NAME;
 	}
 }
