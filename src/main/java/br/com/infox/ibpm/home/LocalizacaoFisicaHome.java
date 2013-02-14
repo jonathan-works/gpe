@@ -44,6 +44,14 @@ public class LocalizacaoFisicaHome extends AbstractHome<LocalizacaoFisica>{
 		RecursiveManager.inactiveRecursive(localizacaoFisica);
 		return super.inactive(localizacaoFisica);
 	}
+	
+	@Override
+	protected boolean beforePersistOrUpdate() {
+		if (!instance.getLocalizacaoFisicaPai().getAtivo())
+			instance.setAtivo(false);
+		return true;
+	}
+	
 
 	@Override
 	public String update() {
