@@ -92,6 +92,12 @@
 						value="#{pessoaFisicaHome.instance.dataNascimento}"
 						label="#{messages['pessoaFisica.dataNascimento']}"
 						required="true"/>
+			<wi:inputText id="email"
+							  label="#{messages['pessoaFisica.email']}"
+							  value="#{pessoaFisicaHome.instance.email}"
+							  required="true">
+				<f:validator validatorId="emailValidator" />
+			</wi:inputText>
 			<wi:selectSituacaoRadio id="ativo"
 						label="#{messages['agrupamento.ativo']}"
 						value="#{pessoaFisicaHome.instance.ativo}" />
