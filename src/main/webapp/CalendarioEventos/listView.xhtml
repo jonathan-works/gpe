@@ -38,7 +38,7 @@
 					  rowId="#{row.idCalendarioEvento}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCalendarioEventosForm"
-							   formTitle="#{messages['calendarioEventos.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:tree id="localizacao"
 							 label="#{messages['calendarioEventos.localizacao']}"
 							 assignTo="calendarioEventosList.entity.localizacao"
@@ -49,13 +49,16 @@
 								  maxlength="100" />
 					<wi:inputNumber id="dia"
 									label="#{messages['calendarioEventos.dia']}"
-									value="#{list.entity.dia}" />
+									value="#{list.entity.dia}"
+                                    maxlength="2" />
 					<wi:inputNumber id="mes"
 									label="#{messages['calendarioEventos.mes']}"
-									value="#{list.entity.mes}" />
+									value="#{list.entity.mes}"
+                                    maxlength="2" />
 					<wi:inputNumber id="ano"
 									label="#{messages['calendarioEventos.ano']}"
-									value="#{list.entity.ano}" />
+									value="#{list.entity.ano}"
+                                    maxlength="4" />
 				</wi:searchForm>
 			</ui:define>
 			
@@ -70,6 +73,7 @@
 								 columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
 								 value="#{row.descricaoEvento}" />
 			<wi:columnOutputText columnId="dataEvento"
+                                 hideOrder="true"
 								 columnHeader="#{messages['calendarioEventos.dataEvento']}"
 								 value="#{row.stringDataEvento}" />
 		</wi:dataTable>
@@ -77,7 +81,7 @@
 	
 	<ui:define name="form">
 		<wi:dataForm formId="calendarioEventosForm"
-					 formTitle="#{messages['calendarioEventos.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:tree id="localizacao"
 					 label="#{messages['calendarioEventos.localizacao']}"
 					 assignTo="calendarioEventosHome.instance.localizacao"
@@ -93,9 +97,8 @@
 							label="#{messages['calendarioEventos.dataEvento']}"
 							required="true"/>
 			<wi:selectBooleanCheckbox id="periodico"
-								label="#{messages['calendarioEventos.periodico']}"
-								value="#{home.instance.repeteAno}"
-								required="true"/>
+        								label="#{messages['calendarioEventos.periodico']}"
+        								value="#{home.instance.repeteAno}"/>
 			
 		</wi:dataForm>
 	</ui:define>
