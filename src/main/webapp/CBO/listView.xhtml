@@ -37,7 +37,7 @@
 					  rowId="#{row.idCbo}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCboForm"
-							   formTitle="#{messages['cbo.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputNumber id="codCbo"
 								 value="#{cboList.entity.codCbo}"
 								 label="#{messages['cbo.codCbo']}"/>
@@ -65,7 +65,7 @@
 	
 	<ui:define name="form">
 		<wi:dataForm formId="cboForm"
-					 formTitle="#{messages['cbo.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputNumber id="codCbo"
 						 value="#{cboHome.instance.codCbo}"
 						 required="true"
@@ -77,7 +77,6 @@
 						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['agrupamento.ativo']}"
-								    required="true"
 								    value="#{cboHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
