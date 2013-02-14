@@ -31,7 +31,7 @@
 	<ui:define name="searchGrid">
 		<wi:dataTable values="#{modeloDocumentoList.list(15)}"
 			bean="#{modeloDocumentoList}"
-			tableTitle="#{messages['modeloDocumento.titleGrid']}"
+			tableTitle="#{messages['modeloDocumento.titleView']}"
 			id="modeloDocumentoList" rowId="#{row.idModeloDocumento}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="modeloDocumentoSearchForm"
@@ -96,7 +96,7 @@
 					label="#{messages['historicoModeloDocumento.titleTab']}">
 			<wi:dataTable values="#{historicoModeloDocumentoList.list(10)}"
 				bean="#{historicoModeloDocumentoList}"
-				tableTitle="#{messages['modeloDocumento.titleGrid']}"
+				tableTitle="#{messages['modeloDocumento.titleView']}"
 				id="historicoModeloDocumentoList">
 				<ui:define name="searchForm">
 					<s:div rendered="#{historicoModeloDocumentoList.getResultCount()>0}">
