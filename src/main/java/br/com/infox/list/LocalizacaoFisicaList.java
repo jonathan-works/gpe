@@ -23,7 +23,7 @@ public class LocalizacaoFisicaList extends EntityList<LocalizacaoFisica> {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String DEFAULT_EJBQL = "select o from LocalizacaoFisica o";
-	private static final String DEFAULT_ORDER = "o.caminhoCompleto";
+	private static final String DEFAULT_ORDER = "caminhoCompleto";
 	
 	private static final String R1 = "o.caminhoCompleto like concat(" +
 			"#{localizacaoFisicaList.entity.localizacaoFisicaPai.caminhoCompleto}, '%')";
