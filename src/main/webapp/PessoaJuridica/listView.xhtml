@@ -55,15 +55,15 @@
 				</wi:searchForm>
 			</ui:define>
 			
+			<wi:columnOutputText columnId="cnpj"
+								 columnHeader="#{messages['pj.cnpj']}"
+								 value="#{row.cnpj}" />
 			<wi:columnOutputText columnId="nomePessoa"
 								 columnHeader="#{messages['pj.nome']}"
 								 value="#{row.nome}" />
 			<wi:columnOutputText columnId="razaoSocial"
 								 columnHeader="#{messages['pj.razaoSocial']}"
 								 value="#{row.razaoSocial}" />
-			<wi:columnOutputText columnId="cnpj"
-								 columnHeader="#{messages['pj.cnpj']}"
-								 value="#{row.cnpj}" />
 			<wi:columnSituacao columnId="ativo"
 							columnHeader="#{messages['agrupamento.ativo']}"
 							value="#{row.ativo}" />
