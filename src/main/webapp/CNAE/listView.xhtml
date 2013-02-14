@@ -37,7 +37,7 @@
 					  rowId="#{row.idCnae}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCnaeForm"
-							   formTitle="#{messages['cnae.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="codCnae"
 								 value="#{cnaeList.entity.codCnae}"
 								 label="#{messages['cnae.codCnae']}"
@@ -50,7 +50,7 @@
 								  value="#{cnaeList.entity.descricaoCnae}"
 								  maxlength="100" />
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['cnae.ativo']}"
 											  value="#{cnaeList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -62,14 +62,14 @@
 								 columnHeader="#{messages['cnae.descricaoCnae']}"
 								 value="#{row.descricaoCnae}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['cnae.ativo']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
 		<wi:dataForm formId="cnaeForm"
-					 formTitle="#{messages['cnae.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="codCnae"
 						 value="#{cnaeHome.instance.codCnae}"
 						 required="true"
@@ -84,8 +84,7 @@
 						  value="#{cnaeHome.instance.descricaoCnae}"
 						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
-								    required="true"
+								    label="#{messages['cnae.ativo']}"
 								    value="#{cnaeHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
