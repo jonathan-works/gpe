@@ -41,7 +41,7 @@
 	<ui:define name="form">
 		<c:if test="#{canEdit}">
 			<wi:form form="#{tipoProcessoDocumentoForm}" 
-					 formTitle="#{messages['tipoProcessoDocumento.titleForm']}" />
+					 formTitle="#{messages['form.title']}" />
 		</c:if>
 		<c:if test="#{not canEdit}">
 			<wi:view form="#{tipoProcessoDocumentoView}" 
@@ -58,7 +58,7 @@
 			<s:div id="divAssociarPapel">
 				<c:if test="#{canEdit}">
 					<wi:form msgRendered="false"				   		
-							 formTitle="#{tipoProcessoDocumentoHome.instance} - #{messages['tipoProcessoDocumentoPapel.titleForm']}"						
+							 formTitle="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"						
 							 form="#{tipoProcessoDocumentoPapelForm}"						
 							 home="#{tipoProcessoDocumentoPapelHome}"						
 							 reRenderSave="divAssociarPapel"/>
@@ -69,7 +69,7 @@
 							 listReRender="divAssociarPapel"
 							 headerToolBar="none"
 							 home="#{tipoProcessoDocumentoPapelHome}"
-							 title="#{tipoProcessoDocumentoHome.instance} - #{messages['tipoProcessoDocumentoPapel.titleForm']}"/>				
+							 title="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"/>				
 			</s:div>
 		</rich:tab>
 	</ui:define>	 

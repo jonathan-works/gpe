@@ -37,7 +37,7 @@
 					  rowId="#{row.idPrioridade}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarPrioridadeProcessoForm"
-							   formTitle="#{messages['prioridadeProcesso.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="descricaoPrioridadeProcesso"
 								  label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
 								  value="#{prioridadeProcessoList.entity.descricaoPrioridade}"
@@ -66,7 +66,7 @@
 	
 	<ui:define name="form">
 		<wi:dataForm formId="prioridadeProcessoForm"
-					 formTitle="#{messages['prioridadeProcesso.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputNumber id="peso"
 						 value="#{prioridadeProcessoHome.instance.peso}"
 						 required="true"

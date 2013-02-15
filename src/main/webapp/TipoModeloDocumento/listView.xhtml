@@ -37,7 +37,7 @@
 
 		<ui:define name="searchForm">
 			<wi:searchForm	formId="pesquisarTipoModeloDocumentoForm"
-							formTitle="#{messages['tipoModeloDocumento.titleSearchForm']}">
+							formTitle="#{messages['searchForm.title']}">
 				<wi:suggest id="grupoModeloDocumento"
 							bean="#{grupoModeloDocumentoSuggest}"
 							assignTo="tipoModeloDocumentoList.entity.grupoModeloDocumento"
@@ -72,7 +72,7 @@
 
 <ui:define name="form">
 	<wi:dataForm formId="tipoModeloDocumentoForm"
-				 formTitle="#{messages['tipoModeloDocumento.titleForm']}">
+				 formTitle="#{messages['form.title']}">
 		<wi:suggest id="grupoModeloDocumento"
 							bean="#{grupoModeloDocumentoSuggest}"
 							assignTo="tipoModeloDocumentoHome.instance.grupoModeloDocumento"
@@ -140,7 +140,7 @@
 				rendered="#{home.managed}">
 				<rich:panel rendered="true"
                             bodyClass="panel" 
-                            header="#{messages['tipoModeloDocumento.titleForm']}" 
+                            header="#{messages['form.title']}" 
                             id="papeisPanel"
                             style="float: left; margin-left: 10px;margin-top:0px; width: 500px">
 					<wi:form form="#{tipoModeloDocumentoPapelForm}" 

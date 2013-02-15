@@ -43,7 +43,7 @@
 	<ui:define name="form" action="#{fluxoHome.newInstance()}">
 		<c:if test="#{canEdit}">
 			<wi:form form="#{fluxoForm}" 
-			         formTitle="#{messages['fluxo.titleForm']}"
+			         formTitle="#{messages['form.title']}"
 	                 persistSemNewInstance="true"/>
 		</c:if>
 		<c:if test="#{not canEdit}">
@@ -60,7 +60,7 @@
 				  label="#{messages['fluxoPapel.titleTab']}"
 				  action="#{action.init()}">
 			<wi:dataForm formId="fluxoPapelForm"
-					 	 formTitle="#{messages['fluxoPapel.titleForm']}">
+					 	 formTitle="#{messages['form.title']}">
 				<wi:tree id="papelTree"
 						 label="#{messages['fluxoPapel.papel']}"
 						 assignTo="fluxoPapelAction.instance.papel"

@@ -33,7 +33,7 @@
 					  rowId="#{row.idEvento}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarEventoForm"
-							   formTitle="#{messages['evento.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="evento"
 								  value="#{eventoList.entity.evento}"
 								  label="#{messages['evento.evento']}"/>
@@ -65,7 +65,7 @@
 
 	<ui:define name="form">
 		<wi:dataForm formId="eventoForm"
-					 formTitle="#{messages['evento.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="evento"
 						  label="#{messages['evento.evento']}"
 						  required="true"

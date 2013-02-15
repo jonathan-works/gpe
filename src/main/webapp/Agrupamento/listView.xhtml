@@ -35,7 +35,7 @@
 					  rowId="#{row.idAgrupamento}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarAgrupamentoForm"
-							   formTitle="#{messages['agrupamento.searchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="agrupamento"
 									value="#{agrupamentoList.entity.agrupamento}"
 								  	label="#{messages['agrupamento.agrupamento']}"/>
@@ -56,7 +56,7 @@
 	
 	<ui:define name="form">
 		<wi:dataForm formId="agrupamentoForm"
-					 formTitle="#{messages['agrupamento.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="agrupamento"
 						  required="true"
 						  label="#{messages['agrupamento.agrupamento']}"
@@ -75,7 +75,7 @@
 				  status=":status"
 				  action="#{eventoAgrupamentoHome.newInstance()}">
 			<wi:dataForm formId="eventoAgrupamentoForm"
-						 formTitle="#{messages['eventoAgrupamento.titleForm']}">
+						 formTitle="#{messages['form.title']}">
 				<wi:tree id="evento"
 						 required="true"
 						 tree="#{eventoTree}"

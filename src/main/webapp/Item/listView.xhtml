@@ -32,7 +32,7 @@
 					  rowId="#{row.idItem}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarItemForm"
-							   formTitle="#{messages['item.searchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="codigoItem"
 								  value="#{itemList.entity.codigoItem}"
 								  label="#{messages['item.codigoItem']}"/>
@@ -60,7 +60,7 @@
 	</ui:define>
 	
 	<ui:define name="form">
-		<wi:dataForm formId="itemForm" formTitle="#{messages['item.titleForm']}">
+		<wi:dataForm formId="itemForm" formTitle="#{messages['form.title']}">
 			<wi:inputText id="codigoItem"
                                   required="true"
 								  label="#{messages['item.codigoItem']}"

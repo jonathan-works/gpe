@@ -38,7 +38,7 @@
 					  actionInactive="naturezaAction.inactive">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarNaturezaForm"
-							   formTitle="#{messages['natureza.searchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="natureza"
 								  value="#{naturezaList.entity.natureza}"
 								  label="#{messages['natureza.natureza']}"/>
@@ -70,7 +70,7 @@
 
 	<ui:define name="form">
 		<wi:dataForm formId="naturezaForm"
-					 formTitle="#{messages['natureza.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="natureza"
 						  value="#{naturezaAction.instance.natureza}"
 						  required="true"
@@ -95,7 +95,7 @@
 				  action="#{action.init()}">
 			<s:div id="naturezaCatFluxoFormDiv">
 				<wi:dataForm formId="naturezaCatFluxoForm"
-						 	 formTitle="#{messages['naturezaCategoriaFluxo.titleForm']}: #{naturezaAction.instance}">
+						 	 formTitle="#{messages['form.title']}: #{naturezaAction.instance}">
 					<wi:selectOneMenuEntity id="categorias"
 											label="#{messages['naturezaCategoriaFluxo.categoria']}"
 											value="#{action.instance.categoria}"

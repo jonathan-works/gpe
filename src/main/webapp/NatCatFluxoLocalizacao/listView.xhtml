@@ -39,7 +39,7 @@
 			<ui:define name="searchForm">
 				<ui:param name="entity" value="#{natCatFluxoLocalizacaoList.entity}" />
 				<wi:searchForm formId="pesquisarNatCatFluxoLocalizacaoForm"
-							   formTitle="#{messages['natCatFluxoLocalizacao.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:selectOneMenuEntity id="natureza"
 										    value="#{entity.naturezaCategoriaFluxo.natureza}"
 										    label="#{messages['naturezaCategoriaFluxo.natureza']}"
@@ -94,7 +94,7 @@
 	
 	<ui:define name="form">
 		<wi:dataForm formId="natCatFluxoLocalizacaoForm"
-					 formTitle="#{messages['natCatFluxoLocalizacao.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:selectOneMenuEntity id="naturezaCategoriaFluxo"
 								    value="#{home.instance.naturezaCategoriaFluxo}"
 								    required="true"
