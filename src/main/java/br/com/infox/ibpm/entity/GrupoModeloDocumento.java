@@ -61,7 +61,7 @@ public class GrupoModeloDocumento implements java.io.Serializable {
 		this.idGrupoModeloDocumento = idGrupoModeloDocumento;
 	}
 
-	@Column(name = "ds_grupo_modelo_documento", nullable = false, length = 50)
+	@Column(name = "ds_grupo_modelo_documento", nullable = false, length = 50, unique=true)
 	@NotNull
 	@Length(max = 50)
 	public String getGrupoModeloDocumento() {
