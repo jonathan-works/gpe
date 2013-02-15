@@ -18,7 +18,6 @@ import br.com.infox.epa.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epa.query.NaturezaCategoriaFluxoQuery;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.util.EntityUtil;
 
 /**
  * 
