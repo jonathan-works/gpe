@@ -114,14 +114,5 @@ public class NaturezaCategoriaFluxoAction extends AbstractHome<NaturezaCategoria
 
 	public List<Fluxo> getFluxoList() {
 		return fluxoList;
-	}
-	
-	public List<Categoria> activedCategoriaList(){
-		List<Categoria> ativas = new ArrayList<Categoria>(); 
-		for (Categoria categoria : categoriaList)
-			if (categoria.getAtivo())
-				ativas.add(categoria);
-		return ativas;
-	}
-	
+	}	
 }
