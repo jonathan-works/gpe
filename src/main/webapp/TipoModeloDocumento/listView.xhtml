@@ -47,7 +47,8 @@
 							  value="#{tipoModeloDocumentoList.entity.tipoModeloDocumento}" />
 				<wi:inputText id="abreviacao"
 							  label="#{messages['tipoModeloDocumento.abreviacao']}"
-							  value="#{tipoModeloDocumentoList.entity.abreviacao}" />
+							  value="#{tipoModeloDocumentoList.entity.abreviacao}" 
+							  maxlength="5"/>
 				<wi:selectSituacaoOneMenu id="ativo"
 										  label="#{messages['field.situacao']}"
 										  value="#{tipoModeloDocumentoList.entity.ativo}" />
@@ -85,7 +86,8 @@
 		<wi:inputText id="abreviacao"
 					  label="#{messages['tipoModeloDocumento.abreviacao']}"
 					  value="#{tipoModeloDocumentoHome.instance.abreviacao}"
-					  required="true" />
+					  required="true"
+					  maxlength="5"/>
 		<wi:selectSituacaoRadio id="ativo"
 							    label="#{messages['field.situacao']}"
 							    value="#{tipoModeloDocumentoHome.instance.ativo}" />
