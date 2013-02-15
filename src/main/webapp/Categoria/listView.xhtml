@@ -89,6 +89,7 @@
 					<wi:tree id="itemTree"
 							 assignTo="categoriaItemAction.instance.item"
 							 tree="#{itemTree}"
+                             required="true"
 							 label="#{messages['categoriaItem.item']}"/>
 					<ui:define name="buttons">
 						<wi:commandButton id="saveButton"
@@ -103,9 +104,11 @@
 					<rich:dataTable id="categoriaItemTable"
 									value="#{action.categoriaItemList}"
 									var="row"
-									title="#{messages['categoriaItem.titleDataTable']} #{categoriaHome.instance.categoria}"
 									rows="10"
 									style="width: 60%">
+                        <f:facet name="header">
+                            <h:outputText value="#{messages['categoriaItem.titleDataTable']} #{categoriaHome.instance.categoria}" />
+                        </f:facet>
 						<rich:column style="width: 10%">
 							<center>
 								<wi:toolBarRemove id="toolBarRemove"
