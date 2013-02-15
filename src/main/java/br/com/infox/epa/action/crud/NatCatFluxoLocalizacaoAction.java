@@ -3,6 +3,8 @@ package br.com.infox.epa.action.crud;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -17,6 +19,7 @@ import br.com.infox.epa.entity.Natureza;
 import br.com.infox.epa.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epa.list.NatCatFluxoLocalizacaoList;
 import br.com.infox.epa.manager.NatCatFluxoLocalizacaoManager;
+import br.com.infox.epa.query.NatCatFluxoLocalizacaoQuery;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.component.AbstractHome;
@@ -110,13 +113,15 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 		return save;
 	}
 	
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public void create() {
 		super.create();
 		naturezaCategoriaFluxoList = EntityUtil.getEntityList(NaturezaCategoriaFluxo.class);
-		naturezaList = EntityUtil.getEntityList(Natureza.class);
-		categoriaList = EntityUtil.getEntityList(Categoria.class);
-		fluxoList = EntityUtil.getEntityList(Fluxo.class);
+		EntityManager manager = getEntityManager();
+		naturezaList = manager.createQuery(NatCatFluxoLocalizacaoQuery.LIST_NATUREZA_ATIVO_QUERY).getResultList();
+		categoriaList = manager.createQuery(NatCatFluxoLocalizacaoQuery.LIST_CATEGORIA_ATIVO_QUERY).getResultList();
+		fluxoList = manager.createQuery(NatCatFluxoLocalizacaoQuery.LIST_FLUXO_ATIVO_QUERY).getResultList();
 	}
 
 	public void setLocalizacaoTreeHandler(LocalizacaoTreeHandler localizacaoTreeHandler) {
