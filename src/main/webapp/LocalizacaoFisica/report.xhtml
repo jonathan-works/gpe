@@ -27,7 +27,7 @@
 				   headerText="#{localizacaoFisicaList.criteria}">
 				   
 		<wi:reportColumnHeader title="#{messages['localizacaoFisica.descricao']}" />
-        <wi:reportColumnHeader title="#{messages['localizacaoFisica.ativo']}" />
+        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
 				
 		<ui:repeat var="row" value="#{localizacaoFisicaList.list()}">
 			<wi:reportColumn value="#{row.descricao}" />

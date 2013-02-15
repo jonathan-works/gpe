@@ -50,7 +50,7 @@
 								  value="#{cnaeList.entity.descricaoCnae}"
 								  maxlength="100" />
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['cnae.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{cnaeList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -62,7 +62,7 @@
 								 columnHeader="#{messages['cnae.descricaoCnae']}"
 								 value="#{row.descricaoCnae}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['cnae.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
@@ -84,7 +84,7 @@
 						  value="#{cnaeHome.instance.descricaoCnae}"
 						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['cnae.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{cnaeHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

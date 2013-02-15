@@ -67,7 +67,7 @@
 								  label="#{messages['cep.nomeBairro']}"
 								  value="#{cepList.entity.nomeBairro}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['cep.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{cepList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -91,7 +91,7 @@
 								 columnHeader="#{messages['cep.nomeBairro']}"
 								 value="#{row.nomeBairro}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
@@ -135,7 +135,7 @@
 				</wi:suggest>		
 			</s:div>
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['cep.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{cepHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

@@ -59,7 +59,7 @@
 			<wi:columnOutputText columnId="usuarioModificacao"
 												   columnHeader="#{messages['parametro.usuarioModificacao']}"
 												   value="#{row.usuarioModificacao}"/>
-			<wi:columnSituacao  columnHeader="#{messages['parametro.ativo']}" />					
+			<wi:columnSituacao  columnHeader="#{messages['field.situacao']}" />					
 		</wi:dataTable>
 	</ui:define>
 	
@@ -87,7 +87,7 @@
 									value="#{parametroHome.instance.esquemaTabelaId}" />
 									
 			<wi:selectSituacaoRadio id="idParametro"
-								    label="#{messages['parametro.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{parametroHome.instance.ativo}"
 								    required="true"/>
 		</wi:dataForm>

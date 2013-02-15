@@ -38,12 +38,12 @@
 					  actionInactive="categoriaHome.inactive">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCategoriaForm"
-							   formTitle="#{messages['categoria.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="categoria"
 								  value="#{categoriaList.entity.categoria}"
 								  label="#{messages['categoria.categoria']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['categoria.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{categoriaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -55,7 +55,7 @@
 								 columnHeader="#{messages['categoria.categoria']}"
 								 value="#{row.categoria}"/>
 			<wi:columnSituacao columnId="ativo"
-							   columnHeader="#{messages['categoria.ativo']}"
+							   columnHeader="#{messages['field.situacao']}"
 						   	   columnWidth="15%"
 							   value="#{row.ativo}" />
 		</wi:dataTable>
@@ -63,14 +63,14 @@
 
 	<ui:define name="form">
 		<wi:dataForm formId="categoriaForm"
-					 formTitle="#{messages['categoria.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="categoria"
 						  value="#{categoriaHome.instance.categoria}"
 						  required="true"
 						  label="#{messages['categoria.categoria']}"/>
 			<wi:selectSituacaoRadio id="ativo"
 								    required="false"
-								    label="#{messages['categoria.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{categoriaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

@@ -65,7 +65,7 @@
 								onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
 								oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{protocoloDocumentoList.entity.ativo}" />
 					
 				</wi:searchForm>
@@ -93,7 +93,7 @@
 			</wi:columnOutputText>
 
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
@@ -125,7 +125,7 @@
 							onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
 							oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"/>
 			<wi:selectSituacaoRadio id="ativo"
-									label="#{messages['agrupamento.ativo']}"
+									label="#{messages['field.situacao']}"
 									required="true"
 									value="#{protocoloDocumentoHome.instance.ativo}" />
 		</wi:dataForm>

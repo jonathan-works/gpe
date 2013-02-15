@@ -50,7 +50,7 @@
 								  value="#{pessoaJuridicaList.entity.razaoSocial}"
 								  maxlength="100" />
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{pessoaJuridicaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -65,7 +65,7 @@
 								 columnHeader="#{messages['pj.razaoSocial']}"
 								 value="#{row.razaoSocial}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
@@ -88,7 +88,7 @@
 						  required="true"
 						  maxlength="100" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    required="true"
 								    value="#{pessoaJuridicaHome.instance.ativo}" />
 		</wi:dataForm>

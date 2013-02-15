@@ -44,7 +44,7 @@
 						label="#{messages['modeloDocumento.tituloModeloDocumento']}"
 						value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
 					<wi:selectSituacaoOneMenu id="situacao"
-						label="#{messages['modeloDocumento.ativo']}"
+						label="#{messages['field.situacao']}"
 						value="#{modeloDocumentoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -56,7 +56,7 @@
 				columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
 				value="#{row.tipoModeloDocumento}" />
 			<wi:columnSituacao
-				columnHeader="#{messages['modeloDocumento.ativo']}"
+				columnHeader="#{messages['field.situacao']}"
 				value="#{row.ativo}"/>
 		</wi:dataTable>
 	</ui:define>
@@ -75,7 +75,7 @@
 				value="#{modeloDocumentoHome.instance.tituloModeloDocumento}"
 				required="true" />
 			<wi:selectSituacaoRadio id="ativo"
-				label="#{messages['modeloDocumento.ativo']}"
+				label="#{messages['field.situacao']}"
 				value="#{modeloDocumentoHome.instance.ativo}"/>
 			<wi:editor id="modeloDocumento"
 				label="#{messages['modeloDocumento.modeloDocumento']}"

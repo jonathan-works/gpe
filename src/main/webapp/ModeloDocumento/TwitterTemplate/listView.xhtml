@@ -47,7 +47,7 @@
 								  value="#{twitterTemplateList.entity.mensagem}"
 								  maxlength="123" />
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['twitterTemplate.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{twitterTemplateList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -59,7 +59,7 @@
 								 columnHeader="#{messages['twitterTemplate.mensagem']}"
 								 value="#{row.mensagem}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['twitterTemplate.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
@@ -78,7 +78,7 @@
 						  value="#{twitterTemplateHome.instance.mensagem}"
 						  maxlength="123" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{twitterTemplateHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

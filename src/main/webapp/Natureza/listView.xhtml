@@ -46,7 +46,7 @@
                                           label="#{messages['natureza.hasPartes']}"
                                           value="#{naturezaList.entity.hasPartes}" />
                     <wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['natureza.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{naturezaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -62,7 +62,7 @@
                                columnWidth="15%"
                                value="#{row.hasPartes}" />
             <wi:columnSituacao columnId="ativo"
-							   columnHeader="#{messages['natureza.ativo']}"
+							   columnHeader="#{messages['field.situacao']}"
 						   	   columnWidth="15%"
 							   value="#{row.ativo}" />
 		</wi:dataTable>
@@ -79,7 +79,7 @@
                                     label="#{messages['natureza.hasPartes']}"
                                     value="#{naturezaAction.instance.hasPartes}" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['natureza.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{naturezaAction.instance.ativo}" />
 								    value="#{naturezaAction.instance.ativo}" />
 		</wi:dataForm>

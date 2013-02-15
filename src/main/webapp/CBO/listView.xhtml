@@ -46,7 +46,7 @@
 								  value="#{cboList.entity.descricaoCbo}"
 								  maxlength="150" />
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{cboList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -58,7 +58,7 @@
 								 columnHeader="#{messages['cbo.descricaoCbo']}"
 								 value="#{row.descricaoCbo}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
@@ -76,7 +76,7 @@
 						  value="#{cboHome.instance.descricaoCbo}"
 						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{cboHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

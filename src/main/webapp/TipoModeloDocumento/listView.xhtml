@@ -49,7 +49,7 @@
 							  label="#{messages['tipoModeloDocumento.abreviacao']}"
 							  value="#{tipoModeloDocumentoList.entity.abreviacao}" />
 				<wi:selectSituacaoOneMenu id="ativo"
-										  label="#{messages['tipoModeloDocumento.ativo']}"
+										  label="#{messages['field.situacao']}"
 										  value="#{tipoModeloDocumentoList.entity.ativo}" />
 			</wi:searchForm>
 		</ui:define>					
@@ -64,7 +64,7 @@
                                 columnHeader="#{messages['tipoModeloDocumento.abreviacao']}"
 								value="#{row.abreviacao}" />
 		<wi:columnSituacao	columnId="ativo"
-                            columnHeader="#{messages['tipoModeloDocumento.ativo']}"
+                            columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
     </wi:dataTable>
     
@@ -87,7 +87,7 @@
 					  value="#{tipoModeloDocumentoHome.instance.abreviacao}"
 					  required="true" />
 		<wi:selectSituacaoRadio id="ativo"
-							    label="#{messages['tipoModeloDocumento.ativo']}"
+							    label="#{messages['field.situacao']}"
 							    value="#{tipoModeloDocumentoHome.instance.ativo}" />
 	</wi:dataForm>
 </ui:define>

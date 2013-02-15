@@ -50,7 +50,7 @@
 								value="#{pessoaFisicaList.entity.dataNascimento}"
 								label="#{messages['pessoaFisica.dataNascimento']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{pessoaFisicaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -71,7 +71,7 @@
 			</wi:columnOutputText>
 
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
@@ -99,7 +99,7 @@
 				<f:validator validatorId="emailValidator" />
 			</wi:inputText>
 			<wi:selectSituacaoRadio id="ativo"
-						label="#{messages['agrupamento.ativo']}"
+						label="#{messages['field.situacao']}"
 						value="#{pessoaFisicaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

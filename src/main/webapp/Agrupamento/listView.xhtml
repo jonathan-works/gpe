@@ -40,7 +40,7 @@
 									value="#{agrupamentoList.entity.agrupamento}"
 								  	label="#{messages['agrupamento.agrupamento']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{agrupamentoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -49,7 +49,7 @@
 								 columnHeader="#{messages['agrupamento.agrupamento']}"
 								 value="#{row.agrupamento}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>			
 	</ui:define>
@@ -62,7 +62,7 @@
 						  label="#{messages['agrupamento.agrupamento']}"
 						  value="#{agrupamentoHome.instance.agrupamento}" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{agrupamentoHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

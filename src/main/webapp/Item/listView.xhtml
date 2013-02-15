@@ -40,7 +40,7 @@
 								  value="#{itemList.entity.descricaoItem}"
 								  label="#{messages['item.descricaoItem']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['item.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{itemList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -53,7 +53,7 @@
 									  value="#{row.descricaoItem}"
 									  fullPath="#{row.caminhoCompleto}"/>
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['item.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							columnWidth="15%"
 							value="#{row.ativo}" />
 		</wi:dataTable>
@@ -76,7 +76,7 @@
 						 iconLeaf="/img/file.gif"
 						 label="#{messages['item.itemPai']}"/>
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['item.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{itemHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

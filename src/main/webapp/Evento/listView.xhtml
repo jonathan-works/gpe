@@ -44,7 +44,7 @@
 							 iconLeaf="/img/file.gif"
 							 label="#{messages['evento.eventoSuperior']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['evento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{eventoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -57,7 +57,7 @@
 								 columnWidth="20%"
 								 value="#{row.eventoSuperior}"/>
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['evento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							columnWidth="15%"
 							value="#{row.ativo}" />
 		</wi:dataTable>
@@ -81,7 +81,7 @@
 					 iconLeaf="/img/file.gif"
 					 label="#{messages['evento.eventoSuperior']}"/>
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['evento.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    value="#{eventoHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
