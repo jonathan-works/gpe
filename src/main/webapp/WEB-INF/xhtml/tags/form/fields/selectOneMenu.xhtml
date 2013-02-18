@@ -24,7 +24,7 @@
 				xmlns:a="http://richfaces.org/a4j"
 				xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:rich="http://richfaces.org/rich"
-				xmlns:c="http://java.sun.com/jstl/core">
+				xmlns:c="http://java.sun.com/jsp/jstl/core">
 				
 	<ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
 	<ui:param name="noSelectionLabel" value="#{ empty showLabel ? (empty noSelectionLabel ? (showLabelSelecione ? 'Selecione...' : (showLabelTodos ? '[Todos]' : '' )) : noSelectionLabel) : showLabel }" />
