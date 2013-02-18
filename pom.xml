@@ -7,6 +7,17 @@
 	<version>1.4.3-SNAPSHOT</version>
 	<name>epa</name>
 	<url>http://www.infox.com.br</url>
+	<dependencyManagement>
+		<dependencies>
+            <dependency>
+                <groupId>org.jboss.seam</groupId>
+                <artifactId>bom</artifactId>
+                <version>${seam.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+    	</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
            <groupId>org.twitter4j</groupId>
@@ -17,8 +28,8 @@
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam</artifactId>
-			<version>${seam.version}</version>
 			<scope>compile</scope>
+			<version>${seam.version}</version><!--$NO-MVN-MAN-VER$-->
 			<type>jar</type>
 			<exclusions>
 				<exclusion>
@@ -38,7 +49,6 @@
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam-ui</artifactId>
-			<version>${seam.version}</version>
 			<scope>compile</scope>
 			<type>jar</type>
 			<exclusions>
@@ -51,7 +61,6 @@
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam-debug</artifactId>
-			<version>${seam.version}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -71,7 +80,6 @@
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam-ioc</artifactId>
-			<version>${seam.version}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -83,7 +91,6 @@
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam-mail</artifactId>
-			<version>${seam.version}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -95,13 +102,11 @@
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam-pdf</artifactId>
-			<version>${seam.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam-remoting</artifactId>
-			<version>${seam.version}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -113,7 +118,6 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>${hibernate.core.version}</version>
 			<type>jar</type>
 			<scope>provided</scope>
 			<exclusions>
@@ -130,7 +134,6 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernate.entitymanager.version}</version>
 			<type>jar</type>
 			<scope>provided</scope>
 			<exclusions>
@@ -147,7 +150,6 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernate.validator.version}</version>
 			<type>jar</type>
 			<scope>provided</scope>
 			<exclusions>
@@ -160,7 +162,6 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search</artifactId>
-			<version>${hibernate.search.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 			<exclusions>
@@ -180,24 +181,16 @@
 		</dependency>
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
-			<artifactId>richfaces-ui</artifactId>
-			<version>${richfaces.version}</version>
+			<artifactId>richfaces-components-ui</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.faces</groupId>
 			<artifactId>jsf-api</artifactId>
-			<version>1.2</version>
 			<type>jar</type>
+			<version>2.1</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.facelets</groupId>
-			<artifactId>jsf-facelets</artifactId>
-			<version>1.1.15</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.transaction</groupId>
@@ -207,25 +200,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
 			<groupId>bsh</groupId>
 			<artifactId>bsh</artifactId>
 			<version>1.3.0</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.jboss</groupId>
-			<artifactId>jboss-common-core</artifactId>
-			<version>${jboss.common.core.version}</version>
-			<type>jar</type>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>br.com.infox.epa</groupId>
@@ -237,7 +214,6 @@
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-jpdl</artifactId>
-			<version>3.2.6.SP1</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -269,7 +245,7 @@
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-identity</artifactId>
-			<version>3.2.6.SP1</version>
+			<version>3.2.10.SP3_seam2</version>
 			<scope>compile</scope>
 			<type>jar</type>
 			<exclusions>
@@ -278,6 +254,10 @@
 					<groupId>org.jbpm.jbpm3</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.dozer</groupId>
@@ -295,14 +275,12 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>quartz</groupId>
+			<groupId>org.opensymphony.quartz</groupId>
 			<artifactId>quartz</artifactId>
-			<version>1.5.2</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -358,7 +336,6 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
@@ -555,7 +532,6 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.4</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -569,7 +545,6 @@
 		<dependency>
 			<groupId>javax.el</groupId>
 			<artifactId>el-api</artifactId>
-			<version>1.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
@@ -689,15 +664,9 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.faces</groupId>
+			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-impl</artifactId>
-			<version>1.2</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.richfaces.framework</groupId>
-			<artifactId>richfaces-impl</artifactId>
-			<version>${richfaces.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.compass-project</groupId>
@@ -712,12 +681,10 @@
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext-rtf</artifactId>
-			<version>2.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam-resteasy</artifactId>
-			<version>${seam.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -803,15 +770,8 @@
 		</plugins>
 	</build>
 	<properties>
-		<seam.version>2.2.2.Final</seam.version>
-		<hibernate.entitymanager.version>3.4.0.GA</hibernate.entitymanager.version>
-		<hibernate.core.version>3.3.2.GA</hibernate.core.version>
-		<jboss.common.core.version>2.2.14.GA</jboss.common.core.version>
-		<hibernate.search.version>3.1.1.GA</hibernate.search.version>
-		<hibernate.validator.version>3.1.0.GA</hibernate.validator.version>
-		<project.build.sourceEncoding>ISO-8859-1
-		</project.build.sourceEncoding>
-		<richfaces.version>3.3.3.Final</richfaces.version>
+		<seam.version>2.3.0.Final</seam.version>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
 		<hibernate.show_sql>true</hibernate.show_sql>
 		<hibernate.format_sql>true</hibernate.format_sql>
