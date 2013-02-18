@@ -40,7 +40,9 @@
 							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputNumber id="codCbo"
 								 value="#{cboList.entity.codCbo}"
-								 label="#{messages['cbo.codCbo']}"/>
+								 label="#{messages['cbo.codCbo']}"
+								 minlength="4"
+								 maxlength="6"/>
 					<wi:inputText id="descricaoCbo"
 								  label="#{messages['cbo.descricaoCbo']}"
 								  value="#{cboList.entity.descricaoCbo}"
@@ -69,7 +71,9 @@
 			<wi:inputNumber id="codCbo"
 						 value="#{cboHome.instance.codCbo}"
 						 required="true"
-						 label="#{messages['cbo.codCbo']}"/>
+						 label="#{messages['cbo.codCbo']}"
+						 minlength="4"
+						 maxlength="6"/>
 			<wi:inputText id="descricaoCbo"
 						  label="#{messages['cbo.descricaoCbo']}"
 						  required="true"
