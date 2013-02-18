@@ -47,7 +47,7 @@ public class LocalizacaoFisicaHome extends AbstractHome<LocalizacaoFisica>{
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {
-		if (!instance.getLocalizacaoFisicaPai().getAtivo())
+		if (instance.getLocalizacaoFisicaPai() != null && !instance.getLocalizacaoFisicaPai().getAtivo())
 			instance.setAtivo(false);
 		return true;
 	}
