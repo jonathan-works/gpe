@@ -191,6 +191,10 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+        	<groupId>org.richfaces.core</groupId>
+        	<artifactId>richfaces-core-impl</artifactId>
+    	</dependency>
+		<dependency>
 			<groupId>javax.faces</groupId>
 			<artifactId>jsf-api</artifactId>
 			<type>jar</type>
