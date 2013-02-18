@@ -2,11 +2,8 @@
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:f="http://java.sun.com/jsf/core"
 				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:a="http://richfaces.org/a4j"
 				xmlns:rich="http://richfaces.org/rich">
 
 <!--
@@ -24,29 +21,15 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --> 
-	
-	<ui:include src="/js/expressionWizard.xhtml">
-		<ui:param name="expressionId" value="form:nodes:expressionDiv" />
-		<ui:param name="inputId" value="form:nodes:expressionDecoration:expression" />
-		<ui:param name="imageSrc" value="#{util.contextPath}/img/jbpm/wizard.gif" />
-	</ui:include>
-	
 	<rich:panel bodyClass="panel"
 				style="clear:both; overflow:visible; padding:0px; margin:0px; width:721px; float:left;">
 		<f:facet name="header">
-            <h:outputText value="Wizard de Expressões"/>
+            <h:outputText value="#{messages['wizardExpressoes.title']}"/>
         </f:facet>
-		<s:div id="expressions" style="margin:5px">
-			<s:div id="expressionDiv" styleClass="expressionDiv">
-			</s:div>
-			<wi:inputTextarea id="expression" 
-			                  label="Expressão"
-							  value="#{nodeFitter.currentNode.decisionExpression}">
-				<a:support status=":status"
-						   event="onchange" reRender="expression"/>
-			</wi:inputTextarea>
-			
-		</s:div>
+	   <ui:include src="/js/expressionWizard.xhtml">
+            <ui:param name="id" value="expression" />
+            <ui:param name="value" value="#{nodeFitter.currentNode.decisionExpression}" />
+       </ui:include>
 	</rich:panel>
 
 </ui:composition>
