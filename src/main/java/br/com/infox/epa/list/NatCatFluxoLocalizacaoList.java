@@ -23,7 +23,7 @@ public class NatCatFluxoLocalizacaoList extends EntityList<NatCatFluxoLocalizaca
 	private static final long serialVersionUID = 1L;
 	
 	private static final String DEFAULT_EJBQL = "select o from NatCatFluxoLocalizacao o";
-	private static final String DEFAULT_ORDER = "o.naturezaCategoriaFluxo.natureza";
+	private static final String DEFAULT_ORDER = "naturezaCategoriaFluxo.natureza";
 
 	public static final NatCatFluxoLocalizacaoList instance() {
 		return ComponentUtil.getComponent(NAME);

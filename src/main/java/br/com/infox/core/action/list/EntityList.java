@@ -180,6 +180,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 				o = ve.getValue();
 			} catch (PropertyNotFoundException e) {
 				// para o caso de uma restriction mapeada não seja um campo da entidade
+			    e.printStackTrace();
 			}
 			if (o != null) {
 				command.execute(s, o);
