@@ -8,15 +8,15 @@
 	  xmlns:rich="http://richfaces.org/rich"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:s="http://jboss.org/schema/seam/taglib">
-	<head>    
+	<h:head>    
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>#{nomeSistema}:&#160;<ui:insert name="title"/></title>
 	    <a:loadScript src="/js/liveclock.js" />
 		<link rel="icon" href="#{util.contextPath}/favicon.ico" type="image/x-icon" />		
 	    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
-	</head>
+	</h:head>
 
-	<body> 
+	<h:body>> 
 	    <ui:param name="canEdit" value="#{home.editable}" />
 	    
 	    <ui:include src="header.xhtml" />
@@ -33,7 +33,7 @@
 		<div class="pageBody">
 			<ui:insert name="body"/>
 		</div>
-	</body>
+	</h:body>>
 </html>
 
 

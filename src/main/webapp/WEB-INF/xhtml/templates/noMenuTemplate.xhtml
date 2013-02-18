@@ -9,7 +9,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:s="http://jboss.org/schema/seam/taglib"
       xmlns:wi= "http://www.itx.com.br/jsf">
-	<head>    
+	<h:head>    
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>#{nomeSistema}:&#160;<ui:insert name="title"/></title>
 		<a:loadScript src="/js/liveclock.js" />
@@ -22,9 +22,9 @@
 		top:0px;
 	}
 	</style>
-	</head>
+	</h:head>
 
-	<body>     
+	<h:body>>     
 	    <ui:param name="canEdit" value="#{home.editable}" />
 	    <ui:param name="disabledForm" value="#{empty disabledForm ? false : disabledForm}" />
 	       
@@ -44,7 +44,7 @@
 				<ui:insert name="tabs" />		
 			</rich:tabPanel>			
 		</s:div>	
-	</body>
+	</h:body>>
 </html>
 
 

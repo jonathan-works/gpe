@@ -8,15 +8,15 @@
 	  xmlns:rich="http://richfaces.org/rich"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:s="http://jboss.org/schema/seam/taglib">
-<head>    
+<h:head>    
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Ajuda</title>
     <a:loadStyle src="/stylesheet/theme.css" />
     <a:loadScript src="/js/util.js" />
 	<link rel="icon" href="#{util.contextPath}/favicon.ico" type="image/x-icon" />
-</head>
+</h:head>
 
-<body>
+<h:body>>
 	<a:form>
 		<a:jsFunction name="refreshPage" status="status" reRender="showHelp" />
 	</a:form>
@@ -105,5 +105,5 @@
 			</rich:tabPanel>
 		</s:div>
 	</s:div>
-</body>
+</h:body>>
 </html>
