@@ -171,7 +171,7 @@
 				
 			</h:form>
 			
-			<rich:modalPanel id="panelTeste" width="370" height="320">
+			<rich:popupPanel id="panelTeste" width="370" height="320">
 				<f:facet name="header">#{messages['login.requisitarSenha']}</f:facet>			
 				<f:facet name="controls">
 					<h:panelGroup>
@@ -214,9 +214,9 @@
 						</div>
 					</div>
 				</h:form>
-			</rich:modalPanel>
+			</rich:popupPanel>
 			
-			<rich:modalPanel id="mp_formValidar" height="100" width="250"
+			<rich:popupPanel id="mp_formValidar" height="100" width="250"
 							 rendered="#{useCertLogin}" resizeable="false">
 				<f:facet name="header">
 					<h:outputText value="Aguarde a incialização do SmartCard." />
@@ -224,7 +224,7 @@
 				<div style="text-align: center; padding-top: 30px">
 					<h:graphicImage url="/img/ajax-loader.gif" />
 				</div>
-			</rich:modalPanel>					
+			</rich:popupPanel>					
 					
 			<br /> <rich:messages></rich:messages>
 		</s:div>

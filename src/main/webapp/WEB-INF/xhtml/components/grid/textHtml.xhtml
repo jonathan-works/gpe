@@ -33,7 +33,7 @@
 							url="#{a4jSkin.imgIconView}" 
 							style="cursor:pointer"
 							onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
-			<rich:modalPanel id="mp_#{c.id}" 
+			<rich:popupPanel id="mp_#{c.id}" 
 							 height="600" 
 							 width="800" 
 							 rendered="#{!empty c.value}"
@@ -48,7 +48,7 @@
 	          			  onclick="Richfaces.hideModalPanel(mp)">X</span>
 				</f:facet>
 				<h:outputText value="#{jbpmUtil.valorProcessoDocumento(c.value)}" escape="false"></h:outputText>
-			</rich:modalPanel>
+			</rich:popupPanel>
 		</div>
 		
 	</ui:composition>

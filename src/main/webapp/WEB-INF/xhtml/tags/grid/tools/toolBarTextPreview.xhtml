@@ -27,7 +27,7 @@
 												title="Pré-visualizar"
 												onclickGraphicImage="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
 	
-	<rich:modalPanel id="mp_#{c.id}" 
+	<rich:popupPanel id="mp_#{c.id}" 
 								 height="300" 
 								 width="600" 
 								 resizeable="false">
@@ -42,6 +42,6 @@
 						 			 style="width: 592px; height: 270px; padding: 3px;
 									 			position: relative; top: -10px; left: -10px"
 						 			 value="#{value}" />
-	</rich:modalPanel>
+	</rich:popupPanel>
 	
 </ui:composition>
