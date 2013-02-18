@@ -3,6 +3,7 @@ package br.com.infox.ibpm.xpdl.activities;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
+import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jdom.Element;
 
@@ -32,7 +33,7 @@ public class StartActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 		if (getLane() != null) {
 			task.setSwimlane(getLane().toSwimlane());
 		} else {
-			task.setSwimlane(definition.getTaskMgmtDefinition().getSwimlanes().values().iterator()
+			task.setSwimlane((Swimlane) definition.getTaskMgmtDefinition().getSwimlanes().values().iterator()
 					.next());
 		}
 		definition.getTaskMgmtDefinition().setStartTask(task);

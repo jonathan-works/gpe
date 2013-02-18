@@ -15,8 +15,9 @@ import javax.persistence.EntityManager;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.richfaces.event.UploadEvent;
-import org.richfaces.model.UploadItem;
+import org.richfaces.event.FileUploadEvent;
+import org.richfaces.event.FileUploadListener;
+import org.richfaces.model.UploadedFile;
 
 import br.com.infox.epa.entity.ImagemBin;
 import br.com.infox.epa.home.ImagemBinHome;
@@ -27,7 +28,7 @@ import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.FileUtil;
 
-public abstract class AbstractImageFileHome {
+public abstract class AbstractImageFileHome implements FileUploadListener {
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractImageFileHome.class);
 	private static boolean updated = false;
 		
@@ -131,11 +132,12 @@ public abstract class AbstractImageFileHome {
 		AbstractImageFileHome.updated = true;
 	}
 	
-	public void listener(UploadEvent e)	{
-		UploadItem ui = e.getUploadItem();
+	@Override
+	public void processFileUpload(FileUploadEvent e)	{
+		UploadedFile ui = e.getUploadedFile();
 		this.data = ui.getData();
-		this.fileName = ui.getFileName();
-		this.fileSize = ui.getFileSize();
+		this.fileName = ui.getName();
+		this.fileSize = Long.valueOf(ui.getSize()).intValue();
 		
 		ImagemBinHome homeInstance = ImagemBinHome.instance();
 		ImagemBin instance = homeInstance.getInstance();

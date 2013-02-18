@@ -18,8 +18,8 @@ package br.com.infox.ibpm.component.tree;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
-import org.richfaces.component.html.HtmlTree;
-import org.richfaces.event.NodeSelectedEvent;
+import org.richfaces.component.UITree;
+import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
@@ -72,8 +72,8 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 	}
 	
 	@Override
-	public void selectListener(NodeSelectedEvent ev) {
-		HtmlTree tree = (HtmlTree) ev.getSource();
+	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
+		UITree tree = (UITree) ev.getSource();
 		treeId = tree.getId();
 		EntityNode<Localizacao> en = (EntityNode<Localizacao>) tree.getData(); 
 		setSelected(en.getEntity());

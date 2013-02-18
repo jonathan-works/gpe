@@ -15,8 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.epa.query.CategoriaQuery;
 
@@ -51,7 +51,7 @@ public class Categoria implements Serializable{
 	
 	@Column(name="ds_categoria", length=30, nullable=false)
 	@NotNull
-	@Length(max=30)
+	@Size(max=30)
 	public String getCategoria() {
 		return categoria;
 	}

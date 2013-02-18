@@ -36,7 +36,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.search.Reindexer;
@@ -110,7 +110,7 @@ public class Ajuda implements java.io.Serializable {
 	}
 
 	@Transient
-	@Field(index=Index.TOKENIZED, store=Store.NO, name="texto")	
+	@Field(index=Index.YES, store=Store.NO, name="texto")	
 	public String getTextoIndexavel() {
 		return Reindexer.getTextoIndexavel(texto);
 	}

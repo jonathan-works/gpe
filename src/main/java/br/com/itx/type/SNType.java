@@ -21,14 +21,11 @@ public class SNType extends CharBooleanType {
 
 	private static final long serialVersionUID = 1L;
 
-	protected final String getTrueString() {
-		return "S";
+	public SNType() {
+		super('S', 'N');
 	}
-
-	protected final String getFalseString() {
-		return "N";
-	}
-
+	
+	@Override
 	public String getName() {
 		return "sim_nao";
 	}

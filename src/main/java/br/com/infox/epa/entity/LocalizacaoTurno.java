@@ -17,7 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.epa.query.LocalizacaoTurnoQuery;
 import br.com.infox.epa.type.DiaSemanaEnum;

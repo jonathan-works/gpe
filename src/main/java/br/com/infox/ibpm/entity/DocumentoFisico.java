@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import org.hibernate.validator.Length;
+import javax.validation.constraints.Size;
 
 import br.com.infox.ibpm.query.DocumentoFisicoQuery;
 
@@ -55,7 +55,7 @@ public class DocumentoFisico implements Serializable {
 	}
 	
 	@Column(name="ds_documento_fisico", nullable=false, length=150)
-	@Length(max=150)
+	@Size(max=150)
 	public String getDescricaoDocumentoFisico() {
 		return descricaoDocumentoFisico;
 	}

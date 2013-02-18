@@ -118,8 +118,8 @@ public class TaskHandler implements Serializable {
 	public static List<TaskHandler> createList(TaskNode node) {
 		List<TaskHandler> ret = new ArrayList<TaskHandler>();
 		if (node.getTasks() != null) {
-			for (Task t : node.getTasks()) {
-				ret.add(new TaskHandler(t));
+			for (Object t : node.getTasks()) {
+				ret.add(new TaskHandler((Task) t));
 			}
 		}
 		return ret;

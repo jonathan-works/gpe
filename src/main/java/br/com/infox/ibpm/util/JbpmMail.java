@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.util;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 	}
 	
 	private void initRemetentes() {
-		List recip = getRecipients();
+		List recip = new ArrayList(getRecipients());
 				
 		if (recip.size()==1) {
 			parameters.putAll(getStringToMap(recip.get(0).toString()));

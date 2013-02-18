@@ -13,8 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="tb_pesquisa", schema="public")
@@ -48,7 +48,7 @@ public class Pesquisa implements java.io.Serializable {
 
 	@Column(name = "ds_nome", nullable = false, length = 100)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNome() {
 		return nome;
 	}
@@ -58,7 +58,7 @@ public class Pesquisa implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_descricao", length = 200)
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getDescricao() {
 		return descricao;
 	}
@@ -68,7 +68,7 @@ public class Pesquisa implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_coluna_ordenacao", length = 50)
-	@Length(max = 50)
+	@Size(max = 50)
 	public String getColunaOrdenacao() {
 		return colunaOrdenacao;
 	}
@@ -79,7 +79,7 @@ public class Pesquisa implements java.io.Serializable {
 
 	@Column(name = "ds_operador_logico", length = 15, nullable=false)
 	@NotNull
-	@Length(max = 15)
+	@Size(max = 15)
 	public String getOperadorLogico() {
 		return operadorLogico;
 	}
@@ -105,7 +105,7 @@ public class Pesquisa implements java.io.Serializable {
 
 	@Column(name = "ds_entity_list", length = 30, nullable=false)
 	@NotNull
-	@Length(max = 30)
+	@Size(max = 30)
 	public String getEntityList() {
 		return entityList;
 	}

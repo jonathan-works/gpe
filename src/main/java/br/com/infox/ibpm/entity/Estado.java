@@ -28,8 +28,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 /**
  * Estado
  */
@@ -62,7 +62,7 @@ public class Estado implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_estado", length = 30)
-	@Length(max = 30)
+	@Size(max = 30)
 	public String getEstado() {
 		return this.estado;
 	}
@@ -72,7 +72,7 @@ public class Estado implements java.io.Serializable {
 	}
 
 	@Column(name = "cd_estado", length = 2)
-	@Length(max = 2)
+	@Size(max = 2)
 	public String getCodEstado() {
 		return this.codEstado;
 	}

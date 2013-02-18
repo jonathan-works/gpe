@@ -24,8 +24,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.context.FacesContext;
 import javax.persistence.Column;
@@ -33,9 +33,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.JoinColumn;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Size;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.hibernate.validator.Length;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -109,7 +109,7 @@ public class LogUtil {
 		if (String.class.equals(classAtributo)) {
 			PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(
 					entidade.getClass().newInstance(), nomeAtributo);	
-			Length lengthAnnotation = pd.getReadMethod().getAnnotation(Length.class);
+			Size lengthAnnotation = pd.getReadMethod().getAnnotation(Size.class);
 			return lengthAnnotation != null && lengthAnnotation.max() <= 300;
 		} else {
 			return !isBinario(classAtributo);

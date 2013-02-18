@@ -35,8 +35,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
 /**
@@ -103,7 +103,7 @@ public class Endereco implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_logradouro", length = 200)
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getNomeLogradouro() {
 		return this.nomeLogradouro;
 	}
@@ -113,7 +113,7 @@ public class Endereco implements java.io.Serializable {
 	}
 
 	@Column(name = "nr_endereco", length = 15)
-	@Length(max = 15)
+	@Size(max = 15)
 	public String getNumeroEndereco() {
 		return this.numeroEndereco;
 	}
@@ -123,7 +123,7 @@ public class Endereco implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_complemento", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getComplemento() {
 		return this.complemento;
 	}
@@ -133,7 +133,7 @@ public class Endereco implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_bairro", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeBairro() {
 		return this.nomeBairro;
 	}

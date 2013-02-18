@@ -23,7 +23,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.ajax4jsf.webapp.BaseFilter;
+//import org.ajax4jsf.webapp.BaseFilter;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -50,7 +50,9 @@ public class MeeterFilter extends AbstractFilter {
 		StopWatch sw = new StopWatch(true);
 		HttpServletRequest hsr = (HttpServletRequest) req;
 		chain.doFilter(req, resp);
-		String ajaxPushHeader = hsr.getHeader(BaseFilter.AJAX_PUSH_KEY_HEADER);		
+		// TODO: Buscar alternativa
+//		String ajaxPushHeader = hsr.getHeader(BaseFilter.AJAX_PUSH_KEY_HEADER);
+		String ajaxPushHeader = null;
 		long time = sw.getTime();
 		if (ajaxPushHeader == null && time > 100) {
 			LOG.info(((HttpServletRequest)req).getRequestURI() +  ": " + time);

@@ -5,78 +5,22 @@
 <!-- Persistence deployment descriptor for dev profile -->
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" 
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
-             version="1.0">
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" 
+             version="2.0">
              
    <persistence-unit name="EPAPersistenceUnit" transaction-type="JTA">
       <provider>org.hibernate.ejb.HibernatePersistence</provider>
-      <jta-data-source>java:/EPADataSource</jta-data-source>
-      <class>br.com.infox.access.entity.Papel</class>
-		<class>br.com.infox.access.entity.Permissao</class>
-		<class>br.com.infox.access.entity.UsuarioLogin</class>
-		<class>br.com.infox.entity.Pesquisa</class>
-		<class>br.com.infox.entity.PesquisaCampo</class>
-		<class>br.com.infox.ibpm.entity.Agrupamento</class>
-		<class>br.com.infox.ibpm.entity.Assunto</class>
-		<class>br.com.infox.ibpm.entity.BloqueioUsuario</class>
-		<class>br.com.infox.ibpm.entity.Caixa</class>
-		<class>br.com.infox.ibpm.entity.Cep</class>
-		<class>br.com.infox.ibpm.entity.DocumentoBin</class>
-		<class>br.com.infox.ibpm.entity.Endereco</class>
-		<class>br.com.infox.ibpm.entity.Estado</class>
-		<class>br.com.infox.ibpm.entity.Estatistica</class>
-		<class>br.com.infox.ibpm.entity.Evento</class>
-		<class>br.com.infox.ibpm.entity.EventoAgrupamento</class>
-		<class>br.com.infox.ibpm.entity.Fluxo</class>
-		<class>br.com.infox.ibpm.entity.GrupoModeloDocumento</class>
-		<class>br.com.infox.ibpm.entity.help.Ajuda</class>
-		<class>br.com.infox.ibpm.entity.help.HistoricoAjuda</class>
-		<class>br.com.infox.ibpm.entity.help.Pagina</class>
-		<class>br.com.infox.ibpm.entity.ItemTipoDocumento</class>
-		<class>br.com.infox.ibpm.entity.JbpmVariavelLabel</class>
-		<class>br.com.infox.ibpm.entity.ListaEmail</class>
-		<class>br.com.infox.ibpm.entity.Localizacao</class>
-		<class>br.com.infox.ibpm.entity.log.EntityLog</class>
-		<class>br.com.infox.ibpm.entity.log.EntityLogDetail</class>
-		<class>br.com.infox.ibpm.entity.ModeloDocumento</class>
-		<class>br.com.infox.ibpm.entity.Municipio</class>
-		<class>br.com.infox.ibpm.entity.Parametro</class>
-		<class>br.com.infox.ibpm.entity.Processo</class>
-		<class>br.com.infox.ibpm.entity.ProcessoDocumento</class>
-		<class>br.com.infox.ibpm.entity.ProcessoDocumentoBin</class>
-		<class>br.com.infox.ibpm.entity.ProcessoEvento</class>
-		<class>br.com.infox.ibpm.entity.ProcessoLocalizacaoIbpm</class>
-		<class>br.com.infox.ibpm.entity.ProcessoTarefaEvento</class>
-		<class>br.com.infox.ibpm.entity.SituacaoProcessoBpm</class>
-		<class>br.com.infox.ibpm.entity.Status</class>
-		<class>br.com.infox.ibpm.entity.Tarefa</class>
-		<class>br.com.infox.ibpm.entity.TarefaEvento</class>
-		<class>br.com.infox.ibpm.entity.TarefaEventoAgrupamento</class>
-		<class>br.com.infox.ibpm.entity.TarefaJbpm</class>
-		<class>br.com.infox.ibpm.entity.TarefaTransicaoEvento</class>
-		<class>br.com.infox.ibpm.entity.TarefaTransicaoEventoAgrupamento</class>
-		<class>br.com.infox.ibpm.entity.TipoModeloDocumento</class>
-		<class>br.com.infox.ibpm.entity.TipoModeloDocumentoPapel</class>
-		<class>br.com.infox.ibpm.entity.TipoProcessoDocumento</class>
-		<class>br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel</class>
-		<class>br.com.infox.ibpm.entity.UsuarioLocalizacao</class>
-		<class>br.com.infox.ibpm.entity.Variavel</class>
-		<class>br.com.infox.ibpm.entity.VariavelTipoModelo</class>
+      <jta-data-source>java:jboss/datasources/EPADataSource</jta-data-source>
       <properties>
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="false" />
-			<property name="hibernate.transaction.manager_lookup_class"
-				value="org.hibernate.transaction.JBossTransactionManagerLookup" />
 			<property name="hibernate.default_schema" value="public" />
 			
 			<property name="hibernate.default_batch_fetch_size" value="16" />	
 			<property name="hibernate.max_fetch_depth" value="2" />				
 
-			<property name="hibernate.ejb.event.flush" 
-	                  value="br.com.infox.listener.PatchedDefaultFlushEventListener"/>
-	        
 	        <property name="hibernate.ejb.event.post-insert" value="br.com.infox.listener.LogEventListener" />
 			<property name="hibernate.ejb.event.post-update" value="br.com.infox.listener.LogEventListener" />
 			<property name="hibernate.ejb.event.post-delete" value="br.com.infox.listener.LogEventListener" />
@@ -87,85 +31,32 @@
                       value="br.com.infox.listener.RecursiveEventListener"/>
                       
 			<property name="hibernate.search.default.directory_provider"
-				value="org.hibernate.search.store.FSDirectoryProvider" />
+				value="filesystem" />
 <!--			<property name="hibernate.hbm2ddl.auto" value="create"/>-->
  
 			<property name="jboss.entity.manager.factory.jndi.name" 
-				value="java:/EPAPersistenceUnit"/> 
+				value="java:jboss/EPAPersistenceUnit"/> 
       </properties>
    </persistence-unit>
    
    <persistence-unit name="EPABinPersistenceUnit"
 		transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jta-data-source>java:/EPADataSourceBin</jta-data-source>
-		<class>br.com.infox.access.entity.Papel</class>
-		<class>br.com.infox.access.entity.Permissao</class>
-		<class>br.com.infox.access.entity.UsuarioLogin</class>
-		<class>br.com.infox.entity.Pesquisa</class>
-		<class>br.com.infox.entity.PesquisaCampo</class>
-		<class>br.com.infox.ibpm.entity.Agrupamento</class>
-		<class>br.com.infox.ibpm.entity.Assunto</class>
-		<class>br.com.infox.ibpm.entity.BloqueioUsuario</class>
-		<class>br.com.infox.ibpm.entity.Caixa</class>
-		<class>br.com.infox.ibpm.entity.Cep</class>
-		<class>br.com.infox.ibpm.entity.DocumentoBin</class>
-		<class>br.com.infox.ibpm.entity.Endereco</class>
-		<class>br.com.infox.ibpm.entity.Estado</class>
-		<class>br.com.infox.ibpm.entity.Estatistica</class>
-		<class>br.com.infox.ibpm.entity.Evento</class>
-		<class>br.com.infox.ibpm.entity.EventoAgrupamento</class>
-		<class>br.com.infox.ibpm.entity.Fluxo</class>
-		<class>br.com.infox.ibpm.entity.GrupoModeloDocumento</class>
-		<class>br.com.infox.ibpm.entity.help.Ajuda</class>
-		<class>br.com.infox.ibpm.entity.help.HistoricoAjuda</class>
-		<class>br.com.infox.ibpm.entity.help.Pagina</class>
-		<class>br.com.infox.ibpm.entity.ItemTipoDocumento</class>
-		<class>br.com.infox.ibpm.entity.JbpmVariavelLabel</class>
-		<class>br.com.infox.ibpm.entity.ListaEmail</class>
-		<class>br.com.infox.ibpm.entity.Localizacao</class>
-		<class>br.com.infox.ibpm.entity.log.EntityLog</class>
-		<class>br.com.infox.ibpm.entity.log.EntityLogDetail</class>
-		<class>br.com.infox.ibpm.entity.ModeloDocumento</class>
-		<class>br.com.infox.ibpm.entity.Municipio</class>
-		<class>br.com.infox.ibpm.entity.Parametro</class>
-		<class>br.com.infox.ibpm.entity.Processo</class>
-		<class>br.com.infox.ibpm.entity.ProcessoDocumento</class>
-		<class>br.com.infox.ibpm.entity.ProcessoDocumentoBin</class>
-		<class>br.com.infox.ibpm.entity.ProcessoEvento</class>
-		<class>br.com.infox.ibpm.entity.ProcessoLocalizacaoIbpm</class>
-		<class>br.com.infox.ibpm.entity.ProcessoTarefaEvento</class>
-		<class>br.com.infox.ibpm.entity.SituacaoProcessoBpm</class>
-		<class>br.com.infox.ibpm.entity.Status</class>
-		<class>br.com.infox.ibpm.entity.Tarefa</class>
-		<class>br.com.infox.ibpm.entity.TarefaEvento</class>
-		<class>br.com.infox.ibpm.entity.TarefaEventoAgrupamento</class>
-		<class>br.com.infox.ibpm.entity.TarefaJbpm</class>
-		<class>br.com.infox.ibpm.entity.TarefaTransicaoEvento</class>
-		<class>br.com.infox.ibpm.entity.TarefaTransicaoEventoAgrupamento</class>
-		<class>br.com.infox.ibpm.entity.TipoModeloDocumento</class>
-		<class>br.com.infox.ibpm.entity.TipoModeloDocumentoPapel</class>
-		<class>br.com.infox.ibpm.entity.TipoProcessoDocumento</class>
-		<class>br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel</class>
-		<class>br.com.infox.ibpm.entity.UsuarioLocalizacao</class>
-		<class>br.com.infox.ibpm.entity.Variavel</class>
-		<class>br.com.infox.ibpm.entity.VariavelTipoModelo</class>
+		<jta-data-source>java:jboss/datasources/EPADataSourceBin</jta-data-source>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="false" />
-			<property name="hibernate.transaction.manager_lookup_class"
-				value="org.hibernate.transaction.JBossTransactionManagerLookup" />
 			<property name="hibernate.default_schema" value="public" />
 
 			<property name="hibernate.default_batch_fetch_size" value="16" />
 
 			<property name="hibernate.search.default.directory_provider"
-				value="org.hibernate.search.store.FSDirectoryProvider" />
+				value="filesystem" />
 			<!--			<property name="hibernate.hbm2ddl.auto" value="create"/>-->
 
 			<property name="jboss.entity.manager.factory.jndi.name"
-				value="java:/EPABinPersistenceUnit" />
+				value="java:jboss/EPABinPersistenceUnit" />
 		</properties>
 	</persistence-unit>
    

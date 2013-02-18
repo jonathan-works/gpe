@@ -27,6 +27,7 @@ import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.util.Version;
 import org.hibernate.Session;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.ScopeType;
@@ -307,7 +308,7 @@ public class SearchHandler implements Serializable {
 		
 		if (searchText != null) {
 			String[] fields = new String[]{"conteudo"};
-			QueryParser parser = new MultiFieldQueryParser(fields, HelpUtil.getAnalyzer());
+			QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, HelpUtil.getAnalyzer());
 			try {
 				org.apache.lucene.search.Query query = parser.parse(searchText);
 				String highlighted = HelpUtil.highlightText(query, texto, false);

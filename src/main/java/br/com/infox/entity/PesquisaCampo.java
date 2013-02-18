@@ -12,8 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="tb_pesquisa_campo", schema="public")
@@ -43,7 +43,7 @@ public class PesquisaCampo implements Serializable {
 
 	@Column(name = "ds_nome", nullable = false, length = 100)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNome() {
 		return nome;
 	}
@@ -54,7 +54,7 @@ public class PesquisaCampo implements Serializable {
 
 	@Column(name = "ds_valor", nullable = false, length = 200)
 	@NotNull
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getValor() {
 		return valor;
 	}

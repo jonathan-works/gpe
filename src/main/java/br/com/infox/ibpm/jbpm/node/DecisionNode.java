@@ -90,8 +90,8 @@ public class DecisionNode extends Node {
 	public List<String> getLeavingTransitionList() {
 		if (leavingTransitionList == null)	{
 			leavingTransitionList = new ArrayList<String>();
-			for (Transition transition : leavingTransitions) {
-				leavingTransitionList.add("\""+transition.getName()+"\"");
+			for (Object transition : leavingTransitions) {
+				leavingTransitionList.add("\""+((Transition) transition).getName()+"\"");
 			}
 		}
 		
@@ -207,7 +207,8 @@ public class DecisionNode extends Node {
 				}
 			} else {
 				// new mode based on conditions in the transition itself
-				for (Transition candidate : leavingTransitions) {
+				for (Object o : leavingTransitions) {
+					Transition candidate = (Transition) o;
 					String conditionExpression = candidate.getCondition();
 					if (conditionExpression != null) {
 						Object result = JbpmExpressionEvaluator.evaluate(

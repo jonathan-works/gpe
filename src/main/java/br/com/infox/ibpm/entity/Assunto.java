@@ -31,8 +31,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.HierarchicalPath;
@@ -85,7 +85,7 @@ public class Assunto implements java.io.Serializable {
 	}
 
 	@Column(name = "cd_assunto", length = 30)
-	@Length(max = 30)
+	@Size(max = 30)
 	public String getCodAssunto() {
 		return this.codAssunto;
 	}
@@ -96,7 +96,7 @@ public class Assunto implements java.io.Serializable {
 
 	@Column(name = "ds_assunto", nullable = false, length = 100)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	@PathDescriptor
 	public String getAssunto() {
 		return this.assunto;

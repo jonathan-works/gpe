@@ -204,7 +204,7 @@ public class NodeHandler implements Serializable {
 		currentTimer.setDueDate(dueDate);
 		setDueDate(dueDate);
 		if (node.getLeavingTransitions().size() > 0) {
-			currentTimer.setTransitionName(node.getLeavingTransitions().get(0).getName());
+			currentTimer.setTransitionName(((Transition) node.getLeavingTransitions().get(0)).getName());
 		}
 		Event e = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
 		if (e == null) {
@@ -275,8 +275,8 @@ public class NodeHandler implements Serializable {
 	public List<String> getTransitions() {
 		List<String> list = new ArrayList<String>();
 		if (node.getLeavingTransitions() != null) {
-			for (Transition t : node.getLeavingTransitions()) {
-				list.add(t.getName());
+			for (Object t : node.getLeavingTransitions()) {
+				list.add(((Transition) t).getName());
 			}
 		}
 		return list;
@@ -284,7 +284,7 @@ public class NodeHandler implements Serializable {
 
 	public void setTimerName(String timerName) {
 		Event e = node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
-		for (Action a : e.getActions()) {
+		for (Object a : e.getActions()) {
 			if (a instanceof CancelTimerAction) {
 				CancelTimerAction c = (CancelTimerAction) a;
 				if (c.getTimerName()== null  || c.getTimerName().equals(currentTimer.getTimerName())) {

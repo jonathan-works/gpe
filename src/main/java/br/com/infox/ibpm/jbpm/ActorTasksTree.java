@@ -29,15 +29,16 @@ import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
-import org.richfaces.component.html.HtmlTree;
-import org.richfaces.event.NodeSelectedEvent;
+import org.richfaces.component.UITree;
+import org.richfaces.event.TreeSelectionChangeEvent;
+import org.richfaces.event.TreeSelectionChangeListener;
 
 
 @Name("actorTasksTree")
 @SuppressWarnings("unchecked")
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
-public class ActorTasksTree implements Serializable {
+public class ActorTasksTree implements Serializable, TreeSelectionChangeListener {
 
 	private static final String	RAWTYPES	= "rawtypes";
 
@@ -145,10 +146,10 @@ public class ActorTasksTree implements Serializable {
 		return list;
 	}
 	
-	public void selectListener(NodeSelectedEvent event) {
+	public void processTreeSelectionChange(TreeSelectionChangeEvent event) {
 		currentProcess = null;
 		currentTask = null;
-		HtmlTree tree = (HtmlTree) event.getComponent();
+		UITree tree = (UITree) event.getComponent();
 		Object rowData = tree.getRowData();
 		if (rowData instanceof ProcessDefinition) {
 			currentProcess = (ProcessDefinition) rowData;

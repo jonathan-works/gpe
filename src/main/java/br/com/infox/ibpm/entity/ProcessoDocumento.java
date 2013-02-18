@@ -32,8 +32,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.Papel;
 import br.com.infox.access.entity.UsuarioLogin;
@@ -152,7 +152,7 @@ public class ProcessoDocumento implements java.io.Serializable {
 
 	@Column(name = "ds_processo_documento", nullable = false, length = 100)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getProcessoDocumento() {
 		return this.processoDocumento;
 	}
@@ -265,7 +265,7 @@ public class ProcessoDocumento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_nome_usuario_inclusao", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeUsuarioInclusao() {
 		return nomeUsuarioInclusao;
 	}
@@ -275,7 +275,7 @@ public class ProcessoDocumento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_nome_usuario_exclusao", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeUsuarioExclusao() {
 		return nomeUsuarioExclusao;
 	}
@@ -285,7 +285,7 @@ public class ProcessoDocumento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_nome_papel", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomePapel() {
 		return nomePapel;
 	}
@@ -295,7 +295,7 @@ public class ProcessoDocumento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_nome_usuario_alteracao", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeUsuarioAlteracao() {
 		return nomeUsuarioAlteracao;
 	}
@@ -305,7 +305,7 @@ public class ProcessoDocumento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_nome_localizacao", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeLocalizacao() {
 		return nomeLocalizacao;
 	}

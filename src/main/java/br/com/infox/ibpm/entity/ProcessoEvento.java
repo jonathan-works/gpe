@@ -16,8 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.query.ProcessoEventoQuery;
@@ -145,7 +145,7 @@ public class ProcessoEvento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_nome_usuario", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeUsuario() {
 		return nomeUsuario;
 	}
@@ -155,7 +155,7 @@ public class ProcessoEvento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_cpf_usuario", length = 50)
-	@Length(max = 50)
+	@Size(max = 50)
 	public String getCpfUsuario() {
 		return cpfUsuario;
 	}
@@ -165,7 +165,7 @@ public class ProcessoEvento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_cnpj_usuario", length = 50)
-	@Length(max = 50)
+	@Size(max = 50)
 	public String getCnpjUsuario() {
 		return cnpjUsuario;
 	}

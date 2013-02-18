@@ -13,8 +13,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
 import org.richfaces.component.UITree;
-import org.richfaces.component.html.HtmlTreeNode;
-import org.richfaces.event.NodeSelectedEvent;
+import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
@@ -129,12 +128,11 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	}
 	
 	@Override
-	public void selectListener(NodeSelectedEvent nodeSelectedEvent)
+	public void processTreeSelectionChange(TreeSelectionChangeEvent nodeSelectedEvent)
 			throws AbortProcessingException {
-		HtmlTreeNode tree = (HtmlTreeNode) nodeSelectedEvent.getSource();
+		UITree tree = (UITree) nodeSelectedEvent.getSource();
 		treeId = tree.getId();
-		UITree uiTree = tree.getUITree();
-		EntityNode<Map<String,Object>> en = (EntityNode<Map<String,Object>>) uiTree.getRowData(); 
+		EntityNode<Map<String,Object>> en = (EntityNode<Map<String,Object>>) tree.getRowData(); 
 		setSelected(en.getEntity());
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}

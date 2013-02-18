@@ -39,8 +39,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
 
@@ -100,7 +100,7 @@ public class Processo implements java.io.Serializable {
 
 	@Column(name = "nr_processo", nullable = false, length = 30)
 	@NotNull
-	@Length(max = 30)
+	@Size(max = 30)
 	public String getNumeroProcesso() {
 		return this.numeroProcesso;
 	}
@@ -110,7 +110,7 @@ public class Processo implements java.io.Serializable {
 	}
 
 	@Column(name = "nr_processo_origem", length = 30)
-	@Length(max = 30)
+	@Size(max = 30)
 	public String getNumeroProcessoOrigem() {
 		return this.numeroProcessoOrigem;
 	}
@@ -120,7 +120,7 @@ public class Processo implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_complemento", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getComplemento() {
 		return this.complemento;
 	}
@@ -280,7 +280,7 @@ public class Processo implements java.io.Serializable {
 	//Adicionado
 	
 	@Column(name = "ds_nome_usuario_cadastro_processo", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeUsuarioCadastroProcesso() {
 		return nomeUsuarioCadastroProcesso;
 	}

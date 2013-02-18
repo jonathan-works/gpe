@@ -21,9 +21,10 @@ import org.jboss.seam.core.Events;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
-import org.richfaces.component.html.HtmlTree;
-import org.richfaces.event.NodeSelectedEvent;
+import org.richfaces.component.UITree;
+import org.richfaces.event.TreeSelectionChangeEvent;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.ibpm.entity.Evento;
@@ -31,7 +32,6 @@ import br.com.infox.ibpm.entity.EventoAgrupamento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.Tarefa;
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ParametroHome;
 import br.com.infox.ibpm.home.ProcessoDocumentoHome;
@@ -314,8 +314,8 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	}
 
 	@Override
-	public void selectListener(NodeSelectedEvent ev) {
-		HtmlTree tree = (HtmlTree) ev.getSource();
+	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
+		UITree tree = (UITree) ev.getSource();
 		treeId = tree.getId();
 		EventsEntityNode en = (EventsEntityNode) tree.getData(); 
 		setSelected((Evento) en.getEntity(), isMultiplo(en));

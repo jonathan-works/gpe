@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.Length;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(schema="public", name=Cnae.TABLE_NAME)
@@ -31,7 +31,7 @@ public class Cnae implements Serializable {
 	}
 	
 	@Column(name="cd_cnae", nullable=false)
-	@Length(max=9)
+	@Size(max=9)
 	public String getCodCnae() {
 		return codCnae;
 	}
@@ -40,7 +40,7 @@ public class Cnae implements Serializable {
 	}
 	
 	@Column(name="ds_cnae", nullable=false, length=150)
-	@Length(max=150)
+	@Size(max=150)
 	public String getDescricaoCnae() {
 		return descricaoCnae;
 	}

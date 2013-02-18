@@ -23,29 +23,35 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.LimitTokenCountAnalyzer;
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocCollector;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import br.com.itx.component.Util;
 
 
 public class Indexer {
 	
-	private Analyzer analyzer = new BrazilianAnalyzer();
+	private Analyzer analyzer = new LimitTokenCountAnalyzer(new BrazilianAnalyzer(Version.LUCENE_36), Integer.MAX_VALUE);
 	private Directory directory;
+	private IndexReader indexReader;
+	private IndexWriterConfig indexWriterConfig;
 
 	public static File getIndexerPath() {
 		Util util = new Util();
@@ -66,12 +72,14 @@ public class Indexer {
 	}
 	
 	public Indexer(File indexPath) throws IOException {
-		directory = FSDirectory.getDirectory(indexPath);
+		directory = FSDirectory.open(indexPath);
+		indexReader = IndexReader.open(directory);
+		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, analyzer).setOpenMode(OpenMode.CREATE_OR_APPEND);
 	}
 	
 	public void index(String id, Map<String, String> storedFields, Map<String, String> fields) {
 		try {
-			IndexWriter writer = new IndexWriter(directory, analyzer, MaxFieldLength.UNLIMITED);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
 			Document doc = new Document();
 			doc.add(new Field("id", id, Field.Store.YES, Field.Index.ANALYZED));
 			for (Entry<String, String> e : fields.entrySet()) {
@@ -83,7 +91,6 @@ public class Indexer {
 						Field.Index.ANALYZED));
 			}
 		    writer.updateDocument(new Term("id", id), doc);
-		    writer.optimize();
 		    writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,9 +101,9 @@ public class Indexer {
 	public List<Document> search(String searchText, String[] fields, int maxResult) {
 	    List<Document> list = new ArrayList<Document>();
 		try {
-			IndexSearcher isearcher = new IndexSearcher(directory);
+			IndexSearcher isearcher = new IndexSearcher(indexReader);
 		    Query query = getQuery(searchText, fields);
-		    TopDocCollector collector = new TopDocCollector(maxResult);
+		    TopScoreDocCollector collector = TopScoreDocCollector.create(maxResult, true);
 		    isearcher.search(query, collector);
 		    ScoreDoc[] hits = collector.topDocs().scoreDocs;
 		    for (int i = 0; i < hits.length; i++) {
@@ -113,7 +120,7 @@ public class Indexer {
 
 	public Query getQuery(String searchText, String[] fields)
 			throws ParseException {
-		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
+		QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, analyzer);
 		return parser.parse(searchText);
 	}
 	

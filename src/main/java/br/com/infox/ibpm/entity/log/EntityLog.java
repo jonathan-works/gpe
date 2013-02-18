@@ -22,6 +22,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,8 +36,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.type.TipoOperacaoLogEnum;
@@ -88,7 +90,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 
 	@Column(name = "id_pagina", length = 200)
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getUrlRequisicao() {
 		return urlRequisicao;
 	}
@@ -98,7 +100,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_ip", length = 15)
-	@Length(max = 15)
+	@Size(max = 15)
 	public String getIp() {
 		return ip;
 	}
@@ -108,7 +110,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_entidade", length = 50)
-	@Length(max = 50)
+	@Size(max = 50)
 	public String getNomeEntidade() {
 		return nomeEntidade;
 	}
@@ -118,7 +120,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_package", length = 150)
-	@Length(max = 150)
+	@Size(max = 150)
 	public String getNomePackage() {
 		return nomePackage;
 	}
@@ -128,7 +130,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_id_entidade", length = 200)
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getIdEntidade() {
 		return idEntidade;
 	}
@@ -138,7 +140,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 	
 	@Column(name = "tp_operacao")
-	@Type(type = "br.com.infox.type.TipoOperacaoLogType")
+	@Enumerated(EnumType.STRING)
 	public TipoOperacaoLogEnum getTipoOperacao() {
 		return tipoOperacao;
 	}

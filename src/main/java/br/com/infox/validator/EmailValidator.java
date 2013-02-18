@@ -15,7 +15,6 @@
 */
 package br.com.infox.validator;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
@@ -33,14 +32,14 @@ public class EmailValidator implements Validator {
 	//@Override
 	public void validate(FacesContext context, UIComponent component,
 			Object value) throws ValidatorException {
-		
-		org.hibernate.validator.EmailValidator validator = 
-			new org.hibernate.validator.EmailValidator();
-		validator.initialize(null);
-		if (! validator.isValid(value)) {
-			FacesMessage fm = new FacesMessage("Email inválido");
-			throw new ValidatorException(fm);
-		}
+		// TODO: Achar solução pra isso aqui
+//		org.hibernate.validator.EmailValidator validator = 
+//			new org.hibernate.validator.EmailValidator();
+//		validator.initialize(null);
+//		if (! validator.isValid(value)) {
+//			FacesMessage fm = new FacesMessage("Email inválido");
+//			throw new ValidatorException(fm);
+//		}
 		
 	}
 	

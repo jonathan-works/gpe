@@ -21,8 +21,8 @@ import java.util.Set;
 
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.def.Node.NodeType;
+import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
@@ -77,19 +77,17 @@ public class TaskHandlerVisitor {
 				TaskNode tn = (TaskNode) from;
 				addTaskNodeVariables(tn);
 			}
-			switch (type) {
-			case StartState:
-				break;
-			default:
+			//TODO: Esse equals funciona?
+			if (!type.equals(NodeType.StartState)) {
 				addVariables(from.getArrivingTransitions());
-				break;
 			}
 		}
 	}
 
 	private void addTaskNodeVariables(TaskNode tn) {
 		boolean filtered = types != null && types.size() > 0;
-		for (Task tsk : tn.getTasks()) {
+		for (Object o : tn.getTasks()) {
+			Task tsk = (Task) o;
 			TaskController tc = tsk.getTaskController();
 			if (tc != null) {
 				List<VariableAccess> accesses = tc.getVariableAccesses();

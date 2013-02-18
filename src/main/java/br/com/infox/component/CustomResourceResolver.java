@@ -17,7 +17,7 @@ package br.com.infox.component;
 
 import java.net.URL;
 
-import com.sun.facelets.impl.DefaultResourceResolver;
+import com.sun.faces.facelets.impl.DefaultResourceResolver;
 
  
 public class CustomResourceResolver extends DefaultResourceResolver

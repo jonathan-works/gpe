@@ -18,7 +18,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.validator.Length;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = Caixa.TABLE_NAME, schema="public", uniqueConstraints = @UniqueConstraint(columnNames = {"nm_caixa", "id_tarefa"}))
@@ -53,7 +53,7 @@ public class Caixa implements java.io.Serializable {
 	}
 
 	@Column(name="nm_caixa", length=100)
-	@Length(max=100)
+	@Size(max=100)
 	public String getNomeCaixa() {
 		return nomeCaixa;
 	}

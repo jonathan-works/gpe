@@ -7,8 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = Status.TABLE_NAME, schema = "public")
@@ -35,7 +35,7 @@ public class Status implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_status", length = 100, unique = true, nullable = false)
-	@Length(max = 100)
+	@Size(max = 100)
 	@NotNull
 	public String getStatus() {
 		return this.status;

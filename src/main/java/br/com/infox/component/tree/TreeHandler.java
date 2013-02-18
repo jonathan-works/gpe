@@ -17,7 +17,7 @@ package br.com.infox.component.tree;
 
 import java.util.List;
 
-import org.richfaces.event.NodeSelectedEvent;
+import org.richfaces.event.TreeSelectionChangeListener;
 
 /**
  * Inteface que um componente deve implementar para manipular um treeview
@@ -25,22 +25,12 @@ import org.richfaces.event.NodeSelectedEvent;
  *
  */
 
-public interface TreeHandler<E> {
+public interface TreeHandler<E> extends TreeSelectionChangeListener {
 
 	/**
 	 * @return lista dos nós do primeiro nível da árvore
 	 */
 	List<EntityNode<E>> getRoots();
-
-	
-	/**
-	 * Listener para atribuir o nó selecionado a um campo da classe, 
-	 * usando o método setSelected
-	 * 
-	 * @param ev objeto passado pelo treeview
-	 */
-	void selectListener(NodeSelectedEvent ev);
-
 	
 	/**
 	 * @return entidade selecionada no treeview

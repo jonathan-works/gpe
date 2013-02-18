@@ -37,8 +37,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
@@ -91,7 +91,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_extensao", length = 15)
-	@Length(max = 15)
+	@Size(max = 15)
 	public String getExtensao() {
 		return this.extensao;
 	}
@@ -111,7 +111,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 
 	@Column(name = "ds_md5_documento", nullable = false, length = 32)
 	@NotNull
-	@Length(max = 32)
+	@Size(max = 32)
 	public String getMd5Documento() {
 		return this.md5Documento;
 	}
@@ -121,7 +121,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_arquivo", length = 300)
-	@Length(max = 300)
+	@Size(max = 300)
 	public String getNomeArquivo() {
 		return this.nomeArquivo;
 	}
@@ -205,7 +205,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_nome_usuario_ultimo_assinar", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getUsuarioUltimoAssinar() {
 		return usuarioUltimoAssinar;
 	}
@@ -215,7 +215,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_nome_usuario", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeUsuario() {
 		return nomeUsuario;
 	}

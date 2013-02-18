@@ -223,7 +223,7 @@ public class CertificadosCaCheckManager {
 	public static List<URL> getResourceListing(Class<? extends Object> clazz,
 			String path, String pattern) throws URISyntaxException, IOException {
 		URL dirURL = clazz.getClassLoader().getResource(path);
-		if (dirURL.getProtocol().equals("vfsfile")) {
+		if (dirURL.getProtocol().equals("vfsfile") || dirURL.getProtocol().equals("vfs")) {
 			dirURL = new URL("file", dirURL.getHost(), dirURL.getFile());
 		}
 		if (dirURL.getProtocol().equals("file")) {

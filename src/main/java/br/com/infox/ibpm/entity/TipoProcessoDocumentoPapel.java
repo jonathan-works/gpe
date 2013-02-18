@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.Papel;
 

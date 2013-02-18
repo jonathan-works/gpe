@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -72,7 +74,7 @@ public class TarefaEvento implements java.io.Serializable {
 	}
 	
 	@Column(name = "in_evento", length = 2)
-	@Type(type = "br.com.infox.ibpm.type.TarefaEventoType")
+	@Enumerated(EnumType.STRING)
 	public TarefaEventoEnum getEvento() {
 		return evento;
 	}

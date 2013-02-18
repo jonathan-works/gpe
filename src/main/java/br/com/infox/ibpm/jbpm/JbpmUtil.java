@@ -47,7 +47,6 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.JbpmVariavelLabel;
 import br.com.infox.ibpm.entity.Localizacao;
@@ -108,7 +107,8 @@ public class JbpmUtil {
 	public Localizacao getLocalizacao(long jbpmProcessId) {
 		ProcessInstance pi = ManagedJbpmContext.instance().getProcessInstance(jbpmProcessId);
 		Token token = pi.getRootToken();
-		for (org.jbpm.taskmgmt.exe.TaskInstance t : pi.getTaskMgmtInstance().getTaskInstances()) {
+		for (Object o : pi.getTaskMgmtInstance().getTaskInstances()) {
+			TaskInstance t = (TaskInstance) o;
 			if (t.getTask().getTaskNode().equals(token.getNode())) {
 				return getLocalizacao(t);
 			}
@@ -209,7 +209,7 @@ public class JbpmUtil {
 		if (node.getNodeType().equals(NodeType.Task)) {
 			TaskNode tn = (TaskNode) JbpmUtil.getJbpmSession().load(TaskNode.class, node.getId());
 			if (!tn.getTasks().isEmpty()) {
-				t = tn.getTasks().iterator().next();
+				t = (Task) tn.getTasks().iterator().next(); 
 			}
 		}
 		return t;

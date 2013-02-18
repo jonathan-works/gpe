@@ -4,7 +4,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import javax.persistence.*;
 
-import org.hibernate.validator.Length;
+import javax.validation.constraints.Size;
 
 import br.com.infox.epa.type.TipoPessoaEnum;
 
@@ -25,7 +25,7 @@ public class PessoaFisica extends Pessoa{
 	}
 	
 	@Column(name="nr_cpf", nullable=false, unique=true)
-	@Length(max=20)
+	@Size(max=20)
 	public String getCpf() {
 		return cpf;
 	}
@@ -42,7 +42,7 @@ public class PessoaFisica extends Pessoa{
 	}
 	
 	@Column(name = "ds_email", length = 100, unique = true, nullable = false)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getEmail() {
 		return this.email;
 	}

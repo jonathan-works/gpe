@@ -2,24 +2,24 @@
 
 <!-- $Id: components.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
 
-<components xmlns="http://www.jboss.org/schema/seam/components"
-            xmlns:core="http://www.jboss.org/schema/seam/core"
-            xmlns:bpm="http://www.jboss.org/schema/seam/bpm"
-            xmlns:async="http://www.jboss.org/schema/seam/async"
-            xmlns:persistence="http://www.jboss.org/schema/seam/persistence"
-            xmlns:security="http://www.jboss.org/schema/seam/security"
-            xmlns:mail="http://www.jboss.org/schema/seam/mail"
-            xmlns:web="http://www.jboss.org/schema/seam/web"
+<components xmlns="http://jboss.org/schema/seam/components"
+            xmlns:core="http://jboss.org/schema/seam/core"
+            xmlns:bpm="http://jboss.org/schema/seam/bpm"
+            xmlns:async="http://jboss.org/schema/seam/async"
+            xmlns:persistence="http://jboss.org/schema/seam/persistence"
+            xmlns:security="http://jboss.org/schema/seam/security"
+            xmlns:mail="http://jboss.org/schema/seam/mail"
+            xmlns:web="http://jboss.org/schema/seam/web"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation=
-                "http://www.jboss.org/schema/seam/core http://www.jboss.org/schema/seam/core-2.2.xsd 
-                 http://www.jboss.org/schema/seam/persistence http://www.jboss.org/schema/seam/persistence-2.2.xsd 
-                 http://www.jboss.org/schema/seam/security http://www.jboss.org/schema/seam/security-2.2.xsd
-                 http://www.jboss.org/schema/seam/mail http://www.jboss.org/schema/seam/mail-2.2.xsd
-                 http://www.jboss.org/schema/seam/web http://www.jboss.org/schema/seam/web-2.2.xsd
-                 http://www.jboss.org/schema/seam/components http://www.jboss.org/schema/seam/components-2.2.xsd">
+                "http://jboss.org/schema/seam/core http://jboss.org/schema/seam/core-2.3.xsd 
+                 http://jboss.org/schema/seam/persistence http://jboss.org/schema/seam/persistence-2.3.xsd 
+                 http://jboss.org/schema/seam/security http://jboss.org/schema/seam/security-2.3.xsd
+                 http://jboss.org/schema/seam/mail http://jboss.org/schema/seam/mail-2.3.xsd
+                 http://jboss.org/schema/seam/web http://jboss.org/schema/seam/web-2.3.xsd
+                 http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">
 
-   <core:init debug="true" jndi-pattern="EPA/#{ejbName}/local"/>
+   <core:init debug="true" jndi-pattern="java:app/EPA-ejb/#{ejbName}"/>
      
 	<web:hot-deploy-filter url-pattern="*.seam"/>
      
@@ -32,19 +32,19 @@
     
 	<persistence:managed-persistence-context name="entityManagerLog"
                   auto-create="true"
-                  persistence-unit-jndi-name="java:/EPAPersistenceUnit"
+                  persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit"
                  />
 
    <persistence:managed-persistence-context name="entityManager"
                   auto-create="true"
-                  persistence-unit-jndi-name="java:/EPAPersistenceUnit"
+                  persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit"
                  />
 
 	<async:quartz-dispatcher/>
 
 	<persistence:managed-persistence-context name="entityManagerBin"
 	          auto-create="true"
-	          persistence-unit-jndi-name="java:/EPABinPersistenceUnit" />
+	          persistence-unit-jndi-name="java:jboss/EPABinPersistenceUnit" />
                       
    <event type="org.jboss.seam.security.notLoggedIn">
        <action execute="#{redirect.captureCurrentView}"/>

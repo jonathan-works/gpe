@@ -29,8 +29,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -66,7 +66,7 @@ public class Variavel implements java.io.Serializable {
 
 	@Column(name = "ds_variavel", nullable = false, length = 100, unique = true)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getVariavel() {
 		return this.variavel;
 	}
@@ -81,7 +81,7 @@ public class Variavel implements java.io.Serializable {
 
 	@Column(name = "vl_variavel", nullable = false, length = 200)
 	@NotNull
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getValorVariavel() {
 		return this.valorVariavel;
 	}

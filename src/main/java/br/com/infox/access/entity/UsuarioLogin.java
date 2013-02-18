@@ -28,8 +28,8 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
@@ -89,7 +89,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	}
 
 	@Column(name = "ds_senha", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	@UserPassword(hash = "SHA")
 	public String getSenha() {
 		return this.senha;
@@ -101,7 +101,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 
 	@Column(name = "ds_login", unique = true, nullable = false, length = 100)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	@UserPrincipal
 	public String getLogin() {
 		return this.login;

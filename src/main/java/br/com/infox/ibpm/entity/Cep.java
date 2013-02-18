@@ -37,8 +37,8 @@ import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.cliente.entity.filters.CepFilter;
 
@@ -88,7 +88,7 @@ public class Cep implements java.io.Serializable {
 	
 	@Column(name = "nr_cep", nullable = false, length = 9, unique = true)
 	@NotNull
-	@Length(max = 9)
+	@Size(max = 9)
 	public String getNumeroCep() {
 		return this.numeroCep;
 	}
@@ -98,7 +98,7 @@ public class Cep implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_logradouro", length = 200)
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getNomeLogradouro() {
 		return this.nomeLogradouro;
 	}
@@ -108,7 +108,7 @@ public class Cep implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_bairro", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeBairro() {
 		return this.nomeBairro;
 	}
@@ -128,7 +128,7 @@ public class Cep implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_complemento", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getComplemento() {
 		return this.complemento;
 	}

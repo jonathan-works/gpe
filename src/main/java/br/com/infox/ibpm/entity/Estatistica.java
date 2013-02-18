@@ -29,8 +29,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -67,7 +67,7 @@ public class Estatistica implements java.io.Serializable {
 
 	@Column(name = "nm_task", nullable = false, length = 150)
 	@NotNull
-	@Length(max = 150)
+	@Size(max = 150)
 	public String getTaskName() {
 		return taskName;
 	}
@@ -77,7 +77,7 @@ public class Estatistica implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_node", length = 150)
-	@Length(max = 150)
+	@Size(max = 150)
 	public String getNodeName() {
 		return nodeName;
 	}
@@ -87,7 +87,7 @@ public class Estatistica implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_fluxo", length = 150)
-	@Length(max = 150)	
+	@Size(max = 150)	
 	public String getNomeFluxo() {
 		return nomeFluxo;
 	}

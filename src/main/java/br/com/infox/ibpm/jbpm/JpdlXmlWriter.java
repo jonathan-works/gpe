@@ -252,7 +252,9 @@ public class JpdlXmlWriter {
 		Element subProcess = addElement(nodeElement, "sub-process");
 		subProcess.addAttribute("name", ReflectionsUtil.getStringValue(node, "subProcessName"));
 		subProcess.addAttribute("binding", "late");
-		writeVariables(nodeElement, node.getVariableAccesses());
+		//TODO: Verificar isso aqui
+		Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
+		writeVariables(nodeElement, variableAccess);
 	}
 
 	private void writeTasks(Set<Task> tasks, Element element) {

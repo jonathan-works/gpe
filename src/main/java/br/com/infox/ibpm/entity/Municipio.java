@@ -30,8 +30,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 /**
  * Municipio
  */
@@ -65,7 +65,7 @@ public class Municipio implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_municipio", length = 50)
-	@Length(max = 50)
+	@Size(max = 50)
 	public String getMunicipio() {
 		return this.municipio;
 	}

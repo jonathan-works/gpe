@@ -2,7 +2,7 @@ package br.com.infox.ibpm.entity;
 
 import javax.persistence.*;
 
-import org.hibernate.validator.Length;
+import javax.validation.constraints.Size;
 
 import br.com.infox.epa.type.TipoPessoaEnum;
 
@@ -22,7 +22,7 @@ public class PessoaJuridica extends Pessoa {
 	}
 	
 	@Column(name="nr_cnpj", nullable=false, unique=true, length=20)
-	@Length(max=20)
+	@Size(max=20)
 	public String getCnpj() {
 		return cnpj;
 	}
@@ -31,7 +31,7 @@ public class PessoaJuridica extends Pessoa {
 	}
 	
 	@Column(name="nm_razao_social", nullable=false, length=100)
-	@Length(max=100)
+	@Size(max=100)
 	public String getRazaoSocial() {
 		return razaoSocial;
 	}

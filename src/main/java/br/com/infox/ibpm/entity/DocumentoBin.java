@@ -21,7 +21,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import br.com.itx.util.ArrayUtil;
 

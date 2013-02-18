@@ -158,8 +158,8 @@ public class ActivitiesXPDL implements Serializable {
 				} else {
 					iter.remove();
 					
-					for (Transition t: node.getArrivingTransitions()) {
-						t.setTo(endState);
+					for (Object o : node.getArrivingTransitions()) {
+						((Transition) o).setTo(endState);
 					}
 				}
 			}

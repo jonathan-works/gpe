@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import org.hibernate.validator.Length;
+import javax.validation.constraints.Size;
 
 import br.com.infox.annotations.HierarchicalPath;
 import br.com.infox.annotations.Parent;
@@ -48,7 +48,7 @@ public class LocalizacaoFisica implements Serializable {
 		this.localizacaoFisicaPai = localizacaoFisicaPai;
 	}
 	@Column(name="ds_localizacao_fisica", nullable=false, length=150)
-	@Length(max=150)
+	@Size(max=150)
 	@PathDescriptor
 	public String getDescricao() {
 		return descricao;

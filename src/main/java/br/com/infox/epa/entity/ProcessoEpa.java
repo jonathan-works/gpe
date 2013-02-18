@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.epa.query.ProcessoEpaQuery;
 import br.com.infox.epa.type.SituacaoPrazoEnum;

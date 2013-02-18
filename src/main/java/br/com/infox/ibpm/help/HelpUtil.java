@@ -27,11 +27,13 @@ import org.apache.lucene.demo.html.HTMLParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.highlight.Formatter;
 import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.search.highlight.NullFragmenter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.Scorer;
 import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.util.Version;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -96,12 +98,14 @@ public final class HelpUtil {
 			return s;
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InvalidTokenOffsetsException e) {
+			e.printStackTrace();
 		}
 		return "";
 	}
 	
 	public static Analyzer getAnalyzer() {
-		return new BrazilianAnalyzer();
+		return new BrazilianAnalyzer(Version.LUCENE_36);
 	}
 	
 

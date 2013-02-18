@@ -52,7 +52,7 @@ public class EventHandler implements Serializable {
 		}
 		if (expression == null) {
 			if (event.getActions() != null && event.getActions().size() > 0) {
-				Action action = event.getActions().get(0);
+				Action action = (Action) event.getActions().get(0);
 				if (action instanceof Script) {
 					Script s = (Script) action;
 					expression = s.getExpression();
@@ -70,7 +70,7 @@ public class EventHandler implements Serializable {
 			event.addAction(new Script());
 		}
 		if (event.getActions().size() > 0) {
-			Action action = event.getActions().get(0);
+			Action action = (Action) event.getActions().get(0);
 			if (action instanceof Script) {
 				Script s = (Script) action;
 				s.setExpression(expression);

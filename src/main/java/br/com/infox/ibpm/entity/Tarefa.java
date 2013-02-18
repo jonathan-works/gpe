@@ -18,8 +18,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.ibpm.type.PrazoEnum;
 
@@ -55,7 +55,7 @@ public class Tarefa implements java.io.Serializable {
 	
 	@Column(name = "ds_tarefa", nullable= false, length=150, unique=true)
 	@NotNull
-	@Length(max=150)
+	@Size(max=150)
 	public String getTarefa() {
 		return tarefa;
 	}

@@ -131,7 +131,8 @@ public class VariableAccessHandler implements Serializable {
 			parent.addEvent(e);
 		}
 		if (e.getActions() != null) {
-			for (Action a : e.getActions()) {
+			for (Object o : e.getActions()) {
+				Action a = (Action) o;
 				String exp = a.getActionExpression();
 				if (exp != null && exp.startsWith(newExpression)) {
 					return a;
@@ -306,7 +307,7 @@ public class VariableAccessHandler implements Serializable {
 		Event e = parent.getEvent(Event.EVENTTYPE_NODE_ENTER);
 		
 		if (e != null && e.getActions() != null) {
-			Action action = e.getActions().get(0);
+			Action action = (Action) e.getActions().get(0);
 			modeloMap = getModeloMap(action.getActionExpression());
 		}
 		

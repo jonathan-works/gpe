@@ -21,7 +21,7 @@ import java.util.List;
 import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
@@ -199,6 +199,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 			 * Não remover -> Sem o session.evict o find(UsuarioLogin.class) do getEntityManager 
 			 * retorna uma PessoaFisica ao invés do UsuárioLogin por conta do cache
 			 * */
+			// TODO: Verificar se funciona com getEntityManager.detach()
 			Session session = (Session) getEntityManager().getDelegate();
 			session.evict(getEntityManager().find(PessoaFisica.class, instance.getIdPessoa()));
 			

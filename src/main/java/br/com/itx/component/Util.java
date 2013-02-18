@@ -37,7 +37,6 @@ import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
-import org.ajax4jsf.context.AjaxContext;
 import org.hibernate.AnnotationException;
 import org.hibernate.LazyInitializationException;
 import org.jboss.seam.Component;
@@ -58,6 +57,7 @@ import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.RandomStringUtils;
 import org.jboss.seam.util.Strings;
 import org.jboss.seam.web.Parameters;
+import org.richfaces.context.ExtendedPartialViewContext;
 
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.component.grid.SearchField;
@@ -389,7 +389,7 @@ public class Util implements Serializable {
 	}	    
 
 	public boolean isAjaxRequest() {
-		return AjaxContext.getCurrentInstance(FacesContext.getCurrentInstance()).isAjaxRequest();
+		return ExtendedPartialViewContext.getInstance(FacesContext.getCurrentInstance()).isAjaxRequest();
 	}
 	
 	public Object getFromPageContext(String var) {

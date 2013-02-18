@@ -13,8 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -53,7 +53,7 @@ public class ProtocoloDocumento implements Serializable {
 	}
 	
 	@Column(name="nm_pessoa", nullable=false)
-	@Length(max=100)
+	@Size(max=100)
 	public String getNomePessoa() {
 		return nomePessoa;
 	}

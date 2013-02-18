@@ -1,4 +1,4 @@
-<components xmlns="http://www.jboss.org/schema/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.jboss.org/schema/seam/core http://www.jboss.org/schema/seam/core-2.3.xsd                   http://www.jboss.org/schema/seam/security http://www.jboss.org/schema/seam/security-2.3.xsd                  http://www.jboss.org/schema/seam/components http://www.jboss.org/schema/seam/components-2.3.xsd">	
+<components xmlns="http://jboss.org/schema/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.org/schema/seam/core http://jboss.org/schema/seam/core-2.3.xsd                   http://jboss.org/schema/seam/security http://jboss.org/schema/seam/security-2.3.xsd                  http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">	
 
 <!-- $Id: cepGrid.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
 

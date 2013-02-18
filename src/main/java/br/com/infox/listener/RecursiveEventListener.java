@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.persistence.Id;
 
-import org.hibernate.event.PreInsertEvent;
-import org.hibernate.event.PreInsertEventListener;
-import org.hibernate.event.PreUpdateEvent;
-import org.hibernate.event.PreUpdateEventListener;
+import org.hibernate.event.spi.PreInsertEvent;
+import org.hibernate.event.spi.PreInsertEventListener;
+import org.hibernate.event.spi.PreUpdateEvent;
+import org.hibernate.event.spi.PreUpdateEventListener;
 
 import br.com.infox.annotations.HierarchicalPath;
 import br.com.infox.annotations.Parent;

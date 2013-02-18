@@ -33,8 +33,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.epa.entity.LocalizacaoTurno;
 
@@ -92,7 +92,7 @@ public class Localizacao implements java.io.Serializable {
 	
 	@Column(name = "ds_localizacao", nullable = false, length = 100, unique = true)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getLocalizacao() {
 		return this.localizacao;
 	}

@@ -30,8 +30,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
 
@@ -79,7 +79,7 @@ public class Parametro implements java.io.Serializable {
 
 	@Column(name = "nm_variavel", nullable = false, length = 100, unique = true)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getNomeVariavel() {
 		return this.nomeVariavel;
 	}
@@ -90,7 +90,7 @@ public class Parametro implements java.io.Serializable {
 
 	@Column(name = "ds_variavel", nullable = false, length = 200)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getDescricaoVariavel() {
 		return this.descricaoVariavel;
 	}
@@ -141,7 +141,7 @@ public class Parametro implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_esquema_tabela_id", length = 200)
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getEsquemaTabelaId() {
 		return this.esquemaTabelaId;
 	}

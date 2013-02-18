@@ -25,6 +25,7 @@ import javax.persistence.Query;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.util.Version;
 import org.hibernate.CacheMode;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
@@ -98,7 +99,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 			resultado = new ArrayList();
 			FullTextEntityManager em = (FullTextEntityManager) getEntityManager();
 			String[] fields = new String[]{"texto"};
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, HelpUtil.getAnalyzer());
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, HelpUtil.getAnalyzer());
 			parser.setAllowLeadingWildcard(true);
 			org.apache.lucene.search.Query query = parser.parse("*"+getTextoPesquisa()+"*");
 			
@@ -247,7 +248,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 			texto = instance.getTexto();
 
 			if (textoPesquisa != null && texto != null) {
-				QueryParser parser = new QueryParser("texto", HelpUtil.getAnalyzer());
+				QueryParser parser = new QueryParser(Version.LUCENE_36, "texto", HelpUtil.getAnalyzer());
 				try {
 					org.apache.lucene.search.Query query = parser.parse(textoPesquisa);
 					String highlighted = HelpUtil.highlightText(query, texto, false);

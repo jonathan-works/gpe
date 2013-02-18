@@ -27,8 +27,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
-import org.richfaces.event.UploadEvent;
-import org.richfaces.model.UploadItem;
+import org.richfaces.event.FileUploadEvent;
+import org.richfaces.event.FileUploadListener;
+import org.richfaces.model.UploadedFile;
 
 import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.ComponentUtil;
@@ -37,7 +38,7 @@ import br.com.itx.util.Crypto;
 @Name(FileHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
-public class FileHome implements Serializable {
+public class FileHome implements Serializable, FileUploadListener {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "fileHome";
@@ -106,11 +107,12 @@ public class FileHome implements Serializable {
 		return Crypto.encodeMD5(data);
 	}
 	
-	public void listener(UploadEvent ue) {
-		UploadItem ui = ue.getUploadItem();
+	@Override
+	public void processFileUpload(FileUploadEvent ue) {
+		UploadedFile ui = ue.getUploadedFile();
 		this.data = ui.getData();
-		this.fileName = ui.getFileName();
-		this.size = ui.getFileSize();
+		this.fileName = ui.getName();
+		this.size = Long.valueOf(ui.getSize()).intValue();
 		this.contentType = ui.getContentType();
 	}
 

@@ -55,6 +55,7 @@ import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
@@ -65,6 +66,7 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.xml.sax.InputSource;
+import org.yaml.snakeyaml.nodes.NodeTuple;
 
 import br.com.infox.bpm.action.TaskPageAction;
 import br.com.infox.ibpm.bean.PrazoTask;
@@ -531,7 +533,7 @@ public class ProcessBuilder implements Serializable {
 			t.setName(currentNode.getName());
 			tn.addTask(t);
 			tn.setEndTasks(true);
-			t.setSwimlane(instance.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
+			t.setSwimlane((Swimlane) instance.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
 			TaskHandler th = new TaskHandler(t);
 			list.add(th);
 			currentTask = th;
@@ -1077,21 +1079,15 @@ public class ProcessBuilder implements Serializable {
 		if (currentNode == null) {
 			return type;
 		}
-		switch (currentNode.getNodeType().ordinal()) {
-		case 1:		// StartState
-//			type = "startState";
-			break;
-		case 7:		// Decision
+		if (currentNode.getNodeType().equals(NodeType.Decision)) {
 			type = "decision";
-			break;
-		default:	// Node (0)
+		} else { 
 			if (currentNode instanceof MailNode) {
 				type = "mail";
 			}
 			if (currentNode instanceof ProcessState) {
 				type = "processState";
 			}
-			break;
 		}
 		return type;
 	}
@@ -1130,7 +1126,7 @@ public class ProcessBuilder implements Serializable {
 	}
 	
 	public String getIcon(Node node) {		
-		String icon = node.getNodeType().name();
+		String icon = node.getNodeType().toString();
 		if (node instanceof MailNode) {
 			icon = "MailNode";
 		}

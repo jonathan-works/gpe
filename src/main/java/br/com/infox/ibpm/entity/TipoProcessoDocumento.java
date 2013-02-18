@@ -22,6 +22,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,8 +36,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
 import br.com.infox.ibpm.type.VisibilidadeEnum;
@@ -86,7 +88,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 
 	@Column(name = "ds_tipo_processo_documento", nullable = false, length = 100)
 	@NotNull
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getTipoProcessoDocumento() {
 		return this.tipoProcessoDocumento;
 	}
@@ -96,7 +98,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	}
 	
 	@Column(name = "cd_documento", length = 30)
-	@Length(max = 30)
+	@Size(max = 30)
 	public String getCodigoDocumento() {
 		return this.codigoDocumento;
 	}
@@ -139,7 +141,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	}
 	
 	@Column(name = "in_tipo_documento", length = 1)
-	@Type(type = "br.com.infox.ibpm.type.TipoDocumentoType")
+	@Enumerated(EnumType.STRING)
 	public TipoDocumentoEnum getInTipoDocumento() {
 		return this.inTipoDocumento;
 	}
@@ -149,7 +151,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	}
 	
 	@Column(name = "tp_visibilidade", length = 1)
-	@Type(type = "br.com.infox.ibpm.type.VisibilidadeType")
+	@Enumerated(EnumType.STRING)
 	public VisibilidadeEnum getVisibilidade() {
 		return this.visibilidade;
 	}
@@ -179,7 +181,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_tipo_processo_documento_observacao", length = 200)
-	@Length(max = 200)
+	@Size(max = 200)
 	public String getTipoProcessoDocumentoObservacao() {
 		return this.tipoProcessoDocumentoObservacao;
 	}
@@ -189,7 +191,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_mascara", length = 100)
-	@Length(max = 100)
+	@Size(max = 100)
 	public String getMascara() {
 		return this.mascara;
 	}

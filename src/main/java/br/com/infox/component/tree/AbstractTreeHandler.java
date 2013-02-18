@@ -30,8 +30,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.util.StopWatch;
 import org.richfaces.component.UITree;
-import org.richfaces.component.html.HtmlTree;
-import org.richfaces.event.NodeSelectedEvent;
+import org.richfaces.event.TreeSelectionChangeEvent;
 import org.richfaces.function.RichFunction;
 
 import br.com.itx.util.EntityUtil;
@@ -79,9 +78,10 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 				return;
 			
 			UITree tree = (UITree) comp;
-			tree.setSelected();
+			// TODO: Verificar esses setSelected
+//			tree.setSelected();
 			tree.setRowKey(null);
-			tree.setSelected();
+//			tree.setSelected();
 		}
 	}
 
@@ -144,8 +144,8 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 	}
 
 	@Override
-	public void selectListener(NodeSelectedEvent ev) {
-		HtmlTree tree = (HtmlTree) ev.getSource();
+	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
+		UITree tree = (UITree) ev.getSource();
 		treeId = tree.getId();
 		EntityNode<E> en = (EntityNode<E>) tree.getData(); 
 		setSelected(en.getEntity());
