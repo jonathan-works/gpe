@@ -29,7 +29,7 @@
 	<s:div style="width: #{width}px; text-align:center">
 		<a:include viewId="../include/filterButton.xhtml" />
 
-		<a:form style="display:inline"
+		<h:form style="display:inline"
 			ajaxSubmit="true"
 			eventsQueue="edit"
 			rendered="#{canEdit}"
@@ -46,14 +46,14 @@
 					style="cursor:pointer"
 				/>
 			</a:commandLink>
-		</a:form>
+		</h:form>
 			
-		<a:form style="display:inline">
+		<h:form style="display:inline">
 			<a:jsFunction eventsQueue="edit"
 			reRender="#{gridId}List" 
 				limitToList="true"
 				name="refreshView" />						
-		</a:form>
+		</h:form>
 		
 	</s:div>
 </ui:composition> 

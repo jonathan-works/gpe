@@ -31,7 +31,7 @@
 				  value="#{value}" 
 				  var="rowGroup"
 				  rowKeyVar="rowKeyGroup">
-			<rich:simpleTogglePanel opened="true"
+			<rich:collapsiblePanel opened="true"
 			        				switchType="client">
 				<c:if test="#{not empty labelGroup}">
 					<f:facet name="header">
@@ -49,7 +49,7 @@
 				<s:div style="float: left">
 					<ui:insert />
 				</s:div>
-			</rich:simpleTogglePanel>
+			</rich:collapsiblePanel>
 		</a:repeat>
 	</a:outputPanel>
 	<a:commandLink id="#{id}addFiltro"

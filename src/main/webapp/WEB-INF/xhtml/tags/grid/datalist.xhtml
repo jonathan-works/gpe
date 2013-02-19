@@ -162,7 +162,7 @@
 			
 			<s:div rendered="#{bean.previousExists or bean.nextExists}"
 				   style="float: left;">
-				<a:form ajaxSubmit="true">
+				<h:form ajaxSubmit="true">
 					<rich:inputNumberSlider	enableManualInput="false"
 											showArrows="true"
 											value="#{bean.page}" 
@@ -177,7 +177,7 @@
 									limitToList="true"
 									reRender="#{gridId}"/>					
 					</rich:inputNumberSlider>
-				</a:form>
+				</h:form>
 		</s:div>
 		
 		<ui:param name="count" value="#{useDatamodel ? datamodel.size : bean.resultCount}" />

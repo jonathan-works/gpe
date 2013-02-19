@@ -33,7 +33,7 @@
 		<rich:panel bodyClass="panel" 
 					rendered="#{historicoModeloDocumentoAction.selecionado != null}"
 					style="float: left;">
-			<a:form>
+			<h:form>
 				<wi:inputText id="#{rowId}Titulo" 
 							  label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
 							  value="#{historicoModeloDocumentoAction.selecionado.tituloModeloDocumento}"
@@ -53,7 +53,7 @@
 				  value="Restaurar"
 				  id="restaurarHistoricoSelecionado"
 				  oncomplete="window.close()"/>
-			</a:form>
+			</h:form>
 		</rich:panel>
 	</ui:define>
 	

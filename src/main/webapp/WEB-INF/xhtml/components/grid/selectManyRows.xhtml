@@ -33,7 +33,7 @@
 		<ui:param name="reRender" value="#{empty props.reRender ? reRender : props.reRender}" />
 		<ui:param name="reRender" value="#{empty reRender ? 'idDiv': reRender}" />
 		<s:div id="idDiv" style="width: 100%; text-align: center">
-			<a:form>
+			<h:form>
 				<a:commandLink 
 						reRender="#{reRender}"
 						action="#{bean.addRemoveRowList(row)}"
@@ -50,7 +50,7 @@
 						rendered="#{bean.selectedRowsList.contains(row)}">
 					<h:graphicImage url="/img/jbpm/checked.gif" style="cursor:pointer" />						
 				</a:commandLink>				
-			</a:form>
+			</h:form>
 			
 		</s:div>
 	

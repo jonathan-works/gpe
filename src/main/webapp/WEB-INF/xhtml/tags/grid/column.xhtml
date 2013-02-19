@@ -36,9 +36,9 @@
 				<ui:param name="hideOrder" value="#{wi:get(hideOrder, false)}" />
 				<ui:param name="orderAsc" value="#{not hideOrder and !bean.orderedColumn.endsWith(' desc')}" />
 				<ui:param name="selectedOrder" value="#{not hideOrder and bean.orderedColumn.startsWith(columnId.concat(' '))}"/>
-				<a:form rendered="#{!inForm}" style="margin-left: 5px" >
+				<h:form rendered="#{!inForm}" style="margin-left: 5px" >
 					<ui:include src="columnOrder.xhtml" />
-				</a:form>
+				</h:form>
 				<s:div rendered="#{inForm}">
 					<ui:include src="columnOrder.xhtml" />
 				</s:div>

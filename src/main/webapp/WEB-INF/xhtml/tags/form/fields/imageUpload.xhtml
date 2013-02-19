@@ -32,7 +32,7 @@
 	
 	<s:div rendered="#{wi:get(rendered, true)}"
 		   style="#{wi:get(style, 'float: left; padding-left:3px')}">
-		<rich:simpleTogglePanel	id="uploadImagem"
+		<rich:collapsiblePanel	id="uploadImagem"
 								switchType="ajax" 
 								opened="#{wi:get(opened, 'false')}"
 								label="Álbum de imagens">
@@ -72,7 +72,7 @@
 		            </f:facet>
 	           	</rich:dataGrid> 
             </h:form>
-	</rich:simpleTogglePanel> 
+	</rich:collapsiblePanel> 
 	</s:div>
 	
 </ui:composition>

@@ -26,7 +26,7 @@
 <ui:composition>
 	<s:div style="text-align:left; width: #{canEdit ? 48 : 18}px" >
 		<a:include viewId="../include/filterButton.xhtml" />
-		<a:form style="display:inline"
+		<h:form style="display:inline"
 			rendered="#{canEdit}"
 			ajaxSubmit="true"
 			eventsQueue="edit"
@@ -43,7 +43,7 @@
 					style="cursor:pointer"
 				/>
 			</a:commandLink>
-		</a:form>
+		</h:form>
 
 		<a:include viewId="../include/reportButton.xhtml" />
 

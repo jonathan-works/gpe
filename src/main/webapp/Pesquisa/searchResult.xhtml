@@ -20,7 +20,7 @@
 			documentos</div>
 			<b>#{search.firstRow} a #{search.lastRow}</b> de <b>#{search.resultSize}</b>
 			documentos sobre <b>#{search.searchText}</b></div>
-			<a:form>
+			<h:form>
 				<h:dataTable id="searchResult" rows="#{search.pageSize}"
 					rendered="#{! empty search.searchResult}"
 					value="#{search.searchResult}" var="v">
@@ -42,7 +42,7 @@
 						</div>
 					</h:column>
 				</h:dataTable>
-			</a:form>
+			</h:form>
 		</s:div>
 
 		<s:div id="searchPager">

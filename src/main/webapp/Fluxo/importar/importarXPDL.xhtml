@@ -19,7 +19,7 @@
 		<ui:param name="home" value="#{fileHome}" />
 		<ui:param name="fluxo" value="#{fluxoHome}" />
 		
-		<a:form id="uploadXPDL">
+		<h:form id="uploadXPDL">
 		
 		<a:jsFunction name="chamarMetodo"
 					  action="#{action.importarXPDL(home.getData(), fluxo.instance.fluxo)}" />
@@ -29,7 +29,7 @@
 				onuploadcomplete="chamarMetodo();window.close();"
 				onchange="clearSign();">
 			</wi:fileUploadBox>
-		</a:form>
+		</h:form>
 	</ui:define>
 
 </ui:composition>

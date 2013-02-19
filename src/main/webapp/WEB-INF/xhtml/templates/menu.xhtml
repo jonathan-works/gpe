@@ -13,22 +13,22 @@
 				xmlns:s="http://jboss.org/schema/seam/taglib"
 				xmlns:rich="http://richfaces.org/rich">
 
-	<a:form>
+	<h:form>
 	 	<a:jsFunction status="status"
 			      	  name="refreshPage" 
 			      	  reRender="pageBody" />
-    </a:form>
+    </h:form>
     
 	<ui:param name="mostrarMenu"
 		value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
 
-	<rich:toolBar width="100%">
+	<rich:toolbar width="100%">
 		<c:if test="#{mostrarMenu}">
-			<rich:toolBarGroup>
+			<rich:toolbarGroup>
 				<s:link view="/home.xhtml" 
 				        style="color:#{a4jSkin.headerTextColor}; font-size:#{skinZoom.skinZoom};"
 					value="Home" />				
-			</rich:toolBarGroup>
+			</rich:toolbarGroup>
 			<c:forEach items="#{mainMenu.dropMenus}" var="drop">
 				<c:if test="#{empty drop.url}">
 					<h:form>
@@ -50,7 +50,7 @@
 				</c:if>
 			</c:forEach>
 		</c:if>
-		<rich:toolBarGroup location="right">
+		<rich:toolbarGroup location="right">
 			<s:link view="/login.xhtml" value="Login"
 				style="color:#{a4jSkin.headerTextColor}"
 				rendered="#{not identity.loggedIn}" />
@@ -60,7 +60,7 @@
 				    value="Logout"
 				    rendered="#{identity.loggedIn}" />
 			<wi:helpIcon />								
-		</rich:toolBarGroup>
-	</rich:toolBar>
+		</rich:toolbarGroup>
+	</rich:toolbar>
 
 </ui:composition>

@@ -67,7 +67,7 @@
 	    <s:div id="rightPanelId" styleClass='rightPanel' style="width: 60%; right: 5px; float: right; !important">
 	    	<s:div rendered="#{estatisticaMovimentacaoHome.instance.inPesquisa}">
 	
-	 			<rich:simpleTogglePanel>
+	 			<rich:collapsiblePanel>
 		
 	 				<h:outputText value="#{numProcessos}" style="clear: both;"> <b>Número de Processos: </b></h:outputText>
 					<h:outputText value="#{tempoMedio}">  <br/> <b>Tempo Médio:  </b> </h:outputText>
@@ -107,7 +107,7 @@
 		    			</rich:column>
 		    		</rich:dataTable>	
 	
-	 		 	</rich:simpleTogglePanel>
+	 		 	</rich:collapsiblePanel>
 			</s:div>
 		</s:div>
 	    

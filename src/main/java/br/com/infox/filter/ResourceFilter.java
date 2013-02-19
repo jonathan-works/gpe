@@ -45,7 +45,7 @@ import org.jboss.seam.web.AbstractFilter;
 public class ResourceFilter extends AbstractFilter {
 
 	
-	private static final String PATTERN = "/img/.*|/js/.*|/stylesheet/.*|/styleSkinInfox/.*";
+	private static final String PATTERN = "/img/.*|/resources/js/.*|/resources/stylesheet/.*|/resources/styleSkinInfox/.*";
  
 	@Override
 	public String getRegexUrlPattern() {

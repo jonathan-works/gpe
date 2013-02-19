@@ -42,7 +42,7 @@
     </style>
     
 	<rich:dragIndicator id="#{id}Indicator" />
-	<a:form id="#{id}dragDropForm">
+	<h:form id="#{id}dragDropForm">
 		<h:panelGrid columnClasses="panelc" columns="4" width="100%">
 
             <rich:panel id="#{id}Panel" style="width: 250px"> 
@@ -70,7 +70,7 @@
                 </rich:dataTable>
                 
                 <s:div rendered="#{bean.dragEntityList.previousExists or bean.dragEntityList.nextExists}">
-					<a:form ajaxSubmit="true">
+					<h:form ajaxSubmit="true">
 						<rich:inputNumberSlider	enableManualInput="false"
 												showArrows="true"
 												value="#{bean.dragEntityList.page}" 
@@ -85,7 +85,7 @@
 										limitToList="true"
 										reRender="#{id}Panel"/>
 						</rich:inputNumberSlider>
-					</a:form>
+					</h:form>
 				</s:div>
             </rich:panel>
             
@@ -133,6 +133,6 @@
 						 	 styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}" 
 			  				 reRender="#{id}Panel,#{id}TableDrop"/>
 		 </ui:insert>
-   	</a:form>
+   	</h:form>
 	   
 </ui:composition>

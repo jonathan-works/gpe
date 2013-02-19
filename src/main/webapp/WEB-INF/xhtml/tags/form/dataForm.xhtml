@@ -27,7 +27,7 @@
 				xmlns:rich="http://richfaces.org/rich">
 				
 	<a:region renderRegionOnly="#{wi:get(renderRegionOnly, false)}">
-	    <a:form id="#{formId}"
+	    <h:form id="#{formId}"
 	    		styleClass="edit"
 	    		enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}"
 	    		rendered="#{wi:get(rendered, true)}">
@@ -51,7 +51,7 @@
 				<wi:commandButtonNew />
 			</ui:insert>	
 			<wi:messages showDialogMessage="#{showDialogMessage}" timeCloseMSG="#{timeCloseMSG}"/>			
-		</a:form>
+		</h:form>
 	</a:region>
 
 </ui:composition>

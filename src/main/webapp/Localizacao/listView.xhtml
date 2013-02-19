@@ -74,7 +74,7 @@
 					  rowId="#{row.idItemTipoDocumento}">
 						  
 			<ui:define name="toolBar">
-				<a:form>
+				<h:form>
 					<div style="width: 35px">
 						<a:region renderRegionOnly="false">
 							<a:commandLink	action="#{itemTipoDocumentoHome.remove(row)}"
@@ -91,7 +91,7 @@
 							</a:commandLink>
 						</a:region>
 					</div>
-				</a:form>							
+				</h:form>							
 			</ui:define>
 				
 			<wi:columnOutputText columnId="grupoModeloDocumento"
@@ -106,11 +106,11 @@
 			  id="localizacaoTurnoTab"
 			  action="#{localizacaoTurnoAction.newInstance(localizacaoHome.instance)}"
 			  rendered="#{home.managed}">
-		<a:form id="localizacaoTurnoForm">
+		<h:form id="localizacaoTurnoForm">
 			<wi:turnoCalendar handler="#{localizacaoTurnoAction.turnoHandler}" /> 
 			
 			<a:commandButton action="#{localizacaoTurnoAction.gravarTurnos()}" value="Gravar" />
-		</a:form>
+		</h:form>
 	</rich:tab>
 	
 </ui:define> 

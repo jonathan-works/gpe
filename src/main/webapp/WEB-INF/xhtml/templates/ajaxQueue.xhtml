@@ -1,23 +1,16 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
       			xmlns:a="http://richfaces.org/a4j"
+      			xmlns:h="http://java.sun.com/jsf/html"
       			xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<ui:param name="queueSize" value="#{empty queueSize ? 2 : queueSize}" />
 	<ui:param name="intervalPush" value="#{empty intervalPush ? 90000 : intervalPush}" />
-	<ui:param name="usePush" value="#{(empty usePush) ? false : usePush}" />
-	<ui:param name="usePush" value="#{desenvolvimento ? true : usePush}" />
-	<a:region renderRegionOnly="true">
-		<a:form>
-			<a:queue name="org.richfaces.queue.global"
-					 requestDelay="100" 
-				     ignoreDupResponce="true" 
-					 sizeExceededBehavior="dropNew" 
-					 size="#{queueSize}" 
-					 timeout="1000"
-					 />
-				<a:poll interval="#{intervalPush}" enabled="#{not usePush}" ajaxSingle="true" />
-   				<a:push interval="#{intervalPush}" enabled="#{usePush}" ajaxSingle="true" />		
-   		</a:form>
-	</a:region>	
+	<h:form>
+		<a:queue name="org.richfaces.queue.global"
+				 requestDelay="100" 
+			     ignoreDupResponses="true" 
+				 />
+			<a:poll interval="#{intervalPush}" ajaxSingle="true" />
+  		</h:form>
 	
 </ui:composition>

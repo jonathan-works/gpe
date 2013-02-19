@@ -96,9 +96,9 @@
 						  style="float: right; margin-right: 1%;" 
 						  rendered="#{wi:get(showGridCount, true)}"/>
 			<s:div rendered="#{bean.previousExists or bean.nextExists}">
-				<a:form rendered="#{!inForm}" ajaxSubmit="true" >
+				<h:form rendered="#{!inForm}" ajaxSubmit="true" >
 					<ui:include src="inputNumberSlider.xhtml" />
-				</a:form>
+				</h:form>
 				<s:div rendered="#{inForm}" >
 					<ui:include src="inputNumberSlider.xhtml" />
 				</s:div>

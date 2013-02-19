@@ -34,7 +34,7 @@
 
 	<ui:param name="def" value="#{processBuilder.instance}" />
 	
-	<a:form id="form">
+	<h:form id="form">
 	
 	<rich:tabPanel style="height:550px"
 		selectedTab="#{processBuilder.tab}"
@@ -131,7 +131,7 @@
 					 type="submit" 
 					 rendered="#{false and processBuilder.exists}"/>
 
-	</a:form>
+	</h:form>
 
 	<rich:messages id="messages" style="color:red" ajaxRendered="true" globalOnly="false" />
 

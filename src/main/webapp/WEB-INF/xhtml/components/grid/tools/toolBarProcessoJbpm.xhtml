@@ -30,7 +30,7 @@
 	      
 	<ui:composition>
 		<div style="width: 48px">
-		<a:form>
+		<h:form>
 			<a:outputPanel>
 				<ui:param name="actorId" value="#{row.actorId}"/>
 				<h:outputText styleClass="actorId"
@@ -79,7 +79,7 @@
 			<h:graphicImage url="/img/role.gif"
 					rendered="#{(owner != actor.id and owner != null)}" 
 					title="Processo bloqueado pelo servidor #{owner}" />
-		</a:form>
+		</h:form>
 		</div>
 	</ui:composition> 
 </jsp:root>

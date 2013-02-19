@@ -63,9 +63,9 @@
 			.propertyView { min-width: 150px }
 		</style>
 		
-		<a:form>
+		<h:form>
 			<a:jsFunction name="renderButtons" reRender="taskButtonsDiv"/>
-		</a:form>
+		</h:form>
 		<s:div rendered="#{processoHome.managed and checkPermission}">
 			<wi:view form="#{consultaSolicitacaoView}" 
 			         title="#{messages['consultaSolicitacaoGrid.titulo']} #{processoHome.instance} - #{taskInstance.name}: #{processoHandler.getItemDoProcesso(processoHome.instance.idProcesso).caminhoCompletoToString()}"

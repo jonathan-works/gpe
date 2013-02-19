@@ -37,14 +37,14 @@
 				<s:decorate id="#{f.id}Decoration"
 							template="/WEB-INF/xhtml/components/templates/display.xhtml">
 					<ui:param name="props" value="#{f.properties}" />
-					<a:form>
+					<h:form>
 						<h:selectBooleanCheckbox styleClass="checkbox"
 												 value="#{row.obrigatorio}">
 							<a:support event="onchange"
 									   action="#{pessoaQualificacaoHome.update}" 
 									   ajaxSingle="true" />
 						</h:selectBooleanCheckbox>
-					</a:form>
+					</h:form>
 				</s:decorate>
 			</c:if> 
 			<c:if test="#{not canEdit}">

@@ -34,7 +34,7 @@
 	
 	<s:div id="#{gridId}Search">
 		<s:fragment rendered="#{!empty bean.searchFields or isM2M}">
-		<rich:simpleTogglePanel id="#{gridId}SearchFields" 
+		<rich:collapsiblePanel id="#{gridId}SearchFields" 
 				switchType="client"
 				opened="#{!isM2M or panelOpened}">
 			<f:facet name="header"> #{titlePesq}</f:facet>
@@ -43,7 +43,7 @@
 			</f:facet>
 			<f:facet name="closeMarker">&#160;</f:facet>
 			<s:div style="overflow:visible;">
-			<a:form id="#{gridId}SearchForm" styleClass="edit">
+			<h:form id="#{gridId}SearchForm" styleClass="edit">
 			<ui:param name="searchOpen" value="#{empty searchOpen ? true : searchOpen}" />
 				<h:inputHidden id="page" value="#{bean.page}" />
 				<h:inputHidden id="searching" value="true" />
@@ -89,13 +89,13 @@
 									     styleClass="buttons dr-tbpnl-tb-inact"/>
 					</c:if>
 				</s:div>
-			</a:form>
+			</h:form>
 			</s:div>
 			<c:if test="#{showGrid and isM2M}">
 				<wi:datalist/>
 			</c:if>
 			
-		</rich:simpleTogglePanel>
+		</rich:collapsiblePanel>
 		</s:fragment>
 	</s:div>
 </ui:composition>

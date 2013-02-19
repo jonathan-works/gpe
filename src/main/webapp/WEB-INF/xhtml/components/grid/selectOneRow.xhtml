@@ -31,7 +31,7 @@
 	<ui:composition>
 	
 		<s:div style="width: 100%; text-align: center">
-			<a:form>
+			<h:form>
 				<a:commandLink 
 						reRender="#{gridId}"
 						action="#{bean.setSelectedRow(row)}"
@@ -48,7 +48,7 @@
 						rendered="#{bean.selectedRow.equals(row)}">
 					<h:graphicImage url="/img/jbpm/radio-button_16x16.png" style="cursor:pointer" />						
 				</a:commandLink>				
-			</a:form>
+			</h:form>
 			
 		</s:div>
 	

@@ -15,7 +15,7 @@
 
 		<h:messages style="color: red; list-style-type: none; text-align: center; font-size: 12pt;" />
 
-		<rich:simpleTogglePanel 
+		<rich:collapsiblePanel 
 			switchType="client" 
 			opened="false"
 			label="Handled Exception">
@@ -24,9 +24,9 @@
 	#{stackElement}
 				</ui:repeat>
 			</pre>
-		</rich:simpleTogglePanel>
+		</rich:collapsiblePanel>
 
-		<rich:simpleTogglePanel 
+		<rich:collapsiblePanel 
 			switchType="client" 
 			opened="false"
 			label="Unhandled or Wrapper Exception">
@@ -35,28 +35,28 @@
 	#{stackElement}
 			</ui:repeat>
 			</pre>
-		</rich:simpleTogglePanel>
+		</rich:collapsiblePanel>
 
-		<rich:simpleTogglePanel 
+		<rich:collapsiblePanel 
 			switchType="client" 
 			opened="false"
 			label="Session Context">
 			<h:outputText value="#{util.getSessionContextsAsString(true)}" escape="false" />
-		</rich:simpleTogglePanel>
+		</rich:collapsiblePanel>
 
-		<rich:simpleTogglePanel 
+		<rich:collapsiblePanel 
 			switchType="client" 
 			opened="false"
 			label="Conversations Context">
 			<h:outputText value="#{util.getConversationContextsAsString(true)}"	escape="false" />
-		</rich:simpleTogglePanel>
+		</rich:collapsiblePanel>
 
-		<rich:simpleTogglePanel 
+		<rich:collapsiblePanel 
 			switchType="client" 
 			opened="false"
 			label="Aplication Context">
 			<h:outputText value="#{util.getApplicationContextsAsString(true)}" escape="false" />
-		</rich:simpleTogglePanel>
+		</rich:collapsiblePanel>
 		
 	</ui:define>
 	

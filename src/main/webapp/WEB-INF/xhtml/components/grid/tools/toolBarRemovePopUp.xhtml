@@ -33,7 +33,7 @@
 	<ui:param name='mainId' 	value = "#{empty treeModeEntityId ? row[bean.key] : treeModeEntityId}"></ui:param>
 	<ui:param name="idPopUp" 	value="popup_#{mainId}" />
 	
-		<a:form>
+		<h:form>
 			<a:region renderRegionOnly="false">
 				<div style="width: 50px">
 					<s:link	view="#{linkDetalhe}"
@@ -60,7 +60,7 @@
 					</a:commandLink>	
 				</div>
 			</a:region>
-		</a:form>
+		</h:form>
 		
 	</ui:composition>
 	 

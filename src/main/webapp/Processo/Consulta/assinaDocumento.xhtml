@@ -94,7 +94,7 @@
 						<param name="caListDownloadFile" value="#{util.urlProject}/downloadCaList.seam" />
 					</applet> 
 		        </div>
-				<a:form id="formValidar">
+				<h:form id="formValidar">
 					<h:inputHidden id="certChain" 
 						value="#{processoDocumentoBinHome.certChain}" 
 						required="true"/>					
@@ -107,7 +107,7 @@
 		            	action="#{processoDocumentoBinHome.assinarDocumento()}" 
 		            	oncomplete="actionDepoisValidar();"/>
 		            	
-				</a:form>
+				</h:form>
 				
 			<rich:messages id="msg" infoClass="formMessage" />
 	

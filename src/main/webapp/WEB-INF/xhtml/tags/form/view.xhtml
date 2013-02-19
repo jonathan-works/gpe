@@ -36,7 +36,7 @@
 			#{form.setHome(home.homeName)}
 		</c:if>    	
 
-       <rich:simpleTogglePanel switchType="client" opened="#{empty opened ? true : opened}">
+       <rich:collapsiblePanel switchType="client" opened="#{empty opened ? true : opened}">
        	<c:if test="#{useCustomTitle}">
         	<f:facet name="header">
         		<ui:insert name="customTitle" />
@@ -56,7 +56,7 @@
 					viewId="/WEB-INF/xhtml/components/view/#{f.type}.xhtml" />
 			</wi:repeat>
 	    </h:panelGrid>
-       </rich:simpleTogglePanel>
+       </rich:collapsiblePanel>
             
     </h:form>
 

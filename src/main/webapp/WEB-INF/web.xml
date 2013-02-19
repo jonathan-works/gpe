@@ -10,13 +10,7 @@
 	<!-- Facelets -->
 	<context-param>
 		<param-name>facelets.LIBRARIES</param-name>
-		<param-value>
-			/WEB-INF/xhtml/itx.bpm.form.taglib.xml;
-			/WEB-INF/xhtml/itx.core.form.taglib.xml;
-			/WEB-INF/xhtml/itx.core.generic.taglib.xml;
-			/WEB-INF/xhtml/itx.core.grid.taglib.xml;
-			/WEB-INF/xhtml/itx.core.report.taglib.xml
-		</param-value>
+		<param-value>/WEB-INF/xhtml/infox.taglib.xml</param-value>
 	</context-param>
 
 	<!-- Fila padrão para as requisições ajax -->
@@ -28,7 +22,7 @@
     <!-- Ajax4jsf -->
     
     <context-param>
-        <param-name>org.richfaces.SKIN</param-name>
+        <param-name>org.richfaces.skin</param-name>
       <param-value>#{wiSkin.skin}</param-value>
     </context-param>
 

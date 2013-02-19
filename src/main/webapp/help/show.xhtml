@@ -17,9 +17,9 @@
 </h:head>
 
 <h:body>>
-	<a:form>
+	<h:form>
 		<a:jsFunction name="refreshPage" status="status" reRender="showHelp" />
-	</a:form>
+	</h:form>
 	
 	<s:div id="showHelp">
 		<div style="position: absolute; right: 3px; top: 3px; z-index: 1000">
@@ -30,7 +30,7 @@
 		   </a:status>
 		</div>
 		
-		<a:form ajaxSubmit="true"  
+		<h:form ajaxSubmit="true"  
 				focus="searchText"
 				style="position: absolute; right:5px">
 			<table cellspacing="0" cellpadding="0"><tr>
@@ -46,7 +46,7 @@
 				</td>
 			</tr></table>
 			<f:param name="tab" value="search" />
-		</a:form>
+		</h:form>
 	
 		<s:div id="resultado">
 			<h:outputText value="Nenhum resultado encontrado."
@@ -79,7 +79,7 @@
 				<rich:tab id="search"
 					rendered="#{!empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}"
 					label="Resultado da pesquisa">
-					<a:form>
+					<h:form>
 						<h:dataTable id="helpResult"
 							rendered="#{! empty ajudaHome.textoPesquisa}"
 							value="#{ajudaHome.resultadoPesquisa}" var="v">
@@ -100,7 +100,7 @@
 								</div>
 							</h:column>
 						</h:dataTable>	
-					</a:form>
+					</h:form>
 				</rich:tab>
 			</rich:tabPanel>
 		</s:div>

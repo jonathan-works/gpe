@@ -38,7 +38,7 @@
 		
 		<ui:param name="home" value="#{empty home ? form.home : home}"/>
 		<ui:param name="instance" value="#{home.instance}"/>
-	    <a:form id="#{formId}" 
+	    <h:form id="#{formId}" 
 	    		styleClass="edit"
 	    		enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}">
 						   	
@@ -128,7 +128,7 @@
 				
 			<wi:messages showDialogMessage="#{showDialogMessage}" timeCloseMSG="#{timeCloseMSG}"/>											
 
-	    </a:form>
+	    </h:form>
 	    
 		<s:fragment rendered="#{!empty focus}">
 			<script type="text/javascript">

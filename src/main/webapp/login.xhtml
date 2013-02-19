@@ -27,7 +27,7 @@
 				</ui:include>
 			</div>
 			<h:form id="login">
-				<div id="corpoInferior" class="corpoInferior" />
+				<div id="corpoInfeior" class="corpoInferior" />
 				<div id="corpoSuperior" class="corpoSuperior" />
 				<div id="blocoCentralLogin" class="blocoCentralLogin" >
 					<div id="logo" class="logo">
@@ -95,15 +95,15 @@
 									
 									<script>
 										function mudar(){
-											if ($("novaSenha").style.display == "none"){
-												$("novaSenha").style.display = "";
-												$("btnTrocar").value = "#{messages['login.naoTrocarSenhaBtn']}";
+											if ($("#novaSenha").is(':hidden')){
+												$("#novaSenha").show();
+												$("#btnTrocar").val("#{messages['login.naoTrocarSenhaBtn']}");
 											}
 											else{
-												$("novaSenha").style.display = "none";
-												$("btnTrocar").value = "#{messages['login.trocarSenhaBtn']}";
-												$("login:newPassword1").value = "";
-												$("login:newPassword2").value = "";
+												$("#novaSenha").hide();
+												$("#btnTrocar").val("#{messages['login.trocarSenhaBtn']}");
+												$("#login\\:newPassword1").val('');
+												$("#login\\:newPassword2").val('');
 											}
 											return false;
 										}
@@ -116,7 +116,7 @@
 									<input class="input_button"
 										id="btnTrocarSenha" type="button" value="#{messages['login.requisitarSenhaBtn']}"
 										style="width: 170px" 
-										onclick="Richfaces.showModalPanel('panelTeste')" />
+										onclick="#{rich:component('panelTeste')}.show();" />
 								</c:if>
 								
 								<c:if test="#{useCertLogin}">
@@ -127,8 +127,8 @@
 										signButtonCaption="Entrar"
 										certificationChainField="login:certChain"
 										signatureField="login:signature"
-										functionPreSign="Richfaces.showModalPanel('mp_formValidar');"	
-										functionPosSign="Richfaces.hideModalPanel('mp_formValidar');"
+										functionPreSign="#{rich:component('mp_formValidar')}.show();"	
+										functionPosSign="#{rich:component('mp_formValidar')}.hide();"
 										functionPosSignOk="checkValidacao();"	
 										loginMode="true" />
 								</c:if>
@@ -176,7 +176,7 @@
 				<f:facet name="controls">
 					<h:panelGroup>
 						<h:graphicImage value="/img/closeMP.gif"
-							onclick="Richfaces.hideModalPanel('panelTeste')"/>
+							onclick="#{rich:component('panelTeste')}.hide()"/>
 					</h:panelGroup>
 				</f:facet>			
 				<h:form id="gerarSenha" rendered="#{not useCertLogin}">
@@ -210,7 +210,7 @@
 								   id="btnTrocarSenha2" 
 							       type="button"
 							       value="#{messages['login.cancelaTrocaSenhaBtn']}" 
-								   onclick="Richfaces.hideModalPanel('panelTeste')" />
+								   onclick="#{rich:component('panelTeste')}.hide()" />
 						</div>
 					</div>
 				</h:form>

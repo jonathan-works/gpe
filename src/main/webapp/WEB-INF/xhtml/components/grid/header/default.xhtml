@@ -36,7 +36,7 @@
 		<ui:param name="header" value="#{evalHeader ? util.eval(header) : header}" />
 		<ui:param name="mostrarOrdenar" value="#{isLeftGrid != true and false}" />
 
-  <a:form ajaxSubmit="true">
+  <h:form ajaxSubmit="true">
   	<a:commandLink styleClass="columnHeader"
   	 	reRender="#{gridId}"
   	 	status=":status"
@@ -46,6 +46,6 @@
        <f:param name="#{bean.gridId}.order" value="#{bean.order==asc ? desc : asc}"/>
    </a:commandLink>
    <h:outputText value="#{header}" rendered="#{not mostrarOrdenar}" />
-   </a:form>
+   </h:form>
 </ui:composition> 
 </jsp:root>

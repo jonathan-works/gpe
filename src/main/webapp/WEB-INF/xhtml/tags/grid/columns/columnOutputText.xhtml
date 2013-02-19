@@ -31,15 +31,15 @@
 		<div style="width: 100%;" class="#{styleClass}" >
 			<ui:insert />
 			
-			<a:form rendered="#{editRowOnClick}">
+			<h:form rendered="#{editRowOnClick}">
 				<a:region> 
 					<a:commandLink action="#{home.setInstance(row)}"
 								   reRender="#{wi:get(reRender,'pageBody')}"
 								   status=":status">
 						<c:if test="#{tabOnClick == 'form'}" >
-							<a:actionparam name="id" value="#{rowId}"  />
+							<a:param name="id" value="#{rowId}"  />
 						</c:if>
-						<a:actionparam name="tab" value="#{wi:get(tabOnClick, 'form')}" assignTo="#{home.tab}"/>
+						<a:param name="tab" value="#{wi:get(tabOnClick, 'form')}" assignTo="#{home.tab}"/>
 						
 						<h:outputText value="#{value}" 
 									  escape="#{escape}"
@@ -49,7 +49,7 @@
 						</h:outputText>
 					</a:commandLink>
 				</a:region>
-			</a:form>
+			</h:form>
 		</div>
 		<s:div rendered="#{not editRowOnClick}"
 			   style="width: 100%;"

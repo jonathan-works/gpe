@@ -82,7 +82,7 @@
 			
 			<span id="#{id}Locator" />
 			
-	 		<rich:simpleTogglePanel id="#{id}Panel"
+	 		<rich:collapsiblePanel id="#{id}Panel"
 						 		    style="width: #{width - 20}px; 
 						 		           border: solid 1px white;"
 						 			headerClass="inputTreeHeader"
@@ -112,7 +112,7 @@
 								  } else return false;"
 							  onclick="#{folderSelectable ? '' : 'return false;'};"
 							  onselected="id = $('#{id}Locator').nextSibling.id + '_header'; $(id).click();"/>			
-			</rich:simpleTogglePanel>
+			</rich:collapsiblePanel>
 
 		</s:div>
 		

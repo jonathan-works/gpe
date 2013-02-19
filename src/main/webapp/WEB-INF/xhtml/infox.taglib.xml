@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibary_2_0.xsd"
+	version="2.0">
+
+	<namespace>http://www.itx.com.br/jsf</namespace>
+
+	<tag>
+		<tag-name>automaticEventsTree</tag-name>
+		<source>tags/form/fields/automaticEventsTree.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>eventsTree</tag-name>
+		<source>tags/form/fields/eventsTree.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>appletAssinatura</tag-name>
+		<source>tags/form/fields/appletAssinatura.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>form</tag-name>
+		<source>tags/form/form.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>dataForm</tag-name>
+		<source>tags/form/dataForm.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>dataView</tag-name>
+		<source>tags/form/dataView.xhtml</source>
+	</tag>	
+	
+	<tag>
+		<tag-name>searchForm</tag-name>
+		<source>tags/form/searchForm.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>formFrame</tag-name>
+		<source>tags/form/formFrame.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>messages</tag-name>
+		<source>tags/form/messages.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>treePanel</tag-name>
+		<source>tags/form/treePanel.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>view</tag-name>
+		<source>tags/form/view.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>commandButton</tag-name>
+		<source>tags/form/buttons/commandButton.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>commandButtonSave</tag-name>
+		<source>tags/form/buttons/commandButtonSave.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>commandButtonNew</tag-name>
+		<source>tags/form/buttons/commandButtonNew.xhtml</source>
+	</tag>
+		
+	<tag>
+		<tag-name>commandButtonPersist</tag-name>
+		<source>tags/form/buttons/commandButtonPersist.xhtml</source>
+	</tag>
+		
+	<tag>
+		<tag-name>commandButtonUpdate</tag-name>
+		<source>tags/form/buttons/commandButtonUpdate.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>suggest</tag-name>
+		<source>tags/form/fields/suggest.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>ajaxSupport</tag-name>
+		<source>tags/form/fields/ajaxSupport.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>captcha</tag-name>
+		<source>tags/form/fields/captcha.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>tree</tag-name>
+		<source>tags/form/fields/tree.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>inputText</tag-name>
+		<source>tags/form/fields/inputText.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>outputText</tag-name>
+		<source>tags/form/fields/outputText.xhtml</source>
+	</tag>	
+	
+	<tag>
+		<tag-name>inputTextarea</tag-name>
+		<source>tags/form/fields/inputTextarea.xhtml</source>
+	</tag>
+		
+	<tag>
+		<tag-name>editor</tag-name>
+		<source>tags/form/fields/editor.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectBooleanCheckbox</tag-name>
+		<source>tags/form/fields/selectBooleanCheckbox.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectBooleanMenu</tag-name>
+		<source>tags/form/fields/selectBooleanMenu.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectManyCheckbox</tag-name>
+		<source>tags/form/fields/selectManyCheckbox.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectOneRadioEnum</tag-name>
+		<source>tags/form/fields/selectOneRadioEnum.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectBooleanRadio</tag-name>
+		<source>tags/form/fields/selectBooleanRadio.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectOneRadio</tag-name>
+		<source>tags/form/fields/selectOneRadio.xhtml</source>
+	</tag>
+		
+	<tag>
+		<tag-name>selectOneMenuSuggest</tag-name>
+		<source>tags/form/fields/selectOneMenuSuggest.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectOneMenu</tag-name>
+		<source>tags/form/fields/selectOneMenu.xhtml</source>
+	</tag>
+		
+	<tag>
+		<tag-name>selectOneMenuEntity</tag-name>
+		<source>tags/form/fields/selectOneMenuEntity.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectOneMenuEnum</tag-name>
+		<source>tags/form/fields/selectOneMenuEnum.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputDate</tag-name>
+		<source>tags/form/fields/inputDate.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>fileUpload</tag-name>
+		<source>tags/form/fields/fileUpload.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>fileUploadBox</tag-name>
+		<source>tags/form/fields/fileUploadBox.xhtml</source>
+	</tag>	
+	
+	<tag>
+		<tag-name>imageUpload</tag-name>
+		<source>tags/form/fields/imageUpload.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputNumber</tag-name>
+		<source>tags/form/fields/inputNumber.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputSecret</tag-name>
+		<source>tags/form/fields/inputSecret.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>pickList</tag-name>
+		<source>tags/form/fields/pickList.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputTime</tag-name>
+		<source>tags/form/fields/inputTime.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputEmail</tag-name>
+		<source>tags/form/fields/inputEmail.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputMonetary</tag-name>
+		<source>tags/form/fields/inputMonetary.xhtml</source>
+	</tag>	
+
+
+<!-- Componentes dentro da pasta "specialized" -->
+
+	<tag>
+		<tag-name>inputHoraPeriodo</tag-name>
+		<source>tags/form/fields/specialized/inputHoraPeriodo.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputDataPeriodo</tag-name>
+		<source>tags/form/fields/specialized/inputDataPeriodo.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>inputPeriodoAnoMes</tag-name>
+		<source>tags/form/fields/specialized/inputPeriodoAnoMes.xhtml</source>
+	</tag>
+		
+	<tag>
+		<tag-name>inputDataPeriodoMes</tag-name>
+		<source>tags/form/fields/specialized/inputDataPeriodoMes.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>inputCep</tag-name>
+		<source>tags/form/fields/specialized/inputCep.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputCnpj</tag-name>
+		<source>tags/form/fields/specialized/inputCnpj.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputCpf</tag-name>
+		<source>tags/form/fields/specialized/inputCpf.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputTituloEleitor</tag-name>
+		<source>tags/form/fields/specialized/inputTituloEleitor.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectGeneroRadio</tag-name>
+		<source>tags/form/fields/specialized/selectGeneroRadio.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectSituacaoRadio</tag-name>
+		<source>tags/form/fields/specialized/selectSituacaoRadio.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>selectSituacaoOneMenu</tag-name>
+		<source>tags/form/fields/specialized/selectSituacaoOneMenu.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>inputTelefone</tag-name>
+		<source>tags/form/fields/specialized/inputTelefone.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>turnoCalendar</tag-name>
+		<source>tags/form/fields/turnoCalendar.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>repeat</tag-name>
+		<handler-class>br.com.itx.jsf.RepeatHandler</handler-class>
+	</tag>
+	
+	<tag>
+		<tag-name>ajaxDiv</tag-name>
+		<source>tags/generic/ajaxDiv.xhtml</source>
+	</tag>	
+	
+	<tag>
+		<tag-name>dragDrop</tag-name>
+		<source>tags/generic/dragDrop.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>mask</tag-name>
+		<source>tags/generic/mask.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>msgGeneric</tag-name>
+		<source>tags/generic/msgGeneric.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>modalPanel</tag-name>
+		<source>tags/generic/modalPanel.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>compositeField</tag-name>
+		<source>tags/generic/compositeField.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>compositeFieldGroup</tag-name>
+		<source>tags/generic/compositeFieldGroup.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>quadro</tag-name>
+		<source>tags/generic/quadro.xhtml</source>
+	</tag>	
+	
+	<tag>
+		<tag-name>helpIcon</tag-name>
+		<source>tags/generic/helpIcon.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>commandLink</tag-name>
+		<source>tags/generic/commandLink.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>outputLink</tag-name>
+		<source>tags/generic/outputLink.xhtml</source>
+	</tag>
+		
+	<tag>
+		<tag-name>graphicImage</tag-name>
+		<source>tags/generic/graphicImage.xhtml</source>
+	</tag>
+	
+	<function>
+		<function-name>get</function-name>
+		<function-class>br.com.itx.jsf.JsfFunctions</function-class>
+		<function-signature>java.lang.Object get(java.lang.Object,java.lang.Object)</function-signature>
+	</function>
+		
+	<function>
+		<function-name>splitLength</function-name>
+		<function-class>br.com.itx.jsf.JsfFunctions</function-class>
+		<function-signature>java.lang.Integer splitLength(java.lang.String, java.lang.String)</function-signature>
+	</function>
+	
+	<tag>
+		<tag-name>dataTable</tag-name>
+		<source>tags/grid/dataTable.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>datagrid</tag-name>
+		<source>tags/grid/datagrid.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>datagridSearch</tag-name>
+		<source>tags/grid/datagridSearch.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>datalist</tag-name>
+		<source>tags/grid/datalist.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>m2mGrid</tag-name>
+		<source>tags/grid/m2mGrid.xhtml</source>
+	</tag>
+	
+	<!-- Columns --> 
+	
+	<tag>
+		<tag-name>column</tag-name>
+		<source>tags/grid/column.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>columnSituacao</tag-name>
+		<source>tags/grid/columns/columnSituacao.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnBoolean</tag-name>
+		<source>tags/grid/columns/columnBoolean.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>columnDateTime</tag-name>
+		<source>tags/grid/columns/columnDateTime.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnEnum</tag-name>
+		<source>tags/grid/columns/columnEnum.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnOutputText</tag-name>
+		<source>tags/grid/columns/columnOutputText.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnOutputTextIdent</tag-name>
+		<source>tags/grid/columns/columnOutputTextIdent.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnSelectBooleanCheckbox</tag-name>
+		<source>tags/grid/columns/columnSelectBooleanCheckbox.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>columnDataList</tag-name>
+		<source>tags/grid/columns/columnDataList.xhtml</source>
+	</tag>
+	
+	<!-- Tools -->
+	
+	<tag>
+		<tag-name>toolBar</tag-name>
+		<source>tags/grid/tools/toolBar.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarEdit</tag-name>
+		<source>tags/grid/tools/toolBarEdit.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarPopUp</tag-name>
+		<source>components/grid/tools/toolBarPopUp.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarInactive</tag-name>
+		<source>tags/grid/tools/toolBarInactive.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarRemove</tag-name>
+		<source>tags/grid/tools/toolBarRemove.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarSelectRemove</tag-name>
+		<source>tags/grid/tools/toolBarSelectRemove.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>toolBarReport</tag-name>
+		<source>tags/grid/tools/toolBarReport.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>toolBarReportExcel</tag-name>
+		<source>tags/grid/tools/toolBarReportExcel.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>toolBarPrint</tag-name>
+		<source>tags/grid/tools/toolBarPrint.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>toolBarTextPreview</tag-name>
+		<source>tags/grid/tools/toolBarTextPreview.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>toolBarGraphicImage</tag-name>
+		<source>tags/grid/tools/toolBarGraphicImage.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>report</tag-name>
+		<source>tags/report/report.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>pdfTable</tag-name>
+		<source>tags/report/pdfTable.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>dataReport</tag-name>
+		<source>tags/report/dataReport.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>reportColumnHeader</tag-name>
+		<source>tags/report/columns/reportColumnHeader.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumn</tag-name>
+		<source>tags/report/columns/reportColumn.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumnList</tag-name>
+		<source>tags/report/columns/reportColumnList.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>reportColumnMonetary</tag-name>
+		<source>tags/report/columns/reportColumnMonetary.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumnDate</tag-name>
+		<source>tags/report/columns/reportColumnDate.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumnEnum</tag-name>
+		<source>tags/report/columns/reportColumnEnum.xhtml</source>
+	</tag>
+	
+	<tag>
+		<tag-name>reportColumnBoolean</tag-name>
+		<source>tags/report/columns/reportColumnBoolean.xhtml</source>
+	</tag>
+
+	<tag>
+		<tag-name>reportColumnSituacao</tag-name>
+		<source>tags/report/columns/reportColumnSituacao.xhtml</source>
+	</tag>
+</facelet-taglib>

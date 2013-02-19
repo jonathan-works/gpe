@@ -59,7 +59,7 @@
 					  rendered="#{home.managed}"
 					  action="#{tarefaEventoHome.carregarAgrupamentos()}">
 				<a:region renderRegionOnly="true">
-					<a:form id="registraEventoForm">
+					<h:form id="registraEventoForm">
 						<wi:pickList id="agrupamentos"
 									 value="#{tarefaEventoHome.registrados}"
 									 sourceListWidth="250"
@@ -77,7 +77,7 @@
 						<a:commandButton value="Salvar"
 										 styleClass="buttons dr-tbpnl-tb-inact"
 										 action="#{tarefaEventoHome.update()}"/>
-					</a:form>
+					</h:form>
 				</a:region>
 			</rich:tab>
 		</rich:tabPanel>	

@@ -22,7 +22,7 @@
 			    url="#{a4jSkin.imgIconPalette}" 
 			    style="cursor:pointer"
 				title="Alterar o esquema de cores"
-				onclick="Richfaces.showModalPanel('#{id}-skinPanel')" />	
+				onclick="#{rich:component(id.concat('-skinPanel'))}.show()" />	
    				 							
 			<h:commandButton 
 				action="#{skinZoom.setTmNormal()}" 
@@ -46,7 +46,7 @@
 		<f:facet name="controls">
 			<h:panelGroup>
 				<h:graphicImage value="/img/closeMP.gif"
-					onclick="Richfaces.hideModalPanel('#{id}-skinPanel')"/>
+					onclick="#{rich:component(id.concat('-skinPanel'))}.hide()"/>
 			</h:panelGroup>				
 		</f:facet>
 		<s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml">

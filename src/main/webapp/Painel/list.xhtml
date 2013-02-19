@@ -20,12 +20,12 @@
 	<ui:define name="body">
 	
 		<a:region renderRegionOnly="true">
-			<a:form>
+			<h:form>
 			 	<a:jsFunction name="atualizaPainelFluxo" 
 					 		  oncomplete="window.location='#{util.contextPath}/Painel/list.seam'"
 					 		  ajaxSingle="true"
 					 		  status="status" />
-			</a:form>
+			</h:form>
 		    <br/>
 		    <table width="99%" border="0" cellspacing="0" cellpadding="0">
 		    	<tr valign="top">
@@ -48,7 +48,7 @@
 							<ui:param name="mostraGrid" value="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}"/>
 						    <s:div id="processos">
 							    <s:div id="pesquisaList">
-								    <rich:simpleTogglePanel	rendered="#{mostraGrid}"
+								    <rich:collapsiblePanel	rendered="#{mostraGrid}"
 													    	switchType="client"
 													    	opened="false" 
 													    	label="Pesquisar"
@@ -97,7 +97,7 @@
 											</ui:define>
 										</wi:searchForm>
 										<h:messages styleClass="message" id="globalMessages"/>
-							    	</rich:simpleTogglePanel>
+							    	</rich:collapsiblePanel>
 								</s:div>			
 							    <s:div id="processoList">
 									<wi:datalist rendered="#{mostraGrid}"
@@ -125,7 +125,7 @@
 			    	<span style="cursor:pointer; font-family: Verdana, Arial; padding-right: 5px"
 			    		  onclick="Richfaces.hideTopModalPanel()">X</span>
 				</f:facet>
-				<a:form id="modalForm">
+				<h:form id="modalForm">
 					<wi:inputText id="nomeCaixa" 
 							      label="Nome da caixa"		
 							      value="#{caixaHome.nomeNovaCaixa}"/>
@@ -135,7 +135,7 @@
 									 oncomplete="Richfaces.hideTopModalPanel()"
 									 reRender="tarefasDiv,painelProcessos"/>
 					<rich:messages />
-				</a:form>
+				</h:form>
 			</rich:popupPanel>
 			
 		</a:region>

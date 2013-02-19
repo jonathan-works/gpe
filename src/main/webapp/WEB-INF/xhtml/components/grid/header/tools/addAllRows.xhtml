@@ -11,7 +11,7 @@
 <ui:composition>
 	<ui:param name="addAllExpression" value="#{'#{'}#{addAllExpression}}" />
 	<ui:param name="reRenderAdd" value="#{empty reRenderAdd ? 'l_'.concat(gridId).concat(', ').concat(gridId) : reRenderAdd}" />
-	<a:form> 
+	<h:form> 
 	<a:commandLink limitToList="true"
 		status=":status" 
 		reRender="#{reRenderAdd}"
@@ -19,6 +19,6 @@
 		rendered="#{canEdit}">
 		<h:graphicImage url="/img/grid/copyLeft.gif" title="Adicionar Todos"/>
 	</a:commandLink>
-	</a:form>
+	</h:form>
 </ui:composition> 
 </jsp:root>

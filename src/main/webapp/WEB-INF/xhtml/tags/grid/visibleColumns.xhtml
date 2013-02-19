@@ -26,10 +26,10 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:rich="http://richfaces.ajax4jsf.org/rich">
  
-	<rich:simpleTogglePanel label="Colunas" 
+	<rich:collapsiblePanel label="Colunas" 
 							opened="false" 
 							switchType="client">
-		<a:form id="#{gridId}ColumnListForm">
+		<h:form id="#{gridId}ColumnListForm">
 			<rich:dataTable value="#{bean.allColumns}" 
 							style="margin-top: 6px; width: 100%"
 							var="col" 
@@ -79,7 +79,7 @@
 								  value="#{messages[col.toString()]}" />
 				</rich:column>
 			</rich:dataTable>
-		</a:form>
-	</rich:simpleTogglePanel>
+		</h:form>
+	</rich:collapsiblePanel>
 
 </ui:composition>

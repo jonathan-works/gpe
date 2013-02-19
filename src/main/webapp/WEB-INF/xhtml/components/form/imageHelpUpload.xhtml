@@ -29,7 +29,7 @@
 	<a:loadScript src="/js/imageUpload.js" />
 	<s:div id="uploadImagem" 
 		style="float: left; padding-left:10px">
-		<rich:simpleTogglePanel 
+		<rich:collapsiblePanel 
 			switchType="ajax" opened="false"
 			label="Álbum de imagens"
 			onclick="configureDragDrop()">
@@ -71,7 +71,7 @@
 		            </f:facet>
 	           	</rich:dataGrid> 
             </h:form>
-		</rich:simpleTogglePanel> 
+		</rich:collapsiblePanel> 
 	</s:div>
 	
 </ui:composition>

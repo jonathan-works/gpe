@@ -46,7 +46,7 @@
 				<h:graphicImage url="/img/usuario.gif"
 								rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
 				<h:outputText value="#{userHandler.getUsuarioByTarefa(task)} "/>
-				<a:form id="unlockForm">
+				<h:form id="unlockForm">
 					<a:commandLink action="#{taskInstanceHome.removeUsuario()}"
 									reRender="usuarioTarefaDiv"
 									rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
@@ -55,7 +55,7 @@
 										
 						</h:graphicImage>
 					</a:commandLink>
-				</a:form>
+				</h:form>
 			</s:div>
 		</rich:column>
 		

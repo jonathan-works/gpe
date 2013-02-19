@@ -27,9 +27,9 @@
 				xmlns:rich="http://richfaces.org/rich">
 	
 	<ui:param name="clearAction" value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}"/>
-    <a:form id="#{formId}" styleClass="edit" >
+    <h:form id="#{formId}" styleClass="edit" >
     	<a:region>
-	        <rich:simpleTogglePanel opened="#{wi:get(opened, true)}"
+	        <rich:collapsiblePanel opened="#{wi:get(opened, true)}"
 	        						width="#{wi:get(widthSearchForm, '275px')}"
 	        						switchType="client">
 				<f:facet name="closeMarker">&#160;</f:facet>
@@ -53,7 +53,7 @@
 										  value="Pesquisar"
 										  action="#{searchAction}"
 										  reRender="#{wi:get(searchReRender, 'pageBody')}">
-				        	<a:actionparam assignTo="#{bean.page}" value="1"/>
+				        	<a:param assignTo="#{bean.page}" value="1"/>
 						</wi:commandButton>
 						
 						<a:region renderRegionOnly="false">
@@ -79,16 +79,16 @@
 										  action="#{bean.cleanSearch()}"/>
 					</s:div>
 				</ui:insert>
-			</rich:simpleTogglePanel>
+			</rich:collapsiblePanel>
 		</a:region>
-	</a:form>
+	</h:form>
 	<wi:modalPanel id="#{formId}ModalPanel" 
 				   labelHeader="Salvar a pesquisa atual"
 				   width="900"
 				   rendered="#{empty showSalvarPesquisa ? true : showSalvarPesquisa}"
 				   height="500">
 		<s:div id="#{formId}modalPesquisaDiv">
-			<a:form id="#{formId}ModalForm">
+			<h:form id="#{formId}ModalForm">
 				<ui:param name="template" 
 						  value="/WEB-INF/xhtml/components/templates/edit.xhtml"/>
 				<wi:inputText id="nomePesquisa" 
@@ -117,7 +117,7 @@
 	                					   operation="hide" 
 	                					   event="onclick"/>
 				</wi:commandButton>
-			</a:form>
+			</h:form>
 		</s:div>
 		<s:div id="#{formId}modalPesquisaListDiv" style="margin-top: 10px;">
 			<ui:param name="beanCrud" value="#{bean}"/>
@@ -130,7 +130,7 @@
 				<ui:define name="headerToolBar"/>
 				<ui:define name="toolBar">
 					<a:region>
-						<a:form>
+						<h:form>
 							<a:commandLink reRender="searchGridRegion"
 										   status=":status"
 										   ajaxSingle="true"
@@ -162,7 +162,7 @@
 												onmouseover="this.style.opacity=1"
 												onmouseout ="this.style.opacity=0.15" />
 							</a:commandLink>
-						</a:form>
+						</h:form>
 					</a:region>
 				</ui:define>
 				<wi:columnOutputText columnId="nome"
