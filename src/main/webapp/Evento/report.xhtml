@@ -22,8 +22,7 @@
 	<ui:param name="title" value="Eventos" />
 
 
-	<wi:dataReport subtitle="Resultado dos Eventos Pesquisados"
-				   title="#{messages['evento.titlePage']}"
+	<wi:dataReport title="#{messages['evento.titlePage']}"
 				   columns="4"
 				   widths="4 2 2 1"
 				   headerText="#{eventoList.criteria}">
@@ -31,7 +30,7 @@
 		<wi:reportColumnHeader title="#{messages['evento.evento']}" />
 		<wi:reportColumnHeader title="#{messages['evento.eventoSuperior']}" />
 		<wi:reportColumnHeader title="#{messages['evento.observacao']}" />
-		<wi:reportColumnHeader title="#{messages['evento.ativo']}" />
+		<wi:reportColumnHeader title="#{messages['field.situacao']}" />
 				
 		<ui:repeat var="row" value="#{eventoList.list()}">
 			

@@ -27,7 +27,7 @@
 -->
 
 	<s:div id="taskDiv" style="float:left; margin-left:5px; width: 480px">
-		<wi:inputText id="taskName" value="#{processBuilder.taskName}" 
+		<wi:inputText id="taskName" value="#{taskFitter.taskName}" 
 			widthDiv="230px"
 			style="width:100%"
 			label="Nome">
@@ -35,7 +35,7 @@
 		</wi:inputText>
 		 
 		<wi:selectOneMenu id="swimlaneTask" 
-			items ="#{processBuilder.swimlaneList}"
+			items ="#{swimlaneFitter.swimlaneList}"
 			label="Atribuir a"
 			style="width:100%"
 			widthDiv="230px"
@@ -46,14 +46,15 @@
 		
 		<wi:inputNumber id="prazo"
 			label="Prazo para Término"
-			value="#{processBuilder.prazo}">
+
+			value="#{taskFitter.prazo}">
 			<wi:ajaxSupport />
 		</wi:inputNumber>
 			
 		<wi:selectOneMenuEnum id="tipoPrazo"
 							  label="Unidade"
-							  value="#{processBuilder.tipoPrazo}"
-							  items="#{processBuilder.tipoPrazoList}"
+							  value="#{taskFitter.tipoPrazo}"
+							  items="#{taskFitter.tipoPrazoList}"
 							  noSelectionLabel="Selecione um registro...">
 			<wi:ajaxSupport />
 		</wi:selectOneMenuEnum>
@@ -96,7 +97,7 @@
 					<a:commandLink ajaxSingle="true"
 						reRender="actionTemplate"
 						status=":status"
-						action="#{processBuilder.currentTask.setCurrentVariable(var)}">
+						action="#{taskFitter.currentTask.setCurrentVariable(var)}">
 						<h:graphicImage title="Adicionar modelo de documento"
 							style="cursor:pointer" 
 							rendered="#{empty var.modeloList}" 
@@ -159,8 +160,8 @@
 		<rich:column style="width:110px">
 			<f:facet name="header">Tipo</f:facet>
 			<wi:selectOneMenu id="type" value="#{var.type}" 
-				items="#{processBuilder.typeList}"
-				optionLabel="#{processBuilder.getTypeLabel(v)}"
+				items="#{typeFitter.typeList}"
+				optionLabel="#{typeFitter.getTypeLabel(v)}"
 				widthDiv="100%"
 				style="width:100%">
 				<a:support event="onchange" 

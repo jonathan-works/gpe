@@ -37,7 +37,7 @@
 					  rowId="#{row.idLocalizacaoFisica}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarlocalizacaoFisicaForm"
-							   formTitle="#{messages['localizacaoFisica.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="descricao"
 								  label="#{messages['localizacaoFisica.descricao']}"
 								  value="#{localizacaoFisicaList.entity.descricao}"
@@ -49,7 +49,7 @@
 							 iconLeaf="/img/file.gif"
 							 label="#{messages['localizacaoFisica.localizacaoFisicaPai']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{localizacaoFisicaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -59,14 +59,14 @@
 									  value="#{row.descricao}"
 									  fullPath="#{row.caminhoCompleto}"/>
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['localizacaoFisica.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							columnWidth="10%"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
-		<wi:dataForm formId="localizacaoFisicaForm" formTitle="#{messages['localizacaoFisica.titleForm']}">
+		<wi:dataForm formId="localizacaoFisicaForm" formTitle="#{messages['form.title']}">
 			<wi:inputText id="descricao"
 								  required="true"
 								  label="#{messages['localizacaoFisica.descricao']}"
@@ -78,8 +78,7 @@
 						 iconLeaf="/img/file.gif"
 						 label="#{messages['localizacaoFisica.pai']}"/>
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['localizacaoFisica.ativo']}"
-								    required="true"
+								    label="#{messages['field.situacao']}"
 								    value="#{localizacaoFisicaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

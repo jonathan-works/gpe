@@ -31,11 +31,11 @@
 	<ui:define name="searchGrid">
 		<wi:dataTable values="#{modeloDocumentoList.list(15)}"
 			bean="#{modeloDocumentoList}"
-			tableTitle="#{messages['modeloDocumento.titleGrid']}"
+			tableTitle="#{messages['modeloDocumento.titleView']}"
 			id="modeloDocumentoList" rowId="#{row.idModeloDocumento}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="modeloDocumentoSearchForm"
-					formTitle="#{messages['modeloDocumento.titleGrid']}">
+					formTitle="#{messages['searchForm.title']}">
 					<wi:selectOneMenuEntity id="tipoModeloDocumento"
 						label="#{messages['modeloDocumento.tipoModeloDocumento']}"
 						value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
@@ -44,7 +44,7 @@
 						label="#{messages['modeloDocumento.tituloModeloDocumento']}"
 						value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
 					<wi:selectSituacaoOneMenu id="situacao"
-						label="#{messages['modeloDocumento.ativo']}"
+						label="#{messages['field.situacao']}"
 						value="#{modeloDocumentoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -56,14 +56,14 @@
 				columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
 				value="#{row.tipoModeloDocumento}" />
 			<wi:columnSituacao
-				columnHeader="#{messages['modeloDocumento.ativo']}"
+				columnHeader="#{messages['field.situacao']}"
 				value="#{row.ativo}"/>
 		</wi:dataTable>
 	</ui:define>
 
 	<ui:define name="form">
 		<wi:dataForm formId="modeloDocumentoForm"
-			formTitle="#{messages['modeloDocumento.titleForm']}">
+			formTitle="#{messages['form.title']}">
 			<wi:selectOneMenuEntity id="tipoModeloDocumento"
 				label="#{messages['modeloDocumento.tipoModeloDocumento']}"
 				value="#{modeloDocumentoHome.instance.tipoModeloDocumento}"
@@ -75,9 +75,8 @@
 				value="#{modeloDocumentoHome.instance.tituloModeloDocumento}"
 				required="true" />
 			<wi:selectSituacaoRadio id="ativo"
-				label="#{messages['modeloDocumento.ativo']}"
-				value="#{modeloDocumentoHome.instance.ativo}"
-				required="true" />
+				label="#{messages['field.situacao']}"
+				value="#{modeloDocumentoHome.instance.ativo}"/>
 			<wi:editor id="modeloDocumento"
 				label="#{messages['modeloDocumento.modeloDocumento']}"
 				value="#{modeloDocumentoHome.instance.modeloDocumento}"
@@ -97,12 +96,16 @@
 					label="#{messages['historicoModeloDocumento.titleTab']}">
 			<wi:dataTable values="#{historicoModeloDocumentoList.list(10)}"
 				bean="#{historicoModeloDocumentoList}"
-				tableTitle="#{messages['modeloDocumento.titleGrid']}"
-				id="historicoModeloDocumentoList">
+				tableTitle="#{messages['historicoModeloDocumento.titleView']}"
+				id="historicoModeloDocumentoList"
+				rendered="true">
 				<ui:define name="searchForm">
 					<s:div rendered="#{historicoModeloDocumentoList.getResultCount()>0}">
 						<wi:searchForm formId="historicoModeloDocumentoSearchForm"
-							formTitle="#{messages['modeloDocumento.titleGrid']}">
+							formTitle="#{messages['searchForm.title']}">
+							<wi:inputText id="historicoTituloModeloDocumento"
+								label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+								value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
 							<wi:selectOneMenuEntity id="usuarioAlteracao"
 								label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
 								value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
@@ -111,10 +114,6 @@
 							<wi:inputDate id="dataAlteracao"
 									value="#{historicoModeloDocumentoList.entity.dataAlteracao}"
 									label="#{messages['historicoModeloDocumento.dataAlteracao']}"/>
-							<wi:inputText id="historicoTituloModeloDocumento"
-								label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
-								value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
-							
 						</wi:searchForm>
 					</s:div>
 				</ui:define>

@@ -94,7 +94,7 @@ public class TipoModeloDocumento implements java.io.Serializable {
 		this.tipoModeloDocumento = tipoModeloDocumento;
 	}
 
-	@Column(name = "ds_abreviacao", nullable = false, length = 50)
+	@Column(name = "ds_abreviacao", nullable = false, length = 5)
 	@NotNull
 	@Size(max = 50)
 	public String getAbreviacao() {

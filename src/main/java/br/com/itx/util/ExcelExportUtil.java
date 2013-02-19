@@ -47,8 +47,19 @@ public class ExcelExportUtil {
 		util.download();
 	}
 	
+	private boolean createDir() throws IOException {
+		boolean result = false;
+
+		File f = new File(fileNameTemp.substring(0, fileNameTemp.lastIndexOf("/")+1 ));
+		if (!f.exists()) {
+			result = f.mkdirs();
+		}
+		return result;
+	}
+	
 	private void transformXLSToFileTemp() throws ExcelExportException {
 		try {
+			createDir();
 			transformer.transformXLS(urlTemplate, getBean(), fileNameTemp);
 		} catch (ParsePropertyException e) {
 			throw new ExcelExportException(e);

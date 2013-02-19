@@ -6,7 +6,7 @@
 
 	<begin-conversation join="true" />
 	<param name="id" value="#{processBuilder.id}"/>
-	<param name="node" value="#{processBuilder.nodeIndex}"/>
+	<param name="node" value="#{nodeFitter.nodeIndex}"/>
 	<param name="tab" value="#{processBuilder.tab}"/>
 
 </page>

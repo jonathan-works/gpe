@@ -37,16 +37,18 @@
 					  rowId="#{row.idCbo}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCboForm"
-							   formTitle="#{messages['cbo.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputNumber id="codCbo"
 								 value="#{cboList.entity.codCbo}"
-								 label="#{messages['cbo.codCbo']}"/>
+								 label="#{messages['cbo.codCbo']}"
+								 minlength="4"
+								 maxlength="6"/>
 					<wi:inputText id="descricaoCbo"
 								  label="#{messages['cbo.descricaoCbo']}"
 								  value="#{cboList.entity.descricaoCbo}"
 								  maxlength="150" />
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{cboList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -58,26 +60,27 @@
 								 columnHeader="#{messages['cbo.descricaoCbo']}"
 								 value="#{row.descricaoCbo}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
 		<wi:dataForm formId="cboForm"
-					 formTitle="#{messages['cbo.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputNumber id="codCbo"
 						 value="#{cboHome.instance.codCbo}"
 						 required="true"
-						 label="#{messages['cbo.codCbo']}"/>
+						 label="#{messages['cbo.codCbo']}"
+						 minlength="4"
+						 maxlength="6"/>
 			<wi:inputText id="descricaoCbo"
 						  label="#{messages['cbo.descricaoCbo']}"
 						  required="true"
 						  value="#{cboHome.instance.descricaoCbo}"
 						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
-								    required="true"
+								    label="#{messages['field.situacao']}"
 								    value="#{cboHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

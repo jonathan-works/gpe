@@ -13,7 +13,7 @@
 	<ui:param name="tipMessage" value="#{empty props.tipMessage ? tipMessage : props.tipMessage}"/>
 	<ui:param name="required" value="#{required or requiredField}" />
 	<ui:param name="showRequired" value="#{showRequired == false ? false : required and not empty label}"/>
-	<ui:param name="showLock" value="#{showLock == false ? false : not empty label}" />
+	<ui:param name="showLock" value="#{showLock == false ? false : (not empty label) and false}" />
 	<ui:param name="homeRef" value="#{empty homeRef ? home : homeRef}" />
 	<ui:param name="fieldName" value="#{(wi:get(fieldId, id)).toString().replaceAll('\\.', '_')}" />
 	<ui:param name="fieldId" value="field#{fieldName}"/>

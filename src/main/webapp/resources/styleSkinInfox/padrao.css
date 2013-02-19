@@ -131,15 +131,11 @@ div.rich-panel {
 	color: #ffffff;
 	position:absolute;
 	margin-top: 3px;
+	right: 30px;
 }
 
 .bordaBox, #papeisUsuarioForm option {
 	text-align: left;
-}
-
-.tituloPagina {
-	width:99%;
-	text-align: center;
 }
 
 #divOverflow {

@@ -22,6 +22,7 @@
 				xmlns:rich="http://richfaces.org/rich"
 				xmlns:f="http://java.sun.com/jsf/core"
 				xmlns:s="http://jboss.org/schema/seam/taglib"
+                xmlns:a="http://richfaces.org/a4j"
 				xmlns:h="http://java.sun.com/jsf/html"
 			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                        
@@ -39,22 +40,22 @@
 			<ui:define name="searchForm">
 				<ui:param name="entity" value="#{natCatFluxoLocalizacaoList.entity}" />
 				<wi:searchForm formId="pesquisarNatCatFluxoLocalizacaoForm"
-							   formTitle="Pesquisar">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:selectOneMenuEntity id="natureza"
-										    value="#{entity.naturezaCategoriaFluxo.natureza}"
+										    value="#{natCatFluxoLocalizacaoList.entity.naturezaCategoriaFluxo.natureza}"
 										    label="#{messages['naturezaCategoriaFluxo.natureza']}"
-										    noSelectionLabel="Selecione um registro..."
-										    items="#{home.naturezaList}"/>
+										    items="#{home.naturezaList}"
+                                            showLabelTodos="true" />
 					<wi:selectOneMenuEntity id="categoria"
-										    value="#{entity.naturezaCategoriaFluxo.categoria}"
+										    value="#{natCatFluxoLocalizacaoList.entity.naturezaCategoriaFluxo.categoria}"
 										    label="#{messages['naturezaCategoriaFluxo.categoria']}"
-										    noSelectionLabel="Selecione um registro..."
-										    items="#{home.categoriaList}"/>
+										    items="#{home.categoriaList}"
+                                            showLabelTodos="true" />
 					<wi:selectOneMenuEntity id="fluxo"
-										    value="#{entity.naturezaCategoriaFluxo.fluxo}"
+										    value="#{natCatFluxoLocalizacaoList.entity.naturezaCategoriaFluxo.fluxo}"
 										    label="#{messages['naturezaCategoriaFluxo.fluxo']}"
-										    noSelectionLabel="Selecione um registro..."
-										    items="#{home.fluxoList}"/>
+										    items="#{home.fluxoList}"
+                                            showLabelTodos="true" />
 					<wi:tree id="localizacao"
 							 label="#{messages['localizacao.localizacao']}"
 							 assignTo="natCatFluxoLocalizacaoList.entity.localizacao"
@@ -68,15 +69,15 @@
 				<wi:toolBarEdit />
 				<wi:toolBarRemove actionRemove="natCatFluxoLocalizacaoAction.remove(row)" />
 			</ui:define>
-			<wi:columnOutputText columnId="natureza"
+			<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"
 								 columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
 								 columnWidth="25%"
 								 value="#{row.naturezaCategoriaFluxo.natureza}"/>
-			<wi:columnOutputText columnId="categoria"
+			<wi:columnOutputText columnId="naturezaCategoriaFluxo.categoria"
 								 columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
 								 columnWidth="20%"
 								 value="#{row.naturezaCategoriaFluxo.categoria}"/>
-			<wi:columnOutputText columnId="fluxo"
+			<wi:columnOutputText columnId="naturezaCategoriaFluxo.fluxo"
 								 columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
 								 columnWidth="20%"
 								 value="#{row.naturezaCategoriaFluxo.fluxo}"/>
@@ -94,20 +95,19 @@
 	
 	<ui:define name="form">
 		<wi:dataForm formId="natCatFluxoLocalizacaoForm"
-					 formTitle="#{messages['natCatFluxoLocalizacao.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:selectOneMenuEntity id="naturezaCategoriaFluxo"
 								    value="#{home.instance.naturezaCategoriaFluxo}"
 								    required="true"
 								    label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
 								    noSelectionLabel="Selecione um registro..."
-								    items="#{home.naturezaCategoriaFluxoList}"/>
+								    items="#{home.getActivedNaturezaCategoriaFluxoList()}"/>
 			<wi:tree id="localizacao"
 					 assignTo="natCatFluxoLocalizacaoAction.instance.localizacao"
 					 label="#{messages['localizacao.localizacao']}"
 					 required="true"
 					 tree="#{home.localizacaoTreeHandler}"/>
 			<wi:selectBooleanCheckbox id="heranca"
-								      required="true"
 								      label="#{messages['natCatFluxoLocalizacao.heranca']}"
 								      value="#{home.instance.heranca}" />
 		</wi:dataForm>

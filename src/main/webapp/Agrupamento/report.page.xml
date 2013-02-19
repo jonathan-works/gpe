@@ -8,7 +8,8 @@
 	<param name="order" value="#{agrupamentoList.order}" />
 	<param name="restrictionLogicOperator" value="#{agrupamentoList.restrictionLogicOperator}" />
 	
-	<param name="descricaoCbo" value="#{agrupamentoList.entity.agrupamento}"/>
-	<param name="ativo" value="#{agrupamentoList.entity.ativo}"/>
+	<param name="agrupamento" value="#{agrupamentoList.entity.agrupamento}" />
+	<param name="ativo" value="#{agrupamentoList.entity.ativo}" />
+
 
 </page>

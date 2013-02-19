@@ -37,7 +37,7 @@
 					  rowId="#{row.idPessoa}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarPjForm"
-							   formTitle="#{messages['pj.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputCnpj id="cnpj"
 									value="#{pessoaJuridicaList.entity.cnpj}"
 									label="#{messages['pj.cnpj']}"/>
@@ -50,29 +50,29 @@
 								  value="#{pessoaJuridicaList.entity.razaoSocial}"
 								  maxlength="100" />
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{pessoaJuridicaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
 			
-			<wi:columnOutputText columnId="nomePessoa"
+			<wi:columnOutputText columnId="cnpj"
+								 columnHeader="#{messages['pj.cnpj']}"
+								 value="#{row.cnpj}" />
+			<wi:columnOutputText columnId="nome"
 								 columnHeader="#{messages['pj.nome']}"
 								 value="#{row.nome}" />
 			<wi:columnOutputText columnId="razaoSocial"
 								 columnHeader="#{messages['pj.razaoSocial']}"
 								 value="#{row.razaoSocial}" />
-			<wi:columnOutputText columnId="cnpj"
-								 columnHeader="#{messages['pj.cnpj']}"
-								 value="#{row.cnpj}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
 		<wi:dataForm formId="cboForm"
-					 formTitle="#{messages['pj.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputCnpj id="cnpj"
 						  value="#{pessoaJuridicaHome.instance.cnpj}"
 						  required="true"
@@ -88,8 +88,7 @@
 						  required="true"
 						  maxlength="100" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
-								    required="true"
+								    label="#{messages['field.situacao']}"
 								    value="#{pessoaJuridicaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

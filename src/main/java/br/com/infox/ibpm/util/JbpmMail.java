@@ -50,7 +50,14 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 		List recip = new ArrayList(getRecipients());
 				
 		if (recip.size()==1) {
-			parameters.putAll(getStringToMap(recip.get(0).toString()));
+			String value = recip.get(0).toString();
+			Map<String, String> map = getStringToMap(value);
+			
+			if (map.size() == 0 && value.contains("@")) {
+				parameters.put("mailList", value);
+			} else {
+				parameters.putAll(map);
+			}
 		}
 	}
 	
@@ -58,7 +65,18 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 		EMailData data = ComponentUtil.getComponent(EMailData.NAME);
 		data.setUseHtmlBody(true);
 		data.setBody(ModeloDocumentoAction.instance().getConteudo(Integer.parseInt(parameters.get("idModeloDocumento"))));
-		data.setJbpmRecipientList(MailResolver.instance().resolve(Integer.parseInt(parameters.get("idGrupo"))));
+		String idGrupo = parameters.get("idGrupo");
+		List<String> recipList = null;
+		if (idGrupo != null) {
+			 recipList = MailResolver.instance().resolve(Integer.parseInt(parameters.get("idGrupo")));
+		}
+		if (parameters.containsKey("mailList")) {
+			if (recipList == null) {
+				recipList = new ArrayList<String>();
+			}
+			recipList.add( parameters.get("mailList"));
+		}
+		data.setJbpmRecipientList(recipList);
 		data.setSubject(getSubject());
 		new SendmailCommand().execute("/WEB-INF/email/jbpmEmailTemplate.xhtml");
 	}

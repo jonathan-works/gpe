@@ -34,7 +34,7 @@
 	</style>
 	<s:div id="mailDiv">
 		<ui:decorate template="../dataTable.xhtml">
-			<ui:param name="values" value="#{processBuilder.currentNode.listaEmail}" />
+			<ui:param name="values" value="#{nodeFitter.currentNode.listaEmail}" />
 			<ui:param name="id" value="listaEmail" />
 			<ui:param name="style" value="clear:both; width:99%; margin-top:5px;#{empty values ? 'border-collapse:separate':'' }" /> 
 			<ui:define name="toolBar">
@@ -42,7 +42,7 @@
 					style="cursor:pointer"
 					url="/img/remove.png">
 					<a:support event="onclick" 
-						action="#{processBuilder.currentNode.removeListaEmail(row)}"
+						action="#{nodeFitter.currentNode.removeListaEmail(row)}"
 						ajaxSingle="true"
 						onclick="if(!confirm('Confirma?')) return false;"
 						reRender="mailDiv"/>
@@ -70,7 +70,7 @@
 							id="novoLocPapel"
 							url="/img/add.gif">
 							<a:support event="onclick" 
-								action="#{processBuilder.currentNode.addNewEmail()}"
+								action="#{nodeFitter.currentNode.addNewEmail()}"
 								ajaxSingle="true"
 								reRender="mailDiv"/>
 						</h:graphicImage>
@@ -79,21 +79,21 @@
 						<wi:tree tree="#{estruturaTree}" 
 							id="estruturaTree"
 							width="210" 
-							assignTo="processBuilder.currentNode.currentListaEmail.estrutura"
+							assignTo="nodeFitter.currentNode.currentListaEmail.estrutura"
 							folderSelectable="true" />
 					</rich:column>
 					<rich:column style="padding-left:2px;">
 						<wi:tree tree="#{localizacaoTree}" 
 							id="localizacao"
 							width="210"
-							assignTo="processBuilder.currentNode.currentListaEmail.localizacao"
+							assignTo="nodeFitter.currentNode.currentListaEmail.localizacao"
 							folderSelectable="true" />
 					</rich:column> 
 					<rich:column style="padding-left:2px;">
 						<wi:tree tree="#{papelTree}" 
 							id="papelTree"
 							width="210" 
-							assignTo="processBuilder.currentNode.currentListaEmail.papel"
+							assignTo="nodeFitter.currentNode.currentListaEmail.papel"
 							folderSelectable="true" />
 					</rich:column>
 				</rich:columnGroup>
@@ -105,21 +105,21 @@
 			</ui:define>
 		</ui:decorate>
 		<wi:selectBooleanCheckbox id="usaTwitter"
-								  value="#{processBuilder.currentNode.usaTwitter}"
+								  value="#{nodeFitter.currentNode.usaTwitter}"
 								  label="#{messages['processBuilder.usaTwitter']}" >
 			<a:support reRender="mailDiv"
 			           event="onchange"
 			           ajaxSingle="true" />
 		</wi:selectBooleanCheckbox>
-		<ui:param name="isExpression" value="#{processBuilder.currentNode.to != null and
-								 			  processBuilder.currentNode.to.startsWith('{')}"/>
+		<ui:param name="isExpression" value="#{nodeFitter.currentNode.to != null and
+								 			  nodeFitter.currentNode.to.startsWith('{')}"/>
 		<s:div id="twitterDiv" 
-		       rendered="#{processBuilder.currentNode.usaTwitter}"
+		       rendered="#{nodeFitter.currentNode.usaTwitter}"
 		       width="50%"
 		       style="float:left;">
 			<wi:selectOneMenuEntity id="modeloTwitter"
 									label="Modelo Twitter.."
-									value="#{processBuilder.currentNode.modeloTwitter}"
+									value="#{nodeFitter.currentNode.modeloTwitter}"
 									reRender="twitterDiv"
 									items="#{twitterTemplateList.list()}"
 									showLabelTodos="true">
@@ -127,13 +127,13 @@
 			</wi:selectOneMenuEntity>
 			<wi:inputTextarea id="editorModeloTwitter"
 						      readonly="true"
-							  value="#{processBuilder.currentNode.modeloTwitter.mensagem}">
+							  value="#{nodeFitter.currentNode.modeloTwitter.mensagem}">
 			</wi:inputTextarea>
 		</s:div>
 		<s:div id="modeloDocDiv" style="float:left;">
 			<wi:selectOneMenuEntity id="modeloDocumento"
 							label="#{messages['processBuilder.tituloModeloDocumento']}"
-							value="#{processBuilder.currentNode.modeloDocumento}"
+							value="#{nodeFitter.currentNode.modeloDocumento}"
 							reRender="editorModeloDocumentoDiv"
 							items="#{modeloDocumento.modeloDocumentoList}"
 							showLabelTodos="true">
@@ -143,7 +143,7 @@
 			<wi:inputText id="to" 
 						  label="Para"
 						  rendered="#{!isExpression}"
-						  value="#{processBuilder.currentNode.to}" >
+						  value="#{nodeFitter.currentNode.to}" >
 				<wi:ajaxSupport/>
 			</wi:inputText>
 		
@@ -156,13 +156,13 @@
 			</wi:inputText>
 		
 			<wi:inputText id="subject" label="Assunto"
-				value="#{processBuilder.currentNode.subject}">
+				value="#{nodeFitter.currentNode.subject}">
 				<wi:ajaxSupport/>
 			</wi:inputText>
 			<s:div id="editorModeloDocumentoDiv">
 				<wi:editor	id="editorModeloDocumento"
-							rendered="#{processBuilder.currentNode.modeloDocumento != null}"
-							value="#{processBuilder.currentNode.modeloDocumento.modeloDocumento}"
+							rendered="#{nodeFitter.currentNode.modeloDocumento != null}"
+							value="#{nodeFitter.currentNode.modeloDocumento.modeloDocumento}"
 							label="#{messages['processBuilder.modeloDocumento']}"
 							readonly="true">
 					<wi:ajaxSupport/>

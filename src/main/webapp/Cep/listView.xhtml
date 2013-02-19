@@ -37,7 +37,7 @@
 					  rowId="#{row.idCep}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCepForm"
-							   formTitle="#{messages['cep.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputCep id="numeroCep"
 								 value="#{cepList.entity.numeroCep}"
 								 label="#{messages['cep.numeroCep']}"/>
@@ -67,7 +67,7 @@
 								  label="#{messages['cep.nomeBairro']}"
 								  value="#{cepList.entity.nomeBairro}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['cep.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{cepList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -91,14 +91,14 @@
 								 columnHeader="#{messages['cep.nomeBairro']}"
 								 value="#{row.nomeBairro}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
 		<wi:dataForm formId="cepForm"
-					 formTitle="#{messages['cep.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputCep id="numeroCep"
 						 value="#{cepHome.instance.numeroCep}"
 						 required="true"
@@ -135,8 +135,7 @@
 				</wi:suggest>		
 			</s:div>
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['cep.ativo']}"
-								    required="true"
+								    label="#{messages['field.situacao']}"
 								    value="#{cepHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

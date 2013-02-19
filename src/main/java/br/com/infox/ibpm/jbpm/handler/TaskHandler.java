@@ -148,7 +148,7 @@ public class TaskHandler implements Serializable {
 				taskController.setVariableAccesses(new ArrayList<VariableAccess>());
 			}
 			taskController.getVariableAccesses().add(v);
-			ProcessBuilder.instance().setTypeList(null);
+			ProcessBuilder.instance().getTypeFitter().setTypeList(null);
 		}
 	}
 	
@@ -168,7 +168,7 @@ public class TaskHandler implements Serializable {
 		if(v.getType().equals(TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
 			hasTaskPage = null;
 		}
-		ProcessBuilder.instance().setTypeList(null);
+		ProcessBuilder.instance().getTypeFitter().setTypeList(null);
 	}
 
 	private List<String> populatePreviousVariables(TaskHandlerVisitor visitor)	{

@@ -66,7 +66,7 @@ public class Cep implements java.io.Serializable {
 	private String nomeBairro;
 	private Municipio municipio;
 	private String complemento;
-	private Boolean ativo = Boolean.TRUE;
+	private Boolean ativo;
 	
 	private List<Endereco> enderecoList = new ArrayList<Endereco>(0);	
 

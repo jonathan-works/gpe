@@ -42,7 +42,7 @@
 	<ui:define name="form" action="#{usuarioHome.newInstance()}">
 		<c:if test="#{canEdit}">
 			<wi:dataForm formId="usuarioForm"
-						 formTitle="#{messages['usuario.titleForm']}">
+						 formTitle="#{messages['form.title']}">
 				<wi:inputCpf id="cpf"
 							 label="CPF"
 							 value="#{usuarioHome.instance.cpf}"
@@ -79,7 +79,7 @@
 							  maxlength="15"/>
 				
 				<wi:selectOneRadio id="ativo"	
-								   label="#{messages['usuario.ativo']}"
+								   label="#{messages['field.situacao']}"
 								   value="#{usuarioHome.instance.ativo}"
 								   valueList="true:Ativo,false:Inativo"/>
 								   

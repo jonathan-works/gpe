@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
+import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Node.NodeType;
 
 import br.com.infox.ibpm.entity.Agrupamento;
@@ -16,6 +17,7 @@ import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.entity.TarefaEvento;
 import br.com.infox.ibpm.entity.TarefaEventoAgrupamento;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.type.TarefaEventoEnum;
@@ -39,7 +41,7 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 		
 	public TarefaEventoEnum[] getTarefaEventoItems() {
 		if(tarefaEventoItems == null || tarefaEventoItems.length == 0) {
-			if(ProcessBuilder.instance().getCurrentNode().getNodeType() == NodeType.Task) {
+			if(ProcessBuilder.instance().getNodeFitter().getCurrentNode().getNodeType() == NodeType.Task) {
 				if(isManaged()) {
 					return TarefaEventoEnum.values();
 				}
@@ -94,7 +96,7 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 		}
 	}
 	
-	@Observer(ProcessBuilder.SET_CURRENT_NODE_EVENT)
+	@Observer(NodeFitter.SET_CURRENT_NODE_EVENT)
 	public void onSetCurrentNode() {
 		setTab("search");
 		newInstance();
@@ -159,7 +161,7 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 	}
 	
 	private void canRegister() {
-		TaskHandler task = ProcessBuilder.instance().getCurrentTask();
+		TaskHandler task = ProcessBuilder.instance().getTaskFitter().getCurrentTask();
 		if(task == null) {
 			enableEvents = false;
 			return;
@@ -186,13 +188,14 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 	}
 
 	public List<Tarefa> getTarefaOrigemList() {
+		ProcessBuilder builder = ProcessBuilder.instance();
 		if(tarefaOrigemList == null) {
-			String fluxo = ProcessBuilder.instance().getInstance().getName();
+			String fluxo = builder.getInstance().getName();
 			tarefaOrigemList = new ArrayList<Tarefa>();
 			String query = "select t from Tarefa t where t.tarefa = :tarefaOrigem " +
 					"and t.fluxo.fluxo = :fluxo";
 			Query q = getEntityManager().createQuery(query);
-			for (TransitionHandler th : ProcessBuilder.instance().getArrivingTransitions()) {
+			for (TransitionHandler th : builder.getTransitionFitter().getArrivingTransitions()) {
 				q.setParameter("tarefaOrigem", th.getTransition().getFrom().getName());
 				q.setParameter("fluxo", fluxo);
 				Tarefa t = EntityUtil.getSingleResult(q);

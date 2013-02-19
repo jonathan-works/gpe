@@ -40,7 +40,7 @@ public class GrupoModeloDocumentoSuggestBean extends AbstractSuggestBean<GrupoMo
 		sb.append("like lower(concat ('%', :");
 		sb.append(INPUT_PARAMETER);
 		sb.append(", '%')) ");
-		sb.append("order by 1");
+		sb.append("and o.ativo = true order by 1");
 		return sb.toString();
 	}
 	
