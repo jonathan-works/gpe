@@ -8,22 +8,9 @@
 	<description>Variavel: #{variavelHome.instance}</description>
 	
 	<begin-conversation join="true"/>
-	<param name="variavel.order" value="#{variavelGrid.order}"/>
+	<!-- <param name="variavel.order" value="#{variavelGrid.order}"/> -->
 	<param name="id" value="#{variavelHome.variavelIdVariavel}"/>
 
 <!-- Parametros para RESTFull -->
 	<param name="tab" value="#{variavelHome.tab}"/>
-	<param name="goBackUrl" value="#{variavelHome.goBackUrl}"/>
-	<param name="goBackId" value="#{variavelHome.goBackId}"/>
-	<param name="goBackTab" value="#{variavelHome.goBackTab}"/>		
-	<param name="ativo" value="#{variavelSearch.ativo}"/>		
-	<param name="variavel" value="#{variavelSearch.variavel}"/>		
-	<param name="valorVariavel" value="#{variavelSearch.valorVariavel}"/>		
-
-	<action if="#{empty variavelHome.tab}" execute="#{variavelHome.setTab('search')}"/>
-	<action if="#{param.newInstance == 'true'}" execute="#{tipoModeloDocumentoHome.newInstance()}"/>
-	
-	<!-- Parametros para a ordem de grids -->
-	<param name="fluxo.order" value="#{fluxoGrid.order}"/>		
- 
 </page>
