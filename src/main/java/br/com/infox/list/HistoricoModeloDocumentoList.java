@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
+import br.com.itx.util.ComponentUtil;
 
 @Name(HistoricoModeloDocumentoList.NAME)
 @BypassInterceptors
@@ -23,7 +24,7 @@ public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocu
 	private static final String DEFAULT_EJBQL = "select o from HistoricoModeloDocumento o";
 	private static final String DEFAULT_ORDER = "dataAlteracao DESC";
 	private static final String R1 = "o.modeloDocumento = #{modeloDocumentoHome.instance}";
-
+	
 	@Override
 	protected void addSearchFields() {
 		addSearchField("modeloDocumento", SearchCriteria.igual, R1);
@@ -46,5 +47,9 @@ public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocu
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
+	}
+	
+	public static HistoricoModeloDocumentoList instance() {
+	    return ComponentUtil.getComponent(HistoricoModeloDocumentoList.NAME);
 	}
 }
