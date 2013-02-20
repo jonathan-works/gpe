@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -21,6 +21,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
@@ -350,21 +351,15 @@ public class NodeFitter implements Serializable, Fitter{
 		if (currentNode == null) {
 			return type;
 		}
-		switch (currentNode.getNodeType().ordinal()) {
-		case 1: // StartState
-			// type = "startState";
-			break;
-		case 7: // Decision
+		if (currentNode.getNodeType().equals(NodeType.Decision)) {
 			type = "decision";
-			break;
-		default: // Node (0)
+		} else if (!currentNode.getNodeType().equals(NodeType.StartState)) {
 			if (currentNode instanceof MailNode) {
 				type = "mail";
 			}
 			if (currentNode instanceof ProcessState) {
 				type = "processState";
 			}
-			break;
 		}
 		return type;
 	}
@@ -406,7 +401,7 @@ public class NodeFitter implements Serializable, Fitter{
 	}
 
 	public String getIcon(Node node) {
-		String icon = node.getNodeType().name();
+		String icon = node.getNodeType().toString();
 		if (node instanceof MailNode) {
 			icon = "MailNode";
 		}

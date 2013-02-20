@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -19,6 +19,7 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
+import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.ibpm.bean.PrazoTask;
@@ -62,7 +63,7 @@ public class TaskFitter implements Serializable, Fitter {
 			t.setName(currentNode.getName());
 			tn.addTask(t);
 			tn.setEndTasks(true);
-			t.setSwimlane(process.getTaskMgmtDefinition().getSwimlanes()
+			t.setSwimlane((Swimlane) process.getTaskMgmtDefinition().getSwimlanes()
 					.values().iterator().next());
 			TaskHandler th = new TaskHandler(t);
 			list.add(th);
