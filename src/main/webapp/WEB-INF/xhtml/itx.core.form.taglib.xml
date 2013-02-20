@@ -28,6 +28,11 @@
 	</tag>
 	
 	<tag>
+		<tag-name>numeravelMascara</tag-name>
+		<source>components/form/numeravelMascara.xhtml</source>
+	</tag>
+	
+	<tag>
 		<tag-name>formFrame</tag-name>
 		<source>tags/form/formFrame.xhtml</source>
 	</tag>

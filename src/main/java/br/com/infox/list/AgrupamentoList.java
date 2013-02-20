@@ -45,4 +45,6 @@ public class AgrupamentoList extends EntityList<Agrupamento> {
 		return DEFAULT_ORDER;
 	}
 	
+
+	
 }

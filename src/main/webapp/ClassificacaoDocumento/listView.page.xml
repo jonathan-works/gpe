@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+	  login-required="true">
+	  
+	<!--  <restrict>#{security.checkPage()}</restrict> --> 
+	<description>TipoProcessoDocumento: #{tipoProcessoDocumentoHome.instance}</description>
+	
+	<begin-conversation join="true"/>
+	<param name="tipoProcessoDocumento.order" value="#{tipoProcessoDocumentoGrid.order}"/>
+	<param name="id" value="#{tipoProcessoDocumentoHome.tipoProcessoDocumentoIdTipoProcessoDocumento}"/>
+
+	<!-- Parametros para RESTFull -->
+	<param name="tab" value="#{tipoProcessoDocumentoHome.tab}"/>
+	<param name="goBackUrl" value="#{tipoProcessoDocumentoHome.goBackUrl}"/>
+	<param name="goBackId" value="#{tipoProcessoDocumentoHome.goBackId}"/>
+	<param name="goBackTab" value="#{tipoProcessoDocumentoHome.goBackTab}"/>		
+	<param name="ativo" value="#{tipoProcessoDocumentoSearch.ativo}"/>		
+	<param name="tipoProcessoDocumento" value="#{tipoProcessoDocumentoSearch.tipoProcessoDocumento}"/>		
+
+	<action if="#{empty tipoProcessoDocumentoHome.tab}" execute="#{tipoProcessoDocumentoHome.setTab('search')}"/>
+	
+	<!-- Parametros para a ordem de grids -->
+	<param name="processoDocumento.order" value="#{processoDocumentoGrid.order}"/>		
+ 
+</page>
