@@ -99,6 +99,13 @@
 				tableTitle="#{messages['historicoModeloDocumento.titleView']}"
 				id="historicoModeloDocumentoList"
 				rendered="true">
+                <ui:define name="headerToolBar">
+                    <wi:toolBarReport rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}"
+                                      reportPath = "#{util.viewIdDirectory.concat('historicoReport.xhtml')}" />
+                    <wi:toolBarReportExcel rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}"
+                                           action="#{historicoModeloDocumentoHome.exportarXLS()}"/>                                      
+                </ui:define>
+                
 				<ui:define name="searchForm">
 					<s:div rendered="#{historicoModeloDocumentoList.getResultCount()>0}">
 						<wi:searchForm formId="historicoModeloDocumentoSearchForm"
@@ -121,7 +128,7 @@
 				<wi:columnOutputText columnId="tituloModeloDocumento" 
 									 columnHeader="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
 									 value="#{row.tituloModeloDocumento}"/>
-				<wi:columnOutputText columnId="usuario" 
+				<wi:columnOutputText columnId="usuarioAlteracao" 
 									 columnHeader="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
 									 value="#{row.usuarioAlteracao}" />
 				<wi:columnOutputText columnId="dataAlteracao"
