@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ <!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:s="http://jboss.com/products/seam/taglib"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+			    xmlns:a="http://richfaces.org/a4j"
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                      
+	<ui:define name="title">#{messages['tipoProcessoDocumento.titlePage']}</ui:define>
+	
+	<ui:param name="home" value="#{tipoProcessoDocumentoHome}" />
+	
+	<ui:define name="searchGrid">   
+	    <wi:dataTable values="#{tipoProcessoDocumentoList.list(15)}"
+					  bean="#{tipoProcessoDocumentoList}"
+					  tableTitle="#{messages['tipoProcessoDocumento.titleGrid']}"
+					  id="tipoProcessoDocumentoList"
+					  rowId="#{row.idTipoProcessoDocumento}" >
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarTipoProcessoDocumentoForm"
+							   formTitle="#{messages['searchForm.title']}">
+					<wi:inputText id="codigoDocumento"
+								 value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"
+								 label="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+								 maxlength="30"/>
+					<wi:inputText id="tipoProcessoDocumento"
+								  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+								  value="#{tipoProcessoDocumentoList.entity.tipoProcessoDocumento}"
+								  maxlength="100"/>
+					<wi:selectOneMenuEnum id="usoTipoDocumento"
+								  label="#{messages['tipoProcessoDocumento.uso']}"
+								  items="#{home.getTipoDocumentoEnumValues()}"
+								  value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"
+								  noSelectionLabel="[Todos]" />
+					<wi:selectOneMenuEnum id="visibilidade"
+								  label="#{messages['tipoProcessoDocumento.visibilidade']}"
+								  items="#{home.getVisibilidadeEnumValues()}"
+								  value="#{tipoProcessoDocumentoList.entity.visibilidade}"
+								  noSelectionLabel="[Todos]" />
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['field.situacao']}"
+											  value="#{tipoProcessoDocumentoList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="codigoDocumento"
+								 columnHeader="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+								 value="#{row.codigoDocumento}" />
+			<wi:columnOutputText columnId="tipoProcessoDocumento"
+								 columnHeader="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+								 value="#{row.tipoProcessoDocumento}" />
+			<wi:columnEnum columnId="usotipoDocumento"
+						   columnHeader="#{messages['tipoProcessoDocumento.uso']}"
+						   value="#{row.inTipoDocumento}" />
+			<wi:columnEnum columnId="visibilidadeTipoprocessoDocumento"
+						   columnHeader="#{messages['tipoProcessoDocumento.visibilidade']}"
+						   value="#{row.visibilidade}" />
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['field.situacao']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
+	</ui:define>
+	
+	<ui:define name="form">
+		<wi:dataForm formId="tipoProcessoDocumentoForm"
+					 formTitle="#{messages['form.title']}">
+			<wi:inputText id="codigoDocumento"
+						 value="#{tipoProcessoDocumentoHome.instance.codigoDocumento}"
+						 required="true"
+						 label="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+						 maxlength="30"/>
+			<wi:inputText id="tipoProcessoDocumento"
+						  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+						  required="true"
+						  value="#{tipoProcessoDocumentoHome.instance.tipoProcessoDocumento}"
+						  maxlength="150" />
+			<wi:selectOneMenuEnum id="usoTipoDocumento"
+								  label="#{messages['tipoProcessoDocumento.uso']}"
+								  items="#{home.getTipoDocumentoEnumValues()}"
+								  value="#{home.instance.inTipoDocumento}"
+								  required="true"
+								  noSelectionLabel="#{messages['comboBox.select']}" />
+			<wi:selectOneMenuEnum id="visibilidade"
+								  label="#{messages['tipoProcessoDocumento.visibilidade']}"
+								  items="#{home.getVisibilidadeEnumValues()}"
+								  value="#{home.instance.visibilidade}"
+								  required="true"
+								  noSelectionLabel="#{messages['comboBox.select']}"/>
+			<wi:numeravelMascara id="numera"
+								    label="#{messages['tipoProcessoDocumento.numera']}"
+								    value="#{home.instance.numera}" />
+			<wi:selectBooleanRadio id="publico"
+								    label="#{messages['tipoProcessoDocumento.publico']}"
+								    value="#{home.instance.publico}" />
+			<wi:selectBooleanRadio id="anexar"
+								    label="#{messages['tipoProcessoDocumento.anexar']}"
+								    value="#{home.instance.anexar}" />
+			<wi:selectBooleanRadio id="sistema"
+								    label="#{messages['tipoProcessoDocumento.sistema']}"
+								    value="#{home.instance.sistema}" />
+			<wi:selectOneMenuEntity id="agrupamento"
+									label="#{messages['tipoProcessoDocumento.agrupamento']}"
+									items="#{agrupamentoList}"
+									value="#{home.instance.agrupamento}"
+									noSelectionLabel="#{messages['comboBox.select']}"/>
+			<wi:inputText id="tipoProcessoDocumentoObservacao"
+						  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
+						  value="#{home.instance.tipoProcessoDocumentoObservacao}"
+						  maxlength="150" />
+			<wi:selectSituacaoRadio id="ativo"
+								    label="#{messages['field.situacao']}"
+								    value="#{home.instance.ativo}" />
+		</wi:dataForm>
+	</ui:define>
+
+</ui:composition>
