@@ -8,7 +8,7 @@
                 xmlns:wi="http://www.itx.com.br/jsf"
                 xmlns:a="http://richfaces.org/a4j"
                 xmlns:s="http://jboss.com/products/seam/taglib">
-                
+<ui:param name="textEvent" value="onblur" />
 <s:div id="#{id}" style="margin:5px">
     <s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
     <wi:inputTextarea id="#{id}Text"
@@ -16,7 +16,7 @@
                       label="Expressão"
                       value="#{value}">
         <a:support status=":status"
-                   event="onchange" reRender="#{id}"/>
+                   event="onblur" reRender="#{id}Text"/>
     </wi:inputTextarea>
     
 </s:div>
@@ -39,7 +39,7 @@
 	// private 
 	var onMouseOverSpan = function(event) {
 		var parent = event.currentTarget.parentNode;
-		event.currentTarget.style.backgroundColor = "#bbcec2";
+		event.currentTarget.style.backgroundColor = "#BBCEC2";
 		parent.style.backgroundColor = "#D4F2D6";
 		parent.style.cursor="pointer";
 	};
@@ -103,8 +103,8 @@
 	    var args = {	expressionId:"#{id}Div",
 						inputId:"#{id}Text",
 						imageSrc:"#{util.contextPath}/img/jbpm/wizard.gif"};
-		_expressionDiv = $j("[id$='"+args.expressionId+"']").get()[0];
-		_inputDiv = $j("[id$='"+args.inputId+"']").get()[0];
+		_expressionDiv = $j("[id$='"+args.expressionId+"']")[0];
+		_inputDiv = $j("[id$='"+args.inputId+"']")[0];
 		_imageSrc = args.imageSrc;
 		
 		clearElement( {"element":_expressionDiv} );
@@ -179,10 +179,8 @@
 	};
 	
 	var setTextArea = function(text) {
-		_inputDiv.innerHTML="#"+"{"+text+"}";
-		if (_inputDiv.onchange) {
-			_inputDiv.onchange();
-		}
+	    _inputDiv.textContent="#"+"{"+text+"}";
+	    _inputDiv["#{textEvent}"].call( _inputDiv );
 	};
 	
 	var addOption = function(value, label, parentNode) {
