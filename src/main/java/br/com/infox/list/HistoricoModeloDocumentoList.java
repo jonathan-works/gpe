@@ -14,7 +14,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(HistoricoModeloDocumentoList.NAME)
 @BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocumento>{
 	
 	public static final String NAME = "historicoModeloDocumentoList";
@@ -23,7 +23,7 @@ public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocu
 	
 	private static final String DEFAULT_EJBQL = "select o from HistoricoModeloDocumento o";
 	private static final String DEFAULT_ORDER = "dataAlteracao DESC";
-	private static final String R1 = "o.modeloDocumento = #{modeloDocumentoHome.instance}";
+	private static final String R1 = "modeloDocumento = #{modeloDocumentoHome.instance}";
 	
 	@Override
 	protected void addSearchFields() {
