@@ -20,7 +20,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
+import br.com.infox.list.HistoricoModeloDocumentoList;
 import br.com.itx.component.AbstractHome;
 
 
@@ -33,7 +35,26 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.PAGE)
 public class HistoricoModeloDocumentoHome extends AbstractHome<HistoricoModeloDocumento> {
 
-	public static final String NAME = "historicoModeloDocumentoHome";
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private static final String TEMPLATE = "/ModeloDocumento/historicoModeloDocumentoTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "historicosModelosDocumento.xls";
+    public static final String NAME = "historicoModeloDocumentoHome";
+    
+	
 
+	@Override
+	public String getTemplate(){
+        return HistoricoModeloDocumentoHome.TEMPLATE;
+    }
+	
+	@Override
+    public String getDownloadXlsName(){
+        return HistoricoModeloDocumentoHome.DOWNLOAD_XLS_NAME;
+    }
+	
+    @Override
+    public EntityList<HistoricoModeloDocumento> getBeanList() {
+        return HistoricoModeloDocumentoList.instance();
+    }
+	
 }

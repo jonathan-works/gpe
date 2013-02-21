@@ -97,31 +97,36 @@
 			<wi:dataTable values="#{historicoModeloDocumentoList.list(10)}"
 				bean="#{historicoModeloDocumentoList}"
 				tableTitle="#{messages['historicoModeloDocumento.titleView']}"
-				id="historicoModeloDocumentoList"
-				rendered="true">
+				id="historicoModeloDocumentoList">
+                <ui:define name="headerToolBar">
+                    <wi:toolBarReport rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}"
+                                      reportPath = "#{util.viewIdDirectory.concat('historicoReport.xhtml')}" />
+                    <wi:toolBarReportExcel rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}"
+                                           action="#{historicoModeloDocumentoHome.exportarXLS()}"/>                                      
+                </ui:define>
+                
 				<ui:define name="searchForm">
-					<s:div rendered="#{historicoModeloDocumentoList.getResultCount()>0}">
-						<wi:searchForm formId="historicoModeloDocumentoSearchForm"
-							formTitle="#{messages['searchForm.title']}">
-							<wi:inputText id="historicoTituloModeloDocumento"
-								label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
-								value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
-							<wi:selectOneMenuEntity id="usuarioAlteracao"
-								label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
-								value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
-								items="#{historicoModeloDocumentoAction.usuarioAlteracaoList}"
-								showLabelTodos="true" />
-							<wi:inputDate id="dataAlteracao"
-									value="#{historicoModeloDocumentoList.entity.dataAlteracao}"
-									label="#{messages['historicoModeloDocumento.dataAlteracao']}"/>
-						</wi:searchForm>
-					</s:div>
+					<wi:searchForm formId="historicoModeloDocumentoSearchForm"
+						formTitle="#{messages['searchForm.title']}"
+                        opened="false">
+						<wi:inputText id="historicoTituloModeloDocumento"
+							label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+							value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
+						<wi:selectOneMenuEntity id="usuarioAlteracao"
+							label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
+							value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
+							items="#{historicoModeloDocumentoAction.usuarioAlteracaoList}"
+							showLabelTodos="true" />
+						<wi:inputDate id="dataAlteracao"
+								value="#{historicoModeloDocumentoList.entity.dataAlteracao}"
+								label="#{messages['historicoModeloDocumento.dataAlteracao']}"/>
+					</wi:searchForm>
 				</ui:define>
 				
 				<wi:columnOutputText columnId="tituloModeloDocumento" 
 									 columnHeader="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
 									 value="#{row.tituloModeloDocumento}"/>
-				<wi:columnOutputText columnId="usuario" 
+				<wi:columnOutputText columnId="usuarioAlteracao" 
 									 columnHeader="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
 									 value="#{row.usuarioAlteracao}" />
 				<wi:columnOutputText columnId="dataAlteracao"
