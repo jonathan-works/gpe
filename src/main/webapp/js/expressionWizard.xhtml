@@ -8,15 +8,15 @@
                 xmlns:wi="http://www.itx.com.br/jsf"
                 xmlns:a="http://richfaces.org/a4j"
                 xmlns:s="http://jboss.com/products/seam/taglib">
-<ui:param name="textEvent" value="onblur" />
+
 <s:div id="#{id}" style="margin:5px">
     <s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
     <wi:inputTextarea id="#{id}Text"
                       styleClass="expressionInput" 
-                      label="Expressão"
+                      label="#{messages['wizardExpressoes.expressao']}"
                       value="#{value}">
         <a:support status=":status"
-                   event="onblur" reRender="#{id}Text"/>
+                   event="onchange" reRender="#{id}"/>
     </wi:inputTextarea>
     
 </s:div>
@@ -26,10 +26,9 @@
 (function ExpressionWizard() {
 	/* Variables */
 	// private 
-	var _booleanVariableList=new Array();
-	var _numberVariableList=new Array();
-	var _transitionList=new Array();
-	var _inputDiv;
+    var _booleanVariableList = #{nodeFitter.currentNode.getBooleanVariables()};
+    var _numberVariableList = #{nodeFitter.currentNode.getNumberVariables()};
+    var	_transitionList = #{nodeFitter.currentNode.getLeavingTransitionList()};
 	var _expressionDiv;
 	var clear = false;
 	var _imageSrc = "";
@@ -41,13 +40,16 @@
 		var parent = event.currentTarget.parentNode;
 		event.currentTarget.style.backgroundColor = "#BBCEC2";
 		parent.style.backgroundColor = "#D4F2D6";
+		parent.style.padding = "5px 5px 5px 5px";
+		parent.style.margin = "-5px 0px 0px -5px";
 		parent.style.cursor="pointer";
 	};
 	
 	var onMouseExitSpan = function(event) {
 		var parent = event.currentTarget.parentNode;
 		event.currentTarget.style.backgroundColor = parent.style.backgroundColor="";
-		parent.style.cursor="";
+		parent.style.padding=parent.style.margin=parent.style.cursor="";
+		
 	};
 	
 	var onMouseClickSpan = function(event) {
@@ -61,11 +63,11 @@
 			clearElement( {"element":pNode} );
 		}
 		if ((sValue == "||") || (sValue == "&&")) {
-			pNode.appendChild( createSpan({"label":"( "}));
+			pNode.appendChild( createSpan({"label":"("}));
 			pNode.appendChild( booleanSelect() );
-			pNode.appendChild( createSpan({"label":" " + sValue + " "}) );
+			pNode.appendChild( createSpan({"label":sValue}) );
 			pNode.appendChild( booleanSelect() );
-			pNode.appendChild( createSpan({"label":" )"}));
+			pNode.appendChild( createSpan({"label":")"}));
 		} else if (sValue == "not") {
 			pNode.appendChild( createSpan({"label":"!"}) );
 			pNode.appendChild( booleanSelect() );
@@ -74,19 +76,19 @@
 		} else if (sValue == "num") {
 			pNode.appendChild( createSpan({"label": _inputNumber()}) );
 		} else if (sValue == "if") {
-			pNode.appendChild( createSpan({"label":"( "}) );
+			pNode.appendChild( createSpan({"label":"("}) );
 			_expression(pNode);
-			pNode.appendChild( createSpan({"label":" )"}) );
+			pNode.appendChild( createSpan({"label":")"}) );
 		} else if ((sValue == "==") || (sValue == "!=")
 				|| (sValue == ">=") || (sValue == ">")
 				|| (sValue == "<=") || (sValue == "<")
 				|| (sValue == "+") || (sValue == "-")
 				|| (sValue == "/") || (sValue == "*")) {
-			pNode.appendChild( createSpan({"label":"( "}) );
+			pNode.appendChild( createSpan({"label":"("}) );
 			pNode.appendChild( aritOperSelect() );
-			pNode.appendChild( createSpan({"label":" " + sValue + " "}) );
+			pNode.appendChild( createSpan({"label": sValue }) );
 			pNode.appendChild( aritOperSelect() );
-			pNode.appendChild( createSpan({"label":" )"}) );
+			pNode.appendChild( createSpan({"label":")"}) );
 		} else {
 			pNode.appendChild( createSpan({"label":sValue}) );
 		}
@@ -100,12 +102,8 @@
 	
 	/* CONSTRUCTOR */
 	var __constructor = function() {
-	    var args = {	expressionId:"#{id}Div",
-						inputId:"#{id}Text",
-						imageSrc:"#{util.contextPath}/img/jbpm/wizard.gif"};
-		_expressionDiv = $j("[id$='"+args.expressionId+"']")[0];
-		_inputDiv = $j("[id$='"+args.inputId+"']")[0];
-		_imageSrc = args.imageSrc;
+		_expressionDiv = $j("[id$='#{id}'] [id$='#{id}Div']")[0];
+		_imageSrc = "#{util.contextPath}/img/jbpm/wizard.gif";
 		
 		clearElement( {"element":_expressionDiv} );
 		_expressionDiv.appendChild( addImageWiz() );
@@ -113,15 +111,6 @@
 	
 	/* METHODS */
 	// private 
-	var initVariableList = function() {
-		_booleanVariableList.clear();
-		_numberVariableList.clear();
-		_transitionList.clear();
-		_booleanVariableList = #{nodeFitter.currentNode.getBooleanVariables()};
-		_numberVariableList = #{nodeFitter.currentNode.getNumberVariables()};
-		_transitionList = #{nodeFitter.currentNode.getLeavingTransitionList()};
-	};
-	
 	var _inputNumber = function() {
 		var _number = ".";
 		var _message = "#{messages['expressionWizard.numberPrompt']}";
@@ -171,6 +160,7 @@
 		if (args.display) {
 			element.style.display = args.display;
 		}
+		element.style.padding = "0px 5px 0px 5px";
 		element.onmouseover = args.onmouseover ? args.onmouseover : onMouseOverSpan;
 		element.onmouseout = args.onmouseout ? args.onmouseout : onMouseExitSpan;
 		element.onclick = args.onclick ? args.onclick : onMouseClickSpan;
@@ -179,34 +169,30 @@
 	};
 	
 	var setTextArea = function(text) {
+	    var _inputDiv = $j("[id$='#{id}'] [id$='#{id}Text']")[0];
 	    _inputDiv.textContent="#"+"{"+text+"}";
-	    _inputDiv["#{textEvent}"].call( _inputDiv );
+	    _inputDiv["onchange"].call( _inputDiv );
 	};
 	
-	var addOption = function(value, label, parentNode) {
+	var addOption = function(args) {
 		result = document.createElement("option")
-		result.value = value;
-		result.innerHTML = label;
-		return parentNode.appendChild(result);
+		result.value = args.value;
+		result.innerHTML = args.label;
+		return args.parent.appendChild(result);
 	};
 	
-	var addListToSelectElement = function(list, element, transition) {
-		for(var i=0; i < list.length; i++) {
+	var addListToSelectElement = function(args) {
+		for(var i=0; i < args.list.length; i++) {
 			if (i==0) {
-				addOption("", "", element);
+				addOption({value:"", label:"", parent:args.parent});
 			}
-			item = list[i];
-			if (transition) {
-				addOption("'"+item+"'", item, element);
+			item = args.list[i];
+			if (args.isTransition) {
+				addOption({value:"'"+item+"'", label:item, parent:args.parent});
 			} else {
-				addOption(item, item, element);	
+				addOption({value:item, label:item, parent:args.parent});	
 			}
 		}
-	};
-	
-	var OptionLabel = function(args) {
-		var label = args.label;
-		var value = args.value;
 	};
 	
 	var aritOperSelect = function() {
@@ -215,14 +201,14 @@
 		var element = parent.appendChild(document.createElement("select"));
 		element.onchange = onSelectExpWiz;
 		
-		addOption("", "#{messages['expressionWizard.aritSelect.null']}", element);
-		addOption("+", "#{messages['expressionWizard.aritSelect.plus']}", element);
-		addOption("-", "#{messages['expressionWizard.aritSelect.minus']}", element);
-		addOption("*", "#{messages['expressionWizard.aritSelect.mult']}", element);
-		addOption("/", "#{messages['expressionWizard.aritSelect.div']}", element);
-		addOption("","",element);
-		addOption("num", "#{messages['expressionWizard.aritSelect.numb']}", element);
-		addListToSelectElement( _numberVariableList, element);
+		addOption({value:"", label:"#{messages['expressionWizard.aritSelect.null']}", parent:element});
+		addOption({value:"+", label:"#{messages['expressionWizard.aritSelect.plus']}", parent:element});
+		addOption({value:"-", label:"#{messages['expressionWizard.aritSelect.minus']}", parent:element});
+		addOption({value:"*", label:"#{messages['expressionWizard.aritSelect.mult']}", parent:element});
+		addOption({value:"/", label:"#{messages['expressionWizard.aritSelect.div']}", parent:element});
+		addOption({value:"",label:"",parent:element});
+		addOption({value:"num", label:"#{messages['expressionWizard.aritSelect.numb']}", parent:element});
+		addListToSelectElement( {list:_numberVariableList, parent:element});
 		
 		return parent;
 	};
@@ -233,20 +219,20 @@
 		var element = parent.appendChild(document.createElement("select"));
 		element.onchange = onSelectExpWiz;
 		
-		addOption("", "#{messages['expressionWizard.booleanSelect.null']}", element);
-		addOption("true", "#{messages['expressionWizard.booleanSelect.true']}", element);
-		addOption("false", "#{messages['expressionWizard.booleanSelect.false']}", element);
-		addOption("||", "#{messages['expressionWizard.booleanSelect.or']}", element);
-		addOption("&&", "#{messages['expressionWizard.booleanSelect.and']}", element);
-		addOption("not", "#{messages['expressionWizard.booleanSelect.not']}", element);
-		addOption("", "", element);
-		addOption("==", "#{messages['expressionWizard.booleanSelect.equals']}", element);
-		addOption("!=", "#{messages['expressionWizard.booleanSelect.notEqual']}", element);
-		addOption(">=", "#{messages['expressionWizard.booleanSelect.gte']}", element);
-		addOption(">", "#{messages['expressionWizard.booleanSelect.gt']}", element);
-		addOption("<=", "#{messages['expressionWizard.booleanSelect.lte']}", element);
-		addOption("<", "#{messages['expressionWizard.booleanSelect.lt']}", element);
-		addListToSelectElement( _booleanVariableList, element);
+		addOption({value:"", label:"#{messages['expressionWizard.booleanSelect.null']}", parent:element});
+		addOption({value:"true", label:"#{messages['expressionWizard.booleanSelect.true']}", parent:element});
+		addOption({value:"false", label:"#{messages['expressionWizard.booleanSelect.false']}", parent:element});
+		addOption({value:"||", label:"#{messages['expressionWizard.booleanSelect.or']}", parent:element});
+		addOption({value:"&&", label:"#{messages['expressionWizard.booleanSelect.and']}", parent:element});
+		addOption({value:"not", label:"#{messages['expressionWizard.booleanSelect.not']}", parent:element});
+		addOption({value:"", label:"", parent:element});
+		addOption({value:"==", label:"#{messages['expressionWizard.booleanSelect.equals']}", parent:element});
+		addOption({value:"!=", label:"#{messages['expressionWizard.booleanSelect.notEqual']}", parent:element});
+		addOption({value:">=", label:"#{messages['expressionWizard.booleanSelect.gte']}", parent:element});
+		addOption({value:">", label:"#{messages['expressionWizard.booleanSelect.gt']}", parent:element});
+		addOption({value:"<=", label:"#{messages['expressionWizard.booleanSelect.lte']}", parent:element});
+		addOption({value:"<", label:"#{messages['expressionWizard.booleanSelect.lt']}", parent:element});
+		addListToSelectElement( {list:_booleanVariableList, parent:element});
 	
 		return parent;
 	};
@@ -256,18 +242,18 @@
 		parent.classList.add("conclusionSelect");
 		var element = parent.appendChild(document.createElement("select"));
 		element.onchange = onSelectExpWiz;
-		addOption("", "#{messages['expressionWizard.condSelect.null']}", element);
-		addOption("if", "#{messages['expressionWizard.condSelect.cond']}", element);
-		addListToSelectElement( _transitionList, element, true);
+		addOption({value:"", label:"#{messages['expressionWizard.condSelect.null']}", parent:element});
+		addOption({value:"if", label:"#{messages['expressionWizard.condSelect.cond']}", parent:element});
+		addListToSelectElement( {list:_transitionList, parent:element, isTransition:true});
 	
 		return parent;
 	};
 	
 	var _expression = function(parent) {
 		parent.appendChild( booleanSelect() );
-		parent.appendChild( createSpan({"label":" ? "}) );
+		parent.appendChild( createSpan({"label":"?"}) );
 		parent.appendChild( conclusionSelect() );
-		parent.appendChild( createSpan({"label":" : "}) );
+		parent.appendChild( createSpan({"label":":"}) );
 		parent.appendChild( conclusionSelect() );
 		return parent;
 	};
@@ -279,7 +265,6 @@
 			clear = false;
 		} else {
 			clear = true;
-			initVariableList();
 			return _expression(_expressionDiv);	
 			
 		}
