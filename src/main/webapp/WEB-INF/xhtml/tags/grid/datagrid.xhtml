@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,54 +13,78 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<a:loadScript src="/js/components.js" />
-	<ui:param name="gridId"
-		value="#{empty gridId ? bean.gridId.concat('Grid') : gridId}" />
-	<ui:param name="gridId"
-		value="#{isLeftGrid ? 'l_'.concat(gridId) : gridId}" />
-	<ui:param name="showGrid" value="#{empty showGrid ? true : showGrid}" />
-	<ui:param name="viewId" value="#{empty viewId ? bean.viewId : viewId}" />
-	<ui:param name="canView"
-		value="#{wiacsSecurity.checkPage(viewId.concat('/view.seam'))}" />
-	<ui:param name="canReport"
-		value="#{wiacsSecurity.checkPage(viewId.concat('/report.seam'))}" />
-	<ui:param name="panelWidth"
-		value="#{empty panelWidth ? '99%' : panelWidth}" />
-	<ui:param name="tableWidthExterno"
-		value="#{empty tableWidthExterno ? '275px' : tableWidthExterno}" />
-	<ui:param name="showColumns"
-		value="#{empty showColumns ? true : showColumns}" />
-	<s:div id="#{gridId}Edit" style="clear: both;">
-		<ui:insert name="customSearch" />
-		<table width="100%" border="0">
+	<h:outputScript
+         library="js"
+         name="components.js" />
+	<ui:param
+         name="gridId"
+         value="#{empty gridId ? bean.gridId.concat('Grid') : gridId}" />
+	<ui:param
+         name="gridId"
+         value="#{isLeftGrid ? 'l_'.concat(gridId) : gridId}" />
+	<ui:param
+         name="showGrid"
+         value="#{empty showGrid ? true : showGrid}" />
+	<ui:param
+         name="viewId"
+         value="#{empty viewId ? bean.viewId : viewId}" />
+	<ui:param
+         name="canView"
+         value="#{wiacsSecurity.checkPage(viewId.concat('/view.seam'))}" />
+	<ui:param
+         name="canReport"
+         value="#{wiacsSecurity.checkPage(viewId.concat('/report.seam'))}" />
+	<ui:param
+         name="panelWidth"
+         value="#{empty panelWidth ? '99%' : panelWidth}" />
+	<ui:param
+         name="tableWidthExterno"
+         value="#{empty tableWidthExterno ? '275px' : tableWidthExterno}" />
+	<ui:param
+         name="showColumns"
+         value="#{empty showColumns ? true : showColumns}" />
+	<s:div
+         id="#{gridId}Edit"
+         style="clear: both;">
+		<ui:insert
+             name="customSearch" />
+		<table
+             width="100%"
+             border="0">
 			<tr>
-				<td width="#{tableWidthExterno}" valign="top">
-				<div style="width: #{tableWidthExterno};"><c:if
-					test="#{empty customSearch or !customSearch}">
+				<td
+                     width="#{tableWidthExterno}"
+                     valign="top">
+				<div
+                         style="width: #{tableWidthExterno};"><c:if
+                             test="#{empty customSearch or !customSearch}">
 					<wi:datagridSearch />
 					<ui:remove>
-						<c:if test="#{!isM2M and showColumns}">
-							<ui:include src="visibleColumns.xhtml" />
+						<c:if
+                                     test="#{!isM2M and showColumns}">
+							<ui:include
+                                         src="visibleColumns.xhtml" />
 						</c:if>
 					</ui:remove>
 				</c:if></div>
 				</td>
-				<td valign="top">
-					<c:if test="#{showGrid and !isM2M}">
+				<td
+                     valign="top">
+					<c:if
+                         test="#{showGrid and !isM2M}">
 						<wi:datalist />
 					</c:if>
 				</td>

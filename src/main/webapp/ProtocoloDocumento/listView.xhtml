@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
- <!--
+<!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -14,120 +13,158 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-<!-- =) -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-			    xmlns:f="http://java.sun.com/jsf/core"
-			    xmlns:a="http://richfaces.org/a4j"
-			    
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><!-- =) --><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                       
-	<ui:define name="title">#{messages['protocoloDocumento.titlePage']}</ui:define>
+	<ui:define
+         name="title">#{messages['protocoloDocumento.titlePage']}</ui:define>
 	
-	<a:loadScript src="/js/components.js"/>
+	<h:outputScript
+         library="js"
+         name="components.js" />
 	
-	<ui:param name="home" value="#{protocoloDocumentoHome}" />
-	<ui:param name="action" value="#{documentoFisicoAction}" />
+	<ui:param
+         name="home"
+         value="#{protocoloDocumentoHome}" />
+	<ui:param
+         name="action"
+         value="#{documentoFisicoAction}" />
 	
-	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{protocoloDocumentoList.list(15)}"
-					  bean="#{protocoloDocumentoList}"
-					  tableTitle="#{messages['protocoloDocumento.titleGrid']}"
-					  id="protocoloDocumentoList"
-					  rowId="#{row.idProtocoloDocumento}">
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarProtocoloDocumentoForm"
-							   formTitle="#{messages['searchForm.title']}">
+	<ui:define
+         name="searchGrid">   
+	    <wi:dataTable
+             values="#{protocoloDocumentoList.list(15)}"
+             bean="#{protocoloDocumentoList}"
+             tableTitle="#{messages['protocoloDocumento.titleGrid']}"
+             id="protocoloDocumentoList"
+             rowId="#{row.idProtocoloDocumento}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="pesquisarProtocoloDocumentoForm"
+                     formTitle="#{messages['searchForm.title']}">
 					
-					<ui:param name="idDataEntrada" value="dataEntrada" />
-					<ui:param name="idDataSaida" value="dataSaida" />
+					<ui:param
+                         name="idDataEntrada"
+                         value="dataEntrada" />
+					<ui:param
+                         name="idDataSaida"
+                         value="dataSaida" />
 					
-					<wi:selectOneMenuEntity id="documentoFisico"
-											label="#{messages['protocoloDocumento.documentoFisico']}"
-											value="#{protocoloDocumentoList.entity.documentoFisico}"
-											items="#{action.documentoFisicoList}"
-											noSelectionLabel="#{messages['protocoloDocumento.selectDocumentoFisico']}"/>
+					<wi:selectOneMenuEntity
+                         id="documentoFisico"
+                         label="#{messages['protocoloDocumento.documentoFisico']}"
+                         value="#{protocoloDocumentoList.entity.documentoFisico}"
+                         items="#{action.documentoFisicoList}"
+                         noSelectionLabel="#{messages['protocoloDocumento.selectDocumentoFisico']}" />
 											
-					<wi:inputText id="pessoa"
-								 value="#{protocoloDocumentoList.entity.nomePessoa}"
-								 label="#{messages['protocoloDocumento.nomePessoa']}"/>
-					<wi:inputDate id="#{idDataEntrada}"
-								value="#{protocoloDocumentoList.entity.dataEntrada}"
-								label="#{messages['protocoloDocumento.dataEntrada']}"/>
-					<wi:inputDate id="#{idDataSaida}"
-								value="#{protocoloDocumentoList.entity.dataSaida}"
-								label="#{messages['protocoloDocumento.dataSaida']}"
-								onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
-								oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"/>
-					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['field.situacao']}"
-											  value="#{protocoloDocumentoList.entity.ativo}" />
+					<wi:inputText
+                         id="pessoa"
+                         value="#{protocoloDocumentoList.entity.nomePessoa}"
+                         label="#{messages['protocoloDocumento.nomePessoa']}" />
+					<wi:inputDate
+                         id="#{idDataEntrada}"
+                         value="#{protocoloDocumentoList.entity.dataEntrada}"
+                         label="#{messages['protocoloDocumento.dataEntrada']}" />
+					<wi:inputDate
+                         id="#{idDataSaida}"
+                         value="#{protocoloDocumentoList.entity.dataSaida}"
+                         label="#{messages['protocoloDocumento.dataSaida']}"
+                         onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
+                         oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)" />
+					<wi:selectSituacaoOneMenu
+                         id="ativo"
+                         label="#{messages['field.situacao']}"
+                         value="#{protocoloDocumentoList.entity.ativo}" />
 					
 				</wi:searchForm>
 			</ui:define>
 			
-			<wi:columnOutputText columnId="documentoFisico" 
-								 columnHeader="#{messages['protocoloDocumento.documentoFisico']}"
-								 value="#{row.documentoFisico}"/>
-			<wi:columnOutputText columnId="pessoa"
-								 columnHeader="#{messages['protocoloDocumento.nomePessoa']}"
-								 value="#{row.nomePessoa}" />
-			<wi:columnOutputText columnId="dataEntrada"
-								 columnHeader="#{messages['protocoloDocumento.dataEntrada']}"
-								 value="#{row.dataEntrada}">
-				<ui:define name="outputText">
-					<f:convertDateTime pattern="dd/MM/yyyy" />
+			<wi:columnOutputText
+                 columnId="documentoFisico"
+                 columnHeader="#{messages['protocoloDocumento.documentoFisico']}"
+                 value="#{row.documentoFisico}" />
+			<wi:columnOutputText
+                 columnId="pessoa"
+                 columnHeader="#{messages['protocoloDocumento.nomePessoa']}"
+                 value="#{row.nomePessoa}" />
+			<wi:columnOutputText
+                 columnId="dataEntrada"
+                 columnHeader="#{messages['protocoloDocumento.dataEntrada']}"
+                 value="#{row.dataEntrada}">
+				<ui:define
+                     name="outputText">
+					<f:convertDateTime
+                         pattern="dd/MM/yyyy" />
 				</ui:define>
 			</wi:columnOutputText>			 
-			<wi:columnOutputText columnId="dataSaida"
-								 columnHeader="#{messages['protocoloDocumento.dataSaida']}"
-								 value="#{row.dataSaida}">
-				<ui:define name="outputText">
-					<f:convertDateTime pattern="dd/MM/yyyy" />
+			<wi:columnOutputText
+                 columnId="dataSaida"
+                 columnHeader="#{messages['protocoloDocumento.dataSaida']}"
+                 value="#{row.dataSaida}">
+				<ui:define
+                     name="outputText">
+					<f:convertDateTime
+                         pattern="dd/MM/yyyy" />
 				</ui:define>
 			</wi:columnOutputText>
 
-			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['field.situacao']}"
-							value="#{row.ativo}" />
+			<wi:columnSituacao
+                 columnId="ativo"
+                 columnHeader="#{messages['field.situacao']}"
+                 value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
-	<ui:define name="form">
-		<wi:dataForm formId="protocoloDocumentoForm"
-					 formTitle="#{messages['form.title']}">
+	<ui:define
+         name="form">
+		<wi:dataForm
+             formId="protocoloDocumentoForm"
+             formTitle="#{messages['form.title']}">
 						
-			<ui:param name="idDataEntrada" value="dataEntradaForm" />
-			<ui:param name="idDataSaida" value="dataSaidaForm" />
+			<ui:param
+                 name="idDataEntrada"
+                 value="dataEntradaForm" />
+			<ui:param
+                 name="idDataSaida"
+                 value="dataSaidaForm" />
 			
-			<wi:selectOneMenuEntity id="documentoFisico"
-									label="#{messages['protocoloDocumento.documentoFisico']}"
-									value="#{protocoloDocumentoHome.instance.documentoFisico}"
-									items="#{action.documentoFisicoList}"
-									required="true"
-									noSelectionLabel="#{messages['protocoloDocumento.selectDocumentoFisico']}"/>
-			<wi:inputText id="pessoa"
-							value="#{protocoloDocumentoHome.instance.nomePessoa}"
-							required="true"
-							label="#{messages['protocoloDocumento.nomePessoa']}"/>
-			<wi:inputDate id="#{idDataEntrada}"
-							value="#{protocoloDocumentoHome.instance.dataEntrada}"
-							required="true"
-							label="#{messages['protocoloDocumento.dataEntrada']}"/>
-			<wi:inputDate id="#{idDataSaida}"
-							value="#{protocoloDocumentoHome.instance.dataSaida}"
-							label="#{messages['protocoloDocumento.dataSaida']}"
-							onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
-							oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"/>
-			<wi:selectSituacaoRadio id="ativo"
-									label="#{messages['field.situacao']}"
-									required="true"
-									value="#{protocoloDocumentoHome.instance.ativo}" />
+			<wi:selectOneMenuEntity
+                 id="documentoFisico"
+                 label="#{messages['protocoloDocumento.documentoFisico']}"
+                 value="#{protocoloDocumentoHome.instance.documentoFisico}"
+                 items="#{action.documentoFisicoList}"
+                 required="true"
+                 noSelectionLabel="#{messages['protocoloDocumento.selectDocumentoFisico']}" />
+			<wi:inputText
+                 id="pessoa"
+                 value="#{protocoloDocumentoHome.instance.nomePessoa}"
+                 required="true"
+                 label="#{messages['protocoloDocumento.nomePessoa']}" />
+			<wi:inputDate
+                 id="#{idDataEntrada}"
+                 value="#{protocoloDocumentoHome.instance.dataEntrada}"
+                 required="true"
+                 label="#{messages['protocoloDocumento.dataEntrada']}" />
+			<wi:inputDate
+                 id="#{idDataSaida}"
+                 value="#{protocoloDocumentoHome.instance.dataSaida}"
+                 label="#{messages['protocoloDocumento.dataSaida']}"
+                 onchanged="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)"
+                 oninputblur="validarPeriodo('#{rich:clientId(idDataEntrada)}InputDate', '#{rich:clientId(idDataSaida)}InputDate', true)" />
+			<wi:selectSituacaoRadio
+                 id="ativo"
+                 label="#{messages['field.situacao']}"
+                 required="true"
+                 value="#{protocoloDocumentoHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-	
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,56 +13,68 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+	<h:outputScript
+         library="js"
+         name="components.js" />
 
-	<a:loadScript src="/js/components.js"/>
+	<ui:param
+         name="search"
+         value="#{empty props.searchBean ? searchBean :    expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
 
-	<ui:param name="search" value="#{empty props.searchBean ? searchBean : 
-		expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
+		<ui:param
+         name="idFromSearch"
+         value="#{props.idDateFrom}Search" />
+	<ui:param
+         name="idToSearch"
+         value="#{props.idDateTo}Search" />
 
-		<ui:param name="idFromSearch" value="#{props.idDateFrom}Search"/>
-	<ui:param name="idToSearch" value="#{props.idDateTo}Search"/>
-
-	<s:decorate id="#{id}Decoration" 
-				template="/WEB-INF/xhtml/components/templates/view.xhtml"
-				rendered="#{empty rendered or rendered}">
-		<wi:mask selector=".#{id}maskDate" mask="99/99/9999"/>
-		<ui:define name="label">#{label}</ui:define>
-		<h:outputText value="De " />
-		<rich:calendar id="#{idFromSearch}" 
-					   value="#{search[props.idDateFrom]}" 
-					   enableManualInput="#{empty props.enableManualInput ? (empty enableManualInput ? true : enableManualInput) : props.enableManualInput}"
-					   inputStyle="width: 70px; display:inline; "
-					   disabled="#{disabled}"
-					   required="#{required}"
-					   inputClass="#{id}maskDate"
-					   showWeeksBar="#{wi:get(showWeeksBar, false)}"
-	                   datePattern="#{empty props.pattern ? 'dd/MM/yyyy' : props.pattern}"
-	                   onchanged="validarPeriodo('#{rich:clientId(idFromSearch)}InputDate', '#{rich:clientId(idToSearch)}InputDate', true);"
-                   	   oninputblur="validarData(this);
-                   	   				validarPeriodo('#{rich:clientId(idFromSearch)}InputDate', '#{rich:clientId(idToSearch)}InputDate', true);"/>
-		<h:outputText value=" Até " />
-		<rich:calendar  id="#{idToSearch}" 
-						value="#{search[props.idDateTo]}" 
-						enableManualInput="#{empty props.enableManualInput ? (empty enableManualInput ? true : enableManualInput) : props.enableManualInput}"
-						inputStyle="width: 70px"
-						disabled="#{disabled}"
-						required="#{required}"
-						inputClass="#{id}maskDate"
-						showWeeksBar="#{wi:get(showWeeksBar, false)}"
-						datePattern="#{empty props.pattern ? 'dd/MM/yyyy' : props.pattern}" 
-						onchanged="validarPeriodo('#{rich:clientId(idFromSearch)}InputDate', '#{rich:clientId(idToSearch)}InputDate', false);"
-                   	    oninputblur="validarData(this);
-                   	    			 validarPeriodo('#{rich:clientId(idFromSearch)}InputDate', '#{rich:clientId(idToSearch)}InputDate', false);"/>
+	<s:decorate
+         id="#{id}Decoration"
+         template="/WEB-INF/xhtml/components/templates/view.xhtml"
+         rendered="#{empty rendered or rendered}">
+		<wi:mask
+             selector=".#{id}maskDate"
+             mask="99/99/9999" />
+		<ui:define
+             name="label">#{label}</ui:define>
+		<h:outputText
+             value="De " />
+		<rich:calendar
+             id="#{idFromSearch}"
+             value="#{search[props.idDateFrom]}"
+             enableManualInput="#{empty props.enableManualInput ? (empty enableManualInput ? true : enableManualInput) : props.enableManualInput}"
+             inputStyle="width: 70px; display:inline; "
+             disabled="#{disabled}"
+             required="#{required}"
+             inputClass="#{id}maskDate"
+             showWeeksBar="#{wi:get(showWeeksBar, false)}"
+             datePattern="#{empty props.pattern ? 'dd/MM/yyyy' : props.pattern}"
+             onchanged="validarPeriodo('#{rich:clientId(idFromSearch)}InputDate', '#{rich:clientId(idToSearch)}InputDate', true);"
+             oninputblur="validarData(this);                            validarPeriodo('#{rich:clientId(idFromSearch)}InputDate', '#{rich:clientId(idToSearch)}InputDate', true);" />
+		<h:outputText
+             value=" Até " />
+		<rich:calendar
+             id="#{idToSearch}"
+             value="#{search[props.idDateTo]}"
+             enableManualInput="#{empty props.enableManualInput ? (empty enableManualInput ? true : enableManualInput) : props.enableManualInput}"
+             inputStyle="width: 70px"
+             disabled="#{disabled}"
+             required="#{required}"
+             inputClass="#{id}maskDate"
+             showWeeksBar="#{wi:get(showWeeksBar, false)}"
+             datePattern="#{empty props.pattern ? 'dd/MM/yyyy' : props.pattern}"
+             onchanged="validarPeriodo('#{rich:clientId(idFromSearch)}InputDate', '#{rich:clientId(idToSearch)}InputDate', false);"
+             oninputblur="validarData(this);                             validarPeriodo('#{rich:clientId(idFromSearch)}InputDate', '#{rich:clientId(idToSearch)}InputDate', false);" />
         <ui:insert />             
 	</s:decorate>
 

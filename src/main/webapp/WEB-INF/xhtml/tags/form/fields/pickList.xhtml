@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,29 +13,41 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:f="http://java.sun.com/jsf/core"
-			    xmlns:rich="http://richfaces.org/rich"
-			    xmlns:a="http://richfaces.org/a4j"
-			    xmlns:wi= "http://www.itx.com.br/jsf"
-			    xmlns:s="http://jboss.org/schema/seam/taglib">
-
-	<ui:param name="listsHeight" value="#{wi:get(listsHeight, '300px')}" />
-	<ui:param name="sourceListWidth" value="#{wi:get(sourceListWidth, '350')}" />
-	<h:outputText style="font-weight: bold; margin-top: 10px; margin-left:#{sourceListWidth + 55}px;
-						 position: absolute;" 
-				  value="#{targetLabel}" />
-	<ui:param name="sourceListWidth" value="#{sourceListWidth}px" />
-	<ui:param name="targetListWidth" value="#{wi:get(targetListWidth, '350')}" />
-	<h:graphicImage url="/img/search.gif" style="margin-top: 5px; margin-left:5px" />
-	<a:loadScript src="/js/jqueryExt.js" />
-	<input id="#{id}Filtro" 
-		   class="inputText"
-		   style="margin-top: 5px; margin-left:8px; width:250px;"/>
+	<ui:param
+         name="listsHeight"
+         value="#{wi:get(listsHeight, '300px')}" />
+	<ui:param
+         name="sourceListWidth"
+         value="#{wi:get(sourceListWidth, '350')}" />
+	<h:outputText
+         style="font-weight: bold; margin-top: 10px; margin-left:#{sourceListWidth + 55}px;        position: absolute;"
+         value="#{targetLabel}" />
+	<ui:param
+         name="sourceListWidth"
+         value="#{sourceListWidth}px" />
+	<ui:param
+         name="targetListWidth"
+         value="#{wi:get(targetListWidth, '350')}" />
+	<h:graphicImage
+         url="/img/search.gif"
+         style="margin-top: 5px; margin-left:5px" />
+	<h:outputScript
+         library="js"
+         name="jqueryExt.js" />
+	<input
+         id="#{id}Filtro"
+         class="inputText"
+         style="margin-top: 5px; margin-left:8px; width:250px;" />
 	<f:verbatim>	   
 		<script>
 			var list = "#{id.replaceAll(':', '\\\\\\\\:')}";
@@ -50,22 +61,27 @@
 			});
 		</script>
 	</f:verbatim>
-	<rich:pickList	id="#{id}"
-			       	value="#{value}"
-			       	copyAllControlLabel="Adiciona todos"
-			       	copyControlLabel="Adicionar"
-			       	removeAllControlLabel="Remover todos"
-			       	removeControlLabel="Remover"
-			       	listsHeight="#{listsHeight}"
-			       	moveControlsVerticalAlign="top"
-			       	sourceListWidth="#{sourceListWidth}"
-			       	targetListWidth="#{targetListWidth}"
-			       	switchByClick="true"
-			       	style="#{style}"
-			       	showButtonsLabel="false"> 
-		<s:selectItems value="#{itemValues}" var="var" label="#{itemLabel}" />
-		<ui:insert/>
+	<rich:pickList
+         id="#{id}"
+         value="#{value}"
+         copyAllControlLabel="Adiciona todos"
+         copyControlLabel="Adicionar"
+         removeAllControlLabel="Remover todos"
+         removeControlLabel="Remover"
+         listsHeight="#{listsHeight}"
+         moveControlsVerticalAlign="top"
+         sourceListWidth="#{sourceListWidth}"
+         targetListWidth="#{targetListWidth}"
+         switchByClick="true"
+         style="#{style}"
+         showButtonsLabel="false"> 
+		<s:selectItems
+             value="#{itemValues}"
+             var="var"
+             label="#{itemLabel}" />
+		<ui:insert />
 	</rich:pickList>
-    <rich:message for="#{id}List" />
+    <rich:message
+         for="#{id}List" />
 
 </ui:composition>
