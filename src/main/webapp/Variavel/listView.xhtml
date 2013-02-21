@@ -35,6 +35,10 @@
 					  tableTitle="#{messages['searchForm.title']}"
 					  id="variavelList"
 					  rowId="#{row.idVariavel}" >
+			<ui:define name="headerToolBar">
+                <wi:toolBarReport rendered="false" />
+                <wi:toolBarReportExcel rendered="false"/>                                      
+            </ui:define>
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarVariavelForm"
 							   formTitle="#{messages['variavel.titlePage']}">
