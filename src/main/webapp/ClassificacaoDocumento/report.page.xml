@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
 
-<page xmlns="http://jboss.com/products/seam/pages"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<begin-conversation join="true" />
 
-	<begin-conversation join="true"/>
-    <param name="order" value="#{tipoProcessoDocumentoGrid.order}"/>
-
-	<action execute="#{tipoProcessoDocumentoGrid.setMaxResults(10000)}"/>
-
-	<!-- Parametros do searchField -->
-	<param name="ativo" value="#{tipoProcessoDocumentoSearch.ativo}"/>		
-	<param value="#{tipoProcessoDocumentoGrid.visibleColumnList}"/>
+	<param name="order" value="#{tipoProcessoDocumentoList.order}" />
+	<param name="restrictionLogicOperator" value="#{tipoProcessoDocumentoList.restrictionLogicOperator}" />
+	
+	<param name="codigoDocumento" value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"/>
+	<param name="tipoProcessoDocumento" value="#{tipoProcessoDocumentoList.entity.tipoProcessoDocumento}"/>
+	<param name="inTipoDocumento" value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"/>
+	<param name="visibilidade" value="#{tipoProcessoDocumentoList.entity.visibilidade}"/>
+	<param name="ativo" value="#{tipoProcessoDocumentoList.entity.ativo}"/>
 
 </page>
