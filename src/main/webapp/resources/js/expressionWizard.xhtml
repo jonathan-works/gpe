@@ -12,8 +12,8 @@
 <s:div id="#{id}" style="margin:5px">
     <s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
     <wi:inputTextarea id="#{id}Text"
-                      styleClass="expressionInput" 
-                      label="#{messages['wizardExpressoes.expressao']}"
+                      styleClass="expressionInput"
+                      label="#{messages['expressionWizard.expressao']}"
                       value="#{value}">
         <a:support status=":status"
                    event="onchange" reRender="#{id}"/>
@@ -275,7 +275,7 @@
 		image.src = _imageSrc;
 		image.onclick = _initWizard;
 		image.style.cursor = "pointer";
-		image.title = "#{messages['wizardExpressoes.title']}";
+		image.title = "#{messages['expressionWizard.title']}";
 		return image;
 	};
 	__constructor();
