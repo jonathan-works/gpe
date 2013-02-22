@@ -10,8 +10,8 @@
 	 
 	<begin-conversation join="true" flush-mode="manual"/>
 	<param name="fluxo.order" value="#{fluxoGrid.order}"/>
-	<param name="id" value="#{fluxoHome.fluxoIdFluxo}"/>
-
+	<param name="id" value="#{fluxoHome.id}"
+           converterId="integerConverter" />
 <!-- Parametros para RESTFull -->
 	<param name="tab" value="#{fluxoHome.tab}"/>
 	<param name="goBackUrl" value="#{fluxoHome.goBackUrl}"/>
