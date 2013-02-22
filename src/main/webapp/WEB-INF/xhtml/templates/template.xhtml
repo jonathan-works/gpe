@@ -13,8 +13,8 @@
              content="text/html; charset=UTF-8" />
 	    <title>#{nomeSistema}: <ui:insert
                  name="title" /></title>
-	    <a:loadScript
-             src="/js/liveclock.js" />
+	    <h:outputScript
+             library="js" name="liveclock.js" />
 		<link
              rel="icon"
              href="#{util.contextPath}/favicon.ico"
@@ -23,7 +23,7 @@
              src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
 	</h:head>
 
-	<h:body>&gt; 
+	<h:body>
 	    <ui:param
              name="canEdit"
              value="#{home.editable}" />
@@ -52,5 +52,5 @@
 			<ui:insert
                  name="body" />
 		</div>
-	</h:body>&gt;
+	</h:body>
 </html>
