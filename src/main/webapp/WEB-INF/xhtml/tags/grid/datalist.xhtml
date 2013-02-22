@@ -190,8 +190,8 @@
                                          name="header">
 								<c:if
                                              test="#{headerToolBar != 'none'}">
-									<a:include
-                                                 viewId="/WEB-INF/xhtml/components/grid/header/tools/#{headerToolBar}.xhtml" />
+									<ui:include
+                                                 src="/WEB-INF/xhtml/components/grid/header/tools/#{headerToolBar}.xhtml" />
 								</c:if>
 								<c:if
                                              test="#{headerToolBar == 'none'}">
@@ -202,8 +202,8 @@
                                          test="#{toolBar != 'none'}">
 								<div
                                              class="transpToolBar">
-									<a:include
-                                                 viewId="/WEB-INF/xhtml/components/grid/tools/#{toolBar}.xhtml" />
+									<ui:include
+                                                 src="/WEB-INF/xhtml/components/grid/tools/#{toolBar}.xhtml" />
 								</div>							
 							</c:if>							
 						</rich:column> 
@@ -238,11 +238,11 @@
 									<ui:param
                                              value="#{ord} desc"
                                              name="desc" />
-									<a:include
-                                             viewId="/WEB-INF/xhtml/components/grid/header/#{c.headerType}.xhtml" />
+									<ui:include
+                                             src="/WEB-INF/xhtml/components/grid/header/#{c.headerType}.xhtml" />
 								</f:facet>
-							<a:include
-                                         viewId="/WEB-INF/xhtml/components/grid/#{c.valueType}.xhtml" />
+							<ui:include
+                                         src="/WEB-INF/xhtml/components/grid/#{c.valueType}.xhtml" />
 						</rich:column>
 					</c:forEach>
 					
@@ -250,7 +250,7 @@
                                  name="footer">
 						<h:form
                                      rendered="#{useDatamodel}">
-							<rich:datascroller
+							<rich:dataScroller
                                          renderIfSinglePage="false" />
 						</h:form>
 					</f:facet>
