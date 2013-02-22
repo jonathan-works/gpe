@@ -1,32 +1,42 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich">
 	
-	<style type="text/css">
+	<style
+         type="text/css">
 	    @media print{
 	      .onlyprint{display: block;visibility: visible;}
 	      .noprint{display: none;visibility: hidden;}
 	    }
   	</style>
-	    <rich:dataTable value="#{processoTrfHome.getEntityProcDocList(param.idProcessoTRF)}" 
-	    				var="var" 
-                  			style="width: 100%"	                    
-             			onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"	
-             			onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">   
+	    <rich:dataTable
+         value="#{processoTrfHome.getEntityProcDocList(param.idProcessoTRF)}"
+         var="var"
+         style="width: 100%"
+         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+         onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">   
 		    	<rich:column>
-		    		<f:facet name="header">Nome do(s) Arquivo(s)</f:facet>
-				    <h:outputText value="#{var.processoDocumento}" />
+		    		<f:facet
+                 name="header">Nome do(s) Arquivo(s)</f:facet>
+				    <h:outputText
+                 value="#{var.processoDocumento}" />
 		    	</rich:column>
 		    	<rich:column>
-		    		<f:facet name="header">Data de Inclusão</f:facet>
-				    <h:outputText value="#{var.dataInclusao}" />
+		    		<f:facet
+                 name="header">Data de Inclusão</f:facet>
+				    <h:outputText
+                 value="#{var.dataInclusao}" />
 		    	</rich:column>
   			</rich:dataTable>	
 	<center>
-	   <button id="btnimprimir" class="noprint" value="imprimir" onclick="window.print();">Imprimir</button>
+	   <button
+             id="btnimprimir"
+             class="noprint"
+             value="imprimir"
+             onclick="window.print();">Imprimir</button>
 	</center>            
 </ui:composition>

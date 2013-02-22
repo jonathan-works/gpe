@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:p="http://jboss.org/schema/seam/pdf">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -25,11 +24,17 @@
 	
 	<ui:composition>
 	
-		<ui:param name="value" value="#{empty col.properties.field ? row[col.id] : row[col.id][col.properties.field]}" />
+		<ui:param
+             name="value"
+             value="#{empty col.properties.field ? row[col.id] : row[col.id][col.properties.field]}" />
 		
-		<p:font size="8" style="#{home.searchTree2GridList.isDad(row) ? 'bold' : ''}">
-			<p:text value="#{home.searchTree2GridList.getIdent(row, false)}" />
-			<p:text value="#{value}"/> 
+		<p:font
+             size="8"
+             style="#{home.searchTree2GridList.isDad(row) ? 'bold' : ''}">
+			<p:text
+                 value="#{home.searchTree2GridList.getIdent(row, false)}" />
+			<p:text
+                 value="#{value}" /> 
 		</p:font>
 		
 	</ui:composition>

@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:wi= "http://www.itx.com.br/jsf"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:rich="http://richfaces.org/rich"
-    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+	<ui:param
+         name="canEdit"
+         value="#{s:hasPermission('seam.user', 'update')}" />
 
-	<ui:param name="canEdit" value="#{s:hasPermission('seam.user', 'update')}" />
+	<ui:param
+         name="home"
+         value="#{usuarioLoginHome}" />
 
-	<ui:param name="home" value="#{usuarioLoginHome}" />
+	<ui:define
+         name="title">Cadastro de Usuários</ui:define>
 
-	<ui:define name="title">Cadastro de Usuários</ui:define>
-
-    <ui:define name="searchGrid">
-		<wi:datagrid 
-	    	canRemove="#{s:hasPermission('seam.user', 'delete')}"
-	    	bean="#{usuarioLoginGrid}" 
-	    	searchBean="#{usuarioLoginSearch}" 
-	    	title="Usuários"
-	    	headerToolBar="none"
-	    />
+    <ui:define
+         name="searchGrid">
+		<wi:datagrid
+             canRemove="#{s:hasPermission('seam.user', 'delete')}"
+             bean="#{usuarioLoginGrid}"
+             searchBean="#{usuarioLoginSearch}"
+             title="Usuários"
+             headerToolBar="none" />
     </ui:define>
 
-	<ui:define name="form">
-		<c:if test="#{canEdit}">
-			<ui:include src="usuarioEdit.xhtml" />
+	<ui:define
+         name="form">
+		<c:if
+             test="#{canEdit}">
+			<ui:include
+                 src="usuarioEdit.xhtml" />
 		</c:if>
-		<c:if test="#{not canEdit}">
-			<wi:view form="#{usuarioLoginView}" columns="4"
-				title="Usuário" />
+		<c:if
+             test="#{not canEdit}">
+			<wi:view
+                 form="#{usuarioLoginView}"
+                 columns="4"
+                 title="Usuário" />
 		</c:if>
 	</ui:define>
 

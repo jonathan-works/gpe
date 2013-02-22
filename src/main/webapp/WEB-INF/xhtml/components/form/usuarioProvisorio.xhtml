@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,37 +13,44 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->	
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
-
-	<s:decorate id="#{f.id}DecorationProvisorio" 
-				template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-				rendered="#{usuarioHome.managed}">
-		<ui:param name="showLock" value="false" />
+	<s:decorate
+         id="#{f.id}DecorationProvisorio"
+         template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+         rendered="#{usuarioHome.managed}">
+		<ui:param
+             name="showLock"
+             value="false" />
 		
-		<wi:selectBooleanCheckbox id="#{id}Provisorio"
-							value="#{usuarioHome.instance.provisorio}"
-							label="#{messages['usuario.provisorio']}">
-			<a:support ajaxSingle="true"
-					   reRender="provisorioDiv"
-					   event="onchange" />
+		<wi:selectBooleanCheckbox
+             id="#{id}Provisorio"
+             value="#{usuarioHome.instance.provisorio}"
+             label="#{messages['usuario.provisorio']}">
+			<a:ajax
+                 event="change"
+                 execute="@this"
+                 render="provisorioDiv" />
 		</wi:selectBooleanCheckbox>
 
-		<s:div id="provisorioDiv">
-			 <s:div rendered="#{usuarioHome.instance.provisorio}" >
-				<wi:inputDate id="#{id}DataExpiracao"
-							 label="#{messages['usuario.dataExpiracao']}"
-							 value="#{usuarioHome.instance.dataExpiracao}"
-							 future="true"
-							 required="true"/>
+		<s:div
+             id="provisorioDiv">
+			 <s:div
+                 rendered="#{usuarioHome.instance.provisorio}">
+				<wi:inputDate
+                     id="#{id}DataExpiracao"
+                     label="#{messages['usuario.dataExpiracao']}"
+                     value="#{usuarioHome.instance.dataExpiracao}"
+                     future="true"
+                     required="true" />
 			 </s:div>
 		</s:div>
        	  

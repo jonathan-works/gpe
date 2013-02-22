@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -21,16 +21,21 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> <div style="width: 100%;"> </div>
-	<s:div style="width: 100%; height: 550px; overflow: auto; padding:0px" 
-			id="processImage">
-		<a:mediaOutput cacheable="false" 
-			id="graphImage"
-			element="img"
-			createContent="#{processBuilderGraph.paintGraph}"
-			usemap="#nodes"
-			ismap="true">
-			<f:param name="cid" value="#{conversation.id}"/>
+--> <div
+         style="width: 100%;"> </div>
+	<s:div
+         style="width: 100%; height: 550px; overflow: auto; padding:0px"
+         id="processImage">
+		<a:mediaOutput
+             cacheable="false"
+             id="graphImage"
+             element="img"
+             createContent="#{processBuilderGraph.paintGraph}"
+             usemap="#nodes"
+             ismap="true">
+			<f:param
+                 name="cid"
+                 value="#{conversation.id}" />
 		</a:mediaOutput>
 		<f:verbatim>
 			<script>
@@ -42,16 +47,9 @@
 	<script>
 		$('form:processImage').style.width = (document.body.offsetWidth - 55) + "px"	
 	</script>	
-	<div id='divDetail' 
-		style='position:absolute; 
-			background-color: #ffffd0;
-			padding: 5px;
-			display:none;
-			opacity: 0.75;
-			border: solid 1px gray;
-			top:0px; right:0px;
-			width: 500px;
-			 '>
+	<div
+         id="divDetail"
+         style="position:absolute;     background-color: #ffffd0;    padding: 5px;    display:none;    opacity: 0.75;    border: solid 1px gray;    top:0px; right:0px;    width: 500px;     ">
 	</div>
 	
 </ui:composition>

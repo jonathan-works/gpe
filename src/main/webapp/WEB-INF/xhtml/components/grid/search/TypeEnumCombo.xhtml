@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:c="http://java.sun.com/jsp/jstl/core"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
 				
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -26,21 +25,29 @@
 	  veja em http://www.gnu.org/licenses/  
 	--> 
 	
-	<s:decorate id="#{f.id}Decoration" template="/WEB-INF/xhtml/components/templates/view.xhtml"
-				rendered="#{empty rendered ? (empty props.rendered ? true : props.rendered) : rendered}">
-    	<ui:param name="items" value="#{empty items ? home.instance[f.id].values() : items}" />
-		<ui:define name="label">
-			<h:outputText value="#{label}"/>
+	<s:decorate
+         id="#{f.id}Decoration"
+         template="/WEB-INF/xhtml/components/templates/view.xhtml"
+         rendered="#{empty rendered ? (empty props.rendered ? true : props.rendered) : rendered}">
+    	<ui:param
+             name="items"
+             value="#{empty items ? home.instance[f.id].values() : items}" />
+		<ui:define
+             name="label">
+			<h:outputText
+                 value="#{label}" />
 		</ui:define>				
-		<h:selectOneMenu id="#{id}comboEnum"
-					     value="#{value}"
-						 required="#{required}">
-			<s:selectItems value="#{items}" 
-						   var="enum" 
-						   label="#{enum.label}" 
-						   noSelectionLabel="[Todos]"/>
-			<s:convertEnum/>
-			<ui:insert/>
+		<h:selectOneMenu
+             id="#{id}comboEnum"
+             value="#{value}"
+             required="#{required}">
+			<s:selectItems
+                 value="#{items}"
+                 var="enum"
+                 label="#{enum.label}"
+                 noSelectionLabel="[Todos]" />
+			<s:convertEnum />
+			<ui:insert />
 		</h:selectOneMenu>
 	</s:decorate>
 	

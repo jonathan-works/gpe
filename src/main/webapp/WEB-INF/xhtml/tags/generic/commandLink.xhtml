@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,23 +13,23 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
-                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                 xmlns:a="http://richfaces.org/a4j"
-                 xmlns:wi="http://www.itx.com.br/jsf">
-
-	<a:commandLink	id="#{id}"
-					status="#{status}"
-					reRender="#{reRender}"
-					action="#{util.invokeMethod(action)}"
-					onclick="#{onclick}"
-					disabled="#{disabled}"
-					oncomplete="#{oncomplete}"
-					ajaxSingle="#{ajaxSingle}"
-					limitToList="#{wi:get(limitToList, true)}"
-					rendered="#{wi:get(rendered, true)}">
+	<a:commandLink
+         id="#{id}"
+         status="#{status}"
+         reRender="#{reRender}"
+         action="#{util.invokeMethod(action)}"
+         onclick="#{onclick}"
+         disabled="#{disabled}"
+         oncomplete="#{oncomplete}"
+         ajaxSingle="#{ajaxSingle}"
+         limitToList="#{wi:get(limitToList, true)}"
+         rendered="#{wi:get(rendered, true)}">
 		<ui:insert />				
 	</a:commandLink>
 	   

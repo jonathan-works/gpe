@@ -1,38 +1,52 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			xmlns:ui="http://java.sun.com/jsf/facelets"
-			xmlns:f="http://java.sun.com/jsf/core"
-			xmlns:h="http://java.sun.com/jsf/html"
-			xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich">
 	
-	<style type="text/css">
+	<style
+         type="text/css">
 	    @media print{
 	      .onlyprint{display: block;visibility: visible;}
 	      .noprint{display: none;visibility: hidden;}
 	    }
   	</style>
    
-    <rich:dataTable value="#{entidadeLogList.getEntityLogDetailList(param.idPesquisa)}" 
-    				var="var" 
-                 			style="width: 100%"	                    
-            			onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"	
-            			onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">   
+    <rich:dataTable
+         value="#{entidadeLogList.getEntityLogDetailList(param.idPesquisa)}"
+         var="var"
+         style="width: 100%"
+         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+         onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">   
 	    	<rich:column>
-	    		<f:facet name="header">Atributo</f:facet>
-			    <h:outputText value="#{var.nomeAtributo}" />
+	    		<f:facet
+                 name="header">Atributo</f:facet>
+			    <h:outputText
+                 value="#{var.nomeAtributo}" />
 	    	</rich:column>
 	    	<rich:column>
-	    		<f:facet name="header">Antes</f:facet>
-			    <h:outputText value="#{var.valorAnterior == null ? 'null' : var.valorAnterior}" escape="!var.isBinario()" />
+	    		<f:facet
+                 name="header">Antes</f:facet>
+			    <h:outputText
+                 value="#{var.valorAnterior == null ? 'null' : var.valorAnterior}"
+                 escape="!var.isBinario()" />
 	    	</rich:column>
 	    	<rich:column>
-	    		<f:facet name="header">Depois</f:facet>
-			    <h:outputText value="#{var.valorAtual == null ? 'null' : var.valorAtual}" escape="!var.isBinario()" />
+	    		<f:facet
+                 name="header">Depois</f:facet>
+			    <h:outputText
+                 value="#{var.valorAtual == null ? 'null' : var.valorAtual}"
+                 escape="!var.isBinario()" />
 	    	</rich:column>
  			</rich:dataTable>	
 
 	<center>
-	   <button id="btnimprimir" class="noprint" value="imprimir" onclick="window.print();">Imprimir</button>
+	   <button
+             id="btnimprimir"
+             class="noprint"
+             value="imprimir"
+             onclick="window.print();">Imprimir</button>
 	</center>            
 </ui:composition>

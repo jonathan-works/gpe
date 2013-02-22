@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
- <!--
+<!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -14,97 +13,126 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-			    xmlns:a="http://richfaces.org/a4j"
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                       
-	<ui:define name="title">#{messages['calendarioEventos.titlePage']}</ui:define>
+	<ui:define
+         name="title">#{messages['calendarioEventos.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{calendarioEventosHome}" />
-	<ui:param name="list" value="#{calendarioEventosList}" />
+	<ui:param
+         name="home"
+         value="#{calendarioEventosHome}" />
+	<ui:param
+         name="list"
+         value="#{calendarioEventosList}" />
 	
-	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{list.list(15)}"
-					  bean="#{list}"
-					  tableTitle="#{messages['calendarioEventos.titleGrid']}"
-					  id="calendarioEventosList"
-					  rowId="#{row.idCalendarioEvento}" >
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarCalendarioEventosForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:tree id="localizacao"
-							 label="#{messages['calendarioEventos.localizacao']}"
-							 assignTo="calendarioEventosList.entity.localizacao"
-							 tree="#{home.localizacaoTreeHandler}" />
-					<wi:inputText id="descricaoEvento"
-								  label="#{messages['calendarioEventos.descricaoEvento']}"
-								  value="#{list.entity.descricaoEvento}"
-								  maxlength="100" />
-					<wi:inputNumber id="dia"
-									label="#{messages['calendarioEventos.dia']}"
-									value="#{list.entity.dia}"
-                                    maxlength="2">
-                                    <wi:mask id="dia" mask="99"/>
+	<ui:define
+         name="searchGrid">   
+	    <wi:dataTable
+             values="#{list.list(15)}"
+             bean="#{list}"
+             tableTitle="#{messages['calendarioEventos.titleGrid']}"
+             id="calendarioEventosList"
+             rowId="#{row.idCalendarioEvento}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="pesquisarCalendarioEventosForm"
+                     formTitle="#{messages['searchForm.title']}">
+					<wi:tree
+                         id="localizacao"
+                         label="#{messages['calendarioEventos.localizacao']}"
+                         assignTo="calendarioEventosList.entity.localizacao"
+                         tree="#{home.localizacaoTreeHandler}" />
+					<wi:inputText
+                         id="descricaoEvento"
+                         label="#{messages['calendarioEventos.descricaoEvento']}"
+                         value="#{list.entity.descricaoEvento}"
+                         maxlength="100" />
+					<wi:inputNumber
+                         id="dia"
+                         label="#{messages['calendarioEventos.dia']}"
+                         value="#{list.entity.dia}"
+                         maxlength="2">
+                                    <wi:mask
+                             id="dia"
+                             mask="99" />
                     </wi:inputNumber>
-					<wi:inputNumber id="mes"
-									label="#{messages['calendarioEventos.mes']}"
-									value="#{list.entity.mes}"
-                                    maxlength="2" >
-                                    <wi:mask id="mes" mask="99"/>
+					<wi:inputNumber
+                         id="mes"
+                         label="#{messages['calendarioEventos.mes']}"
+                         value="#{list.entity.mes}"
+                         maxlength="2">
+                                    <wi:mask
+                             id="mes"
+                             mask="99" />
                     </wi:inputNumber>
-					<wi:inputNumber id="ano"
-									label="#{messages['calendarioEventos.ano']}"
-									value="#{list.entity.ano}"
-                                    maxlength="4" >
-                                    <wi:mask id="ano" mask="9999"/>
+					<wi:inputNumber
+                         id="ano"
+                         label="#{messages['calendarioEventos.ano']}"
+                         value="#{list.entity.ano}"
+                         maxlength="4">
+                                    <wi:mask
+                             id="ano"
+                             mask="9999" />
                     </wi:inputNumber>
 				</wi:searchForm>
 			</ui:define>
 			
-			<ui:define name="toolBar">
-				<wi:toolBarEdit  />
+			<ui:define
+                 name="toolBar">
+				<wi:toolBarEdit />
 			</ui:define>
 			
-			<wi:columnOutputText columnId="localizacao"
-								 columnHeader="#{messages['calendarioEventos.localizacao']}"
-								 value="#{row.localizacao}" />
-			<wi:columnOutputText columnId="descricaoEvento"
-								 columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
-								 value="#{row.descricaoEvento}" />
-			<wi:columnOutputText columnId="dataEvento"
-                                 hideOrder="true"
-								 columnHeader="#{messages['calendarioEventos.dataEvento']}"
-								 value="#{row.stringDataEvento}" />
+			<wi:columnOutputText
+                 columnId="localizacao"
+                 columnHeader="#{messages['calendarioEventos.localizacao']}"
+                 value="#{row.localizacao}" />
+			<wi:columnOutputText
+                 columnId="descricaoEvento"
+                 columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
+                 value="#{row.descricaoEvento}" />
+			<wi:columnOutputText
+                 columnId="dataEvento"
+                 hideOrder="true"
+                 columnHeader="#{messages['calendarioEventos.dataEvento']}"
+                 value="#{row.stringDataEvento}" />
 		</wi:dataTable>
 	</ui:define>
 	
-	<ui:define name="form">
-		<wi:dataForm formId="calendarioEventosForm"
-					 formTitle="#{messages['form.title']}">
-			<wi:tree id="localizacao"
-					 label="#{messages['calendarioEventos.localizacao']}"
-					 assignTo="calendarioEventosHome.instance.localizacao"
-					 tree="#{home.localizacaoTreeHandler}"
-					 required="true" />
-			<wi:inputText id="descricaoEvento"
-						  label="#{messages['calendarioEventos.descricaoEvento']}"
-						  value="#{home.instance.descricaoEvento}"
-						  maxlength="100"
-						  required="true" />
-			<wi:inputDate id="dataNascimento"
-							value="#{home.instance.dataEvento}"
-							label="#{messages['calendarioEventos.dataEvento']}"
-							required="true"/>
-			<wi:selectBooleanCheckbox id="periodico"
-        								label="#{messages['calendarioEventos.periodico']}"
-        								value="#{home.instance.repeteAno}"/>
+	<ui:define
+         name="form">
+		<wi:dataForm
+             formId="calendarioEventosForm"
+             formTitle="#{messages['form.title']}">
+			<wi:tree
+                 id="localizacao"
+                 label="#{messages['calendarioEventos.localizacao']}"
+                 assignTo="calendarioEventosHome.instance.localizacao"
+                 tree="#{home.localizacaoTreeHandler}"
+                 required="true" />
+			<wi:inputText
+                 id="descricaoEvento"
+                 label="#{messages['calendarioEventos.descricaoEvento']}"
+                 value="#{home.instance.descricaoEvento}"
+                 maxlength="100"
+                 required="true" />
+			<wi:inputDate
+                 id="dataNascimento"
+                 value="#{home.instance.dataEvento}"
+                 label="#{messages['calendarioEventos.dataEvento']}"
+                 required="true" />
+			<wi:selectBooleanCheckbox
+                 id="periodico"
+                 label="#{messages['calendarioEventos.periodico']}"
+                 value="#{home.instance.repeteAno}" />
 			
 		</wi:dataForm>
 	</ui:define>

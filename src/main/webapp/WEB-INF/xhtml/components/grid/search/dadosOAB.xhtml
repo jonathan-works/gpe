@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -29,50 +28,69 @@
 	
 	<ui:composition>
 
-		<script type="text/javascript">  
+		<script
+             type="text/javascript">  
 			function onlyNumber(obj){
 				valor = obj.value;
 				obj.value = valor.replace(/\D/g,"");
    			}  
 		</script>
 		
-		<ui:param name="estado" value="#{empty estado ? props.estado : estado}"/>
-		<ui:param name="numero" value="#{empty numero ? props.numero : numero}"/>
-		<ui:param name="letra" value="#{empty letra ? props.letra : letra}"/>
-		<ui:param name="required" value="#{empty required ? props.required : required}"/>
-		<ui:param name="search" value="#{empty props.searchBean ? searchBean : 
-			expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
+		<ui:param
+             name="estado"
+             value="#{empty estado ? props.estado : estado}" />
+		<ui:param
+             name="numero"
+             value="#{empty numero ? props.numero : numero}" />
+		<ui:param
+             name="letra"
+             value="#{empty letra ? props.letra : letra}" />
+		<ui:param
+             name="required"
+             value="#{empty required ? props.required : required}" />
+		<ui:param
+             name="search"
+             value="#{empty props.searchBean ? searchBean :     expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
 
-		<s:decorate id="#{id}Decoration" template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+		<s:decorate
+             id="#{id}Decoration"
+             template="/WEB-INF/xhtml/components/templates/edit.xhtml">
 		
 
-			<ui:define name="label">OAB (UF 000000 A)</ui:define>
-			<h:selectOneMenu id="#{f.id}EstadoCombo"
-							 value="#{search[estado]}"
-							 required="#{required}"
-							 style="width: 100px !important">
+			<ui:define
+                 name="label">OAB (UF 000000 A)</ui:define>
+			<h:selectOneMenu
+                 id="#{f.id}EstadoCombo"
+                 value="#{search[estado]}"
+                 required="#{required}"
+                 style="width: 100px !important">
 				<s:convertEntity />
-				<s:selectItems	value="#{estadoItems}" 
-								var="v"
-								label="#{v.codEstado}"
-								noSelectionLabel="Selecione..."/>
+				<s:selectItems
+                     value="#{estadoItems}"
+                     var="v"
+                     label="#{v.codEstado}"
+                     noSelectionLabel="Selecione..." />
 				<ui:insert />
 			</h:selectOneMenu>
-			<h:outputText value=" - " />
-			<h:inputText id="#{id}NumeroOAB" 
-						 value="#{search[numero]}"
-						 maxlength="6"
-						 style="width: 70px !important"
-						 styleClass="#{readonly ? 'readOnly' : '' } inputText"
-						 onkeyup="onlyNumber(this)"
-						 required="#{required}">
+			<h:outputText
+                 value=" - " />
+			<h:inputText
+                 id="#{id}NumeroOAB"
+                 value="#{search[numero]}"
+                 maxlength="6"
+                 style="width: 70px !important"
+                 styleClass="#{readonly ? 'readOnly' : '' } inputText"
+                 onkeyup="onlyNumber(this)"
+                 required="#{required}">
 				<ui:insert />
 			</h:inputText>
-			<h:outputText value=" - " />
-			<h:inputText value="#{search[letra]}" 
-						 maxlength="1" 
-						 style="text-transform: uppercase !important; width: 30px !important"
-						 styleClass="#{readonly ? 'readOnly' : '' } inputText"/>
+			<h:outputText
+                 value=" - " />
+			<h:inputText
+                 value="#{search[letra]}"
+                 maxlength="1"
+                 style="text-transform: uppercase !important; width: 30px !important"
+                 styleClass="#{readonly ? 'readOnly' : '' } inputText" />
 		</s:decorate>
 
 	</ui:composition>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,70 +13,85 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:rich="http://richfaces.org/rich">
+	<ui:param
+         name="home"
+         value="#{tarefaEventoHome}" />
 
-	<ui:param name="home" value="#{tarefaEventoHome}"/>
-
-	<s:div id="pageBody">
-		<rich:tabPanel switchType="client" 
-	                   headerSpacing="2"
-				       selectedTab="#{home.tab}">
-			<rich:tab id="search"
-				      label="#{messages['tarefaEvento.labelSearchTab']}"
-				      action="#{home.onClickSearchTab}" 
-				      status=":status">
-				<a:region renderRegionOnly="true">
-					<wi:datalist bean="#{tarefaEventoGrid}"
-								 canEdit="true"
-								 toolBar="toolBarEvents"
-								 headerToolBar="none"
-								 title="#{messages['tarefaEvento.titleGrid']}"/>
+	<s:div
+         id="pageBody">
+		<rich:tabPanel
+             switchType="client"
+             headerSpacing="2"
+             selectedTab="#{home.tab}">
+			<rich:tab
+                 id="search"
+                 label="#{messages['tarefaEvento.labelSearchTab']}"
+                 action="#{home.onClickSearchTab}"
+                 status=":status">
+				<a:region
+                     renderRegionOnly="true">
+					<wi:datalist
+                         bean="#{tarefaEventoGrid}"
+                         canEdit="true"
+                         toolBar="toolBarEvents"
+                         headerToolBar="none"
+                         title="#{messages['tarefaEvento.titleGrid']}" />
 				</a:region>
 			</rich:tab>			
-			<rich:tab id="form" 
-					  label="#{messages['tarefaEvento.labelFormTab']}" 
-					  immediate="true"
-					  status=":status"
-					  action="#{home.onClickFormTab}">
-				<a:region renderRegionOnly="true">
-					<wi:form form="#{tarefaEventoForm}" 
-							 canEdit="true"
-							 showMsg="false"
-							 formTitle="#{messages['form.title']}"/>
+			<rich:tab
+                 id="form"
+                 label="#{messages['tarefaEvento.labelFormTab']}"
+                 immediate="true"
+                 status=":status"
+                 action="#{home.onClickFormTab}">
+				<a:region
+                     renderRegionOnly="true">
+					<wi:form
+                         form="#{tarefaEventoForm}"
+                         canEdit="true"
+                         showMsg="false"
+                         formTitle="#{messages['form.title']}" />
 				</a:region>
 			</rich:tab>
-			<rich:tab id="agrupamentoTarefa"
-					  label="#{messages['tarefaEvento.agrupamentoTarefa']}"
-				      status=":status"
-					  rendered="#{home.managed}"
-					  action="#{tarefaEventoHome.carregarAgrupamentos()}">
-				<a:region renderRegionOnly="true">
-					<h:form id="registraEventoForm">
-						<wi:pickList id="agrupamentos"
-									 value="#{tarefaEventoHome.registrados}"
-									 sourceListWidth="250"
-									 targetListWidth="250"
-									 listsHeight="200px"
-									 itemValues="#{tarefaEventoHome.agrupamentos}"
-									 itemLabel="#{var}">
+			<rich:tab
+                 id="agrupamentoTarefa"
+                 label="#{messages['tarefaEvento.agrupamentoTarefa']}"
+                 status=":status"
+                 rendered="#{home.managed}"
+                 action="#{tarefaEventoHome.carregarAgrupamentos()}">
+				<a:region
+                     renderRegionOnly="true">
+					<h:form
+                         id="registraEventoForm">
+						<wi:pickList
+                             id="agrupamentos"
+                             value="#{tarefaEventoHome.registrados}"
+                             sourceListWidth="250"
+                             targetListWidth="250"
+                             listsHeight="200px"
+                             itemValues="#{tarefaEventoHome.agrupamentos}"
+                             itemLabel="#{var}">
 							<wi:ajaxSupport />
 						</wi:pickList>
-						<rich:messages  globalOnly="true"				
-								        infoClass="formMessage" 				
-								        style="margin: 5px" 				
-								        errorClass="error formMessage" 
-								        warnStyle="display: none" />
-						<a:commandButton value="Salvar"
-										 styleClass="buttons dr-tbpnl-tb-inact"
-										 action="#{tarefaEventoHome.update()}"/>
+						<rich:messages
+                             globalOnly="true"
+                             infoClass="formMessage"
+                             style="margin: 5px"
+                             errorClass="error formMessage"
+                             warnStyle="display: none" />
+						<a:commandButton
+                             value="Salvar"
+                             styleClass="buttons dr-tbpnl-tb-inact"
+                             action="#{tarefaEventoHome.update()}" />
 					</h:form>
 				</a:region>
 			</rich:tab>

@@ -1,49 +1,64 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-			    xmlns:a="http://richfaces.org/a4j" 
-			    xmlns:rich="http://richfaces.org/rich"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
-
-	<ui:define name="head">
-		<a:loadScript src="/js/jqueryExt.js" /> 
+	<ui:define
+         name="head">
+		<a:loadScript
+             src="/js/jqueryExt.js" /> 
 	</ui:define>
 	
-	<ui:define name="body">
-		<ui:param name="showSearchTab" value="#{wi:get(showSearchTab, true)}" />
-		<ui:param name="showFormTab" value="#{wi:get(showFormTab, true)}" />
+	<ui:define
+         name="body">
+		<ui:param
+             name="showSearchTab"
+             value="#{wi:get(showSearchTab, true)}" />
+		<ui:param
+             name="showFormTab"
+             value="#{wi:get(showFormTab, true)}" />
 		
-		<rich:tabPanel switchType="ajax" 
-	                   headerSpacing="2"
-				       selectedTab="#{home.tab}">		
-			<rich:tab id="search"
-				      label="Pesquisa"
-				      action="#{home.onClickSearchTab}" 
-				      rendered="#{showSearchTab}"
-				      status=":status">
-				<a:region renderRegionOnly="true">
-					<s:div id="searchGridRegion">
-						<ui:insert name="searchGrid"/>
+		<rich:tabPanel
+             switchType="ajax"
+             headerSpacing="2"
+             selectedTab="#{home.tab}">		
+			<rich:tab
+                 id="search"
+                 label="Pesquisa"
+                 action="#{home.onClickSearchTab}"
+                 rendered="#{showSearchTab}"
+                 status=":status">
+				<a:region
+                     renderRegionOnly="true">
+					<s:div
+                         id="searchGridRegion">
+						<ui:insert
+                             name="searchGrid" />
 					</s:div>
 				</a:region>
 			</rich:tab>	
 					
-			<rich:tab id="form" 
-					  rendered="#{showFormTab}" 
-					  label="FormulÃ¡rio" 
-					  immediate="true"
-					  status=":status"
-					  disabled="#{wi:get(disabledForm, false)}"
-					  action="#{home.onClickFormTab}">
-				<a:region renderRegionOnly="true">
-					<ui:insert name="form"/>
+			<rich:tab
+                 id="form"
+                 rendered="#{showFormTab}"
+                 label="Formulário"
+                 immediate="true"
+                 status=":status"
+                 disabled="#{wi:get(disabledForm, false)}"
+                 action="#{home.onClickFormTab}">
+				<a:region
+                     renderRegionOnly="true">
+					<ui:insert
+                         name="form" />
 				</a:region>
 			</rich:tab>
 			
-			<ui:insert name="tabs" />
+			<ui:insert
+                 name="tabs" />
 			
 		</rich:tabPanel>
 	</ui:define>

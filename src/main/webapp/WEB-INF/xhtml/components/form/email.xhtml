@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -28,7 +28,8 @@
 		
 	<ui:composition>
 	
-		<script type="text/javascript">  
+		<script
+             type="text/javascript">  
 		function chkEmail(obj){
 			var mail = obj.value;		
 	        var er = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
@@ -41,12 +42,14 @@
 	   	} 
 		</script>
 		
-		<f:subview id="#{id}">
-			<wi:inputText onblur="chkEmail(this)">
-				<f:validator validatorId="emailValidator" />
+		<f:subview
+             id="#{id}">
+			<wi:inputText
+                 onblur="chkEmail(this)">
+				<f:validator
+                     validatorId="emailValidator" />
 			</wi:inputText>	
 		</f:subview>
 		
 	</ui:composition>
 </jsp:root>
-

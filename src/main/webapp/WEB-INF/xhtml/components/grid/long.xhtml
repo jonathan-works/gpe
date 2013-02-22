@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:s="http://jboss.org/schema/seam/taglib"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:a="http://richfaces.org/a4j"
-        xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -30,12 +29,17 @@
         
 	<ui:composition>
 	
-		<div style="width: 100%; text-align: right">
+		<div
+             style="width: 100%; text-align: right">
 		
-			<ui:param name="props" value="#{c.properties}"/>
+			<ui:param
+                 name="props"
+                 value="#{c.properties}" />
 		
-			<h:outputText value="#{c.value}">
-				<f:convertNumber pattern="#{props.pattern}"/>
+			<h:outputText
+                 value="#{c.value}">
+				<f:convertNumber
+                     pattern="#{props.pattern}" />
 			</h:outputText>
 			
 		</div>

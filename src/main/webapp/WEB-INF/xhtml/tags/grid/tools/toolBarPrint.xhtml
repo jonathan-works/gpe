@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,27 +13,30 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->         
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-					        xmlns:s="http://jboss.org/schema/seam/taglib"
-					        xmlns:ui="http://java.sun.com/jsf/facelets"
-					        xmlns:h="http://java.sun.com/jsf/html"
-					        xmlns:wi= "http://www.itx.com.br/jsf"> 
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"> 
 		     
-	<s:link view="#{printPath}" 
-				target="_blank"
-				rendered="#{not empty printPath}">
-		<h:graphicImage url="/img/printer.png" 
-					title="Imprimir"
-					style="cursor:pointer; padding:0px 1px;" />
+	<s:link
+         view="#{printPath}"
+         target="_blank"
+         rendered="#{not empty printPath}">
+		<h:graphicImage
+             url="/img/printer.png"
+             title="Imprimir"
+             style="cursor:pointer; padding:0px 1px;" />
 	</s:link>	
 
-	<h:outputLink onclick="window.print()"
-				rendered="#{empty printPath}">
-		<h:graphicImage url="/img/printer.png" 
-					title="Imprimir"
-					style="cursor:pointer; padding:0px 1px;" />
+	<h:outputLink
+         onclick="window.print()"
+         rendered="#{empty printPath}">
+		<h:graphicImage
+             url="/img/printer.png"
+             title="Imprimir"
+             style="cursor:pointer; padding:0px 1px;" />
 	</h:outputLink>
 										 
 </ui:composition>

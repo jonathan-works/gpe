@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,55 +13,69 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->                       
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-				template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 	
-	<ui:define name="title">#{messages['grupoModeloDocumento.titlePage']}</ui:define>
-	<ui:param name="home" value="#{grupoModeloDocumentoHome}" />
+	<ui:define
+         name="title">#{messages['grupoModeloDocumento.titlePage']}</ui:define>
+	<ui:param
+         name="home"
+         value="#{grupoModeloDocumentoHome}" />
 	
-	<ui:define name="searchGrid"> 
-		<wi:dataTable values="#{grupoModeloDocumentoList.list(15)}"
-								bean="#{grupoModeloDocumentoList}"
-								tableTitle="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
-								id="grupoModeloDocumentoList"
-								rowId="#{row.idGrupoModeloDocumento}">
-			<ui:define name="searchForm">
-				<wi:searchForm formId="grupoModeloDocumentoSearchForm"
-										   formTitle="#{messages['searchForm.title']}">
+	<ui:define
+         name="searchGrid"> 
+		<wi:dataTable
+             values="#{grupoModeloDocumentoList.list(15)}"
+             bean="#{grupoModeloDocumentoList}"
+             tableTitle="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
+             id="grupoModeloDocumentoList"
+             rowId="#{row.idGrupoModeloDocumento}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="grupoModeloDocumentoSearchForm"
+                     formTitle="#{messages['searchForm.title']}">
 				
-					<wi:inputText id="grupoModeloDocumento"
-											label="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
-											value="#{grupoModeloDocumentoList.entity.grupoModeloDocumento}"
-											length="50" />			
-					<wi:selectSituacaoOneMenu id="ativo"
-																	value="#{grupoModeloDocumentoList.entity.ativo}" />								
+					<wi:inputText
+                         id="grupoModeloDocumento"
+                         label="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
+                         value="#{grupoModeloDocumentoList.entity.grupoModeloDocumento}"
+                         length="50" />			
+					<wi:selectSituacaoOneMenu
+                         id="ativo"
+                         value="#{grupoModeloDocumentoList.entity.ativo}" />								
 				</wi:searchForm>
 			</ui:define>
-			<wi:columnOutputText columnId="grupoModeloDocumento"
-												   columnHeader="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
-												   value="#{row.grupoModeloDocumento}"/>					
-			<wi:columnSituacao  columnHeader="#{messages['field.situacao']}" />					
+			<wi:columnOutputText
+                 columnId="grupoModeloDocumento"
+                 columnHeader="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
+                 value="#{row.grupoModeloDocumento}" />					
+			<wi:columnSituacao
+                 columnHeader="#{messages['field.situacao']}" />					
 		</wi:dataTable>
 	</ui:define>
 	
-	<ui:define name="form">
-		<wi:dataForm formId="grupoModeloDocumentoForm"
-					 formTitle="#{messages['form.title']}">
+	<ui:define
+         name="form">
+		<wi:dataForm
+             formId="grupoModeloDocumentoForm"
+             formTitle="#{messages['form.title']}">
 								
-			<wi:inputText id="grupoModeloDocumento"
-						  label="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
-						  value="#{home.instance.grupoModeloDocumento}"
-						  required="true"
-						  length="50" />
+			<wi:inputText
+                 id="grupoModeloDocumento"
+                 label="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
+                 value="#{home.instance.grupoModeloDocumento}"
+                 required="true"
+                 length="50" />
 						  
-			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['field.situacao']}"
-								    value="#{home.instance.ativo}" />
+			<wi:selectSituacaoRadio
+                 id="ativo"
+                 label="#{messages['field.situacao']}"
+                 value="#{home.instance.ativo}" />
 													 
 		</wi:dataForm>
 	</ui:define> 

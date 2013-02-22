@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,25 +13,33 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:param
+         name="title"
+         value="Localizações Físicas" />
 
-	<ui:param name="title" value="Localizações Físicas" />
-
-	<wi:dataReport title="#{messages['localizacaoFisica.reportTitle']}"
-				   columns="2"
-				   widths="4 2"
-				   headerText="#{localizacaoFisicaList.criteria}">
+	<wi:dataReport
+         title="#{messages['localizacaoFisica.reportTitle']}"
+         columns="2"
+         widths="4 2"
+         headerText="#{localizacaoFisicaList.criteria}">
 				   
-		<wi:reportColumnHeader title="#{messages['localizacaoFisica.descricao']}" />
-        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
+		<wi:reportColumnHeader
+             title="#{messages['localizacaoFisica.descricao']}" />
+        <wi:reportColumnHeader
+             title="#{messages['field.situacao']}" />
 				
-		<ui:repeat var="row" value="#{localizacaoFisicaList.list()}">
-			<wi:reportColumn value="#{row.descricao}" />
-            <wi:reportColumnSituacao value="#{row.ativo}" 
-                 columnAlign="center"/>
+		<ui:repeat
+             var="row"
+             value="#{localizacaoFisicaList.list()}">
+			<wi:reportColumn
+                 value="#{row.descricao}" />
+            <wi:reportColumnSituacao
+                 value="#{row.ativo}"
+                 columnAlign="center" />
 		</ui:repeat>
 
 	</wi:dataReport>

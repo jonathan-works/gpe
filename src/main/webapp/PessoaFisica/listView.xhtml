@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
- <!--
+<!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -14,93 +13,116 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-<!-- =) -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-			    xmlns:f="http://java.sun.com/jsf/core"
-			    xmlns:a="http://richfaces.org/a4j"
-			    
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><!-- =) --><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                       
-	<ui:define name="title">#{messages['pessoaFisica.titlePage']}</ui:define>
+	<ui:define
+         name="title">#{messages['pessoaFisica.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{pessoaFisicaHome}" />
+	<ui:param
+         name="home"
+         value="#{pessoaFisicaHome}" />
 	
-	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{pessoaFisicaList.list(15)}"
-					  bean="#{pessoaFisicaList}"
-					  tableTitle="#{messages['pessoaFisica.titleGrid']}"
-					  id="pessoaFisicaList"
-					  rowId="#{row.idPessoa}">
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarPessoaFisicaForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputCpf id="cpf"
-								 value="#{pessoaFisicaList.entity.cpf}"
-								 label="#{messages['pessoaFisica.cpf']}"/>
-					<wi:inputText id="nome"
-								 value="#{pessoaFisicaList.entity.nome}"
-								 label="#{messages['pessoaFisica.nome']}"/>			 
-					<wi:inputDate id="dataNascimento"
-								value="#{pessoaFisicaList.entity.dataNascimento}"
-								label="#{messages['pessoaFisica.dataNascimento']}"/>
-					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['field.situacao']}"
-											  value="#{pessoaFisicaList.entity.ativo}" />
+	<ui:define
+         name="searchGrid">   
+	    <wi:dataTable
+             values="#{pessoaFisicaList.list(15)}"
+             bean="#{pessoaFisicaList}"
+             tableTitle="#{messages['pessoaFisica.titleGrid']}"
+             id="pessoaFisicaList"
+             rowId="#{row.idPessoa}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="pesquisarPessoaFisicaForm"
+                     formTitle="#{messages['searchForm.title']}">
+					<wi:inputCpf
+                         id="cpf"
+                         value="#{pessoaFisicaList.entity.cpf}"
+                         label="#{messages['pessoaFisica.cpf']}" />
+					<wi:inputText
+                         id="nome"
+                         value="#{pessoaFisicaList.entity.nome}"
+                         label="#{messages['pessoaFisica.nome']}" />			 
+					<wi:inputDate
+                         id="dataNascimento"
+                         value="#{pessoaFisicaList.entity.dataNascimento}"
+                         label="#{messages['pessoaFisica.dataNascimento']}" />
+					<wi:selectSituacaoOneMenu
+                         id="ativo"
+                         label="#{messages['field.situacao']}"
+                         value="#{pessoaFisicaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
 			
-			<wi:columnOutputText columnId="cpf"
-								 columnHeader="#{messages['pessoaFisica.cpf']}"
-								 value="#{row.cpf}" />
-			<wi:columnOutputText columnId="nome"
-								 columnHeader="#{messages['pessoaFisica.nome']}"
-								 value="#{row.nome}" />			 
-			<wi:columnOutputText columnId="dataNascimento"
-								 columnHeader="#{messages['pessoaFisica.dataNascimento']}"
-								 value="#{row.dataNascimento}">
-								 <ui:define name="outputText">
-								 	<f:convertDateTime pattern="dd/MM/yyyy"/>
+			<wi:columnOutputText
+                 columnId="cpf"
+                 columnHeader="#{messages['pessoaFisica.cpf']}"
+                 value="#{row.cpf}" />
+			<wi:columnOutputText
+                 columnId="nome"
+                 columnHeader="#{messages['pessoaFisica.nome']}"
+                 value="#{row.nome}" />			 
+			<wi:columnOutputText
+                 columnId="dataNascimento"
+                 columnHeader="#{messages['pessoaFisica.dataNascimento']}"
+                 value="#{row.dataNascimento}">
+								 <ui:define
+                     name="outputText">
+								 	<f:convertDateTime
+                         pattern="dd/MM/yyyy" />
 								 </ui:define>
 								 
 			</wi:columnOutputText>
 
-			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['field.situacao']}"
-							value="#{row.ativo}" />
+			<wi:columnSituacao
+                 columnId="ativo"
+                 columnHeader="#{messages['field.situacao']}"
+                 value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
-	<ui:define name="form">
-		<wi:dataForm formId="pessoaFisicaForm"
-					 formTitle="#{messages['form.title']}">
+	<ui:define
+         name="form">
+		<wi:dataForm
+             formId="pessoaFisicaForm"
+             formTitle="#{messages['form.title']}">
 			
-			<wi:inputCpf id="cpf"
-						 value="#{pessoaFisicaHome.instance.cpf}"
-						 label="#{messages['pessoaFisica.cpf']}"
-						 required="true"/>
-			<wi:inputText id="nome"
-						 value="#{pessoaFisicaHome.instance.nome}"
-						 label="#{messages['pessoaFisica.nome']}"
-						 required="true"/>	 
-			<wi:inputDate id="dataNascimento"
-						value="#{pessoaFisicaHome.instance.dataNascimento}"
-						label="#{messages['pessoaFisica.dataNascimento']}"
-						required="true"/>
-			<wi:inputText id="email"
-							  label="#{messages['pessoaFisica.email']}"
-							  value="#{pessoaFisicaHome.instance.email}"
-							  required="true">
-				<f:validator validatorId="emailValidator" />
+			<wi:inputCpf
+                 id="cpf"
+                 value="#{pessoaFisicaHome.instance.cpf}"
+                 label="#{messages['pessoaFisica.cpf']}"
+                 required="true" />
+			<wi:inputText
+                 id="nome"
+                 value="#{pessoaFisicaHome.instance.nome}"
+                 label="#{messages['pessoaFisica.nome']}"
+                 required="true" />	 
+			<wi:inputDate
+                 id="dataNascimento"
+                 value="#{pessoaFisicaHome.instance.dataNascimento}"
+                 label="#{messages['pessoaFisica.dataNascimento']}"
+                 required="true" />
+			<wi:inputText
+                 id="email"
+                 label="#{messages['pessoaFisica.email']}"
+                 value="#{pessoaFisicaHome.instance.email}"
+                 required="true">
+				<f:validator
+                     validatorId="emailValidator" />
 			</wi:inputText>
-			<wi:selectSituacaoRadio id="ativo"
-						label="#{messages['field.situacao']}"
-						value="#{pessoaFisicaHome.instance.ativo}" />
+			<wi:selectSituacaoRadio
+                 id="ativo"
+                 label="#{messages['field.situacao']}"
+                 value="#{pessoaFisicaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

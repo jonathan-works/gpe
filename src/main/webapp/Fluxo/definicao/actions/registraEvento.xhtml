@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-		        xmlns:a="http://richfaces.org/a4j"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -22,26 +22,32 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	<s:div id="registraEventoDiv">
-		<rich:panel header="Registra evento:" style="height:550px;">
-			<h:form id="registraEventoForm">
-				<wi:pickList id="agrupamentos"
-						value="#{actionTemplate.registrados}"
-						itemValues="#{actionTemplate.agrupamentos}"
-						itemLabel="#{var}">
+	<s:div
+         id="registraEventoDiv">
+		<rich:panel
+             header="Registra evento:"
+             style="height:550px;">
+			<h:form
+                 id="registraEventoForm">
+				<wi:pickList
+                     id="agrupamentos"
+                     value="#{actionTemplate.registrados}"
+                     itemValues="#{actionTemplate.agrupamentos}"
+                     itemLabel="#{var}">
 					<wi:ajaxSupport />
 				</wi:pickList>
 			
-				<a:commandButton 
-					value="OK"
-					oncomplete="$(idTextarea).setValue($('registraEventoForm:createdExpression').innerHTML); Richfaces.hideTopModalPanel(); $(idTextarea).onchange()"
-					styleClass="buttons dr-tbpnl-tb-inact"
-					reRender="createdExpression"
-					action="#{actionTemplate.createExpression}" />
+				<a:commandButton
+                     value="OK"
+                     oncomplete="$(idTextarea).setValue($('registraEventoForm:createdExpression').innerHTML); Richfaces.hideTopModalPanel(); $(idTextarea).onchange()"
+                     styleClass="buttons dr-tbpnl-tb-inact"
+                     reRender="createdExpression"
+                     action="#{actionTemplate.createExpression}" />
 
-				<h:outputText id="createdExpression" 
-					style="display:none"
-					value="#{actionTemplate.createdExpression}" />
+				<h:outputText
+                     id="createdExpression"
+                     style="display:none"
+                     value="#{actionTemplate.createdExpression}" />
 					
 			</h:form>
 			

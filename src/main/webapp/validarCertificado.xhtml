@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     template="/WEB-INF/xhtml/templates/template.xhtml">
 
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:rich="http://richfaces.org/rich"
-                xmlns:a="http://richfaces.org/a4j"
-                template="/WEB-INF/xhtml/templates/template.xhtml">
+<ui:define
+         name="body">
 
-<ui:define name="body">
-
-	<div style="width: 49%; float: left">
-		<h:form >
-			<h:inputTextarea value="#{certificadosCaCheckManagerTeste.certChain}" cols="80" rows="30" />
-			<br />
-			<h:commandButton value="Testar" action="#{certificadosCaCheckManagerTeste.verificaCertificado()}" />
+	<div
+             style="width: 49%; float: left">
+		<h:form>
+			<h:inputTextarea
+                     value="#{certificadosCaCheckManagerTeste.certChain}"
+                     cols="80"
+                     rows="30" />
+			<br
+                     clear="none" />
+			<h:commandButton
+                     value="Testar"
+                     action="#{certificadosCaCheckManagerTeste.verificaCertificado()}" />
 		</h:form>
 	</div>
-	<div style="width: 49%;float: left; padding-left:3px">
-		<rich:panel rendered="#{not empty certificadosCaCheckManagerTeste.certificado}">
-			<pre>
+	<div
+             style="width: 49%;float: left; padding-left:3px">
+		<rich:panel
+                 rendered="#{not empty certificadosCaCheckManagerTeste.certificado}">
+			<pre
+                     xml:space="preserve">
   Certificado:
 c = #{certificadosCaCheckManagerTeste.certificado.c} = null;
 cn = #{certificadosCaCheckManagerTeste.certificado.cn} = null;
@@ -41,6 +50,8 @@ nomeCertificadora = #{certificadosCaCheckManagerTeste.certificado.nomeCertificad
 		</rich:panel>
 	</div>	
     
-    <h:messages globalOnly="true" styleClass="message"/>
+    <h:messages
+             globalOnly="true"
+             styleClass="message" />
 </ui:define> 
 </ui:composition>

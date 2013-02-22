@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,48 +13,59 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
-                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                 xmlns:a="http://richfaces.org/a4j"
-                 xmlns:h="http://java.sun.com/jsf/html"
-                 xmlns:c="http://java.sun.com/jsp/jstl/core"
-                 xmlns:f="http://java.sun.com/jsf/core"
-                 xmlns:rich="http://richfaces.org/rich"
-                 xmlns:s="http://jboss.org/schema/seam/taglib"
-                 xmlns:wi="http://www.itx.com.br/jsf">   
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">   
         
-    <div class="propertyView" 
-     	 style="float: left; #{inNewLine != true ? '' : 'clear: both;'} width: #{width} !important;">
-		<rich:dataTable id="#{id}" 
-						value="#{value}" 
-						var="row"
-						rowKeyVar="rowKey">
-			<c:if test="#{not empty label}">
-				<f:facet name="header">
-					<h:outputText value="#{label}" />
+    <div
+         class="propertyView"
+         style="float: left; #{inNewLine != true ? '' : 'clear: both;'} width: #{width} !important;">
+		<rich:dataTable
+             id="#{id}"
+             value="#{value}"
+             var="row"
+             rowKeyVar="rowKey">
+			<c:if
+                 test="#{not empty label}">
+				<f:facet
+                     name="header">
+					<h:outputText
+                         value="#{label}" />
 				</f:facet>
 			</c:if>
-			<rich:column style="width: 20px">
-				<a:commandLink action="#{util.invokeMethod(actionRemove)}"
-							   reRender="#{id}">
-					<h:graphicImage	url="/img/remove.png" 
-									title="Remover Filtro"
-									style="cursor: pointer"/>
+			<rich:column
+                 style="width: 20px">
+				<a:commandLink
+                     action="#{util.invokeMethod(actionRemove)}"
+                     reRender="#{id}">
+					<h:graphicImage
+                         url="/img/remove.png"
+                         title="Remover Filtro"
+                         style="cursor: pointer" />
 				</a:commandLink>
 			</rich:column>
-			<rich:column id="#{id}ColumnField">
+			<rich:column
+                 id="#{id}ColumnField">
 				<ui:insert />
 			</rich:column>
 			
-			<f:facet name="footer">
-				<a:commandLink id="#{id}addFiltro"
-				       		   reRender="#{id}"
-				       		   action="#{util.invokeMethod(actionAdd)}">
-			      	<h:graphicImage	url="/img/add.gif" 
-									title="Adicionar Filtro"
-									style="cursor: pointer"/>
+			<f:facet
+                 name="footer">
+				<a:commandLink
+                     id="#{id}addFiltro"
+                     reRender="#{id}"
+                     action="#{util.invokeMethod(actionAdd)}">
+			      	<h:graphicImage
+                         url="/img/add.gif"
+                         title="Adicionar Filtro"
+                         style="cursor: pointer" />
 			    </a:commandLink>
 			</f:facet>
 		</rich:dataTable>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,35 +13,47 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:p="http://jboss.org/schema/seam/pdf"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<ui:param name="title" value="Assuntos" />
+	<ui:param
+         name="title"
+         value="Assuntos" />
 
 
-	<wi:dataReport subtitle="Assuntos"
-				   title="#{nomeSistema}"
-				   columns="4"
-				   widths="2 4 2 #{empty assuntoList.entity.ativo ? '1' :'0'}"
-				   headerText="#{assuntoList.criteria}">
+	<wi:dataReport
+         subtitle="Assuntos"
+         title="#{nomeSistema}"
+         columns="4"
+         widths="2 4 2 #{empty assuntoList.entity.ativo ? '1' :'0'}"
+         headerText="#{assuntoList.criteria}">
 				   
-		<wi:reportColumnHeader title="#{messages['assunto.codAssunto']}" />
-		<wi:reportColumnHeader title="#{messages['assunto.assunto']}" />
-		<wi:reportColumnHeader title="#{messages['assunto.assuntoPai']}" />
-		<wi:reportColumnHeader title="#{messages['field.situacao']}" />
+		<wi:reportColumnHeader
+             title="#{messages['assunto.codAssunto']}" />
+		<wi:reportColumnHeader
+             title="#{messages['assunto.assunto']}" />
+		<wi:reportColumnHeader
+             title="#{messages['assunto.assuntoPai']}" />
+		<wi:reportColumnHeader
+             title="#{messages['field.situacao']}" />
 				
-		<ui:repeat var="row" value="#{assuntoList.list()}">
+		<ui:repeat
+             var="row"
+             value="#{assuntoList.list()}">
 			
-			<wi:reportColumn value="#{row.codAssunto}" />
-			<wi:reportColumn value="#{row.assunto}" />
-			<wi:reportColumn value="#{row.assuntoPai}" />
-			<wi:reportColumn value="#{row.ativo ? 'Ativo' : 'Inativo'}" 
-							 columnAlign="center"/>
+			<wi:reportColumn
+                 value="#{row.codAssunto}" />
+			<wi:reportColumn
+                 value="#{row.assunto}" />
+			<wi:reportColumn
+                 value="#{row.assuntoPai}" />
+			<wi:reportColumn
+                 value="#{row.ativo ? 'Ativo' : 'Inativo'}"
+                 columnAlign="center" />
 			
 		</ui:repeat>
 

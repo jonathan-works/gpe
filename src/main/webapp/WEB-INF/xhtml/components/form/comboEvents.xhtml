@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,37 +13,42 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">	
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">	
 	
-	<s:div id="divComboEvents">
-		<wi:selectOneMenuEnum  optionExpression="{label}" 
-							   disabled="#{tarefaEventoHome.managed}"
-							   id="tipoTarefaEvento"
-							   value="#{tarefaEventoHome.instance.evento}"
-							   items="#{tarefaEventoHome.tarefaEventoItems}"
-							   label="Tipo do Evento"
-							   noSelectionLabel="Selecione um Evento">
-			<a:support event="onchange"
-					   reRender="divComboEvents"/>
+	<s:div
+         id="divComboEvents">
+		<wi:selectOneMenuEnum
+             optionExpression="{label}"
+             disabled="#{tarefaEventoHome.managed}"
+             id="tipoTarefaEvento"
+             value="#{tarefaEventoHome.instance.evento}"
+             items="#{tarefaEventoHome.tarefaEventoItems}"
+             label="Tipo do Evento"
+             noSelectionLabel="Selecione um Evento">
+			<a:ajax
+                 event="change"
+                 render="divComboEvents" />
 		</wi:selectOneMenuEnum>
-		<s:div id="comboArrivingTransitions"
-			   rendered="#{tarefaEventoHome.instance.evento == 'ET'}">
-			<wi:selectOneMenuEntity  id="tarefaOrigiem"
-									 label="Tarefa de Origem"
-									 value="#{tarefaEventoHome.instance.tarefaOrigem}"
-									 items="#{tarefaEventoHome.tarefaOrigemList}" 
-									 noSelectionLabel="Selecione a Tarefa de Origem">
-				<a:support event="onchange"
-					   	   reRender="tarefaOrigiem"/>
+		<s:div
+             id="comboArrivingTransitions"
+             rendered="#{tarefaEventoHome.instance.evento == 'ET'}">
+			<wi:selectOneMenuEntity
+                 id="tarefaOrigiem"
+                 label="Tarefa de Origem"
+                 value="#{tarefaEventoHome.instance.tarefaOrigem}"
+                 items="#{tarefaEventoHome.tarefaOrigemList}"
+                 noSelectionLabel="Selecione a Tarefa de Origem">
+				<a:ajax
+                     event="change"
+                     render="tarefaOrigiem" />
 			</wi:selectOneMenuEntity>		
 		</s:div>
 	</s:div>

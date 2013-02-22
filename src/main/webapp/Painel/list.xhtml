@@ -1,113 +1,148 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: list.xhtml 750 2010-08-24 14:10:58Z danielsilva $ --><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/template-sample.xhtml">
 
-<!-- $Id: list.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+	<ui:param
+         name="pageTitle"
+         value="Painel do Usuário" />
+	<ui:define
+         name="title">#{pageTitle}</ui:define>
 
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:c="http://java.sun.com/jsp/jstl/core"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:rich="http://richfaces.org/rich"
-				template="/WEB-INF/xhtml/templates/template-sample.xhtml">
-
-	<ui:param name="pageTitle" value="Painel do Usuário" />
-	<ui:define name="title">#{pageTitle}</ui:define>
-
-	<ui:define name="body">
+	<ui:define
+         name="body">
 	
-		<a:region renderRegionOnly="true">
+		<a:region
+             renderRegionOnly="true">
 			<h:form>
-			 	<a:jsFunction name="atualizaPainelFluxo" 
-					 		  oncomplete="window.location='#{util.contextPath}/Painel/list.seam'"
-					 		  ajaxSingle="true"
-					 		  status="status" />
+			 	<a:jsFunction
+                     name="atualizaPainelFluxo"
+                     oncomplete="window.location='#{util.contextPath}/Painel/list.seam'"
+                     ajaxSingle="true"
+                     status="status" />
 			</h:form>
-		    <br/>
-		    <table width="99%" border="0" cellspacing="0" cellpadding="0">
-		    	<tr valign="top">
-			    	<td width="310">   	
-			    		<rich:tabPanel id="tabPainelUsuario"
-									   switchType="ajax" 
-									   status=":status">
-								<rich:tab label="Caixas" 
-										  reRender="painelProcesso"
-									      action="#{tarefasTree.clearTree()}">
-									<s:div id="tarefasDiv">
-										<ui:include src="tarefasTree.xhtml"/>
+		    <br />
+		    <table
+                 width="99%"
+                 border="0"
+                 cellspacing="0"
+                 cellpadding="0">
+		    	<tr
+                     valign="top">
+			    	<td
+                         width="310">   	
+			    		<rich:tabPanel
+                             id="tabPainelUsuario"
+                             switchType="ajax"
+                             status=":status">
+								<rich:tab
+                                 label="Caixas"
+                                 reRender="painelProcesso"
+                                 action="#{tarefasTree.clearTree()}">
+									<s:div
+                                     id="tarefasDiv">
+										<ui:include
+                                         src="tarefasTree.xhtml" />
 									</s:div>
 								</rich:tab> 
 						</rich:tabPanel> 				
 			    	</td>
 					<td>				
-						<s:div id="painelProcessos">
-							<ui:param name="home" value="#{consultaProcessoHome}" />
-							<ui:param name="mostraGrid" value="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}"/>
-						    <s:div id="processos">
-							    <s:div id="pesquisaList">
-								    <rich:collapsiblePanel	rendered="#{mostraGrid}"
-													    	switchType="client"
-													    	opened="false" 
-													    	label="Pesquisar"
-													    	styleClass="leftPanel">
-										<wi:searchForm formId="consultaProcessoForm"
-													 formTitle="#{messages['form.title']}"
-													 widthSearchForm="100%">
-											<wi:inputText id="numeroProcesso"
-														  label="#{messages['consultaProcesso.numeroProcesso']}"
-														  value="#{home.instance.numeroProcesso}"/>
-											<wi:inputDataPeriodo id="periodo"
-																 label="Período"
-											                     valueDateFrom="#{home.instance.dataInicio}"
-											                     valueDateTo="#{home.instance.dataFim}"/>
-											<wi:selectOneMenuEntity id="natureza"
-																	label="#{messages['natureza.natureza']}"
-																	value="#{home.instance.natureza}"
-																	noSelectionLabel="Selecione um registro..."
-																	items="#{home.naturezaList}"/>
-											<wi:selectOneMenuEntity id="categoria"
-																	label="#{messages['categoria.categoria']}"
-																	value="#{home.instance.categoria}"
-																	noSelectionLabel="Selecione um registro..."
-																	inNewLine="true"
-																	items="#{home.categoriaList}"/>
-											<wi:tree id="assunto"
-													 label="#{messages['assunto.assunto']}"
-													 assignTo="consultaProcessoHome.instance.assunto"
-													 tree="#{home.assuntoTree}"/>
-											<ui:define name="buttons">
-												<div style="float:left; clear: both;">	
-										           <a:commandButton id="consulta" 
-										           				 status="status"
-																 value="Consulta" 
-																 styleClass="dr-tbpnl-tb-inact"
-																 action="#{home.instance.setInPesquisa(true)}"
-																 reRender="processoList,consultaProcessoForm"/>
-										           <a:commandButton id="novaConsulta" 
-										           				 status="status"
-																 style="width: 120px !important"
-																 value="Nova Consulta" 
-																 styleClass="dr-tbpnl-tb-inact"
-																 action="#{home.limparTela('consultaProcessoForm')}"
-																 reRender="processoList,consultaProcessoForm"/>
+						<s:div
+                             id="painelProcessos">
+							<ui:param
+                                 name="home"
+                                 value="#{consultaProcessoHome}" />
+							<ui:param
+                                 name="mostraGrid"
+                                 value="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}" />
+						    <s:div
+                                 id="processos">
+							    <s:div
+                                     id="pesquisaList">
+								    <rich:collapsiblePanel
+                                         rendered="#{mostraGrid}"
+                                         switchType="client"
+                                         opened="false"
+                                         label="Pesquisar"
+                                         styleClass="leftPanel">
+										<wi:searchForm
+                                             formId="consultaProcessoForm"
+                                             formTitle="#{messages['form.title']}"
+                                             widthSearchForm="100%">
+											<wi:inputText
+                                                 id="numeroProcesso"
+                                                 label="#{messages['consultaProcesso.numeroProcesso']}"
+                                                 value="#{home.instance.numeroProcesso}" />
+											<wi:inputDataPeriodo
+                                                 id="periodo"
+                                                 label="Período"
+                                                 valueDateFrom="#{home.instance.dataInicio}"
+                                                 valueDateTo="#{home.instance.dataFim}" />
+											<wi:selectOneMenuEntity
+                                                 id="natureza"
+                                                 label="#{messages['natureza.natureza']}"
+                                                 value="#{home.instance.natureza}"
+                                                 noSelectionLabel="Selecione um registro..."
+                                                 items="#{home.naturezaList}" />
+											<wi:selectOneMenuEntity
+                                                 id="categoria"
+                                                 label="#{messages['categoria.categoria']}"
+                                                 value="#{home.instance.categoria}"
+                                                 noSelectionLabel="Selecione um registro..."
+                                                 inNewLine="true"
+                                                 items="#{home.categoriaList}" />
+											<wi:tree
+                                                 id="assunto"
+                                                 label="#{messages['assunto.assunto']}"
+                                                 assignTo="consultaProcessoHome.instance.assunto"
+                                                 tree="#{home.assuntoTree}" />
+											<ui:define
+                                                 name="buttons">
+												<div
+                                                     style="float:left; clear: both;">	
+										           <a:commandButton
+                                                         id="consulta"
+                                                         status="status"
+                                                         value="Consulta"
+                                                         styleClass="dr-tbpnl-tb-inact"
+                                                         action="#{home.instance.setInPesquisa(true)}"
+                                                         reRender="processoList,consultaProcessoForm" />
+										           <a:commandButton
+                                                         id="novaConsulta"
+                                                         status="status"
+                                                         style="width: 120px !important"
+                                                         value="Nova Consulta"
+                                                         styleClass="dr-tbpnl-tb-inact"
+                                                         action="#{home.limparTela('consultaProcessoForm')}"
+                                                         reRender="processoList,consultaProcessoForm" />
 										       </div>
 											</ui:define>
 										</wi:searchForm>
-										<h:messages styleClass="message" id="globalMessages"/>
+										<h:messages
+                                             styleClass="message"
+                                             id="globalMessages" />
 							    	</rich:collapsiblePanel>
 								</s:div>			
-							    <s:div id="processoList">
-									<wi:datalist rendered="#{mostraGrid}"
-												 rows="20" 
-												 bean="#{consultaProcessoGrid}" 
-												 title="#{messages['consultaProcessoGrid.titulo']}"
-												 searchBean="consultaProcessoSearch"				
-												 toolBar="toolBarProcessoJbpm"
-												 headerToolBar="toolBarProcessoJbpm"
-												 pesqHome="#{consultaProcessoHome}"/> 
+							    <s:div
+                                     id="processoList">
+									<wi:datalist
+                                         rendered="#{mostraGrid}"
+                                         rows="20"
+                                         bean="#{consultaProcessoGrid}"
+                                         title="#{messages['consultaProcessoGrid.titulo']}"
+                                         searchBean="consultaProcessoSearch"
+                                         toolBar="toolBarProcessoJbpm"
+                                         headerToolBar="toolBarProcessoJbpm"
+                                         pesqHome="#{consultaProcessoHome}" /> 
 								</s:div>
 							</s:div>
 						</s:div>			
@@ -115,25 +150,36 @@
 			    </tr>
 			</table>
 			
-			<rich:dragIndicator id="indicator" />			
+			<rich:dragIndicator
+                 id="indicator" />			
 	
-			<rich:popupPanel id="novaCaixaPanel" height="110" left="40" >
-				<f:facet name="header">
-					<h:outputText value="Nova caixa para a tarefa" />
+			<rich:popupPanel
+                 id="novaCaixaPanel"
+                 height="110"
+                 left="40">
+				<f:facet
+                     name="header">
+					<h:outputText
+                         value="Nova caixa para a tarefa" />
 				</f:facet>
-				<f:facet name="controls">
-			    	<span style="cursor:pointer; font-family: Verdana, Arial; padding-right: 5px"
-			    		  onclick="Richfaces.hideTopModalPanel()">X</span>
+				<f:facet
+                     name="controls">
+			    	<span
+                         style="cursor:pointer; font-family: Verdana, Arial; padding-right: 5px"
+                         onclick="Richfaces.hideTopModalPanel()">X</span>
 				</f:facet>
-				<h:form id="modalForm">
-					<wi:inputText id="nomeCaixa" 
-							      label="Nome da caixa"		
-							      value="#{caixaHome.nomeNovaCaixa}"/>
-					<a:commandButton value="Incluir" 
-									 styleClass="dr-tbpnl-tb-inact" 
-									 action="#{caixaHome.addCaixa(painelUsuarioHome.taskId)}"
-									 oncomplete="Richfaces.hideTopModalPanel()"
-									 reRender="tarefasDiv,painelProcessos"/>
+				<h:form
+                     id="modalForm">
+					<wi:inputText
+                         id="nomeCaixa"
+                         label="Nome da caixa"
+                         value="#{caixaHome.nomeNovaCaixa}" />
+					<a:commandButton
+                         value="Incluir"
+                         styleClass="dr-tbpnl-tb-inact"
+                         action="#{caixaHome.addCaixa(painelUsuarioHome.taskId)}"
+                         oncomplete="Richfaces.hideTopModalPanel()"
+                         reRender="tarefasDiv,painelProcessos" />
 					<rich:messages />
 				</h:form>
 			</rich:popupPanel>

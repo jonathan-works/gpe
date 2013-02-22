@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,34 +13,53 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:p="http://jboss.org/schema/seam/pdf">
-
-	<p:font size="10">
-		<p:table columns="#{bean.columns.size}" headerRows="1" 
-				 widths="#{bean.widths}">
-			<wi:repeat var="col" value="#{bean.columns}">
+	<p:font
+         size="10">
+		<p:table
+             columns="#{bean.columns.size}"
+             headerRows="1"
+             widths="#{bean.widths}">
+			<wi:repeat
+                 var="col"
+                 value="#{bean.columns}">
 				
-				<ui:param name="props" value="#{col.properties}" />
+				<ui:param
+                     name="props"
+                     value="#{col.properties}" />
 				
-				<p:cell grayFill=".9" horizontalAlignment="center">
-					<ui:include src="/WEB-INF/xhtml/components/report/header/#{col.headerType}.xhtml" />
+				<p:cell
+                     grayFill=".9"
+                     horizontalAlignment="center">
+					<ui:include
+                         src="/WEB-INF/xhtml/components/report/header/#{col.headerType}.xhtml" />
 				</p:cell>
 			</wi:repeat>
 			
-			<ui:param name="dataModel" value="#{empty dataModel ? bean.grid.resultList : dataModel}" />
+			<ui:param
+                 name="dataModel"
+                 value="#{empty dataModel ? bean.grid.resultList : dataModel}" />
 			
-			<wi:repeat var="row" value="#{dataModel}">
-				<wi:repeat var="col" value="#{bean.columns}">
-				<ui:param name="props" value="#{col.properties}" />
-					<p:cell padding="3"
-							horizontalAlignment="#{col.valueType == 'number' ? 'right' : ''}">
+			<wi:repeat
+                 var="row"
+                 value="#{dataModel}">
+				<wi:repeat
+                     var="col"
+                     value="#{bean.columns}">
+				<ui:param
+                         name="props"
+                         value="#{col.properties}" />
+					<p:cell
+                         padding="3"
+                         horizontalAlignment="#{col.valueType == 'number' ? 'right' : ''}">
 						<p:paragraph>
-							<ui:include src="/WEB-INF/xhtml/components/report/#{col.valueType}.xhtml" />
+							<ui:include
+                                 src="/WEB-INF/xhtml/components/report/#{col.valueType}.xhtml" />
 						</p:paragraph>
 					</p:cell>
 				</wi:repeat>

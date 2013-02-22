@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:s="http://jboss.org/schema/seam/taglib"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:a="http://richfaces.org/a4j"
-        xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -30,33 +29,50 @@
 	        
 	<ui:composition>
 	
-	<ui:param name='mainId' 	value = "#{empty treeModeEntityId ? row[bean.key] : treeModeEntityId}"></ui:param>
-	<ui:param name="idPopUp" 	value="popup_#{mainId}" />
+	<ui:param
+             name="mainId"
+             value="#{empty treeModeEntityId ? row[bean.key] : treeModeEntityId}" />
+	<ui:param
+             name="idPopUp"
+             value="popup_#{mainId}" />
 	
 		<h:form>
-			<a:region renderRegionOnly="false">
-				<div style="width: 50px">
-					<s:link	view="#{linkDetalhe}"
-							target="#{idPopUp}"
-							onclick="openPopUp('#{idPopUp}', 'about:blank');">
-						<s:conversationPropagation type="none"/>
-						<f:param name="id" value="#{mainId}" />
-						<h:graphicImage title="Visualizar"
-										url="/img/show.gif"
-										style="cursor:pointer !important"/>
+			<a:region
+                 renderRegionOnly="false">
+				<div
+                     style="width: 50px">
+					<s:link
+                         view="#{linkDetalhe}"
+                         target="#{idPopUp}"
+                         onclick="openPopUp('#{idPopUp}', 'about:blank');">
+						<s:conversationPropagation
+                             type="none" />
+						<f:param
+                             name="id"
+                             value="#{mainId}" />
+						<h:graphicImage
+                             title="Visualizar"
+                             url="/img/show.gif"
+                             style="cursor:pointer !important" />
 					</s:link>	
 					
-					<a:commandLink  action="#{home.remove(row)}"
-									rendered="#{canEdit}"
-									limitToList="true"
-									status=":status"
-									reRender=":#{gridId}"
-									onclick="if(!confirm('Confirma?')) return false;">
-						<h:graphicImage	url="/img/remove.png" 
-										title="Remover registro"
-										style="cursor:pointer"/>
-						<f:param name="firstResult" value="#{bean.firstResult}"/>
-						<f:param name="page" value="#{bean.page}"/>
+					<a:commandLink
+                         action="#{home.remove(row)}"
+                         rendered="#{canEdit}"
+                         limitToList="true"
+                         status=":status"
+                         reRender=":#{gridId}"
+                         onclick="if(!confirm('Confirma?')) return false;">
+						<h:graphicImage
+                             url="/img/remove.png"
+                             title="Remover registro"
+                             style="cursor:pointer" />
+						<f:param
+                             name="firstResult"
+                             value="#{bean.firstResult}" />
+						<f:param
+                             name="page"
+                             value="#{bean.page}" />
 					</a:commandLink>	
 				</div>
 			</a:region>

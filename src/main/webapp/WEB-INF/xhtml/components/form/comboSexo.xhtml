@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -25,21 +25,27 @@
   veja em http://www.gnu.org/licenses/  
 --> 	
 	<ui:composition>
-	<ui:param name="template" value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
+	<ui:param
+             name="template"
+             value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
 		
-		<s:decorate id="#{id}Decoration" 
-					template="#{template}"
-					rendered="#{empty rendered or rendered}">
+		<s:decorate
+             id="#{id}Decoration"
+             template="#{template}"
+             rendered="#{empty rendered or rendered}">
 					
-			<ui:define name="label">#{label}</ui:define>			
+			<ui:define
+                 name="label">#{label}</ui:define>			
 					
-			<h:selectOneMenu id="#{f.id}"
-				value="#{home.instance.sexo}" 
-				style="width: 250px"
-				required="#{required}">
-				<f:selectItem itemLabel="Selecione..."/>
+			<h:selectOneMenu
+                 id="#{f.id}"
+                 value="#{home.instance.sexo}"
+                 style="width: 250px"
+                 required="#{required}">
+				<f:selectItem
+                     itemLabel="Selecione..." />
 				<f:selectItems
-					value="#{util.splitAsList('M:Masculino,F:Feminino')}" />
+                     value="#{util.splitAsList('M:Masculino,F:Feminino')}" />
 			</h:selectOneMenu>
 		</s:decorate>		
 		

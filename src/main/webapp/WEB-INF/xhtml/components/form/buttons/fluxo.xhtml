@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -29,26 +27,30 @@
 	  veja em http://www.gnu.org/licenses/  
 	-->	
 
-	<ui:composition template="default.xhtml">
+	<ui:composition
+         template="default.xhtml">
 
-		<ui:define name="customButtons">
-			<s:link view="/Fluxo/definicao/processDefinition.xhtml"
-					action="#{processBuilder.load(fluxoHome.instance.codFluxo)}" 
-					styleClass="buttons dr-tbpnl-tb-inact"
-					style="padding: 3px 12px 3px 12px; font-size: 13px;"
-					target="processDefinition"
-					value="Definição"
-					rendered="#{fluxoHome.managed}"
-					onclick="openPopUp('processDefinition', 'about:blank',1300,850);">
+		<ui:define
+             name="customButtons">
+			<s:link
+                 view="/Fluxo/definicao/processDefinition.xhtml"
+                 action="#{processBuilder.load(fluxoHome.instance.codFluxo)}"
+                 styleClass="buttons dr-tbpnl-tb-inact"
+                 style="padding: 3px 12px 3px 12px; font-size: 13px;"
+                 target="processDefinition"
+                 value="Definição"
+                 rendered="#{fluxoHome.managed}"
+                 onclick="openPopUp('processDefinition', 'about:blank',1300,850);">
 			</s:link>
 			
-			<s:link view="/Fluxo/importar/importarXPDL.xhtml"
-					styleClass="buttons dr-tbpnl-tb-inact"
-					style="padding: 3px 12px 3px 12px; font-size: 13px;"
-					target="importarXPDL"
-					value="#{messages['importarXPDL.button']}"
-					rendered="#{fluxoHome.managed}"
-					onclick="openPopUp('importarXPDL', 'about:blank',1300,850);">
+			<s:link
+                 view="/Fluxo/importar/importarXPDL.xhtml"
+                 styleClass="buttons dr-tbpnl-tb-inact"
+                 style="padding: 3px 12px 3px 12px; font-size: 13px;"
+                 target="importarXPDL"
+                 value="#{messages['importarXPDL.button']}"
+                 rendered="#{fluxoHome.managed}"
+                 onclick="openPopUp('importarXPDL', 'about:blank',1300,850);">
 			</s:link>
 		</ui:define>
 		

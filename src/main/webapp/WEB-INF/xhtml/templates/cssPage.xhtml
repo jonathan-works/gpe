@@ -1,16 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html">
  
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-		        xmlns:h="http://java.sun.com/jsf/html">
- 
-	    <h:outputStylesheet library="styleSkinInfox" name="padrao.css" />
+	    <h:outputStylesheet
+         library="styleSkinInfox"
+         name="padrao.css" />
 <!-- 	    <h:outputStylesheet src="#{a4jSkin.colorCSS}" /> -->
-        <h:outputScript library="js" name="jquery-1.8.3.js" />
-        <a:loadScript src="/js/jquery-ui-1.9.2.custom.js" />
-        <a:loadStyle src="/stylesheet/jquery-ui-1.9.2.custom.css" />
+        <h:outputScript
+         library="js"
+         name="jquery-1.8.3.js" />
+        <h:outputScript
+         library="js"
+         name="jquery-ui-1.9.2.custom.js" />
+        <h:outputStylesheet
+         library="stylesheet"
+         name="jquery-ui-1.9.2.custom.css" />
         
-	    <script type="text/javascript" charset="ISO-8859-1">
+	    <script
+         type="text/javascript"
+         charset="ISO-8859-1">
     		//Remover quando a funcao estiver funcionando na util.js
 			function openPopUp(id, url) {
 				var featurePopUp = "width=800, height=600, resizable=YES, scrollbars=YES, status=NO, location=NO";
@@ -19,7 +29,8 @@
 			}
 		</script>
 	      
-		<style type="text/css">	
+		<style
+         type="text/css">	
 			div	{
 				font-size: #{skinZoom.skinZoom} !important;
 			}

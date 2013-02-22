@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,42 +13,49 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<style type="text/css">
+	<style
+         type="text/css">
 			.noMaskClass .rich-mpnl-mask-div{
 	        display:none;				       
 	    }
     </style>
 	
-	<s:div id="#{id}SearchForm" style="float:left; overflow:visible;">
-		<ui:insert name="searchForm" />
+	<s:div
+         id="#{id}SearchForm"
+         style="float:left; overflow:visible;">
+		<ui:insert
+             name="searchForm" />
 	</s:div>
-	<a:region renderRegionOnly="true">
-		<ui:param name="panelWidth" value="#{wi:get(panelWidth, '73%')}"/>
-		<rich:panel rendered="#{wi:get(showGrid, true)}"
-					bodyClass="panel" 
-					header="#{tableTitle}" 
-					id="#{id}Panel"
-					style="float: left; margin-left: 10px;margin-top:0px; width: #{panelWidth};#{style}">
+	<a:region
+         renderRegionOnly="true">
+		<ui:param
+             name="panelWidth"
+             value="#{wi:get(panelWidth, '73%')}" />
+		<rich:panel
+             rendered="#{wi:get(showGrid, true)}"
+             bodyClass="panel"
+             header="#{tableTitle}"
+             id="#{id}Panel"
+             style="float: left; margin-left: 10px;margin-top:0px; width: #{panelWidth};#{style}">
 
-			<rich:messages 
-  			    id="#{id}Messages"			    
-				rendered="#{empty showMsg ? true : showMsg}" 				
-  			    globalOnly="true"			    
-  			    infoClass="formMessage"			    
- 			    style="float:left; margin: 5px"
-  			    errorClass="error formMessage"	    
-  			    warnStyle="display: none" />	
+			<rich:messages
+                 id="#{id}Messages"
+                 rendered="#{empty showMsg ? true : showMsg}"
+                 globalOnly="true"
+                 infoClass="formMessage"
+                 style="float:left; margin: 5px"
+                 errorClass="error formMessage"
+                 warnStyle="display: none" />	
   			    
 			<f:verbatim>
 				<script>
@@ -59,48 +65,69 @@
 				</script>
 			</f:verbatim>  	
 
-			<ui:param name="onMouseOut" value="this.style.backgroundColor=c" />
-			<ui:param name="onMouseOver" value="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'" />
-			<rich:dataTable value="#{values}" 
-							id="#{id}"  
-							rowKeyVar="key"
-							rowClasses="#{rowClasses}"
-							onRowMouseOut="#{wi:get(onRowMouseOut, onMouseOut)}"
-							onRowMouseOver="#{wi:get(onRowMouseOver, onMouseOver)}"
-							styleClass="#{styleClass}"
-							style="#{style}"
-							var="row">
-				<ui:param name="toolBarColumnWidth" value="#{wi:get(toolBarColumnWidth, '40px')}" />
-				<rich:column style="width: #{toolBarColumnWidth}; padding:2px 0px 0px 0px; 
-									text-align:center; 
-									border: solid 1px; border-color: #CCCCCC"
-									rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
-									rowspan="#{empty columnRowspan ? '1':columnRowspan}">
-					<f:facet name="header">
+			<ui:param
+                 name="onMouseOut"
+                 value="this.style.backgroundColor=c" />
+			<ui:param
+                 name="onMouseOver"
+                 value="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'" />
+			<rich:dataTable
+                 value="#{values}"
+                 id="#{id}"
+                 rowKeyVar="key"
+                 rowClasses="#{rowClasses}"
+                 onRowMouseOut="#{wi:get(onRowMouseOut, onMouseOut)}"
+                 onRowMouseOver="#{wi:get(onRowMouseOver, onMouseOver)}"
+                 styleClass="#{styleClass}"
+                 style="#{style}"
+                 var="row">
+				<ui:param
+                     name="toolBarColumnWidth"
+                     value="#{wi:get(toolBarColumnWidth, '40px')}" />
+				<rich:column
+                     style="width: #{toolBarColumnWidth}; padding:2px 0px 0px 0px;           text-align:center;           border: solid 1px; border-color: #CCCCCC"
+                     rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
+                     rowspan="#{empty columnRowspan ? '1':columnRowspan}">
+					<f:facet
+                         name="header">
 						<s:div>
-							<ui:insert name="headerToolBar">
-								<ui:param name="home" value="#{wi:get(home, '')}"/>
-								<wi:toolBarReport rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}" />
-								<wi:toolBarReportExcel rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}" action="#{home.exportarXLS()}"/>
+							<ui:insert
+                                 name="headerToolBar">
+								<ui:param
+                                     name="home"
+                                     value="#{wi:get(home, '')}" />
+								<wi:toolBarReport
+                                     rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}" />
+								<wi:toolBarReportExcel
+                                     rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}"
+                                     action="#{home.exportarXLS()}" />
 							</ui:insert>
 						</s:div>
 					</f:facet>
-					<ui:insert name="toolBar">
-						<wi:toolBarEdit  />
-						<wi:toolBarInactive  />
+					<ui:insert
+                         name="toolBar">
+						<wi:toolBarEdit />
+						<wi:toolBarInactive />
 					</ui:insert>
 				</rich:column>
-				<ui:insert/>
+				<ui:insert />
 			</rich:dataTable>
-			<h:outputText value="Foram encontrados:  #{bean.resultCount} resultados"
-						  style="float: right; margin-right: 1%;" 
-						  rendered="#{wi:get(showGridCount, true)}"/>
-			<s:div rendered="#{bean.previousExists or bean.nextExists}">
-				<h:form rendered="#{!inForm}" ajaxSubmit="true" >
-					<ui:include src="inputNumberSlider.xhtml" />
+			<h:outputText
+                 value="Foram encontrados:  #{bean.resultCount} resultados"
+                 style="float: right; margin-right: 1%;"
+                 rendered="#{wi:get(showGridCount, true)}" />
+			<s:div
+                 rendered="#{bean.previousExists or bean.nextExists}">
+				<h:form
+                     rendered="#{!inForm}"
+                     ajaxSubmit="true">
+					<ui:include
+                         src="inputNumberSlider.xhtml" />
 				</h:form>
-				<s:div rendered="#{inForm}" >
-					<ui:include src="inputNumberSlider.xhtml" />
+				<s:div
+                     rendered="#{inForm}">
+					<ui:include
+                         src="inputNumberSlider.xhtml" />
 				</s:div>
 			</s:div>
 		</rich:panel>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,110 +13,131 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-				template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
 				
-	<ui:param name="pageTitle" value="Detalhes do Processo" />
-	<ui:define name="title">#{pageTitle}</ui:define>
+	<ui:param
+         name="pageTitle"
+         value="Detalhes do Processo" />
+	<ui:define
+         name="title">#{pageTitle}</ui:define>
 
-	<ui:define name="body">
+	<ui:define
+         name="body">
 
-		<h:messages globalOnly="true" 
-					styleClass="message"
-					id="globalMessages" />
+		<h:messages
+             globalOnly="true"
+             styleClass="message"
+             id="globalMessages" />
 
-		<wi:view form="#{consultaSolicitacaoView}"
-				 title="#{messages['consultaSolicitacao.titulo']} #{processoHome.instance}"
-				 home="#{processoHome}"
-				 columns="4" 
-				 buttons="none">
+		<wi:view
+             form="#{consultaSolicitacaoView}"
+             title="#{messages['consultaSolicitacao.titulo']} #{processoHome.instance}"
+             home="#{processoHome}"
+             columns="4"
+             buttons="none">
 		</wi:view>
 
-		<rich:tabPanel switchType="ajax" 
-					   headerSpacing="2" 
-					   selectedTab="#{processoHome.tab}">
+		<rich:tabPanel
+             switchType="ajax"
+             headerSpacing="2"
+             selectedTab="#{processoHome.tab}">
 			
-			<rich:tab id="form"
-					  label="#{messages['acaoProcesso.menuText']}" 
-					  immediate="true"
-					  status=":status">
+			<rich:tab
+                 id="form"
+                 label="#{messages['acaoProcesso.menuText']}"
+                 immediate="true"
+                 status=":status">
 
-				<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+				<ui:include
+                     src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
 			</rich:tab>
 
-			<rich:tab id="tabAnexos" 
-					  label="Documentos do Processo"
-					  status=":status" 
-					  action="#{processoHome.setTab('tabAnexos')}">
-				<wi:ajaxDiv id="divDocumentos">
-					<wi:datalist bean="#{documentoProcessoGrid}"
-								 title="Documentos do Processo" 
-								 toolBar="none"
-								 headerToolBar="none"
-								 columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin, numeroDocumento,processoDocumentoBin.sizeFormatado">
+			<rich:tab
+                 id="tabAnexos"
+                 label="Documentos do Processo"
+                 status=":status"
+                 action="#{processoHome.setTab('tabAnexos')}">
+				<wi:ajaxDiv
+                     id="divDocumentos">
+					<wi:datalist
+                         bean="#{documentoProcessoGrid}"
+                         title="Documentos do Processo"
+                         toolBar="none"
+                         headerToolBar="none"
+                         columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin, numeroDocumento,processoDocumentoBin.sizeFormatado">
 					</wi:datalist>
 					
 				</wi:ajaxDiv>
 			</rich:tab>
 
-			<rich:tab id="tabAnexar" 
-					  label="Anexar Documento" 
-					  status=":status"
-					  action="#{processoDocumentoHome.newInstance()}">
-				<wi:ajaxDiv id="divAnexarDocumentos">
-					<wi:form canEdit="true" 
-							 isUploadForm="true"
-							 form="#{anexarDocumentoForm}"
-							 formTitle="Cadastro do Documento"
-							 home="#{processoDocumentoHome}"
-							 reRenderSave="divAnexarDocumentos" />
+			<rich:tab
+                 id="tabAnexar"
+                 label="Anexar Documento"
+                 status=":status"
+                 action="#{processoDocumentoHome.newInstance()}">
+				<wi:ajaxDiv
+                     id="divAnexarDocumentos">
+					<wi:form
+                         canEdit="true"
+                         isUploadForm="true"
+                         form="#{anexarDocumentoForm}"
+                         formTitle="Cadastro do Documento"
+                         home="#{processoDocumentoHome}"
+                         reRenderSave="divAnexarDocumentos" />
 				</wi:ajaxDiv>
 			</rich:tab>
 
 			<ui:remove>
 			<!-- Remover até decidir como será essa funcionalidade -->
-			<rich:tab label="#{messages['processo.titleGridApensar']}">
-				<wi:ajaxDiv id="divGridApensar">
-					<wi:m2mGrid canEdit="true" 
-								gridId="processoList"
-								gridLeftTitle="O Processo #{processoHome.definedInstance} está apensado aos seguintes processos"
-								leftGrid="#{processoGrid}"
-								datamodel="#{processoHome.definedInstance.processoConexoListForIdProcessoConexo}"
-								removeExpression="processoHome.removeProcessoConexoForIdProcessoConexo(row, 'processoGrid')"
-								addExpression="processoHome.addProcessoConexoForIdProcessoConexo(row, 'processoGrid')"
-								searchBean="#{processoSearch}" 
-								gridRightTitle="Processos"
-								rightGrid="#{processoGrid}"
-								columnRightList="numeroProcesso, usuarioCadastroProcesso"
-								columnLeftList="numeroProcesso, usuarioCadastroProcesso" />
+			<rich:tab
+                     label="#{messages['processo.titleGridApensar']}">
+				<wi:ajaxDiv
+                         id="divGridApensar">
+					<wi:m2mGrid
+                             canEdit="true"
+                             gridId="processoList"
+                             gridLeftTitle="O Processo #{processoHome.definedInstance} está apensado aos seguintes processos"
+                             leftGrid="#{processoGrid}"
+                             datamodel="#{processoHome.definedInstance.processoConexoListForIdProcessoConexo}"
+                             removeExpression="processoHome.removeProcessoConexoForIdProcessoConexo(row, 'processoGrid')"
+                             addExpression="processoHome.addProcessoConexoForIdProcessoConexo(row, 'processoGrid')"
+                             searchBean="#{processoSearch}"
+                             gridRightTitle="Processos"
+                             rightGrid="#{processoGrid}"
+                             columnRightList="numeroProcesso, usuarioCadastroProcesso"
+                             columnLeftList="numeroProcesso, usuarioCadastroProcesso" />
 				</wi:ajaxDiv>
 			</rich:tab>
 			</ui:remove>
 			
-			<rich:tab id="tabPartesDoProcesso"
-					  label="#{messages['parteProcesso.partes']}"
-					  switchType="ajax" 
-					  status=":status"
-					  rendered="#{processoHandler.hasPartes()}">
-				<ui:include src="/Processo/parteProcessoGrid.xhtml" />
+			<rich:tab
+                 id="tabPartesDoProcesso"
+                 label="#{messages['parteProcesso.partes']}"
+                 switchType="ajax"
+                 status=":status"
+                 rendered="#{processoHandler.hasPartes()}">
+				<ui:include
+                     src="/Processo/parteProcessoGrid.xhtml" />
 			</rich:tab>	
 
 
 		</rich:tabPanel>
 		
 		<ui:remove>
-		<div class="actionButtons">
-           	<s:button styleClass="dr-tbpnl-tb-inact" 
-					  value="Voltar"
-					  view="/Consulta/solicitacao/list.seam">
+		<div
+                 class="actionButtons">
+           	<s:button
+                     styleClass="dr-tbpnl-tb-inact"
+                     value="Voltar"
+                     view="/Consulta/solicitacao/list.seam">
 			</s:button>
         </div>
 		</ui:remove>

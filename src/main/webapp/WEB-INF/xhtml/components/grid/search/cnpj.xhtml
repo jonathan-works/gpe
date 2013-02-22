@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">	
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">	
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -31,22 +30,30 @@
 	
 	<ui:composition>
 	
-		<ui:param name="search" value="#{empty props.searchBean ? searchBean : 
-						expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
-		<a:region renderRegionOnly="true">	
-			<s:decorate template="/WEB-INF/xhtml/components/templates/view.xhtml">
-				<ui:define name="label">#{label}</ui:define>
-				<h:inputText id="#{f.id}" 
-							 value="#{search[f.id]}"
-							 styleClass="#{readonly ? 'readOnly' : '' } inputText"
-							 readonly="#{readonly}"
-							 disabled="#{disabled}" 
-							 required="#{required}" 
-							 size="15"
-							 maxlength="15">
-					<f:converter converterId="stringConverter"/>
-					<ui:insert/>
-					<wi:mask id="#{f.id}" mask="99.999.999/9999-99"/>
+		<ui:param
+             name="search"
+             value="#{empty props.searchBean ? searchBean :        expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
+		<a:region
+             renderRegionOnly="true">	
+			<s:decorate
+                 template="/WEB-INF/xhtml/components/templates/view.xhtml">
+				<ui:define
+                     name="label">#{label}</ui:define>
+				<h:inputText
+                     id="#{f.id}"
+                     value="#{search[f.id]}"
+                     styleClass="#{readonly ? 'readOnly' : '' } inputText"
+                     readonly="#{readonly}"
+                     disabled="#{disabled}"
+                     required="#{required}"
+                     size="15"
+                     maxlength="15">
+					<f:converter
+                         converterId="stringConverter" />
+					<ui:insert />
+					<wi:mask
+                         id="#{f.id}"
+                         mask="99.999.999/9999-99" />
 				</h:inputText>
 			</s:decorate>
 		</a:region>

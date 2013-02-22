@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 	
 	#{props.optionExpression}?Expressão que irá gerar o texto das opções do select. 
 	 Os atributos a serem mostrados devem estar entre chaves. Exemplo: {sigla} - {estado}
@@ -30,36 +30,47 @@
 	
 	<ui:composition>
 	
-		<ui:param name="template" value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
+		<ui:param
+             name="template"
+             value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
 			
-		<s:decorate id="#{id}Decoration" 
-					template="#{template}"
-					rendered="#{empty rendered or rendered}">
+		<s:decorate
+             id="#{id}Decoration"
+             template="#{template}"
+             rendered="#{empty rendered or rendered}">
 
-			<ui:param name="noSelectionLabel" value="#{empty props.noSelectionLabel ? noSelectionLabel : props.noSelectionLabel }"/>
-			<ui:param name="optionExpression" value="#{empty optionExpression ? props.optionExpression : optionExpression}"/>
-			<ui:param name="enableReRender" value="#{empty props.enableReRender ? true : util.eval(props.enableReRender)}"/>
+			<ui:param
+                 name="noSelectionLabel"
+                 value="#{empty props.noSelectionLabel ? noSelectionLabel : props.noSelectionLabel }" />
+			<ui:param
+                 name="optionExpression"
+                 value="#{empty optionExpression ? props.optionExpression : optionExpression}" />
+			<ui:param
+                 name="enableReRender"
+                 value="#{empty props.enableReRender ? true : util.eval(props.enableReRender)}" />
 			
-			<ui:define name="label">#{label}</ui:define>
-			<h:selectOneMenu id="#{id}"
-				value="#{value}"
-				style="#{style}"
-				required="#{required}" 
-				onchange="#{onchange}"
-				disabled="#{disabled}">
+			<ui:define
+                 name="label">#{label}</ui:define>
+			<h:selectOneMenu
+                 id="#{id}"
+                 value="#{value}"
+                 style="#{style}"
+                 required="#{required}"
+                 onchange="#{onchange}"
+                 disabled="#{disabled}">
 				<s:convertEntity />
 				<s:selectItems
-					value="#{empty items ? util.eval(props.items) : items }" 
-					var="v"
-					label="#{empty optionExpression ? v : util.getSelectExpressionSelectItem(optionExpression, v) }"
-					hideNoSelectionLabel="#{hideNoSelectionLabel}"
-					noSelectionLabel="#{noSelectionLabel}"/>
+                     value="#{empty items ? util.eval(props.items) : items }"
+                     var="v"
+                     label="#{empty optionExpression ? v : util.getSelectExpressionSelectItem(optionExpression, v) }"
+                     hideNoSelectionLabel="#{hideNoSelectionLabel}"
+                     noSelectionLabel="#{noSelectionLabel}" />
 				<ui:insert />
-				<a:support event="onchange"
-					   ajaxSingle="true"
-					   disabled="#{not enableReRender}"
-					   rendered="#{enableReRender}"
-					   reRender="#{reRender}"/>
+				<a:ajax
+                     event="change"
+                     disabled="#{not enableReRender}"
+                     execute="@this"
+                     render="#{reRender}" />
 			</h:selectOneMenu>
 		</s:decorate>
 		

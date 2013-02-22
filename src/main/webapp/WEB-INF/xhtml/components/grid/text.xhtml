@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -28,28 +27,34 @@
 
 	<ui:composition>
 	
-		<div style="width: 100%; text-align: center">
-			<h:graphicImage rendered="#{!empty c.value}" 
-							url="/img/view.gif" 
-							style="cursor:pointer"
-							onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
-			<rich:popupPanel id="mp_#{c.id}" 
-							 height="300" 
-							 width="600" 
-							 rendered="#{!empty c.value}"
-							 resizeable="false">
-				<f:facet name="header">
-					<h:outputText value="#{header}:" />
+		<div
+             style="width: 100%; text-align: center">
+			<h:graphicImage
+                 rendered="#{!empty c.value}"
+                 url="/img/view.gif"
+                 style="cursor:pointer"
+                 onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
+			<rich:popupPanel
+                 id="mp_#{c.id}"
+                 height="300"
+                 width="600"
+                 rendered="#{!empty c.value}"
+                 resizeable="false">
+				<f:facet
+                     name="header">
+					<h:outputText
+                         value="#{header}:" />
 				</f:facet>
-				<f:facet name="controls">
-	          		<span style="cursor:pointer; font-family: Verdana, Arial; 
-	          					 padding-right: 22px"
-	          			  onclick="Richfaces.hideModalPanel(mp)">X</span>
+				<f:facet
+                     name="controls">
+	          		<span
+                         style="cursor:pointer; font-family: Verdana, Arial;                   padding-right: 22px"
+                         onclick="Richfaces.hideModalPanel(mp)">X</span>
 				</f:facet>
-				<h:inputTextarea readonly="true"
-								 style="width: 592px; height: 270px; padding: 3px;
-										position: relative; top: -10px; left: -10px"
-								 value="#{c.value}" />
+				<h:inputTextarea
+                     readonly="true"
+                     style="width: 592px; height: 270px; padding: 3px;           position: relative; top: -10px; left: -10px"
+                     value="#{c.value}" />
 			</rich:popupPanel>
 		</div>
 		

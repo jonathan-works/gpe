@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,32 +13,52 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:p="http://jboss.org/schema/seam/pdf">
+	<p:font
+         size="10">
 
-	<p:font size="10">
+		<ui:param
+             name="valueList"
+             value="#{valueList}" />
+		<ui:param
+             name="columnList"
+             value="#{columnList}" />
+		<ui:param
+             name="propertiesList"
+             value="#{propertiesList}" />
 
-		<ui:param name="valueList" value="#{valueList}" />
-		<ui:param name="columnList" value="#{columnList}" />
-		<ui:param name="propertiesList" value="#{propertiesList}" />
-
-		<p:table columns="#{columnList.size}" headerRows="1">
-			<wi:repeat var="col" value="#{columnList}">
-				<p:cell grayFill=".9" horizontalAlignment="center">
-					<p:paragraph alignment="center">
-						<p:text value="#{col}"/>
+		<p:table
+             columns="#{columnList.size}"
+             headerRows="1">
+			<wi:repeat
+                 var="col"
+                 value="#{columnList}">
+				<p:cell
+                     grayFill=".9"
+                     horizontalAlignment="center">
+					<p:paragraph
+                         alignment="center">
+						<p:text
+                             value="#{col}" />
 					</p:paragraph>
 				</p:cell>
 			</wi:repeat>
-			<wi:repeat var="row" value="#{valueList}">
-				<wi:repeat var="props" value="#{propertiesList}">
-					<p:cell padding="3">
+			<wi:repeat
+                 var="row"
+                 value="#{valueList}">
+				<wi:repeat
+                     var="props"
+                     value="#{propertiesList}">
+					<p:cell
+                         padding="3">
 						<p:paragraph>
-							<p:text value="#{reportUtil.getValueRow(row, props)}" />
+							<p:text
+                                 value="#{reportUtil.getValueRow(row, props)}" />
 						</p:paragraph>
 					</p:cell>
 				</wi:repeat>

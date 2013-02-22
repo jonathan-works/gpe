@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-                xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -20,27 +20,31 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	<ui:param name="variavel" value="#{processBuilder.taskFitter.currentTask.currentVariable}" />
-	<s:div id="modeloDocumentoDiv">
-		<rich:panel header="Modelo de documento: #{variavel.name}" style="height:550px;">
-			<wi:m2mGrid 
-				canEdit="true"
-				title="Modelos de documento"
-				gridId="modeloDocumentoList"
-				leftPanelWidth="29%"
-				leftToolBar="removeModelo"
-				leftGrid = "#{modeloDocumentoGrid}"
-				columnLeftList = "tituloModeloDocumento"
-				datamodel = "#{variavel.modeloDocumentoList}"
-				rightPanelWidth="69%"
-				rightTitle = "Adicione modelo:"
-				rightToolBar="addModelo"
-				rightGrid = "#{modeloDocumentoGrid}"
-				columnRightList = "tipoModeloDocumento,tituloModeloDocumento"
-				searchBean="#{modeloDocumentoSearch}"
-				panelOpened = "true"
-				datalistHeight="320px"
-			/>
+	<ui:param
+         name="variavel"
+         value="#{processBuilder.taskFitter.currentTask.currentVariable}" />
+	<s:div
+         id="modeloDocumentoDiv">
+		<rich:panel
+             header="Modelo de documento: #{variavel.name}"
+             style="height:550px;">
+			<wi:m2mGrid
+                 canEdit="true"
+                 title="Modelos de documento"
+                 gridId="modeloDocumentoList"
+                 leftPanelWidth="29%"
+                 leftToolBar="removeModelo"
+                 leftGrid="#{modeloDocumentoGrid}"
+                 columnLeftList="tituloModeloDocumento"
+                 datamodel="#{variavel.modeloDocumentoList}"
+                 rightPanelWidth="69%"
+                 rightTitle="Adicione modelo:"
+                 rightToolBar="addModelo"
+                 rightGrid="#{modeloDocumentoGrid}"
+                 columnRightList="tipoModeloDocumento,tituloModeloDocumento"
+                 searchBean="#{modeloDocumentoSearch}"
+                 panelOpened="true"
+                 datalistHeight="320px" />
 		
 		</rich:panel>
 	</s:div>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,47 +13,62 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->   
-                    
-<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
-							xmlns="http://www.w3.org/1999/xhtml"
-							xmlns:s="http://jboss.org/schema/seam/taglib"
-							xmlns:ui="http://java.sun.com/jsf/facelets"
-							xmlns:f="http://java.sun.com/jsf/core"
-							xmlns:wi= "http://www.itx.com.br/jsf"
-							xmlns:h="http://java.sun.com/jsf/html"
-							xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-							xmlns:a="http://richfaces.org/a4j"
-							template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
     
-	<ui:param name="pageTitle" value="Consulta de Clima" />                       
-	<ui:define name="title">#{pageTitle}</ui:define>
+	<ui:param
+         name="pageTitle"
+         value="Consulta de Clima" />                       
+	<ui:define
+         name="title">#{pageTitle}</ui:define>
 	
-	<ui:param name="home" value="#{consultaSolicitacaoHome}" />
+	<ui:param
+         name="home"
+         value="#{consultaSolicitacaoHome}" />
 	
-	<ui:define name="body">
+	<ui:define
+         name="body">
 	    
-	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
+	    <h:messages
+             globalOnly="true"
+             styleClass="message"
+             id="globalMessages" />
 
-		<wi:dataForm formId="estatisticaMovimentacaoForm" formTitle="Pesquisar">
+		<wi:dataForm
+             formId="estatisticaMovimentacaoForm"
+             formTitle="Pesquisar">
 		
 			<wi:selectOneMenu
-				id="comboCidade"
-				label="Cidade"
-				value="#{getCitiesByCountryService.cidade}"
-				items="#{getCitiesByCountryService.getCidadeListBrazil()}" 
-				required="true"
-				noSelectionLabel="Selecione...">
-				<a:support event="onchange"
-						   ajaxSingle="true"
-						   status="status"
-						   reRender="clima"/>
+                 id="comboCidade"
+                 label="Cidade"
+                 value="#{getCitiesByCountryService.cidade}"
+                 items="#{getCitiesByCountryService.getCidadeListBrazil()}"
+                 required="true"
+                 noSelectionLabel="Selecione...">
+				<a:ajax
+                     event="change"
+                     status="status"
+                     execute="@this"
+                     render="clima" />
 			</wi:selectOneMenu>	
 			
-			<s:div id="clima">
-				<s:div rendered="#{not empty getCitiesByCountryService.cidade}">
-				<rich:panel style="overflow:auto; width: 50%;">
-				<f:facet name="header">Dados</f:facet>
+			<s:div
+                 id="clima">
+				<s:div
+                     rendered="#{not empty getCitiesByCountryService.cidade}">
+				<rich:panel
+                         style="overflow:auto; width: 50%;">
+				<f:facet
+                             name="header">Dados</f:facet>
 					<h:outputText>Local: #{getCitiesByCountryService.getClima().location}</h:outputText><br />
 					<h:outputText>Horário: #{getCitiesByCountryService.getClima().time}</h:outputText><br />
 					<h:outputText>Vento: #{getCitiesByCountryService.getClima().wind}</h:outputText><br />		
@@ -65,7 +79,8 @@
 				</s:div>	
 			</s:div>
 		
-			<ui:define name="buttons">
+			<ui:define
+                 name="buttons">
 			</ui:define>
 		</wi:dataForm>
 

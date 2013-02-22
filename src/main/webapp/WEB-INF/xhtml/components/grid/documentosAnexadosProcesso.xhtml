@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:s="http://jboss.org/schema/seam/taglib"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:a="http://richfaces.org/a4j"
-        xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -31,43 +30,63 @@
         
 	<ui:composition>
 	
-		<ui:param name="isAtivo" value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
-		<ui:param name="styleClass" value="#{isAtivo ? '' : 'inativo'}" />
+		<ui:param
+             name="isAtivo"
+             value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
+		<ui:param
+             name="styleClass"
+             value="#{isAtivo ? '' : 'inativo'}" />
 	
-		<div style="width: 100%;" class="#{styleClass}" >
+		<div
+             style="width: 100%;"
+             class="#{styleClass}">
 		
-		    <rich:dataTable	id="documentosBinarios"
-		    				value="#{processoHome.instance.getProcessoDocumentoList(true)}" var="var" 
-		                    style="width: 100%"	                    
-	             			onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"	
-	             			onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"	
-	             			rows="15">   
+		    <rich:dataTable
+                 id="documentosBinarios"
+                 value="#{processoHome.instance.getProcessoDocumentoList(true)}"
+                 var="var"
+                 style="width: 100%"
+                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                 onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+                 rows="15">   
 
-		    	<rich:column style="width:10%; padding: 0">
-		    		<ui:include src="processoDocumentoBin.xhtml" >
-		    			<ui:param name="bin" value="#{var.processoDocumentoBin}" />
-		    			<ui:param name="header" value="#{var.processoDocumento}" />
+		    	<rich:column
+                     style="width:10%; padding: 0">
+		    		<ui:include
+                         src="processoDocumentoBin.xhtml">
+		    			<ui:param
+                             name="bin"
+                             value="#{var.processoDocumentoBin}" />
+		    			<ui:param
+                             name="header"
+                             value="#{var.processoDocumento}" />
 		    		</ui:include>
 		    	</rich:column>	    	
 	
-		    	<rich:column style="text-align: left">
-				    <h:outputText value="#{var.processoDocumento}" />
+		    	<rich:column
+                     style="text-align: left">
+				    <h:outputText
+                         value="#{var.processoDocumento}" />
 		    	</rich:column>
 		    	
-		    	<rich:column style="width:65px">
-				    <h:outputText value="#{var.processoDocumentoBin.dataInclusao}" >
-				    		<s:convertDateTime	pattern="dd/MM/yy"/>
+		    	<rich:column
+                     style="width:65px">
+				    <h:outputText
+                         value="#{var.processoDocumentoBin.dataInclusao}">
+				    		<s:convertDateTime
+                             pattern="dd/MM/yy" />
 				    </h:outputText>
 		    	</rich:column>
 
 		    </rich:dataTable>	
 		    
-			<rich:datascroller	maxPages="10"
-								oncomplete="pageFocus()"
-								stepControls="hide"
-								id="docScrollerDocumentosBinarios" 
-								for="documentosBinarios" 
-								page="#{processoHandler.inicio}"/>	    
+			<rich:datascroller
+                 maxPages="10"
+                 oncomplete="pageFocus()"
+                 stepControls="hide"
+                 id="docScrollerDocumentosBinarios"
+                 for="documentosBinarios"
+                 page="#{processoHandler.inicio}" />	    
 	
 		</div>
 		

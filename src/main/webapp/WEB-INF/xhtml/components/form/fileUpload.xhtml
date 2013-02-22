@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -29,46 +29,48 @@
 
 	<ui:composition>
 	
-		<s:decorate id="#{id}Decoration" 
-			template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-			rendered="#{empty rendered or rendered}">
+		<s:decorate
+             id="#{id}Decoration"
+             template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+             rendered="#{empty rendered or rendered}">
 			
-			<ui:define name="label">#{label}</ui:define>
+			<ui:define
+                 name="label">#{label}</ui:define>
 			
-			<rich:fileUpload 	
-               	id="#{id}"
-               	ajaxSingle="true"
-               	status=":status"
-				allowFlash="true"
-               	required="#{empty required ? false : required}"
-               	acceptedTypes="#{empty acceptedTypes ? pdf : acceptedTypes}"
-               	maxFilesQuantity="#{empty maxFilesQuantity ? 1 : maxFilesQuantity }"
-            	fileUploadListener="#{fileHome.listener}"
-               	autoclear="#{autoclear}"
-               	immediateUpload="#{empty immediateUpload ? true : immediateUpload}"
-               	listWidth="#{empty listWidth ? '260px' : listWidth}" 
-               	listHeight="#{empty listHeight ? '58px' : listHeight}"
-               	noDuplicate="#{empty noDuplicate ? true : noDuplicate}"
-               	onupload="#{onupload}"
-               	onuploadcomplete="#{onuploadcomplete}"
-  				addControlLabel="Adicionar" 
-				clearAllControlLabel="Limpar" 
-				clearControlLabel=""
-               	stopControlLabel="Parar"
-               	stopEntryControlLabel="Parar"
-               	uploadControlLabel="Processar"
-               	cancelEntryControlLabel="Cancelar"
-               	doneLabel="Enviado"            
-               	sizeErrorLabel="Erro! Tamanho máximo 2MB."
-               	validator="nullValidator"
-               	validatorMessage="campo obrigatório."
-               	requiredMessage="erro, campo obrigatorio">
+			<rich:fileUpload
+                 id="#{id}"
+                 ajaxSingle="true"
+                 status=":status"
+                 allowFlash="true"
+                 required="#{empty required ? false : required}"
+                 acceptedTypes="#{empty acceptedTypes ? pdf : acceptedTypes}"
+                 maxFilesQuantity="#{empty maxFilesQuantity ? 1 : maxFilesQuantity }"
+                 fileUploadListener="#{fileHome.listener}"
+                 autoclear="#{autoclear}"
+                 immediateUpload="#{empty immediateUpload ? true : immediateUpload}"
+                 listWidth="#{empty listWidth ? '260px' : listWidth}"
+                 listHeight="#{empty listHeight ? '58px' : listHeight}"
+                 noDuplicate="#{empty noDuplicate ? true : noDuplicate}"
+                 onupload="#{onupload}"
+                 onuploadcomplete="#{onuploadcomplete}"
+                 addControlLabel="Adicionar"
+                 clearAllControlLabel="Limpar"
+                 clearControlLabel=""
+                 stopControlLabel="Parar"
+                 stopEntryControlLabel="Parar"
+                 uploadControlLabel="Processar"
+                 cancelEntryControlLabel="Cancelar"
+                 doneLabel="Enviado"
+                 sizeErrorLabel="Erro! Tamanho máximo 2MB."
+                 validator="nullValidator"
+                 validatorMessage="campo obrigatório."
+                 requiredMessage="erro, campo obrigatorio">
                	<ui:insert />
-				<a:support 
-					ajaxSingle="true"
-					reRender="uploadBaseDiv"
-               		event="onuploadcomplete">
-				</a:support>	               	
+				<a:ajax
+                     event="uploadcomplete"
+                     execute="@this"
+                     render="uploadBaseDiv">
+				</a:ajax>	               	
             </rich:fileUpload>
             
             
@@ -80,23 +82,38 @@
 
 
 
-			<s:div id="uploadBaseDiv">
-				<s:div rendered="#{!fileUpload.isEmpty() or true}">
+			<s:div
+                 id="uploadBaseDiv">
+				<s:div
+                     rendered="#{!fileUpload.isEmpty() or true}">
 				#{currentTime}
-					<h:inputHidden id="hiddenBase64" value="#{fileUpload.dataB64}" />
+					<h:inputHidden
+                         id="hiddenBase64"
+                         value="#{fileUpload.dataB64}" />
 					#{!fileUpload.isEmpty()}	
 					
-					<applet width="70" height="25" id="certificacao" 
-						code="SmartCardSignerApplet" archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
-						<param name="signButtonCaption" value="Certificar" />
-						<param name="urlDownload" value="#{util.urlProject}/certificado/" />
-						<param name="caListDownloadFile" value="#{util.urlProject}/downloadCaList.seam" />
+					<applet
+                         width="70"
+                         height="25"
+                         id="certificacao"
+                         code="SmartCardSignerApplet"
+                         archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+						<param
+                             name="signButtonCaption"
+                             value="Certificar" />
+						<param
+                             name="urlDownload"
+                             value="#{util.urlProject}/certificado/" />
+						<param
+                             name="caListDownloadFile"
+                             value="#{util.urlProject}/downloadCaList.seam" />
 						#{util.urlProject}
 					</applet> 
 				</s:div>
 			</s:div>            
 						
-			<a href="javascript:alert(getData())">Teste</a>
+			<a
+                 href="javascript:alert(getData())">Teste</a>
 						
 		</s:decorate>
 	</ui:composition>

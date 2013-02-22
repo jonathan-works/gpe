@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ --><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
-
-
-<ui:composition	xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:c="http://java.sun.com/jsp/jstl/core"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:rich="http://richfaces.org/rich">
-
-	<ui:param name="mostrarMenu"
-		value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
+	<ui:param
+         name="mostrarMenu"
+         value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
 	
-	<h:form class="formPesquisa"
-			rendered="#{mostrarMenu}">
+	<h:form
+         class="formPesquisa"
+         rendered="#{mostrarMenu}">
       <div>
         <label>
 		    #{messages['template.abaPesquisaText']}
 		</label>
-		<h:inputText id="searchText"					   
-		   			 value="#{search.searchText}"/>					
-         <h:commandButton action="/Pesquisa/searchResult.xhtml"
-			   			  image="#{a4jSkin.imgBgButtonPesq}" />
+		<h:inputText
+                 id="searchText"
+                 value="#{search.searchText}" />					
+         <h:commandButton
+                 action="/Pesquisa/searchResult.xhtml"
+                 image="#{a4jSkin.imgBgButtonPesq}" />
       </div>
 	</h:form>
 

@@ -1,33 +1,52 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:a="http://richfaces.org/a4j"
-			    xmlns:c="http://java.sun.com/jsp/jstl/core"
-				template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
 				
-	<ui:define name="baseHead">
-		<a:loadScript src="/js/liveclock.js" />
-		<a:loadScript src="/js/jqueryExt.js" />
-		<ui:insert name="head"/>
+	<ui:define
+         name="baseHead">
+		<a:loadScript
+             src="/js/liveclock.js" />
+		<a:loadScript
+             src="/js/jqueryExt.js" />
+		<ui:insert
+             name="head" />
 	</ui:define>
 	
-	<ui:define name="baseBody">
-		<ui:include src="include/header.xhtml" />
+	<ui:define
+         name="baseBody">
+		<ui:include
+             src="include/header.xhtml" />
 		
-		<ui:param name="showMenu" value="#{not empty showMenu ? showMenu : true}" />
-		<c:if test="#{showMenu}">
-			<ui:include src="include/menu.xhtml">
-				<ui:param name="projectName" value="#{nomeSistema}"/>
+		<ui:param
+             name="showMenu"
+             value="#{not empty showMenu ? showMenu : true}" />
+		<c:if
+             test="#{showMenu}">
+			<ui:include
+                 src="include/menu.xhtml">
+				<ui:param
+                     name="projectName"
+                     value="#{nomeSistema}" />
 			</ui:include>
 			<!--Por algum motivo o menu esta adicionando o parametro required="true" na pagina -->	
-			<ui:param name="required" value="false" />
+			<ui:param
+                 name="required"
+                 value="false" />
 		</c:if>
 		
-		<s:div styleClass="pageBody" id="pageBody">
-			<ui:decorate id="frameDecorate" template="include/frame.xhtml">
-				<ui:insert name="body"/>
+		<s:div
+             styleClass="pageBody"
+             id="pageBody">
+			<ui:decorate
+                 id="frameDecorate"
+                 template="include/frame.xhtml">
+				<ui:insert
+                     name="body" />
 			</ui:decorate>
 		</s:div>
 	</ui:define>

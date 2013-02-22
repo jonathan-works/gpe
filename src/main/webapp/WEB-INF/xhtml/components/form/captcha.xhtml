@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
-				xmlns="http://www.w3.org/1999/xhtml"
-        		xmlns:s="http://jboss.org/schema/seam/taglib"
-        		xmlns:ui="http://java.sun.com/jsf/facelets"
-        		xmlns:f="http://java.sun.com/jsf/core"
-        		xmlns:wi= "http://www.itx.com.br/jsf"
-        		xmlns:h="http://java.sun.com/jsf/html"
-        		xmlns:a="http://richfaces.org/a4j"
-        		xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -26,16 +26,22 @@
 	  veja em http://www.gnu.org/licenses/  
 	--> 
 
-	<s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml">			
-		<ui:define name="label">
-			<h:outputLabel for="verifyCaptcha">Informe o valor do cálculo:</h:outputLabel>
+	<s:decorate
+         template="/WEB-INF/xhtml/components/templates/edit.xhtml">			
+		<ui:define
+             name="label">
+			<h:outputLabel
+                 for="verifyCaptcha">Informe o valor do cálculo:</h:outputLabel>
 		</ui:define>
-		<h:graphicImage id="captchaImg" value="/seam/resource/captcha?f=#{currentDate.time}" />
-		<h:inputText id="verifyCaptcha" 
-					 value="#{captcha.response}"
-					 required="#{required}"
-					 style="width:160px !important"
-					 styleClass="inputText">
+		<h:graphicImage
+             id="captchaImg"
+             value="/seam/resource/captcha?f=#{currentDate.time}" />
+		<h:inputText
+             id="verifyCaptcha"
+             value="#{captcha.response}"
+             required="#{required}"
+             style="width:160px !important"
+             styleClass="inputText">
 		</h:inputText>
 	</s:decorate>
 

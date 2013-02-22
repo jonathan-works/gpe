@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
 	  IBPM - Ferramenta de produtividade Java
 	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,42 +13,58 @@
 	  Consulte a GNU GPL para mais detalhes.
 	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
 	  veja em http://www.gnu.org/licenses/  
-	--> 
-
-<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
-							xmlns="http://www.w3.org/1999/xhtml"
-					        xmlns:s="http://jboss.org/schema/seam/taglib"
-					        xmlns:ui="http://java.sun.com/jsf/facelets"
-					        xmlns:f="http://java.sun.com/jsf/core"
-					        xmlns:h="http://java.sun.com/jsf/html"
-					        xmlns:a="http://richfaces.org/a4j"
-					        xmlns:rich="http://richfaces.org/rich">
+	--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
         
-	<ui:param name="treeMode" value="#{empty treeMode ? false : treeMode}" />
+	<ui:param
+         name="treeMode"
+         value="#{empty treeMode ? false : treeMode}" />
 	<h:form>
-		<div style="width: 35px">
-			<a:region renderRegionOnly="false">
-				<a:commandLink	status=":status"
-								reRender=":pageBody"
-								id="#{gridId}Edit">
-					<h:graphicImage url="#{a4jSkin.imgIconView}" title="Selecionar" />
-					<f:param name="id" value="#{treeMode ? row.entity[bean.key] : row[bean.key]}" />
-					<f:param name="tab" value="form" />
+		<div
+             style="width: 35px">
+			<a:region
+                 renderRegionOnly="false">
+				<a:commandLink
+                     status=":status"
+                     reRender=":pageBody"
+                     id="#{gridId}Edit">
+					<h:graphicImage
+                         url="#{a4jSkin.imgIconView}"
+                         title="Selecionar" />
+					<f:param
+                         name="id"
+                         value="#{treeMode ? row.entity[bean.key] : row[bean.key]}" />
+					<f:param
+                         name="tab"
+                         value="form" />
 				</a:commandLink>
 			</a:region>
-			<a:commandLink  action="#{home.inactiveRecursive(treeMode ? row.entity : row)}"
-							rendered="#{wi:get(canEdit, true)}"
-							limitToList="true"
-							status=":status"
-							reRender=":#{gridId}"
-							onclick="if(!confirm('Esta ação irá inativar todos os filhos deste registro. Confirma?')) return false;">
-				<h:graphicImage	url="/img/remove.png" 
-								title="Inativar registro"
-								style="cursor:pointer"/>
-				<f:param name="firstResult" value="#{bean.firstResult}"/>
-				<f:param name="page" value="#{bean.page}"/>
+			<a:commandLink
+                 action="#{home.inactiveRecursive(treeMode ? row.entity : row)}"
+                 rendered="#{wi:get(canEdit, true)}"
+                 limitToList="true"
+                 status=":status"
+                 reRender=":#{gridId}"
+                 onclick="if(!confirm('Esta ação irá inativar todos os filhos deste registro. Confirma?')) return false;">
+				<h:graphicImage
+                     url="/img/remove.png"
+                     title="Inativar registro"
+                     style="cursor:pointer" />
+				<f:param
+                     name="firstResult"
+                     value="#{bean.firstResult}" />
+				<f:param
+                     name="page"
+                     value="#{bean.page}" />
 			</a:commandLink>
 		</div>
 	</h:form>
 	
-</ui:composition> 
+</ui:composition>

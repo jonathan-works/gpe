@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,75 +13,93 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-  
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                        
-	<ui:define name="title">#{messages['evento.titlePage']}</ui:define>
+	<ui:define
+         name="title">#{messages['evento.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{eventoHome}" />
+	<ui:param
+         name="home"
+         value="#{eventoHome}" />
 	
-	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{eventoList.list(15)}"
-					  bean="#{eventoList}"
-					  tableTitle="#{messages['evento.titleGrid']}"
-					  id="eventoList"
-					  rowId="#{row.idEvento}">
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarEventoForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputText id="evento"
-								  value="#{eventoList.entity.evento}"
-								  label="#{messages['evento.evento']}"/>
-					<wi:tree id="eventoSuperior"
-							 assignTo="eventoList.entity.eventoSuperior"
-							 tree="#{eventoTree}"
-							 icon="/img/nivelTree.gif"
-							 iconLeaf="/img/file.gif"
-							 label="#{messages['evento.eventoSuperior']}"/>
-					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['field.situacao']}"
-											  value="#{eventoList.entity.ativo}" />
+	<ui:define
+         name="searchGrid">   
+	    <wi:dataTable
+             values="#{eventoList.list(15)}"
+             bean="#{eventoList}"
+             tableTitle="#{messages['evento.titleGrid']}"
+             id="eventoList"
+             rowId="#{row.idEvento}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="pesquisarEventoForm"
+                     formTitle="#{messages['searchForm.title']}">
+					<wi:inputText
+                         id="evento"
+                         value="#{eventoList.entity.evento}"
+                         label="#{messages['evento.evento']}" />
+					<wi:tree
+                         id="eventoSuperior"
+                         assignTo="eventoList.entity.eventoSuperior"
+                         tree="#{eventoTree}"
+                         icon="/img/nivelTree.gif"
+                         iconLeaf="/img/file.gif"
+                         label="#{messages['evento.eventoSuperior']}" />
+					<wi:selectSituacaoOneMenu
+                         id="ativo"
+                         label="#{messages['field.situacao']}"
+                         value="#{eventoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
-			<wi:columnOutputTextIdent columnId="evento"
-									  columnHeader="#{messages['evento.evento']}"
-									  value="#{row.evento}"
-									  fullPath="#{row.caminhoCompleto}"/>
-			<wi:columnOutputText columnId="eventoSuperior"
-								 columnHeader="#{messages['evento.eventoSuperior']}"
-								 columnWidth="20%"
-								 value="#{row.eventoSuperior}"/>
-			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['field.situacao']}"
-							columnWidth="15%"
-							value="#{row.ativo}" />
+			<wi:columnOutputTextIdent
+                 columnId="evento"
+                 columnHeader="#{messages['evento.evento']}"
+                 value="#{row.evento}"
+                 fullPath="#{row.caminhoCompleto}" />
+			<wi:columnOutputText
+                 columnId="eventoSuperior"
+                 columnHeader="#{messages['evento.eventoSuperior']}"
+                 columnWidth="20%"
+                 value="#{row.eventoSuperior}" />
+			<wi:columnSituacao
+                 columnId="ativo"
+                 columnHeader="#{messages['field.situacao']}"
+                 columnWidth="15%"
+                 value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 
-	<ui:define name="form">
-		<wi:dataForm formId="eventoForm"
-					 formTitle="#{messages['form.title']}">
-			<wi:inputText id="evento"
-						  label="#{messages['evento.evento']}"
-						  required="true"
-						  value="#{eventoHome.instance.evento}" />
-			<wi:inputText id="observacao"
-						  required="true"
-						  label="#{messages['evento.observacao']}"
-						  value="#{eventoHome.instance.observacao}"/>
-		  	<wi:tree id="eventoSuperior"
-					 assignTo="eventoHome.instance.eventoSuperior"
-					 tree="#{eventoTree}"
-					 icon="/img/nivelTree.gif"
-					 iconLeaf="/img/file.gif"
-					 label="#{messages['evento.eventoSuperior']}"/>
-			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['field.situacao']}"
-								    value="#{eventoHome.instance.ativo}" />
+	<ui:define
+         name="form">
+		<wi:dataForm
+             formId="eventoForm"
+             formTitle="#{messages['form.title']}">
+			<wi:inputText
+                 id="evento"
+                 label="#{messages['evento.evento']}"
+                 required="true"
+                 value="#{eventoHome.instance.evento}" />
+			<wi:inputText
+                 id="observacao"
+                 required="true"
+                 label="#{messages['evento.observacao']}"
+                 value="#{eventoHome.instance.observacao}" />
+		  	<wi:tree
+                 id="eventoSuperior"
+                 assignTo="eventoHome.instance.eventoSuperior"
+                 tree="#{eventoTree}"
+                 icon="/img/nivelTree.gif"
+                 iconLeaf="/img/file.gif"
+                 label="#{messages['evento.eventoSuperior']}" />
+			<wi:selectSituacaoRadio
+                 id="ativo"
+                 label="#{messages['field.situacao']}"
+                 value="#{eventoHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

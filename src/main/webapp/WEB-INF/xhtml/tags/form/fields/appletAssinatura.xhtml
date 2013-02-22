@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!-- $Id: outputText.xhtml 725 2010-09-20 17:40:57Z danielsilva $ -->
-	
-<!--
+<!-- $Id: outputText.xhtml 725 2010-09-20 17:40:57Z danielsilva $ --><!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -16,40 +13,83 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-			    xmlns:f="http://java.sun.com/jsf/core"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:wi="http://www.itx.com.br/jsf"
-			    xmlns:a="http://richfaces.org/a4j"
-			    xmlns:rich="http://richfaces.org/rich">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 	
-	 <ui:param name="urlDownloadFile" value="#{empty urlDownloadFile and not empty processoDocumento ? processoDocumentoHome.getUrlDownloadProcessoDocumento(processoDocumento) : urlDownloadFile}"/>
-	 <s:div id="#{empty id ? 'divApplet' : id}">
-		 <s:div rendered="#{empty rendered ? true : rendered}">
-				<applet width="#{empty width ? '140' : width}" height="25" id="certificacao#{id}" 
-					code="SmartCardSignerApplet" archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
-					<param name="formId" value="#{formId}" />
-					<param name="signButtonCaption" value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" />
-					<param name="certificationChainField" value="#{certificationChainField}" />
-					<param name="signatureField" value="#{signatureField}" />
-					<param name="urlDownload" value="#{util.urlProject}/certificado/" />
-					<param name="getDataFunction" value="#{getDataFunction}" />	
-					<param name="useBase64Function" value="#{useBase64Function}" />
-					<param name="functionPreSign" value="#{functionPreSign}" />	
-					<param name="functionPosSign" value="#{functionPosSign}" />
-					<param name="functionPosSignOk" value="#{functionPosSignOk}" />	
-					<param name="functionPosSignError" value="#{functionPosSignError}" />	
-					<param name="urlDownloadFile" value="#{urlDownloadFile}" />
-					<param name="urlConfigProviderFile" value="#{util.urlProject}/certificado/providerConfig.conf" />
-					<param name="debug" value="#{empty debug ? false : debug}" />	
-					<param name="dataAtual" value="#{currentDatetime}" />
-					<param name="caListDownloadFile" value="#{util.urlProject}/downloadCaList.seam" />
-					<param name="loginMode" value="#{empty loginMode ? false : loginMode}" />	
-					<param name="useProviderDll" value="#{empty useProviderDll ? false : useProviderDll}" />
+	 <ui:param
+         name="urlDownloadFile"
+         value="#{empty urlDownloadFile and not empty processoDocumento ? processoDocumentoHome.getUrlDownloadProcessoDocumento(processoDocumento) : urlDownloadFile}" />
+	 <s:div
+         id="#{empty id ? 'divApplet' : id}">
+		 <s:div
+             rendered="#{empty rendered ? true : rendered}">
+				<applet
+                 width="#{empty width ? '140' : width}"
+                 height="25"
+                 id="certificacao#{id}"
+                 code="SmartCardSignerApplet"
+                 archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+					<param
+                     name="formId"
+                     value="#{formId}" />
+					<param
+                     name="signButtonCaption"
+                     value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" />
+					<param
+                     name="certificationChainField"
+                     value="#{certificationChainField}" />
+					<param
+                     name="signatureField"
+                     value="#{signatureField}" />
+					<param
+                     name="urlDownload"
+                     value="#{util.urlProject}/certificado/" />
+					<param
+                     name="getDataFunction"
+                     value="#{getDataFunction}" />	
+					<param
+                     name="useBase64Function"
+                     value="#{useBase64Function}" />
+					<param
+                     name="functionPreSign"
+                     value="#{functionPreSign}" />	
+					<param
+                     name="functionPosSign"
+                     value="#{functionPosSign}" />
+					<param
+                     name="functionPosSignOk"
+                     value="#{functionPosSignOk}" />	
+					<param
+                     name="functionPosSignError"
+                     value="#{functionPosSignError}" />	
+					<param
+                     name="urlDownloadFile"
+                     value="#{urlDownloadFile}" />
+					<param
+                     name="urlConfigProviderFile"
+                     value="#{util.urlProject}/certificado/providerConfig.conf" />
+					<param
+                     name="debug"
+                     value="#{empty debug ? false : debug}" />	
+					<param
+                     name="dataAtual"
+                     value="#{currentDatetime}" />
+					<param
+                     name="caListDownloadFile"
+                     value="#{util.urlProject}/downloadCaList.seam" />
+					<param
+                     name="loginMode"
+                     value="#{empty loginMode ? false : loginMode}" />	
+					<param
+                     name="useProviderDll"
+                     value="#{empty useProviderDll ? false : useProviderDll}" />
 				</applet> 
 	     </s:div>
 	 </s:div>

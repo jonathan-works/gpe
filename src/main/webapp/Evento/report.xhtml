@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,31 +13,43 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:param
+         name="title"
+         value="Eventos" />
 
-	<ui:param name="title" value="Eventos" />
 
-
-	<wi:dataReport title="#{messages['evento.titlePage']}"
-				   columns="4"
-				   widths="4 2 2 1"
-				   headerText="#{eventoList.criteria}">
+	<wi:dataReport
+         title="#{messages['evento.titlePage']}"
+         columns="4"
+         widths="4 2 2 1"
+         headerText="#{eventoList.criteria}">
 				   
-		<wi:reportColumnHeader title="#{messages['evento.evento']}" />
-		<wi:reportColumnHeader title="#{messages['evento.eventoSuperior']}" />
-		<wi:reportColumnHeader title="#{messages['evento.observacao']}" />
-		<wi:reportColumnHeader title="#{messages['field.situacao']}" />
+		<wi:reportColumnHeader
+             title="#{messages['evento.evento']}" />
+		<wi:reportColumnHeader
+             title="#{messages['evento.eventoSuperior']}" />
+		<wi:reportColumnHeader
+             title="#{messages['evento.observacao']}" />
+		<wi:reportColumnHeader
+             title="#{messages['field.situacao']}" />
 				
-		<ui:repeat var="row" value="#{eventoList.list()}">
+		<ui:repeat
+             var="row"
+             value="#{eventoList.list()}">
 			
-			<wi:reportColumn value="#{row.evento}" />
-			<wi:reportColumn value="#{row.eventoSuperior}" />
-			<wi:reportColumn value="#{row.observacao}" />
-			<wi:reportColumnSituacao value="#{row.ativo}" 
-							 columnAlign="center"/>
+			<wi:reportColumn
+                 value="#{row.evento}" />
+			<wi:reportColumn
+                 value="#{row.eventoSuperior}" />
+			<wi:reportColumn
+                 value="#{row.observacao}" />
+			<wi:reportColumnSituacao
+                 value="#{row.ativo}"
+                 columnAlign="center" />
 			
 		</ui:repeat>
 

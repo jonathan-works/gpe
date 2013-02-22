@@ -1,61 +1,69 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:a="http://richfaces.org/a4j"
-	  xmlns:rich="http://richfaces.org/rich"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:s="http://jboss.org/schema/seam/taglib"
-      xmlns:wi= "http://www.itx.com.br/jsf"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 	<h:head>    
-	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <title>#{nomeSistema}:&#160;<ui:insert name="title"/></title>
-		<a:loadScript src="/js/liveclock.js" />
-		<link rel="icon" href="#{util.contextPath}/favicon.ico" type="image/x-icon" />	
-	    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />  
+	    <meta
+             http-equiv="Content-Type"
+             content="text/html; charset=UTF-8" />
+	    <title>#{nomeSistema}: <ui:insert
+                 name="title" /></title>
+		<a:loadScript
+             src="/js/liveclock.js" />
+		<link
+             rel="icon"
+             href="#{util.contextPath}/favicon.ico"
+             type="image/x-icon" />	
+	    <ui:include
+             src="/WEB-INF/xhtml/templates/cssPage.xhtml" />  
 	</h:head>
 
-	<h:body>>     
-		<ui:param name="canEdit" value="#{empty canEdit ? home.editable : canEdit}" />	    
-		<ui:param name="showMenu" value="#{empty showMenu ? true : showMenu}" />
+	<h:body>&gt;     
+		<ui:param
+             name="canEdit"
+             value="#{empty canEdit ? home.editable : canEdit}" />	    
+		<ui:param
+             name="showMenu"
+             value="#{empty showMenu ? true : showMenu}" />
 	    
-	    <ui:include src="header.xhtml" />
-		<ui:include src="ajaxQueue.xhtml" />
+	    <ui:include
+             src="header.xhtml" />
+		<ui:include
+             src="ajaxQueue.xhtml" />
 		
-   		<c:if test="#{showMenu}">
-		    <ui:include src="menu.xhtml">
-		        <ui:param name="projectName" value="#{nomeSistema}"/>
+   		<c:if
+             test="#{showMenu}">
+		    <ui:include
+                 src="menu.xhtml">
+		        <ui:param
+                     name="projectName"
+                     value="#{nomeSistema}" />
 		    </ui:include>
 	    </c:if>
 	
-		<s:div styleClass="pageBody" id="pageBody">  	 			
+		<s:div
+             styleClass="pageBody"
+             id="pageBody">  	 			
 			<wi:quadro>
 				<s:div>
-					<ui:insert name="view" />	
+					<ui:insert
+                         name="view" />	
 				</s:div>
-				<rich:tabPanel switchType="ajax" 
-				               headerSpacing="2"
-							   selectedTab="#{home.tab}">			
-					<ui:insert name="tabs" />		
+				<rich:tabPanel
+                     switchType="ajax"
+                     headerSpacing="2"
+                     selectedTab="#{home.tab}">			
+					<ui:insert
+                         name="tabs" />		
 				</rich:tabPanel>
 			</wi:quadro>			
 		</s:div>	
-	</h:body>>
+	</h:body>&gt;
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

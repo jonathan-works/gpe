@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,18 +13,18 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
-       
-<ui:composition	xmlns="http://www.w3.org/1999/xhtml"
-			xmlns:ui="http://java.sun.com/jsf/facelets"
-			xmlns:h="http://java.sun.com/jsf/html">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html">
 	
-	<h:graphicImage url="#{url}" 
-				title="#{title}"
-				style="cursor:pointer; padding:0px 1px;opacity:0.15;"
-				onmouseover="this.style.opacity=1"
-				onmouseout ="this.style.opacity=0.15"
-				rendered="#{empty rendered ? true : rendered}"
-				onclick="#{onclickGraphicImage}" />
+	<h:graphicImage
+         url="#{url}"
+         title="#{title}"
+         style="cursor:pointer; padding:0px 1px;opacity:0.15;"
+         onmouseover="this.style.opacity=1"
+         onmouseout="this.style.opacity=0.15"
+         rendered="#{empty rendered ? true : rendered}"
+         onclick="#{onclickGraphicImage}" />
 
 </ui:composition>

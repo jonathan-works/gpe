@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,34 +13,39 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:a="http://richfaces.org/a4j">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html">
 	
-		<a:commandLink 	ajaxSingle="true"
-						status="status"
-						rendered="#{!hideOrder}"
-						disabled="#{orderAsc and selectedOrder}"
-						action="#{bean.setOrderedColumn(columnId.concat(' asc'))}"
-						reRender="#{id}Panel">
-			<h:graphicImage title="Ordem crescente"
-							styleClass="#{orderAsc and selectedOrder ? 'disabled' : ''}"
-							url="/img/grid/arrow-up.png" />
+		<a:commandLink
+         ajaxSingle="true"
+         status="status"
+         rendered="#{!hideOrder}"
+         disabled="#{orderAsc and selectedOrder}"
+         action="#{bean.setOrderedColumn(columnId.concat(' asc'))}"
+         reRender="#{id}Panel">
+			<h:graphicImage
+             title="Ordem crescente"
+             styleClass="#{orderAsc and selectedOrder ? 'disabled' : ''}"
+             url="/img/grid/arrow-up.png" />
 		</a:commandLink>
-		<h:outputText value="#{columnHeader}" style="margin-left: 5px"/>
-		<a:commandLink 	ajaxSingle="true"
-						status="status"
-						rendered="#{!hideOrder}"
-						disabled="#{!orderAsc and selectedOrder}"
-						action="#{bean.setOrderedColumn(columnId.concat(' desc'))}"
-						reRender="#{id}Panel">
-			<h:graphicImage title="Ordem decrescente"
-							styleClass="#{!orderAsc and selectedOrder ? 'disabled' : ''}"
-							style="margin-left: 5px"
-							url="/img/grid/arrow-down.png" />
+		<h:outputText
+         value="#{columnHeader}"
+         style="margin-left: 5px" />
+		<a:commandLink
+         ajaxSingle="true"
+         status="status"
+         rendered="#{!hideOrder}"
+         disabled="#{!orderAsc and selectedOrder}"
+         action="#{bean.setOrderedColumn(columnId.concat(' desc'))}"
+         reRender="#{id}Panel">
+			<h:graphicImage
+             title="Ordem decrescente"
+             styleClass="#{!orderAsc and selectedOrder ? 'disabled' : ''}"
+             style="margin-left: 5px"
+             url="/img/grid/arrow-down.png" />
 		</a:commandLink>
 
 </ui:composition>

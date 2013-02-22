@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -23,23 +23,29 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<f:subview id="#{id}Action">
-	<div style="clear:both"></div>
-	<a:commandLink id="#{id}Link" 
-		reRender="actionTemplate"
-		onclick="idTextarea='form:nodes:nodeEventeventSubView:nodeEventAction:nodeEventActionExpressionDecoration:nodeEventActionExpression'"
-		action="#{event.setTemplate()}" >
-		<h:graphicImage url="/img/jbpm/wizard.gif" 
-			title="Assistente para expressão"
-			style="position: absolute; margin-left: 80px; margin-top: 3px;"/>
-        <rich:componentControl for="actionTemplatePanel" 
-        	operation="show" 
-        	event="oncomplete"/>
+<f:subview
+         id="#{id}Action">
+	<div
+             style="clear:both" />
+	<a:commandLink
+             id="#{id}Link"
+             reRender="actionTemplate"
+             onclick="idTextarea='form:nodes:nodeEventeventSubView:nodeEventAction:nodeEventActionExpressionDecoration:nodeEventActionExpression'"
+             action="#{event.setTemplate()}">
+		<h:graphicImage
+                 url="/img/jbpm/wizard.gif"
+                 title="Assistente para expressão"
+                 style="position: absolute; margin-left: 80px; margin-top: 3px;" />
+        <rich:componentControl
+                 for="actionTemplatePanel"
+                 operation="show"
+                 event="oncomplete" />
 	</a:commandLink>
-	<wi:inputTextarea id="#{id}ActionExpression" 
-		value="#{event.currentAction.actionExpression}"
-		style="width:100%; #{height}" 
-		label="Expressão">		
+	<wi:inputTextarea
+             id="#{id}ActionExpression"
+             value="#{event.currentAction.actionExpression}"
+             style="width:100%; #{height}"
+             label="Expressão">		
 		<wi:ajaxSupport />
 	</wi:inputTextarea>
 </f:subview>

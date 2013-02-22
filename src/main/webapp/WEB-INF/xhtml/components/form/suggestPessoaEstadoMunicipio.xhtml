@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -36,27 +35,33 @@
 	
 	<ui:composition>
 
-		<ui:param name="handler" value="#{empty props.handler ? null : util.eval(props.handler)}" />
+		<ui:param
+             name="handler"
+             value="#{empty props.handler ? null : util.eval(props.handler)}" />
 
-		<wi:selectOneMenuEntity id="#{f.id}estadoCombo"
-					 label="UF Nascimento"
-					 value="#{home.estado}"
-					 items="#{empty items ? util.eval(props.items) : items}"
-					 optionExpression="{estado}"
-					 required="#{required}" 
-					 noSelectionLabel="Selecione...">
-				<a:support reRender="#{f.id}municipioSuggestDiv"
-						   event="onchange"
-						   status=":status" 
-						   ajaxSingle="true" />
+		<wi:selectOneMenuEntity
+             id="#{f.id}estadoCombo"
+             label="UF Nascimento"
+             value="#{home.estado}"
+             items="#{empty items ? util.eval(props.items) : items}"
+             optionExpression="{estado}"
+             required="#{required}"
+             noSelectionLabel="Selecione...">
+				<a:ajax
+                 event="change"
+                 status=":status"
+                 render="#{f.id}municipioSuggestDiv"
+                 execute="@this" />
 			</wi:selectOneMenuEntity>
 			
-			<s:div id="#{f.id}municipioSuggestDiv">
-				<wi:suggest id="#{f.id}municipioSuggest"
-							bean="#{handler}"
-							disabled="#{empty home.estado}"
-							required="#{required}"
-							label="Naturalidade">
+			<s:div
+             id="#{f.id}municipioSuggestDiv">
+				<wi:suggest
+                 id="#{f.id}municipioSuggest"
+                 bean="#{handler}"
+                 disabled="#{empty home.estado}"
+                 required="#{required}"
+                 label="Naturalidade">
 				</wi:suggest>		
 			</s:div>
 			

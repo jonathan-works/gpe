@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-		        xmlns:a="http://richfaces.org/a4j"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
 	<!--
 	  IBPM - Ferramenta de produtividade Java
 	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -23,23 +22,32 @@
 	  veja em http://www.gnu.org/licenses/  
 	-->
 	
-	<s:div id="modeloDocumentoDiv">
-		<rich:panel header="Selecione o assistente:" style="height:550px;">
+	<s:div
+         id="modeloDocumentoDiv">
+		<rich:panel
+             header="Selecione o assistente:"
+             style="height:550px;">
 			<h:form>
-				<rich:dataTable var="t" 
-								style="border:none"
-								value="#{actionTemplateHandler.publicTemplateList}">
-					<rich:column style="height:30px; border:none; width: 20px">
-						<h:graphicImage url="/img/jbpm/action.gif" />
+				<rich:dataTable
+                     var="t"
+                     style="border:none"
+                     value="#{actionTemplateHandler.publicTemplateList}">
+					<rich:column
+                         style="height:30px; border:none; width: 20px">
+						<h:graphicImage
+                             url="/img/jbpm/action.gif" />
 					</rich:column>
-					<rich:column style="height:30px; border:none">
-						<a:commandLink value="#{t.label}"
-									   style="font-size: 14px" 
-									   action="#{actionTemplateHandler.setCurrentTemplate(t)}"
-									   reRender="actionTemplatePanel">
-							<rich:componentControl for="actionTemplatePanel" 
-									        	   operation="show" 
-									        	   event="oncomplete"/>
+					<rich:column
+                         style="height:30px; border:none">
+						<a:commandLink
+                             value="#{t.label}"
+                             style="font-size: 14px"
+                             action="#{actionTemplateHandler.setCurrentTemplate(t)}"
+                             reRender="actionTemplatePanel">
+							<rich:componentControl
+                                 for="actionTemplatePanel"
+                                 operation="show"
+                                 event="oncomplete" />
 						</a:commandLink>
 					</rich:column>
 				</rich:dataTable>

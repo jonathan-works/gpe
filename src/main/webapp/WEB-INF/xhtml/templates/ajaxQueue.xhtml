@@ -1,16 +1,24 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-      			xmlns:a="http://richfaces.org/a4j"
-      			xmlns:h="http://java.sun.com/jsf/html"
-      			xmlns:ui="http://java.sun.com/jsf/facelets">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html">
 
-	<ui:param name="queueSize" value="#{empty queueSize ? 2 : queueSize}" />
-	<ui:param name="intervalPush" value="#{empty intervalPush ? 90000 : intervalPush}" />
+	<ui:param
+         name="queueSize"
+         value="#{empty queueSize ? 2 : queueSize}" />
+	<ui:param
+         name="intervalPush"
+         value="#{empty intervalPush ? 90000 : intervalPush}" />
 	<h:form>
-		<a:queue name="org.richfaces.queue.global"
-				 requestDelay="100" 
-			     ignoreDupResponses="true" 
-				 />
-			<a:poll interval="#{intervalPush}" ajaxSingle="true" />
+		<a:queue
+             name="org.richfaces.queue.global"
+             requestDelay="100"
+             ignoreDupResponses="true" />
+			<a:poll
+             interval="#{intervalPush}"
+             ajaxSingle="true" />
   		</h:form>
 	
 </ui:composition>

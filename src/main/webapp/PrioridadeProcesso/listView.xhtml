@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
- <!--
+<!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -14,72 +13,89 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-			    xmlns:a="http://richfaces.org/a4j"
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                       
-	<ui:define name="title">#{messages['prioridadeProcesso.titlePage']}</ui:define>
+	<ui:define
+         name="title">#{messages['prioridadeProcesso.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{prioridadeProcessoHome}" />
+	<ui:param
+         name="home"
+         value="#{prioridadeProcessoHome}" />
 	
-	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{prioridadeProcessoList.list(15)}"
-					  bean="#{prioridadeProcessoList}"
-					  tableTitle="#{messages['prioridadeProcesso.titleGrid']}"
-					  id="prioridadeProcessoList"
-					  rowId="#{row.idPrioridade}" >
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarPrioridadeProcessoForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputText id="descricaoPrioridadeProcesso"
-								  label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
-								  value="#{prioridadeProcessoList.entity.descricaoPrioridade}"
-								  maxlength="150" />
-					<wi:inputNumber id="peso"
-								 value="#{prioridadeProcessoList.entity.peso}"
-								 label="#{messages['prioridadeProcesso.peso']}"/>
+	<ui:define
+         name="searchGrid">   
+	    <wi:dataTable
+             values="#{prioridadeProcessoList.list(15)}"
+             bean="#{prioridadeProcessoList}"
+             tableTitle="#{messages['prioridadeProcesso.titleGrid']}"
+             id="prioridadeProcessoList"
+             rowId="#{row.idPrioridade}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="pesquisarPrioridadeProcessoForm"
+                     formTitle="#{messages['searchForm.title']}">
+					<wi:inputText
+                         id="descricaoPrioridadeProcesso"
+                         label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
+                         value="#{prioridadeProcessoList.entity.descricaoPrioridade}"
+                         maxlength="150" />
+					<wi:inputNumber
+                         id="peso"
+                         value="#{prioridadeProcessoList.entity.peso}"
+                         label="#{messages['prioridadeProcesso.peso']}" />
 					
-					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['field.situacao']}"
-											  value="#{prioridadeProcessoList.entity.ativo}" />
+					<wi:selectSituacaoOneMenu
+                         id="ativo"
+                         label="#{messages['field.situacao']}"
+                         value="#{prioridadeProcessoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
 			
-			<wi:columnOutputText columnId="peso"
-								 columnHeader="#{messages['prioridadeProcesso.peso']}"
-								 value="#{row.peso}" />
-			<wi:columnOutputText columnId="descricaoPrioridade"
-								 columnHeader="#{messages['prioridadeProcesso.descricaoPrioridade']}"
-								 value="#{row.descricaoPrioridade}" />
-			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['field.situacao']}"
-							value="#{row.ativo}" />
+			<wi:columnOutputText
+                 columnId="peso"
+                 columnHeader="#{messages['prioridadeProcesso.peso']}"
+                 value="#{row.peso}" />
+			<wi:columnOutputText
+                 columnId="descricaoPrioridade"
+                 columnHeader="#{messages['prioridadeProcesso.descricaoPrioridade']}"
+                 value="#{row.descricaoPrioridade}" />
+			<wi:columnSituacao
+                 columnId="ativo"
+                 columnHeader="#{messages['field.situacao']}"
+                 value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
-	<ui:define name="form">
-		<wi:dataForm formId="prioridadeProcessoForm"
-					 formTitle="#{messages['form.title']}">
-			<wi:inputNumber id="peso"
-						 value="#{prioridadeProcessoHome.instance.peso}"
-						 required="true"
-						 label="#{messages['prioridadeProcesso.peso']}"/>
-			<wi:inputText id="descricaoPrioridade"
-						  label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
-						  required="true"
-						  value="#{prioridadeProcessoHome.instance.descricaoPrioridade}"
-						  maxlength="150" />
-			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['field.situacao']}"
-								    required="true"
-								    value="#{prioridadeProcessoHome.instance.ativo}" />
+	<ui:define
+         name="form">
+		<wi:dataForm
+             formId="prioridadeProcessoForm"
+             formTitle="#{messages['form.title']}">
+			<wi:inputNumber
+                 id="peso"
+                 value="#{prioridadeProcessoHome.instance.peso}"
+                 required="true"
+                 label="#{messages['prioridadeProcesso.peso']}" />
+			<wi:inputText
+                 id="descricaoPrioridade"
+                 label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
+                 required="true"
+                 value="#{prioridadeProcessoHome.instance.descricaoPrioridade}"
+                 maxlength="150" />
+			<wi:selectSituacaoRadio
+                 id="ativo"
+                 label="#{messages['field.situacao']}"
+                 required="true"
+                 value="#{prioridadeProcessoHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

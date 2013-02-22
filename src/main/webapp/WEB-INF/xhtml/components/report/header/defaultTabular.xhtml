@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,15 +13,17 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:p="http://jboss.org/schema/seam/pdf">
+	<ui:param
+         name="header"
+         value="#{empty props.header ? col.header : props.header}" />
 
-	<ui:param name="header" value="#{empty props.header ? col.header : props.header}" />
+	<p:text
+         value="#{header}:" />
 
-	<p:text value="#{header}:" />
-
-</ui:composition> 
+</ui:composition>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,20 +13,24 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/ 
---> 
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:rich="http://richfaces.org/rich">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
 				
-	<ui:param name="showDialogMessage" value="#{empty showDialogMessage ? true : showDialogMessage}"/>
-	<ui:param name="timeCloseMSG" value="#{empty timeCloseMSG ? '6000' : timeCloseMSG}"/>
+	<ui:param
+         name="showDialogMessage"
+         value="#{empty showDialogMessage ? true : showDialogMessage}" />
+	<ui:param
+         name="timeCloseMSG"
+         value="#{empty timeCloseMSG ? '6000' : timeCloseMSG}" />
 				
-	<script type="text/javascript">		
+	<script
+         type="text/javascript">		
 		function showDialogMessage() {
 			element = document.getElementById("dialogMessage");
 			element.style.visibility = "visible";
@@ -56,7 +59,8 @@
 		actionDialogMessage();
 	</script>	
 
-	<style type="text/css">
+	<style
+         type="text/css">
 		<!--
 			#dialogMessage {
 				visibility:hidden;
@@ -82,22 +86,25 @@
 		-->
 	</style>
 
-	<div id="dialogMessage">
-		<div id="title">
+	<div
+         id="dialogMessage">
+		<div
+             id="title">
 			Mensagem
-			<h:graphicImage 
-				style="padding-left: 218px; cursor: pointer;"
-				value="/img/closeMP.gif"
-				onclick="hideDialogMessage();"/>	
+			<h:graphicImage
+                 style="padding-left: 218px; cursor: pointer;"
+                 value="/img/closeMP.gif"
+                 onclick="hideDialogMessage();" />	
     	</div>
-    	<div style="overflow:auto;"> 
-			<rich:messages		
-			    id="#{formId}Message"	     			    	    
-			    globalOnly="true"			    
-			    infoClass="formMessage"			    
-			    style="margin: 5px"		    
-			    errorClass="error formMessage"	    
-			    warnStyle="display: none" />
+    	<div
+             style="overflow:auto;"> 
+			<rich:messages
+                 id="#{formId}Message"
+                 globalOnly="true"
+                 infoClass="formMessage"
+                 style="margin: 5px"
+                 errorClass="error formMessage"
+                 warnStyle="display: none" />
     	</div>
 	</div>
 	

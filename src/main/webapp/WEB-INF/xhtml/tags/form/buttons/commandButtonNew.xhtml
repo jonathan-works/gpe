@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,20 +13,22 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition	xmlns="http://www.w3.org/1999/xhtml"
-							xmlns:ui="http://java.sun.com/jsf/facelets"
-							xmlns:wi="http://www.itx.com.br/jsf">
+	<ui:param
+         name="newInstanceAction"
+         value="#{empty newInstanceAction ? home.homeName.concat('.newInstance()') : newInstanceAction}" />
 
-	<ui:param name="newInstanceAction" value="#{empty newInstanceAction ? home.homeName.concat('.newInstance()') : newInstanceAction}"/>
-
-	<wi:commandButton id="newInstanceButton"
-					  action="#{newInstanceAction}"
-					  rendered="#{wi:get(rendered, home.managed)}"
-					  reRender="#{empty reRender ? 'pageBody, modalPanelMessages' : reRender}"
-					  ajaxSingle="true"
-					  value="Novo">
+	<wi:commandButton
+         id="newInstanceButton"
+         action="#{newInstanceAction}"
+         rendered="#{wi:get(rendered, home.managed)}"
+         reRender="#{empty reRender ? 'pageBody, modalPanelMessages' : reRender}"
+         ajaxSingle="true"
+         value="Novo">
 	</wi:commandButton>
 		
 </ui:composition>

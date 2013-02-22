@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,82 +13,106 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-			 	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	<ui:define
+         name="title">#{messages['parametro.titlePage']}</ui:define>
+	<ui:param
+         name="home"
+         value="#{parametroHome}" />
 
-	<ui:define name="title">#{messages['parametro.titlePage']}</ui:define>
-	<ui:param name="home" value="#{parametroHome}" />
-
-	<ui:define name="searchGrid">
-	    <wi:dataTable values="#{parametroList.list(15)}"
-					  bean="#{parametroList}"
-					  tableTitle="#{messages['parametro.titleGrid']}"
-					  id="parametroList"
-					  rowId="#{row.idParametro}">
-			<ui:define name="searchForm">
-				<wi:searchForm formId="parametroSearchForm" 
-										   formTitle="#{messages['parametro.titleGrid']}">
-					<wi:inputText id="nomeVariavel"
-											label="#{messages['parametro.nomeVariavel']}"
-											value="#{parametroList.entity.nomeVariavel}" />				
-					<wi:selectSituacaoOneMenu 	id="ativo" value="#{parametroList.entity.ativo}" />	
+	<ui:define
+         name="searchGrid">
+	    <wi:dataTable
+             values="#{parametroList.list(15)}"
+             bean="#{parametroList}"
+             tableTitle="#{messages['parametro.titleGrid']}"
+             id="parametroList"
+             rowId="#{row.idParametro}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="parametroSearchForm"
+                     formTitle="#{messages['parametro.titleGrid']}">
+					<wi:inputText
+                         id="nomeVariavel"
+                         label="#{messages['parametro.nomeVariavel']}"
+                         value="#{parametroList.entity.nomeVariavel}" />				
+					<wi:selectSituacaoOneMenu
+                         id="ativo"
+                         value="#{parametroList.entity.ativo}" />	
 				</wi:searchForm>
 			</ui:define>
 			
-			<wi:columnOutputText columnId="nomeVariavel"
-												   columnHeader="#{messages['parametro.nomeVariavel']}"
-												   value="#{row.nomeVariavel}"/>				
-			<wi:columnOutputText columnId="descricaoVariavel"
-												   columnHeader="#{messages['parametro.descricaoVariavel']}"
-												   value="#{row.descricaoVariavel}"/>	
-			<wi:columnOutputText columnId="valorVariavel"
-												   columnHeader="#{messages['parametro.valorVariavel']}"
-												   value="#{row.valorVariavel}"/>
-			<wi:columnDateTime columnId="dataAtualizacao"
-												columnHeader="#{messages['parametro.dataAtualizacao']}"
-												value="#{row.dataAtualizacao}"
-												showTime="true"/>	
-			<wi:columnBoolean columnId="sistema"
-											  columnHeader="#{messages['parametro.sistema']}"
-											  value="#{row.sistema}"/>	
-			<wi:columnOutputText columnId="usuarioModificacao"
-												   columnHeader="#{messages['parametro.usuarioModificacao']}"
-												   value="#{row.usuarioModificacao}"/>
-			<wi:columnSituacao  columnHeader="#{messages['field.situacao']}" />					
+			<wi:columnOutputText
+                 columnId="nomeVariavel"
+                 columnHeader="#{messages['parametro.nomeVariavel']}"
+                 value="#{row.nomeVariavel}" />				
+			<wi:columnOutputText
+                 columnId="descricaoVariavel"
+                 columnHeader="#{messages['parametro.descricaoVariavel']}"
+                 value="#{row.descricaoVariavel}" />	
+			<wi:columnOutputText
+                 columnId="valorVariavel"
+                 columnHeader="#{messages['parametro.valorVariavel']}"
+                 value="#{row.valorVariavel}" />
+			<wi:columnDateTime
+                 columnId="dataAtualizacao"
+                 columnHeader="#{messages['parametro.dataAtualizacao']}"
+                 value="#{row.dataAtualizacao}"
+                 showTime="true" />	
+			<wi:columnBoolean
+                 columnId="sistema"
+                 columnHeader="#{messages['parametro.sistema']}"
+                 value="#{row.sistema}" />	
+			<wi:columnOutputText
+                 columnId="usuarioModificacao"
+                 columnHeader="#{messages['parametro.usuarioModificacao']}"
+                 value="#{row.usuarioModificacao}" />
+			<wi:columnSituacao
+                 columnHeader="#{messages['field.situacao']}" />					
 		</wi:dataTable>
 	</ui:define>
 	
-	<ui:define name="form">
-		<wi:dataForm formId="parametroForm" 
-								formTitle="#{messages['form.title']}">
-			<wi:inputText id="nomeVariavel"
-									label="#{messages['parametro.nomeVariavel']}"
-									value="#{parametroHome.instance.nomeVariavel}"
-									required="true" />
-			<wi:inputText id="descricaoVariavel"
-									label="#{messages['parametro.descricaoVariavel']}"
-									value="#{parametroHome.instance.descricaoVariavel}"
-									required="true" />
-			<wi:inputText id="valorVariavel"
-									label="#{messages['parametro.valorVariavel']}"
-									value="#{parametroHome.instance.valorVariavel}" 
-									required="true" />
-			<wi:selectBooleanRadio id="sistema"
-													 label="#{messages['parametro.sistema']}"
-													 value="#{parametroHome.instance.sistema}"
-													 required="true" />
-			<wi:inputText id="esquemaTabelaId"
-									label="#{messages['parametro.esquemaTabelaId']}"
-									value="#{parametroHome.instance.esquemaTabelaId}" />
+	<ui:define
+         name="form">
+		<wi:dataForm
+             formId="parametroForm"
+             formTitle="#{messages['form.title']}">
+			<wi:inputText
+                 id="nomeVariavel"
+                 label="#{messages['parametro.nomeVariavel']}"
+                 value="#{parametroHome.instance.nomeVariavel}"
+                 required="true" />
+			<wi:inputText
+                 id="descricaoVariavel"
+                 label="#{messages['parametro.descricaoVariavel']}"
+                 value="#{parametroHome.instance.descricaoVariavel}"
+                 required="true" />
+			<wi:inputText
+                 id="valorVariavel"
+                 label="#{messages['parametro.valorVariavel']}"
+                 value="#{parametroHome.instance.valorVariavel}"
+                 required="true" />
+			<wi:selectBooleanRadio
+                 id="sistema"
+                 label="#{messages['parametro.sistema']}"
+                 value="#{parametroHome.instance.sistema}"
+                 required="true" />
+			<wi:inputText
+                 id="esquemaTabelaId"
+                 label="#{messages['parametro.esquemaTabelaId']}"
+                 value="#{parametroHome.instance.esquemaTabelaId}" />
 									
-			<wi:selectSituacaoRadio id="idParametro"
-								    label="#{messages['field.situacao']}"
-								    value="#{parametroHome.instance.ativo}"
-								    required="true"/>
+			<wi:selectSituacaoRadio
+                 id="idParametro"
+                 label="#{messages['field.situacao']}"
+                 value="#{parametroHome.instance.ativo}"
+                 required="true" />
 		</wi:dataForm>
 	</ui:define>	
 	

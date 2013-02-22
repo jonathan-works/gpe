@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:s="http://jboss.org/schema/seam/taglib"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-		xmlns:p="http://jboss.org/schema/seam/pdf">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 	
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -27,10 +26,14 @@
 			
 	<ui:composition>
 		
-		<ui:param name="value" value="#{empty col.properties.field ? row[col.id] : row[col.id][col.properties.field]}" />
+		<ui:param
+             name="value"
+             value="#{empty col.properties.field ? row[col.id] : row[col.id][col.properties.field]}" />
 		
-		<p:text value="#{value}">
-			<s:convertDateTime pattern="#{empty props.pattern ? 'kk:mm:ss' : props.pattern}"/>
+		<p:text
+             value="#{value}">
+			<s:convertDateTime
+                 pattern="#{empty props.pattern ? 'kk:mm:ss' : props.pattern}" />
 		</p:text>
 		
 	</ui:composition> 

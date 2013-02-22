@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -29,14 +28,19 @@
 
 	<ui:composition>
 	
-		<s:decorate id="#{f.id}Decoration"
-					template="/WEB-INF/xhtml/components/templates/view.xhtml">
-			<ui:define name="label">#{label}</ui:define>			
-			<h:selectOneMenu id="#{f.id}"
-							 value="#{searchBean[f.id]}" 
-							 style="width: 250px">
-				<f:selectItem itemLabel="[Todos]"/>
-				<f:selectItems	value="#{util.splitAsList('A:Ambos,M:Masculino,F:Feminino')}" />
+		<s:decorate
+             id="#{f.id}Decoration"
+             template="/WEB-INF/xhtml/components/templates/view.xhtml">
+			<ui:define
+                 name="label">#{label}</ui:define>			
+			<h:selectOneMenu
+                 id="#{f.id}"
+                 value="#{searchBean[f.id]}"
+                 style="width: 250px">
+				<f:selectItem
+                     itemLabel="[Todos]" />
+				<f:selectItems
+                     value="#{util.splitAsList('A:Ambos,M:Masculino,F:Feminino')}" />
 			</h:selectOneMenu>
 		</s:decorate>
 

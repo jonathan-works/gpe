@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -21,14 +21,17 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	<a:mediaOutput cacheable="false" 
-		id="graphImage"
-		element="img"
-		style="border:none"
-		createContent="#{processLayout.paintGraph}"
-		usemap="#nodes"
-		ismap="true">
-		<f:param name="cid" value="#{conversation.id}"/>
+	<a:mediaOutput
+         cacheable="false"
+         id="graphImage"
+         element="img"
+         style="border:none"
+         createContent="#{processLayout.paintGraph}"
+         usemap="#nodes"
+         ismap="true">
+		<f:param
+             name="cid"
+             value="#{conversation.id}" />
 	</a:mediaOutput>
 	<f:verbatim>
 		<script>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -24,121 +24,181 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	<s:div id="swimlanesDiv">
-		<s:div style="width:200px; float:left;">
-		<ui:decorate template="dataTable.xhtml">
-			<ui:param name="values" value="#{swimlaneFitter.swimlanes}" />
-			<ui:param name="styleClass" value="tabelaVariaveis" />
-			<ui:param name="id" value="swimlanesTable" />
-			<ui:param name="style" value="width:100%" />
-			<ui:define name="headerToolBar">
-				<a:commandLink action="#{swimlaneFitter.addSwimlane()}"
-					ajaxSingle="true"
-					focus="swimlaneName"
-					reRender="swimlanesDiv">
-					<h:graphicImage title="Adicionar raia"
-						style="cursor:pointer" 
-						url="/img/add.gif"
-					/>
+	<s:div
+         id="swimlanesDiv">
+		<s:div
+             style="width:200px; float:left;">
+		<ui:decorate
+                 template="dataTable.xhtml">
+			<ui:param
+                     name="values"
+                     value="#{swimlaneFitter.swimlanes}" />
+			<ui:param
+                     name="styleClass"
+                     value="tabelaVariaveis" />
+			<ui:param
+                     name="id"
+                     value="swimlanesTable" />
+			<ui:param
+                     name="style"
+                     value="width:100%" />
+			<ui:define
+                     name="headerToolBar">
+				<a:commandLink
+                         action="#{swimlaneFitter.addSwimlane()}"
+                         ajaxSingle="true"
+                         focus="swimlaneName"
+                         reRender="swimlanesDiv">
+					<h:graphicImage
+                             title="Adicionar raia"
+                             style="cursor:pointer"
+                             url="/img/add.gif" />
 				</a:commandLink>
 			</ui:define>
-			<ui:define name="toolBar">
-				<h:graphicImage title="Excluir raia"
-					style="cursor:pointer" 
-					url="/img/remove.png">
-					<a:support event="onclick" 
-						action="#{swimlaneFitter.removeSwimlane(row)}"
-						ajaxSingle="true"
-						onclick="if(!confirm('Confirma?')) return false;"
-						reRender="swimlanesDiv"/>
+			<ui:define
+                     name="toolBar">
+				<h:graphicImage
+                         title="Excluir raia"
+                         style="cursor:pointer"
+                         url="/img/remove.png">
+					<a:ajax
+                             event="click"
+                             action="#{swimlaneFitter.removeSwimlane(row)}"
+                             onclick="if(!confirm('Confirma?')) return false;"
+                             execute="@this"
+                             render="swimlanesDiv" />
 				</h:graphicImage>
 			</ui:define>
-			<ui:define name="columns">
-				<rich:column style="padding-left:2px">
-					<f:facet name="header">Raias</f:facet>
-					<ui:param name="current" value="#{row == swimlaneFitter.currentSwimlane}" />
-					<ui:param name="styleNodeName" 
-						value="#{current ? 'font-weight:bold' : ''}" />
-					 <a:commandLink action="#{swimlaneFitter.setCurrentSwimlane(row)}"
-					 		ajaxSingle="true"
-					 		style="float:left;"
-					 		reRender="swimlanesDiv">
-							<h:outputText value="#{row.swimlane.name}" style="#{styleNodeName}"/>
+			<ui:define
+                     name="columns">
+				<rich:column
+                         style="padding-left:2px">
+					<f:facet
+                             name="header">Raias</f:facet>
+					<ui:param
+                             name="current"
+                             value="#{row == swimlaneFitter.currentSwimlane}" />
+					<ui:param
+                             name="styleNodeName"
+                             value="#{current ? 'font-weight:bold' : ''}" />
+					 <a:commandLink
+                             action="#{swimlaneFitter.setCurrentSwimlane(row)}"
+                             ajaxSingle="true"
+                             style="float:left;"
+                             reRender="swimlanesDiv">
+							<h:outputText
+                                 value="#{row.swimlane.name}"
+                                 style="#{styleNodeName}" />
 					 </a:commandLink>
 				</rich:column>
 			</ui:define>
 		</ui:decorate>
 		</s:div>
 
-		<s:div id="swimlaneDiv" rendered="#{!empty swimlaneFitter.currentSwimlane}"
-			style="width:680px; float:left; margin-left:5px">
+		<s:div
+             id="swimlaneDiv"
+             rendered="#{!empty swimlaneFitter.currentSwimlane}"
+             style="width:680px; float:left; margin-left:5px">
 			
-			<wi:inputText id="swimlaneName" label="Nome da raia"
-				value="#{swimlaneFitter.currentSwimlane.name}">
-				<wi:ajaxSupport reRender="swimlanesDiv"/>
+			<wi:inputText
+                 id="swimlaneName"
+                 label="Nome da raia"
+                 value="#{swimlaneFitter.currentSwimlane.name}">
+				<wi:ajaxSupport
+                     reRender="swimlanesDiv" />
 			</wi:inputText>
 
-			<ui:decorate template="dataTable.xhtml">
-				<ui:param name="values" value="#{swimlaneFitter.currentSwimlane.localPapelList}" />
-				<ui:param name="id" value="localPapeis" />
-				<ui:param name="style" value="width:500px; margin-top:5px" />
+			<ui:decorate
+                 template="dataTable.xhtml">
+				<ui:param
+                     name="values"
+                     value="#{swimlaneFitter.currentSwimlane.localPapelList}" />
+				<ui:param
+                     name="id"
+                     value="localPapeis" />
+				<ui:param
+                     name="style"
+                     value="width:500px; margin-top:5px" />
 
-				<ui:define name="toolBar">
-					<h:graphicImage title="Excluir localização/papel"
-						style="cursor:pointer" 
-						url="/img/remove.png">
-						<a:support event="onclick" 
-							action="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
-							ajaxSingle="true"
-							onclick="if(!confirm('Confirma?')) return false;"
-							reRender="swimlanesDiv"/>
+				<ui:define
+                     name="toolBar">
+					<h:graphicImage
+                         title="Excluir localização/papel"
+                         style="cursor:pointer"
+                         url="/img/remove.png">
+						<a:ajax
+                             event="click"
+                             action="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
+                             onclick="if(!confirm('Confirma?')) return false;"
+                             execute="@this"
+                             render="swimlanesDiv" />
 					</h:graphicImage>
 				</ui:define>
-				<ui:define name="columns"> 
-					<rich:column style="padding-left:2px">
-						<f:facet name="header">Localização</f:facet>
-						<h:outputText value="#{row.localizacao}"/>
+				<ui:define
+                     name="columns"> 
+					<rich:column
+                         style="padding-left:2px">
+						<f:facet
+                             name="header">Localização</f:facet>
+						<h:outputText
+                             value="#{row.localizacao}" />
 					</rich:column>
-					<rich:column style="padding-left:2px">
-						<f:facet name="header">Papel</f:facet>
-						<h:outputText value="#{row.papel}"/>
+					<rich:column
+                         style="padding-left:2px">
+						<f:facet
+                             name="header">Papel</f:facet>
+						<h:outputText
+                             value="#{row.papel}" />
 					</rich:column>
-					<rich:column style="padding-left:2px; width :20px;">
-						<f:facet name="header">Contabilizar</f:facet>
-						<h:outputText value="#{row.contabilizar ? 'Sim' : 'Não'}"/>
+					<rich:column
+                         style="padding-left:2px; width :20px;">
+						<f:facet
+                             name="header">Contabilizar</f:facet>
+						<h:outputText
+                             value="#{row.contabilizar ? 'Sim' : 'Não'}" />
 					</rich:column>
 					
-					<f:facet name="footer">
+					<f:facet
+                         name="footer">
 					 <rich:columnGroup>
 					 	<rich:column>
-							<h:graphicImage title="Adicionar localização/papel"
-								style="cursor:pointer" 
-								id="novoLocPapel"
-								url="/img/add.gif">
-								<a:support event="onclick" 
-									action="#{swimlaneFitter.currentSwimlane.addLocalPapel()}"
-									ajaxSingle="true"
-									reRender="swimlanesDiv"/>
+							<h:graphicImage
+                                     title="Adicionar localização/papel"
+                                     style="cursor:pointer"
+                                     id="novoLocPapel"
+                                     url="/img/add.gif">
+								<a:ajax
+                                         event="click"
+                                         action="#{swimlaneFitter.currentSwimlane.addLocalPapel()}"
+                                         execute="@this"
+                                         render="swimlanesDiv" />
 							</h:graphicImage>
 					 	</rich:column>
-						<rich:column style="padding-left:2px;padding-bottom:6px">
-							<wi:tree tree="#{estruturaTree}" 
-								id="localizacao"
-								assignTo="swimlaneFitter.currentSwimlane.localizacao"
-								folderSelectable="false" />
+						<rich:column
+                                 style="padding-left:2px;padding-bottom:6px">
+							<wi:tree
+                                     tree="#{estruturaTree}"
+                                     id="localizacao"
+                                     assignTo="swimlaneFitter.currentSwimlane.localizacao"
+                                     folderSelectable="false" />
 						</rich:column>
-						<rich:column style="padding-left:2px;padding-bottom:6px">
-							<wi:tree tree="#{papelTree}" 
-								id="papelTree"
-								assignTo="swimlaneFitter.currentSwimlane.papel"
-								folderSelectable="true" />
+						<rich:column
+                                 style="padding-left:2px;padding-bottom:6px">
+							<wi:tree
+                                     tree="#{papelTree}"
+                                     id="papelTree"
+                                     assignTo="swimlaneFitter.currentSwimlane.papel"
+                                     folderSelectable="true" />
 						</rich:column>
-						<rich:column style="padding-left:2px;padding-bottom:6px;width :20px;">
-							<wi:selectBooleanCheckbox id="papelTree"
-								value="#{swimlaneFitter.currentSwimlane.contabilizar}">
-								<a:support event="onclick" 
-									ajaxSingle="true"
-									reRender="papelTree"/>
+						<rich:column
+                                 style="padding-left:2px;padding-bottom:6px;width :20px;">
+							<wi:selectBooleanCheckbox
+                                     id="papelTree"
+                                     value="#{swimlaneFitter.currentSwimlane.contabilizar}">
+								<a:ajax
+                                         event="click"
+                                         execute="@this"
+                                         render="papelTree" />
 							</wi:selectBooleanCheckbox>
 						</rich:column>
 					</rich:columnGroup>

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,76 +13,96 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->	
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:c="http://java.sun.com/jsp/jstl/core"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
       
-       <s:div id="taskButtonsDiv" styleClass="actionButtons" style="width:100%">
+       <s:div
+         id="taskButtonsDiv"
+         styleClass="actionButtons"
+         style="width:100%">
 
-		<ui:param name="props" value="#{form.buttons.properties}"/>
-		<ui:param name="reRenderSave" value="#{empty reRenderSave ? formId : reRenderSave}"/>
-		<ui:param name="allRootsSelected" value="#{automaticEventsTree.allRootsSelected}"/>
-		<ui:param name="isEventoSairTarefa" value="#{tarefaEventoTree.currentEvent.evento == 'ST'}"/>
-		<ui:param name="canLeave" value="#{tarefaEventoTree.canLeave}"/>
+		<ui:param
+             name="props"
+             value="#{form.buttons.properties}" />
+		<ui:param
+             name="reRenderSave"
+             value="#{empty reRenderSave ? formId : reRenderSave}" />
+		<ui:param
+             name="allRootsSelected"
+             value="#{automaticEventsTree.allRootsSelected}" />
+		<ui:param
+             name="isEventoSairTarefa"
+             value="#{tarefaEventoTree.currentEvent.evento == 'ST'}" />
+		<ui:param
+             name="canLeave"
+             value="#{tarefaEventoTree.canLeave}" />
 
-           <a:commandButton id="update"
-            		     rendered="#{!empty form.fields and processoHome.managed and 
-            		     			 (allRootsSelected or isEventoSairTarefa)}"
-            			 status=":status"
-						 eventsQueue="editQueue"					
-					 	 oncomplete="#{oncomplete}"
-					   	 reRender="#{reRenderSave}, taskButtonsDiv"
-                         value="Gravar" styleClass="dr-tbpnl-tb-inact"
-                         action="#{taskInstanceHome.update(home)}"/>
+           <a:commandButton
+             id="update"
+             rendered="#{!empty form.fields and processoHome.managed and                         (allRootsSelected or isEventoSairTarefa)}"
+             status=":status"
+             eventsQueue="editQueue"
+             oncomplete="#{oncomplete}"
+             reRender="#{reRenderSave}, taskButtonsDiv"
+             value="Gravar"
+             styleClass="dr-tbpnl-tb-inact"
+             action="#{taskInstanceHome.update(home)}" />
 
-           <a:commandButton id="persist" 
-            		   	 rendered="#{!empty form.fields and !processoHome.managed and 
-            		   	  			 (allRootsSelected or isEventoSairTarefa)}"
-            			 status=":status"
-						 eventsQueue="editQueue"
-					   	 reRender="#{reRenderSave}, taskButtonsDiv"
-                         value="Gravar" styleClass="dr-tbpnl-tb-inact"
-                         action="#{taskInstanceHome.persist(home)}"/>
+           <a:commandButton
+             id="persist"
+             rendered="#{!empty form.fields and !processoHome.managed and                          (allRootsSelected or isEventoSairTarefa)}"
+             status=":status"
+             eventsQueue="editQueue"
+             reRender="#{reRenderSave}, taskButtonsDiv"
+             value="Gravar"
+             styleClass="dr-tbpnl-tb-inact"
+             action="#{taskInstanceHome.persist(home)}" />
            
-           <h:outputText style="margin-left:40px; font-size:13px" 
-           			  	 value="Próxima ação:"
-           			  	 rendered="#{((canLeave and allRootsSelected) or 
-           			  	 			   automaticEventsTree.registred)}"/>
-           <c:if test="#{taskInstanceHome.transitions.size gt 3 and ((canLeave
-           				 and allRootsSelected) or automaticEventsTree.registred)}">
-            	<h:selectOneMenu style="min-width: 150px;" 
-            					 value="#{taskInstanceHome.name}">
-					<f:selectItems value="#{taskInstanceHome.transtionsSelectItems}"/>
+           <h:outputText
+             style="margin-left:40px; font-size:13px"
+             value="Próxima ação:"
+             rendered="#{((canLeave and allRootsSelected) or                          automaticEventsTree.registred)}" />
+           <c:if
+             test="#{taskInstanceHome.transitions.size gt 3 and ((canLeave                 and allRootsSelected) or automaticEventsTree.registred)}">
+            	<h:selectOneMenu
+                 style="min-width: 150px;"
+                 value="#{taskInstanceHome.name}">
+					<f:selectItems
+                     value="#{taskInstanceHome.transtionsSelectItems}" />
 				</h:selectOneMenu>
-            	<a:commandButton action="#{taskInstanceHome.end(taskInstanceHome.name)}" 
-            					 value="OK"
-            					 onmouseup="showLoading()"
-            					 status="none"
-	                     		 styleClass="buttons dr-tbpnl-tb-inact"
-								 eventsQueue="editQueue"
-						 		 oncomplete="#{oncomplete};verifyFields();"
-						   		 reRender=":script,#{reRenderSave}" />
+            	<a:commandButton
+                 action="#{taskInstanceHome.end(taskInstanceHome.name)}"
+                 value="OK"
+                 onmouseup="showLoading()"
+                 status="none"
+                 styleClass="buttons dr-tbpnl-tb-inact"
+                 eventsQueue="editQueue"
+                 oncomplete="#{oncomplete};verifyFields();"
+                 reRender=":script,#{reRenderSave}" />
            </c:if>
-           <c:if test="#{taskInstanceHome.transitions.size le 3 and ((canLeave
-           				 and allRootsSelected) or automaticEventsTree.registred)}">
-            <a:repeat value="#{taskInstanceHome.transitions}" var="transition">
-	            <a:commandButton status="none"
-								 eventsQueue="editQueue"
-						 		 oncomplete="#{oncomplete};verifyFields();"
-		            			 onmouseup="showLoading()"
-						   		 reRender=":script,#{reRenderSave}"
-						   		 value="#{transition.name}"
-	                     		 styleClass="buttons dr-tbpnl-tb-inact"
-	                     		 style="width: 200px;"
-	                         	 action="#{taskInstanceHome.end(transition.name)}"/>           	
+           <c:if
+             test="#{taskInstanceHome.transitions.size le 3 and ((canLeave                 and allRootsSelected) or automaticEventsTree.registred)}">
+            <a:repeat
+                 value="#{taskInstanceHome.transitions}"
+                 var="transition">
+	            <a:commandButton
+                     status="none"
+                     eventsQueue="editQueue"
+                     oncomplete="#{oncomplete};verifyFields();"
+                     onmouseup="showLoading()"
+                     reRender=":script,#{reRenderSave}"
+                     value="#{transition.name}"
+                     styleClass="buttons dr-tbpnl-tb-inact"
+                     style="width: 200px;"
+                     action="#{taskInstanceHome.end(transition.name)}" />           	
             </a:repeat>
            </c:if>
        </s:div>

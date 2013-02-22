@@ -1,54 +1,66 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
- 	xmlns:wi= "http://www.itx.com.br/jsf">
+        <h:form
+         id="userForm">
 
-        <h:form id="userForm">
+            <rich:panel
+             header="Cadastro de usuário">
 
-            <rich:panel header="Cadastro de usuário">
+				<wi:inputText
+                 label="Nome"
+                 value="#{userAction.firstname}"
+                 required="true"
+                 id="nome" />
 
-				<wi:inputText label="Nome" 
-					value="#{userAction.firstname}"
-					required="true"
-					id="nome" />
+				<wi:inputText
+                 label="Nome de login"
+                 value="#{userAction.username}"
+                 required="true"
+                 readonly="#{identityManager.userExists(userAction.username)}"
+                 id="nomeLogin" />
 
-				<wi:inputText label="Nome de login" 
-					value="#{userAction.username}"
-					required="true"
-					readonly="#{identityManager.userExists(userAction.username)}"
-					id="nomeLogin" />
+				<wi:inputSecret
+                 label="Senha"
+                 value="#{userAction.password}"
+                 id="password" />
 
-				<wi:inputSecret label="Senha"
-					value="#{userAction.password}"
-					id="password" />
-
-				<wi:inputSecret label="Confirme a senha" 
-					value="#{userAction.confirm}"
-					id="confirma" />
+				<wi:inputSecret
+                 label="Confirme a senha"
+                 value="#{userAction.confirm}"
+                 id="confirma" />
 					
-				<wi:selectOneMenu label="Papel"
-					value="#{usuarioLoginHome.papel}"
-					id="usuarioPapel"
-					items="#{papelItems}" />
+				<wi:selectOneMenu
+                 label="Papel"
+                 value="#{usuarioLoginHome.papel}"
+                 id="usuarioPapel"
+                 items="#{papelItems}" />
 
-				<wi:selectBooleanCheckbox label="Ativo"
-					id="enabled"
-					value="#{userAction.enabled}" />
+				<wi:selectBooleanCheckbox
+                 label="Ativo"
+                 id="enabled"
+                 value="#{userAction.enabled}" />
 
-                <div style="clear:both"/>
+                <div
+                 style="clear:both" />
 
             </rich:panel>
 
-            <div class="actionButtons">
-                <a:commandButton id="save" 
-                	reRender="userForm"
-                	value="Gravar" action="#{userAction.save}"/>
+            <div
+             class="actionButtons">
+                <a:commandButton
+                 id="save"
+                 reRender="userForm"
+                 value="Gravar"
+                 action="#{userAction.save}" />
             </div>
 
         </h:form>

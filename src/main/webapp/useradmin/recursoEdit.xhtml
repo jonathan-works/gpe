@@ -1,67 +1,83 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:wi= "http://www.itx.com.br/jsf"
-    xmlns:s="http://jboss.org/schema/seam/taglib">
 
+        <h:form
+         id="papelForm">
 
-        <h:form id="papelForm">
+          <rich:panel
+             header="Recursos">
 
-          <rich:panel header="Recursos">
-
-			<wi:inputText label="Identificador" 
-				value="#{papelHome.instance.identificador}"
-				required="true"
-				rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}"
-				id="identificador" />
+			<wi:inputText
+                 label="Identificador"
+                 value="#{papelHome.instance.identificador}"
+                 required="true"
+                 rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}"
+                 id="identificador" />
 				
-			<wi:outputText label="Identificador" 
-				value="#{papelHome.instance.identificador}"
-				rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
-				id="identificadorOutput" />
+			<wi:outputText
+                 label="Identificador"
+                 value="#{papelHome.instance.identificador}"
+                 rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
+                 id="identificadorOutput" />
 				
-			<wi:inputText label="Nome" 
-				value="#{papelHome.instance.nome}"
-				required="true"
-				id="nome" />
+			<wi:inputText
+                 label="Nome"
+                 value="#{papelHome.instance.nome}"
+                 required="true"
+                 id="nome" />
 
-		<rich:tabPanel switchType="ajax"
-			rendered="#{papelHome.managed}"
-			style="margin-top: 10px; width: 660px; clear: both;">
-			<rich:tab label="Papéis que acessam" status=":status">
-		        <a:region renderRegionOnly="true">
-					<wi:pickList id="herdeiros"
-						value="#{papelHome.membros}"
-						itemValues="#{papelHome.getPapeisDisponiveis(false)}"
-						itemLabel="#{papelHome.getNome(var)}"
-					/>
+		<rich:tabPanel
+                 switchType="ajax"
+                 rendered="#{papelHome.managed}"
+                 style="margin-top: 10px; width: 660px; clear: both;">
+			<rich:tab
+                     label="Papéis que acessam"
+                     status=":status">
+		        <a:region
+                         renderRegionOnly="true">
+					<wi:pickList
+                             id="herdeiros"
+                             value="#{papelHome.membros}"
+                             itemValues="#{papelHome.getPapeisDisponiveis(false)}"
+                             itemLabel="#{papelHome.getNome(var)}" />
 				</a:region>
 			</rich:tab>
 		</rich:tabPanel>
 
-              <div style="clear: both;"/>
+              <div
+                 style="clear: both;" />
 
           </rich:panel>
 
-          <s:div styleClass="actionButtons">
-                <a:commandButton id="save" 
-                	reRender="papelForm"
-                	styleClass="buttons dr-tbpnl-tb-inact"
-                	value="Gravar" action="#{papelHome.save}"/>
+          <s:div
+             styleClass="actionButtons">
+                <a:commandButton
+                 id="save"
+                 reRender="papelForm"
+                 styleClass="buttons dr-tbpnl-tb-inact"
+                 value="Gravar"
+                 action="#{papelHome.save}" />
 
-                <a:commandButton id="new" 
-                	reRender="papelForm"
-                	styleClass="buttons dr-tbpnl-tb-inact"
-                	ajaxSingle="true"
-                	value="Novo" action="#{papelHome.newInstance()}"/>
+                <a:commandButton
+                 id="new"
+                 reRender="papelForm"
+                 styleClass="buttons dr-tbpnl-tb-inact"
+                 ajaxSingle="true"
+                 value="Novo"
+                 action="#{papelHome.newInstance()}" />
           </s:div>
 
         </h:form>
-		<rich:messages styleClass="error errors"  />
+		<rich:messages
+         styleClass="error errors" />
 
 </ui:composition>

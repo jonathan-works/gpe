@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -20,14 +20,16 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	<rich:panel bodyClass="panel"
-			style="width:706px; margin-left:3px; clear:both">
+	<rich:panel
+         bodyClass="panel"
+         style="width:706px; margin-left:3px; clear:both">
 		
-		<wi:selectOneMenu id="cmbSubProcessName" 
-			label="Sub processo"
-			items="#{jbpmUtil.processNames}"
-			noSelectionLabel="Selecione..."
-			value="#{nodeFitter.nodeHandler.subProcessName}">
+		<wi:selectOneMenu
+             id="cmbSubProcessName"
+             label="Sub processo"
+             items="#{jbpmUtil.processNames}"
+             noSelectionLabel="Selecione..."
+             value="#{nodeFitter.nodeHandler.subProcessName}">
 			<wi:ajaxSupport />
 		</wi:selectOneMenu>
 		

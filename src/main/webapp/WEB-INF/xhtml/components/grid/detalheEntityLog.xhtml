@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:s="http://jboss.org/schema/seam/taglib"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:a="http://richfaces.org/a4j"
-        xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -31,8 +30,12 @@
         
 	<ui:composition>
 	
-		<ui:param name="isAtivo" value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
-		<ui:param name="styleClass" value="#{isAtivo ? '' : 'inativo'}" />
+		<ui:param
+             name="isAtivo"
+             value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
+		<ui:param
+             name="styleClass"
+             value="#{isAtivo ? '' : 'inativo'}" />
 	
 		<script>
 			function abrirPopUp(){
@@ -40,18 +43,22 @@
 			}
 		</script>
 		
-		<div style="width: 100%; text-align: center">
+		<div
+             style="width: 100%; text-align: center">
 		
-			<s:link view="/Consulta/Log/detalheLog.seam"
-				onclick="abrirPopUp();"
-				target="comprovante">
-				<s:conversationPropagation type="none"/>
-				<f:param name="idPesquisa" value="#{row.idLog}" />
-				<h:graphicImage 
-					title="Visualizar"
-					url="#{a4jSkin.imgIconView}"
-					style="cursor:pointer !important"
-				/>
+			<s:link
+                 view="/Consulta/Log/detalheLog.seam"
+                 onclick="abrirPopUp();"
+                 target="comprovante">
+				<s:conversationPropagation
+                     type="none" />
+				<f:param
+                     name="idPesquisa"
+                     value="#{row.idLog}" />
+				<h:graphicImage
+                     title="Visualizar"
+                     url="#{a4jSkin.imgIconView}"
+                     style="cursor:pointer !important" />
 			</s:link>
 		
 		</div>

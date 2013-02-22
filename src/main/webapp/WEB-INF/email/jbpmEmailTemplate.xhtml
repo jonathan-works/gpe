@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,17 +13,22 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
-<m:message xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:m="http://jboss.org/schema/seam/mail"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:ui="http://java.sun.com/jsf/facelets">
+--><m:message
+     xmlns:m="http://jboss.org/schema/seam/mail"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <m:from name="#{nomeSistema}" address="#{emailSistema}" />
+    <m:from
+         name="#{nomeSistema}"
+         address="#{emailSistema}" />
     
-    <c:if test="#{!empty emailData.jbpmRecipientList}">
-		<ui:repeat value="#{emailData.jbpmRecipientList}" var="mail">
+    <c:if
+         test="#{!empty emailData.jbpmRecipientList}">
+		<ui:repeat
+             value="#{emailData.jbpmRecipientList}"
+             var="mail">
 		    <m:to>#{mail}</m:to>
 		</ui:repeat>    
     </c:if>    
@@ -32,7 +36,9 @@
     <m:subject>#{emailData.subject}</m:subject>
 
     <m:body>
-        <h:outputText value="#{emailData.body}" escape="#{!emailData.useHtmlBody}" />
+        <h:outputText
+             value="#{emailData.body}"
+             escape="#{!emailData.useHtmlBody}" />
     </m:body>
     
 </m:message>

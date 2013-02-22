@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,36 +13,59 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:p="http://jboss.org/schema/seam/pdf">
-
-	<p:font size="10">
+	<p:font
+         size="10">
 		
-		<ui:param name="props" value="#{bean.bodyTemplate.properties}"/>
-		<ui:param name="i" value="0" />
+		<ui:param
+             name="props"
+             value="#{bean.bodyTemplate.properties}" />
+		<ui:param
+             name="i"
+             value="0" />
 		
-		<wi:repeat var="row" value="#{bean.grid.fullList}">
-			<ui:param name="i" value="#{i + 1}" />
-			<s:fragment rendered="#{i gt 1 and props.newPage}">
+		<wi:repeat
+             var="row"
+             value="#{bean.grid.fullList}">
+			<ui:param
+                 name="i"
+                 value="#{i + 1}" />
+			<s:fragment
+                 rendered="#{i gt 1 and props.newPage}">
 				<p:newPage />
 			</s:fragment>
-			<p:table columns="1" headerRows="0">
-			<p:cell grayFill="#{i % 2 == 0 ? '0.98' : '1'}">
-				<wi:repeat var="col" value="#{bean.columns}">
+			<p:table
+                 columns="1"
+                 headerRows="0">
+			<p:cell
+                     grayFill="#{i % 2 == 0 ? '0.98' : '1'}">
+				<wi:repeat
+                         var="col"
+                         value="#{bean.columns}">
 				
-				<ui:param name="props" value="#{col.properties}" />
+				<ui:param
+                             name="props"
+                             value="#{col.properties}" />
 				
-				<p:table columns="2" headerRows="0" widths="1 1.5">
-					<p:cell borderWidth="0">
-						<ui:include src="/WEB-INF/xhtml/components/report/header/#{col.headerType}Tabular.xhtml" />
+				<p:table
+                             columns="2"
+                             headerRows="0"
+                             widths="1 1.5">
+					<p:cell
+                                 borderWidth="0">
+						<ui:include
+                                     src="/WEB-INF/xhtml/components/report/header/#{col.headerType}Tabular.xhtml" />
 					</p:cell>
-					<p:cell borderWidth="0">
-						<ui:include src="/WEB-INF/xhtml/components/report/#{col.valueType}.xhtml" />
+					<p:cell
+                                 borderWidth="0">
+						<ui:include
+                                     src="/WEB-INF/xhtml/components/report/#{col.valueType}.xhtml" />
 					</p:cell>
 				</p:table> 
 				</wi:repeat>

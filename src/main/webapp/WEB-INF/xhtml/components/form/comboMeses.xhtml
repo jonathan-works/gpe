@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 	
 	#{props.optionExpression}?Expressão que irá gerar o texto das opções do select. 
 	 Os atributos a serem mostrados devem estar entre chaves. Exemplo: {sigla} - {estado}
@@ -30,35 +30,21 @@
 	
 	<ui:composition>
 	
-		<s:decorate id="#{id}Decoration"
-			template="/WEB-INF/xhtml/components/templates/edit.xhtml">
-			<ui:define name="label">#{label}</ui:define>			
-			<h:selectOneMenu id="#{id}"
-				value="#{value}" 
-				style="width: 250px">
-				<f:selectItem itemLabel="Selecione um mês"/>
-				<f:selectItems 
-					value="#{util.splitAsListWithKeyNumber('
-							      1:Janeiro,
-							      2:Fevereiro,
-							      3:Março,
-							      4:Abril,
-							      5:Maio,
-							      6:Junho,
-							      7:Julho,
-							      8:Agosto,
-							      9:Setembro,
-							      10:Outubro,
-							      11:Novembro,
-							      12:Dezembro')}" />
+		<s:decorate
+             id="#{id}Decoration"
+             template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+			<ui:define
+                 name="label">#{label}</ui:define>			
+			<h:selectOneMenu
+                 id="#{id}"
+                 value="#{value}"
+                 style="width: 250px">
+				<f:selectItem
+                     itemLabel="Selecione um mês" />
+				<f:selectItems
+                     value="#{util.splitAsListWithKeyNumber('              1:Janeiro,              2:Fevereiro,              3:Março,              4:Abril,              5:Maio,              6:Junho,              7:Julho,              8:Agosto,              9:Setembro,              10:Outubro,              11:Novembro,              12:Dezembro')}" />
 			</h:selectOneMenu>
 		</s:decorate>
 		
 	</ui:composition>
 </jsp:root>
-
-
-
-
-
-

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:s="http://jboss.org/schema/seam/taglib"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:a="http://richfaces.org/a4j"
-        xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -28,17 +27,18 @@
       
 	<ui:composition>
 	
-		<a:commandLink  id="#{gridId}"
-						status=":status"
-						reRender="viewPanel"
-						limitToList="true"
-						onclick="n=parentNode; 
-						while(n.tagName.toLowerCase() != 'tr') {n = n.parentNode};
-						jQuery('##{gridId}List .activeRow').removeClass('activeRow');
-						jQuery(n).addClass('activeRow');">
-			<h:graphicImage url="#{a4jSkin.imgIconView}" 
-							title="Exibir detalhes" />
-			<f:param name="id" value="#{row[bean.key]}" />
+		<a:commandLink
+             id="#{gridId}"
+             status=":status"
+             reRender="viewPanel"
+             limitToList="true"
+             onclick="n=parentNode;        while(n.tagName.toLowerCase() != 'tr') {n = n.parentNode};       jQuery('##{gridId}List .activeRow').removeClass('activeRow');       jQuery(n).addClass('activeRow');">
+			<h:graphicImage
+                 url="#{a4jSkin.imgIconView}"
+                 title="Exibir detalhes" />
+			<f:param
+                 name="id"
+                 value="#{row[bean.key]}" />
 		</a:commandLink>
 		
 	</ui:composition> 

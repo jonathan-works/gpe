@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,34 +13,39 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-							xmlns:ui="http://java.sun.com/jsf/facelets"
-							xmlns:f="http://java.sun.com/jsf/core"
-							xmlns:h="http://java.sun.com/jsf/html"
-							xmlns:rich="http://richfaces.org/rich"
-							xmlns:wi="http://www.itx.com.br/jsf">
-
-	<wi:toolBarGraphicImage url="/img/view.gif"
-												title="Pré-visualizar"
-												onclickGraphicImage="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
+	<wi:toolBarGraphicImage
+         url="/img/view.gif"
+         title="Pré-visualizar"
+         onclickGraphicImage="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
 	
-	<rich:popupPanel id="mp_#{c.id}" 
-								 height="300" 
-								 width="600" 
-								 resizeable="false">
-		<f:facet name="header">
-			<h:outputText value="Pré-visualização do texto:" />
+	<rich:popupPanel
+         id="mp_#{c.id}"
+         height="300"
+         width="600"
+         resizeable="false">
+		<f:facet
+             name="header">
+			<h:outputText
+                 value="Pré-visualização do texto:" />
 		</f:facet>
-		<f:facet name="controls">
-         		<span style="cursor:pointer; font-family: Verdana, Arial; padding-right: 22px"
-         			  		onclick="Richfaces.hideModalPanel(mp)">X</span>
+		<f:facet
+             name="controls">
+         		<span
+                 style="cursor:pointer; font-family: Verdana, Arial; padding-right: 22px"
+                 onclick="Richfaces.hideModalPanel(mp)">X</span>
 		</f:facet>
-		<h:inputTextarea readonly="true"
-						 			 style="width: 592px; height: 270px; padding: 3px;
-									 			position: relative; top: -10px; left: -10px"
-						 			 value="#{value}" />
+		<h:inputTextarea
+             readonly="true"
+             style="width: 592px; height: 270px; padding: 3px;              position: relative; top: -10px; left: -10px"
+             value="#{value}" />
 	</rich:popupPanel>
 	
 </ui:composition>

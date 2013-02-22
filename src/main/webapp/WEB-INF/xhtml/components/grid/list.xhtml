@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:s="http://jboss.org/schema/seam/taglib"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:a="http://richfaces.org/a4j"
-        xmlns:wi= "http://www.itx.com.br/jsf"
-        xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -32,20 +31,32 @@
         
 	<ui:composition>
 		
-		<ui:param name="isAtivo" value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
-		<ui:param name="styleClass" value="#{isAtivo ? '' : 'inativo'}" />
-		<ui:param name="expressionValue" value="#{empty props.expressionValue ? '' : 'v.'.concat(props.expressionValue)}" />
+		<ui:param
+             name="isAtivo"
+             value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
+		<ui:param
+             name="styleClass"
+             value="#{isAtivo ? '' : 'inativo'}" />
+		<ui:param
+             name="expressionValue"
+             value="#{empty props.expressionValue ? '' : 'v.'.concat(props.expressionValue)}" />
 
-		<div style="width: 100%;" class="#{styleClass}" >
+		<div
+             style="width: 100%;"
+             class="#{styleClass}">
 		
-			<rich:dataList value="#{c.value}" 
-						   var="v" 
-						   style="margin:0px; padding:2px;" 
-						   type="none">
-				<h:outputText value="- #{empty expressionValue ? v : util.eval(expressionValue)}"></h:outputText>
+			<rich:dataList
+                 value="#{c.value}"
+                 var="v"
+                 style="margin:0px; padding:2px;"
+                 type="none">
+				<h:outputText
+                     value="- #{empty expressionValue ? v : util.eval(expressionValue)}" />
 			</rich:dataList>
 			
-			<h:outputText value="-" rendered="#{empty c.value}" />
+			<h:outputText
+                 value="-"
+                 rendered="#{empty c.value}" />
 			
 		</div>
 		

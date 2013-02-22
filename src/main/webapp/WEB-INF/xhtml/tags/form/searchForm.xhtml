@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,164 +13,205 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:c="http://java.sun.com/jsp/jstl/core"
-				xmlns:rich="http://richfaces.org/rich">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<ui:param name="clearAction" value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}"/>
-    <h:form id="#{formId}" styleClass="edit" >
+	<ui:param
+         name="clearAction"
+         value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}" />
+    <h:form
+         id="#{formId}"
+         styleClass="edit">
     	<a:region>
-	        <rich:collapsiblePanel opened="#{wi:get(opened, true)}"
-	        						width="#{wi:get(widthSearchForm, '275px')}"
-	        						switchType="client">
-				<f:facet name="closeMarker">&#160;</f:facet>
-	            <f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
-				<ui:param name="template" 
-						  value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}"/>
+	        <rich:collapsiblePanel
+                 opened="#{wi:get(opened, true)}"
+                 width="#{wi:get(widthSearchForm, '275px')}"
+                 switchType="client">
+				<f:facet
+                     name="closeMarker"> </f:facet>
+	            <f:facet
+                     name="header">#{empty formTitle ? formId : formTitle}</f:facet>
+				<ui:param
+                     name="template"
+                     value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
 				<ui:insert />
-				<ui:insert name="buttons">
-					<wi:selectOneMenu id="#{gridId}LogicOperator" 
-									  label="Mostrar resultado que atenda a:"
-									  value="#{bean.restrictionLogicOperator}" 
-									  rendered="#{wi:get(showLogicOperator, false)}"
-									  showLock="false"
-									  optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
-									  items="#{'and,or'.split(',')}"/>
+				<ui:insert
+                     name="buttons">
+					<wi:selectOneMenu
+                         id="#{gridId}LogicOperator"
+                         label="Mostrar resultado que atenda a:"
+                         value="#{bean.restrictionLogicOperator}"
+                         rendered="#{wi:get(showLogicOperator, false)}"
+                         showLock="false"
+                         optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
+                         items="#{'and,or'.split(',')}" />
 					
-					<s:div styleClass="actionButtons" 
-						   style="clear: both; width:250px" 
-						   rendered="#{wi:get(showButtons, true)}">
-						<wi:commandButton id="searchButton"
-										  value="Pesquisar"
-										  action="#{searchAction}"
-										  reRender="#{wi:get(searchReRender, 'pageBody')}">
-				        	<a:param assignTo="#{bean.page}" value="1"/>
+					<s:div
+                         styleClass="actionButtons"
+                         style="clear: both; width:250px"
+                         rendered="#{wi:get(showButtons, true)}">
+						<wi:commandButton
+                             id="searchButton"
+                             value="Pesquisar"
+                             action="#{searchAction}"
+                             reRender="#{wi:get(searchReRender, 'pageBody')}">
+				        	<a:param
+                                 assignTo="#{bean.page}"
+                                 value="1" />
 						</wi:commandButton>
 						
-						<a:region renderRegionOnly="false">
-		            		<a:commandButton id="clearButton"
-		            						onclick="j$('##{formId}').clearForm();showLoading();"
-			            					oncomplete="hideLoading();"
-	 				            		    action="#{util.invokeMethod(clearAction)}" 
-										    value="Limpar" 
-										    ajaxSingle="true"
-										    style="min-width:65px; width:65px;"
-										    reRender="#{wi:get(clearReRender, 'pageBody')}"
-										    styleClass="buttons dr-tbpnl-tb-inact"/>
+						<a:region
+                             renderRegionOnly="false">
+		            		<a:commandButton
+                                 id="clearButton"
+                                 onclick="j$('##{formId}').clearForm();showLoading();"
+                                 oncomplete="hideLoading();"
+                                 action="#{util.invokeMethod(clearAction)}"
+                                 value="Limpar"
+                                 ajaxSingle="true"
+                                 style="min-width:65px; width:65px;"
+                                 reRender="#{wi:get(clearReRender, 'pageBody')}"
+                                 styleClass="buttons dr-tbpnl-tb-inact" />
 						</a:region>
 									     
-	            		<a:commandButton  oncomplete="Richfaces.showModalPanel('#{formId}ModalPanel')"
-					            		  id="reportButton" 
-										  value="Relatório" 
-										  ajaxSingle="true"
-										  rendered="#{wi:get(showRelatorioBtn, false)}"
-										  reRender="#{formId}modalPesquisaDiv"
-										  style="min-width:68px; width:68px;"
-										  styleClass="buttons dr-tbpnl-tb-inact"
-										  action="#{bean.cleanSearch()}"/>
+	            		<a:commandButton
+                             oncomplete="Richfaces.showModalPanel('#{formId}ModalPanel')"
+                             id="reportButton"
+                             value="Relatório"
+                             ajaxSingle="true"
+                             rendered="#{wi:get(showRelatorioBtn, false)}"
+                             reRender="#{formId}modalPesquisaDiv"
+                             style="min-width:68px; width:68px;"
+                             styleClass="buttons dr-tbpnl-tb-inact"
+                             action="#{bean.cleanSearch()}" />
 					</s:div>
 				</ui:insert>
 			</rich:collapsiblePanel>
 		</a:region>
 	</h:form>
-	<wi:modalPanel id="#{formId}ModalPanel" 
-				   labelHeader="Salvar a pesquisa atual"
-				   width="900"
-				   rendered="#{empty showSalvarPesquisa ? true : showSalvarPesquisa}"
-				   height="500">
-		<s:div id="#{formId}modalPesquisaDiv">
-			<h:form id="#{formId}ModalForm">
-				<ui:param name="template" 
-						  value="/WEB-INF/xhtml/components/templates/edit.xhtml"/>
-				<wi:inputText id="nomePesquisa" 
-							  required="true"
-							  label="Nome da pesquisa"
-							  value="#{bean.pesquisa.nome}" />
-				<wi:inputTextarea id="descricaoPesquisa" 
-							  label="Descrição"
-							  value="#{bean.pesquisa.descricao}" />
-				<pre style="clear:both">#{bean.getCriteria()}</pre>
-				<a:commandButton id="saveReportButton"
-								 status=":status"
-								 action="#{bean.saveSearch}"
-								 value="Gravar Pesquisa"
-								 buttonStyle="min-width:125px; width:125px;"
-								 reRender="#{formId}modalPesquisaListDiv, #{formId}modalPesquisaDiv"
-								 rendered="#{not empty bean.getCriteria()}"
-								 styleClass="buttons dr-tbpnl-tb-inact"/>
-				<wi:commandButton id="closeReportButton"
-								  action="#{closeReportAction}"
-								  ajaxSingle="true"
-								  reRender="#{formId}modalPesquisaDiv"
-								  value="Fechar">
-					<rich:componentControl for="#{formId}ModalPanel" 
-	                					   attachTo="closeReportButton" 
-	                					   operation="hide" 
-	                					   event="onclick"/>
+	<wi:modalPanel
+         id="#{formId}ModalPanel"
+         labelHeader="Salvar a pesquisa atual"
+         width="900"
+         rendered="#{empty showSalvarPesquisa ? true : showSalvarPesquisa}"
+         height="500">
+		<s:div
+             id="#{formId}modalPesquisaDiv">
+			<h:form
+                 id="#{formId}ModalForm">
+				<ui:param
+                     name="template"
+                     value="/WEB-INF/xhtml/components/templates/edit.xhtml" />
+				<wi:inputText
+                     id="nomePesquisa"
+                     required="true"
+                     label="Nome da pesquisa"
+                     value="#{bean.pesquisa.nome}" />
+				<wi:inputTextarea
+                     id="descricaoPesquisa"
+                     label="Descrição"
+                     value="#{bean.pesquisa.descricao}" />
+				<pre
+                     style="clear:both">#{bean.getCriteria()}</pre>
+				<a:commandButton
+                     id="saveReportButton"
+                     status=":status"
+                     action="#{bean.saveSearch}"
+                     value="Gravar Pesquisa"
+                     buttonStyle="min-width:125px; width:125px;"
+                     reRender="#{formId}modalPesquisaListDiv, #{formId}modalPesquisaDiv"
+                     rendered="#{not empty bean.getCriteria()}"
+                     styleClass="buttons dr-tbpnl-tb-inact" />
+				<wi:commandButton
+                     id="closeReportButton"
+                     action="#{closeReportAction}"
+                     ajaxSingle="true"
+                     reRender="#{formId}modalPesquisaDiv"
+                     value="Fechar">
+					<rich:componentControl
+                         for="#{formId}ModalPanel"
+                         attachTo="closeReportButton"
+                         operation="hide"
+                         event="onclick" />
 				</wi:commandButton>
 			</h:form>
 		</s:div>
-		<s:div id="#{formId}modalPesquisaListDiv" style="margin-top: 10px;">
-			<ui:param name="beanCrud" value="#{bean}"/>
-			<wi:dataTable values="#{pesquisaList.listSavedSearch(beanCrud.entityListName)}"
-						  bean="#{pesquisaList}"
-						  panelWidth="95%"
-						  tableTitle="Lista de Relatórios"
-						  id="#{formId}pesquisaList"
-						  toolBarColumnWidth="55px">
-				<ui:define name="headerToolBar"/>
-				<ui:define name="toolBar">
+		<s:div
+             id="#{formId}modalPesquisaListDiv"
+             style="margin-top: 10px;">
+			<ui:param
+                 name="beanCrud"
+                 value="#{bean}" />
+			<wi:dataTable
+                 values="#{pesquisaList.listSavedSearch(beanCrud.entityListName)}"
+                 bean="#{pesquisaList}"
+                 panelWidth="95%"
+                 tableTitle="Lista de Relatórios"
+                 id="#{formId}pesquisaList"
+                 toolBarColumnWidth="55px">
+				<ui:define
+                     name="headerToolBar" />
+				<ui:define
+                     name="toolBar">
 					<a:region>
 						<h:form>
-							<a:commandLink reRender="searchGridRegion"
-										   status=":status"
-										   ajaxSingle="true"
-										   oncomplete="Richfaces.hideModalPanel('#{formId}ModalPanel')"
-										   action="#{beanCrud.setPesquisa(row)}">
-								<h:graphicImage url="/img/start.gif" 
-												title="Executar"
-												style="opacity:0.15;"
-												onmouseover="this.style.opacity=1"
-												onmouseout ="this.style.opacity=0.15" />
+							<a:commandLink
+                                 reRender="searchGridRegion"
+                                 status=":status"
+                                 ajaxSingle="true"
+                                 oncomplete="Richfaces.hideModalPanel('#{formId}ModalPanel')"
+                                 action="#{beanCrud.setPesquisa(row)}">
+								<h:graphicImage
+                                     url="/img/start.gif"
+                                     title="Executar"
+                                     style="opacity:0.15;"
+                                     onmouseover="this.style.opacity=1"
+                                     onmouseout="this.style.opacity=0.15" />
 							</a:commandLink>
-							<a:commandLink reRender="#{formId}modalPesquisaDiv"
-										   status=":status"
-										   ajaxSingle="true"
-										   action="#{beanCrud.setPesquisa(row)}">
-								<h:graphicImage url="#{a4jSkin.imgIconView}" 
-												title="Editar"
-												style="opacity:0.15;"
-												onmouseover="this.style.opacity=1"
-												onmouseout ="this.style.opacity=0.15" />
+							<a:commandLink
+                                 reRender="#{formId}modalPesquisaDiv"
+                                 status=":status"
+                                 ajaxSingle="true"
+                                 action="#{beanCrud.setPesquisa(row)}">
+								<h:graphicImage
+                                     url="#{a4jSkin.imgIconView}"
+                                     title="Editar"
+                                     style="opacity:0.15;"
+                                     onmouseover="this.style.opacity=1"
+                                     onmouseout="this.style.opacity=0.15" />
 							</a:commandLink>
-							<a:commandLink reRender="#{formId}modalPesquisaListDiv"
-										   status=":status"
-										   ajaxSingle="true"
-										   action="#{beanCrud.remove(row)}">
-								<h:graphicImage url="/img/remove.png" 
-												title="Remover"
-												style="opacity:0.15;"
-												onmouseover="this.style.opacity=1"
-												onmouseout ="this.style.opacity=0.15" />
+							<a:commandLink
+                                 reRender="#{formId}modalPesquisaListDiv"
+                                 status=":status"
+                                 ajaxSingle="true"
+                                 action="#{beanCrud.remove(row)}">
+								<h:graphicImage
+                                     url="/img/remove.png"
+                                     title="Remover"
+                                     style="opacity:0.15;"
+                                     onmouseover="this.style.opacity=1"
+                                     onmouseout="this.style.opacity=0.15" />
 							</a:commandLink>
 						</h:form>
 					</a:region>
 				</ui:define>
-				<wi:columnOutputText columnId="nome"
-									 columnHeader="Nome"
-									 columnWidth="30%"
-									 value="#{row.nome}" />
-				<wi:columnOutputText columnId="descricao"
-									 columnHeader="Descrição"
-									 value="#{row.descricao}" />
+				<wi:columnOutputText
+                     columnId="nome"
+                     columnHeader="Nome"
+                     columnWidth="30%"
+                     value="#{row.nome}" />
+				<wi:columnOutputText
+                     columnId="descricao"
+                     columnHeader="Descrição"
+                     value="#{row.descricao}" />
 			</wi:dataTable>
 		</s:div>
 	</wi:modalPanel>

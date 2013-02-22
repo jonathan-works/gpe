@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,24 +13,28 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-		        xmlns:s="http://jboss.org/schema/seam/taglib"
-		        xmlns:ui="http://java.sun.com/jsf/facelets"
-		        xmlns:f="http://java.sun.com/jsf/core"
-		        xmlns:h="http://java.sun.com/jsf/html"
-		        xmlns:a="http://richfaces.org/a4j"
-		        xmlns:rich="http://richfaces.org/rich">
-
-       <s:decorate template="/WEB-INF/xhtml/components/templates/view.xhtml">
+       <s:decorate
+         template="/WEB-INF/xhtml/components/templates/view.xhtml">
 		
-		<ui:param name="props" value="#{f.properties}"/>
+		<ui:param
+             name="props"
+             value="#{f.properties}" />
 		
-		<ui:define name="label">#{label}</ui:define>
-		<h:outputText value="#{f.value}">
-			<s:convertDateTime 
-				pattern="#{empty props.pattern ? 'dd/MM/yy kk:mm' : props.pattern}"/>
+		<ui:define
+             name="label">#{label}</ui:define>
+		<h:outputText
+             value="#{f.value}">
+			<s:convertDateTime
+                 pattern="#{empty props.pattern ? 'dd/MM/yy kk:mm' : props.pattern}" />
 		</h:outputText>
        </s:decorate>
 

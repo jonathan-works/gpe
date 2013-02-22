@@ -1,25 +1,42 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:ui="http://java.sun.com/jsf/facelets"
-	  xmlns:h="http://java.sun.com/jsf/html">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<h:head>    
-	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <title>#{nomeSistema}:&#160;<ui:insert name="title"/></title>
-		<link rel="icon" href="#{util.contextPath}/favicon.ico" type="image/x-icon" />		
-	    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
+	    <meta
+             http-equiv="Content-Type"
+             content="text/html; charset=UTF-8" />
+	    <title>#{nomeSistema}: <ui:insert
+                 name="title" /></title>
+		<link
+             rel="icon"
+             href="#{util.contextPath}/favicon.ico"
+             type="image/x-icon" />		
+	    <ui:include
+             src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
 	    
-	    <ui:insert name="baseHead"/>
+	    <ui:insert
+             name="baseHead" />
 	</h:head>
 	
-	<ui:include src="include/ajaxQueue.xhtml" />	
-	<ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
-	<ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
+	<ui:include
+         src="include/ajaxQueue.xhtml" />	
+	<ui:include
+         src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
+	<ui:include
+         src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 	
-	<ui:param name="canEdit" value="#{empty canEdit ? home.editable : canEdit}" />
-	<h:body onbeforeunload="#{onbeforeunload}" onload="#{onload}" onunload="#{onunload}"> 
-		<ui:insert name="baseBody"/>
+	<ui:param
+         name="canEdit"
+         value="#{empty canEdit ? home.editable : canEdit}" />
+	<h:body
+         onbeforeunload="#{onbeforeunload}"
+         onload="#{onload}"
+         onunload="#{onunload}"> 
+		<ui:insert
+             name="baseBody" />
 	</h:body>
 	
 </html>

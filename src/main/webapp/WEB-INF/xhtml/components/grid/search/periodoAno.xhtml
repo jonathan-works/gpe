@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-	
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,16 +13,15 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<script>
 		function validarAno(di, df) {
@@ -36,7 +33,7 @@
 			} else if (inputInicio.value == "" || inputInicio.value == null) {
 				inputInicio.value = inputFim.value;
 			} else {
-				if (inputInicio.value > inputFim.value) {
+				if (inputInicio.value &gt; inputFim.value) {
 					alert("O ano final deve ser superior que o inicial!");
 					inputFim.value = inputInicio.value;
 				}
@@ -44,30 +41,41 @@
 		}
 	</script>
 
-	<ui:param name="search" value="#{empty props.searchBean ? searchBean : 
-		expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
+	<ui:param
+         name="search"
+         value="#{empty props.searchBean ? searchBean :    expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
 
-	<ui:param name="idFromSearch" value="#{props.idDateFrom}Search"/>
-	<ui:param name="idToSearch" value="#{props.idDateTo}Search"/>
+	<ui:param
+         name="idFromSearch"
+         value="#{props.idDateFrom}Search" />
+	<ui:param
+         name="idToSearch"
+         value="#{props.idDateTo}Search" />
 
-	<s:decorate id="#{id}Decoration" 
-				template="/WEB-INF/xhtml/components/templates/view.xhtml"
-				rendered="#{empty rendered or rendered}">
-		<ui:define name="label">#{label}</ui:define>
-		<h:outputText value="De " />
-		<rich:inputNumberSpinner id="#{idFromSearch}" 
-					   			 value="#{search[props.idDateFrom]}"
-					   			 minValue="#{wi:get(props.minValue, 1990)}"
-					   			 maxValue="#{wi:get(props.maxValue, 2500)}"
-					   			 enableManualInput="#{wi:get(props.enableManualInput, false)}"
-					   			 onchange="validarAno('#{rich:clientId(idFromSearch)}', '#{rich:clientId(idToSearch)}');" />
-		<h:outputText value=" Até " />
-		<rich:inputNumberSpinner id="#{idToSearch}" 
-								 value="#{search[props.idDateTo]}" 
-								 minValue="#{wi:get(props.minValue, 1990)}"
-								 maxValue="#{wi:get(props.maxValue, 2500)}"
-								 enableManualInput="#{wi:get(props.enableManualInput, false)}"
-					   			 onchange="validarAno('#{rich:clientId(idFromSearch)}', '#{rich:clientId(idToSearch)}');"  />
+	<s:decorate
+         id="#{id}Decoration"
+         template="/WEB-INF/xhtml/components/templates/view.xhtml"
+         rendered="#{empty rendered or rendered}">
+		<ui:define
+             name="label">#{label}</ui:define>
+		<h:outputText
+             value="De " />
+		<rich:inputNumberSpinner
+             id="#{idFromSearch}"
+             value="#{search[props.idDateFrom]}"
+             minValue="#{wi:get(props.minValue, 1990)}"
+             maxValue="#{wi:get(props.maxValue, 2500)}"
+             enableManualInput="#{wi:get(props.enableManualInput, false)}"
+             onchange="validarAno('#{rich:clientId(idFromSearch)}', '#{rich:clientId(idToSearch)}');" />
+		<h:outputText
+             value=" Até " />
+		<rich:inputNumberSpinner
+             id="#{idToSearch}"
+             value="#{search[props.idDateTo]}"
+             minValue="#{wi:get(props.minValue, 1990)}"
+             maxValue="#{wi:get(props.maxValue, 2500)}"
+             enableManualInput="#{wi:get(props.enableManualInput, false)}"
+             onchange="validarAno('#{rich:clientId(idFromSearch)}', '#{rich:clientId(idToSearch)}');" />
         <ui:insert />                        
 	</s:decorate>
 

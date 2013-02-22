@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-	<!--
+<!--
 	  IBPM - Ferramenta de produtividade Java
 	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
 	 
@@ -14,21 +13,22 @@
 	  Consulte a GNU GPL para mais detalhes.
 	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
 	  veja em http://www.gnu.org/licenses/  
-	-->
+	--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-		xmlns:s="http://jboss.org/schema/seam/taglib"
-		xmlns:ui="http://java.sun.com/jsf/facelets"
-		xmlns:wi="http://www.itx.com.br/jsf">
-
-    <ui:param name="sim" value="#{empty sim ? props.sim : sim}" />
+    <ui:param
+         name="sim"
+         value="#{empty sim ? props.sim : sim}" />
   
-    <wi:selectOneRadio 
-    	valueList="true:Sim,false:Não" 
-    	boxChecked="#{sim ? 0 : 1}"
-    	disabled="#{props.disabled}">
-    	<ui:insert/>
+    <wi:selectOneRadio
+         valueList="true:Sim,false:Não"
+         boxChecked="#{sim ? 0 : 1}"
+         disabled="#{props.disabled}">
+    	<ui:insert />
     </wi:selectOneRadio>
     	
 </ui:composition>

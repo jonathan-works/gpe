@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-			    xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:a="http://richfaces.org/a4j"
-			    xmlns:c="http://java.sun.com/jsp/jstl/core"
-			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-			    template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -28,17 +27,29 @@
 	  veja em http://www.gnu.org/licenses/  
 	-->         
 	            
-	<ui:param name="pageTitle" value="#{messages['processo.titlePage']}" />
-	<ui:define name="title">#{pageTitle}</ui:define>
+	<ui:param
+         name="pageTitle"
+         value="#{messages['processo.titlePage']}" />
+	<ui:define
+         name="title">#{pageTitle}</ui:define>
 	
-	<ui:param name="home" value="#{processoHome}" />
-	<ui:param name="showMenu" value="false" />
-	<ui:param name="checkPermission" value="#{processoHome.checarVisibilidade()}" />
+	<ui:param
+         name="home"
+         value="#{processoHome}" />
+	<ui:param
+         name="showMenu"
+         value="false" />
+	<ui:param
+         name="checkPermission"
+         value="#{processoHome.checarVisibilidade()}" />
 	
-	<ui:define name="body">
-		<s:div id="script">
+	<ui:define
+         name="body">
+		<s:div
+             id="script">
 		<f:verbatim>
-			<script type="text/javascript">
+			<script
+                     type="text/javascript">
 		    	function verifyFields() { 
 		        	var taskCompleted = "#{util.getFromEventContext('taskCompleted')}";
 		        	if(taskCompleted != '') {
@@ -64,183 +75,235 @@
 		</style>
 		
 		<h:form>
-			<a:jsFunction name="renderButtons" reRender="taskButtonsDiv"/>
+			<a:jsFunction
+                 name="renderButtons"
+                 reRender="taskButtonsDiv" />
 		</h:form>
-		<s:div rendered="#{processoHome.managed and checkPermission}">
-			<wi:view form="#{consultaSolicitacaoView}" 
-			         title="#{messages['consultaSolicitacaoGrid.titulo']} #{processoHome.instance} - #{taskInstance.name}: #{processoHandler.getItemDoProcesso(processoHome.instance.idProcesso).caminhoCompletoToString()}"
-			         columns="4"
-			         opened="false"
-			         buttons="none">
+		<s:div
+             rendered="#{processoHome.managed and checkPermission}">
+			<wi:view
+                 form="#{consultaSolicitacaoView}"
+                 title="#{messages['consultaSolicitacaoGrid.titulo']} #{processoHome.instance} - #{taskInstance.name}: #{processoHandler.getItemDoProcesso(processoHome.instance.idProcesso).caminhoCompletoToString()}"
+                 columns="4"
+                 opened="false"
+                 buttons="none">
 			</wi:view>
 		</s:div>
-		<rich:tabPanel switchType="ajax" 
-					   headerSpacing="2"
-					   selectedTab="#{home.tab}"
-					   rendered="#{checkPermission}">
-				<rich:tab id="tabFluxo" 
-						  rendered="#{!processoHome.managed}" 
-						  label="Escolher fluxo" 
-						  status=":status" 
-						  action="#{processoHome.limpar()}">
-					<h:messages	id="globalMessages" 
-								globalOnly="true" 
-								styleClass="message" />
+		<rich:tabPanel
+             switchType="ajax"
+             headerSpacing="2"
+             selectedTab="#{home.tab}"
+             rendered="#{checkPermission}">
+				<rich:tab
+                 id="tabFluxo"
+                 rendered="#{!processoHome.managed}"
+                 label="Escolher fluxo"
+                 status=":status"
+                 action="#{processoHome.limpar()}">
+					<h:messages
+                     id="globalMessages"
+                     globalOnly="true"
+                     styleClass="message" />
 				</rich:tab>
 			
-			<rich:tab id="tabEntrada"
-					  rendered="#{!empty taskInstanceView.fields}"
-					  label="Entrada" 
-					  status=":status">	
-				<s:div id="divDocAnterior">
-					<wi:form canEdit="true"
-					    	 formTitle="#{taskInstance.name}"
-					    	 home="#{taskInstanceHome}"
-					    	 form="#{taskInstanceView}" />
+			<rich:tab
+                 id="tabEntrada"
+                 rendered="#{!empty taskInstanceView.fields}"
+                 label="Entrada"
+                 status=":status">	
+				<s:div
+                     id="divDocAnterior">
+					<wi:form
+                         canEdit="true"
+                         formTitle="#{taskInstance.name}"
+                         home="#{taskInstanceHome}"
+                         form="#{taskInstanceView}" />
 				</s:div>
 			</rich:tab>	
 			
-			<rich:tab id="tabSaida" 
-					  rendered="#{processoHome.managed}"
-					  label="Saída" 
-					  status=":status">
-				<c:if test="#{empty taskPageAction.taskPagePath}">
-					<s:div id="taskInstanceDiv">
-						<wi:form canEdit="true"
-				    			 formTitle="#{taskInstance.name}"
-						    	 home="#{taskInstanceForm.home}"
-						    	 reRenderSave="taskInstanceDiv"
-						    	 form="#{taskInstaceForm}" />
+			<rich:tab
+                 id="tabSaida"
+                 rendered="#{processoHome.managed}"
+                 label="Saída"
+                 status=":status">
+				<c:if
+                     test="#{empty taskPageAction.taskPagePath}">
+					<s:div
+                         id="taskInstanceDiv">
+						<wi:form
+                             canEdit="true"
+                             formTitle="#{taskInstance.name}"
+                             home="#{taskInstanceForm.home}"
+                             reRenderSave="taskInstanceDiv"
+                             form="#{taskInstaceForm}" />
 					</s:div>
 				</c:if>
-				<c:if test="#{not empty taskPageAction.taskPagePath}">
-					<ui:include src="#{taskPageAction.taskPagePath}" />
+				<c:if
+                     test="#{not empty taskPageAction.taskPagePath}">
+					<ui:include
+                         src="#{taskPageAction.taskPagePath}" />
 				</c:if>
 			</rich:tab>			
 			
-			<rich:tab id="tabAnexar" 
-					  rendered="#{processoHome.managed}"
-					  label="Anexar Documento" 
-					  status=":status"
-					  action="#{processoDocumentoHome.newInstance()}">
-				<s:div id="divAnexarDocumentos">
-					<div style="width: 75%; left:1px; ">
-						<wi:form isUploadForm="true"
-								 form="#{anexarDocumentoForm}" 
-								 formTitle="Cadastro do Documento" 
-								 home="#{processoDocumentoHome}"
-								 reRenderSave="divAnexarDocumentos" />
+			<rich:tab
+                 id="tabAnexar"
+                 rendered="#{processoHome.managed}"
+                 label="Anexar Documento"
+                 status=":status"
+                 action="#{processoDocumentoHome.newInstance()}">
+				<s:div
+                     id="divAnexarDocumentos">
+					<div
+                         style="width: 75%; left:1px; ">
+						<wi:form
+                             isUploadForm="true"
+                             form="#{anexarDocumentoForm}"
+                             formTitle="Cadastro do Documento"
+                             home="#{processoDocumentoHome}"
+                             reRenderSave="divAnexarDocumentos" />
 					</div>
 				</s:div>
 			</rich:tab>	
 			
-			<rich:tab id="tabAnexos" 
-					  rendered="#{processoHome.managed}"
-					  label="Documentos do Processo"
-					  status=":status">
-				<s:div id="divDocumentosProcesso">
-					    <wi:datalist bean="#{documentoProcessoGrid}" 
-							    	 title="Documentos do Processo #{home.instance}"
-							    	 toolBar="none"
-							    	 headerToolBar="none"
-							    	 columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin">
+			<rich:tab
+                 id="tabAnexos"
+                 rendered="#{processoHome.managed}"
+                 label="Documentos do Processo"
+                 status=":status">
+				<s:div
+                     id="divDocumentosProcesso">
+					    <wi:datalist
+                         bean="#{documentoProcessoGrid}"
+                         title="Documentos do Processo #{home.instance}"
+                         toolBar="none"
+                         headerToolBar="none"
+                         columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin">
 					    </wi:datalist>
 				</s:div>
 			</rich:tab>
 			
-			<rich:tab id="tabMovimentacoes" 
-					  rendered="#{processoHome.managed}"
-					  label="Movimentações do Processo"
-					  switchType="ajax" 
-					  status=":status">
-				<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+			<rich:tab
+                 id="tabMovimentacoes"
+                 rendered="#{processoHome.managed}"
+                 label="Movimentações do Processo"
+                 switchType="ajax"
+                 status=":status">
+				<ui:include
+                     src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
 			</rich:tab>
 			
-			<ui:param name="action" value="#{localizacaoDocumentoFisicoAction}" />
-			<rich:tab id="documentoFisicoTab" 
-					  rendered="#{home.isManaged()}"
-					  eventsQueue="default" 
-					  switchType="ajax"
-					  label="#{messages['documentoFisico.titleTab']}"
-					  action="#{action.init()}">
-				<wi:dataForm formId="documentoFisicoForm"
-						 	 formTitle="#{messages['form.title']}">
-					<wi:tree id="localizacaoFisica"
-											assignTo="localizacaoDocumentoFisicoAction.instance.localizacaoFisica"
-											tree="#{localizacaoFisicaTree}"
-											label="#{messages['documentoFisico.localizacaoFisica']}"
-											
-											
-											required="true"
-											noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}"/>
+			<ui:param
+                 name="action"
+                 value="#{localizacaoDocumentoFisicoAction}" />
+			<rich:tab
+                 id="documentoFisicoTab"
+                 rendered="#{home.isManaged()}"
+                 eventsQueue="default"
+                 switchType="ajax"
+                 label="#{messages['documentoFisico.titleTab']}"
+                 action="#{action.init()}">
+				<wi:dataForm
+                     formId="documentoFisicoForm"
+                     formTitle="#{messages['form.title']}">
+					<wi:tree
+                         id="localizacaoFisica"
+                         assignTo="localizacaoDocumentoFisicoAction.instance.localizacaoFisica"
+                         tree="#{localizacaoFisicaTree}"
+                         label="#{messages['documentoFisico.localizacaoFisica']}"
+                         required="true"
+                         noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}" />
 							 	 
-					<wi:inputText id="descricaoDocumentoFisico"
-								  label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
-								  required="true"
-								  value="#{action.instance.descricaoDocumentoFisico}"
-								  maxlength="150" />
-					<ui:define name="buttons">
-						<wi:commandButton id="saveDocumentoFisicoButton"
-										  action="localizacaoDocumentoFisicoAction.save"
-										  reRender="documentoFisicoForm, documentoFisicoDiv"
-										  value="Incluir"/>
+					<wi:inputText
+                         id="descricaoDocumentoFisico"
+                         label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
+                         required="true"
+                         value="#{action.instance.descricaoDocumentoFisico}"
+                         maxlength="150" />
+					<ui:define
+                         name="buttons">
+						<wi:commandButton
+                             id="saveDocumentoFisicoButton"
+                             action="localizacaoDocumentoFisicoAction.save"
+                             reRender="documentoFisicoForm, documentoFisicoDiv"
+                             value="Incluir" />
 					</ui:define>
 				</wi:dataForm>
-				<s:div id="documentoFisicoDiv">
+				<s:div
+                     id="documentoFisicoDiv">
 					<h:form>
-						<rich:dataTable id="documentoFisicoTable"
-										value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
-										var="row"
-										rows="10"
-										style="width: 75%">
-							<rich:column style="width: 10%">
-								<f:facet name="header">
-									<wi:toolBarRemove id="headerInactivate"
-													  reRender="documentoFisicoDiv"
-												      actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
-												      title="Inativar todos os Registros"/>
+						<rich:dataTable
+                             id="documentoFisicoTable"
+                             value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+                             var="row"
+                             rows="10"
+                             style="width: 75%">
+							<rich:column
+                                 style="width: 10%">
+								<f:facet
+                                     name="header">
+									<wi:toolBarRemove
+                                         id="headerInactivate"
+                                         reRender="documentoFisicoDiv"
+                                         actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
+                                         title="Inativar todos os Registros" />
 								</f:facet>
 								<center>
-									<wi:toolBarRemove id="toolBarInactivate"
-													  reRender="documentoFisicoDiv"
-												      actionRemove="localizacaoDocumentoFisicoAction.inactive(row)"/>
+									<wi:toolBarRemove
+                                         id="toolBarInactivate"
+                                         reRender="documentoFisicoDiv"
+                                         actionRemove="localizacaoDocumentoFisicoAction.inactive(row)" />
 								</center>
 							</rich:column>
-							<rich:column style="width: 40%">
-								<f:facet name="header">
-									<h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />
+							<rich:column
+                                 style="width: 40%">
+								<f:facet
+                                     name="header">
+									<h:outputText
+                                         value="#{messages['documentoFisico.localizacaoFisica']}" />
 								</f:facet>
-								<h:outputText value="#{row.localizacaoFisica.caminhoCompletoToString()}"/>
+								<h:outputText
+                                     value="#{row.localizacaoFisica.caminhoCompletoToString()}" />
 							</rich:column>
 							
-							<rich:column style="width: 40%">
-								<f:facet name="header">
-									<h:outputText value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
+							<rich:column
+                                 style="width: 40%">
+								<f:facet
+                                     name="header">
+									<h:outputText
+                                         value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
 								</f:facet>
-								<h:outputText value="#{row.descricaoDocumentoFisico}"/>
+								<h:outputText
+                                     value="#{row.descricaoDocumentoFisico}" />
 							</rich:column>
 							
 						</rich:dataTable>
-						<rich:datascroller id="dsDocumentoFisicoTable"
-										   for="documentoFisicoTable"
-										   lastPageMode="full"
-										   align="left"
-										   renderIfSinglePage="false"/>
+						<rich:datascroller
+                             id="dsDocumentoFisicoTable"
+                             for="documentoFisicoTable"
+                             lastPageMode="full"
+                             align="left"
+                             renderIfSinglePage="false" />
 					</h:form>
 				</s:div>
 			</rich:tab>
 			
-			<rich:tab id="tabPartesDoProcesso"
-					  label="#{messages['parteProcesso.partes']}"
-					  switchType="ajax" 
-					  status=":status"
-					  rendered="#{processoHandler.hasPartes()}">
-				<ui:include src="parteProcessoGrid.xhtml" />
+			<rich:tab
+                 id="tabPartesDoProcesso"
+                 label="#{messages['parteProcesso.partes']}"
+                 switchType="ajax"
+                 status=":status"
+                 rendered="#{processoHandler.hasPartes()}">
+				<ui:include
+                     src="parteProcessoGrid.xhtml" />
 			</rich:tab>	
 		</rich:tabPanel>
-		<c:if test="#{!checkPermission}">
-			<wi:outputText id="error" value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
-			<a:jsFunction name="closeWindow">window.close();</a:jsFunction>
+		<c:if
+             test="#{!checkPermission}">
+			<wi:outputText
+                 id="error"
+                 value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
+			<a:jsFunction
+                 name="closeWindow">window.close();</a:jsFunction>
 		</c:if>
 	</ui:define>
 	

@@ -1,45 +1,60 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"	
-				xmlns:ui="http://java.sun.com/jsf/facelets"	
-				xmlns:wi="http://www.itx.com.br/jsf"	
-				template="/WEB-INF/xhtml/templates/template-sample.xhtml">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/template-sample.xhtml">
 		
-	<ui:param name="pageTitle" value="Detalhes do Processo" />
-	<ui:define name="title">#{pageTitle} </ui:define>
-	<ui:param name="home" value="#{processoHome}" />
+	<ui:param
+         name="pageTitle"
+         value="Detalhes do Processo" />
+	<ui:define
+         name="title">#{pageTitle} </ui:define>
+	<ui:param
+         name="home"
+         value="#{processoHome}" />
 	
-	<ui:define name="body">
-		<table width="100%" border="0" style="margin-top: 20px;">
+	<ui:define
+         name="body">
+		<table
+             width="100%"
+             border="0"
+             style="margin-top: 20px;">
 			<tr>
-	    		<td valign="top" width="100%">	
-			    	<div style="color: black;">
-			<wi:datalist home="#{processoParteHome}"
-						 bean="#{processoPartePoloAtivoGrid}" 
-						 gridId="processopartePoloAtivoGridTab"
-						 toolBar="none"
-						 headerToolBar="none"
-						 title="#{processoJudicialHome.instance.listaParteAtivo.size() > 0 ? 'Polo Ativo' : 'Polo Ativo - Não existem Partes cadastradas ao Polo Ativo.'}"
-						 showMsg="false"
-						 columnList="#{s:hasRole('advogado') ? 'nomeParte' : 'pessoa'},tipoParte"/>	
+	    		<td
+                     valign="top"
+                     width="100%">	
+			    	<div
+                         style="color: black;">
+			<wi:datalist
+                             home="#{processoParteHome}"
+                             bean="#{processoPartePoloAtivoGrid}"
+                             gridId="processopartePoloAtivoGridTab"
+                             toolBar="none"
+                             headerToolBar="none"
+                             title="#{processoJudicialHome.instance.listaParteAtivo.size() &gt; 0 ? 'Polo Ativo' : 'Polo Ativo - Não existem Partes cadastradas ao Polo Ativo.'}"
+                             showMsg="false"
+                             columnList="#{s:hasRole('advogado') ? 'nomeParte' : 'pessoa'},tipoParte" />	
 						 
-			<wi:datalist home="#{processoParteHome}"
-						 bean="#{processoPartePoloPassivoGrid}" 
-						 gridId="processoPartePoloPassivoGridTab"
-						 toolBar="none"
-						 headerToolBar="none"
-						 title="#{processoJudicialHome.instance.listaPartePassivo.size() > 0 ? 'Polo Passivo' : 'Polo Passivo - Não existem Partes cadastradas ao Polo Passivo.'}"
-						 showMsg="false"
-						 columnList="#{s:hasRole('advogado') ? 'nomeParte' : 'pessoa'},tipoParte"/>	
+			<wi:datalist
+                             home="#{processoParteHome}"
+                             bean="#{processoPartePoloPassivoGrid}"
+                             gridId="processoPartePoloPassivoGridTab"
+                             toolBar="none"
+                             headerToolBar="none"
+                             title="#{processoJudicialHome.instance.listaPartePassivo.size() &gt; 0 ? 'Polo Passivo' : 'Polo Passivo - Não existem Partes cadastradas ao Polo Passivo.'}"
+                             showMsg="false"
+                             columnList="#{s:hasRole('advogado') ? 'nomeParte' : 'pessoa'},tipoParte" />	
 						 
-			<wi:datalist home="#{processoDocumentoHome}"
-						 bean="#{processoDocumentoGrid}" 
-						 gridId="processoDocumentoGridTab"
-						 toolBar="none"
-						 title="Documentos"
-						 headerToolBar="none"
-						 columnList="processoDocumento, tipoProcessoDocumento, processoDocumentoBin"
-						 showMsg="false"/>		
+			<wi:datalist
+                             home="#{processoDocumentoHome}"
+                             bean="#{processoDocumentoGrid}"
+                             gridId="processoDocumentoGridTab"
+                             toolBar="none"
+                             title="Documentos"
+                             headerToolBar="none"
+                             columnList="processoDocumento, tipoProcessoDocumento, processoDocumentoBin"
+                             showMsg="false" />		
 	
 		            </div>
 		    	</td>

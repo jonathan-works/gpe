@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,70 +13,89 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-    
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                        
-	<ui:define name="title">#{messages['item.titlePage']}</ui:define>
-	<ui:param name="home" value="#{itemHome}" />
+	<ui:define
+         name="title">#{messages['item.titlePage']}</ui:define>
+	<ui:param
+         name="home"
+         value="#{itemHome}" />
 
-	<ui:define name="searchGrid">
-	    <wi:dataTable values="#{itemList.list(15)}"
-					  bean="#{itemList}"
-					  tableTitle="#{messages['item.titleGrid']}"
-					  id="itemList"
-					  rowId="#{row.idItem}">
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarItemForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputText id="codigoItem"
-								  value="#{itemList.entity.codigoItem}"
-								  label="#{messages['item.codigoItem']}"/>
-					<wi:inputText id="descricaoItem"
-								  value="#{itemList.entity.descricaoItem}"
-								  label="#{messages['item.descricaoItem']}"/>
-					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['field.situacao']}"
-											  value="#{itemList.entity.ativo}" />
+	<ui:define
+         name="searchGrid">
+	    <wi:dataTable
+             values="#{itemList.list(15)}"
+             bean="#{itemList}"
+             tableTitle="#{messages['item.titleGrid']}"
+             id="itemList"
+             rowId="#{row.idItem}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="pesquisarItemForm"
+                     formTitle="#{messages['searchForm.title']}">
+					<wi:inputText
+                         id="codigoItem"
+                         value="#{itemList.entity.codigoItem}"
+                         label="#{messages['item.codigoItem']}" />
+					<wi:inputText
+                         id="descricaoItem"
+                         value="#{itemList.entity.descricaoItem}"
+                         label="#{messages['item.descricaoItem']}" />
+					<wi:selectSituacaoOneMenu
+                         id="ativo"
+                         label="#{messages['field.situacao']}"
+                         value="#{itemList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
-			<wi:columnOutputText columnId="codigoItem"
-								 columnHeader="#{messages['item.codigoItem']}"
-								 columnWidth="20%"
-								 value="#{row.codigoItem}" />
-			<wi:columnOutputTextIdent columnId="caminhoCompleto"
-									  columnHeader="#{messages['item.descricaoItem']}"
-									  value="#{row.descricaoItem}"
-									  fullPath="#{row.caminhoCompleto}"/>
-			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['field.situacao']}"
-							columnWidth="15%"
-							value="#{row.ativo}" />
+			<wi:columnOutputText
+                 columnId="codigoItem"
+                 columnHeader="#{messages['item.codigoItem']}"
+                 columnWidth="20%"
+                 value="#{row.codigoItem}" />
+			<wi:columnOutputTextIdent
+                 columnId="caminhoCompleto"
+                 columnHeader="#{messages['item.descricaoItem']}"
+                 value="#{row.descricaoItem}"
+                 fullPath="#{row.caminhoCompleto}" />
+			<wi:columnSituacao
+                 columnId="ativo"
+                 columnHeader="#{messages['field.situacao']}"
+                 columnWidth="15%"
+                 value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
-	<ui:define name="form">
-		<wi:dataForm formId="itemForm" formTitle="#{messages['form.title']}">
-			<wi:inputText id="codigoItem"
-                                  required="true"
-								  label="#{messages['item.codigoItem']}"
-								  value="#{itemHome.instance.codigoItem}" />
-			<wi:inputText id="descricao"
-								  required="true"
-								  label="#{messages['item.descricaoItem']}"
-								  value="#{itemHome.instance.descricaoItem}"/>
-		  	<wi:tree id="itemPai"
-						 assignTo="itemHome.instance.itemPai"
-						 tree="#{itemTree}"
-						 icon="/img/nivelTree.gif"
-						 iconLeaf="/img/file.gif"
-						 label="#{messages['item.itemPai']}"/>
-			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['field.situacao']}"
-								    value="#{itemHome.instance.ativo}" />
+	<ui:define
+         name="form">
+		<wi:dataForm
+             formId="itemForm"
+             formTitle="#{messages['form.title']}">
+			<wi:inputText
+                 id="codigoItem"
+                 required="true"
+                 label="#{messages['item.codigoItem']}"
+                 value="#{itemHome.instance.codigoItem}" />
+			<wi:inputText
+                 id="descricao"
+                 required="true"
+                 label="#{messages['item.descricaoItem']}"
+                 value="#{itemHome.instance.descricaoItem}" />
+		  	<wi:tree
+                 id="itemPai"
+                 assignTo="itemHome.instance.itemPai"
+                 tree="#{itemTree}"
+                 icon="/img/nivelTree.gif"
+                 iconLeaf="/img/file.gif"
+                 label="#{messages['item.itemPai']}" />
+			<wi:selectSituacaoRadio
+                 id="ativo"
+                 label="#{messages['field.situacao']}"
+                 value="#{itemHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 	 

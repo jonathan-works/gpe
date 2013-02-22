@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 				
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -26,10 +25,11 @@
 	  veja em http://www.gnu.org/licenses/  
 	-->	
 
-	<wi:selectOneMenuEntity id="#{f.id}papel"
-				 label="Papel"
-				 items="#{home.papelItems()}"
-				 value="#{home.instance.papel}"
-				 noSelectionLabel="Selecione..."/>
+	<wi:selectOneMenuEntity
+         id="#{f.id}papel"
+         label="Papel"
+         items="#{home.papelItems()}"
+         value="#{home.instance.papel}"
+         noSelectionLabel="Selecione..." />
 				 
 </ui:composition>

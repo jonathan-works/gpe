@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,33 +13,49 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:param
+         name="title"
+         value="#{messages['cep.titlePage']}" />
 
-	<ui:param name="title" value="#{messages['cep.titlePage']}" />
+	<wi:dataReport
+         subtitle="Resultado da Pesquisa "
+         title="#{title}"
+         columns="6"
+         widths="4 4 4 4 4 2"
+         headerText="#{cepList.criteria}">
+		<wi:reportColumnHeader
+             title="#{messages['cep.numeroCep']}" />
+		<wi:reportColumnHeader
+             title="#{messages['cep.nomeLogradouro']}" />
+		<wi:reportColumnHeader
+             title="#{messages['cep.nomeBairro']}" />
+		<wi:reportColumnHeader
+             title="#{messages['cep.municipio']}" />
+		<wi:reportColumnHeader
+             title="#{messages['cep.complemento']}" />
+		<wi:reportColumnHeader
+             title="#{messages['field.situacao']}" />
 
-	<wi:dataReport subtitle="Resultado da Pesquisa "
-				   title="#{title}"
-				   columns="6"
-				   widths="4 4 4 4 4 2"
-				   headerText="#{cepList.criteria}">
-		<wi:reportColumnHeader title="#{messages['cep.numeroCep']}"/>
-		<wi:reportColumnHeader title="#{messages['cep.nomeLogradouro']}"/>
-		<wi:reportColumnHeader title="#{messages['cep.nomeBairro']}"/>
-		<wi:reportColumnHeader title="#{messages['cep.municipio']}"/>
-		<wi:reportColumnHeader title="#{messages['cep.complemento']}"/>
-		<wi:reportColumnHeader title="#{messages['field.situacao']}"/>
-
-		<ui:repeat var="row" value="#{cepList.list()}">
-			<wi:reportColumn value="#{row.numeroCep}"/>
-			<wi:reportColumn value="#{row.nomeLogradouro}"/>
-			<wi:reportColumn value="#{row.nomeBairro}"/>
-			<wi:reportColumn value="#{row.municipio}"/>
-			<wi:reportColumn value="#{row.complemento}"/>
-			<wi:reportColumnSituacao value="#{row.ativo}"
-							 columnAlign="center"/>
+		<ui:repeat
+             var="row"
+             value="#{cepList.list()}">
+			<wi:reportColumn
+                 value="#{row.numeroCep}" />
+			<wi:reportColumn
+                 value="#{row.nomeLogradouro}" />
+			<wi:reportColumn
+                 value="#{row.nomeBairro}" />
+			<wi:reportColumn
+                 value="#{row.municipio}" />
+			<wi:reportColumn
+                 value="#{row.complemento}" />
+			<wi:reportColumnSituacao
+                 value="#{row.ativo}"
+                 columnAlign="center" />
 		</ui:repeat>
 
 	</wi:dataReport>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:wi="http://www.itx.com.br/jsf">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -20,12 +20,15 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	<f:subview id="#{id}Script">
-		<wi:inputTextarea id="#{id}Event"
-			style="width:100%; #{height}" 
-			value="#{event.currentAction.expression}" 
-			label="Expressão">
-			<wi:ajaxSupport reRender="#{id}EventList" />
+	<f:subview
+         id="#{id}Script">
+		<wi:inputTextarea
+             id="#{id}Event"
+             style="width:100%; #{height}"
+             value="#{event.currentAction.expression}"
+             label="Expressão">
+			<wi:ajaxSupport
+                 reRender="#{id}EventList" />
 		</wi:inputTextarea>
 	</f:subview>
 </ui:composition>

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		  xmlns="http://www.w3.org/1999/xhtml"
-		  xmlns:s="http://jboss.org/schema/seam/taglib"
-		  xmlns:ui="http://java.sun.com/jsf/facelets"
-		  xmlns:f="http://java.sun.com/jsf/core"
-		  xmlns:h="http://java.sun.com/jsf/html"
-		  xmlns:c="http://java.sun.com/jsp/jstl/core"
-		  xmlns:a="http://richfaces.org/a4j"
-		  xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:c="http://java.sun.com/jsp/jstl/core"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -29,30 +28,43 @@
 		
 	<ui:composition>
 	
-	     <s:decorate template="/WEB-INF/xhtml/components/templates/view.xhtml">
-				<ui:define name="label">#{label}</ui:define>
-			<c:if test="#{f.value.length() le 200}">
+	     <s:decorate
+             template="/WEB-INF/xhtml/components/templates/view.xhtml">
+				<ui:define
+                 name="label">#{label}</ui:define>
+			<c:if
+                 test="#{f.value.length() le 200}">
 				#{f.value}
 			</c:if>
 	
-			<c:if test="#{f.value.length() > 200}">			
-				<h:graphicImage rendered="#{!empty f.value}" url="#{a4jSkin.imgIconView}" style="cursor:pointer"
-					onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
-				<rich:popupPanel id="mp_#{f.id}" height="300" 
-								 width="600" rendered="#{!empty f.value}"
-								 resizeable="false">
-					<f:facet name="header">
-						<h:outputText value="#{label}:" />
+			<c:if
+                 test="#{f.value.length() &gt; 200}">			
+				<h:graphicImage
+                     rendered="#{!empty f.value}"
+                     url="#{a4jSkin.imgIconView}"
+                     style="cursor:pointer"
+                     onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
+				<rich:popupPanel
+                     id="mp_#{f.id}"
+                     height="300"
+                     width="600"
+                     rendered="#{!empty f.value}"
+                     resizeable="false">
+					<f:facet
+                         name="header">
+						<h:outputText
+                             value="#{label}:" />
 					</f:facet>
-					<f:facet name="controls">
-		          		<span style="cursor:pointer; font-family: Verdana, Arial; 
-		          			padding-right: 22px"
-		          			onclick="Richfaces.hideModalPanel(mp)">X</span>
+					<f:facet
+                         name="controls">
+		          		<span
+                             style="cursor:pointer; font-family: Verdana, Arial;                 padding-right: 22px"
+                             onclick="Richfaces.hideModalPanel(mp)">X</span>
 					</f:facet>
-					<h:inputTextarea readonly="true"
-						style="width: 592px; height: 270px; padding: 3px;
-						position: relative; top: -10px; left: -10px"
-						value="#{f.value}" />
+					<h:inputTextarea
+                         readonly="true"
+                         style="width: 592px; height: 270px; padding: 3px;       position: relative; top: -10px; left: -10px"
+                         value="#{f.value}" />
 				</rich:popupPanel>
 			</c:if>
 	    </s:decorate>

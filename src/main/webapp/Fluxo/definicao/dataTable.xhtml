@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:rich="http://richfaces.org/rich">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -20,28 +20,35 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	<rich:dataTable value="#{values}" 
-		id="#{id}"
-		rowKeyVar="key"
-		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
-		onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
-		styleClass="#{styleClass}"
-		style="#{style}"
-		var="row">
-		<rich:column style="padding:2px; width: 20px"
-			styleClass="dr-table-subheader rich-table-subheader">
-			<f:facet name="header">
-				<ui:insert name="headerToolBar" />
+	<rich:dataTable
+         value="#{values}"
+         id="#{id}"
+         rowKeyVar="key"
+         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+         onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+         styleClass="#{styleClass}"
+         style="#{style}"
+         var="row">
+		<rich:column
+             style="padding:2px; width: 20px"
+             styleClass="dr-table-subheader rich-table-subheader">
+			<f:facet
+                 name="header">
+				<ui:insert
+                     name="headerToolBar" />
 			</f:facet>
-			<div onmouseover="firstChild.style.visibility='visible'"
-				onmouseout="firstChild.style.visibility='hidden'"
-				style="width: 99%; text-align: center;"
-				><div style="visibility: hidden;">
-					<ui:insert name="toolBar"/>
+			<div
+                 onmouseover="firstChild.style.visibility='visible'"
+                 onmouseout="firstChild.style.visibility='hidden'"
+                 style="width: 99%; text-align: center;"><div
+                     style="visibility: hidden;">
+					<ui:insert
+                         name="toolBar" />
 				</div>
 			</div>
 		</rich:column>
-		<ui:insert name="columns"/>
+		<ui:insert
+             name="columns" />
 	</rich:dataTable>
 
 </ui:composition>

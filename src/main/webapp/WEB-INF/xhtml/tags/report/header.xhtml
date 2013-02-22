@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,35 +13,55 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
 
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:p="http://jboss.org/schema/seam/pdf">
-
-	<p:paragraph alignment="center"><p:font size="18">#{nomeSistema}</p:font></p:paragraph>
-	<p:table columns="2" widthPercentage="100" widths="4 1"
-			 spacingBefore="20" spacingAfter="33">
-		<p:cell verticalAlignment="middle" borderWidth="0">
-			<p:font size="16">
+	<p:paragraph
+         alignment="center"><p:font
+             size="18">#{nomeSistema}</p:font></p:paragraph>
+	<p:table
+         columns="2"
+         widthPercentage="100"
+         widths="4 1"
+         spacingBefore="20"
+         spacingAfter="33">
+		<p:cell
+             verticalAlignment="middle"
+             borderWidth="0">
+			<p:font
+                 size="16">
 				<p:paragraph>#{messages[bean.title.concat('.titlePage')]}</p:paragraph>
 			</p:font>
 		</p:cell>
-		<p:cell horizontalAlignment="right" borderWidth="0">
-			<p:font size="8">
-				<p:table columns="1">
-					<p:cell horizontalAlignment="right" borderWidth="0">
+		<p:cell
+             horizontalAlignment="right"
+             borderWidth="0">
+			<p:font
+                 size="8">
+				<p:table
+                     columns="1">
+					<p:cell
+                         horizontalAlignment="right"
+                         borderWidth="0">
 						<p:paragraph>
-							<p:text value="#{currentDate}">
+							<p:text
+                                 value="#{currentDate}">
 								<f:convertDateTime />
 							</p:text>
 						</p:paragraph>
 					</p:cell>
-					<p:cell borderWidth="0" horizontalAlignment="right">
-						<p:paragraph alignment="right">
-							<p:text value="#{currentTime}">
-								<s:convertDateTime pattern="HH:mm:ss"/>
+					<p:cell
+                         borderWidth="0"
+                         horizontalAlignment="right">
+						<p:paragraph
+                             alignment="right">
+							<p:text
+                                 value="#{currentTime}">
+								<s:convertDateTime
+                                     pattern="HH:mm:ss" />
 							</p:text>
 						</p:paragraph>
 					</p:cell>

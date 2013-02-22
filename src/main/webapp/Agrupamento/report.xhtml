@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,23 +13,29 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:ui="http://java.sun.com/jsf/facelets">
+	<wi:dataReport
+         title="#{messages['agrupamento.reportTitle']}"
+         columns="2"
+         widths="3 1"
+         headerText="#{agrupamentoList.criteria}">
 
-	<wi:dataReport title="#{messages['agrupamento.reportTitle']}"
-				   columns="2"
-				   widths="3 1"
-				   headerText="#{agrupamentoList.criteria}">
+		<wi:reportColumnHeader
+             title="#{messages['agrupamento.agrupamento']}" />
+		<wi:reportColumnHeader
+             title="#{messages['field.situacao']}" />
 
-		<wi:reportColumnHeader title="#{messages['agrupamento.agrupamento']}"/>
-		<wi:reportColumnHeader title="#{messages['field.situacao']}"/>
-
-		<ui:repeat var="row" value="#{agrupamentoList.list()}">
-			<wi:reportColumn value="#{row.agrupamento}" />
-			<wi:reportColumnSituacao value="#{row.ativo}"
-							 columnAlign="center"/>
+		<ui:repeat
+             var="row"
+             value="#{agrupamentoList.list()}">
+			<wi:reportColumn
+                 value="#{row.agrupamento}" />
+			<wi:reportColumnSituacao
+                 value="#{row.ativo}"
+                 columnAlign="center" />
 		</ui:repeat>
 
 	</wi:dataReport>

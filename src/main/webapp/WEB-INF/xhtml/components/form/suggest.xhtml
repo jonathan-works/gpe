@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi= "http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -29,16 +28,21 @@
 	
 	<ui:composition>
 		
-		<a:region renderRegionOnly="true">
+		<a:region
+             renderRegionOnly="true">
 		
-			<ui:param name="handler" value="#{empty props.handler ? null : util.eval(props.handler)}" />
-			<ui:param name="assignTo" value="#{empty props.assignTo ? assignTo : props.assignTo}" />
+			<ui:param
+                 name="handler"
+                 value="#{empty props.handler ? null : util.eval(props.handler)}" />
+			<ui:param
+                 name="assignTo"
+                 value="#{empty props.assignTo ? assignTo : props.assignTo}" />
 			
-			<wi:suggest 
-				assignTo="#{assignTo}"
-				bean="#{handler}"
-				label="#{label}"
-				maxlength="#{empty props.maxlength ? '250' : props.maxlength}"/>
+			<wi:suggest
+                 assignTo="#{assignTo}"
+                 bean="#{handler}"
+                 label="#{label}"
+                 maxlength="#{empty props.maxlength ? '250' : props.maxlength}" />
 		
 		</a:region>
 				

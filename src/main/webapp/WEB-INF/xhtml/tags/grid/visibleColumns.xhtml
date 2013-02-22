@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,69 +13,82 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-
-<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:a="http://richfaces.org/a4j"
-    xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:rich="http://richfaces.ajax4jsf.org/rich">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
  
-	<rich:collapsiblePanel label="Colunas" 
-							opened="false" 
-							switchType="client">
-		<h:form id="#{gridId}ColumnListForm">
-			<rich:dataTable value="#{bean.allColumns}" 
-							style="margin-top: 6px; width: 100%"
-							var="col" 
-							rowKeyVar="key">
-				<ui:param name="visible" value="#{bean.visibleColumns.contains(col)}" />
-				<rich:column style="width:40px; text-align:center"
-							 styleClass="dr-table-subheader rich-table-subheader">
-					<div onmouseover="firstChild.style.visibility='visible'"
-						 onmouseout="firstChild.style.visibility='hidden'"
-						 style="width: 100%; text-align: center}">
-						<div style="visibility: hidden;">
+	<rich:collapsiblePanel
+         label="Colunas"
+         opened="false"
+         switchType="client">
+		<h:form
+             id="#{gridId}ColumnListForm">
+			<rich:dataTable
+                 value="#{bean.allColumns}"
+                 style="margin-top: 6px; width: 100%"
+                 var="col"
+                 rowKeyVar="key">
+				<ui:param
+                     name="visible"
+                     value="#{bean.visibleColumns.contains(col)}" />
+				<rich:column
+                     style="width:40px; text-align:center"
+                     styleClass="dr-table-subheader rich-table-subheader">
+					<div
+                         onmouseover="firstChild.style.visibility='visible'"
+                         onmouseout="firstChild.style.visibility='hidden'"
+                         style="width: 100%; text-align: center}">
+						<div
+                             style="visibility: hidden;">
 							<a:commandLink
-								reRender="#{gridId}Div,#{gridId}ColumnListForm"
-								status="status"
-								action="#{bean.toggleVisibleColumn(col.id)}">
-								<h:graphicImage url="/img/add.gif" 
-									title="Mostrar coluna"
-									rendered="#{!visible}" />
-								<h:graphicImage url="/img/removeCol.png" 
-									title="Esconder coluna"
-									rendered="#{visible}" />
+                                 reRender="#{gridId}Div,#{gridId}ColumnListForm"
+                                 status="status"
+                                 action="#{bean.toggleVisibleColumn(col.id)}">
+								<h:graphicImage
+                                     url="/img/add.gif"
+                                     title="Mostrar coluna"
+                                     rendered="#{!visible}" />
+								<h:graphicImage
+                                     url="/img/removeCol.png"
+                                     title="Esconder coluna"
+                                     rendered="#{visible}" />
 							</a:commandLink>
 							<a:commandLink
-								rendered="#{key != 0}"
-								reRender="#{gridId}Div,#{gridId}ColumnListForm"
-								status="status"
-								action="#{bean.moveColumnUp(col)}">
-								<h:graphicImage url="/img/jbpm/up.gif" 
-									title="Subir"
-									rendered="#{visible}" />
+                                 rendered="#{key != 0}"
+                                 reRender="#{gridId}Div,#{gridId}ColumnListForm"
+                                 status="status"
+                                 action="#{bean.moveColumnUp(col)}">
+								<h:graphicImage
+                                     url="/img/jbpm/up.gif"
+                                     title="Subir"
+                                     rendered="#{visible}" />
 							</a:commandLink>
 							<a:commandLink
-								rendered="#{key lt bean.visibleColumns.size - 1}"
-								reRender="#{gridId}Div,#{gridId}ColumnListForm"
-								status="status"
-								action="#{bean.moveColumnDown(col)}">
-								<h:graphicImage url="/img/jbpm/down.gif" 
-									title="Descer"
-									rendered="#{visible}" />
+                                 rendered="#{key lt bean.visibleColumns.size - 1}"
+                                 reRender="#{gridId}Div,#{gridId}ColumnListForm"
+                                 status="status"
+                                 action="#{bean.moveColumnDown(col)}">
+								<h:graphicImage
+                                     url="/img/jbpm/down.gif"
+                                     title="Descer"
+                                     rendered="#{visible}" />
 							</a:commandLink>
 						</div>
 					</div>
 				</rich:column>
 				<rich:column>
-					<f:facet name="header">Coluna</f:facet>
-					<h:outputText style="#{!visible ? 'color: #888888' : ''}" 
-								  value="#{messages[col.toString()]}" />
+					<f:facet
+                         name="header">Coluna</f:facet>
+					<h:outputText
+                         style="#{!visible ? 'color: #888888' : ''}"
+                         value="#{messages[col.toString()]}" />
 				</rich:column>
 			</rich:dataTable>
 		</h:form>

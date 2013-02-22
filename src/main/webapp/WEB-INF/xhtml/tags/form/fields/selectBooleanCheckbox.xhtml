@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,30 +13,34 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
-<ui:composition	xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:rich="http://richfaces.org/rich">
+	<ui:param
+         name="template"
+         value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
 
-	<ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}"/>
-
-	<s:decorate id="#{id}Decoration" 
-				template="#{template}"
-				widthDiv="#{wi:get(widthDiv, '100px')}"
-				rendered="#{wi:get(rendered, true)}">
-		<ui:define name="label">#{label}</ui:define>
-           <h:selectBooleanCheckbox id="#{id}" 
-					            	styleClass="checkbox"
-					            	value="#{value}"
-									required="#{required}" 
-					                disabled="#{wi:get(disabled, false)}"
-					                onclick="#{onclick}">
+	<s:decorate
+         id="#{id}Decoration"
+         template="#{template}"
+         widthDiv="#{wi:get(widthDiv, '100px')}"
+         rendered="#{wi:get(rendered, true)}">
+		<ui:define
+             name="label">#{label}</ui:define>
+           <h:selectBooleanCheckbox
+             id="#{id}"
+             styleClass="checkbox"
+             value="#{value}"
+             required="#{required}"
+             disabled="#{wi:get(disabled, false)}"
+             onclick="#{onclick}">
 			<ui:insert />
 		</h:selectBooleanCheckbox>
 	</s:decorate>

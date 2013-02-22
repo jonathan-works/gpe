@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-		xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:s="http://jboss.org/schema/seam/taglib"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:a="http://richfaces.org/a4j"
-        xmlns:rich="http://richfaces.org/rich">
+<jsp:root
+     xmlns:jsp="http://java.sun.com/JSP/Page"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
  <!-- 
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -25,27 +25,51 @@
         #{props.header}?Indica o nome do header da grid
         
 <ui:composition>
-		<ui:param name="id" value="#{c.id.contains('.') ? c.id.split('\\.')[0] : c.id}" />
-		<ui:param name="f" value="#{bean.fields[id]}" />
-		<ui:param name="type" value="#{f.type}" />
-		<ui:param name="type" value="#{empty type ? 'default' : type}" />
-		<ui:param name="isLeftGrid" value="#{empty isLeftGrid ? 'false' : isLeftGrid}" />
+		<ui:param
+             name="id"
+             value="#{c.id.contains('.') ? c.id.split('\\.')[0] : c.id}" />
+		<ui:param
+             name="f"
+             value="#{bean.fields[id]}" />
+		<ui:param
+             name="type"
+             value="#{f.type}" />
+		<ui:param
+             name="type"
+             value="#{empty type ? 'default' : type}" />
+		<ui:param
+             name="isLeftGrid"
+             value="#{empty isLeftGrid ? 'false' : isLeftGrid}" />
 		
-		<ui:param name="header" value="#{empty props.header ? c.header : props.header}" />
-		<ui:param name="evalHeader" value="#{empty props.evalHeader ? false : props.evalHeader}" />
-		<ui:param name="header" value="#{evalHeader ? util.eval(header) : header}" />
-		<ui:param name="mostrarOrdenar" value="#{isLeftGrid != true and false}" />
+		<ui:param
+             name="header"
+             value="#{empty props.header ? c.header : props.header}" />
+		<ui:param
+             name="evalHeader"
+             value="#{empty props.evalHeader ? false : props.evalHeader}" />
+		<ui:param
+             name="header"
+             value="#{evalHeader ? util.eval(header) : header}" />
+		<ui:param
+             name="mostrarOrdenar"
+             value="#{isLeftGrid != true and false}" />
 
-  <h:form ajaxSubmit="true">
-  	<a:commandLink styleClass="columnHeader"
-  	 	reRender="#{gridId}"
-  	 	status=":status"
-		value="#{header} #{bean.order==asc ? messages.down : ( bean.order==desc ? messages.up : '' )} #{empty bean.entity[f.id] ? '' : '*'}"
-		limitToList="true"
-		rendered="#{mostrarOrdenar}">
-       <f:param name="#{bean.gridId}.order" value="#{bean.order==asc ? desc : asc}"/>
+  <h:form
+             ajaxSubmit="true">
+  	<a:commandLink
+                 styleClass="columnHeader"
+                 reRender="#{gridId}"
+                 status=":status"
+                 value="#{header} #{bean.order==asc ? messages.down : ( bean.order==desc ? messages.up : '' )} #{empty bean.entity[f.id] ? '' : '*'}"
+                 limitToList="true"
+                 rendered="#{mostrarOrdenar}">
+       <f:param
+                     name="#{bean.gridId}.order"
+                     value="#{bean.order==asc ? desc : asc}" />
    </a:commandLink>
-   <h:outputText value="#{header}" rendered="#{not mostrarOrdenar}" />
+   <h:outputText
+                 value="#{header}"
+                 rendered="#{not mostrarOrdenar}" />
    </h:form>
 </ui:composition> 
 </jsp:root>

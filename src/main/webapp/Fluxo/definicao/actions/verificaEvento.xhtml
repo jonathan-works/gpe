@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-                xmlns:f="http://java.sun.com/jsf/core"
-		        xmlns:a="http://richfaces.org/a4j"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:rich="http://richfaces.org/rich">
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -26,43 +25,60 @@
 	  veja em http://www.gnu.org/licenses/  
 	-->
 
-	<s:div id="verificaEventoDiv">
-		<f:facet name="header">
-			<h:outputText value="#{messages['verificaEvento.title']}" />
+	<s:div
+         id="verificaEventoDiv">
+		<f:facet
+             name="header">
+			<h:outputText
+                 value="#{messages['verificaEvento.title']}" />
 		</f:facet>
-		<rich:panel header="#{messages['verificaEvento.panelHeader']}" style="height:550px;">
-			<h:form id="verificaEventoForm">
-				<wi:selectOneRadio id="andCondition"
-								   valueList="true:AND,false:OR"
-								   label="#{messages['verificaEvento.tipoCondicao']}"
-								   value="#{actionTemplate.andCondition}"/>
-				<wi:selectBooleanCheckbox id="notCondition"
-								   		  label="#{messages['verificaEvento.negarCondicao']}"
-								   		  value="#{actionTemplate.notCondition}"/>
-				<s:div style="clear: both">
-					<wi:pickList id="agrupamentoVerificarEventos"
-								 value="#{actionTemplate.registrados}"
-								 sourceListWidth="250"
-								 targetListWidth="250"
-								 listsHeight="200px"
-								 style="margin-top: 10px;"
-								 itemValues="#{actionTemplate.agrupamentos}"
-								 itemLabel="#{var}">
+		<rich:panel
+             header="#{messages['verificaEvento.panelHeader']}"
+             style="height:550px;">
+			<h:form
+                 id="verificaEventoForm">
+				<wi:selectOneRadio
+                     id="andCondition"
+                     valueList="true:AND,false:OR"
+                     label="#{messages['verificaEvento.tipoCondicao']}"
+                     value="#{actionTemplate.andCondition}" />
+				<wi:selectBooleanCheckbox
+                     id="notCondition"
+                     label="#{messages['verificaEvento.negarCondicao']}"
+                     value="#{actionTemplate.notCondition}" />
+				<s:div
+                     style="clear: both">
+					<wi:pickList
+                         id="agrupamentoVerificarEventos"
+                         value="#{actionTemplate.registrados}"
+                         sourceListWidth="250"
+                         targetListWidth="250"
+                         listsHeight="200px"
+                         style="margin-top: 10px;"
+                         itemValues="#{actionTemplate.agrupamentos}"
+                         itemLabel="#{var}">
 						<wi:ajaxSupport />
 					</wi:pickList>
-					<h:outputText value="#{messages['verificaEvento.obs']}" 
-								  style="margin-left: 8px;"/>
-					<br/>
-					<a:commandButton value="Gravar"
-									 oncomplete="$(idTextarea).setValue($('verificaEventoForm:createdExpression').innerHTML); Richfaces.hideTopModalPanel(); $(idTextarea).onchange()"
-									 styleClass="buttons dr-tbpnl-tb-inact"
-									 reRender="trasitionCondition, createdExpression"
-									 action="#{actionTemplate.createExpression}" />
+					<h:outputText
+                         value="#{messages['verificaEvento.obs']}"
+                         style="margin-left: 8px;" />
+					<br />
+					<a:commandButton
+                         value="Gravar"
+                         oncomplete="$(idTextarea).setValue($('verificaEventoForm:createdExpression').innerHTML); Richfaces.hideTopModalPanel(); $(idTextarea).onchange()"
+                         styleClass="buttons dr-tbpnl-tb-inact"
+                         reRender="trasitionCondition, createdExpression"
+                         action="#{actionTemplate.createExpression}" />
 				</s:div>
-				<rich:messages id="messagesTrasition" style="color:red" ajaxRendered="true" globalOnly="false" />
-				<h:outputText id="createdExpression" 
-							  style="display:none"
-							  value="#{actionTemplate.createdExpression}" />
+				<rich:messages
+                     id="messagesTrasition"
+                     style="color:red"
+                     ajaxRendered="true"
+                     globalOnly="false" />
+				<h:outputText
+                     id="createdExpression"
+                     style="display:none"
+                     value="#{actionTemplate.createdExpression}" />
 			</h:form>
 		</rich:panel>
 	</s:div>

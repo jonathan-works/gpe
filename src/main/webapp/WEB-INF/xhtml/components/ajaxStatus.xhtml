@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -14,21 +13,23 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
- 	
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:rich="http://richfaces.org/rich"
-				xmlns:itx="http://www.itx.com.br/jsf"
-				xmlns:a4j="http://richfaces.org/a4j"
-				xmlns:s="http://jboss.org/schema/seam/taglib">
+--><ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:itx="http://www.itx.com.br/jsf"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
 	
-	<a4j:status id="status">
-	   <f:facet name="start">
-	        <h:graphicImage value="#{a4jSkin.imgFigStatusRetangular}" 
-	        styleClass="positionImg"/>
+	<a4j:status
+         id="status">
+	   <f:facet
+             name="start">
+	        <h:graphicImage
+                 value="#{a4jSkin.imgFigStatusRetangular}"
+                 styleClass="positionImg" />
 	   </f:facet>
 	</a4j:status>		
 </ui:composition>
