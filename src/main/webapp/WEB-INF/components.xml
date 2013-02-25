@@ -19,7 +19,7 @@
                  http://jboss.org/schema/seam/web http://jboss.org/schema/seam/web-2.3.xsd
                  http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">
 
-   <core:init debug="true" jndi-pattern="java:app/EPA-ejb/#{ejbName}"/>
+   <core:init debug="false" jndi-pattern="java:app/EPA-ejb/#{ejbName}"/>
      
 	<web:hot-deploy-filter url-pattern="*.seam"/>
      

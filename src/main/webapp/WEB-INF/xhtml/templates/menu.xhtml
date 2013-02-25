@@ -14,7 +14,7 @@
 	 	<a:jsFunction
              status="status"
              name="refreshPage"
-             reRender="pageBody" />
+             render="pageBody" />
     </h:form>
     
 	<ui:param
@@ -38,7 +38,7 @@
                      test="#{empty drop.url}">
 					<h:form>
 						<rich:dropDownMenu
-                             value="#{drop.label}">
+                             label="#{drop.label}">
 							<ui:include
                                  src="/WEB-INF/xhtml/templates/subMenu.xhtml">
 								<ui:param
@@ -53,7 +53,7 @@
 					<h:form>
 						<rich:menuItem
                              submitMode="server"
-                             value="#{drop.label}"
+                             label="#{drop.label}"
                              action="#{drop.url}">
 							<s:conversationPropagation
                                  type="end" />

@@ -13,14 +13,14 @@
          var="sub">
 			<rich:menuItem
              submitMode="server"
-             value="#{sub.label}"
+             label="#{sub.label}"
              action="#{conversationUtil.endBeforeRedirect(sub.url)}"
-             ajaxSingle="true"
+             execute="@this"
              rendered="#{empty sub.children}">
 			</rich:menuItem>
 	
 			<rich:menuGroup
-             value="#{sub.label}"
+             label="#{sub.label}"
              rendered="#{!empty sub.children}">
 				<ui:include
                  src="/WEB-INF/xhtml/templates/subMenu.xhtml">

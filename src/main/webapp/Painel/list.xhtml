@@ -38,13 +38,14 @@
 		    	<tr
                      valign="top">
 			    	<td
-                         width="310">   	
+                         width="310">   
+                         <h:form>	
 			    		<rich:tabPanel
                              id="tabPainelUsuario"
                              switchType="ajax"
                              status=":status">
 								<rich:tab
-                                 label="Caixas"
+                                 header="Caixas"
                                  reRender="painelProcesso"
                                  action="#{tarefasTree.clearTree()}">
 									<s:div
@@ -53,7 +54,8 @@
                                          src="tarefasTree.xhtml" />
 									</s:div>
 								</rich:tab> 
-						</rich:tabPanel> 				
+						</rich:tabPanel>
+						</h:form> 				
 			    	</td>
 					<td>				
 						<s:div
