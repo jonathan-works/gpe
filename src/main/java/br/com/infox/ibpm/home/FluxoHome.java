@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
@@ -31,6 +30,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.ibpm.entity.Fluxo;
+import br.com.itx.util.ComponentUtil;
 
  
 @Name(FluxoHome.NAME)
@@ -43,7 +43,7 @@ public class FluxoHome
 	private List<Fluxo> fluxoList;
 	
 	public static FluxoHome instance() {
-		return (FluxoHome) Component.getInstance(NAME);
+		return ComponentUtil.getComponent(FluxoHome.NAME);
 	}
 	
 	@Override
@@ -121,7 +121,8 @@ public class FluxoHome
 		return "updated";
 	}
 	
-	public List<Fluxo> getFluxoList() { 
+	@SuppressWarnings("unchecked")
+    public List<Fluxo> getFluxoList() { 
 		if(fluxoList == null) {
 			fluxoList = new ArrayList<Fluxo>();
 			for (Fluxo f : (List<Fluxo>) getEntityManager()

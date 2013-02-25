@@ -92,9 +92,10 @@
     font-size: 20pt;
     height: 85px;
     top: 0px;
-    left: 0px;
+    left: 50%;
     text-align: center;
-    width: 100%;
+    width: 295px;
+    margin: 0 0 0 -147.5px;
     z-index: 0;
 }
 

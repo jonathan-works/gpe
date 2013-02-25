@@ -9,7 +9,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
@@ -50,7 +49,8 @@ public class CaixaHome extends AbstractCaixaHome<Caixa> {
 		return getPreviousTasks(EntityUtil.find(Tarefa.class, idTarefa));
 	}
 	
-	public List<SelectItem> getPreviousTasks(Tarefa tarefa) {
+	@SuppressWarnings("unchecked")
+    public List<SelectItem> getPreviousTasks(Tarefa tarefa) {
 		List<SelectItem> previousTasksItems = new ArrayList<SelectItem>();
 		Session session = JbpmUtil.getJbpmSession();
 		StringBuilder sql = new StringBuilder();
