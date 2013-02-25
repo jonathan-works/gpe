@@ -31,24 +31,81 @@
 	<ui:param name="home" value="#{fluxoHome}" />
 	
 	<ui:define name="searchGrid">   
-	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
-	    <wi:datagrid 
-	    	bean="#{fluxoGrid}" 
-	    	searchBean="#{fluxoSearch}" 
-	    	title="#{messages['fluxo.titleGrid']}"
-	    	columnList="codFluxo,fluxo,publicado,dataInicioPublicacao,dataFimPublicacao, ativo"
-	    />
+	    <wi:dataTable values="#{fluxoList.list(15)}"
+                      bean="#{fluxoList}"
+                      tableTitle="#{messages['fluxo.titleGrid']}"
+                      id="fluxoList"
+                      rowId="#{row.idFluxo}">
+            <ui:define name="headerToolBar">
+            </ui:define>
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarFluxoForm"
+                               formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText id="codFluxo" label="#{messages['fluxo.codFluxo']}" value="#{fluxoList.entity.codFluxo}"/>
+                    <wi:inputText id="descricao" label="#{messages['fluxo.descricao']}" value="#{fluxoList.entity.fluxo}"/>
+                    <wi:selectBooleanMenu id="publicado" label="#{messages['fluxo.publicado']}" value="#{fluxoList.entity.publicado}"/>
+                    <wi:selectSituacaoOneMenu id="ativo" label="#{messages['field.situacao']}" value="#{fluxoList.entity.ativo}"/>
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="codFluxo"
+                                 columnHeader="#{messages['fluxo.codFluxo']}"
+                                 value="#{row.codFluxo}" />
+            <wi:columnOutputText columnId="fluxo"
+                                 columnHeader="#{messages['fluxo.descricao']}"
+                                 value="#{row.fluxo}" />
+            <wi:columnOutputText columnId="dataInicioPublicacao"
+                                 columnHeader="#{messages['fluxo.dataInicioPublicacao']}"
+                                 value="#{row.dataInicioPublicacao}" />
+            <wi:columnOutputText columnId="dataFimPublicacao"
+                                 columnHeader="#{messages['fluxo.dataFimPublicacao']}"
+                                 value="#{row.dataFimPublicacao}" />
+            <wi:columnBoolean columnId="publicado"
+                                 columnHeader="#{messages['fluxo.publicado']}"
+                                 value="#{row.publicado}" />
+            <wi:columnSituacao columnId="ativo"
+                               columnHeader="#{messages['field.situacao']}"
+                               value="#{row.ativo}" />
+        </wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form" action="#{fluxoHome.newInstance()}">
-		<c:if test="#{canEdit}">
-			<wi:form form="#{fluxoForm}" 
-			         formTitle="#{messages['form.title']}"
-	                 persistSemNewInstance="true"/>
-		</c:if>
-		<c:if test="#{not canEdit}">
-			<wi:view form="#{fluxoView}" columns="4" title="#{messages['fluxo.titleView']}"/>
-		</c:if>
+		<wi:dataForm formId="fluxoForm"
+                     formTitle="#{messages['form.title']}">
+            <wi:inputText id="codFluxo"
+                         value="#{fluxoHome.instance.codFluxo}"
+                         required="true"
+                         label="#{messages['fluxo.codFluxo']}" />
+            <wi:inputText id="descricaoFluxo"
+                          label="#{messages['fluxo.descricao']}"
+                          required="true"
+                          value="#{fluxoHome.instance.fluxo}"
+                          readonly="#{!canEdit}"/>
+            <wi:inputNumber id="prazoDias"
+                            label="#{messages['fluxo.qtPrazo']}"
+                            required="true"
+                            value="#{fluxoHome.instance.qtPrazo}"
+                            readonly="#{!canEdit}"/>
+            <wi:inputDate id="dataInicio"
+                          label="#{messages['fluxo.dataInicioPublicacao']}"
+                          required="true"
+                          value="#{fluxoHome.instance.dataInicioPublicacao}"                          
+                          readonly="#{!canEdit}"/>
+            <wi:inputDate id="dataFim"
+                          label="#{messages['fluxo.dataFimPublicacao']}"
+                          value="#{fluxoHome.instance.dataFimPublicacao}"                          
+                          readonly="#{!canEdit}"/>
+            <wi:selectBooleanRadio id="publicado"
+                                   label="#{messages['fluxo.publicado']}"
+                                   value="#{fluxoHome.instance.publicado}"
+                                   readonly="#{!canEdit}"/>
+            <wi:selectSituacaoRadio id="ativo"
+                                    label="#{messages['field.situacao']}"
+                                    value="#{fluxoHome.instance.ativo}" 
+                                    readonly="#{!canEdit}"/>
+            <ui:define name="buttons">
+                <ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml" />
+            </ui:define>
+        </wi:dataForm>
 	</ui:define>
 	
 	<ui:define name="tabs">
