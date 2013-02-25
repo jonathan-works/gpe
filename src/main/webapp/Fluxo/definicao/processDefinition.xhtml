@@ -42,24 +42,24 @@
 		<rich:tab label="#{messages['processDefinition.properties']}">
 			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px"
 				header="#{messages['processDefinition.info']}" >
-				<wi:inputText label="#{messages['fluxo.codFluxo']}" 
-					required="#{! processBuilder.exists}"
-					readonly="true"
-					id="id" value="#{processBuilder.id}">
+				<wi:inputText id="codFluxo" 
+                              label="#{messages['fluxo.codFluxo']}"
+                              value="#{processBuilder.id}" 
+					          readonly="true">
 					<f:validator validatorId="idValidator" />
 					<wi:ajaxSupport reRender="idDecoration"/>
 				</wi:inputText>
 
-				<wi:inputText label="#{messages['fluxo.fluxo']}" 
-					required="true"
-					readonly="true"
-					id="nome"
-                    value="#{def.name}">
+				<wi:inputText id="nome"
+                              label="#{messages['fluxo.fluxo']}"
+                              value="#{def.name}" 
+                              readonly="true">
 					<wi:ajaxSupport reRender="nomeDecoration"/>
 				</wi:inputText>
 				
-				<wi:inputTextarea id="description" value="#{def.description}" 
-					label="#{messages['processDefinition.description']}">
+				<wi:inputTextarea id="description"
+                                  value="#{def.description}" 
+					              label="#{messages['processDefinition.description']}">
 					<wi:ajaxSupport/>
 				</wi:inputTextarea> 
 			</rich:panel>
