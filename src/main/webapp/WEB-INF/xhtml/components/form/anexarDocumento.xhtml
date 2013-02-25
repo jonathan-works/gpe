@@ -28,10 +28,6 @@
 		#{home.setModelo(false)}
 		<ui:param name="reRenderSaveForm" value="#{reRenderSave}" />
 		
-		
-		<div id="anexarImagem" style="width: 25%; right:5px; position:absolute;">
-			<wi:imageUpload rendered="#{!home.modelo}"/>
-		</div>
 		<s:div style="clear: both">
 		   	<wi:inputText
 		   		id="#{f.id}inputProcessoDocumento" 
@@ -101,6 +97,9 @@
 					showVariables="false"
 					onchange="clearSign()">
 				</wi:editor>
+                
+                <wi:imageUpload style="width: 25%; right:5px; position:absolute;"
+                                imageBean="#{imageFileUpload}" />
 				
 				<h:inputHidden id="certChain" 
 					value="#{processoDocumentoBinHome.certChain}" />					
