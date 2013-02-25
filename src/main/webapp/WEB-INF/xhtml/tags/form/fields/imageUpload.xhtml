@@ -33,9 +33,10 @@
 	<s:div rendered="#{wi:get(rendered, true)}"
 		   style="#{wi:get(style, 'float: left; padding-left:3px')}">
 		<rich:simpleTogglePanel	id="uploadImagem"
-								switchType="ajax" 
+								switchType="ajax"
 								opened="#{wi:get(opened, 'false')}"
-								label="Álbum de imagens">
+								label="Álbum de imagens"
+                                ajaxSingle="true">
             <rich:fileUpload fileUploadListener="#{imageBean.listener}"
 			                 id="upload"
 			                 ajaxSingle="true"
