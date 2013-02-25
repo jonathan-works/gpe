@@ -121,9 +121,12 @@
 					rendered="#{empty var.name and !empty t.previousVariables}"
 					selectFirstOnUpdate="false"
 					suggestionValues="#{t.previousVariables}">
+                    <a:support status=":status" 
+                               action="#{var.copyVariable()}"
+                               event="onblur" reRender="varDiv,writable,type,varLabel"/>
 					<a:support status=":status" 
-						action="#{var.copyVariable()}"
-						event="onselect" reRender="varDiv,writable,type,varLabel"/>
+						       action="#{var.copyVariable()}"
+						       event="onselect" reRender="varDiv,writable,type,varLabel"/>
 				</rich:comboBox>
 			</s:div>
 		</rich:column>
