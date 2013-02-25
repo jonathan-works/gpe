@@ -82,38 +82,32 @@
 					</a:commandLink>
 				</s:div>
 			</f:facet>
-			<div onmouseover="firstChild.style.visibility='visible'"
-				onmouseout="firstChild.style.visibility='hidden'"
-				style="width: 100%; text-align: center}"
-				><div style="visibility: hidden;"><a:commandLink action="#{t.removeVar(var)}"
-						ajaxSingle="true"
-						onclick="if(!confirm('Confirma?')) return false;"
-						reRender="varTable">
-						<h:graphicImage title="Excluir variável"
-							style="cursor:pointer" 
-							url="/img/remove.png"
-						/>
-					</a:commandLink>
-					<a:commandLink ajaxSingle="true"
-						reRender="actionTemplate"
-						status=":status"
-						action="#{taskFitter.currentTask.setCurrentVariable(var)}">
-						<h:graphicImage title="Adicionar modelo de documento"
-							style="cursor:pointer" 
-							rendered="#{empty var.modeloList}" 
-							url="/img/newfile.gif"
-						/>
-						<h:graphicImage title="#{var.modeloDocumentoList.toString()}"
-							style="cursor:pointer"
-							rendered="#{!empty var.modeloList}"
-							status=":status"
-							url="/img/file.gif"
-						/>
-				        <rich:componentControl for="actionTemplatePanel" 
-				        	operation="show" 
-				        	event="oncomplete"/>
-					</a:commandLink>
-				</div>
+			<div style="width: 100%; text-align: center}">
+				<a:commandLink action="#{t.removeVar(var)}"
+								ajaxSingle="true"
+								onclick="if(!confirm('Confirma?')) return false;"
+								reRender="varTable">
+					<h:graphicImage title="Excluir variável"
+									style="cursor:pointer" 
+									url="/img/remove.png" />
+				</a:commandLink>
+				<a:commandLink ajaxSingle="true"
+								reRender="actionTemplate"
+								status=":status"
+								action="#{taskFitter.currentTask.setCurrentVariable(var)}">
+					<h:graphicImage title="Adicionar modelo de documento"
+									style="cursor:pointer" 
+									rendered="#{empty var.modeloList}" 
+									url="/img/newfile.gif" />
+					<h:graphicImage title="#{var.modeloDocumentoList.toString()}"
+									style="cursor:pointer"
+									rendered="#{!empty var.modeloList}"
+									status=":status"
+									url="/img/file.gif" />
+			        <rich:componentControl for="actionTemplatePanel" 
+								        	operation="show" 
+								        	event="oncomplete"/>
+				</a:commandLink>
 			</div>
 		</rich:column>
 		<rich:column>
