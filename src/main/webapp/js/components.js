@@ -151,10 +151,15 @@ function validarDataDMA(dia, mes, ano) {
 }
 
 function onlyNumber(obj){
-	valor = obj.value;
-	signal = valor.indexOf('-') == 0 ? '-' : '';
-	obj.value = signal + valor.replace(/\D/g,"");
-}  
+    valor = obj.value;
+    signal = valor.indexOf('-') == 0 ? '-' : '';
+    obj.value = signal + valor.replace(/\D/g,"");
+}
+
+function onlyPositiveNumber(obj){
+    valor = obj.value;
+    obj.value = valor.replace(/\D/g,"");
+}
 
 //Validador de E-Mail
 function validarEmail(obj) {
