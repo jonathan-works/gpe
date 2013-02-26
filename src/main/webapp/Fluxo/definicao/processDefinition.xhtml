@@ -39,9 +39,9 @@
 	<rich:tabPanel style="height:550px"
 		selectedTab="#{processBuilder.tab}"
 		switchType="support" headerSpacing="2">
-		<rich:tab label="#{messages['processDefinition.properties']}">
+		<rich:tab label="#{messages['processBuilder.properties']}">
 			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px"
-				header="#{messages['processDefinition.info']}" >
+				header="#{messages['processBuilder.info']}" >
 				<wi:inputText id="codFluxo" 
                               label="#{messages['fluxo.codFluxo']}"
                               value="#{processBuilder.id}" 
@@ -59,19 +59,19 @@
 				
 				<wi:inputTextarea id="description"
                                   value="#{def.description}" 
-					              label="#{messages['processDefinition.description']}">
+					              label="#{messages['processBuilder.description']}">
 					<wi:ajaxSupport/>
 				</wi:inputTextarea> 
 			</rich:panel>
 			
 			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px; margin-top:5px" 
-				header="#{messages['processDefinition.swimlanes']}" 
+				header="#{messages['processBuilder.swimlanes']}" 
 				rendered="#{processBuilder.exists}">
 				<ui:include src="swimlanes.xhtml" />
 			</rich:panel>
 		</rich:tab>
 		
-		<rich:tab label="#{messages['processDefinition.nodes']}" id="nodesTab" rendered="#{processBuilder.exists}">
+		<rich:tab label="#{messages['processBuilder.nodes']}" id="nodesTab" rendered="#{processBuilder.exists}">
 			<ui:include src="nodes.xhtml" />
 		</rich:tab>
 		
