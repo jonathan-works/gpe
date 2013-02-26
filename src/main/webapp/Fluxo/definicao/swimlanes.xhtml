@@ -108,7 +108,7 @@
 					</rich:column>
 					<rich:column style="padding-left:2px; width :20px;">
 						<f:facet name="header">#{messages['processBuilder.contabilizar']}</f:facet>
-						<h:outputText value="#{row.contabilizar ? '#{messages['processBuilder.contabilizar.true']}' : '#{messages['processBuilder.contabilizar.false']}'}"/>
+						<h:outputText value="#{row.contabilizar ? messages['processBuilder.contabilizar.true'] : messages['processBuilder.contabilizar.false']}"/>
 					</rich:column>
 					
 					<f:facet name="footer">
