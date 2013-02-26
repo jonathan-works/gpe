@@ -56,7 +56,7 @@
 									 value="#{row.nomeTarefa}" />
 				<wi:columnOutputText columnId="tempoMedio"
 									 columnHeader="#{messages['temposMedios.tempoMedio']}"
-									 value="#{row.tempoMedio}" />
+									 value="#{row.getTempoMedioFormatado()}" />
 				<wi:columnOutputText columnId="prazo"
 									 columnHeader="#{messages['temposMedios.prazo']}"
 									 value="#{row.prazo} #{row.tipoPrazo.label}"
