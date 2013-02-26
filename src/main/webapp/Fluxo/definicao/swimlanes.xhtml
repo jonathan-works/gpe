@@ -99,22 +99,22 @@
 				</ui:define>
 				<ui:define name="columns"> 
 					<rich:column style="padding-left:2px">
-						<f:facet name="header">Localização</f:facet>
+						<f:facet name="header">#{messages['localizacao.localizacao']}</f:facet>
 						<h:outputText value="#{row.localizacao}"/>
 					</rich:column>
 					<rich:column style="padding-left:2px">
-						<f:facet name="header">Papel</f:facet>
+						<f:facet name="header">#{messages['papel.papel']}</f:facet>
 						<h:outputText value="#{row.papel}"/>
 					</rich:column>
 					<rich:column style="padding-left:2px; width :20px;">
-						<f:facet name="header">Contabilizar</f:facet>
-						<h:outputText value="#{row.contabilizar ? 'Sim' : 'Não'}"/>
+						<f:facet name="header">#{messages['processBuilder.contabilizar']}</f:facet>
+						<h:outputText value="#{row.contabilizar ? '#{messages['processBuilder.contabilizar.true']}' : '#{messages['processBuilder.contabilizar.false']}'}"/>
 					</rich:column>
 					
 					<f:facet name="footer">
 					 <rich:columnGroup>
 					 	<rich:column>
-							<h:graphicImage title="Adicionar localização/papel"
+							<h:graphicImage title="#{messages['processBuilder.swimlane.addLocalPapel']}"
 								style="cursor:pointer" 
 								id="novoLocPapel"
 								url="/img/add.gif">
