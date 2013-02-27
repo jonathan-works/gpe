@@ -36,6 +36,8 @@
 				height:15px;
 				border:0px;
 				border-radius:15px;
+                position:relative;
+                left: 10px;
 			}
 			
 			.yellow-back {
@@ -91,12 +93,12 @@
 						  
 				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar"> 
-					<div style="float: left;" class="#{row.porcentagem > 100 ? 'circ red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'circ yellow-back' : '')}">
-					</div>
-					<wi:toolBar url="/img/edit.gif"
-								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
-								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
-								reRender="processoEpaTarefaModal"/>
+					<div class="circ #{row.porcentagem > 100 ? 'red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'yellow-back' : '')}">
+    					<wi:toolBar url="/img/edit.gif"
+    								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
+    								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
+    								reRender="processoEpaTarefaModal"/>
+                    </div>
 				</ui:define>
 				
 				<wi:columnOutputText columnId="numeroProcesso"
@@ -162,7 +164,7 @@
 				<rich:column style="text-align: center" 
 							 styleClass="defaultCell">
 					<f:facet name="header">Início</f:facet>
-					<h:outputText value="#{task.start}">
+					<h:outputText value="#{row.dataInicio}">
 						<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
 					</h:outputText>
 				</rich:column>
@@ -170,7 +172,7 @@
 				<rich:column style="text-align: center" 
 							 styleClass="defaultCell">
 					<f:facet name="header">Término</f:facet>
-					<h:outputText value="#{task.end}">
+					<h:outputText value="#{row.dataFim}">
 						<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
 					</h:outputText>
 				</rich:column>
