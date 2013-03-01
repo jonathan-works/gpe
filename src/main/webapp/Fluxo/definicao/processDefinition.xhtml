@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/minimal.xhtml">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+                xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:c="http://java.sun.com/jstl/core"
+		        xmlns:a="http://richfaces.org/a4j"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="/WEB-INF/xhtml/templates/minimal.xhtml">
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -25,79 +25,54 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<ui:define
-         name="title">Definição do processo: #{processBuilder.instance.name}</ui:define>
+<ui:define name="title">#{messages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
 
-<ui:define
-         name="body">
+<ui:define name="body">
 
-	<a:loadStyle
-             src="processDefinition.css" />
-	<a:loadScript
-             src="/js/jbpmGraph.js" />
+	<a:loadStyle src="processDefinition.css" />
+	<a:loadScript src="/js/jbpmGraph.js" />
 
-	<ui:param
-             name="def"
-             value="#{processBuilder.instance}" />
+	<ui:param name="def" value="#{processBuilder.instance}" />
 	
-	<h:form
-             id="form">
+	<a:form id="form">
 	
-	<rich:tabPanel
-                 style="height:550px"
-                 selectedTab="#{processBuilder.tab}"
-                 switchType="support"
-                 headerSpacing="2">
-		<rich:tab
-                     label="Propriedades">
-			<rich:panel
-                         style="clear:both; overflow:auto; padding-bottom:5px"
-                         header="Dados gerais">
-				<wi:inputText
-                             label="Identificador"
-                             required="#{! processBuilder.exists}"
-                             readonly="true"
-                             id="id"
-                             value="#{processBuilder.id}">
-					<f:validator
-                                 validatorId="idValidator" />
-					<wi:ajaxSupport
-                                 reRender="idDecoration" />
+	<rich:tabPanel style="height:550px"
+		selectedTab="#{processBuilder.tab}"
+		switchType="support" headerSpacing="2">
+		<rich:tab label="#{messages['processBuilder.properties']}">
+			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px"
+				header="#{messages['processBuilder.info']}" >
+				<wi:inputText id="codFluxo" 
+                              label="#{messages['fluxo.codFluxo']}"
+                              value="#{processBuilder.id}" 
+					          readonly="true">
+					<f:validator validatorId="idValidator" />
+					<wi:ajaxSupport reRender="idDecoration"/>
 				</wi:inputText>
 
-				<wi:inputText
-                             label="Nome do processo"
-                             required="true"
-                             readonly="true"
-                             id="nome"
-                             value="#{def.name}">
-					<wi:ajaxSupport
-                                 reRender="nomeDecoration" />
+				<wi:inputText id="nome"
+                              label="#{messages['fluxo.fluxo']}"
+                              value="#{def.name}" 
+                              readonly="true">
+					<wi:ajaxSupport reRender="nomeDecoration"/>
 				</wi:inputText>
 				
-				<wi:inputTextarea
-                             id="description"
-                             value="#{def.description}"
-                             label="Descrição">
-					<wi:ajaxSupport />
+				<wi:inputTextarea id="description"
+                                  value="#{def.description}" 
+					              label="#{messages['processBuilder.description']}">
+					<wi:ajaxSupport/>
 				</wi:inputTextarea> 
 			</rich:panel>
 			
-			<rich:panel
-                         style="clear:both; overflow:auto; padding-bottom:5px; margin-top:5px"
-                         header="Raias (swimlanes)"
-                         rendered="#{processBuilder.exists}">
-				<ui:include
-                             src="swimlanes.xhtml" />
+			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px; margin-top:5px" 
+				header="#{messages['processBuilder.swimlanes']}" 
+				rendered="#{processBuilder.exists}">
+				<ui:include src="swimlanes.xhtml" />
 			</rich:panel>
 		</rich:tab>
 		
-		<rich:tab
-                     label="Nós"
-                     id="nodesTab"
-                     rendered="#{processBuilder.exists}">
-			<ui:include
-                         src="nodes.xhtml" />
+		<rich:tab label="#{messages['processBuilder.nodes']}" id="nodesTab" rendered="#{processBuilder.exists}">
+			<ui:include src="nodes.xhtml" />
 		</rich:tab>
 		
 			<ui:remove>
@@ -111,85 +86,55 @@
 	<!--		</rich:tab>-->
 			</ui:remove>
 		
-		<rich:tab
-                     label="XML"
-                     id="xmlTab"
-                     rendered="#{processBuilder.exists}">
-			<ui:include
-                         src="xmlEdit.xhtml" />
+		<rich:tab label="XML" id="xmlTab" 
+			rendered="#{processBuilder.exists}">
+			<ui:include src="xmlEdit.xhtml" />
 		</rich:tab>
 
-		<rich:tab
-                     label="Gráfico"
-                     id="graphTab">
-			<ui:include
-                         src="graph.xhtml" />
+		<rich:tab label="#{messages['processBuilder.graph']}" id="graphTab" >
+			<ui:include src="graph.xhtml" />
 		</rich:tab>
 	</rich:tabPanel>
 	
-	<h:commandButton
-                 styleClass="dr-tbpnl-tb-inact"
-                 id="gravar"
-                 action="#{processBuilder.update()}"
-                 value="Gravar"
-                 type="submit"
-                 rendered="#{processBuilder.exists}" />
+	<h:commandButton styleClass="dr-tbpnl-tb-inact"
+		id="gravar"
+		action="#{processBuilder.update()}"
+		value="#{messages['processBuilder.saveBtn']}" type="submit" 
+		rendered="#{processBuilder.exists}"/>
 
-	<a:commandButton
-                 styleClass="dr-tbpnl-tb-inact"
-                 id="publicar"
-                 ajaxSingle="true"
-                 reRender="form"
-                 action="#{processBuilder.deploy()}"
-                 value="Publicar"
-                 type="submit"
-                 rendered="#{processBuilder.exists}" />
+	<a:commandButton styleClass="dr-tbpnl-tb-inact"
+		id="publicar"
+		ajaxSingle="true"
+		reRender="form"
+		action="#{processBuilder.deploy()}"
+		value="#{messages['processBuilder.deployBtn']}" type="submit" 
+		rendered="#{processBuilder.exists}"/>
 
-	<h:commandButton
-                 styleClass="dr-tbpnl-tb-inact"
-                 id="novoProcesso"
-                 action="#{processBuilder.update()}"
-                 value="Gravar"
-                 type="submit"
-                 rendered="#{!processBuilder.exists}"
-                 reRender="pageBody" />
+	<h:commandButton styleClass="dr-tbpnl-tb-inact"
+		id="novoProcesso"
+		action="#{processBuilder.update()}"
+		value="#{messages['processBuilder.saveBtn']}" type="submit" 
+		rendered="#{!processBuilder.exists}"
+		reRender="pageBody"/>
+	<h:commandButton styleClass="dr-tbpnl-tb-inact"
+					 id="new"
+					 action="#{processBuilder.clearDefinition()}"
+					 value="#{messages['processBuilder.newBtn']}" 
+					 type="submit"
+					 onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;" 
+					 rendered="#{processBuilder.exists}"/>
 
-	<h:commandButton
-                 styleClass="dr-tbpnl-tb-inact"
-                 id="new"
-                 action="#{processBuilder.clearDefinition()}"
-                 value="Novo"
-                 type="submit"
-                 onclick="if(!confirm('Confirma apagar toda a definição desse Fluxo? Será criada uma nova e não é possível desfazer.')) return false;"
-                 rendered="#{processBuilder.exists}" />
+	</a:form>
 
-	<h:commandButton
-                 styleClass="dr-tbpnl-tb-inact"
-                 id="test"
-                 action="#{processoHome.test()}"
-                 value="Testar"
-                 type="submit"
-                 rendered="#{false and processBuilder.exists}" />
+	<rich:messages id="messages" style="color:red" ajaxRendered="true" globalOnly="false" />
 
-	</h:form>
-
-	<rich:messages
-             id="messages"
-             style="color:red"
-             ajaxRendered="true"
-             globalOnly="false" />
-
-	<s:div
-             id="actionTemplate">
-		<wi:modalPanel
-                 id="actionTemplatePanel"
-                 style="padding:0"
-                 height="550"
-                 width="920">
-			<c:if
-                     test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}">
-				<ui:include
-                         src="actions/#{actionTemplate.fileName}" />
+	<s:div id="actionTemplate">
+		<wi:modalPanel id="actionTemplatePanel"
+					   style="padding:0"
+					   height="550" 
+					   width="920">
+			<c:if test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}">
+				<ui:include src="actions/#{actionTemplate.fileName}" />
 			</c:if>
 		</wi:modalPanel>
 	</s:div>
