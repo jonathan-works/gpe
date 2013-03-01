@@ -4,8 +4,8 @@
 
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.com/products/seam/taglib"
-				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:s="http://jboss.org/schema/seam/taglib"
+				xmlns:c="http://java.sun.com/jsp/jstl/core"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
 				xmlns:a="http://richfaces.org/a4j"
 				xmlns:f="http://java.sun.com/jsf/core"
@@ -20,27 +20,30 @@
 	<ui:define name="body">
 	
 		<a:region renderRegionOnly="true">
-			<a:form>
+			<h:form>
 			 	<a:jsFunction name="atualizaPainelFluxo" 
 					 		  oncomplete="window.location='#{util.contextPath}/Painel/list.seam'"
-					 		  ajaxSingle="true"
+					 		  execute="@this"
 					 		  status="status" />
-			</a:form>
+			</h:form>
 		    <br/>
 		    <table width="99%" border="0" cellspacing="0" cellpadding="0">
 		    	<tr valign="top">
 			    	<td width="310">   	
-			    		<rich:tabPanel id="tabPainelUsuario"
-									   switchType="ajax" 
-									   status=":status">
-								<rich:tab label="Caixas" 
-										  reRender="painelProcesso"
-									      action="#{tarefasTree.clearTree()}">
-									<s:div id="tarefasDiv">
-										<ui:include src="tarefasTree.xhtml"/>
-									</s:div>
-								</rich:tab> 
-						</rich:tabPanel> 				
+			    		<h:form>
+				    		<rich:tabPanel id="tabPainelUsuario"
+										   switchType="ajax" 
+										   status=":status">
+									<rich:tab header="Caixas" 
+											  render="painelProcesso"
+											  limitRender="true"
+										      action="#{tarefasTree.clearTree()}">
+										<s:div id="tarefasDiv">
+											<ui:include src="tarefasTree.xhtml"/>
+										</s:div>
+									</rich:tab> 
+							</rich:tabPanel>
+						</h:form>			
 			    	</td>
 					<td>				
 						<s:div id="painelProcessos">
@@ -48,10 +51,10 @@
 							<ui:param name="mostraGrid" value="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}"/>
 						    <s:div id="processos">
 							    <s:div id="pesquisaList">
-								    <rich:simpleTogglePanel	rendered="#{mostraGrid}"
-													    	switchType="client"
-													    	opened="false" 
-													    	label="Pesquisar"
+								    <rich:collapsiblePanel	rendered="#{mostraGrid}"
+													    	switchType="ajax"
+													    	expanded="false" 
+													    	header="Pesquisar"
 													    	styleClass="leftPanel">
 										<wi:searchForm formId="consultaProcessoForm"
 													   formTitle="#{messages['form.title']}"
@@ -80,20 +83,22 @@
 										           				 status="status"
 																 value="Consulta" 
 																 styleClass="dr-tbpnl-tb-inact"
+																 limitRender="true"
 																 action="#{home.instance.setInPesquisa(true)}"
-																 reRender="processoList,consultaProcessoForm"/>
+																 render="processoList,consultaProcessoForm"/>
 										           <a:commandButton id="novaConsulta" 
 										           				 status="status"
 																 style="width: 120px !important"
 																 value="Nova Consulta" 
+																 limitRender="true"
 																 styleClass="dr-tbpnl-tb-inact"
 																 action="#{home.limparTela('consultaProcessoForm')}"
-																 reRender="processoList,consultaProcessoForm"/>
+																 render="processoList,consultaProcessoForm"/>
 										       </div>
 											</ui:define>
 										</wi:searchForm>
 										<h:messages styleClass="message" id="globalMessages" />
-							    	</rich:simpleTogglePanel>
+							    	</rich:collapsiblePanel>
 								</s:div>			
 							    <s:div id="processoList">
 									<wi:datalist rendered="#{mostraGrid}"
@@ -111,17 +116,17 @@
 			    </tr>
 			</table>
 			
-			<rich:dragIndicator id="indicator" />			
+			<!-- <rich:dragIndicator id="indicator" /> -->			
 	
-			<rich:modalPanel id="novaCaixaPanel" height="110" left="40" >
+			<rich:popupPanel id="novaCaixaPanel" height="110" left="40" >
 				<f:facet name="header">
 					<h:outputText value="Nova caixa para a tarefa" />
 				</f:facet>
 				<f:facet name="controls">
 			    	<span style="cursor:pointer; font-family: Verdana, Arial; padding-right: 5px"
-			    		  onclick="Richfaces.hideTopModalPanel()">X</span>
+			    		  onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
 				</f:facet>
-				<a:form id="modalForm">
+				<h:form id="modalForm">
 					<wi:inputText id="nomeCaixa" 
 							      label="Nome da caixa"		
 							      value="#{caixaHome.nomeNovaCaixa}"/>
@@ -129,10 +134,10 @@
 									 styleClass="dr-tbpnl-tb-inact" 
 									 action="#{caixaHome.addCaixa(painelUsuarioHome.taskId)}"
 									 oncomplete="Richfaces.hideTopModalPanel()"
-									 reRender="tarefasDiv,painelProcessos"/>
+									 render="tarefasDiv,painelProcessos"/>
 					<rich:messages />
-				</a:form>
-			</rich:modalPanel>
+				</h:form>
+			</rich:popupPanel>
 			
 		</a:region>
 	</ui:define>
