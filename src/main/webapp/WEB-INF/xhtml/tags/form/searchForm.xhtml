@@ -30,7 +30,7 @@
 		<a:region>
 			<f:validateBean disabled="true">
 				<rich:collapsiblePanel expanded="#{wi:get(opened, true)}"
-					width="#{wi:get(widthSearchForm, '275px')}" switchType="client">
+					style="#{empty widthSearchForm ? 'width: 275px' : ''}" switchType="client">
 					<f:facet name="closeMarker"> </f:facet>
 					<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 					<ui:param name="template"
