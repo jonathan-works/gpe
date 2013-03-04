@@ -42,14 +42,7 @@
 				<ui:param
                      name="selectedOrder"
                      value="#{not hideOrder and bean.orderedColumn.startsWith(columnId.concat(' '))}" />
-				<h:form
-                     rendered="#{!inForm}"
-                     style="margin-left: 5px">
-					<ui:include
-                         src="columnOrder.xhtml" />
-				</h:form>
-				<s:div
-                     rendered="#{inForm}">
+				<s:div>
 					<ui:include
                          src="columnOrder.xhtml" />
 				</s:div>

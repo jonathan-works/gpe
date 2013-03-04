@@ -22,13 +22,13 @@
 	<a:commandLink
          id="#{id}"
          status="#{status}"
-         reRender="#{reRender}"
+         render="#{render}"
          action="#{util.invokeMethod(action)}"
          onclick="#{onclick}"
          disabled="#{disabled}"
          oncomplete="#{oncomplete}"
-         ajaxSingle="#{ajaxSingle}"
-         limitToList="#{wi:get(limitToList, true)}"
+         execute="#{ajaxSingle ? '@this' : ''}"
+         limitRender="#{wi:get(limitToList, true)}"
          rendered="#{wi:get(rendered, true)}">
 		<ui:insert />				
 	</a:commandLink>

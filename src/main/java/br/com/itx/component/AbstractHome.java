@@ -66,7 +66,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public static final String PERSISTED = "persisted";
 	public static final String UPDATED = "updated";
 	
-	private String tab = null;
+	private String tab = "search";
 	private String goBackUrl = null;
 	private String goBackId = null;
 	private String goBackTab = null;

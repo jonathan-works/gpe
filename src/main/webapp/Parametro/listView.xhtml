@@ -17,6 +17,8 @@
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:wi="http://www.itx.com.br/jsf"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:o="http://omnifaces.org/ui"
      template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
 	<ui:define
@@ -41,10 +43,10 @@
 					<wi:inputText
                          id="nomeVariavel"
                          label="#{messages['parametro.nomeVariavel']}"
-                         value="#{parametroList.entity.nomeVariavel}" />				
+                         value="#{parametroList.entity.nomeVariavel}" />
 					<wi:selectSituacaoOneMenu
                          id="ativo"
-                         value="#{parametroList.entity.ativo}" />	
+                         value="#{parametroList.entity.ativo}" /> 
 				</wi:searchForm>
 			</ui:define>
 			

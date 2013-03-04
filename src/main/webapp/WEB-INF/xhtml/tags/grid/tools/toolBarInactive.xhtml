@@ -27,7 +27,7 @@
          rendered="#{row.ativo}"
          limitToList="true"
          status=":status"
-         reRender="#{wi:get(reRender, 'searchGridRegion')},modalPanelMessages"
+         render="#{wi:get(reRender, 'searchGridRegion')},modalPanelMessages"
          onclick="if(!confirm('Deseja inativar este registro?')) return false;"
          url="/img/remove.png"
          title="Inativar registro" />

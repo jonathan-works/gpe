@@ -46,7 +46,8 @@
              onchange="#{onchange}"
              onkeypress="#{onkeypress}"
              onkeyup="#{onkeyup}"
-             maxlength="#{wi:get(maxlength, 255)}">
+             maxlength="#{wi:get(maxlength, 255)}"
+             immediate="#{immediate}">
 			<ui:insert />
 			<f:converter
                  converterId="#{wi:get(converterId, 'stringConverter')}" />

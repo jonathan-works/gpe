@@ -106,7 +106,7 @@
 					</f:facet>
 					<ui:insert
                          name="toolBar">
-						<wi:toolBarEdit />
+						<wi:toolBarEdit id="#{id}edit" />
 						<wi:toolBarInactive />
 					</ui:insert>
 				</rich:column>
@@ -118,14 +118,7 @@
                  rendered="#{wi:get(showGridCount, true)}" />
 			<s:div
                  rendered="#{bean.previousExists or bean.nextExists}">
-				<h:form
-                     rendered="#{!inForm}"
-                     ajaxSubmit="true">
-					<ui:include
-                         src="inputNumberSlider.xhtml" />
-				</h:form>
-				<s:div
-                     rendered="#{inForm}">
+				<s:div>
 					<ui:include
                          src="inputNumberSlider.xhtml" />
 				</s:div>

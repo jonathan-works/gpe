@@ -94,7 +94,6 @@
         </s:div>
         <span
                  class="value #{invalid?'errors':''}">
-            <s:validateAll>
            		<s:div
                          rendered="#{!obfuscate}">
                		<ui:insert />
@@ -102,7 +101,6 @@
                	<h:outputText
                          value="ocultado"
                          rendered="#{obfuscate}" />
-            </s:validateAll>
         </span>
 
     </div>

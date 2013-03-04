@@ -38,9 +38,9 @@
 			<a:commandLink
                  action="#{home.setId(row[bean.key])}"
                  rendered="#{canEdit and listReRender == ':pagebody'}"
-                 limitToList="true"
+                 limitRender="true"
                  status=":status"
-                 reRender="#{listReRender}">
+                 render="#{listReRender}">
 				<h:graphicImage
                      url="#{a4jSkin.imgIconEdit}"
                      title="Selecionar registro"
@@ -56,9 +56,9 @@
 		<a:commandLink
              action="#{home.setId(row[bean.key])}"
              rendered="#{canEdit and listReRender != ':pagebody'}"
-             limitToList="true"
+             limitRender="true"
              status=":status"
-             reRender="#{listReRender}">
+             render="#{listReRender}">
 			<h:graphicImage
                  url="#{a4jSkin.imgIconEdit}"
                  title="Selecionar registro"

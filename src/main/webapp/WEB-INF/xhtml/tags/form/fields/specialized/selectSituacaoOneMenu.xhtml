@@ -22,11 +22,13 @@
 		<h:selectOneMenu
              id="#{id}"
              value="#{value}"
-             style="width: 250px">
+             style="width: 250px"
+             immediate="#{immediate}">
 			<f:selectItem
                  itemLabel="[Todos]" />
 			<f:selectItems
                  value="#{wi:get(items, util.splitAsList('true:Ativo,false:Inativo'))}" />
+            <ui:insert />
 		</h:selectOneMenu>
 	</s:decorate>
 

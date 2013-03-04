@@ -20,12 +20,12 @@
      xmlns:h="http://java.sun.com/jsf/html">
 	
 		<a:commandLink
-         ajaxSingle="true"
+         execute="@this"
          status="status"
          rendered="#{!hideOrder}"
          disabled="#{orderAsc and selectedOrder}"
          action="#{bean.setOrderedColumn(columnId.concat(' asc'))}"
-         reRender="#{id}Panel">
+         render="#{id}Panel">
 			<h:graphicImage
              title="Ordem crescente"
              styleClass="#{orderAsc and selectedOrder ? 'disabled' : ''}"
@@ -35,12 +35,12 @@
          value="#{columnHeader}"
          style="margin-left: 5px" />
 		<a:commandLink
-         ajaxSingle="true"
+         execute="@this"
          status="status"
          rendered="#{!hideOrder}"
          disabled="#{!orderAsc and selectedOrder}"
          action="#{bean.setOrderedColumn(columnId.concat(' desc'))}"
-         reRender="#{id}Panel">
+         render="#{id}Panel">
 			<h:graphicImage
              title="Ordem decrescente"
              styleClass="#{!orderAsc and selectedOrder ? 'disabled' : ''}"

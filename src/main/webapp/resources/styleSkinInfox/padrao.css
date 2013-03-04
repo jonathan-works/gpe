@@ -427,6 +427,14 @@ body {
 	display: block;
 }
 
+.rf-msgs-err {
+	padding: 2px;
+	border: 1px solid red;
+	background-color: lightYellow;
+	display: block;
+	background-image: none;
+}
+
 .errorFields {
 	margin-left: 20px;
 	margin-top: 5px;

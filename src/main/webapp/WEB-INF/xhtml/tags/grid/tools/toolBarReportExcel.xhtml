@@ -19,6 +19,7 @@
      xmlns:c="http://java.sun.com/jsp/jstl/core"
      xmlns:h="http://java.sun.com/jsf/html"
      xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:a="http://richfaces.org/a4j"
      xmlns:wi="http://www.itx.com.br/jsf"> 
 	<s:span
          rendered="#{wi:get(rendered, 'true')}">
@@ -33,9 +34,7 @@
                      style="cursor:pointer; padding:0px 1px;" />		
 			</s:link>
 		</c:if>
-		
-		<h:form
-             enctype="multipart/form-data">
+		<a:region>		
 			<h:commandLink
                  action="#{util.invokeMethod(action)}">
 				<h:graphicImage
@@ -43,6 +42,6 @@
                      title="Gerar Excel"
                      style="cursor:pointer; padding:0px 1px;" />																
 			</h:commandLink>
-		</h:form>
+		</a:region>
 	</s:span>
 </ui:composition>

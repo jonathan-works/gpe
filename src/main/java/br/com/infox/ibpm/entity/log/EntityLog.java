@@ -34,10 +34,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.Type;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.type.TipoOperacaoLogEnum;
@@ -67,7 +65,7 @@ public class EntityLog implements java.io.Serializable {
 	public EntityLog() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_log")
+	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_log", allocationSize = 1)
 	@Id
 	@GeneratedValue(generator = "generator")
 	@Column(name = "id_log", unique = true, nullable = false)

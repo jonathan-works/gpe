@@ -50,7 +50,7 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 	private String expression;
 	
 	@Override
-	public List<E> suggestList(Object typed) {
+	public List<E> suggestList(String typed) {
 		StopWatch sw = new StopWatch(true);
 		List<E> result = null;
 		if (getEjbql() != null) {

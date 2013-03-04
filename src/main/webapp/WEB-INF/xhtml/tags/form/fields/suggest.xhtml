@@ -54,37 +54,22 @@
              test="#{!empty assignTo}">
 			#{bean.setExpression(assignTo)}
 		</c:if>			
-		
-		<h:inputText
-             id="#{id}"
-             maxlength="#{maxlength}"
+
+	  	<rich:autocomplete
+	  		 id="#{id}"
+             minChars="#{minChars}"
+             rendered="#{empty props.hideSuggest}"
+             var="var"
+             fetchValue="#{fetch}"
+             autocompleteMethod="#{bean.suggestList}"
+             mode="ajax"
              required="#{required}"
              onkeyup="#{onkeyup}"
              disabled="#{disabled}"
              styleClass="suggest"
              style="width: #{width - 20}px"
-             value="#{bean.defaultValue}">
-				<a:ajax
-                 event="change"
-                 action="#{bean.setInstance(null)}"
-                 status=":status"
-                 render="#{reRender}"
-                 execute="@this"
-                 onbegin="if(this.value != '') return false;" />
-		</h:inputText>
-	  	<rich:suggestionbox
-             width="#{widthBoxSuggest}"
-             height="200"
-             status=":status"
-             frequency="1"
-             minChars="#{minChars}"
-             eventsQueue="suggest"
-             rendered="#{empty props.hideSuggest}"
-             nothingLabel="Termo não encontrado"
-             var="var"
-             fetchValue="#{fetch}"
-             for="#{id}"
-             suggestionAction="#{bean.suggestList}">
+             value="#{bean.defaultValue}"
+             onselectitem="__autocompleteSelectItem#{id}()">
 			<ui:insert
                  name="columns">
 				<h:column>
@@ -94,20 +79,19 @@
 			</ui:insert>
 
 			<ui:insert />
-
-			<a:ajax
-                 event="select"
-                 oncomplete="#{oncomplete}"
-                 status=":status"
-                 render="#{reRender}"
-                 execute="@this"
-                 limitRender="#{empty reRender ? false : true}"
-                 queueId="suggest">  
-		         <f:setPropertyActionListener
-                     value="#{var}"
-                     target="#{bean.instance}" />
-		    </a:ajax>  						  
-	  	</rich:suggestionbox>
+	  	</rich:autocomplete>
 	</s:decorate>
+	
+	<a:jsFunction name="__autocompleteSelectItem#{id}"
+		oncomplete="#{oncomplete}"
+		status=":status"
+		render="#{reRender}"
+		execute="@this, #{id}"
+		limitRender="#{empty reRender ? false : true}"
+		queueId="suggest">
+		<f:setPropertyActionListener
+			value="#{var}"
+			target="#{bean.instance}"/>
+	</a:jsFunction>
 	
 </ui:composition>

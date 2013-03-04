@@ -23,13 +23,9 @@
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
-				
+	
+	<f:subview id="#{formId}">
 	<a:region
-         renderRegionOnly="#{wi:get(renderRegionOnly, false)}">
-	    <h:form
-             id="#{formId}"
-             styleClass="edit"
-             enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}"
              rendered="#{wi:get(rendered, true)}">
 	    	<ui:param
                  name="panelWidth"
@@ -66,7 +62,6 @@
 			<wi:messages
                  showDialogMessage="#{showDialogMessage}"
                  timeCloseMSG="#{timeCloseMSG}" />			
-		</h:form>
 	</a:region>
-
+	</f:subview>
 </ui:composition>

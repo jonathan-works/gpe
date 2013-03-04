@@ -43,7 +43,7 @@
 			var globalMessages = '#{!facesMessages.currentGlobalMessages.isEmpty()}';
 			if(globalMessages == 'true') {	
 				if('#{showDialogMessage}' == 'true') {		
-					if(jQuery('dt[class=error formMessage]').html() == null) {
+					if(jQuery('dt[class=rf-msgs-err]').html() == null) {
 						showDialogMessage();
 						setTimeout("hideDialogMessage()", "#{timeCloseMSG}");					
 					} else {
@@ -101,10 +101,7 @@
 			<rich:messages
                  id="#{formId}Message"
                  globalOnly="true"
-                 infoClass="formMessage"
-                 style="margin: 5px"
-                 errorClass="error formMessage"
-                 warnStyle="display: none" />
+                 style="margin: 5px"/>
     	</div>
 	</div>
 	

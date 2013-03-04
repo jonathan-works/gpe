@@ -19,7 +19,7 @@ import java.util.List;
 
 public interface SuggestBean<E> {
 
-	List<E> suggestList(Object typed);
+	List<E> suggestList(String typed);
 
 	/**
 	 * Define a expressão a ser utilizada para o suggest

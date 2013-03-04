@@ -20,16 +20,14 @@
      xmlns:h="http://java.sun.com/jsf/html"
      xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<h:form>
-		<a:region
-             renderRegionOnly="false">
-			<wi:commandLink
-                 reRender="#{wi:get(reRender,'pageBody')}"
-                 status=":status">
-				<wi:toolBarGraphicImage />
-				<ui:insert />
-			</wi:commandLink>
-		</a:region>
-	</h:form>
+	<a:region>
+		<wi:commandLink
+				id="#{id}"
+                render="#{wi:get(render,'pageBody')}"
+                status=":status">
+			<wi:toolBarGraphicImage />
+			<ui:insert />
+		</wi:commandLink>
+	</a:region>
 
 </ui:composition>

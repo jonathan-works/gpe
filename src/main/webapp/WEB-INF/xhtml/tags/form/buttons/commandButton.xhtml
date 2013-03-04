@@ -29,15 +29,15 @@
          action="#{util.invokeMethod(action)}"
          tabindex="#{tabindex}"
          rendered="#{wi:get(rendered,true)}"
-         limitToList="true"
-         ajaxSingle="#{ajaxSingle}"
+         limitRender="true"
+		 execute="#{execute}"
          onclick="showLoading();#{onclick}"
          oncomplete="hideLoading();#{oncomplete}"
          value="#{value}"
-         reRender="#{reRender}"
-         eventsQueue="#{eventsQueue}"
+         render="#{reRender}"
          style="#{buttonStyle}"
          disabled="#{disabled}"
+         immediate="#{immediate}"
          styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}">
 		<ui:insert />
 	</a:commandButton>	
