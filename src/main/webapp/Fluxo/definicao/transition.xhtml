@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -24,184 +24,133 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<rich:panel
-         bodyClass="panel"
-         style="width:350px; margin:3px; padding:0; float:left">
-	<f:facet
-             name="header">
-		<h:panelGrid
-                 columns="2"
-                 cellpadding="0"
-                 cellspacing="0">
-			<h:graphicImage
-                     url="/img/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif"
-                     style="margin-right:5px" />
-			<h:outputText
-                     value="Transições que #{type == 'from' ? 'chegam ao' : 'saem do'} nó" />
+<rich:panel bodyClass="panel"
+	style="width:350px; margin:3px; padding:0; float:left">
+	<f:facet name="header">
+		<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+			<h:graphicImage url="/img/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif" 
+							style="margin-right:5px" />
+			<h:outputText value="Transições que #{type == 'from' ? 'chegam ao' : 'saem do'} nó" />
 		</h:panelGrid>
 	</f:facet>
-	<ui:param
-             name="values"
-             value="#{type == 'from' ? transitionFitter.arrivingTransitions : transitionFitter.leavingTransitions}" />
-	<rich:dataTable
-             value="#{values}"
-             id="transition#{type}Table"
-             onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
-             onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
-             styleClass="tabelaVariaveis"
-             style="width:100%"
-             var="transition">
-		<rich:column
-                 style="padding:2px; width: 45px"
-                 styleClass="dr-table-subheader rich-table-subheader">
-			<f:facet
-                     name="header">
-				<a:commandLink
-                         action="#{transitionFitter.addTransition(type)}"
-                         ajaxSingle="true"
-                         reRender="transition#{type}Table,nodesDiv">
-					<h:graphicImage
-                             title="Adicionar transição"
-                             style="cursor:pointer"
-                             url="/img/add.gif" />
+	<ui:param name="values" value="#{type == 'from' ? transitionFitter.arrivingTransitions : transitionFitter.leavingTransitions}" />
+	<rich:dataTable value="#{values}" 
+					id="transition#{type}Table"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+					onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+					styleClass="tabelaVariaveis"
+					style="width:100%"
+					var="transition">
+		<rich:column style="padding:2px; width: 45px"
+					 styleClass="dr-table-subheader rich-table-subheader">
+			<f:facet name="header">
+				<a:commandLink action="#{transitionFitter.addTransition(type)}"
+							   ajaxSingle="true"
+							   reRender="transition#{type}Table,nodesDiv">
+					<h:graphicImage title="Adicionar transição"
+									style="cursor:pointer" 
+									url="/img/add.gif"/>
 				</a:commandLink>
 			</f:facet>
-			<div
-                     onmouseover="firstChild.style.visibility='visible'"
-                     onmouseout="firstChild.style.visibility='hidden'"
-                     style="width: 99%; text-align: center;"><div
-                         style="visibility: hidden;">
-					<h:graphicImage
-                             title="Definir condição"
-                             rendered="#{empty transition.transition.condition}"
-                             style="cursor:pointer"
-                             url="/img/help_dis.gif">
-						<a:ajax
-                                 event="click"
-                                 action="#{transitionFitter.setCurrentTransition(transition.transition)}"
-                                 oncomplete="Richfaces.showModalPanel('transitionCondition');"
-                                 render="transitionCondition" />
+			<div style="width: 99%; text-align: center;">
+                <div>
+					<h:graphicImage title="Definir condição"
+						rendered="#{empty transition.transition.condition}"
+						style="cursor:pointer" 
+						url="/img/help_dis.gif">
+						<a:support event="onclick"
+							action="#{transitionFitter.setCurrentTransition(transition.transition)}"
+							oncomplete="Richfaces.showModalPanel('transitionCondition');"
+							reRender="transitionCondition"/>
 					</h:graphicImage>
-					<h:graphicImage
-                             title="Editar condição"
-                             rendered="#{!empty transition.transition.condition and            transition.transition.condition != '#{true}'}"
-                             style="cursor:pointer"
-                             url="/img/help.gif">
-						<a:ajax
-                                 event="click"
-                                 action="#{transitionFitter.setCurrentTransition(transition.transition)}"
-                                 oncomplete="Richfaces.showModalPanel('transitionCondition');"
-                                 render="transitionCondition" />
+					<h:graphicImage title="Editar condição"
+						rendered="#{!empty transition.transition.condition and 
+									 transition.transition.condition != '#{true}'}"
+						style="cursor:pointer" 
+						url="/img/help.gif">
+						<a:support event="onclick"
+							action="#{transitionFitter.setCurrentTransition(transition.transition)}"
+							oncomplete="Richfaces.showModalPanel('transitionCondition');"
+							reRender="transitionCondition"/>
 					</h:graphicImage>
-					<h:graphicImage
-                             title="Excluir transição"
-                             style="cursor:pointer"
-                             url="/img/remove.png">
-						<a:ajax
-                                 event="click"
-                                 action="#{transitionFitter.removeTransition(transition, type)}"
-                                 onclick="if(!confirm('Confirma?')) return false;"
-                                 execute="@this"
-                                 render="transition#{type}Table,nodesDiv" />
+					<h:graphicImage title="Excluir transição"
+						style="cursor:pointer" 
+						url="/img/remove.png">
+						<a:support event="onclick"
+							action="#{transitionFitter.removeTransition(transition, type)}"
+							ajaxSingle="true"
+							onclick="if(!confirm('Confirma?')) return false;"
+							reRender="transition#{type}Table,nodesDiv"/>
 					</h:graphicImage>
 				</div>
 			</div>
 		
 		</rich:column>
 
-		<rich:column
-                 style="width:150px"
-                 rendered="#{type=='from'}">
-			<f:facet
-                     name="header">Nó Origem</f:facet>
-			<h:selectOneMenu
-                     id="from"
-                     valueChangeListener="#{nodeFitter.transitionChangeListener}"
-                     style="width:100%"
-                     rendered="#{empty transition.from}"
-                     value="#{transition.from}">
-				<f:selectItems
-                         value="#{nodeFitter.getNodesTransitionItems(type)}"
-                         var="v" />
-					<a:ajax
-                         event="change"
-                         action="#{transitionFitter.changeTransition(transition, type)}"
-                         execute="@this"
-                         render="transitionName,nodesDiv" />
+		<rich:column style="width:150px" rendered="#{type=='from'}">
+			<f:facet name="header">Nó Origem</f:facet>
+			<h:selectOneMenu id="from" 
+							 valueChangeListener="#{nodeFitter.transitionChangeListener}"
+							 style="width:100%"
+							 rendered="#{empty transition.from}"
+							 value="#{transition.from}" >
+				<f:selectItems value="#{nodeFitter.getNodesTransitionItems(type)}" var="v"/>
+					<a:support event="onchange"
+							   ajaxSingle="true"
+							   reRender="transitionName,nodesDiv"
+							   action="#{transitionFitter.changeTransition(transition, type)}"/>
 			</h:selectOneMenu>
 			<h:outputText
-                     style="#{!empty transition.transition.condition ? 'font-style:italic' : ''}"
-                     rendered="#{!empty transition.from}"
-                     value="#{transition.fromName}" />
+				style="#{!empty transition.transition.condition ? 'font-style:italic' : ''}"
+				rendered="#{!empty transition.from}"
+				value="#{transition.fromName}" />
 		</rich:column>
 
-		<rich:column
-                 style="width:150px"
-                 rendered="#{type=='to'}">
-			<f:facet
-                     name="header">Nó Destino</f:facet>
-			<h:selectOneMenu
-                     id="to"
-                     style="width:100%"
-                     valueChangeListener="#{nodeFitter.transitionChangeListener}"
-                     rendered="#{empty transition.to}"
-                     required="true"
-                     value="#{transition.to}">
-				<f:selectItems
-                         value="#{nodeFitter.getNodesTransitionItems(type)}"
-                         var="v" />
-				<a:ajax
-                         event="change"
-                         action="#{transitionFitter.changeTransition(transition, type)}"
-                         execute="@this"
-                         render="transitionName,nodesDiv" />
+		<rich:column style="width:150px" rendered="#{type=='to'}">
+			<f:facet name="header">Nó Destino</f:facet>
+			<h:selectOneMenu id="to" 
+							 style="width:100%"
+ 							 valueChangeListener="#{nodeFitter.transitionChangeListener}"
+							 rendered="#{empty transition.to}"
+							 required="true"
+							 value="#{transition.to}" >
+				<f:selectItems	value="#{nodeFitter.getNodesTransitionItems(type)}" var="v"/>
+				<a:support event="onchange"
+						   ajaxSingle="true"
+						   reRender="transitionName,nodesDiv"
+						   action="#{transitionFitter.changeTransition(transition, type)}"/>
 			</h:selectOneMenu>
 			<h:outputText
-                     style="#{!empty transition.transition.condition ? 'font-style:italic' : ''}"
-                     rendered="#{!empty transition.to}"
-                     value="#{transition.toName}" />
+				style="#{!empty transition.transition.condition ? 'font-style:italic' : ''}"
+				rendered="#{!empty transition.to}"
+				value="#{transition.toName}" />
 		</rich:column>
 
-		<rich:column
-                 style="width:150px"
-                 id="transitionName">
-			<f:facet
-                     name="header">Nome</f:facet>
-			<h:inputText
-                     value="#{transition.name}"
-                     required="true"
-                     style="width:130px; float:left">
-				<wi:ajaxSupport
-                         reRender="transition#{type}Table" />
+		<rich:column style="width:150px" id="transitionName">
+			<f:facet name="header">Nome</f:facet>
+			<h:inputText value="#{transition.name}" 
+				required="true"
+				style="width:130px; float:left">
+				<wi:ajaxSupport reRender="transition#{type}Table" />
 			</h:inputText>
-			<a:commandLink
-                     reRender="nodesDiv"
-                     title="Ir para o nó"
-                     ajaxSingle="true"
-                     style="float:right"
-                     action="#{nodeFitter.setCurrentNode(transition, type)}">
-				<h:graphicImage
-                         url="/img/jbpm/up.gif"
-                         rendered="#{type == 'from'}" />
-				<h:graphicImage
-                         url="/img/jbpm/down.gif"
-                         rendered="#{type == 'to'}" />
+			<a:commandLink reRender="nodesDiv"
+				title="Ir para o nó"
+				ajaxSingle="true"
+				style="float:right"
+				action="#{nodeFitter.setCurrentNode(transition, type)}" >
+				<h:graphicImage url="/img/jbpm/up.gif" rendered="#{type == 'from'}" />
+				<h:graphicImage url="/img/jbpm/down.gif" rendered="#{type == 'to'}" />
 			</a:commandLink>
 		</rich:column>
 		
-		<rich:column
-                 style="width:40px"
-                 id="showTransitionButtonColumn">
-			<f:facet
-                     name="header">Ocultar</f:facet>
+		<rich:column style="width:40px" id="showTransitionButtonColumn">
+			<f:facet name="header">Ocultar</f:facet>
 			<center>
-				<h:selectBooleanCheckbox
-                         id="showTransitionButton"
-                         value="#{transition.showTransitionButton}">
-					<a:ajax
-                             event="change"
-                             action="#{transitionFitter.setTransitionButton(transition)}"
-                             render="transition#{type}Table" />
+				<h:selectBooleanCheckbox id="showTransitionButton"
+										 value="#{transition.showTransitionButton}">
+					<a:support event="onchange"
+							   action="#{transitionFitter.setTransitionButton(transition)}"
+							   reRender="transition#{type}Table"/>
 				</h:selectBooleanCheckbox>
 			</center>
 		</rich:column>
