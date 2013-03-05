@@ -25,6 +25,7 @@ import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
+import br.com.infox.ibpm.query.ProcessoLocalizacaoIbpmQuery;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -36,9 +37,7 @@ public class JbpmEventsHandler implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(JbpmEventsHandler.class);
-	private static final String PROCESSO_LOCALIZACAO_PAPEL_QUERY = "select distinct id_task_instance from vs_situacao_processo o " +
-	                                                                "JOIN tb_processo_localizacao_ibpm USING (id_task_instance) " +
-	                                                                "where o.id_processo = :id and id_localizacao = :idLocalizacao and id_papel = :idPapel";
+
 	public static final String NAME = "jbpmEventsHandler";
 	
 	@Observer(Event.EVENTTYPE_TASK_END)
@@ -210,12 +209,12 @@ public class JbpmEventsHandler implements Serializable {
 					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
 				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
 				UsuarioLocalizacao t = Authenticator.getUsuarioLocalizacaoAtual();
-                Query q = getEntityManager().createNativeQuery(JbpmEventsHandler.PROCESSO_LOCALIZACAO_PAPEL_QUERY);
-                q.setParameter("id", processo.getIdProcesso())
-                .setParameter("idLocalizacao", t.getLocalizacao().getIdLocalizacao())
-                .setParameter("idPapel", t.getPapel().getIdPapel());
+                Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
+                q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, t.getLocalizacao())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, t.getPapel());
                 
-                Long taskId = ((java.math.BigInteger)q.getSingleResult()).longValue();
+                Long taskId = (Long) q.getSingleResult();
 				if (taskId != null) {
 					BusinessProcess.instance().setTaskId(taskId);
 				}
@@ -236,12 +235,12 @@ public class JbpmEventsHandler implements Serializable {
 					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
 				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
 				UsuarioLocalizacao t = Authenticator.getUsuarioLocalizacaoAtual();
-				Query q = getEntityManager().createNativeQuery(JbpmEventsHandler.PROCESSO_LOCALIZACAO_PAPEL_QUERY);
-				q.setParameter("id", processo.getIdProcesso())
-				.setParameter("idLocalizacao", t.getLocalizacao().getIdLocalizacao())
-                .setParameter("idPapel", t.getPapel().getIdPapel());
-				
-				Long taskId = ((java.math.BigInteger)q.getSingleResult()).longValue();
+				Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
+                q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, t.getLocalizacao())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, t.getPapel());
+                
+                Long taskId = (Long) q.getSingleResult();
 				
 				if (taskId != null) {
 					BusinessProcess.instance().setTaskId(taskId);
@@ -300,6 +299,6 @@ public class JbpmEventsHandler implements Serializable {
 	 * @return
 	 */
 	public static JbpmEventsHandler instance() {
-		return ComponentUtil.getComponent(NAME);
+		return ComponentUtil.getComponent(JbpmEventsHandler.NAME);
 	}
 }
