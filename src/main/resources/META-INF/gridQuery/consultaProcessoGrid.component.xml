@@ -7,10 +7,11 @@
 		<property name="key">idProcesso</property>
 		<property name="columns">
 			<value>numeroProcesso</value>			
-			<value>usuarioCadastroProcesso</value>			
+			<value>usuarioCadastroProcesso</value>
 			<value>dataInicio: { valueType: date, properties : { pattern: "dd/MM/yy kk:mm" } }</value>
-			<value>naturezaCategoriaFluxo.natureza : {properties:{header: #{messages['consultaProcesso.natureza']}}}</value>
-			<value>naturezaCategoriaFluxo.categoria : {properties:{header: #{messages['consultaProcesso.categoria']}}}</value>			
+			<value>naturezaCategoriaFluxo.natureza : {properties:{header: #{messages['natureza.titleGrid']}}}</value>
+			<value>naturezaCategoriaFluxo.categoria : {properties:{header: #{messages['categoria.titleGrid']}}}</value>
+            <value>itemDoProcesso : {properties:{header: #{messages['item.titleGrid']}}}</value>			
 		</property>
 		<property name="restrictions">
 			<value>o.idProcesso in (#{painelUsuarioHome.processoIdList})</value>  

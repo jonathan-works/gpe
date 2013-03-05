@@ -127,7 +127,7 @@
 					<div style="width: 75%; left:1px; ">
 						<wi:form isUploadForm="true"
 								 form="#{anexarDocumentoForm}" 
-								 formTitle="Cadastro do Documento" 
+								 formTitle="#{messages['form.title']}"
 								 home="#{processoDocumentoHome}"
 								 reRenderSave="divAnexarDocumentos" />
 					</div>
@@ -143,7 +143,7 @@
 							    	 title="Documentos do Processo #{home.instance}"
 							    	 toolBar="none"
 							    	 headerToolBar="none"
-							    	 columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin">
+							    	 columnList="usuarioInclusao,dataInclusao,processoDocumentoBin">
 					    </wi:datalist>
 				</s:div>
 			</rich:tab>
