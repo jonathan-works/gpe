@@ -47,7 +47,6 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.JbpmVariavelLabel;
 import br.com.infox.ibpm.entity.Localizacao;
