@@ -7,7 +7,7 @@
 		<property name="formId">tipoProcessoDocumentoPapel</property>
 		<property name="fields">
 			<value>papel : {type : comboPapel, required: true}</value>
-	  		<value>obrigatorio: {type: radioBoolean, required: true}</value>
+	  		<value>obrigatorio: {type: radioBoolean}</value>
 		</property>
 	</component>
 </components>
