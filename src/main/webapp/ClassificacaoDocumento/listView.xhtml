@@ -124,13 +124,13 @@
 									items="#{agrupamentoList}"
 									value="#{home.instance.agrupamento}"
 									noSelectionLabel="#{messages['comboBox.select']}"/>
-			<wi:inputText id="tipoProcessoDocumentoObservacao"
-						  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
-						  value="#{home.instance.tipoProcessoDocumentoObservacao}"
-						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['field.situacao']}"
 								    value="#{home.instance.ativo}" />
+			<wi:inputTextarea id="tipoProcessoDocumentoObservacao"
+						  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
+						  value="#{home.instance.tipoProcessoDocumentoObservacao}"
+						  maxlength="150" />
 		</wi:dataForm>
 	</ui:define>
 	 <ui:define name="tabs">
