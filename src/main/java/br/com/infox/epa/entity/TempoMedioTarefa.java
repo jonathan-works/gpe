@@ -80,13 +80,12 @@ public class TempoMedioTarefa implements Serializable {
 	@Transient
 	public String getTempoMedioFormatado() {
 	    float resultTempo = tempoMedio;
-	    if(tipoPrazo.equals(PrazoEnum.D)) {
+	    if(PrazoEnum.D.equals(tipoPrazo)) {
 	        resultTempo = resultTempo / 1440;
-	    } else if (tipoPrazo.equals(PrazoEnum.H)) {
+	    } else if (PrazoEnum.H.equals(tipoPrazo)) {
 	        resultTempo = resultTempo / 60;
 	    }
-	    String result =String.format("%.2f %s", resultTempo, tipoPrazo.getLabel());
-	    return result;
+	    return String.format("%.2f %s", resultTempo, tipoPrazo == null ? "":tipoPrazo.getLabel());
 	}
 	
 	@Column(name="tp_prazo")
