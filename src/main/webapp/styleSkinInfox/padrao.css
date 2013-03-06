@@ -373,6 +373,16 @@ html, body {
 	height:100%;
 }
 
+tr.rich-table-row:nth-child(odd) {
+    background-color:#FAFAFA;
+}
+tr.rich-table-row:nth-child(even) {
+    background-color:#E7E7E7;
+}
+tr.rich-table-row:hover {
+    background-color:#AFAFAF;
+}
+
 body {
 	margin: 0px;
 	font-family: Arial, sans-serif;
