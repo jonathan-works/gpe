@@ -300,7 +300,7 @@ public class SearchHandler implements Serializable {
 		if (JbpmUtil.isTypeEditor(type)){
 			texto = JbpmUtil.instance().valorProcessoDocumento((Integer) value);
 		} else if("sim_nao".equals(type)) {
-			texto = (Boolean)value ? "Sim" : "Não";
+			texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
 		} else if ("numberMoney".equalsIgnoreCase(type)){
             texto = String.format("%.2f", value);
         } else {
