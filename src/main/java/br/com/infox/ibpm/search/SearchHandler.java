@@ -313,7 +313,7 @@ public class SearchHandler implements Serializable {
 			try {
 				org.apache.lucene.search.Query query = parser.parse(searchText);
 				String highlighted = HelpUtil.highlightText(query, texto, false);
-				if (!highlighted.equals("")) {
+				if (!"".equals(highlighted)) {
 					texto = highlighted;
 				}
 			} catch (ParseException e) {
