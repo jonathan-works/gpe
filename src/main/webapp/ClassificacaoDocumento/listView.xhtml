@@ -24,6 +24,7 @@
 			    xmlns:h="http://java.sun.com/jsf/html"
 			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 			    xmlns:a="http://richfaces.org/a4j"
+			    xmlns:c="http://java.sun.com/jstl/core"
 			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                       
 	<ui:define name="title">#{messages['tipoProcessoDocumento.titlePage']}</ui:define>
@@ -69,10 +70,10 @@
 			<wi:columnOutputText columnId="tipoProcessoDocumento"
 								 columnHeader="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 								 value="#{row.tipoProcessoDocumento}" />
-			<wi:columnEnum columnId="usotipoDocumento"
+			<wi:columnEnum columnId="inTipoDocumento"
 						   columnHeader="#{messages['tipoProcessoDocumento.uso']}"
 						   value="#{row.inTipoDocumento}" />
-			<wi:columnEnum columnId="visibilidadeTipoprocessoDocumento"
+			<wi:columnEnum columnId="visibilidade"
 						   columnHeader="#{messages['tipoProcessoDocumento.visibilidade']}"
 						   value="#{row.visibilidade}" />
 			<wi:columnSituacao columnId="ativo"
@@ -123,14 +124,36 @@
 									items="#{agrupamentoList}"
 									value="#{home.instance.agrupamento}"
 									noSelectionLabel="#{messages['comboBox.select']}"/>
-			<wi:inputText id="tipoProcessoDocumentoObservacao"
-						  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
-						  value="#{home.instance.tipoProcessoDocumentoObservacao}"
-						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['field.situacao']}"
 								    value="#{home.instance.ativo}" />
+			<wi:inputTextarea id="tipoProcessoDocumentoObservacao"
+						  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
+						  value="#{home.instance.tipoProcessoDocumentoObservacao}"
+						  maxlength="150" />
 		</wi:dataForm>
 	</ui:define>
-
+	 <ui:define name="tabs">
+		 <rich:tab label="Associar Papel"
+		    	   status=":status"			
+		    	   id="associarPapelTab"			
+		    	   rendered="#{home.managed}">
+			<s:div id="divAssociarPapel">
+				<c:if test="#{canEdit}">
+					<wi:form msgRendered="false"				   		
+							 formTitle="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"						
+							 form="#{tipoProcessoDocumentoPapelForm}"						
+							 home="#{tipoProcessoDocumentoPapelHome}"						
+							 reRenderSave="divAssociarPapel"/>
+				</c:if>
+				<wi:datalist bean="#{tipoProcessoDocumentoPapelGrid}" 
+							 gridId="tipoProcessoDocumentoPapelGridTab"
+							 toolBar="toolBarEditRemove"
+							 listReRender="divAssociarPapel"
+							 headerToolBar="none"
+							 home="#{tipoProcessoDocumentoPapelHome}"
+							 title="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"/>				
+			</s:div>
+		</rich:tab>
+	</ui:define>
 </ui:composition>

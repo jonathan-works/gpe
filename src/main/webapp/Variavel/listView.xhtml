@@ -32,7 +32,7 @@
 	<ui:define name="searchGrid">   
 	    <wi:dataTable values="#{variavelList.list(15)}"
 					  bean="#{variavelList}"
-					  tableTitle="#{messages['searchForm.title']}"
+					  tableTitle="#{messages['variavel.titleView']}"
 					  id="variavelList"
 					  rowId="#{row.idVariavel}" >
 			<ui:define name="headerToolBar">
@@ -41,7 +41,7 @@
             </ui:define>
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarVariavelForm"
-							   formTitle="#{messages['variavel.titlePage']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="variavel"
 								 value="#{variavelList.entity.variavel}"
 								 label="#{messages['variavel.variavel']}"
@@ -59,7 +59,7 @@
 			<wi:columnOutputText columnId="variavel"
 								 columnHeader="#{messages['variavel.variavel']}"
 								 value="#{row.variavel}" />
-			<wi:columnOutputText columnId="descricaoVariavel"
+			<wi:columnOutputText columnId="valorVariavel"
 								 columnHeader="#{messages['variavel.valorVariavel']}"
 								 value="#{row.valorVariavel}" />
 			<wi:columnSituacao columnId="ativo"
