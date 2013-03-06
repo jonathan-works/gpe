@@ -26,43 +26,41 @@
 
 	<ui:param name="clearAction"
 		value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}" />
-	<f:subview id="#{formId}">
-		<a:region>
-			<f:validateBean disabled="true">
-				<rich:collapsiblePanel expanded="#{wi:get(opened, true)}"
-					style="#{empty widthSearchForm ? 'width: 275px' : ''}" switchType="client">
-					<f:facet name="closeMarker"> </f:facet>
-					<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
-					<ui:param name="template"
-						value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
-					<ui:insert />
-					<ui:insert name="buttons">
-						<wi:selectOneMenu id="#{gridId}LogicOperator"
-							label="Mostrar resultado que atenda a:"
-							value="#{bean.restrictionLogicOperator}"
-							rendered="#{wi:get(showLogicOperator, false)}" showLock="false"
-							optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
-							items="#{'and,or'.split(',')}" />
-	
-						<s:div styleClass="actionButtons" style="clear: both; width:250px"
-							rendered="#{wi:get(showButtons, true)}">
-							<wi:commandButton id="searchButton" value="Pesquisar"
-								action="#{searchAction}"
-								reRender="#{wi:get(searchReRender, 'pageBody')}">
-								<a:param assignTo="#{bean.page}" value="1" />
-							</wi:commandButton>
-	
-							<a:commandButton id="clearButton"
-								onclick="j$('##{formId}').clearForm();showLoading();"
-								oncomplete="hideLoading();"
-								action="#{util.invokeMethod(clearAction)}" value="Limpar"
-								ajaxSingle="true" style="min-width:65px; width:65px;"
-								reRender="#{wi:get(clearReRender, 'pageBody')}"
-								styleClass="buttons dr-tbpnl-tb-inact" />
-						</s:div>
-					</ui:insert>
-				</rich:collapsiblePanel>
-			</f:validateBean>
-		</a:region>
-	</f:subview>
+	<a:region id="#{formId}">
+		<f:validateBean disabled="true">
+			<rich:collapsiblePanel expanded="#{wi:get(opened, true)}"
+				style="#{empty widthSearchForm ? 'width: 275px' : ''}" switchType="client">
+				<f:facet name="closeMarker"> </f:facet>
+				<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
+				<ui:param name="template"
+					value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
+				<ui:insert />
+				<ui:insert name="buttons">
+					<wi:selectOneMenu id="#{gridId}LogicOperator"
+						label="Mostrar resultado que atenda a:"
+						value="#{bean.restrictionLogicOperator}"
+						rendered="#{wi:get(showLogicOperator, false)}" showLock="false"
+						optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
+						items="#{'and,or'.split(',')}" />
+
+					<s:div styleClass="actionButtons" style="clear: both; width:250px"
+						rendered="#{wi:get(showButtons, true)}">
+						<wi:commandButton id="searchButton" value="Pesquisar"
+							action="#{searchAction}"
+							reRender="#{wi:get(searchReRender, 'pageBody')}">
+							<f:setPropertyActionListener target="#{bean.page}" value="1" />
+						</wi:commandButton>
+
+						<a:commandButton id="clearButton"
+							onclick="j$('##{formId}').clearForm();showLoading();"
+							oncomplete="hideLoading();"
+							action="#{util.invokeMethod(clearAction)}" value="Limpar"
+							execute="@this" style="min-width:65px; width:65px;"
+							render="#{wi:get(clearReRender, 'pageBody')}"
+							styleClass="buttons dr-tbpnl-tb-inact" />
+					</s:div>
+				</ui:insert>
+			</rich:collapsiblePanel>
+		</f:validateBean>
+	</a:region>
 </ui:composition>

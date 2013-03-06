@@ -1,14 +1,14 @@
 function showLoading() {	
-	if ($('_viewRoot:status')) {
-		$('_viewRoot:status').style.display='none';
+	if ($('#status')) {
+		$('#status').hide();
 	}
-	Richfaces.showModalPanel('modalStatus');
+	RichFaces.$('modalStatus').show();
 }
 
 function hideLoading() {
-	Richfaces.hideModalPanel('modalStatus');
-	if ($('_viewRoot:status')) {
-		$('_viewRoot:status').style.display='block';
+	RichFaces.$('modalStatus').hide();
+	if ($('#status')) {
+		$('#status').show();
 	}
 }
 
@@ -18,13 +18,13 @@ function refreshOpener() {
 	} catch (e) {}
 }
 
-if (! j$.fn.clearForm) {
-	j$.fn.clearForm = function() {
+if (!$.fn.clearForm) {
+	$.fn.clearForm = function() {
 		return this.each(function() {
 			var type = this.type; 
 			var tag = this.tagName.toLowerCase();
 			if (tag == 'form')
-				return j$(':input',this).clearForm();
+				return $(':input',this).clearForm();
 			if (type == 'text' || type == 'password' || tag == 'textarea')
 				this.value = '';
 			else if (type == 'checkbox' || type == 'radio')

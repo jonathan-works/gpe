@@ -1,17 +1,17 @@
 function showModal(modalId) {
-	setTimeout('Richfaces.showModalPanel("' + modalId + '")', 100);
+	setTimeout('RichFaces.$("' + modalId + '").show()', 100);
 }
 
 function hideModal(modalId) {
-	setTimeout('Richfaces.hideModalPanel("' + modalId + '")', 100);
+	setTimeout('RichFaces.$("' + modalId + '").hide()', 100);
 } 
 
 function setMesmaData(di, df) {
-	if( $(df).value == "" || $(df).value == null || $(df).value.startsWith("_") ) {
-		$(df).value = $(di).value;
+	if( $(df).val() == "" || $(df).val() == null || $(df).val().startsWith("_") ) {
+		$(df).val($(di).val());
 	}
-	if( $(di).value == "" || $(di).value == null || $(di).value.startsWith("_") ) {
-		$(di).value = $(df).value;
+	if( $(di).val() == "" || $(di).val() == null || $(di).val().startsWith("_") ) {
+		$(di).val($(df).val());
 	}
 } 
 
@@ -19,12 +19,12 @@ function validarPeriodo(di, df, mesmaData, dataInicio) {
 	if (mesmaData) {
 		setMesmaData(di, df);
 	}
-	 if (toDate($(di).value).getTime() > toDate($(df).value).getTime()) {
+	 if (toDate($(di).val()).getTime() > toDate($(df).val()).getTime()) {
 	   alert("A data inicial deve ser menor ou igual a data final.");
 	   if (dataInicio)	{
-		   $(di).value = "";
+		   $(di).val("");
 	   } else {
-		   $(df).value = "";
+		   $(df).val("");
 	   }
 	 }
 }
@@ -33,9 +33,9 @@ function validarPeriodoAnoMes(di, df, mesmaData) {
 	if (mesmaData) {
 		setMesmaData(di, df);
 	}
-	if (getDateFirstDayOfMonth($(di).value).getTime() > getDateLastDayOfMonth($(df).value).getTime()) {
+	if (getDateFirstDayOfMonth($(di).val()).getTime() > getDateLastDayOfMonth($(df).val()).getTime()) {
 		alert("A data inicial deve ser menor ou igual a data final.");
-		$(df).value = "";
+		$(df).val("");
 	}
 }
 

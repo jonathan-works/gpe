@@ -43,7 +43,7 @@
 			var globalMessages = '#{!facesMessages.currentGlobalMessages.isEmpty()}';
 			if(globalMessages == 'true') {	
 				if('#{showDialogMessage}' == 'true') {		
-					if(jQuery('dt[class=rf-msgs-err]').html() == null) {
+					if($('dt[class=rf-msgs-err]').html() == null) {
 						showDialogMessage();
 						setTimeout("hideDialogMessage()", "#{timeCloseMSG}");					
 					} else {
