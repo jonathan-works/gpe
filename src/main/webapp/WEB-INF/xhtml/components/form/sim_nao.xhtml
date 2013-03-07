@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:wi="http://www.itx.com.br/jsf">
+
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -30,22 +31,22 @@
 	
 	<ui:composition>
 	
-		<s:decorate
-             id="#{id}Decoration"
-             template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-             rendered="#{empty rendered or rendered}">
+		<s:decorate id="#{id}Decoration" 
+			template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+			rendered="#{empty rendered or rendered}">
 			
-			<ui:define
-                 name="label">#{label}</ui:define>
-            <h:selectBooleanCheckbox
-                 id="#{id}"
-                 styleClass="checkbox"
-                 value="#{value}"
-                 required="#{required}"
-                 disabled="#{not empty readonly and readonly ? true : disabled}"
-                 onclick="#{onclick}">
-				<ui:insert />
-			</h:selectBooleanCheckbox>
+			<ui:define name="label">#{label}</ui:define>
+            <h:selectOneRadio id="#{id}"    
+                              value="#{value}"
+                              disabled="#{not empty readonly and readonly ? true : disabled}"
+                              required="#{required}" 
+                              onchange="#{onchange}"
+                              onclick="#{onclick}"
+                              styleClass="radio"
+                              boxChecked="#{sim ? 0 : 1}">  
+                <f:selectItems value="#{util.splitAsList('true:Sim,false:Não') }"/>
+                <ui:insert />
+            </h:selectOneRadio>
 			
 		</s:decorate>
 

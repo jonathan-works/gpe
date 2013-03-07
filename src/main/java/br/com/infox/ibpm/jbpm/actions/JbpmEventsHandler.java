@@ -208,11 +208,11 @@ public class JbpmEventsHandler implements Serializable {
 			if (processo != null && processo.getIdJbpm() != null &&
 					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
 				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-				UsuarioLocalizacao t = Authenticator.getUsuarioLocalizacaoAtual();
+				UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
                 Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
                 q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, t.getLocalizacao())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, t.getPapel());
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
                 
                 Long taskId = (Long) q.getSingleResult();
 				if (taskId != null) {
@@ -234,11 +234,11 @@ public class JbpmEventsHandler implements Serializable {
 			if (processo != null && processo.getIdJbpm() != null &&
 					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
 				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-				UsuarioLocalizacao t = Authenticator.getUsuarioLocalizacaoAtual();
+				UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
 				Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
                 q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, t.getLocalizacao())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, t.getPapel());
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
                 
                 Long taskId = (Long) q.getSingleResult();
 				

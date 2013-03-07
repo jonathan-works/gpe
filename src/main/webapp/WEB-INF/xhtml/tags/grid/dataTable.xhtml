@@ -65,13 +65,8 @@
 				</script>
 			</f:verbatim>  	
 
-			<ui:param
-                 name="onMouseOut"
-                 value="this.style.backgroundColor=c" />
-			<ui:param
-                 name="onMouseOver"
-                 value="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'" />
-			<rich:dataTable
+
+		<rich:dataTable
                  value="#{values}"
                  id="#{id}"
                  rowKeyVar="key"
