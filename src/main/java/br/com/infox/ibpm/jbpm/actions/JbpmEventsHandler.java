@@ -20,9 +20,12 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
+import br.com.infox.ibpm.query.ProcessoLocalizacaoIbpmQuery;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -34,6 +37,7 @@ public class JbpmEventsHandler implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(JbpmEventsHandler.class);
+
 	public static final String NAME = "jbpmEventsHandler";
 	
 	@Observer(Event.EVENTTYPE_TASK_END)
@@ -204,12 +208,13 @@ public class JbpmEventsHandler implements Serializable {
 			if (processo != null && processo.getIdJbpm() != null &&
 					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
 				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-				String sql = "select o.idTaskInstance from SituacaoProcesso o " +
-				"where o.idProcesso = :id " +
-				"group by o.idTaskInstance";
-				Query q = getEntityManager().createQuery(sql);
-				q.setParameter("id", processo.getIdProcesso());
-				Long taskId = EntityUtil.getSingleResult(q);
+				UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
+                Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
+                q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
+                
+                Long taskId = (Long) q.getSingleResult();
 				if (taskId != null) {
 					BusinessProcess.instance().setTaskId(taskId);
 				}
@@ -229,12 +234,13 @@ public class JbpmEventsHandler implements Serializable {
 			if (processo != null && processo.getIdJbpm() != null &&
 					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
 				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-				String sql = "select o.idTaskInstance from SituacaoProcesso o " +
-				"where o.idProcesso = :id " +
-				"group by o.idTaskInstance";
-				Query q = getEntityManager().createQuery(sql);
-				q.setParameter("id", processo.getIdProcesso());
-				Long taskId = EntityUtil.getSingleResult(q);
+				UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
+				Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
+                q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
+                
+                Long taskId = (Long) q.getSingleResult();
 				
 				if (taskId != null) {
 					BusinessProcess.instance().setTaskId(taskId);
@@ -293,6 +299,6 @@ public class JbpmEventsHandler implements Serializable {
 	 * @return
 	 */
 	public static JbpmEventsHandler instance() {
-		return ComponentUtil.getComponent(NAME);
+		return ComponentUtil.getComponent(JbpmEventsHandler.NAME);
 	}
 }

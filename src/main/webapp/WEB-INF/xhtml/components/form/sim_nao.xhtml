@@ -36,14 +36,17 @@
 			rendered="#{empty rendered or rendered}">
 			
 			<ui:define name="label">#{label}</ui:define>
-            <h:selectBooleanCheckbox id="#{id}" 
-             	styleClass="checkbox"
-             	value="#{value}"
-				required="#{required}" 
-                disabled="#{not empty readonly and readonly ? true : disabled}"
-                onclick="#{onclick}">
-				<ui:insert />
-			</h:selectBooleanCheckbox>
+            <h:selectOneRadio id="#{id}"    
+                              value="#{value}"
+                              disabled="#{not empty readonly and readonly ? true : disabled}"
+                              required="#{required}" 
+                              onchange="#{onchange}"
+                              onclick="#{onclick}"
+                              styleClass="radio"
+                              boxChecked="#{sim ? 0 : 1}">  
+                <f:selectItems value="#{util.splitAsList('true:Sim,false:Não') }"/>
+                <ui:insert />
+            </h:selectOneRadio>
 			
 		</s:decorate>
 
