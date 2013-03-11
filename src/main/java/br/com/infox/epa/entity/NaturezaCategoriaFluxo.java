@@ -27,7 +27,7 @@ import br.com.infox.ibpm.entity.Fluxo;
 @Entity
 @Table(name=NaturezaCategoriaFluxo.TABLE_NAME, schema="public",
 	   uniqueConstraints={
-			@UniqueConstraint(columnNames={"id_categoria", "id_natureza"})
+			@UniqueConstraint(columnNames={"id_categoria", "id_fluxo"})
 		})
 @NamedQueries(value={
 				@NamedQuery(name=NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA,
