@@ -23,14 +23,6 @@
 	font-size:1px;
 }
 
-.even-row {
-   background-color: #e7e7e7;
-}
-
-.odd-row {
-   background-color: #f7f7f7;
-}
-
 tr.rich-table-row:nth-child(odd) {
 	background-color:#FAFAFA;
 }
