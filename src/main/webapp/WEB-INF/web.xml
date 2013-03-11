@@ -1,11 +1,10 @@
-<?xml version="1.0" ?> 
+<?xml version="1.0" ?>
 
 <!-- $Id: web.xml 747 2010-09-22 17:49:22Z danielsilva $ -->
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
-         version="3.0">
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
 
 	<!-- Facelets -->
 	<context-param>
@@ -15,16 +14,16 @@
 
 	<!-- Fila padrão para as requisições ajax -->
 	<context-param>
-	   <param-name>org.richfaces.queue.global.enabled</param-name>
-	   <param-value>true</param-value>
+		<param-name>org.richfaces.queue.global.enabled</param-name>
+		<param-value>true</param-value>
 	</context-param>
 
-    <!-- Ajax4jsf -->
-    
-    <context-param>
-        <param-name>org.richfaces.skin</param-name>
-      <param-value>#{wiSkin.skin}</param-value>
-    </context-param>
+	<!-- Ajax4jsf -->
+
+	<context-param>
+		<param-name>org.richfaces.skin</param-name>
+		<param-value>#{wiSkin.skin}</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>org.richfaces.LoadScriptStrategy</param-name>
@@ -40,7 +39,7 @@
 		<param-name>org.richfaces.LoadStyleStrategy</param-name>
 		<param-value>ALL</param-value>
 	</context-param>
-	
+
 	<context-param>
 		<param-name>org.ajax4jsf.COMPRESS_STYLE</param-name>
 		<param-value>true</param-value>
@@ -50,85 +49,89 @@
 		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
 		<param-value>1</param-value>
 	</context-param>
-	
+
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
 		<param-value>Development</param-value>
 	</context-param>
 
-   <!-- Seam -->
-    
-   <listener>
-      <listener-class>br.com.infox.seam.deploy.IbpmSeamListener</listener-class>
-   </listener>
-    
-    <filter>
-        <filter-name>Seam Filter</filter-name>
-        <filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
-        <init-param>
-            <param-name>maxRequestSize</param-name>
-            <param-value>2097152</param-value>
-       	</init-param>  
-       	<init-param>
-        	<param-name>createTempFiles</param-name>
-        	<param-value>false</param-value>
-	</init-param>      
-    </filter>
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>bluesky</param-value>
+	</context-param>
+	<!-- Seam -->
 
-    <filter-mapping>
-        <filter-name>Seam Filter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-        
-   <servlet>
-      <servlet-name>Seam Resource Servlet</servlet-name>
-      <servlet-class>org.jboss.seam.servlet.SeamResourceServlet</servlet-class>
-   </servlet>
-    
-   <servlet-mapping>
-      <servlet-name>Seam Resource Servlet</servlet-name>
-      <url-pattern>/seam/resource/*</url-pattern>
-   </servlet-mapping>
-   
-   <!-- Facelets development mode (disable in production) -->
-   
-   <context-param>
-      <param-name>facelets.DEVELOPMENT</param-name>
-      <param-value>true</param-value>
-   </context-param>
+	<listener>
+		<listener-class>br.com.infox.seam.deploy.IbpmSeamListener</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>Seam Filter</filter-name>
+		<filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
+		<init-param>
+			<param-name>maxRequestSize</param-name>
+			<param-value>2097152</param-value>
+		</init-param>
+		<init-param>
+			<param-name>createTempFiles</param-name>
+			<param-value>false</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>Seam Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<servlet>
+		<servlet-name>Seam Resource Servlet</servlet-name>
+		<servlet-class>org.jboss.seam.servlet.SeamResourceServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Seam Resource Servlet</servlet-name>
+		<url-pattern>/seam/resource/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Facelets development mode (disable in production) -->
+
+	<context-param>
+		<param-name>facelets.DEVELOPMENT</param-name>
+		<param-value>true</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>facelets.RESOURCE_RESOLVER</param-name>
 		<param-value>br.com.infox.component.CustomResourceResolver</param-value>
-	</context-param>    
-    
-   <!-- JSF -->
-   
-   <context-param>
-      <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
-      <param-value>.xhtml</param-value>
-   </context-param>
+	</context-param>
 
-   <servlet>
-      <servlet-name>Faces Servlet</servlet-name>
-      <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-      <load-on-startup>1</load-on-startup>
-   </servlet>
-    
-   <servlet-mapping>
-      <servlet-name>Faces Servlet</servlet-name>
-      <url-pattern>*.seam</url-pattern>
-   </servlet-mapping>
-                  
-   <security-constraint> 
-       <display-name>Restrict raw XHTML Documents</display-name>
-       <web-resource-collection>
-           <web-resource-name>XHTML</web-resource-name>
-           <url-pattern>*.xhtml</url-pattern>
-       </web-resource-collection>
-       <auth-constraint/>
-   </security-constraint>
-   
-   
-   
+	<!-- JSF -->
+
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.seam</url-pattern>
+	</servlet-mapping>
+
+	<security-constraint>
+		<display-name>Restrict raw XHTML Documents</display-name>
+		<web-resource-collection>
+			<web-resource-name>XHTML</web-resource-name>
+			<url-pattern>*.xhtml</url-pattern>
+		</web-resource-collection>
+		<auth-constraint />
+	</security-constraint>
+
+
+
 </web-app>
