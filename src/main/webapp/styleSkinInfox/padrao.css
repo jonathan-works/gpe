@@ -24,13 +24,17 @@
 	font-size:1px;
 }
 
-tr.rich-table-row:nth-child(odd) {
-	background-color:#FAFAFA;
-}
-tr.rich-table-row:nth-child(even) {
+tr.rich-table-row:hover {
 	background-color:#E7E7E7;
 }
-tr.rich-table-row:hover {
+
+.zebra tr.rich-table-row:nth-child(odd) {
+	background-color:#FAFAFA;
+}
+.zebra tr.rich-table-row:nth-child(even) {
+	background-color:#E7E7E7;
+}
+.zebra tr.rich-table-row:hover {
 	background-color:#AFAFAF;
 }
 
@@ -572,7 +576,15 @@ body {
     text-align: center;
     opacity:1.0;
     filter: alpha(opacity=100);
-}	
+}
+
+.opacityHover {
+	opacity:0.3;
+}
+
+.opacityHover:hover {
+	opacity:1;
+}
 
 img.disabled {
 	opacity: 0.3;
