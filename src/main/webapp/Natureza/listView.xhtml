@@ -13,7 +13,8 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
+-->
+<ui:composition
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:f="http://java.sun.com/jsf/core"
@@ -21,6 +22,7 @@
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf"
+     xmlns:a="http://richfaces.org/a4j"
      template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                        
 	<ui:define
@@ -60,7 +62,7 @@
 			</ui:define>
 			<ui:define
                  name="toolBar">
-				<wi:toolBarEdit />
+				<wi:toolBarEdit id="naturezaListEditToolbar"/>
 				<wi:toolBarInactive
                      actionInactive="naturezaAction.inactive(row)" />
 			</ui:define>
@@ -109,8 +111,8 @@
              value="#{naturezaCategoriaFluxoAction}" />
 		<rich:tab
              id="naturezaCatFluxoTab"
+             name="naturezaCatFluxoTab"
              rendered="#{home.isManaged()}"
-             eventsQueue="default"
              switchType="ajax"
              label="#{messages['naturezaCategoriaFluxo.titleTab']}"
              action="#{action.init()}">
@@ -143,7 +145,7 @@
 			</s:div>
 			<s:div
                  id="natCatFluxoDiv">
-				<h:form>
+				<a:region>
 					<rich:dataTable
                          id="natCatFluxoTable"
                          value="#{action.naturezaCategoriaFluxoList}"
@@ -195,7 +197,7 @@
                          id="dsNatCatFluxoTable"
                          align="left"
                          renderIfSinglePage="false" />
-				</h:form>
+				</a:region>
 			</s:div>
 		</rich:tab>
 	</ui:define>

@@ -1,61 +1,59 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">			
-	<s:div
-         id="includePessoaFisicaDiv">
-		
-		<wi:dataForm
-             formId="pessoaFisicaForm"
-             formTitle="#{messages['form.title']}"
-             panelWidth="70%">
-			
-			<wi:inputCpf
-                 id="cpf"
-                 value="#{pessoaFisicaHome.instance.cpf}"
-                 label="#{messages['pessoaFisica.cpf']}"
-                 assignTo="#{pessoaFisicaHome.instance.cpf}"
-                 required="true">
-				<a:ajax
-                     event="blur"
-                     action="#{action.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}"
-                     execute="@this"
-                     render="nome, dataNascimentoDecoration"
-                     limitRender="true" />
-			</wi:inputCpf>
-			<wi:inputText
-                 id="nome"
-                 value="#{pessoaFisicaHome.instance.nome}"
-                 label="#{messages['pessoaFisica.nome']}"
-                 required="true" />	 
-			<wi:inputDate
-                 id="dataNascimento"
-                 value="#{pessoaFisicaHome.instance.dataNascimento}"
-                 label="#{messages['pessoaFisica.dataNascimento']}"
-                 required="true" />
-			<wi:inputText
-                 id="email"
-                 label="#{messages['pessoaFisica.email']}"
-                 value="#{pessoaFisicaHome.instance.email}"
-                 required="true">
-				<f:validator
-                     validatorId="emailValidator" />
-			</wi:inputText>
-			<ui:define
-                 name="buttons">
-				<wi:commandButton
-                     id="saveButton"
-                     action="#{action.incluir('F')}"
-                     reRender="includePessoaFisicaDiv, pessoasListDiv, storeDiv"
-                     value="Incluir" />
-				<wi:commandButtonNew />
-			</ui:define>
-		</wi:dataForm>
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
+	<s:div id="includePessoaFisicaDiv">
+		<h:form id="pessoaFisicaForm">
+			<wi:dataForm
+				formId="pessoaFisicaForm"
+				formTitle="#{messages['form.title']}"
+				panelWidth="70%">
+
+				<wi:inputCpf
+					id="cpf"
+					value="#{pessoaFisicaHome.instance.cpf}"
+					label="#{messages['pessoaFisica.cpf']}"
+					assignTo="#{pessoaFisicaHome.instance.cpf}"
+					required="true">
+					<a:ajax
+						event="blur"
+						action="#{action.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}"
+						execute="@this"
+						render="nome, dataNascimentoDecoration"
+						limitRender="true" />
+				</wi:inputCpf>
+				<wi:inputText
+					id="nome"
+					value="#{pessoaFisicaHome.instance.nome}"
+					label="#{messages['pessoaFisica.nome']}"
+					required="true" />
+				<wi:inputDate
+					id="dataNascimento"
+					value="#{pessoaFisicaHome.instance.dataNascimento}"
+					label="#{messages['pessoaFisica.dataNascimento']}"
+					required="true" />
+				<wi:inputText
+					id="email"
+					label="#{messages['pessoaFisica.email']}"
+					value="#{pessoaFisicaHome.instance.email}"
+					required="true">
+					<f:validator validatorId="emailValidator" />
+				</wi:inputText>
+				<ui:define name="buttons">
+					<wi:commandButton
+						id="saveButton"
+						action="#{action.incluir('F')}"
+						reRender="includePessoaFisicaDiv, pessoasListDiv, storeDiv"
+						value="Incluir" />
+					<wi:commandButtonNew />
+				</ui:define>
+			</wi:dataForm>
+		</h:form>
 	</s:div>
 </ui:composition>

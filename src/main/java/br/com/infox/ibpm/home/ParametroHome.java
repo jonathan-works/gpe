@@ -26,8 +26,8 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
-import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.entity.log.LogUtil;
 import br.com.itx.util.EntityUtil;
 

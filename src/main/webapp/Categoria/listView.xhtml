@@ -15,119 +15,141 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-  
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-				xmlns:rich="http://richfaces.org/rich"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:h="http://java.sun.com/jsf/html"
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-                       
+
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:h="http://java.sun.com/jsf/html"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
 	<ui:define name="title">#{messages['categoria.titlePage']}</ui:define>
-	
-	<ui:param name="home" value="#{categoriaHome}" />
-	
+
+	<ui:param
+		name="home"
+		value="#{categoriaHome}" />
+
 	<ui:define name="searchGrid">
-	    <wi:dataTable values="#{categoriaList.list(15)}"
-					  bean="#{categoriaList}"
-					  tableTitle="#{messages['categoria.titleGrid']}"
-					  id="categoriaList"
-					  rowId="#{row.idCategoria}"
-					  actionInactive="categoriaHome.inactive">
+		<wi:dataTable
+			values="#{categoriaList.list(15)}"
+			bean="#{categoriaList}"
+			tableTitle="#{messages['categoria.titleGrid']}"
+			id="categoriaList"
+			rowId="#{row.idCategoria}"
+			actionInactive="categoriaHome.inactive">
 			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarCategoriaForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputText id="categoria"
-								  value="#{categoriaList.entity.categoria}"
-								  label="#{messages['categoria.categoria']}"/>
-					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['field.situacao']}"
-											  value="#{categoriaList.entity.ativo}" />
+				<wi:searchForm
+					formId="pesquisarCategoriaForm"
+					formTitle="#{messages['searchForm.title']}">
+					<wi:inputText
+						id="categoria"
+						value="#{categoriaList.entity.categoria}"
+						label="#{messages['categoria.categoria']}" />
+					<wi:selectSituacaoOneMenu
+						id="ativo"
+						label="#{messages['field.situacao']}"
+						value="#{categoriaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
 			<ui:define name="toolBar">
-				<wi:toolBarEdit  />
+				<wi:toolBarEdit id="categoriaListEditToolbar"/>
 				<wi:toolBarInactive actionInactive="categoriaHome.inactive(row)" />
 			</ui:define>
-			<wi:columnOutputText columnId="categoria"
-								 columnHeader="#{messages['categoria.categoria']}"
-								 value="#{row.categoria}"/>
-			<wi:columnSituacao columnId="ativo"
-							   columnHeader="#{messages['field.situacao']}"
-						   	   columnWidth="15%"
-							   value="#{row.ativo}" />
+			<wi:columnOutputText
+				columnId="categoria"
+				columnHeader="#{messages['categoria.categoria']}"
+				value="#{row.categoria}" />
+			<wi:columnSituacao
+				columnId="ativo"
+				columnHeader="#{messages['field.situacao']}"
+				columnWidth="15%"
+				value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 
 	<ui:define name="form">
-		<wi:dataForm formId="categoriaForm"
-					 formTitle="#{messages['form.title']}">
-			<wi:inputText id="categoria"
-						  value="#{categoriaHome.instance.categoria}"
-						  required="true"
-						  label="#{messages['categoria.categoria']}"/>
-			<wi:selectSituacaoRadio id="ativo"
-								    required="false"
-								    label="#{messages['field.situacao']}"
-								    value="#{categoriaHome.instance.ativo}" />
+		<wi:dataForm
+			formId="categoriaForm"
+			formTitle="#{messages['form.title']}">
+			<wi:inputText
+				id="categoria"
+				value="#{categoriaHome.instance.categoria}"
+				required="true"
+				label="#{messages['categoria.categoria']}" />
+			<wi:selectSituacaoRadio
+				id="ativo"
+				required="false"
+				label="#{messages['field.situacao']}"
+				value="#{categoriaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 
 	<ui:define name="tabs">
-		<ui:param name="action" value="#{categoriaItemAction}" />
-		<rich:tab id="categoriaItemTab"
-				  rendered="#{categoriaHome.isManaged()}"
-				  eventsQueue="default"
-				  switchType="ajax"
-				  label="#{messages['categoriaItem.titleTab']}"
-				  action="#{action.init()}">
+		<ui:param
+			name="action"
+			value="#{categoriaItemAction}" />
+		<rich:tab
+			id="categoriaItemTab"
+			rendered="#{categoriaHome.isManaged()}"
+			eventsQueue="default"
+			switchType="ajax"
+			label="#{messages['categoriaItem.titleTab']}"
+			action="#{action.init()}">
 			<s:div id="categoriaItemFormDiv">
-				<wi:dataForm formId="categoriaItemForm"
-						 	 formTitle="#{messages['form.title']} #{categoriaHome.instance.categoria}">
-					<wi:tree id="itemTree"
-							 assignTo="categoriaItemAction.instance.item"
-							 tree="#{itemTree}"
-                             required="true"
-							 label="#{messages['categoriaItem.item']}"/>
+				<wi:dataForm
+					formId="categoriaItemForm"
+					formTitle="#{messages['form.title']} #{categoriaHome.instance.categoria}">
+					<wi:tree
+						id="itemTree"
+						assignTo="categoriaItemAction.instance.item"
+						tree="#{itemTree}"
+						required="true"
+						label="#{messages['categoriaItem.item']}" />
 					<ui:define name="buttons">
-						<wi:commandButton id="saveButton"
-										  action="categoriaItemAction.persist"
-										  reRender="categoriaItemFormDiv, categoriaItemDiv"
-										  value="Incluir"/>
+						<wi:commandButton
+							id="saveButton"
+							action="categoriaItemAction.persist"
+							reRender="categoriaItemFormDiv, categoriaItemDiv"
+							value="Incluir" />
 					</ui:define>
 				</wi:dataForm>
 			</s:div>
 			<s:div id="categoriaItemDiv">
 				<h:form>
-					<rich:dataTable id="categoriaItemTable"
-									value="#{action.categoriaItemList}"
-									var="row"
-									rows="10"
-									style="width: 60%">
-                        <f:facet name="header">
-                            <h:outputText value="#{messages['categoriaItem.titleDataTable']} #{categoriaHome.instance.categoria}" />
-                        </f:facet>
+					<rich:dataTable
+						id="categoriaItemTable"
+						value="#{action.categoriaItemList}"
+						var="row"
+						rows="10"
+						style="width: 60%">
+						<f:facet name="header">
+							<h:outputText
+								value="#{messages['categoriaItem.titleDataTable']} #{categoriaHome.instance.categoria}" />
+						</f:facet>
 						<rich:column style="width: 10%">
 							<center>
-								<wi:toolBarRemove id="toolBarRemove"
-												  reRender="categoriaItemDiv"
-											      actionRemove="categoriaItemAction.remove(row)"/>
+								<wi:toolBarRemove
+									id="toolBarRemove"
+									reRender="categoriaItemDiv"
+									actionRemove="categoriaItemAction.remove(row)" />
 							</center>
 						</rich:column>
 						<rich:column style="width: 45%">
 							<f:facet name="header">
 								<h:outputText value="#{messages['categoriaItem.item']}" />
 							</f:facet>
-							<h:outputText value="#{row.item.caminhoCompletoToString()}"/>
+							<h:outputText value="#{row.item.caminhoCompletoToString()}" />
 						</rich:column>
 					</rich:dataTable>
-					<rich:dataScroller for="categoriaItemTable"
-									   lastPageMode="full"
-									   id="dsItemCatTable"
-									   align="left"
-									   renderIfSinglePage="false"/>
+					<rich:dataScroller
+						for="categoriaItemTable"
+						lastPageMode="full"
+						id="dsItemCatTable"
+						align="left"
+						renderIfSinglePage="false" />
 				</h:form>
 			</s:div>
 		</rich:tab>

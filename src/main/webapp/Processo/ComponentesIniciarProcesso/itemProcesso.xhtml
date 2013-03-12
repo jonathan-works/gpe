@@ -1,66 +1,57 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
-    
-   	<h:form
-         id="itemProcessoForm">
-   		<s:div
-             id="itemDiv">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
+
+	<h:form id="itemProcessoForm">
+		<s:div id="itemDiv">
 			<rich:dataTable
-                 id="itemTable"
-                 value="#{action.itemList}"
-                 var="row"
-                 rows="10"
-                 rendered="#{action.renderedByItem}"
-                 style="width: auto; min-width:100px">
-				<rich:column
-                     style="width: 10%">
-					<c:if
-                         test="#{!action.necessitaPartes()}">
+				id="itemTable"
+				value="#{action.itemList}"
+				var="row"
+				rows="10"
+				rendered="#{action.renderedByItem}"
+				style="width: auto; min-width:100px">
+				<rich:column style="width: 10%">
+					<c:if test="#{!action.necessitaPartes()}">
 						<a:commandLink
-                             action="#{action.onSelectItem(row)}"
-                             ajaxSingle="true"
-                             oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');                 window.location='#{util.contextPath}/Painel/list.seam';">
-                    		<h:graphicImage
-                                 url="/img/start.gif" />
-                		</a:commandLink>
-               		</c:if>
-               		<c:if
-                         test="#{action.necessitaPartes()}">
-               			<a:commandLink
-                             action="#{action.onSelectItem(row)}"
-                             ajaxSingle="true"
-                             reRender="itemDiv, partesForm">
-                    		<h:graphicImage
-                                 url="/img/start.gif" />
-                    	</a:commandLink>
-               		</c:if>
+							action="#{action.onSelectItem(row)}"
+							execute="@this"
+							render="itemProcessoForm"
+							oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');                 window.location='#{util.contextPath}/Painel/list.seam';">
+							<h:graphicImage url="/img/start.gif" />
+						</a:commandLink>
+					</c:if>
+					<c:if test="#{action.necessitaPartes()}">
+						<a:commandLink
+							action="#{action.onSelectItem(row)}"
+							execute="@this"
+							render="itemDiv, partesForm">
+							<h:graphicImage url="/img/start.gif" />
+						</a:commandLink>
+					</c:if>
 				</rich:column>
-				<rich:column
-                     style="width: 90%">
-					<f:facet
-                         name="header">
-						<h:outputText
-                             value="#{messages['item.descricaoItem']}" />
+				<rich:column style="width: 90%">
+					<f:facet name="header">
+						<h:outputText value="#{messages['item.descricaoItem']}" />
 					</f:facet>
-					<h:outputText
-                         value="#{row.item.caminhoCompletoToString()}" />
+					<h:outputText value="#{row.item.caminhoCompletoToString()}" />
 				</rich:column>
 			</rich:dataTable>
 			<rich:dataScroller
-                 for="itemTable"
-                 lastPageMode="full"
-                 id="dsItemTable"
-                 align="right"
-                 renderIfSinglePage="false" />
+				for="itemTable"
+				lastPageMode="full"
+				id="dsItemTable"
+				align="right"
+				renderIfSinglePage="false" />
 		</s:div>
+		<wi:messages />
 	</h:form>
 </ui:composition>

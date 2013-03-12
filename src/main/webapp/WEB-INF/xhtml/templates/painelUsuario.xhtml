@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
 	<ui:param
-         name="selectable"
-         value="#{wi:get(selectable, true)}" />
-	<s:div
-         styleClass="painelUsuario">
+		name="selectable"
+		value="#{wi:get(selectable, true)}" />
+	<s:div styleClass="painelUsuario">
 
-	    <h:outputLabel
-             rendered="#{identity.loggedIn}"
-             for="usuarioLocalizacao">
+		<h:outputLabel
+			rendered="#{identity.loggedIn}"
+			for="usuarioLocalizacao">
 	    	#{usuarioLogado}
 	    </h:outputLabel>
 
-	    <h:form
-             id="papeisUsuarioForm">
-	    	<c:if
-                 test="#{selectable}">
-			    <wi:selectOneMenuEntity
-                     value="#{authenticator.localizacaoAtualCombo}"
-                     rendered="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}"
-                     id="usuarioLocalizacao"
-                     template="/WEB-INF/xhtml/components/templates/display.xhtml"
-                     onchange="this.form.submit()"
-                     items="#{authenticator.usuarioLocalizacaoListItems}">
-			    </wi:selectOneMenuEntity><br />
+		<h:form id="papeisUsuarioForm">
+			<c:if test="#{selectable}">
+				<wi:selectOneMenuEntity
+					value="#{authenticator.localizacaoAtualCombo}"
+					rendered="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}"
+					id="usuarioLocalizacao"
+					template="/WEB-INF/xhtml/components/templates/display.xhtml"
+					onchange="this.form.submit()"
+					items="#{authenticator.usuarioLocalizacaoListItems}">
+				</wi:selectOneMenuEntity>
+				<br />
 			</c:if>
-			<c:if
-                 test="#{not selectable}">
-				<br /><h:outputLabel
-                     value="#{authenticator.localizacaoAtualCombo}" />
+			<c:if test="#{not selectable}">
+				<br />
+				<h:outputLabel value="#{authenticator.localizacaoAtualCombo}" />
 			</c:if>
-		    <h:outputText
-                 value="#{authenticator.usuarioLocalizacaoListItems[0]}"
-                 rendered="#{identity.loggedIn and authenticator.usuarioLocalizacaoListItems.size() == 1}" />
-	    </h:form>
+			<h:outputText
+				value="#{authenticator.usuarioLocalizacaoListItems[0]}"
+				rendered="#{identity.loggedIn and authenticator.usuarioLocalizacaoListItems.size() == 1}" />
+		</h:form>
 	</s:div>
 
 </ui:composition>
