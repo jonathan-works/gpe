@@ -49,7 +49,8 @@
 					<s:div style="width:40px; text-align:left">
 						<h:graphicImage title="Excluir nó"
 							style="cursor:pointer" 
-							url="/img/remove.png">
+							url="/img/remove.png"
+                            styleClass="opacityHover">
 							<a:support event="onclick" 
 								action="#{nodeFitter.removeNode(row)}"
 								ajaxSingle="true"
@@ -59,7 +60,8 @@
 						<h:graphicImage title="Subir na ordem"
 							style="cursor:pointer" 
 							rendered="#{key != 0}"
-							url="/img/jbpm/up.gif">
+							url="/img/jbpm/up.gif"
+                            styleClass="opacityHover">
 							<a:support event="onclick" 
 								action="#{nodeFitter.moveUp(row)}"
 								ajaxSingle="true"
@@ -68,7 +70,8 @@
 						<h:graphicImage title="Descer na ordem"
 							style="cursor:pointer" 
 							rendered="#{key lt nodeFitter.nodes.size - 1}"
-							url="/img/jbpm/down.gif">
+							url="/img/jbpm/down.gif"
+                            styleClass="opacityHover">
 							<a:support event="onclick" 
 								action="#{nodeFitter.moveDown(row)}"
 								ajaxSingle="true"

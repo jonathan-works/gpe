@@ -23,8 +23,6 @@
 	<rich:dataTable value="#{values}" 
 		id="#{id}"
 		rowKeyVar="key"
-		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
-		onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
 		styleClass="#{styleClass}"
 		style="#{style}"
 		var="row">
@@ -33,10 +31,8 @@
 			<f:facet name="header">
 				<ui:insert name="headerToolBar" />
 			</f:facet>
-			<div onmouseover="firstChild.style.visibility='visible'"
-				onmouseout="firstChild.style.visibility='hidden'"
-				style="width: 99%; text-align: center;"
-				><div style="visibility: hidden;">
+			<div style="width: 99%; text-align: center;"
+				><div>
 					<ui:insert name="toolBar"/>
 				</div>
 			</div>
