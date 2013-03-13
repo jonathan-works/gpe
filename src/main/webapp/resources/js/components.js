@@ -161,6 +161,12 @@ function onlyPositiveNumber(obj){
     obj.value = valor.replace(/\D/g,"");
 }
 
+function clamp(obj, min, max) {
+    if ((!isNaN(obj.value)) && (isFinite(obj.value)) && (obj.value != "")) {
+        obj.value = Math.min(max, Math.max(min, obj.value));
+    }
+}
+
 //Validador de E-Mail
 function validarEmail(obj) {
 	var mail = obj.value;		

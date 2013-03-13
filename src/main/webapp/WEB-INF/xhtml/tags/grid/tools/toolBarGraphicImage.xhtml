@@ -21,9 +21,8 @@
 	<h:graphicImage
          url="#{url}"
          title="#{title}"
-         style="cursor:pointer; padding:0px 1px;opacity:0.15;"
-         onmouseover="this.style.opacity=1"
-         onmouseout="this.style.opacity=0.15"
+				style="cursor:pointer; padding:0px 1px;"
+                styleClass="opacityHover"
          rendered="#{empty rendered ? true : rendered}"
          onclick="#{onclickGraphicImage}" />
 

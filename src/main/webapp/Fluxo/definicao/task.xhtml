@@ -86,7 +86,8 @@
 				<a:commandLink action="#{t.removeVar(var)}"
 								ajaxSingle="true"
 								onclick="if(!confirm('Confirma?')) return false;"
-								reRender="varTable">
+								reRender="varTable"
+                                styleClass="opacityHover">
 					<h:graphicImage title="Excluir variável"
 									style="cursor:pointer" 
 									url="/img/remove.png" />
@@ -94,7 +95,8 @@
 				<a:commandLink ajaxSingle="true"
 								reRender="actionTemplate"
 								status=":status"
-								action="#{taskFitter.currentTask.setCurrentVariable(var)}">
+								action="#{taskFitter.currentTask.setCurrentVariable(var)}"
+                                styleClass="opacityHover">
 					<h:graphicImage title="Adicionar modelo de documento"
 									style="cursor:pointer" 
 									rendered="#{empty var.modeloList}" 

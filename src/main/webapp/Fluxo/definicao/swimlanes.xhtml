@@ -44,7 +44,8 @@
 			<ui:define name="toolBar">
 				<h:graphicImage title="#{messages['processBuilder.removeSwimlane']}"
             					style="cursor:pointer" 
-            					url="/img/remove.png">
+            					url="/img/remove.png"
+                                styleClass="opacityHover">
 					<a:support event="onclick" 
         					   action="#{swimlaneFitter.removeSwimlane(row)}"
         					   ajaxSingle="true"

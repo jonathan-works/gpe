@@ -64,8 +64,8 @@
 						<h:graphicImage
                                      title="Excluir nó"
                                      style="cursor:pointer"
-                                     url="/img/remove.png">
-							<a:ajax
+							url="/img/remove.png"
+                            styleClass="opacityHover">
                                          event="click"
                                          action="#{nodeFitter.removeNode(row)}"
                                          onclick="if(!confirm('Confirma?')) return false;"
@@ -76,8 +76,8 @@
                                      title="Subir na ordem"
                                      style="cursor:pointer"
                                      rendered="#{key != 0}"
-                                     url="/img/jbpm/up.gif">
-							<a:ajax
+							url="/img/jbpm/up.gif"
+                            styleClass="opacityHover">
                                          event="click"
                                          action="#{nodeFitter.moveUp(row)}"
                                          execute="@this"
@@ -87,8 +87,8 @@
                                      title="Descer na ordem"
                                      style="cursor:pointer"
                                      rendered="#{key lt nodeFitter.nodes.size - 1}"
-                                     url="/img/jbpm/down.gif">
-							<a:ajax
+							url="/img/jbpm/down.gif"
+                            styleClass="opacityHover">
                                          event="click"
                                          action="#{nodeFitter.moveDown(row)}"
                                          execute="@this"

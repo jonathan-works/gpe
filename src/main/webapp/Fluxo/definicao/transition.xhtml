@@ -57,7 +57,8 @@
 					<h:graphicImage title="Definir condição"
 						rendered="#{empty transition.transition.condition}"
 						style="cursor:pointer" 
-						url="/img/help_dis.gif">
+						url="/img/help_dis.gif"
+                        styleClass="opacityHover">
 						<a:support event="onclick"
 							action="#{transitionFitter.setCurrentTransition(transition.transition)}"
 							oncomplete="Richfaces.showModalPanel('transitionCondition');"
@@ -66,6 +67,7 @@
 					<h:graphicImage title="Editar condição"
 						rendered="#{!empty transition.transition.condition and 
 									 transition.transition.condition != '#{true}'}"
+                        styleClass="opacityHover"
 						style="cursor:pointer" 
 						url="/img/help.gif">
 						<a:support event="onclick"
@@ -75,7 +77,8 @@
 					</h:graphicImage>
 					<h:graphicImage title="Excluir transição"
 						style="cursor:pointer" 
-						url="/img/remove.png">
+						url="/img/remove.png"
+                        styleClass="opacityHover">
 						<a:support event="onclick"
 							action="#{transitionFitter.removeTransition(transition, type)}"
 							ajaxSingle="true"

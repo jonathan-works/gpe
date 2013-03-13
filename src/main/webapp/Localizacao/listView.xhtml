@@ -82,12 +82,11 @@
 											limitToList="true"
 											status=":status"
 											reRender="pageBody"
+                                            styleClass="opacityHover"
 											onclick="if(!confirm('Confirma?')) return false;">
 								<h:graphicImage	url="/img/remove.png" 
 												title="Remover registro"
-												style="opacity:0.15; #{style}"
-												onmouseover="this.style.opacity=1"
-												onmouseout ="this.style.opacity=0.15"/>
+												style="#{style}"/>
 							</a:commandLink>
 						</a:region>
 					</div>
