@@ -135,32 +135,26 @@
 										   status=":status"
 										   ajaxSingle="true"
 										   oncomplete="Richfaces.hideModalPanel('#{formId}ModalPanel')"
-										   action="#{beanCrud.setPesquisa(row)}">
+										   action="#{beanCrud.setPesquisa(row)}"
+                                           styleClass="opacityHover">
 								<h:graphicImage url="/img/start.gif" 
-												title="Executar"
-												style="opacity:0.15;"
-												onmouseover="this.style.opacity=1"
-												onmouseout ="this.style.opacity=0.15" />
+												title="Executar" />
 							</a:commandLink>
 							<a:commandLink reRender="#{formId}modalPesquisaDiv"
 										   status=":status"
 										   ajaxSingle="true"
-										   action="#{beanCrud.setPesquisa(row)}">
+										   action="#{beanCrud.setPesquisa(row)}"
+                                           styleClass="opacityHover">
 								<h:graphicImage url="#{a4jSkin.imgIconView}" 
-												title="Editar"
-												style="opacity:0.15;"
-												onmouseover="this.style.opacity=1"
-												onmouseout ="this.style.opacity=0.15" />
+												title="Editar"/>
 							</a:commandLink>
 							<a:commandLink reRender="#{formId}modalPesquisaListDiv"
 										   status=":status"
 										   ajaxSingle="true"
-										   action="#{beanCrud.remove(row)}">
+										   action="#{beanCrud.remove(row)}"
+                                           styleClass="opacityHover">
 								<h:graphicImage url="/img/remove.png" 
-												title="Remover"
-												style="opacity:0.15;"
-												onmouseover="this.style.opacity=1"
-												onmouseout ="this.style.opacity=0.15" />
+												title="Remover"/>
 							</a:commandLink>
 						</a:form>
 					</a:region>

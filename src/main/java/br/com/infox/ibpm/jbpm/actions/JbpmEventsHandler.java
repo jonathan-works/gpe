@@ -3,6 +3,7 @@ package br.com.infox.ibpm.jbpm.actions;
 import java.io.Serializable;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.End;
@@ -259,6 +260,8 @@ public class JbpmEventsHandler implements Serializable {
 					}
 				}
 			}
+		} catch (NoResultException ex) {
+		    LOG.warn("JbpmEventsHandler.iniciarTask: "+ex.getMessage());
 		} catch (Exception ex) {
 			String action = "iniciar a tarefa: ";
 			LOG.warn(action, ex);

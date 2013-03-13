@@ -47,24 +47,27 @@
 								  label="#{messages['calendarioEventos.descricaoEvento']}"
 								  value="#{list.entity.descricaoEvento}"
 								  maxlength="100" />
-					<wi:inputNumber id="dia"
+					<wi:inputText id="dia"
 									label="#{messages['calendarioEventos.dia']}"
 									value="#{list.entity.dia}"
+                                    onkeyup="onlyPositiveNumber(this); clamp(this,1,31)"
+                                    converterId="integerConverter"
                                     maxlength="2">
-                                    <wi:mask id="dia" mask="99"/>
-                    </wi:inputNumber>
-					<wi:inputNumber id="mes"
+                    </wi:inputText>
+					<wi:inputText id="mes"
 									label="#{messages['calendarioEventos.mes']}"
 									value="#{list.entity.mes}"
+                                    onkeyup="onlyPositiveNumber(this); clamp(this,1,12)"
+                                    converterId="integerConverter"
                                     maxlength="2" >
-                                    <wi:mask id="mes" mask="99"/>
-                    </wi:inputNumber>
-					<wi:inputNumber id="ano"
+                    </wi:inputText>
+					<wi:inputText id="ano"
 									label="#{messages['calendarioEventos.ano']}"
 									value="#{list.entity.ano}"
+                                    onkeyup="onlyPositiveNumber(this)"
+                                    converterId="integerConverter"
                                     maxlength="4" >
-                                    <wi:mask id="ano" mask="9999"/>
-                    </wi:inputNumber>
+                    </wi:inputText>
 				</wi:searchForm>
 			</ui:define>
 			
