@@ -41,7 +41,7 @@
 					reRender="tarefasTree,painelProcessos"
 					dragType="task#{painelUsuarioHome.taskId}" 
 					dragValue="#{row}">
-					<ui:param name="owner" value="#{userHandler.getActorIdTarefaAtual(row[bean.key])}"/> 				
+					<ui:param name="owner" value="#{userHandler.getActorIdTarefaAtual()}"/> 				
 				<rich:dndParam name="label" value="Processo: #{row.numeroProcesso}" />
 				</rich:dragSupport>
 				<h:graphicImage url="/img/annotate.gif" title="Mover para caixa" />
@@ -49,15 +49,14 @@
 			 <a:commandLink ajaxSingle="true"
 				rendered="true"
 				target="#{row[bean.key]}popUpFluxo"
-				onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
-				>
+				onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 				<f:param name="idProcesso" value="#{row[bean.key]}" />
 				<f:param name="taskId" value="#{painelUsuarioHome.taskId}" />
 				<h:graphicImage url="/img/view.gif" 
 					title="Visualizar a tarefa" />
 			</a:commandLink>
 			<a:commandLink ajaxSingle="true"
-				rendered="#{owner == null}"
+				rendered="#{empty owner}"
 				target="#{row[bean.key]}popUpFluxo"
 				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
 				>
@@ -77,7 +76,7 @@
 					title="Continuar a tarefa" />
 			</a:commandLink>
 			<h:graphicImage url="/img/role.gif"
-					rendered="#{(owner != actor.id and owner != null)}" 
+					rendered="#{(owner != actor.id and ! empty owner)}" 
 					title="Processo bloqueado pelo servidor #{owner}" />
 		</a:form>
 		</div>
