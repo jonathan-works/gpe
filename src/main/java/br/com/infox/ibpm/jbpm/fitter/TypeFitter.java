@@ -94,7 +94,6 @@ public class TypeFitter implements Serializable, Fitter{
 							TaskPageAction.TASK_PAGE_COMPONENT_NAME, tList);
 					break;
 				} else if (!vah.getType().equals("null")) {
-					tList.remove(TaskPageAction.TASK_PAGE_COMPONENT_NAME);
 					break;
 				}
 			}
