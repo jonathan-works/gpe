@@ -164,7 +164,7 @@ public class ProcessoHandler implements Serializable {
 		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
 		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
 		ProcessoEpa pe = EntityUtil.getSingleResult(query);
-		return pe.hasPartes();
+		return ((pe == null) || (pe.hasPartes()));
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){
