@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- $Id: toolBarProcessoJbpm.xhtml 704 2010-08-12 23:21:10Z jplacerda $ --><jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -23,22 +23,21 @@
 	  Consulte a GNU GPL para mais detalhes.
 	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
 	  veja em http://www.gnu.org/licenses/  
-	-->   
-	      
+	-->
+
 	<ui:composition>
-		<div
-             style="width: 48px">
-		<h:form>
-			<a:outputPanel>
-				<ui:param
-                         name="actorId"
-                         value="#{row.actorId}" />
-				<h:outputText
-                         styleClass="actorId"
-                         rendered="#{!empty actorId}"
-                         style="display:none"
-                         value="#{actorId}" />
-				<!--  <rich:dragSupport
+		<div style="width: 48px">
+			<h:form>
+				<a:outputPanel>
+					<ui:param
+						name="actorId"
+						value="#{row.actorId}" />
+					<h:outputText
+						styleClass="actorId"
+						rendered="#{!empty actorId}"
+						style="display:none"
+						value="#{actorId}" />
+					<!--  <rich:dragSupport
                          dragIndicator="indicator"
                          reRender="tarefasTree,painelProcessos"
                          dragType="task#{painelUsuarioHome.taskId}"
@@ -50,60 +49,60 @@
                              name="label"
                              value="Processo: #{row.numeroProcesso}" />
 				</rich:dragSupport>-->
+					<h:graphicImage
+						url="/img/annotate.gif"
+						title="Mover para caixa" />
+				</a:outputPanel>
+				<a:commandLink
+					ajaxSingle="true"
+					rendered="true"
+					target="#{row[bean.key]}popUpFluxo"
+					onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+					<f:param
+						name="idProcesso"
+						value="#{row[bean.key]}" />
+					<f:param
+						name="taskId"
+						value="#{painelUsuarioHome.taskId}" />
+					<h:graphicImage
+						url="/img/view.gif"
+						title="Visualizar a tarefa" />
+				</a:commandLink>
+				<a:commandLink
+					ajaxSingle="true"
+					rendered="#{empty owner}"
+					target="#{row[bean.key]}popUpFluxo"
+					onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+					<f:param
+						name="idProcesso"
+						value="#{row[bean.key]}" />
+					<f:param
+						name="taskId"
+						value="#{painelUsuarioHome.taskId}" />
+					<h:graphicImage
+						url="/img/edit.gif"
+						title="Abrir a tarefa" />
+				</a:commandLink>
+				<a:commandLink
+					ajaxSingle="true"
+					rendered="#{owner == actor.id}"
+					target="#{row[bean.key]}popUpFluxo"
+					onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+					<f:param
+						name="idProcesso"
+						value="#{row[bean.key]}" />
+					<f:param
+						name="taskId"
+						value="#{painelUsuarioHome.taskId}" />
+					<h:graphicImage
+						url="/img/task.gif"
+						title="Continuar a tarefa" />
+				</a:commandLink>
 				<h:graphicImage
-                         url="/img/annotate.gif"
-                         title="Mover para caixa" />
-			 </a:outputPanel>
-			 <a:commandLink
-                     ajaxSingle="true"
-                     rendered="true"
-                     target="#{row[bean.key]}popUpFluxo"
-                     onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-				<f:param
-                         name="idProcesso"
-                         value="#{row[bean.key]}" />
-				<f:param
-                         name="taskId"
-                         value="#{painelUsuarioHome.taskId}" />
-				<h:graphicImage
-                         url="/img/view.gif"
-                         title="Visualizar a tarefa" />
-			</a:commandLink>
-			<a:commandLink
-                     ajaxSingle="true"
-                     rendered="#{empty owner}"
-                     target="#{row[bean.key]}popUpFluxo"
-                     onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-				<f:param
-                         name="idProcesso"
-                         value="#{row[bean.key]}" />
-				<f:param
-                         name="taskId"
-                         value="#{painelUsuarioHome.taskId}" />
-				<h:graphicImage
-                         url="/img/edit.gif"
-                         title="Abrir a tarefa" />
-			</a:commandLink>
-			<a:commandLink
-                     ajaxSingle="true"
-                     rendered="#{owner == actor.id}"
-                     target="#{row[bean.key]}popUpFluxo"
-                     onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-				<f:param
-                         name="idProcesso"
-                         value="#{row[bean.key]}" />
-				<f:param
-                         name="taskId"
-                         value="#{painelUsuarioHome.taskId}" />
-				<h:graphicImage
-                         url="/img/task.gif"
-                         title="Continuar a tarefa" />
-			</a:commandLink>
-			<h:graphicImage
-                     url="/img/role.gif"
-                     rendered="#{(owner != actor.id and ! empty owner)}"
-                     title="Processo bloqueado pelo servidor #{owner}" />
-		</h:form>
+					url="/img/role.gif"
+					rendered="#{(owner != actor.id and ! empty owner)}"
+					title="Processo bloqueado pelo servidor #{owner}" />
+			</h:form>
 		</div>
-	</ui:composition> 
+	</ui:composition>
 </jsp:root>
