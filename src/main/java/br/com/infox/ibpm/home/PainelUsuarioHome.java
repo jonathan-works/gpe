@@ -129,6 +129,13 @@ public class PainelUsuarioHome implements Serializable {
 
 	public Integer getTaskId() {
 		if (selected != null) {
+			return (Integer) selected.get("idTask");
+		}
+		return null;
+	}
+	
+	public Integer getTarefaId(){
+		if (selected != null) {
 			if (selected.containsKey("idTarefa")) {
 				return (Integer) selected.get("idTarefa");
 			}

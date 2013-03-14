@@ -136,6 +136,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 		UITree uiTree = tree.getUITree();
 		EntityNode<Map<String,Object>> en = (EntityNode<Map<String,Object>>) uiTree.getRowData(); 
 		setSelected(en.getEntity());
+		en.getEntity().get("idTask");
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}
 }
