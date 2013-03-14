@@ -27,8 +27,10 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.home.PainelUsuarioHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
@@ -50,16 +52,18 @@ public class UserHandler {
 		return null;
 	}
 	
-	public String getActorIdTarefaAtual(Integer idProcesso){
+	public String getActorIdTarefaAtual(){
 		try {
-		Long idTaskInstance = getIdTaskAtual(idProcesso); 
-		String hql = "select ul from UsuarioLogin ul where ul.idPessoa = (" +
-				"select uti.idUsuario from UsuarioTaskInstance uti where uti.idTaskInstance = :idTaskInstance)";
-		Query query = EntityUtil.createQuery(hql).setParameter("idTaskInstance", idTaskInstance);
-		UsuarioLogin ul = EntityUtil.getSingleResult(query);
-		if (ul!= null) 
-			return ul.getLogin();
-		else return null;
+			PainelUsuarioHome puh = (PainelUsuarioHome) ComponentUtil.getComponent(PainelUsuarioHome.NAME);
+			Long idTaskInstance = puh.getTaskId().longValue();
+			String hql = "select ul from UsuarioLogin ul where ul.idPessoa = (" +
+					"select uti.idUsuario from UsuarioTaskInstance uti where uti.idTaskInstance = :idTaskInstance)";
+			Query query = EntityUtil.createQuery(hql).setParameter("idTaskInstance", idTaskInstance);
+			UsuarioLogin ul = EntityUtil.getSingleResult(query);
+			if (ul != null) {
+				System.out.println(ul.getLogin());
+				return ul.getLogin();
+			} else return "";
 		} catch (NoResultException nre){
 			//TODO Verificar porque o Painel de Usuário ainda tenta buscar a tarefa que foi finalizada e passada para o próximo nó do fluxo
 			nre.printStackTrace();

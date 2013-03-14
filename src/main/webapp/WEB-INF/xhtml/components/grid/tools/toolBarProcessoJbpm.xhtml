@@ -45,7 +45,7 @@
                          dragValue="#{row}">
 					<ui:param
                              name="owner"
-                             value="#{userHandler.getActorIdTarefaAtual(row[bean.key])}" /> 				
+                             value="#{userHandler.getActorIdTarefaAtual()}" /> 				
 				<rich:dndParam
                              name="label"
                              value="Processo: #{row.numeroProcesso}" />
@@ -71,7 +71,7 @@
 			</a:commandLink>
 			<a:commandLink
                      ajaxSingle="true"
-                     rendered="#{owner == null}"
+                     rendered="#{empty owner}"
                      target="#{row[bean.key]}popUpFluxo"
                      onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{row[bean.key]}', '#{row[bean.key]}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 				<f:param
@@ -101,7 +101,7 @@
 			</a:commandLink>
 			<h:graphicImage
                      url="/img/role.gif"
-                     rendered="#{(owner != actor.id and owner != null)}"
+                     rendered="#{(owner != actor.id and ! empty owner)}"
                      title="Processo bloqueado pelo servidor #{owner}" />
 		</h:form>
 		</div>
