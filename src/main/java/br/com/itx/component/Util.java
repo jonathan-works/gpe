@@ -389,7 +389,8 @@ public class Util implements Serializable {
 	}	    
 
 	public boolean isAjaxRequest() {
-		return ExtendedPartialViewContext.getInstance(FacesContext.getCurrentInstance()).isAjaxRequest();
+		ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(FacesContext.getCurrentInstance());
+		return context != null && context.isAjaxRequest();
 	}
 	
 	public Object getFromPageContext(String var) {
