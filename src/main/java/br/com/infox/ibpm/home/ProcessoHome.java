@@ -97,7 +97,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
     private ProcessoDocumento pdFluxo;
 	private Integer idProcessoDocumento;
 
-	private long taskId;
+	private Long taskId;
 
 	private Boolean checkVisibilidade = true;
 
@@ -253,11 +253,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return Boolean.FALSE;
 	}
 	
-	public void setTaskId(long taskId) {
+	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
 
-	public long getTaskId() {
+	public Long getTaskId() {
 		return taskId; 
 	}
 	

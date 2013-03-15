@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.End;
@@ -20,9 +21,13 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.converter.IntegerConverter;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.entity.filters.SituacaoProcessoFilter;
 import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.home.PainelUsuarioHome;
+import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
@@ -236,10 +241,12 @@ public class JbpmEventsHandler implements Serializable {
 					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
 				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
 				UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
-				Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
+				ProcessoHome ph = (ProcessoHome) ComponentUtil.getComponent(ProcessoHome.NAME);
+				Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY);
                 q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
                 .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK, ph.getTaskId().intValue());
                 
                 Long taskId = (Long) q.getSingleResult();
 				
@@ -260,6 +267,8 @@ public class JbpmEventsHandler implements Serializable {
 					}
 				}
 			}
+		} catch (NonUniqueResultException ex) {
+			LOG.warn("JbpmEventsHandler.iniciarTask: "+ex.getMessage());
 		} catch (NoResultException ex) {
 		    LOG.warn("JbpmEventsHandler.iniciarTask: "+ex.getMessage());
 		} catch (Exception ex) {

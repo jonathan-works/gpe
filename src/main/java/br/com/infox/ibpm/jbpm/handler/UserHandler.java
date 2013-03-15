@@ -18,27 +18,29 @@ package br.com.infox.ibpm.jbpm.handler;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.home.Authenticator;
-import br.com.infox.ibpm.home.PainelUsuarioHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
 @Name("userHandler")
 @BypassInterceptors
+@Scope(ScopeType.EVENT)
 public class UserHandler {
 
 	private static final LogProvider LOG = Logging.getLogProvider(UserHandler.class);
+	private Long idTask;
+	private String owner;
+	private Integer idProcesso;
 	
 	public String getNomeUsuario(TaskInstance task) {
 		String login = task.getActorId();
@@ -52,18 +54,16 @@ public class UserHandler {
 		return null;
 	}
 	
-	public String getActorIdTarefaAtual(){
+	public String getActorIdTarefaAtual(Integer idProcesso){
 		try {
-			PainelUsuarioHome puh = (PainelUsuarioHome) ComponentUtil.getComponent(PainelUsuarioHome.NAME);
-			Long idTaskInstance = puh.getTaskId().longValue();
-			String hql = "select ul from UsuarioLogin ul where ul.idPessoa = (" +
+			if (this.idProcesso == null || !this.idProcesso.equals(idProcesso)) {
+				String hql = "select ul.login from UsuarioLogin ul where ul.idPessoa = (" +
 					"select uti.idUsuario from UsuarioTaskInstance uti where uti.idTaskInstance = :idTaskInstance)";
-			Query query = EntityUtil.createQuery(hql).setParameter("idTaskInstance", idTaskInstance);
-			UsuarioLogin ul = EntityUtil.getSingleResult(query);
-			if (ul != null) {
-				System.out.println(ul.getLogin());
-				return ul.getLogin();
-			} else return "";
+				Query query = EntityUtil.createQuery(hql).setParameter("idTaskInstance", getIdTaskAtual(idProcesso));
+				this.owner = EntityUtil.getSingleResult(query);
+				this.idProcesso = idProcesso;
+			}
+			return this.owner;
 		} catch (NoResultException nre){
 			//TODO Verificar porque o Painel de Usuário ainda tenta buscar a tarefa que foi finalizada e passada para o próximo nó do fluxo
 			nre.printStackTrace();
@@ -121,8 +121,11 @@ public class UserHandler {
 	}
 	
 	private Long getIdTaskAtual(Integer idProcesso){
-		String hql = "select o.idTaskInstance from SituacaoProcesso o where o.idProcesso = :idProcesso";
-		return (Long) EntityUtil.createQuery(hql).setParameter("idProcesso", idProcesso).getSingleResult();
+		if (idTask == null) {
+			String hql = "select o.idTaskInstance from SituacaoProcesso o where o.idProcesso = :idProcesso";
+			idTask = (Long) EntityUtil.createQuery(hql).setParameter("idProcesso", idProcesso).getSingleResult();
+		}
+		return idTask;
 	}
 	
 }
