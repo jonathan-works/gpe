@@ -115,45 +115,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		newInstance();
 	}
 	
-	@Observer("processoHomeSetId")
-	@Override
-	public void setId(Object id) {
-		super.setId(id);
-	}
-	
-	public void setModeloDocumentoCombo(ModeloDocumento modeloDocumentoCombo) {
-		this.modeloDocumento = modeloDocumentoCombo;
-	}
-	
-	public ModeloDocumento getModeloDocumentoCombo() {
-		return modeloDocumento;
-	}
-
-	public TipoProcessoDocumento getTipoProcessoDocumento() {
-		return tipoProcessoDocumento;
-	}
-	
-	public void setTipoProcessoDocumento(
-			TipoProcessoDocumento tipoProcessoDocumento) {	
-			this.tipoProcessoDocumento = tipoProcessoDocumento;		
-	}
-	
-	public String getObservacaoMovimentacao() {
-		return observacaoMovimentacao;
-	}
-	
-	public void setObservacaoMovimentacao(String observacaoMovimentacao) {
-		this.observacaoMovimentacao = observacaoMovimentacao;
-	}
-	
-	public void setProcessoDocumentoFaseAtual(
-		ProcessoDocumento processoDocumentoFaseAtual) {
-	}
-	
-	public void setProcessoDocumentoFaseAnterior(
-		ProcessoDocumento processoDocumentoFaseAtual) {
-	}	
-	
 	public void adicionarFluxo(Fluxo fluxo, Map<String, Object> variaveis){
 		iniciarProcessoJbpm(fluxo, variaveis);
 	}
@@ -231,12 +192,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return instance;
 	}
  
-	public UsuarioLogin getUsuarioLogado() {
-		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
-		usuario = getEntityManager().find(usuario.getClass(), usuario.getIdPessoa());
-		return usuario;
-	}	
-	
 	public void iniciarTarefaProcesso() {
 		JbpmEventsHandler.instance().iniciarTask(instance);
 	}
@@ -253,32 +208,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return Boolean.FALSE;
 	}
 	
-	public void setTaskId(Long taskId) {
-		this.taskId = taskId;
-	}
-
-	public Long getTaskId() {
-		return taskId; 
-	}
-	
 	public String mostraProcesso(int id, String destino) {
 		setId(id);
 		return destino;
 	}
-	
-	// TODO: Verificar este método retornando uma constante
-	public int getMovimentacaoInicial() {
-		return 0;
-	}
 		
-	public boolean isIniciaExterno() {
-		return iniciaExterno;
-	}
-
-	public void setIniciaExterno(boolean iniciaExterno) {
-		this.iniciaExterno = iniciaExterno;
-	}
-	
 	public void iniciaExterno(String viewId) {
 		iniciaExterno = true;
 		Redirect r = Redirect.instance();
@@ -286,15 +220,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		setTab("tabParticipante");
 		r.execute();
 		
-	}
-
-	public String getNumeroProcesso(int idProcesso) {
-		String ret = idProcesso + "";
-		Processo processo = EntityUtil.find(Processo.class, idProcesso);
-		if (processo != null) {
-			ret = processo.getNumeroProcesso();
-		}
-		return ret;
 	}
 	
 	public static ProcessoHome instance() {
@@ -578,12 +503,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 	}
 	
-	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
-		String sql = "select o from TipoProcessoDocumento o ";
-		Query q = EntityUtil.getEntityManager().createQuery(sql);
-		return (TipoProcessoDocumento) q.getResultList().get(0);
-	}	
-	
 	public Boolean isSigned(){
 		Boolean faltaAssinatura = Boolean.FALSE;
 		Boolean somenteMagistrado = Boolean.FALSE;
@@ -606,6 +525,222 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Todos os Documentos devem estar assinados digitalmente por Magistrado.");
 		}
 		return faltaAssinatura;		
+	}
+	
+	/**
+	 * Verifica se existe algum agrupamento vinculado ao tipo de documento
+	 * selecionado.
+	 */
+	public void onSelectProcessoDocumento() {
+		AutomaticEventsTreeHandler.instance().clearList();
+		AutomaticEventsTreeHandler.instance().clearTree();
+		renderEventsTree = false;
+	
+			if(tipoProcessoDocumento != null && tipoProcessoDocumento.getAgrupamento() != null) {
+				idAgrupamentos = Integer.toString(tipoProcessoDocumento.getAgrupamento().getIdAgrupamento());
+				if(!Strings.isEmpty(idAgrupamentos)) {
+					renderEventsTree = true;
+					AutomaticEventsTreeHandler.instance().setRootsSelectedMap(new HashMap<Evento, List<Evento>>());
+					AutomaticEventsTreeHandler.instance().getRoots(idAgrupamentos);
+				}
+			}	
+		}
+	
+	public boolean verificaUltimoEvento(Processo processo, Evento evento) {
+		ProcessoEvento processoEvento = getUltimoProcessoEvento(processo);
+		
+		if (processoEvento == null) {
+			LOG.info("verificaUltimoEvento: Não existem evento no processo: " + processo);
+			return false;
+		}
+		
+		List<Evento> filhos = evento.getEventoListCompleto();
+		return filhos.contains(processoEvento.getEvento());
+	}
+	
+	public boolean verificaEvento(Processo processo, Evento evento) {
+		String hql = "select o.idProcessoEvento from ProcessoEvento o where o.processo = :processo and o.evento in (:eventos)";
+		Query q = getEntityManager().createQuery(hql);
+		q.setParameter("processo", processo);
+		q.setParameter("eventos", evento.getEventoListCompleto());
+		
+		return EntityUtil.getSingleResult(q) != null;
+	}
+	
+	/**
+	 * Método que retorna a data do envio do processo ao segundo grau
+	 * @return Data de envio do processo ao segundo grau
+	 * 
+	 */
+	public String dataEnvio2Grau() {
+		String hql = "Select o from ProcessoEvento o where o.processo = :processo " +
+				      "and o.evento = (Select o.idEvento from EventoProcessual o " +
+				      					"where o.codEvento = '123A')";
+		Query q = getEntityManager().createQuery(hql);
+		q.setParameter("processo", getInstance());
+		if(!q.getResultList().isEmpty()){
+			ProcessoEvento pe = (ProcessoEvento)q.getResultList().get(0);
+			if(pe != null){
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				return sdf.format(pe.getDataAtualizacao());
+			}
+		}
+		return null;
+	}
+
+	public void updateProcessoDocumentoBin() {
+		ModeloDocumento modeloDocumento = TaskInstanceHome.instance().getModeloDocumento();
+		String modelo = "";
+		if(modeloDocumento != null) {
+			modelo = ModeloDocumentoAction.instance().getConteudo(modeloDocumento);
+		}
+		processoDocumentoBin.setModeloDocumento(modelo);
+	}
+	
+// -----------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------- Getters e Setters --------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------------------
+	
+	@Observer("processoHomeSetId")
+	@Override
+	public void setId(Object id) {
+		super.setId(id);
+	}
+	
+	public void setModeloDocumentoCombo(ModeloDocumento modeloDocumentoCombo) {
+		this.modeloDocumento = modeloDocumentoCombo;
+	}
+	
+	public ModeloDocumento getModeloDocumentoCombo() {
+		return modeloDocumento;
+	}
+
+	public TipoProcessoDocumento getTipoProcessoDocumento() {
+		return tipoProcessoDocumento;
+	}
+	
+	public void setTipoProcessoDocumento(
+			TipoProcessoDocumento tipoProcessoDocumento) {	
+			this.tipoProcessoDocumento = tipoProcessoDocumento;		
+	}
+	
+	public String getObservacaoMovimentacao() {
+		return observacaoMovimentacao;
+	}
+	
+	public void setObservacaoMovimentacao(String observacaoMovimentacao) {
+		this.observacaoMovimentacao = observacaoMovimentacao;
+	}
+
+	public void setModeloDocumentoRO(String modeloDocumentoRO) {
+		this.modeloDocumentoRO = modeloDocumentoRO;
+	}
+
+	public String getModeloDocumentoRO() {
+		return modeloDocumentoRO;
+	}
+
+	public void setTipoProcessoDocumentoRO(TipoProcessoDocumento tipoProcessoDocumentoRO) {
+		this.tipoProcessoDocumentoRO = tipoProcessoDocumentoRO;
+	}
+
+	public TipoProcessoDocumento getTipoProcessoDocumentoRO() {
+		return tipoProcessoDocumentoRO;
+	}
+	
+	public void setTaskId(Long taskId) {
+		this.taskId = taskId;
+	}
+
+	public Long getTaskId() {
+		return taskId; 
+	}
+	
+	// TODO: Verificar este método retornando uma constante
+	public int getMovimentacaoInicial() {
+		return 0;
+	}
+		
+	public boolean isIniciaExterno() {
+		return iniciaExterno;
+	}
+
+	public void setIniciaExterno(boolean iniciaExterno) {
+		this.iniciaExterno = iniciaExterno;
+	}
+	
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setCertChain(String certChain) {
+		this.certChain = certChain;
+	}
+
+	public String getCertChain() {
+		return certChain;
+	}
+	
+	public String getIdAgrupamentos() {
+		return idAgrupamentos;
+	}
+
+	public boolean getRenderEventsTree() {
+		return renderEventsTree;
+	}
+
+	public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {
+		this.processoDocumentoBin = processoDocumentoBin;
+	}
+
+	public ProcessoDocumentoBin getProcessoDocumentoBin() {
+		return processoDocumentoBin;
+	}
+
+	public void setPdFluxo(ProcessoDocumento pdFluxo) {
+		this.pdFluxo = pdFluxo;
+	}
+
+	public ProcessoDocumento getPdFluxo() {
+		return pdFluxo;
+	}
+
+	public void setIdProcessoDocumento(Integer idProcessoDocumento) {
+		this.idProcessoDocumento = idProcessoDocumento;
+	}
+
+	public Integer getIdProcessoDocumento() {
+		return idProcessoDocumento;
+	}
+
+	public Integer getFirst(){
+		List<ProcessoDocumento> processoDocList = getInstance().getProcessoDocumentoList();
+		return processoDocList.size();
+	}
+	
+	public UsuarioLogin getUsuarioLogado() {
+		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
+		usuario = getEntityManager().find(usuario.getClass(), usuario.getIdPessoa());
+		return usuario;
+	}	
+		
+	public String getNumeroProcesso(int idProcesso) {
+		String ret = idProcesso + "";
+		Processo processo = EntityUtil.find(Processo.class, idProcesso);
+		if (processo != null) {
+			ret = processo.getNumeroProcesso();
+		}
+		return ret;
+	}
+	
+	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
+		String sql = "select o from TipoProcessoDocumento o ";
+		Query q = EntityUtil.getEntityManager().createQuery(sql);
+		return (TipoProcessoDocumento) q.getResultList().get(0);
 	}
 	
 	public Boolean getPessoaAssinatura(ProcessoDocumentoBin processoDocumentoBin)	{
@@ -704,87 +839,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			updateString.executeUpdate();
 		}
 	}
-	 
-	
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
-
-	public String getSignature() {
-		return signature;
-	}
-
-	public void setCertChain(String certChain) {
-		this.certChain = certChain;
-	}
-
-	public String getCertChain() {
-		return certChain;
-	}
-
-	public Integer getFirst(){
-		List<ProcessoDocumento> processoDocList = getInstance().getProcessoDocumentoList();
-		return processoDocList.size();
-	}
-
-	/**
-	 * Verifica se existe algum agrupamento vinculado ao tipo de documento
-	 * selecionado.
-	 */
-	public void onSelectProcessoDocumento() {
-		AutomaticEventsTreeHandler.instance().clearList();
-		AutomaticEventsTreeHandler.instance().clearTree();
-		renderEventsTree = false;
-	
-			if(tipoProcessoDocumento != null && tipoProcessoDocumento.getAgrupamento() != null) {
-				idAgrupamentos = Integer.toString(tipoProcessoDocumento.getAgrupamento().getIdAgrupamento());
-				if(!Strings.isEmpty(idAgrupamentos)) {
-					renderEventsTree = true;
-					AutomaticEventsTreeHandler.instance().setRootsSelectedMap(new HashMap<Evento, List<Evento>>());
-					AutomaticEventsTreeHandler.instance().getRoots(idAgrupamentos);
-				}
-			}	
-		}
-
-	//TODO: ver uso deste método
-	public void teste(){
-		System.out.println("paginator");
-		processoDocumentoBin = pdFluxo.getProcessoDocumentoBin();
-		System.out.println(processoDocumentoBin);
-		System.out.println(tipoProcessoDocumento);
-	}
-
-	public String getIdAgrupamentos() {
-		return idAgrupamentos;
-	}
-
-	public boolean getRenderEventsTree() {
-		return renderEventsTree;
-	}
-
-	public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {
-		this.processoDocumentoBin = processoDocumentoBin;
-	}
-
-	public ProcessoDocumentoBin getProcessoDocumentoBin() {
-		return processoDocumentoBin;
-	}
-
-	public void setPdFluxo(ProcessoDocumento pdFluxo) {
-		this.pdFluxo = pdFluxo;
-	}
-
-	public ProcessoDocumento getPdFluxo() {
-		return pdFluxo;
-	}
-
-	public void setIdProcessoDocumento(Integer idProcessoDocumento) {
-		this.idProcessoDocumento = idProcessoDocumento;
-	}
-
-	public Integer getIdProcessoDocumento() {
-		return idProcessoDocumento;
-	}
 	
 	public ProcessoEvento getUltimoProcessoEvento(Processo processo){
 		String hql = "select o from ProcessoEvento o where o.processo = :processo " +
@@ -827,72 +881,23 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		query.setParameter("eventos", eventoListCompleto);
 		return EntityUtil.getSingleResult(query);
 	}
+
+// -----------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------- Excluir -------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------------------
 	
-	public boolean verificaUltimoEvento(Processo processo, Evento evento) {
-		ProcessoEvento processoEvento = getUltimoProcessoEvento(processo);
-		
-		if (processoEvento == null) {
-			LOG.info("verificaUltimoEvento: Não existem evento no processo: " + processo);
-			return false;
-		}
-		
-		List<Evento> filhos = evento.getEventoListCompleto();
-		return filhos.contains(processoEvento.getEvento());
+	public void setProcessoDocumentoFaseAtual(ProcessoDocumento processoDocumentoFaseAtual) {
 	}
 	
-	public boolean verificaEvento(Processo processo, Evento evento) {
-		String hql = "select o.idProcessoEvento from ProcessoEvento o where o.processo = :processo and o.evento in (:eventos)";
-		Query q = getEntityManager().createQuery(hql);
-		q.setParameter("processo", processo);
-		q.setParameter("eventos", evento.getEventoListCompleto());
-		
-		return EntityUtil.getSingleResult(q) != null;
+	public void setProcessoDocumentoFaseAnterior(ProcessoDocumento processoDocumentoFaseAtual) {
 	}
 	
-	/**
-	 * Método que retorna a data do envio do processo ao segundo grau
-	 * @return Data de envio do processo ao segundo grau
-	 * 
-	 */
-	public String dataEnvio2Grau() {
-		String hql = "Select o from ProcessoEvento o where o.processo = :processo " +
-				      "and o.evento = (Select o.idEvento from EventoProcessual o " +
-				      					"where o.codEvento = '123A')";
-		Query q = getEntityManager().createQuery(hql);
-		q.setParameter("processo", getInstance());
-		if(!q.getResultList().isEmpty()){
-			ProcessoEvento pe = (ProcessoEvento)q.getResultList().get(0);
-			if(pe != null){
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				return sdf.format(pe.getDataAtualizacao());
-			}
-		}
-		return null;
-	}
-
-	public void updateProcessoDocumentoBin() {
-		ModeloDocumento modeloDocumento = TaskInstanceHome.instance().getModeloDocumento();
-		String modelo = "";
-		if(modeloDocumento != null) {
-			modelo = ModeloDocumentoAction.instance().getConteudo(modeloDocumento);
-		}
-		processoDocumentoBin.setModeloDocumento(modelo);
-	}
-
-	public void setModeloDocumentoRO(String modeloDocumentoRO) {
-		this.modeloDocumentoRO = modeloDocumentoRO;
-	}
-
-	public String getModeloDocumentoRO() {
-		return modeloDocumentoRO;
-	}
-
-	public void setTipoProcessoDocumentoRO(TipoProcessoDocumento tipoProcessoDocumentoRO) {
-		this.tipoProcessoDocumentoRO = tipoProcessoDocumentoRO;
-	}
-
-	public TipoProcessoDocumento getTipoProcessoDocumentoRO() {
-		return tipoProcessoDocumentoRO;
+	//TODO: ver uso deste método
+	public void teste(){
+		System.out.println("paginator");
+		processoDocumentoBin = pdFluxo.getProcessoDocumentoBin();
+		System.out.println(processoDocumentoBin);
+		System.out.println(tipoProcessoDocumento);
 	}
 	
 }
