@@ -252,16 +252,13 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		} catch (javax.persistence.PersistenceException e) {
             instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
             LOG.error(msg, e);
+		} catch (ConstraintViolationException e){
+		    instance().add(StatusMessage.Severity.ERROR, getConstraintViolationExceptionMessage());
+            LOG.warn(".persist() (" + getInstanceClassName() + ")", e.getCause());
         } catch (Exception e) {
-			Throwable cause = e.getCause();
-			if (cause instanceof ConstraintViolationException) {
-				instance().add(StatusMessage.Severity.ERROR, getConstraintViolationExceptionMessage());
-				LOG.warn(".persist() (" + getInstanceClassName() + ")", cause);					
-			} else {
-				instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " +
-						e.getMessage(), e);
-				LOG.error(".persist() (" + getInstanceClassName() + ")", e);
-			}
+            instance().add(StatusMessage.Severity.ERROR,
+                    "Erro ao gravar: " + e.getMessage(), e);
+            LOG.error(".persist() (" + getInstanceClassName() + ")", e);
 		} 
 		if (ret == null) {
 			 // Caso ocorra algum erro, é criada uma copia do instance sem O Id e os List
