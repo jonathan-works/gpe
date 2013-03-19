@@ -15,14 +15,11 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -106,7 +103,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		Redirect redirect = Redirect.instance();
 		redirect.setViewId("/Processo/movimentar.xhtml");
 		redirect.execute();
-		
 	}
 	
 	public void limpar(){
@@ -128,7 +124,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		FacesMessages.instance().clear();
 		FacesMessages.instance().add(StatusMessage.Severity.INFO,
 				"Processo #{processoHome.instance.idProcesso} iniciado com sucesso");
-		
 		return processo;
 	}
 	
