@@ -21,13 +21,9 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.converter.IntegerConverter;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
-import br.com.infox.ibpm.entity.filters.SituacaoProcessoFilter;
 import br.com.infox.ibpm.home.Authenticator;
-import br.com.infox.ibpm.home.PainelUsuarioHome;
-import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
@@ -228,32 +224,57 @@ public class JbpmEventsHandler implements Serializable {
 		} catch (Exception ex) {
 			StringBuilder action = new StringBuilder("Visualizar Tarefa: ");
 			action.append(ex.getLocalizedMessage());
-			action.append("iniciarTask()");
+			action.append("visualizarTask()");
 			action.append("JbpmEventsHandler");
 			action.append("BPM");
 			LOG.warn(action.toString(), ex);
 		}
 	}
 	
-	public void iniciarTask(Processo processo) {
+	public void iniciarTask(Processo processo, Long idTarefa) {
 		try {
 			if (processo != null && processo.getIdJbpm() != null &&
 					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
 				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
 				UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
-				ProcessoHome ph = (ProcessoHome) ComponentUtil.getComponent(ProcessoHome.NAME);
-				Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY);
-                q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK, ph.getTaskId().intValue());
+                Query q;
+                if (idTarefa != null) {
+                    q = getEntityManager()
+                            .createQuery(
+                                    ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY);
+                    q.setParameter(
+                            ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,
+                            processo)
+                            .setParameter(
+                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO,
+                                    usrLoc.getLocalizacao())
+                            .setParameter(
+                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,
+                                    usrLoc.getPapel())
+                            .setParameter(
+                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK,
+                                    idTarefa.intValue());
+                } else {
+                    q = getEntityManager()
+                            .createQuery(
+                                    ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
+                    q.setParameter(
+                            ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,
+                            processo)
+                            .setParameter(
+                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO,
+                                    usrLoc.getLocalizacao())
+                            .setParameter(
+                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,
+                                    usrLoc.getPapel());
+                }
                 
-                Long taskId = (Long) q.getSingleResult();
+                Long taskInstanceId = (Long) q.getSingleResult();
 				
-				if (taskId != null) {
-					BusinessProcess.instance().setTaskId(taskId);
+				if (taskInstanceId != null) {
+					BusinessProcess.instance().setTaskId(taskInstanceId);
 					TaskInstance ti = (TaskInstance) JbpmUtil.getJbpmSession()
-					.get(TaskInstance.class, taskId);
+					.get(TaskInstance.class, taskInstanceId);
 					if (ti != null) {
 						if (ti.getStart() == null) {
 							BusinessProcess.instance().startTask();
@@ -261,7 +282,7 @@ public class JbpmEventsHandler implements Serializable {
 						String actorId = Actor.instance().getId();
 						
 						processo.setActorId(actorId);
-						storeUsuario(taskId, actorId);
+						storeUsuario(taskInstanceId, actorId);
 						getEntityManager().merge(processo);
 						EntityUtil.flush();
 					}
