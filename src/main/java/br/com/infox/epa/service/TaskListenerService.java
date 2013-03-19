@@ -35,42 +35,42 @@ public class TaskListenerService extends AbstractAction {
 	private LocalizacaoTurnoManager localizacaoTurnoManager;
 	
 	@Observer(IniciarProcessoService.ON_CREATE_PROCESS)
-	public void onStartProcess(TaskInstance ti, Processo processo) { 
-		createProcessoEpa(processo, ti);
+	public void onStartProcess(TaskInstance taskInstance, Processo processo) { 
+		createProcessoEpa(processo, taskInstance);
 	}
 		
 	@Observer(Event.EVENTTYPE_TASK_CREATE)
 	public void onCreateJbpmTask(ExecutionContext context) {
-		Processo p = JbpmUtil.getProcesso();
-		if(p != null) {
+		Processo processo = JbpmUtil.getProcesso();
+		if(processo != null) {
 			TaskInstance taskInstance = context.getTaskInstance();
-			createProcessoEpa(p, taskInstance);
+			createProcessoEpa(processo, taskInstance);
 		}
 	}
 
-	private void createProcessoEpa(Processo p, TaskInstance taskInstance) {
-		String task = taskInstance.getTask().getName();
+	private void createProcessoEpa(Processo processo, TaskInstance taskInstance) {
+		String taskName = taskInstance.getTask().getName();
 		String procDefName = taskInstance.getProcessInstance()
-							   .getProcessDefinition().getName();
-		ProcessoEpaTarefa pt = new ProcessoEpaTarefa();
-		pt.setProcessoEpa(find(ProcessoEpa.class, p.getIdProcesso()));
-		Tarefa tarefa = getTarefa(task, procDefName);
-		pt.setTarefa(tarefa);
-		pt.setDataInicio(taskInstance.getCreate());
-		pt.setTaskInstance(taskInstance.getId());
-		pt.setUltimoDisparo(new Date());
-		pt.setTempoGasto(0);
-		pt.setPorcentagem(0);
+                .getProcessDefinition().getName();
+		Tarefa tarefa = getTarefa(taskName, procDefName);
 		
-		pt.setTempoPrevisto(tarefa.getPrazo());
-		if (pt.getTempoPrevisto() == null) {
-			pt.setTempoPrevisto(0);
+		ProcessoEpaTarefa pEpaTarefa = new ProcessoEpaTarefa();
+        pEpaTarefa.setProcessoEpa(find(ProcessoEpa.class, processo.getIdProcesso()));
+		pEpaTarefa.setTarefa(tarefa);
+		pEpaTarefa.setDataInicio(taskInstance.getCreate());
+		pEpaTarefa.setTaskInstance(taskInstance.getId());
+		pEpaTarefa.setUltimoDisparo(new Date());
+		pEpaTarefa.setTempoGasto(0);
+		pEpaTarefa.setPorcentagem(0);
+		pEpaTarefa.setTempoPrevisto(tarefa.getPrazo());
+		if (pEpaTarefa.getTempoPrevisto() == null) {
+			pEpaTarefa.setTempoPrevisto(0);
 		}
 		if (tarefa.getTipoPrazo() == PrazoEnum.H) {
-			pt.setTempoPrevisto(pt.getTempoPrevisto() * 60);
+			pEpaTarefa.setTempoPrevisto(pEpaTarefa.getTempoPrevisto() * 60);
 		}
 
-		persist(pt);
+		persist(pEpaTarefa);
 	}
 
 	@Observer(Event.EVENTTYPE_TASK_END)
