@@ -33,7 +33,6 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
@@ -53,7 +52,6 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
-import br.com.infox.ibpm.entity.ProcessoEvento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
@@ -241,15 +239,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 				}
 			}	
 		}
-	
-	public boolean verificaEvento(Processo processo, Evento evento) {
-		String hql = "select o.idProcessoEvento from ProcessoEvento o where o.processo = :processo and o.evento in (:eventos)";
-		Query q = getEntityManager().createQuery(hql);
-		q.setParameter("processo", processo);
-		q.setParameter("eventos", evento.getEventoListCompleto());
-		
-		return EntityUtil.getSingleResult(q) != null;
-	}
 	
 // -----------------------------------------------------------------------------------------------------------------------
 // ----------------------------------- Métodos ligados a Processo Documento ----------------------------------------------
