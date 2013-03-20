@@ -78,7 +78,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 
 	private static final long serialVersionUID = 1L;
 	
-	@In private ProcessoService processoManager;
+	@In private ProcessoService processoService;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;

@@ -1,6 +1,7 @@
 package br.com.infox.epa.service;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -13,6 +14,7 @@ import br.com.infox.epa.manager.TipoProcessoDocumentoManager;
 
 @Name(ProcessoService.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class ProcessoService extends GenericManager {
 	
 	private static final long serialVersionUID = 8095772422429350875L;

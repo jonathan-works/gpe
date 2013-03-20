@@ -18,6 +18,7 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
  */
 @Name(ModeloDocumentoManager.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class ModeloDocumentoManager extends GenericManager{
 	private static final long serialVersionUID = 4455754174682600299L;
 	public static final String NAME = "modeloDocumentoManager";
