@@ -16,9 +16,9 @@
 	<param name="goBackId" value="#{processoHome.goBackId}"/>
 	<param name="goBackTab" value="#{processoHome.goBackTab}"/>		
 
-	<param name="idBin" value="#{processoDocumentoBinHome.processoDocumentoBinIdProcessoDocumentoBin}"/>
-	<param name="idProcesso" value="#{processoHome.processoIdProcesso}"/>
-	<param name="taskId" value="#{processoHome.taskId}"/>	
-	<action execute="#{processoHome.iniciarTarefaProcesso()}"/>	
+	<param name="idBin" value="#{processoDocumentoBinHome.processoDocumentoBinIdProcessoDocumentoBin}" />
+	<param name="idProcesso" value="#{processoHome.processoIdProcesso}" />
+	<param name="tarefaId" value="#{processoHome.tarefaId}" />
+	<action execute="#{processoHome.iniciarTarefaProcesso()}" />	
  
 </page>
