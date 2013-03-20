@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.query;
 
-import br.com.infox.ibpm.entity.filters.SituacaoProcessoFilter;
-
 public interface ProcessoLocalizacaoIbpmQuery {
 
 	String QUERY_PARAM_ID_TASK_INSTANCE = "idTaskInstance";
@@ -17,7 +15,7 @@ public interface ProcessoLocalizacaoIbpmQuery {
 		"o.contabilizar = true";
 	
 	String LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL = "listIdTaskInstanceByLocalizacaoPapel";
-	String LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY = "select o from ProcessoLocalizacaoIbpm o" +
+	String LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY = "select distinct o.idTaskInstance from ProcessoLocalizacaoIbpm o" +
 			                                           " where o.processo = :processo" +
 			                                           " and o.localizacao = :localizacao" +
 			                                           " and o.papel = :papel";

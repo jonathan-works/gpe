@@ -12,10 +12,11 @@
  Consulte a GNU GPL para mais detalhes.
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
-*/
+ */
 package br.com.infox.ibpm.jbpm.handler;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
@@ -28,104 +29,101 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
 import br.com.itx.util.EntityUtil;
 
-
-@Name("userHandler")
+@Name(UserHandler.NAME)
 @BypassInterceptors
 @Scope(ScopeType.EVENT)
 public class UserHandler {
+    private static final LogProvider LOG = Logging
+            .getLogProvider(UserHandler.class);
+    public final static String NAME = "userHandler";
+    
+    private Integer idProcesso;
+    private TaskInstance taskInstance;
+    private String usuarioProcesso, usuarioTarefa;
 
-	private static final LogProvider LOG = Logging.getLogProvider(UserHandler.class);
-	private Long idTask;
-	private String owner;
-	private Integer idProcesso;
-	
-	public String getNomeUsuario(TaskInstance task) {
-		String login = task.getActorId();
-		if (login == null || login.equals("")) {
-			return getLocalizacao(task);
-		}
-		UsuarioLogin u = getUsuario(login);
-		if (u != null) {
-			return u.getLogin();
-		}
-		return null;
-	}
-	
-	public String getActorIdTarefaAtual(Integer idProcesso){
-		try {
-			if (this.idProcesso == null || !this.idProcesso.equals(idProcesso)) {
-				String hql = "select ul.login from UsuarioLogin ul where ul.idPessoa = (" +
-					"select uti.idUsuario from UsuarioTaskInstance uti where uti.idTaskInstance = :idTaskInstance)";
-				Query query = EntityUtil.createQuery(hql).setParameter("idTaskInstance", getIdTaskAtual(idProcesso));
-				this.owner = EntityUtil.getSingleResult(query);
-				this.idProcesso = idProcesso;
-			}
-			return this.owner;
-		} catch (NoResultException nre){
-			//TODO Verificar porque o Painel de Usuário ainda tenta buscar a tarefa que foi finalizada e passada para o próximo nó do fluxo
-			nre.printStackTrace();
-			return null;
-		}
-	}
+    public String getNomeUsuario(TaskInstance task) {
+        String login = task.getActorId();
+        if (login == null || login.equals("")) {
+            return getLocalizacao(task);
+        }
+        UsuarioLogin u = getUsuario(login);
+        if (u != null) {
+            return u.getLogin();
+        }
+        return null;
+    }
 
-	/*
-	 * O try/catch não será mais necessário quando o e-PP começar a rodar numa base limpa
-	 * ele foi necessário porque antes não eram guardados os usuários das tarefas finalizadas
-	 * assim, como existiam tarefas sem usuários na base antigo o getSingleResult lançava uma exceção
-	 * TODO retirar o try/catch
-	 * */
-	public String getUsuarioByTarefa(TaskInstance task){
-		UsuarioTaskInstance uti;
-		try{
-		uti = (UsuarioTaskInstance)  
-				EntityUtil.getEntityManager()
-				.createQuery("select o from UsuarioTaskInstance o where o.idTaskInstance = :idTaskInstance")
-				.setParameter("idTaskInstance", task.getId())
-				.getSingleResult();
-		} catch (Exception e){
-			System.out.println(e.getMessage());
-			return "";
-		}
-		UsuarioLogin user = (UsuarioLogin)
-				EntityUtil.getEntityManager()
-				.createQuery("select o from UsuarioLogin o where o.idPessoa = :idUsuario")
-				.setParameter("idUsuario", uti.getIdUsuario())
-				.getSingleResult();
-		return user.getNome();
-	}
-	
-	public UsuarioLogin getUsuario(String login) {
-		if (login == null || login.equals("")) {
-			return null;
-		}
-		UsuarioLogin u = null;
-		try {
-			u = (UsuarioLogin) EntityUtil.getEntityManager()
-				.createQuery("select u from UsuarioLogin u where login=:login")
-				.setParameter("login", login)
-				.getSingleResult();
-		} catch (NoResultException e) {
-			LOG.warn("Usuário não encontrado. Login: " + login);
-		} catch (Exception e) {
-			LOG.error("Erro ao buscar usuário. Login: " + login, e);
-		}
-		return u;
-	}
-	
-	private String getLocalizacao(TaskInstance task) {
-		String localizacao = JbpmUtil.instance().getLocalizacao(task).getCaminho();
-		return "Local: " + localizacao;
-	}
-	
-	private Long getIdTaskAtual(Integer idProcesso){
-		if (idTask == null) {
-			String hql = "select o.idTaskInstance from SituacaoProcesso o where o.idProcesso = :idProcesso";
-			idTask = (Long) EntityUtil.createQuery(hql).setParameter("idProcesso", idProcesso).getSingleResult();
-		}
-		return idTask;
-	}
-	
+    public String getActorIdTarefaAtual(Integer idProcesso) {
+        if (this.idProcesso == null || !this.idProcesso.equals(idProcesso)) {
+            try {
+                
+                String sql = "SELECT DISTINCT ds_login "
+                        + "FROM tb_usuario_login ul "
+                        + "JOIN tb_usuario_taskinstance uti ON (ul.id_pessoa=uti.id_usuario_login) "
+                        + "JOIN vs_situacao_processo sp ON (uti.id_taskinstance = sp.id_task_instance) "
+                        + "WHERE id_processo=:idProcesso";
+                Query query = EntityUtil.getEntityManager()
+                        .createNativeQuery(sql)
+                        .setParameter("idProcesso", idProcesso);
+                this.idProcesso = idProcesso;
+                this.usuarioProcesso = (String) query.getSingleResult();
+            } catch (NoResultException e) {
+                this.usuarioProcesso = "";
+                LOG.warn("Não houve resultado. UserHandler.getActorIdTarefaAtual(Integer)");
+            } catch (NonUniqueResultException e) {
+                LOG.error("Múltiplos resultados. UserHandler.getActorIdTarefaAtual(Integer)", e);
+            } catch (IllegalStateException e) {
+                LOG.error("Estado inválido. UserHandler.getActorIdTarefaAtual(Integer)", e);
+            }
+        }
+        return this.usuarioProcesso;
+    }
+
+    public String getUsuarioByTarefa(TaskInstance taskInstance) {
+        if (this.taskInstance == null || !this.taskInstance.equals(taskInstance)) {
+            try {
+                String sql = "SELECT DISTINCT ul.ds_login FROM tb_usuario_login ul "
+                        + "JOIN tb_usuario_taskinstance uti ON (uti.id_usuario_login = ul.id_pessoa) "
+                        + "WHERE id_taskinstance = :idTaskInstance";
+                Query query = EntityUtil.getEntityManager().createNativeQuery(sql)
+                        .setParameter("idTaskInstance", taskInstance.getId());
+                this.taskInstance = taskInstance;
+                this.usuarioTarefa = (String) query.getSingleResult();
+            } catch (NoResultException e) {
+                this.usuarioTarefa = "";
+                LOG.warn("Não houve resultado. UserHandler.getUsuarioByTarefa(TaskInstance)");
+            } catch (NonUniqueResultException e) {
+                LOG.error("Múltiplos resultados. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
+            } catch (IllegalStateException e) {
+                LOG.error("Estado inválido. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
+            }
+        }
+        return this.usuarioTarefa;
+    }
+
+    public UsuarioLogin getUsuario(String login) {
+        if (login == null || login.equals("")) {
+            return null;
+        }
+        UsuarioLogin u = null;
+        try {
+            String sql = "select u from UsuarioLogin u where login=:login";
+            u = (UsuarioLogin) EntityUtil.getEntityManager().createQuery(sql)
+                    .setParameter("login", login).getSingleResult();
+        } catch (NoResultException e) {
+            LOG.warn("Usuário não encontrado. Login: " + login);
+        } catch (Exception e) {
+            LOG.error("Erro ao buscar usuário. Login: " + login, e);
+        }
+        return u;
+    }
+
+    private String getLocalizacao(TaskInstance task) {
+        String localizacao = JbpmUtil.instance().getLocalizacao(task)
+                .getCaminho();
+        return "Local: " + localizacao;
+    }
+
 }
