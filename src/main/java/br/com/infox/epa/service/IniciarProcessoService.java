@@ -47,8 +47,8 @@ public class IniciarProcessoService {
 	 */
 	public void iniciarProcesso(Processo processo, Fluxo fluxo) {
 		processo.setDataInicio(new Date());
-		Long idJbpm = iniciarProcessoJbpm(processo, fluxo.getFluxo());
-		processo.setIdJbpm(idJbpm);
+		Long idProcessoJbpm = iniciarProcessoJbpm(processo, fluxo.getFluxo());
+		processo.setIdJbpm(idProcessoJbpm);
 		processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
 		
 		processoManager.update(processo);
@@ -59,31 +59,33 @@ public class IniciarProcessoService {
 	 * @param id
 	 * @param fluxo
 	 */
-	public Long iniciarProcessoJbpm(Processo processo, String fluxo) {
-		BusinessProcess businessProcess = BusinessProcess.instance();
-		businessProcess.createProcess(fluxo);
-		org.jbpm.graph.exe.ProcessInstance processInstance = 
-					ProcessInstance.instance();
-		processInstance.getContextInstance().setVariable("processo", processo.getIdProcesso());
-		Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = 
-					processInstance.getTaskMgmtInstance().getTaskInstances();
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
-		if (taskInstances != null && !taskInstances.isEmpty()) {
-			taskInstance = taskInstances.iterator().next();
-			long taskId = taskInstance.getId();
-			businessProcess.setTaskId(taskId);
-			businessProcess.startTask();
-		}
-		SwimlaneInstance swimlaneInstance = TaskInstance.instance()
-					.getSwimlaneInstance();
-		String actorsExpression = swimlaneInstance.getSwimlane()
-					.getPooledActorsExpression();
-		Set<String> pooledActors = LocalizacaoAssignment.instance()
-					.getPooledActors(actorsExpression);
-		String[] actorIds = pooledActors.toArray(new String[pooledActors.size()]);
-		swimlaneInstance.setPooledActors(actorIds);
-		Events.instance().raiseEvent(ON_CREATE_PROCESS, taskInstance, processo);
-		return businessProcess.getProcessId();
-	}
+    public Long iniciarProcessoJbpm(Processo processo, String fluxo) {
+        BusinessProcess businessProcess = BusinessProcess.instance();
+        businessProcess.createProcess(fluxo);
+        org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance
+                .instance();
+        processInstance.getContextInstance().setVariable("processo",
+                processo.getIdProcesso());
+        Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance
+                .getTaskMgmtInstance().getTaskInstances();
+        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
+        if (taskInstances != null && !taskInstances.isEmpty()) {
+            taskInstance = taskInstances.iterator().next();
+            long taskInstanceId = taskInstance.getId();
+            businessProcess.setTaskId(taskInstanceId);
+            businessProcess.startTask();
+        }
+        SwimlaneInstance swimlaneInstance = TaskInstance.instance()
+                .getSwimlaneInstance();
+        String actorsExpression = swimlaneInstance.getSwimlane()
+                .getPooledActorsExpression();
+        Set<String> pooledActors = LocalizacaoAssignment.instance()
+                .getPooledActors(actorsExpression);
+        String[] actorIds = pooledActors
+                .toArray(new String[pooledActors.size()]);
+        swimlaneInstance.setPooledActors(actorIds);
+        Events.instance().raiseEvent(ON_CREATE_PROCESS, taskInstance, processo);
+        return businessProcess.getProcessId();
+    }
 	
 }
