@@ -44,7 +44,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
-import br.com.infox.epa.manager.ProcessoManager;
+import br.com.infox.epa.service.ProcessoService;
 import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Evento;
@@ -80,7 +80,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 
 	private static final long serialVersionUID = 1L;
 	
-	@In private ProcessoManager processoManager;
+	@In private ProcessoService processoManager;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -660,47 +660,5 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			SQLQuery updateString = JbpmUtil.getJbpmSession().createSQLQuery(sba.toString());
 			updateString.executeUpdate();
 		}
-	}
-	
-	public ProcessoEvento getUltimoProcessoEvento(Processo processo){
-		String hql = "select o from ProcessoEvento o where o.processo = :processo " +
-				"order by o.dataAtualizacao desc ";
-		
-		Query q = getEntityManager().createQuery(hql);
-		q.setParameter("processo", processo);
-		
-		return EntityUtil.getSingleResult(q);
-	}	
-	
-	@SuppressWarnings("unchecked")
-	public List<Evento> getEventosAgrupamento(String nomeAgrupamento) {
-		String hql = "	select e from Agrupamento o " +
-			"	inner join o.eventoAgrupamentoList evtL " +
-			"	inner join evtL.evento e " +
-			"	where o.agrupamento = :nomeAgrupamento ";
-		Query query = getEntityManager().createQuery(hql);
-		query.setParameter("nomeAgrupamento", nomeAgrupamento);
-		return query.getResultList();
-	}
-	
-	public ProcessoEvento getUltimoProcessoEvento(Processo processo, String nomeAgrupamento) {
-		List<Evento> eventosAgrupamento = getEventosAgrupamento(nomeAgrupamento);
-		if (eventosAgrupamento == null || eventosAgrupamento.size() == 0) {
-			LOG.warn("Nenhum evento evento encontrado para o agrupamento: " + nomeAgrupamento);
-			return null;
-		}
-		List<Evento> eventoListCompleto = new ArrayList<Evento>();
-		for (Evento evento : eventosAgrupamento) {
-			eventoListCompleto.addAll(evento.getEventoListCompleto());
-		}
-		
-		String hql = "select o from ProcessoEvento o " +
-			"where o.processo = :processo and o.evento in (" + 
-			":eventos) " +
-			"order by o.dataAtualizacao desc";
-		Query query = getEntityManager().createQuery(hql);
-		query.setParameter("processo", processo);
-		query.setParameter("eventos", eventoListCompleto);
-		return EntityUtil.getSingleResult(query);
 	}
 }
