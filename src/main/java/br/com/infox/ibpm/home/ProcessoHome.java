@@ -116,7 +116,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public Processo criarProcesso() {
 		Date dataCadastro = new Date();
 		newInstance();
-		UsuarioLogin usuario = getUsuarioLogado();
+		UsuarioLogin usuario = Authenticator.getUsuarioLogado();
 		instance.setUsuarioCadastroProcesso(usuario);
 		instance.setDataInicio(dataCadastro);
 		instance.setNumeroProcesso("");
@@ -133,7 +133,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		BusinessProcess.instance().createProcess(fluxo.getFluxo().trim());
 		Date dataCadastro = new Date();
 		newInstance();
-		UsuarioLogin usuario = getUsuarioLogado();
+		UsuarioLogin usuario = Authenticator.getUsuarioLogado();
 		instance.setUsuarioCadastroProcesso(usuario);
 		instance.setDataInicio(dataCadastro);
 		instance.setIdJbpm(BusinessProcess.instance().getProcessId());
@@ -285,7 +285,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado){
 		if (assinado){
 			try {
-				verificaCertificadoUsuarioLogado(certChain, getUsuarioLogado());
+				verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
 			} catch (Exception e1) {
 				FacesMessages.instance().add(Severity.ERROR, 
 						"Erro ao verificar certificado: " + e1.getMessage());
@@ -347,7 +347,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	//Método para Inserir o documento do fluxo
 	public Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
-		UsuarioLogin usuarioLogado = getUsuarioLogado();
+		UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
 		if (assinado){
 			try {
 				verificaCertificadoUsuarioLogado(certChain, usuarioLogado);
@@ -558,12 +558,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public Integer getFirst(){
 		List<ProcessoDocumento> processoDocList = getInstance().getProcessoDocumentoList();
 		return processoDocList.size();
-	}
-	
-	public UsuarioLogin getUsuarioLogado() {
-		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
-		usuario = getEntityManager().find(usuario.getClass(), usuario.getIdPessoa());
-		return usuario;
 	}	
 		
 	public String getNumeroProcesso(int idProcesso) {
