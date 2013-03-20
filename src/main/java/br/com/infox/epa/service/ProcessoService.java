@@ -18,7 +18,7 @@ import br.com.infox.epa.manager.TipoProcessoDocumentoManager;
 public class ProcessoService extends GenericManager {
 	
 	private static final long serialVersionUID = 8095772422429350875L;
-	public static final String NAME = "processoManager";
+	public static final String NAME = "processoService";
 	
 	@In private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
 	@In private ProcessoDocumentoManager processoDocumentoManager;
