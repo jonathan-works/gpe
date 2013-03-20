@@ -51,7 +51,6 @@ import br.com.itx.util.EntityUtil;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
 public class ProcessBuilder implements Serializable {
 
 	private static final long serialVersionUID = 1L;

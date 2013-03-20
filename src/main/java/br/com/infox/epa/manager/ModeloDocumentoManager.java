@@ -18,14 +18,19 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
  */
 @Name(ModeloDocumentoManager.NAME)
 @Scope(ScopeType.CONVERSATION)
-@AutoCreate
 public class ModeloDocumentoManager extends GenericManager{
 	private static final long serialVersionUID = 4455754174682600299L;
-
 	public static final String NAME = "modeloDocumentoManager";
+	
+	private ModeloDocumento modeloDocumento;
+	private String modeloDocumentoRO;
 
 	@In
 	private ModeloDocumentoDAO modeloDocumentoDAO;
+	
+	public void limpar(){
+		modeloDocumento = null;
+	}
 	
 	/**
 	 * Retorna todos os Modelos de Documento ativos
@@ -33,6 +38,14 @@ public class ModeloDocumentoManager extends GenericManager{
 	 */
 	public List<ModeloDocumento> getModeloDocumentoList() {
 		return modeloDocumentoDAO.getModeloDocumentoList();
+	}
+	
+	public void setModeloDocumentoCombo(ModeloDocumento modeloDocumentoCombo) {
+		this.modeloDocumento = modeloDocumentoCombo;
+	}
+	
+	public ModeloDocumento getModeloDocumentoCombo() {
+		return modeloDocumento;
 	}
 
 }
