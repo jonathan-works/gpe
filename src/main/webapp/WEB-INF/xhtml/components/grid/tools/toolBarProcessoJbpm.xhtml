@@ -32,7 +32,7 @@
 		<div style="width: 48px">
 		<a:form>
 			<ui:param name="idProcesso" value="#{row[bean.key]}" />
-			<ui:param name="taskId" value="#{painelUsuarioHome.selected.get('idTask')}" />
+			<ui:param name="tarefaId" value="#{painelUsuarioHome.tarefaId}" />
 			<ui:param name="owner" value="#{userHandler.getActorIdTarefaAtual(idProcesso)}"/> 
 			
 			<a:outputPanel>
@@ -43,7 +43,7 @@
 					value="#{actorId}" />
 				<rich:dragSupport dragIndicator="indicator"
 					reRender="tarefasTree,painelProcessos"
-					dragType="task#{taskId}" 
+					dragType="task#{tarefaId}" 
 					dragValue="#{row}">			
 				<rich:dndParam name="label" value="Processo: #{row.numeroProcesso}" />
 				</rich:dragSupport>
@@ -54,35 +54,35 @@
 			 <a:commandLink ajaxSingle="true"
 				rendered="true"
 				target="#{idProcesso}popUpFluxo"
-				onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;taskId=#{taskId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+				onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 				<f:param name="idProcesso" value="#{idProcesso}" />
-				<f:param name="taskId" value="#{taskId}" />				
+				<f:param name="tarefaId" value="#{tarefaId}" />				
 				<h:graphicImage url="/img/view.gif" 
 					title="Visualizar a tarefa" />
 			</a:commandLink>
 			<a:commandLink ajaxSingle="true"
 				rendered="#{empty owner}"
 				target="#{idProcesso}popUpFluxo"
-				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;taskId=#{taskId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
+				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
 				>
 				<f:param name="idProcesso" value="#{idProcesso}" />
-				<f:param name="taskId" value="#{taskId}" />
+				<f:param name="tarefaId" value="#{tarefaId}" />
 				<h:graphicImage url="/img/edit.gif" 
 					title="Abrir a tarefa" />
 			</a:commandLink>
 			<a:commandLink ajaxSingle="true"
 				rendered="#{owner == actor.id}"
 				target="#{idProcesso}popUpFluxo"
-				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;taskId=#{taskId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
-				>
+				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 				<f:param name="idProcesso" value="#{idProcesso}" />
-				<f:param name="taskId" value="#{taskId}" />
+				<f:param name="tarefaId" value="#{tarefaId}" />
 				<h:graphicImage url="/img/task.gif" 
 					title="Continuar a tarefa" />
 			</a:commandLink>
 			<h:graphicImage url="/img/role.gif"
 					rendered="#{(owner != actor.id and ! empty owner)}" 
 					title="Processo bloqueado pelo servidor #{owner}" />
+            <h:outputText value="#{tarefaId}"></h:outputText>
 		</a:form>
 		</div>
 	</ui:composition> 
