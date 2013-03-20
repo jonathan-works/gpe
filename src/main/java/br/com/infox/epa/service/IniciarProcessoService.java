@@ -15,7 +15,6 @@ import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.core.Events;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
-import br.com.infox.epa.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
@@ -31,7 +30,7 @@ import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
 public class IniciarProcessoService {
 	
 	@In
-	private ProcessoManager processoManager;
+	private ProcessoService processoService;
 
 	public static final String ON_CREATE_PROCESS = 
 		"br.com.infox.epa.IniciarProcessoService.ONCREATEPROCESS";
@@ -51,7 +50,7 @@ public class IniciarProcessoService {
 		processo.setIdJbpm(idJbpm);
 		processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
 		
-		processoManager.update(processo);
+		processoService.update(processo);
 	}
 	
 	/**
