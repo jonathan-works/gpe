@@ -48,7 +48,9 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select new map(max(s.idSituacaoProcesso) as id, ");
 		sb.append("s.nomeTarefa as nomeTarefa, ");
-		sb.append("max(s.idTarefa) as idTask, ");
+		sb.append("max(s.idTask) as idTask, ");
+		sb.append("max(s.idTaskInstance) as idTaskInstance, ");
+		sb.append("max(s.idTarefa) as idTarefa, ");
 		sb.append("count(s.nomeCaixa) as qtdEmCaixa, ");
 		sb.append("count(s.idProcesso) as qtd, ");
 		sb.append("'");

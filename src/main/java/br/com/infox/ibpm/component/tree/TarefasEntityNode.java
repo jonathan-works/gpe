@@ -114,7 +114,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	}
 	
 	protected List<Map<String,Object>> getCaixasList(Query query, Map<String,Object> entity) {
-		return query.setParameter("taskId", entity.get("idTask"))
+		return query.setParameter("taskId", entity.get("idTarefa"))
 				.getResultList();
 	}
 
@@ -128,10 +128,17 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		TarefasEntityNode<Map<String,Object>> node = new TarefasEntityNode<Map<String,Object>>(this, n, getQueryChildren(), queryCaixas);
 		return node;
 	}
-		
+
+	public Integer getTarefaId() {
+	    if (getEntity() != null) {
+            return (Integer) getEntity().get("idTarefa");
+        }
+        return 0;
+	}
+	
 	public Integer getTaskId() { 
 		if (getEntity() != null) {
-			return (Integer) getEntity().get("idTask");
+			return ((Long) getEntity().get("idTask")).intValue();
 		}
 		return 0;
 	}

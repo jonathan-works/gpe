@@ -231,77 +231,85 @@ public class JbpmEventsHandler implements Serializable {
 		}
 	}
 	
-	public void iniciarTask(Processo processo, Long idTarefa) {
-		try {
-			if (processo != null && processo.getIdJbpm() != null &&
-					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
-				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-				UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
-                Query q;
-                if (idTarefa != null) {
-                    q = getEntityManager()
-                            .createQuery(
-                                    ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY);
-                    q.setParameter(
-                            ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,
-                            processo)
-                            .setParameter(
-                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO,
-                                    usrLoc.getLocalizacao())
-                            .setParameter(
-                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,
-                                    usrLoc.getPapel())
-                            .setParameter(
-                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK,
-                                    idTarefa.intValue());
-                } else {
-                    q = getEntityManager()
-                            .createQuery(
-                                    ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
-                    q.setParameter(
-                            ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,
-                            processo)
-                            .setParameter(
-                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO,
-                                    usrLoc.getLocalizacao())
-                            .setParameter(
-                                    ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,
-                                    usrLoc.getPapel());
+	private Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo, Long idTarefa) {
+        Query q = getEntityManager()
+                .createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY);
+        
+        q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,processo)
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO,
+                        usrLoc.getLocalizacao())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,
+                        usrLoc.getPapel())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK,
+                        idTarefa.intValue());
+        Long result = -1L;
+        try {
+            result = (Long) q.getSingleResult();
+        } catch (NoResultException e) {
+            LOG.error("JbpmEventsHandler.getTaskInstanceId()",e);
+        } catch (NonUniqueResultException e){
+            result = (Long) q.getResultList().get(0);
+            LOG.warn("JbpmEventsHandler.getTaskInstanceId()",e);
+        } catch (IllegalStateException e) {
+            LOG.error("JbpmEventsHandler.getTaskInstanceId()",e);
+        }
+        return result;
+    }
+	
+    private Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo) {
+        Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
+        q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,processo)
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
+                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,usrLoc.getPapel());
+        
+        Long result = -1L;
+        try {
+            result = (Long) q.getSingleResult();
+        } catch (NoResultException e) {
+            LOG.error("JbpmEventsHandler.getTaskInstanceId()",e);
+        } catch (NonUniqueResultException e){
+            result = (Long) q.getResultList().get(0);
+            LOG.warn("JbpmEventsHandler.getTaskInstanceId()",e);
+        } catch (IllegalStateException e) {
+            LOG.error("JbpmEventsHandler.getTaskInstanceId()",e);
+        }
+        
+        return result;
+    }
+	
+    public void iniciarTask(Processo processo, Long idTarefa) {
+        if (processo != null
+                && processo.getIdJbpm() != null
+                && !processo.getIdJbpm().equals(
+                        BusinessProcess.instance().getProcessId())) {
+            BusinessProcess.instance().setProcessId(processo.getIdJbpm());
+            UsuarioLocalizacao usrLoc = Authenticator
+                    .getUsuarioLocalizacaoAtual();
+            Long taskInstanceId;
+            if (idTarefa != null) {
+                taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+            } else {
+                taskInstanceId = getTaskInstanceId(usrLoc, processo);
+            }
+
+            if (taskInstanceId >= 0L) {
+                BusinessProcess.instance().setTaskId(taskInstanceId);
+                TaskInstance ti = (TaskInstance) JbpmUtil.getJbpmSession().get(
+                        TaskInstance.class, taskInstanceId);
+                if (ti != null) {
+                    if (ti.getStart() == null) {
+                        BusinessProcess.instance().startTask();
+                    }
+                    String actorId = Actor.instance().getId();
+
+                    processo.setActorId(actorId);
+                    storeUsuario(taskInstanceId, actorId);
+                    getEntityManager().merge(processo);
+                    EntityUtil.flush();
                 }
-                
-                Long taskInstanceId = (Long) q.getSingleResult();
-				
-				if (taskInstanceId != null) {
-					BusinessProcess.instance().setTaskId(taskInstanceId);
-					TaskInstance ti = (TaskInstance) JbpmUtil.getJbpmSession()
-					.get(TaskInstance.class, taskInstanceId);
-					if (ti != null) {
-						if (ti.getStart() == null) {
-							BusinessProcess.instance().startTask();
-						}
-						String actorId = Actor.instance().getId();
-						
-						processo.setActorId(actorId);
-						storeUsuario(taskInstanceId, actorId);
-						getEntityManager().merge(processo);
-						EntityUtil.flush();
-					}
-				}
-			}
-		} catch (NonUniqueResultException ex) {
-			LOG.warn("JbpmEventsHandler.iniciarTask: "+ex.getMessage());
-		} catch (NoResultException ex) {
-		    LOG.warn("JbpmEventsHandler.iniciarTask: "+ex.getMessage());
-		} catch (Exception ex) {
-			String action = "iniciar a tarefa: ";
-			LOG.warn(action, ex);
-			throw new AplicationException(AplicationException.
-					createMessage(action+ex.getLocalizedMessage(), 
-								  "iniciarTask()", 
-								  "JbpmEventsHandler", 
-								  "BPM"));
-		}
-	}
+            }
+        }
+    }
 	
 	/**
 	 * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os usuários das tarefas em execução, 

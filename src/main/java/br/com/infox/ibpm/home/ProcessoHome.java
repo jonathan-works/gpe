@@ -68,7 +68,6 @@ import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
 public class ProcessoHome extends AbstractProcessoHome<Processo> {
-	
 	public static final String NAME = "processoHome";
 
 	public static final String EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO = "atualizarProcessoDocumentoFluxo";
