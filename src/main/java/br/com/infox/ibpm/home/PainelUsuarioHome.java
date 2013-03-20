@@ -62,7 +62,7 @@ public class PainelUsuarioHome implements Serializable {
 				sb.append("group by s.idProcesso");
 				Query query = EntityUtil.getEntityManager().createQuery(sb.toString());
 				processoIdList = query
-					.setParameter("idTarefa", getTaskId())
+					.setParameter("idTarefa", getTarefaId())
 					.getResultList();
 			}
 			if(processoIdList.size() == 0){
@@ -127,19 +127,23 @@ public class PainelUsuarioHome implements Serializable {
 		setProcessoCaixa(getProcessoIdList(evt.getDragValue()), null);
 	}
 
-	public Integer getTaskId() {
+	public Long getTaskId() {
 		if (selected != null) {
-			return (Integer) selected.get("idTask");
+			return (Long)selected.get("idTask");
 		}
 		return null;
 	}
 	
+	public Long getTaskInstanceId() {
+	    if (selected != null) {
+            return (Long) selected.get("idTaskInstance");
+        }
+        return null;
+	}
+	
 	public Integer getTarefaId(){
 		if (selected != null) {
-			if (selected.containsKey("idTarefa")) {
-				return (Integer) selected.get("idTarefa");
-			}
-			return (Integer) selected.get("idTask");
+			return (Integer) selected.get("idTarefa");
 		}
 		return null;
 	}
