@@ -257,7 +257,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	//Método para Inserir o documento do fluxo
-	public Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
+	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
 		UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
 		if (assinado){
 			try {
