@@ -32,8 +32,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import br.com.infox.epa.service.ProcessoService;
 import br.com.infox.ibpm.component.ControleFiltros;
@@ -56,7 +54,6 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
-
 @Name(ProcessoHome.NAME)
 public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public static final String NAME = "processoHome";
@@ -64,8 +61,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public static final String EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO = "atualizarProcessoDocumentoFluxo";
 	public static final String AFTER_UPDATE_PD_FLUXO_EVENT = "afterUpdatePdFluxoEvent";
 	
-	private static final LogProvider LOG = Logging.getLogProvider(ProcessoHome.class);
-
 	private static final long serialVersionUID = 1L;
 	
 	@In private ProcessoService processoService;
@@ -114,18 +109,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return ComponentUtil.getComponent(NAME);
 	}
 		
-	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws Exception {
-		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
-			limparAssinatura();
-			throw new Exception("O cadastro do usuário não está assinado.");
-		}
-		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
-			limparAssinatura();
-			throw new Exception("O certificado não é o mesmo do cadastro do usuario");
-		}
-		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
-	}	
-	
 	private void limparAssinatura() {
 		certChain = null;
 		signature = null;
@@ -137,9 +120,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		ControleFiltros.instance().iniciarFiltro();
 		boolean check = processoLocalizacaoIbpmDAO.possuiPermissao(getInstance().getIdProcesso(), 
 				Authenticator.getLocalizacaoAtual(), Authenticator.getPapelAtual());
-		if(!check){
+		if(!check)
 			avisarNaoHaPermissaoParaAcessarProcesso();
-		}
 		return check;
 	}
 
@@ -154,19 +136,31 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	 * selecionado.
 	 */
 	public void onSelectProcessoDocumento() {
+		limparEventsTreeHandler();
+		if(possuiAgrupamento()) {
+			preencherEventsTreeHandler();
+		}	
+	}
+	
+	private void limparEventsTreeHandler() {
 		AutomaticEventsTreeHandler.instance().clearList();
 		AutomaticEventsTreeHandler.instance().clearTree();
 		renderEventsTree = false;
-	
-			if(tipoProcessoDocumento != null && tipoProcessoDocumento.getAgrupamento() != null) {
-				idAgrupamentos = Integer.toString(tipoProcessoDocumento.getAgrupamento().getIdAgrupamento());
-				if(!Strings.isEmpty(idAgrupamentos)) {
-					renderEventsTree = true;
-					AutomaticEventsTreeHandler.instance().setRootsSelectedMap(new HashMap<Evento, List<Evento>>());
-					AutomaticEventsTreeHandler.instance().getRoots(idAgrupamentos);
-				}
-			}	
-		}
+	}
+
+	private void preencherEventsTreeHandler() {
+		renderEventsTree = true;
+		AutomaticEventsTreeHandler.instance().setRootsSelectedMap(new HashMap<Evento, List<Evento>>());
+		AutomaticEventsTreeHandler.instance().getRoots(getIdAgrupamentoAsString());
+	}
+
+	private String getIdAgrupamentoAsString() {
+		return Integer.toString(tipoProcessoDocumento.getAgrupamento().getIdAgrupamento());
+	}
+
+	private boolean possuiAgrupamento() {
+		return tipoProcessoDocumento != null && tipoProcessoDocumento.getAgrupamento() != null;
+	}
 	
 // -----------------------------------------------------------------------------------------------------------------------
 // ----------------------------------- Métodos ligados a Processo Documento ----------------------------------------------
@@ -572,4 +566,21 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			updateString.executeUpdate();
 		}
 	}
+	
+//
+	
+	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws Exception {
+		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
+			limparAssinatura();
+			throw new Exception("O cadastro do usuário não está assinado.");
+		}
+		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
+			limparAssinatura();
+			throw new Exception("O certificado não é o mesmo do cadastro do usuario");
+		}
+		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
+		//TODO esperando Tássio verificar (21 de março de 2013)
+	}	
+	
+	
 }
