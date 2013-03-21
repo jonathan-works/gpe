@@ -242,7 +242,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	public void visualizarTarefaProcesso(){
-		JbpmEventsHandler.instance().visualizarTask(instance);
+		JbpmEventsHandler.instance().visualizarTask(instance, tarefaId);
 	}
 
 	public Boolean acessarFluxo(){
