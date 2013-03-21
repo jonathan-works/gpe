@@ -10,7 +10,7 @@
     <action if="#{!util.ajaxRequest}" execute="#{controleFiltros.iniciarFiltro()}" />
 	<begin-conversation join="true" />
 
-	<param name="taskId" value="#{processoHome.taskId}" />
+	<param name="tarefaId" value="#{processoHome.tarefaId}" />
 	<param name="id" value="#{processoHome.id}" converterId="integerConverter"/>
 
 

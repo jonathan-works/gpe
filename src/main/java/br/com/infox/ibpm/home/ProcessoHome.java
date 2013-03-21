@@ -97,7 +97,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
     private ProcessoDocumento pdFluxo;
 	private Integer idProcessoDocumento;
 
-	private Long taskId;
+	private Long tarefaId;
 
 	private Boolean checkVisibilidade = true;
 
@@ -238,7 +238,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}	
 	
 	public void iniciarTarefaProcesso() {
-		JbpmEventsHandler.instance().iniciarTask(instance, taskId);
+		JbpmEventsHandler.instance().iniciarTask(instance, tarefaId);
 	}
 	
 	public void visualizarTarefaProcesso(){
@@ -253,12 +253,12 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return Boolean.FALSE;
 	}
 	
-	public void setTaskId(Long taskId) {
-		this.taskId = taskId;
+	public void setTarefaId(Long tarefaId) {
+		this.tarefaId = tarefaId;
 	}
 
-	public Long getTaskId() {
-		return taskId; 
+	public Long getTarefaId() {
+		return tarefaId;
 	}
 	
 	public String mostraProcesso(int id, String destino) {

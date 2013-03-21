@@ -21,7 +21,7 @@
 								  submitMode="ajax">
                 	<rich:menuItem value="Nova caixa"
                   				   icon="/img/add.gif"                  		
-                  				   rendered = "#{! empty painelUsuarioHome.taskId and painelUsuarioHome.selected.type == 'Task'
+                  				   rendered = "#{! empty painelUsuarioHome.tarefaId and painelUsuarioHome.selected.type == 'Task'
                   				   				 and s:hasRole('/pages/Caixa/listView.seam')}"                  		
                   				   onclick="Richfaces.showModalPanel('novaCaixaPanel')" />
 	                <rich:menuItem value="Editar caixa"
@@ -55,7 +55,7 @@
 						<rich:treeNode icon="/img/messages.gif"					
 									   dropListener="#{painelUsuarioHome.processoCaixaTarefa}" 					
 									   dropValue="#{node.entity.idProcesso}"
-									   acceptedTypes="task#{node.taskId}"
+									   acceptedTypes="tarefaId#{node.tarefaId}"
 									   iconLeaf="/img/messages.gif"
 									   nodeSelectListener="#{tarefasTree.selectListener}">
 							<h:outputText value="#{node.entity.nomeTarefa}" />

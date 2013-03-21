@@ -28,15 +28,9 @@
 	<ui:composition>
 		<div style="width: 48px">
 			<h:form>
-				<ui:param
-					name="idProcesso"
-					value="#{row[bean.key]}" />
-				<ui:param
-					name="taskId"
-					value="#{painelUsuarioHome.selected.get('idTask')}" />
-				<ui:param
-					name="owner"
-					value="#{userHandler.getActorIdTarefaAtual(idProcesso)}" />
+			<ui:param name="idProcesso" value="#{row[bean.key]}" />
+			<ui:param name="tarefaId" value="#{painelUsuarioHome.tarefaId}" />
+			<ui:param name="owner" value="#{userHandler.getActorIdTarefaAtual(idProcesso)}"/> 
 
 				<a:outputPanel>
 					<ui:param
@@ -50,7 +44,7 @@
 					<!--  <rich:dragSupport
                          dragIndicator="indicator"
                          reRender="tarefasTree,painelProcessos"
-					dragType="task#{taskId}" 
+					dragType="task#{tarefaId}" 
 					dragValue="#{row}">			
 		
 				<rich:dndParam
@@ -67,47 +61,28 @@
 					ajaxSingle="true"
 					rendered="true"
 					target="#{idProcesso}popUpFluxo"
-					onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;taskId=#{taskId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-					<f:param
-						name="idProcesso"
-						value="#{idProcesso}" />
-					<f:param
-						name="taskId"
-						value="#{taskId}" />				
-						value="#{row[bean.key]}" />
-					<h:graphicImage
-						url="/img/view.gif"
-						title="Visualizar a tarefa" />
+				onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+<f:param name="idProcesso" value="#{idProcesso}" />
+				<f:param name="tarefaId" value="#{tarefaId}" />				
+				<h:graphicImage url="/img/view.gif" />			
 				</a:commandLink>
 				<a:commandLink
 					ajaxSingle="true"
 					rendered="#{empty owner}"
 					target="#{idProcesso}popUpFluxo"
-					onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;taskId=#{taskId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-					<f:param
-						name="idProcesso"
-						value="#{idProcesso}" />
-					<f:param
-						name="taskId"
-						value="#{taskId}" />
-					<h:graphicImage
-						url="/img/edit.gif"
-						title="Abrir a tarefa" />
+				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
+					<f:param name="idProcesso" value="#{idProcesso}" />
+				<f:param name="tarefaId" value="#{tarefaId}" />			
+				<h:graphicImage url="/img/edit.gif" />
 				</a:commandLink>
 				<a:commandLink
 					ajaxSingle="true"
 					rendered="#{owner == actor.id}"
 					target="#{idProcesso}popUpFluxo"
-					onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;taskId=#{taskId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-					<f:param
-						name="idProcesso"
-						value="#{idProcesso}" />
-					<f:param
-						name="taskId"
-						value="#{taskId}" />
-					<h:graphicImage
-						url="/img/task.gif"
-						title="Continuar a tarefa" />
+				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+					<f:param name="idProcesso" value="#{idProcesso}" />
+				<f:param name="tarefaId" value="#{tarefaId}" />
+				<h:graphicImage url="/img/task.gif" />
 				</a:commandLink>
 				<h:graphicImage
 					url="/img/role.gif"
