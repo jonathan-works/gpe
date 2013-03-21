@@ -83,6 +83,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private Long tarefaId;
 
 	private Boolean checkVisibilidade = true;
+	
+	private static final Integer ERRO_AO_VERIFICAR_CERTIFICADO = 0;
 
 	public void iniciarNovoFluxo(){
 		limpar();
@@ -262,16 +264,13 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		if (assinado){
 			try {
 				verificaCertificadoUsuarioLogado(certChain, usuarioLogado);
-				
 			} catch (Exception e1) {
 				FacesMessages.instance().add(Severity.ERROR, 
 						"Erro ao verificar certificado: " + e1.getMessage());
-				return 0;
+				return ERRO_AO_VERIFICAR_CERTIFICADO;
 			}
 		}
 		
-		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
-		ProcessoDocumento doc = new ProcessoDocumento();
 		if(processoDocumentoBin.getModeloDocumento() != null) {
 			value = processoDocumentoBin.getModeloDocumento();
 		}
@@ -282,23 +281,9 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		if (Strings.isEmpty(modeloDocumento)){
 			modeloDocumento = " ";
 		}
-		bin.setModeloDocumento(modeloDocumento);
-		bin.setDataInclusao(new Date());
-		bin.setMd5Documento(Crypto.encodeMD5(String.valueOf(value)));
-		bin.setUsuario(usuarioLogado);
-		bin.setCertChain(certChain);
-		bin.setSignature(signature);
-		  
-		doc.setProcessoDocumentoBin(bin);
-		doc.setAtivo(Boolean.TRUE);
-		doc.setDataInclusao(new Date());
-		doc.setUsuarioInclusao(usuarioLogado);
-		doc.setProcesso(getInstance());
-		if (label == null) {
-			doc.setProcessoDocumento("null");
-		} else {
-			doc.setProcessoDocumento(label);
-		}
+		
+		ProcessoDocumentoBin bin = configurarProcessoDocumentoBin(value, modeloDocumento);
+		ProcessoDocumento doc = configurarProcessoDocumento(label, bin);
 
 		//TODO verificar se a regra abaixo será mantida, se será criado um parametro ou se o componente textEditor será extinto.
 		/*
@@ -328,6 +313,36 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 		
 		return doc.getIdProcessoDocumento();
+	}
+
+	//TODO método candidato à migração para o Manager apropriado
+	private ProcessoDocumento configurarProcessoDocumento(String label,
+			ProcessoDocumentoBin bin) {
+		ProcessoDocumento doc = new ProcessoDocumento();
+		doc.setProcessoDocumentoBin(bin);
+		doc.setAtivo(Boolean.TRUE);
+		doc.setDataInclusao(new Date());
+		doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
+		doc.setProcesso(getInstance());
+		if (label == null) {
+			doc.setProcessoDocumento("null");
+		} else {
+			doc.setProcessoDocumento(label);
+		}
+		return doc;
+	}
+
+	//TODO método candidato à migração para o Manager apropriado
+	private ProcessoDocumentoBin configurarProcessoDocumentoBin(Object value,
+			String modeloDocumento) {
+		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
+		bin.setModeloDocumento(modeloDocumento);
+		bin.setDataInclusao(new Date());
+		bin.setMd5Documento(Crypto.encodeMD5(String.valueOf(value)));
+		bin.setUsuario(Authenticator.getUsuarioLogado());
+		bin.setCertChain(certChain);
+		bin.setSignature(signature);
+		return bin;
 	}
 	
 	public void carregarDadosFluxo(Integer idProcessoDocumento){
