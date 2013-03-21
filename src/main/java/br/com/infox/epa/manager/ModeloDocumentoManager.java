@@ -11,6 +11,8 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.ModeloDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.jbpm.TaskInstanceHome;
+import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 
 /**
  * Classe Manager para a entidade ModeloDocumento 
@@ -22,15 +24,15 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
 public class ModeloDocumentoManager extends GenericManager{
 	private static final long serialVersionUID = 4455754174682600299L;
 	public static final String NAME = "modeloDocumentoManager";
-	
-	private ModeloDocumento modeloDocumento;
-	private String modeloDocumentoRO;
 
 	@In
 	private ModeloDocumentoDAO modeloDocumentoDAO;
 	
-	public void limpar(){
-		modeloDocumento = null;
+	public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento){
+		if(modeloDocumento != null)
+			return ModeloDocumentoAction.instance().getConteudo(modeloDocumento);
+		else 
+			return "";
 	}
 	
 	/**
@@ -39,14 +41,6 @@ public class ModeloDocumentoManager extends GenericManager{
 	 */
 	public List<ModeloDocumento> getModeloDocumentoList() {
 		return modeloDocumentoDAO.getModeloDocumentoList();
-	}
-	
-	public void setModeloDocumentoCombo(ModeloDocumento modeloDocumentoCombo) {
-		this.modeloDocumento = modeloDocumentoCombo;
-	}
-	
-	public ModeloDocumento getModeloDocumentoCombo() {
-		return modeloDocumento;
 	}
 
 }
