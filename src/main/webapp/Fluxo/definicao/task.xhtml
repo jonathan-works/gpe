@@ -117,7 +117,7 @@
 			<s:div id="varDiv" style="overflow:hidden">
 				<h:inputText rendered="#{!empty var.name or empty t.previousVariables}"
 					value="#{var.name}" style="width: 100%">
-					<wi:ajaxSupport reRender="varDiv, varLabel" onsubmit="replaceSpaces(this)" />
+					<wi:ajaxSupport reRender="varDiv, varLabel" />
 				</h:inputText>
 				<rich:comboBox value="#{var.name}" width="205"
 					rendered="#{empty var.name and !empty t.previousVariables}"
@@ -125,11 +125,9 @@
 					suggestionValues="#{t.previousVariables}">
                     <a:support status=":status" 
                                action="#{var.copyVariable()}"
-                               onsubmit="replaceSpaces(this)"
                                event="onblur" reRender="varDiv,writable,type,varLabel"/>
 					<a:support status=":status" 
 						       action="#{var.copyVariable()}"
-                               onsubmit="replaceSpaces(this)"
 						       event="onselect" reRender="varDiv,writable,type,varLabel"/>
 				</rich:comboBox>
 			</s:div>
