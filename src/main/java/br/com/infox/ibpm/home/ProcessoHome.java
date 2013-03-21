@@ -105,58 +105,10 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	public void limpar(){
-		modeloDocumento = null;
-		tipoProcessoDocumento = null;
+//		modeloDocumento = null;
+//		tipoProcessoDocumento = null;
+		processoService.limpar();
 		newInstance();
-	}
-	
-	public Processo criarProcesso() {
-		Date dataCadastro = new Date();
-		newInstance();
-		UsuarioLogin usuario = Authenticator.getUsuarioLogado();
-		instance.setUsuarioCadastroProcesso(usuario);
-		instance.setDataInicio(dataCadastro);
-		instance.setNumeroProcesso("");
-		Processo processo = getInstance();
-		persist();
-		
-		FacesMessages.instance().clear();
-		FacesMessages.instance().add(StatusMessage.Severity.INFO,
-				"Processo #{processoHome.instance.idProcesso} iniciado com sucesso");
-		return processo;
-	}
-	
-	public Processo iniciarProcesso(Fluxo fluxo) {
-		BusinessProcess.instance().createProcess(fluxo.getFluxo().trim());
-		Date dataCadastro = new Date();
-		newInstance();
-		UsuarioLogin usuario = Authenticator.getUsuarioLogado();
-		instance.setUsuarioCadastroProcesso(usuario);
-		instance.setDataInicio(dataCadastro);
-		instance.setIdJbpm(BusinessProcess.instance().getProcessId());
-		instance.setNumeroProcesso("");
-		persist();
-		// grava a variavel processo no jbpm com o numero do processo e-pa
-		org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
-		processInstance.getContextInstance().setVariable("processo", instance.getIdProcesso());
-		instance.setNumeroProcesso(Integer.toString(instance.getIdProcesso()));
-		update();
-		// inicia a primeira tarefa do processo
-		Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
-		if (taskInstances != null && !taskInstances.isEmpty()) {
-			BusinessProcess.instance().setTaskId(taskInstances.iterator().next().getId());
-			BusinessProcess.instance().startTask();
-		}
-		FacesMessages.instance().clear();
-		FacesMessages.instance().add(StatusMessage.Severity.INFO,
-				"Processo #{processoHome.instance.idProcesso} iniciado com sucesso");
-
-		SwimlaneInstance swimlaneInstance = TaskInstance.instance().getSwimlaneInstance();
-		String actorsExpression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
-		Set<String> pooledActors = LocalizacaoAssignment.instance().getPooledActors(actorsExpression);
-		String[] actorIds = (String[]) pooledActors.toArray(new String[pooledActors.size()]);
-		swimlaneInstance.setPooledActors(actorIds);
-		return instance;
 	}
  
 	public void iniciarTarefaProcesso() {
