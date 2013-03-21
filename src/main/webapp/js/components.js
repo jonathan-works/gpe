@@ -6,14 +6,6 @@ function hideModal(modalId) {
 	setTimeout('Richfaces.hideModalPanel("' + modalId + '")', 100);
 } 
 
-function replaceSpaces(arg) {
-    obj = $j(arg).find("input[type='hidden']");
-    if (obj.size()==0) {
-        obj = $j(arg);
-    }
-    obj.val( obj.val().replace(/ /g,'_').replace(/\//g,'_') );
-}
-
 function setMesmaData(di, df) {
 	if( $(df).value == "" || $(df).value == null || $(df).value.startsWith("_") ) {
 		$(df).value = $(di).value;
