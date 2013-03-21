@@ -16,12 +16,9 @@
 package br.com.infox.ibpm.home;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -30,9 +27,6 @@ import org.hibernate.SQLQuery;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.bpm.BusinessProcess;
-import org.jboss.seam.bpm.ProcessInstance;
-import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
@@ -41,13 +35,11 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
-import org.jbpm.taskmgmt.exe.SwimlaneInstance;
-
 import br.com.infox.epa.service.ProcessoService;
 import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
+import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.entity.Evento;
-import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
@@ -58,7 +50,6 @@ import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
-import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
@@ -78,6 +69,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private static final long serialVersionUID = 1L;
 	
 	@In private ProcessoService processoService;
+	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -105,9 +97,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	public void limpar(){
-//		modeloDocumento = null;
-//		tipoProcessoDocumento = null;
-		processoService.limpar();
+		modeloDocumento = null;
+		tipoProcessoDocumento = null;
 		newInstance();
 	}
  
@@ -141,35 +132,21 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	public Boolean checarVisibilidade()	{
-		 if (!checkVisibilidade ) {
-				return true;
-			}
-			Integer id = null;
-			String numeroProcesso = null;
-			if (!isManaged()) {
-				id = ProcessoHome.instance().getInstance().getIdProcesso();
-				numeroProcesso = ProcessoHome.instance().getInstance().getNumeroProcesso();
-			} else {
-				id = getInstance().getIdProcesso();
-				numeroProcesso = getInstance().getNumeroProcesso();
-			}
-			
-			ControleFiltros.instance().iniciarFiltro();
-			Query query = getEntityManager().createQuery("select o from ProcessoLocalizacaoIbpm o" +
-															" where o.processo.idProcesso = :id" +
-																" and o.localizacao = :localizacao" +
-																" and o.papel = :papel");
-			query.setParameter("id", id);
-			query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
-			query.setParameter("papel", Authenticator.getPapelAtual());
-			Object result = EntityUtil.getSingleResult(query);
-			boolean check = result != null;
-			if(!check){
-				Util.setToEventContext("canClosePanel", true);
-				FacesMessages.instance().clear();
-				FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + numeroProcesso);
-			}
-			return check;
+		if (!checkVisibilidade)
+			return true;
+		ControleFiltros.instance().iniciarFiltro();
+		boolean check = processoLocalizacaoIbpmDAO.possuiPermissao(getInstance().getIdProcesso(), 
+				Authenticator.getLocalizacaoAtual(), Authenticator.getPapelAtual());
+		if(!check){
+			avisarNaoHaPermissaoParaAcessarProcesso();
+		}
+		return check;
+	}
+
+	private void avisarNaoHaPermissaoParaAcessarProcesso() {
+		Util.setToEventContext("canClosePanel", true);
+		FacesMessages.instance().clear();
+		FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + getInstance().getNumeroProcesso());
 	}
 		
 	/**
