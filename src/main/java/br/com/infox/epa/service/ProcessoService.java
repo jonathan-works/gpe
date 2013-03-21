@@ -11,6 +11,8 @@ import br.com.infox.epa.manager.ModeloDocumentoManager;
 import br.com.infox.epa.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epa.manager.ProcessoDocumentoManager;
 import br.com.infox.epa.manager.TipoProcessoDocumentoManager;
+import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 
 @Name(ProcessoService.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -24,10 +26,5 @@ public class ProcessoService extends GenericManager {
 	@In private ProcessoDocumentoManager processoDocumentoManager;
 	@In private ProcessoDocumentoBinManager processoDocumentoBinManager;
 	@In private ModeloDocumentoManager modeloDocumentoManager;
-	
-	public void limpar(){
-		modeloDocumentoManager.limpar();
-		tipoProcessoDocumentoManager.limpar();
-	}
 	
 }
