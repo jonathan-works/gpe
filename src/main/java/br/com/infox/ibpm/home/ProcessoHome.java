@@ -37,6 +37,7 @@ import br.com.infox.epa.service.ProcessoService;
 import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
+import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.Processo;
@@ -56,15 +57,17 @@ import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
 public class ProcessoHome extends AbstractProcessoHome<Processo> {
+	
+	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
 
 	public static final String EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO = "atualizarProcessoDocumentoFluxo";
 	public static final String AFTER_UPDATE_PD_FLUXO_EVENT = "afterUpdatePdFluxoEvent";
-	
-	private static final long serialVersionUID = 1L;
-	
+	private static final Integer ERRO_AO_VERIFICAR_CERTIFICADO = 0;
+		
 	@In private ProcessoService processoService;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
+	@In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -84,7 +87,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 
 	private Boolean checkVisibilidade = true;
 	
-	private static final Integer ERRO_AO_VERIFICAR_CERTIFICADO = 0;
+	
 
 	public void iniciarNovoFluxo(){
 		limpar();
@@ -233,9 +236,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		 *o editor sem assinatura digital, o tipoProcessoDOcumento será setado
 		 *automaticamente com um valor aleatorio 
 		 */
-		if (tipoProcessoDocumento == null){
-			tipoProcessoDocumento = getTipoProcessoDocumentoFluxo();
-		}
+		inicializarTipoProcessoDocumento();
 		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
 		
 		try {
@@ -255,6 +256,12 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			}
 		} catch (AssertionFailure e) {
 			// TODO: handle exception
+		}
+	}
+
+	private void inicializarTipoProcessoDocumento() {
+		if (tipoProcessoDocumento == null){
+			tipoProcessoDocumento = tipoProcessoDocumentoDAO.getTipoProcessoDocumentoFluxo();
 		}
 	}
 	
@@ -291,9 +298,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		 *o editor sem assinatura digital, o tipoProcessoDOcumento será setado
 		 *automaticamente com um valor aleatorio 
 		 */
-		if (tipoProcessoDocumento == null){
-			tipoProcessoDocumento = getTipoProcessoDocumentoFluxo();
-		}
+		inicializarTipoProcessoDocumento();
 		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
 	  
 		EntityManager em = EntityUtil.getEntityManager();
@@ -493,12 +498,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			ret = processo.getNumeroProcesso();
 		}
 		return ret;
-	}
-	
-	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
-		String sql = "select o from TipoProcessoDocumento o ";
-		Query q = EntityUtil.getEntityManager().createQuery(sql);
-		return (TipoProcessoDocumento) q.getResultList().get(0);
 	}
 	
 	/*
