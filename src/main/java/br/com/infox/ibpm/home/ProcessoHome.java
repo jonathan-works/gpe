@@ -222,12 +222,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		processoDocumentoBin.setCertChain(certChain);
 		processoDocumentoBin.setSignature(signature);
 		
-		//TODO verificar se a regra abaixo será mantida, se será criado um parametro ou se o componente textEditor será extinto.
-		/*
-		 *Se o tipoProcessoDocumento for nulo (caso o componente utilizado seja
-		 *o editor sem assinatura digital, o tipoProcessoDOcumento será setado
-		 *automaticamente com um valor aleatorio 
-		 */
 		inicializarTipoProcessoDocumento();
 		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
 		
@@ -251,6 +245,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 	}
 
+	/**
+	 *Se o tipoProcessoDocumento for nulo (caso o componente utilizado seja
+	 *o editor sem assinatura digital, o tipoProcessoDOcumento será setado
+	 *automaticamente com um valor aleatorio 
+	 */
 	private void inicializarTipoProcessoDocumento() {
 		if (tipoProcessoDocumento == null){
 			tipoProcessoDocumento = tipoProcessoDocumentoDAO.getTipoProcessoDocumentoFluxo();
@@ -267,23 +266,10 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 				return ERRO_AO_VERIFICAR_CERTIFICADO;
 			}
 		}
-		
-		if(processoDocumentoBin.getModeloDocumento() != null) {
-			value = processoDocumentoBin.getModeloDocumento();
-		}
-		if(value == null) {
-			value = new String();
-		}
+		value = getAlteracaoModeloDocumento(value);
 		
 		ProcessoDocumentoBin bin = configurarProcessoDocumentoBin(value);
 		ProcessoDocumento doc = configurarProcessoDocumento(label, bin);
-
-		//TODO verificar se a regra abaixo será mantida, se será criado um parametro ou se o componente textEditor será extinto.
-		/*
-		 *Se o tipoProcessoDocumento for nulo (caso o componente utilizado seja
-		 *o editor sem assinatura digital, o tipoProcessoDOcumento será setado
-		 *automaticamente com um valor aleatorio 
-		 */
 		inicializarTipoProcessoDocumento();
 		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
 	  
@@ -304,6 +290,18 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 		
 		return doc.getIdProcessoDocumento();
+	}
+
+	/**
+	 * Retorna, se houver, o novo valor do ModeloDocumento. Se nao houver, retorna o valor o valor
+	 * inicial inalterado
+	 * @param value - valor da variável modeloDocumento no contexto jBPM
+	 * */
+	private Object getAlteracaoModeloDocumento(Object value) {
+		if(processoDocumentoBin.getModeloDocumento() != null) {
+			value = processoDocumentoBin.getModeloDocumento();
+		}
+		return value;
 	}
 
 	private String getDescricaoModeloDocumentoByValue(Object value) {
@@ -337,6 +335,10 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 
 	//TODO método candidato à migração para o Manager apropriado
+	/**
+	 * Cria e configura um novo ProcessoDocumentoBin com base no {@value} passado
+	 * @param value - valor da variável modeloDocumento no contexto jBPM
+	 * */
 	private ProcessoDocumentoBin configurarProcessoDocumentoBin(Object value) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
 		bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
