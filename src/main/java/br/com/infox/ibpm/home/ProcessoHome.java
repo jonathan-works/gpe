@@ -196,8 +196,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			try {
 				verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
 			} catch (Exception e1) {
-				FacesMessages.instance().add(Severity.ERROR, 
-						"Erro ao verificar certificado: " + e1.getMessage());
+				avisarErroAoVerificarCertificado(e1);
 				return;
 			}
 		}
@@ -265,8 +264,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			try {
 				verificaCertificadoUsuarioLogado(certChain, usuarioLogado);
 			} catch (Exception e1) {
-				FacesMessages.instance().add(Severity.ERROR, 
-						"Erro ao verificar certificado: " + e1.getMessage());
+				avisarErroAoVerificarCertificado(e1);
 				return ERRO_AO_VERIFICAR_CERTIFICADO;
 			}
 		}
@@ -311,6 +309,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 		
 		return doc.getIdProcessoDocumento();
+	}
+
+	private void avisarErroAoVerificarCertificado(Exception e1) {
+		FacesMessages.instance().add(Severity.ERROR, 
+				"Erro ao verificar certificado: " + e1.getMessage());
 	}
 
 	//TODO método candidato à migração para o Manager apropriado
