@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
+import javax.persistence.TransactionRequiredException;
 
 import org.jboss.seam.annotations.End;
 import org.jboss.seam.annotations.Install;
@@ -194,6 +195,10 @@ public class JbpmEventsHandler implements Serializable {
 			EntityUtil.getEntityManager().createNativeQuery(sql)
 					  .setParameter("processo", processo.getIdProcesso())
 					  .executeUpdate();
+		} catch (IllegalStateException e) {
+		    LOG.warn("JbpmEventsHandler.removeCaixaProcesso()",e);
+		} catch (TransactionRequiredException e) {
+		    LOG.warn("JbpmEventsHandler.removeCaixaProcesso()",e);
 		} catch (Exception ex) {
 			String action = "remover o processo da caixa: ";
 			LOG.warn(action, ex);
@@ -202,32 +207,6 @@ public class JbpmEventsHandler implements Serializable {
 								  "removeCaixaProcesso()", 
 								  "JbpmEventsHandler", 
 								  "BPM"));
-		}
-	}
-	
-	public void visualizarTask(Processo processo){
-		try {
-			if (processo != null && processo.getIdJbpm() != null &&
-					!processo.getIdJbpm().equals(BusinessProcess.instance().getProcessId())) {
-				BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-				UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
-                Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
-                q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO, processo)
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
-                
-                Long taskId = (Long) q.getSingleResult();
-				if (taskId != null) {
-					BusinessProcess.instance().setTaskId(taskId);
-				}
-			}
-		} catch (Exception ex) {
-			StringBuilder action = new StringBuilder("Visualizar Tarefa: ");
-			action.append(ex.getLocalizedMessage());
-			action.append("visualizarTask()");
-			action.append("JbpmEventsHandler");
-			action.append("BPM");
-			LOG.warn(action.toString(), ex);
 		}
 	}
 	
@@ -276,6 +255,22 @@ public class JbpmEventsHandler implements Serializable {
         
         return result;
     }
+    
+    public void visualizarTask(Processo processo, Long idTarefa){
+        if (processo != null
+                && processo.getIdJbpm() != null
+                && !processo.getIdJbpm().equals(
+                        BusinessProcess.instance().getProcessId())) {
+            
+            BusinessProcess.instance().setProcessId(processo.getIdJbpm());
+            UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
+            Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+
+            if (taskInstanceId >= 0L) {
+                BusinessProcess.instance().setTaskId(taskInstanceId);
+            }
+        }
+    }
 	
     public void iniciarTask(Processo processo, Long idTarefa) {
         if (processo != null
@@ -283,8 +278,7 @@ public class JbpmEventsHandler implements Serializable {
                 && !processo.getIdJbpm().equals(
                         BusinessProcess.instance().getProcessId())) {
             BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-            UsuarioLocalizacao usrLoc = Authenticator
-                    .getUsuarioLocalizacaoAtual();
+            UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
             Long taskInstanceId;
             if (idTarefa != null) {
                 taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
@@ -326,7 +320,7 @@ public class JbpmEventsHandler implements Serializable {
 			UsuarioLogin user = (UsuarioLogin) q.getSingleResult();		
 			UsuarioTaskInstance uti = new UsuarioTaskInstance();
 			uti.setIdTaskInstance(idTask);
-			uti.setIdUsuario(user.getIdPessoa());
+			uti.setUsuario(user);
 			EntityUtil.getEntityManager().persist(uti);
 		}
 	}

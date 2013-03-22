@@ -76,13 +76,14 @@ public class VariableAccessHandler implements Serializable {
 	}
 	
 	public void setName(String name) {
-		if (!name.equals(this.name)){
-			this.name = name;
+	    String Name = name.replace(' ', '_').replace('/', '_');
+		if (!Name.equals(this.name)){
+			this.name = Name;
 			if ("page".equals(type) && !pageExists()) {
 				return;
 			}
-			ReflectionsUtil.setValue(variableAccess, "variableName", name);
-			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + name);
+			ReflectionsUtil.setValue(variableAccess, "variableName", Name);
+			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + Name);
 		}
 	}
 	

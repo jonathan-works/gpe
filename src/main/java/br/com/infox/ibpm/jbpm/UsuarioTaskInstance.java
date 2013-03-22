@@ -6,6 +6,8 @@ import javax.persistence.*;
 
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.access.entity.UsuarioLogin;
+
 @Entity
 @Table(name = UsuarioTaskInstance.TABLE_NAME, schema="public")
 @BypassInterceptors
@@ -15,8 +17,7 @@ public class UsuarioTaskInstance implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long idTaskInstance;
-	
-	private Integer idUsuario;
+	private UsuarioLogin usuario;
 
 	@Id
 	@Column(name = "id_taskinstance", unique = true, nullable = false)
@@ -28,13 +29,14 @@ public class UsuarioTaskInstance implements Serializable {
 		this.idTaskInstance = idTaskInstance;
 	}
 
-	@Column(name = "id_usuario_login")
-	public Integer getIdUsuario() {
-		return idUsuario;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_usuario_login")
+	public UsuarioLogin getUsuario() {
+		return usuario;
 	}
 
-	public void setIdUsuario(Integer idUsuario) {
-		this.idUsuario = idUsuario;
+	public void setUsuario(UsuarioLogin usuario) {
+		this.usuario = usuario;
 	}
 	
 	

@@ -116,7 +116,7 @@
 			<f:facet name="header">Variável</f:facet>
 			<s:div id="varDiv" style="overflow:hidden">
 				<h:inputText rendered="#{!empty var.name or empty t.previousVariables}"
-					value="#{var.name}" style="width: 100%" onkeyup="this.value=this.value.replace(' ','_').replace('/','_')" >
+					value="#{var.name}" style="width: 100%">
 					<wi:ajaxSupport reRender="varDiv, varLabel" />
 				</h:inputText>
 				<rich:comboBox value="#{var.name}" width="205"
