@@ -35,53 +35,55 @@
 	<ui:define name="body">
 		<rich:panel>
 			<s:div id="idTwitterBody">
-				<wi:dataForm formId="contaTwitterForm"
-							 formTitle="#{messages['form.title']}"
-							 requiredForm="false">
-					<rich:dataTable rendered="#{contaTwitterHome.managed}" style="width: 350px">
-						<f:facet name="header">
-							<h:outputText value="#{messages['contaTwitter.contaCadastrada']}"/>
-						</f:facet>
-						<rich:column style="width:20px;">
+				<h:form>
+					<wi:dataForm formId="contaTwitterForm"
+								 formTitle="#{messages['form.title']}"
+								 requiredForm="false">
+						<rich:dataTable rendered="#{contaTwitterHome.managed}" style="width: 350px">
 							<f:facet name="header">
-								<wi:commandLink id="recadastrarLink"
-								                rendered="#{contaTwitterHome.managed}"
-											    onclick="if(!confirm('Deseja inativar este registro?')) return false;"
-											    action="contaTwitterHome.remove()"
-											    reRender="contaTwitterForm">
-									<wi:toolBarGraphicImage url="/img/remove.png"/>
-								</wi:commandLink>
+								<h:outputText value="#{messages['contaTwitter.contaCadastrada']}"/>
 							</f:facet>
-						</rich:column>
-						<rich:column>
-							<f:facet name="header">
-								<h:outputText value="#{home.instance.screenName}"/>
-							</f:facet>
-						</rich:column>
-					</rich:dataTable>
-					<s:div rendered="#{!home.managed and home.requesting}"
-							id="includeTwitterDiv">
-						<wi:inputText id="pin"
-									 value="#{home.pin}"
-									 label="#{messages['contaTwitter.pin']}"
-									 required="false" />
-					</s:div>
-					<ui:define name="buttons">
-						<s:div rendered="#{!home.managed}" >
-							<wi:commandButton id="includeButton"
-											  action="#{home.setRequesting(true)}"
-											  value="Incluir Twitter"
-											  rendered="#{!home.requesting}"
-											  reRender="idTwitterBody"
-											  onclick="window.open('#{home.getAuthorizationURL()}', 'Autorizar Aplicação' ,'');"/>
-							<wi:commandButton id="gravarButton"
-											  value="Gravar"
-											  rendered="#{home.requesting}"
-											  reRender="idTwitterBody"
-											  action="#{home.getAutorizacao('U')}" />
+							<rich:column style="width:20px;">
+								<f:facet name="header">
+									<wi:commandLink id="recadastrarLink"
+									                rendered="#{contaTwitterHome.managed}"
+												    onclick="if(!confirm('Deseja inativar este registro?')) return false;"
+												    action="contaTwitterHome.remove()"
+												    reRender="contaTwitterForm">
+										<wi:toolBarGraphicImage url="/img/remove.png"/>
+									</wi:commandLink>
+								</f:facet>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="#{home.instance.screenName}"/>
+								</f:facet>
+							</rich:column>
+						</rich:dataTable>
+						<s:div rendered="#{!home.managed and home.requesting}"
+								id="includeTwitterDiv">
+							<wi:inputText id="pin"
+										 value="#{home.pin}"
+										 label="#{messages['contaTwitter.pin']}"
+										 required="false" />
 						</s:div>
-					</ui:define>
-				</wi:dataForm>
+						<ui:define name="buttons">
+							<s:div rendered="#{!home.managed}" >
+								<wi:commandButton id="includeButton"
+												  action="#{home.setRequesting(true)}"
+												  value="Incluir Twitter"
+												  rendered="#{!home.requesting}"
+												  reRender="idTwitterBody"
+												  onclick="window.open('#{home.getAuthorizationURL()}', 'Autorizar Aplicação' ,'');"/>
+								<wi:commandButton id="gravarButton"
+												  value="Gravar"
+												  rendered="#{home.requesting}"
+												  reRender="idTwitterBody"
+												  action="#{home.getAutorizacao('U')}" />
+							</s:div>
+						</ui:define>
+					</wi:dataForm>
+				</h:form>
 			</s:div>
 		</rich:panel>
 	</ui:define>
