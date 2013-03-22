@@ -478,11 +478,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public Integer getIdProcessoDocumento() {
 		return idProcessoDocumento;
 	}
-
-	public Integer getFirst(){
-		List<ProcessoDocumento> processoDocList = getInstance().getProcessoDocumentoList();
-		return processoDocList.size();
-	}	
 		
 	public String getNumeroProcesso(int idProcesso) {
 		Processo processo = EntityUtil.find(Processo.class, idProcesso);
