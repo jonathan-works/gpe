@@ -15,15 +15,11 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import org.hibernate.AssertionFailure;
-import org.hibernate.SQLQuery;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -45,7 +41,6 @@ import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
@@ -490,14 +485,12 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}	
 		
 	public String getNumeroProcesso(int idProcesso) {
-		String ret = idProcesso + "";
 		Processo processo = EntityUtil.find(Processo.class, idProcesso);
 		if (processo != null) {
-			ret = processo.getNumeroProcesso();
+			return processo.getNumeroProcesso();
 		}
-		return ret;
+		return String.valueOf(idProcesso);
 	}
-//
 	
 	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws Exception {
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
@@ -510,7 +503,5 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
 		//TODO esperando Tássio verificar (21 de março de 2013)
-	}	
-	
-	
+	}
 }
