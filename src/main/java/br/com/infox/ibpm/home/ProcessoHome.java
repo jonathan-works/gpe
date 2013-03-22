@@ -356,12 +356,15 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	public void updateProcessoDocumentoBin() {
-		ModeloDocumento modeloDocumento = TaskInstanceHome.instance().getModeloDocumento();
 		String modelo = "";
-		if(modeloDocumento != null) {
+		if(taskInstancePossuiModeloDocumento()) {
 			modelo = ModeloDocumentoAction.instance().getConteudo(modeloDocumento);
 		}
 		processoDocumentoBin.setModeloDocumento(modelo);
+	}
+	
+	private boolean taskInstancePossuiModeloDocumento(){
+		return TaskInstanceHome.instance().getModeloDocumento() != null;
 	}
 		
 // -----------------------------------------------------------------------------------------------------------------------
