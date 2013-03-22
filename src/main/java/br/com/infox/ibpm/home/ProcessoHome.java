@@ -87,8 +87,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 
 	private Boolean checkVisibilidade = true;
 	
-	
-
 	public void iniciarNovoFluxo(){
 		limpar();
 		Redirect redirect = Redirect.instance();
@@ -499,88 +497,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 		return ret;
 	}
-	
-	/*
-	 * Varre toda a entidade variableInstance, e caso o registro seja do tipo textEditor 
-	 * e tenha valor na stringInstance, pega esse valor, cria um documento, seta como null
-	 * a string e seta o longInstance do o id do ProcessoDocumento criado.
-	 */
-	@SuppressWarnings("unchecked")
-	public void getListaVariable(){
-		//Lista de todos os objetos que sao textEditor
-		String sqlListTextEditor = "select o.id from org.jbpm.context.exe.VariableInstance o " +
-		 						   "where o.name like 'textEdit%'";
-		org.hibernate.Query q0 = JbpmUtil.getJbpmSession().createQuery(sqlListTextEditor);
-		List<Long> lte = q0.list();
-		
-		//Verificando quais items dessa lista que estao com o valor da string != null
-		List<Long> les = new ArrayList<Long>(0);
-		for (Long longId : lte) {
-			String sqlListEditorString = "select o.id from org.jbpm.context.exe.variableinstance.StringInstance o " +
-										 "where o.id = :id and o.value != ''";
-			org.hibernate.Query q = JbpmUtil.getJbpmSession().createQuery(sqlListEditorString);
-			q.setParameter("id", longId);
-			if (q.list().size() > 0){
-				les.add((Long) q.list().get(0));
-			}
-		}
-		
-		/*
-		 * Pega cada registro da variableInstance, verifica o processInstance e
-		 * procura o registro com o name processo em q o processInstance seja igual,
-		 * para pegar o numero do processo.
-		 */
-		for (Long longId : les) {
-			//Pega o objeto do registro
-			String sqlVar = "select o from org.jbpm.context.exe.VariableInstance o " +
-						    "where o.id = :id";
-			org.hibernate.Query q = JbpmUtil.getJbpmSession().createQuery(sqlVar);
-			q.setParameter("id", longId);
-			
-			//Pega o variable instance do registro TextEditor q tenha valor na string.
-			String pi = "select o.processInstance.id from org.jbpm.context.exe.VariableInstance o " +
-						"where o.id = :id";
-			org.hibernate.Query q1 = JbpmUtil.getJbpmSession().createQuery(pi);
-			q1.setParameter("id", longId);
-			Long resultado = (Long) q1.list().get(0);
-			
-			//Pega o id do registro que guarda o numero do processo.
-			String np = "select o.id from org.jbpm.context.exe.VariableInstance o " +
-						"where o.processInstance.id = :processInstanceId and o.name like 'processo'";
-			org.hibernate.Query q2 = JbpmUtil.getJbpmSession().createQuery(np);
-			q2.setParameter("processInstanceId", resultado);
-			Long process = (Long) q2.list().get(0);
-			
-			//Pega o valor da coluna Long do registro achado anteriormente.
-			String processo = "select o.value from org.jbpm.context.exe.variableinstance.LongInstance o " +
-							  "where o.id = :id";
-			org.hibernate.Query q3 = JbpmUtil.getJbpmSession().createQuery(processo);
-			q3.setParameter("id", process);
-			long numeroProcesso = (Long) q3.list().get(0);
-			
-			int numeroProcessoInt = (int) numeroProcesso; 
-			//Seta a instancia com o processo achado.
-			Processo instanceProcesso = EntityUtil.find(Processo.class, numeroProcessoInt);
-			setInstance(instanceProcesso);
-			
-			//Pegando o valor do registro para criar um processo documento.
-			String doc = "select o.value from org.jbpm.context.exe.variableinstance.StringInstance o " +
-						 "where o.id = :id";
-			org.hibernate.Query q4 = JbpmUtil.getJbpmSession().createQuery(doc);
-			q4.setParameter("id", longId);
-			
-			Object value = q4.list().get(0); 
-			int id = inserirProcessoDocumentoFluxo(value, "Certidão", false);
-			
-			StringBuilder sba = new StringBuilder();
-			sba.append("update public.jbpm_variableinstance ");
-			sba.append("set stringvalue_ = null , longvalue_ = ").append((long) id);
-			sba.append(" where id_ = ").append(longId);
-			SQLQuery updateString = JbpmUtil.getJbpmSession().createSQLQuery(sba.toString());
-			updateString.executeUpdate();
-		}
-	}
-	
 //
 	
 	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws Exception {
