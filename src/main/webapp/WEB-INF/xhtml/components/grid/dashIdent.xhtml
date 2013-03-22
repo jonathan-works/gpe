@@ -1,53 +1,34 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	--> 
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
 	
-	 #{props.ativo}?Indica que vai ser mudada a classe se o registro for inativo
-	 #{props.campoAtivo}?Indica o campo a ser avaliado (default = ativo) 
-	        
-	<ui:composition>
 		
 		<div
-             style="width: 100%;"
-             class="#{styleClass}">
-			<ui:param
-                 name="lista"
-                 value="#{util.getArrayAsList(row[props.completo].split('\\|'))}" />
-			<ui:repeat
-                 var="x"
-                 value="#{lista.subList(0, lista.size() - 1)}">
-				<rich:spacer
-                     width="20px" />
-			</ui:repeat>				
-			<h:outputText
-                 escape="false"
-                 value="#{row}"
-                 style="#{lista.size() == 1 ? 'font-weight: bold' : ''}" />
-		</div>
+		 style="width: 100%;"
+		 class="#{styleClass}">
 		
-	</ui:composition>
-	 
-</jsp:root>
+			<ui:param
+			 name="lista"
+			 value="#{util.getArrayAsList(row[props.completo].split('\\|'))}" />
+			<ui:repeat
+			 var="x"
+			 value="#{lista.subList(0, lista.size() - 1)}">
+			
+				<rich:spacer width="20px" />
+			
+		</ui:repeat>				
+			<h:outputText
+			 escape="false"
+			 value="#{row}"
+			 style="#{lista.size() == 1 ? 'font-weight: bold' : ''}" />
+		
+	</div>
+		
+	
+</ui:composition>

@@ -14,76 +14,82 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
+	
     
 	<ui:param
-         name="pageTitle"
-         value="Consulta de Clima" />                       
-	<ui:define
-         name="title">#{pageTitle}</ui:define>
+		 name="pageTitle"
+		 value="Consulta de Clima" />                       
+	<ui:define name="title">#{pageTitle}</ui:define>
 	
 	<ui:param
-         name="home"
-         value="#{consultaSolicitacaoHome}" />
+		 name="home"
+		 value="#{consultaSolicitacaoHome}" />
 	
-	<ui:define
-         name="body">
+	<ui:define name="body">
+		
 	    
 	    <h:messages
-             globalOnly="true"
-             styleClass="message"
-             id="globalMessages" />
+			 globalOnly="true"
+			 styleClass="message"
+			 id="globalMessages" />
 
 		<wi:dataForm
-             formId="estatisticaMovimentacaoForm"
-             formTitle="Pesquisar">
+			 formId="estatisticaMovimentacaoForm"
+			 formTitle="Pesquisar">
+			
 		
 			<wi:selectOneMenu
-                 id="comboCidade"
-                 label="Cidade"
-                 value="#{getCitiesByCountryService.cidade}"
-                 items="#{getCitiesByCountryService.getCidadeListBrazil()}"
-                 required="true"
-                 noSelectionLabel="Selecione...">
+				 id="comboCidade"
+				 label="Cidade"
+				 value="#{getCitiesByCountryService.cidade}"
+				 items="#{getCitiesByCountryService.getCidadeListBrazil()}"
+				 required="true"
+				 noSelectionLabel="Selecione...">
+				
 				<a:ajax
-                     event="change"
-                     status="status"
-                     execute="@this"
-                     render="clima" />
+					 event="change"
+					 status="status"
+					 execute="@this"
+					 render="clima" />
+			
 			</wi:selectOneMenu>	
 			
-			<s:div
-                 id="clima">
-				<s:div
-                     rendered="#{not empty getCitiesByCountryService.cidade}">
-				<rich:panel
-                         style="overflow:auto; width: 50%;">
-				<f:facet
-                             name="header">Dados</f:facet>
+			<s:div id="clima">
+				
+				<s:div rendered="#{not empty getCitiesByCountryService.cidade}">
+					
+				<rich:panel style="overflow:auto; width: 50%;">
+						
+				<f:facet name="header">Dados</f:facet>
 					<h:outputText>Local: #{getCitiesByCountryService.getClima().location}</h:outputText><br />
 					<h:outputText>Horário: #{getCitiesByCountryService.getClima().time}</h:outputText><br />
 					<h:outputText>Vento: #{getCitiesByCountryService.getClima().wind}</h:outputText><br />		
 					<h:outputText>Temperatura: #{getCitiesByCountryService.getClima().temperature}</h:outputText><br />
 					<h:outputText>Humidade: #{getCitiesByCountryService.getClima().relativeHumidity}</h:outputText><br />
 					<h:outputText>Pressão: #{getCitiesByCountryService.getClima().pressure}</h:outputText><br />							
-				</rich:panel>
+				
+					</rich:panel>
+				
 				</s:div>	
+			
 			</s:div>
 		
-			<ui:define
-                 name="buttons">
+			<ui:define name="buttons">
 			</ui:define>
+		
 		</wi:dataForm>
 
+	
 	</ui:define>
+
 
 </ui:composition>

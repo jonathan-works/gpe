@@ -14,91 +14,109 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
+	
     
 	<ui:param
-         name="pageTitle"
-         value="#{messages['consultaSolicitacao.titulo']}" />                       
-	<ui:define
-         name="title">#{pageTitle}</ui:define>
+		 name="pageTitle"
+		 value="#{messages['consultaSolicitacao.titulo']}" />                       
+	<ui:define name="title">#{pageTitle}</ui:define>
 	
 	<ui:param
-         name="home"
-         value="#{consultaSolicitacaoHome}" />
+		 name="home"
+		 value="#{consultaSolicitacaoHome}" />
 	
-	<ui:define
-         name="body">
+	<ui:define name="body">
+		
 	    
 	    <h:messages
-             globalOnly="true"
-             styleClass="message"
-             id="globalMessages" />
+			 globalOnly="true"
+			 styleClass="message"
+			 id="globalMessages" />
 	    <table
-             width="100%"
-             border="0"
-             style="margin-top: 20px;">
+			 width="100%"
+			 border="0"
+			 style="margin-top: 20px;">
+			
 	    	<tr>
+				
 	    		<td
-                     valign="top"
-                     width="30%">
-				    <div
-                         class="leftPanel">
+					 valign="top"
+					 width="30%">
+					
+				    <div class="leftPanel">
+						
 						<wi:form
-                             form="#{consultaSolicitacaoForm}"
-                             formTitle="Pesquisa" />
-				    </div>
-	    		</td>
-	    		<td
-                     valign="top">	
-				    <s:div
-                         styleClass="rightPanel">
-				    	<s:div
-                             rendered="#{consultaSolicitacaoHome.instance.inPesquisa}">
-							<div>	
+							 form="#{consultaSolicitacaoForm}"
+							 formTitle="Pesquisa" />
+				    
+					</div>
+	    		
+				</td>
+	    		<td valign="top">
+						
+				    <s:div styleClass="rightPanel">
+						
+				    	<s:div rendered="#{consultaSolicitacaoHome.instance.inPesquisa}">
+							
+							<div>
+									
 								<wi:datalist
-                                     bean="#{consultaSolicitacaoGrid}"
-                                     gridId="consultaSolicitacaoGrid"
-                                     title="#{messages['consultaSolicitacaoGrid.titulo']}"
-                                     datamodel="#{consultaSolicitacaoHome.resultList}"
-                                     useDatamodel="true"
-                                     searchBean="consultaSolicitacaoSearch"
-                                     toolBar="toolBarSelect"
-                                     linkDetalhe="/Processo/Consulta/list.xhtm"
-                                     headerToolBar="toolBar_pdf"
-                                     pesqHome="#{consultaSolicitacaoHome}"
-                                     subList="movimentacaoProcessoList" />
+									 bean="#{consultaSolicitacaoGrid}"
+									 gridId="consultaSolicitacaoGrid"
+									 title="#{messages['consultaSolicitacaoGrid.titulo']}"
+									 datamodel="#{consultaSolicitacaoHome.resultList}"
+									 useDatamodel="true"
+									 searchBean="consultaSolicitacaoSearch"
+									 toolBar="toolBarSelect"
+									 linkDetalhe="/Processo/Consulta/list.xhtm"
+									 headerToolBar="toolBar_pdf"
+									 pesqHome="#{consultaSolicitacaoHome}"
+									 subList="movimentacaoProcessoList" />
+							
 							</div>
+						
 						</s:div>
+					
 					</s:div>
-	    		</td>
-	    	</tr>
-	    </table>
+	    		
+				</td>
+	    	
+			</tr>
+	    
+		</table>
 	    
 		<ui:remove>
+			
 	    <s:div
-                 id="viewPanel"
-                 styleClass="rightPanel"
-                 style="width: 60%; right: 10px; float: right;  margin-top: 10px; !important">      
-	    	<s:div
-                     rendered="#{not empty consultaSolicitacaoHome.idPesquisa}">
+				 id="viewPanel"
+				 styleClass="rightPanel"
+				 style="width: 60%; right: 10px; float: right;  margin-top: 10px; !important">
+				      
+	    	<s:div rendered="#{not empty consultaSolicitacaoHome.idPesquisa}">
+					
 				<wi:view
-                         form="#{consultaSolicitacaoView}"
-                         title="#{messages['consultaSolicitacaoGrid.titulo']}"
-                         columns="3"
-                         buttons="none">
+						 form="#{consultaSolicitacaoView}"
+						 title="#{messages['consultaSolicitacaoGrid.titulo']}"
+						 columns="3"
+						 buttons="none">
 				</wi:view>
+			
+				</s:div>
+		
 			</s:div>
-		</s:div>
-		 </ui:remove>
+		 
+		</ui:remove>
 	    
+	
 	</ui:define>
+
 
 </ui:composition>

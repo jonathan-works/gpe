@@ -1,55 +1,38 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:wi="http://www.itx.com.br/jsf">
-
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	-->
-
-	<ui:composition>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 		
 		<ui:param
-             name="template"
-             value="/WEB-INF/xhtml/components/templates/view.xhtml" />
+		 name="template"
+		 value="/WEB-INF/xhtml/components/templates/view.xhtml" />
 		<ui:param
-             name="search"
-             value="#{empty props.searchBean ? searchBean :        expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
+		 name="search"
+		 value="#{empty props.searchBean ? searchBean :        expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
 	
-		<a:region
-             renderRegionOnly="true">
-			<ui:define
-                 name="label">#{label}</ui:define>
+		<a:region renderRegionOnly="true">
+		
+			<ui:define name="label">#{label}</ui:define>
 			<wi:inputText
-                 id="#{f.id}"
-                 style="width: 250px"
-                 styleClass="inputText"
-                 value="#{search[f.id]}">
+			 id="#{f.id}"
+			 style="width: 250px"
+			 styleClass="inputText"
+			 value="#{search[f.id]}">
+			
 				<wi:mask
-                     id="#{id}"
-                     mask="99999-999" />
-			</wi:inputText>
-		</a:region>
+				 id="#{id}"
+				 mask="99999-999" />
+			
+		</wi:inputText>
 		
-	</ui:composition>
+	</a:region>
+		
 	
-</jsp:root>
+</ui:composition>

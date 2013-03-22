@@ -1,95 +1,80 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	-->  
-
-	#{props.ativo}?Indica que vai ser mudada a classe se o registro for inativo
-	#{props.campoAtivo}?Indica o campo a ser avaliado (default = ativo)	
-        
-	<ui:composition>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
+	
 	
 		<ui:param
-             name="isAtivo"
-             value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
+		 name="isAtivo"
+		 value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
 		<ui:param
-             name="styleClass"
-             value="#{isAtivo ? '' : 'inativo'}" />
+		 name="styleClass"
+		 value="#{isAtivo ? '' : 'inativo'}" />
 	
 		<div
-             style="width: 100%;"
-             class="#{styleClass}">
+		 style="width: 100%;"
+		 class="#{styleClass}">
+		
 		
 		    <rich:dataTable
-                 id="documentosBinarios"
-                 value="#{processoHome.instance.getProcessoDocumentoList(true)}"
-                 var="var"
-                 style="width: 100%"
-                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
-                 onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
-                 rows="15">   
+			 id="documentosBinarios"
+			 value="#{processoHome.instance.getProcessoDocumentoList(true)}"
+			 var="var"
+			 style="width: 100%"
+			 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+			 onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+			 rows="15">
+			   
 
-		    	<rich:column
-                     style="width:10%; padding: 0">
-		    		<ui:include
-                         src="processoDocumentoBin.xhtml">
+		    	<rich:column style="width:10%; padding: 0">
+				
+		    		<ui:include src="processoDocumentoBin.xhtml">
+					
 		    			<ui:param
-                             name="bin"
-                             value="#{var.processoDocumentoBin}" />
+						 name="bin"
+						 value="#{var.processoDocumentoBin}" />
 		    			<ui:param
-                             name="header"
-                             value="#{var.processoDocumento}" />
-		    		</ui:include>
-		    	</rich:column>	    	
-	
-		    	<rich:column
-                     style="text-align: left">
-				    <h:outputText
-                         value="#{var.processoDocumento}" />
-		    	</rich:column>
+						 name="header"
+						 value="#{var.processoDocumento}" />
+		    		
+				</ui:include>
 		    	
-		    	<rich:column
-                     style="width:65px">
-				    <h:outputText
-                         value="#{var.processoDocumentoBin.dataInclusao}">
-				    		<s:convertDateTime
-                             pattern="dd/MM/yy" />
-				    </h:outputText>
-		    	</rich:column>
+			</rich:column>	    	
+	
+		    	<rich:column style="text-align: left">
+				
+				    <h:outputText value="#{var.processoDocumento}" />
+		    	
+			</rich:column>
+		    	
+		    	<rich:column style="width:65px">
+				
+				    <h:outputText value="#{var.processoDocumentoBin.dataInclusao}">
+					
+				    		<s:convertDateTime pattern="dd/MM/yy" />
+				    
+				</h:outputText>
+		    	
+			</rich:column>
 
-		    </rich:dataTable>	
+		    
+		</rich:dataTable>	
 		    
 			<rich:dataScroller
-                 maxPages="10"
-                 oncomplete="pageFocus()"
-                 stepControls="hide"
-                 id="docScrollerDocumentosBinarios"
-                 for="documentosBinarios"
-                 page="#{processoHandler.inicio}" />	    
+			 maxPages="10"
+			 oncomplete="pageFocus()"
+			 stepControls="hide"
+			 id="docScrollerDocumentosBinarios"
+			 for="documentosBinarios"
+			 page="#{processoHandler.inicio}" />	    
 	
-		</div>
 		
-	</ui:composition>
-	 
-</jsp:root>
+	</div>
+		
+	
+</ui:composition>

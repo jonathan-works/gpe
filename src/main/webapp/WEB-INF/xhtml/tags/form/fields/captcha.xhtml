@@ -20,24 +20,26 @@
 	
 		#{sessionContext.remove('org.jboss.seam.captcha.captcha')}
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 
 	<h:graphicImage
-         id="captchaImg"
-         value="/seam/resource/captcha?f=#{currentDate.time}" />		
+		 id="captchaImg"
+		 value="/seam/resource/captcha?f=#{currentDate.time}" />		
 	<wi:inputText
-         id="#{id}Captcha"
-         value="#{captcha.response}"
-         label="Informe o valor do cálculo:"
-         style="width:160px !important">
+		 id="#{id}Captcha"
+		 value="#{captcha.response}"
+		 label="Informe o valor do cálculo:"
+		 style="width:160px !important">
 	</wi:inputText>
+
 
 </ui:composition>

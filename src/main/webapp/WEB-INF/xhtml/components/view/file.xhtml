@@ -1,46 +1,28 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	--> 	
-
-	<ui:composition>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
 	
-        <s:decorate
-             template="/WEB-INF/xhtml/components/templates/view.xhtml">
-			<ui:define
-                 name="label">#{label}</ui:define>
+	
+        <s:decorate template="/WEB-INF/xhtml/components/templates/view.xhtml">
+		
+			<ui:define name="label">#{label}</ui:define>
 			<s:link
-                 target="_blank"
-                 style="margin-left: 20px"
-                 view="/download.xhtml">
-				<h:graphicImage
-                     value="#{a4jSkin.imgIconView}" />
-			</s:link>				
-        </s:decorate>
+			 target="_blank"
+			 style="margin-left: 20px"
+			 view="/download.xhtml">
+			
+				<h:graphicImage value="#{a4jSkin.imgIconView}" />
+			
+		</s:link>				
         
-	</ui:composition>
+	</s:decorate>
+        
 	
-</jsp:root>
+</ui:composition>

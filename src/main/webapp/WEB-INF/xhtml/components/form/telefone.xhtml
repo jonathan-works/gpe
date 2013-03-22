@@ -1,82 +1,66 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:wi="http://www.itx.com.br/jsf">
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	-->
-	
-	#{props.length}?Tamanho do campo (default = 255)
-	
-
-	<ui:composition>
 	
 		<s:decorate
-             id="#{id}Decoration"
-             template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-             rendered="#{empty rendered or rendered}">
+		 id="#{id}Decoration"
+		 template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+		 rendered="#{empty rendered or rendered}">
+		
 			
 			<ui:param
-                 name="ddd"
-                 value="#{empty props.ddd ? ddd : props.ddd}" />
+			 name="ddd"
+			 value="#{empty props.ddd ? ddd : props.ddd}" />
 			<ui:param
-                 name="numero"
-                 value="#{empty props.numero ? numero : props.numero}" />
+			 name="numero"
+			 value="#{empty props.numero ? numero : props.numero}" />
 		
-			<ui:define
-                 name="label">#{label}</ui:define>
+			<ui:define name="label">#{label}</ui:define>
 			<h:inputText
-                 id="#{id}Ddd"
-                 value="#{home.instance[props.ddd]}"
-                 styleClass="#{readonly ? 'readOnly' : '' } foneDDD"
-                 readonly="#{readonly}"
-                 disabled="#{disabled}"
-                 required="#{required}"
-                 style="#{style}; width: 30px !important"
-                 size="2"
-                 maxlength="2">
-				<ui:insert />
-				<wi:mask
-                     id="#{id}Ddd"
-                     mask="99" />
-			</h:inputText>
-			<h:inputText
-                 id="#{id}Numero"
-                 value="#{home.instance[props.numero]}"
-                 styleClass="#{readonly ? 'readOnly' : '' } foneNormal"
-                 readonly="#{readonly}"
-                 disabled="#{disabled}"
-                 required="#{required}"
-                 style="#{style} ; width: 100px !important; position: relative; left: 8px;"
-                 size="15"
-                 maxlength="15">
-				<ui:insert />
-				<wi:mask
-                     id="#{id}Numero"
-                     mask="9999-9999" />
-			</h:inputText>
+			 id="#{id}Ddd"
+			 value="#{home.instance[props.ddd]}"
+			 styleClass="#{readonly ? 'readOnly' : '' } foneDDD"
+			 readonly="#{readonly}"
+			 disabled="#{disabled}"
+			 required="#{required}"
+			 style="#{style}; width: 30px !important"
+			 size="2"
+			 maxlength="2">
 			
-		</s:decorate>
+				<ui:insert />
+				<wi:mask
+				 id="#{id}Ddd"
+				 mask="99" />
+			
+		</h:inputText>
+			<h:inputText
+			 id="#{id}Numero"
+			 value="#{home.instance[props.numero]}"
+			 styleClass="#{readonly ? 'readOnly' : '' } foneNormal"
+			 readonly="#{readonly}"
+			 disabled="#{disabled}"
+			 required="#{required}"
+			 style="#{style} ; width: 100px !important; position: relative; left: 8px;"
+			 size="15"
+			 maxlength="15">
+			
+				<ui:insert />
+				<wi:mask
+				 id="#{id}Numero"
+				 mask="9999-9999" />
+			
+		</h:inputText>
+			
 		
-	</ui:composition>
-</jsp:root>
+	</s:decorate>
+		
+	
+</ui:composition>

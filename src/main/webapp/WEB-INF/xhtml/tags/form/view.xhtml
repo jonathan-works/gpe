@@ -14,106 +14,118 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 
 	<ui:param
-         name="useCustomTitle"
-         value="#{empty useCustomTitle ? false : useCustomTitle}" />
+		 name="useCustomTitle"
+		 value="#{empty useCustomTitle ? false : useCustomTitle}" />
 	<ui:param
-         name="formId"
-         value="#{empty formId ? form.formId.concat('View') : formId}" />
+		 name="formId"
+		 value="#{empty formId ? form.formId.concat('View') : formId}" />
    	<ui:param
-         name="title"
-         value="#{empty title ? formId : title}" />
+		 name="title"
+		 value="#{empty title ? formId : title}" />
     <h:form
-         id="#{formId}View"
-         styleClass="edit">
+		 id="#{formId}View"
+		 styleClass="edit">
+		
    	
-		<c:if
-             test="#{not empty home}">
+		<c:if test="#{not empty home}">
 			#{form.setHome(home.homeName)}
 		</c:if>    	
 
        <rich:collapsiblePanel
-             switchType="client"
-             opened="#{empty opened ? true : opened}">
-       	<c:if
-                 test="#{useCustomTitle}">
-        	<f:facet
-                     name="header">
-        		<ui:insert
-                         name="customTitle" />
-        	</f:facet>
-       	</c:if>
-		<c:if
-                 test="#{not useCustomTitle}">
-			<f:facet
-                     name="header">#{title}</f:facet>
-       	</c:if>        	
+			 switchType="client"
+			 opened="#{empty opened ? true : opened}">
+			
+       	<c:if test="#{useCustomTitle}">
+				
+        	<f:facet name="header">
+					
+        		<ui:insert name="customTitle" />
+        	
+				</f:facet>
+       	
+			</c:if>
+		<c:if test="#{not useCustomTitle}">
+				
+			<f:facet name="header">#{title}</f:facet>
+       	
+			</c:if>        	
 		<ui:param
-                 name="home"
-                 value="#{form.home}" />
+				 name="home"
+				 value="#{form.home}" />
 		<ui:param
-                 name="instance"
-                 value="#{empty instance ? home.instance : instance}" />
+				 name="instance"
+				 value="#{empty instance ? home.instance : instance}" />
 		<ui:param
-                 name="columns"
-                 value="#{empty columns ? 1 : columns}" />
+				 name="columns"
+				 value="#{empty columns ? 1 : columns}" />
 		<h:panelGrid
-                 columns="#{columns}"
-                 width="100%"
-                 columnClasses="viewColumn">
+				 columns="#{columns}"
+				 width="100%"
+				 columnClasses="viewColumn">
+				
 			<wi:repeat
-                     value="#{form.fields}"
-                     var="f">
+					 value="#{form.fields}"
+					 var="f">
+					
 				<ui:param
-                         name="label"
-                         value="#{empty props.label ? f.label : props.label}" />
+						 name="label"
+						 value="#{empty props.label ? f.label : props.label}" />
 				<ui:param
-                         name="label"
-                         value="#{expressions.createValueExpression(label).value}" />
-				<a:include
-                         viewId="/WEB-INF/xhtml/components/view/#{f.type}.xhtml" />
-			</wi:repeat>
-	    </h:panelGrid>
-       </rich:collapsiblePanel>
+						 name="label"
+						 value="#{expressions.createValueExpression(label).value}" />
+				<a:include viewId="/WEB-INF/xhtml/components/view/#{f.type}.xhtml" />
+			
+				</wi:repeat>
+	    
+			</h:panelGrid>
+       
+		</rich:collapsiblePanel>
             
-    </h:form>
+    
+	</h:form>
 
 	<ui:param
-         name="buttons"
-         value="#{form.buttons.id}#{empty modalPanelId ? '' : '_modal'}" />
-	<ui:include
-         src="/WEB-INF/xhtml/components/view/buttons/#{buttons}.xhtml" />
+		 name="buttons"
+		 value="#{form.buttons.id}#{empty modalPanelId ? '' : '_modal'}" />
+	<ui:include src="/WEB-INF/xhtml/components/view/buttons/#{buttons}.xhtml" />
 	<s:button
-         styleClass="dr-tbpnl-tb-inact"
-         rendered="#{not empty home.goBackUrl and (home.tab == 'form')}"
-         value="Voltar"
-         view="#{home.goBackUrl}">
+		 styleClass="dr-tbpnl-tb-inact"
+		 rendered="#{not empty home.goBackUrl and (home.tab == 'form')}"
+		 value="Voltar"
+		 view="#{home.goBackUrl}">
+		
 		<f:param
-             name="id"
-             value="#{home.goBackId}" />
+			 name="id"
+			 value="#{home.goBackId}" />
 		<f:param
-             name="tab"
-             value="#{home.goBackTab}" />			
+			 name="tab"
+			 value="#{home.goBackTab}" />			
+	
 	</s:button>	
 	
 	<ui:param
-         name="isInView"
-         value="true" />
+		 name="isInView"
+		 value="true" />
 	<s:div
-         rendered="#{form.showReferences}"
-         style="margin-top: 5px">
+		 rendered="#{form.showReferences}"
+		 style="margin-top: 5px">
+		
 		<ui:insert />
+	
 	</s:div>
 	
+
 </ui:composition>

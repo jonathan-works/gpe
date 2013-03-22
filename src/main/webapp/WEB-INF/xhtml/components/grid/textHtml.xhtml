@@ -1,63 +1,48 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	--> 	
-
-	<ui:composition>
-		
-		<div
-             style="width: 100%; text-align: center">
-			<h:graphicImage
-                 rendered="#{!empty c.value}"
-                 url="#{a4jSkin.imgIconView}"
-                 style="cursor:pointer"
-                 onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
-			<rich:popupPanel
-                 id="mp_#{c.id}"
-                 height="600"
-                 width="800"
-                 rendered="#{!empty c.value}"
-                 resizeable="false"
-                 style="overflow: auto">
-				<f:facet
-                     name="header">
-					<h:outputText
-                         value="#{header}:" />
-				</f:facet>
-				<f:facet
-                     name="controls">
-	          		<span
-                         style="cursor:pointer; font-family: Verdana, Arial;                   padding-right: 22px;"
-                         onclick="Richfaces.hideModalPanel(mp)">X</span>
-				</f:facet>
-				<h:outputText
-                     value="#{jbpmUtil.valorProcessoDocumento(c.value)}"
-                     escape="false" />
-			</rich:popupPanel>
-		</div>
-		
-	</ui:composition>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
 	
-</jsp:root>
+		
+		<div style="width: 100%; text-align: center">
+		
+			<h:graphicImage
+			 rendered="#{!empty c.value}"
+			 url="#{a4jSkin.imgIconView}"
+			 style="cursor:pointer"
+			 onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
+			<rich:popupPanel
+			 id="mp_#{c.id}"
+			 height="600"
+			 width="800"
+			 rendered="#{!empty c.value}"
+			 resizeable="false"
+			 style="overflow: auto">
+			
+				<f:facet name="header">
+				
+					<h:outputText value="#{header}:" />
+				
+			</f:facet>
+				<f:facet name="controls">
+				
+	          		<span
+					 style="cursor:pointer; font-family: Verdana, Arial;                   padding-right: 22px;"
+					 onclick="Richfaces.hideModalPanel(mp)">X</span>
+				
+			</f:facet>
+				<h:outputText
+				 value="#{jbpmUtil.valorProcessoDocumento(c.value)}"
+				 escape="false" />
+			
+		</rich:popupPanel>
+		
+	</div>
+		
+	
+</ui:composition>

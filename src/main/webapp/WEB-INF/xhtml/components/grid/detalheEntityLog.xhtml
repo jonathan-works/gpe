@@ -1,41 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	--> 
-
-	#{props.ativo}?Indica que vai ser mudada a classe se o registro for inativo
-	#{props.campoAtivo}?Indica o campo a ser avaliado (default = ativo)	
-        
-	<ui:composition>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
+	
 	
 		<ui:param
-             name="isAtivo"
-             value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
+		 name="isAtivo"
+		 value="#{empty props.ativo or props.ativo == 'false' ? true : (empty props.campoAtivo ? row.ativo : expressions.createValueExpression('#{row.'.concat(props.campoAtivo).concat('}')).value)}" />
 		<ui:param
-             name="styleClass"
-             value="#{isAtivo ? '' : 'inativo'}" />
+		 name="styleClass"
+		 value="#{isAtivo ? '' : 'inativo'}" />
 	
 		<script>
 			function abrirPopUp(){
@@ -43,26 +22,27 @@
 			}
 		</script>
 		
-		<div
-             style="width: 100%; text-align: center">
+		<div style="width: 100%; text-align: center">
+		
 		
 			<s:link
-                 view="/Consulta/Log/detalheLog.seam"
-                 onclick="abrirPopUp();"
-                 target="comprovante">
-				<s:conversationPropagation
-                     type="none" />
+			 view="/Consulta/Log/detalheLog.seam"
+			 onclick="abrirPopUp();"
+			 target="comprovante">
+			
+				<s:conversationPropagation type="none" />
 				<f:param
-                     name="idPesquisa"
-                     value="#{row.idLog}" />
+				 name="idPesquisa"
+				 value="#{row.idLog}" />
 				<h:graphicImage
-                     title="Visualizar"
-                     url="#{a4jSkin.imgIconView}"
-                     style="cursor:pointer !important" />
-			</s:link>
+				 title="Visualizar"
+				 url="#{a4jSkin.imgIconView}"
+				 style="cursor:pointer !important" />
+			
+		</s:link>
 		
-		</div>
 		
-	</ui:composition>
- 
-</jsp:root>
+	</div>
+		
+	
+</ui:composition>

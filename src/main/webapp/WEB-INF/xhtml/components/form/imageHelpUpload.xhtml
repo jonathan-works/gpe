@@ -14,70 +14,82 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
+	
 
 	<h:outputScript
-         library="js"
-         name="imageUpload.js" />
+		 library="js"
+		 name="imageUpload.js" />
 	<s:div
-         id="uploadImagem"
-         style="float: left; padding-left:10px">
+		 id="uploadImagem"
+		 style="float: left; padding-left:10px">
+		
 		<rich:collapsiblePanel
-             switchType="ajax"
-             opened="false"
-             label="Álbum de imagens"
-             onclick="configureDragDrop()">
+			 switchType="ajax"
+			 opened="false"
+			 label="Álbum de imagens"
+			 onclick="configureDragDrop()">
+			
 	        <rich:fileUpload
-                 fileUploadListener="#{helpFileUpload.listener}"
-                 id="upload"
-                 ajaxSingle="true"
-                 onupload="uploadHandler(event, '#{helpFileUpload.imagesPath}')"
-                 onuploadcomplete="insert()"
-                 autoclear="true"
-                 maxFilesQuantity="10"
-                 addControlLabel="Nova imagem"
-                 clearAllControlLabel="Limpar todas"
-                 clearControlLabel="Limpar"
-                 stopEntryControlLabel="Parar"
-                 uploadControlLabel="Processar"
-                 listWidth="250px"
-                 listHeight="0px"
-                 immediateUpload="true"
-                 noDuplicate="true"
-                 status=":status"
-                 allowFlash="true"
-                 reRender="uploadImagem"
-                 acceptedTypes="jpg, gif, png">
+				 fileUploadListener="#{helpFileUpload.listener}"
+				 id="upload"
+				 ajaxSingle="true"
+				 onupload="uploadHandler(event, '#{helpFileUpload.imagesPath}')"
+				 onuploadcomplete="insert()"
+				 autoclear="true"
+				 maxFilesQuantity="10"
+				 addControlLabel="Nova imagem"
+				 clearAllControlLabel="Limpar todas"
+				 clearControlLabel="Limpar"
+				 stopEntryControlLabel="Parar"
+				 uploadControlLabel="Processar"
+				 listWidth="250px"
+				 listHeight="0px"
+				 immediateUpload="true"
+				 noDuplicate="true"
+				 status=":status"
+				 allowFlash="true"
+				 reRender="uploadImagem"
+				 acceptedTypes="jpg, gif, png">
             </rich:fileUpload>
             <h:form>
+				
 	           	<rich:dataGrid
-                     style="margin-left: 1px; width: 251px;"
-                     value="#{helpFileUpload.images}"
-                     elements="20"
-                     columns="4"
-                     var="img">
-	            	<s:div
-                         style="text-align:center">
+					 style="margin-left: 1px; width: 251px;"
+					 value="#{helpFileUpload.images}"
+					 elements="20"
+					 columns="4"
+					 var="img">
+					
+	            	<s:div style="text-align:center">
+						
 		            	<img
-                             src="#{img}"
-                             style="max-width:50px;"
-                             title="Arraste para o documento" />
-	            	</s:div>
-		           	<f:facet
-                         name="footer">
+							 src="#{img}"
+							 style="max-width:50px;"
+							 title="Arraste para o documento" />
+	            	
+					</s:div>
+		           	<f:facet name="footer">
+						
 		                <rich:dataScroller />
-		            </f:facet>
-	           	</rich:dataGrid> 
-            </h:form>
+		            
+					</f:facet>
+	           	
+				</rich:dataGrid> 
+            
+			</h:form>
+		
 		</rich:collapsiblePanel> 
+	
 	</s:div>
 	
+
 </ui:composition>

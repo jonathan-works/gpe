@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- $Id: valorMonetario.xhtml 11094 2010-08-24 14:11:45Z danielsilva $ --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -27,18 +28,20 @@
 	-->
 	
 	<h:outputScript
-         library="js"
-         name="jquery.maskMoney.js" />
+		 library="js"
+		 name="jquery.maskMoney.js" />
 	<wi:outputText
-         id="valor#{id}"
-         value="#{f.value}"
-         showLock="false">
-		<f:converter
-             converterId="monetarioConverter" />
+		 id="valor#{id}"
+		 value="#{f.value}"
+		 showLock="false">
+		
+		<f:converter converterId="monetarioConverter" />
 		<rich:jQuery
-             selector="#valor#{id}"
-             timing="domready"
-             query="maskMoney()" />
+			 selector="#valor#{id}"
+			 timing="domready"
+			 query="maskMoney()" />
+	
 	</wi:outputText>
 		
+
 </ui:composition>

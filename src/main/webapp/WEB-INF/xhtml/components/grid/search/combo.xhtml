@@ -1,65 +1,49 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:wi="http://www.itx.com.br/jsf">
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	--> 
-	
-	<ui:composition>
 		
 		<s:decorate
-             id="#{f.id}Decoration"
-             template="/WEB-INF/xhtml/components/templates/view.xhtml">
+		 id="#{f.id}Decoration"
+		 template="/WEB-INF/xhtml/components/templates/view.xhtml">
+		
 
 			<ui:param
-                 name="props"
-                 value="#{f.properties}" />
+			 name="props"
+			 value="#{f.properties}" />
 			<ui:param
-                 name="search"
-                 value="#{empty props.searchBean ? searchBean :     expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
+			 name="search"
+			 value="#{empty props.searchBean ? searchBean :     expressions.createValueExpression('#{'.concat(props.searchBean).concat('}')).value}" />
 
 			<ui:param
-                 name="optionExpression"
-                 value="#{props.optionExpression}" />
+			 name="optionExpression"
+			 value="#{props.optionExpression}" />
 			
-			<ui:define
-                 name="label">#{label}</ui:define>			
+			<ui:define name="label">#{label}</ui:define>			
 			<h:selectOneMenu
-                 id="#{f.id}"
-                 value="#{search[f.id]}"
-                 style="width: 250px"
-                 disabled="#{props.disabled}">
+			 id="#{f.id}"
+			 value="#{search[f.id]}"
+			 style="width: 250px"
+			 disabled="#{props.disabled}">
+			
 				<s:convertEntity />
 				<s:selectItems
-                     value="#{empty items ? util.eval(props.items) : items}"
-                     var="v"
-                     label="#{empty optionExpression ? v : util.getSelectExpressionSelectItem(optionExpression, v)}"
-                     noSelectionLabel="[Todos]" />
-			</h:selectOneMenu>
+				 value="#{empty items ? util.eval(props.items) : items}"
+				 var="v"
+				 label="#{empty optionExpression ? v : util.getSelectExpressionSelectItem(optionExpression, v)}"
+				 noSelectionLabel="[Todos]" />
 			
-		</s:decorate>
+		</h:selectOneMenu>
+			
+		
+	</s:decorate>
 
-	</ui:composition>
 	
-</jsp:root>
+</ui:composition>

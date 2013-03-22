@@ -1,75 +1,62 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	--> 
-        
-    #{canEdit}?Condição de segurança do wiacs que indica se o usuario possue permissão para editar. A depender da permissão certos elementos irão ser exibidos ou não 
-        
-	<ui:composition>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
+	
 	
 		<h:form>
-			<div
-                 style="width: 35px">
-				<a:region
-                     renderRegionOnly="false">
+		
+			<div style="width: 35px">
+			
+				<a:region renderRegionOnly="false">
+				
 					<a:commandLink
-                         status=":status"
-                         reRender=":pageBody"
-                         id="#{gridId}Edit">
+					 status=":status"
+					 reRender=":pageBody"
+					 id="#{gridId}Edit">
+					
 						<h:graphicImage
-                             url="#{a4jSkin.imgIconView}"
-                             title="Selecionar" />
+						 url="#{a4jSkin.imgIconView}"
+						 title="Selecionar" />
 						<f:param
-                             name="id"
-                             value="#{row[bean.key]}" />
+						 name="id"
+						 value="#{row[bean.key]}" />
 						<f:param
-                             name="tab"
-                             value="form" />
-					</a:commandLink>
-				</a:region>
+						 name="tab"
+						 value="form" />
+					
+				</a:commandLink>
+				
+			</a:region>
 				<a:commandLink
-                     action="#{home.remove(row)}"
-                     rendered="#{canEdit}"
-                     limitToList="true"
-                     status=":status"
-                     reRender="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove}"
-                     onclick="if(!confirm('Confirma?')) return false;">
+				 action="#{home.remove(row)}"
+				 rendered="#{canEdit}"
+				 limitToList="true"
+				 status=":status"
+				 reRender="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove}"
+				 onclick="if(!confirm('Confirma?')) return false;">
+				
 					<h:graphicImage
-                         url="/img/remove.png"
-                         title="Remover registro"
-                         style="cursor:pointer" />
+					 url="/img/remove.png"
+					 title="Remover registro"
+					 style="cursor:pointer" />
 					<f:param
-                         name="firstResult"
-                         value="#{bean.firstResult}" />
+					 name="firstResult"
+					 value="#{bean.firstResult}" />
 					<f:param
-                         name="page"
-                         value="#{bean.page}" />
-				</a:commandLink>	
-			</div>
-		</h:form>
+					 name="page"
+					 value="#{bean.page}" />
+				
+			</a:commandLink>	
+			
+		</div>
+		
+	</h:form>
 
-	</ui:composition>
- 
-</jsp:root>
+	
+</ui:composition>

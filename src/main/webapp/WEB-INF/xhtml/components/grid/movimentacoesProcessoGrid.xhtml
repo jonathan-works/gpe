@@ -14,110 +14,122 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 
 	<rich:dataTable
-         value="#{processoHandler.taskInstanceList}"
-         rowKeyVar="key"
-         var="task">
-		<rich:column
-             styleClass="defaultCell">
-			<f:facet
-                 name="header">Tarefa</f:facet>
-			<h:outputText
-                 value="#{task.name}" />
+		 value="#{processoHandler.taskInstanceList}"
+		 rowKeyVar="key"
+		 var="task">
+		
+		<rich:column styleClass="defaultCell">
+			
+			<f:facet name="header">Tarefa</f:facet>
+			<h:outputText value="#{task.name}" />
+		
 		</rich:column>
 		
-		<rich:column
-             styleClass="defaultCell">
-			<f:facet
-                 name="header">Localização / Usuário</f:facet>
-			<div
-                 style="width:50%; float:left">
+		<rich:column styleClass="defaultCell">
+			
+			<f:facet name="header">Localização / Usuário</f:facet>
+			<div style="width:50%; float:left">
+				
 				<h:graphicImage
-                     url="/img/localizacao.gif"
-                     rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
-				<h:outputText
-                     value="#{jbpmUtil.getLocalizacao(task)}" />
+					 url="/img/localizacao.gif"
+					 rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
+				<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
+			
 			</div>
 			<s:div
-                 id="usuarioTarefaDiv"
-                 style="width:50%; float:left">
+				 id="usuarioTarefaDiv"
+				 style="width:50%; float:left">
+				
 				<h:graphicImage
-                     url="/img/usuario.gif"
-                     rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
-				<h:outputText
-                     value="#{userHandler.getUsuarioByTarefa(task)} " />
-				<h:form
-                     id="unlockForm">
+					 url="/img/usuario.gif"
+					 rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
+				<h:outputText value="#{userHandler.getUsuarioByTarefa(task)} " />
+				<h:form id="unlockForm">
+					
 					<a:commandLink
-                         action="#{taskInstanceHome.removeUsuario()}"
-                         reRender="usuarioTarefaDiv"
-                         rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
+						 action="#{taskInstanceHome.removeUsuario()}"
+						 reRender="usuarioTarefaDiv"
+						 rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
+						
 						<h:graphicImage
-                             url="/img/unlocked.gif"
-                             title="Liberar Tarefa">
+							 url="/img/unlocked.gif"
+							 title="Liberar Tarefa">
 										
 						</h:graphicImage>
+					
 					</a:commandLink>
+				
 				</h:form>
+			
 			</s:div>
+		
 		</rich:column>
 		
 		<rich:column
-             style="text-align: center"
-             styleClass="defaultCell">
-			<f:facet
-                 name="header">Início</f:facet>
-			<h:outputText
-                 value="#{task.start}">
-				<s:convertDateTime
-                     pattern="dd/MM/yy kk:mm:ss" />
+			 style="text-align: center"
+			 styleClass="defaultCell">
+			
+			<f:facet name="header">Início</f:facet>
+			<h:outputText value="#{task.start}">
+				
+				<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+			
 			</h:outputText>
+		
 		</rich:column>
 		
 		<rich:column
-             style="text-align: center"
-             styleClass="defaultCell">
-			<f:facet
-                 name="header">Término</f:facet>
-			<h:outputText
-                 value="#{task.end}">
-				<s:convertDateTime
-                     pattern="dd/MM/yy kk:mm:ss" />
+			 style="text-align: center"
+			 styleClass="defaultCell">
+			
+			<f:facet name="header">Término</f:facet>
+			<h:outputText value="#{task.end}">
+				
+				<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+			
 			</h:outputText>
+		
 		</rich:column>
 		
 		<rich:column
-             style="text-align: center"
-             styleClass="defaultCell">
-			<f:facet
-                 name="header">Dados</f:facet>
+			 style="text-align: center"
+			 styleClass="defaultCell">
+			
+			<f:facet name="header">Dados</f:facet>
 			<s:link
-                 target="_blank"
-                 rendered="#{processoHandler.taskDocumentList.contains(task)}"
-                 view="/Processo/Consulta/paginator.seam">
+				 target="_blank"
+				 rendered="#{processoHandler.taskDocumentList.contains(task)}"
+				 view="/Processo/Consulta/paginator.seam">
+				
 				<h:graphicImage
-                     url="#{a4jSkin.imgIconView}"
-                     style="cursor:pointer" />
+					 url="#{a4jSkin.imgIconView}"
+					 style="cursor:pointer" />
 				<h:graphicImage
-                     rendered="#{!empty processoHandler.getAnexos(task)}"
-                     url="/img/anexo.gif"
-                     style="cursor:pointer" />
+					 rendered="#{!empty processoHandler.getAnexos(task)}"
+					 url="/img/anexo.gif"
+					 style="cursor:pointer" />
 				<f:param
-                     name="inicio"
-                     value="#{key + 1}" />
+					 name="inicio"
+					 value="#{key + 1}" />
+			
 			</s:link>
+		
 		</rich:column>
+	
 	</rich:dataTable>
 	
+
 </ui:composition>

@@ -14,125 +14,138 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 
 	<ui:param
-         name="titlePesq"
-         value="#{empty titlePesq ? 'Pesquisar '.concat(title) : titlePesq}" />
+		 name="titlePesq"
+		 value="#{empty titlePesq ? 'Pesquisar '.concat(title) : titlePesq}" />
 	<ui:param
-         name="showLogicOperator"
-         value="#{empty showLogicOperator ? false : showLogicOperator}" />
+		 name="showLogicOperator"
+		 value="#{empty showLogicOperator ? false : showLogicOperator}" />
 	<ui:param
-         name="showButtonLimpar"
-         value="#{empty showButtonLimpar ? true : showButtonLimpar}" />
+		 name="showButtonLimpar"
+		 value="#{empty showButtonLimpar ? true : showButtonLimpar}" />
 	
-	<s:div
-         id="#{gridId}Search">
-		<s:fragment
-             rendered="#{!empty bean.searchFields or isM2M}">
+	<s:div id="#{gridId}Search">
+		
+		<s:fragment rendered="#{!empty bean.searchFields or isM2M}">
+			
 		<rich:collapsiblePanel
-                 id="#{gridId}SearchFields"
-                 switchType="client"
-                 opened="#{!isM2M or panelOpened}">
-			<f:facet
-                     name="header"> #{titlePesq}</f:facet>
-			<f:facet
-                     name="openMarker">
-				<h:graphicImage
-                         value="/img/search.gif" />
-			</f:facet>
-			<f:facet
-                     name="closeMarker"> </f:facet>
-			<s:div
-                     style="overflow:visible;">
+				 id="#{gridId}SearchFields"
+				 switchType="client"
+				 opened="#{!isM2M or panelOpened}">
+				
+			<f:facet name="header"> #{titlePesq}</f:facet>
+			<f:facet name="openMarker">
+					
+				<h:graphicImage value="/img/search.gif" />
+			
+				</f:facet>
+			<f:facet name="closeMarker"> </f:facet>
+			<s:div style="overflow:visible;">
+					
 			<h:form
-                         id="#{gridId}SearchForm"
-                         styleClass="edit">
+						 id="#{gridId}SearchForm"
+						 styleClass="edit">
+						
 			<ui:param
-                             name="searchOpen"
-                             value="#{empty searchOpen ? true : searchOpen}" />
+							 name="searchOpen"
+							 value="#{empty searchOpen ? true : searchOpen}" />
 				<h:inputHidden
-                             id="page"
-                             value="#{bean.page}" />
+							 id="page"
+							 value="#{bean.page}" />
 				<h:inputHidden
-                             id="searching"
-                             value="true" />
+							 id="searching"
+							 value="true" />
 				<wi:repeat
-                             value="#{bean.searchFields}"
-                             var="f">
+							 value="#{bean.searchFields}"
+							 var="f">
+							
 					<ui:param
-                                 name="props"
-                                 value="#{f.properties}" />
+								 name="props"
+								 value="#{f.properties}" />
 					<ui:param
-                                 name="label"
-                                 value="#{empty props.label ? f.label : props.label}" />
+								 name="label"
+								 value="#{empty props.label ? f.label : props.label}" />
 					<ui:param
-                                 name="label"
-                                 value="#{expressions.createValueExpression(label).value}" />
-					<c:if
-                                 test="#{empty f.type}">
-						<a:include
-                                     viewId="/WEB-INF/xhtml/components/grid/search/default.xhtml" />
-		            </c:if>
-					<c:if
-                                 test="#{!empty f.type}">
-						<a:include
-                                     viewId="/WEB-INF/xhtml/components/grid/search/#{f.type}.xhtml" />
-					</c:if> 
-				</wi:repeat>
+								 name="label"
+								 value="#{expressions.createValueExpression(label).value}" />
+					<c:if test="#{empty f.type}">
+								
+						<a:include viewId="/WEB-INF/xhtml/components/grid/search/default.xhtml" />
+		            
+							</c:if>
+					<c:if test="#{!empty f.type}">
+								
+						<a:include viewId="/WEB-INF/xhtml/components/grid/search/#{f.type}.xhtml" />
+					
+							</c:if> 
+				
+						</wi:repeat>
 				
 				<wi:selectOneMenu
-                             id="#{gridId}LogicOperator"
-                             label="Mostrar resultado que atenda a:"
-                             value="#{bean.restrictionLogicOperator}"
-                             rendered="#{showLogicOperator}"
-                             showLock="false"
-                             optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
-                             items="#{'and,or'.split(',')}" />
+							 id="#{gridId}LogicOperator"
+							 label="Mostrar resultado que atenda a:"
+							 value="#{bean.restrictionLogicOperator}"
+							 rendered="#{showLogicOperator}"
+							 showLock="false"
+							 optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
+							 items="#{'and,or'.split(',')}" />
 				<s:div
-                             styleClass="actionButtons"
-                             style="clear: both; width:250px"
-                             rendered="#{empty props.showButton ? true : props.showButton}">
+							 styleClass="actionButtons"
+							 style="clear: both; width:250px"
+							 rendered="#{empty props.showButton ? true : props.showButton}">
+							
 		            <a:commandButton
-                                 id="search"
-                                 action="#{util.invokeMethod(actionButtonPesquisar)}"
-                                 rendered="#{!empty bean.searchFields}"
-                                 styleClass="dr-tbpnl-tb-inact"
-                                 value="Pesquisar"
-                                 reRender="#{gridId}"
-                                 onclick="this.form['#{rich:clientId(gridId)}SearchForm:page'].value='1';showLoading();"
-                                 oncomplete="hideLoading();" />
-					<c:if
-                                 test="#{showButtonLimpar}">
+								 id="search"
+								 action="#{util.invokeMethod(actionButtonPesquisar)}"
+								 rendered="#{!empty bean.searchFields}"
+								 styleClass="dr-tbpnl-tb-inact"
+								 value="Pesquisar"
+								 reRender="#{gridId}"
+								 onclick="this.form['#{rich:clientId(gridId)}SearchForm:page'].value='1';showLoading();"
+								 oncomplete="hideLoading();" />
+					<c:if test="#{showButtonLimpar}">
+								
 						<a:commandButton
-                                     onclick="j$('##{rich:clientId(gridId)}SearchForm').clearForm();showLoading();"
-                                     oncomplete="hideLoading();"
-                                     action="#{util.invokeMethod(actionButtonLimpar)}"
-                                     reRender="#{wi:get(reRenderButtonLimpar, gridId.concat('Search'))}"
-                                     id="clearButton"
-                                     value="Limpar"
-                                     style="min-width:65px; width:65px;"
-                                     styleClass="buttons dr-tbpnl-tb-inact" />
-					</c:if>
-				</s:div>
-			</h:form>
-			</s:div>
-			<c:if
-                     test="#{showGrid and isM2M}">
-				<wi:datalist />
-			</c:if>
+									 onclick="j$('##{rich:clientId(gridId)}SearchForm').clearForm();showLoading();"
+									 oncomplete="hideLoading();"
+									 action="#{util.invokeMethod(actionButtonLimpar)}"
+									 reRender="#{wi:get(reRenderButtonLimpar, gridId.concat('Search'))}"
+									 id="clearButton"
+									 value="Limpar"
+									 style="min-width:65px; width:65px;"
+									 styleClass="buttons dr-tbpnl-tb-inact" />
+					
+							</c:if>
+				
+						</s:div>
 			
-		</rich:collapsiblePanel>
+					</h:form>
+			
+				</s:div>
+			<c:if test="#{showGrid and isM2M}">
+					
+				<wi:datalist />
+			
+				</c:if>
+			
+		
+			</rich:collapsiblePanel>
+		
 		</s:fragment>
+	
 	</s:div>
+
 </ui:composition>

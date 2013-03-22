@@ -1,70 +1,47 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<jsp:root
-     xmlns:jsp="http://java.sun.com/JSP/Page"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:wi="http://www.itx.com.br/jsf">
-
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	-->	
-	<!-- 
-		O suggest é alimentado apenas com os municipios do estado selecionado na
-		combo. Este filtro é feito no suggestBean, no caso municipioSuggest.
-		No municipioSuggest ele o home do cep através do metodo getHome e então,
-		pega o estado selecionado através do metodo	getEstado, contido no 
-		home de Cep.
-	 -->
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<ui:composition>
 
 		<ui:param
-             name="handler"
-             value="#{empty props.handler ? null : util.eval(props.handler)}" />
+		 name="handler"
+		 value="#{empty props.handler ? null : util.eval(props.handler)}" />
 
 		<wi:selectOneMenuEntity
-             id="#{f.id}estadoCombo"
-             label="UF Nascimento"
-             value="#{home.estado}"
-             items="#{empty items ? util.eval(props.items) : items}"
-             optionExpression="{estado}"
-             required="#{required}"
-             noSelectionLabel="Selecione...">
+		 id="#{f.id}estadoCombo"
+		 label="UF Nascimento"
+		 value="#{home.estado}"
+		 items="#{empty items ? util.eval(props.items) : items}"
+		 optionExpression="{estado}"
+		 required="#{required}"
+		 noSelectionLabel="Selecione...">
+		
 				<a:ajax
-                 event="change"
-                 status=":status"
-                 render="#{f.id}municipioSuggestDiv"
-                 execute="@this" />
-			</wi:selectOneMenuEntity>
+			 event="change"
+			 status=":status"
+			 render="#{f.id}municipioSuggestDiv"
+			 execute="@this" />
 			
-			<s:div
-             id="#{f.id}municipioSuggestDiv">
+	</wi:selectOneMenuEntity>
+			
+			<s:div id="#{f.id}municipioSuggestDiv">
+		
 				<wi:suggest
-                 id="#{f.id}municipioSuggest"
-                 bean="#{handler}"
-                 disabled="#{empty home.estado}"
-                 required="#{required}"
-                 label="Naturalidade">
+			 id="#{f.id}municipioSuggest"
+			 bean="#{handler}"
+			 disabled="#{empty home.estado}"
+			 required="#{required}"
+			 label="Naturalidade">
 				</wi:suggest>		
-			</s:div>
 			
-	</ui:composition>
+	</s:div>
+			
 	
-</jsp:root>
+</ui:composition>
