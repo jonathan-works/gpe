@@ -259,10 +259,9 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	//Método para Inserir o documento do fluxo
 	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
-		UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
 		if (assinado){
 			try {
-				verificaCertificadoUsuarioLogado(certChain, usuarioLogado);
+				verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
 			} catch (Exception e1) {
 				avisarErroAoVerificarCertificado(e1);
 				return ERRO_AO_VERIFICAR_CERTIFICADO;
