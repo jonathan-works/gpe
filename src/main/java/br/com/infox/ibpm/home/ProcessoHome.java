@@ -274,12 +274,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		if(value == null) {
 			value = new String();
 		}
-		String modeloDocumento = String.valueOf(value);
-		if (Strings.isEmpty(modeloDocumento)){
-			modeloDocumento = " ";
-		}
 		
-		ProcessoDocumentoBin bin = configurarProcessoDocumentoBin(value, modeloDocumento);
+		ProcessoDocumentoBin bin = configurarProcessoDocumentoBin(value);
 		ProcessoDocumento doc = configurarProcessoDocumento(label, bin);
 
 		//TODO verificar se a regra abaixo será mantida, se será criado um parametro ou se o componente textEditor será extinto.
@@ -310,6 +306,14 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return doc.getIdProcessoDocumento();
 	}
 
+	private String getDescricaoModeloDocumentoByValue(Object value) {
+		String modeloDocumento = String.valueOf(value);
+		if (Strings.isEmpty(modeloDocumento)){
+			modeloDocumento = " ";
+		}
+		return modeloDocumento;
+	}
+
 	private void avisarErroAoVerificarCertificado(Exception e1) {
 		FacesMessages.instance().add(Severity.ERROR, 
 				"Erro ao verificar certificado: " + e1.getMessage());
@@ -333,10 +337,9 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 
 	//TODO método candidato à migração para o Manager apropriado
-	private ProcessoDocumentoBin configurarProcessoDocumentoBin(Object value,
-			String modeloDocumento) {
+	private ProcessoDocumentoBin configurarProcessoDocumentoBin(Object value) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
-		bin.setModeloDocumento(modeloDocumento);
+		bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
 		bin.setDataInclusao(new Date());
 		bin.setMd5Documento(Crypto.encodeMD5(String.valueOf(value)));
 		bin.setUsuario(Authenticator.getUsuarioLogado());
