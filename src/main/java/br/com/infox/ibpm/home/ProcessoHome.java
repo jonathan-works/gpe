@@ -185,11 +185,15 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		
 		if (!validacaoCertificadoBemSucedida(assinado)) 
 			return;
-		
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
 		ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
-		
-		String modeloDocumentoFluxo = processoDocumentoBin.getModeloDocumento();
+		String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
+		atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento);
+		inicializarTipoProcessoDocumento();
+		gravarAlteracoes(processoDocumento, processoDocumentoBin);
+	}
+
+	private String getDescricaoModeloDocumentoFluxoByValue(Object value, String modeloDocumentoFluxo) {
 		if(value == null) {
 			value = modeloDocumentoFluxo;
 			if(value == null) {
@@ -197,17 +201,16 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			}
 		}
 		String modeloDocumento = String.valueOf(value);
-		
 		if (!Strings.isEmpty(modeloDocumentoFluxo) && modeloDocumento != modeloDocumentoFluxo){
 			modeloDocumento = modeloDocumentoFluxo;
 		}
-		
 		if (Strings.isEmpty(modeloDocumento)){
 			modeloDocumento = " ";
 		}
-		
-		atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento);
-		inicializarTipoProcessoDocumento();
+		return modeloDocumento;
+	}
+
+	private void gravarAlteracoes(ProcessoDocumento processoDocumento, ProcessoDocumentoBin processoDocumentoBin) {
 		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
 		getEntityManager().merge(processoDocumento);
 		setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
