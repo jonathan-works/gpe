@@ -59,9 +59,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
-
-	public static final String EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO = "atualizarProcessoDocumentoFluxo";
-	public static final String AFTER_UPDATE_PD_FLUXO_EVENT = "afterUpdatePdFluxoEvent";
+	
 	private static final Integer ERRO_AO_VERIFICAR_CERTIFICADO = 0;
 		
 	@In private ProcessoService processoService;
@@ -190,7 +188,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			}
 		}
 		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
-		Events.instance().raiseEvent(AFTER_UPDATE_PD_FLUXO_EVENT, idProcessoDocumento);
 		return result;
 	}
 	
