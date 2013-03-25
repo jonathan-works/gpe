@@ -195,15 +195,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	//Método para Atualizar o documento do fluxo
-	public void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado){
-		if (assinado){
-			try {
-				verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
-			} catch (Exception e1) {
-				avisarErroAoVerificarCertificado(e1);
-				return;
-			}
-		}
+	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado){
+		
+		if (!validacaoCertificadoBemSucedida(assinado)) 
+			return;
+		
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
 		ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
 		String modeloDocumentoFluxo = processoDocumentoBin.getModeloDocumento();
@@ -256,23 +252,26 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	//Método para Inserir o documento do fluxo
 	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
 		
+		if (!validacaoCertificadoBemSucedida(assinado)) 
+			return ERRO_AO_VERIFICAR_CERTIFICADO;
+		
+		value = getAlteracaoModeloDocumento(value);
+		ProcessoDocumento doc = createProcessoDocumento(label, createProcessoDocumentoBin(value));
+		getEntityManager().flush();
+        setIdProcessoDocumento(doc.getIdProcessoDocumento());
+		return doc.getIdProcessoDocumento();
+	}
+	
+	private boolean validacaoCertificadoBemSucedida(boolean assinado){
 		if (assinado){
 			try {
 				verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
 			} catch (Exception e1) {
 				avisarErroAoVerificarCertificado(e1);
-				return ERRO_AO_VERIFICAR_CERTIFICADO;
+				return false;
 			}
 		}
-		value = getAlteracaoModeloDocumento(value);
-		
-		ProcessoDocumento doc = createProcessoDocumento(label, createProcessoDocumentoBin(value));
-		
-			getEntityManager().flush();
-            setIdProcessoDocumento(doc.getIdProcessoDocumento());
-		
-		
-		return doc.getIdProcessoDocumento();
+		return true;
 	}
 
 	/**
@@ -301,8 +300,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 
 	//TODO método candidato à migração para o Manager apropriado
-	private ProcessoDocumento createProcessoDocumento(String label,
-			ProcessoDocumentoBin bin) {
+	private ProcessoDocumento createProcessoDocumento(String label, ProcessoDocumentoBin bin) {
 		ProcessoDocumento doc = new ProcessoDocumento();
 		doc.setProcessoDocumentoBin(bin);
 		doc.setAtivo(Boolean.TRUE);
