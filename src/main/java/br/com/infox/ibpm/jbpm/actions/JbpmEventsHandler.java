@@ -3,8 +3,6 @@ package br.com.infox.ibpm.jbpm.actions;
 import java.io.Serializable;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.TransactionRequiredException;
 
@@ -44,69 +42,92 @@ public class JbpmEventsHandler implements Serializable {
 	public static final String NAME = "jbpmEventsHandler";
 	
 	@Observer(Event.EVENTTYPE_TASK_END)
-	public void removerProcessoLocalizacao(ExecutionContext context) {
-		try {
-			Long taskId = context.getTask().getId();
-			Long processId = context.getProcessInstance().getId();
-			StringBuilder sb = new StringBuilder();
-			sb.append("delete from ProcessoLocalizacaoIbpm o where ");
-			sb.append("o.idProcessInstanceJbpm = :processId ");
-			sb.append("and o.idTaskJbpm = :taskId");
-			EntityUtil.getEntityManager().createQuery(sb.toString())
-				.setParameter("processId", processId)
-				.setParameter("taskId", taskId)
-				.executeUpdate();
-		} catch (Exception ex) {
-			String action = "remover o processo da localizacao: ";
-			LOG.warn(action, ex);
-			throw new AplicationException(AplicationException.
-					createMessage(action+ex.getLocalizedMessage(), 
-								  "removerProcessoLocalizacao()", 
-								  "JbpmEventsHandler", 
-								  "BPM"));
-		}
-	}
+    public void removerProcessoLocalizacao(ExecutionContext context) {
+        Long taskId = context.getTask().getId();
+        Long processId = context.getProcessInstance().getId();
+        StringBuilder sb = new StringBuilder();
+        sb.append("delete from ProcessoLocalizacaoIbpm o where ");
+        sb.append("o.idProcessInstanceJbpm = :processId ");
+        sb.append("and o.idTaskJbpm = :taskId");
+        try {
+            getEntityManager().createQuery(sb.toString())
+                    .setParameter("processId", processId)
+                    .setParameter("taskId", taskId).executeUpdate();
+        } catch (IllegalStateException e) {
+            String action = "Remover o processo da localizacao: ";
+            LOG.warn(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(),
+                    "removerProcessoLocalizacao()", "JbpmEventsHandler", "BPM"));
+        } catch (IllegalArgumentException e) {
+            String action = "Remover o processo da localizacao: ";
+            LOG.warn(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(),
+                    "removerProcessoLocalizacao()", "JbpmEventsHandler", "BPM"));
+        } catch (TransactionRequiredException e) {
+            String action = "Remover o processo da localizacao: ";
+            LOG.warn(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(),
+                    "removerProcessoLocalizacao()", "JbpmEventsHandler", "BPM"));
+        }
+    }
 
 	@Observer(Event.EVENTTYPE_TASK_END)
 	@End(beforeRedirect=true)
-	public void refreshPainel(ExecutionContext context) {
-		try {
-			context.getTaskInstance().setActorId(null);
-			String q = "update public.tb_processo set nm_actor_id = null where id_processo = :id";
-			EntityUtil.getEntityManager().createNativeQuery(q)
-					  .setParameter("id", JbpmUtil.getProcesso().getIdProcesso())
-					  .executeUpdate();
-		} catch (Exception ex) {
-			String action = "limpar as variaveis do painel para atualização: ";
-			LOG.warn(action, ex);
-			throw new AplicationException(AplicationException.
-					createMessage(action+ex.getLocalizedMessage(), 
-								  "refreshPainel()", 
-								  "JbpmEventsHandler", 
-								  "BPM"));
-		}
-	}
+    public void refreshPainel(ExecutionContext context) {
+        context.getTaskInstance().setActorId(null);
+        String q = "update public.tb_processo set nm_actor_id = null where id_processo = :id";
+        try {
+            getEntityManager().createNativeQuery(q)
+                    .setParameter("id", JbpmUtil.getProcesso().getIdProcesso())
+                    .executeUpdate();
+        } catch (IllegalStateException e) {
+            String action = "Limpar as variáveis do painel para atualização: ";
+            LOG.error(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(), "refreshPainel()",
+                    "JbpmEventsHandler", "BPM"));
+        } catch (IllegalArgumentException e) {
+            String action = "Limpar as variáveis do painel para atualização: ";
+            LOG.error(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(), "refreshPainel()",
+                    "JbpmEventsHandler", "BPM"));
+        } catch (TransactionRequiredException e) {
+            String action = "Limpar as variáveis do painel para atualização: ";
+            LOG.error(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(), "refreshPainel()",
+                    "JbpmEventsHandler", "BPM"));
+        }
+    }
 	
 	/**
 	 * Atualiza o dicionário de Tarefas (tb_tarefa) com seus respectivos id's 
 	 * de todas as versões.
 	 **/
 	@Observer(ProcessBuilder.POST_DEPLOY_EVENT)
-	public static void updatePostDeploy() {
-		try {
-		atualizarProcessos();
-		inserirTarefas();
-		inserirVersoesTarefas();
-		} catch (Exception ex) {
-			String action = "realizar atualização automáticas após publicação do fluxo: ";
-			LOG.warn(action, ex);
-			throw new AplicationException(AplicationException.
-					createMessage(action+ex.getLocalizedMessage(), 
-								  "updatePostDeploy()", 
-								  "JbpmEventsHandler", 
-								  "BPM"));
-		}
-	}
+    public static void updatePostDeploy() {
+        try {
+            atualizarProcessos();
+            inserirTarefas();
+            inserirVersoesTarefas();
+        } catch (IllegalStateException e) {
+            String action = "Realizar atualização automáticas após publicação do fluxo: ";
+            LOG.error(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(), "updatePostDeploy()",
+                    "JbpmEventsHandler", "BPM"));
+        } catch (TransactionRequiredException e) {
+            String action = "Realizar atualização automáticas após publicação do fluxo: ";
+            LOG.error(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(), "updatePostDeploy()",
+                    "JbpmEventsHandler", "BPM"));
+        }
+    }
 	
 	private static void atualizarProcessos() {
 		String sql = "update jbpm_processinstance pi set processdefinition_ = " +
@@ -138,14 +159,13 @@ public class JbpmEventsHandler implements Serializable {
 				"and id_ = pl.id_task_jbpm))";
 		
 		JbpmUtil.getJbpmSession().createSQLQuery(sql).executeUpdate();
-			
 	}
 
 	/**
 	 * Popula a tabela tb_tarefa com todas as tarefas de todos os fluxos, 
 	 * considerando como chave o nome da tarefa task.name_
 	 */
-	private static void inserirTarefas() throws Exception {
+	private static void inserirTarefas() throws IllegalStateException, TransactionRequiredException {
 		StringBuilder builder = new StringBuilder();
 		builder.append("insert into public.tb_tarefa (id_fluxo, ds_tarefa) ");
 		builder.append("select f.id_fluxo, t.name_ ");
@@ -166,7 +186,7 @@ public class JbpmEventsHandler implements Serializable {
 	 * Insere para cada tarefa na tabela de tb_tarefa todos os ids que esse já
 	 * possuiu.
 	 */
-	private static void inserirVersoesTarefas() throws Exception {
+	private static void inserirVersoesTarefas() throws IllegalStateException, TransactionRequiredException {
 		StringBuilder builder = new StringBuilder();
 		builder.append("insert into public.tb_tarefa_jbpm (id_tarefa, id_jbpm_task) ");
 		builder.append("select t.id_tarefa, jt.id_ ");
@@ -187,28 +207,28 @@ public class JbpmEventsHandler implements Serializable {
 	 * @param transition
 	 */ 
 	@Observer(Event.EVENTTYPE_TASK_END)
-	public void removeCaixaProcesso(ExecutionContext context) {
-		try {
-			Processo processo = JbpmUtil.getProcesso();
-			String sql = "update public.tb_processo set id_caixa = null where " +
-						 "id_processo = :processo";
-			EntityUtil.getEntityManager().createNativeQuery(sql)
-					  .setParameter("processo", processo.getIdProcesso())
-					  .executeUpdate();
-		} catch (IllegalStateException e) {
-		    LOG.warn("JbpmEventsHandler.removeCaixaProcesso()",e);
-		} catch (TransactionRequiredException e) {
-		    LOG.warn("JbpmEventsHandler.removeCaixaProcesso()",e);
-		} catch (Exception ex) {
-			String action = "remover o processo da caixa: ";
-			LOG.warn(action, ex);
-			throw new AplicationException(AplicationException.
-					createMessage(action+ex.getLocalizedMessage(), 
-								  "removeCaixaProcesso()", 
-								  "JbpmEventsHandler", 
-								  "BPM"));
-		}
-	}
+    public void removeCaixaProcesso(ExecutionContext context) {
+        Processo processo = JbpmUtil.getProcesso();
+        String sql = "update public.tb_processo set id_caixa = null where "
+                + "id_processo = :processo";
+        try {
+            getEntityManager().createNativeQuery(sql)
+                    .setParameter("processo", processo.getIdProcesso())
+                    .executeUpdate();
+        } catch (IllegalStateException e) {
+            String action = "Remover o processo da caixa: ";
+            LOG.warn(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(), "removeCaixaProcesso()",
+                    "JbpmEventsHandler", "BPM"));
+        } catch (TransactionRequiredException e) {
+            String action = "Remover o processo da caixa: ";
+            LOG.warn(action, e);
+            throw new AplicationException(AplicationException.createMessage(
+                    action + e.getLocalizedMessage(), "removeCaixaProcesso()",
+                    "JbpmEventsHandler", "BPM"));
+        }
+    }
 	
 	private Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo, Long idTarefa) {
         Query q = getEntityManager()
@@ -221,17 +241,10 @@ public class JbpmEventsHandler implements Serializable {
                         usrLoc.getPapel())
                 .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK,
                         idTarefa.intValue());
-        Long result = -1L;
-        try {
-            result = (Long) q.getSingleResult();
-        } catch (NoResultException e) {
-            LOG.error("JbpmEventsHandler.getTaskInstanceId()",e);
-        } catch (NonUniqueResultException e){
-            result = (Long) q.getResultList().get(0);
-            LOG.warn("JbpmEventsHandler.getTaskInstanceId()",e);
-        } catch (IllegalStateException e) {
-            LOG.error("JbpmEventsHandler.getTaskInstanceId()",e);
-        }
+        
+        Long result = EntityUtil.getSingleResult(q);
+        result = result == null ? -1L : result;
+        
         return result;
     }
 	
@@ -241,17 +254,8 @@ public class JbpmEventsHandler implements Serializable {
                 .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
                 .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,usrLoc.getPapel());
         
-        Long result = -1L;
-        try {
-            result = (Long) q.getSingleResult();
-        } catch (NoResultException e) {
-            LOG.error("JbpmEventsHandler.getTaskInstanceId()",e);
-        } catch (NonUniqueResultException e){
-            result = (Long) q.getResultList().get(0);
-            LOG.warn("JbpmEventsHandler.getTaskInstanceId()",e);
-        } catch (IllegalStateException e) {
-            LOG.error("JbpmEventsHandler.getTaskInstanceId()",e);
-        }
+        Long result = EntityUtil.getSingleResult(q);
+        result = result == null ? -1L : result;
         
         return result;
     }
@@ -310,19 +314,24 @@ public class JbpmEventsHandler implements Serializable {
 	 * apagando o usuário sempre que a tarefa é finalizada (ver tabela jbpm_taskinstance, campo actorid_)
 	 * Porém surgiu a necessidade de armazenar os usuários das tarefas já finalizas para exibir no 
 	 * histórico de Movimentação do Processo
-	 * @param idTask
+	 * @param idTaskInstance
 	 * @param actorId				 
 	 * */
-	private void storeUsuario(Long idTask, String actorId){
-		if (getEntityManager().find(UsuarioTaskInstance.class, idTask) == null){
-			Query q = EntityUtil.getEntityManager().createQuery("select o from UsuarioLogin o where o.login = :actorId");
-			q.setParameter("actorId", actorId);
-			UsuarioLogin user = (UsuarioLogin) q.getSingleResult();		
-			UsuarioTaskInstance uti = new UsuarioTaskInstance();
-			uti.setIdTaskInstance(idTask);
-			uti.setUsuario(user);
-			EntityUtil.getEntityManager().persist(uti);
-		}
+	private void storeUsuario(Long idTaskInstance, String actorId){
+        String hql = "select o from UsuarioLogin o "
+                + "where o.login = :actorId "
+                + "and not exists (from UsuarioTaskInstance "
+                + "where idTaskInstance = :idTaskInstance)";
+        Query q = EntityUtil.createQuery(hql).setParameter("actorId", actorId)
+                .setParameter("idTaskInstance", idTaskInstance);
+
+        UsuarioLogin user = EntityUtil.getSingleResult(q);
+        if (user != null) {
+            UsuarioTaskInstance uti = new UsuarioTaskInstance();
+            uti.setIdTaskInstance(idTaskInstance);
+            uti.setUsuario(user);
+    		getEntityManager().persist(uti);
+        }
 	}
 	
 	private EntityManager getEntityManager() {
