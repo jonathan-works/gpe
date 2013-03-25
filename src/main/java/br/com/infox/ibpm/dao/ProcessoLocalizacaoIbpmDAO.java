@@ -43,9 +43,4 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 		Object result = EntityUtil.getSingleResult(query);
 		return result != null;
 	}
-	
-	public static ProcessoLocalizacaoIbpmDAO instance(){
-		return ProcessoLocalizacaoIbpmDAO.instance();
-	}
-	
 }
