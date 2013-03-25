@@ -23,6 +23,8 @@ import org.hibernate.AssertionFailure;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.annotations.TransactionPropagationType;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
@@ -34,7 +36,9 @@ import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
+import br.com.infox.ibpm.entity.Agrupamento;
 import br.com.infox.ibpm.entity.Evento;
+import br.com.infox.ibpm.entity.EventoAgrupamento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
@@ -230,7 +234,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 			getEntityManager().flush();
             setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
 		} catch (AssertionFailure e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		try {
 			getEntityManager().merge(processoDocumentoBin);
@@ -241,7 +245,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 				//Ignora de assinatura erro por enquanto
 			}
 		} catch (AssertionFailure e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 
@@ -258,6 +262,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	//Método para Inserir o documento do fluxo
 	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
+		
 		if (assinado){
 			try {
 				verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
@@ -268,26 +273,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		}
 		value = getAlteracaoModeloDocumento(value);
 		
-		ProcessoDocumentoBin bin = configurarProcessoDocumentoBin(value);
-		ProcessoDocumento doc = configurarProcessoDocumento(label, bin);
-		inicializarTipoProcessoDocumento();
-		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
-	  
-		EntityManager em = EntityUtil.getEntityManager();
-		em.persist(bin);
-		em.persist(doc);
+		ProcessoDocumento doc = createProcessoDocumento(label, createProcessoDocumentoBin(value));
 		
-		try {
-			em.flush();
+			getEntityManager().flush();
             setIdProcessoDocumento(doc.getIdProcessoDocumento());
-			try{
-				Events.instance().raiseEvent(EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO, bin);
-			}catch(Exception e){
-				//Ignora de assinatura erro por enquanto
-			}
-		} catch (AssertionFailure e) { 
-		//Ignorar
-		}
+		
 		
 		return doc.getIdProcessoDocumento();
 	}
@@ -318,7 +308,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 
 	//TODO método candidato à migração para o Manager apropriado
-	private ProcessoDocumento configurarProcessoDocumento(String label,
+	private ProcessoDocumento createProcessoDocumento(String label,
 			ProcessoDocumentoBin bin) {
 		ProcessoDocumento doc = new ProcessoDocumento();
 		doc.setProcessoDocumentoBin(bin);
@@ -331,6 +321,9 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		} else {
 			doc.setProcessoDocumento(label);
 		}
+		inicializarTipoProcessoDocumento();
+		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
+		getEntityManager().persist(doc);
 		return doc;
 	}
 
@@ -339,7 +332,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	 * Cria e configura um novo ProcessoDocumentoBin com base no {@value} passado
 	 * @param value - valor da variável modeloDocumento no contexto jBPM
 	 * */
-	private ProcessoDocumentoBin configurarProcessoDocumentoBin(Object value) {
+	private ProcessoDocumentoBin createProcessoDocumentoBin(Object value) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
 		bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
 		bin.setDataInclusao(new Date());
@@ -347,6 +340,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		bin.setUsuario(Authenticator.getUsuarioLogado());
 		bin.setCertChain(certChain);
 		bin.setSignature(signature);
+		getEntityManager().persist(bin);
 		return bin;
 	}
 	
