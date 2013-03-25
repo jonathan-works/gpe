@@ -59,7 +59,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
-	
+
 	private static final Integer ERRO_AO_VERIFICAR_CERTIFICADO = 0;
 		
 	@In private ProcessoService processoService;
@@ -228,11 +228,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
         setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
 		getEntityManager().merge(processoDocumentoBin);
 		getEntityManager().flush();
-		try{
-			Events.instance().raiseEvent(EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO, processoDocumentoBin);
-		}catch(Exception e){
-			//Ignora de assinatura erro por enquanto
-		}
 	}
 
 	/**
