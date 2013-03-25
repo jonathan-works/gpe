@@ -18,14 +18,9 @@ package br.com.infox.ibpm.home;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import javax.persistence.EntityManager;
-import org.hibernate.AssertionFailure;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.TransactionPropagationType;
-import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage;
@@ -36,9 +31,7 @@ import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
-import br.com.infox.ibpm.entity.Agrupamento;
 import br.com.infox.ibpm.entity.Evento;
-import br.com.infox.ibpm.entity.EventoAgrupamento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
@@ -60,7 +53,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
 
-	private static final Integer ERRO_AO_VERIFICAR_CERTIFICADO = 0;
+	private static final int ERRO_AO_VERIFICAR_CERTIFICADO = 0;
+	private static final int ERRO_AO_INSERIR_DOCUMENTO = 0;
 		
 	@In private ProcessoService processoService;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
@@ -160,11 +154,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 
 	private boolean possuiAgrupamento() {
 		return tipoProcessoDocumento != null && tipoProcessoDocumento.getAgrupamento() != null;
-	}
-	
-// -----------------------------------------------------------------------------------------------------------------------
-// ----------------------------------- Métodos ligados a Processo Documento ----------------------------------------------
-// -----------------------------------------------------------------------------------------------------------------------	
+	}	
 	
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
 		Integer result = 0;
@@ -173,16 +163,15 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		ProcessoHome.instance().setIdProcessoDocumento(idDoc);
 		if (processoDocumento == null) {
 			result = inserirProcessoDocumentoFluxo(value, label, assinado);
-			if(result == 0) {
-				//Erro ao inserir o documento
-				return result;
+			if(result == ERRO_AO_VERIFICAR_CERTIFICADO) {
+				return ERRO_AO_INSERIR_DOCUMENTO;
 			}
 		} else {
 			AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
 			if(documentoService.isDocumentoAssinado(idDoc)){
 				result = inserirProcessoDocumentoFluxo(value, label, assinado);
 			}
-			if(result == 0) {
+			if(result == ERRO_AO_VERIFICAR_CERTIFICADO) {
 				atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
 				result = idDoc;
 			}
@@ -199,6 +188,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
 		ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
+		
 		String modeloDocumentoFluxo = processoDocumentoBin.getModeloDocumento();
 		if(value == null) {
 			value = modeloDocumentoFluxo;
@@ -215,19 +205,20 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		if (Strings.isEmpty(modeloDocumento)){
 			modeloDocumento = " ";
 		}
+		
+		atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento);
+		inicializarTipoProcessoDocumento();
+		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
+		getEntityManager().merge(processoDocumento);
+		setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
+		getEntityManager().merge(processoDocumentoBin);
+		getEntityManager().flush();
+	}
+
+	private void atualizarProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin, String modeloDocumento) {
 		processoDocumentoBin.setModeloDocumento(modeloDocumento);
 		processoDocumentoBin.setCertChain(certChain);
 		processoDocumentoBin.setSignature(signature);
-		
-		inicializarTipoProcessoDocumento();
-		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
-		
-
-		getEntityManager().merge(processoDocumento);
-		getEntityManager().flush();
-        setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
-		getEntityManager().merge(processoDocumentoBin);
-		getEntityManager().flush();
 	}
 
 	/**
