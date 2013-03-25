@@ -17,7 +17,7 @@ import br.com.infox.epa.type.TipoPessoaEnum;
 @Entity
 @Table(name=Pessoa.TABLE_NAME, schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
-public abstract class Pessoa implements Serializable {
+public class Pessoa implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_pessoa";

@@ -37,7 +37,7 @@
 					  rowId="#{row.idPrioridade}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarPrioridadeProcessoForm"
-							   formTitle="#{messages['prioridadeProcesso.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="descricaoPrioridadeProcesso"
 								  label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
 								  value="#{prioridadeProcessoList.entity.descricaoPrioridade}"
@@ -47,7 +47,7 @@
 								 label="#{messages['prioridadeProcesso.peso']}"/>
 					
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{prioridadeProcessoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -59,14 +59,14 @@
 								 columnHeader="#{messages['prioridadeProcesso.descricaoPrioridade']}"
 								 value="#{row.descricaoPrioridade}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
 		<wi:dataForm formId="prioridadeProcessoForm"
-					 formTitle="#{messages['prioridadeProcesso.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputNumber id="peso"
 						 value="#{prioridadeProcessoHome.instance.peso}"
 						 required="true"
@@ -77,7 +77,7 @@
 						  value="#{prioridadeProcessoHome.instance.descricaoPrioridade}"
 						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    required="true"
 								    value="#{prioridadeProcessoHome.instance.ativo}" />
 		</wi:dataForm>

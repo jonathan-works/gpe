@@ -37,26 +37,26 @@
 				<ui:param name="visible" value="#{bean.visibleColumns.contains(col)}" />
 				<rich:column style="width:40px; text-align:center"
 							 styleClass="dr-table-subheader rich-table-subheader">
-					<div onmouseover="firstChild.style.visibility='visible'"
-						 onmouseout="firstChild.style.visibility='hidden'"
-						 style="width: 100%; text-align: center}">
-						<div style="visibility: hidden;">
+					<div style="width: 100%; text-align: center}">
+						<div>
 							<a:commandLink
 								reRender="#{gridId}Div,#{gridId}ColumnListForm"
 								status="status"
-								action="#{bean.toggleVisibleColumn(col.id)}">
+								action="#{bean.toggleVisibleColumn(col.id)}"
+                                styleClass="opacityHover">
 								<h:graphicImage url="/img/add.gif" 
 									title="Mostrar coluna"
-									rendered="#{!visible}" />
+									rendered="#{!visible}"/>
 								<h:graphicImage url="/img/removeCol.png" 
 									title="Esconder coluna"
-									rendered="#{visible}" />
+									rendered="#{visible}"/>
 							</a:commandLink>
 							<a:commandLink
 								rendered="#{key != 0}"
 								reRender="#{gridId}Div,#{gridId}ColumnListForm"
 								status="status"
-								action="#{bean.moveColumnUp(col)}">
+								action="#{bean.moveColumnUp(col)}"
+                                styleClass="opacityHover">
 								<h:graphicImage url="/img/jbpm/up.gif" 
 									title="Subir"
 									rendered="#{visible}" />
@@ -65,7 +65,8 @@
 								rendered="#{key lt bean.visibleColumns.size - 1}"
 								reRender="#{gridId}Div,#{gridId}ColumnListForm"
 								status="status"
-								action="#{bean.moveColumnDown(col)}">
+								action="#{bean.moveColumnDown(col)}"
+                                styleClass="opacityHover">
 								<h:graphicImage url="/img/jbpm/down.gif" 
 									title="Descer"
 									rendered="#{visible}" />

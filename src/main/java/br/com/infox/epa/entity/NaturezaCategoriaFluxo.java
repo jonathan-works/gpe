@@ -16,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.validator.NotNull;
@@ -26,7 +27,7 @@ import br.com.infox.ibpm.entity.Fluxo;
 @Entity
 @Table(name=NaturezaCategoriaFluxo.TABLE_NAME, schema="public",
 	   uniqueConstraints={
-			@UniqueConstraint(columnNames={"id_categoria", "id_natureza"})
+			@UniqueConstraint(columnNames={"id_categoria", "id_fluxo"})
 		})
 @NamedQueries(value={
 				@NamedQuery(name=NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA,
@@ -120,6 +121,11 @@ public class NaturezaCategoriaFluxo implements Serializable{
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="naturezaCategoriaFluxo")
 	public List<ProcessoEpa> getProcessoEpaList() {
 		return processoEpaList;
+	}
+	
+	@Transient
+	public boolean isAtivo(){
+		return (natureza.getAtivo() && categoria.getAtivo() && fluxo.getAtivo());
 	}
 	
 }

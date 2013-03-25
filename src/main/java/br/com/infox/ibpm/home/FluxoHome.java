@@ -16,34 +16,32 @@
 package br.com.infox.ibpm.home;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Query;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.security.Identity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.Fluxo;
+import br.com.itx.util.ComponentUtil;
 
  
 @Name(FluxoHome.NAME)
 @BypassInterceptors
 public class FluxoHome 
 		extends AbstractFluxoHome<Fluxo>{
-
+    private static final LogProvider LOG = Logging.getLogProvider(FluxoHome.class);
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "fluxoHome";
-	private List<Fluxo> fluxoList;
 	
 	public static FluxoHome instance() {
-		return (FluxoHome) Component.getInstance(NAME);
+		return ComponentUtil.getComponent(FluxoHome.NAME);
 	}
 	
 	@Override
@@ -53,7 +51,7 @@ public class FluxoHome
 			ret = super.persist();
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+			LOG.error(e.getMessage());
 		} 
 		return ret;	
 	}
@@ -71,8 +69,9 @@ public class FluxoHome
 
 	@Override
 	protected boolean beforePersistOrUpdate() {
-		if (getInstance().getDataFimPublicacao() != null){
-			if (getInstance().getDataFimPublicacao().before(getInstance().getDataInicioPublicacao())){
+	    Date dataFimPublicacao = getInstance().getDataFimPublicacao();
+		if (dataFimPublicacao != null){
+			if (dataFimPublicacao.before(getInstance().getDataInicioPublicacao())){
 				FacesMessages.instance().add(Severity.ERROR, "Data Fim Publicação deve ser maior que a Data Iníco Publicação");
 				return Boolean.FALSE;
 			}
@@ -81,58 +80,40 @@ public class FluxoHome
 		verificaPublicacao();
 		return super.beforePersistOrUpdate();
 	}
-	
-	
 
 	@Override
 	public String update() {
-		String ret = null;
+		String ret = "";
 		try {
 			ret = super.update();
 		} catch (Exception e) {
-			System.out.println("Erro de restrição: possivelmente um campo foi duplicado.");
+		    LOG.error("Erro de restrição: possivelmente um campo foi duplicado.");
 		}
 		return ret;
 	}	
-
 	
 	/*Remoção Lógica. Se possuir algum processo vinculado, verifica se o msm 
 	 * está arquivado ou não.
 	 */
-	@Override
-	public String remove(Fluxo obj) {
-		setInstance(obj);
-		//Verifica se esta vinculado a algum processo
-		String query = "select count(o) from Processo o " +
-						"where o.fluxo = :fluxo2 ";
-		Query q = getEntityManager().createQuery(query).setMaxResults(1);
-		q.setParameter("fluxo2", obj);
-		
-		if ( ((Long)q.getSingleResult() <= 0)){
-			obj.setAtivo(Boolean.FALSE);
-			super.update();
-			newInstance();
-			refreshGrid("fluxoGrid");
-		}
-		else {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-					"Este registro está em uso e não poderá ser excluído.");
-		}
-		return "updated";
-	}
-	
-	public List<Fluxo> getFluxoList() { 
-		if(fluxoList == null) {
-			fluxoList = new ArrayList<Fluxo>();
-			for (Fluxo f : (List<Fluxo>) getEntityManager()
-					.createQuery("select f from Fluxo f where f.ativo = true order by f.fluxo")
-					.getResultList()) {
-				if(Identity.instance().hasRole("/fluxo/"+f.getFluxo())) {
-					fluxoList.add(f);
-				}
-			}
-		}
-		return fluxoList;
-	}
+    @Override
+    public String remove(Fluxo obj) {
+        setInstance(obj);
+        String query = "select count(o) from Processo o "
+                + "where o.fluxo = :fluxo2 ";
+        Query q = getEntityManager().createQuery(query).setMaxResults(1);
+        q.setParameter("fluxo2", obj);
+
+        if (((Long) q.getSingleResult() <= 0)) {
+            obj.setAtivo(Boolean.FALSE);
+            super.update();
+            newInstance();
+            refreshGrid("fluxoGrid");
+        } else {
+            final String message = "Este registro está em uso e não poderá ser excluído.";
+            LOG.warn(message);
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, message);
+        }
+        return "updated";
+    }
 	
 }

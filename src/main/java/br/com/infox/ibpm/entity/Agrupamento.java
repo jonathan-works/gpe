@@ -31,7 +31,7 @@ public class Agrupamento implements java.io.Serializable {
 
 	private int idAgrupamento;
 	private String agrupamento;
-	private Boolean ativo = Boolean.TRUE;
+	private Boolean ativo;
 	private List<EventoAgrupamento> eventoAgrupamentoList = new ArrayList<EventoAgrupamento>(0);
 	private List<TarefaEventoAgrupamento> agrupamentoTarefaList = 
 				new ArrayList<TarefaEventoAgrupamento>(0);

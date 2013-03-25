@@ -40,7 +40,7 @@
 					bodyClass="panel" 
 					header="#{tableTitle}" 
 					id="#{id}Panel"
-					style="float: left; margin-left: 10px; width: #{panelWidth};#{style}">
+					style="float: left; margin-left: 10px;margin-top:0px; width: #{panelWidth};#{style}">
 
 			<rich:messages 
   			    id="#{id}Messages"			    
@@ -59,15 +59,13 @@
 				</script>
 			</f:verbatim>  	
 
-			<ui:param name="onMouseOut" value="this.style.backgroundColor=c" />
-			<ui:param name="onMouseOver" value="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'" />
 			<rich:dataTable value="#{values}" 
 							id="#{id}"  
 							rowKeyVar="key"
 							rowClasses="#{rowClasses}"
 							onRowMouseOut="#{wi:get(onRowMouseOut, onMouseOut)}"
 							onRowMouseOver="#{wi:get(onRowMouseOver, onMouseOver)}"
-							styleClass="#{styleClass}"
+							styleClass="#{styleClass} zebra"
 							style="#{style}"
 							var="row">
 				<ui:param name="toolBarColumnWidth" value="#{wi:get(toolBarColumnWidth, '40px')}" />

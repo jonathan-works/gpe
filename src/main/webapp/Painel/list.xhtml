@@ -54,8 +54,8 @@
 													    	label="Pesquisar"
 													    	styleClass="leftPanel">
 										<wi:searchForm formId="consultaProcessoForm"
-													 formTitle="#{messages['consultaProcesso.titleForm']}"
-													 widthSearchForm="100%">
+													   formTitle="#{messages['form.title']}"
+													   widthSearchForm="100%">
 											<wi:inputText id="numeroProcesso"
 														  label="#{messages['consultaProcesso.numeroProcesso']}"
 														  value="#{home.instance.numeroProcesso}"/>
@@ -64,20 +64,16 @@
 											                     valueDateFrom="#{home.instance.dataInicio}"
 											                     valueDateTo="#{home.instance.dataFim}"/>
 											<wi:selectOneMenuEntity id="natureza"
-																	label="#{messages['natureza.natureza']}"
+																	label="#{messages['natureza.titleGrid']}"
 																	value="#{home.instance.natureza}"
 																	noSelectionLabel="Selecione um registro..."
 																	items="#{home.naturezaList}"/>
 											<wi:selectOneMenuEntity id="categoria"
-																	label="#{messages['categoria.categoria']}"
+																	label="#{messages['categoria.titleGrid']}"
 																	value="#{home.instance.categoria}"
 																	noSelectionLabel="Selecione um registro..."
 																	inNewLine="true"
 																	items="#{home.categoriaList}"/>
-											<wi:tree id="assunto"
-													 label="#{messages['assunto.assunto']}"
-													 assignTo="consultaProcessoHome.instance.assunto"
-													 tree="#{home.assuntoTree}"/>
 											<ui:define name="buttons">
 												<div style="float:left; clear: both;">	
 										           <a:commandButton id="consulta" 
@@ -96,7 +92,7 @@
 										       </div>
 											</ui:define>
 										</wi:searchForm>
-										<h:messages styleClass="message" id="globalMessages"/>
+										<h:messages styleClass="message" id="globalMessages" />
 							    	</rich:simpleTogglePanel>
 								</s:div>			
 							    <s:div id="processoList">

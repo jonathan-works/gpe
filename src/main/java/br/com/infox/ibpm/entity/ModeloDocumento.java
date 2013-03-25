@@ -50,7 +50,7 @@ public class ModeloDocumento implements java.io.Serializable {
 	private TipoModeloDocumento tipoModeloDocumento;
 	private String tituloModeloDocumento;
 	private String modeloDocumento;
-	private Boolean ativo = Boolean.TRUE;
+	private Boolean ativo;
 
 	public ModeloDocumento() {
 	}

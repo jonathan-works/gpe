@@ -46,7 +46,7 @@
 							 iconLeaf="/img/file.gif"
 							 label="#{messages['assunto.assuntoPai']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['assunto.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{assuntoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -59,14 +59,14 @@
 									  value="#{row.assunto}"
 									  fullPath="#{row.caminhoCompleto}"/>
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['assunto.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							columnWidth="15%"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
-		<wi:dataForm formId="assuntoForm" formTitle="#{messages['assunto.titleForm']}">
+		<wi:dataForm formId="assuntoForm" formTitle="#{messages['form.title']}">
 			<wi:inputText id="codAssunto"
 								  label="#{messages['assunto.codAssunto']}"
 								  value="#{assuntoHome.instance.codAssunto}" />
@@ -81,7 +81,7 @@
 						 iconLeaf="/img/file.gif"
 						 label="#{messages['assunto.assuntoPai']}"/>
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['assunto.ativo']}"
+								    label="#{messages['field.situacao']}"
 								    required="true"
 								    value="#{assuntoHome.instance.ativo}" />
 		</wi:dataForm>

@@ -127,18 +127,16 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 				// Trata os tipos Booleanos
 				String atributeLabel = "";
+				String entityName = getEntityName();
 				if (object instanceof Boolean) {
-					if (!((Boolean) object)) {
-						atributeLabel = "Não";
-					} else {
-						atributeLabel = "Sim";
-					}
+				    atributeLabel = Messages.instance().get(MessageFormat.format(
+                            "{0}.{1}.{2}", entityName, s.getName(), (Boolean)object));
 				} else {
 					// Caso não for booleano
 					atributeLabel = object.toString();
 				}
 
-				String entityName = getEntityName();
+				
 				sb.append(Messages.instance().get(MessageFormat.format(
 						"{0}.{1}", entityName, s.getName())))
 						.append(" ")
@@ -149,19 +147,19 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 			}
 
 		});
-		if (sb.length() == 0) {
-			return null;
+		if (sb.length() != 0) {
+		    sb.insert(0, ":\n");
+	        sb.insert(0,(getRestrictionLogicOperator().equals("and") ?
+	                "Todas as expressões" : "Qualquer expressão"));
 		}
-		sb.insert(0, ":\n");
-		sb.insert(0,(getRestrictionLogicOperator().equals("and") ?
-				"Todas as expressões" : "Qualquer expressão"));
 		sb.append("Classificado por: ");
-		String column = getOrderedColumn();
+		String column = getOrder();
 		String[] s = column.split(" ");
 		sb.append(Messages.instance().get(MessageFormat.format(
 				"{0}.{1}", getEntityName(), s[0])));
 		sb.append(" ");
-		sb.append(s.length > 1 && s[1].equals("desc") ? "descrescente" : "crescente");
+		sb.append(s.length > 1 && s[1].equals("desc") ? "decrescente" : "crescente");
+				
 		return sb.toString();
 	}
 
@@ -182,6 +180,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 				o = ve.getValue();
 			} catch (PropertyNotFoundException e) {
 				// para o caso de uma restriction mapeada não seja um campo da entidade
+			    e.printStackTrace();
 			}
 			if (o != null) {
 				command.execute(s, o);

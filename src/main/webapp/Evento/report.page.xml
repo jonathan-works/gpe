@@ -9,9 +9,8 @@
 	<param name="restrictionLogicOperator" value="#{eventoList.restrictionLogicOperator}" />
 
 	<param name="evento" value="#{eventoList.entity.evento}" />
-	<param name="eventoSuperior" value="#{eventoList.entity.eventoSuperior}" />
 	<param name="observacao" value="#{eventoList.entity.observacao}" />
-	<param name="status" value="#{eventoList.entity.status}" />
+	<param name="eventoSuperior" value="#{eventoList.entity.eventoSuperior}" />
 	<param name="ativo" value="#{eventoList.entity.ativo}" />
 
 </page>

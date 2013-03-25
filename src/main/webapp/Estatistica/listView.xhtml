@@ -37,7 +37,7 @@
 						  showGrid="#{tempoMedioTarefaList.entity.tempoMedioProcesso != null}">
 				<ui:define name="searchForm">
 					<wi:searchForm formId="pesquisarTempoMedioProcesso"
-								   formTitle="#{messages['tempoMedioProcesso.titleSearchForm']}"
+								   formTitle="#{messages['searchForm.title']}"
 								   opened="true">
 						<wi:selectOneMenuEntity id="naturezaCategoriaFluxo"
 												label="#{messages['tempoMedioTarefaList.tempoMedioProcesso']}"
@@ -56,7 +56,7 @@
 									 value="#{row.nomeTarefa}" />
 				<wi:columnOutputText columnId="tempoMedio"
 									 columnHeader="#{messages['temposMedios.tempoMedio']}"
-									 value="#{row.tempoMedio}" />
+									 value="#{row.getTempoMedioFormatado()}" />
 				<wi:columnOutputText columnId="prazo"
 									 columnHeader="#{messages['temposMedios.prazo']}"
 									 value="#{row.prazo} #{row.tipoPrazo.label}"

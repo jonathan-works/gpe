@@ -70,7 +70,7 @@
 						searchReRender="divUsuario" showSalvarPesquisa="false"
 						searchAction="#{activeDirectoryAction.setUsuariosADList(null)}"
 						clearAction="activeDirectoryAction.newInstance()"
-						formTitle="#{messages['activeDirectory.titleSearchForm']}">
+						formTitle="#{messages['searchForm.title']}">
 						<wi:inputText id="nomeUsuario"
 							label="#{messages['activeDirectory.nome']}"
 							value="#{activeDirectoryAction.entity.nome}" />
@@ -102,7 +102,7 @@
 	</ui:define>
 	<ui:define name="form">
 		<wi:dataForm formId="usuarioForm"
-			formTitle="#{messages['usuario.titleForm']} - #{action.instance.nome}">
+			formTitle="#{messages['form.title']} - #{action.instance.nome}">
 
 			<wi:inputText id="nomeId" required="true"
 				value="#{action.instance.nome}"
@@ -120,7 +120,7 @@
 				label="#{messages['usuario.bloqueado']}" />
 			<wi:selectBooleanRadio id="ativoId" required="true"
 				value="#{action.instance.ativo}"
-				label="#{messages['usuario.ativo']}" />
+				label="#{messages['field.situacao']}" />
 			<wi:selectBooleanRadio id="ldapId" required="true" disabled="true"
 				value="#{action.instance.ldap}"
 				label="#{messages['usuarioLogin.ldap']}" />
@@ -146,7 +146,7 @@
 			<s:div id="enderecoDiv">
 
 				<wi:dataForm formId="endeId"
-					formTitle="#{messages['usuario.titleForm']} - #{action.instance.nome}">
+					formTitle="#{messages['form.title']} - #{action.instance.nome}">
 
 						<wi:suggest id="#{id}Cep" bean="#{cepSuggest}"
 							label="#{messages['endereco.cep']}" required="true"
@@ -225,7 +225,7 @@
 			rendered="#{not empty action.instance.idUsuario}" status=":status">
 			<s:div id="usuLocDiv">
 				<wi:dataForm formId="locId"
-					formTitle="#{messages['usuarioLocalizacao.titleForm']} - #{action.instance.nome}">
+					formTitle="#{messages['form.title']} - #{action.instance.nome}">
 
 					<wi:tree id="usuarioLocalizacao" required="true"
 						tree="#{localizacaoTree}" icon="/img/nivelTree.gif"

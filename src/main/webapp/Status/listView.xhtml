@@ -23,7 +23,7 @@
 		<ui:define name="form">
 			<c:if test="#{canEdit}">
 				<wi:form form="#{statusForm}"
-					formTitle="#{messages['status.titleForm']}"
+					formTitle="#{messages['form.title']}"
 					persistSemNewInstance="true" />
 			</c:if>
 			<c:if test="#{not canEdit}">

@@ -1,8 +1,9 @@
 package br.com.infox.epa.action.crud;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -115,34 +116,41 @@ public class CategoriaItemAction extends AbstractHome<CategoriaItem> {
 		return categoria;
 	}
 
-	public List<Item> getFolhas(int idPai)	{
+	public Set<Item> getFolhas(Item pai) {
+        Set<Item> result = null;
+        if (pai != null) {
+            Set<Item> set = new HashSet<Item>(pai.getItemList());
+            result = new HashSet<Item>();
+            if (set.size() == 0) {
+                result.add(pai);
+            } else {
+                for (Item filho : set) {
+                    result.addAll(getFolhas(filho));
+                }
+            }
+        }
+        return result;
+	}
+	
+	public Set<Item> getFolhas(Integer idPai)	{
 		Item pai = getEntityManager().find(Item.class, idPai);
-		List<Item> list = pai.getItemList();
-		
-		List<Item> result = new ArrayList<Item>();
-		if (list.size() == 0)	{
-			result.add(pai);
-			return result;
-		}
-		
-		for (Item filho : list) {
-			result.addAll(getFolhas(filho.getIdItem()));
-		}
-		
-		return result;
+		return getFolhas(pai);
 	}
 	
 	@Override
 	public String persist() {
-		List<Item> folhas = getFolhas(getInstance().getItem().getIdItem());
-		
-		for (Item item : folhas) {
-			if (item.getAtivo())	{
-				getInstance().setItem(item);
-				super.persist();
-			}
-		}
-		return "persisted";
+	    Set<Item> folhas = getFolhas(getInstance().getItem());
+	    String result = "";
+	    if (folhas != null) {
+	        for (Item item : folhas) {
+	            if (item.getAtivo())    {
+	                getInstance().setItem(item);
+	                super.persist();
+	            }
+	        }
+	        result = "persisted";
+	    }
+		return result;
 	}
 	
 }

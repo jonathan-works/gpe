@@ -11,6 +11,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.validator.NotNull;
@@ -83,6 +84,11 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 	@NotNull
 	public Boolean getHeranca() {
 		return heranca;
+	}
+	
+	@Transient
+	public boolean isAtivo(){
+		return (naturezaCategoriaFluxo.isAtivo() && localizacao.getAtivo());
 	}
 	
 }

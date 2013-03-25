@@ -18,9 +18,11 @@ package br.com.infox.ibpm.home;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
 import br.com.infox.ibpm.type.VisibilidadeEnum;
+import br.com.infox.list.TipoProcessoDocumentoList;
 import br.com.itx.util.ComponentUtil;
 
 
@@ -33,6 +35,24 @@ public class TipoProcessoDocumentoHome
 	
 	public static final String NAME = "tipoProcessoDocumentoHome";
 	private static final long serialVersionUID = 1L;
+	
+	private static final String TEMPLATE = "/ClassificacaoDocumento/tipoProcessoDocumentoTemplate.xls";
+	private static final String DOWNLOAD_XLS_NAME = "ClassificacaoDocumento.xls";
+
+	@Override
+	public EntityList<TipoProcessoDocumento> getBeanList() {
+		return TipoProcessoDocumentoList.instance();
+	}
+	
+	@Override
+	public String getTemplate() {
+		return TEMPLATE;
+	}
+	
+	@Override
+	public String getDownloadXlsName() {
+		return DOWNLOAD_XLS_NAME;
+	}
 	
 	public static TipoProcessoDocumentoHome instance() {
 		return ComponentUtil.getComponent("tipoProcessoDocumentoHome");

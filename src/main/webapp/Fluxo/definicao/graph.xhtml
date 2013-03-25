@@ -27,7 +27,7 @@
 		<a:mediaOutput cacheable="false" 
 			id="graphImage"
 			element="img"
-			createContent="#{processBuilder.paintGraph}"
+			createContent="#{processBuilderGraph.paintGraph}"
 			usemap="#nodes"
 			ismap="true">
 			<f:param name="cid" value="#{conversation.id}"/>
@@ -35,7 +35,7 @@
 		<f:verbatim>
 			<script>
 				var nodes=new NodeArea('#{conversation.id}'); 
-				#{processBuilder.map}
+				#{processBuilderGraph.map}
 			</script>
 		</f:verbatim>
 	</s:div>

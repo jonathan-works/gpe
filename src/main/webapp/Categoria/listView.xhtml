@@ -38,12 +38,12 @@
 					  actionInactive="categoriaHome.inactive">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCategoriaForm"
-							   formTitle="Pesquisar Categoria">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="categoria"
 								  value="#{categoriaList.entity.categoria}"
 								  label="#{messages['categoria.categoria']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['categoria.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{categoriaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -55,7 +55,7 @@
 								 columnHeader="#{messages['categoria.categoria']}"
 								 value="#{row.categoria}"/>
 			<wi:columnSituacao columnId="ativo"
-							   columnHeader="#{messages['categoria.ativo']}"
+							   columnHeader="#{messages['field.situacao']}"
 						   	   columnWidth="15%"
 							   value="#{row.ativo}" />
 		</wi:dataTable>
@@ -63,32 +63,33 @@
 
 	<ui:define name="form">
 		<wi:dataForm formId="categoriaForm"
-					 formTitle="#{messages['categoria.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="categoria"
 						  value="#{categoriaHome.instance.categoria}"
 						  required="true"
 						  label="#{messages['categoria.categoria']}"/>
 			<wi:selectSituacaoRadio id="ativo"
-								    required="true"
-								    label="#{messages['categoria.ativo']}"
+								    required="false"
+								    label="#{messages['field.situacao']}"
 								    value="#{categoriaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 
 	<ui:define name="tabs">
 		<ui:param name="action" value="#{categoriaItemAction}" />
-		<rich:tab id="categoriaItemTab" 
+		<rich:tab id="categoriaItemTab"
 				  rendered="#{categoriaHome.isManaged()}"
-				  eventsQueue="default" 
+				  eventsQueue="default"
 				  switchType="ajax"
 				  label="#{messages['categoriaItem.titleTab']}"
 				  action="#{action.init()}">
 			<s:div id="categoriaItemFormDiv">
 				<wi:dataForm formId="categoriaItemForm"
-						 	 formTitle="#{messages['categoriaItem.titleForm']}">
+						 	 formTitle="#{messages['form.title']} #{categoriaHome.instance.categoria}">
 					<wi:tree id="itemTree"
 							 assignTo="categoriaItemAction.instance.item"
 							 tree="#{itemTree}"
+                             required="true"
 							 label="#{messages['categoriaItem.item']}"/>
 					<ui:define name="buttons">
 						<wi:commandButton id="saveButton"
@@ -103,9 +104,11 @@
 					<rich:dataTable id="categoriaItemTable"
 									value="#{action.categoriaItemList}"
 									var="row"
-									title="Relacionados à #{categoriaHome.instance.categoria}"
 									rows="10"
 									style="width: 60%">
+                        <f:facet name="header">
+                            <h:outputText value="#{messages['categoriaItem.titleDataTable']} #{categoriaHome.instance.categoria}" />
+                        </f:facet>
 						<rich:column style="width: 10%">
 							<center>
 								<wi:toolBarRemove id="toolBarRemove"
@@ -122,7 +125,7 @@
 					</rich:dataTable>
 					<rich:datascroller for="categoriaItemTable"
 									   lastPageMode="full"
-									   id="dsNatCatFluxoTable"
+									   id="dsItemCatTable"
 									   align="left"
 									   renderIfSinglePage="false"/>
 				</h:form>

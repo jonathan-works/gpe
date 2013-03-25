@@ -35,12 +35,12 @@
 					  rowId="#{row.idAgrupamento}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarAgrupamentoForm"
-							   formTitle="Pesquisar Agrupamentos">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="agrupamento"
 									value="#{agrupamentoList.entity.agrupamento}"
 								  	label="#{messages['agrupamento.agrupamento']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{agrupamentoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -49,21 +49,20 @@
 								 columnHeader="#{messages['agrupamento.agrupamento']}"
 								 value="#{row.agrupamento}" />
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>			
 	</ui:define>
 	
 	<ui:define name="form">
 		<wi:dataForm formId="agrupamentoForm"
-					 formTitle="#{messages['agrupamento.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="agrupamento"
 						  required="true"
 						  label="#{messages['agrupamento.agrupamento']}"
 						  value="#{agrupamentoHome.instance.agrupamento}" />
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['agrupamento.ativo']}"
-								    required="true"
+								    label="#{messages['field.situacao']}"
 								    value="#{agrupamentoHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
@@ -76,7 +75,7 @@
 				  status=":status"
 				  action="#{eventoAgrupamentoHome.newInstance()}">
 			<wi:dataForm formId="eventoAgrupamentoForm"
-						 formTitle="#{messages['eventoAgrupamento.titleForm']}">
+						 formTitle="#{messages['form.title']}">
 				<wi:tree id="evento"
 						 required="true"
 						 tree="#{eventoTree}"

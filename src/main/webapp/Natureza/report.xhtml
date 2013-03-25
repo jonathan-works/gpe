@@ -21,21 +21,20 @@
 
 	<ui:param name="title" value="Naturezas" />
 
-	<wi:dataReport subtitle="Resultado dos Naturezas Pesquisados"
-				   title="#{nomeSistema}"
+	<wi:dataReport title="#{messages['natureza.reportTitle']}"
 				   columns="3"
 				   widths="4 2 2"
 				   headerText="#{naturezaList.criteria}">
 				   
 		<wi:reportColumnHeader title="#{messages['natureza.natureza']}" />
-		<wi:reportColumnHeader title="#{messages['natureza.ativo']}" />
 		<wi:reportColumnHeader title="#{messages['natureza.hasPartes']}" />
+        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
 				
 		<ui:repeat var="row" value="#{naturezaList.list()}">
 			<wi:reportColumn value="#{row.natureza}" />
-			<wi:reportColumnSituacao value="#{row.ativo}" 
-							 columnAlign="center"/>
 			<wi:reportColumnBoolean value="#{row.hasPartes}" />
+            <wi:reportColumnSituacao value="#{row.ativo}" 
+                 columnAlign="center"/>
 		</ui:repeat>
 
 	</wi:dataReport>

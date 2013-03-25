@@ -9,7 +9,7 @@
 	<s:div id="includePessoaFisicaDiv">
 		
 		<wi:dataForm formId="pessoaFisicaForm"
-					 formTitle="#{messages['pessoaFisica.titleForm']}"
+					 formTitle="#{messages['form.title']}"
 					 panelWidth="70%">
 			
 			<wi:inputCpf id="cpf"
@@ -31,6 +31,12 @@
 						value="#{pessoaFisicaHome.instance.dataNascimento}"
 						label="#{messages['pessoaFisica.dataNascimento']}"
 						required="true"/>
+			<wi:inputText id="email"
+						label="#{messages['pessoaFisica.email']}"
+						value="#{pessoaFisicaHome.instance.email}"
+						required="true">
+				<f:validator validatorId="emailValidator" />
+			</wi:inputText>
 			<ui:define name="buttons">
 				<wi:commandButton id="saveButton"
 								  action="#{action.incluir('F')}"

@@ -32,12 +32,12 @@
 		<s:div id="nodesDiv">
 			<s:div style="width:200px; float:left;">
 			<ui:decorate template="dataTable.xhtml">
-				<ui:param name="values" value="#{processBuilder.nodes}" />
+				<ui:param name="values" value="#{nodeFitter.nodes}" />
 				<ui:param name="styleClass" value="tabelaVariaveis" />
 				<ui:param name="id" value="nodesTable" />
 				<ui:param name="style" value="width:100%" />
 				<ui:define name="headerToolBar">
-					<a:commandLink action="#{processBuilder.setCurrentNode(null)}"
+					<a:commandLink action="#{nodeFitter.setCurrentNode(null)}"
 						reRender="nodesDiv">
 						<h:graphicImage title="Adicionar nó"
 							style="cursor:pointer" 
@@ -49,9 +49,10 @@
 					<s:div style="width:40px; text-align:left">
 						<h:graphicImage title="Excluir nó"
 							style="cursor:pointer" 
-							url="/img/remove.png">
+							url="/img/remove.png"
+                            styleClass="opacityHover">
 							<a:support event="onclick" 
-								action="#{processBuilder.removeNode(row)}"
+								action="#{nodeFitter.removeNode(row)}"
 								ajaxSingle="true"
 								onclick="if(!confirm('Confirma?')) return false;"
 								reRender="nodesDiv"/>
@@ -59,18 +60,20 @@
 						<h:graphicImage title="Subir na ordem"
 							style="cursor:pointer" 
 							rendered="#{key != 0}"
-							url="/img/jbpm/up.gif">
+							url="/img/jbpm/up.gif"
+                            styleClass="opacityHover">
 							<a:support event="onclick" 
-								action="#{processBuilder.moveUp(row)}"
+								action="#{nodeFitter.moveUp(row)}"
 								ajaxSingle="true"
 								reRender="nodesTable"/>
 						</h:graphicImage>
 						<h:graphicImage title="Descer na ordem"
 							style="cursor:pointer" 
-							rendered="#{key lt processBuilder.nodes.size - 1}"
-							url="/img/jbpm/down.gif">
+							rendered="#{key lt nodeFitter.nodes.size - 1}"
+							url="/img/jbpm/down.gif"
+                            styleClass="opacityHover">
 							<a:support event="onclick" 
-								action="#{processBuilder.moveDown(row)}"
+								action="#{nodeFitter.moveDown(row)}"
 								ajaxSingle="true"
 								reRender="nodesTable"/>
 						</h:graphicImage>
@@ -79,22 +82,22 @@
 				<ui:define name="columns">
 					<rich:column>
 						<f:facet name="header">Nós</f:facet>
-						<ui:param name="current" value="#{row == processBuilder.currentNode}" />
+						<ui:param name="current" value="#{row == nodeFitter.currentNode}" />
 						<ui:param name="styleNodeName" 
 							value="#{current ? 'font-weight:bold' : ''}" />
-						 <a:commandLink action="#{processBuilder.setCurrentNode(row)}"
+						 <a:commandLink action="#{nodeFitter.setCurrentNode(row)}"
 						 		style="float:left;"
 						 		reRender="divNodesGeral"
 						 		ajaxSingle="true"
 						 		limitToList="true">
 						 		<a:outputPanel>
 						 			<h:panelGrid columns="2" cellspacing="0" cellpadding="0">
-										<h:graphicImage url="/img/jbpm/#{processBuilder.getIcon(row)}.gif" 
+										<h:graphicImage url="/img/jbpm/#{nodeFitter.getIcon(row)}.gif" 
 											title="#{row.nodeType}"
 											style="margin-right:5px; margin-left:2px" />
 									 	<h:outputText value="#{row.name}" 
-									 		style="#{styleNodeName}; #{!empty processBuilder.getMessage(row) ? 'color:red' : ''} " 
-									 		title="#{processBuilder.getMessage(row)}"/>
+									 		style="#{styleNodeName}; #{!empty nodeFitter.getMessage(row) ? 'color:red' : ''} " 
+									 		title="#{nodeFitter.getMessage(row)}"/>
 						 			</h:panelGrid>
 						 		</a:outputPanel>
 						 </a:commandLink>
@@ -106,14 +109,14 @@
 			<s:div id="nodeDiv" style="width:auto; float:left; margin-left:5px">
 				<rich:panel bodyClass="panel"
 					style="overflow:visible"
-					rendered="#{!empty processBuilder.currentNode}">
+					rendered="#{!empty nodeFitter.currentNode}">
 					<f:facet name="header">
 						<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-							<h:graphicImage url="/img/jbpm/#{processBuilder.getIcon(processBuilder.currentNode)}.gif" 
-								title="#{processBuilder.currentNode.nodeType}"
+							<h:graphicImage url="/img/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif" 
+								title="#{nodeFitter.currentNode.nodeType}"
 								style="margin-right:5px" />
 							<rich:inplaceInput style="border:none; background-color:transparent"
-								value="#{processBuilder.nodeName}"
+								value="#{nodeFitter.nodeName}"
 								inputWidth="150px"
 								title="Clique para alterar o nome do nó"
 								selectOnEdit="true"
@@ -126,29 +129,29 @@
 						</h:panelGrid>
 					</f:facet>
 					
-					<s:fragment rendered="#{processBuilder.currentNode.nodeType != 'StartState'}">
+					<s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
 						<ui:include src="transition.xhtml">
 							<ui:param name="type" value="from" />
 						</ui:include>
 					</s:fragment>
 	
-					<s:fragment rendered="#{processBuilder.currentNode.nodeType != 'EndState'}">
+					<s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}">
 						<ui:include src="transition.xhtml">
 							<ui:param name="type" value="to" />
 						</ui:include>
 					</s:fragment>
 	
-					<s:fragment rendered="#{processBuilder.currentNode.nodeType == 'Task' || processBuilder.currentNode.nodeType == 'StartState'}">
+					<s:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task' || nodeFitter.currentNode.nodeType == 'StartState'}">
 						<ui:include src="tasks.xhtml" />
 					</s:fragment>
 	
-					<s:fragment rendered="#{processBuilder.currentNode.nodeType == 'Task'}">
+					<s:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
 						<ui:include src="timers.xhtml" />
 					</s:fragment>
 	
-					<c:if test="#{! empty processBuilder.nodeForm}">
+					<c:if test="#{! empty nodeFitter.nodeForm}">
 						<s:div style="margin-left:3px">
-							<ui:include src="forms/#{processBuilder.nodeForm}.xhtml" />
+							<ui:include src="forms/#{nodeFitter.nodeForm}.xhtml" />
 						</s:div>
 					</c:if>
 					
@@ -160,7 +163,7 @@
 						<wi:inputTextarea id="nodeDescription"
 				 			label=""
 				 			style="width:680px; height:200px"
-				 			value="#{processBuilder.currentNode.description}">
+				 			value="#{nodeFitter.currentNode.description}">
 				 			<wi:ajaxSupport />
 				 		</wi:inputTextarea>
 						
@@ -173,7 +176,7 @@
 											opened="false" 
 											label="Eventos">
 						<ui:include src="events.xhtml"> 
-							<ui:param name="parent" value="#{processBuilder.nodeHandler}" />
+							<ui:param name="parent" value="#{nodeFitter.nodeHandler}" />
 							<ui:param name="id" value="nodeEvent" />
 						</ui:include>
 					</rich:simpleTogglePanel>
@@ -182,10 +185,10 @@
 											style="margin:3px; width:705px; clear:both"
 											opened="false" 
 											label="Eventos de Tarefa"
-											rendered="#{processBuilder.currentNode.nodeType == 'Task'}">
+											rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
 						<c:if test="#{tarefaEventoHome.enableEvents}">
 							<ui:include src="taskEvents.xhtml"> 
-								<ui:param name="parent" value="#{processBuilder.nodeHandler}" />
+								<ui:param name="parent" value="#{nodeFitter.nodeHandler}" />
 								<ui:param name="id" value="nodeEvent" />
 							</ui:include>
 						</c:if>
@@ -197,10 +200,10 @@
 				</rich:panel>
 				<br/>
 				<rich:panel header="Novo nó" style="height: 290px; width:480px"
-					rendered="#{empty processBuilder.currentNode}">
+					rendered="#{empty nodeFitter.currentNode}">
 
 				 		<rich:dataTable id="nodeTypes" style="width: 150px; float:left"
-				 			value="#{processBuilder.nodeTypes}" var="node">
+				 			value="#{nodeFitter.nodeTypes}" var="node">
 				 			<f:facet name="header">Tipo de nó</f:facet>
 				 			<rich:column style="width:18px">
 				 				<h:graphicImage url="/img/jbpm/${node[0]}.gif" />
@@ -210,11 +213,11 @@
 				 			</rich:column>
 				 			<rich:column style="width:15px">
 				 				<h:graphicImage 
-				 					url="/img/jbpm/#{processBuilder.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
+				 					url="/img/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
 				 					<a:support event="onclick"
 				 						ajaxSingle="true"
 				 						reRender="nodeTypes,inTransition"
-				 						action="#{processBuilder.setNewNodeType(node[0])}"/>
+				 						action="#{nodeFitter.setNewNodeType(node[0])}"/>
 				 				</h:graphicImage>
 				 			</rich:column>
 				 		</rich:dataTable>
@@ -225,7 +228,7 @@
 					 		<h:inputText id="newNodeName"
 					 					 label="Nome"
 					 					 styleClass="inputText"
-					 					 value="#{processBuilder.newNodeName}">
+					 					 value="#{nodeFitter.newNodeName}">
 					 			<wi:ajaxSupport/>
 					 		</h:inputText>
 					 	</s:decorate>
@@ -233,19 +236,19 @@
 					 		<ui:define name="label">Inserir após:</ui:define>
 					 		<h:selectOneMenu id="after"					 
 											 style="min-width: 250px;"
-											 value="#{processBuilder.newNodeAfter}">
-								<f:selectItems value="#{processBuilder.nodesItems}"/>
+											 value="#{nodeFitter.newNodeAfter}">
+								<f:selectItems value="#{nodeFitter.nodesItems}"/>
 								<wi:ajaxSupport/>
 							</h:selectOneMenu>
 					 	</s:decorate>
 						<s:div  id="inTransition">
-						 	<s:decorate rendered="#{processBuilder.newNodeType != 'EndState'}"
+						 	<s:decorate rendered="#{nodeFitter.newNodeType != 'EndState'}"
 						 				template="/WEB-INF/xhtml/components/templates/edit.xhtml">	
 						 		<ui:define name="label">Na transição:</ui:define>
 						 		<h:selectOneMenu id="after"	
 												 style="min-width: 250px;"
-												 value="#{processBuilder.newNodeTransition}">
-									<f:selectItems value="#{processBuilder.transitionsItems}"/>
+												 value="#{transitionFitter.newNodeTransitionName}">
+									<f:selectItems value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}"/>
 									<wi:ajaxSupport/>
 								</h:selectOneMenu>
 						 	</s:decorate>	
@@ -254,7 +257,7 @@
 							value="Inserir"
 							reRender="nodesDiv" 
 							ajaxSingle="true"
-							action="#{processBuilder.addNewNode()}" />
+							action="#{nodeFitter.addNewNode()}" />
 			 		</s:div>
 		 		</rich:panel>
 				
@@ -270,7 +273,7 @@
 			<a:commandLink id="#{type}Link" 
 				reRender="actionTemplate"
 				onclick="idTextarea='form:nodes:conditionInputDecoration:conditionInput'"
-				action="#{actionTemplateHandler.setCurrentActionTemplate(processBuilder.currentTransition.condition)}" >
+				action="#{actionTemplateHandler.setCurrentActionTemplate(transitionFitter.getCurrentTransition().condition)}" >
 				<h:graphicImage url="/img/jbpm/wizard.gif" 
 					title="Assistente para expressão"
 					style="position: absolute; margin-left: 80px; margin-top: 3px;"/>
@@ -280,7 +283,7 @@
 			</a:commandLink>
 			<div style="padding: 10px">
 				<wi:inputTextarea id="conditionInput" 
-					value="#{processBuilder.currentTransition.condition}" 
+					value="#{transitionFitter.getCurrentTransition().condition}" 
 					widthDiv="500px"
 					style="width:100%"
 					label="Expressão:">

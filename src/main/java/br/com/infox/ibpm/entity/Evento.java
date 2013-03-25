@@ -45,7 +45,7 @@ public class Evento implements java.io.Serializable {
 	private int idEvento;
 	private String evento;
 	private String observacao;
-	private Boolean ativo = Boolean.TRUE;
+	private Boolean ativo;
 	private Evento eventoSuperior;
 	private Status status;
 	private String caminhoCompleto;
@@ -176,7 +176,7 @@ public class Evento implements java.io.Serializable {
 		this.status = status;
 	}
 
-	@Column(name="ds_caminho_completo")
+	@Column(name="ds_caminho_completo", unique=true)
 	@HierarchicalPath
 	public String getCaminhoCompleto() {
 		return caminhoCompleto;

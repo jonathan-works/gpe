@@ -41,7 +41,7 @@ public class Natureza implements java.io.Serializable {
 		this.idNatureza = idNatureza;
 	}
 	
-	@Column(name="ds_natureza", length=30, nullable=false)
+	@Column(name="ds_natureza", length=30, nullable=false, unique=true)
 	public String getNatureza() {
 		return natureza;
 	}

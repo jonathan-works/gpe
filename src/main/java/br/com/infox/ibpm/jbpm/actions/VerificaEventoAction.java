@@ -227,7 +227,7 @@ public class VerificaEventoAction extends ActionTemplate {
 	public List<Agrupamento> getAgrupamentos() {
 		if(agrupamentos == null) {
 			 agrupamentos = EntityUtil.getEntityList(Agrupamento.class);
-			 createdExpression = ProcessBuilder.instance().getCurrentTransition().getCondition();
+			 createdExpression = ProcessBuilder.instance().getTransitionFitter().getCurrentTransition().getCondition();
 			 extractParameters(createdExpression);
 		}
 		return agrupamentos;

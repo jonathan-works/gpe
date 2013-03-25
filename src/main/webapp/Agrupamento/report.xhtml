@@ -19,16 +19,13 @@
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
 				xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<ui:param name="title" value="#{messages['agrupamento.titlePage']}" />
-
-	<wi:dataReport subtitle="Resultado da Pesquisa "
-				   title="#{title}"
+	<wi:dataReport title="#{messages['agrupamento.reportTitle']}"
 				   columns="2"
 				   widths="3 1"
 				   headerText="#{agrupamentoList.criteria}">
 
-		<wi:reportColumnHeader title="#{messages['agrupamento.descricaoCbo']}"/>
-		<wi:reportColumnHeader title="#{messages['agrupamento.ativo']}"/>
+		<wi:reportColumnHeader title="#{messages['agrupamento.agrupamento']}"/>
+		<wi:reportColumnHeader title="#{messages['field.situacao']}"/>
 
 		<ui:repeat var="row" value="#{agrupamentoList.list()}">
 			<wi:reportColumn value="#{row.agrupamento}" />

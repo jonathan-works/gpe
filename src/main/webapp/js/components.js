@@ -151,10 +151,21 @@ function validarDataDMA(dia, mes, ano) {
 }
 
 function onlyNumber(obj){
-	valor = obj.value;
-	signal = valor.indexOf('-') == 0 ? '-' : '';
-	obj.value = signal + valor.replace(/\D/g,"");
-}  
+    valor = obj.value;
+    signal = valor.indexOf('-') == 0 ? '-' : '';
+    obj.value = signal + valor.replace(/\D/g,"");
+}
+
+function onlyPositiveNumber(obj){
+    valor = obj.value;
+    obj.value = valor.replace(/\D/g,"");
+}
+
+function clamp(obj, min, max) {
+    if ((!isNaN(obj.value)) && (isFinite(obj.value)) && (obj.value != "")) {
+        obj.value = Math.min(max, Math.max(min, obj.value));
+    }
+}
 
 //Validador de E-Mail
 function validarEmail(obj) {

@@ -300,8 +300,10 @@ public class SearchHandler implements Serializable {
 		if (JbpmUtil.isTypeEditor(type)){
 			texto = JbpmUtil.instance().valorProcessoDocumento((Integer) value);
 		} else if("sim_nao".equals(type)) {
-			texto = (Boolean)value ? "Sim" : "Não";
-		} else {
+			texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
+		} else if ("numberMoney".equalsIgnoreCase(type)){
+            texto = String.format("%.2f", value);
+        } else {
 			texto = value.toString();
 		}
 		
@@ -311,7 +313,7 @@ public class SearchHandler implements Serializable {
 			try {
 				org.apache.lucene.search.Query query = parser.parse(searchText);
 				String highlighted = HelpUtil.highlightText(query, texto, false);
-				if (!highlighted.equals("")) {
+				if (!"".equals(highlighted)) {
 					texto = highlighted;
 				}
 			} catch (ParseException e) {

@@ -2,7 +2,6 @@ package br.com.infox.list;
 
 import java.util.Map;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;

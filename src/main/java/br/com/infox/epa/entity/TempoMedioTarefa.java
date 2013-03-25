@@ -77,6 +77,17 @@ public class TempoMedioTarefa implements Serializable {
 		this.tempoMedio = tempoMedio;
 	}
 	
+	@Transient
+	public String getTempoMedioFormatado() {
+	    float resultTempo = tempoMedio;
+	    if(PrazoEnum.D.equals(tipoPrazo)) {
+	        resultTempo = resultTempo / 1440;
+	    } else if (PrazoEnum.H.equals(tipoPrazo)) {
+	        resultTempo = resultTempo / 60;
+	    }
+	    return String.format("%.2f %s", resultTempo, tipoPrazo == null ? "":tipoPrazo.getLabel());
+	}
+	
 	@Column(name="tp_prazo")
 	@Enumerated(EnumType.STRING)
 	public PrazoEnum getTipoPrazo() {

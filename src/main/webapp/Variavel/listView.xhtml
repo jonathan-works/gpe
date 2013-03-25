@@ -4,6 +4,7 @@
 			    xmlns:ui="http://java.sun.com/jsf/facelets"
 				xmlns:c="http://java.sun.com/jstl/core"
 				xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:s="http://jboss.com/products/seam/taglib"
 			    xmlns:h="http://java.sun.com/jsf/html"
 			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 				template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
@@ -24,30 +25,68 @@
 		  veja em http://www.gnu.org/licenses/  
 		-->             
 		          
-	<ui:define name="title">
-		#{messages['variavel.titlePage']}
-	</ui:define>
+	<ui:define name="title"> #{messages['variavel.titlePage']} </ui:define>
 	
 	<ui:param name="home" value="#{variavelHome}" />
 	
 	<ui:define name="searchGrid">   
-	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
-	    <wi:datagrid 
-	    	bean="#{variavelGrid}" 
-	    	searchBean="#{variavelSearch}" 
-	    	title="#{messages['variavel.titleGrid']}"/>
+	    <wi:dataTable values="#{variavelList.list(15)}"
+					  bean="#{variavelList}"
+					  tableTitle="#{messages['variavel.titleView']}"
+					  id="variavelList"
+					  rowId="#{row.idVariavel}" >
+			<ui:define name="headerToolBar">
+                <wi:toolBarReport rendered="false" />
+                <wi:toolBarReportExcel rendered="false"/>                                      
+            </ui:define>
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarVariavelForm"
+							   formTitle="#{messages['searchForm.title']}">
+					<wi:inputText id="variavel"
+								 value="#{variavelList.entity.variavel}"
+								 label="#{messages['variavel.variavel']}"
+								 maxlength="100"/>
+					<wi:inputText id="valorVariavel"
+								  label="#{messages['variavel.valorVariavel']}"
+								  value="#{variavelList.entity.valorVariavel}"
+								  maxlength="200" />
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['field.situacao']}"
+											  value="#{variavelList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="variavel"
+								 columnHeader="#{messages['variavel.variavel']}"
+								 value="#{row.variavel}" />
+			<wi:columnOutputText columnId="valorVariavel"
+								 columnHeader="#{messages['variavel.valorVariavel']}"
+								 value="#{row.valorVariavel}" />
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['field.situacao']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
-		<c:if test="#{canEdit}">
-			<wi:form form="#{variavelForm}" formTitle="#{messages['variavel.titleForm']}" 
-			         persistSemNewInstance="true"/>
-		</c:if>
-		<c:if test="#{not canEdit}">
-			<wi:view form="#{variavelView}" columns="4" title="#{messages['variavel.titleView']}"/>
-		</c:if>
+		<wi:dataForm formId="variavelForm"
+					 formTitle="#{messages['form.title']}">
+			<wi:inputText id="variavel"
+								 value="#{home.instance.variavel}"
+								 label="#{messages['variavel.variavel']}"
+								 maxlength="100"
+								 required="true"/>
+					<wi:inputText id="valorVariavel"
+								  label="#{messages['variavel.valorVariavel']}"
+								  value="#{home.instance.valorVariavel}"
+								  maxlength="200"
+								  required="true"/>
+					<wi:selectSituacaoRadio id="ativo"
+											  label="#{messages['field.situacao']}"
+											  value="#{home.instance.ativo}" />
+		</wi:dataForm>
 	</ui:define>
-
+	
 	<ui:define name="tabs">
 		<rich:tab label="Tipos de Modelo de Documento"
 			rendered="#{home.managed}">

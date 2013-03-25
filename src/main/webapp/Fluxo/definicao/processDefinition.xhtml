@@ -25,7 +25,7 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<ui:define name="title">Definição do processo: #{processBuilder.instance.name}</ui:define>
+<ui:define name="title">#{messages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
 
 <ui:define name="body">
 
@@ -39,38 +39,39 @@
 	<rich:tabPanel style="height:550px"
 		selectedTab="#{processBuilder.tab}"
 		switchType="support" headerSpacing="2">
-		<rich:tab label="Propriedades">
+		<rich:tab label="#{messages['processBuilder.properties']}">
 			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px"
-				header="Dados gerais" >
-				<wi:inputText label="Identificador" 
-					required="#{! processBuilder.exists}"
-					readonly="true"
-					id="id" value="#{processBuilder.id}">
+				header="#{messages['processBuilder.info']}" >
+				<wi:inputText id="codFluxo" 
+                              label="#{messages['fluxo.codFluxo']}"
+                              value="#{processBuilder.id}" 
+					          readonly="true">
 					<f:validator validatorId="idValidator" />
 					<wi:ajaxSupport reRender="idDecoration"/>
 				</wi:inputText>
 
-				<wi:inputText label="Nome do processo" 
-					required="true"
-					readonly="true"
-					id="nome" value="#{def.name}">
+				<wi:inputText id="nome"
+                              label="#{messages['fluxo.fluxo']}"
+                              value="#{def.name}" 
+                              readonly="true">
 					<wi:ajaxSupport reRender="nomeDecoration"/>
 				</wi:inputText>
 				
-				<wi:inputTextarea id="description" value="#{def.description}" 
-					label="Descrição">
+				<wi:inputTextarea id="description"
+                                  value="#{def.description}" 
+					              label="#{messages['processBuilder.description']}">
 					<wi:ajaxSupport/>
 				</wi:inputTextarea> 
 			</rich:panel>
 			
 			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px; margin-top:5px" 
-				header="Raias (swimlanes)" 
+				header="#{messages['processBuilder.swimlanes']}" 
 				rendered="#{processBuilder.exists}">
 				<ui:include src="swimlanes.xhtml" />
 			</rich:panel>
 		</rich:tab>
 		
-		<rich:tab label="Nós" id="nodesTab" rendered="#{processBuilder.exists}">
+		<rich:tab label="#{messages['processBuilder.nodes']}" id="nodesTab" rendered="#{processBuilder.exists}">
 			<ui:include src="nodes.xhtml" />
 		</rich:tab>
 		
@@ -90,7 +91,7 @@
 			<ui:include src="xmlEdit.xhtml" />
 		</rich:tab>
 
-		<rich:tab label="Gráfico" id="graphTab" >
+		<rich:tab label="#{messages['processBuilder.graph']}" id="graphTab" >
 			<ui:include src="graph.xhtml" />
 		</rich:tab>
 	</rich:tabPanel>
@@ -98,7 +99,7 @@
 	<h:commandButton styleClass="dr-tbpnl-tb-inact"
 		id="gravar"
 		action="#{processBuilder.update()}"
-		value="Gravar" type="submit" 
+		value="#{messages['processBuilder.saveBtn']}" type="submit" 
 		rendered="#{processBuilder.exists}"/>
 
 	<a:commandButton styleClass="dr-tbpnl-tb-inact"
@@ -106,30 +107,22 @@
 		ajaxSingle="true"
 		reRender="form"
 		action="#{processBuilder.deploy()}"
-		value="Publicar" type="submit" 
+		value="#{messages['processBuilder.deployBtn']}" type="submit" 
 		rendered="#{processBuilder.exists}"/>
 
 	<h:commandButton styleClass="dr-tbpnl-tb-inact"
 		id="novoProcesso"
 		action="#{processBuilder.update()}"
-		value="Gravar" type="submit" 
+		value="#{messages['processBuilder.saveBtn']}" type="submit" 
 		rendered="#{!processBuilder.exists}"
 		reRender="pageBody"/>
-
 	<h:commandButton styleClass="dr-tbpnl-tb-inact"
 					 id="new"
 					 action="#{processBuilder.clearDefinition()}"
-					 value="Novo" 
+					 value="#{messages['processBuilder.newBtn']}" 
 					 type="submit"
-					 onclick="if(!confirm('Confirma apagar toda a definição desse Fluxo? Será criada uma nova e não é possível desfazer.')) return false;" 
+					 onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;" 
 					 rendered="#{processBuilder.exists}"/>
-
-	<h:commandButton styleClass="dr-tbpnl-tb-inact"
-					 id="test"
-					 action="#{processoHome.test()}"
-					 value="Testar" 
-					 type="submit" 
-					 rendered="#{false and processBuilder.exists}"/>
 
 	</a:form>
 
@@ -140,7 +133,7 @@
 					   style="padding:0"
 					   height="550" 
 					   width="920">
-			<c:if test="#{!empty actionTemplate.fileName or !empty processBuilder.currentTask.currentVariable}">
+			<c:if test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}">
 				<ui:include src="actions/#{actionTemplate.fileName}" />
 			</c:if>
 		</wi:modalPanel>

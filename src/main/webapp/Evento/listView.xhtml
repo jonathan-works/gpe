@@ -33,7 +33,7 @@
 					  rowId="#{row.idEvento}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarEventoForm"
-							   formTitle="Pesquisar Eventos">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputText id="evento"
 								  value="#{eventoList.entity.evento}"
 								  label="#{messages['evento.evento']}"/>
@@ -44,7 +44,7 @@
 							 iconLeaf="/img/file.gif"
 							 label="#{messages['evento.eventoSuperior']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['evento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{eventoList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -57,7 +57,7 @@
 								 columnWidth="20%"
 								 value="#{row.eventoSuperior}"/>
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['evento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							columnWidth="15%"
 							value="#{row.ativo}" />
 		</wi:dataTable>
@@ -65,7 +65,7 @@
 
 	<ui:define name="form">
 		<wi:dataForm formId="eventoForm"
-					 formTitle="#{messages['evento.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="evento"
 						  label="#{messages['evento.evento']}"
 						  required="true"
@@ -81,8 +81,7 @@
 					 iconLeaf="/img/file.gif"
 					 label="#{messages['evento.eventoSuperior']}"/>
 			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['evento.ativo']}"
-								    required="true"
+								    label="#{messages['field.situacao']}"
 								    value="#{eventoHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

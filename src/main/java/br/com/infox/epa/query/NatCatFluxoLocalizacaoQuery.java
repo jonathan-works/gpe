@@ -30,4 +30,8 @@ public interface NatCatFluxoLocalizacaoQuery {
 		   "inner join ncf.fluxo.fluxoPapelList papelList where " +
 		   "o.localizacao = :"+QUERY_PARAM_LOCALIZACAO+
 		   " and papelList.papel = :"+QUERY_PARAM_PAPEL;
+	
+	String LIST_NATUREZA_ATIVO_QUERY = "select o from Natureza o";
+	String LIST_CATEGORIA_ATIVO_QUERY = "select o from Categoria o";
+	String LIST_FLUXO_ATIVO_QUERY = "select o from Fluxo o";
 }

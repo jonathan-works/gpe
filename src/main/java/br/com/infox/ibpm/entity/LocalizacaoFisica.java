@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 import org.hibernate.validator.Length;
 
+import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.HierarchicalPath;
 import br.com.infox.annotations.Parent;
 import br.com.infox.annotations.PathDescriptor;
@@ -26,6 +27,7 @@ public class LocalizacaoFisica implements Serializable {
 	private String descricao;
 	private String caminhoCompleto;
 	private Boolean ativo;
+	private List<LocalizacaoFisica> localizacaoFisicaList;
 	
 	@SequenceGenerator(name="generator", sequenceName="sq_tb_localizacao_fisica")
 	@Id
@@ -91,6 +93,17 @@ public class LocalizacaoFisica implements Serializable {
 			pai = pai.getLocalizacaoFisicaPai();
 		}
 		return list;
+	}
+	
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "localizacaoFisicaPai")
+	@ChildList
+	public List<LocalizacaoFisica> getLocalizacaoFisicaList() {
+		return this.localizacaoFisicaList;
+	}
+
+	public void setLocalizacaoFisicaList(List<LocalizacaoFisica> localizacaoFisicaList) {
+		this.localizacaoFisicaList = localizacaoFisicaList;
 	}
 	
 }

@@ -21,14 +21,13 @@
 
 	<ui:param name="title" value="#{messages['categoria.titlePage']}" />
 
-	<wi:dataReport subtitle="Resultado das Categorias Pesquisadas"
-				   title="#{title}"
+	<wi:dataReport title="#{messages['categoria.reportTitle']}"
 				   columns="2"
 				   widths="4 2"
 				   headerText="#{categoriaList.criteria}" >
 				   
 		<wi:reportColumnHeader title="#{messages['categoria.categoria']}" />
-		<wi:reportColumnHeader title="#{messages['categoria.ativo']}" />
+		<wi:reportColumnHeader title="#{messages['field.situacao']}" />
 				
 		<ui:repeat var="row" value="#{categoriaList.list()}">
 			<wi:reportColumn value="#{row.categoria}" />

@@ -226,6 +226,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public String persist() {
 		StopWatch sw = new StopWatch(true);
 		String ret = null;
+		String msg = ".persist() (" + getInstanceClassName() + ")";
 		try {
 			if (beforePersistOrUpdate()) {
 				ret = super.persist();
@@ -248,16 +249,16 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			LOG.error(".persist() (" + getInstanceClassName() + ")", e);	
 		} catch (AplicationException e){
 			throw new AplicationException("Erro: " + e.getMessage(), e);
-		} catch (Exception e) {
-			Throwable cause = e.getCause();
-			if (cause instanceof ConstraintViolationException) {
-				instance().add(StatusMessage.Severity.ERROR, getConstraintViolationExceptionMessage());
-				LOG.warn(".persist() (" + getInstanceClassName() + ")", cause);					
-			} else {
-				instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " +
-						e.getMessage(), e);
-				LOG.error(".persist() (" + getInstanceClassName() + ")", e);
-			}
+		} catch (javax.persistence.PersistenceException e) {
+            instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
+            LOG.error(msg, e);
+		} catch (ConstraintViolationException e){
+		    instance().add(StatusMessage.Severity.ERROR, getConstraintViolationExceptionMessage());
+            LOG.warn(".persist() (" + getInstanceClassName() + ")", e.getCause());
+        } catch (Exception e) {
+            instance().add(StatusMessage.Severity.ERROR,
+                    "Erro ao gravar: " + e.getMessage(), e);
+            LOG.error(".persist() (" + getInstanceClassName() + ")", e);
 		} 
 		if (ret == null) {
 			 // Caso ocorra algum erro, é criada uma copia do instance sem O Id e os List
@@ -308,7 +309,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			LOG.error(msg, e);			
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, getNonUniqueObjectExceptionMessage());
-			LOG.error(msg, e);			
+			LOG.error(msg, e);	
+		} catch (javax.persistence.PersistenceException e) {
+		    instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
+            LOG.error(msg, e);
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {

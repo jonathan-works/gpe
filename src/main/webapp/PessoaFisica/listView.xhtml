@@ -39,7 +39,7 @@
 					  rowId="#{row.idPessoa}">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarPessoaFisicaForm"
-							   formTitle="#{messages['pessoaFisica.titleSearchForm']}">
+							   formTitle="#{messages['searchForm.title']}">
 					<wi:inputCpf id="cpf"
 								 value="#{pessoaFisicaList.entity.cpf}"
 								 label="#{messages['pessoaFisica.cpf']}"/>
@@ -50,7 +50,7 @@
 								value="#{pessoaFisicaList.entity.dataNascimento}"
 								label="#{messages['pessoaFisica.dataNascimento']}"/>
 					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['agrupamento.ativo']}"
+											  label="#{messages['field.situacao']}"
 											  value="#{pessoaFisicaList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
@@ -71,14 +71,14 @@
 			</wi:columnOutputText>
 
 			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['agrupamento.ativo']}"
+							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form">
 		<wi:dataForm formId="pessoaFisicaForm"
-					 formTitle="#{messages['pessoaFisica.titleForm']}">
+					 formTitle="#{messages['form.title']}">
 			
 			<wi:inputCpf id="cpf"
 						 value="#{pessoaFisicaHome.instance.cpf}"
@@ -92,9 +92,14 @@
 						value="#{pessoaFisicaHome.instance.dataNascimento}"
 						label="#{messages['pessoaFisica.dataNascimento']}"
 						required="true"/>
+			<wi:inputText id="email"
+							  label="#{messages['pessoaFisica.email']}"
+							  value="#{pessoaFisicaHome.instance.email}"
+							  required="true">
+				<f:validator validatorId="emailValidator" />
+			</wi:inputText>
 			<wi:selectSituacaoRadio id="ativo"
-						label="#{messages['agrupamento.ativo']}"
-						required="true"
+						label="#{messages['field.situacao']}"
 						value="#{pessoaFisicaHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>

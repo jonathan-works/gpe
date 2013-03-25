@@ -97,7 +97,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
     private ProcessoDocumento pdFluxo;
 	private Integer idProcessoDocumento;
 
-	private long taskId;
+	private Long tarefaId;
 
 	private Boolean checkVisibilidade = true;
 
@@ -238,11 +238,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}	
 	
 	public void iniciarTarefaProcesso() {
-		JbpmEventsHandler.instance().iniciarTask(instance);
+		JbpmEventsHandler.instance().iniciarTask(instance, tarefaId);
 	}
 	
 	public void visualizarTarefaProcesso(){
-		JbpmEventsHandler.instance().visualizarTask(instance);
+		JbpmEventsHandler.instance().visualizarTask(instance, tarefaId);
 	}
 
 	public Boolean acessarFluxo(){
@@ -253,12 +253,12 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return Boolean.FALSE;
 	}
 	
-	public void setTaskId(long taskId) {
-		this.taskId = taskId;
+	public void setTarefaId(Long tarefaId) {
+		this.tarefaId = tarefaId;
 	}
 
-	public long getTaskId() {
-		return taskId; 
+	public Long getTarefaId() {
+		return tarefaId;
 	}
 	
 	public String mostraProcesso(int id, String destino) {
@@ -484,7 +484,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		doc.setDataInclusao(new Date());
 		doc.setUsuarioInclusao(usuarioLogado);
 		doc.setProcesso(getInstance());
-		doc.setProcessoDocumento(label);
+		if (label == null) {
+			doc.setProcessoDocumento("null");
+		} else {
+			doc.setProcessoDocumento(label);
+		}
 
 		//TODO verificar se a regra abaixo será mantida, se será criado um parametro ou se o componente textEditor será extinto.
 		/*
