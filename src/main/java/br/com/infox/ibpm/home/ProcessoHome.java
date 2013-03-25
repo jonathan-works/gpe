@@ -229,23 +229,16 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		inicializarTipoProcessoDocumento();
 		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
 		
-		try {
-			getEntityManager().merge(processoDocumento);
-			getEntityManager().flush();
-            setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
-		} catch (AssertionFailure e) {
-			e.printStackTrace();
-		}
-		try {
-			getEntityManager().merge(processoDocumentoBin);
-			getEntityManager().flush();
-			try{
-				Events.instance().raiseEvent(EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO, processoDocumentoBin);
-			}catch(Exception e){
-				//Ignora de assinatura erro por enquanto
-			}
-		} catch (AssertionFailure e) {
-			e.printStackTrace();
+
+		getEntityManager().merge(processoDocumento);
+		getEntityManager().flush();
+        setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
+		getEntityManager().merge(processoDocumentoBin);
+		getEntityManager().flush();
+		try{
+			Events.instance().raiseEvent(EVENT_ATUALIZAR_PROCESSO_DOCUMENTO_FLUXO, processoDocumentoBin);
+		}catch(Exception e){
+			//Ignora de assinatura erro por enquanto
 		}
 	}
 
