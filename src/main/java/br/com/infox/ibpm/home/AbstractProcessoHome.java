@@ -38,13 +38,8 @@ public abstract class AbstractProcessoHome<T> extends AbstractHome<Processo> {
 
 	@Override
 	protected Processo createInstance() {
-		Processo processo = new Processo();
-		UsuarioHome usuarioHome = (UsuarioHome) Component.getInstance(
-				"usuarioHome", false);
-		if (usuarioHome != null) {
-			processo.setUsuarioCadastroProcesso(usuarioHome
-					.getDefinedInstance());
-		}
+		Processo processo = super.createInstance();
+		processo.setUsuarioCadastroProcesso(Authenticator.getUsuarioLogado());
 		return processo;
 	}
 
