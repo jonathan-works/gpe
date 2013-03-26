@@ -18,6 +18,8 @@ package br.com.infox.ibpm.home;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -40,13 +42,14 @@ import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
-public class ProcessoHome extends AbstractProcessoHome<Processo> {
+public class ProcessoHome extends AbstractHome<Processo> {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
@@ -325,10 +328,99 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private boolean taskInstancePossuiModeloDocumento(){
 		return TaskInstanceHome.instance().getModeloDocumento() != null;
 	}
+	
+	@Override
+	protected Processo createInstance() {
+		Processo processo = super.createInstance();
+		processo.setUsuarioCadastroProcesso(Authenticator.getUsuarioLogado());
+		return processo;
+	}
+
+	@Override
+	public String remove() {
+		UsuarioHome usuario = (UsuarioHome) Component.getInstance(
+				"usuarioHome", false);
+		if (usuario != null) {
+			usuario.getInstance().getProcessoListForIdUsuarioCadastroProcesso()
+					.remove(instance);
+		}
+		return super.remove();
+	}
+
+	@Override
+	public String remove(Processo obj) {
+		setInstance(obj);
+		String ret = super.remove();
+		newInstance();
+		refreshGrid("processoGrid");
+		return ret;
+	}
+
+	@Override
+	public String persist() {
+		String action = super.persist();
+		return action;
+	}
+
+	public List<ProcessoDocumento> getProcessoDocumentoList() {
+		return getInstance() == null ? null : getInstance()
+				.getProcessoDocumentoList();
+	}
+
+	/**
+	 * Metodo que adiciona o processo passado como parâmetro a lista dos processos
+	 * que são conexos ao processo da instância.
+	 * @param obj
+	 * @param gridId
+	 */
+	public void addProcessoConexoForIdProcesso(Processo obj, String gridId) {
+		if (getInstance() != null) {
+			getInstance().getProcessoConexoListForIdProcesso().add(obj);
+			refreshGrid(gridId);
+		}
+	}
+
+	public void removeProcessoConexoForIdProcesso(Processo obj, String gridId) {
+		if (getInstance() != null) {
+			getInstance().getProcessoConexoListForIdProcesso().remove(obj);
+			refreshGrid(gridId);
+		}
+	}
+
+
+	/**
+	 * Metodo que adiciona o processo passado como parâmetro a lista dos processos
+	 * que o processo da instância é conexo.
+	 * @param processo
+	 * @param gridId
+	 */
+	public void addProcessoConexoForIdProcessoConexo(Processo processo, String gridId) {
+		if (getInstance() != null) {
+			getInstance().getProcessoConexoListForIdProcessoConexo().add(processo);
+			getEntityManager().flush();
+			refreshGrid(gridId);
+		}
+	}
+
+	public void removeProcessoConexoForIdProcessoConexo(Processo processo, String gridId) {
+		if (getInstance() != null) {
+			getInstance().getProcessoConexoListForIdProcessoConexo().remove(processo);
+			getEntityManager().flush();
+			refreshGrid(gridId);
+		}
+	}
 		
 // -----------------------------------------------------------------------------------------------------------------------
 // -------------------------------------------- Getters e Setters --------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------------------
+	
+	public void setProcessoIdProcesso(Integer id) {
+		setId(id);
+	}
+
+	public Integer getProcessoIdProcesso() {
+		return (Integer) getId();
+	}
 	
 	@Observer("processoHomeSetId")
 	@Override
@@ -461,4 +553,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
 		//TODO esperando Tássio verificar (21 de março de 2013)
 	}
+	
+	
 }
