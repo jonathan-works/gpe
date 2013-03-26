@@ -75,8 +75,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private Integer idProcessoDocumento;
 
 	private Long tarefaId;
-
-	private Boolean checkVisibilidade = true;
 	
 	public void iniciarNovoFluxo(){
 		limpar();
@@ -109,14 +107,11 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	public Boolean checarVisibilidade()	{
-		if (!checkVisibilidade)
-			return true;
-		ControleFiltros.instance().iniciarFiltro();
-		boolean check = processoLocalizacaoIbpmDAO.possuiPermissao(getInstance().getIdProcesso(), 
+		boolean possuiPermissao = processoLocalizacaoIbpmDAO.possuiPermissao(getInstance().getIdProcesso(), 
 				Authenticator.getLocalizacaoAtual(), Authenticator.getPapelAtual());
-		if(!check)
+		if(!possuiPermissao)
 			avisarNaoHaPermissaoParaAcessarProcesso();
-		return check;
+		return possuiPermissao;
 	}
 
 	private void avisarNaoHaPermissaoParaAcessarProcesso() {
@@ -125,10 +120,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + getInstance().getNumeroProcesso());
 	}
 		
-	/**
-	 * Verifica se existe algum agrupamento vinculado ao tipo de documento
-	 * selecionado.
-	 */
+	
 	public void onSelectProcessoDocumento() {
 		limparEventsTreeHandler();
 		if(possuiAgrupamento()) {
@@ -285,7 +277,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 				"Erro ao verificar certificado: " + e1.getMessage());
 	}
 
-	//TODO método candidato à migração para o Manager apropriado
 	private ProcessoDocumento createProcessoDocumento(String label, ProcessoDocumentoBin bin) {
 		ProcessoDocumento doc = new ProcessoDocumento();
 		doc.setProcessoDocumentoBin(bin);
@@ -304,7 +295,6 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return doc;
 	}
 
-	//TODO método candidato à migração para o Manager apropriado
 	/**
 	 * Cria e configura um novo ProcessoDocumentoBin com base no {@value} passado
 	 * @param value - valor da variável modeloDocumento no contexto jBPM
