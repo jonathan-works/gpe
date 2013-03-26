@@ -26,7 +26,6 @@ import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
-import br.com.infox.epa.service.ProcessoService;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
@@ -53,9 +52,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	public static final String NAME = "processoHome";
 
 	private static final int ERRO_AO_VERIFICAR_CERTIFICADO = 0;
-	private static final int ERRO_AO_INSERIR_DOCUMENTO = 0;
 		
-	@In private ProcessoService processoService;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	@In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
 
@@ -148,14 +145,10 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
 		Integer result = 0;
-		
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
 		ProcessoHome.instance().setIdProcessoDocumento(idDoc);
 		if (processoDocumento == null) {
 			result = inserirProcessoDocumentoFluxo(value, label, assinado);
-			if(result == ERRO_AO_VERIFICAR_CERTIFICADO) {
-				return ERRO_AO_INSERIR_DOCUMENTO;
-			}
 		} else {
 			AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
 			if(documentoService.isDocumentoAssinado(idDoc)){
@@ -165,8 +158,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 				atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
 				result = idDoc;
 			}
+			FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 		}
-		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 		return result;
 	}
 	
