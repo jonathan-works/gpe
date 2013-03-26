@@ -12,8 +12,10 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.access.entity.Papel;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.query.ProcessoLocalizacaoIbpmQuery;
 import br.com.itx.util.EntityUtil;
 
@@ -31,15 +33,16 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 		return getNamedSingleResult(ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE, parameters);
 	}
 	
-	public boolean possuiPermissao(Integer id, Localizacao localizacao, Papel papel) {
+	public boolean possuiPermissao() {
+		ControleFiltros.instance().iniciarFiltro();
 		String hql = "select o from ProcessoLocalizacaoIbpm o " +
 						"where o.processo.idProcesso = :id" +
 						" and o.localizacao = :localizacao" +
 						" and o.papel = :papel";
 		Query query = entityManager.createQuery(hql);
-		query.setParameter("id", id);
-		query.setParameter("localizacao", localizacao);
-		query.setParameter("papel", papel);
+		query.setParameter("id", ProcessoHome.instance().getInstance().getIdProcesso());
+		query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
+		query.setParameter("papel", Authenticator.getPapelAtual());
 		Object result = EntityUtil.getSingleResult(query);
 		return result != null;
 	}

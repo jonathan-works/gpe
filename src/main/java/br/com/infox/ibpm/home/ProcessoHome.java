@@ -27,7 +27,6 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
 import br.com.infox.epa.service.ProcessoService;
-import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
@@ -107,8 +106,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	}
 	
 	public Boolean checarVisibilidade()	{
-		boolean possuiPermissao = processoLocalizacaoIbpmDAO.possuiPermissao(getInstance().getIdProcesso(), 
-				Authenticator.getLocalizacaoAtual(), Authenticator.getPapelAtual());
+		boolean possuiPermissao = processoLocalizacaoIbpmDAO.possuiPermissao();
 		if(!possuiPermissao)
 			avisarNaoHaPermissaoParaAcessarProcesso();
 		return possuiPermissao;
