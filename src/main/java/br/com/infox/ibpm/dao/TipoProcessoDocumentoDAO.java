@@ -25,5 +25,4 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 		q.setMaxResults(1);
 		return (TipoProcessoDocumento) q.getSingleResult();
 	}
-
 }

@@ -16,14 +16,6 @@ public class ProcessoDocumentoManager extends GenericManager {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoDocumentoManager";
 	
-	private ProcessoDocumento processoDocumento;
-
-	public ProcessoDocumento getProcessoDocumento() {
-		return processoDocumento;
-	}
-
-	public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
-		this.processoDocumento = processoDocumento;
-	}
+	
 
 }
