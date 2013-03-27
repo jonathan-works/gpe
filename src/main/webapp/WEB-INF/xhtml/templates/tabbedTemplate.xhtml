@@ -1,92 +1,85 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:wi="http://www.itx.com.br/jsf">
-	<h:head>    
-	    <meta
-             http-equiv="Content-Type"
-             content="text/html; charset=UTF-8" />
-	    <title>#{nomeSistema}: <ui:insert
-                 name="title" /></title>
-		<a:loadScript
-             src="/js/liveclock.js" />
-		<a:loadScript
-             src="/js/jqueryExt.js" /> 
-		<link
-             rel="icon"
-             href="#{util.contextPath}/favicon.ico"
-             type="image/x-icon" />	
-		<ui:include
-             src="/WEB-INF/xhtml/templates/cssPage.xhtml" /> 
-	</h:head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:wi="http://www.itx.com.br/jsf">
+<h:head>
+	<meta
+		http-equiv="Content-Type"
+		content="text/html; charset=UTF-8" />
+	<title>#{nomeSistema}: <ui:insert name="title" /></title>
+	<h:outputScript
+		library="js"
+		name="liveclock.js" />
+	<h:outputScript
+		library="js"
+		name="jqueryExty.js" />
+	<link
+		rel="icon"
+		href="#{util.contextPath}/favicon.ico"
+		type="image/x-icon" />
+	<ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
+</h:head>
 
-	<h:body>&gt;     
+<h:body>
+	<ui:param
+		name="canEdit"
+		value="#{home.editable}" />
+	<ui:param
+		name="disabledForm"
+		value="#{empty disabledForm ? false : disabledForm}" />
+
+	<ui:include src="header.xhtml" />
+	<ui:include src="ajaxQueue.xhtml" />
+
+	<ui:include src="menu.xhtml">
 		<ui:param
-             name="canEdit"
-             value="#{home.editable}" />
-	    <ui:param
-             name="disabledForm"
-             value="#{empty disabledForm ? false : disabledForm}" />
-	    
-	    <ui:include
-             src="header.xhtml" />   
-		<ui:include
-             src="ajaxQueue.xhtml" />
-	
-	    <ui:include
-             src="menu.xhtml">
-	        <ui:param
-                 name="projectName"
-                 value="#{nomeSistema}" />
-	    </ui:include>
-	
-		<s:div
-             styleClass="pageBody"
-             id="pageBody">  	 				
-			<wi:quadro>
-           		<rich:tabPanel
-                     switchType="ajax"
-                     headerSpacing="2"
-                     selectedTab="#{home.tab}">			
+			name="projectName"
+			value="#{nomeSistema}" />
+	</ui:include>
+
+	<s:div
+		styleClass="pageBody"
+		id="pageBody">
+		<wi:quadro>
+			<h:form>
+				<rich:tabPanel
+					switchType="ajax"
+					activeItem="#{home.tab}">
 					<rich:tab
-                         id="search"
-                         label="Pesquisa"
-                         action="#{home.onClickSearchTab}"
-                         status=":status">
-						<a:region
-                             renderRegionOnly="true">
-							<s:div
-                                 id="searchGridRegion">
-								<ui:insert
-                                     name="searchGrid" />
+						id="search"
+						header="Pesquisa"
+						action="#{home.onClickSearchTab}"
+						status=":status">
+						<a:region>
+							<s:div id="searchGridRegion">
+								<ui:insert name="searchGrid" />
 							</s:div>
 						</a:region>
-					</rich:tab>			
+					</rich:tab>
 					<rich:tab
-                         id="form"
-                         rendered="#{(home.managed or (canEdit and (hideTabForm != true)))}"
-                         label="#{canEdit ? 'Formulário' : 'Detalhes'}"
-                         immediate="true"
-                         status=":status"
-                         disabled="#{disabledForm}"
-                         action="#{home.onClickFormTab}">
-						<a:region
-                             renderRegionOnly="true">
-							<ui:insert
-                                 name="form" />
+						id="form"
+						rendered="#{(home.managed or (canEdit and (hideTabForm != true)))}"
+						header="#{canEdit ? 'Formulário' : 'Detalhes'}"
+						immediate="true"
+						status=":status"
+						disabled="#{disabledForm}"
+						action="#{home.onClickFormTab}">
+						<a:region>
+							<ui:insert name="form" />
 						</a:region>
 					</rich:tab>
-					<ui:insert
-                         name="tabs" />
-				</rich:tabPanel>					
-			</wi:quadro>
-		</s:div>
-			
-	</h:body>&gt;
+					<ui:insert name="tabs" />
+				</rich:tabPanel>
+			</h:form>
+		</wi:quadro>
+	</s:div>
+
+</h:body>
 </html>
