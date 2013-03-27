@@ -76,7 +76,7 @@ public class Processo implements java.io.Serializable {
 	public Processo() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo")
+	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo", allocationSize = 1)
 	@Id
 	@GeneratedValue(generator = "generator")
 	@Column(name = "id_processo", unique = true, nullable = false)
