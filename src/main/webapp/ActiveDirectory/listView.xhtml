@@ -98,7 +98,7 @@
 				<ui:define
                      name="toolBar">
 					<wi:toolBarEdit
-                         rowId="#{row.idUsuario}"
+                         rowId="#{row.idPessoa}"
                          action="#{action.setInstance(row)}" />
 				</ui:define>
 
@@ -196,7 +196,7 @@
              id="enderecoTab"
              label="#{messages['endereco.titlePage']}"
              action="#{action.newEndereco()}"
-             rendered="#{not empty action.instance.idUsuario}"
+             rendered="#{not empty action.instance.idPessoa}"
              status=":status">
 			<s:div
                  id="enderecoDiv">
@@ -317,7 +317,7 @@
              id="localizacaoTab"
              label="#{messages['usuarioLocalizacao.titlePage']}"
              action="#{action.newUsuarioLocalizacao()}"
-             rendered="#{not empty action.instance.idUsuario}"
+             rendered="#{not empty action.instance.idPessoa}"
              status=":status">
 			<s:div
                  id="usuLocDiv">
