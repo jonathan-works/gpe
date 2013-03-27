@@ -24,8 +24,8 @@
 						<a:commandLink
 							action="#{action.onSelectItem(row)}"
 							execute="@this"
-							render="itemProcessoForm"
-							oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');                 window.location='#{util.contextPath}/Painel/list.seam';">
+							render=":itemProcessoForm"
+							oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{util.contextPath}/Painel/list.seam';">
 							<h:graphicImage url="/img/start.gif" />
 						</a:commandLink>
 					</c:if>
@@ -33,7 +33,7 @@
 						<a:commandLink
 							action="#{action.onSelectItem(row)}"
 							execute="@this"
-							render="itemDiv, partesForm">
+							render="itemDiv, :partesForm">
 							<h:graphicImage url="/img/start.gif" />
 						</a:commandLink>
 					</c:if>
