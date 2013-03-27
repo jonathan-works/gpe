@@ -38,7 +38,7 @@ public abstract class AbstractProcessoHome<T> extends AbstractHome<Processo> {
 
 	@Override
 	protected Processo createInstance() {
-		Processo processo = new Processo();
+		Processo processo = super.createInstance();
 		UsuarioHome usuarioHome = (UsuarioHome) Component.getInstance(
 				"usuarioHome", false);
 		if (usuarioHome != null) {
