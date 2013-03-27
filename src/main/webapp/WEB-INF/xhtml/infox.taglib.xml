@@ -554,4 +554,9 @@
 		<tag-name>reportColumnSituacao</tag-name>
 		<source>tags/report/columns/reportColumnSituacao.xhtml</source>
 	</tag>
+	
+	<tag>
+		<tag-name>numeravelMascara</tag-name>
+		<source>tags/components/form/numeravelMascara.xhtml</source>
+	</tag>
 </facelet-taglib>
