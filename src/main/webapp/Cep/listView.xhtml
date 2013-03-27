@@ -13,161 +13,155 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-                      
-	<ui:define
-         name="title">#{messages['cep.titlePage']}</ui:define>
-	
+-->
+<ui:composition
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+	<ui:define name="title">#{messages['cep.titlePage']}</ui:define>
+
 	<ui:param
-         name="home"
-         value="#{cepHome}" />
-	
-	<ui:define
-         name="searchGrid">   
-	    <wi:dataTable
-             values="#{cepList.list(15)}"
-             bean="#{cepList}"
-             tableTitle="#{messages['cep.titleGrid']}"
-             id="cepList"
-             rowId="#{row.idCep}">
-			<ui:define
-                 name="searchForm">
+		name="home"
+		value="#{cepHome}" />
+
+	<ui:define name="searchGrid">
+		<wi:dataTable
+			values="#{cepList.list(15)}"
+			bean="#{cepList}"
+			tableTitle="#{messages['cep.titleGrid']}"
+			id="cepList"
+			rowId="#{row.idCep}">
+			<ui:define name="searchForm">
 				<wi:searchForm
-                     formId="pesquisarCepForm"
-                     formTitle="#{messages['searchForm.title']}">
+					formId="pesquisarCepForm"
+					formTitle="#{messages['searchForm.title']}">
 					<wi:inputCep
-                         id="numeroCep"
-                         value="#{cepList.entity.numeroCep}"
-                         label="#{messages['cep.numeroCep']}" />
+						id="numeroCep"
+						value="#{cepList.entity.numeroCep}"
+						label="#{messages['cep.numeroCep']}" />
 					<wi:selectOneMenuEntity
-                         id="estado"
-                         label="#{messages['cep.municipio.estado']}"
-                         value="#{cepList.estado}"
-                         items="#{estadoItems}"
-                         required="#{required}"
-                         noSelectionLabel="Selecione...">
+						id="estado"
+						label="#{messages['cep.municipio.estado']}"
+						value="#{cepList.estado}"
+						items="#{estadoItems}"
+						required="#{required}"
+						noSelectionLabel="Selecione...">
 						<a:ajax
-                             event="change"
-                             status=":status"
-                             render="municipioSuggestSearchDiv"
-                             execute="@this" />
+							event="change"
+							status=":status"
+							render="municipioSuggestSearchDiv"
+							execute="@this" />
 					</wi:selectOneMenuEntity>
-					<s:div
-                         id="municipioSuggestSearchDiv">
+					<s:div id="municipioSuggestSearchDiv">
 						<wi:suggest
-                             id="municipio"
-                             bean="#{municipioSearchSuggest}"
-                             disabled="#{empty cepList.estado}"
-                             assignTo="cepList.entity.municipio"
-                             label="#{messages['cep.municipio']}">
-						</wi:suggest>		
+							id="municipio"
+							bean="#{municipioSearchSuggest}"
+							disabled="#{empty cepList.estado}"
+							assignTo="cepList.entity.municipio"
+							label="#{messages['cep.municipio']}">
+						</wi:suggest>
 					</s:div>
 					<wi:inputText
-                         id="nomeLogradouro"
-                         label="#{messages['cep.nomeLogradouro']}"
-                         value="#{cepList.entity.nomeLogradouro}" />
+						id="nomeLogradouro"
+						label="#{messages['cep.nomeLogradouro']}"
+						value="#{cepList.entity.nomeLogradouro}" />
 					<wi:inputText
-                         id="nomeBairro"
-                         label="#{messages['cep.nomeBairro']}"
-                         value="#{cepList.entity.nomeBairro}" />
+						id="nomeBairro"
+						label="#{messages['cep.nomeBairro']}"
+						value="#{cepList.entity.nomeBairro}" />
 					<wi:selectSituacaoOneMenu
-                         id="ativo"
-                         label="#{messages['field.situacao']}"
-                         value="#{cepList.entity.ativo}" />
+						id="ativo"
+						label="#{messages['field.situacao']}"
+						value="#{cepList.entity.ativo}" />
 				</wi:searchForm>
 			</ui:define>
-			
-			<ui:define
-                 name="headerToolBar">
+
+			<ui:define name="headerToolBar">
 			</ui:define>
-			
+
 			<wi:columnOutputText
-                 columnId="numeroCep"
-                 columnHeader="#{messages['cep.numeroCep']}"
-                 value="#{row.numeroCep}" />
+				columnId="numeroCep"
+				columnHeader="#{messages['cep.numeroCep']}"
+				value="#{row.numeroCep}" />
 			<wi:columnOutputText
-                 columnId="municipio.estado"
-                 columnHeader="#{messages['cep.municipio.estado']}"
-                 value="#{row.municipio.estado}" />
+				columnId="municipio.estado"
+				columnHeader="#{messages['cep.municipio.estado']}"
+				value="#{row.municipio.estado}" />
 			<wi:columnOutputText
-                 columnId="municipio"
-                 columnHeader="#{messages['cep.municipio']}"
-                 value="#{row.municipio}" />
+				columnId="municipio"
+				columnHeader="#{messages['cep.municipio']}"
+				value="#{row.municipio}" />
 			<wi:columnOutputText
-                 columnId="nomeLogradouro"
-                 columnHeader="#{messages['cep.nomeLogradouro']}"
-                 value="#{row.nomeLogradouro}" />
+				columnId="nomeLogradouro"
+				columnHeader="#{messages['cep.nomeLogradouro']}"
+				value="#{row.nomeLogradouro}" />
 			<wi:columnOutputText
-                 columnId="nomeBairro"
-                 columnHeader="#{messages['cep.nomeBairro']}"
-                 value="#{row.nomeBairro}" />
+				columnId="nomeBairro"
+				columnHeader="#{messages['cep.nomeBairro']}"
+				value="#{row.nomeBairro}" />
 			<wi:columnSituacao
-                 columnId="ativo"
-                 columnHeader="#{messages['field.situacao']}"
-                 value="#{row.ativo}" />
+				columnId="ativo"
+				columnHeader="#{messages['field.situacao']}"
+				value="#{row.ativo}" />
 		</wi:dataTable>
 	</ui:define>
-	
-	<ui:define
-         name="form">
+
+	<ui:define name="form">
 		<wi:dataForm
-             formId="cepForm"
-             formTitle="#{messages['form.title']}">
+			formId="cepForm"
+			formTitle="#{messages['form.title']}">
 			<wi:inputCep
-                 id="numeroCep"
-                 value="#{cepHome.instance.numeroCep}"
-                 required="true"
-                 label="#{messages['cep.numeroCep']}" />
+				id="numeroCep"
+				value="#{cepHome.instance.numeroCep}"
+				required="true"
+				label="#{messages['cep.numeroCep']}" />
 			<wi:inputText
-                 id="nomeLogradouro"
-                 label="#{messages['cep.nomeLogradouro']}"
-                 required="true"
-                 value="#{cepHome.instance.nomeLogradouro}" />
+				id="nomeLogradouro"
+				label="#{messages['cep.nomeLogradouro']}"
+				required="true"
+				value="#{cepHome.instance.nomeLogradouro}" />
 			<wi:inputText
-                 id="nomeBairro"
-                 label="#{messages['cep.nomeBairro']}"
-                 required="true"
-                 value="#{cepHome.instance.nomeBairro}" />
+				id="nomeBairro"
+				label="#{messages['cep.nomeBairro']}"
+				required="true"
+				value="#{cepHome.instance.nomeBairro}" />
 			<wi:inputText
-                 id="complemente"
-                 label="#{messages['cep.complemento']}"
-                 value="#{cepHome.instance.complemento}" />
+				id="complemente"
+				label="#{messages['cep.complemento']}"
+				value="#{cepHome.instance.complemento}" />
 			<wi:selectOneMenuEntity
-                 id="estado"
-                 label="#{messages['cep.municipio.estado']}"
-                 value="#{cepHome.estado}"
-                 items="#{estadoItems}"
-                 required="true"
-                 noSelectionLabel="Selecione...">
+				id="estado"
+				label="#{messages['cep.municipio.estado']}"
+				value="#{cepHome.estado}"
+				items="#{estadoItems}"
+				required="true"
+				noSelectionLabel="Selecione...">
 				<a:ajax
-                     event="change"
-                     status=":status"
-                     render="municipioSuggestDiv"
-                     execute="@this" />
+					event="change"
+					status=":status"
+					render="municipioSuggestDiv"
+					execute="@this" />
 			</wi:selectOneMenuEntity>
-			<s:div
-                 id="municipioSuggestDiv">
+			<s:div id="municipioSuggestDiv">
 				<wi:suggest
-                     id="municipio"
-                     bean="#{municipioSuggest}"
-                     disabled="#{empty cepHome.estado}"
-                     required="true"
-                     assignTo="cepHome.instance.municipio"
-                     label="#{messages['cep.municipio']}">
-				</wi:suggest>		
+					id="municipio"
+					bean="#{municipioSuggest}"
+					disabled="#{empty cepHome.estado}"
+					required="true"
+					assignTo="cepHome.instance.municipio"
+					label="#{messages['cep.municipio']}">
+				</wi:suggest>
 			</s:div>
 			<wi:selectSituacaoRadio
-                 id="ativo"
-                 label="#{messages['field.situacao']}"
-                 value="#{cepHome.instance.ativo}" />
+				id="ativo"
+				label="#{messages['field.situacao']}"
+				value="#{cepHome.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 
