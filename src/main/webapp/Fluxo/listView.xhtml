@@ -14,157 +14,196 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->   
+-->
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:c="http://java.sun.com/jstl/core"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:s="http://jboss.com/products/seam/taglib"
-			    xmlns:f="http://java.sun.com/jsf/core"
-			    xmlns:rich="http://richfaces.org/rich"
-			 	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">              
-      
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
 	<ui:define name="title">#{messages['fluxo.titlePage']}</ui:define>
-	
-	<ui:param name="home" value="#{fluxoHome}" />
-	
-	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{fluxoList.list(15)}"
-                      bean="#{fluxoList}"
-                      tableTitle="#{messages['fluxo.titleGrid']}"
-                      id="fluxoList"
-                      rowId="#{row.idFluxo}">
-            <ui:define name="headerToolBar">
-            </ui:define>
-            <ui:define name="searchForm">
-                <wi:searchForm formId="pesquisarFluxoForm"
-                               formTitle="#{messages['searchForm.title']}">
-                    <wi:inputText id="codFluxo" label="#{messages['fluxo.codFluxo']}" value="#{fluxoList.entity.codFluxo}"/>
-                    <wi:inputText id="descricao" label="#{messages['fluxo.descricao']}" value="#{fluxoList.entity.fluxo}"/>
-                    <wi:selectBooleanMenu id="publicado" label="#{messages['fluxo.publicado']}" value="#{fluxoList.entity.publicado}"/>
-                    <wi:selectSituacaoOneMenu id="ativo" label="#{messages['field.situacao']}" value="#{fluxoList.entity.ativo}"/>
-                </wi:searchForm>
-            </ui:define>
-            <wi:columnOutputText columnId="codFluxo"
-                                 columnHeader="#{messages['fluxo.codFluxo']}"
-                                 value="#{row.codFluxo}" />
-            <wi:columnOutputText columnId="fluxo"
-                                 columnHeader="#{messages['fluxo.descricao']}"
-                                 value="#{row.fluxo}" />
-            <wi:columnOutputText columnId="dataInicioPublicacao"
-                                 columnHeader="#{messages['fluxo.dataInicioPublicacao']}"
-                                 value="#{row.dataInicioPublicacao}" />
-            <wi:columnOutputText columnId="dataFimPublicacao"
-                                 columnHeader="#{messages['fluxo.dataFimPublicacao']}"
-                                 value="#{row.dataFimPublicacao}" />
-            <wi:columnBoolean columnId="publicado"
-                                 columnHeader="#{messages['fluxo.publicado']}"
-                                 value="#{row.publicado}" />
-            <wi:columnSituacao columnId="ativo"
-                               columnHeader="#{messages['field.situacao']}"
-                               value="#{row.ativo}" />
-        </wi:dataTable>
+
+	<ui:param
+		name="home"
+		value="#{fluxoHome}" />
+
+	<ui:define name="searchGrid">
+		<wi:dataTable
+			values="#{fluxoList.list(15)}"
+			bean="#{fluxoList}"
+			tableTitle="#{messages['fluxo.titleGrid']}"
+			id="fluxoList"
+			rowId="#{row.idFluxo}">
+			<ui:define name="headerToolBar">
+			</ui:define>
+			<ui:define name="searchForm">
+				<wi:searchForm
+					formId="pesquisarFluxoForm"
+					formTitle="#{messages['searchForm.title']}">
+					<wi:inputText
+						id="codFluxo"
+						label="#{messages['fluxo.codFluxo']}"
+						value="#{fluxoList.entity.codFluxo}" />
+					<wi:inputText
+						id="descricao"
+						label="#{messages['fluxo.descricao']}"
+						value="#{fluxoList.entity.fluxo}" />
+					<wi:selectBooleanMenu
+						id="publicado"
+						label="#{messages['fluxo.publicado']}"
+						value="#{fluxoList.entity.publicado}" />
+					<wi:selectSituacaoOneMenu
+						id="ativo"
+						label="#{messages['field.situacao']}"
+						value="#{fluxoList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			<wi:columnOutputText
+				columnId="codFluxo"
+				columnHeader="#{messages['fluxo.codFluxo']}"
+				value="#{row.codFluxo}" />
+			<wi:columnOutputText
+				columnId="fluxo"
+				columnHeader="#{messages['fluxo.descricao']}"
+				value="#{row.fluxo}" />
+			<wi:columnOutputText
+				columnId="dataInicioPublicacao"
+				columnHeader="#{messages['fluxo.dataInicioPublicacao']}"
+				value="#{row.dataInicioPublicacao}" />
+			<wi:columnOutputText
+				columnId="dataFimPublicacao"
+				columnHeader="#{messages['fluxo.dataFimPublicacao']}"
+				value="#{row.dataFimPublicacao}" />
+			<wi:columnBoolean
+				columnId="publicado"
+				columnHeader="#{messages['fluxo.publicado']}"
+				value="#{row.publicado}" />
+			<wi:columnSituacao
+				columnId="ativo"
+				columnHeader="#{messages['field.situacao']}"
+				value="#{row.ativo}" />
+		</wi:dataTable>
 	</ui:define>
-	
-	<ui:define name="form" action="#{fluxoHome.newInstance()}">
-		<wi:dataForm formId="fluxoForm"
-                     formTitle="#{messages['form.title']}">
-            <wi:inputText id="codFluxo"
-                         value="#{fluxoHome.instance.codFluxo}"
-                         required="true"
-                         label="#{messages['fluxo.codFluxo']}" />
-            <wi:inputText id="descricaoFluxo"
-                          label="#{messages['fluxo.descricao']}"
-                          required="true"
-                          value="#{fluxoHome.instance.fluxo}"
-                          readonly="#{!canEdit}"/>
-            <wi:inputNumber id="prazoDias"
-                            label="#{messages['fluxo.qtPrazo']}"
-                            required="true"
-                            value="#{fluxoHome.instance.qtPrazo}"
-                            readonly="#{!canEdit}"/>
-            <wi:inputDate id="dataInicio"
-                          label="#{messages['fluxo.dataInicioPublicacao']}"
-                          required="true"
-                          value="#{fluxoHome.instance.dataInicioPublicacao}"                          
-                          readonly="#{!canEdit}"/>
-            <wi:inputDate id="dataFim"
-                          label="#{messages['fluxo.dataFimPublicacao']}"
-                          value="#{fluxoHome.instance.dataFimPublicacao}"                          
-                          readonly="#{!canEdit}"/>
-            <wi:selectBooleanRadio id="publicado"
-                                   label="#{messages['fluxo.publicado']}"
-                                   value="#{fluxoHome.instance.publicado}"
-                                   readonly="#{!canEdit}"/>
-            <wi:selectSituacaoRadio id="ativo"
-                                    label="#{messages['field.situacao']}"
-                                    value="#{fluxoHome.instance.ativo}" 
-                                    readonly="#{!canEdit}"/>
-            <ui:define name="buttons">
-                <ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml" />
-            </ui:define>
-        </wi:dataForm>
+
+	<ui:define
+		name="form"
+		action="#{fluxoHome.newInstance()}">
+		<wi:dataForm
+			formId="fluxoForm"
+			formTitle="#{messages['form.title']}">
+			<wi:inputText
+				id="codFluxo"
+				value="#{fluxoHome.instance.codFluxo}"
+				required="true"
+				label="#{messages['fluxo.codFluxo']}" />
+			<wi:inputText
+				id="descricaoFluxo"
+				label="#{messages['fluxo.descricao']}"
+				required="true"
+				value="#{fluxoHome.instance.fluxo}"
+				readonly="#{!canEdit}" />
+			<wi:inputNumber
+				id="prazoDias"
+				label="#{messages['fluxo.qtPrazo']}"
+				required="true"
+				value="#{fluxoHome.instance.qtPrazo}"
+				readonly="#{!canEdit}" />
+			<wi:inputDate
+				id="dataInicio"
+				label="#{messages['fluxo.dataInicioPublicacao']}"
+				required="true"
+				value="#{fluxoHome.instance.dataInicioPublicacao}"
+				readonly="#{!canEdit}" />
+			<wi:inputDate
+				id="dataFim"
+				label="#{messages['fluxo.dataFimPublicacao']}"
+				value="#{fluxoHome.instance.dataFimPublicacao}"
+				readonly="#{!canEdit}" />
+			<wi:selectBooleanRadio
+				id="publicado"
+				label="#{messages['fluxo.publicado']}"
+				value="#{fluxoHome.instance.publicado}"
+				readonly="#{!canEdit}" />
+			<wi:selectSituacaoRadio
+				id="ativo"
+				label="#{messages['field.situacao']}"
+				value="#{fluxoHome.instance.ativo}"
+				readonly="#{!canEdit}" />
+			<ui:define name="buttons">
+				<ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml" />
+			</ui:define>
+		</wi:dataForm>
 	</ui:define>
-	
+
 	<ui:define name="tabs">
-		<ui:param name="action" value="#{fluxoPapelAction}" />
-		<rich:tab id="fluxoPapelTab" 
-				  rendered="#{home.isManaged()}"
-				  eventsQueue="default" 
-				  switchType="ajax"
-				  label="#{messages['fluxoPapel.titleTab']}"
-				  action="#{action.init()}">
-			<wi:dataForm formId="fluxoPapelForm"
-					 	 formTitle="#{messages['form.title']}">
-				<wi:tree id="papelTree"
-						 label="#{messages['fluxoPapel.papel']}"
-						 assignTo="fluxoPapelAction.instance.papel"
-						 tree="#{action.papelTreeHandler}"
-						 required="true"/>
+		<ui:param
+			name="action"
+			value="#{fluxoPapelAction}" />
+		<rich:tab
+			id="fluxoPapelTab"
+			rendered="#{home.isManaged()}"
+			header="#{messages['fluxoPapel.titleTab']}"
+			action="#{action.init()}">
+			<wi:dataForm
+				formId="fluxoPapelForm"
+				formTitle="#{messages['form.title']}">
+				<wi:tree
+					id="papelTree"
+					label="#{messages['fluxoPapel.papel']}"
+					assignTo="fluxoPapelAction.instance.papel"
+					tree="#{action.papelTreeHandler}"
+					required="true" />
 				<ui:define name="buttons">
-					<wi:commandButton id="savePapelButton"
-									  action="fluxoPapelAction.save"
-									  reRender="fluxoPapelForm, fluxoPapelDiv"
-									  value="Incluir"/>
+					<wi:commandButton
+						id="savePapelButton"
+						action="fluxoPapelAction.save"
+						reRender="fluxoPapelForm, fluxoPapelDiv"
+						value="Incluir" />
 				</ui:define>
 			</wi:dataForm>
 			<s:div id="fluxoPapelDiv">
-				<h:form>
-					<rich:dataTable id="fluxoPapelTable"
-									value="#{action.fluxoPapelList}"
-									var="row"
-									rows="10"
-									style="width: 50%">
-						<rich:column style="width: 10%">
-							<f:facet name="header">
-								<wi:toolBarRemove id="headerRemove"
-												  reRender="fluxoPapelDiv"
-											      actionRemove="fluxoPapelAction.removeAll()"
-											      title="Remover todos os Registros"/>
-							</f:facet>
-							<center>
-								<wi:toolBarRemove id="toolBarRemove"
-												  reRender="fluxoPapelDiv"
-											      actionRemove="fluxoPapelAction.remove(row)"/>
-							</center>
-						</rich:column>
-						<rich:column style="width: 90%">
-							<f:facet name="header">
-								<h:outputText value="#{messages['fluxoPapel.papel']}" />
-							</f:facet>
-							<h:outputText value="#{row.papel}"/>
-						</rich:column>
-					</rich:dataTable>
-					<rich:datascroller id="dsFluxoPapelTable"
-									   for="fluxoPapelTable"
-									   lastPageMode="full"
-									   align="left"
-									   renderIfSinglePage="false"/>
-				</h:form>
+				<rich:dataTable
+					id="fluxoPapelTable"
+					value="#{action.fluxoPapelList}"
+					var="row"
+					rows="10"
+					style="width: 50%">
+					<rich:column style="width: 10%">
+						<f:facet name="header">
+							<wi:toolBarRemove
+								id="headerRemove"
+								reRender="fluxoPapelDiv"
+								actionRemove="fluxoPapelAction.removeAll()"
+								title="Remover todos os Registros" />
+						</f:facet>
+						<center>
+							<wi:toolBarRemove
+								id="toolBarRemove"
+								reRender="fluxoPapelDiv"
+								actionRemove="fluxoPapelAction.remove(row)" />
+						</center>
+					</rich:column>
+					<rich:column style="width: 90%">
+						<f:facet name="header">
+							<h:outputText value="#{messages['fluxoPapel.papel']}" />
+						</f:facet>
+						<h:outputText value="#{row.papel}" />
+					</rich:column>
+				</rich:dataTable>
+				<rich:dataScroller
+					id="dsFluxoPapelTable"
+					for="fluxoPapelTable"
+					lastPageMode="full"
+					align="left"
+					renderIfSinglePage="false" />
 			</s:div>
-		</rich:tab>			
-	</ui:define> 
- 
+		</rich:tab>
+	</ui:define>
+
 </ui:composition>
