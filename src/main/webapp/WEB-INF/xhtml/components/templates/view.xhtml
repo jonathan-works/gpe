@@ -1,52 +1,46 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib">
-                 
-    <ui:param
-         name="tipMessage"
-         value="#{empty props.tipMessage ? tipMessage : props.tipMessage}" />
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+
 	<ui:param
-         name="fieldId"
-         value="#{empty fieldId ? f.id.replaceAll('\\.', '_') : fieldId}" />
+		name="tipMessage"
+		value="#{empty props.tipMessage ? tipMessage : props.tipMessage}" />
 	<ui:param
-         name="inNewLine"
-         value="#{empty inNewLine ? props.inNewLine : inNewLine}" />
-  
-    <div
-         class="propertyView"
-         style="#{empty inNewLine ? '' : 'clear: both;'} width: #{widthDiv} !important; ">
-        <div
-             class="name">
-            <ui:insert
-                 name="label" />
-			<c:if
-                 test="#{not empty tipMessage}">
+		name="fieldId"
+		value="#{empty fieldId ? f.id.replaceAll('\\.', '_') : fieldId}" />
+	<ui:param
+		name="inNewLine"
+		value="#{empty inNewLine ? props.inNewLine : inNewLine}" />
+
+	<div
+		class="propertyView"
+		style="#{empty inNewLine ? '' : 'clear: both;'} width: #{widthDiv} !important; ">
+		<div class="name">
+			<ui:insert name="label" />
+			<c:if test="#{not empty tipMessage}">
 				<h:graphicImage
-                     id="#{fieldId}ViewTipImg"
-                     style="height:12px; margin-left:3px; margin-bottom:-2px"
-                     url="/img/help.gif" />
-				<rich:tooltip
-                     for="#{fieldId}ViewTipImg"
-                     style="background-color:#{richSkin.generalBackgroundColor};              border-color:#{richSkin.panelBorderColor}; padding:5px; font-weight:normal;"
-                     value="#{tipMessage}">
-				</rich:tooltip>
+					id="#{fieldId}ViewTipImg"
+					style="height:12px; margin-left:3px; margin-bottom:-2px"
+					url="/img/help.gif">
+					<rich:tooltip
+						style="background-color:#{richSkin.generalBackgroundColor}; border-color:#{richSkin.panelBorderColor}; padding:5px; font-weight:normal;"
+						value="#{tipMessage}" />
+				</h:graphicImage>
 			</c:if>
-        </div>
-        
-        <div
-             class="value #{invalid?'errors':''}">
-               		<ui:insert />
-        </div>
-        
-		<s:message
-             styleClass="error" />
-		
-    </div>
-    
+		</div>
+
+		<div class="value #{invalid?'errors':''}">
+			<ui:insert />
+		</div>
+
+		<s:message styleClass="error" />
+
+	</div>
+
 </ui:composition>
