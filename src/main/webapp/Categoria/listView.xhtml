@@ -55,7 +55,7 @@
 				</wi:searchForm>
 			</ui:define>
 			<ui:define name="toolBar">
-				<wi:toolBarEdit id="categoriaListEditToolbar"/>
+				<wi:toolBarEdit id="categoriaListEditToolbar" />
 				<wi:toolBarInactive actionInactive="categoriaHome.inactive(row)" />
 			</ui:define>
 			<wi:columnOutputText
@@ -94,9 +94,7 @@
 		<rich:tab
 			id="categoriaItemTab"
 			rendered="#{categoriaHome.isManaged()}"
-			eventsQueue="default"
-			switchType="ajax"
-			label="#{messages['categoriaItem.titleTab']}"
+			header="#{messages['categoriaItem.titleTab']}"
 			action="#{action.init()}">
 			<s:div id="categoriaItemFormDiv">
 				<wi:dataForm
@@ -118,39 +116,37 @@
 				</wi:dataForm>
 			</s:div>
 			<s:div id="categoriaItemDiv">
-				<h:form>
-					<rich:dataTable
-						id="categoriaItemTable"
-						value="#{action.categoriaItemList}"
-						var="row"
-						rows="10"
-						style="width: 60%">
+				<rich:dataTable
+					id="categoriaItemTable"
+					value="#{action.categoriaItemList}"
+					var="row"
+					rows="10"
+					style="width: 60%">
+					<f:facet name="header">
+						<h:outputText
+							value="#{messages['categoriaItem.titleDataTable']} #{categoriaHome.instance.categoria}" />
+					</f:facet>
+					<rich:column style="width: 10%">
+						<center>
+							<wi:toolBarRemove
+								id="toolBarRemove"
+								reRender="categoriaItemDiv"
+								actionRemove="categoriaItemAction.remove(row)" />
+						</center>
+					</rich:column>
+					<rich:column style="width: 45%">
 						<f:facet name="header">
-							<h:outputText
-								value="#{messages['categoriaItem.titleDataTable']} #{categoriaHome.instance.categoria}" />
+							<h:outputText value="#{messages['categoriaItem.item']}" />
 						</f:facet>
-						<rich:column style="width: 10%">
-							<center>
-								<wi:toolBarRemove
-									id="toolBarRemove"
-									reRender="categoriaItemDiv"
-									actionRemove="categoriaItemAction.remove(row)" />
-							</center>
-						</rich:column>
-						<rich:column style="width: 45%">
-							<f:facet name="header">
-								<h:outputText value="#{messages['categoriaItem.item']}" />
-							</f:facet>
-							<h:outputText value="#{row.item.caminhoCompletoToString()}" />
-						</rich:column>
-					</rich:dataTable>
-					<rich:dataScroller
-						for="categoriaItemTable"
-						lastPageMode="full"
-						id="dsItemCatTable"
-						align="left"
-						renderIfSinglePage="false" />
-				</h:form>
+						<h:outputText value="#{row.item.caminhoCompletoToString()}" />
+					</rich:column>
+				</rich:dataTable>
+				<rich:dataScroller
+					for="categoriaItemTable"
+					lastPageMode="full"
+					id="dsItemCatTable"
+					align="left"
+					renderIfSinglePage="false" />
 			</s:div>
 		</rich:tab>
 	</ui:define>
