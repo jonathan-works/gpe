@@ -15,65 +15,74 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-	
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.com/products/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:c="http://java.sun.com/jstl/core"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:rich="http://richfaces.org/rich">
-	
-	<a:loadScript src="/js/imageUpload.js" />
-	
-	<ui:param name="imageBean" value="#{wi:get(imageBean, imageFileUpload)}" />
-	
-	<s:div rendered="#{wi:get(rendered, true)}"
-		   style="#{wi:get(style, 'float: left; padding-left:3px')}">
-		<rich:simpleTogglePanel	id="uploadImagem"
-								switchType="ajax"
-								opened="#{wi:get(opened, 'false')}"
-								label="Álbum de imagens"
-                                ajaxSingle="true">
-            <rich:fileUpload fileUploadListener="#{imageBean.listener}"
-			                 id="upload"
-			                 ajaxSingle="true"
-			                 onupload="uploadHandler(event, '#{imageBean.imagePath}')"
-							 onuploadcomplete="insert()"
-			                 autoclear="true"
-			                 maxFilesQuantity="10"
-							 addControlLabel="Nova imagem" 
-							 clearAllControlLabel="Limpar todas" 
-							 clearControlLabel="Limpar"
-			                 stopEntryControlLabel="Parar" 
-			                 uploadControlLabel="Processar"                
-			                 listWidth="355px"
-			                 listHeight="0px"
-			                 immediateUpload="true"
-			                 noDuplicate="true"
-			                 status=":status"
-			                 allowFlash="false"
-			                 reRender="uploadImagem"
-			                 acceptedTypes="jpg, gif, png">
-            </rich:fileUpload>
-            <h:form>
-	           	<rich:dataGrid	style="margin-left: 1px; width: 351px;"
-				           		value="#{imageBean.images}" 
-				           		elements="30"
-				           		columns="6" var="img">
-	            	<s:div style="text-align:center">
-		            	<img src="#{img}" 
-			            	 style="width:50px;" 
-			            	 title="Arraste para o documento" />
-	            	</s:div>
-		           	<f:facet name="footer">
-		                <rich:datascroller></rich:datascroller>
-		            </f:facet>
-	           	</rich:dataGrid> 
-            </h:form>
-	</rich:simpleTogglePanel> 
+
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:outputScript
+		library="js"
+		name="imageUpload.js" />
+
+	<ui:param
+		name="imageBean"
+		value="#{wi:get(imageBean, imageFileUpload)}" />
+
+	<s:div
+		rendered="#{wi:get(rendered, true)}"
+		style="#{wi:get(style, 'float: left; padding-left:3px')}">
+		<rich:collapsiblePanel
+			id="uploadImagem"
+			switchType="ajax"
+			expanded="#{wi:get(opened, 'false')}"
+			label="Álbum de imagens"
+			execute="@this">
+			<rich:fileUpload
+				fileUploadListener="#{imageBean.listener}"
+				id="upload"
+				execute="@this"
+				onupload="uploadHandler(event, '#{imageBean.imagePath}')"
+				onuploadcomplete="insert()"
+				autoclear="true"
+				maxFilesQuantity="10"
+				addControlLabel="Nova imagem"
+				clearAllControlLabel="Limpar todas"
+				clearControlLabel="Limpar"
+				stopEntryControlLabel="Parar"
+				uploadControlLabel="Processar"
+				listWidth="355px"
+				listHeight="0px"
+				immediateUpload="true"
+				noDuplicate="true"
+				status=":status"
+				allowFlash="false"
+				render="uploadImagem"
+				acceptedTypes="jpg, gif, png">
+			</rich:fileUpload>
+			<rich:dataGrid
+				style="margin-left: 1px; width: 351px;"
+				value="#{imageBean.images}"
+				elements="30"
+				columns="6"
+				var="img">
+				<s:div style="text-align:center">
+					<img
+						src="#{img}"
+						style="width: 50px;"
+						title="Arraste para o documento" />
+				</s:div>
+				<f:facet name="footer">
+					<rich:dataScroller />
+				</f:facet>
+			</rich:dataGrid>
+		</rich:collapsiblePanel>
 	</s:div>
-	
+
 </ui:composition>
