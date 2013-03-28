@@ -13,22 +13,33 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.entity.CategoriaItem;
 import br.com.infox.epa.query.CategoriaItemQuery;
+import br.com.infox.ibpm.entity.Item;
 
 @Name(CategoriaItemDAO.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class CategoriaItemDAO extends GenericDAO {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "categoriaItemDAO";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "categoriaItemDAO";
 
-	public List<CategoriaItem> listByCategoria(Categoria categoria) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(CategoriaItemQuery.QUERY_PARAM_CATEGORIA, categoria);
-		List<CategoriaItem> resultList = getNamedResultList
-								(CategoriaItemQuery.LIST_BY_CATEGORIA, 
-								 parameters);
-		return resultList;		
-	}
-	
+    public List<CategoriaItem> listByCategoria(Categoria categoria) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        
+        parameters.put(CategoriaItemQuery.QUERY_PARAM_CATEGORIA, categoria);
+        
+        return getNamedResultList(CategoriaItemQuery.LIST_BY_CATEGORIA,
+                parameters);
+    }
+
+    public Long countByCategoriaItem(Categoria categoria, Item item) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put(CategoriaItemQuery.QUERY_PARAM_CATEGORIA, categoria);
+        parameters.put(CategoriaItemQuery.QUERY_PARAM_ITEM, item);
+
+        return getNamedSingleResult(CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM,
+                parameters);
+    }
+
 }
