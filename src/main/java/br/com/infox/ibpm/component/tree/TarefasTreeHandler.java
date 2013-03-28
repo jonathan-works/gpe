@@ -130,11 +130,16 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	}
 	
 	@Override
-	public void processTreeSelectionChange(TreeSelectionChangeEvent nodeSelectedEvent)
-			throws AbortProcessingException {
-		UITree tree = (UITree) nodeSelectedEvent.getSource();
+	public void processTreeSelectionChange(TreeSelectionChangeEvent selectionChangeEvent) throws AbortProcessingException {
+		// Considerando single selection
+		Object selectionKey = new ArrayList<Object>(selectionChangeEvent.getNewSelection()).get(0);
+		UITree tree = (UITree) selectionChangeEvent.getSource();
 		treeId = tree.getId();
-		EntityNode<Map<String,Object>> en = (EntityNode<Map<String,Object>>) tree.getRowData(); 
+		
+		Object key = tree.getRowKey();
+		tree.setRowKey(selectionKey);
+		EntityNode<Map<String,Object>> en = (EntityNode<Map<String,Object>>) tree.getRowData();
+		tree.setRowKey(key);
 		setSelected(en.getEntity());
 		en.getEntity().get("idTask");
 		Events.instance().raiseEvent(getEventSelected(), getSelected());

@@ -1,90 +1,93 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: tarefasTree.xhtml 750 2010-08-24 14:10:58Z danielsilva $ --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
-<ui:remove>
-	<h:form
-         id="#{id}Form">
-         
-	<!-- 
-		<s:div id="TarefasTree" style="float: left;">
-			<s:div id="#{id}NovaCaixaDiv" style="font-weight:bold" >
-				<rich:contextMenu event="oncontextmenu" 
-								  attachTo="TarefasTree" 
-								  submitMode="ajax">
-                	<rich:menuItem value="Nova caixa"
-                  				   icon="/img/add.gif"                  		
-                  				   rendered = "#{! empty painelUsuarioHome.tarefaId and painelUsuarioHome.selected.type == 'Task'
-                  				   				 and s:hasRole('/pages/Caixa/listView.seam')}"                  		
-                  				   onclick="Richfaces.showModalPanel('novaCaixaPanel')" />
-	                <rich:menuItem value="Editar caixa"
-	                  			   icon="/img/edit.gif"	                  		
-	                  			   rendered="#{painelUsuarioHome.selected.type == 'Caixa' and s:hasRole('/pages/Caixa/listView.seam')}"							
-	                  			   action="#{painelUsuarioHome.editaCaixa()}">
+<!-- $Id: tarefasTree.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
+	<h:form id="#{id}Form">
+		<s:div
+			id="TarefasTree"
+			style="float: left;">
+			<s:div
+				id="#{id}NovaCaixaDiv"
+				style="font-weight:bold">
+				<rich:contextMenu
+					target="TarefasTree"
+					mode="ajax">
+					<rich:menuItem
+						label="Nova caixa"
+						icon="/img/add.gif"
+						rendered="#{! empty painelUsuarioHome.tarefaId and painelUsuarioHome.selected.type == 'Task'
+                  				   				 and s:hasRole('/pages/Caixa/listView.seam')}"
+						onclick="#{rich:component('novaCaixaPanel')}.show()" />
+					<rich:menuItem
+						label="Editar caixa"
+						icon="/img/edit.gif"
+						rendered="#{painelUsuarioHome.selected.type == 'Caixa' and s:hasRole('/pages/Caixa/listView.seam')}"
+						action="#{painelUsuarioHome.editaCaixa()}">
 					</rich:menuItem>
-	                <rich:menuItem value="Remover a caixa"
-                  				   icon="/img/remove.png"                  		
-                  				   rendered="#{painelUsuarioHome.selected.type == 'Caixa' and s:hasRole('/pages/Caixa/listView.seam')}"
-                   				   onclick="if (!confirm('Confirma?')) return false;"                 		
-                   				   reRender="tarefasDiv"
-                 				   action="#{caixaHome.removeCaixa(painelUsuarioHome.selected.idCaixa)}" />
-            	</rich:contextMenu>
+					<rich:menuItem
+						label="Remover a caixa"
+						icon="/img/remove.png"
+						rendered="#{painelUsuarioHome.selected.type == 'Caixa' and s:hasRole('/pages/Caixa/listView.seam')}"
+						onclick="if (!confirm('Confirma?')) return false;"
+						render="tarefasDiv"
+						action="#{caixaHome.removeCaixa(painelUsuarioHome.selected.idCaixa)}" />
+				</rich:contextMenu>
 			</s:div>
-			<rich:tree status="status" 
-					   switchType="client"		
-					   ajaxSingle="true" 
-					   ajaxSubmitSelection="true"
-					   style="height:450px; overflow:auto; width:310px"				
-					   reRender="painelProcessos,#{id}NovaCaixaDiv">
-				<rich:treeNodesAdaptor var="root"
-									   nodes="#{tarefasTree.tarefasRoots}">
-					<rich:treeNode icon="/img/globe16.png"					
-								   iconLeaf="/img/messages.gif">
-						<h:outputText style="font-weight: bold" 
-									  value="#{root.entity.nomeFluxo}" /> 
+			<rich:tree
+				status="status"
+				toggleType="client"
+				execute="@this"
+				selectionType="ajax"
+				style="height:450px; overflow:auto; width:310px"
+				selectionChangeListener="#{tarefasTree.processTreeSelectionChange}"
+				render="painelProcessos,#{id}NovaCaixaDiv"
+				var="node">
+				<rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
+					<rich:treeNode
+						iconCollapsed="/img/globe16.png"
+						iconExpanded="/img/globe16.png"
+						iconLeaf="/img/messages.gif">
+						<h:outputText
+							style="font-weight: bold"
+							value="#{node.entity.nomeFluxo}" />
 					</rich:treeNode>
-					<rich:treeNodesAdaptor var="node"
-										   nodes="#{root.nodesTarefas}">
-						<rich:treeNode icon="/img/messages.gif"					
-									   dropListener="#{painelUsuarioHome.processoCaixaTarefa}" 					
-									   dropValue="#{node.entity.idProcesso}"
-									   acceptedTypes="tarefaId#{node.tarefaId}"
-									   iconLeaf="/img/messages.gif"
-									   nodeSelectListener="#{tarefasTree.selectListener}">
+					<rich:treeModelAdaptor nodes="#{node.nodesTarefas}">
+						<rich:treeNode
+							iconCollapsed="/img/messages.gif"
+							iconExpanded="/img/messages.gif"
+							iconLeaf="/img/messages.gif">
 							<h:outputText value="#{node.entity.nomeTarefa}" />
-							<h:outputText style="margin-left: 10px" 
-										  rendered="#{node.entity.qtd - node.entity.qtdEmCaixa gt 0}"
-										  value="(#{node.entity.qtd - node.entity.qtdEmCaixa})" /> 
-							<h:outputText style="color: #aaaaaa" 
-										  rendered="#{node.entity.qtdEmCaixa gt 0}" 
-										  value=" (Em caixas: #{node.entity.qtdEmCaixa})" />
+							<h:outputText
+								style="margin-left: 10px"
+								rendered="#{node.entity.qtd - node.entity.qtdEmCaixa gt 0}"
+								value="(#{node.entity.qtd - node.entity.qtdEmCaixa})" />
+							<h:outputText
+								style="color: #aaaaaa"
+								rendered="#{node.entity.qtdEmCaixa gt 0}"
+								value=" (Em caixas: #{node.entity.qtdEmCaixa})" />
 						</rich:treeNode>
-						<rich:treeNodesAdaptor var="caixa" nodes="#{node.caixas}">
-							<rich:treeNode icon="/img/message.gif"		
-										   dropListener="#{painelUsuarioHome.processoCaixa}"
-										   dropValue="#{caixa.entity.idCaixa}"	
-										   acceptedTypes="task#{caixa.entity.idTarefa}"					
-										   iconLeaf="/img/message.gif"
-										   nodeSelectListener="#{tarefasTree.selectListener}">
-								<h:outputText value="#{caixa.entity.nomeCaixa}" />
-								<h:outputText style="margin-left: 10px" 
-											  value="(#{caixa.entity.qtd})" />
+						<rich:treeModelAdaptor nodes="#{node.caixas}">
+							<rich:treeNode
+								iconCollapsed="/img/message.gif"
+								iconExpanded="/img/message.gif"
+								iconLeaf="/img/message.gif">
+								<h:outputText value="#{node.entity.nomeCaixa}" />
+								<h:outputText
+									style="margin-left: 10px"
+									value="(#{node.entity.qtd})" />
 							</rich:treeNode>
-						</rich:treeNodesAdaptor>
-					</rich:treeNodesAdaptor>
-				</rich:treeNodesAdaptor>
+						</rich:treeModelAdaptor>
+					</rich:treeModelAdaptor>
+				</rich:treeModelAdaptor>
 			</rich:tree>
 		</s:div>
-		 -->
-		 
 	</h:form>
-	</ui:remove>
-	
 </ui:composition>
