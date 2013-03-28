@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -24,96 +24,88 @@
 	  Consulte a GNU GPL para mais detalhes.
 	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
 	  veja em http://www.gnu.org/licenses/  
-	-->	
+	-->
 
-        <s:div
-         id="taskButtonsDiv"
-         styleClass="actionButtons"
-         style="width:100%">
-			<ui:param
-             name="props"
-             value="#{form.buttons.properties}" />
-			<ui:param
-             name="reRenderSave"
-             value="#{empty reRenderSave ? formId : reRenderSave}" />
+	<s:div
+		id="taskButtonsDiv"
+		styleClass="actionButtons"
+		style="width:100%">
+		<ui:param
+			name="props"
+			value="#{form.buttons.properties}" />
+		<ui:param
+			name="reRenderSave"
+			value="#{empty reRenderSave ? formId : reRenderSave}" />
 
-            <a:commandButton
-             id="update"
-             status="none"
-             rendered="#{!empty form.fields and processoHome.managed}"
-             onmouseup="showLoading()"
-             oncomplete="#{oncomplete};hideLoading()"
-             eventsQueue="editQueue"
-             reRender="#{reRenderSave}"
-             value="Gravar"
-             styleClass="dr-tbpnl-tb-inact"
-             action="#{taskInstanceHome.update(home)}" />
-	        
-	       	<!-- Implementar -->                 
-	        <a:commandButton
-             id="unlock"
-             ajaxSingle="true"
-             status="none"
-             rendered="#{processoHome.managed}"
-             onmouseup="showLoading()"
-             oncomplete="#{oncomplete};hideLoading()"
-             eventsQueue="editQueue"
-             reRender="#{reRenderSave}"
-             value="Liberar Tarefa"
-             styleClass="dr-tbpnl-tb-inact"
-             action="#{taskInstanceHome.removeUsuario()}" />
+		<a:commandButton
+			id="update"
+			status="none"
+			rendered="#{!empty form.fields and processoHome.managed}"
+			onmouseup="showLoading()"
+			oncomplete="#{oncomplete};hideLoading()"
+			render="#{reRenderSave}"
+			value="Gravar"
+			styleClass="dr-tbpnl-tb-inact"
+			action="#{taskInstanceHome.update(home)}" />
 
-            <a:commandButton
-             id="persist"
-             rendered="#{!empty form.fields and !processoHome.managed}"
-             status="none"
-             onmouseup="showLoading()"
-             oncomplete="hideLoading()"
-             eventsQueue="editQueue"
-             reRender="#{reRenderSave}"
-             value="Incluir"
-             styleClass="dr-tbpnl-tb-inact"
-             action="#{taskInstanceHome.persist(home)}" />
+		<!-- Implementar -->
+		<a:commandButton
+			id="unlock"
+			execute="@this"
+			status="none"
+			rendered="#{processoHome.managed}"
+			onmouseup="showLoading()"
+			oncomplete="#{oncomplete};hideLoading()"
+			render="#{reRenderSave}"
+			value="Liberar Tarefa"
+			styleClass="dr-tbpnl-tb-inact"
+			action="#{taskInstanceHome.removeUsuario()}" />
+
+		<a:commandButton
+			id="persist"
+			rendered="#{!empty form.fields and !processoHome.managed}"
+			status="none"
+			onmouseup="showLoading()"
+			oncomplete="hideLoading()"
+			render="#{reRenderSave}"
+			value="Incluir"
+			styleClass="dr-tbpnl-tb-inact"
+			action="#{taskInstanceHome.persist(home)}" />
 
 		<h:outputText
-             style="margin-left:40px; font-size:13px"
-             value="Próxima ação:" />
-            <c:if
-             test="#{taskInstanceHome.transitions.size gt 3}">
-		            	<h:selectOneMenu
-                 style="min-width: 150px;"
-                 value="#{taskInstanceHome.name}">
-							<f:selectItems
-                     value="#{taskInstanceHome.transtionsSelectItems}" />
-						</h:selectOneMenu>
-	            	<a:commandButton
-                 action="#{taskInstanceHome.end(taskInstanceHome.name)}"
-                 value="OK"
-                 status="none"
-                 onmouseup="showLoading()"
-                 styleClass="dr-tbpnl-tb-inact"
-                 eventsQueue="editQueue"
-                 oncomplete="verifyFields();"
-                 reRender=":script,#{reRenderSave}" />
-            </c:if>
-            <c:if
-             test="#{taskInstanceHome.transitions.size le 3}">
-	            <a:repeat
-                 value="#{taskInstanceHome.transitions}"
-                 var="transition">
-		            <a:commandButton
-                     eventsQueue="editQueue"
-                     status="none"
-                     onmouseup="showLoading()"
-                     oncomplete="verifyFields()"
-                     reRender=":script,#{reRenderSave}"
-                     value="#{transition.name}"
-                     styleClass="buttons dr-tbpnl-tb-inact"
-                     style="width: 200px;"
-                     action="#{taskInstanceHome.end(transition.name)}">
-					</a:commandButton>     
-	            </a:repeat>
-            </c:if>
-        </s:div>
+			style="margin-left:40px; font-size:13px"
+			value="Próxima ação:" />
+		<c:if test="#{taskInstanceHome.transitions.size gt 3}">
+			<h:selectOneMenu
+				style="min-width: 150px;"
+				value="#{taskInstanceHome.name}">
+				<f:selectItems value="#{taskInstanceHome.transtionsSelectItems}" />
+			</h:selectOneMenu>
+			<a:commandButton
+				action="#{taskInstanceHome.end(taskInstanceHome.name)}"
+				value="OK"
+				status="none"
+				onmouseup="showLoading()"
+				styleClass="dr-tbpnl-tb-inact"
+				oncomplete="verifyFields();"
+				render=":script,#{reRenderSave}" />
+		</c:if>
+		<c:if test="#{taskInstanceHome.transitions.size le 3}">
+			<a:repeat
+				value="#{taskInstanceHome.transitions}"
+				var="transition">
+				<a:commandButton
+					status="none"
+					onmouseup="showLoading()"
+					oncomplete="verifyFields()"
+					render=":script,#{reRenderSave}"
+					value="#{transition.name}"
+					styleClass="buttons dr-tbpnl-tb-inact"
+					style="width: 200px;"
+					action="#{taskInstanceHome.end(transition.name)}">
+				</a:commandButton>
+			</a:repeat>
+		</c:if>
+	</s:div>
 
 </ui:composition>
