@@ -48,7 +48,7 @@
 				selectionType="ajax"
 				style="height:450px; overflow:auto; width:310px"
 				selectionChangeListener="#{tarefasTree.processTreeSelectionChange}"
-				render="painelProcessos,#{id}NovaCaixaDiv"
+				render="painelProcessos,#{id}NovaCaixaDiv,:pesquisaListForm"
 				var="node">
 				<rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
 					<rich:treeNode
