@@ -24,7 +24,7 @@
 	        <property name="hibernate.ejb.event.post-insert" value="br.com.infox.listener.LogEventListener" />
 			<property name="hibernate.ejb.event.post-update" value="br.com.infox.listener.LogEventListener" />
 			<property name="hibernate.ejb.event.post-delete" value="br.com.infox.listener.LogEventListener" />
-	        
+	        <property name="hibernate.id.new_generator_mappings" value="false"/>
 			<property name="hibernate.ejb.event.pre-insert" 
                       value="br.com.infox.listener.RecursiveEventListener"/>
             <property name="hibernate.ejb.event.pre-update" 
@@ -48,6 +48,7 @@
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="false" />
 			<property name="hibernate.default_schema" value="public" />
+			<property name="hibernate.id.new_generator_mappings" value="true"/>
 
 			<property name="hibernate.default_batch_fetch_size" value="16" />
 

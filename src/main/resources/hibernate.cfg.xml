@@ -36,6 +36,7 @@
 	<property name="hibernate.cache.infinispan.cachemanager">java:jboss/infinispan/container/hibernate</property>
 	<property name="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property>
 	<property name="hibernate.cache.use_second_level_cache">true</property>
+	<property name="hibernate.id.new_generator_mappings">false</property>
 	<!--
 	rodrigo
 	<property name="hibernate.default_schema" value="jbpm" />

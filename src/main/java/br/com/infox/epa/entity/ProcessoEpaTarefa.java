@@ -47,7 +47,7 @@ public class ProcessoEpaTarefa implements Serializable {
 	private Integer tempoGasto;
 	private Integer tempoPrevisto;
 	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_epa_tarefa", allocationSize = 1)
+	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_epa_tarefa")
 	@Id
 	@GeneratedValue(generator = "generator")
 	@Column(name = "id_processo_epa_tarefa", unique = true, nullable = false)
