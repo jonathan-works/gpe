@@ -149,20 +149,13 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
 		Integer result = 0;
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
-		ProcessoHome.instance().setIdProcessoDocumento(idDoc);
-		if (processoDocumento == null) {
-			result = inserirProcessoDocumentoFluxo(value, label, assinado);
-		} else {
-			AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
-			if(documentoService.isDocumentoAssinado(idDoc)){
-				result = inserirProcessoDocumentoFluxo(value, label, assinado);
-			}
-			if(result == ERRO_AO_VERIFICAR_CERTIFICADO) {
-				atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
-				result = idDoc;
-			}
-			FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
+		setIdProcessoDocumento(idDoc);
+		result = inserirProcessoDocumentoFluxo(value, label, assinado);
+		if (processoDocumento != null && result == ERRO_AO_VERIFICAR_CERTIFICADO) {
+			atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
+			result = idDoc;
 		}
+		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 		return result;
 	}
 	
@@ -311,7 +304,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 			setPdFluxo(processoDocumento);
 			processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
 			ProcessoDocumentoHome.instance().setInstance(processoDocumento);
-			ProcessoHome.instance().setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
+			setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
 			setTipoProcessoDocumento(processoDocumento.getTipoProcessoDocumento());
 			onSelectProcessoDocumento();
 		}
@@ -338,12 +331,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
 	@Override
 	public String remove() {
-		UsuarioHome usuario = (UsuarioHome) Component.getInstance(
-				"usuarioHome", false);
-		if (usuario != null) {
-			usuario.getInstance().getProcessoListForIdUsuarioCadastroProcesso()
+		Authenticator.getUsuarioLogado().getProcessoListForIdUsuarioCadastroProcesso()
 					.remove(instance);
-		}
 		return super.remove();
 	}
 
@@ -354,12 +343,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		newInstance();
 		refreshGrid("processoGrid");
 		return ret;
-	}
-
-	@Override
-	public String persist() {
-		String action = super.persist();
-		return action;
 	}
 
 	public List<ProcessoDocumento> getProcessoDocumentoList() {
@@ -386,7 +369,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 			refreshGrid(gridId);
 		}
 	}
-
 
 	/**
 	 * Metodo que adiciona o processo passado como parâmetro a lista dos processos

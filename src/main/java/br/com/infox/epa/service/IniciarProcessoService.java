@@ -30,7 +30,7 @@ import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
 public class IniciarProcessoService {
 	
 	@In
-	private ProcessoService processoService;
+	private ProcessoManager processoService;
 
 	public static final String ON_CREATE_PROCESS = 
 		"br.com.infox.epa.IniciarProcessoService.ONCREATEPROCESS";

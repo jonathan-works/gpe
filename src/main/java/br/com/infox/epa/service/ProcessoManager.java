@@ -14,17 +14,11 @@ import br.com.infox.epa.manager.TipoProcessoDocumentoManager;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 
-@Name(ProcessoService.NAME)
+@Name(ProcessoManager.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class ProcessoService extends GenericManager {
+public class ProcessoManager extends GenericManager {
 	
 	private static final long serialVersionUID = 8095772422429350875L;
-	public static final String NAME = "processoService";
-	
-	@In private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
-	@In private ProcessoDocumentoManager processoDocumentoManager;
-	@In private ProcessoDocumentoBinManager processoDocumentoBinManager;
-	@In private ModeloDocumentoManager modeloDocumentoManager;
-	
+	public static final String NAME = "processoManager";	
 }
