@@ -237,7 +237,7 @@
 					<s:div
 						rendered="#{bean.previousExists or bean.nextExists}"
 						style="float: left;">
-						<h:form ajaxSubmit="true">
+						<h:form id="#{gridId}SliderForm">
 							<rich:inputNumberSlider
 								enableManualInput="false"
 								showArrows="true"
