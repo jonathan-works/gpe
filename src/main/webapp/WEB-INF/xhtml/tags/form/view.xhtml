@@ -100,23 +100,24 @@
 	<ui:param
 		name="buttons"
 		value="#{form.buttons.id}#{empty modalPanelId ? '' : '_modal'}" />
-	<ui:include
-		src="/WEB-INF/xhtml/components/view/buttons/#{buttons}.xhtml" />
-	<s:button
-		styleClass="dr-tbpnl-tb-inact"
-		rendered="#{not empty home.goBackUrl and (home.tab == 'form')}"
-		value="Voltar"
-		view="#{home.goBackUrl}">
+	<h:form>
+		<ui:include
+			src="/WEB-INF/xhtml/components/view/buttons/#{buttons}.xhtml" />
+		<s:button
+			styleClass="dr-tbpnl-tb-inact"
+			rendered="#{not empty home.goBackUrl and (home.tab == 'form')}"
+			value="Voltar"
+			view="#{home.goBackUrl}">
 
-		<f:param
-			name="id"
-			value="#{home.goBackId}" />
-		<f:param
-			name="tab"
-			value="#{home.goBackTab}" />
+			<f:param
+				name="id"
+				value="#{home.goBackId}" />
+			<f:param
+				name="tab"
+				value="#{home.goBackTab}" />
 
-	</s:button>
-
+		</s:button>
+	</h:form>
 	<ui:param
 		name="isInView"
 		value="true" />
