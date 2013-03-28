@@ -101,6 +101,7 @@
 					rendered="#{!processoHome.managed}"
 					header="Escolher fluxo"
 					status=":status"
+					immediate="true"
 					action="#{processoHome.limpar()}">
 					<h:messages
 						id="globalMessages"
@@ -112,6 +113,7 @@
 					id="tabEntrada"
 					rendered="#{!empty taskInstanceView.fields}"
 					header="Entrada"
+					immediate="true"
 					status=":status">
 					<s:div id="divDocAnterior">
 						<wi:form
@@ -126,6 +128,7 @@
 					id="tabSaida"
 					rendered="#{processoHome.managed}"
 					header="Saída"
+					immediate="true"
 					status=":status">
 					<c:if test="#{empty taskPageAction.taskPagePath}">
 						<s:div id="taskInstanceDiv">
@@ -147,6 +150,7 @@
 					rendered="#{processoHome.managed}"
 					header="Anexar Documento"
 					status=":status"
+					immediate="true"
 					action="#{processoDocumentoHome.newInstance()}">
 					<s:div id="divAnexarDocumentos">
 						<div style="width: 75%; left: 1px;">
@@ -164,7 +168,8 @@
 					id="tabAnexos"
 					rendered="#{processoHome.managed}"
 					header="Documentos do Processo"
-					status=":status">
+					status=":status"
+					immediate="true">
 					<s:div id="divDocumentosProcesso">
 						<wi:datalist
 							bean="#{documentoProcessoGrid}"
@@ -180,7 +185,8 @@
 					id="tabMovimentacoes"
 					rendered="#{processoHome.managed}"
 					header="Movimentações do Processo"
-					status=":status">
+					status=":status"
+					immediate="true">
 					<ui:include
 						src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
 				</rich:tab>
@@ -192,7 +198,8 @@
 					id="documentoFisicoTab"
 					rendered="#{home.isManaged()}"
 					header="#{messages['documentoFisico.titleTab']}"
-					action="#{action.init()}">
+					action="#{action.init()}"
+					immediate="true">
 					<wi:dataForm
 						formId="documentoFisicoForm"
 						formTitle="#{messages['form.title']}">
@@ -271,6 +278,7 @@
 					id="tabPartesDoProcesso"
 					header="#{messages['parteProcesso.partes']}"
 					status=":status"
+					immediate="true"
 					rendered="#{processoHandler.hasPartes()}">
 					<ui:include src="parteProcessoGrid.xhtml" />
 				</rich:tab>
@@ -280,7 +288,6 @@
 			<wi:outputText
 				id="error"
 				value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
-			<a:jsFunction name="closeWindow">window.close();</a:jsFunction>
 		</c:if>
 	</ui:define>
 
