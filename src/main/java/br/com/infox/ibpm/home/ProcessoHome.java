@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -41,7 +40,6 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
-import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
@@ -77,6 +75,10 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	
 	public void iniciarNovoFluxo(){
 		limpar();
+		redirecionarPagina();
+	}
+
+	private void redirecionarPagina() {
 		Redirect redirect = Redirect.instance();
 		redirect.setViewId("/Processo/movimentar.xhtml");
 		redirect.execute();
@@ -147,21 +149,27 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}	
 	
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
-		Integer result = 0;
-		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
+		ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 		setIdProcessoDocumento(idDoc);
-		result = inserirProcessoDocumentoFluxo(value, label, assinado);
+		Integer result = inserirProcessoDocumentoFluxo(value, label, assinado);
 		if (processoDocumento != null && result == ERRO_AO_VERIFICAR_CERTIFICADO) {
 			atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
 			result = idDoc;
 		}
-		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
+		avisarRegistroFoiGravadoComSucesso();
 		return result;
+	}
+
+	private ProcessoDocumento buscarProcessoDocumento(Integer idDoc) {
+		return EntityUtil.find(ProcessoDocumento.class, idDoc);
+	}
+
+	private void avisarRegistroFoiGravadoComSucesso() {
+		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 	}
 	
 	//Método para Atualizar o documento do fluxo
 	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado){
-		
 		if (!validacaoCertificadoBemSucedida(assinado)) 
 			return;
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
@@ -371,7 +379,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	/**
-	 * Metodo que adiciona o processo passado como parâmetro a lista dos processos
+	 * Metodo que adiciona o processo passado como parâmetro à lista dos processos
 	 * que o processo da instância é conexo.
 	 * @param processo
 	 * @param gridId
