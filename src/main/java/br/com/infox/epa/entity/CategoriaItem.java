@@ -25,8 +25,10 @@ import br.com.infox.ibpm.entity.Item;
 			@UniqueConstraint(columnNames={"id_categoria", "id_item"})
 		})
 @NamedQueries(value={
-		@NamedQuery(name=CategoriaItemQuery.LIST_BY_CATEGORIA,
-				    query=CategoriaItemQuery.LIST_BY_CATEGORIA_QUERY)
+        @NamedQuery(name=CategoriaItemQuery.LIST_BY_CATEGORIA,
+                query=CategoriaItemQuery.LIST_BY_CATEGORIA_QUERY),
+        @NamedQuery(name=CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM,
+                        query=CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM_QUERY)
 	})
 public class CategoriaItem implements Serializable{
 	private static final long serialVersionUID = 1L;

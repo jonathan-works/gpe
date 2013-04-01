@@ -12,6 +12,9 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.CategoriaItemDAO;
 import br.com.infox.epa.entity.Categoria;
 import br.com.infox.epa.entity.CategoriaItem;
+import br.com.infox.ibpm.entity.Item;
+import br.com.infox.ibpm.home.CategoriaHome;
+import br.com.itx.util.ComponentUtil;
 
 @Name(CategoriaItemManager.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -27,6 +30,19 @@ public class CategoriaItemManager extends GenericManager{
 	
 	public List<CategoriaItem> listByCategoria(Categoria categoria) {
 		return categoriaItemDAO.listByCategoria(categoria);
+	}
+	
+	public Long countByCategoriaItem(Categoria categoria, Item item) {
+	    return categoriaItemDAO.countByCategoriaItem(categoria, item);
+	}
+	
+	public boolean containsCategoriaItem(CategoriaItem categoriaItem)  {
+	    return categoriaItemDAO.countByCategoriaItem(categoriaItem.getCategoria(), categoriaItem.getItem()) > 0;
+	}
+	
+	public Categoria getCategoriaAtual() {
+	    CategoriaHome categoriaHome = ComponentUtil.getComponent(CategoriaHome.NAME);
+	    return categoriaHome.getInstance();
 	}
 	
 }

@@ -95,7 +95,7 @@
 			id="categoriaItemTab"
 			rendered="#{categoriaHome.isManaged()}"
 			header="#{messages['categoriaItem.titleTab']}"
-			action="#{action.init()}">
+>
 			<s:div id="categoriaItemFormDiv">
 				<wi:dataForm
 					formId="categoriaItemForm"
@@ -130,7 +130,7 @@
 						<center>
 							<wi:toolBarRemove
 								id="toolBarRemove"
-								reRender="categoriaItemDiv"
+								reRender="categoriaItemFormDiv, categoriaItemDiv"
 								actionRemove="categoriaItemAction.remove(row)" />
 						</center>
 					</rich:column>
