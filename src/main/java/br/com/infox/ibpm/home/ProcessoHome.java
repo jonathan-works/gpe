@@ -170,14 +170,14 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	
 	//Método para Atualizar o documento do fluxo
 	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado){
-		if (!validacaoCertificadoBemSucedida(assinado)) 
-			return;
-		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
-		ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
-		String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
-		atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento);
-		inicializarTipoProcessoDocumento();
-		gravarAlteracoes(processoDocumento, processoDocumentoBin);
+		if (validacaoCertificadoBemSucedida(assinado)) {
+			ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
+			ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
+			String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
+			atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento);
+			inicializarTipoProcessoDocumento();
+			gravarAlteracoes(processoDocumento, processoDocumentoBin);
+		}
 	}
 
 	private String getDescricaoModeloDocumentoFluxoByValue(Object value, String modeloDocumentoFluxo) {
