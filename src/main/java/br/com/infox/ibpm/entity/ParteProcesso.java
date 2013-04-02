@@ -24,6 +24,7 @@ public class ParteProcesso implements Serializable {
 	private Integer idParteProcesso;
 	private ProcessoEpa processo;
 	private Pessoa pessoa;
+	private Boolean ativo = true;
 	
 	public ParteProcesso() {
 	}
@@ -61,6 +62,15 @@ public class ParteProcesso implements Serializable {
 	
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
+	}
+
+	@Column(name="in_ativo")
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 	
 }
