@@ -38,6 +38,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epa.query.FluxoQuery;
+import br.com.itx.util.HibernateUtil;
 
 @Entity
 @Table(name = "tb_fluxo", schema="public")
@@ -191,7 +192,7 @@ public class Fluxo implements java.io.Serializable {
 		if (!(obj instanceof Fluxo)) {
 			return false;
 		}
-		Fluxo other = (Fluxo) obj;
+		Fluxo other = (Fluxo) HibernateUtil.removeProxy(obj);
 		if (getIdFluxo() != other.getIdFluxo()) {
 			return false;
 		}
