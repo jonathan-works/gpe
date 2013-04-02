@@ -15,7 +15,6 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +26,8 @@ import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
+
+import br.com.infox.epa.service.ProcessoManager;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
@@ -43,7 +44,6 @@ import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
@@ -56,6 +56,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	@In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
+	
+	@In private ProcessoManager processoManager;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -225,8 +227,9 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	//Método para Inserir o documento do fluxo
 	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
 		if (validacaoCertificadoBemSucedida(assinado)) {
-			value = getAlteracaoModeloDocumento(value);
-			ProcessoDocumento doc = createProcessoDocumento(label, createProcessoDocumentoBin(value));
+			value = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
+			ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(value, certChain, signature);
+			ProcessoDocumento doc = processoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
 			getEntityManager().flush();
 	        setIdProcessoDocumento(doc.getIdProcessoDocumento());
 			return doc.getIdProcessoDocumento();
@@ -247,65 +250,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return true;
 	}
 
-	/**
-	 * Retorna, se houver, o novo valor do ModeloDocumento. Se nao houver, retorna o valor o valor
-	 * inicial inalterado
-	 * @param value - valor da variável modeloDocumento no contexto jBPM
-	 * */
-	private Object getAlteracaoModeloDocumento(Object value) {
-		if(processoDocumentoBin.getModeloDocumento() != null) {
-			value = processoDocumentoBin.getModeloDocumento();
-		}
-		return value;
-	}
-
-	private String getDescricaoModeloDocumentoByValue(Object value) {
-		String modeloDocumento = String.valueOf(value);
-		if (Strings.isEmpty(modeloDocumento)){
-			modeloDocumento = " ";
-		}
-		return modeloDocumento;
-	}
-
 	private void avisarErroAoVerificarCertificado(Exception e1) {
 		FacesMessages.instance().add(Severity.ERROR, 
 				"Erro ao verificar certificado: " + e1.getMessage());
 	}
 
-	private ProcessoDocumento createProcessoDocumento(String label, ProcessoDocumentoBin bin) {
-		ProcessoDocumento doc = new ProcessoDocumento();
-		doc.setProcessoDocumentoBin(bin);
-		doc.setAtivo(Boolean.TRUE);
-		doc.setDataInclusao(new Date());
-		doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
-		doc.setProcesso(getInstance());
-		if (label == null) {
-			doc.setProcessoDocumento("null");
-		} else {
-			doc.setProcessoDocumento(label);
-		}
-		inicializarTipoProcessoDocumento();
-		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
-		getEntityManager().persist(doc);
-		return doc;
-	}
-
-	/**
-	 * Cria e configura um novo ProcessoDocumentoBin com base no {@value} passado
-	 * @param value - valor da variável modeloDocumento no contexto jBPM
-	 * */
-	private ProcessoDocumentoBin createProcessoDocumentoBin(Object value) {
-		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
-		bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
-		bin.setDataInclusao(new Date());
-		bin.setMd5Documento(Crypto.encodeMD5(String.valueOf(value)));
-		bin.setUsuario(Authenticator.getUsuarioLogado());
-		bin.setCertChain(certChain);
-		bin.setSignature(signature);
-		getEntityManager().persist(bin);
-		return bin;
-	}
-	
 	public void carregarDadosFluxo(Integer idProcessoDocumento){
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idProcessoDocumento);
 		if(processoDocumento != null){
@@ -427,11 +376,13 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	public TipoProcessoDocumento getTipoProcessoDocumento() {
+		if (tipoProcessoDocumento == null){
+			tipoProcessoDocumento = tipoProcessoDocumentoDAO.getTipoProcessoDocumentoFluxo();
+		}
 		return tipoProcessoDocumento;
 	}
 	
-	public void setTipoProcessoDocumento(
-			TipoProcessoDocumento tipoProcessoDocumento) {	
+	public void setTipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {	
 			this.tipoProcessoDocumento = tipoProcessoDocumento;		
 	}
 	
