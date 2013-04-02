@@ -14,7 +14,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(GrupoModeloDocumentoList.NAME)
 @BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class GrupoModeloDocumentoList extends EntityList<GrupoModeloDocumento> {
 
 	public static final String NAME = "grupoModeloDocumentoList";
