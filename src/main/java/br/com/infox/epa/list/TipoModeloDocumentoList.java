@@ -15,7 +15,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(TipoModeloDocumentoList.NAME)
 @BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
 	public static final String NAME = "tipoModeloDocumentoList";
 	private static final long serialVersionUID = 1L;
