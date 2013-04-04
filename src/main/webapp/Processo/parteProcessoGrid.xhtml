@@ -24,46 +24,53 @@
 				xmlns:h="http://java.sun.com/jsf/html"
 				xmlns:a="http://richfaces.org/a4j"
 				xmlns:rich="http://richfaces.org/rich"
-				xmlns:c="http://java.sun.com/jstl/core">
-	<s:div id="partesPessoaFisicaListDiv">
-		<rich:dataTable value="#{processoHandler.getPessoaFisicaList()}"
-						rowKeyVar="key"
-						var="pessoaFisica"
-						rendered="#{!processoHandler.getPessoaFisicaList().isEmpty()}">
-			<f:facet name="header">Pessoa(s) Fisica(s)</f:facet>
-			<rich:column styleClass="defaultCell" style="width: 40%">
-				<f:facet name="header">Nome</f:facet>
-				<h:outputText value="#{pessoaFisica.nome}" />
-			</rich:column>
-			<rich:column styleClass="defaultCell">
-				<f:facet name="header">CPF</f:facet>
-				<h:outputText value="#{pessoaFisica.cpf}" />
-			</rich:column>
-			<rich:column styleClass="defaultCell">
-				<f:facet name="header">Data de Nascimento</f:facet>
-				<h:outputText value="#{pessoaFisica.dataNascimento}" />
-			</rich:column>			
-		</rich:dataTable>
-	</s:div>
-	<br/>
-	<s:div id="partesPessoaJuridicaListDiv">
-		<rich:dataTable value="#{processoHandler.getPessoaJuridicaList()}"
-						rowKeyVar="key"
-						var="pessoaJuridica"
-						rendered="#{!processoHandler.getPessoaJuridicaList().isEmpty()}">
-			<f:facet name="header">Pessoa(s) Jurídica(s)</f:facet>
-			<rich:column styleClass="defaultCell" style="width: 40%">
-				<f:facet name="header">Nome</f:facet>
-				<h:outputText value="#{pessoaJuridica.nome}" />
-			</rich:column>
-			<rich:column styleClass="defaultCell">
-				<f:facet name="header">CNPJ</f:facet>
-				<h:outputText value="#{pessoaJuridica.cnpj}" />
-			</rich:column>
-			<rich:column styleClass="defaultCell">
-				<f:facet name="header">Razão Social</f:facet>
-				<h:outputText value="#{pessoaJuridica.razaoSocial}" />
-			</rich:column>			
-		</rich:dataTable>
-	</s:div>
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:wi="http://www.itx.com.br/jsf">
+	
+		
+	<s:div id="partesDiv">
+   		<h:form id="partesForm">
+   			<wi:selectOneRadioEnum id="tipoPessoaEnum"
+								   items="#{pessoaHome.getTipoPessoaItens()}"
+								   value="#{pessoaHome.tipoPessoa}"
+								   label="#{messages['pessoa.tipoPessoa']}">
+								   <a:support ajaxSingle="true"
+					   					reRender="buscaDiv"
+					   					event="onchange" />
+			</wi:selectOneRadioEnum> 
+   		</h:form>
+   	</s:div>
+   	<s:div id="buscaDiv">
+		<c:if test="#{pessoaHome.isPessoaFisica()}">
+			<ui:include src="partePessoaFisica.xhtml"/>
+		</c:if>
+		<c:if test="#{pessoaHome.isPessoaJuridica()}">
+			<ui:include src="partePessoaJuridica.xhtml"/>
+		</c:if>
+ 	</s:div>
+   	<s:div id="parteProcessoListDiv">
+   		<wi:dataTable values="#{parteProcessoList.list(15)}"
+					  bean="#{parteProcessoList}"
+					  tableTitle="#{messages['parteProcesso.titleGrid']}"
+					  id="parteProcessoList">
+			<ui:define name="headerToolBar"/>		  
+			<ui:define name="toolBar">
+				<wi:toolBarInactive actionInactive="processoEpaHome.inativarParteProcesso(row)"/>
+			</ui:define>
+			<wi:columnOutputText columnId="pessoa.nome"
+								 columnHeader="#{messages['parteProcesso.nome']}"
+								 value="#{row.pessoa.nome}" />				 
+			<wi:columnOutputText columnId="codigo"
+								 columnHeader="#{messages['parteProcesso.codigo']}"
+								 value="#{row.pessoa.getCodigo()}" 
+								 hideOrder="true"/>
+			<wi:columnOutputText columnId="pessoa.tipoPessoa"
+								 columnHeader="#{messages['parteProcesso.tipoPessoa']}"
+								 value="#{row.pessoa.tipoPessoa.label}"/>
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['field.situacao']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
+   	</s:div>
+
 </ui:composition>
