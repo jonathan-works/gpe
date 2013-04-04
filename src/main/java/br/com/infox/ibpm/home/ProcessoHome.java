@@ -30,6 +30,7 @@ import javax.persistence.Query;
 
 import org.hibernate.AssertionFailure;
 import org.hibernate.SQLQuery;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
@@ -47,6 +48,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
+import br.com.infox.epa.dao.ProcessoEpaDAO;
 import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Evento;
@@ -71,7 +73,6 @@ import br.com.itx.util.EntityUtil;
 
 
 @Name(ProcessoHome.NAME)
-@BypassInterceptors
 public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	public static final String NAME = "processoHome";
@@ -82,6 +83,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoHome.class);
 
 	private static final long serialVersionUID = 1L;
+	
+	@In private ProcessoEpaDAO processoEpaDAO;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -893,6 +896,10 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 
 	public TipoProcessoDocumento getTipoProcessoDocumentoRO() {
 		return tipoProcessoDocumentoRO;
+	}
+	
+	public boolean hasPartes(){
+		return processoEpaDAO.hasPartes(getInstance());
 	}
 	
 }

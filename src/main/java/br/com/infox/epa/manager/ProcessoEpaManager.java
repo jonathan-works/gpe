@@ -12,9 +12,11 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.ProcessoEpaDAO;
 import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.ibpm.entity.ParteProcesso;
+import br.com.infox.ibpm.entity.Pessoa;
 
 @Name(ProcessoEpaManager.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.EVENT)
 @AutoCreate
 public class ProcessoEpaManager extends GenericManager {
 
@@ -33,4 +35,13 @@ public class ProcessoEpaManager extends GenericManager {
 		return processoEpaDAO.listNotEnded(fluxo);
 	}
 	
+	public void incluirParteProcesso(ProcessoEpa processoEpa, Pessoa pessoa){
+		processoEpa.getPartes().add(new ParteProcesso(processoEpa, pessoa));
+		update(processoEpa);
+	}
+	
+	public void incluirParteProcesso(ProcessoEpa processoEpa, ParteProcesso parteProcesso){
+		processoEpa.getPartes().add(parteProcesso);
+		update(processoEpa);
+	}
 }
