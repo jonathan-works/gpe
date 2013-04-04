@@ -28,6 +28,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.epa.service.ProcessoManager;
+
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
@@ -48,6 +49,7 @@ import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
 public class ProcessoHome extends AbstractHome<Processo> {
+
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
@@ -494,6 +496,5 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
 		//TODO esperando Tássio verificar (21 de março de 2013)
 	}
-	
 	
 }

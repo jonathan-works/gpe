@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.com.itx.util.HibernateUtil;
+
 @Entity
 @Table(name=Natureza.TABLE_NAME, schema="public")
 public class Natureza implements java.io.Serializable {
@@ -87,5 +89,25 @@ public class Natureza implements java.io.Serializable {
 	public List<NaturezaLocalizacao> getNaturezaLocalizacaoList() {
 		return naturezaLocalizacaoList;
 	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + idNatureza;
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Natureza))
+            return false;
+        Natureza other = (Natureza) HibernateUtil.removeProxy(obj);
+        if (idNatureza != other.idNatureza)
+            return false;
+        return true;
+    }
 	
 }

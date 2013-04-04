@@ -19,6 +19,7 @@ import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
 import br.com.infox.epa.query.CategoriaQuery;
+import br.com.itx.util.HibernateUtil;
 
 @Entity
 @Table(name=Categoria.TABLE_NAME, schema="public")
@@ -107,7 +108,7 @@ public class Categoria implements Serializable{
             return false;
         if (!(obj instanceof Categoria))
             return false;
-        Categoria other = (Categoria) obj;
+        Categoria other = (Categoria) HibernateUtil.removeProxy(obj);
         if (idCategoria != other.idCategoria)
             return false;
         return true;

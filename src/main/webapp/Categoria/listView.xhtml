@@ -81,8 +81,7 @@
 				  rendered="#{categoriaHome.isManaged()}"
 				  eventsQueue="default"
 				  switchType="ajax"
-				  label="#{messages['categoriaItem.titleTab']}"
-				  action="#{action.init()}">
+				  label="#{messages['categoriaItem.titleTab']}">
 			<s:div id="categoriaItemFormDiv">
 				<wi:dataForm formId="categoriaItemForm"
 						 	 formTitle="#{messages['form.title']} #{categoriaHome.instance.categoria}">
@@ -112,7 +111,7 @@
 						<rich:column style="width: 10%">
 							<center>
 								<wi:toolBarRemove id="toolBarRemove"
-												  reRender="categoriaItemDiv"
+												  reRender="categoriaItemFormDiv, categoriaItemDiv"
 											      actionRemove="categoriaItemAction.remove(row)"/>
 							</center>
 						</rich:column>

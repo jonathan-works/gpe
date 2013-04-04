@@ -9,7 +9,7 @@
 	<param name="restrictionLogicOperator" value="#{tipoModeloDocumentoList.restrictionLogicOperator}" />
 
 <!-- Parametros do searchField -->
-	<param name="grupoModeloDocumento" value="#{tipoModeloDocumentoList.entity.grupoModeloDocumento}"/>			
+	<param name="idGrupoModeloDocumento" value="#{tipoModeloDocumentoList.entity.grupoModeloDocumento.idGrupoModeloDocumento}"/>			
 	<param name="tipoModeloDocumento" value="#{tipoModeloDocumentoList.entity.tipoModeloDocumento}"/>		
 	<param name="abreviacao" value="#{tipoModeloDocumentoList.entity.abreviacao}"/>		
 	<param name="ativo" value="#{tipoModeloDocumentoList.entity.ativo}"/>

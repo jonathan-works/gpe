@@ -21,11 +21,10 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String DEFAULT_EJBQL = "select o from ModeloDocumento o";
-	private static final String DEFAULT_ORDER = "tituloModeloDocumento";
-	private static final String R1 = "o.tipoModeloDocumento in (select t from TipoModeloDocumentoPapel tmdp" +
-																				" join tmdp.tipoModeloDocumento t" +
-																				" join tmdp.papel p" +
-																			" where p = #{usuarioLogadoLocalizacaoAtual.getPapel()})";
+    private static final String DEFAULT_ORDER = "tituloModeloDocumento";
+    private static final String R1 = "exists (from TipoModeloDocumentoPapel tmdp"
+            + " where tmdp.tipoModeloDocumento = o.tipoModeloDocumento"
+            + " and tmdp.papel = #{usuarioLogadoLocalizacaoAtual.papel})";
 	
 	public static final ModeloDocumentoList instance() {
 		return ComponentUtil.getComponent(NAME);
@@ -35,7 +34,7 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 		addSearchField("ativo", SearchCriteria.igual);
 		addSearchField("tipoModeloDocumento", SearchCriteria.igual);
 		addSearchField("tituloModeloDocumento", SearchCriteria.contendo);
-		addSearchField("tipoModeloDocumento", SearchCriteria.igual, R1);
+		addSearchField("validaPapel", SearchCriteria.igual, R1);
 	}
 
 	protected Map<String, String> getCustomColumnsOrder() {

@@ -381,7 +381,7 @@ public class TwitterUtil {
 	
 	private final void loadApplicationTwitter() {
 		Integer idUsuarioSistema = Integer.valueOf(ParametroUtil.getParametro("idUsuarioSistema"));
-		String hql = "select o from ContaTwitter o right join o.usuario u where u.idPessoa = :usuario";
+		String hql = "select o from ContaTwitter o where o.usuario.idPessoa = :usuario";
 		ContaTwitter ct = (ContaTwitter) EntityUtil.createQuery(hql)
 				.setParameter("usuario", idUsuarioSistema)
 				.getSingleResult();
