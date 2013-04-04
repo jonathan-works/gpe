@@ -48,21 +48,25 @@
 			<ui:include src="partePessoaJuridica.xhtml"/>
 		</c:if>
  	</s:div>
-   	<s:div>
+   	<s:div id="parteProcessoListDiv">
    		<wi:dataTable values="#{parteProcessoList.list(15)}"
 					  bean="#{parteProcessoList}"
 					  tableTitle="#{messages['parteProcesso.titleGrid']}"
 					  id="parteProcessoList">
-					  
+			<ui:define name="headerToolBar"/>		  
 			<ui:define name="toolBar">
 				<wi:toolBarInactive actionInactive="processoEpaHome.inativarParteProcesso(row)"/>
 			</ui:define>
-			<wi:columnOutputText columnId="nome"
+			<wi:columnOutputText columnId="pessoa.nome"
 								 columnHeader="#{messages['parteProcesso.nome']}"
-								 value="#{row.pessoa.nome}" />
-			<wi:columnOutputText columnId="descricaoCbo"
-								 columnHeader="#{messages['parteprocesso.descricaoCbo']}"
-								 value="#{row.pessoa.ativo}" />
+								 value="#{row.pessoa.nome}" />				 
+			<wi:columnOutputText columnId="codigo"
+								 columnHeader="#{messages['parteProcesso.codigo']}"
+								 value="#{row.pessoa.getCodigo()}" 
+								 hideOrder="true"/>
+			<wi:columnOutputText columnId="pessoa.tipoPessoa"
+								 columnHeader="#{messages['parteProcesso.tipoPessoa']}"
+								 value="#{row.pessoa.tipoPessoa.label}"/>
 			<wi:columnSituacao columnId="ativo"
 							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
