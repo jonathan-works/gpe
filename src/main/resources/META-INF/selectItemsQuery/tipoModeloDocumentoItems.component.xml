@@ -5,11 +5,10 @@
 
 	<component name="tipoModeloDocumentoItems" class="br.com.itx.component.SelectItemsQuery">
 		<property name="ejbql">select t from TipoModeloDocumentoPapel tmdp
-											join tmdp.tipoModeloDocumento t
-											join tmdp.papel p</property>
+											join tmdp.tipoModeloDocumento t</property>
 		<property name="order">t.tipoModeloDocumento</property>
 		<property name="restrictions">
-			<value>p = #{usuarioLogadoLocalizacaoAtual.getPapel()}</value>
+			<value>tmdp.papel = #{usuarioLogadoLocalizacaoAtual.getPapel()}</value>
 		</property>
 	</component>
 </components>

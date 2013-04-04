@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epa.query.NaturezaCategoriaFluxoQuery;
 import br.com.infox.ibpm.entity.Fluxo;
+import br.com.itx.util.HibernateUtil;
 
 @Entity
 @Table(name=NaturezaCategoriaFluxo.TABLE_NAME, schema="public",
@@ -113,8 +114,30 @@ public class NaturezaCategoriaFluxo implements Serializable{
 		  .append(fluxo);
 		return sb.toString();
 	}
+	
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + idNaturezaCategoriaFluxo;
+        return result;
+    }
 
-	public void setProcessoEpaList(List<ProcessoEpa> processoEpaList) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof NaturezaCategoriaFluxo))
+            return false;
+        NaturezaCategoriaFluxo other = (NaturezaCategoriaFluxo) HibernateUtil.removeProxy(obj);
+        if (idNaturezaCategoriaFluxo != other.idNaturezaCategoriaFluxo)
+            return false;
+        return true;
+    }
+
+    public void setProcessoEpaList(List<ProcessoEpa> processoEpaList) {
 		this.processoEpaList = processoEpaList;
 	}
 

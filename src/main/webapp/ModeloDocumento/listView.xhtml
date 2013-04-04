@@ -36,13 +36,13 @@
 			<ui:define name="searchForm">
 				<wi:searchForm formId="modeloDocumentoSearchForm"
 					formTitle="#{messages['searchForm.title']}">
-					<wi:selectOneMenuEntity id="tipoModeloDocumento"
-						label="#{messages['modeloDocumento.tipoModeloDocumento']}"
-						value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
-						items="#{tipoModeloDocumentoItems}" showLabelTodos="true" />
 					<wi:inputText id="tituloModeloDocumento"
 						label="#{messages['modeloDocumento.tituloModeloDocumento']}"
 						value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
+                    <wi:selectOneMenuEntity id="tipoModeloDocumento"
+                        label="#{messages['modeloDocumento.tipoModeloDocumento']}"
+                        value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
+                        items="#{tipoModeloDocumentoItems}" showLabelTodos="true" />
 					<wi:selectSituacaoOneMenu id="situacao"
 						label="#{messages['field.situacao']}"
 						value="#{modeloDocumentoList.entity.ativo}" />
