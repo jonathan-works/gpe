@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -13,83 +14,71 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:jsp="http://java.sun.com/JSP/Page"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib">
-	
-	<s:div id="partesPessoaFisicaListDiv">
-		
-		<rich:dataTable
-			 value="#{processoHandler.getPessoaFisicaList()}"
-			 rowKeyVar="key"
-			 var="pessoaFisica"
-			 rendered="#{!processoHandler.getPessoaFisicaList().isEmpty()}">
-			
-			<f:facet name="header">Pessoa(s) Fisica(s)</f:facet>
-			<rich:column
-				 styleClass="defaultCell"
-				 style="width: 40%">
-				
-				<f:facet name="header">Nome</f:facet>
-				<h:outputText value="#{pessoaFisica.nome}" />
-			
-			</rich:column>
-			<rich:column styleClass="defaultCell">
-				
-				<f:facet name="header">CPF</f:facet>
-				<h:outputText value="#{pessoaFisica.cpf}" />
-			
-			</rich:column>
-			<rich:column styleClass="defaultCell">
-				
-				<f:facet name="header">Data de Nascimento</f:facet>
-				<h:outputText value="#{pessoaFisica.dataNascimento}" />
-			
-			</rich:column>			
-		
-		</rich:dataTable>
-	
+-->
+
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:wi="http://www.itx.com.br/jsf">
+
+
+	<s:div id="partesDiv">
+		<h:form id="partesForm">
+			<wi:selectOneRadioEnum
+				id="tipoPessoaEnum"
+				items="#{pessoaHome.getTipoPessoaItens()}"
+				value="#{pessoaHome.tipoPessoa}"
+				label="#{messages['pessoa.tipoPessoa']}">
+				<a:ajax
+					execute="@this"
+					render="buscaDiv"
+					event="change" />
+			</wi:selectOneRadioEnum>
+		</h:form>
 	</s:div>
-	<br />
-	<s:div id="partesPessoaJuridicaListDiv">
-		
-		<rich:dataTable
-			 value="#{processoHandler.getPessoaJuridicaList()}"
-			 rowKeyVar="key"
-			 var="pessoaJuridica"
-			 rendered="#{!processoHandler.getPessoaJuridicaList().isEmpty()}">
-			
-			<f:facet name="header">Pessoa(s) Jurídica(s)</f:facet>
-			<rich:column
-				 styleClass="defaultCell"
-				 style="width: 40%">
-				
-				<f:facet name="header">Nome</f:facet>
-				<h:outputText value="#{pessoaJuridica.nome}" />
-			
-			</rich:column>
-			<rich:column styleClass="defaultCell">
-				
-				<f:facet name="header">CNPJ</f:facet>
-				<h:outputText value="#{pessoaJuridica.cnpj}" />
-			
-			</rich:column>
-			<rich:column styleClass="defaultCell">
-				
-				<f:facet name="header">Razão Social</f:facet>
-				<h:outputText value="#{pessoaJuridica.razaoSocial}" />
-			
-			</rich:column>			
-		
-		</rich:dataTable>
-	
+	<s:div id="buscaDiv">
+		<c:if test="#{pessoaHome.isPessoaFisica()}">
+			<ui:include src="partePessoaFisica.xhtml" />
+		</c:if>
+		<c:if test="#{pessoaHome.isPessoaJuridica()}">
+			<ui:include src="partePessoaJuridica.xhtml" />
+		</c:if>
+	</s:div>
+	<s:div id="parteProcessoListDiv">
+		<wi:dataTable
+			values="#{parteProcessoList.list(15)}"
+			bean="#{parteProcessoList}"
+			tableTitle="#{messages['parteProcesso.titleGrid']}"
+			id="parteProcessoList">
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<wi:toolBarInactive
+					actionInactive="processoEpaHome.inativarParteProcesso(row)" />
+			</ui:define>
+			<wi:columnOutputText
+				columnId="pessoa.nome"
+				columnHeader="#{messages['parteProcesso.nome']}"
+				value="#{row.pessoa.nome}" />
+			<wi:columnOutputText
+				columnId="codigo"
+				columnHeader="#{messages['parteProcesso.codigo']}"
+				value="#{row.pessoa.getCodigo()}"
+				hideOrder="true" />
+			<wi:columnOutputText
+				columnId="pessoa.tipoPessoa"
+				columnHeader="#{messages['parteProcesso.tipoPessoa']}"
+				value="#{row.pessoa.tipoPessoa.label}" />
+			<wi:columnSituacao
+				columnId="ativo"
+				columnHeader="#{messages['field.situacao']}"
+				value="#{row.ativo}" />
+		</wi:dataTable>
 	</s:div>
 
 </ui:composition>

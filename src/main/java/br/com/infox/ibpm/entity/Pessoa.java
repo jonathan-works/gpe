@@ -11,6 +11,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import br.com.infox.epa.type.TipoPessoaEnum;
 
@@ -69,4 +70,13 @@ public class Pessoa implements Serializable {
 		return nome;
 	}
 	
+	@Transient
+	public String getCodigo(){
+		if (this instanceof PessoaFisica) {
+			return ((PessoaFisica)this).getCpf();
+		} else if (this instanceof PessoaJuridica) {
+			return ((PessoaJuridica)this).getCnpj();
+		}
+		return "";
+	}
 }

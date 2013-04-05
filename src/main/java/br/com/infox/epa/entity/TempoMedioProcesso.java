@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import br.com.itx.util.HibernateUtil;
+
 @Entity
 @Table(name=TempoMedioProcesso.TABLE_NAME, schema="public")
 public class TempoMedioProcesso implements Serializable {
@@ -19,17 +21,17 @@ public class TempoMedioProcesso implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "vs_tempo_medio_processo";
 
-	private Integer idNaturezaCategoriaFluxo;
+	private int idNaturezaCategoriaFluxo;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
 	private Float tempoMedio;
 	private Integer prazo;
 
 	@Id
 	@Column(name = "id_natureza_categoria_fluxo", nullable=false, insertable=false, updatable=false)
-	public Integer getIdNaturezaCategoriaFluxo() {
+	public int getIdNaturezaCategoriaFluxo() {
 		return idNaturezaCategoriaFluxo;
 	}
-	public void setIdNaturezaCategoriaFluxo(Integer idNaturezaCategoriaFluxo) {
+	public void setIdNaturezaCategoriaFluxo(int idNaturezaCategoriaFluxo) {
 		this.idNaturezaCategoriaFluxo = idNaturezaCategoriaFluxo;
 	}
 	
@@ -67,7 +69,29 @@ public class TempoMedioProcesso implements Serializable {
 		return String.format("%.2f", this.tempoMedio);
 	}
 	
-	@Override
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + idNaturezaCategoriaFluxo;
+        return result;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (obj instanceof TempoMedioProcesso)
+            return false;
+        TempoMedioProcesso other = (TempoMedioProcesso) HibernateUtil.removeProxy(obj);
+        if (idNaturezaCategoriaFluxo != other.idNaturezaCategoriaFluxo)
+            return false;
+        return true;
+    }
+    
+    @Override
 	public String toString() {
 		return MessageFormat.format("{0}", this.naturezaCategoriaFluxo.toString());
 	}

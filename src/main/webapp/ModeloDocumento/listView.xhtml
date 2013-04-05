@@ -99,8 +99,8 @@
 				tableTitle="#{messages['historicoModeloDocumento.titleView']}"
 				id="historicoModeloDocumentoList">
                 <ui:define name="headerToolBar">
-                    <wi:toolBarReport rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}"
-                                      reportPath = "#{util.viewIdDirectory.concat('historicoReport.xhtml')}" />
+                    <!-- <wi:toolBarReport rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}"
+                                      reportPath = "#{util.viewIdDirectory.concat('historicoReport.xhtml')}" /> -->
                     <wi:toolBarReportExcel rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}"
                                            action="#{historicoModeloDocumentoHome.exportarXLS()}"/>                                      
                 </ui:define>

@@ -30,6 +30,7 @@ import javax.persistence.Query;
 
 import org.hibernate.AssertionFailure;
 import org.hibernate.SQLQuery;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
@@ -47,6 +48,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
+import br.com.infox.epa.dao.ProcessoEpaDAO;
 import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Evento;
@@ -71,7 +73,6 @@ import br.com.itx.util.EntityUtil;
 
 
 @Name(ProcessoHome.NAME)
-@BypassInterceptors
 public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	public static final String NAME = "processoHome";
@@ -82,6 +83,8 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoHome.class);
 
 	private static final long serialVersionUID = 1L;
+	
+	@In private ProcessoEpaDAO processoEpaDAO;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -525,37 +528,40 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		signature = null;
 	}
 	
-	public Boolean checarVisibilidade()	{
-		 if (!checkVisibilidade ) {
-				return true;
-			}
-			Integer id = null;
-			String numeroProcesso = null;
-			if (!isManaged()) {
-				id = ProcessoHome.instance().getInstance().getIdProcesso();
-				numeroProcesso = ProcessoHome.instance().getInstance().getNumeroProcesso();
-			} else {
-				id = getInstance().getIdProcesso();
-				numeroProcesso = getInstance().getNumeroProcesso();
-			}
-			
-			ControleFiltros.instance().iniciarFiltro();
-			Query query = getEntityManager().createQuery("select o from ProcessoLocalizacaoIbpm o" +
-															" where o.processo.idProcesso = :id" +
-																" and o.localizacao = :localizacao" +
-																" and o.papel = :papel");
-			query.setParameter("id", id);
-			query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
-			query.setParameter("papel", Authenticator.getPapelAtual());
-			Object result = EntityUtil.getSingleResult(query);
-			boolean check = result != null;
-			if(!check){
-				Util.setToEventContext("canClosePanel", true);
-				FacesMessages.instance().clear();
-				FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + numeroProcesso);
-			}
-			return check;
-	}
+    public Boolean checarVisibilidade() {
+        if (!checkVisibilidade) {
+            return true;
+        }
+        Integer id = null;
+        String numeroProcesso = null;
+        if (!isManaged()) {
+            id = ProcessoHome.instance().getInstance().getIdProcesso();
+            numeroProcesso = ProcessoHome.instance().getInstance()
+                    .getNumeroProcesso();
+        } else {
+            id = getInstance().getIdProcesso();
+            numeroProcesso = getInstance().getNumeroProcesso();
+        }
+
+        ControleFiltros.instance().iniciarFiltro();
+        Query query = getEntityManager().createQuery(
+                "select o from ProcessoLocalizacaoIbpm o"
+                        + " where o.processo.idProcesso = :id"
+                        + " and o.localizacao = :localizacao"
+                        + " and o.papel = :papel");
+        query.setParameter("id", id);
+        query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
+        query.setParameter("papel", Authenticator.getPapelAtual());
+        Object result = EntityUtil.getSingleResult(query);
+        boolean check = result != null;
+        if (!check) {
+            Util.setToEventContext("canClosePanel", true);
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add(Severity.ERROR,
+                    "Sem permissão para acessar o processo: " + numeroProcesso);
+        }
+        return check;
+    }
 	
 	public void carregarDadosFluxo(Integer idProcessoDocumento){
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idProcessoDocumento);
@@ -893,6 +899,10 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 
 	public TipoProcessoDocumento getTipoProcessoDocumentoRO() {
 		return tipoProcessoDocumentoRO;
+	}
+	
+	public boolean hasPartes(){
+		return processoEpaDAO.hasPartes(getInstance());
 	}
 	
 }
