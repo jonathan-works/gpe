@@ -14,7 +14,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(CalendarioEventosList.NAME)
 @BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class CalendarioEventosList extends EntityList<CalendarioEventos> {
 	
 	public static final String NAME = "calendarioEventosList";

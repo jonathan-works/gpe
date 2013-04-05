@@ -528,37 +528,40 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		signature = null;
 	}
 	
-	public Boolean checarVisibilidade()	{
-		 if (!checkVisibilidade ) {
-				return true;
-			}
-			Integer id = null;
-			String numeroProcesso = null;
-			if (!isManaged()) {
-				id = ProcessoHome.instance().getInstance().getIdProcesso();
-				numeroProcesso = ProcessoHome.instance().getInstance().getNumeroProcesso();
-			} else {
-				id = getInstance().getIdProcesso();
-				numeroProcesso = getInstance().getNumeroProcesso();
-			}
-			
-			ControleFiltros.instance().iniciarFiltro();
-			Query query = getEntityManager().createQuery("select o from ProcessoLocalizacaoIbpm o" +
-															" where o.processo.idProcesso = :id" +
-																" and o.localizacao = :localizacao" +
-																" and o.papel = :papel");
-			query.setParameter("id", id);
-			query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
-			query.setParameter("papel", Authenticator.getPapelAtual());
-			Object result = EntityUtil.getSingleResult(query);
-			boolean check = result != null;
-			if(!check){
-				Util.setToEventContext("canClosePanel", true);
-				FacesMessages.instance().clear();
-				FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + numeroProcesso);
-			}
-			return check;
-	}
+    public Boolean checarVisibilidade() {
+        if (!checkVisibilidade) {
+            return true;
+        }
+        Integer id = null;
+        String numeroProcesso = null;
+        if (!isManaged()) {
+            id = ProcessoHome.instance().getInstance().getIdProcesso();
+            numeroProcesso = ProcessoHome.instance().getInstance()
+                    .getNumeroProcesso();
+        } else {
+            id = getInstance().getIdProcesso();
+            numeroProcesso = getInstance().getNumeroProcesso();
+        }
+
+        ControleFiltros.instance().iniciarFiltro();
+        Query query = getEntityManager().createQuery(
+                "select o from ProcessoLocalizacaoIbpm o"
+                        + " where o.processo.idProcesso = :id"
+                        + " and o.localizacao = :localizacao"
+                        + " and o.papel = :papel");
+        query.setParameter("id", id);
+        query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
+        query.setParameter("papel", Authenticator.getPapelAtual());
+        Object result = EntityUtil.getSingleResult(query);
+        boolean check = result != null;
+        if (!check) {
+            Util.setToEventContext("canClosePanel", true);
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add(Severity.ERROR,
+                    "Sem permissão para acessar o processo: " + numeroProcesso);
+        }
+        return check;
+    }
 	
 	public void carregarDadosFluxo(Integer idProcessoDocumento){
 		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idProcessoDocumento);

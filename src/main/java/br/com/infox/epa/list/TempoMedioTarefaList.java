@@ -13,7 +13,7 @@ import br.com.infox.epa.entity.TempoMedioTarefa;
 
 @Name(TempoMedioTarefaList.NAME)
 @BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class TempoMedioTarefaList extends EntityList<TempoMedioTarefa> {
 	public static final String NAME = "tempoMedioTarefaList";
 	

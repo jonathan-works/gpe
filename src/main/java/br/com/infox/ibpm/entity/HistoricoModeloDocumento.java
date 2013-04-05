@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.entity;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import br.com.infox.access.entity.UsuarioLogin;
 
@@ -68,6 +70,14 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 		this.dataAlteracao = dataAlteracao;
 	}
 
+	@Transient
+	public String getDataAlteracaoFormatada() {
+	    if (dataAlteracao == null) {
+	        return "";
+	    }
+	    return DateFormat.getDateInstance().format(dataAlteracao);
+	}
+	
 	@Column(name="ds_titulo_modelo_documento", nullable=false, length=60)
 	public String getTituloModeloDocumento() {
 		return tituloModeloDocumento;
