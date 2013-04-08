@@ -29,6 +29,7 @@
 	<ui:define name="body">
 		<rich:panel style="height:98%;">
 			<ui:param name="tempoMedioProcesso" value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}" />
+            <ui:param name="home" value="#{tempoMedioTarefaHome}" />
 		    <wi:dataTable values="#{tempoMedioTarefaList.list(15)}"
 						  bean="#{tempoMedioTarefaList}"
 						  tableTitle="[#{tempoMedioProcesso}] Tempo médio: #{tempoMedioProcesso.getTempoMedioFormatado()} dia(s). Prazo: #{tempoMedioProcesso.prazo} dia(s)"
@@ -42,7 +43,7 @@
 						<wi:selectOneMenuEntity id="naturezaCategoriaFluxo"
 												label="#{messages['tempoMedioTarefaList.tempoMedioProcesso']}"
 												value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}"
-												items="#{tempoMedioProcessoAction.listTempoMedioProcesso}"
+												items="#{tempoMedioTarefaHome.listTempoMedioProcesso}"
 												showLabel="#{messages['tempoMedioProcesso.tempoMedioProcessoListCombo']}" />
 					</wi:searchForm>
 				</ui:define>
@@ -53,10 +54,12 @@
 				
 				<wi:columnOutputText columnId="nomeTarefa"
 									 columnHeader="#{messages['temposMedios.descricaoTarefa']}"
-									 value="#{row.nomeTarefa}" />
+									 value="#{row.nomeTarefa}"
+                                     hideOrder="true" />
 				<wi:columnOutputText columnId="tempoMedio"
 									 columnHeader="#{messages['temposMedios.tempoMedio']}"
-									 value="#{row.getTempoMedioFormatado()}" />
+									 value="#{row.getTempoMedioFormatado()}"
+                                     hideOrder="true" />
 				<wi:columnOutputText columnId="prazo"
 									 columnHeader="#{messages['temposMedios.prazo']}"
 									 value="#{row.prazo} #{row.tipoPrazo.label}"
