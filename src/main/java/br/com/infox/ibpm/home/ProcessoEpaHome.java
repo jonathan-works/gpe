@@ -1,9 +1,14 @@
 package br.com.infox.ibpm.home;
 
+import javax.persistence.PersistenceException;
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.epa.manager.ParteProcessoManager;
@@ -21,7 +26,13 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 	@In private ParteProcessoManager parteProcessoManager;
 	
 	public void incluirParteProcesso(Processo processo, String tipoPessoa){
-		parteProcessoManager.incluir(processo, tipoPessoa);
+		try {
+			parteProcessoManager.incluir(processo, tipoPessoa);
+		} catch (PersistenceException cve){
+			FacesMessages.instance().clear();
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
+					"Parte já cadastrada no Processo!");
+		}
 	}
 	
 	public void inativarParteProcesso(ParteProcesso parteProcesso){
