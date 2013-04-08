@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epa.dao.ProcessoEpaDAO;
 import br.com.infox.epa.manager.ModeloDocumentoManager;
 import br.com.infox.epa.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epa.manager.ProcessoDocumentoManager;
@@ -31,6 +32,8 @@ public class ProcessoManager extends GenericManager {
 	
 	private static final long serialVersionUID = 8095772422429350875L;
 	public static final String NAME = "processoManager";
+	
+	@In private ProcessoEpaDAO processoEpaDAO;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
@@ -79,5 +82,27 @@ public class ProcessoManager extends GenericManager {
 			value = processoDocumentoBinAtual.getModeloDocumento();
 		}
 		return value;
+	}
+	
+	public void addProcessoConexoForIdProcesso(Processo processoAtual, Processo processoConexo) {
+		processoAtual.getProcessoConexoListForIdProcesso().add(processoConexo);
+	}
+	
+	public void removeProcessoConexoForIdProcesso(Processo processoAtual, Processo processoConexo) {
+		processoAtual.getProcessoConexoListForIdProcesso().remove(processoConexo);
+	}
+	
+	public void addProcessoConexoForIdProcessoConexo(Processo processoAtual, Processo processoConexo){
+		processoAtual.getProcessoConexoListForIdProcessoConexo().add(processoConexo);
+		update(processoAtual);
+	}
+	
+	public void removeProcessoConexoForIdProcessoConexo(Processo processoAtual, Processo processoConexo){
+		processoAtual.getProcessoConexoListForIdProcessoConexo().remove(processoConexo);
+		update(processoAtual);
+	}
+	
+	public boolean hasPartes(Processo processo){
+		return processoEpaDAO.hasPartes(processo);
 	}
 }
