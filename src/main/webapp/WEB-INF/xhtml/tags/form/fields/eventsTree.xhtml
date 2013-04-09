@@ -55,7 +55,7 @@
 							execute="@this"
 							selectionType="ajax"
 							rendered="#{not empty agrupamentos}"
-							selectionChangeListener="#{tree.selectListener}"
+							selectionChangeListener="#{tree.processTreeSelectionChange}"
 							style="height:200px; overflow:auto"
 							var="item">
 							<rich:treeModelRecursiveAdaptor
@@ -63,7 +63,8 @@
 								nodes="#{item.nodes}">
 								<rich:treeNode
 									render="#{id}EventsTreeDiv, #{reRender}"
-									icon="/img/nivelTree.gif"
+									iconCollapsed="/img/nivelTree.gif"
+									iconExpanded="/img/nivelTree.gif"
 									iconLeaf="/img/file.gif">
 									<h:outputText value="#{item}" />
 								</rich:treeNode>
