@@ -9,7 +9,7 @@
 			where o.ativo = true and (o.visibilidade = 'I' OR o.visibilidade = 'A')
 		</property>
 		<property name="restrictions">
-			<value>(o.inTipoDocumento = #{processoDocumentoHome.modelo ? 'P' : 'D'} OR o.inTipoDocumento = 'T')</value>
+			<value>(o.inTipoDocumento = #{processoDocumentoHome.modelo ? TipoDocumentoEnum.P : TipoDocumentoEnum.D} OR o.inTipoDocumento = 'T')</value>
 		</property>
 		<property name="order">o.tipoProcessoDocumento</property>
 
