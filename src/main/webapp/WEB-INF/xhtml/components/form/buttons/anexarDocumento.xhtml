@@ -32,8 +32,8 @@
     				 
     <a:commandButton
          rendered="true"
-         ajaxSingle="true"
-         reRender="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao, divAnexarImagem"
+         execute="@this"
+         render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao, divAnexarImagem"
          action="#{processoDocumentoHome.setModelo(not processoDocumentoHome.modelo)}"
          value="#{processoDocumentoHome.modelo ? messages['processo.associarDocumentoBtn'] : messages['processo.redigirDocumentoBtn']}"
          styleClass="dr-tbpnl-tb-inact"
