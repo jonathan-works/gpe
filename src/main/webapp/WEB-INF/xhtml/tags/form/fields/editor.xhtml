@@ -13,33 +13,34 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+-->
+<ui:composition
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
 
 	<ui:param
-         name="varsList"
-         value="#{showVariables ? 'epaInsert,|,' : '' }" />
+		name="varsList"
+		value="#{showVariables ? 'epaInsert,|,' : '' }" />
 	<ui:param
-         name="template"
-         value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
-	
+		name="template"
+		value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+
 	<s:decorate
-         id="#{id}Decoration"
-         template="#{template}"
-         rendered="#{wi:get(rendered, true)}"
-         style="clear:both">
-		
+		id="#{id}Decoration"
+		template="#{template}"
+		rendered="#{wi:get(rendered, true)}"
+		style="clear:both">
+
 		<script
-             language="javascript"
-             type="text/javascript">
+			language="javascript"
+			type="text/javascript">
 			// Conteudo da lista de selecao
 			var contents = {
 				<a:repeat
@@ -71,57 +72,53 @@
 				});
 			}
 		</script>
-				
-		<ui:define
-             name="label">#{label}</ui:define>
-		<span
-             id="#{id}Locator" />
+
+		<ui:define name="label">#{label}</ui:define>
+		<span id="#{id}Locator" />
 		<rich:editor
-             id="#{id}"
-             value="#{value}"
-             theme="#{wi:get(editorTheme, 'advanced')}"
-             width="#{wi:get(width, 650)}"
-             height="#{wi:get(height, 350)}"
-             autoResize="#{wi:get(autoResize, 'false')}"
-             disabled="#{disabled}"
-             readonly="#{readonly}"
-             required="#{required}"
-             onchange="#{wi:get(onchange, 'void(0);')}"
-             customPlugins="epaPlugins">
-				<f:param
-                 name="language"
-                 value="pt" />
-				<f:param
-                 name="relative_urls"
-                 value="false" />
-				<f:param
-                 name="theme_advanced_toolbar_location"
-                 value="top" />
-				<f:param
-                 name="theme_advanced_toolbar_align"
-                 value="left" />
-				<f:param
-                 name="plugins"
-                 value="epa,spellchecker,table,advhr,advimage,advlink,inlinepopups,searchreplace,print,contextmenu,paste,fullscreen,visualchars" />				
-				<f:param
-                 name="theme_advanced_buttons1_add"
-                 value="fontselect,fontsizeselect,|,selectall,cut,copy,paste,pastetext,pasteword,|,search,replace" />
-				<f:param
-                 name="theme_advanced_buttons2_add"
-                 value="#{varsList},blockquote,insertdate,inserttime,forecolor,backcolor,|,tablecontrols" />
-				<f:param
-                 name="theme_advanced_buttons3_add"
-                 value="visualchars,advhr,|,print,|,spellchecker,|,undo,redo,|,fullscreen" />
-				<f:param
-                 name="theme_advanced_disable"
-                 value="formatselect,styleselect,link,image,unlink,anchor,cleanup,help,code" />
-				<f:param
-                 name="setup"
-                 value="tabKeyAction" />
-			<ui:insert />			
+			id="#{id}"
+			value="#{value}"
+			skin="#{wi:get(editorTheme, 'richfaces')}"
+			toolbar="#{wi:get(toolbar, 'basic')}"
+			width="#{wi:get(width, 650)}"
+			height="#{wi:get(height, 350)}"
+			readonly="#{readonly}"
+			required="#{required}"
+			onchange="#{wi:get(onchange, 'void(0);')}"
+			customPlugins="epaPlugins">
+			<f:param
+				name="language"
+				value="pt" />
+			<f:param
+				name="relative_urls"
+				value="false" />
+			<f:param
+				name="theme_advanced_toolbar_location"
+				value="top" />
+			<f:param
+				name="theme_advanced_toolbar_align"
+				value="left" />
+			<f:param
+				name="plugins"
+				value="epa,spellchecker,table,advhr,advimage,advlink,inlinepopups,searchreplace,print,contextmenu,paste,fullscreen,visualchars" />
+			<f:param
+				name="theme_advanced_buttons1_add"
+				value="fontselect,fontsizeselect,|,selectall,cut,copy,paste,pastetext,pasteword,|,search,replace" />
+			<f:param
+				name="theme_advanced_buttons2_add"
+				value="#{varsList},blockquote,insertdate,inserttime,forecolor,backcolor,|,tablecontrols" />
+			<f:param
+				name="theme_advanced_buttons3_add"
+				value="visualchars,advhr,|,print,|,spellchecker,|,undo,redo,|,fullscreen" />
+			<f:param
+				name="theme_advanced_disable"
+				value="formatselect,styleselect,link,image,unlink,anchor,cleanup,help,code" />
+			<f:param
+				name="setup"
+				value="tabKeyAction" />
+			<ui:insert />
 		</rich:editor>
-		<ui:insert
-             name="conteudoApplet" />	
+		<ui:insert name="conteudoApplet" />
 	</s:decorate>
 
 </ui:composition>
