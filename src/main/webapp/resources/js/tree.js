@@ -1,3 +1,3 @@
 function setZIndex(id) {
-	$(id).style.zIndex = $(id).offsetHeight > 30 ? 1 : 0;
+	document.getElementById(id).style.zIndex = document.getElementById(id).offsetHeight > 30 ? 1 : 0;
 }
