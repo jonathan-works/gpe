@@ -22,6 +22,7 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.util.Strings;
+import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.component.tree.SearchTree2GridList;
@@ -223,14 +224,13 @@ public class LocalizacaoHome
 	}
 	
 	@Override
-	public void onClickFormTab() {
-		if (isManaged()){
+	public void itemChangeListener(ItemChangeEvent event) {
+		if (isManaged()) {
 			localizacaoPai = getInstance().getLocalizacaoPai();
-		}
-		else {
+		} else {
 			localizacaoPai = null;
 		}
-		super.onClickFormTab();
+		super.itemChangeListener(event);
 	}
 	
 	private EnderecoHome getEnderecoHome() {

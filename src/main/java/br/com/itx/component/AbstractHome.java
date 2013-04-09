@@ -41,6 +41,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jboss.util.StopWatch;
+import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.itx.component.grid.GridQuery;
@@ -395,15 +396,17 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 
 	/**
-	 * Evento acionado quando o usuário entra na aba de pesquisa.
+	 * Evento acionado quando o usuário clica em alguma aba
 	 */
-	public void onClickSearchTab() {
-		newInstance();
+
+	public void itemChangeListener(ItemChangeEvent event) {
+		System.out.println(event.getNewItemName());
+		if (event.getNewItemName().equals("search")) {
+			newInstance();
+		}
+		setTab(event.getNewItemName());
 	}
 	
-	public void onClickFormTab() {
-	}
-
 	/**
 	 * Metodo para limpar o formulario com o mesmo nome do Home, caso houver algum
 	 * Chamado pelo newInstance
