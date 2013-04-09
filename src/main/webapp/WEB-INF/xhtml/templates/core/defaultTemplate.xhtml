@@ -20,13 +20,14 @@
 		<h:form id="tabForm">
 
 			<rich:tabPanel
+				id="defaultTabPanel"
 				switchType="ajax"
-				activeItem="#{home.tab}">
+				activeItem="#{home.tab}"
+				itemChangeListener="#{home.itemChangeListener}">
 				<rich:tab
 					id="search"
 					name="search"
 					header="#{messages['template.abaPesquisaText']}"
-					action="#{home.onClickSearchTab}"
 					rendered="#{showSearchTab}"
 					immediate="true"
 					status=":status">
@@ -44,8 +45,7 @@
 					header="#{messages['template.abaFormularioText']}"
 					immediate="true"
 					status=":status"
-					disabled="#{empty disabledForm ? false : disabledForm}"
-					action="#{home.onClickFormTab}">
+					disabled="#{empty disabledForm ? false : disabledForm}">
 					<a:region>
 						<ui:insert name="form" />
 					</a:region>
