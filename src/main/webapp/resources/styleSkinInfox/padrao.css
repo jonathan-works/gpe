@@ -23,17 +23,17 @@
 	font-size:1px;
 }
 
-tr.rich-table-row:hover {
+tr.rf-dt-r:hover {
 	background-color:#E7E7E7;
 }
 
-.zebra tr.rich-table-row:nth-child(odd) {
+.zebra tr.rf-dt-r:nth-child(odd) {
 	background-color:#FAFAFA;
 }
-.zebra tr.rich-table-row:nth-child(even) {
+.zebra tr.rf-dt-r:nth-child(even) {
 	background-color:#E7E7E7;
 }
-.zebra tr.rich-table-row:hover {
+.zebra tr.rf-dt-r:hover {
 	background-color:#AFAFAF;
 }
 
@@ -125,7 +125,7 @@ tr.rich-table-row:hover {
 	font-weight: bold;
 }
 
-div.rich-panel {
+div.rf-p {
 	margin:20px 0 0 10px;
 	max-width:98%;
 	padding-top:2px;
@@ -293,7 +293,6 @@ label.label_login {
 	margin-right:10px;
 	display: table;			
 	overflow: visible;
-	float: left;		
 }
 
 .propertyView .name {
@@ -353,16 +352,12 @@ label.label_login {
 	text-align: right;
 }
 
-.actionButtons {
-	float: left; 
-}
-
 .footer {
 	text-align: center;
 	font-size: 10px;
 }
 
-.rich-table {
+.rf-dt {
 	width: 99%;
 }
 
@@ -506,12 +501,12 @@ body {
 	border: solid 1px transparent !important;
 }
 
-.dr-table-footercell {
+.rf-dt-ftr-c {
 	text-align: center;
 	padding: 0px
 }
 
-.dr-table-subfootercell {
+.rf-dt-sftr-c {
 	text-align: center;
 }
 
