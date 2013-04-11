@@ -287,7 +287,7 @@
 		<c:if test="#{!checkPermission}">
 			<wi:outputText
 				id="error"
-				value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
+				value="#{messages['movimentar.noPermission']}" />
 		</c:if>
 	</ui:define>
 
