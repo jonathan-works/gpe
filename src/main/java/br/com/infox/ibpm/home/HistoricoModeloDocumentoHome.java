@@ -18,21 +18,14 @@ package br.com.infox.ibpm.home;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.list.HistoricoModeloDocumentoList;
 import br.com.itx.component.AbstractHome;
 
-
-/**
- * Classe para operações com "Assunto(TUA)"
- *
- */
 @Name(HistoricoModeloDocumentoHome.NAME)
-@BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class HistoricoModeloDocumentoHome extends AbstractHome<HistoricoModeloDocumento> {
 
     private static final long serialVersionUID = 1L;
@@ -40,8 +33,6 @@ public class HistoricoModeloDocumentoHome extends AbstractHome<HistoricoModeloDo
     private static final String DOWNLOAD_XLS_NAME = "historicosModelosDocumento.xls";
     public static final String NAME = "historicoModeloDocumentoHome";
     
-	
-
 	@Override
 	public String getTemplate(){
         return HistoricoModeloDocumentoHome.TEMPLATE;
