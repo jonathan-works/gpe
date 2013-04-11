@@ -8,7 +8,6 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.epa.manager.ParteProcessoManager;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.util.ComponentUtil;
 
 @Name(ParteProcessoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
