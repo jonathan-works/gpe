@@ -1,6 +1,6 @@
 package br.com.infox.epa.processor;
 
-import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.jboss.seam.Component;
@@ -70,26 +70,45 @@ public class TarefaTimerProcessor {
 		}
 		Date fireTime = trigger.getPreviousFireTime();
 		for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getTarefaNotEnded(PrazoEnum.H)) {
-			LocalizacaoTurno lt = localizacaoTurnoManager.getTurnoTarefa(pt, fireTime, new Time(fireTime.getTime()));
-			if (lt != null) {
-				pt.setTempoGasto(pt.getTempoGasto() + localizacaoTurnoManager.calcularMinutosGastos(fireTime, pt.getUltimoDisparo(), lt));
-				if (pt.getTempoPrevisto() == 0) {
-					pt.setPorcentagem(-1);
-				} else {
-					pt.setPorcentagem((pt.getTempoGasto()*100)/(pt.getTarefa().getPrazo()*60));
-				}
+            while (pt.getUltimoDisparo().before(fireTime)) {
+                LocalizacaoTurno lt = localizacaoTurnoManager.getTurnoTarefa(pt, fireTime);
+                Date disparoAtual = getDisparoAtual(pt.getUltimoDisparo(), fireTime);
+                if (lt != null) {
+                    pt.setTempoGasto(pt.getTempoGasto()+localizacaoTurnoManager.calcularMinutosGastos(disparoAtual, pt.getUltimoDisparo(),lt));
+                    if (pt.getTarefa().getPrazo() == 0) {
+                        pt.setPorcentagem(-1);
+                    } else {
+                        pt.setTempoPrevisto(pt.getTarefa().getPrazo() * 60);
+                        pt.setPorcentagem((pt.getTempoGasto() * 100)
+                                / pt.getTempoPrevisto());
+                    }
 
-				ProcessoEpa processoEpa = pt.getProcessoEpa();
-				if (pt.getPorcentagem() > 100 && processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
-					processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
-				}
-			}
-			
-			pt.setUltimoDisparo(fireTime);
-			processoEpaTarefaManager.update(pt);
+                    ProcessoEpa processoEpa = pt.getProcessoEpa();
+                    if (pt.getPorcentagem() > 100
+                            && processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
+                        processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
+                    }
+                }
+
+                pt.setUltimoDisparo(disparoAtual);
+            }
+            processoEpaTarefaManager.update(pt);
 		}
 		
 		return null;
+	}
+	
+	private Date getDisparoAtual(Date ultimoDisparo, Date fireTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(ultimoDisparo);
+        calendar.add(Calendar.MINUTE, 30);
+        Date proxDisparo = calendar.getTime();
+        
+        if (proxDisparo.before(fireTime)) {
+            return proxDisparo;
+        } else {
+            return fireTime;
+        }
 	}
 	
 }
