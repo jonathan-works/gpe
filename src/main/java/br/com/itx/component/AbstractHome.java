@@ -400,7 +400,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 */
 
 	public void itemChangeListener(ItemChangeEvent event) {
-		System.out.println(event.getNewItemName());
 		if (event.getNewItemName().equals("search")) {
 			newInstance();
 		}
