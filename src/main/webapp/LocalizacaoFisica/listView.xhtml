@@ -58,6 +58,9 @@
 									  columnHeader="#{messages['localizacaoFisica.descricao']}"
 									  value="#{row.descricao}"
 									  fullPath="#{row.caminhoCompleto}"/>
+            <wi:columnOutputText columnId="localizacaoFisicaPai"
+                                 columnHeader="#{messages['localizacaoFisica.localizacaoFisicaPai']}"
+                                 value="#{row.localizacaoFisicaPai}"/>
 			<wi:columnSituacao columnId="ativo"
 							columnHeader="#{messages['field.situacao']}"
 							columnWidth="10%"

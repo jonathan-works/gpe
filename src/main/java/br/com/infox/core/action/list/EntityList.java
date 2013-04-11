@@ -1,6 +1,7 @@
 package br.com.infox.core.action.list;
 
 import java.beans.PropertyDescriptor;
+import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -131,6 +132,8 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 				if (object instanceof Boolean) {
 				    atributeLabel = Messages.instance().get(MessageFormat.format(
                             "{0}.{1}.{2}", entityName, s.getName(), (Boolean)object));
+				} else if (object instanceof Date) {
+				    atributeLabel = DateFormat.getDateInstance().format(object);
 				} else {
 					// Caso não for booleano
 					atributeLabel = object.toString();

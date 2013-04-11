@@ -22,15 +22,17 @@
 	<ui:param name="title" value="Localizações Físicas" />
 
 	<wi:dataReport title="#{messages['localizacaoFisica.reportTitle']}"
-				   columns="2"
-				   widths="4 2"
+				   columns="3"
+				   widths="4 2 1"
 				   headerText="#{localizacaoFisicaList.criteria}">
 				   
 		<wi:reportColumnHeader title="#{messages['localizacaoFisica.descricao']}" />
+        <wi:reportColumnHeader title="#{messages['localizacaoFisica.localizacaoFisicaPai']}" />
         <wi:reportColumnHeader title="#{messages['field.situacao']}" />
 				
 		<ui:repeat var="row" value="#{localizacaoFisicaList.list()}">
 			<wi:reportColumn value="#{row.descricao}" />
+            <wi:reportColumn value="#{localizacaoFisicaPai}" />
             <wi:reportColumnSituacao value="#{row.ativo}" 
                  columnAlign="center"/>
 		</ui:repeat>
