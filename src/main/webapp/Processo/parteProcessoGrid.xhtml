@@ -54,9 +54,14 @@
 					  id="parteProcessoList">
 			<ui:define name="headerToolBar"/>		  
 			<ui:define name="toolBar">
-				<wi:toolBar action="#{parteProcessoHome.setInstance(row)}"
+				<wi:toolBar rendered="#{row.ativo}"
+                            action="#{parteProcessoHome.setInstance(row)}"
 							reRender="parteProcessoListDiv"
-							url="/img/remove.png"/>
+							url="/img/removeCol.png"/>
+                <wi:toolBar rendered="#{!row.ativo}"
+                            action="#{parteProcessoHome.setInstance(row)}"
+							reRender="parteProcessoListDiv"
+							url="/img/add.gif"/>
 			</ui:define>
 			<wi:columnOutputText columnId="pessoa.nome"
 								 columnHeader="#{messages['parteProcesso.nome']}"
@@ -72,22 +77,28 @@
 							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
-		<s:div id="atividadeParteDiv" style="position:fixed; top:0px; left:0px; width:100%; height:100%; background-color:#000; opacity:0.7" rendered="#{parteProcessoHome.isManaged()}">
-			<s:div style="position:fixed; top:50%; left:50%; width:300px; height:300px; background-color:#FFF; margin:-150px 0 0 -150px">
-				<wi:dataForm formId="atividadeParte" 
-								formTitle="">
-					<ui:define name="buttons">
-						<wi:commandButtonPersist rendered="true"
-												style="position:relative"
-												reRender="parteProcessoListDiv"
-												persistAction="parteProcessoHome.alternarAtividadeParteProcesso()"/>
-					</ui:define>
-					<wi:inputText id="motivo"
-									required="true"
-									label="Motivo da Modificação"
-									value="#{parteProcessoHome.motivoModificacao}"/>
-				</wi:dataForm>
-			</s:div>
+		<s:div id="atividadeParteDiv" rendered="#{parteProcessoHome.isManaged()}">
+            <s:div id="backgroundBlock"></s:div>
+    		<wi:dataForm formId="atividadeParte" 
+    						formTitle="">
+    			<ui:define name="buttons">
+                    <wi:commandButton id="persistButton"
+                                      action="#{parteProcessoHome.alternarAtividadeParteProcesso()}"
+                                      rendered="true"
+                                      reRender="parteProcessoListDiv"
+                                      value="Incluir" />
+                    <wi:commandButton id="cancelarButton"
+                                      action="#{parteProcessoHome.newInstance()}"
+                                      rendered="true"
+                                      ajaxSingle="true"
+                                      reRender="parteProcessoListDiv"
+                                      value="Cancelar" />
+    			</ui:define>
+    			<wi:inputText id="motivo"
+    							required="true"
+    							label="Motivo da Modificação"
+    							value="#{parteProcessoHome.motivoModificacao}"/>
+    		</wi:dataForm>
 		</s:div>
    	</s:div>
 	

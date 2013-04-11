@@ -21,7 +21,13 @@ public class ParteProcessoHome extends AbstractHome<ParteProcesso>{
 	
 	@In private ParteProcessoManager parteProcessoManager;
 	
-	public void alternarAtividadeParteProcesso(){
+	@Override
+    public void newInstance() {
+	    motivoModificacao = "";
+        super.newInstance();
+    }
+
+    public void alternarAtividadeParteProcesso(){
 		parteProcessoManager.alternarAtividade(getInstance(), motivoModificacao);
 		newInstance();
 	}
