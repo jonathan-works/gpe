@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import br.com.infox.epa.entity.ProcessoEpa;
 
@@ -71,6 +72,15 @@ public class ParteProcesso implements Serializable {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+	
+	@Transient
+	public String getNomeParte(){
+		return getPessoa().getNome();
+	}
+	
+	public void setNomeParte(String nome){
+		getPessoa().setNome(nome);
 	}
 	
 }

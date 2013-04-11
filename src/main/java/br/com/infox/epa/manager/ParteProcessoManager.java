@@ -1,6 +1,9 @@
 package br.com.infox.epa.manager;
 
+import java.util.Date;
+
 import javax.persistence.Query;
+import javax.xml.bind.ValidationException;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -16,6 +19,7 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.ProcessoEpaDAO;
 import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.epa.type.TipoPessoaEnum;
+import br.com.infox.ibpm.entity.HistoricoParteProcesso;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Pessoa;
 import br.com.infox.ibpm.entity.PessoaFisica;
@@ -35,9 +39,11 @@ public class ParteProcessoManager extends GenericManager {
 	
 	@In private ProcessoEpaDAO processoEpaDAO; 
 	
-	public void inativar(ParteProcesso parteProcesso){
-		parteProcesso.setAtivo(false);
+	public void alternarAtividade(ParteProcesso parteProcesso, String motivoModificacao){
+		HistoricoParteProcesso hpp = new HistoricoParteProcesso(parteProcesso, motivoModificacao);
+		parteProcesso.setAtivo(!parteProcesso.getAtivo());
 		update(parteProcesso);
+		persist(hpp);
 	}
 	
 	public void carregaPessoa(String tipoPessoa, String codigo){
@@ -90,7 +96,21 @@ public class ParteProcessoManager extends GenericManager {
 				persist(new ParteProcesso(processoEpa, p));
 			pj.setInstance(null);
 		} else return;
-		//update(processoEpa);
+	}
+	
+	public HistoricoParteProcesso restaurarParteProcesso(ParteProcesso parteProcessoAtual, HistoricoParteProcesso versaoAnterior, String motivoRestauracao) throws ValidationException {
+		if (!parteProcessoAtual.getIdParteProcesso().equals(versaoAnterior.getParteModificada().getIdParteProcesso()))
+			throw new ValidationException("Restauração inválida: Histórico passado não pertence ao Histórico da Parte de Processo instanciada");
+		
+		HistoricoParteProcesso novoHistorico = new HistoricoParteProcesso(parteProcessoAtual, motivoRestauracao);
+		persist(novoHistorico);
+		parteProcessoAtual.setAtivo(parteProcessoAtual.getAtivo());
+		update(parteProcessoAtual);
+		return novoHistorico;
+	}
+	
+	public void salvarAlteracaoDeParteProcesso(String motivoAlteracao){
+		
 	}
 	
 }

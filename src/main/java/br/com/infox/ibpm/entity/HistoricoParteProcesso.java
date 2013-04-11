@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.ibpm.home.Authenticator;
 
 @Entity
 @Table(name=HistoricoParteProcesso.TABLE_NAME, schema="public")
@@ -27,11 +28,21 @@ public class HistoricoParteProcesso {
 	private Date dataModificacao;
 	private String motivoModificacao;
 	private ParteProcesso parteModificada;
-	
 	//Atributos da Entidade ParteProcesso que podem ser modificados
 	//Em caso de novas regras/atributos, favor inserir aqui abaixo
-	private String nomeParte;
 	private boolean ativo;
+	
+	public HistoricoParteProcesso(){
+		super();
+	}
+	
+	public HistoricoParteProcesso(ParteProcesso parteProcessoAtual, String motivoModificacao){
+		responsavelPorModificacao = Authenticator.getUsuarioLogado();
+		dataModificacao = new Date();
+		this.motivoModificacao = motivoModificacao;
+		parteModificada = parteProcessoAtual;
+		ativo = parteProcessoAtual.getAtivo();
+	}
 
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_historico_parte_processo")
 	@Id
@@ -62,7 +73,7 @@ public class HistoricoParteProcesso {
 	}
 
 	public void setDataModificacao(Date dataModificacao) {
-		this.dataModificacao = dataModificacao;
+		this.dataModificacao = dataModificacao;	
 	}
 
 	@Column(name="ds_motivo_modificacao", nullable=false, length=150)
@@ -82,15 +93,6 @@ public class HistoricoParteProcesso {
 
 	public void setParteModificada(ParteProcesso parte) {
 		this.parteModificada = parte;
-	}
-	
-	@Column(name="nm_parte", nullable=false, length=150)
-	public String getNomeParte() {
-		return nomeParte;
-	}
-
-	public void setNomeParte(String nome) {
-		this.nomeParte = nome;
 	}
 
 	@Column(name="is_ativo", nullable=false)
