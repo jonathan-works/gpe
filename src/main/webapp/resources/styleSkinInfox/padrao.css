@@ -757,3 +757,36 @@ input[type='submit'],input[type='button'], .buttons {
 .conclusionSelect {
 	display: block;
 }
+
+#backgroundBlock {
+	left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    background-color: #000000;
+    opacity: 0.75;
+}
+
+#atividadeParteDiv form {
+    left: 50%;
+    top: 50%;
+    height: 136px;
+    width: 284px;
+    margin: -68px 0 0 -197px;
+    position: fixed;
+    z-index: 2;
+    background-color: #FFFFFF;
+}
+
+#atividadeParteDiv input[type="button"], #atividadeParteDiv input[type="submit"] {
+    background-color: #FFFFFF;
+}
+
+#atividadeParteDiv form .rich-panel {
+    height: 100px;
+    margin: 0;
+    max-width: 99%;
+    padding-top: 0;
+}

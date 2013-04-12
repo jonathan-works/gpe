@@ -16,69 +16,92 @@
   veja em http://www.gnu.org/licenses/  
 -->
 
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.com/products/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:wi="http://www.itx.com.br/jsf">
-
-
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:c="http://java.sun.com/jsp/jstl/core"
+				xmlns:wi="http://www.itx.com.br/jsf">
+	
 	<s:div id="partesDiv">
-		<h:form id="partesForm">
-			<wi:selectOneRadioEnum
-				id="tipoPessoaEnum"
-				items="#{pessoaHome.getTipoPessoaItens()}"
-				value="#{pessoaHome.tipoPessoa}"
-				label="#{messages['pessoa.tipoPessoa']}">
-				<a:ajax
-					execute="@this"
-					render="buscaDiv"
-					event="change" />
-			</wi:selectOneRadioEnum>
-		</h:form>
-	</s:div>
-	<s:div id="buscaDiv">
+   		<h:form id="partesForm">
+   			<wi:selectOneRadioEnum id="tipoPessoaEnum"
+								   items="#{pessoaHome.getTipoPessoaItens()}"
+								   value="#{pessoaHome.tipoPessoa}"
+								   label="#{messages['pessoa.tipoPessoa']}">
+								   <a:ajax execute="@this"
+					   					render="buscaDiv"
+					   					event="change" 
+					   					limitRender="true"/>
+			</wi:selectOneRadioEnum> 
+   		</h:form>
+   	</s:div>
+   	<s:div id="buscaDiv">
 		<c:if test="#{pessoaHome.isPessoaFisica()}">
-			<ui:include src="partePessoaFisica.xhtml" />
+			<ui:include src="partePessoaFisica.xhtml"/>
 		</c:if>
 		<c:if test="#{pessoaHome.isPessoaJuridica()}">
-			<ui:include src="partePessoaJuridica.xhtml" />
+			<ui:include src="partePessoaJuridica.xhtml"/>
 		</c:if>
-	</s:div>
-	<s:div id="parteProcessoListDiv">
-		<wi:dataTable
-			values="#{parteProcessoList.list(15)}"
-			bean="#{parteProcessoList}"
-			tableTitle="#{messages['parteProcesso.titleGrid']}"
-			id="parteProcessoList">
-			<ui:define name="headerToolBar" />
+ 	</s:div>
+   	<s:div id="parteProcessoListDiv">
+   		<wi:dataTable values="#{parteProcessoList.list(15)}"
+					  bean="#{parteProcessoList}"
+					  tableTitle="#{messages['parteProcesso.titleGrid']}"
+					  id="parteProcessoList">
+			<ui:define name="headerToolBar"/>		  
 			<ui:define name="toolBar">
-				<wi:toolBarInactive
-					actionInactive="processoEpaHome.inativarParteProcesso(row)" />
+				<wi:toolBar rendered="#{row.ativo}"
+                            action="#{parteProcessoHome.setInstance(row)}"
+							render="parteProcessoListDiv"
+							url="/img/removeCol.png"/>
+                <wi:toolBar rendered="#{!row.ativo}"
+                            action="#{parteProcessoHome.setInstance(row)}"
+							render="parteProcessoListDiv"
+							url="/img/add.gif"/>
 			</ui:define>
-			<wi:columnOutputText
-				columnId="pessoa.nome"
-				columnHeader="#{messages['parteProcesso.nome']}"
-				value="#{row.pessoa.nome}" />
-			<wi:columnOutputText
-				columnId="codigo"
-				columnHeader="#{messages['parteProcesso.codigo']}"
-				value="#{row.pessoa.getCodigo()}"
-				hideOrder="true" />
-			<wi:columnOutputText
-				columnId="pessoa.tipoPessoa"
-				columnHeader="#{messages['parteProcesso.tipoPessoa']}"
-				value="#{row.pessoa.tipoPessoa.label}" />
-			<wi:columnSituacao
-				columnId="ativo"
-				columnHeader="#{messages['field.situacao']}"
-				value="#{row.ativo}" />
+			<wi:columnOutputText columnId="pessoa.nome"
+								 columnHeader="#{messages['parteProcesso.nome']}"
+								 value="#{row.pessoa.nome}" />				 
+			<wi:columnOutputText columnId="codigo"
+								 columnHeader="#{messages['parteProcesso.codigo']}"
+								 value="#{row.pessoa.getCodigo()}" 
+								 hideOrder="true"/>
+			<wi:columnOutputText columnId="pessoa.tipoPessoa"
+								 columnHeader="#{messages['parteProcesso.tipoPessoa']}"
+								 value="#{row.pessoa.tipoPessoa.label}"/>
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['field.situacao']}"
+							value="#{row.ativo}" />
 		</wi:dataTable>
-	</s:div>
+		<s:div id="atividadeParteDiv" rendered="#{parteProcessoHome.isManaged()}">
+            <s:div id="backgroundBlock"></s:div>
+    		<wi:dataForm formId="atividadeParte" 
+    						formTitle="">
+    			<ui:define name="buttons">
+                    <wi:commandButton id="persistButton"
+                                      action="#{parteProcessoHome.alternarAtividadeParteProcesso()}"
+                                      rendered="true"
+                                      reRender="parteProcessoListDiv"
+                                      value="Incluir" />
+                    <wi:commandButton id="cancelarButton"
+                                      action="#{parteProcessoHome.newInstance()}"
+                                      rendered="true"
+                                      execute="@this"
+                                      reRender="parteProcessoListDiv"
+                                      value="Cancelar" />
+    			</ui:define>
+    			<wi:inputText id="motivo"
+    							required="true"
+    							label="Motivo da Modificação"
+    							value="#{parteProcessoHome.motivoModificacao}"/>
+    		</wi:dataForm>
+		</s:div>
+   	</s:div>
+	
+
 
 </ui:composition>
