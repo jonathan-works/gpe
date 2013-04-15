@@ -30,7 +30,7 @@ import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
 public class IniciarProcessoService {
 	
 	@In
-	private ProcessoManager processoService;
+	private ProcessoManager processoManager;
 
 	public static final String ON_CREATE_PROCESS = 
 		"br.com.infox.epa.IniciarProcessoService.ONCREATEPROCESS";
@@ -50,7 +50,7 @@ public class IniciarProcessoService {
 		processo.setIdJbpm(idProcessoJbpm);
 		processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
 		
-		processoService.update(processo);
+		processoManager.update(processo);
 	}
 	
 	/**
