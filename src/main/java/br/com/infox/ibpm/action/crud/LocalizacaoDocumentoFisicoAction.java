@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.event.AbortProcessingException;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.richfaces.event.ItemChangeEvent;
+import org.richfaces.event.ItemChangeListener;
 
 import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.ibpm.entity.DocumentoFisico;
@@ -21,7 +25,7 @@ import br.com.infox.list.LocalizacaoFisicaList;
 @Name(LocalizacaoDocumentoFisicoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class LocalizacaoDocumentoFisicoAction extends
-		AbstractCrudAction<DocumentoFisico> implements Serializable {
+		AbstractCrudAction<DocumentoFisico> implements Serializable, ItemChangeListener {
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "localizacaoDocumentoFisicoAction";
@@ -98,4 +102,10 @@ public class LocalizacaoDocumentoFisicoAction extends
 		return documentoFisicoList;
 	}
 
+	@Override
+	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
+		if ("documentoFisicoTab".equals(event.getNewItemName())) {
+			init();
+		}
+	}
 }

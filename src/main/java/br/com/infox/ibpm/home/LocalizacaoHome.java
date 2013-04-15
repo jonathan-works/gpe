@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.home;
 
+import javax.faces.event.AbortProcessingException;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
@@ -222,15 +224,15 @@ public class LocalizacaoHome
 			inativarFilhos(localizacao.getLocalizacaoList().get(i));
 		}
 	}
-	
+
 	@Override
-	public void itemChangeListener(ItemChangeEvent event) {
+	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
 		if (isManaged()) {
 			localizacaoPai = getInstance().getLocalizacaoPai();
 		} else {
 			localizacaoPai = null;
 		}
-		super.itemChangeListener(event);
+		super.processItemChange(event);
 	}
 	
 	private EnderecoHome getEnderecoHome() {

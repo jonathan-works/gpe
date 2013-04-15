@@ -96,13 +96,17 @@
 				switchType="ajax"
 				activeItem="#{home.tab}"
 				rendered="#{checkPermission}">
+				
+				<rich:itemChangeListener binding="#{processoHome}" />
+				<rich:itemChangeListener binding="#{processoDocumentoHome}" />
+				<rich:itemChangeListener binding="#{localizacaoDocumentoFisicoAction}" />
+				
 				<rich:tab
 					id="tabFluxo"
 					rendered="#{!processoHome.managed}"
 					header="Escolher fluxo"
 					status=":status"
-					immediate="true"
-					action="#{processoHome.limpar()}">
+					immediate="true">
 					<h:messages
 						id="globalMessages"
 						globalOnly="true"
@@ -150,8 +154,7 @@
 					rendered="#{processoHome.managed}"
 					header="Anexar Documento"
 					status=":status"
-					immediate="true"
-					action="#{processoDocumentoHome.newInstance()}">
+					immediate="true">
 					<s:div id="divAnexarDocumentos">
 						<div style="width: 75%; left: 1px;">
 							<wi:form
@@ -198,7 +201,6 @@
 					id="documentoFisicoTab"
 					rendered="#{home.isManaged()}"
 					header="#{messages['documentoFisico.titleTab']}"
-					action="#{action.init()}"
 					immediate="true">
 					<wi:dataForm
 						formId="documentoFisicoForm"

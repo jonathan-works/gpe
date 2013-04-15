@@ -15,8 +15,11 @@
 */
 package br.com.infox.cliente.home;
 
+import javax.faces.event.AbortProcessingException;
+
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.home.AbstractProcessoDocumentoHome;
@@ -48,5 +51,13 @@ public class ProcessoDocumentoHome
 	public void newInstance() {
 		setModeloDocumentoCombo(null);
 		super.newInstance();
+	}
+	
+	@Override
+	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
+		if ("tabAnexar".equals(event.getNewItemName())) {
+			newInstance();
+		}
+		super.processItemChange(event);
 	}
 }

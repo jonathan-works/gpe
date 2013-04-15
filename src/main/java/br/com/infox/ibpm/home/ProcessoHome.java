@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.faces.event.AbortProcessingException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -33,7 +34,6 @@ import org.hibernate.SQLQuery;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
@@ -47,7 +47,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
+import org.richfaces.event.ItemChangeEvent;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epa.dao.ProcessoEpaDAO;
 import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
@@ -59,7 +61,6 @@ import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.ProcessoEvento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
@@ -116,6 +117,14 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		modeloDocumento = null;
 		tipoProcessoDocumento = null;
 		newInstance();
+	}
+	
+	@Override
+	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
+		if ("tabFluxo".equals(event.getNewItemName())) {
+			limpar();
+		}
+		super.processItemChange(event);
 	}
 	
 	@Observer("processoHomeSetId")
