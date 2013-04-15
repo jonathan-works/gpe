@@ -19,12 +19,14 @@ public class ParteProcessoList extends EntityList<ParteProcesso> {
 	private static final String DEFAULT_EJBQL = "select o from ParteProcesso o";
 	private static final String DEFAULT_ORDER = "pessoa";
 	private static final String REGRA1 = "o.processo.idJbpm = #{org.jboss.seam.bpm.processInstance.id}";
+	private static final String REGRA_IS_RESPONSAVEL = "#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao()}=true or o.ativo=true";
 
 	@Override
 	protected void addSearchFields() {
 		addSearchField("processo", SearchCriteria.igual);
 		addSearchField("pessoa", SearchCriteria.igual);
 		addSearchField("processoAtual", SearchCriteria.igual, REGRA1);
+	    addSearchField("isResponsavelLocalizacao",SearchCriteria.igual, REGRA_IS_RESPONSAVEL);
 	}
 
 	@Override

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:c="http://java.sun.com/jstl/core"
+				xmlns:wi="http://www.itx.com.br/jsf">
+	
+   	<s:div id="parteProcessoListDiv">
+   		<wi:dataTable values="#{parteProcessoList.list(15)}"
+					  bean="#{parteProcessoList}"
+					  tableTitle="#{messages['parteProcesso.titleGrid']}"
+					  id="parteProcessoList">
+			<ui:define name="headerToolBar" />		  
+			<ui:define name="toolBar" />
+			<wi:columnOutputText columnId="pessoa.nome"
+								 columnHeader="#{messages['parteProcesso.nome']}"
+								 value="#{row.pessoa.nome}" />				 
+			<wi:columnOutputText columnId="codigo"
+								 columnHeader="#{messages['parteProcesso.codigo']}"
+								 value="#{row.pessoa.getCodigo()}" 
+								 hideOrder="true"/>
+			<wi:columnOutputText columnId="pessoa.tipoPessoa"
+								 columnHeader="#{messages['parteProcesso.tipoPessoa']}"
+								 value="#{row.pessoa.tipoPessoa.label}"/>
+		</wi:dataTable>
+   	</s:div>
+	
+
+
+</ui:composition>
