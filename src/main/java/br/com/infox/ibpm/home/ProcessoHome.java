@@ -253,8 +253,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	private void avisarErroAoVerificarCertificado(Exception e1) {
-		FacesMessages.instance().add(Severity.ERROR, 
-				"Erro ao verificar certificado: " + e1.getMessage());
+		FacesMessages.instance().add(Severity.ERROR, "Erro ao verificar certificado: " + e1.getMessage());
 	}
 
 	public void carregarDadosFluxo(Integer idProcessoDocumento){
@@ -290,8 +289,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
 	@Override
 	public String remove() {
-		Authenticator.getUsuarioLogado().getProcessoListForIdUsuarioCadastroProcesso()
-					.remove(instance);
+		Authenticator.getUsuarioLogado().getProcessoListForIdUsuarioCadastroProcesso().remove(instance);
 		return super.remove();
 	}
 
