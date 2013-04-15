@@ -11,12 +11,6 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epa.dao.ProcessoEpaDAO;
-import br.com.infox.epa.manager.ModeloDocumentoManager;
-import br.com.infox.epa.manager.ProcessoDocumentoBinManager;
-import br.com.infox.epa.manager.ProcessoDocumentoManager;
-import br.com.infox.epa.manager.TipoProcessoDocumentoManager;
-import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
-import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
