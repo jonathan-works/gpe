@@ -44,12 +44,12 @@ public interface LocalizacaoTurnoQuery {
 			"where (:" +QUERY_PARAM_HORA_INICIO+ " between lt.horaInicio and lt.horaFim or " +
 			"		:" +QUERY_PARAM_HORA_FIM+ " between lt.horaInicio and lt.horaFim) and" +
 			"	lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + " and " +
-			"   not exists(select o from CalendarioEventos o " +
+			"   not exists(from CalendarioEventos o " +
 			"			   where o.localizacao = lt.localizacao and " +
 			"					 o.dia = :" + QUERY_PARAM_DIA + " and " +
 			"					 o.mes = :" + QUERY_PARAM_MES + " and " +
 			"					 (o.ano is null or o.ano = :" + QUERY_PARAM_ANO + ")) and " +
-			"   exists (select o from ProcessoLocalizacaoIbpm o where " +
+			"   exists (from ProcessoLocalizacaoIbpm o where " +
 			" 	 			   o.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+" and " +
 			"				   o.localizacao = lt.localizacao and	" +
 			"	 			   o.contabilizar = true)";

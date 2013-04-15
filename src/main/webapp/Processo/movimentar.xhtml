@@ -239,7 +239,7 @@
 			</rich:tab>	
 		</rich:tabPanel>
 		<c:if test="#{!checkPermission}">
-			<wi:outputText id="error" value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
+			<wi:outputText id="error" value="#{messages['movimentar.noPermission']}" />
 			<a:jsFunction name="closeWindow">window.close();</a:jsFunction>
 		</c:if>
 	</ui:define>

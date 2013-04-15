@@ -27,7 +27,6 @@
 				xmlns:c="http://java.sun.com/jstl/core"
 				xmlns:wi="http://www.itx.com.br/jsf">
 	
-		
 	<s:div id="partesDiv">
    		<h:form id="partesForm">
    			<wi:selectOneRadioEnum id="tipoPessoaEnum"
@@ -55,7 +54,14 @@
 					  id="parteProcessoList">
 			<ui:define name="headerToolBar"/>		  
 			<ui:define name="toolBar">
-				<wi:toolBarInactive actionInactive="processoEpaHome.inativarParteProcesso(row)"/>
+				<wi:toolBar rendered="#{row.ativo}"
+                            action="#{parteProcessoHome.setInstance(row)}"
+							reRender="parteProcessoListDiv"
+							url="/img/removeCol.png"/>
+                <wi:toolBar rendered="#{!row.ativo}"
+                            action="#{parteProcessoHome.setInstance(row)}"
+							reRender="parteProcessoListDiv"
+							url="/img/add.gif"/>
 			</ui:define>
 			<wi:columnOutputText columnId="pessoa.nome"
 								 columnHeader="#{messages['parteProcesso.nome']}"
@@ -71,6 +77,31 @@
 							columnHeader="#{messages['field.situacao']}"
 							value="#{row.ativo}" />
 		</wi:dataTable>
+		<s:div id="atividadeParteDiv" rendered="#{parteProcessoHome.isManaged()}">
+            <s:div id="backgroundBlock"></s:div>
+    		<wi:dataForm formId="atividadeParte" 
+    						formTitle="">
+    			<ui:define name="buttons">
+                    <wi:commandButton id="persistButton"
+                                      action="#{parteProcessoHome.alternarAtividadeParteProcesso()}"
+                                      rendered="true"
+                                      reRender="parteProcessoListDiv"
+                                      value="Incluir" />
+                    <wi:commandButton id="cancelarButton"
+                                      action="#{parteProcessoHome.newInstance()}"
+                                      rendered="true"
+                                      ajaxSingle="true"
+                                      reRender="parteProcessoListDiv"
+                                      value="Cancelar" />
+    			</ui:define>
+    			<wi:inputText id="motivo"
+    							required="true"
+    							label="Motivo da Modificação"
+    							value="#{parteProcessoHome.motivoModificacao}"/>
+    		</wi:dataForm>
+		</s:div>
    	</s:div>
+	
+
 
 </ui:composition>

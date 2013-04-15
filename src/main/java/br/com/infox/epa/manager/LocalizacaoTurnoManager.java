@@ -38,11 +38,11 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	 * @param horario 
 	 * @return turno da localização da tarefa
 	 */
-	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date data, Time horario) {
+	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date data) {
 		Calendar horarioCalendar = Calendar.getInstance();
-		horarioCalendar.setTime(horario);
+		horarioCalendar.setTime(data);
 		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
-		return localizacaoTurnoDAO.getTurnoTarefa(pt, data, horario, DiaSemanaEnum.values()[diaSemana-1]);
+		return localizacaoTurnoDAO.getTurnoTarefa(pt, data, DiaSemanaEnum.values()[diaSemana-1]);
 	}
 	
 	/**
@@ -111,7 +111,6 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	public int calcularMinutosGastos(Date fireTime, Date lastFire, LocalizacaoTurno lt) {
 		int minutesBegin = Math.max(getMinutesOfDay(lastFire), getMinutesOfDay(lt.getHoraInicio()));
 		int minutesEnd = Math.min(getMinutesOfDay(fireTime), getMinutesOfDay(lt.getHoraFim()));
-		
 		if (minutesBegin < minutesEnd) {
 			return minutesEnd - minutesBegin;
 		}
@@ -121,7 +120,7 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	private int getMinutesOfDay(Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR)*60);
+		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR_OF_DAY)*60);
 	}
 	
 	public static void main(String[] args) {
