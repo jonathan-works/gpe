@@ -93,4 +93,16 @@ public class ProcessoEpaDAO extends GenericDAO {
 		return (pe != null) && (pe.hasPartes());
 	}
 	
+	
+	/**
+	 * Quando um processo necessita de partes, não é permitido inativar todas
+	 * as partes do processo de uma vez.
+	 * Esse método retorna falso (não há permissão de inativar) se o processo
+	 * possuir uma única parte ativa no momento.
+	 * */
+	public Boolean podeInativarPartes(ProcessoEpa processoEpa){
+		String hql = "select count(*) from ParteProcesso partes where partes.processo = :processoEpa and partes.ativo = true";
+		return (Boolean) (((Long) EntityUtil.createQuery(hql).setParameter("processoEpa", processoEpa).getSingleResult()).compareTo(1L) > 0);
+	}
+	
 }

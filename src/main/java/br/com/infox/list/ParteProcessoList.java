@@ -24,7 +24,6 @@ public class ParteProcessoList extends EntityList<ParteProcesso> {
 	protected void addSearchFields() {
 		addSearchField("processo", SearchCriteria.igual);
 		addSearchField("pessoa", SearchCriteria.igual);
-		//addSearchField("ativo", SearchCriteria.igual);
 		addSearchField("processoAtual", SearchCriteria.igual, REGRA1);
 	}
 

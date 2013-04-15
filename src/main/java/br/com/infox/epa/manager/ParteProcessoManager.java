@@ -1,7 +1,5 @@
 package br.com.infox.epa.manager;
 
-import java.util.Date;
-
 import javax.persistence.Query;
 import javax.xml.bind.ValidationException;
 
@@ -108,9 +106,4 @@ public class ParteProcessoManager extends GenericManager {
 		update(parteProcessoAtual);
 		return novoHistorico;
 	}
-	
-	public void salvarAlteracaoDeParteProcesso(String motivoAlteracao){
-		
-	}
-	
 }

@@ -49,6 +49,7 @@ import org.jboss.seam.util.Strings;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
 import br.com.infox.epa.dao.ProcessoEpaDAO;
+import br.com.infox.epa.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Evento;
@@ -85,6 +86,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private static final long serialVersionUID = 1L;
 	
 	@In private ProcessoEpaDAO processoEpaDAO;
+	@In private ProcessoEpaManager processoEpaManager;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -103,6 +105,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	private Long tarefaId;
 
 	private Boolean checkVisibilidade = true;
+	private Boolean podeInativarParteProcesso;
 
 	public void iniciarNovoFluxo(){
 		limpar();
@@ -903,6 +906,22 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 	
 	public boolean hasPartes(){
 		return processoEpaDAO.hasPartes(getInstance());
+	}
+
+	public Boolean getPodeInativarParteProcesso() {
+		if (podeInativarParteProcesso == null){
+			podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
+		}
+		return podeInativarParteProcesso;
+	}
+	
+	public void setPodeInativarParteProcesso(Boolean podeInativarParteProcesso) {
+		return;
+	}
+
+	@Observer("parteProcessoHomeAlternaAtividadeParteProcesso")
+	public void setPodeInativarParteProcesso() {
+		this.podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
 	}
 	
 }
