@@ -16,61 +16,74 @@
   veja em http://www.gnu.org/licenses/  
 -->
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:c="http://java.sun.com/jstl/core"
-				xmlns:rich="http://richfaces.org/rich">
-	
-	<ui:param name="clearAction" value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}"/>
-	<f:validateBean disabled="true">
-	   	<a:region id="#{formId}">
-	   		<s:div styleClass="edit">
-		        <rich:collapsiblePanel expanded="#{wi:get(opened, true)}"
-		        						style="width: #{wi:get(widthSearchForm, '275px')}"
-		        						switchType="client">
-					<f:facet name="closeMarker">&#160;</f:facet>
-		            <f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
-					<ui:param name="template" 
-							  value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}"/>
-					<ui:insert />
-					<ui:insert name="buttons">
-						<wi:selectOneMenu id="#{gridId}LogicOperator" 
-										  label="Mostrar resultado que atenda a:"
-										  value="#{bean.restrictionLogicOperator}" 
-										  rendered="#{wi:get(showLogicOperator, false)}"
-										  showLock="false"
-										  optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
-										  items="#{'and,or'.split(',')}"/>
-						
-						<s:div style="clear: both; width:250px" 
-							   rendered="#{wi:get(showButtons, true)}">
-							<wi:commandButton id="searchButton"
-											  value="Pesquisar"
-											  action="#{searchAction}"
-											  reRender="#{wi:get(searchReRender, 'pageBody')}">
-					        	<a:param assignTo="#{bean.page}" value="1"/>
-							</wi:commandButton>
-							
-							<a:region>
-			            		<a:commandButton id="clearButton"
-			            						onclick="j$('##{formId}').clearForm();showLoading();"
-				            					oncomplete="hideLoading();"
-		 				            		    action="#{util.invokeMethod(clearAction)}" 
-											    value="Limpar" 
-											    execute="@this"
-											    style="min-width:65px; width:65px;"
-											    render="#{wi:get(clearReRender, 'pageBody')}"
-											    styleClass="buttons dr-tbpnl-tb-inact"/>
-							</a:region>
-						</s:div>
-					</ui:insert>
-				</rich:collapsiblePanel>
-			</s:div>
-		</a:region>
-	</f:validateBean>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<ui:param
+		name="clearAction"
+		value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}" />
+	<f:subview id="#{formId}">
+		<f:validateBean disabled="true">
+			<a:region>
+				<s:div styleClass="edit">
+					<rich:collapsiblePanel
+						expanded="#{wi:get(opened, true)}"
+						style="width: #{wi:get(widthSearchForm, '275px')}"
+						switchType="client">
+						<f:facet name="closeMarker">&#160;</f:facet>
+						<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
+						<ui:param
+							name="template"
+							value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
+						<ui:insert />
+						<ui:insert name="buttons">
+							<wi:selectOneMenu
+								id="#{gridId}LogicOperator"
+								label="Mostrar resultado que atenda a:"
+								value="#{bean.restrictionLogicOperator}"
+								rendered="#{wi:get(showLogicOperator, false)}"
+								showLock="false"
+								optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
+								items="#{'and,or'.split(',')}" />
+
+							<s:div
+								style="clear: both; width:250px"
+								rendered="#{wi:get(showButtons, true)}">
+								<wi:commandButton
+									id="searchButton"
+									value="Pesquisar"
+									action="#{searchAction}"
+									reRender="#{wi:get(searchReRender, 'pageBody')}">
+									<a:param
+										assignTo="#{bean.page}"
+										value="1" />
+								</wi:commandButton>
+
+								<a:region>
+									<a:commandButton
+										id="clearButton"
+										onclick="j$('##{formId}').clearForm();showLoading();"
+										oncomplete="hideLoading();"
+										action="#{util.invokeMethod(clearAction)}"
+										value="Limpar"
+										execute="@this"
+										style="min-width:65px; width:65px;"
+										render="#{wi:get(clearReRender, 'pageBody')}"
+										styleClass="buttons dr-tbpnl-tb-inact" />
+								</a:region>
+							</s:div>
+						</ui:insert>
+					</rich:collapsiblePanel>
+				</s:div>
+			</a:region>
+		</f:validateBean>
+	</f:subview>
 </ui:composition>
