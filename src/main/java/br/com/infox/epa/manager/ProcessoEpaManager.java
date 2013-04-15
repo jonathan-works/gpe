@@ -14,6 +14,7 @@ import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Pessoa;
+import br.com.infox.ibpm.entity.Processo;
 
 @Name(ProcessoEpaManager.NAME)
 @Scope(ScopeType.EVENT)
@@ -24,8 +25,7 @@ public class ProcessoEpaManager extends GenericManager {
 
 	public static final String NAME = "processoEpaManager";
 
-	@In
-	private ProcessoEpaDAO processoEpaDAO;
+	@In private ProcessoEpaDAO processoEpaDAO;
 
 	public List<ProcessoEpa> listAllNotEnded() {
 		return processoEpaDAO.listAllNotEnded();
@@ -43,5 +43,14 @@ public class ProcessoEpaManager extends GenericManager {
 	public void incluirParteProcesso(ProcessoEpa processoEpa, ParteProcesso parteProcesso){
 		processoEpa.getPartes().add(parteProcesso);
 		update(processoEpa);
+	}
+	
+	public Boolean podeInativarPartesDoProcesso(Processo processo){
+		return processoEpaDAO.podeInativarPartes(
+				processoEpaDAO.getProcessoEpaByProcesso(processo));
+	}
+	
+	public boolean podeInativarPartesDoProcesso(ProcessoEpa processoEpa){
+		return processoEpaDAO.podeInativarPartes(processoEpa);
 	}
 }

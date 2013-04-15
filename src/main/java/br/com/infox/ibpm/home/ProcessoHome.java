@@ -28,7 +28,8 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.epa.service.ProcessoManager;
-
+import br.com.infox.epa.dao.ProcessoEpaDAO;
+import br.com.infox.epa.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
@@ -60,6 +61,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	@In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
 	
 	@In private ProcessoManager processoManager;
+	@In private ProcessoEpaDAO processoEpaDAO;
+	@In private ProcessoEpaManager processoEpaManager;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -76,7 +79,10 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	private Integer idProcessoDocumento;
 
 	private Long tarefaId;
-	
+
+	private Boolean checkVisibilidade = true;
+	private Boolean podeInativarParteProcesso;
+
 	public void iniciarNovoFluxo(){
 		limpar();
 		redirecionarPagina();
@@ -495,6 +501,22 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		}
 		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
 		//TODO esperando Tássio verificar (21 de março de 2013)
+	}
+
+	public Boolean getPodeInativarParteProcesso() {
+		if (podeInativarParteProcesso == null){
+			podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
+		}
+		return podeInativarParteProcesso;
+	}
+	
+	public void setPodeInativarParteProcesso(Boolean podeInativarParteProcesso) {
+		return;
+	}
+
+	@Observer("parteProcessoHomeAlternaAtividadeParteProcesso")
+	public void setPodeInativarParteProcesso() {
+		this.podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
 	}
 	
 }
