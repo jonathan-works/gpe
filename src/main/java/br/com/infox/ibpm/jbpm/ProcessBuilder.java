@@ -317,4 +317,32 @@ public class ProcessBuilder implements Serializable {
 	public String getTypeLabel(String type){
 		return typeFitter.getTypeLabel(type);
 	}
+
+	public EventFitter getEventFitter() {
+		return eventFitter;
+	}
+
+	public TransitionFitter getTransitionFitter() {
+		return transitionFitter;
+	}
+
+	public SwimlaneFitter getSwinlaneFitter() {
+		return swinlaneFitter;
+	}
+
+	public TaskFitter getTaskFitter() {
+		return taskFitter;
+	}
+
+	public NodeFitter getNodeFitter() {
+		return nodeFitter;
+	}
+
+	public TypeFitter getTypeFitter() {
+		return typeFitter;
+	}
+
+	public ProcessBuilderGraph getProcessBuilderGraph() {
+		return processBuilderGraph;
+	}
 }
