@@ -36,12 +36,8 @@
 		<param-value>true</param-value>
 	</context-param>
 	<context-param>
-		<param-name>org.richfaces.LoadScriptStrategy</param-name>
-		<param-value>ALL</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.richfaces.LoadStyleStrategy</param-name>
-		<param-value>ALL</param-value>
+		<param-name>resourceOptimization.enabled</param-name>
+		<param-value>true</param-value>
 	</context-param>
 	<!-- Fila padrão para as requisições ajax -->
 	<context-param>
