@@ -57,14 +57,13 @@ public class ProcessBuilder implements Serializable {
 	public static final String NAME = "processBuilder";
 	public static final String POST_DEPLOY_EVENT = "postDeployEvent";
 	
-	@In private EventFitter eventFitter;
-	@In private TransitionFitter transitionFitter;
-	@In private SwimlaneFitter swinlaneFitter;
+	@In	private EventFitter eventFitter;
+	@In	private TransitionFitter transitionFitter;
+	@In private SwimlaneFitter swimlaneFitter;
 	@In private TaskFitter taskFitter;
 	@In private NodeFitter nodeFitter;
 	@In private TypeFitter typeFitter;
-	
-	@In private ProcessBuilderGraph processBuilderGraph;
+	@In	private ProcessBuilderGraph processBuilderGraph;
 
 	private String id;
 	private ProcessDefinition instance;
@@ -109,7 +108,7 @@ public class ProcessBuilder implements Serializable {
 
 	private void clear() {
 		taskNodeMap = null;
-		swinlaneFitter.clear();
+		swimlaneFitter.clear();
 		taskFitter.clear();
 		nodeFitter.clear();
 		transitionFitter.clear();
@@ -326,8 +325,8 @@ public class ProcessBuilder implements Serializable {
 		return transitionFitter;
 	}
 
-	public SwimlaneFitter getSwinlaneFitter() {
-		return swinlaneFitter;
+	public SwimlaneFitter getSwimlaneFitter() {
+		return swimlaneFitter;
 	}
 
 	public TaskFitter getTaskFitter() {
