@@ -1,9 +1,23 @@
 package br.com.infox.ibpm.jbpm.fitter;
 
-public interface Fitter {
-	
-	public void clear();
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Create;
+import org.jboss.seam.annotations.Scope;
+
+import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.itx.util.ComponentUtil;
+
+@Scope(ScopeType.CONVERSATION)
+public abstract class Fitter {
+    protected ProcessBuilder pb;
+    
+	public abstract void clear();
 	//public void add();
 	//public void remove(<Handler> handler);
+	
+	@Create
+	public void init() {
+	    pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+	}
 	
 }
