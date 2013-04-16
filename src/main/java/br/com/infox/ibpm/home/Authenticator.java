@@ -515,13 +515,21 @@ public class Authenticator {
 	/**
 	 * @return a UsuarioLocalizacao atual do usuário logado
 	 */
-	public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
-		UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(
-				USUARIO_LOCALIZACAO_ATUAL);
-		usuarioLocalizacao = EntityUtil.getEntityManager().find(UsuarioLocalizacao.class, 
-				usuarioLocalizacao.getIdUsuarioLocalizacao());
-		return usuarioLocalizacao;
-	}
+    public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
+        UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(
+                USUARIO_LOCALIZACAO_ATUAL);
+        usuarioLocalizacao = EntityUtil.getEntityManager().find(UsuarioLocalizacao.class, 
+                usuarioLocalizacao.getIdUsuarioLocalizacao());
+        return usuarioLocalizacao;
+    }
+    
+    public static boolean isUsuarioAtualResponsavel() {
+        UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(
+                USUARIO_LOCALIZACAO_ATUAL);
+        usuarioLocalizacao = EntityUtil.getEntityManager().find(UsuarioLocalizacao.class, 
+                usuarioLocalizacao.getIdUsuarioLocalizacao());
+        return usuarioLocalizacao.getResponsavelLocalizacao();
+    }
 	
 	/**
 	 * Atalho para a localização atual
