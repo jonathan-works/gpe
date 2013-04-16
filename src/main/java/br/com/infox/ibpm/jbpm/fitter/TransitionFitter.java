@@ -9,21 +9,18 @@ import java.util.Set;
 
 import javax.faces.model.SelectItem;
 
-import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 
-import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
-import br.com.itx.util.ComponentUtil;
 
 @Name(TransitionFitter.NAME)
-@Scope(ScopeType.CONVERSATION)
-public class TransitionFitter implements Serializable, Fitter {
+@AutoCreate
+public class TransitionFitter extends Fitter implements Serializable {
 	
 
 	private static final long serialVersionUID = 1L;
@@ -39,8 +36,6 @@ public class TransitionFitter implements Serializable, Fitter {
 	private List<TransitionHandler> transitionList;
 	private List<String[]> transitionNames;
 	
-	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
-
 	public void changeTransition(TransitionHandler th, String type) {
 		Node oldNodeTransition = pb.getNodeFitter().getOldNodeTransition();
 		Transition t = th.getTransition();

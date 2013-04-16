@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
@@ -15,8 +14,8 @@ import br.com.infox.ibpm.jbpm.handler.SwimlaneHandler;
 import br.com.itx.util.ComponentUtil;
 
 @Name(SwimlaneFitter.NAME)
-@Scope(ScopeType.CONVERSATION)
-public class SwimlaneFitter implements Serializable, Fitter {
+@AutoCreate
+public class SwimlaneFitter extends Fitter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "swimlaneFitter";
