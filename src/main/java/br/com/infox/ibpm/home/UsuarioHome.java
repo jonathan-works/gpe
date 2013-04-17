@@ -194,15 +194,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 			sb.append(" (id_pessoa, ds_login, ds_senha, ds_assinatura_usuario, ds_cert_chain_usuario, " +
 						"in_ldap, in_bloqueio, dt_expiracao_usuario, in_provisorio, in_twitter)");
 			sb.append(" values (:idPessoa, :login, :senha, :assinatura, :cert_chain, :ldap, :bloqueio, null, :provisorio, :twitter)");
-			Query query = getEntityManager().createNativeQuery(sb.toString(), UsuarioLogin.class);
-			
-			/*
-			 * Não remover -> Sem o session.evict o find(UsuarioLogin.class) do getEntityManager 
-			 * retorna uma PessoaFisica ao invés do UsuárioLogin por conta do cache
-			 * */
-			Session session = (Session) getEntityManager().getDelegate();
-			session.evict(getEntityManager().find(PessoaFisica.class, instance.getIdPessoa()));
-			
+			Query query = getEntityManager().createNativeQuery(sb.toString());
 			query.setParameter("idPessoa", instance.getIdPessoa())
 					.setParameter("login", login)
 					.setParameter("senha", instance.getSenha())
@@ -212,8 +204,11 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 					.setParameter("bloqueio", instance.getBloqueio())
 					.setParameter("provisorio", instance.getProvisorio())
 					.setParameter("twitter", instance.getTemContaTwitter()).executeUpdate();
+			getEntityManager().flush();
 			resultado = "persisted";
-			instance = getEntityManager().find(UsuarioLogin.class, instance.getIdPessoa());
+			instance = (UsuarioLogin) getEntityManager().createQuery("from UsuarioLogin where idPessoa = :idPessoa")
+					.setParameter("idPessoa", instance.getIdPessoa())
+					.getSingleResult();
 		}
 		return resultado;
 	}
