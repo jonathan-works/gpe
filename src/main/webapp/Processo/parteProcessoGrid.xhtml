@@ -54,7 +54,7 @@
 					  id="parteProcessoList">
 			<ui:define name="headerToolBar"/>		  
 			<ui:define name="toolBar">
-				<wi:toolBar rendered="#{row.ativo and processoHome.getPodeInativarParteProcesso()}"
+				<wi:toolBar rendered="#{row.ativo}"
                             action="#{parteProcessoHome.setInstance(row)}"
 							reRender="parteProcessoListDiv"
 							url="/img/remove.png"/>
