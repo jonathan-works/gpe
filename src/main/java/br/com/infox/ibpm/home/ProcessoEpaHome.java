@@ -26,6 +26,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 	public void incluirParteProcesso(Processo processo, String tipoPessoa){
 		try {
 			parteProcessoManager.incluir(processo, tipoPessoa);
+			raiseEvent("parteProcessoHomeAlternaAtividadeParteProcesso");
 		} catch (PersistenceException cve){
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,

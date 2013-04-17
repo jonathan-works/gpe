@@ -41,4 +41,10 @@ public class ParteProcessoHome extends AbstractHome<ParteProcesso>{
 	public void setMotivoModificacao(String motivoModificacao) {
 		this.motivoModificacao = motivoModificacao;
 	}
+	
+	@Override
+	protected String afterPersistOrUpdate(String ret) {
+		raiseEvent(ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
+		return super.afterPersistOrUpdate(ret);
+	}
 }
