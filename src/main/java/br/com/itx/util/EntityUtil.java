@@ -514,6 +514,22 @@ public final class EntityUtil implements Serializable {
 		
 	}
 	
+	/**
+	 * @author Victor Pasqualino
+	 * Método genérico para buscar no banco um objeto do mesmo tipo e com o mesmo Id 
+	 * daquele que foi passado como parâmetro
+	 * */
+	@SuppressWarnings("unchecked")
+	public static <E> E buscaEntidadeForaDoCacheDeSessao(Object object) {
+		if ( object != null ){
+			StringBuilder sb = new StringBuilder();
+			sb.append("from ").append(object.getClass().getSimpleName()).append(" o where o = ?1");				 	
+			return (E) getSingleResult(getEntityManager().createQuery(sb.toString()).setParameter(1, object));
+		} else {		
+			return null;
+		}
+	}
+	
 	public static String getIdPropertyDescriptorName(Class<?> clazz){
 		PropertyDescriptor id = getId(clazz);
 		if ( id == null ){
