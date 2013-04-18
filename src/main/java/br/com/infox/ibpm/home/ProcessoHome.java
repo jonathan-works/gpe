@@ -35,6 +35,7 @@ import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
@@ -514,7 +515,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return;
 	}
 
-	@Observer("parteProcessoHomeAlternaAtividadeParteProcesso")
+	@Observer(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO)
 	public void setPodeInativarParteProcesso() {
 		this.podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
 	}
