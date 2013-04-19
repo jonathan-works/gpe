@@ -57,6 +57,7 @@ import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
@@ -928,7 +929,7 @@ public class ProcessoHome extends AbstractProcessoHome<Processo> {
 		return;
 	}
 
-	@Observer("parteProcessoHomeAlternaAtividadeParteProcesso")
+	@Observer(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO)
 	public void setPodeInativarParteProcesso() {
 		this.podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
 	}

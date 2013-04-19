@@ -11,6 +11,7 @@ import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.epa.entity.ProcessoEpa;
 import br.com.infox.epa.manager.ParteProcessoManager;
+import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.itx.component.AbstractHome;
 
@@ -26,6 +27,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 	public void incluirParteProcesso(Processo processo, String tipoPessoa){
 		try {
 			parteProcessoManager.incluir(processo, tipoPessoa);
+			raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
 		} catch (PersistenceException cve){
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,

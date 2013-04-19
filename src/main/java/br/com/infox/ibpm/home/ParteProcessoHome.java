@@ -16,8 +16,6 @@ public class ParteProcessoHome extends AbstractHome<ParteProcesso>{
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "parteProcessoHome";
 	
-	public static final String ALTERACAO_ATIVIDADE_PARTE_PROCESSO = "parteProcessoHomeAlternaAtividadeParteProcesso";
-	
 	private String motivoModificacao;
 	
 	@In private ParteProcessoManager parteProcessoManager;
@@ -31,7 +29,7 @@ public class ParteProcessoHome extends AbstractHome<ParteProcesso>{
     public void alternarAtividadeParteProcesso(){
 		parteProcessoManager.alternarAtividade(getInstance(), motivoModificacao);
 		newInstance();
-		raiseEvent(ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
+		raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
 	}
 
 	public String getMotivoModificacao() {

@@ -21,6 +21,7 @@ public class ParteProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_parte_processo";
+	public static final String ALTERACAO_ATIVIDADE_PARTE_PROCESSO = "alteracaoAtividadeParteProcesso";
 	
 	private Integer idParteProcesso;
 	private ProcessoEpa processo;
