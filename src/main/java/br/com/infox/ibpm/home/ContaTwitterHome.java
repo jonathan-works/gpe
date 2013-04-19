@@ -14,7 +14,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
-import br.com.infox.epa.type.TipoTwitterEnum;
+import br.com.infox.epp.type.TipoTwitterEnum;
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.access.entity.UsuarioLogin;

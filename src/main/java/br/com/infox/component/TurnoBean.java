@@ -2,7 +2,7 @@ package br.com.infox.component;
 
 import java.sql.Time;
 
-import br.com.infox.epa.type.DiaSemanaEnum;
+import br.com.infox.epp.type.DiaSemanaEnum;
 
 public class TurnoBean {
 	
