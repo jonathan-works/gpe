@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 import org.hibernate.validator.Length;
 
-import br.com.infox.epa.type.TipoPessoaEnum;
+import br.com.infox.epp.type.TipoPessoaEnum;
 
 @Entity
 @Table(schema="public", name=PessoaFisica.TABLE_NAME)

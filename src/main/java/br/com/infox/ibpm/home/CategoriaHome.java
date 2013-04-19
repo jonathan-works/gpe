@@ -5,8 +5,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
-import br.com.infox.epa.entity.Categoria;
-import br.com.infox.epa.list.CategoriaList;
+import br.com.infox.epp.entity.Categoria;
+import br.com.infox.epp.list.CategoriaList;
 import br.com.itx.component.AbstractHome;
 
 /**

@@ -8,9 +8,9 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
-import br.com.infox.epa.entity.TempoMedioProcesso;
-import br.com.infox.epa.entity.TempoMedioTarefa;
-import br.com.infox.epa.list.TempoMedioTarefaList;
+import br.com.infox.epp.entity.TempoMedioProcesso;
+import br.com.infox.epp.entity.TempoMedioTarefa;
+import br.com.infox.epp.list.TempoMedioTarefaList;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
