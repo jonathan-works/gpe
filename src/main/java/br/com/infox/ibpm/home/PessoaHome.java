@@ -4,7 +4,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.*;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.epp.type.TipoPessoaEnum;
+import br.com.infox.epa.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.Pessoa;
 import br.com.itx.component.AbstractHome;
 

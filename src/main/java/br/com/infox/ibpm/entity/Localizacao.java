@@ -36,7 +36,7 @@ import javax.persistence.Transient;
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
-import br.com.infox.epp.entity.LocalizacaoTurno;
+import br.com.infox.epa.entity.LocalizacaoTurno;
 
 
 /**

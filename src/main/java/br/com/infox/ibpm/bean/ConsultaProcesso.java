@@ -3,8 +3,8 @@ package br.com.infox.ibpm.bean;
 import java.io.Serializable;
 import java.util.Date;
 
-import br.com.infox.epp.entity.Categoria;
-import br.com.infox.epp.entity.Natureza;
+import br.com.infox.epa.entity.Categoria;
+import br.com.infox.epa.entity.Natureza;
 import br.com.infox.ibpm.entity.Assunto;
 
 public class ConsultaProcesso implements Serializable {

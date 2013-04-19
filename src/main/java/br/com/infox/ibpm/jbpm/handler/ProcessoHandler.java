@@ -39,8 +39,8 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.entity.ProcessoEpa;
-import br.com.infox.epp.type.TipoPessoaEnum;
+import br.com.infox.epa.entity.ProcessoEpa;
+import br.com.infox.epa.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Pessoa;

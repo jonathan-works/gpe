@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import br.com.infox.epp.type.TipoPessoaEnum;
+import br.com.infox.epa.type.TipoPessoaEnum;
 
 @Entity
 @Table(name=Pessoa.TABLE_NAME, schema="public")

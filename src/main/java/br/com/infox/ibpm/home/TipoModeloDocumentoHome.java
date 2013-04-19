@@ -18,7 +18,7 @@ package br.com.infox.ibpm.home;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
-import br.com.infox.epp.list.TipoModeloDocumentoList;
+import br.com.infox.epa.list.TipoModeloDocumentoList;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.itx.util.ComponentUtil;
 
