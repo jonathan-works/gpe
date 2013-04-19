@@ -18,8 +18,8 @@ import org.jboss.seam.log.Logging;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
 
-import br.com.infox.epa.entity.ImagemBin;
-import br.com.infox.epa.home.ImagemBinHome;
+import br.com.infox.epp.entity.ImagemBin;
+import br.com.infox.epp.home.ImagemBinHome;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.component.Util;

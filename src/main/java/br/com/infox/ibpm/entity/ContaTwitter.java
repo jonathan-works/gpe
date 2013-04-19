@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 import twitter4j.auth.AccessToken;
 
-import br.com.infox.epa.type.TipoTwitterEnum;
+import br.com.infox.epp.type.TipoTwitterEnum;
 import br.com.infox.access.entity.UsuarioLogin;
 
 @Entity

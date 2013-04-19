@@ -10,8 +10,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.infox.epa.entity.LocalizacaoTurno;
-import br.com.infox.epa.manager.LocalizacaoTurnoManager;
+import br.com.infox.epp.entity.LocalizacaoTurno;
+import br.com.infox.epp.manager.LocalizacaoTurnoManager;
 
 public class LocalizacaoTurnoManagerTest {
 	
