@@ -108,12 +108,11 @@
 				switchType="client"
 				status=":status"
 				header="#{tree.getSelectedView(tree.selected)}"
-				expanded="#{opened}">
+				expanded="#{expanded}">
 				
 				<wi:treePanel
 					switchType="#{switchType}"
-					onclick="#{folderSelectable ? '' : 'return false;'};"
-					onselected="#{rich:component(id.concat('Panel'))}.switchPanel()" />
+					onclick="#{folderSelectable ? '' : 'return false;'};"/>
 			</rich:collapsiblePanel>
 
 		</s:div>
