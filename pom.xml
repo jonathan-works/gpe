@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>br.com.infox.epa</groupId>
-	<artifactId>epa</artifactId>
+	<groupId>br.com.infox.epp</groupId>
+	<artifactId>epp</artifactId>
 	<packaging>war</packaging>
 	<version>1.4.3-SNAPSHOT</version>
-	<name>epa</name>
+	<name>epp</name>
 	<url>http://www.infox.com.br</url>
 	<dependencyManagement>
 		<dependencies>
@@ -239,7 +239,7 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>br.com.infox.epa</groupId>
+			<groupId>br.com.infox.epp</groupId>
 			<artifactId>jbpmgraph</artifactId>
 			<version>1.0.1</version>
 			<type>jar</type>
@@ -739,7 +739,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>epa</finalName>
+		<finalName>epp</finalName>
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>

@@ -36,7 +36,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epa.entity.LocalizacaoTurno;
+import br.com.infox.epp.entity.LocalizacaoTurno;
 
 
 /**

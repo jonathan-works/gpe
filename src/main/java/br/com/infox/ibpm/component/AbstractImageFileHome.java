@@ -19,8 +19,8 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
-import br.com.infox.epa.entity.ImagemBin;
-import br.com.infox.epa.home.ImagemBinHome;
+import br.com.infox.epp.entity.ImagemBin;
+import br.com.infox.epp.home.ImagemBinHome;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.component.Util;

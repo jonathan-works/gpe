@@ -37,7 +37,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.epa.query.FluxoQuery;
+import br.com.infox.epp.query.FluxoQuery;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
