@@ -49,6 +49,7 @@ import org.jboss.seam.util.Strings;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.richfaces.event.ItemChangeEvent;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.component.ControleFiltros;
