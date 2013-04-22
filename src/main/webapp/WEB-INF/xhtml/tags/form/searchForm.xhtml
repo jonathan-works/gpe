@@ -70,7 +70,7 @@
 								<a:region>
 									<a:commandButton
 										id="clearButton"
-										onclick="j$('##{formId}').clearForm();showLoading();"
+										onclick="$('##{formId}').clearForm();showLoading();"
 										oncomplete="hideLoading();"
 										action="#{util.invokeMethod(clearAction)}"
 										value="Limpar"

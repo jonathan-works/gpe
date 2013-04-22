@@ -38,7 +38,8 @@
 					  rowId="#{row.idCalendarioEvento}" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCalendarioEventosForm"
-							   formTitle="#{messages['searchForm.title']}">
+							   formTitle="#{messages['searchForm.title']}"
+							   clearAction="calendarioEventosHome.localizacaoTreeHandler.clearTree">
 					<wi:tree id="localizacao"
 							 label="#{messages['calendarioEventos.localizacao']}"
 							 assignTo="calendarioEventosList.entity.localizacao"

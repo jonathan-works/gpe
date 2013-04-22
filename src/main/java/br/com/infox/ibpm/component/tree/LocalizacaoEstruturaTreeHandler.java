@@ -77,6 +77,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 		treeId = tree.getId();
 		EntityNode<Localizacao> en = (EntityNode<Localizacao>) tree.getData(); 
 		setSelected(en.getEntity());
+		closeParentPanel(tree);
 		Events.instance().raiseEvent("evtSelectLocalizacaoEstrutura", getSelected(), getEstrutura(en));
 	}
 	

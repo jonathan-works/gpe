@@ -12,11 +12,9 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
-import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
-import br.com.infox.component.tree.EntityNode;
 import br.com.itx.util.EntityUtil;
 
 @Name(TarefasTreeHandler.NAME)
@@ -127,21 +125,5 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 		Events.instance().raiseEvent(CLEAR_TAREFAS_TREE_EVENT);
 		rootList = null;
 		super.clearTree();
-	}
-	
-	@Override
-	public void processTreeSelectionChange(TreeSelectionChangeEvent selectionChangeEvent) throws AbortProcessingException {
-		// Considerando single selection
-		Object selectionKey = new ArrayList<Object>(selectionChangeEvent.getNewSelection()).get(0);
-		UITree tree = (UITree) selectionChangeEvent.getSource();
-		treeId = tree.getId();
-		
-		Object key = tree.getRowKey();
-		tree.setRowKey(selectionKey);
-		EntityNode<Map<String,Object>> en = (EntityNode<Map<String,Object>>) tree.getRowData();
-		tree.setRowKey(key);
-		setSelected(en.getEntity());
-		en.getEntity().get("idTask");
-		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}
 }

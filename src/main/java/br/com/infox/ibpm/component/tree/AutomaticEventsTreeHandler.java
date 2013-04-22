@@ -319,6 +319,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		treeId = tree.getId();
 		EventsEntityNode en = (EventsEntityNode) tree.getData(); 
 		setSelected((Evento) en.getEntity(), isMultiplo(en));
+		closeParentPanel(tree);
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}	
 	
