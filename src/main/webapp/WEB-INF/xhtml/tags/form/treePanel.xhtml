@@ -51,7 +51,8 @@
 		status=":status"
 		limitRender="true"
 		var="item"
-		onselectionchange="#{onselected}">
+		onselectionchange="#{onselected}"
+		oncomplete="#{rich:component(id.concat('Panel'))}.switchToItem('false')">
 		
 		<rich:treeModelRecursiveAdaptor roots="#{tree.roots}" nodes="#{item.nodes}" />
 
@@ -110,5 +111,4 @@
 			</div>
 		</rich:treeNode>
 	</rich:tree>
-
 </ui:composition>
