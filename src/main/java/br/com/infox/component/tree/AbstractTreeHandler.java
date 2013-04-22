@@ -18,8 +18,8 @@ package br.com.infox.component.tree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import javax.faces.component.UIComponent;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -30,6 +30,7 @@ import org.jboss.seam.core.Expressions;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.util.StopWatch;
+import org.richfaces.component.UICollapsiblePanel;
 import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 import org.richfaces.function.RichFunction;
@@ -85,6 +86,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 			UITree tree = (UITree) comp;
 			tree.setRowKey(null);
 			tree.setSelection(null);
+			closeParentPanel(tree);
 		}
 	}
 
@@ -160,6 +162,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		EntityNode<E> en = (EntityNode<E>) tree.getRowData();
 		tree.setRowKey(key);
 		setSelected(en.getEntity());
+		closeParentPanel(tree);
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}
 
@@ -290,4 +293,18 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		return null;
 	}
 
+	private UICollapsiblePanel getParentPanel(UIComponent root) {
+		UIComponent parent = root.getParent();
+		if (parent instanceof UICollapsiblePanel || parent == null) {
+			return (UICollapsiblePanel) parent;
+		}
+		return getParentPanel(parent);
+	}
+	
+	protected void closeParentPanel(UITree tree) {
+		UICollapsiblePanel panel = getParentPanel(tree);
+		if (panel != null) {
+			panel.setExpanded(false);
+		}
+	}
 }
