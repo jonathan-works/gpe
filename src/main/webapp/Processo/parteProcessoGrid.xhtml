@@ -57,11 +57,13 @@
 				<wi:toolBar rendered="#{row.ativo and processoHome.getPodeInativarParteProcesso()}"
                             action="#{parteProcessoHome.setInstance(row)}"
 							reRender="parteProcessoListDiv"
-							url="/img/remove.png"/>
+							url="/img/remove.png"
+							id="ativo"/>
                 <wi:toolBar rendered="#{!row.ativo}"
                             action="#{parteProcessoHome.setInstance(row)}"
 							reRender="parteProcessoListDiv"
-							url="/img/add.gif"/>
+							url="/img/add.gif"
+							id="inativo"/>
 			</ui:define>
 			<wi:columnOutputText columnId="pessoa.nome"
 								 columnHeader="#{messages['parteProcesso.nome']}"
