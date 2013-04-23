@@ -11,7 +11,6 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epa.entity.ProcessoEpa;
-import br.com.infox.epa.entity.ProcessoEpaTarefa;
 import br.com.infox.epa.manager.FluxoManager;
 import br.com.infox.epa.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.entity.Fluxo;
