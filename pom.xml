@@ -228,7 +228,7 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>br.com.infox.epp</groupId>
+			<groupId>br.com.infox.epa</groupId>
 			<artifactId>jbpmgraph</artifactId>
 			<version>1.0.1</version>
 			<type>jar</type>
