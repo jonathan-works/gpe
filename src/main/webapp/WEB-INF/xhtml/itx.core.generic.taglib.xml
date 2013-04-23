@@ -15,7 +15,7 @@
 	<tag>
 		<tag-name>ajaxDiv</tag-name>
 		<source>tags/generic/ajaxDiv.xhtml</source>
-	</tag>	
+	</tag>
 	
 	<tag>
 		<tag-name>dragDrop</tag-name>
