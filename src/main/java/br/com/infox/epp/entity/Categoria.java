@@ -24,7 +24,7 @@ import br.com.itx.util.HibernateUtil;
 @Entity
 @Table(name=Categoria.TABLE_NAME, schema="public")
 @NamedQueries(value={
-				@NamedQuery(name=CategoriaQuery.LIST_PROCESSO_EPA_BY_CATEGORIA,
+				@NamedQuery(name=CategoriaQuery.LIST_PROCESSO_EPP_BY_CATEGORIA,
 						    query=CategoriaQuery.LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY)
 			  })
 public class Categoria implements Serializable{

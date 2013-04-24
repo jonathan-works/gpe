@@ -25,7 +25,7 @@ public class CategoriaDAO extends GenericDAO {
 
 	public List<Object[]> listProcessoByCategoria() {
 		List<Object[]> resultList = getNamedResultList(
-				CategoriaQuery.LIST_PROCESSO_EPA_BY_CATEGORIA, null);
+				CategoriaQuery.LIST_PROCESSO_EPP_BY_CATEGORIA, null);
 		return resultList;
 	}
 	
