@@ -10,7 +10,7 @@ public interface CategoriaQuery {
 
 	String QUERY_PARAM_CATEGORIA = "categoria";
 
-	String LIST_PROCESSO_EPA_BY_CATEGORIA = "listProcessoEpaByCategoria";
+	String LIST_PROCESSO_EPP_BY_CATEGORIA = "listProcessoEpaByCategoria";
 	
 	String LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY = 
 		"select distinct(c), " +
