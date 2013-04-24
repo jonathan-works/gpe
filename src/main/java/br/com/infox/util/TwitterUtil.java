@@ -3,6 +3,8 @@ package br.com.infox.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.TwitterTemplate;
@@ -408,6 +410,10 @@ public class TwitterUtil {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e)	{
+			e.printStackTrace();
+		} catch (NoResultException nre){
+			nre.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
