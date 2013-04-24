@@ -78,13 +78,22 @@
 			id="#{id}"
 			value="#{value}"
 			skin="#{wi:get(editorTheme, 'azulverde')}"
-			toolbar="#{wi:get(toolbar, 'basic')}"
+			toolbar="#{wi:get(toolbar, 'InfoxToolbar')}"
 			width="#{wi:get(width, 650)}"
 			height="#{wi:get(height, 350)}"
 			readonly="#{readonly}"
 			required="#{required}"
 			onchange="#{wi:get(onchange, 'void(0);')}"
 			customPlugins="epaPlugins">
+			
+			<f:facet name="config">
+				toolbar_InfoxToolbar:
+				[
+				{ name: 'editing', items: ['Cut', 'Copy', 'Paste', '-', 'Find', 'Replace', '-', 'Undo', 'Redo'] },
+				{ name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'Underline'] }
+				]
+			</f:facet>
+			
 			<f:param
 				name="language"
 				value="pt" />
