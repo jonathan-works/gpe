@@ -33,10 +33,37 @@
 	<ui:param name="home" value="#{usuarioHome}" />
 	
 	<ui:define name="searchGrid">   
-	    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/>
-	    <wi:datagrid bean="#{usuarioGrid}" 
-			    	 searchBean="#{usuarioSearch}" 
-			    	 title="#{messages['usuario.titleGrid']}"/>
+	    <wi:dataTable values="#{usuarioLoginList.list(15)}"
+					  bean="#{usuarioLoginList}"
+					  tableTitle="#{messages['usuario.titleGrid']}"
+					  id="usuarioLoginList"
+					  rowId="#{row.idPessoa}">
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisarUsuarioLoginForm"
+							   formTitle="#{messages['searchForm.title']}">
+					<wi:inputText id="nome"
+								  label="#{messages['usuarioLogin.nome']}"
+								  value="#{usuarioLoginList.entity.nome}"
+								  maxlength="150" />
+					<wi:selectSituacaoOneMenu id="ativo"
+											  label="#{messages['field.situacao']}"
+											  value="#{usuarioLoginList.entity.ativo}" />
+				</wi:searchForm>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="nome"
+								 columnHeader="#{messages['usuarioLogin.nome']}"
+								 value="#{row.nome}" />
+			<wi:columnOutputText columnId="bloqueio"
+								 columnHeader="#{messages['usuarioLogin.bloqueio']}"
+								 value="#{row.bloqueio ? 'Sim' : 'Não'}" />
+			<wi:columnOutputText columnId="provisorio"
+								 columnHeader="#{messages['usuarioLogin.provisorio']}"
+								 value="#{row.provisorio  ? 'Sim' : 'Não'}" />
+			<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['field.situacao']}"
+							value="#{row.ativo}" />
+		</wi:dataTable>
 	</ui:define>
 	
 	<ui:define name="form" action="#{usuarioHome.newInstance()}">

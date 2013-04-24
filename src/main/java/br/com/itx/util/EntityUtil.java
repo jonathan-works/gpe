@@ -21,6 +21,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -493,6 +494,19 @@ public final class EntityUtil implements Serializable {
 			}
 		}
 		return list;
+	}
+	
+	public <E> E getEntidadebyParametro(String nomeEntidade, String nomeParametro, Object valorParametro){
+		StringBuilder sb = new StringBuilder();
+		sb.append("select o from ");
+		sb.append(nomeEntidade);
+		sb.append(" o where o.");
+		sb.append(nomeParametro);
+		sb.append(" = :");
+		sb.append(nomeParametro);
+		Query query = getEntityManager().createQuery(sb.toString());
+		query.setParameter(nomeParametro, valorParametro);
+		return getSingleResult(query);
 	}
 	
 	
