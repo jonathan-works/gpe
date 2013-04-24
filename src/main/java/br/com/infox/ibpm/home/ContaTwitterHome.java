@@ -6,7 +6,6 @@ import javax.persistence.NoResultException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
@@ -22,7 +21,6 @@ import br.com.infox.util.TwitterUtil;
 import br.com.itx.component.AbstractHome;
 
 @Name(ContaTwitterHome.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 
