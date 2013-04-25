@@ -25,6 +25,7 @@
 				xmlns:c="http://java.sun.com/jstl/core"
 				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:a="http://richfaces.org/a4j"
+				xmlns:dojo="http://www.itx.com.br/dojo"
 			    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
                        
 	<ui:define name="title">BAM</ui:define>
@@ -101,6 +102,18 @@
                     </div>
 				</ui:define>
 				
+				<wi:columnOutputText columnId="medidor"
+									 columnHeader="Medidor"
+									 hideOrder="true"
+									 columnWidth="60">
+					<dojo:defaultGauge id="#{row.numeroProcesso}"
+										radius="15"
+										width="40"
+										height="40"
+										max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+										value="#{row.tempoGasto}"/>
+				</wi:columnOutputText>
+				
 				<wi:columnOutputText columnId="numeroProcesso"
 									 columnHeader="Número do Processo"
 									 value="#{row.numeroProcesso}" />
@@ -131,6 +144,17 @@
 						  onRowMouseOut=""
 						  onRowMouseOver=""
 						  id="processoTarefaDataTable">
+				<wi:columnOutputText columnId="medidor"
+									 columnHeader="Medidor"
+									 hideOrder="true"
+									 columnWidth="60">
+					<dojo:defaultGauge id="#{row.tarefa.idTarefa}"
+										radius="15"
+										width="40"
+										height="40"
+										max="#{row.tempoPrevisto}"
+										value="#{row.tempoGasto}"/>
+				</wi:columnOutputText>
 				
 				<wi:columnOutputText columnId="tarefa"
 									 columnHeader="Tarefa"
