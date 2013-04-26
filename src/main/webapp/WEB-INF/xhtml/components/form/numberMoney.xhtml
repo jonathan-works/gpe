@@ -10,7 +10,7 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-		<a:loadScript src="/js/jquery.maskMoney.js" />
+		<h:outputScript name="jquery.maskMoney.js" library="js"/>
 		
 		<ui:param
 		 name="style"
@@ -42,7 +42,7 @@
 			 onkeyup="#{onkeyup}"
 			 maxlength="20">
 			
-				<c:if test="#{!readonly}">
+			<c:if test="#{!readonly}">
 				
 					<rich:jQuery
 					 selector="##{id}"
