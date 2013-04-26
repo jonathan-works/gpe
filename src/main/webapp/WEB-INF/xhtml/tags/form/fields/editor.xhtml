@@ -51,24 +51,14 @@
 			// Label da lista de variáveis
 			var label = 'Variáveis';
 
-			function tabKeyAction(editor) {
-				//adicionar o evento onKeyDown ao editor
-				editor.onKeyDown.add(function(editor, event) {
-					if (event.keyCode) code = event.keyCode;
-					else if (event.which) code = event.which;
-					else if (event.charCode) code = event.charCode;
-					//se o evento for a tecla tab
-					if(code == 9) {
-						//insere espaços em branco
-						editor.selection.setContent("            ");
-						//cancelando a ação padrão da tecla tab, que seria ir para o próximo campo.
-						if (event.preventDefault) event.preventDefault();
-						else event.returnValue = false;
-						if (event.stopPropagation) event.stopPropagation();
-						else event.cancelBubble = true;
-						return false;
-					}
-				});
+			function tabKeyAction(event) {
+				if (event.data.keyCode == 9) {
+					//insere espaços em branco
+					editor.selection.setContent("            ");
+					//cancelando a ação padrão da tecla tab, que seria ir para o próximo campo.
+					event.preventDefault();
+					return false;
+				}
 			}
 		</script>
 
@@ -90,8 +80,13 @@
 				toolbar_InfoxToolbar:
 				[
 				{ name: 'editing', items: ['Cut', 'Copy', 'Paste', '-', 'Find', 'Replace', '-', 'Undo', 'Redo'] },
-				{ name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'Underline'] }
-				]
+				{ name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'Underline'] },
+				],
+				on: {
+					instanceReady: function() {
+						this.on('key', tabKeyAction);
+					}
+				}
 			</f:facet>
 			
 			<f:param
