@@ -1,0 +1,41 @@
+package br.com.infox.list;
+
+import java.util.Map;
+
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+
+import br.com.infox.core.action.list.EntityList;
+import br.com.infox.ibpm.entity.ProcessoDocumento;
+
+@Name(ProcessoDocumentoList.NAME)
+@Scope(ScopeType.PAGE)
+public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
+
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "processoDocumentoList";
+	
+	private static final String DEFAULT_EJBQL = "select o from ProcessoDocumento o";
+	private static final String DEFAULT_ORDER = "processo";
+	
+	@Override
+	protected void addSearchFields() {		
+	}
+
+	@Override
+	protected String getDefaultEjbql() {
+		return DEFAULT_EJBQL;
+	}
+
+	@Override
+	protected String getDefaultOrder() {
+		return DEFAULT_ORDER;
+	}
+
+	@Override
+	protected Map<String, String> getCustomColumnsOrder() {
+		return null;
+	}
+
+}

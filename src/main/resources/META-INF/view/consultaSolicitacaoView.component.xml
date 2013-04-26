@@ -8,8 +8,6 @@
 		<property name="fields">	
 			<value>dataInicio: { type: date, properties : { pattern: "dd/MM/yyyy kk:mm" } }</value>
 			<value>usuarioCadastroProcesso.nome</value>
-			<value>complemento</value>
-			<value>numeroProcessoOrigem</value>
 		</property>
 		<property name="buttons">empty</property>
 	</component>

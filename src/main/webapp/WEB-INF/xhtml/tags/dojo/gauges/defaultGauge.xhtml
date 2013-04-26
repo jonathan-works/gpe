@@ -24,7 +24,7 @@
     	        async:false
     	}
     </script>
-    <script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/dojo.js"></script>
+    <script src="#{util.contextPath}/js/dojo/dojo.js"></script>
     
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
     <ui:param name="angle" value="#{wi:get(angle,300)}" />
@@ -32,7 +32,7 @@
     <ui:param name="min" value="#{wi:get(min,0)}" />
     <ui:param name="max" value="#{wi:get(max,100)}" />
     <ui:param name="value" value="#{wi:get(value,0)}" />
-    <ui:param name="showValues" value="#{wi:get(showValues,'false')}" />
+    <ui:param name="hideValues" value="#{wi:get(hideValues,'false')}" />
     <ui:param name="tickInterval" value="#{wi:get(tickInterval, 1)}" />
     <ui:param name="width" value="#{wi:get(width, radius*4)}" />
     <ui:param name="height" value="#{wi:get(height, radius*4)}" />
@@ -106,6 +106,8 @@
                 })
 			]
             
+            var _hideValues = #{hideValues};
+            
             var props = {
             	id: dijit.getUniqueId(idGauge),
             	width: _width,
@@ -115,16 +117,14 @@
             	radius: _radius,
             	startAngle : -_angle/2,
             	endAngle : _angle/2,
-            	hideValues : true,
+            	hideValues : _hideValues,
             	ranges : _ranges,
             	indicators: _indicators,
-            	useTooltip: true,
+            	useTooltip: false,
             	background:'rgba(0,0,0,0)'
             }
             
-            var _showValues = #{showValues};
-            
-            if (_showValues) {
+            if (!_hideValues) {
             	props.majorTicks = {
                     length : _radius*0.1,
                     offset : _radius*1.15,
