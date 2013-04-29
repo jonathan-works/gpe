@@ -33,9 +33,9 @@
 			<ui:param name="style" value="width:100%" />
 			<ui:define name="headerToolBar">
 				<a:commandLink action="#{swimlaneFitter.addSwimlane()}"
-					           ajaxSingle="true"
-					           focus="swimlaneName"
-					           reRender="swimlanesDiv">
+					           execute="@this"
+					           render="swimlanesDiv"
+					           limitRender="true">
 					<h:graphicImage title="#{messages['processBuilder.addSwimlane']}"
 						            style="cursor:pointer" 
 						            url="/img/add.gif" />
@@ -46,11 +46,12 @@
             					style="cursor:pointer" 
             					url="/img/remove.png"
                                 styleClass="opacityHover">
-					<a:support event="onclick" 
+					<a:ajax event="click" 
         					   action="#{swimlaneFitter.removeSwimlane(row)}"
-        					   ajaxSingle="true"
+        					   execute="@this"
         					   onclick="if(!confirm('#{messages['processBuilder.confirm']}')) return false;"
-        					   reRender="swimlanesDiv"/>
+        					   render="swimlanesDiv"
+        					   limitRender="true"/>
 				</h:graphicImage>
 			</ui:define>
 			<ui:define name="columns">
@@ -61,9 +62,10 @@
 					<ui:param name="styleNodeName" 
 						      value="#{current ? 'font-weight:bold' : ''}" />
 					 <a:commandLink action="#{swimlaneFitter.setCurrentSwimlane(row)}"
-        					 		ajaxSingle="true"
+        					 		execute="@this"
         					 		style="float:left;"
-        					 		reRender="swimlanesDiv">
+        					 		render="swimlanesDiv"
+        					 		limitRender="true">
 							<h:outputText value="#{row.swimlane.name}"
                                           style="#{styleNodeName}"/>
 					 </a:commandLink>
@@ -79,7 +81,6 @@
 			<wi:inputText id="swimlaneName"
                           label="#{messages['processBuilder.swimlane.name']}"
 				          value="#{swimlaneFitter.currentSwimlane.name}">
-				<wi:ajaxSupport reRender="swimlaneName"/>
 			</wi:inputText>
 
 			<ui:decorate template="dataTable.xhtml">
@@ -91,11 +92,12 @@
 					<h:graphicImage title="#{messages['processBuilder.swimlane.removeLocalPapel']}"
             						style="cursor:pointer" 
             						url="/img/remove.png">
-						<a:support event="onclick" 
+						<a:ajax event="click" 
         							action="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
-        							ajaxSingle="true"
+        							execute="@this"
         							onclick="if(!confirm('#{messages['processBuilder.confirm']}')) return false;"
-        							reRender="swimlanesDiv"/>
+        							render="swimlanesDiv"
+        							limitRender="true"/>
 					</h:graphicImage>
 				</ui:define>
 				<ui:define name="columns"> 
@@ -119,10 +121,11 @@
 								style="cursor:pointer" 
 								id="novoLocPapel"
 								url="/img/add.gif">
-								<a:support event="onclick" 
+								<a:ajax event="click" 
 									action="#{swimlaneFitter.currentSwimlane.addLocalPapel()}"
-									ajaxSingle="true"
-									reRender="swimlanesDiv"/>
+									execute="swimlaneName, localPapeis"
+									render="swimlanesDiv"
+									limitRender="true"/>
 							</h:graphicImage>
 					 	</rich:column>
 						<rich:column style="padding-left:2px;padding-bottom:6px">
@@ -140,9 +143,6 @@
 						<rich:column style="padding-left:2px;padding-bottom:6px;width :20px;">
 							<wi:selectBooleanCheckbox id="papelTree"
 								value="#{swimlaneFitter.currentSwimlane.contabilizar}">
-								<a:support event="onclick" 
-									ajaxSingle="true"
-									reRender="papelTree"/>
 							</wi:selectBooleanCheckbox>
 						</rich:column>
 					</rich:columnGroup>

@@ -3,6 +3,7 @@ package br.com.infox.ibpm.home;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.event.AbortProcessingException;
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.Name;
@@ -11,6 +12,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Node.NodeType;
+import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.ibpm.entity.Agrupamento;
 import br.com.infox.ibpm.entity.Tarefa;
@@ -209,6 +211,14 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 
 	public void setTarefaOrigemList(List<Tarefa> tarefaOrigemList) {
 		this.tarefaOrigemList = tarefaOrigemList;
+	}
+	
+	@Override
+	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
+		if (event.getNewItemName().equals("agrupamentoTarefa")){
+			carregarAgrupamentos();
+		}
+		super.processItemChange(event);
 	}
 
 }

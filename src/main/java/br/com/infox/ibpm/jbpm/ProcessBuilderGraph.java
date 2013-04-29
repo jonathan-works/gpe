@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.jbpm;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,19 +25,10 @@ public class ProcessBuilderGraph {
 	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilderGraph.class);
 	
-	/**
-	 * Parâmetro Object obj é utilizado pela página graph.xhtml pelo componente
-	 * mediaOutput
-	 * 
-	 * @param out
-	 * @param obj
-	 * @throws IOException
-	 */
-	public void paintGraph(OutputStream out, Object obj) throws IOException {
-		JbpmLayout layoutOut = getLayout();
-		if (layoutOut != null) {
-			layoutOut.paint(out);
-		}
+	public byte[] getGraph() throws IOException {
+		ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+		getLayout().paint(byteArray);
+		return byteArray.toByteArray();
 	}
 	
 	public boolean isGraphImage() {

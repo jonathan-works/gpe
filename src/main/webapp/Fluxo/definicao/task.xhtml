@@ -31,7 +31,11 @@
 			widthDiv="230px"
 			style="width:100%"
 			label="Nome">
-			<wi:ajaxSupport reRender="tasksTable" />
+			<a:ajax
+                event="change"
+                render="tasksTable"
+                limitRender="true"
+                execute="@this"/>
 		</wi:inputText>
 		 
 		<wi:selectOneMenu id="swimlaneTask" 
@@ -41,14 +45,20 @@
 			widthDiv="230px"
 			noSelectionLabel="Selecione..."
 			value="#{t.swimlaneName}">
-			<wi:ajaxSupport /> 
+			<a:ajax
+                event="change"
+                execute="@this"
+                limitRender="true"/> 
 		</wi:selectOneMenu>
 		
 		<wi:inputNumber id="prazo"
 			label="Prazo para Término"
 
 			value="#{taskFitter.prazo}">
-			<wi:ajaxSupport />
+			<a:ajax
+                event="change"
+                execute="@this"
+                limitRender="true"/> 
 		</wi:inputNumber>
 			
 		<wi:selectOneMenuEnum id="tipoPrazo"
@@ -56,15 +66,18 @@
 							  value="#{taskFitter.tipoPrazo}"
 							  items="#{taskFitter.tipoPrazoList}"
 							  noSelectionLabel="Selecione um registro...">
-			<wi:ajaxSupport />
+			<a:ajax
+                event="change"
+                execute="@this"
+                limitRender="true"/> 
 		</wi:selectOneMenuEnum>
 	</s:div>	
 
 <a:region>
 	<rich:dataTable value="#{t.variables}" 
 		id="varTable"
-		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
-		onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+		onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+		onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
 		styleClass="tabelaVariaveis"
 		style="margin-top:4px; width:700px; clear:both"
 		var="var">
@@ -74,8 +87,9 @@
 				<s:div id="addVarDiv"
 					   rendered="#{not t.hasTaskPage()}">
 					<a:commandLink action="#{t.newVar()}"
-								   ajaxSingle="true"
-								   reRender="varTable">
+								   execute="@this"
+								   render="varTable"
+                                   limitRender="true">
 						<h:graphicImage title="Adicionar variável"
 										style="cursor:pointer" 
 										url="/img/add.gif"/>
@@ -84,16 +98,18 @@
 			</f:facet>
 			<div style="width: 100%; text-align: center}">
 				<a:commandLink action="#{t.removeVar(var)}"
-								ajaxSingle="true"
+								execute="@this"
 								onclick="if(!confirm('Confirma?')) return false;"
-								reRender="varTable"
+								render="varTable"
+                                limitRender="true"
                                 styleClass="opacityHover">
 					<h:graphicImage title="Excluir variável"
 									style="cursor:pointer" 
 									url="/img/remove.png" />
 				</a:commandLink>
-				<a:commandLink ajaxSingle="true"
-								reRender="actionTemplate"
+				<a:commandLink execute="@this"
+								render="actionTemplate"
+                                limitRender="true"
 								status=":status"
 								action="#{taskFitter.currentTask.setCurrentVariable(var)}"
                                 styleClass="opacityHover">
@@ -117,26 +133,38 @@
 			<s:div id="varDiv" style="overflow:hidden">
 				<h:inputText rendered="#{!empty var.name or empty t.previousVariables}"
 					value="#{var.name}" style="width: 100%">
-					<wi:ajaxSupport reRender="varDiv, varLabel" />
+					<a:ajax 
+                        execute="@this"
+                        event="change"
+                        render="varDiv, varLabel"
+                        limitRender="true"/>
 				</h:inputText>
-				<rich:comboBox value="#{var.name}" width="205"
+				<rich:autocomplete value="#{var.name}" style="width:205px"
 					rendered="#{empty var.name and !empty t.previousVariables}"
-					selectFirstOnUpdate="false"
-					suggestionValues="#{t.previousVariables}">
-                    <a:support status=":status" 
+					selectFirst="false"
+					autocompleteList="#{t.previousVariables}">
+                    <a:ajax status=":status" 
                                action="#{var.copyVariable()}"
-                               event="onblur" reRender="varDiv,writable,type,varLabel"/>
-					<a:support status=":status" 
+                               event="blur" 
+                               render="varDiv,writable,type,varLabel"
+                               limitRender="true"/>
+					<a:ajax status=":status" 
 						       action="#{var.copyVariable()}"
-						       event="onselect" reRender="varDiv,writable,type,varLabel"/>
-				</rich:comboBox>
+						       event="selectitem" 
+                               render="varDiv,writable,type,varLabel"
+                               limitRender="true"/>
+				</rich:autocomplete>
 			</s:div>
 		</rich:column>
 		<rich:column>
 			<f:facet name="header">Label</f:facet>
 			<s:div id="varLabel" style="overflow:hidden">
 				<h:inputText value="#{var.label}" style="width: 100%">
-					<wi:ajaxSupport />
+					<a:ajax
+                        execute="@this"
+                        limitRender="true"
+                        event="change"
+                    />
 				</h:inputText>
 			</s:div>
 		</rich:column>
@@ -145,7 +173,11 @@
 			<h:selectBooleanCheckbox id="writable" 
              	styleClass="checkbox"
              	value="#{var.writable}">
-				<wi:ajaxSupport reRender="readable,writable"/> 
+				<a:ajax
+                        execute="@this"
+                        limitRender="true"
+                        event="change" 
+                        render="readable,writable"/> 
 			</h:selectBooleanCheckbox>
 		</rich:column>
 		<rich:column style="width:30px; text-align:center">
@@ -153,7 +185,11 @@
 			<h:selectBooleanCheckbox id="required" 
              	styleClass="checkbox"
              	value="#{var.required}">
-				<wi:ajaxSupport reRender="readable,writable"/> 
+				<a:ajax
+                        execute="@this"
+                        limitRender="true"
+                        event="change" 
+                        render="readable,writable"/> 
 			</h:selectBooleanCheckbox>
 		</rich:column>
 		<rich:column style="width:110px">
@@ -163,11 +199,12 @@
 				optionLabel="#{typeFitter.getTypeLabel(v)}"
 				widthDiv="100%"
 				style="width:100%">
-				<a:support event="onchange" 
-						   ajaxSingle="true" 
+				<a:ajax event="change" 
+						   execute="true" 
 						   status=":status"
 						   action="#{t.clearHasTaskPage()}"
-						   reRender="addVarDiv" />
+						   render="addVarDiv"
+                           limitRender="true"/>
 			</wi:selectOneMenu>
 		</rich:column>
 	</rich:dataTable>		

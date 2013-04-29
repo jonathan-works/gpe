@@ -88,8 +88,8 @@
 						  tableTitle="Processos - Prazo: #{processoEpaNaoFinalizadoList.fluxo.qtPrazo} (dias)"
 						  showGrid="#{not empty processoEpaNaoFinalizadoList.fluxo}"
 						  panelWidth="100%"
-						  onRowMouseOut=""
-						  onRowMouseOver=""
+						  onrowmouseout=""
+						  onrowmouseover=""
 						  id="processoDataTable">
 						  
 				<ui:define name="headerToolBar" />
@@ -142,8 +142,8 @@
 						  panelWidth="97%"
 						  showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
 						  rowClasses="#{processoEpaTarefaList.rowClasses()}"
-						  onRowMouseOut=""
-						  onRowMouseOver=""
+						  onrowmouseout=""
+						  onrowmouseover=""
 						  id="processoTarefaDataTable">
 				<wi:columnOutputText columnId="medidor"
 									 columnHeader="Medidor"

@@ -32,7 +32,7 @@
              id="#{id}Div"
              style="overflow:auto; padding:1px">
 			<s:div
-                 style="width:200px; float:left"
+                 style="width:200px;"
                  id="#{id}EventList">
 			<ui:decorate
                      template="dataTable.xhtml">
@@ -53,9 +53,10 @@
                          name="headerToolBar">
 					 <a:commandLink
                              action="#{parent.addEvent()}"
-                             ajaxSingle="true"
+                             execute="@this"
                              immediate="true"
-                             reRender="#{parentId}Div">
+                             render="#{parentId}Div"
+                             limitRender="true">
 							<h:graphicImage
                                  url="/img/add.gif"
                                  title="Novo evento"
@@ -73,7 +74,8 @@
                                  action="#{parent.removeEvent(row)}"
                                  onclick="if(!confirm('Confirma?')) return false;"
                                  execute="@this"
-                                 render="#{parentId}Div" />
+                                 render="#{parentId}Div"
+                                 limitRender="true"/>
 					</h:graphicImage>
 				</ui:define>
 				<ui:define
@@ -83,12 +85,13 @@
 						<f:facet
                                  name="header">Eventos</f:facet>
 						 <a:commandLink
-                                 ajaxSingle="true"
+                                 execute="@this"
                                  action="#{parent.setCurrentEvent(row)}"
                                  value="#{messages['jbpm.'.concat(row.event.eventType)]}"
                                  rendered="#{row.event.eventType != 'new-event'}"
                                  style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
-                                 reRender="#{parentId}Div" />
+                                 render="#{parentId}Div"
+                                 limitRender="true"/>
 						<wi:selectOneMenu
                                  id="events"
                                  noSelectionLabel="Selecione..."
@@ -98,8 +101,11 @@
                                  items="#{parent.supportedEventTypes}"
                                  optionLabel="#{messages['jbpm.'.concat(v)]}"
                                  value="#{parent.eventType}">
-							<wi:ajaxSupport
-                                     reRender="#{parentId}Div" />
+							<a:ajax
+                                execute="@this"
+                                event="change"
+                                render="#{parentId}Div"
+                                limitRender="true"/>
 						</wi:selectOneMenu>
 					</rich:column>
 				</ui:define>
@@ -130,9 +136,10 @@
                              name="headerToolBar">
 						 <a:commandLink
                                  action="#{event.addAction()}"
-                                 ajaxSingle="true"
+                                 execute="@this"
                                  immediate="true"
-                                 reRender="#{parentId}Div">
+                                 render="#{parentId}Div"
+                                 limitRender="true">
 								<h:graphicImage
                                      url="/img/add.gif"
                                      title="Nova ação"
@@ -150,7 +157,8 @@
                                      action="#{event.removeAction(row)}"
                                      onclick="if(!confirm('Confirma?')) return false;"
                                      execute="@this"
-                                     render="#{parentId}Div" />
+                                     render="#{parentId}Div"
+                                     limitRender="true"/>
 						</h:graphicImage>
 					</ui:define>
 					<ui:define
@@ -160,11 +168,12 @@
 							<f:facet
                                      name="header">Ações</f:facet>
 							 <a:commandLink
-                                     ajaxSingle="true"
+                                     execute="@this"
                                      action="#{event.setCurrentAction(row)}"
                                      rendered="#{row.event.eventType != 'new-event'}"
                                      style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
-                                     reRender="#{parentId}Div">
+                                     render="#{parentId}Div"
+                                     limitRender="true">
 							 	<a:outputPanel>
 							 		<h:panelGrid
                                              columns="2"
@@ -185,8 +194,11 @@
                                      rendered="#{row.event.eventType == 'new-event'}"
                                      items="#{parent.supportedEventTypes}"
                                      value="#{parent.eventType}">
-								<wi:ajaxSupport
-                                         reRender="#{parentId}Div" />
+								<a:ajax
+                                    execute="@this"
+                                    event="change"
+                                    render="#{parentId}Div"
+                                    limitRender="true"/>
 							</wi:selectOneMenu>
 						</rich:column>
 					</ui:define>
@@ -206,8 +218,11 @@
                          id="#{id}ActionName"
                          value="#{event.currentAction.name}"
                          label="Nome">
-						<wi:ajaxSupport
-                             reRender="#{eventDiv}" />
+						<a:ajax
+                            execute="@this"
+                            event="change"
+                            render="#{eventDiv}"
+                            limitRender="true"/>
 					</wi:inputText>
 					<ui:include
                          src="forms/#{event.currentActionType}.xhtml">

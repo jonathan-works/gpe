@@ -3,7 +3,8 @@
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:wi="http://www.itx.com.br/jsf">
+     xmlns:wi="http://www.itx.com.br/jsf"
+          xmlns:a="http://richfaces.org/a4j">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -27,8 +28,11 @@
              style="width:100%; #{height}"
              value="#{event.currentAction.expression}"
              label="Expressão">
-			<wi:ajaxSupport
-                 reRender="#{id}EventList" />
+			<a:ajax
+                event="change"
+                execute="@this"
+                render="#{id}EventList"
+                limitRender="true"/>
 		</wi:inputTextarea>
 	</f:subview>
 </ui:composition>

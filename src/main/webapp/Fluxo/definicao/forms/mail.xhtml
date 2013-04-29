@@ -56,7 +56,8 @@
                          action="#{nodeFitter.currentNode.removeListaEmail(row)}"
                          onclick="if(!confirm('Confirma?')) return false;"
                          execute="@this"
-                         render="mailDiv" />
+                         render="mailDiv"
+                         limitRender="true"/>
 				</h:graphicImage>
 			</ui:define>
 			<ui:define
@@ -96,7 +97,8 @@
                                      event="click"
                                      action="#{nodeFitter.currentNode.addNewEmail()}"
                                      execute="@this"
-                                     render="mailDiv" />
+                                     render="mailDiv"
+                                     limitRender="true" />
 						</h:graphicImage>
 				 	</rich:column>
 					<rich:column
@@ -143,11 +145,12 @@
 			<a:ajax
                  event="change"
                  render="mailDiv"
-                 execute="@this" />
+                 execute="@this" 
+                 limitRender="true"/>
 		</wi:selectBooleanCheckbox>
 		<ui:param
              name="isExpression"
-             value="#{nodeFitter.currentNode.to != null and               nodeFitter.currentNode.to.startsWith('{')}" />
+             value="#{nodeFitter.currentNode.to != null and nodeFitter.currentNode.to.startsWith('{')}" />
 		<s:div
              id="twitterDiv"
              rendered="#{nodeFitter.currentNode.usaTwitter}"
@@ -157,10 +160,13 @@
                  id="modeloTwitter"
                  label="Modelo Twitter.."
                  value="#{nodeFitter.currentNode.modeloTwitter}"
-                 reRender="twitterDiv"
                  items="#{twitterTemplateList.list()}"
                  showLabelTodos="true">
-				<wi:ajaxSupport />
+				<a:ajax
+                    event="change"
+                    execute="@this"
+                    render="twitterDiv"
+                    limitRender="true"/>
 			</wi:selectOneMenuEntity>
 			<wi:inputTextarea
                  id="editorModeloTwitter"
@@ -175,10 +181,13 @@
                  id="modeloDocumento"
                  label="#{messages['processBuilder.tituloModeloDocumento']}"
                  value="#{nodeFitter.currentNode.modeloDocumento}"
-                 reRender="editorModeloDocumentoDiv"
                  items="#{modeloDocumento.modeloDocumentoList}"
                  showLabelTodos="true">
-				<wi:ajaxSupport />
+				<a:ajax
+                    event="change"
+                    render="editorModeloDocumentoDiv"
+                    execute="@this"
+                    limitRender="true"/>
 			</wi:selectOneMenuEntity>
 		
 			<wi:inputText
@@ -186,7 +195,10 @@
                  label="Para"
                  rendered="#{!isExpression}"
                  value="#{nodeFitter.currentNode.to}">
-				<wi:ajaxSupport />
+				<a:ajax
+                 event="change"
+                 execute="@this"
+                 limitRender="true"/>
 			</wi:inputText>
 		
 			<wi:inputText
@@ -202,7 +214,10 @@
                  id="subject"
                  label="Assunto"
                  value="#{nodeFitter.currentNode.subject}">
-				<wi:ajaxSupport />
+				<a:ajax
+                    event="change"
+                    execute="@this"
+                    limitRender="true"/>
 			</wi:inputText>
 			<s:div
                  id="editorModeloDocumentoDiv">
@@ -212,7 +227,10 @@
                      value="#{nodeFitter.currentNode.modeloDocumento.modeloDocumento}"
                      label="#{messages['processBuilder.modeloDocumento']}"
                      readonly="true">
-					<wi:ajaxSupport />
+					<a:ajax
+                        event="change"
+                        execute="@this"
+                        limitRender="true"/>
 				</wi:editor>
 			</s:div>
 		</s:div>

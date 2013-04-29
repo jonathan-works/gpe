@@ -29,24 +29,28 @@
              style="clear:both" />
 	<a:commandLink
              id="#{id}Link"
-             reRender="actionTemplate"
+             render="actionTemplate"
              onclick="idTextarea='form:nodes:nodeEventeventSubView:nodeEventAction:nodeEventActionExpressionDecoration:nodeEventActionExpression'"
-             action="#{event.setTemplate()}">
+             action="#{event.setTemplate()}"
+             limitRender="true">
 		<h:graphicImage
                  url="/img/jbpm/wizard.gif"
                  title="Assistente para expressão"
                  style="position: absolute; margin-left: 80px; margin-top: 3px;" />
         <rich:componentControl
-                 for="actionTemplatePanel"
+                 target="actionTemplatePanel"
                  operation="show"
-                 event="oncomplete" />
+                 event="complete" />
 	</a:commandLink>
 	<wi:inputTextarea
              id="#{id}ActionExpression"
              value="#{event.currentAction.actionExpression}"
              style="width:100%; #{height}"
              label="Expressão">		
-		<wi:ajaxSupport />
+		<a:ajax
+            event="change"
+            limitRender="true"
+            execute="@this"/>
 	</wi:inputTextarea>
 </f:subview>
 </ui:composition>

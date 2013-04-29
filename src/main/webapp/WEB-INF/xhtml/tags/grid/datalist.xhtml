@@ -65,7 +65,7 @@
 		<rich:panel
 			bodyClass="panel"
 			rendered="#{showDataList}"
-			style="float: left; margin-left: 1%; width:#{panelWidth}">
+			style="margin-left: 1%; width:#{panelWidth}">
 			<f:facet name="header">
 				<h:outputText value="#{title}" />
 				<c:if test="#{useLink}">
@@ -159,9 +159,9 @@
 							var="row"
 							value="#{datamodel}"
 							rows="#{empty rows ? bean.maxResults : rows}"
-							onRowMouseOut="this.style.backgroundColor=c"
+							onrowmouseout="this.style.backgroundColor=c"
 							style="margin-left: 1px; margin-top: 1px; clear: both;"
-							onRowMouseOver="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">
+							onrowmouseover="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">
 							<f:facet name="header">
 								<rich:columnGroup
 									columnClasses="dr-table-subheadercell dr-table-subheader"

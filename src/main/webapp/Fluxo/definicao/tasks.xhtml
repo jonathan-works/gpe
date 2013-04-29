@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
 
-<!--
+    <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -24,94 +24,88 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<rich:panel
-         bodyClass="panel"
-         style="width:706px; margin-left:3px; clear:both">
-	
-	<s:div
-             id="tasksDiv"
-             style="width:200px; float:left;">
+    <rich:panel
+        bodyClass="panel"
+        style="width:706px; margin-left:3px; clear:both">
 
-		<ui:decorate
-                 template="dataTable.xhtml">
-			<ui:param
-                     name="values"
-                     value="#{taskFitter.tasks}" />
-			<ui:param
-                     name="styleClass"
-                     value="tabelaVariaveis" />
-			<ui:param
-                     name="id"
-                     value="tasksTable" />
-			<ui:param
-                     name="style"
-                     value="width:100%" />
-			<ui:define
-                     name="headerToolBar">
-				 <a:commandLink
-                         action="#{taskFitter.addTask()}"
-                         ajaxSingle="true"
-                         immediate="true"
-                         focus="taskName"
-                         reRender="tasksDiv,taskDiv">
-						<h:graphicImage
-                             url="/img/add.gif"
-                             title="Nova tarefa"
-                             style="margin-right:5px" />
-				 </a:commandLink>
-			</ui:define>
-			<ui:define
-                     name="toolBar">
-				<h:graphicImage
-                         title="Excluir tarefa"
-                         style="cursor:pointer"
-                         url="/img/remove.png">
-					<a:ajax
-                             event="click"
-                             action="#{taskFitter.removeTask(row)}"
-                             onclick="if(!confirm('Confirma?')) return false;"
-                             execute="@this"
-                             render="tasksDiv" />
-				</h:graphicImage>
-			</ui:define>
-			<ui:define
-                     name="columns">
-				<rich:column>
-					<f:facet
-                             name="header">Tarefas</f:facet>
-					<ui:param
-                             name="current"
-                             value="#{row == taskFitter.currentTask}" />
-					<ui:param
-                             name="styleTaskName"
-                             value="#{current ? 'font-weight:bold' : ''}" />
-					<s:div
-                             style="margin-left:2px;">
-						 <a:commandLink
-                                 action="#{taskFitter.setCurrentTask(row)}"
-                                 ajaxSingle="true"
-                                 reRender="tasksDiv,taskDiv">
-							 	<h:outputText
-                                     value="#{row.task.name}"
-                                     style="#{styleTaskName}" />
-						 </a:commandLink>
-					</s:div>
-				</rich:column>
-			</ui:define>
-		</ui:decorate>
-	
-	</s:div>
-	
-		<s:fragment
-             rendered="#{!empty taskFitter.currentTask}">
-			<ui:include
-                 src="task.xhtml">
-				<ui:param
-                     name="t"
-                     value="#{taskFitter.currentTask}" />
-			</ui:include>
-		</s:fragment>
+        <s:div
+            id="tasksDiv"
+            style="width:200px; float:left;">
 
-</rich:panel>
+            <ui:decorate template="dataTable.xhtml">
+                <ui:param
+                    name="values"
+                    value="#{taskFitter.tasks}" />
+                <ui:param
+                    name="styleClass"
+                    value="tabelaVariaveis" />
+                <ui:param
+                    name="id"
+                    value="tasksTable" />
+                <ui:param
+                    name="style"
+                    value="width:100%" />
+                <ui:define name="headerToolBar">
+                    <a:commandLink
+                        action="#{taskFitter.addTask()}"
+                        execute="@this"
+                        immediate="true"
+                        render="tasksDiv,taskDiv"
+                        limitRender="true">
+                        <h:graphicImage
+                            url="/img/add.gif"
+                            title="Nova tarefa"
+                            style="margin-right:5px" />
+                    </a:commandLink>
+                </ui:define>
+                <ui:define name="toolBar">
+                    <h:graphicImage
+                        title="Excluir tarefa"
+                        style="cursor:pointer"
+                        url="/img/remove.png">
+                        <a:ajax
+                            event="click"
+                            action="#{taskFitter.removeTask(row)}"
+                            onclick="if(!confirm('Confirma?')) return false;"
+                            execute="@this"
+                            render="tasksDiv" 
+                            limitRender="true"/>
+                    </h:graphicImage>
+                </ui:define>
+                <ui:define name="columns">
+                    <rich:column>
+                        <f:facet name="header">Tarefas</f:facet>
+                        <ui:param
+                            name="current"
+                            value="#{row == taskFitter.currentTask}" />
+                        <ui:param
+                            name="styleTaskName"
+                            value="#{current ? 'font-weight:bold' : ''}" />
+                        <s:div style="margin-left:2px;">
+                            <a:commandLink
+                                action="#{taskFitter.setCurrentTask(row)}"
+                                execute="@this"
+                                render="tasksDiv,taskDiv"
+                                limitRender="true">
+                                <h:outputText
+                                    value="#{row.task.name}"
+                                    style="#{styleTaskName}" />
+                            </a:commandLink>
+                        </s:div>
+                    </rich:column>
+                </ui:define>
+            </ui:decorate>
+
+        </s:div>
+
+        <s:fragment rendered="#{!empty taskFitter.currentTask}">
+            <ui:include src="task.xhtml">
+                <ui:param
+                    name="t"
+                    value="#{taskFitter.currentTask}" />
+            </ui:include>
+        </s:fragment>
+
+    </rich:panel>
 
 </ui:composition>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
 
-<!--
+    <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -24,143 +24,153 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<rich:panel
-         bodyClass="panel"
-         style="width:706px; margin-left:3px; clear:both; margin-top:3px">
-	
-	<s:div
-             id="timersDiv"
-             style="width:200px; float:left;">
+    <rich:panel
+        bodyClass="panel"
+        style="width:706px; margin-left:3px; clear:both; margin-top:3px">
 
-		<ui:param
-                 name="node"
-                 value="#{nodeFitter.nodeHandler}" />
-		<ui:decorate
-                 template="dataTable.xhtml">
-			<ui:param
-                     name="values"
-                     value="#{node.timerList}" />
-			<ui:param
-                     name="styleClass"
-                     value="tabelaVariaveis" />
-			<ui:param
-                     name="id"
-                     value="timersTable" />
-			<ui:param
-                     name="style"
-                     value="width:100%" />
-			<ui:define
-                     name="headerToolBar">
-				 <a:commandLink
-                         action="#{node.addTimer()}"
-                         ajaxSingle="true"
-                         immediate="true"
-                         focus="name"
-                         reRender="timersDiv,timerDiv">
-						<h:graphicImage
-                             url="/img/add.gif"
-                             title="Novo temporizador"
-                             style="margin-right:5px" />
-				 </a:commandLink>
-			</ui:define>
-			<ui:define
-                     name="toolBar">
-				<h:graphicImage
-                         title="Excluir temporizador"
-                         style="cursor:pointer"
-                         url="/img/remove.png">
-					<a:ajax
-                             event="click"
-                             action="#{node.removeTimer(row)}"
-                             onclick="if(!confirm('Confirma?')) return false;"
-                             execute="@this"
-                             render="timersDiv" />
-				</h:graphicImage>
-			</ui:define>
-			<ui:define
-                     name="columns">
-				<rich:column>
-					<f:facet
-                             name="header">Temporizadores</f:facet>
-					<ui:param
-                             name="current"
-                             value="#{row == nodeFitter.nodeHandler.currentTimer}" />
-					<ui:param
-                             name="styleTimerName"
-                             value="#{current ? 'font-weight:bold' : ''}" />
-					<s:div
-                             style="margin-left:2px;">
-						 <a:commandLink
-                                 action="#{node.setCurrentTimer(row)}"
-                                 ajaxSingle="true"
-                                 reRender="timersDiv,timerDiv">
-							 	<h:outputText
-                                     value="#{row.timerName}"
-                                     style="#{styleTimerName}" />
-						 </a:commandLink>
-					</s:div>
-				</rich:column>
-			</ui:define>
-		</ui:decorate>
-	
-	</s:div>
-	
-	<s:div
-             id="timerDiv"
-             style="float:left; margin-left:5px">
-		<s:div
-                 rendered="#{!empty node.currentTimer}">
-			<ui:param
-                     name="timer"
-                     value="#{node.currentTimer}" />
-			<wi:inputText
-                     id="name"
-                     value="#{node.timerName}"
-                     label="Nome">
-				<wi:ajaxSupport
-                         reRender="timersTable" />
-			</wi:inputText>
-			<wi:inputText
-                     id="duedate"
-                     value="#{node.dueDateValue}"
-                     style="width:50px"
-                     widthDiv="50px"
-                     label="Prazo">
-				<wi:ajaxSupport />
-			</wi:inputText>
-	
-			<wi:selectOneMenuEnum
-                     id="unit"
-                     value="#{node.dueDateUnit}"
-                     style="width:100px"
-                     widthDiv="100px"
-                     label="Unidade"
-                     items="#{node.dueDateDefaultUnit.values()}"
-                     noSelectionLabel="[Selecione...]"
-                     optionText="label">
-				<wi:ajaxSupport />			
-			</wi:selectOneMenuEnum>
-			
-			<wi:selectBooleanCheckbox
-                     id="business"
-                     value="#{node.dueDateBusiness}"
-                     style="width:30px"
-                     widthDiv="40px"
-                     label="Comercial?">
-				<wi:ajaxSupport />
-			</wi:selectBooleanCheckbox>
-			
-			<wi:selectOneMenu
-                     id="transition"
-                     value="#{timer.transitionName}"
-                     label="Transição"
-                     items="#{node.getTransitions()}"
-                     noSelectionLabel="[Selecione...]">
-				<wi:ajaxSupport />			
-			</wi:selectOneMenu>
-		</s:div>
-	</s:div>	
+        <s:div
+            id="timersDiv"
+            style="width:200px; float:left;">
 
-</rich:panel>
+            <ui:param
+                name="node"
+                value="#{nodeFitter.nodeHandler}" />
+            <ui:decorate template="dataTable.xhtml">
+                <ui:param
+                    name="values"
+                    value="#{node.timerList}" />
+                <ui:param
+                    name="styleClass"
+                    value="tabelaVariaveis" />
+                <ui:param
+                    name="id"
+                    value="timersTable" />
+                <ui:param
+                    name="style"
+                    value="width:100%" />
+                <ui:define name="headerToolBar">
+                    <a:commandLink
+                        action="#{node.addTimer()}"
+                        execute="@this"
+                        immediate="true"
+                        render="timersDiv,timerDiv"
+                        limitRender="true">
+                        <h:graphicImage
+                            url="/img/add.gif"
+                            title="Novo temporizador"
+                            style="margin-right:5px" />
+                    </a:commandLink>
+                </ui:define>
+                <ui:define name="toolBar">
+                    <h:graphicImage
+                        title="Excluir temporizador"
+                        style="cursor:pointer"
+                        url="/img/remove.png">
+                        <a:ajax
+                            event="click"
+                            action="#{node.removeTimer(row)}"
+                            onclick="if(!confirm('Confirma?')) return false;"
+                            execute="@this"
+                            render="timersDiv"
+                            limitRender="true"/>
+                    </h:graphicImage>
+                </ui:define>
+                <ui:define name="columns">
+                    <rich:column>
+                        <f:facet name="header">Temporizadores</f:facet>
+                        <ui:param
+                            name="current"
+                            value="#{row == nodeFitter.nodeHandler.currentTimer}" />
+                        <ui:param
+                            name="styleTimerName"
+                            value="#{current ? 'font-weight:bold' : ''}" />
+                        <s:div style="margin-left:2px;">
+                            <a:commandLink
+                                action="#{node.setCurrentTimer(row)}"
+                                execute="@this"
+                                render="timersDiv,timerDiv"
+                                limitRender="true">
+                                <h:outputText
+                                    value="#{row.timerName}"
+                                    style="#{styleTimerName}" />
+                            </a:commandLink>
+                        </s:div>
+                    </rich:column>
+                </ui:define>
+            </ui:decorate>
+
+        </s:div>
+
+        <s:div
+            id="timerDiv"
+            style="float:left; margin-left:5px">
+            <s:div rendered="#{!empty node.currentTimer}">
+                <ui:param
+                    name="timer"
+                    value="#{node.currentTimer}" />
+                <wi:inputText
+                    id="name"
+                    value="#{node.timerName}"
+                    label="Nome">
+                    <a:ajax
+                        execute="@this"
+                        limitRender="true"
+                        event="change" 
+                        render="timersTable" />
+                </wi:inputText>
+                <wi:inputText
+                    id="duedate"
+                    value="#{node.dueDateValue}"
+                    style="width:50px"
+                    widthDiv="50px"
+                    label="Prazo">
+                    <a:ajax
+                        execute="@this"
+                        limitRender="true"
+                        event="change" />
+                </wi:inputText>
+
+                <wi:selectOneMenuEnum
+                    id="unit"
+                    value="#{node.dueDateUnit}"
+                    style="width:100px"
+                    widthDiv="100px"
+                    label="Unidade"
+                    items="#{node.dueDateDefaultUnit.values()}"
+                    noSelectionLabel="[Selecione...]"
+                    optionText="label">
+                    <a:ajax
+                        execute="@this"
+                        limitRender="true"
+                        event="change" />
+                </wi:selectOneMenuEnum>
+
+                <wi:selectBooleanCheckbox
+                    id="business"
+                    value="#{node.dueDateBusiness}"
+                    style="width:30px"
+                    widthDiv="40px"
+                    label="Comercial?">
+                    <a:ajax
+                        execute="@this"
+                        limitRender="true"
+                        event="change" />
+                </wi:selectBooleanCheckbox>
+
+                <wi:selectOneMenu
+                    id="transition"
+                    value="#{timer.transitionName}"
+                    label="Transição"
+                    items="#{node.getTransitions()}"
+                    noSelectionLabel="[Selecione...]">
+                    <a:ajax
+                        execute="@this"
+                        limitRender="true"
+                        event="change" />
+                </wi:selectOneMenu>
+            </s:div>
+        </s:div>
+
+    </rich:panel>
 
 </ui:composition>

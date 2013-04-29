@@ -31,6 +31,7 @@
 
 	<h:outputStylesheet name="processDefinition.css" library="stylesheet"/>
 	<h:outputScript name="jbpmGraph.js" library="js"/>
+    <h:outputScript name="underscore.js" library="js"/>
 
 	<ui:param name="def" value="#{processBuilder.instance}" />
 	
@@ -90,17 +91,17 @@
 
 	<a:commandButton styleClass="dr-tbpnl-tb-inact"
 		id="publicar"
-		reRender="form"
+		render="form"
 		action="#{processBuilder.deploy()}"
 		value="#{messages['processBuilder.deployBtn']}" type="submit" 
-		rendered="#{processBuilder.exists}"/>
+		rendered="#{processBuilder.exists}"
+        limitRender="true"/>
 
 	<h:commandButton styleClass="dr-tbpnl-tb-inact"
 		id="novoProcesso"
 		action="#{processBuilder.update()}"
 		value="#{messages['processBuilder.saveBtn']}" type="submit" 
-		rendered="#{!processBuilder.exists}"
-		reRender="pageBody"/>
+		rendered="#{!processBuilder.exists}"/>
 	<h:commandButton styleClass="dr-tbpnl-tb-inact"
 					 id="new"
 					 action="#{processBuilder.clearDefinition()}"
@@ -108,8 +109,7 @@
 					 type="submit"
 					 onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;" 
 					 rendered="#{processBuilder.exists}"/>
-
-	</h:form>
+    </h:form>
 
 	<rich:messages id="messages" style="color:red" ajaxRendered="true" globalOnly="false" />
 

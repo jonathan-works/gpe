@@ -3,7 +3,8 @@
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:rich="http://richfaces.org/rich"
-     xmlns:wi="http://www.itx.com.br/jsf">
+     xmlns:wi="http://www.itx.com.br/jsf"
+     xmlns:a="http://richfaces.org/a4j">
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -23,9 +24,11 @@
          id="xmlTextArea"
          style="width:auto !important; height:490px; position:relative"
          value="#{processBuilder.xml}">
-		
-		<wi:ajaxSupport
-             reRender="pageBody" />
+		<a:ajax
+            event="change"
+            execute="@this"
+            render="pageBody"
+            limitRender="true"/>
 	</wi:inputTextarea>
 		
 </ui:composition>

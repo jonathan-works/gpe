@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich">
 
-<!--
+    <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -20,24 +20,21 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---> 
-	<rich:panel
-         bodyClass="panel"
-         style="clear:both; overflow:visible; padding:0px; margin:0px; width:721px; float:left;">
-		<f:facet
-             name="header">
-            <h:outputText
-                 value="#{messages['expressionWizard.title']}" />
+-->
+    <rich:panel
+        bodyClass="panel"
+        style="clear:both; overflow:visible; padding:0px; margin:0px; width:721px; float:left;">
+        <f:facet name="header">
+            <h:outputText value="#{messages['expressionWizard.title']}" />
         </f:facet>
-	   <ui:include
-             src="/js/expressionWizard.xhtml">
+        <ui:include src="expressionWizard.xhtml">
             <ui:param
-                 name="id"
-                 value="expression" />
+                name="id"
+                value="expression" />
             <ui:param
-                 name="value"
-                 value="#{nodeFitter.currentNode.decisionExpression}" />
-       </ui:include>
-	</rich:panel>
+                name="value"
+                value="#{nodeFitter.currentNode.decisionExpression}" />
+        </ui:include>
+    </rich:panel>
 
 </ui:composition>
