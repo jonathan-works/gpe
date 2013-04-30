@@ -18,140 +18,35 @@
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:s="http://jboss.com/products/seam/taglib">
-    <script>
-    	dojoConfig={
-    	        async:false
-    	}
-    </script>
-    <script src="#{util.contextPath}/js/dojo/dojo.js"></script>
+    xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core">
     
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
-    <ui:param name="angle" value="#{wi:get(angle,300)}" />
-    <ui:param name="radius" value="#{wi:get(radius,150)}" />
-    <ui:param name="min" value="#{wi:get(min,0)}" />
-    <ui:param name="max" value="#{wi:get(max,100)}" />
-    <ui:param name="value" value="#{wi:get(value,0)}" />
-    <ui:param name="hideValues" value="#{wi:get(hideValues,'false')}" />
-    <ui:param name="tickInterval" value="#{wi:get(tickInterval, 1)}" />
-    <ui:param name="width" value="#{wi:get(width, radius*4)}" />
-    <ui:param name="height" value="#{wi:get(height, radius*4)}" />
-    <ui:param name="draggable" value="#{wi:get(draggable, 'false')}" />
-    <ui:param name="indicatorLabel" value="#{wi:get(indicatorLabel, '')}" />
-    
-    <script>
-  //<![CDATA[
-        (function() {
-            dojo.require("dojox.gauges.AnalogGauge");
-            dojo.require("dojox.gauges.AnalogArcIndicator");
-            dojo.require("dojox.gauges.AnalogNeedleIndicator");
-        })();
-        
-        dojo.ready(function() {
-            var idGauge = "#{id}Gauge";
-            var gauge = dojo.byId(idGauge);
-            var _angle = #{angle};
-            var _value = #{value};
-            var _radius = #{radius};
-            var _width = #{width};
-            var _height = #{height};
-            var _min = #{min};
-            var _max = #{max};
-            var _rangeColors = [{offset:0, color:'#AAA'},
-                                {offset:1, color:'#444'}];
-            
-            var _ranges = [{
-                id : "#{id}GaugeRange1",
-                low : _min,
-                high : _max,
-                hover : _min+"-"+_max,
-                color : {
-                    type : "radial",
-                    cx : _width/2,
-                    cy : _height/2,
-                    r : _radius,
-                    colors : _rangeColors
-                }
-            }];
-            
-            var baseIndicatorProps = {
-                width:_radius*0.2,
-                offset:_radius,
-                noChange:true
-            }
-            
-            baseIndicatorProps.value = _max;
-            baseIndicatorProps.color = "#CC0000";
-            var redIndicator = new dojox.gauges.AnalogArcIndicator(baseIndicatorProps);
-            
-            baseIndicatorProps.value = _max*0.75;
-            baseIndicatorProps.color = "#CCCC00";
-            var yellowIndicator = new dojox.gauges.AnalogArcIndicator(baseIndicatorProps);
-            
-            baseIndicatorProps.value = _max*0.25;
-            baseIndicatorProps.color = "#00CC00";
-            var greenIndicator = new dojox.gauges.AnalogArcIndicator(baseIndicatorProps);
-            
-            var _indicators = [
-				redIndicator,
-				yellowIndicator,
-				greenIndicator,
-                new dojox.gauges.AnalogNeedleIndicator({
-                    id : dijit.getUniqueId('#{id}Needle'),
-                    value : _value,
-                    width : Math.max(2,_radius/10),
-                    length : _radius*1.2,
-                    color : '#000000',
-                    title : "#{indicatorLabel}",
-                    hover : "#{indicatorLabel}: "+_value,
-                    noChange : true
-                })
-			]
-            
-            var _hideValues = #{hideValues};
-            
-            var props = {
-            	id: dijit.getUniqueId(idGauge),
-            	width: _width,
-            	height: _height,
-            	cx: _width/2,
-            	cy: _height/2,
-            	radius: _radius,
-            	startAngle : -_angle/2,
-            	endAngle : _angle/2,
-            	hideValues : _hideValues,
-            	ranges : _ranges,
-            	indicators: _indicators,
-            	useTooltip: false,
-            	background:'rgba(0,0,0,0)'
-            }
-            
-            if (!_hideValues) {
-            	props.majorTicks = {
-                    length : _radius*0.1,
-                    offset : _radius*1.15,
-                    interval : _max/4,
-                    color : 'black'
-                };
-            }
-            
-            gauge = new dojox.gauges.AnalogGauge(props, gauge);
-            gauge.startup();
-            
-            if (#{draggable}) {
-            	$j("##{id}GaugeContainer")
-            		.css("position","absolute")
-            		.css("top","50px")
-            		.css("right","50px")
-            		.css("opacity","0.5")
-            		.draggable({scroll:false});
-            }
-        });
-	//]]>
+    <a:loadScript src="/js/dojoCustom/gauges/defaultGauge.js"/>
+
+    <script>    	
+    	br.com.infox.dojoCustom.gauges.DefaultGauge({
+    	    id:"#{id}Gauge",
+    	    containerId:"#{id}GaugeContainer",
+    	    angle:#{wi:get(angle,300)},
+    	    radius:#{wi:get(radius,150)},
+    	    min:#{wi:get(min,0)},
+    	    max:#{wi:get(max,100)},
+    	    value:#{wi:get(value,0)},
+    	    hideValues:#{wi:get(hideValues,'false')},
+    	    tickInterval:#{wi:get(tickInterval, 1)},
+    	    width:#{wi:get(width, radius*4)},
+    	    height:#{wi:get(height, radius*4)},
+    	    draggable:#{wi:get(draggable, 'false')},
+    	    indicatorLabel:"#{wi:get(indicatorLabel, '')}"
+    	});
     </script>
-    <div id="#{id}GaugeContainer" class="gaugeContainer" style="#{style}">
+    <rich:panel id="#{id}GaugeContainer" styleClass="gaugeContainer" style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;#{style}">
+    	<f:facet name="header">#{label}</f:facet>
         <div id="#{id}Gauge" class="gauge">
         </div>
-    </div>
+    </rich:panel>
 
 </ui:composition>
