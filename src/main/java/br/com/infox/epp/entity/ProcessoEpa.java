@@ -46,6 +46,7 @@ public class ProcessoEpa extends Processo {
 	private Integer porcentagem;
 	private Item itemDoProcesso;
 	private SituacaoPrazoEnum situacaoPrazo;
+	private Boolean contabilizar;
 	
 	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
 	private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
@@ -120,6 +121,15 @@ public class ProcessoEpa extends Processo {
 		this.situacaoPrazo = situacaoPrazo;
 	}
 	
+	@Column(name="in_contabilizar", nullable=false)
+	@NotNull
+	public Boolean getContabilizar() {
+		return contabilizar;
+	}
+	public void setContabilizar(Boolean contabilizar) {
+		this.contabilizar = contabilizar;
+	}
+
 	public boolean hasPartes(){
 		return naturezaCategoriaFluxo.getNatureza().getHasPartes();
 	}
