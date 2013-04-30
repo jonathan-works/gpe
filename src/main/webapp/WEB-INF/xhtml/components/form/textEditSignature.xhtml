@@ -14,139 +14,154 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 		
-		<s:div
-         id="testeEditSignatureDiv">
+		<s:div id="testeEditSignatureDiv">
+		
 			<wi:selectOneMenuEntity
-             id="tipoProcessoDocumento"
-             label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
-             value="#{processoHome.tipoProcessoDocumento}"
-             items="#{tipoProcessoDocumentoInternoItems}"
-             required="true"
-             noSelectionLabel="Selecione...">
+			 id="tipoProcessoDocumento"
+			 label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+			 value="#{processoHome.tipoProcessoDocumento}"
+			 items="#{tipoProcessoDocumentoInternoItems}"
+			 required="true"
+			 noSelectionLabel="Selecione...">
+			
 				<a:ajax
-                 event="change"
-                 oncomplete="#{automaticEventsTree.carregaEventos()}"
-                 action="#{processoHome.onSelectProcessoDocumento()}"
-                 execute="@this"
-                 limitRender="true"
-                 render="divEventsTreeTextEdit, divAppletId, appletAssinar" />
-			</wi:selectOneMenuEntity>
+				 event="change"
+				 oncomplete="#{automaticEventsTree.carregaEventos()}"
+				 listener="#{processoHome.onSelectProcessoDocumento()}"
+				 execute="@this"
+				 limitRender="true"
+				 render="divEventsTreeTextEdit, divAppletId, appletAssinar" />
+			
+		</wi:selectOneMenuEntity>
 			
 			<br />
 			
-			<s:div
-             id="divEventsTreeTextEdit">
-				<wi:automaticEventsTree
-                 agrupamentos="#{processoHome.idAgrupamentos}"
-                 reRender="divAppletId"
-                 inNewLine="true"
-                 rendered="#{processoHome.renderEventsTree}" />
-			</s:div>
+			<s:div id="divEventsTreeTextEdit">
 			
-			<s:div
-             id="divAppletId"> 
+				<wi:automaticEventsTree
+				 agrupamentos="#{processoHome.idAgrupamentos}"
+				 reRender="divAppletId"
+				 inNewLine="true"
+				 rendered="#{processoHome.renderEventsTree}" />
+			
+		</s:div>
+			
+			<s:div id="divAppletId">
+			 
 				<br />
 				<table
-                 width="100%"
-                 border="0"
-                 cellspacing="0"
-                 cellpadding="0">
+				 width="100%"
+				 border="0"
+				 cellspacing="0"
+				 cellpadding="0">
+				
 					<tr>
+					
 				    	<td>
-				    		<s:div
-                             id="editorTextEditComboDiv">
+						
+				    		<s:div id="editorTextEditComboDiv">
+							
 								<wi:editor
-                                 id="#{id}Editor"
-                                 value="#{processoHome.processoDocumentoBin.modeloDocumento}" />
-							</s:div>
-				    	</td>
-				  	</tr>
+								 id="#{id}Editor"
+								 value="#{processoHome.processoDocumentoBin.modeloDocumento}" />
+							
+						</s:div>
+				    	
+					</td>
+				  	
+				</tr>
 				  	<tr>
+					
 				    	<td>
+						
 				    		<a:jsFunction
-                             name="renderTransitions"
-                             reRender="taskButtonsDiv" />
+							 name="renderTransitions"
+							 reRender="taskButtonsDiv" />
 					        <a:jsFunction
-                             name="submitForm"
-                             action="#{home.assinarDocumento()}"
-                             oncomplete="window.location.reload()" />					
+							 name="submitForm"
+							 action="#{home.assinarDocumento()}"
+							 oncomplete="window.location.reload()" />					
 					
 							<h:inputHidden
-                             id="#{id}certChain"
-                             value="#{processoHome.certChain}" />					
+							 id="#{id}certChain"
+							 value="#{processoHome.certChain}" />					
 							<h:inputHidden
-                             id="#{id}signature"
-                             value="#{processoHome.signature}" />
+							 id="#{id}signature"
+							 value="#{processoHome.signature}" />
 							 
 							<ui:param
-                             name="path"
-                             value="#{'taskInstanceForm:'.concat(id)                  .concat(':').concat(id)}" />
+							 name="path"
+							 value="#{'taskInstanceForm:'.concat(id)                  .concat(':').concat(id)}" />
 							<ui:param
-                             name="path2"
-                             value="#{'taskInstanceForm:'.concat(id)                  .concat(':').concat(id).concat('EditorDecoration:')                  .concat(id)}" />										   
+							 name="path2"
+							 value="#{'taskInstanceForm:'.concat(id)                  .concat(':').concat(id).concat('EditorDecoration:')                  .concat(id)}" />										   
 							<ui:param
-                             name="idEditor"
-                             value="#{path2.concat('EditorTextArea')}" />
+							 name="idEditor"
+							 value="#{path2.concat('EditorTextArea')}" />
 							<ui:param
-                             name="signature"
-                             value="#{path.concat('signature')}" />
+							 name="signature"
+							 value="#{path.concat('signature')}" />
 							<ui:param
-                             name="certChain"
-                             value="#{path.concat('certChain')}" />
+							 name="certChain"
+							 value="#{path.concat('certChain')}" />
 							
 							<s:div
-                             id="appletAssinar"
-                             rendered="#{not empty automaticEventsTree.eventoBeanList}">
+							 id="appletAssinar"
+							 rendered="#{not empty automaticEventsTree.eventoBeanList}">
+							
 								<applet
-                                 width="140"
-                                 height="25"
-                                 id="certificacao"
-                                 code="SmartCardSignerApplet"
-                                 archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+								 width="140"
+								 height="25"
+								 id="certificacao"
+								 code="SmartCardSignerApplet"
+								 archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+								
 									<param
-                                     name="formId"
-                                     value="taskInstanceForm" />
+									 name="formId"
+									 value="taskInstanceForm" />
 									<param
-                                     name="signButtonCaption"
-                                     value="Assinar Digitalmente" />
+									 name="signButtonCaption"
+									 value="Assinar Digitalmente" />
 									<param
-                                     name="certificationChainField"
-                                     value="#{certChain}" />
+									 name="certificationChainField"
+									 value="#{certChain}" />
 									<param
-                                     name="signatureField"
-                                     value="#{signature}" />
+									 name="signatureField"
+									 value="#{signature}" />
 									<param
-                                     name="urlDownload"
-                                     value="#{util.urlProject}/certificado/" />
+									 name="urlDownload"
+									 value="#{util.urlProject}/certificado/" />
 									<param
-                                     name="getDataFunction"
-                                     value="getData()" />	
+									 name="getDataFunction"
+									 value="getData()" />	
 									<param
-                                     name="useBase64Function"
-                                     value="useBase64()" />
+									 name="useBase64Function"
+									 value="useBase64()" />
 									<param
-                                     name="functionPreSign"
-                                     value="showLoading()" />	
+									 name="functionPreSign"
+									 value="showLoading()" />	
 									<param
-                                     name="functionPosSign"
-                                     value="hideLoading();submitForm();" />		
+									 name="functionPosSign"
+									 value="hideLoading();submitForm();" />		
 									<param
-                                     name="dataAtual"
-                                     value="#{currentDatetime}" />	
+									 name="dataAtual"
+									 value="#{currentDatetime}" />	
 									<param
-                                     name="caListDownloadFile"
-                                     value="#{util.urlProject}/downloadCaList.seam" />				
-								</applet> 
+									 name="caListDownloadFile"
+									 value="#{util.urlProject}/downloadCaList.seam" />				
+								
+							</applet> 
 								<script>
 									function useBase64() {
 										return 'false';
@@ -161,10 +176,17 @@
 										$('#{certChain}').value = "";
 									}
 								</script>   			
-							</s:div>
-				    	</td>
-				 	</tr>
-				</table>		
-			</s:div>	
+							
+						</s:div>
+				    	
+					</td>
+				 	
+				</tr>
+				
+			</table>		
+			
 		</s:div>	
+		
+	</s:div>	
+
 </ui:composition>

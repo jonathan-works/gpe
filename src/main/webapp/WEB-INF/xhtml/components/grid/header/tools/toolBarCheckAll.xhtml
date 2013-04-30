@@ -8,6 +8,7 @@
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib">
 	
+	
 		
 		<ui:param
 		 name="checkAllExpression"
@@ -15,19 +16,24 @@
 	
 		<h:form>
 		
+		
 
 			<h:selectBooleanCheckbox value="#{checkAllValue}">
 			
+			
 				<a:ajax
 				 event="click"
-				 action="#{expressions.createMethodExpression(checkAllExpression).invoke(null)}"
+				 listener="#{expressions.createMethodExpression(checkAllExpression).invoke(null)}"
 				 execute="@this"
 				 render="#{gridId}" />
 			
+		
 		</h:selectBooleanCheckbox>
 
 		
+	
 	</h:form>
 
 	
+
 </ui:composition>

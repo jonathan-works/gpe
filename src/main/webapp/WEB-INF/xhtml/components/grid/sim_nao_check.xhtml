@@ -10,43 +10,55 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
+	
 
 		<div style="width: 100%; text-align: center">
 		
 		
+		
 			<c:if test="#{canEdit}">
+			
 			
 			
 				<s:decorate
 				 id="#{f.id}Decoration"
 				 template="/WEB-INF/xhtml/components/templates/display.xhtml">
 				
+				
 					<ui:param
 					 name="props"
 					 value="#{f.properties}" />
 					<h:form>
 					
+					
 						<h:selectBooleanCheckbox
 						 styleClass="checkbox"
 						 value="#{row.obrigatorio}">
 						
+						
 							<a:ajax
 							 event="change"
-							 action="#{pessoaQualificacaoHome.update}"
+							 listener="#{pessoaQualificacaoHome.update}"
 							 execute="@this" />
 						
+					
 					</h:selectBooleanCheckbox>
 					
+				
 				</h:form>
 				
+			
 			</s:decorate>
 			
+		
 		</c:if> 
 			<c:if test="#{not canEdit}">
 				#{c.value ? 'SIM' : 'NÃO'}
 			</c:if>
 		
+	
 	</div>
 		
 	
+
 </ui:composition>

@@ -9,10 +9,12 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
+	
 
 		<s:decorate
 		 id="estadoDecoration"
 		 template="/WEB-INF/xhtml/components/templates/view.xhtml">
+		
 		
 			<wi:selectOneMenuEntity
 			 template="/WEB-INF/xhtml/components/templates/view.xhtml"
@@ -22,22 +24,27 @@
 			 items="#{estadoItems}"
 			 noSelectionLabel="[Todos]">
 			
+			
 				<a:ajax
 				 event="change"
 				 status=":status"
-				 action="#{cepHome.clearMunicipioSuggest()}"
+				 listener="#{cepHome.clearMunicipioSuggest()}"
 				 render="#{f.id}municipioSuggestDiv"
 				 execute="@this" />
 			
+		
 		</wi:selectOneMenuEntity>
 		
+	
 	</s:decorate>
 		
 		<s:decorate
 		 id="municipioDecoration"
 		 template="/WEB-INF/xhtml/components/templates/view.xhtml">
 		
+		
 			<s:div id="#{f.id}municipioSuggestDiv">
+			
 			
 			<wi:suggest
 				 template="/WEB-INF/xhtml/components/templates/view.xhtml"
@@ -46,16 +53,21 @@
 				 disabled="#{empty municipioSearch.estado}"
 				 label="Cidade">
 				
+				
 				<a:ajax
 					 event="change"
 					 render="#{f.id}teste"
 					 execute="@this" />
 			
+			
 			</wi:suggest>		
 			
+		
 		</s:div>
 		
+	
 	</s:decorate>
 		
 	
+
 </ui:composition>
