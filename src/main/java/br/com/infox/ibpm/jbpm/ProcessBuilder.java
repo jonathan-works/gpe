@@ -15,11 +15,15 @@
  */
 package br.com.infox.ibpm.jbpm;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.event.AbortProcessingException;
+
 import org.hibernate.Query;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -35,6 +39,8 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
+import org.richfaces.event.ItemChangeEvent;
+import org.richfaces.event.ItemChangeListener;
 import org.xml.sax.InputSource;
 
 import br.com.infox.ibpm.entity.Fluxo;
@@ -52,7 +58,7 @@ import br.com.itx.util.EntityUtil;
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
-public class ProcessBuilder implements Serializable {
+public class ProcessBuilder implements Serializable, ItemChangeListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -367,5 +373,16 @@ public class ProcessBuilder implements Serializable {
 		if (typeFitter == null)
 			typeFitter = ComponentUtil.getComponent(TypeFitter.NAME);
 		return typeFitter;
+	}
+
+	@Override
+	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
+		if  (event.getNewItemName().equals("graphTab")) {
+			try {
+				getProcessBuilderGraph().paintGraph();
+			} catch (IOException e) {
+				throw new AbortProcessingException(e);
+			}
+		}
 	}
 }

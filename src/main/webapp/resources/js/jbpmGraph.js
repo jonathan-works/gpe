@@ -46,7 +46,7 @@ function NodeArea(cid) {
 		var outVars = [];
 		
 		_.each(area[0].vars, function(v) {
-			if (v.value.readonly == 'true') {
+			if (v.readonly == 'true') {
 				inVars[inVars.length] = v;
 			} else {
 				outVars[outVars.length] = v;
@@ -61,24 +61,26 @@ function NodeArea(cid) {
 		d.append(ulIn);
 		
 		if (outVars.length > 0) {
-			d.append('Saída:');
+			var saida = "Sa\u00EDda";
+			d.append(saida + ':');
 		}
 		
 		var ulOut = $('<ul style:"margin:0"></ul>'); 
 		d.append(ulOut);
 		
 		_.each(inVars, function(v) {
-			ulIn.append($('<li>' + v.value.name + ' (' + v.value.type + ')' + '</li>'));
+			ulIn.append($('<li>' + v.name + ' (' + v.type + ')' + '</li>'));
 		});
 		
 		_.each(outVars, function(v) {
-			ulOut.append($('<li>' + v.value.name + ' (' + v.value.type + ')' + '</li>'));
+			ulOut.append($('<li>' + v.name + ' (' + v.type + ')' + '</li>'));
 		});
 		
 		d.show();
 		
 		if (area[0].cond != null){
-			d.append($('<br/>Condição: ' + area[0].cond));
+			var condicao = "Condi\u00E7\u00E3o";
+			d.append($('<p>' + condicao + ': ' + area[0].cond + '</p>'));
 		}
 	};
 

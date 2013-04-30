@@ -39,7 +39,8 @@
 	
 	<rich:tabPanel style="height:550px"
 		activeItem="#{processBuilder.tab}"
-		switchType="ajax">
+		switchType="ajax"
+		itemChangeListener="#{processBuilder.processItemChange}">
 		<rich:tab header="#{messages['processBuilder.properties']}" name="propriedadesTab" id="propriedadesTab">
 			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px"
 				header="#{messages['processBuilder.info']}" >
