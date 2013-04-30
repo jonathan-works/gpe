@@ -37,7 +37,6 @@
 				height:15px;
 				border:0px;
 				border-radius:15px;
-                position:relative;
                 left: 10px;
 			}
 			
@@ -81,53 +80,68 @@
 								  
 			<ui:define name="buttons"/>
 		</wi:dataForm>
-		
 		<s:div id="processoList">
-			<s:div rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}">
-				<dojo:defaultGauge id="#{row.numeroProcesso}"
-									draggable="true"
-									max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-									width="160"
-									height="160"
-									radius="50"
-									indicatorLabel="#{bam.tempoMedio}"
-									value="#{processoEpaNaoFinalizadoList.getMediaTempoGasto()}"/>
-			</s:div>
-			<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
-						  bean="#{processoEpaNaoFinalizadoList}"
-						  tableTitle="Processos - Prazo: #{processoEpaNaoFinalizadoList.fluxo.qtPrazo} (dias)"
-						  showGrid="#{not empty processoEpaNaoFinalizadoList.fluxo}"
-						  panelWidth="100%"
-						  onRowMouseOut=""
-						  onRowMouseOver=""
-						  id="processoDataTable">
-						  
-				<ui:define name="headerToolBar" />
-				<ui:define name="toolBar"> 
-					<div class="circ #{row.porcentagem > 100 ? 'red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'yellow-back' : '')}">
-    					<wi:toolBar url="/img/edit.gif"
-    								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
-    								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
-    								reRender="processoEpaTarefaModal"/>
-                    </div>
-				</ui:define>
-				
-				<wi:columnOutputText columnId="numeroProcesso"
-									 columnHeader="Número do Processo"
-									 value="#{row.numeroProcesso}" />
-									 
-				<wi:columnOutputText columnId="tempoGasto"
-									 columnHeader="Tempo Gasto (em dias)"
-									 value="#{row.tempoGasto}" />
-									 
-				<ui:param name="porc" value="#{row.porcentagem > 100 ? '> 100' : row.porcentagem}" />
-				<wi:columnOutputText columnId="porcentagem"
-									 columnHeader="Porcentagem"
-									 value="#{not empty row.porcentagem ? porc : 0}%" />
-				
-			</wi:dataTable>
+			<rich:panel id="processoListPanel" style="overflow:auto; width: 100%; margin:0px 0px 0px 10px" rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}">
+				<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
+							  bean="#{processoEpaNaoFinalizadoList}"
+							  tableTitle="Processos - Prazo: #{processoEpaNaoFinalizadoList.fluxo.qtPrazo} (dias)"
+							  showGrid="#{not empty processoEpaNaoFinalizadoList.fluxo}"
+							  panelWidth="70%"
+							  id="processoDataTable">
+					<ui:define name="headerToolBar" />
+					<ui:define name="toolBar"> 
+						<div style="float:left" class="circ #{row.porcentagem > 100 ? 'red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'yellow-back' : '')}">
+	    					<wi:toolBar url="/img/edit.gif"
+	    								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
+	    								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
+	    								reRender="processoEpaTarefaModal"/>
+	                    </div>
+	                    <h:form id="#{row.numeroProcesso}Form">
+		                    <h:selectBooleanCheckbox id="#{row.numeroProcesso}Contab" 
+						            	styleClass="checkbox"
+						            	value="#{row.contabilizar}"
+										required="false"
+						                disabled="false">
+								<a:support event="onclick"
+										   action="#{processoEpaAction.alternarContabilizar(row)}"
+						                   reRender="processoListPanel"
+										   status=":status"
+										   rendered="true" 
+										   ajaxSingle="false"
+										   onsubmit="showLoading();"
+										   oncomplete="hideLoading();">
+								</a:support>
+							</h:selectBooleanCheckbox>
+						</h:form>
+					</ui:define>
+					
+					<wi:columnOutputText columnId="numeroProcesso"
+										 columnHeader="Número do Processo"
+										 value="#{row.numeroProcesso}" />
+										 
+					<wi:columnOutputText columnId="tempoGasto"
+										 columnHeader="Tempo Gasto (em dias)"
+										 value="#{row.tempoGasto}" />
+										 
+					<ui:param name="porc" value="#{row.porcentagem > 100 ? '> 100' : row.porcentagem}" />
+					<wi:columnOutputText columnId="porcentagem"
+										 columnHeader="Porcentagem"
+										 value="#{not empty row.porcentagem ? porc : 0}%" />
+					
+				</wi:dataTable>
+				<div style="float:left">
+					<dojo:defaultGauge id="#{row.numeroProcesso}"
+										max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+										width="210"
+										height="200"
+										radius="50"
+										label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
+										draggable="true"
+										indicatorLabel="#{messages['bam.tempoMedio']} (dias)"
+										value="#{processoEpaNaoFinalizadoList.getMediaTempoGasto()}"/>
+				</div>
+			</rich:panel>
 		</s:div>
-		
 		<wi:modalPanel id="processoEpaTarefaModal"
 					   labelHeader="Detalhe do Processo"
 					   width="800"
@@ -139,20 +153,12 @@
 						  panelWidth="97%"
 						  showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
 						  rowClasses="#{processoEpaTarefaList.rowClasses()}"
-						  onRowMouseOut=""
-						  onRowMouseOver=""
 						  id="processoTarefaDataTable">
 				<wi:columnOutputText columnId="medidor"
 									 columnHeader="Medidor"
 									 hideOrder="true"
 									 columnWidth="60">
-					<dojo:defaultGauge id="#{row.tarefa.idTarefa}"
-										hideValues="true"
-										radius="15"
-										width="40"
-										height="40"
-										max="#{row.tempoPrevisto}"
-										value="#{row.tempoGasto}"/>
+					EXIBIR BARRA DE PROGRESSO
 				</wi:columnOutputText>
 				
 				<wi:columnOutputText columnId="tarefa"
