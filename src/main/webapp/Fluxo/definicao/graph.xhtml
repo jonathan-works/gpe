@@ -26,16 +26,14 @@
 	<s:div
          style="width: 100%; height: 550px; overflow: auto; padding:0px"
          id="processImage">
-		<img src="#{processBuilderGraph.graphPath}" />
-		<f:verbatim>
+		<img src="data:image/png;base64,#{processBuilderGraph.encodedGraph}" usemap="#nodes" ismap="true"/>
 			<script>
 				var nodes=new NodeArea('#{conversation.id}'); 
 				#{processBuilderGraph.map}
 			</script>
-		</f:verbatim>
 	</s:div>
 	<script>
-		$('form:processImage').style.width = (document.body.offsetWidth - 55) + "px"	
+		#{rich:element('processImage')}.style.width = (document.body.offsetWidth - 55) + "px"	
 	</script>	
 	<div
          id="divDetail"
