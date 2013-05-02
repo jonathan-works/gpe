@@ -87,6 +87,9 @@
 	    $gauge = new dojox.gauges.AnalogGauge($props, $gauge);
 	    $gauge.startup();
 	    
+	    $gauge.indicators[3].currentValue = 0;
+	    $gauge.indicators[3].draw();
+	    
 	    var $containerId = args.containerId || false;
 	    if (args.draggable && $containerId) {
 	    	$j("#"+$containerId).draggable({scroll:false});
