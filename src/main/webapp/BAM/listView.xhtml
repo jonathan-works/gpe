@@ -158,7 +158,18 @@
 									 columnHeader="Medidor"
 									 hideOrder="true"
 									 columnWidth="60">
-					EXIBIR BARRA DE PROGRESSO
+					<ui:include src="/WEB-INF/xhtml/tags/dojo/gauges/progressBarGauge.xhtml">
+						<ui:param name="id" value="#{row.idProcessoTarefa}"/>
+						<ui:param name="width" value="60"/>
+						<ui:param name="height" value="13"/>
+						<ui:param name="barWidth" value="60"/>
+						<ui:param name="barHeight" value="13"/>
+						<ui:param name="min" value="0" />
+						<ui:param name="max" value="#{row.tempoPrevisto}" />
+						<ui:param name="value" value="#{row.tempoGasto}" />
+						<ui:param name="hideTicks" value="true" />
+						<ui:param name="style" value="position:relative; top:50%; left:50%; margin:-6px 0px 0px -30px" />
+					</ui:include>
 				</wi:columnOutputText>
 				
 				<wi:columnOutputText columnId="tarefa"
