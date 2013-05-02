@@ -13,22 +13,19 @@
 		 name="reRenderRemove"
 		 value="#{empty reRenderRemove ? gridId.concat(', ').concat(gridId.substring(2)) : reRenderRemove}" />	
 
-		<h:form style="display: inline">
-		
+		<a:region>
 			<a:commandLink
-			 limitToList="true"
+			 limitRender="true"
 			 status=":status"
-			 reRender="#{reRenderRemove}"
+			 render="#{reRenderRemove}"
 			 action="#{variavel.removeModelo(row)}"
 			 rendered="#{canEdit}">
-			
-				<h:graphicImage
+			<h:graphicImage
 				 url="/img/grid/copyRight.gif"
 				 title="Remover" />		
 			
 		</a:commandLink>
-		
-	</h:form>
+		</a:region>
 
 	
 </ui:composition>

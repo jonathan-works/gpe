@@ -149,8 +149,8 @@
 						 limitRender="true"
 						 status=":status"
 						 action="#{taskFitter.currentTask.setCurrentVariable(var)}"
-						 styleClass="opacityHover">
-						
+						 styleClass="opacityHover"
+                         oncomplete="#{rich:component('actionTemplatePanel')}.show()">						
 					<h:graphicImage
 							 title="Adicionar modelo de documento"
 							 style="cursor:pointer"
@@ -162,10 +162,6 @@
 							 rendered="#{!empty var.modeloList}"
 							 status=":status"
 							 url="/img/file.gif" />
-			        <rich:componentControl
-							 for="actionTemplatePanel"
-							 operation="show"
-							 event="oncomplete" />
 				
 					</a:commandLink>
 			
