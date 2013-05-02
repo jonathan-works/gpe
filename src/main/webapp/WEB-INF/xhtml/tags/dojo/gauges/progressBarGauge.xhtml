@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core">
+    
+    <ui:param name="id" value="#{wi:get(id, 'default')}" />
+    <a:loadScript src="/js/dojoCustom/gauges/progressBarGauge.js"/>
+
+    <script>
+    br.com.infox.dojoCustom.gauges.ProgressBarGauge({
+    	    id:"#{id}Gauge",
+    	    containerId:"#{id}GaugeContainer",
+    	    min:#{wi:get(min,false)},
+    	    max:#{wi:get(max,false)},
+    	    value:#{wi:get(value,false)},
+    	    hideValues:#{wi:get(hideValues,false)},
+    	    tickInterval:#{wi:get(tickInterval, false)},
+    	    width:#{wi:get(width, false)},
+    	    height:#{wi:get(height, false)},
+    	    barHeight:#{wi:get(barHeight, false)},
+    	    barWidth:#{wi:get(barWidth,false)},
+    	    barPosX:#{wi:get(barPosX,false)},
+    	    barPosY:#{wi:get(barPosY,false)},
+    	    draggable:#{wi:get(draggable, false)},
+    	    hideTicks:#{wi:get(hideTicks, false)},
+    	    indicatorLabel:#{wi:get(indicatorLabel, false)}
+    	});
+    </script>
+    <div id="#{id}GaugeContainer" class="barGaugeContainer" style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;#{style}">
+        <div id="#{id}Gauge" class="gauge">
+        </div>
+    </div>
+
+</ui:composition>
