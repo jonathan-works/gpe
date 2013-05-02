@@ -16,7 +16,7 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FacesUtil;
 
 @Name(ProcessBuilderGraph.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.SESSION)
 public class ProcessBuilderGraph {
 	
 	public static final String NAME = "processBuilderGraph";
