@@ -83,6 +83,16 @@
 		</wi:dataForm>
 		
 		<s:div id="processoList">
+			<s:div rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}">
+				<dojo:defaultGauge id="#{row.numeroProcesso}"
+									draggable="true"
+									max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+									width="160"
+									height="160"
+									radius="50"
+									indicatorLabel="#{bam.tempoMedio}"
+									value="#{processoEpaNaoFinalizadoList.getMediaTempoGasto()}"/>
+			</s:div>
 			<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
 						  bean="#{processoEpaNaoFinalizadoList}"
 						  tableTitle="Processos - Prazo: #{processoEpaNaoFinalizadoList.fluxo.qtPrazo} (dias)"
@@ -101,19 +111,6 @@
     								reRender="processoEpaTarefaModal"/>
                     </div>
 				</ui:define>
-				
-				<wi:columnOutputText columnId="medidor"
-									 columnHeader="Medidor"
-									 hideOrder="true"
-									 columnWidth="60">
-					<dojo:defaultGauge id="#{row.numeroProcesso}"
-										hideValues="true"
-										radius="15"
-										width="40"
-										height="40"
-										max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-										value="#{row.tempoGasto}"/>
-				</wi:columnOutputText>
 				
 				<wi:columnOutputText columnId="numeroProcesso"
 									 columnHeader="Número do Processo"

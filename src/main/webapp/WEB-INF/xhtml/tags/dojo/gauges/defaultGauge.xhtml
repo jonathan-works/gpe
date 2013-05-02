@@ -36,6 +36,8 @@
     <ui:param name="tickInterval" value="#{wi:get(tickInterval, 1)}" />
     <ui:param name="width" value="#{wi:get(width, radius*4)}" />
     <ui:param name="height" value="#{wi:get(height, radius*4)}" />
+    <ui:param name="draggable" value="#{wi:get(draggable, 'false')}" />
+    <ui:param name="indicatorLabel" value="#{wi:get(indicatorLabel, '')}" />
     
     <script>
   //<![CDATA[
@@ -100,8 +102,8 @@
                     width : Math.max(2,_radius/10),
                     length : _radius*1.2,
                     color : '#000000',
-                    title : 'Needle',
-                    hover : 'Needle: '+_value,
+                    title : "#{indicatorLabel}",
+                    hover : "#{indicatorLabel}: "+_value,
                     noChange : true
                 })
 			]
@@ -129,12 +131,21 @@
                     length : _radius*0.1,
                     offset : _radius*1.15,
                     interval : _max/4,
-                    color : 'gray'
+                    color : 'black'
                 };
             }
             
             gauge = new dojox.gauges.AnalogGauge(props, gauge);
             gauge.startup();
+            
+            if (#{draggable}) {
+            	$j("##{id}GaugeContainer")
+            		.css("position","absolute")
+            		.css("top","50px")
+            		.css("right","50px")
+            		.css("opacity","0.5")
+            		.draggable({scroll:false});
+            }
         });
 	//]]>
     </script>

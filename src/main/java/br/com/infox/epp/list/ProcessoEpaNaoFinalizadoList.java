@@ -83,6 +83,18 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 		return (Long) query.getSingleResult() > 0;
 	}
 	
+	public Double getMediaTempoGasto() {
+		String hql = "select avg(pet.tempoGasto)/60 " +
+				"from ProcessoEpaTarefa pet " +
+				"where pet.processoEpa.naturezaCategoriaFluxo.fluxo = :fluxo " +
+				"and pet.processoEpa.dataFim is null " +
+				"group by pet.processoEpa.naturezaCategoriaFluxo.fluxo";
+		Query query = EntityUtil.createQuery(hql);
+		query.setParameter("fluxo", fluxo);
+		
+		return EntityUtil.getSingleResult(query);
+	}
+
 	public String getFluxoName() {
 		return fluxoName;
 	}
