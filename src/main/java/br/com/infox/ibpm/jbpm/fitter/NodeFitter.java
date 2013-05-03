@@ -411,11 +411,11 @@ public class NodeFitter implements Serializable, Fitter{
 		return icon;
 	}
 	
-	public void setCurrentNode(Transition t, String type) {
+	public void setCurrentNode(TransitionHandler t, String type) {
 		if (type.equals("from")) {
-			setCurrentNode(t.getFrom());
+			setCurrentNode(t.getTransition().getFrom());
 		} else {
-			setCurrentNode(t.getTo());
+			setCurrentNode(t.getTransition().getTo());
 		}
 	}
 	

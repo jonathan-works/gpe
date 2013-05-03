@@ -24,29 +24,31 @@
 	xmlns:f="http://java.sun.com/jsf/core">
     
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
-    <a:loadScript src="/js/dojoCustom/gauges/defaultGauge.js"/>
+    <a:loadScript src="/js/dojoCustom/gauges/progressBarGauge.js"/>
 
-    <script>    	
-    	br.com.infox.dojoCustom.gauges.DefaultGauge({
+    <script>
+    br.com.infox.dojoCustom.gauges.ProgressBarGauge({
     	    id:"#{id}Gauge",
     	    containerId:"#{id}GaugeContainer",
-    	    angle:#{wi:get(angle,300)},
-    	    radius:#{wi:get(radius,150)},
-    	    min:#{wi:get(min,0)},
-    	    max:#{wi:get(max,100)},
-    	    value:#{wi:get(value,0)},
-    	    hideValues:#{wi:get(hideValues,'false')},
-    	    tickInterval:#{wi:get(tickInterval, 1)},
-    	    width:#{wi:get(width, radius*4)},
-    	    height:#{wi:get(height, radius*4)},
-    	    draggable:#{wi:get(draggable, 'false')},
-    	    indicatorLabel:"#{wi:get(indicatorLabel, '')}"
+    	    min:#{wi:get(min,false)},
+    	    max:#{wi:get(max,false)},
+    	    value:#{wi:get(value,false)},
+    	    hideValues:#{wi:get(hideValues,false)},
+    	    tickInterval:#{wi:get(tickInterval, false)},
+    	    width:#{wi:get(width, false)},
+    	    height:#{wi:get(height, false)},
+    	    barHeight:#{wi:get(barHeight, false)},
+    	    barWidth:#{wi:get(barWidth,false)},
+    	    barPosX:#{wi:get(barPosX,false)},
+    	    barPosY:#{wi:get(barPosY,false)},
+    	    draggable:#{wi:get(draggable, false)},
+    	    hideTicks:#{wi:get(hideTicks, false)},
+    	    indicatorLabel:#{wi:get(indicatorLabel, false)}
     	});
     </script>
-    <rich:panel id="#{id}GaugeContainer" styleClass="gaugeContainer" style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;#{style}">
-    	<f:facet name="header">#{label}</f:facet>
+    <div id="#{id}GaugeContainer" class="barGaugeContainer" style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;#{style}">
         <div id="#{id}Gauge" class="gauge">
         </div>
-    </rich:panel>
+    </div>
 
 </ui:composition>

@@ -1,3 +1,20 @@
+(function(){
+function _defineObject(path, object) {
+  var packages = path.split(".");
+  var _namespace = window;
+  for(var i=0; i<packages.length; i++) {
+    var item = packages[i];
+    if (i==packages.length-1) {
+      _namespace = _namespace[item] = _namespace[item] || object;
+    } else {
+      _namespace = _namespace[item] = _namespace[item] || {};
+    }
+  }
+  return _namespace;
+}
+window.defineObject = window.defineObject || _defineObject;
+})()
+
 function showLoading() {	
 	if ($('#status')) {
 		$('#status').hide();
