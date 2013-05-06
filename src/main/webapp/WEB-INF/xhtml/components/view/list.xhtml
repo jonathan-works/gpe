@@ -23,7 +23,7 @@
 			 class="#{styleClass}">
 			
 		<ui:define name="label">#{label}</ui:define>
-			<rich:dataList
+			<rich:list
 				 value="#{f.value}"
 				 var="v"
 				 style="margin:0px; padding:2px;"
@@ -31,7 +31,7 @@
 				
 				<h:outputText value="- #{v}" />
 			
-			</rich:dataList>
+			</rich:list>
 			
 			<h:outputText
 				 value="-"
