@@ -58,12 +58,29 @@
 					  status=":status" 
 					  action="#{processoHome.setTab('tabAnexos')}">
 				<wi:ajaxDiv id="divDocumentos">
-					<wi:datalist bean="#{documentoProcessoGrid}"
-								 title="Documentos do Processo" 
-								 toolBar="none"
-								 headerToolBar="none"
-								 columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin,processoDocumentoBin.sizeFormatado">
-					</wi:datalist>
+					<wi:dataTable values="#{processoDocumentoList.list(15)}"
+								  bean="#{processoDocumentoList}"
+								  tableTitle="Documentos do Processo"
+								  id="processoDocumentoList"
+								  rowId="#{row.idProcessoDocumento}" >
+								  <ui:define name="toolBar"></ui:define>
+								  <ui:define name="headerToolBar"></ui:define>
+						<wi:columnOutputText columnId="usuarioInclusao"
+											 columnHeader="Usuário"
+											 value="#{row.usuarioInclusao}" />
+						<wi:columnOutputText columnId="dataInclusao"
+											 columnHeader="Data"
+											 value="#{row.dataInclusao}" />
+						<wi:columnOutputText columnId="processoDocumento"
+											 columnHeader="Processo Documento"
+											 value="#{row.processoDocumento.equals('null') ? '-':row.processoDocumento}" />
+						<wi:columnOutputText columnId="processoDocumentoBin"
+											 columnHeader="Processo Documento Bin"
+											 value="#{row.processoDocumentoBin}" />
+						<wi:columnOutputText columnId="processoDocumentoBin.sizeFormatado"
+											 columnHeader="Tamanho: "
+											 value="#{row.processoDocumentoBin.sizeFormatado}" />
+					</wi:dataTable>
 					
 				</wi:ajaxDiv>
 			</rich:tab>
