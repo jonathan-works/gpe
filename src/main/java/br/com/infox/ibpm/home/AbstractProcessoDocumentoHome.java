@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.event.AbortProcessingException;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.contexts.Contexts;
@@ -30,6 +32,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
+import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.component.tree.EventsTipoDocumentoTreeHandler;
@@ -314,6 +317,15 @@ public abstract class AbstractProcessoDocumentoHome<T>
 			refreshGrid();
 		}
 		return ret;
+	}
+	
+	@Override
+	public void processItemChange(ItemChangeEvent event)
+			throws AbortProcessingException {
+		if (event.getNewItemName().equals("tabAnexar")){
+			newInstance();
+		}
+		super.processItemChange(event);
 	}
 	
 	public String getDocumento() {

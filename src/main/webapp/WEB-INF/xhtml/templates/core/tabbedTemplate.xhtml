@@ -5,12 +5,12 @@
      xmlns:a="http://richfaces.org/a4j"
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:h="http://java.sun.com/jsf/html"
      template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
 	<ui:define
          name="head">
-		<a:loadScript
-             src="/js/jqueryExt.js" /> 
+		<h:outputScript library="js" mame ="jqueryExt.js" /> 
 	</ui:define>
 	
 	<ui:define

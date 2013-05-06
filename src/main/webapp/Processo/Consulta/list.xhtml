@@ -13,135 +13,102 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/reportTemplate.xhtml">
-				
-	<ui:param
-         name="pageTitle"
-         value="Detalhes do Processo" />
-	<ui:define
-         name="title">#{pageTitle}</ui:define>
+-->
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-	<ui:define
-         name="body">
+    <ui:param
+        name="pageTitle"
+        value="Detalhes do Processo" />
+    <ui:define name="title">#{pageTitle}</ui:define>
 
-		<h:messages
-             globalOnly="true"
-             styleClass="message"
-             id="globalMessages" />
+    <ui:define name="body">
 
-		<wi:view
-             form="#{consultaSolicitacaoView}"
-             title="#{messages['consultaSolicitacao.titulo']} #{processoHome.instance}"
-             home="#{processoHome}"
-				 columns="2" 
-             buttons="none">
-		</wi:view>
+        <h:messages
+            globalOnly="true"
+            styleClass="message"
+            id="globalMessages" />
 
-		<rich:tabPanel
-             switchType="ajax"
-             headerSpacing="2"
-             selectedTab="#{processoHome.tab}">
-			
-			<rich:tab
-                 id="form"
-                 label="#{messages['acaoProcesso.menuText']}"
-                 immediate="true"
-                 status=":status">
+        <wi:view
+            form="#{consultaSolicitacaoView}"
+            title="#{messages['consultaSolicitacao.titulo']} #{processoHome.instance}"
+            home="#{processoHome}"
+            columns="2"
+            buttons="none">
+        </wi:view>
 
-				<ui:include
-                     src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
-			</rich:tab>
+        <h:form>
+            <rich:tabPanel
+                switchType="ajax"
+                headerSpacing="2"
+                selectedTab="#{processoHome.tab}">
+                <rich:itemChangeListener binding="#{processoHome}"/>
+                <rich:itemChangeListener binding="#{processoDocumentoHome}"/>
+                <rich:tab
+                    id="form"
+                    name="form"
+                    header="#{messages['acaoProcesso.menuText']}"
+                    immediate="true"
+                    status=":status">
 
-			<rich:tab
-                 id="tabAnexos"
-                 label="Documentos do Processo"
-                 status=":status"
-                 action="#{processoHome.setTab('tabAnexos')}">
-				<wi:ajaxDiv
-                     id="divDocumentos">
-					<wi:datalist
-                         bean="#{documentoProcessoGrid}"
-                         title="Documentos do Processo"
-                         toolBar="none"
-                         headerToolBar="none"
-								 columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin,processoDocumentoBin.sizeFormatado">
-					</wi:datalist>
-					
-				</wi:ajaxDiv>
-			</rich:tab>
+                    <ui:include
+                        src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+                </rich:tab>
 
-			<rich:tab
-                 id="tabAnexar"
-                 label="Anexar Documento"
-                 status=":status"
-                 action="#{processoDocumentoHome.newInstance()}">
-				<wi:ajaxDiv
-                     id="divAnexarDocumentos">
-					<wi:form
-                         canEdit="true"
-                         isUploadForm="true"
-                         form="#{anexarDocumentoForm}"
-                         formTitle="Cadastro do Documento"
-                         home="#{processoDocumentoHome}"
-                         reRenderSave="divAnexarDocumentos" />
-				</wi:ajaxDiv>
-			</rich:tab>
+                <rich:tab
+                    id="tabAnexos"
+                    name="tabAnexos"
+                    header="Documentos do Processo"
+                    immediate="true"
+                    status=":status">
+                    <wi:ajaxDiv id="divDocumentos">
+                        <wi:datalist
+                            bean="#{documentoProcessoGrid}"
+                            title="Documentos do Processo"
+                            toolBar="none"
+                            headerToolBar="none"
+                            columnList="usuarioInclusao,dataInclusao,processoDocumento,processoDocumentoBin,processoDocumentoBin.sizeFormatado">
+                        </wi:datalist>
+                    </wi:ajaxDiv>
+                </rich:tab>
 
-			<ui:remove>
-			<!-- Remover até decidir como será essa funcionalidade -->
-			<rich:tab
-                     label="#{messages['processo.titleGridApensar']}">
-				<wi:ajaxDiv
-                         id="divGridApensar">
-					<wi:m2mGrid
-                             canEdit="true"
-                             gridId="processoList"
-                             gridLeftTitle="O Processo #{processoHome.definedInstance} está apensado aos seguintes processos"
-                             leftGrid="#{processoGrid}"
-                             datamodel="#{processoHome.definedInstance.processoConexoListForIdProcessoConexo}"
-                             removeExpression="processoHome.removeProcessoConexoForIdProcessoConexo(row, 'processoGrid')"
-                             addExpression="processoHome.addProcessoConexoForIdProcessoConexo(row, 'processoGrid')"
-                             searchBean="#{processoSearch}"
-                             gridRightTitle="Processos"
-                             rightGrid="#{processoGrid}"
-                             columnRightList="numeroProcesso, usuarioCadastroProcesso"
-                             columnLeftList="numeroProcesso, usuarioCadastroProcesso" />
-				</wi:ajaxDiv>
-			</rich:tab>
-			</ui:remove>
-			
-			<rich:tab
-                 id="tabPartesDoProcesso"
-                 label="#{messages['parteProcesso.partes']}"
-                 switchType="ajax"
-                 status=":status"
-                 rendered="#{processoHandler.hasPartes()}">
-				<ui:include
-                     src="/Processo/parteProcessoGridRO.xhtml" />
-			</rich:tab>	
+                <rich:tab
+                    id="tabAnexar"
+                    name="tabAnexar"
+                    header="Anexar Documento"
+                    immediate="true"
+                    status=":status">
+                    <wi:ajaxDiv id="divAnexarDocumentos">
+                        <wi:form
+                            canEdit="true"
+                            isUploadForm="true"
+                            form="#{anexarDocumentoForm}"
+                            formTitle="Cadastro do Documento"
+                            home="#{processoDocumentoHome}"
+                            reRenderSave="divAnexarDocumentos" />
+                    </wi:ajaxDiv>
+                </rich:tab>
 
+                <rich:tab
+                    id="tabPartesDoProcesso"
+                    name="tabPartesDoProcesso"
+                    header="#{messages['parteProcesso.partes']}"
+                    immediate="true"
+                    status=":status"
+                    rendered="#{processoHandler.hasPartes()}">
+                    <ui:include
+                        src="/Processo/parteProcessoGridRO.xhtml" />
+                </rich:tab>
+            </rich:tabPanel>
+        </h:form>
 
-		</rich:tabPanel>
-		
-		<ui:remove>
-		<div
-                 class="actionButtons">
-           	<s:button
-                     styleClass="dr-tbpnl-tb-inact"
-                     value="Voltar"
-                     view="/Consulta/solicitacao/list.seam">
-			</s:button>
-        </div>
-		</ui:remove>
-		
-	</ui:define>
+    </ui:define>
 
 </ui:composition>
