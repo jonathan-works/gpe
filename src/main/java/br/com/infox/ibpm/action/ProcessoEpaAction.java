@@ -13,8 +13,7 @@ public class ProcessoEpaAction extends AbstractAction {
 	public static final String NAME = "processoEpaAction";
 	
 	public boolean alternarContabilizar(ProcessoEpa processoEpa) {
-		processoEpa.setContabilizar(!processoEpa.getContabilizar());
-		return AbstractAction.PERSISTED.equals(persist(processoEpa));
+		return AbstractAction.UPDATED.equals(update(processoEpa));
 	}
 	
 }
