@@ -20,11 +20,12 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:s="http://jboss.com/products/seam/taglib"
 	xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:f="http://java.sun.com/jsf/core">
     
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
-    <a:loadScript src="/js/dojoCustom/gauges/progressBarGauge.js"/>
+    <h:outputScript library="js/dojoCustom/gauges" name="progressBarGauge.js"/>
 
     <script>
     br.com.infox.dojoCustom.gauges.ProgressBarGauge({
