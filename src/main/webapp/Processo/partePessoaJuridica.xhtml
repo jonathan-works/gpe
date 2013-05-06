@@ -15,11 +15,11 @@
 						 label="#{messages['pessoaJuridica.cnpj']}"
 						 assignTo="#{pessoaJuridicaHome.instance.cnpj}"
 						 required="true">
-				<a:support event="onblur"
-							ajaxSingle="true"
-							reRender="nome, razao"
-							limitToList="true"
-							action="#{processoEpaHome.carregaPessoa('J', pessoaJuridicaHome.instance.cnpj)}"/>
+				<a:ajax event="blur"
+							execute="@this"
+							render="nome, razao"
+							limitRender="true"
+							listener="#{processoEpaHome.carregaPessoa('J', pessoaJuridicaHome.instance.cnpj)}"/>
 			</wi:inputCnpj>
 			<wi:inputText id="nome"
 						 value="#{pessoaJuridicaHome.instance.nome}"

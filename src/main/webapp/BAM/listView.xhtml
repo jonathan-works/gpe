@@ -102,12 +102,13 @@
 						            	value="#{row.contabilizar}"
 										required="false"
 						                disabled="false">
-								<a:support event="onclick"
-										   action="#{processoEpaAction.alternarContabilizar(row)}"
-						                   reRender="processoListPanel"
+								<a:ajax event="click"
+										   listener="#{processoEpaAction.alternarContabilizar(row)}"
+						                   render="processoListPanel"
+                                           limitRender="true"
 										   status=":status"
 										   rendered="true" 
-										   ajaxSingle="false"
+										   execute="@this"
 										   onsubmit="showLoading();"
 										   oncomplete="hideLoading();">
 								</a:support>

@@ -42,11 +42,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>formFrame</tag-name>
-		<source>tags/form/formFrame.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>messages</tag-name>
 		<source>tags/form/messages.xhtml</source>
 	</tag>

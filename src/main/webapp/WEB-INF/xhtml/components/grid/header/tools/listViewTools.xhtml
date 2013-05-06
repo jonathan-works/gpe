@@ -10,7 +10,7 @@
 	
 	<s:div style="text-align:left; width: #{canEdit ? 48 : 18}px">
 		
-		<a:include viewId="../include/filterButton.xhtml" />
+		<ui:include src="../include/filterButton.xhtml" />
 		<h:form
 			 style="display:inline"
 			 rendered="#{canEdit}"
@@ -33,7 +33,7 @@
 		
 		</h:form>
 
-		<a:include viewId="../include/reportButton.xhtml" />
+		<ui:include src="../include/reportButton.xhtml" />
 
 	
 	</s:div>
