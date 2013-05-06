@@ -1,17 +1,17 @@
 jQuery(document).bind('keydown', 'home', function(){
-		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:datascroller:onscroll', {'page': 'first'})
+		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:dataScroller:onscroll', {'page': 'first'})
 	 });
 
 jQuery(document).bind('keydown', 'left', function(){
-		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:datascroller:onscroll', {'page': 'fastrewind'})
+		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:dataScroller:onscroll', {'page': 'fastrewind'})
 	 });
 
 jQuery(document).bind('keydown', 'right', function(){
-		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:datascroller:onscroll', {'page': 'fastforward'})
+		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:dataScroller:onscroll', {'page': 'fastforward'})
 	 });
 
 jQuery(document).bind('keydown', 'end', function(){
-		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:datascroller:onscroll', {'page': 'last'})
+		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:dataScroller:onscroll', {'page': 'last'})
 	 });
 	 
 jQuery(document).ready(init);
