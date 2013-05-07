@@ -35,7 +35,8 @@
 				
 				<a:commandLink
 					 status=":status"
-					 reRender=":pageBody"
+					 render=":pageBody"
+                     limitRender="true"
 					 id="#{gridId}Edit">
 					
 					<h:graphicImage
@@ -54,9 +55,9 @@
 			<a:commandLink
 				 action="#{home.inactiveRecursive(treeMode ? row.entity : row)}"
 				 rendered="#{wi:get(canEdit, true)}"
-				 limitToList="true"
+				 limitRender="true"
 				 status=":status"
-				 reRender=":#{gridId}"
+				 render=":#{gridId}"
 				 onclick="if(!confirm('Esta ação irá inativar todos os filhos deste registro. Confirma?')) return false;">
 				
 				<h:graphicImage

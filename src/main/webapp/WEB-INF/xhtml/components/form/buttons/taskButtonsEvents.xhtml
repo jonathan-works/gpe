@@ -51,7 +51,8 @@
              status=":status"
              eventsQueue="editQueue"
              oncomplete="#{oncomplete}"
-             reRender="#{reRenderSave}, taskButtonsDiv"
+             render="#{reRenderSave}, taskButtonsDiv"
+             limitRender="true"
              value="Gravar"
              styleClass="dr-tbpnl-tb-inact"
              action="#{taskInstanceHome.update(home)}" />
@@ -61,7 +62,8 @@
              rendered="#{!empty form.fields and !processoHome.managed and                          (allRootsSelected or isEventoSairTarefa)}"
              status=":status"
              eventsQueue="editQueue"
-             reRender="#{reRenderSave}, taskButtonsDiv"
+             render="#{reRenderSave}, taskButtonsDiv"
+             limitRender="true"
              value="Gravar"
              styleClass="dr-tbpnl-tb-inact"
              action="#{taskInstanceHome.persist(home)}" />
@@ -86,7 +88,8 @@
                  styleClass="buttons dr-tbpnl-tb-inact"
                  eventsQueue="editQueue"
                  oncomplete="#{oncomplete};verifyFields();"
-                 reRender=":script,#{reRenderSave}" />
+                 render=":script,#{reRenderSave}" 
+                 limitRender="true"/>
            </c:if>
            <c:if
              test="#{taskInstanceHome.transitions.size le 3 and ((canLeave                 and allRootsSelected) or automaticEventsTree.registred)}">
@@ -98,7 +101,8 @@
                      eventsQueue="editQueue"
                      oncomplete="#{oncomplete};verifyFields();"
                      onmouseup="showLoading()"
-                     reRender=":script,#{reRenderSave}"
+                     render=":script,#{reRenderSave}"
+                     limitRender="true"
                      value="#{transition.name}"
                      styleClass="buttons dr-tbpnl-tb-inact"
                      style="width: 200px;"

@@ -41,9 +41,9 @@
 					<a:commandLink
 					 action="#{home.remove(row)}"
 					 rendered="#{canEdit}"
-					 limitToList="true"
+					 limitRender="true"
 					 status=":status"
-					 reRender=":#{gridId}"
+					 render=":#{gridId}"
 					 onclick="if(!confirm('Confirma?')) return false;">
 					
 						<h:graphicImage

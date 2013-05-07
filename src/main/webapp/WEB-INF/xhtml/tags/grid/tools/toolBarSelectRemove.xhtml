@@ -29,7 +29,8 @@
 				<a:commandLink
                      action="#{home.setInstance(row)}"
                      status=":status"
-                     reRender="#{reRender}"
+                     render="#{reRender}"
+                     limitRender="true"
                      id="#{gridId}Edit">
 					<wi:toolBarGraphicImage
                          url="#{a4jSkin.imgIconView}"
@@ -39,9 +40,9 @@
 				<a:commandLink
                      action="#{home.remove(row)}"
                      rendered="#{wi:get(canEdit,true)}"
-                     limitToList="true"
+                     limitRender="true"
                      status=":status"
-                     reRender="#{reRender}"
+                     render="#{reRender}"
                      onclick="if(!confirm('Confirma?')) return false;">
 					<wi:toolBarGraphicImage
                          url="/img/remove.png"

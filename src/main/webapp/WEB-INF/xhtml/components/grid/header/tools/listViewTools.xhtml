@@ -20,7 +20,8 @@
 			
 			<a:commandLink
 				 status=":status"
-				 reRender="#{modalPanelId}Region"
+				 render="#{modalPanelId}Region"
+                 limitRender="true"
 				 action="#{home.newInstance()}"
 				 oncomplete="showModal('#{modalPanelId}')">
 				

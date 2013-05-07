@@ -18,8 +18,9 @@
 					<a:commandLink
 					 action="#{home.setTab()}"
 					 status=":status"
-					 reRender=":pageBody"
-					 id="#{gridId}Edit">
+					 render=":pageBody"
+					 limitRender="true"
+                     id="#{gridId}Edit">
 					
 						<h:graphicImage
 						 url="#{a4jSkin.imgIconView}"
@@ -33,9 +34,9 @@
 					<a:commandLink
 					 action="#{home.remove(row)}"
 					 rendered="#{canEdit}"
-					 limitToList="true"
+					 limitRender="true"
 					 status=":status"
-					 reRender=":#{gridId}"
+					 render=":#{gridId}"
 					 onclick="if(!confirm('Confirma?')) return false;">
 					
 						<h:graphicImage

@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib">
-	
-	
-		<h:form>
-		
-				<div style="width: 50px">
-			
-					<a:commandLink
-				 action="#{home.remove(row)}"
-				 rendered="#{canEdit}"
-				 limitToList="true"
-				 status=":status"
-				 reRender="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove}"
-				 onclick="if(!confirm('Confirma?')) return false;">
-				
-						<h:graphicImage
-					 url="/img/remove.png"
-					 title="Remover registro"
-					 style="cursor:pointer" />
-						<f:param
-					 name="firstResult"
-					 value="#{bean.firstResult}" />
-						<f:param
-					 name="page"
-					 value="#{bean.page}" />
-					
-			</a:commandLink>		
-				
-		</div>
-		
-	</h:form>
-		
-	
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+
+    <h:form>
+
+        <div style="width: 50px">
+
+            <a:commandLink
+                action="#{home.remove(row)}"
+                rendered="#{canEdit}"
+                limitRender="true"
+                status=":status"
+                render="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove}"
+                onclick="if(!confirm('Confirma?')) return false;">
+
+                <h:graphicImage
+                    url="/img/remove.png"
+                    title="Remover registro"
+                    style="cursor:pointer" />
+                <f:param
+                    name="firstResult"
+                    value="#{bean.firstResult}" />
+                <f:param
+                    name="page"
+                    value="#{bean.page}" />
+
+            </a:commandLink>
+
+        </div>
+
+    </h:form>
+
+
 </ui:composition>

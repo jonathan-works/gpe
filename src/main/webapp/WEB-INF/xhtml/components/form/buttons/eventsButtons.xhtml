@@ -37,13 +37,15 @@
                  eventsQueue="editQueue"
                  action="#{home.persist()}"
                  value="Incluir"
-                 reRender=":pageBody"
+                 render=":pageBody"
+                 limitRender="true"
                  styleClass="dr-tbpnl-tb-inact"
                  rendered="#{!home.managed}" />	
 			<a:commandButton
                  id="new"
                  eventsQueue="editQueue"
-                 reRender=":pageBody"
+                 render=":pageBody"
+                 limitRender="true"
                  value="Novo"
                  styleClass="dr-tbpnl-tb-inact"
                  action="#{home.newInstance}"

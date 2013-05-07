@@ -15,9 +15,9 @@
 		
 			<a:commandLink
 			 action="#{pesqHome.setIdPesquisa(row[bean.key])}"
-			 limitToList="true"
+			 limitRender="true"
 			 status=":status"
-			 reRender="viewPanel"
+			 render="viewPanel"
 			 oncomplete="showModal('#{modalPanelId}')">
 			
 				<h:graphicImage

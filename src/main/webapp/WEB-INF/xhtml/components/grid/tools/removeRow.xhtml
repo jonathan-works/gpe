@@ -21,7 +21,8 @@
 			<a:commandLink
 			 limitToList="true"
 			 status=":status"
-			 reRender="#{reRenderRemove}"
+			 render="#{reRenderRemove}"
+             limitRender="true"
 			 action="#{expressions.createMethodExpression(removeExpression).invoke(null)}"
 			 rendered="#{canEdit}">
 			

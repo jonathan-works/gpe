@@ -18,7 +18,7 @@
 
 <h:body>>
 	<h:form>
-		<a:jsFunction name="refreshPage" status="status" reRender="showHelp" />
+		<a:jsFunction name="refreshPage" status="status" render="showHelp" limitRender="true"/>
 	</h:form>
 	
 	<s:div id="showHelp">
@@ -40,7 +40,8 @@
 						value="#{ajudaHome.textoPesquisa}" />
 				</td><td>
 					<a:commandButton
-						reRender="resultado" 
+						render="resultado"
+                        limitRender="true" 
 						oncomplete="if (RichFaces.panelTabs['helpPanel'].size() > 1) RichFaces.switchTab('helpPanel', 'search')"
 						image="/img/grid/arrow-next-off.gif"/>
 				</td>
@@ -86,7 +87,8 @@
 							<h:column>
 								<div style="margin: 1em; font-family: arial,sans-serif; font-size: 11px;">
 									<a:commandLink value="#{v[0].pagina.descricao}" 
-										reRender="helpText, helpLink"
+										render="helpText, helpLink"
+                                        limitRender="true"
 										style="font-size: 13px; color:blue"
 										oncomplete="RichFaces.switchTab('helpPanel', 'help')"
 										action="#{ajudaHome.setViewId(v[0].pagina.url, false)}"

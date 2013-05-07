@@ -182,8 +182,8 @@
                      action="#{action.importeUsuarioAD()}"
                      styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
                      status=":status"
-                     reRender="pageBody"
-                     limitToList="true" />
+                     render="pageBody"
+                     limitRender="true" />
 			</ui:define>
 
 		</wi:dataForm>
@@ -278,7 +278,8 @@
                              action="#{action.incluirEndereco()}"
                              styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
                              status=":status"
-                             reRender="enderecoDiv, enderecoList" />
+                             render="enderecoDiv, enderecoList"
+                             limitRender="true"/>
 					</ui:define>
 
 				</wi:dataForm>
@@ -356,7 +357,8 @@
                              action="#{action.incluirUsuarioLocalizacao()}"
                              styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
                              status=":status"
-                             reRender="usuLocDiv, usuarioLocList" />
+                             render="usuLocDiv, usuarioLocList" 
+                             limitRender="true"/>
 					</ui:define>
 				</wi:dataForm>
 				</s:div>

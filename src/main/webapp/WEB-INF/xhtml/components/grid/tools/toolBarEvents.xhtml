@@ -29,7 +29,8 @@
 			<a:commandLink
                  action="#{tarefaEventoHome.setUpdate(row)}"
                  status=":status"
-                 reRender=":pageBody"
+                 render=":pageBody"
+                 limitRender="true"
                  id="#{gridId}Edit">
 				<h:graphicImage
                      url="#{a4jSkin.imgIconView}"
@@ -38,9 +39,9 @@
 			<a:commandLink
                  action="#{tarefaEventoHome.remove(row)}"
                  rendered="#{canEdit}"
-                 limitToList="true"
+                 limitRender="true"
                  status=":status"
-                 reRender=":pageBody"
+                 render=":pageBody"
                  onclick="if(!confirm('Deseja remover este evento?')) return false;">
 				<h:graphicImage
                      url="/img/remove.png"

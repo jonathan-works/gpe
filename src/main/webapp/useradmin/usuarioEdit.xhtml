@@ -58,7 +58,8 @@
              class="actionButtons">
                 <a:commandButton
                  id="save"
-                 reRender="userForm"
+                 render="userForm"
+                 limitRender="true"
                  value="Gravar"
                  action="#{userAction.save}" />
             </div>

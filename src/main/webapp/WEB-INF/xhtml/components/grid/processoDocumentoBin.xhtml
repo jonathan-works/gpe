@@ -116,7 +116,8 @@
 				 action="#{processoDocumentoHome.excluir(row)}"
 				 onclick="if(!confirm('Deseja realmente excluir documento do processo')) return false;"
 				 rendered="#{processoTrfHome.isEmElaboracao()}"
-				 reRender="pageBody">
+				 render="pageBody"
+                 limitRender="true">
 				
 				<h:graphicImage
 					 title="Excluir"

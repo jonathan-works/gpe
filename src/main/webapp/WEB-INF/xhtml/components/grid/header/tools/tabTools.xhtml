@@ -27,7 +27,8 @@
 			
 			<a:commandLink
 				 status=":status"
-				 reRender="#{modalPanelId}Region"
+				 render="#{modalPanelId}Region"
+                 limitRender="true"
 				 action="#{home.newInstance()}"
 				 oncomplete="showModal('#{modalPanelId}')">
 				
@@ -44,8 +45,8 @@
 			
 			<a:jsFunction
 				 eventsQueue="edit"
-				 reRender="#{gridId}List"
-				 limitToList="true"
+				 render="#{gridId}List"
+                 limitRender="true"
 				 name="refreshView" />						
 		
 		</h:form>

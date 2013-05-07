@@ -14,7 +14,8 @@
         <div class="actionButtons">
 		
 			<a:commandButton
-			 reRender="gridAjuda"
+			 render="gridAjuda"
+             limitRender="true"
 			 action="#{ajudaHome.persist()}"
 			 oncomplete="opener.refreshPage();"
 			 value="Gravar" />

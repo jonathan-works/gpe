@@ -12,8 +12,8 @@
 		<a:commandLink
 		 id="#{gridId}"
 		 status=":status"
-		 reRender="viewPanel"
-		 limitToList="true"
+		 render="viewPanel"
+		 limitRender="true"
 		 onclick="n=parentNode;        while(n.tagName.toLowerCase() != 'tr') {n = n.parentNode};       jQuery('##{gridId}List .activeRow').removeClass('activeRow');       jQuery(n).addClass('activeRow');">
 		
 			<h:graphicImage

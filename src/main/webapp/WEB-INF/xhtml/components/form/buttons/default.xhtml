@@ -45,8 +45,9 @@
 			 eventsQueue="editQueue"
 			 onclick="showLoading();"
 			 oncomplete="hideLoading();#{oncomplete}"
-			 reRender="#{reRenderSave}"
-			 value="Incluir"
+			 render="#{reRenderSave}"
+			 limitRender="true"
+             value="Incluir"
 			 styleClass="dr-tbpnl-tb-inact"
 			 rendered="#{!home.managed and !isUploadForm and !persistSemNewInstance}">
 			</a:commandButton>  			
@@ -75,7 +76,8 @@
 			 eventsQueue="editQueue"
 			 onclick="showLoading();"
 			 oncomplete="hideLoading();#{oncomplete}"
-			 reRender="#{reRenderSave}"
+			 render="#{reRenderSave}"
+             limitRender="true"
 			 value="Gravar"
 			 styleClass="dr-tbpnl-tb-inact"
 			 rendered="#{home.managed and !isUploadForm}">
@@ -88,7 +90,8 @@
 				 eventsQueue="editQueue"
 				 onclick="showLoading();"
 				 oncomplete="hideLoading();#{oncomplete}"
-				 reRender="pageBody"
+				 render="pageBody"
+                 limitRender="true"
 				 ajaxSingle="true"
 				 value="Novo"
 				 styleClass="dr-tbpnl-tb-inact"

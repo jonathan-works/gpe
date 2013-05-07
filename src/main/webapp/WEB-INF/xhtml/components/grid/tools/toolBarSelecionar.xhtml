@@ -18,7 +18,8 @@
 					<a:commandLink
 					 action="#{home.setTab()}"
 					 status=":status"
-					 reRender=":pageBody"
+					 render=":pageBody"
+                     limitRender="true"
 					 id="#{gridId}Edit">
 					
 						<h:graphicImage

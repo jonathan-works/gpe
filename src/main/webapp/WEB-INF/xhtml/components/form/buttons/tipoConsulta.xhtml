@@ -39,7 +39,8 @@
              value="Consulta"
              styleClass="dr-tbpnl-tb-inact"
              action="#{home.instance.setInPesquisa(true)}"
-             reRender="#{buttonReRender}" />
+             render="#{buttonReRender}"
+             limitRender="true" />
                          			  
            <a:commandButton
              id="novaConsulta"
@@ -48,7 +49,8 @@
              value="Nova Consulta"
              styleClass="dr-tbpnl-tb-inact"
              action="#{home.limparTela('consultaProcessoForm')}"
-             reRender="#{buttonReRender}" />
+             render="#{buttonReRender}" 
+             limitRender="true"/>
 
        </div>
 
