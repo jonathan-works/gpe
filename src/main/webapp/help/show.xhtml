@@ -55,8 +55,8 @@
 					right: 250px; top: 2px"
 				rendered="#{empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}"/>
 			<rich:tabPanel id="helpPanel" 
-				height="650px" selectedTab="#{ajudaHome.tab}" switchType="client">
-				<rich:tab id="help" label="Ajuda">
+				height="650px" activeItem="#{ajudaHome.tab}" switchType="client">
+				<rich:tab id="help" header="Ajuda">
 					<s:div id="helpLink" rendered="true"
 						style="position:fixed; top:25px; right:5px;">
 						<h:outputLink value="#{util.contextPath}/help/show.seam?viewId=#{ajudaHome.viewId}">
@@ -78,7 +78,7 @@
 		
 				<rich:tab id="search"
 					rendered="#{!empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}"
-					label="Resultado da pesquisa">
+					header="Resultado da pesquisa">
 					<h:form>
 						<h:dataTable id="helpResult"
 							rendered="#{! empty ajudaHome.textoPesquisa}"

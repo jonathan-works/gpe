@@ -25,10 +25,10 @@
 		<rich:tabPanel
              switchType="ajax"
              headerSpacing="2"
-             selectedTab="#{home.tab}">		
+             activeItem="#{home.tab}">		
 			<rich:tab
                  id="search"
-                 label="Pesquisa"
+                 header="Pesquisa"
                  action="#{home.onClickSearchTab}"
                  rendered="#{showSearchTab}"
                  status=":status">
@@ -45,7 +45,7 @@
 			<rich:tab
                  id="form"
                  rendered="#{showFormTab}"
-                 label="Formulário"
+                 header="Formulário"
                  immediate="true"
                  status=":status"
                  disabled="#{wi:get(disabledForm, false)}"

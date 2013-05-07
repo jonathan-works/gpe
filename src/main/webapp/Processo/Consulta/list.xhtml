@@ -46,9 +46,8 @@
 
         <h:form>
             <rich:tabPanel
-                switchType="ajax"
                 headerSpacing="2"
-                selectedTab="#{processoHome.tab}">
+                activeItem="#{processoHome.tab}">
                 <rich:itemChangeListener binding="#{processoHome}"/>
                 <rich:itemChangeListener binding="#{processoDocumentoHome}"/>
                 <rich:tab

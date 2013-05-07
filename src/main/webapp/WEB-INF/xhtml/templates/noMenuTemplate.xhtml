@@ -52,11 +52,11 @@
 			<rich:tabPanel
                  switchType="ajax"
                  headerSpacing="2"
-                 selectedTab="#{home.tab}">			
+                 activeItem="#{home.tab}">			
 				<rich:tab
                      action="#{home.newInstance}"
                      id="search"
-                     label="Pesquisa"
+                     header="Pesquisa"
                      status=":status">
 						<ui:insert
                          name="searchGrid" />
