@@ -15,7 +15,7 @@
              submitMode="server"
              value="#{sub.label}"
              action="#{conversationUtil.endBeforeRedirect(sub.url)}"
-             ajaxSingle="true"
+             execute="@this"
              rendered="#{empty sub.children}">
 			</rich:menuItem>
 	
