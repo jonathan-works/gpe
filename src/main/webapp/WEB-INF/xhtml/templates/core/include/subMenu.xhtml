@@ -13,7 +13,7 @@
          var="sub">
 			<rich:menuItem
              submitMode="server"
-             value="#{sub.label}"
+             label="#{sub.label}"
              action="#{conversationUtil.endBeforeRedirect(sub.url)}"
              execute="@this"
              rendered="#{empty sub.children}">
