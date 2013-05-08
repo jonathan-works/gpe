@@ -1,6 +1,5 @@
 package br.com.infox.epp.manager;
 
-import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,8 +15,6 @@ import org.joda.time.Minutes;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.entity.LocalizacaoTurno;
-import br.com.infox.epp.entity.ProcessoEpaTarefa;
-import br.com.infox.epp.type.DiaSemanaEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Name(LocalizacaoTurnoManager.NAME)
@@ -31,31 +28,6 @@ public class LocalizacaoTurnoManager extends GenericManager {
 
 	@In
 	private LocalizacaoTurnoDAO localizacaoTurnoDAO;
-	
-	/**
-	 * Pesquisa o turno da localizacao da tarefa em que o horário informado se encontra
-	 * @param pt 
-	 * @param horario 
-	 * @return turno da localização da tarefa
-	 */
-	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date data) {
-		Calendar horarioCalendar = Calendar.getInstance();
-		horarioCalendar.setTime(data);
-		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
-		return localizacaoTurnoDAO.getTurnoTarefa(pt, data, DiaSemanaEnum.values()[diaSemana-1]);
-	}
-	
-	/**
-	 * Verifica se existe algum turno da localizacao da tarefa em que no dia informado
-	 * @param pt 
-	 * @param horario 
-	 * @return turno da localização da tarefa
-	 */
-	public boolean contemTurnoTarefaDia(ProcessoEpaTarefa pt, Date data) {
-		Calendar horarioCalendar = Calendar.getInstance();
-		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
-		return localizacaoTurnoDAO.countTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana-1]) > 0;
-	}
 	
 	/**
 	 * Lista todos os turnos da localização
@@ -84,19 +56,6 @@ public class LocalizacaoTurnoManager extends GenericManager {
 		DateTime dtFim = new DateTime(fim);
 		return Minutes.minutesBetween(dtInicio, dtFim).getMinutes();
 	}
-	
-	/**
-	 * verifica se existe choque de horário entre os turnos da localização e o turno 
-	 * definido pelos parametros inicio e fim
-	 * 
-	 * @param l
-	 * @param inicio
-	 * @param fim
-	 * @return true se existir choque de horario
-	 */
-	public boolean verificarTurnos(Localizacao l, Time inicio, Time fim) {
-		return localizacaoTurnoDAO.	countByHoraInicioFim(l, inicio, fim) > 0;
-	}
 
 	/**
 	 * Verifica as possibilidades para os intervalos do turno de 
@@ -121,14 +80,6 @@ public class LocalizacaoTurnoManager extends GenericManager {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR_OF_DAY)*60);
-	}
-	
-	public static void main(String[] args) {
-		
-		Time t = new Time(new Date().getTime());
-		System.out.println(t);
-		System.out.println(t.getTime());
-		
 	}
 	
 }
