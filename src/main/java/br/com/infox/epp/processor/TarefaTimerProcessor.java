@@ -56,7 +56,7 @@ public class TarefaTimerProcessor {
 			e.printStackTrace();
 		}
 		if (trigger != null) {
-			processoEpaTarefaManager.updateTempoGasto(trigger.getPreviousFireTime(), PrazoEnum.H);
+			processoEpaTarefaManager.updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), PrazoEnum.H);
 		}
 		return null;
 	}
