@@ -216,11 +216,11 @@
 				
 				<wi:columnOutputText columnId="tempoGasto"
 									 columnHeader="Tempo Gasto"
-									 value="#{row.tempoGasto}  (#{processoEpaTarefa.tarefa.tipoPrazo == 'D' ? 'dias' : 'minutos'})" />
+									 value="#{row.tempoGasto} #{row.tarefa.tipoPrazo.getLabel()}" />
 									 
 				<wi:columnOutputText columnId="tempoPrevisto"
 									 columnHeader="Tempo Previsto"
-									 value="#{row.tempoPrevisto}  (#{processoEpaTarefa.tarefa.tipoPrazo == 'D' ? 'dias' : 'minutos'})" />
+									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}" />
 			</wi:dataTable>
 		</wi:modalPanel>
 	</ui:define>
