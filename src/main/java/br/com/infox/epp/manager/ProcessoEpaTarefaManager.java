@@ -20,6 +20,7 @@ import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.type.DiaSemanaEnum;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.util.DateUtil;
 
 @Name(ProcessoEpaTarefaManager.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -54,6 +55,53 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	}
 	
 	/**
+	 * Verifica se existe algum turno da localizacao da tarefa em que no dia informado
+	 * @param pt 
+	 * @param horario 
+	 * @return turno da localização da tarefa
+	 */
+	public boolean contemTurnoTarefaDia(ProcessoEpaTarefa pt, Date data) {
+		Calendar horarioCalendar = Calendar.getInstance();
+		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
+		return localizacaoTurnoDAO.countTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana-1]) > 0;
+	}
+	
+	/**
+	 * Atualiza os atributos referentes ao tempo gasto em
+	 * uma tarefa caso exista incremento.
+	 * @param fireTime
+	 * @param tipoPrazo
+	 */
+	public void updateTarefasNaoFinalizadas(Date fireTime, PrazoEnum tipoPrazo) {
+		for (ProcessoEpaTarefa pt : getTarefaNotEnded(tipoPrazo)) {
+			updateTempoGasto(fireTime, pt);
+		}
+	}
+	
+	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) {
+		int incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
+		if (incrementoTempoGasto > 0) {
+			Integer prazo = processoEpaTarefa.getTarefa().getPrazo();
+			int porcentagem = 0;
+			int tempoGasto = processoEpaTarefa.getTempoGasto()+incrementoTempoGasto;
+			if(prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
+				porcentagem = (tempoGasto*100)/prazo;
+			}
+            
+            ProcessoEpa processoEpa = processoEpaTarefa.getProcessoEpa();
+		    if (porcentagem > 100 
+		    		&& processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
+		        processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
+		    }
+		    
+		    processoEpaTarefa.setPorcentagem(porcentagem);
+			processoEpaTarefa.setTempoGasto(tempoGasto);
+			processoEpaTarefa.setUltimoDisparo(fireTime);
+            update(processoEpaTarefa);
+		}
+	}
+	
+	/**
 	 * Calcula o tempo a incrementar no {@link ProcessoEpaTarefa} de acordo 
 	 * com a data em que ocorreu o disparo.
 	 * @param horaDisparo
@@ -72,36 +120,6 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 			break;
 		}
 		return result;
-	}
-	/**
-	 * Atualiza os atributos referentes ao tempo gasto em
-	 * uma tarefa caso exista incremento.
-	 * @param fireTime
-	 * @param tipoPrazo
-	 */
-	public void updateTempoGasto(Date fireTime, PrazoEnum tipoPrazo) {
-		for (ProcessoEpaTarefa pt : getTarefaNotEnded(tipoPrazo)) {
-			int incrementoTempoGasto = getIncrementoTempoGasto(fireTime, pt);
-			if (incrementoTempoGasto > 0) {
-				Integer prazo = pt.getTarefa().getPrazo();
-				int porcentagem = 0;
-				int tempoGasto = pt.getTempoGasto()+incrementoTempoGasto;
-				if(prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
-					porcentagem = (tempoGasto*100)/prazo;
-				}
-	            
-	            ProcessoEpa processoEpa = pt.getProcessoEpa();
-			    if (porcentagem > 100 
-			    		&& processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
-			        processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
-			    }
-			    
-			    pt.setPorcentagem(porcentagem);
-				pt.setTempoGasto(tempoGasto);
-				pt.setUltimoDisparo(fireTime);
-	            update(pt);
-			}
-		}
 	}
 	
 	/**
@@ -169,15 +187,6 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		return result/60;
 	}
 	
-	private int calcularDiasEmIntervalo(Date inicio, Date fim) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(inicio);
-		int diaInicio = calendar.get(Calendar.DAY_OF_YEAR);
-		calendar.setTime(fim);
-		int diaFim = calendar.get(Calendar.DAY_OF_YEAR);
-		return diaFim - diaInicio;
-	}
-	
 	private int calcularTempoGastoDias(Date dataDisparo, ProcessoEpaTarefa processoEpaTarefa) {
 		int result = 0;
 		Date ultimaAtualizacao = processoEpaTarefa.getUltimoDisparo();
@@ -185,23 +194,11 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		while(ultimaAtualizacao.before(dataDisparo)) {
 			Date disparoAtual = getDisparoIncrementado(ultimaAtualizacao, dataDisparo, Calendar.DAY_OF_MONTH, 1);
 			if (contemTurnoTarefaDia(processoEpaTarefa, disparoAtual)) {
-				result += calcularDiasEmIntervalo(ultimaAtualizacao, disparoAtual);
+				result += DateUtil.diferencaDias(disparoAtual, ultimaAtualizacao);
 			}
 			ultimaAtualizacao = disparoAtual;
 		}
 		
 		return result;
-	}
-	
-	/**
-	 * Verifica se existe algum turno da localizacao da tarefa em que no dia informado
-	 * @param pt 
-	 * @param horario 
-	 * @return turno da localização da tarefa
-	 */
-	public boolean contemTurnoTarefaDia(ProcessoEpaTarefa pt, Date data) {
-		Calendar horarioCalendar = Calendar.getInstance();
-		int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
-		return localizacaoTurnoDAO.countTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana-1]) > 0;
 	}
 }
