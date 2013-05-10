@@ -18,7 +18,7 @@
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:a="http://richfaces.org/a4j"
     xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
@@ -44,10 +44,10 @@
     	    indicatorLabel:"#{wi:get(indicatorLabel, '')}"
     	});
     </script>
-    <rich:panel id="#{id}GaugeContainer" styleClass="gaugeContainer" style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;#{style}">
+    <s:div id="#{id}GaugeContainer" styleClass="gaugeContainer" style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;#{style}">
     	<f:facet name="header">#{label}</f:facet>
         <div id="#{id}Gauge" class="gauge">
         </div>
-    </rich:panel>
+    </s:div>
 
 </ui:composition>

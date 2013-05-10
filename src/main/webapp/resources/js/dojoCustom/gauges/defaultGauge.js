@@ -1,6 +1,6 @@
 (function(){
 	var $namespace = defineObject("br.com.infox.dojoCustom.gauges.DefaultGauge", function(args){
-	  require(["dojox/gauges/AnalogGauge","dojox/gauges/AnalogArcIndicator","dojox/gauges/AnalogNeedleIndicator"]);
+	  require(["dojox/gauges/AnalogGauge","dojox/gauges/AnalogArcIndicator","dojox/gauges/AnalogNeedleIndicator","#{util.contextPath/resources/js/jquery-ui-1.9.2.custom.js}"]);
 	  dojo.ready(function() {
 	    var $angle = args.angle || 300;
 	    var $radius = args.radius || 150;
