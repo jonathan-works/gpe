@@ -57,11 +57,7 @@
 
 			<f:verbatim>
 				<script>
-					if ($('#{id}Messages')) {
-						setTimeout(
-								"if ($('#{id}Messages')) $('#{id}Messages').css('display','none')",
-								5000);
-					}
+				    br.com.infox.applyCSSAfterTimeout({id:'#{id}Messages', style:{display:'none'}, timeout:5000});
 				</script>
 			</f:verbatim>
 

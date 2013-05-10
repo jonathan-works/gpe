@@ -78,10 +78,11 @@
 				label="#{messages['field.situacao']}"
 				value="#{modeloDocumentoHome.instance.ativo}"/>
 			<wi:editor id="modeloDocumento"
-				label="#{messages['modeloDocumento.modeloDocumento']}"
-				value="#{modeloDocumentoHome.instance.modeloDocumento}"
-				showVariables="true"
-				required="true" />
+                label="#{messages['modeloDocumento.modeloDocumento']}"
+                value="#{modeloDocumentoHome.instance.modeloDocumento}"
+                showVariables="true"
+                required="true"
+                skin=""/>
 
 			<wi:imageUpload imageBean="#{imageFileUpload}" />
 

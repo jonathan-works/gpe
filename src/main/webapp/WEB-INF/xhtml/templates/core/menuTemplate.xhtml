@@ -12,14 +12,16 @@
          name="baseHead">
 		<h:outputScript
              library="js" name="liveclock.js" />
-		<script
-             src="#{util.contextPath}/resources/js/jqueryExt.js" />
+        
 		<ui:insert
              name="head" />
+        
 	</ui:define>
 	
 	<ui:define
          name="baseBody">
+         <h:outputScript
+             library="js" name="jqueryExt.js" />
 		<ui:include
              src="include/header.xhtml" />
 		

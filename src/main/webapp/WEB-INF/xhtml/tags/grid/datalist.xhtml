@@ -146,10 +146,8 @@
 							warnStyle="display: none" />
 						<f:verbatim>
 							<script>
-						if ($('#{gridId}Messages')) {
-							setTimeout("if ($('#{gridId}Messages')) $('#{gridId}Messages').css('display','none')", 5000);
-						}
-					</script>
+							 br.com.infox.applyCSSAfterTimeout({id:'#{gridId}Messages', style:{display:'none'}, timeout:5000});
+					        </script>
 						</f:verbatim>
 
 						<rich:dataTable

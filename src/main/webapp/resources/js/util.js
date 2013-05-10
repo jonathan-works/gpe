@@ -15,6 +15,23 @@ function _defineObject(path, object) {
 window.defineObject = window.defineObject || _defineObject;
 })()
 
+defineObject("br.com.infox.applyCSSAfterTimeout", function(args) {
+	if (args.id) {
+		var $id = args.id;
+		var $style = args.style || {};
+		var $timeout = args.timeout || 5000;
+		if ($($id)) {
+			setTimeout(function() {
+				if ($($id)) {
+					for(var index in $style) {
+						$($id).css(index, $style[index]);
+					}
+				}
+			}, $timeout);
+		}
+	}
+});
+
 function showLoading() {	
 	if ($('#status')) {
 		$('#status').hide();

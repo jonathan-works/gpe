@@ -38,9 +38,7 @@
 
 	<f:verbatim>
 		<script>
-			if ($("#{id}")) {
-				setTimeout("if ($('#{id}')) $('#{id}').css('display','none')", 9000);
-			}
+	       br.com.infox.applyCSSAfterTimeout({id:'#{id}', style:{display:'none'}, timeout:9000});
 		</script>
 	</f:verbatim>			
 		
