@@ -552,6 +552,6 @@
 	
 	<tag>
 		<tag-name>numeravelMascara</tag-name>
-		<source>tags/components/form/numeravelMascara.xhtml</source>
+		<source>components/form/numeravelMascara.xhtml</source>
 	</tag>
 </facelet-taglib>
