@@ -8,9 +8,6 @@
 		<property name="buttons">anexarDocumento</property>
 		<property name="fields">
 			<value>processoDocumento: {type: anexarDocumento}</value>
-<!--			<value>processoDocumento: { required: true, properties : { length: 100 } }</value>-->
-<!--			<value>tipoProcessoDocumento: { label: 'Tipo de Petição', required: true, type: combo, properties : { items: tipoProcessoDocumentoItems , noSelectionLabel: 'Selecione...'} }</value>-->
-<!--			<value>modelo: { type: anexarModeloDocumento }</value>-->
 		</property>
 	</component>
 </components>
