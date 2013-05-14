@@ -21,6 +21,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -493,6 +494,62 @@ public final class EntityUtil implements Serializable {
 			}
 		}
 		return list;
+	}
+	
+	public <E> E getEntidadebyParametro(String nomeEntidade, String nomeParametro, Object valorParametro){
+		StringBuilder sb = new StringBuilder();
+		sb.append("select o from ");
+		sb.append(nomeEntidade);
+		sb.append(" o where o.");
+		sb.append(nomeParametro);
+		sb.append(" = :");
+		sb.append(nomeParametro);
+		Query query = getEntityManager().createQuery(sb.toString());
+		query.setParameter(nomeParametro, valorParametro);
+		return getSingleResult(query);
+	}
+	
+	
+	/**
+	 * @author Victor Pasqualino
+	 * Método genérico para buscar no banco um objeto da classe passada como parâmetro com o id informado
+	 * sem, no entanto fazer, a pesquisa no cache de sessão.
+	 * */
+	@SuppressWarnings("unchecked")
+	public static <E> E buscaEntidadeForaDoCacheDeSessao(Class<E> clazz, Object id) {
+		if ( id == null ){
+			return null;
+		} else {			
+			StringBuilder sb = new StringBuilder();
+			sb.append("from ").append(clazz.getSimpleName()).append(" where ");
+			sb.append(getIdPropertyDescriptorName(clazz)).append(" = ?1");			 	
+			return (E) getSingleResult(getEntityManager().createQuery(sb.toString()).setParameter(1, id));
+		}
+		
+	}
+	
+	/**
+	 * @author Victor Pasqualino
+	 * Método genérico para buscar no banco um objeto do mesmo tipo e com o mesmo Id 
+	 * daquele que foi passado como parâmetro
+	 * */
+	@SuppressWarnings("unchecked")
+	public static <E> E buscaEntidadeForaDoCacheDeSessao(Object object) {
+		if ( object != null ){
+			StringBuilder sb = new StringBuilder();
+			sb.append("from ").append(object.getClass().getSimpleName()).append(" o where o = ?1");				 	
+			return (E) getSingleResult(getEntityManager().createQuery(sb.toString()).setParameter(1, object));
+		} else {		
+			return null;
+		}
+	}
+	
+	public static String getIdPropertyDescriptorName(Class<?> clazz){
+		PropertyDescriptor id = getId(clazz);
+		if ( id == null ){
+			return null;
+		}
+		return id.getName();
 	}
 	
 }

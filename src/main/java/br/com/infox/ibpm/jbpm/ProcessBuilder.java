@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 import org.hibernate.Query;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
@@ -46,12 +46,10 @@ import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
 import br.com.infox.ibpm.jbpm.fitter.TransitionFitter;
 import br.com.infox.ibpm.jbpm.fitter.TypeFitter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
 public class ProcessBuilder implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -59,14 +57,13 @@ public class ProcessBuilder implements Serializable {
 	public static final String NAME = "processBuilder";
 	public static final String POST_DEPLOY_EVENT = "postDeployEvent";
 	
-	private EventFitter eventFitter;
-	private TransitionFitter transitionFitter;
-	private SwimlaneFitter swinlaneFitter;
-	private TaskFitter taskFitter;
-	private NodeFitter nodeFitter;
-	private TypeFitter typeFitter;
-	
-	private ProcessBuilderGraph processBuilderGraph;
+	@In	private EventFitter eventFitter;
+	@In	private TransitionFitter transitionFitter;
+	@In private SwimlaneFitter swimlaneFitter;
+	@In private TaskFitter taskFitter;
+	@In private NodeFitter nodeFitter;
+	@In private TypeFitter typeFitter;
+	@In	private ProcessBuilderGraph processBuilderGraph;
 
 	private String id;
 	private ProcessDefinition instance;
@@ -104,18 +101,18 @@ public class ProcessBuilder implements Serializable {
 		startState.addLeavingTransition(t);
 		endState.addArrivingTransition(t);
 		instance.getTaskMgmtDefinition().addSwimlane(laneSolicitante);
-		getEventFitter().addEvents();
+		eventFitter.addEvents();
 		taskFitter.getTasks();
-		getProcessBuilderGraph().clear();
+		processBuilderGraph.clear();
 	}
 
 	private void clear() {
 		taskNodeMap = null;
-		getSwinlaneFitter().clear();
-		getTaskFitter().clear();
-		getNodeFitter().clear();
-		getTransitionFitter().clear();
-		getEventFitter().clear();
+		swimlaneFitter.clear();
+		taskFitter.clear();
+		nodeFitter.clear();
+		transitionFitter.clear();
+		eventFitter.clear();
 	}
 
 	public void load(String newId) {
@@ -131,7 +128,7 @@ public class ProcessBuilder implements Serializable {
 			} else {
 				try {
 					instance = parseInstance(xml);
-					getProcessBuilderGraph().clear();
+					processBuilderGraph.clear();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -166,10 +163,10 @@ public class ProcessBuilder implements Serializable {
 				fluxoHome.update();
 			}
 
-			getTaskFitter().updatePrazoTask();
+			taskFitter.updatePrazoTask();
 			FacesMessages.instance().add("Fluxo salvo com sucesso!");
 		}
-		getProcessBuilderGraph().clear();
+		processBuilderGraph.clear();
 	}
 
 	public void updateFluxo(String cdFluxo) {
@@ -184,8 +181,8 @@ public class ProcessBuilder implements Serializable {
 	}
 
 	private void modifyNodesAndTasks() {
-		getNodeFitter().modifyNodes();		
-		getTaskFitter().modifyTasks();
+		nodeFitter.modifyNodes();		
+		taskFitter.modifyTasks();
 	}
 
 	public void deploy() {
@@ -228,7 +225,7 @@ public class ProcessBuilder implements Serializable {
 			fluxoHome.setInstance(f);
 			load(f.getFluxo());
 			instance.getEvents().clear();
-			getEventFitter().addEvents();
+			eventFitter.addEvents();
 			deploy();
 		}
 	}
@@ -317,55 +314,34 @@ public class ProcessBuilder implements Serializable {
 	}
 	
 	public String getTypeLabel(String type){
-		return getTypeFitter().getTypeLabel(type);
+		return typeFitter.getTypeLabel(type);
 	}
-	
-	public ProcessBuilderGraph getProcessBuilderGraph(){
-		if (processBuilderGraph == null)
-			processBuilderGraph = ComponentUtil
-				.getComponent(ProcessBuilderGraph.NAME);
-		return processBuilderGraph;
-	}
-	
-// ------------------------------------------------------------------------------------------------------------------
-// --------------------------------------------------- ~Fitters~ ----------------------------------------------------
-// ------------------------------------------------------------------------------------------------------------------
-	
+
 	public EventFitter getEventFitter() {
-		if (eventFitter == null)
-			eventFitter = ComponentUtil
-					.getComponent(EventFitter.NAME);
 		return eventFitter;
 	}
-	
+
 	public TransitionFitter getTransitionFitter() {
-		if (transitionFitter == null)
-			transitionFitter = ComponentUtil
-					.getComponent(TransitionFitter.NAME);
 		return transitionFitter;
 	}
-	
-	public SwimlaneFitter getSwinlaneFitter(){
-		if (swinlaneFitter == null)
-			swinlaneFitter = ComponentUtil.getComponent(SwimlaneFitter.NAME);
-		return swinlaneFitter;
+
+	public SwimlaneFitter getSwimlaneFitter() {
+		return swimlaneFitter;
 	}
-	
-	public TaskFitter getTaskFitter(){
-		if (taskFitter == null)
-			taskFitter = ComponentUtil.getComponent(TaskFitter.NAME);
+
+	public TaskFitter getTaskFitter() {
 		return taskFitter;
 	}
-	
-	public NodeFitter getNodeFitter(){
-		if (nodeFitter == null)
-			nodeFitter = ComponentUtil.getComponent(NodeFitter.NAME);
+
+	public NodeFitter getNodeFitter() {
 		return nodeFitter;
 	}
-	
-	public TypeFitter getTypeFitter(){
-		if (typeFitter == null)
-			typeFitter = ComponentUtil.getComponent(TypeFitter.NAME);
+
+	public TypeFitter getTypeFitter() {
 		return typeFitter;
+	}
+
+	public ProcessBuilderGraph getProcessBuilderGraph() {
+		return processBuilderGraph;
 	}
 }

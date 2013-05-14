@@ -21,9 +21,8 @@ import java.util.List;
 import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
-import org.hibernate.classic.Session;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -40,17 +39,19 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
+import br.com.infox.ibpm.manager.UsuarioLoginManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioHome.NAME)
-@BypassInterceptors
 public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 
 	public static final String AFTER_SET_USUARIO_LOCALIZACAO_ATUAL_EVENT = "br.com.infox.ibpm.home.UsuarioHome.afterSetLocalizacaoAtual";
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioHome";
 	public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
+	
+	@In private UsuarioLoginManager usuarioLoginManager;
 
 	private String login;
 	private String password;
@@ -66,9 +67,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	 * Essa segunda validação (em código) é realmente necessária?
 	 */
 	private void validarBloqueio() {
-		if (getInstance().getBloqueio()
-				&& (novoBloqueio.getDataPrevisaoDesbloqueio() == null || novoBloqueio
-						.getMotivoBloqueio().equals(""))) {
+		if (getInstance().getBloqueio() && (novoBloqueio.getDataPrevisaoDesbloqueio() == null || novoBloqueio.getMotivoBloqueio().equals(""))) {
 			getInstance().setBloqueio(false);
 			this.novoBloqueio = new BloqueioUsuario();
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
@@ -160,7 +159,8 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	
 	@Override
 	protected String afterPersistOrUpdate(String ret) {
-		if (password == null) {
+		if (instance.getSenha() == null) {
+			password = instance.getSenha();
 			gerarNovaSenha();
 		}
 		return ret;
@@ -182,37 +182,9 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 		if (!pessoaFisicaCadastrada){
 			resultado = super.persist();
 		} else{
-			/*
-			 * Uma vez que o UsuarioLogin herda de PessoFisica p hibernate não consegue fazer o mapeamento
-			 * para persistir o usuarioLogin se já existir a pessoaFisica correspondente no banco, por isso foi
-			 * preciso inserir em SQL nativo
-			 * */
-			StringBuilder sb = new StringBuilder();
-			sb.append("INSERT INTO ");
-			sb.append(UsuarioLogin.TABLE_NAME);
-			sb.append(" (id_pessoa, ds_login, ds_senha, ds_assinatura_usuario, ds_cert_chain_usuario, " +
-						"in_ldap, in_bloqueio, dt_expiracao_usuario, in_provisorio, in_twitter)");
-			sb.append(" values (:idPessoa, :login, :senha, :assinatura, :cert_chain, :ldap, :bloqueio, null, :provisorio, :twitter)");
-			Query query = getEntityManager().createNativeQuery(sb.toString(), UsuarioLogin.class);
-			
-			/*
-			 * Não remover -> Sem o session.evict o find(UsuarioLogin.class) do getEntityManager 
-			 * retorna uma PessoaFisica ao invés do UsuárioLogin por conta do cache
-			 * */
-			Session session = (Session) getEntityManager().getDelegate();
-			session.evict(getEntityManager().find(PessoaFisica.class, instance.getIdPessoa()));
-			
-			query.setParameter("idPessoa", instance.getIdPessoa())
-					.setParameter("login", login)
-					.setParameter("senha", instance.getSenha())
-					.setParameter("assinatura", instance.getAssinatura())
-					.setParameter("cert_chain", instance.getCertChain())
-					.setParameter("ldap", instance.getLdap())
-					.setParameter("bloqueio", instance.getBloqueio())
-					.setParameter("provisorio", instance.getProvisorio())
-					.setParameter("twitter", instance.getTemContaTwitter()).executeUpdate();
+			usuarioLoginManager.inserirUsuarioParaPessoaFisicaCadastrada(login, instance);
+			instance = usuarioLoginManager.getUsuarioLogin(instance);
 			resultado = "persisted";
-			instance = getEntityManager().find(UsuarioLogin.class, instance.getIdPessoa());
 		}
 		return resultado;
 	}
@@ -391,7 +363,6 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public static String gerarHashSenha(UsuarioLogin usuarioLogin) {
 		String hash = new PasswordHash().generateSaltedHash(
 				usuarioLogin.getLogin(), usuarioLogin.getLogin(), "SHA");

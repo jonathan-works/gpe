@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
@@ -16,6 +18,7 @@ import br.com.itx.util.FacesUtil;
 
 @Name(ProcessBuilderGraph.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class ProcessBuilderGraph {
 	
 	public static final String NAME = "processBuilderGraph";
@@ -23,6 +26,11 @@ public class ProcessBuilderGraph {
 	
 	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilderGraph.class);
+	
+	@Create
+	public void init() {
+	    pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+	}
 	
 	/**
 	 * Parâmetro Object obj é utilizado pela página graph.xhtml pelo componente

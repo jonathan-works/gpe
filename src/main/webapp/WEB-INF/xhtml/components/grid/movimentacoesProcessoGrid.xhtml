@@ -47,12 +47,13 @@
 								rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
 				<h:outputText value="#{userHandler.getUsuarioByTarefa(task)} "/>
 				<a:form id="unlockForm">
-					<a:commandLink action="#{taskInstanceHome.removeUsuario()}"
-									reRender="usuarioTarefaDiv"
-									rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
+					<a:commandLink  reRender="usuarioTarefaDiv"
+									rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and empty task.end}"
+									onclick="if(!confirm('Confirma Liberação?')) return false;"
+									action="#{taskInstanceHome.removeUsuario()}"
+									oncomplete="window.close();">
 						<h:graphicImage url="/img/unlocked.gif"
-										title="Liberar Tarefa">
-										
+										title="Liberar Tarefa">	
 						</h:graphicImage>
 					</a:commandLink>
 				</a:form>

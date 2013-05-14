@@ -5,22 +5,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.ProcessDefinition;
 
-import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.EventHandler;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.ReflectionsUtil;
 
 @Name(EventFitter.NAME)
-@Scope(ScopeType.CONVERSATION)
-public class EventFitter implements Serializable, Fitter{
+@AutoCreate
+public class EventFitter extends Fitter implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
@@ -28,8 +25,6 @@ public class EventFitter implements Serializable, Fitter{
 	
 	private List<EventHandler> eventList;
 	private EventHandler currentEvent;
-	
-	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	
 	/**
 	 * Metodo que adiciona o tratamento de eventos 
