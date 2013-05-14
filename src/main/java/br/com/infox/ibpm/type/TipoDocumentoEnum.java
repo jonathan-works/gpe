@@ -18,7 +18,7 @@ package br.com.infox.ibpm.type;
 
 public enum TipoDocumentoEnum {
 
-	P("Texto"), D("Documento"), T("Todos");
+	P("Texto"), D("Anexo"), T("Todos");
 	
 	private String label;
 	
