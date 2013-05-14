@@ -21,6 +21,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
+import br.com.infox.ibpm.type.TipoNumeracaoEnum;
 import br.com.infox.ibpm.type.VisibilidadeEnum;
 import br.com.infox.list.TipoProcessoDocumentoList;
 import br.com.itx.util.ComponentUtil;
@@ -78,6 +79,10 @@ public class TipoProcessoDocumentoHome
 	
 	public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
 		return TipoDocumentoEnum.values();
+	}
+	
+	public TipoNumeracaoEnum[] getTipoNumeracaoEnumValues() {
+		return TipoNumeracaoEnum.values();
 	}
 	
 	public VisibilidadeEnum[] getVisibilidadeEnumValues(){
