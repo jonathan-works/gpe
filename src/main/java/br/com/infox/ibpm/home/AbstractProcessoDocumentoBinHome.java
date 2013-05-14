@@ -188,7 +188,6 @@ public abstract class AbstractProcessoDocumentoBinHome<T>
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("processoDocumentoBinGrid");
 		return ret;
 	}
 
