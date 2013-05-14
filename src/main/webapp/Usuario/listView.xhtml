@@ -13,220 +13,224 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
-	
+-->
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
 
-	<ui:define name="title">#{messages['usuario.titlePage']}</ui:define>
 
-	<ui:param
-		 name="home"
-		 value="#{usuarioHome}" />
+    <ui:define name="title">#{messages['usuario.titlePage']}</ui:define>
 
-	<ui:define name="searchGrid">
-		
-		<h:messages
-			 globalOnly="true"
-			 styleClass="message"
-			 id="globalMessages" />
-		<wi:datagrid
-			 bean="#{usuarioGrid}"
-			 searchBean="#{usuarioSearch}"
-			 title="#{messages['usuario.titleGrid']}" />
-	
-	</ui:define>
+    <ui:param
+        name="home"
+        value="#{usuarioHome}" />
 
-	<ui:define
-		 name="form"
-		 action="#{usuarioHome.newInstance()}">
-		
-		<c:if test="#{canEdit}">
-			
-			<wi:dataForm
-				 formId="usuarioForm"
-				 formTitle="#{messages['form.title']}">
-				
-				<wi:inputCpf
-					 id="cpf"
-					 label="CPF"
-					 value="#{usuarioHome.instance.cpf}"
-					 assignTo="#{usuarioHome.instance.cpf}"
-					 required="true">
-					
-					<a:ajax
-						 event="blur"
-						 listener="#{usuarioHome.searchByCpf(usuarioHome.instance.cpf)}"
-						 execute="@this"
-						 render="usuarioForm"
-						 limitRender="true" />
-				
-				</wi:inputCpf>
+    <ui:define name="searchGrid">
 
-				<wi:inputText
-					 id="nomeUsuario"
-					 label="#{messages['usuario.nome']}"
-					 value="#{usuarioHome.instance.nome}"
-					 required="true" />
+        <h:messages
+            globalOnly="true"
+            styleClass="message"
+            id="globalMessages" />
+        <wi:datagrid
+            bean="#{usuarioGrid}"
+            searchBean="#{usuarioSearch}"
+            title="#{messages['usuario.titleGrid']}" />
 
-				<wi:inputDate
-					 id="dataNascimento"
-					 value="#{usuarioHome.instance.dataNascimento}"
-					 label="#{messages['pessoaFisica.dataNascimento']}"
-					 required="true" />
+    </ui:define>
 
-				<wi:inputText
-					 id="email"
-					 label="E-mail"
-					 value="#{usuarioHome.instance.email}"
-					 required="true">
-					
-					<f:validator validatorId="emailValidator" />
-				
-				</wi:inputText>
+    <ui:define
+        name="form"
+        action="#{usuarioHome.newInstance()}">
 
-				<wi:inputText
-					 id="login"
-					 label="Login"
-					 value="#{usuarioHome.instance.login}"
-					 required="true"
-					 maxlength="15" />
+        <c:if test="#{canEdit}">
 
-				<wi:selectOneRadio
-					 id="ativo"
-					 label="#{messages['field.situacao']}"
-					 value="#{usuarioHome.instance.ativo}"
-					 valueList="true:Ativo,false:Inativo" />
+            <wi:dataForm
+                formId="usuarioForm"
+                formTitle="#{messages['form.title']}">
 
-				<ui:include src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml" />
+                <wi:inputCpf
+                    id="cpf"
+                    label="CPF"
+                    value="#{usuarioHome.instance.cpf}"
+                    assignTo="#{usuarioHome.instance.cpf}"
+                    required="true">
 
-				<ui:include src="/WEB-INF/xhtml/components/form/bloqueio.xhtml" />
-			
-			</wi:dataForm>
-		
-		</c:if>
-		<c:if test="#{not canEdit}">
-			
-			<wi:view
-				 form="#{usuarioView}"
-				 columns="4"
-				 title="#{messages['usuario.titleView']}" />
-		
-		</c:if>
-	
-	</ui:define>
+                    <a:ajax
+                        event="blur"
+                        listener="#{usuarioHome.searchByCpf(usuarioHome.instance.cpf)}"
+                        execute="@this"
+                        render="usuarioForm"
+                        limitRender="true" />
 
-	<ui:define name="tabs">
-		
-		<rich:tab
-			 label="#{messages['endereco.titlePage']}"
-			 status=":status"
-			 id="endereco2"
-			 rendered="#{home.isManaged()}"
-			 action="#{enderecoHome.newInstance()}">
-			
-			<s:div>
-				
-				<wi:ajaxDiv id="divGridEnd">
-					
-					<c:if test="#{canEdit}">
-						
-						<wi:form
-							 columns="3"
-							 msgRendered="false"
-							 formTitle="Adicionar Endereço - #{(usuarioHome.instance)}"
-							 form="#{enderecoForm}"
-							 reRenderSave="divGridEnd"
-							 home="#{enderecoHome}" />
-					
-					</c:if>
-					<wi:datalist
-						 home="#{enderecoHome}"
-						 bean="#{enderecoGrid}"
-						 gridId="enderecoGridTab"
-						 toolBar="toolBarEditRemove"
-						 searchBean="#{enderecoSearch}"
-						 listReRender="divGridEnd"
-						 linkDetalhe="/Endereco/listView.xhtm"
-						 headerToolBar="none"
-						 columnList="nomeLogradouro, nomeBairro"
-						 title="#{messages['endereco.titlePage']} - #{(usuarioHome.instance)}" />
-				
-				</wi:ajaxDiv>
-			
-			</s:div>
-		
-		</rich:tab>
+                </wi:inputCpf>
 
-		<rich:tab
-			 id="localizacaoUsuario"
-			 label="#{messages['localizacao.usuarioLocalizacaoList']}"
-			 status=":status"
-			 rendered="#{home.isManaged()}"
-			 action="#{usuarioLocalizacaoHome.newInstance()}">
-			
-			<s:div>
-				
-				<wi:ajaxDiv id="divGridLU">
-					
-					<wi:form
-						 columns="3"
-						 msgRendered="false"
-						 formTitle="Adicionar Localização - #{(usuarioHome.instance)}"
-						 form="#{usuarioLocalizacaoForm}"
-						 home="#{usuarioLocalizacaoHome}"
-						 reRenderSave="divGridLU"
-						 mostrarNovo="false"
-						 mostrarVoltar="false" />
-					<wi:datalist
-						 home="#{usuarioLocalizacaoHome}"
-						 bean="#{usuarioLocalizacaoGrid}"
-						 gridId="usuarioLocalizacaoGridTab"
-						 toolBar="toolBarEditRemove"
-						 listReRender="divGridLU"
-						 headerToolBar="none"
-						 columnList="localizacao, papel"
-						 title="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioHome.instance)}" />
-				
-				</wi:ajaxDiv>
-			
-			</s:div>
-		
-		</rich:tab>
+                <wi:inputText
+                    id="nomeUsuario"
+                    label="#{messages['usuario.nome']}"
+                    value="#{usuarioHome.instance.nome}"
+                    required="true" />
 
-		<rich:tab
-			 id="historicoBloqueioUsuario"
-			 label="#{messages['bloqueioUsuario.historicoBloqueioList']}"
-			 rendered="#{home.isManaged()}">
-			
-			<s:div>
-				
-				<wi:ajaxDiv id="divHistoricoList">
-					
-					<wi:datalist
-						 home="#{bloqueioUsuarioHome}"
-						 bean="#{bloqueioUsuarioGrid}"
-						 gridId="bloqueioUsuarioGridTab"
-						 toolBar="none"
-						 columnList="dataBloqueio, dataPrevisaoDesbloqueio, motivoBloqueio, dataDesbloqueio"
-						 title="#{messages['bloqueioUsuario.historicoBloqueio']}"
-						 id="historicoBloqueioList" />
-				
-				</wi:ajaxDiv>
-			
-			</s:div>
-		
-		</rich:tab>
+                <wi:inputDate
+                    id="dataNascimento"
+                    value="#{usuarioHome.instance.dataNascimento}"
+                    label="#{messages['pessoaFisica.dataNascimento']}"
+                    required="true" />
 
-	
-	</ui:define>
+                <wi:inputText
+                    id="email"
+                    label="E-mail"
+                    value="#{usuarioHome.instance.email}"
+                    required="true">
+
+                    <f:validator validatorId="emailValidator" />
+
+                </wi:inputText>
+
+                <wi:inputText
+                    id="login"
+                    label="Login"
+                    value="#{usuarioHome.instance.login}"
+                    required="true"
+                    maxlength="15" />
+
+                <wi:selectOneRadio
+                    id="ativo"
+                    label="#{messages['field.situacao']}"
+                    value="#{usuarioHome.instance.ativo}"
+                    valueList="true:Ativo,false:Inativo" />
+
+                <ui:include
+                    src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml" />
+
+                <ui:include
+                    src="/WEB-INF/xhtml/components/form/bloqueio.xhtml" />
+
+            </wi:dataForm>
+
+        </c:if>
+        <c:if test="#{not canEdit}">
+
+            <wi:view
+                form="#{usuarioView}"
+                columns="4"
+                title="#{messages['usuario.titleView']}" />
+
+        </c:if>
+
+    </ui:define>
+
+    <ui:define name="tabs">
+
+        <rich:tab
+            label="#{messages['endereco.titlePage']}"
+            status=":status"
+            id="endereco2"
+            rendered="#{home.isManaged()}"
+            action="#{enderecoHome.newInstance()}">
+
+            <s:div>
+
+                <wi:ajaxDiv id="divGridEnd">
+
+                    <c:if test="#{canEdit}">
+
+                        <wi:form
+                            columns="3"
+                            msgRendered="false"
+                            formTitle="Adicionar Endereço - #{(usuarioHome.instance)}"
+                            form="#{enderecoForm}"
+                            reRenderSave="divGridEnd"
+                            home="#{enderecoHome}" />
+
+                    </c:if>
+                    <wi:datalist
+                        home="#{enderecoHome}"
+                        bean="#{enderecoGrid}"
+                        gridId="enderecoGridTab"
+                        toolBar="toolBarEditRemove"
+                        searchBean="#{enderecoSearch}"
+                        listReRender="divGridEnd"
+                        linkDetalhe="/Endereco/listView.xhtm"
+                        headerToolBar="none"
+                        columnList="nomeLogradouro, nomeBairro"
+                        title="#{messages['endereco.titlePage']} - #{(usuarioHome.instance)}" />
+
+                </wi:ajaxDiv>
+
+            </s:div>
+
+        </rich:tab>
+
+        <rich:tab
+            id="localizacaoUsuario"
+            label="#{messages['localizacao.usuarioLocalizacaoList']}"
+            status=":status"
+            rendered="#{home.isManaged()}"
+            action="#{usuarioLocalizacaoHome.newInstance()}">
+
+            <s:div>
+
+                <wi:ajaxDiv id="divGridLU">
+
+                    <wi:form
+                        columns="3"
+                        msgRendered="false"
+                        formTitle="Adicionar Localização - #{(usuarioHome.instance)}"
+                        form="#{usuarioLocalizacaoForm}"
+                        home="#{usuarioLocalizacaoHome}"
+                        reRenderSave="divGridLU"
+                        mostrarNovo="false"
+                        mostrarVoltar="false" />
+                    <wi:datalist
+                        home="#{usuarioLocalizacaoHome}"
+                        bean="#{usuarioLocalizacaoGrid}"
+                        gridId="usuarioLocalizacaoGridTab"
+                        toolBar="toolBarEditRemove"
+                        listReRender="divGridLU"
+                        headerToolBar="none"
+                        columnList="localizacao, papel"
+                        title="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioHome.instance)}" />
+
+                </wi:ajaxDiv>
+
+            </s:div>
+
+        </rich:tab>
+
+        <rich:tab
+            id="historicoBloqueioUsuario"
+            label="#{messages['bloqueioUsuario.historicoBloqueioList']}"
+            rendered="#{home.isManaged()}">
+
+            <s:div>
+
+                <wi:ajaxDiv id="divHistoricoList">
+
+                    <wi:datalist
+                        home="#{bloqueioUsuarioHome}"
+                        bean="#{bloqueioUsuarioGrid}"
+                        gridId="bloqueioUsuarioGridTab"
+                        toolBar="none"
+                        columnList="dataBloqueio, dataPrevisaoDesbloqueio, motivoBloqueio, dataDesbloqueio"
+                        title="#{messages['bloqueioUsuario.historicoBloqueio']}"
+                        id="historicoBloqueioList" />
+
+                </wi:ajaxDiv>
+
+            </s:div>
+
+        </rich:tab>
+
+
+    </ui:define>
 
 
 </ui:composition>
