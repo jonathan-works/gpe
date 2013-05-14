@@ -107,23 +107,28 @@
 								  value="#{home.instance.visibilidade}"
 								  required="true"
 								  noSelectionLabel="#{messages['comboBox.select']}"/>
-			<wi:numeravelMascara id="numera"
-								    label="#{messages['tipoProcessoDocumento.numera']}"
-								    value="#{home.instance.numera}" />
-			<wi:selectBooleanRadio id="publico"
-								    label="#{messages['tipoProcessoDocumento.publico']}"
-								    value="#{home.instance.publico}" />
-			<wi:selectBooleanRadio id="anexar"
-								    label="#{messages['tipoProcessoDocumento.anexar']}"
-								    value="#{home.instance.anexar}" />
+			<wi:selectOneRadio	id="numera"
+								label="#{messages['tipoProcessoDocumento.numera']}"
+						    	value="#{home.instance.numera}"
+						    	valueList="true:Sim, false:Não">
+		    	<a:support reRender="mascaraDiv"
+		    			   ajaxSingle="true"
+		    			   event="onchange"
+		    			   status="status" />
+		    </wi:selectOneRadio>
+
+			<s:div id="mascaraDiv">
+				<wi:selectOneMenuEnum id="tipoNumeracaoCombo"
+									  rendered="#{tipoProcessoDocumentoHome.instance.numera}"
+									  label="#{messages['classificacaoDocumento.tipoNumeracao']}"
+									  items="#{home.getTipoNumeracaoEnumValues()}"
+									  value="#{home.instance.tipoNumeracao}"
+									  required="true"
+									  noSelectionLabel="#{messages['comboBox.select']}"/>
+			</s:div>
 			<wi:selectBooleanRadio id="sistema"
 								    label="#{messages['tipoProcessoDocumento.sistema']}"
 								    value="#{home.instance.sistema}" />
-			<wi:selectOneMenuEntity id="agrupamento"
-									label="#{messages['tipoProcessoDocumento.agrupamento']}"
-									items="#{agrupamentoList}"
-									value="#{home.instance.agrupamento}"
-									noSelectionLabel="#{messages['comboBox.select']}"/>
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['field.situacao']}"
 								    value="#{home.instance.ativo}" />
