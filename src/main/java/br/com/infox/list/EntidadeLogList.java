@@ -4,25 +4,29 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
+import br.com.infox.epp.manager.UsuarioLoginManager;
 import br.com.infox.ibpm.bean.ConsultaEntidadeLog;
 import br.com.infox.ibpm.entity.log.EntityLog;
 import br.com.infox.ibpm.entity.log.EntityLogDetail;
 import br.com.infox.type.TipoOperacaoLogEnum;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(EntidadeLogList.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class EntidadeLogList extends EntityList<EntityLog> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "entidadeLogList";
+	
+	@In private UsuarioLoginManager usuarioLoginManager;
 	
 	private ConsultaEntidadeLog instance = new ConsultaEntidadeLog();
 	private String nomePackage;
@@ -113,5 +117,9 @@ public class EntidadeLogList extends EntityList<EntityLog> {
 
 	public void setIdPesquisa(Integer idPesquisa) {
 		this.idPesquisa = idPesquisa;
+	}
+	
+	public List<UsuarioLogin> getUsuariosQuePossuemLogs(){
+		return usuarioLoginManager.getUsuariosQuePossuemRegistrosDeLog();
 	}
 }
