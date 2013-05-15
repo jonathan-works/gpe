@@ -15,7 +15,6 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
@@ -34,7 +33,6 @@ import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
-import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;
@@ -81,7 +79,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
 	private Long tarefaId;
 
-	private Boolean checkVisibilidade = true;
 	private Boolean podeInativarParteProcesso;
 
 	public void iniciarNovoFluxo(){
@@ -134,9 +131,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	
 	public void onSelectProcessoDocumento() {
 		limparEventsTreeHandler();
-		if(possuiAgrupamento()) {
-			preencherEventsTreeHandler();
-		}	
 	}
 	
 	private void limparEventsTreeHandler() {
@@ -145,20 +139,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		renderEventsTree = false;
 	}
 
-	private void preencherEventsTreeHandler() {
-		renderEventsTree = true;
-		AutomaticEventsTreeHandler.instance().setRootsSelectedMap(new HashMap<Evento, List<Evento>>());
-		AutomaticEventsTreeHandler.instance().getRoots(getIdAgrupamentoAsString());
-	}
-
-	private String getIdAgrupamentoAsString() {
-		return Integer.toString(tipoProcessoDocumento.getAgrupamento().getIdAgrupamento());
-	}
-
-	private boolean possuiAgrupamento() {
-		return tipoProcessoDocumento != null && tipoProcessoDocumento.getAgrupamento() != null;
-	}	
-	
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
 		ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 		setIdProcessoDocumento(idDoc);

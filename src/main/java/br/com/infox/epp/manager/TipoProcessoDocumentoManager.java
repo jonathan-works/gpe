@@ -33,10 +33,6 @@ public class TipoProcessoDocumentoManager extends GenericManager {
 		return (TipoProcessoDocumento) q.getResultList().get(0);
 	}
 	
-	public boolean tipoProcessoDocumentoPossuiAgrupamentos(){
-		return (tipoProcessoDocumento != null && tipoProcessoDocumento.getAgrupamento() != null);
-	}
-	
 	public void limpar(){
 		tipoProcessoDocumento = null;
 	}
