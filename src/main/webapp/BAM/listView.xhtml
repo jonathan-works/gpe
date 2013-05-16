@@ -77,6 +77,11 @@
 							  value="Pesquisar"
 							  action="#{processoEpaNaoFinalizadoList.setFluxo(null)}"
 							  reRender="processoList" />
+			<wi:commandButton id="reRenderPg"
+							  value="ReRenderPage"
+							  action=""
+							  buttonStyle="display:none"
+							  reRender="processoList" />
 								  
 			<ui:define name="buttons"/>
 		</wi:dataForm>
@@ -102,12 +107,13 @@
 						            	value="#{row.contabilizar}"
 										required="false"
 						                disabled="false">
-								<a:support event="onclick"
+								<a:support event="onchange"
 										   action="#{processoEpaAction.alternarContabilizar(row)}"
 						                   reRender="processoListPanel"
 										   status=":status"
-										   rendered="true" 
-										   ajaxSingle="false">
+										   rendered="true"
+										   ajaxSingle="true"
+										   oncomplete="$j('#pesquisaFluxoForm\\\:reRenderPg').click()">
 								</a:support>
 							</h:selectBooleanCheckbox>
 						</h:form>
@@ -128,7 +134,7 @@
 					
 				</wi:dataTable>
 				<div style="float:left">
-					<dojo:defaultGauge id="#{row.numeroProcesso}"
+					<dojo:defaultGauge id="processo#{row.numeroProcesso}"
 										max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
 										width="210"
 										height="200"
@@ -222,6 +228,17 @@
 									 columnHeader="Tempo Previsto"
 									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}" />
 			</wi:dataTable>
+			<div style="position:fixed; top:0px; left:0px;">
+				<dojo:defaultGauge id="#{processoEpaTarefaList.entity.processoEpa.numeroProcesso}"
+									max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+									width="210"
+									height="200"
+									radius="50"
+									label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
+									draggable="true"
+									indicatorLabel="#{messages['processoEpa.tempoGasto']} (dias)"
+									value="#{processoEpaTarefaList.entity.processoEpa.tempoGasto}"/>
+			</div>
 		</wi:modalPanel>
 	</ui:define>
 	 
