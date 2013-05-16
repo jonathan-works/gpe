@@ -30,7 +30,6 @@
 	<param name="fluxo.order" value="#{fluxoGrid.order}"/>		
 	<param name="bloqueioUsuario.order" value="#{bloqueioUsuarioGrid.order}"/>		
 	<param name="endereco.order" value="#{enderecoGrid.order}"/>		
-	<param name="processo.order" value="#{processoGrid.order}"/>		
 	<param name="usuarioLocalizacao.order" value="#{usuarioLocalizacaoGrid.order}"/>
  
 </page>

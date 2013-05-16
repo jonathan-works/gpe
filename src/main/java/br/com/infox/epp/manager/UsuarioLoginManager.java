@@ -18,9 +18,5 @@ public class UsuarioLoginManager extends GenericManager {
 	public static final String NAME = "usuarioLoginManager";
 	
 	@In private UsuarioLoginDAO usuarioLoginDAO;
-	
-	public List<UsuarioLogin> getUsuariosQuePossuemRegistrosDeLog(){
-		return usuarioLoginDAO.getUsuariosQuePossuemRegistrosDeLog();
-	}
 
 }

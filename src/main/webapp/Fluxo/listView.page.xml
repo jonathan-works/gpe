@@ -23,7 +23,6 @@
 	
 	<!-- Parametros para a ordem de grids -->
 	<param name="fluxo.order" value="#{fluxoGrid.order}"/>		
-	<param name="processo.order" value="#{processoGrid.order}"/>		
 	<param name="variavel.order" value="#{variavelGrid.order}"/>
  
 </page>

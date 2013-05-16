@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
+import br.com.infox.epp.manager.EntidadeLogManager;
 import br.com.infox.epp.manager.UsuarioLoginManager;
 import br.com.infox.ibpm.bean.ConsultaEntidadeLog;
 import br.com.infox.ibpm.entity.log.EntityLog;
@@ -26,7 +27,7 @@ public class EntidadeLogList extends EntityList<EntityLog> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "entidadeLogList";
 	
-	@In private UsuarioLoginManager usuarioLoginManager;
+	@In private EntidadeLogManager entidadeLogManager;
 	
 	private ConsultaEntidadeLog instance = new ConsultaEntidadeLog();
 	private String nomePackage;
@@ -120,6 +121,10 @@ public class EntidadeLogList extends EntityList<EntityLog> {
 	}
 	
 	public List<UsuarioLogin> getUsuariosQuePossuemLogs(){
-		return usuarioLoginManager.getUsuariosQuePossuemRegistrosDeLog();
+		return entidadeLogManager.getUsuariosQuePossuemRegistrosDeLog();
+	}
+	
+	public List<String> getNomesDasEntidades(){
+		return entidadeLogManager.getEntidadesQuePodemPossuirLog();
 	}
 }

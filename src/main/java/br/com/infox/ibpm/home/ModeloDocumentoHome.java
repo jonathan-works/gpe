@@ -26,6 +26,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
+import br.com.infox.epp.manager.ModeloDocumentoManager;
 import br.com.infox.epp.manager.TipoModeloDocumentoPapelManager;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
@@ -52,6 +53,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	private TipoModeloDocumento tipoModeloDocumento;
 	
 	@In private TipoModeloDocumentoPapelManager tipoModeloDocumentoPapelManager;
+	@In private ModeloDocumentoManager modeloDocumentoManager;
 	
 	@Override
 	public EntityList<ModeloDocumento> getBeanList() {
@@ -147,6 +149,10 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	
 	public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos() {
 		return tipoModeloDocumentoPapelManager.getTiposModeloDocumentoPermitidos();
+	}
+	
+	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(){
+		return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(grupoModeloDocumento, tipoModeloDocumento);
 	}
 	
 }

@@ -25,7 +25,6 @@
 	
 	<!-- Parametros para a ordem de grids -->
 	<param name="passo.order" value="#{passoGrid.order}"/>		
-	<param name="processo.order" value="#{processoGrid.order}"/>		
 	<param name="usuarioLocalizacao.order" value="#{usuarioLocalizacaoGrid.order}"/>		
  
 </page>

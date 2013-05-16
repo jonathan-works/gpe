@@ -64,7 +64,6 @@ public abstract class AbstractProcessoHome<T> extends AbstractHome<Processo> {
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("processoGrid");
 		return ret;
 	}
 
