@@ -30,6 +30,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.util.ComponentUtil;
+import br.com.itx.util.HibernateUtil;
 
  
 @Name(FluxoHome.NAME)
@@ -55,6 +56,13 @@ public class FluxoHome
 		} 
 		return ret;	
 	}
+
+	public String persistAs() {
+		Fluxo fluxo = getInstance();
+		HibernateUtil.getSession().evict(fluxo);
+		fluxo.setIdFluxo(null);
+		return persist();
+	}
 	
 	private void verificaPublicacao(){
 		Date data = new Date();
@@ -78,7 +86,7 @@ public class FluxoHome
 		}
 		
 		verificaPublicacao();
-		return super.beforePersistOrUpdate();
+		return true;
 	}
 
 	@Override
