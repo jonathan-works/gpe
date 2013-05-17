@@ -53,7 +53,7 @@ public class Fluxo implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int idFluxo;
+	private Integer idFluxo;
 	private UsuarioLogin usuarioPublicacao;
 	private String codFluxo;
 	private String fluxo;
@@ -74,11 +74,11 @@ public class Fluxo implements java.io.Serializable {
 	@Id
 	@GeneratedValue(generator = "generator")
 	@Column(name = "id_fluxo", unique = true, nullable = false)
-	public int getIdFluxo() {
+	public Integer getIdFluxo() {
 		return this.idFluxo;
 	}
 
-	public void setIdFluxo(int idFluxo) {
+	public void setIdFluxo(Integer idFluxo) {
 		this.idFluxo = idFluxo;
 	}
 	
