@@ -114,27 +114,27 @@ public class ProcessBuilder implements Serializable {
 		transitionFitter.clear();
 		eventFitter.clear();
 	}
-
-	public void load(String newId) {
+	
+	public void load(Fluxo fluxo) {
+		String newId = fluxo.getCodFluxo();
 		this.id = null;
 		setId(newId);
-		FluxoHome fluxoHome = FluxoHome.instance();
-		if (fluxoHome != null && fluxoHome.isManaged()) {
-			getInstance().setName(fluxoHome.getInstance().getFluxo());
-			xml = fluxoHome.getInstance().getXml();
-			if (xml == null) {
-				this.id = newId;
-				update();
-			} else {
-				try {
-					instance = parseInstance(xml);
-					processBuilderGraph.clear();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				exists = true;
-				this.id = newId;
+		
+		getInstance().setName(fluxo.getFluxo());
+		xml = fluxo.getXml();
+		if (xml == null) {
+			this.id = newId;
+			update();
+		} else {
+			try {
+				instance = parseInstance(xml);
+				instance.setName(fluxo.getFluxo());
+				processBuilderGraph.clear();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			exists = true;
+			this.id = newId;
 		}
 	}
 
@@ -205,10 +205,9 @@ public class ProcessBuilder implements Serializable {
 		FluxoHome fluxoHome = FluxoHome.instance();
 		Fluxo fluxo = fluxoHome.getInstance();
 		fluxo.setXml(null);
-		String id = this.id;
 		clear();
 		createInstance();
-		load(id);
+		load(fluxo);
 	}
 
 	public static ProcessBuilder instance() {
@@ -220,10 +219,10 @@ public class ProcessBuilder implements Serializable {
 	 */
 	public void migraFluxos() {
 		List<Fluxo> list = EntityUtil.getEntityList(Fluxo.class);
-		for (Fluxo f : list) {
+		for (Fluxo fluxo : list) {
 			FluxoHome fluxoHome = FluxoHome.instance();
-			fluxoHome.setInstance(f);
-			load(f.getFluxo());
+			fluxoHome.setInstance(fluxo);
+			load(fluxo);
 			instance.getEvents().clear();
 			eventFitter.addEvents();
 			deploy();
