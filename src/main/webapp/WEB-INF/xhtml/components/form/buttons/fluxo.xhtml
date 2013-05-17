@@ -32,8 +32,15 @@
 	<ui:composition template="default.xhtml">
 
 		<ui:define name="customButtons">
+			<wi:commandButton id="updateButton"
+					  action="fluxoHome.persistAs()"
+  					  reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
+  					  rendered="#{fluxoHome.managed}"
+  					  value="Incluir como..." >
+			</wi:commandButton>
+		
 			<s:link view="/Fluxo/definicao/processDefinition.xhtml"
-					action="#{processBuilder.load(fluxoHome.instance.codFluxo)}" 
+					action="#{processBuilder.load(fluxoHome.instance)}" 
 					styleClass="buttons dr-tbpnl-tb-inact"
 					style="padding: 3px 12px 3px 12px; font-size: 13px;"
 					target="processDefinition"
