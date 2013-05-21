@@ -26,7 +26,7 @@
 		<f:facet name="header">
             <h:outputText value="#{messages['expressionWizard.title']}"/>
         </f:facet>
-	   <ui:include src="/js/expressionWizard.xhtml">
+	   <ui:include src="/WEB-INF/xhtml/tags/form/fields/specialized/expressionWizard.xhtml">
             <ui:param name="id" value="expression" />
             <ui:param name="value" value="#{nodeFitter.currentNode.decisionExpression}" />
        </ui:include>
