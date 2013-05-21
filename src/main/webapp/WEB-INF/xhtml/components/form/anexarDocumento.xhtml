@@ -35,7 +35,7 @@
 			 id="#{f.id}tipoProcessoDocumento"
 			 label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 			 value="#{home.instance.tipoProcessoDocumento}"
-			 items="#{tipoProcessoDocumentoInternoItems}"
+			 items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
 			 required="true"
 			 noSelectionLabel="Selecione...">
 			
