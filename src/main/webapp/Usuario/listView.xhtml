@@ -34,15 +34,39 @@
         value="#{usuarioHome}" />
 
     <ui:define name="searchGrid">
-        <h:messages
-            globalOnly="true"
-            styleClass="message"
-            id="globalMessages" />
-        <wi:datagrid
-            bean="#{usuarioGrid}"
-            searchBean="#{usuarioSearch}"
-            title="#{messages['usuario.titleGrid']}" />
-
+        <wi:dataTable values="#{usuarioLoginList.list(15)}"
+                        bean="#{usuarioLoginList}"
+                        tableTitle="#{messages['usuario.titleGrid']}"
+                        id="usuarioList"
+                        rowId="#{row.idPessoa}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarUsuarioForm"
+                                formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText id="nome"
+                                  label="#{messages['usuario.nome']}"
+                                  value="#{usuarioLoginList.entity.nome}"
+                                  maxlength="255" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                                              label="#{messages['field.situacao']}"
+                                              value="#{usuarioLoginList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="nome"
+								 columnHeader="#{messages['usuario.nome']}"
+								 value="#{row.nome}" />
+            <wi:columnBoolean
+                 columnId="bloqueio"
+                 columnHeader="#{messages['usuario.bloqueio']}"
+                 value="#{row.bloqueio}"/>
+             <wi:columnBoolean
+                 columnId="provisorio"
+                 columnHeader="#{messages['usuario.provisorio']}"
+                 value="#{row.provisorio}"/>
+            <wi:columnSituacao columnId="ativo"
+                            columnHeader="#{messages['field.situacao']}"
+                            value="#{row.ativo}" />
+            <ui:define name="headerToolBar"/>
+        </wi:dataTable>
     </ui:define>
     <ui:define
         name="form"

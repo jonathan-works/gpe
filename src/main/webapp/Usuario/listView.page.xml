@@ -9,7 +9,6 @@
 	<description>Usuario: #{usuarioHome.instance}</description>
 	
 	<begin-conversation join="true"/>
-	<param name="usuario.order" value="#{usuarioGrid.order}"/>
 	<param name="id" value="#{usuarioHome.usuarioIdUsuario}"/>
 
 <!-- Parametros para RESTFull -->
@@ -17,19 +16,7 @@
 	<param name="goBackUrl" value="#{usuarioHome.goBackUrl}"/>
 	<param name="goBackId" value="#{usuarioHome.goBackId}"/>
 	<param name="goBackTab" value="#{usuarioHome.goBackTab}"/>		
-	<param name="nome" value="#{usuarioSearch.nome}"/>		
-	<param name="bloqueio" value="#{usuarioSearch.bloqueio}"/>		
-	<param name="ativo" value="#{usuarioSearch.ativo}"/>		
-	<param name="provisorio" value="#{usuarioSearch.provisorio}"/>
 	<param name="cpf" value="#{usuarioHome.instance.cpf}"/>		
 
-
 	<action if="#{empty usuarioHome.tab}" execute="#{usuarioHome.setTab('search')}"/>
-
-	<!-- Parametros para a ordem de grids -->
-	<param name="fluxo.order" value="#{fluxoGrid.order}"/>		
-	<param name="bloqueioUsuario.order" value="#{bloqueioUsuarioGrid.order}"/>		
-	<param name="endereco.order" value="#{enderecoGrid.order}"/>		
-	<param name="usuarioLocalizacao.order" value="#{usuarioLocalizacaoGrid.order}"/>
- 
 </page>
