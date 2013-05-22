@@ -107,7 +107,6 @@ public class FluxoHome
             obj.setAtivo(Boolean.FALSE);
             super.update();
             newInstance();
-            refreshGrid("fluxoGrid");
         } else {
             final String message = "Este registro está em uso e não poderá ser excluído.";
             LOG.warn(message);

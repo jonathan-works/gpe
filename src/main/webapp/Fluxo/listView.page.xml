@@ -9,7 +9,6 @@
 	<description>Fluxo: #{fluxoHome.instance}</description>
 	 
 	<begin-conversation join="true" flush-mode="manual"/>
-	<param name="fluxo.order" value="#{fluxoGrid.order}"/>
 	<param name="id" value="#{fluxoHome.id}"
            converterId="integerConverter" />
 <!-- Parametros para RESTFull -->
@@ -21,8 +20,4 @@
 
 	<action if="#{empty fluxoHome.tab}" execute="#{fluxoHome.setTab('search')}"/>
 	
-	<!-- Parametros para a ordem de grids -->
-	<param name="fluxo.order" value="#{fluxoGrid.order}"/>		
-	<param name="variavel.order" value="#{variavelGrid.order}"/>
- 
 </page>
