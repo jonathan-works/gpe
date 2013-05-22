@@ -34,38 +34,44 @@
         value="#{usuarioHome}" />
 
     <ui:define name="searchGrid">
-        <wi:dataTable values="#{usuarioLoginList.list(15)}"
-                        bean="#{usuarioLoginList}"
-                        tableTitle="#{messages['usuario.titleGrid']}"
-                        id="usuarioList"
-                        rowId="#{row.idPessoa}">
+        <wi:dataTable
+            values="#{usuarioLoginList.list(15)}"
+            bean="#{usuarioLoginList}"
+            tableTitle="#{messages['usuario.titleGrid']}"
+            id="usuarioList"
+            rowId="#{row.idPessoa}">
             <ui:define name="searchForm">
-                <wi:searchForm formId="pesquisarUsuarioForm"
-                                formTitle="#{messages['searchForm.title']}">
-                    <wi:inputText id="nome"
-                                  label="#{messages['usuario.nome']}"
-                                  value="#{usuarioLoginList.entity.nome}"
-                                  maxlength="255" />
-                    <wi:selectSituacaoOneMenu id="ativo"
-                                              label="#{messages['field.situacao']}"
-                                              value="#{usuarioLoginList.entity.ativo}" />
+                <wi:searchForm
+                    formId="pesquisarUsuarioForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText
+                        id="nome"
+                        label="#{messages['usuario.nome']}"
+                        value="#{usuarioLoginList.entity.nome}"
+                        maxlength="255" />
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{usuarioLoginList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
-            <wi:columnOutputText columnId="nome"
-								 columnHeader="#{messages['usuario.nome']}"
-								 value="#{row.nome}" />
+            <wi:columnOutputText
+                columnId="nome"
+                columnHeader="#{messages['usuario.nome']}"
+                value="#{row.nome}" />
             <wi:columnBoolean
-                 columnId="bloqueio"
-                 columnHeader="#{messages['usuario.bloqueio']}"
-                 value="#{row.bloqueio}"/>
-             <wi:columnBoolean
-                 columnId="provisorio"
-                 columnHeader="#{messages['usuario.provisorio']}"
-                 value="#{row.provisorio}"/>
-            <wi:columnSituacao columnId="ativo"
-                            columnHeader="#{messages['field.situacao']}"
-                            value="#{row.ativo}" />
-            <ui:define name="headerToolBar"/>
+                columnId="bloqueio"
+                columnHeader="#{messages['usuario.bloqueio']}"
+                value="#{row.bloqueio}" />
+            <wi:columnBoolean
+                columnId="provisorio"
+                columnHeader="#{messages['usuario.provisorio']}"
+                value="#{row.provisorio}" />
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
+            <ui:define name="headerToolBar" />
         </wi:dataTable>
     </ui:define>
     <ui:define
@@ -184,20 +190,56 @@
                 </wi:ajaxDiv>
             </s:div>
         </rich:tab>
+
         <rich:tab
             id="historicoBloqueioUsuario"
             label="#{messages['bloqueioUsuario.historicoBloqueioList']}"
             rendered="#{home.isManaged()}">
             <s:div>
                 <wi:ajaxDiv id="divHistoricoList">
-                    <wi:datalist
-                        home="#{bloqueioUsuarioHome}"
-                        bean="#{bloqueioUsuarioGrid}"
-                        gridId="bloqueioUsuarioGridTab"
-                        toolBar="none"
-                        columnList="dataBloqueio, dataPrevisaoDesbloqueio, motivoBloqueio, dataDesbloqueio"
-                        title="#{messages['bloqueioUsuario.historicoBloqueio']}"
-                        id="historicoBloqueioList" />
+                    <wi:dataTable
+                        values="#{bloqueioUsuarioList.list(15)}"
+                        bean="#{bloqueioUsuarioList}"
+                        tableTitle="#{messages['bloqueioUsuario.titleGrid']}"
+                        id="bloqueioUsuarioList"
+                        rowId="#{row.idBloqueioUsuario}">
+                        <ui:define name="searchForm">
+                            <wi:searchForm
+                                formId="pesquisarBloqueiosForm"
+                                formTitle="#{messages['searchForm.title']}">
+                                <wi:inputDate
+                                    id="dataBloqueio"
+                                    value="#{bloqueioUsuarioList.entity.dataBloqueio}"
+                                    label="#{messages['bloqueioUsuario.dataBloqueio']}" />
+                                <wi:inputText
+                                    id="motivoBloqueio"
+                                    label="#{messages['bloqueioUsuario.motivoBloqueio']}"
+                                    value="#{bloqueioUsuarioList.entity.motivoBloqueio}"
+                                    maxlength="150" />
+                                <wi:inputDate
+                                    id="dataDesloqueio"
+                                    value="#{bloqueioUsuarioList.entity.dataDesbloqueio}"
+                                    label="#{messages['bloqueioUsuario.dataDesbloqueio']}" />
+                            </wi:searchForm>
+                        </ui:define>
+
+                        <wi:columnDateTime
+                            columnId="dataBloqueio"
+                            columnHeader="#{messages['bloqueioUsuario.dataBloqueio']}"
+                            value="#{row.dataBloqueio}" />
+                        <wi:columnDateTime
+                            columnId="dataPrevisaoDesbloqueio"
+                            columnHeader="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+                            value="#{row.dataPrevisaoDesbloqueio}" />
+                        <wi:columnOutputText
+                            columnId="motivoBloqueio"
+                            columnHeader="#{messages['bloqueioUsuario.motivoBloqueio']}"
+                            value="#{row.motivoBloqueio}" />
+                        <wi:columnDateTime
+                            columnId="dataDesbloqueio"
+                            columnHeader="#{messages['bloqueioUsuario.dataDesbloqueio']}"
+                            value="#{row.dataDesbloqueio}" />
+                    </wi:dataTable>
                 </wi:ajaxDiv>
             </s:div>
         </rich:tab>

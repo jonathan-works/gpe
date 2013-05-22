@@ -63,7 +63,6 @@ public abstract class AbstractBloqueioUsuarioHome<T>
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("bloqueioUsuarioGrid");
 		return ret;
 	}
 
