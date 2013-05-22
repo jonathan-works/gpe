@@ -26,7 +26,7 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 		restricaoDeTipo += "'";
 		String hql = "select o from TipoProcessoDocumento o " +
 				"where o.ativo = true and (o.visibilidade = 'I' OR o.visibilidade = 'A') and " +
-				"o.inTipoDocumento = (" + restricaoDeTipo + " OR o.inTipoDocumento = 'T')";
+				"(o.inTipoDocumento = " + restricaoDeTipo + " OR o.inTipoDocumento = 'T')";
 		return entityManager.createQuery(hql).getResultList();
 	}
 	

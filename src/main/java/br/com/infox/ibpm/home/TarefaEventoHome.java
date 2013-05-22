@@ -27,7 +27,6 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(TarefaEventoHome.NAME)
-@BypassInterceptors
 public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 
 	private static final long serialVersionUID = 1L;
