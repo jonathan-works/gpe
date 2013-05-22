@@ -10,7 +10,6 @@
 	<description>TipoProcessoDocumento: #{tipoProcessoDocumentoHome.instance}</description>
 	
 	<begin-conversation join="true"/>
-	<param name="tipoProcessoDocumento.order" value="#{tipoProcessoDocumentoGrid.order}"/>
 	<param name="id" value="#{tipoProcessoDocumentoHome.tipoProcessoDocumentoIdTipoProcessoDocumento}"/>
 
 	<!-- Parametros para RESTFull -->
@@ -22,8 +21,4 @@
 	<param name="tipoProcessoDocumento" value="#{tipoProcessoDocumentoSearch.tipoProcessoDocumento}"/>		
 
 	<action if="#{empty tipoProcessoDocumentoHome.tab}" execute="#{tipoProcessoDocumentoHome.setTab('search')}"/>
-	
-	<!-- Parametros para a ordem de grids -->
-	<param name="processoDocumento.order" value="#{processoDocumentoGrid.order}"/>		
- 
 </page>
