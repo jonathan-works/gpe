@@ -77,6 +77,7 @@ public class TaskListenerService extends AbstractAction {
 	public void onEndJbpmTask(ExecutionContext context) {
 		ProcessoEpaTarefa pt = processoEpaTarefaManager.getByTaskInstance
 									(context.getTaskInstance().getId());
+		processoEpaTarefaManager.updateTempoGasto(context.getTaskInstance().getEnd(), pt);
 		pt.setDataFim(context.getTaskInstance().getEnd());
 		update(pt);
 	}
