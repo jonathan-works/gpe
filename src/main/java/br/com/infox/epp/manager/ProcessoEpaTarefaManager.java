@@ -80,7 +80,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	
 	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) {
 		int incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
-		if (incrementoTempoGasto > 0) {
+		if (processoEpaTarefa.getUltimoDisparo().before(fireTime)) {
 			Integer prazo = processoEpaTarefa.getTarefa().getPrazo();
 			int porcentagem = 0;
 			int tempoGasto = processoEpaTarefa.getTempoGasto()+incrementoTempoGasto;
