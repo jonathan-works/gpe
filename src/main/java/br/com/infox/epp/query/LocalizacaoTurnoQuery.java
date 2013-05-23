@@ -44,15 +44,17 @@ public interface LocalizacaoTurnoQuery {
 			"where (:" +QUERY_PARAM_HORA_INICIO+ " between lt.horaInicio and lt.horaFim or " +
 			"		:" +QUERY_PARAM_HORA_FIM+ " between lt.horaInicio and lt.horaFim) and" +
 			"	lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + " and " +
-			"   not exists(from CalendarioEventos o " +
-			"			   where o.localizacao = lt.localizacao and " +
-			"					 o.dia = :" + QUERY_PARAM_DIA + " and " +
-			"					 o.mes = :" + QUERY_PARAM_MES + " and " +
-			"					 (o.ano is null or o.ano = :" + QUERY_PARAM_ANO + ")) and " +
-			"   exists (from ProcessoLocalizacaoIbpm o where " +
-			" 	 			   o.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+" and " +
-			"				   o.localizacao = lt.localizacao and	" +
-			"	 			   o.contabilizar = true)";
+			"   not exists(from CalendarioEventos cal " +
+			"			   where cal.localizacao = lt.localizacao and " +
+			"					 cal.dia = :" + QUERY_PARAM_DIA + " and " +
+			"					 cal.mes = :" + QUERY_PARAM_MES + " and " +
+			"					 (cal.ano is null or cal.ano = :" + QUERY_PARAM_ANO + ")) and " +
+			"   exists (select 1 from ProcessoLocalizacaoIbpm pli where " +
+			" 	 			   pli.idTaskJbpm in (select tj.idJbpmTask" +
+			"                                   from TarefaJbpm tj" +
+			"                                   where tj.tarefa = :"+QUERY_PARAM_ID_TASK_INSTANCE+") and " +
+			"				   pli.localizacao = lt.localizacao and	" +
+			"	 			   pli.contabilizar = true)";
 	
 	String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA = "localizacaoTurnoByTarefaDia";
 	String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY = 
