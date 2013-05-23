@@ -16,6 +16,7 @@ public interface LocalizacaoTurnoQuery {
 	String QUERY_PARAM_ANO = "ano";
 	
 	String QUERY_PARAM_ID_TASK_INSTANCE = "idTaskInstance";
+	String QUERY_PARAM_TAREFA = "tarefa";
 	String QUERY_PARAM_DIA_SEMANA = "diaSemana";
 	
 	String LIST_BY_LOCALIZACAO = "listLocalizacaoTurnoByLocalizcao";
@@ -52,7 +53,7 @@ public interface LocalizacaoTurnoQuery {
 			"   exists (select 1 from ProcessoLocalizacaoIbpm pli where " +
 			" 	 			   pli.idTaskJbpm in (select tj.idJbpmTask" +
 			"                                   from TarefaJbpm tj" +
-			"                                   where tj.tarefa = :"+QUERY_PARAM_ID_TASK_INSTANCE+") and " +
+			"                                   where tj.tarefa = :"+QUERY_PARAM_TAREFA+") and " +
 			"				   pli.localizacao = lt.localizacao and	" +
 			"	 			   pli.contabilizar = true)";
 	
