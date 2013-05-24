@@ -58,7 +58,7 @@ public class MeeterPhaseListener {
 	}
 
 //	private void showComponentsWithoutForm(UIComponent root) {
-//		if (hasParentForm(root)) {
+//		if (!hasParentForm(root)) {
 //			System.out.println(root.getClass() + " -> " + root.getId());
 //		}
 //		for (UIComponent child : root.getChildren()) {
