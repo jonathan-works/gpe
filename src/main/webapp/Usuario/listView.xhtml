@@ -123,47 +123,99 @@
                     value="#{usuarioHome.instance.ativo}"
                     valueList="true:Ativo,false:Inativo" />
                 <ui:include
-                    src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml" />
+                    src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
+                    <ui:param
+                        name="id"
+                        value="usuarioProvisorio" />
+                </ui:include>
                 <ui:include
-                    src="/WEB-INF/xhtml/components/form/bloqueio.xhtml" />
+                    src="/WEB-INF/xhtml/components/form/bloqueio.xhtml">
+                    <ui:param
+                        name="id"
+                        value="bloqueioUsuario" />
+                </ui:include>
             </wi:dataForm>
         </c:if>
     </ui:define>
     <ui:define name="tabs">
         <rich:tab
-            label="#{messages['endereco.titlePage']}"
+            header="#{messages['endereco.titlePage']}"
             status=":status"
             id="endereco2"
             rendered="#{home.isManaged()}"
             action="#{enderecoHome.newInstance()}">
             <s:div>
                 <wi:ajaxDiv id="divGridEnd">
-                    <c:if test="#{canEdit}">
-                        <wi:form
-                            columns="3"
-                            msgRendered="false"
-                            formTitle="Adicionar Endereço - #{(usuarioHome.instance)}"
-                            form="#{enderecoForm}"
-                            reRenderSave="divGridEnd"
-                            home="#{enderecoHome}" />
-                    </c:if>
-                    <wi:datalist
-                        home="#{enderecoHome}"
-                        bean="#{enderecoGrid}"
-                        gridId="enderecoGridTab"
-                        toolBar="toolBarEditRemove"
-                        searchBean="#{enderecoSearch}"
-                        listReRender="divGridEnd"
-                        linkDetalhe="/Endereco/listView.xhtm"
-                        headerToolBar="none"
-                        columnList="nomeLogradouro, nomeBairro"
-                        title="#{messages['endereco.titlePage']} - #{(usuarioHome.instance)}" />
+                    <s:div id="enderecoCadastroForm">
+                        <wi:dataForm
+                            formId="enderecoForm"
+                            formTitle="#{messages['form.title']}">
+                            <wi:inputCep
+                                id="cep"
+                                label="CEP"
+                                value="#{enderecoHome.instance.cep}">
+                            </wi:inputCep>
+                            <wi:inputText
+                                id="nomeEstado"
+                                label="#{messages['endereco.nomeEstado']}"
+                                value="#{enderecoHome.instance.nomeEstado}"/>
+                            <wi:inputText
+                                id="nomeBairro"
+                                label="#{messages['endereco.nomeBairro']}"
+                                value="#{enderecoHome.instance.nomeBairro}">
+                            </wi:inputText>
+                            <wi:inputText
+                                id="nomeLogradouro"
+                                label="#{messages['endereco.nomeLogradouro']}"
+                                value="#{enderecoHome.instance.nomeLogradouro}">
+                            </wi:inputText>
+                            <wi:inputText
+                                id="nomeNumero"
+                                label="#{messages['endereco.numeroEndereco']}"
+                                value="#{enderecoHome.instance.numeroEndereco}">
+                            </wi:inputText>
+                            <wi:inputText
+                                id="nomeComplemento"
+                                label="#{messages['endereco.complemento']}"
+                                value="#{enderecoHome.instance.complemento}">
+                            </wi:inputText>
+                            <wi:selectBooleanCheckbox
+                                id="ativo"
+                                label="#{messages['endereco.correspondencia']}"
+                                value="#{enderecoHome.instance.correspondencia}" />
+                            <ui:define name="buttons">
+                                <wi:commandButton
+                                    id="saveButton"
+                                    action="enderecoHome.persist"
+                                    reRender="listEnderecos"
+                                    value="Incluir" />
+                            </ui:define>
+                        </wi:dataForm>
+                    </s:div>
+                    <s:div id="listEnderecos">
+                        <wi:dataTable
+                            values="#{enderecoList.list(15)}"
+                            bean="#{enderecoList}"
+                            tableTitle="#{messages['endereco.titlePage']} - #{(usuarioHome.instance)}"
+                            id="enderecoList"
+                            rowId="#{row.idEndereco}">
+                            <ui:define name="headerToolBar" />
+                            <wi:columnOutputText
+                                columnId="nomeLogradouro"
+                                columnHeader="#{messages['endereco.nomeLogradouro']}"
+                                value="#{row.nomeLogradouro}" />
+                            <wi:columnOutputText
+                                columnId="nomeBairro"
+                                columnHeader="#{messages['endereco.nomeBairro']}"
+                                value="#{row.nomeBairro}" />
+                        </wi:dataTable>
+                    </s:div>
                 </wi:ajaxDiv>
             </s:div>
         </rich:tab>
         <rich:tab
             id="localizacaoUsuario"
-            label="#{messages['localizacao.usuarioLocalizacaoList']}"
+            header="#{messages['localizacao.usuarioLocalizacaoList']}"
             status=":status"
             rendered="#{home.isManaged()}"
             action="#{usuarioLocalizacaoHome.newInstance()}">
@@ -193,16 +245,17 @@
 
         <rich:tab
             id="historicoBloqueioUsuario"
-            label="#{messages['bloqueioUsuario.historicoBloqueioList']}"
+            header="#{messages['bloqueioUsuario.historicoBloqueioList']}"
             rendered="#{home.isManaged()}">
             <s:div>
                 <wi:ajaxDiv id="divHistoricoList">
                     <wi:dataTable
                         values="#{bloqueioUsuarioList.list(15)}"
                         bean="#{bloqueioUsuarioList}"
-                        tableTitle="#{messages['bloqueioUsuario.titleGrid']}"
+                        tableTitle="#{messages['bloqueioUsuario.titleGrid']} - #{usuarioHome.instance.nome}"
                         id="bloqueioUsuarioList"
                         rowId="#{row.idBloqueioUsuario}">
+                        <ui:define name="headerToolBar" />
                         <ui:define name="searchForm">
                             <wi:searchForm
                                 formId="pesquisarBloqueiosForm"

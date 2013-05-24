@@ -241,5 +241,4 @@ public class Endereco implements java.io.Serializable {
 		result = prime * result + getIdEndereco();
 		return result;
 	}
-	
 }

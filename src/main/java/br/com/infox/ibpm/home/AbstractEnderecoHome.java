@@ -70,7 +70,6 @@ public abstract class AbstractEnderecoHome<T> extends AbstractHome<Endereco> {
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("enderecoGrid");
 		return ret;
 	}
 
