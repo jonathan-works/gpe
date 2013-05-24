@@ -221,15 +221,39 @@
             action="#{usuarioLocalizacaoHome.newInstance()}">
             <s:div>
                 <wi:ajaxDiv id="divGridLU">
-                    <wi:form
-                        columns="3"
-                        msgRendered="false"
-                        formTitle="Adicionar Localização - #{(usuarioHome.instance)}"
-                        form="#{usuarioLocalizacaoForm}"
-                        home="#{usuarioLocalizacaoHome}"
-                        reRenderSave="divGridLU"
-                        mostrarNovo="false"
-                        mostrarVoltar="false" />
+                    <s:div id="cadastroUsuarioLocalizacao">
+                        <wi:dataForm
+                            formId="localizacaoUsuarioForm"
+                            formTitle="#{messages['form.title']}">
+                            <wi:tree
+                                id="localizacao"
+                                assignTo="#{usuarioLocalizacaoHome.instance.localizacao}"
+                                tree="#{localizacaoEstruturaTree}"
+                                icon="/img/nivelTree.gif"
+                                iconLeaf="/img/file.gif"
+                                label="#{messages['usuarioLocalizacao.localizacao']}" />
+                            <wi:tree
+                                id="papel"
+                                assignTo="#{usuarioLocalizacaoHome.instance.papel}"
+                                tree="#{papelTree}"
+                                icon="/img/nivelTree.gif"
+                                iconLeaf="/img/file.gif"
+                                label="#{messages['usuarioLocalizacao.papel']}" />
+                            <wi:selectBooleanRadio
+                                id="responsavelLocalizacao"
+                                required="true"
+                                value="#{usuarioLocalizacaoHome.instance.responsavelLocalizacao}"
+                                label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}" />
+                            <ui:define name="buttons">
+                                <wi:commandButton
+                                    id="saveButton"
+                                    action="usuarioLocalizacaoHome.persist"
+                                    reRender="listLocalizacoes"
+                                    value="Incluir" />
+                            </ui:define>
+                        </wi:dataForm>
+                    </s:div>
+                   
                     <wi:datalist
                         home="#{usuarioLocalizacaoHome}"
                         bean="#{usuarioLocalizacaoGrid}"
