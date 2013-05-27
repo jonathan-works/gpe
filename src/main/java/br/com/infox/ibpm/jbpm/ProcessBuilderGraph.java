@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
@@ -17,6 +19,7 @@ import br.com.itx.util.FacesUtil;
 
 @Name(ProcessBuilderGraph.NAME)
 @Scope(ScopeType.SESSION)
+@AutoCreate
 public class ProcessBuilderGraph {
 	
 	public static final String NAME = "processBuilderGraph";
@@ -24,6 +27,11 @@ public class ProcessBuilderGraph {
 	
 	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilderGraph.class);
+	
+	@Create
+	public void init() {
+	    pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+	}
 	
 	private String encodedGraph;
 	

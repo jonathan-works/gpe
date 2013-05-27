@@ -57,7 +57,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	private Integer idDocumentoRerender;
 	private String numeroHash;
 	private String documento;
-	private String idAgrupamentos;
 	private Boolean renderEventTree = Boolean.FALSE;
 	private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
@@ -292,12 +291,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		EventsTipoDocumentoTreeHandler.instance().clearTree();
 		EventsTipoDocumentoTreeHandler.instance().clearList();
 		renderEventTree = false;
-		if(instance.getTipoProcessoDocumento() != null && instance.getTipoProcessoDocumento().getAgrupamento() != null) {
-			idAgrupamentos = Integer.toString(instance.getTipoProcessoDocumento().getAgrupamento().getIdAgrupamento());
-			if(!"".equals(getIdAgrupamentos())) {
-				renderEventTree = true;
-			}
-		}
 	}
 	
 	public void setNumeroHash(String numeroHash) {
@@ -342,10 +335,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	
 	public String labelTipoProcessoDocumento() {
 		return "Tipo do Documento";
-	}
-	
-	public String getIdAgrupamentos() {
-		return idAgrupamentos;
 	}
 	
 }

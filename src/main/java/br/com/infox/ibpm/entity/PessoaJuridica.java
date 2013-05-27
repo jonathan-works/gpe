@@ -53,7 +53,7 @@ public class PessoaJuridica extends Pessoa {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof PessoaJuridica))
 			return false;
 		PessoaJuridica other = (PessoaJuridica) obj;
 		if (cnpj == null) {

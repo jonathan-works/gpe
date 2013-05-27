@@ -77,6 +77,11 @@
 							  value="Pesquisar"
 							  action="#{processoEpaNaoFinalizadoList.setFluxo(null)}"
 							  reRender="processoList" />
+			<wi:commandButton id="reRenderPg"
+							  value="ReRenderPage"
+							  action=""
+							  buttonStyle="display:none"
+							  reRender="processoList" />
 								  
 			<ui:define name="buttons"/>
 		</wi:dataForm>
@@ -102,15 +107,13 @@
 						            	value="#{row.contabilizar}"
 										required="false"
 						                disabled="false">
-								<a:ajax event="click"
+								<a:ajax event="change"
 										   listener="#{processoEpaAction.alternarContabilizar(row)}"
 						                   render="processoListPanel"
                                            limitRender="true"
 										   status=":status"
-										   rendered="true" 
+										   rendered="true"
 										   execute="@this"
-										   onsubmit="showLoading();"
-										   oncomplete="hideLoading();">
 								</a:ajax>
 							</h:selectBooleanCheckbox>
 						</h:form>
@@ -131,7 +134,7 @@
 					
 				</wi:dataTable>
 				<div style="float:left">
-					<dojo:defaultGauge id="#{row.numeroProcesso}"
+					<dojo:defaultGauge id="processo#{row.numeroProcesso}"
 										max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
 										width="210"
 										height="200"
@@ -219,12 +222,23 @@
 				
 				<wi:columnOutputText columnId="tempoGasto"
 									 columnHeader="Tempo Gasto"
-									 value="#{row.tempoGasto}  (#{processoEpaTarefa.tarefa.tipoPrazo == 'D' ? 'dias' : 'minutos'})" />
+									 value="#{row.tempoGasto} #{row.tarefa.tipoPrazo.getLabel()}" />
 									 
 				<wi:columnOutputText columnId="tempoPrevisto"
 									 columnHeader="Tempo Previsto"
-									 value="#{row.tempoPrevisto}  (#{processoEpaTarefa.tarefa.tipoPrazo == 'D' ? 'dias' : 'minutos'})" />
+									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}" />
 			</wi:dataTable>
+			<div style="position:fixed; top:0px; left:0px;">
+				<dojo:defaultGauge id="#{processoEpaTarefaList.entity.processoEpa.numeroProcesso}"
+									max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+									width="210"
+									height="200"
+									radius="50"
+									label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
+									draggable="true"
+									indicatorLabel="#{messages['processoEpa.tempoGasto']} (dias)"
+									value="#{processoEpaTarefaList.entity.processoEpa.tempoGasto}"/>
+			</div>
 		</wi:modalPanel>
 	</ui:define>
 	 

@@ -7,20 +7,22 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
+import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 
 @Name(ProcessoDocumentoList.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
-
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "processoDocumentoList";
-	
 	private static final String DEFAULT_EJBQL = "select o from ProcessoDocumento o";
-	private static final String DEFAULT_ORDER = "processo";
+    private static final String DEFAULT_ORDER = "dataInclusao desc";
+    private static final String R1 = "o.processo.idProcesso = #{processoHome.id}";
 	
+	public static final String NAME = "processoDocumentoList";
+
 	@Override
-	protected void addSearchFields() {		
+	protected void addSearchFields() {
+		addSearchField("idProcesso", SearchCriteria.igual, ProcessoDocumentoList.R1);
 	}
 
 	@Override

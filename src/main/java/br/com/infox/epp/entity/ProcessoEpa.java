@@ -46,7 +46,7 @@ public class ProcessoEpa extends Processo {
 	private Integer porcentagem;
 	private Item itemDoProcesso;
 	private SituacaoPrazoEnum situacaoPrazo;
-	private Boolean contabilizar;
+	private Boolean contabilizar = Boolean.TRUE;
 	
 	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
 	private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);

@@ -1,7 +1,6 @@
-(function(){
-function _defineObject(path, object) {
+function defineObject(path, object, basePath) {
   var packages = path.split(".");
-  var _namespace = window;
+  var _namespace = basePath || window;
   for(var i=0; i<packages.length; i++) {
     var item = packages[i];
     if (i==packages.length-1) {
@@ -12,8 +11,20 @@ function _defineObject(path, object) {
   }
   return _namespace;
 }
-window.defineObject = window.defineObject || _defineObject;
-})()
+
+function existsObject(path, basePath) {
+	var packages = path.split(".");
+	var _namespace = basePath || window;
+	var result = true;
+	for(var i=0; i<packages.length; i++) {
+		var item = packages[i];
+		if (!_namespace[item]) {
+			return false;
+		}
+		_namespace = _namespace[item];
+	}
+	return true;
+}
 
 defineObject("br.com.infox.applyCSSAfterTimeout", function(args) {
 	if (args.id) {

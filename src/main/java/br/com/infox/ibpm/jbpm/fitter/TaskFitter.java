@@ -12,9 +12,8 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 
 import org.hibernate.Query;
-import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
@@ -27,15 +26,13 @@ import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.home.FluxoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.type.PrazoEnum;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(TaskFitter.NAME)
-@Scope(ScopeType.CONVERSATION)
-public class TaskFitter implements Serializable, Fitter {
+@AutoCreate
+public class TaskFitter extends Fitter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "taskFitter";
@@ -47,8 +44,6 @@ public class TaskFitter implements Serializable, Fitter {
 	private Integer prazo;
 	private PrazoEnum tipoPrazo;
 	private Map<String, PrazoTask> prazoTaskMap = new HashMap<String, PrazoTask>();
-	
-	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	
 	public void addTask() {
 		Node currentNode = pb.getNodeFitter().getCurrentNode();

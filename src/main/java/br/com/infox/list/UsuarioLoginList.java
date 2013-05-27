@@ -13,7 +13,7 @@ import br.com.infox.core.action.list.SearchCriteria;
 @Name(UsuarioLoginList.NAME)
 @Scope(ScopeType.PAGE)
 public class UsuarioLoginList extends EntityList<UsuarioLogin> {
-	
+
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioLoginList";
 	
@@ -24,7 +24,6 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
 	protected void addSearchFields() {
 		addSearchField("nome", SearchCriteria.contendo);
 		addSearchField("ativo", SearchCriteria.igual);
-		
 	}
 
 	@Override
@@ -39,7 +38,6 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

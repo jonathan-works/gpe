@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import javax.persistence.Query;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
@@ -30,6 +31,12 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 		return entityManager.createQuery(hql).getResultList();
 	}
 	
-	
+	//Retorna um TipoProcessoDocumento ~aleatório
+	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
+		String sql = "select o from TipoProcessoDocumento o ";
+		Query q = entityManager.createQuery(sql);
+		q.setMaxResults(1);
+		return (TipoProcessoDocumento) q.getSingleResult();	
+	}
 
 }

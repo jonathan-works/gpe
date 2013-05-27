@@ -88,6 +88,7 @@ public class ProcessDeployVerifier {
 			if (f.getAtivo() && f.getPublicado() && f.getXml() != null && !"".equals(f.getXml())) {
 				if (!processNames.contains(f.getFluxo())) {
 					ProcessDefinition instance = parseInstance(f.getXml());
+					instance.setName(f.getFluxo());
 					graphSession.deployProcessDefinition(instance);
 					JbpmUtil.getJbpmSession().flush();
 					Events.instance().raiseEvent(ProcessBuilder.POST_DEPLOY_EVENT, 
