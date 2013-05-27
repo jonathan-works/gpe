@@ -356,4 +356,8 @@ public class ProcessBuilder implements Serializable, ItemChangeListener {
 			}
 		}
 	}
+	
+	public ProcessBuilderGraph getProcessBuilderGraph() {
+		return processBuilderGraph;
+	}
 }

@@ -12,12 +12,10 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epp.manager.EntidadeLogManager;
-import br.com.infox.epp.manager.UsuarioLoginManager;
 import br.com.infox.ibpm.bean.ConsultaEntidadeLog;
 import br.com.infox.ibpm.entity.log.EntityLog;
 import br.com.infox.ibpm.entity.log.EntityLogDetail;
 import br.com.infox.type.TipoOperacaoLogEnum;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(EntidadeLogList.NAME)
