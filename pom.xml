@@ -122,7 +122,7 @@
 			<artifactId>hibernate-core</artifactId>
 			<type>jar</type>
 			<scope>provided</scope>
-			<version>4.2.0.Final</version>
+			<version>4.2.2.Final</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -139,7 +139,7 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<type>jar</type>
 			<scope>provided</scope>
-			<version>4.2.0.Final</version>
+			<version>4.2.2.Final</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>javassist</artifactId>
@@ -156,7 +156,7 @@
 			<artifactId>hibernate-validator</artifactId>
 			<type>jar</type>
 			<scope>provided</scope>
-			<version>4.3.1.Final</version>
+			<version>5.0.1.Final</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
