@@ -16,6 +16,7 @@ import javax.faces.model.SelectItem;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -31,17 +32,16 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.converter.NodeConverter;
 import br.com.infox.ibpm.jbpm.handler.NodeHandler;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.jbpm.node.MailNode;
-import br.com.itx.util.ComponentUtil;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class NodeFitter implements Serializable, Fitter{
+@AutoCreate
+public class NodeFitter extends Fitter implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "nodeFitter";
@@ -59,7 +59,6 @@ public class NodeFitter implements Serializable, Fitter{
 	private String nodeName;
 	private Map<BigInteger, String> modifiedNodes = new HashMap<BigInteger, String>();
 	
-	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	
 	public void addNewNode() {
 		Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
@@ -411,11 +410,11 @@ public class NodeFitter implements Serializable, Fitter{
 		return icon;
 	}
 	
-	public void setCurrentNode(Transition t, String type) {
+	public void setCurrentNode(TransitionHandler t, String type) {
 		if (type.equals("from")) {
-			setCurrentNode(t.getFrom());
+			setCurrentNode(t.getTransition().getFrom());
 		} else {
-			setCurrentNode(t.getTo());
+			setCurrentNode(t.getTransition().getTo());
 		}
 	}
 	

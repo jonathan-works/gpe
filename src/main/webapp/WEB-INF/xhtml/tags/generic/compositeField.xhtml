@@ -44,7 +44,8 @@
                  style="width: 20px">
 				<a:commandLink
                      action="#{util.invokeMethod(actionRemove)}"
-                     reRender="#{id}">
+                     render="#{id}"
+                     limitRender="true">
 					<h:graphicImage
                          url="/img/remove.png"
                          title="Remover Filtro"
@@ -60,7 +61,8 @@
                  name="footer">
 				<a:commandLink
                      id="#{id}addFiltro"
-                     reRender="#{id}"
+                     render="#{id}"
+                     limitRender="true"
                      action="#{util.invokeMethod(actionAdd)}">
 			      	<h:graphicImage
                          url="/img/add.gif"

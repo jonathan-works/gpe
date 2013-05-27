@@ -47,12 +47,12 @@
                      value="/img/close.gif"
                      title="Fechar"
                      style="cursor:pointer"
-                     id="hidelink" />
+                     id="hidelink" >
 	                <rich:componentControl
-                     for="#{id}"
-                     attachTo="hidelink"
+                     target="#{id}"
                      operation="hide"
-                     event="onclick" />
+                     event="click" />
+                    </h:graphicImage>
 	            </h:panelGroup>
 	        </f:facet>
 	        <ui:insert />

@@ -51,7 +51,8 @@
 							
                              style="visibility: hidden;"&gt;
 							<a:commandLink
-								 reRender="#{gridId}Div,#{gridId}ColumnListForm"
+								 render="#{gridId}Div,#{gridId}ColumnListForm"
+                                 limitRender="true"
 								 status="status"
 								 action="#{bean.toggleVisibleColumn(col.id)}"
 								 styleClass="opacityHover">
@@ -67,7 +68,8 @@
 							</a:commandLink>
 							<a:commandLink
 								 rendered="#{key != 0}"
-								 reRender="#{gridId}Div,#{gridId}ColumnListForm"
+								 render="#{gridId}Div,#{gridId}ColumnListForm"
+                                 limitRender="true"
 								 status="status"
 								 action="#{bean.moveColumnUp(col)}"
 								 styleClass="opacityHover">
@@ -77,7 +79,8 @@
 							</a:commandLink>
 							<a:commandLink
 								 rendered="#{key lt bean.visibleColumns.size - 1}"
-								 reRender="#{gridId}Div,#{gridId}ColumnListForm"
+								 render="#{gridId}Div,#{gridId}ColumnListForm"
+                                 limitRender="true"
 								 status="status"
 								 action="#{bean.moveColumnDown(col)}"
 								 styleClass="opacityHover">

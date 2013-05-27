@@ -22,10 +22,11 @@
 			<h:form>
 			
 				<a:commandLink
-				 reRender="#{reRender}"
+				 render="#{reRender}"
+                 limitRender="true"
 				 action="#{bean.addRemoveRowList(row)}"
 				 status="status"
-				 ajaxSingle="true"
+				 execute="@this"
 				 rendered="#{not bean.selectedRowsList.contains(row)}">
 				
 					<h:graphicImage
@@ -34,10 +35,11 @@
 				
 			</a:commandLink>
 				<a:commandLink
-				 reRender="#{reRender}"
+				 render="#{reRender}"
+                 limitRender="true"
 				 action="#{bean.addRemoveRowList(row)}"
 				 status="status"
-				 ajaxSingle="true"
+				 execute="@this"
 				 rendered="#{bean.selectedRowsList.contains(row)}">
 				
 					<h:graphicImage

@@ -70,7 +70,7 @@ public class PessoaFisica extends Pessoa{
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof PessoaFisica))
 			return false;
 		PessoaFisica other = (PessoaFisica) obj;
 		if (cpf == null) {

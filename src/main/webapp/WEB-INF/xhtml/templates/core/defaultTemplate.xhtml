@@ -22,8 +22,11 @@
 			<rich:tabPanel
 				id="defaultTabPanel"
 				switchType="ajax"
-				activeItem="#{home.tab}"
-				itemChangeListener="#{home.processItemChange}">
+				activeItem="#{home.tab}">
+				
+				<ui:insert name="changeListeners">
+					<rich:itemChangeListener binding="#{home}" />
+				</ui:insert>
 				<rich:tab
 					id="search"
 					name="search"

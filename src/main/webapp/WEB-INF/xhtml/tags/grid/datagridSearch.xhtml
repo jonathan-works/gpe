@@ -115,7 +115,8 @@
 								rendered="#{!empty bean.searchFields}"
 								styleClass="dr-tbpnl-tb-inact"
 								value="Pesquisar"
-								reRender="#{gridId}"
+								render="#{gridId}"
+                                limitRender="true"
 								onclick="this.form['#{rich:clientId(gridId)}SearchForm:page'].value='1';showLoading();"
 								oncomplete="hideLoading();" />
 							<c:if test="#{showButtonLimpar}">
@@ -124,7 +125,8 @@
 									onclick="j$('##{rich:clientId(gridId)}SearchForm').clearForm();showLoading();"
 									oncomplete="hideLoading();"
 									action="#{util.invokeMethod(actionButtonLimpar)}"
-									reRender="#{wi:get(reRenderButtonLimpar, gridId.concat('Search'))}"
+									render="#{wi:get(reRenderButtonLimpar, gridId.concat('Search'))}"
+                                    limitRender="true"
 									id="clearButton"
 									value="Limpar"
 									style="min-width:65px; width:65px;"

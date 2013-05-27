@@ -21,11 +21,11 @@
 		<rich:tabPanel
              switchType="ajax"
              headerSpacing="2"
-             selectedTab="#{caixaHome.tab}">
+             activeItem="#{caixaHome.tab}">
 			<rich:tab
                  id="form"
                  rendered="#{(caixaHome.managed or (canEdit and (hideTabForm != true)))}"
-                 label="#{canEdit ? 'Formulário' : 'Detalhes'}"
+                 header="#{canEdit ? 'Formulário' : 'Detalhes'}"
                  immediate="true"
                  status=":status"
                  disabled="#{disabledForm}"

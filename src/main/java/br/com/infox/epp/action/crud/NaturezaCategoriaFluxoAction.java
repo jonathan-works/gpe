@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.event.AbortProcessingException;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.Natureza;
@@ -113,5 +116,13 @@ public class NaturezaCategoriaFluxoAction extends AbstractHome<NaturezaCategoria
 
 	public List<Fluxo> getFluxoList() {
 		return fluxoList;
-	}	
+	}
+	
+	@Override
+	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
+		if (event.getNewItemName().equals("naturezaCatFluxoTab")){
+			init();
+		}
+		super.processItemChange(event);
+	}
 }

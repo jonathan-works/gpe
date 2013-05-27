@@ -1,21 +1,25 @@
 package br.com.infox.ibpm.jbpm;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.util.Base64;
 
 import br.com.infox.jbpm.layout.JbpmLayout;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FacesUtil;
 
 @Name(ProcessBuilderGraph.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.SESSION)
+@AutoCreate
 public class ProcessBuilderGraph {
 	
 	public static final String NAME = "processBuilderGraph";
@@ -24,19 +28,23 @@ public class ProcessBuilderGraph {
 	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilderGraph.class);
 	
-	/**
-	 * Parâmetro Object obj é utilizado pela página graph.xhtml pelo componente
-	 * mediaOutput
-	 * 
-	 * @param out
-	 * @param obj
-	 * @throws IOException
-	 */
-	public void paintGraph(OutputStream out, Object obj) throws IOException {
+	@Create
+	public void init() {
+	    pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+	}
+	
+	private String encodedGraph;
+	
+	public void paintGraph() throws IOException {
 		JbpmLayout layoutOut = getLayout();
-		if (layoutOut != null) {
-			layoutOut.paint(out);
-		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		layoutOut.paint(out);
+		out.close();
+		encodedGraph = Base64.encodeBytes(out.toByteArray());
+	}
+	
+	public String getEncodedGraph() {
+		return encodedGraph;
 	}
 	
 	public boolean isGraphImage() {

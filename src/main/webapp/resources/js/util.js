@@ -1,3 +1,48 @@
+function defineObject(path, object, basePath) {
+  var packages = path.split(".");
+  var _namespace = basePath || window;
+  for(var i=0; i<packages.length; i++) {
+    var item = packages[i];
+    if (i==packages.length-1) {
+      _namespace = _namespace[item] = _namespace[item] || object;
+    } else {
+      _namespace = _namespace[item] = _namespace[item] || {};
+    }
+  }
+  return _namespace;
+}
+
+function existsObject(path, basePath) {
+	var packages = path.split(".");
+	var _namespace = basePath || window;
+	var result = true;
+	for(var i=0; i<packages.length; i++) {
+		var item = packages[i];
+		if (!_namespace[item]) {
+			return false;
+		}
+		_namespace = _namespace[item];
+	}
+	return true;
+}
+
+defineObject("br.com.infox.applyCSSAfterTimeout", function(args) {
+	if (args.id) {
+		var $id = args.id;
+		var $style = args.style || {};
+		var $timeout = args.timeout || 5000;
+		if ($($id)) {
+			setTimeout(function() {
+				if ($($id)) {
+					for(var index in $style) {
+						$($id).css(index, $style[index]);
+					}
+				}
+			}, $timeout);
+		}
+	}
+});
+
 function showLoading() {	
 	if ($('#status')) {
 		$('#status').hide();

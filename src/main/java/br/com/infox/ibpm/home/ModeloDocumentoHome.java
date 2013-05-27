@@ -20,22 +20,25 @@ import java.util.Date;
 import java.util.List;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
+import br.com.infox.epp.manager.ModeloDocumentoManager;
+import br.com.infox.epp.manager.TipoModeloDocumentoPapelManager;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.list.ModeloDocumentoList;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ModeloDocumentoHome.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocumento> {
 
@@ -48,6 +51,9 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	
 	private GrupoModeloDocumento grupoModeloDocumento;
 	private TipoModeloDocumento tipoModeloDocumento;
+	
+	@In private TipoModeloDocumentoPapelManager tipoModeloDocumentoPapelManager;
+	@In private ModeloDocumentoManager modeloDocumentoManager;
 	
 	@Override
 	public EntityList<ModeloDocumento> getBeanList() {
@@ -139,6 +145,14 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		}
 		
 		return super.beforePersistOrUpdate();
+	}
+	
+	public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos() {
+		return tipoModeloDocumentoPapelManager.getTiposModeloDocumentoPermitidos();
+	}
+	
+	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(){
+		return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(grupoModeloDocumento, tipoModeloDocumento);
 	}
 	
 }

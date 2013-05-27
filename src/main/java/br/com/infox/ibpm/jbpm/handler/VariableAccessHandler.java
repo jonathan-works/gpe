@@ -37,6 +37,8 @@ import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.itx.component.grid.GridQuery;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
@@ -275,13 +277,18 @@ public class VariableAccessHandler implements Serializable {
 		}
 		modeloDocumentoList.add(modelo);
 		modeloList.add(modelo.getIdModeloDocumento());
+		GridQuery modeloDocumentoGrid = ComponentUtil.getComponent("modeloDocumentoGrid");
+		modeloDocumentoGrid.getResultList().remove(modelo);
 		mudouModelo = true;
 		updateModelo();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void removeModelo(ModeloDocumento modelo) {
 		modeloDocumentoList.remove(modelo);
 		modeloList.remove(Integer.valueOf(modelo.getIdModeloDocumento()));
+		GridQuery modeloDocumentoGrid = ComponentUtil.getComponent("modeloDocumentoGrid");
+		modeloDocumentoGrid.getResultList().add(modelo);
 		mudouModelo = true;
 		updateModelo();
 	}

@@ -50,7 +50,6 @@ public abstract class AbstractUsuarioHome<T> extends AbstractHome<UsuarioLogin> 
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("usuarioGrid");
 		return ret;
 	}
 

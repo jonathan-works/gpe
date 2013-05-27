@@ -19,7 +19,7 @@
 			
 			<rich:fileUpload
 			 id="#{id}"
-			 ajaxSingle="true"
+			 execute="@this"
 			 status=":status"
 			 allowFlash="true"
 			 required="#{empty required ? false : required}"
@@ -41,7 +41,7 @@
 			 uploadControlLabel="Processar"
 			 cancelEntryControlLabel="Cancelar"
 			 doneLabel="Enviado"
-			 sizeErrorLabel="Erro! Tamanho máximo 2MB."
+             sizeExceededLabel="Erro! Tamanho máximo 2MB."
 			 validator="nullValidator"
 			 validatorMessage="campo obrigatório."
 			 requiredMessage="erro, campo obrigatorio">

@@ -17,7 +17,8 @@
 				
 					<a:commandLink
 					 status=":status"
-					 reRender=":pageBody"
+					 render=":pageBody"
+                     limitRender="true"
 					 id="#{gridId}Edit">
 					
 						<h:graphicImage
@@ -36,9 +37,9 @@
 				<a:commandLink
 				 action="#{home.remove(row)}"
 				 rendered="#{canEdit}"
-				 limitToList="true"
+				 limitRender="true"
 				 status=":status"
-				 reRender="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove}"
+				 render="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove}"
 				 onclick="if(!confirm('Confirma?')) return false;">
 				
 					<h:graphicImage

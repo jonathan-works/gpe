@@ -62,12 +62,6 @@ public class ConsultaProcessoHome implements Serializable {
 		return true;
 	}	
 	
-	public void limparTela(String obj){
-		instance = new ConsultaProcesso();
-		UIComponent form = ComponentUtil.getUIComponent(obj);
-		ComponentUtil.clearChildren(form);
-	}
-	
 	
 	/**
 	 * Retorna os resultados do grid

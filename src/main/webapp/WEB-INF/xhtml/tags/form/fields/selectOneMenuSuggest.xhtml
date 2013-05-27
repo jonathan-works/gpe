@@ -34,7 +34,7 @@
          rendered="#{wi:get(rendered, true)}">
 		<ui:define
              name="label">#{label}</ui:define>
-		<rich:comboBox
+		<rich:select
              id="#{id}"
              value="#{value}"
              disabled="#{disabled}"
@@ -42,12 +42,11 @@
              onchange="#{onchange}"
              defaultLabel="#{empty defaultLabel ? 'Digite algum valor' : defaultLabel}"
              width="#{empty width ? '250' : width}"
-             directInputSuggestions="#{directInputSuggestions}"
              enableManualInput="#{empty enableManualInput ? true : enableManualInput}">
             <f:selectItems
                  value="#{valueItems}" />
             <ui:insert />
-        </rich:comboBox>
+        </rich:select>
 	</s:decorate>
 
 </ui:composition>

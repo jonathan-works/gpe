@@ -116,8 +116,9 @@
                              value="#{(row[1]-row[3])*100 div row[1]}" />
 						<a:commandLink
                              action="#{action.byProcessoForaPrazo(row[0], foraPrazoFluxo)}"
-                             ajaxSingle="true"
-                             reRender="gridByCurrentTask">
+                             execute="@this"
+                             render="gridByCurrentTask"
+                             limitRender="true">
 							<h:outputText
                                  value="#{foraPrazoFluxo}">
 								<f:convertNumber
@@ -144,8 +145,9 @@
                              value="#{(row[4])*100 div (row[4]+row[2])}" />
 						<a:commandLink
                              action="#{action.byProcessoForaTarefa(row[0], foraPrazoTarefa)}"
-                             ajaxSingle="true"
-                             reRender="gridByCurrentTask">
+                             execute="@this"
+                             render="gridByCurrentTask"
+                             limitRender="true">
 							<h:outputText
                                  value="#{foraPrazoTarefa}">
 								<f:convertNumber

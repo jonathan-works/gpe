@@ -15,11 +15,13 @@
 */
 package br.com.infox.ibpm.home;
 
+import java.util.List;
+
 import javax.faces.event.AbortProcessingException;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -35,21 +37,25 @@ import br.com.infox.ibpm.entity.Endereco;
 import br.com.infox.ibpm.entity.Estado;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Municipio;
+import br.com.infox.ibpm.manager.LocalizacaoManager;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 
 
-@Name("localizacaoHome")
-@BypassInterceptors
+@Name(LocalizacaoHome.NAME)
 public class LocalizacaoHome
 		extends AbstractLocalizacaoHome<Localizacao>{
 
+	public static final String NAME = "localizacaoHome";
+	
 	private static final long serialVersionUID = 1L;
 	private Localizacao localizacaoPai;
 	private SearchTree2GridList<Localizacao> searchTree2GridList;
 	private boolean mostrarSomenteEstrutura = false;
 	private boolean mostrarSomenteEstruturaAnterior = false;
 	private String cnpj = "0";
+	
+	@In private LocalizacaoManager localizacaoManager;
 	
 	
 	public Localizacao getLocalizacaoPai() {
@@ -355,6 +361,10 @@ public class LocalizacaoHome
 			nodePai = nodePai.getParent();
 		}
 		return false;
+	}
+	
+	public List<Localizacao> getLocalizacoesEstrutura(){
+		return localizacaoManager.getLocalizacoesEstrutura();
 	}
 
 }

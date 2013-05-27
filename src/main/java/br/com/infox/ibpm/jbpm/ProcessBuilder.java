@@ -15,16 +15,20 @@
  */
 package br.com.infox.ibpm.jbpm;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.event.AbortProcessingException;
+
 import org.hibernate.Query;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
@@ -35,6 +39,8 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
+import org.richfaces.event.ItemChangeEvent;
+import org.richfaces.event.ItemChangeListener;
 import org.xml.sax.InputSource;
 
 import br.com.infox.ibpm.entity.Fluxo;
@@ -46,27 +52,24 @@ import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
 import br.com.infox.ibpm.jbpm.fitter.TransitionFitter;
 import br.com.infox.ibpm.jbpm.fitter.TypeFitter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
-public class ProcessBuilder implements Serializable {
+public class ProcessBuilder implements Serializable, ItemChangeListener {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "processBuilder";
 	public static final String POST_DEPLOY_EVENT = "postDeployEvent";
 	
-	private EventFitter eventFitter;
-	private TransitionFitter transitionFitter;
-	private SwimlaneFitter swinlaneFitter;
-	private TaskFitter taskFitter;
-	private NodeFitter nodeFitter;
-	private TypeFitter typeFitter;
-	
-	private ProcessBuilderGraph processBuilderGraph;
+	@In	private EventFitter eventFitter;
+	@In	private TransitionFitter transitionFitter;
+	@In private SwimlaneFitter swimlaneFitter;
+	@In private TaskFitter taskFitter;
+	@In private NodeFitter nodeFitter;
+	@In private TypeFitter typeFitter;
+	@In	private ProcessBuilderGraph processBuilderGraph;
 
 	private String id;
 	private ProcessDefinition instance;
@@ -104,40 +107,40 @@ public class ProcessBuilder implements Serializable {
 		startState.addLeavingTransition(t);
 		endState.addArrivingTransition(t);
 		instance.getTaskMgmtDefinition().addSwimlane(laneSolicitante);
-		getEventFitter().addEvents();
+		eventFitter.addEvents();
 		taskFitter.getTasks();
-		getProcessBuilderGraph().clear();
+		processBuilderGraph.clear();
 	}
 
 	private void clear() {
 		taskNodeMap = null;
-		getSwinlaneFitter().clear();
-		getTaskFitter().clear();
-		getNodeFitter().clear();
-		getTransitionFitter().clear();
-		getEventFitter().clear();
+		swimlaneFitter.clear();
+		taskFitter.clear();
+		nodeFitter.clear();
+		transitionFitter.clear();
+		eventFitter.clear();
 	}
-
-	public void load(String newId) {
+	
+	public void load(Fluxo fluxo) {
+		String newId = fluxo.getCodFluxo();
 		this.id = null;
 		setId(newId);
-		FluxoHome fluxoHome = FluxoHome.instance();
-		if (fluxoHome != null && fluxoHome.isManaged()) {
-			getInstance().setName(fluxoHome.getInstance().getFluxo());
-			xml = fluxoHome.getInstance().getXml();
-			if (xml == null) {
-				this.id = newId;
-				update();
-			} else {
-				try {
-					instance = parseInstance(xml);
-					getProcessBuilderGraph().clear();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				exists = true;
-				this.id = newId;
+		
+		getInstance().setName(fluxo.getFluxo());
+		xml = fluxo.getXml();
+		if (xml == null) {
+			this.id = newId;
+			update();
+		} else {
+			try {
+				instance = parseInstance(xml);
+				instance.setName(fluxo.getFluxo());
+				processBuilderGraph.clear();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			exists = true;
+			this.id = newId;
 		}
 	}
 
@@ -166,10 +169,10 @@ public class ProcessBuilder implements Serializable {
 				fluxoHome.update();
 			}
 
-			getTaskFitter().updatePrazoTask();
+			taskFitter.updatePrazoTask();
 			FacesMessages.instance().add("Fluxo salvo com sucesso!");
 		}
-		getProcessBuilderGraph().clear();
+		processBuilderGraph.clear();
 	}
 
 	public void updateFluxo(String cdFluxo) {
@@ -184,8 +187,8 @@ public class ProcessBuilder implements Serializable {
 	}
 
 	private void modifyNodesAndTasks() {
-		getNodeFitter().modifyNodes();		
-		getTaskFitter().modifyTasks();
+		nodeFitter.modifyNodes();		
+		taskFitter.modifyTasks();
 	}
 
 	public void deploy() {
@@ -208,10 +211,9 @@ public class ProcessBuilder implements Serializable {
 		FluxoHome fluxoHome = FluxoHome.instance();
 		Fluxo fluxo = fluxoHome.getInstance();
 		fluxo.setXml(null);
-		String id = this.id;
 		clear();
 		createInstance();
-		load(id);
+		load(fluxo);
 	}
 
 	public static ProcessBuilder instance() {
@@ -223,12 +225,12 @@ public class ProcessBuilder implements Serializable {
 	 */
 	public void migraFluxos() {
 		List<Fluxo> list = EntityUtil.getEntityList(Fluxo.class);
-		for (Fluxo f : list) {
+		for (Fluxo fluxo : list) {
 			FluxoHome fluxoHome = FluxoHome.instance();
-			fluxoHome.setInstance(f);
-			load(f.getFluxo());
+			fluxoHome.setInstance(fluxo);
+			load(fluxo);
 			instance.getEvents().clear();
-			getEventFitter().addEvents();
+			eventFitter.addEvents();
 			deploy();
 		}
 	}
@@ -317,55 +319,45 @@ public class ProcessBuilder implements Serializable {
 	}
 	
 	public String getTypeLabel(String type){
-		return getTypeFitter().getTypeLabel(type);
+		return typeFitter.getTypeLabel(type);
 	}
-	
-	public ProcessBuilderGraph getProcessBuilderGraph(){
-		if (processBuilderGraph == null)
-			processBuilderGraph = ComponentUtil
-				.getComponent(ProcessBuilderGraph.NAME);
-		return processBuilderGraph;
-	}
-	
-// ------------------------------------------------------------------------------------------------------------------
-// --------------------------------------------------- ~Fitters~ ----------------------------------------------------
-// ------------------------------------------------------------------------------------------------------------------
-	
+
 	public EventFitter getEventFitter() {
-		if (eventFitter == null)
-			eventFitter = ComponentUtil
-					.getComponent(EventFitter.NAME);
 		return eventFitter;
 	}
-	
+
 	public TransitionFitter getTransitionFitter() {
-		if (transitionFitter == null)
-			transitionFitter = ComponentUtil
-					.getComponent(TransitionFitter.NAME);
 		return transitionFitter;
 	}
-	
-	public SwimlaneFitter getSwinlaneFitter(){
-		if (swinlaneFitter == null)
-			swinlaneFitter = ComponentUtil.getComponent(SwimlaneFitter.NAME);
-		return swinlaneFitter;
+
+	public SwimlaneFitter getSwimlaneFitter() {
+		return swimlaneFitter;
 	}
-	
-	public TaskFitter getTaskFitter(){
-		if (taskFitter == null)
-			taskFitter = ComponentUtil.getComponent(TaskFitter.NAME);
+
+	public TaskFitter getTaskFitter() {
 		return taskFitter;
 	}
-	
-	public NodeFitter getNodeFitter(){
-		if (nodeFitter == null)
-			nodeFitter = ComponentUtil.getComponent(NodeFitter.NAME);
+
+	public NodeFitter getNodeFitter() {
 		return nodeFitter;
 	}
-	
-	public TypeFitter getTypeFitter(){
-		if (typeFitter == null)
-			typeFitter = ComponentUtil.getComponent(TypeFitter.NAME);
+
+	public TypeFitter getTypeFitter() {
 		return typeFitter;
+	}
+
+	@Override
+	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
+		if  (event.getNewItemName().equals("graphTab")) {
+			try {
+				getProcessBuilderGraph().paintGraph();
+			} catch (IOException e) {
+				throw new AbortProcessingException(e);
+			}
+		}
+	}
+	
+	public ProcessBuilderGraph getProcessBuilderGraph() {
+		return processBuilderGraph;
 	}
 }

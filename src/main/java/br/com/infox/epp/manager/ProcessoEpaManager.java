@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.entity.ProcessoEpa;
+import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Pessoa;
@@ -52,5 +53,25 @@ public class ProcessoEpaManager extends GenericManager {
 	
 	public boolean podeInativarPartesDoProcesso(ProcessoEpa processoEpa){
 		return processoEpaDAO.podeInativarPartes(processoEpa);
+	}
+	
+	public void updateTempoGastoProcessoEpa() {
+		List<ProcessoEpa> listAllNotEnded = listAllNotEnded();
+		for (ProcessoEpa processoEpa : listAllNotEnded) {
+			Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+			
+			Integer tempoGasto = processoEpa.getTempoGasto();
+			if (tempoGasto == null) {
+				tempoGasto = 0;
+			}
+			processoEpa.setTempoGasto(tempoGasto + 1);//? sem critério
+			if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
+				processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100) / f.getQtPrazo());
+			}
+			if (processoEpa.getPorcentagem() > 100) {
+				processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+			}
+			update(processoEpa);
+		}
 	}
 }

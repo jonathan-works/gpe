@@ -11,4 +11,8 @@
         <tag-name>defaultGauge</tag-name>
         <source>tags/dojo/gauges/defaultGauge.xhtml</source>
     </tag>
+    <tag>
+        <tag-name>progressBarGauge</tag-name>
+        <source>tags/dojo/gauges/progressBarGauge.xhtml</source>
+    </tag>
 </facelet-taglib>

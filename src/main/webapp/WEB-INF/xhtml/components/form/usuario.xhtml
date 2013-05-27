@@ -14,62 +14,65 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 				
 	<wi:inputCpf
-         id="#{id}cpf"
-         label="CPF"
-         value="#{usuarioHome.instance.cpf}"
-         assignTo="#{usuarioHome.instance.cpf}"
-         required="true">
+		 id="#{id}cpf"
+		 label="CPF"
+		 value="#{usuarioHome.instance.cpf}"
+		 assignTo="#{usuarioHome.instance.cpf}"
+		 required="true">
+		
 				 <a:ajax
-             event="blur"
-             action="#{usuarioHome.searchByCpf(usuarioHome.instance.cpf)}"
-             execute="@this"
-             render="nome, dataNascimentoDecoration"
-             limitRender="true" />
+			 event="blur"
+			 listener="#{usuarioHome.searchByCpf(usuarioHome.instance.cpf)}"
+			 execute="@this"
+			 render="nome, dataNascimentoDecoration"
+			 limitRender="true" />
+	
 	</wi:inputCpf>
 
 	<wi:inputText
-         id="#{id}NomeUsuario"
-         label="#{messages['usuario.nome']}"
-         value="#{usuarioHome.instance.nome}"
-         required="true" />
+		 id="#{id}NomeUsuario"
+		 label="#{messages['usuario.nome']}"
+		 value="#{usuarioHome.instance.nome}"
+		 required="true" />
 	
 	<wi:inputText
-         id="#{id}Login"
-         label="Login"
-         value="#{usuarioHome.instance.login}"
-         required="true"
-         maxlength="15" />
+		 id="#{id}Login"
+		 label="Login"
+		 value="#{usuarioHome.instance.login}"
+		 required="true"
+		 maxlength="15" />
 	
 	<wi:inputText
-         id="#{id}Email"
-         label="E-mail"
-         value="#{usuarioHome.instance.email}"
-         required="true">
-		<f:validator
-             validatorId="emailValidator" />
+		 id="#{id}Email"
+		 label="E-mail"
+		 value="#{usuarioHome.instance.email}"
+		 required="true">
+		
+		<f:validator validatorId="emailValidator" />
+	
 	</wi:inputText>
 	
 	<wi:selectOneRadio
-         id="#{id}Ativo"
-         label="#{messages['field.situacao']}"
-         value="#{usuarioHome.instance.ativo}"
-         valueList="true:Ativo,false:Inativo" />
+		 id="#{id}Ativo"
+		 label="#{messages['field.situacao']}"
+		 value="#{usuarioHome.instance.ativo}"
+		 valueList="true:Ativo,false:Inativo" />
 					   
-	<ui:include
-         src="usuarioProvisorio.xhtml" />
+	<ui:include src="usuarioProvisorio.xhtml" />
 	
-	<ui:include
-         src="bloqueio.xhtml" />
+	<ui:include src="bloqueio.xhtml" />
 		
+
 </ui:composition>

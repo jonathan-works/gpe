@@ -17,11 +17,11 @@
 						 label="#{messages['pessoaFisica.cpf']}"
 						 assignTo="#{pessoaFisicaHome.instance.cpf}"
 						 required="true">
-				<a:support event="onblur"
-							ajaxSingle="true"
-							reRender="nome, dataNascimentoDecoration"
-							limitToList="true"
-							action="#{processoEpaHome.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}"/>
+				<a:ajax event="blur"
+							execute="@this"
+							render="nome, dataNascimentoDecoration"
+							limitRender="true"
+							listener="#{processoEpaHome.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}"/>
 			</wi:inputCpf>
 			<wi:inputText id="nome"
 						 value="#{pessoaFisicaHome.instance.nome}"

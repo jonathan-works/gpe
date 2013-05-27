@@ -34,7 +34,6 @@ public abstract class AbstractParametroHome<T>
 		setInstance(obj);
 		String ret = super.update();
 		newInstance();
-		refreshGrid("parametroGrid");
 		return ret;
 	}
 }

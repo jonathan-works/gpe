@@ -3,7 +3,8 @@
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:rich="http://richfaces.org/rich"
-     xmlns:wi="http://www.itx.com.br/jsf">
+     xmlns:wi="http://www.itx.com.br/jsf"
+     xmlns:a="http://richfaces.org/a4j">
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -30,7 +31,9 @@
              items="#{jbpmUtil.processNames}"
              noSelectionLabel="Selecione..."
              value="#{nodeFitter.nodeHandler.subProcessName}">
-			<wi:ajaxSupport />
+			<a:ajax event="change"
+                execute="@this"
+                limitRender="true"/>
 		</wi:selectOneMenu>
 		
 	</rich:panel>

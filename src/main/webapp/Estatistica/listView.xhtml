@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
- <!--
+<!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -15,57 +15,70 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:rich="http://richfaces.org/rich"
-			    xmlns:a="http://richfaces.org/a4j"
-			    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
-                      
-	<ui:define name="title">#{messages['temposMedios.titlePage']}</ui:define>
-	
-	<ui:define name="body">
-		<rich:panel style="height:98%;">
-			<ui:param name="tempoMedioProcesso" value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}" />
-            <ui:param name="home" value="#{tempoMedioTarefaHome}" />
-		    <wi:dataTable values="#{tempoMedioTarefaList.list(15)}"
-						  bean="#{tempoMedioTarefaList}"
-						  tableTitle="[#{tempoMedioProcesso}] Tempo médio: #{tempoMedioProcesso.getTempoMedioFormatado()} dia(s). Prazo: #{tempoMedioProcesso.prazo} dia(s)"
-						  id="tempoMedioTarefaList"
-						  rowId="#{row.idTarefa}"
-						  showGrid="#{tempoMedioTarefaList.entity.tempoMedioProcesso != null}">
-				<ui:define name="searchForm">
-					<wi:searchForm formId="pesquisarTempoMedioProcesso"
-								   formTitle="#{messages['searchForm.title']}"
-								   opened="true">
-						<wi:selectOneMenuEntity id="naturezaCategoriaFluxo"
-												label="#{messages['tempoMedioTarefaList.tempoMedioProcesso']}"
-												value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}"
-												items="#{tempoMedioTarefaHome.listTempoMedioProcesso}"
-												showLabel="#{messages['tempoMedioProcesso.tempoMedioProcessoListCombo']}" />
-					</wi:searchForm>
-				</ui:define>
-				
-				<ui:define name="toolBar">
-					
-				</ui:define>
-				
-				<wi:columnOutputText columnId="nomeTarefa"
-									 columnHeader="#{messages['temposMedios.descricaoTarefa']}"
-									 value="#{row.nomeTarefa}"
-                                     hideOrder="true" />
-				<wi:columnOutputText columnId="tempoMedio"
-									 columnHeader="#{messages['temposMedios.tempoMedio']}"
-									 value="#{row.getTempoMedioFormatado()}"
-                                     hideOrder="true" />
-				<wi:columnOutputText columnId="prazo"
-									 columnHeader="#{messages['temposMedios.prazo']}"
-									 value="#{row.prazo} #{row.tipoPrazo.label}"
-									 hideOrder="true" />
-			</wi:dataTable>
-		</rich:panel>
-	</ui:define>
-	
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+    <ui:define name="title">#{messages['temposMedios.titlePage']}</ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <rich:panel style="height:98%;">
+                <ui:param
+                    name="tempoMedioProcesso"
+                    value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}" />
+                <ui:param
+                    name="home"
+                    value="#{tempoMedioTarefaHome}" />
+                <wi:dataTable
+                    values="#{tempoMedioTarefaList.list(15)}"
+                    bean="#{tempoMedioTarefaList}"
+                    tableTitle="[#{tempoMedioProcesso}] Tempo médio: #{tempoMedioProcesso.getTempoMedioFormatado()} dia(s). Prazo: #{tempoMedioProcesso.prazo} dia(s)"
+                    id="tempoMedioTarefaList"
+                    rowId="#{row.idTarefa}"
+                    showGrid="#{tempoMedioTarefaList.entity.tempoMedioProcesso != null}">
+                    <ui:define name="searchForm">
+                        <wi:searchForm
+                            formId="pesquisarTempoMedioProcesso"
+                            formTitle="#{messages['searchForm.title']}"
+                            opened="true">
+                            <wi:selectOneMenuEntity
+                                id="naturezaCategoriaFluxo"
+                                label="#{messages['tempoMedioTarefaList.tempoMedioProcesso']}"
+                                value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}"
+                                items="#{tempoMedioTarefaHome.listTempoMedioProcesso}"
+                                showLabel="#{messages['tempoMedioProcesso.tempoMedioProcessoListCombo']}" />
+                        </wi:searchForm>
+                    </ui:define>
+
+                    <ui:define name="toolBar">
+
+                    </ui:define>
+
+                    <wi:columnOutputText
+                        columnId="nomeTarefa"
+                        columnHeader="#{messages['temposMedios.descricaoTarefa']}"
+                        value="#{row.nomeTarefa}"
+                        hideOrder="true" />
+                    <wi:columnOutputText
+                        columnId="tempoMedio"
+                        columnHeader="#{messages['temposMedios.tempoMedio']}"
+                        value="#{row.getTempoMedioFormatado()}"
+                        hideOrder="true" />
+                    <wi:columnOutputText
+                        columnId="prazo"
+                        columnHeader="#{messages['temposMedios.prazo']}"
+                        value="#{row.prazo} #{row.tipoPrazo.label}"
+                        hideOrder="true" />
+                </wi:dataTable>
+            </rich:panel>
+        </h:form>
+    </ui:define>
+
 </ui:composition>

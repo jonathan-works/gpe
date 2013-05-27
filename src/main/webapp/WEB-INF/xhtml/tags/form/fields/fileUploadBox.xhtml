@@ -13,67 +13,74 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-<ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf">
+--><ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 
 	<ui:param
-		name="template"
-		value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+		 name="template"
+		 value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
 
 	<s:decorate
-		id="#{id}Decoration"
-		template="#{template}"
-		rendered="#{wi:get(rendered, true)}">
+		 id="#{id}Decoration"
+		 template="#{template}"
+		 rendered="#{wi:get(rendered, true)}">
+		
 		<ui:define name="label">#{label}</ui:define>
 
 		<ui:param
-			name="acceptedTypes"
-			value="#{wi:get(acceptedTypes, 'pdf')}" />
+			 name="acceptedTypes"
+			 value="#{wi:get(acceptedTypes, 'pdf')}" />
 		<ui:param
-			name="tipMessage"
-			value="#{acceptedTypes == 'pdf' ? 'Somente arquivo PDF com tamanho máximo de 1.5MB' : tipMessage}" />
+			 name="tipMessage"
+			 value="#{acceptedTypes == 'pdf' ? 'Somente arquivo PDF com tamanho máximo de 1.5MB' : tipMessage}" />
 
 		<rich:fileUpload
-			id="#{id}"
-			execute="@this"
-			status=":status"
-			limitRender="true"
-			required="#{wi:get(required, false)}"
-			acceptedTypes="#{acceptedTypes}"
-			maxFilesQuantity="#{wi:get(maxFilesQuantity, 1)}"
-			fileUploadListener="#{fileHome.processFileUpload}"
-			immediateUpload="#{wi:get(immediateUpload, true)}"
-			listWidth="#{wi:get(listWidth, '260px')}"
-			listHeight="#{wi:get(listHeight, '58px')}"
-			noDuplicate="#{wi:get(noDuplicate, true)}"
-			onuploadcomplete="#{onuploadcomplete}"
-			addLabel="Adicionar"
-			clearAllLabel="Limpar Todos"
-			clearLabel="Limpar"
-			uploadLabel="Processar"
-			doneLabel="Enviado"
-			sizeExceededLabel="Erro! Tamanho máximo 2MB."
-			validatorMessage="campo obrigatório."
-			requiredMessage="erro, campo obrigatorio"
-			disabled="#{disabled}">
+			 id="#{id}"
+			 execute="@this"
+			 status=":status"
+			 limitRender="true"
+			 required="#{wi:get(required, false)}"
+			 acceptedTypes="#{acceptedTypes}"
+			 maxFilesQuantity="#{wi:get(maxFilesQuantity, 1)}"
+			 fileUploadListener="#{fileHome.processFileUpload}"
+			 immediateUpload="#{wi:get(immediateUpload, true)}"
+			 listWidth="#{wi:get(listWidth, '260px')}"
+			 listHeight="#{wi:get(listHeight, '58px')}"
+			 noDuplicate="#{wi:get(noDuplicate, true)}"
+			 onuploadcomplete="#{onuploadcomplete}"
+			 addLabel="Adicionar"
+			 clearAllLabel="Limpar Todos"
+			 clearLabel="Limpar"
+			 uploadLabel="Processar"
+			 doneLabel="Enviado"
+			 sizeExceededLabel="Erro! Tamanho máximo 2MB."
+			 validatorMessage="campo obrigatório."
+			 requiredMessage="erro, campo obrigatorio"
+			 disabled="#{disabled}">
+			
 			<f:facet name="label">
+				
 				<h:outputText value="{_KB}KB de {KB}KB" />
+			
 			</f:facet>
 			<ui:insert />
 			<a:ajax
-				event="clear"
-				action="#{fileHome.clear()}"
-				execute="@this"
-				render="#{id}" />
+				 event="clear"
+				 listener="#{fileHome.clear()}"
+				 execute="@this"
+				 render="#{id}" />
+		
 		</rich:fileUpload>
+	
 	</s:decorate>
+
 
 </ui:composition>

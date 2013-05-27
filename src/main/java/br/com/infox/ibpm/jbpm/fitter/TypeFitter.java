@@ -9,31 +9,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.bpm.action.TaskPageAction;
-import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableAccessHandler;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FacesUtil;
 import br.com.itx.util.FileUtil;
 
 @Name(TypeFitter.NAME)
-@Scope(ScopeType.CONVERSATION)
-public class TypeFitter implements Serializable, Fitter{
+@AutoCreate
+public class TypeFitter extends Fitter implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "typeFitter";
 	
 	private List<String> typeList;
 	private Properties types;
-	
-	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List getTypeList() {

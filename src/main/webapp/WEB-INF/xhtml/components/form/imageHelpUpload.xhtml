@@ -41,7 +41,7 @@
 	        <rich:fileUpload
 				 fileUploadListener="#{helpFileUpload.listener}"
 				 id="upload"
-				 ajaxSingle="true"
+				 execute="@this"
 				 onupload="uploadHandler(event, '#{helpFileUpload.imagesPath}')"
 				 onuploadcomplete="insert()"
 				 autoclear="true"
@@ -57,7 +57,8 @@
 				 noDuplicate="true"
 				 status=":status"
 				 allowFlash="true"
-				 reRender="uploadImagem"
+                 render="uploadImagem"
+                 limitRender="true"
 				 acceptedTypes="jpg, gif, png">
             </rich:fileUpload>
             <h:form>

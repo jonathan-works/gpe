@@ -43,7 +43,8 @@
                                  value="#{labelGroup} (#{rowKeyGroup})" />
 						<a:commandLink
                                  action="#{util.invokeMethod(actionRemove)}"
-                                 reRender="#{id}Panel">
+                                 render="#{id}Panel"
+                                 limitRender="true">
 							<h:graphicImage
                                      url="/img/remove.png"
                                      title="Remover Filtro"
@@ -61,7 +62,8 @@
 	</a:outputPanel>
 	<a:commandLink
          id="#{id}addFiltro"
-         reRender="#{id}Panel"
+         render="#{id}Panel"
+         limitRender="true"
          action="#{util.invokeMethod(actionAdd)}">
 		<h:outputText
              value="Add" />

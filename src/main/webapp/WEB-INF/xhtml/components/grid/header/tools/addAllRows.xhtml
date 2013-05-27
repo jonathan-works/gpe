@@ -17,9 +17,10 @@
 	<h:form>
 		 
 	<a:commandLink
-			 limitToList="true"
+			 limitRender="true"
 			 status=":status"
-			 reRender="#{reRenderAdd}"
+			 render="#{reRenderAdd}"
+             limitRender="true"
 			 action="#{expressions.createMethodExpression(addAllExpression).invoke(null)}"
 			 rendered="#{canEdit}">
 			

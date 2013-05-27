@@ -42,7 +42,7 @@
                     <wi:selectOneMenuEntity id="tipoModeloDocumento"
                         label="#{messages['modeloDocumento.tipoModeloDocumento']}"
                         value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
-                        items="#{tipoModeloDocumentoItems}" showLabelTodos="true" />
+                        items="#{home.tiposModeloDocumentoPermitidos}" showLabelTodos="true" />
 					<wi:selectSituacaoOneMenu id="situacao"
 						label="#{messages['field.situacao']}"
 						value="#{modeloDocumentoList.entity.ativo}" />
@@ -67,7 +67,7 @@
 			<wi:selectOneMenuEntity id="tipoModeloDocumento"
 				label="#{messages['modeloDocumento.tipoModeloDocumento']}"
 				value="#{modeloDocumentoHome.instance.tipoModeloDocumento}"
-				items="#{tipoModeloDocumentoItems}"
+				items="#{home.tiposModeloDocumentoPermitidos}"
 				required="true"
 				showLabelSelecione="true" />
 			<wi:inputText id="tituloModeloDocumento"
@@ -78,10 +78,11 @@
 				label="#{messages['field.situacao']}"
 				value="#{modeloDocumentoHome.instance.ativo}"/>
 			<wi:editor id="modeloDocumento"
-				label="#{messages['modeloDocumento.modeloDocumento']}"
-				value="#{modeloDocumentoHome.instance.modeloDocumento}"
-				showVariables="true"
-				required="true" />
+                label="#{messages['modeloDocumento.modeloDocumento']}"
+                value="#{modeloDocumentoHome.instance.modeloDocumento}"
+                showVariables="true"
+                required="true"
+                skin=""/>
 
 			<wi:imageUpload imageBean="#{imageFileUpload}" />
 

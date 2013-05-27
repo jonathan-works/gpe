@@ -11,6 +11,7 @@
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
 	
+	
 		<ui:param
 		 name="modelo"
 		 value="#{f.id}" />
@@ -19,15 +20,17 @@
 		 id="#{f.id}Decoration"
 		 template="/WEB-INF/xhtml/components/templates/edit.xhtml">
 		
+		
 			<ui:define name="label">Modelo</ui:define>
 			<h:selectOneMenu
 			 value="#{home.modeloDocumento}"
 			 rendered="#{! readonly}">
 			
+			
 				<a:ajax
 				 event="change"
 				 status=":status"
-				 action="#{processoHome.updateProcessoDocumentoBin()}"
+				 listener="#{processoHome.updateProcessoDocumentoBin()}"
 				 render="taskInstanceDiv"
 				 execute="@this" />
 				<s:convertEntity />
@@ -37,9 +40,12 @@
 				 label="#{v}"
 				 value="#{modeloDocumento.getModeloItems(modelo)}" />
 			
+		
 		</h:selectOneMenu>
 		
+	
 	</s:decorate>
 		
 	
+
 </ui:composition>

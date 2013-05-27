@@ -42,7 +42,8 @@
 				<a:region> 
 					<a:commandLink
                          action="#{home.setInstance(row)}"
-                         reRender="#{wi:get(reRender,'pageBody')}"
+                         render="#{wi:get(reRender,'pageBody')}"
+                         limitRender="true"
                          status=":status">
 						<c:if
                              test="#{tabOnClick == 'form'}">

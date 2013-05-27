@@ -67,7 +67,8 @@
                          value="Gravar"
                          oncomplete="$(idTextarea).setValue($('verificaEventoForm:createdExpression').innerHTML); Richfaces.hideTopModalPanel(); $(idTextarea).onchange()"
                          styleClass="buttons dr-tbpnl-tb-inact"
-                         reRender="trasitionCondition, createdExpression"
+                         render="trasitionCondition, createdExpression"
+                         limitRender="true"
                          action="#{actionTemplate.createExpression}" />
 				</s:div>
 				<rich:messages

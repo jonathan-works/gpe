@@ -29,17 +29,19 @@
 
 <ui:define name="body">
 
-	<a:loadStyle src="processDefinition.css" />
-	<a:loadScript src="/js/jbpmGraph.js" />
+	<h:outputStylesheet name="processDefinition.css" library="stylesheet"/>
+	<h:outputScript name="jbpmGraph.js" library="js"/>
+    <h:outputScript name="underscore.js" library="js"/>
 
 	<ui:param name="def" value="#{processBuilder.instance}" />
 	
-	<a:form id="form">
+	<h:form id="form">
 	
 	<rich:tabPanel style="height:550px"
-		selectedTab="#{processBuilder.tab}"
-		switchType="support" headerSpacing="2">
-		<rich:tab label="#{messages['processBuilder.properties']}">
+		activeItem="#{processBuilder.tab}"
+		switchType="ajax"
+		itemChangeListener="#{processBuilder.processItemChange}">
+		<rich:tab header="#{messages['processBuilder.properties']}" name="propriedadesTab" id="propriedadesTab">
 			<rich:panel style="clear:both; overflow:auto; padding-bottom:5px"
 				header="#{messages['processBuilder.info']}" >
 				<wi:inputText id="codFluxo" 
@@ -47,20 +49,17 @@
                               value="#{processBuilder.id}" 
 					          readonly="true">
 					<f:validator validatorId="idValidator" />
-					<wi:ajaxSupport reRender="idDecoration"/>
 				</wi:inputText>
 
 				<wi:inputText id="nome"
                               label="#{messages['fluxo.fluxo']}"
                               value="#{def.name}" 
                               readonly="true">
-					<wi:ajaxSupport reRender="nomeDecoration"/>
 				</wi:inputText>
 				
 				<wi:inputTextarea id="description"
                                   value="#{def.description}" 
 					              label="#{messages['processBuilder.description']}">
-					<wi:ajaxSupport/>
 				</wi:inputTextarea> 
 			</rich:panel>
 			
@@ -71,27 +70,16 @@
 			</rich:panel>
 		</rich:tab>
 		
-		<rich:tab label="#{messages['processBuilder.nodes']}" id="nodesTab" rendered="#{processBuilder.exists}">
+		<rich:tab header="#{messages['processBuilder.nodes']}" name="nodesTab" id="nodesTab" rendered="#{processBuilder.exists}">
 			<ui:include src="nodes.xhtml" />
 		</rich:tab>
 		
-			<ui:remove>
-	<!--		<rich:tab label="Eventos" id="events" rendered="#{processBuilder.exists}">-->
-	<!--			<rich:panel header="Eventos">-->
-	<!--				<ui:include src="events.xhtml">-->
-	<!--					<ui:param name="parent" value="#{processBuilder}" />-->
-	<!--					<ui:param name="id" value="processEvent" />-->
-	<!--				</ui:include>-->
-	<!--			</rich:panel>-->
-	<!--		</rich:tab>-->
-			</ui:remove>
-		
-		<rich:tab label="XML" id="xmlTab" 
+		<rich:tab header="XML" name="xmlTab" id="xmlTab" 
 			rendered="#{processBuilder.exists}">
 			<ui:include src="xmlEdit.xhtml" />
 		</rich:tab>
 
-		<rich:tab label="#{messages['processBuilder.graph']}" id="graphTab" >
+		<rich:tab header="#{messages['processBuilder.graph']}" name="graphTab" id="graphTab" >
 			<ui:include src="graph.xhtml" />
 		</rich:tab>
 	</rich:tabPanel>
@@ -104,18 +92,17 @@
 
 	<a:commandButton styleClass="dr-tbpnl-tb-inact"
 		id="publicar"
-		ajaxSingle="true"
-		reRender="form"
+		render="form"
 		action="#{processBuilder.deploy()}"
 		value="#{messages['processBuilder.deployBtn']}" type="submit" 
-		rendered="#{processBuilder.exists}"/>
+		rendered="#{processBuilder.exists}"
+        limitRender="true"/>
 
 	<h:commandButton styleClass="dr-tbpnl-tb-inact"
 		id="novoProcesso"
 		action="#{processBuilder.update()}"
 		value="#{messages['processBuilder.saveBtn']}" type="submit" 
-		rendered="#{!processBuilder.exists}"
-		reRender="pageBody"/>
+		rendered="#{!processBuilder.exists}"/>
 	<h:commandButton styleClass="dr-tbpnl-tb-inact"
 					 id="new"
 					 action="#{processBuilder.clearDefinition()}"
@@ -123,8 +110,7 @@
 					 type="submit"
 					 onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;" 
 					 rendered="#{processBuilder.exists}"/>
-
-	</a:form>
+    </h:form>
 
 	<rich:messages id="messages" style="color:red" ajaxRendered="true" globalOnly="false" />
 

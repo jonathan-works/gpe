@@ -12,12 +12,11 @@
 		<ui:param
 		 name="reRenderAdd"
 		 value="#{empty reRenderAdd ? 'l_'.concat(gridId).concat(', ').concat(gridId) : reRenderAdd}" />
-		<h:form>
-		
-			<a:commandLink
-			 limitToList="true"
+         <a:region>
+		  <a:commandLink
+			 limitRender="true"
 			 status=":status"
-			 reRender="#{reRenderAdd}"
+			 render="#{reRenderAdd}"
 			 action="#{variavel.addModelo(row)}"
 			 rendered="#{canEdit}">
 			
@@ -25,9 +24,7 @@
 				 url="/img/grid/copyLeft.gif"
 				 title="Adicionar" />
 			
-		</a:commandLink>
-		
-	</h:form>
-		
+		  </a:commandLink>
+		</a:region>
 	
 </ui:composition>

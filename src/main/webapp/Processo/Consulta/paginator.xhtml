@@ -1,108 +1,93 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/minimal.xhtml">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
-	<ui:define
-         name="title">Documentos do processo #{processoHome.instance.numeroProcesso}</ui:define>
-	
-	<ui:define
-         name="body">
-	<a:loadScript
-             src="/js/jquery.hotkeys.js" />
-	<a:loadScript
-             src="paginator.js" />
-	<a:loadStyle
-             src="paginator.css" />
-	
-	<wi:view
-             form="#{consultaSolicitacaoView}"
-             title="#{messages['consultaSolicitacaoGrid.titulo']} #{processoHome.instance}"
-             columns="4"
-             opened="false"
-             buttons="none">
-	</wi:view>
-	
-	<div
-             style="width: 100%; text-align: center">
+    <ui:define name="title">Documentos do processo #{processoHome.instance.numeroProcesso}</ui:define>
 
-		<div>
-			<h:form
-                     id="documento">
-				<rich:dataTable
-                         id="documentosGrid"
-                         columnsWidth="70%,30%"
-                         value="#{processoHandler.taskDocumentList}"
-                         var="task"
-                         first="#{processoHandler.inicio}"
-                         rows="1">
+    <ui:define name="body">
+        <h:outputScript
+            name="jquery.hotkeys.js"
+            library="js" />
+        <h:outputScript
+            name="paginator.js"
+            library="js" />
+        <h:outputStylesheet
+            name="paginator.css"
+            library="stylesheet" />
 
-					<rich:column
-                             style="vertical-align:top; background-color: #dddddd; padding:0">
-						<f:facet
-                                 name="header">Documento</f:facet>
-						<div
-                                 id="areaPagina">
-							<ui:include
-                                     src="postit.xhtml" />
-							<div
-                                     id="pagina">
-								<rich:dataTable
-                                         value="#{variableHandler.getTaskVariables(task.id)}"
-                                         var="v">
-									<rich:column>
-										<table
-                                                 style="width: 100%; text-align: left;">
-											<tr>
-												<th
-                                                         style="text-align:left">
-													<h:outputText
-                                                             value="#{v.label}" />
-												</th>
-											</tr>
-											<tr>
-												<td>
-													<h:outputText
-                                                             value="#{search.getTextoDestacado(v)}"
-                                                             escape="false" />
-												</td>
-											</tr>
-										</table>
-									</rich:column>
-								</rich:dataTable>
-							</div>
-						</div>
-					</rich:column>
-					
-					<rich:column
-                             style="vertical-align:top; padding:0; background-color:#dddddd">
-						<f:facet
-                                 name="header">
-							<ui:include
-                                     src="/WEB-INF/xhtml/components/grid/header/documentoBin.xhtml" />
-						</f:facet>
-						<ui:include
-                                 src="/WEB-INF/xhtml/components/grid/documentosAnexadosProcesso.xhtml" />
-					</rich:column>
+        <wi:view
+            form="#{consultaSolicitacaoView}"
+            title="#{messages['consultaSolicitacaoGrid.titulo']} #{processoHome.instance}"
+            columns="4"
+            opened="false"
+            buttons="none">
+        </wi:view>
 
-				</rich:dataTable>
-				
-				<rich:dataScroller
-                         maxPages="10"
-                         oncomplete="pageFocus()"
-                         stepControls="hide"
-                         id="docScroller"
-                         for="documentosGrid"
-                         page="#{processoHandler.inicio}"
-                         style="color: black;" />
-			</h:form>
-		</div>				
-	</div>
-	</ui:define>
+        <div style="width: 100%; text-align: center">
+
+            <div>
+                <h:form id="documento">
+                    <rich:dataTable
+                        id="documentosGrid"
+                        columnsWidth="70%,30%"
+                        value="#{processoHandler.taskDocumentList}"
+                        var="task"
+                        first="#{processoHandler.inicio}"
+                        rows="1">
+
+                        <rich:column
+                            style="vertical-align:top; background-color: #dddddd; padding:0">
+                            <f:facet name="header">Documento</f:facet>
+                            <div id="areaPagina">
+                                <ui:include src="postit.xhtml" />
+                                <div id="pagina">
+                                    <rich:dataTable
+                                        value="#{variableHandler.getTaskVariables(task.id)}"
+                                        var="v">
+                                        <rich:column
+                                            style="width: 100%; text-align: left;">
+                                            <h:outputText
+                                                style="font-weight:bold"
+                                                value="#{v.label}" />
+
+                                            <h:outputText
+                                                value="#{search.getTextoDestacado(v)}"
+                                                escape="false" />
+                                        </rich:column>
+                                    </rich:dataTable>
+                                </div>
+                            </div>
+                        </rich:column>
+
+                        <rich:column
+                            style="vertical-align:top; padding:0; background-color:#dddddd">
+                            <f:facet name="header">
+                                <ui:include
+                                    src="/WEB-INF/xhtml/components/grid/header/documentoBin.xhtml" />
+                            </f:facet>
+                            <ui:include
+                                src="/WEB-INF/xhtml/components/grid/documentosAnexadosProcesso.xhtml" />
+                        </rich:column>
+
+                    </rich:dataTable>
+
+                    <rich:dataScroller
+                        maxPages="10"
+                        oncomplete="pageFocus()"
+                        stepControls="hide"
+                        id="docScroller"
+                        for="documentosGrid"
+                        page="#{processoHandler.inicio}"
+                        style="color: black;" />
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
 </ui:composition>

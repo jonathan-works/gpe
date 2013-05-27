@@ -55,14 +55,14 @@
 					<wi:selectOneMenu
                          id="nomeEntidade"
                          value="#{entidadeLogList.instance.nomeEntidade}"
-                         items="#{entidadeNomeLogItems}"
+                         items="#{entidadeLogList.nomesDasEntidades}"
                          noSelectionLabel="[Todos]"
                          label="#{messages['entidadeLog.nomeEntidade']}" />
 								  	  
 					<wi:selectOneMenuEntity
                          id="usuario"
                          value="#{entidadeLogList.instance.usuario}"
-                         items="#{usuarioLogItems}"
+                         items="#{entidadeLogList.usuariosQuePossuemLogs}"
                          noSelectionLabel="[Todos]"
                          label="#{messages['entidadeLog.usuario']}" />
 											

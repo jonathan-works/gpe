@@ -1,86 +1,90 @@
-function showDetail(event) {
-	divDetail = $('divDetail');
-	p = Event.pointer(event);
-	area = Event.element(event);
-	coords = area.coords.split(',');
-//	divDetail.style.left= p.x + 'px';
-//	divDetail.style.top= p.y + 'px';
-	divDetail.innerHTML = area.id;
-	divDetail.show();
-}
-
-function hideDetail() {
-	$('divDetail').hide();
-}
-
-function openLink(nodeIndex, cid) {
-	window.location.href = "?tab=nodesTab&cid=" + cid + "&node=" + nodeIndex;
-}
-
-NodeArea=Class.create({
-	initialize:function(cid){
-		if (! $('nodes')) {
-			document.body.appendChild(new Element('map', {name:'nodes', id:'nodes'}));
-		}
-		this.map = $('nodes');
-		this.nodes = new Array();
-		this.cid = cid;
-	},
+function NodeArea(cid) {
+	if ($('#nodes').length == 0) {
+		var map = $('<map></map>');
+		map.attr({'id': 'nodes', 'name': 'nodes'});
+		$('body').append(map);
+	}
 	
-	addToMap: function(id, coords, title, vars, cond) {
-		area = this.map.appendChild(new Element('area', 
-				{id:'_'+id, coords:coords, 
-					href:'javascript:openLink(' + id + ',' + this.cid + ')' , 
-					shape:'rect'}));
-		area.observe('mouseover', this.mouseover);
-		area.observe('mouseout', this.mouseout);
-		area.areaName = title;
-		area.vars = vars;
-		area.cond = cond;
-	},
+	this.map = $('#nodes');
+	this.nodes = [];
+	this.cid = cid;
 	
-	mouseover: function(event) {
-		d = $('divDetail');
-		if (d.visible()) {
-			debug.log("visible")
+	function createLink(nodeIndex, cid) {
+		return "?tab=nodesTab&cid=" + cid + "&node=" + nodeIndex;
+	}
+	
+	this.addToMap = function(id, coords, title, vars, cond) {
+		var area = $('<area></area>');
+		area.attr({
+			id: '_' + id, 
+			coords: coords,
+			href: 'javascript:window.location.href = "' + createLink(id, this.cid) + '"',
+			shape: 'rect'
+		});
+
+		area[0].addEventListener('mouseover', this.mouseover, false);
+		area[0].addEventListener('mouseout', this.mouseout, false);
+		area[0].areaName = title;
+		area[0].vars = vars;
+		area[0].cond = cond;
+		
+		this.map.append(area);
+	};
+	
+	this.mouseover = function(event) {
+		var d = $('#divDetail');
+		if (d.css('display') == 'block') {
 			return;
 		}
-		d.innerHTML = '';
-		area = Event.element(event);
-		d.insert('<div style="width:100%; text-align:center;font-weight:bold">' + area.areaName + '</div>');
-		inVars = new Array();
-		outVars = new Array();
-		$H(area.vars).each(
-			function(v) {
-				if (v.value.readonly == 'true') {
-					inVars[inVars.length] = v;
-				} else {
-					outVars[outVars.length] = v;
-				}
+
+		d.empty();
+		
+		var area = $(event.target);
+		d.append($('<div style="width:100%; text-align:center;font-weight:bold">' + area[0].areaName + '</div>'));
+		
+		var inVars = [];
+		var outVars = [];
+		
+		_.each(area[0].vars, function(v) {
+			if (v.readonly == 'true') {
+				inVars[inVars.length] = v;
+			} else {
+				outVars[outVars.length] = v;
 			}
-		);
+		});
+		
 		if (inVars.length > 0) {
-			d.insert('<br/>Entrada:');
+			d.append('<br/>Entrada:');
 		}
-		ulIn = d.appendChild(new Element('ul', {style:'list-style:circle;margin:0'}));
+		
+		var ulIn = $('<ul style:"list-style:circle;margin:0"></ul>'); 
+		d.append(ulIn);
+		
 		if (outVars.length > 0) {
-			d.insert('Saída:');
+			var saida = "Sa\u00EDda";
+			d.append(saida + ':');
 		}
-		ulOut = d.appendChild(new Element('ul', {style:'margin:0'}));
-		inVars.each(function(v) {
-			ulIn.insert('<li>' + v.value.name + ' (' + v.value.type + ')' + '</li>');
+		
+		var ulOut = $('<ul style:"margin:0"></ul>'); 
+		d.append(ulOut);
+		
+		_.each(inVars, function(v) {
+			ulIn.append($('<li>' + v.name + ' (' + v.type + ')' + '</li>'));
 		});
-		outVars.each(function(v) {
-			ulOut.insert('<li>' + v.value.name + ' (' + v.value.type + ')' + '</li>');
+		
+		_.each(outVars, function(v) {
+			ulOut.append($('<li>' + v.name + ' (' + v.type + ')' + '</li>'));
 		});
+		
 		d.show();
-		if (area.cond != null){
-			d.insert('<br/>Condição: ' + area.cond);
+		
+		if (area[0].cond != null){
+			var condicao = "Condi\u00E7\u00E3o";
+			d.append($('<p>' + condicao + ': ' + area[0].cond + '</p>'));
 		}
-	},
+	};
 
-	mouseout: function(event) {
-		$('divDetail').hide();
-	}
-
-});
+	this.mouseout = function(event) {
+		$('#divDetail').hide();
+	};
+}

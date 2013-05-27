@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -32,191 +33,240 @@
 		min-width: 215px;
 	}
 	</style>
-	<s:div
-         id="mailDiv">
-		<ui:decorate
-             template="../dataTable.xhtml">
+	<s:div id="mailDiv">
+		
+		<ui:decorate template="../dataTable.xhtml">
+			
 			<ui:param
-                 name="values"
-                 value="#{nodeFitter.currentNode.listaEmail}" />
+				 name="values"
+				 value="#{nodeFitter.currentNode.listaEmail}" />
 			<ui:param
-                 name="id"
-                 value="listaEmail" />
+				 name="id"
+				 value="listaEmail" />
 			<ui:param
-                 name="style"
-                 value="clear:both; width:99%; margin-top:5px;#{empty values ? 'border-collapse:separate':'' }" /> 
-			<ui:define
-                 name="toolBar">
+				 name="style"
+				 value="clear:both; width:99%; margin-top:5px;#{empty values ? 'border-collapse:separate':'' }" /> 
+			<ui:define name="toolBar">
+				
 				<h:graphicImage
-                     title="Excluir destinatário"
-                     style="cursor:pointer"
-                     url="/img/remove.png">
+					 title="Excluir destinatário"
+					 style="cursor:pointer"
+					 url="/img/remove.png">
+					
 					<a:ajax
-                         event="click"
-                         action="#{nodeFitter.currentNode.removeListaEmail(row)}"
-                         onclick="if(!confirm('Confirma?')) return false;"
-                         execute="@this"
-                         render="mailDiv" />
+						 event="click"
+						 listener="#{nodeFitter.currentNode.removeListaEmail(row)}"
+						 onbeforesubmit="if(!confirm('Confirma?')) return false;"
+						 execute="@this"
+						 render="mailDiv"
+						 limitRender="true" />
+				
 				</h:graphicImage>
+			
 			</ui:define>
-			<ui:define
-                 name="columns"> 
-				<rich:column
-                     style="padding-left:2px">
-					<f:facet
-                         name="header">Estrutura</f:facet>
-					<h:outputText
-                         value="#{row.estrutura}" />
+			<ui:define name="columns">
+				 
+				<rich:column style="padding-left:2px">
+					
+					<f:facet name="header">Estrutura</f:facet>
+					<h:outputText value="#{row.estrutura}" />
+				
 				</rich:column>
-				<rich:column
-                     style="padding-left:2px">
-					<f:facet
-                         name="header">Localização</f:facet>
-					<h:outputText
-                         value="#{row.localizacao}" />
+				<rich:column style="padding-left:2px">
+					
+					<f:facet name="header">Localização</f:facet>
+					<h:outputText value="#{row.localizacao}" />
+				
 				</rich:column>
-				<rich:column
-                     style="padding-left:2px">
-					<f:facet
-                         name="header">Papel</f:facet>
-					<h:outputText
-                         value="#{row.papel}" />
+				<rich:column style="padding-left:2px">
+					
+					<f:facet name="header">Papel</f:facet>
+					<h:outputText value="#{row.papel}" />
+				
 				</rich:column>
 				
-				<f:facet
-                     name="footer">
+				<f:facet name="footer">
+					
 				 <rich:columnGroup>
+						
 				 	<rich:column>
+							
 						<h:graphicImage
-                                 title="Adicionar destinatários"
-                                 style="cursor:pointer"
-                                 id="novoLocPapel"
-                                 url="/img/add.gif">
+								 title="Adicionar destinatários"
+								 style="cursor:pointer"
+								 id="novoLocPapel"
+								 url="/img/add.gif">
+								
 							<a:ajax
-                                     event="click"
-                                     action="#{nodeFitter.currentNode.addNewEmail()}"
-                                     execute="@this"
-                                     render="mailDiv" />
-						</h:graphicImage>
-				 	</rich:column>
-					<rich:column
-                             style="padding-left:2px;">
+									 event="click"
+									 listener="#{nodeFitter.currentNode.addNewEmail()}"
+									 execute="@this"
+									 render="mailDiv"
+									 limitRender="true" />
+						
+							</h:graphicImage>
+				 	
+						</rich:column>
+					<rich:column style="padding-left:2px;">
+							
 						<wi:tree
-                                 tree="#{estruturaTree}"
-                                 id="estruturaTree"
-                                 width="210"
-                                 assignTo="nodeFitter.currentNode.currentListaEmail.estrutura"
-                                 folderSelectable="true" />
-					</rich:column>
-					<rich:column
-                             style="padding-left:2px;">
+								 tree="#{estruturaTree}"
+								 id="estruturaTree"
+								 width="210"
+								 assignTo="nodeFitter.currentNode.currentListaEmail.estrutura"
+								 folderSelectable="true" />
+					
+						</rich:column>
+					<rich:column style="padding-left:2px;">
+							
 						<wi:tree
-                                 tree="#{localizacaoTree}"
-                                 id="localizacao"
-                                 width="210"
-                                 assignTo="nodeFitter.currentNode.currentListaEmail.localizacao"
-                                 folderSelectable="true" />
-					</rich:column> 
-					<rich:column
-                             style="padding-left:2px;">
+								 tree="#{localizacaoTree}"
+								 id="localizacao"
+								 width="210"
+								 assignTo="nodeFitter.currentNode.currentListaEmail.localizacao"
+								 folderSelectable="true" />
+					
+						</rich:column> 
+					<rich:column style="padding-left:2px;">
+							
 						<wi:tree
-                                 tree="#{papelTree}"
-                                 id="papelTree"
-                                 width="210"
-                                 assignTo="nodeFitter.currentNode.currentListaEmail.papel"
-                                 folderSelectable="true" />
-					</rich:column>
-				</rich:columnGroup>
+								 tree="#{papelTree}"
+								 id="papelTree"
+								 width="210"
+								 assignTo="nodeFitter.currentNode.currentListaEmail.papel"
+								 folderSelectable="true" />
+					
+						</rich:column>
+				
+					</rich:columnGroup>
+				
 				</f:facet>
-				<f:facet
-                     name="header">
-					<h:outputText
-                         value="Destinatários" />
+				<f:facet name="header">
+					
+					<h:outputText value="Destinatários" />
+				
 				</f:facet>
 				
+			
 			</ui:define>
+		
 		</ui:decorate>
 		<wi:selectBooleanCheckbox
-             id="usaTwitter"
-             value="#{nodeFitter.currentNode.usaTwitter}"
-             label="#{messages['processBuilder.usaTwitter']}">
+			 id="usaTwitter"
+			 value="#{nodeFitter.currentNode.usaTwitter}"
+			 label="#{messages['processBuilder.usaTwitter']}">
+			
 			<a:ajax
-                 event="change"
-                 render="mailDiv"
-                 execute="@this" />
+				 event="change"
+				 render="mailDiv"
+				 execute="@this"
+				 limitRender="true" />
+		
 		</wi:selectBooleanCheckbox>
 		<ui:param
-             name="isExpression"
-             value="#{nodeFitter.currentNode.to != null and               nodeFitter.currentNode.to.startsWith('{')}" />
+			 name="isExpression"
+			 value="#{nodeFitter.currentNode.to != null and nodeFitter.currentNode.to.startsWith('{')}" />
 		<s:div
-             id="twitterDiv"
-             rendered="#{nodeFitter.currentNode.usaTwitter}"
-             width="50%"
-             style="float:left;">
+			 id="twitterDiv"
+			 rendered="#{nodeFitter.currentNode.usaTwitter}"
+			 width="50%"
+			 style="float:left;">
+			
 			<wi:selectOneMenuEntity
-                 id="modeloTwitter"
-                 label="Modelo Twitter.."
-                 value="#{nodeFitter.currentNode.modeloTwitter}"
-                 reRender="twitterDiv"
-                 items="#{twitterTemplateList.list()}"
-                 showLabelTodos="true">
-				<wi:ajaxSupport />
+				 id="modeloTwitter"
+				 label="Modelo Twitter.."
+				 value="#{nodeFitter.currentNode.modeloTwitter}"
+				 items="#{twitterTemplateList.list()}"
+				 showLabelTodos="true">
+				
+				<a:ajax
+					 event="change"
+					 execute="@this"
+					 render="twitterDiv"
+					 limitRender="true" />
+			
 			</wi:selectOneMenuEntity>
 			<wi:inputTextarea
-                 id="editorModeloTwitter"
-                 readonly="true"
-                 value="#{nodeFitter.currentNode.modeloTwitter.mensagem}">
+				 id="editorModeloTwitter"
+				 readonly="true"
+				 value="#{nodeFitter.currentNode.modeloTwitter.mensagem}">
 			</wi:inputTextarea>
+		
 		</s:div>
 		<s:div
-             id="modeloDocDiv"
-             style="float:left;">
+			 id="modeloDocDiv"
+			 style="float:left;">
+			
 			<wi:selectOneMenuEntity
-                 id="modeloDocumento"
-                 label="#{messages['processBuilder.tituloModeloDocumento']}"
-                 value="#{nodeFitter.currentNode.modeloDocumento}"
-                 reRender="editorModeloDocumentoDiv"
-                 items="#{modeloDocumento.modeloDocumentoList}"
-                 showLabelTodos="true">
-				<wi:ajaxSupport />
+				 id="modeloDocumento"
+				 label="#{messages['processBuilder.tituloModeloDocumento']}"
+				 value="#{nodeFitter.currentNode.modeloDocumento}"
+				 items="#{modeloDocumento.modeloDocumentoList}"
+				 showLabelTodos="true">
+				
+				<a:ajax
+					 event="change"
+					 render="editorModeloDocumentoDiv"
+					 execute="@this"
+					 limitRender="true" />
+			
 			</wi:selectOneMenuEntity>
 		
 			<wi:inputText
-                 id="to"
-                 label="Para"
-                 rendered="#{!isExpression}"
-                 value="#{nodeFitter.currentNode.to}">
-				<wi:ajaxSupport />
+				 id="to"
+				 label="Para"
+				 rendered="#{!isExpression}"
+				 value="#{nodeFitter.currentNode.to}">
+				
+				<a:ajax
+					 event="change"
+					 execute="@this"
+					 limitRender="true" />
+			
 			</wi:inputText>
 		
 			<wi:inputText
-                 id="toExpession"
-                 label="Para"
-                 rendered="#{isExpression}"
-                 disabled="true"
-                 readonly="true"
-                 value="[Gerado pela tabela acima...]">
+				 id="toExpession"
+				 label="Para"
+				 rendered="#{isExpression}"
+				 disabled="true"
+				 readonly="true"
+				 value="[Gerado pela tabela acima...]">
 			</wi:inputText>
 		
 			<wi:inputText
-                 id="subject"
-                 label="Assunto"
-                 value="#{nodeFitter.currentNode.subject}">
-				<wi:ajaxSupport />
+				 id="subject"
+				 label="Assunto"
+				 value="#{nodeFitter.currentNode.subject}">
+				
+				<a:ajax
+					 event="change"
+					 execute="@this"
+					 limitRender="true" />
+			
 			</wi:inputText>
-			<s:div
-                 id="editorModeloDocumentoDiv">
+			<s:div id="editorModeloDocumentoDiv">
+				
 				<wi:editor
-                     id="editorModeloDocumento"
-                     rendered="#{nodeFitter.currentNode.modeloDocumento != null}"
-                     value="#{nodeFitter.currentNode.modeloDocumento.modeloDocumento}"
-                     label="#{messages['processBuilder.modeloDocumento']}"
-                     readonly="true">
-					<wi:ajaxSupport />
+					 id="editorModeloDocumento"
+					 rendered="#{nodeFitter.currentNode.modeloDocumento != null}"
+					 value="#{nodeFitter.currentNode.modeloDocumento.modeloDocumento}"
+					 label="#{messages['processBuilder.modeloDocumento']}"
+					 readonly="true">
+					
+					<a:ajax
+						 event="change"
+						 execute="@this"
+						 limitRender="true" />
+				
 				</wi:editor>
+			
 			</s:div>
+		
 		</s:div>
 	
+	
 	</s:div>
+
 
 </ui:composition>

@@ -8,12 +8,20 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+	 template="default.xhtml">
 	
 
 		<ui:define name="customButtons">
+		        <wi:commandButton id="updateButton"
+					  action="fluxoHome.persistAs()"
+  					  reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
+  					  rendered="#{fluxoHome.managed}"
+  					  value="Incluir como..." >
+			</wi:commandButton>
+
 		
-			<s:link
+                         <s:link
 			 view="/Fluxo/definicao/processDefinition.xhtml"
 			 action="#{processBuilder.load(fluxoHome.instance.codFluxo)}"
 			 styleClass="buttons dr-tbpnl-tb-inact"

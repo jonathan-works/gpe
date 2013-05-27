@@ -43,9 +43,10 @@
                              value="#{t.label}"
                              style="font-size: 14px"
                              action="#{actionTemplateHandler.setCurrentTemplate(t)}"
-                             reRender="actionTemplatePanel">
+                             render="actionTemplatePanel"
+                             limitRender="true">
 							<rich:componentControl
-                                 for="actionTemplatePanel"
+                                 target="actionTemplatePanel"
                                  operation="show"
                                  event="oncomplete" />
 						</a:commandLink>

@@ -49,7 +49,7 @@
 						id="estado"
 						label="#{messages['cep.municipio.estado']}"
 						value="#{cepList.estado}"
-						items="#{estadoItems}"
+						items="#{estadoList}"
 						required="#{required}"
 						noSelectionLabel="Selecione...">
 						<a:ajax
@@ -139,7 +139,7 @@
 				id="estado"
 				label="#{messages['cep.municipio.estado']}"
 				value="#{cepHome.estado}"
-				items="#{estadoItems}"
+				items="#{estadoList}"
 				required="true"
 				noSelectionLabel="Selecione...">
 				<a:ajax

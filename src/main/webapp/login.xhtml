@@ -154,14 +154,16 @@
 		        	status="status"
 		        	action="#{authenticator.authenticateSC()}" 
 		        	oncomplete="mostrarInconsistencia();"
-		        	reRender="pagina" />
+		        	render="pagina"
+                    limitRender="true" />
 		        	
 		        <a:jsFunction 
 		        	rendered="#{useCertLogin}"
 		        	name="logCertChain" 
 		        	action="#{authenticator.executeLogCertificadoInvalido()}" 
 		        	status="status"
-		        	reRender="pagina" />	        	
+		        	render="pagina"
+                    limitRender="true" />	        	
 		
 				<script>
 				  function checkValidacao() {

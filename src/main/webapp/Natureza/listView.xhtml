@@ -32,6 +32,11 @@
          name="home"
          value="#{naturezaAction}" />
 	
+	<ui:define name="changeListeners">
+		<rich:itemChangeListener binding="#{home}" />
+		<rich:itemChangeListener binding="#{naturezaCategoriaFluxoAction}" />
+	</ui:define>
+	
 	<ui:define
          name="searchGrid">
 	    <wi:dataTable
@@ -112,9 +117,8 @@
 		<rich:tab
              id="naturezaCatFluxoTab"
              name="naturezaCatFluxoTab"
-             rendered="#{home.isManaged()}"
-             header="#{messages['naturezaCategoriaFluxo.titleTab']}"
-             action="#{action.init()}">
+             rendered="#{home.managed}"
+             header="#{messages['naturezaCategoriaFluxo.titleTab']}">
 			<s:div
                  id="naturezaCatFluxoFormDiv">
 				<wi:dataForm

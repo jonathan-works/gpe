@@ -14,10 +14,10 @@
              content="text/html; charset=UTF-8" />
 	    <title>#{nomeSistema}: <ui:insert
                  name="title" /></title>
-		<a:loadScript
-             src="/js/liveclock.js" />
-		<a:loadScript
-             src="/js/jqueryExt.js" /> 
+		<h:outputScript
+             library="js" name="liveclock.js" />
+		<h:outputScript
+             library="js" name="jqueryExt.js" /> 
 		<link
              rel="icon"
              href="#{util.contextPath}/favicon.ico"

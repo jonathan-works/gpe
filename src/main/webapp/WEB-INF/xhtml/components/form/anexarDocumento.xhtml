@@ -1,185 +1,205 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 	
 		#{home.setModelo(false)}
 		<ui:param
-		name="reRenderSaveForm"
-		value="#{reRenderSave}" />
+		 name="reRenderSaveForm"
+		 value="#{reRenderSave}" />
 
 	<s:div style="clear: both">
+		
 
 		<wi:inputText
-			id="#{f.id}inputProcessoDocumento"
-			value="#{processoDocumentoHome.instance.processoDocumento}"
-			disabled="false"
-			required="true"
-			label="#{messages['processo.anexarDocumentoDescricao']}">
+			 id="#{f.id}inputProcessoDocumento"
+			 value="#{processoDocumentoHome.instance.processoDocumento}"
+			 disabled="false"
+			 required="true"
+			 label="#{messages['processo.anexarDocumentoDescricao']}">
 		</wi:inputText>
 
+	
 	</s:div>
 	<s:div id="divTipoDocumento">
+		
 
 		<wi:selectOneMenuEntity
-			id="#{f.id}tipoProcessoDocumento"
-			label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-			value="#{home.instance.tipoProcessoDocumento}"
-			items="#{tipoProcessoDocumentoInternoItems}"
-			required="true"
-			noSelectionLabel="Selecione...">
+			 id="#{f.id}tipoProcessoDocumento"
+			 label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+			 value="#{home.instance.tipoProcessoDocumento}"
+			 items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+			 required="true"
+			 noSelectionLabel="Selecione...">
+			
 
 			<a:ajax
-				event="change"
-				action="#{processoDocumentoHome.onSelectProcessoDocumento()}"
-				execute="@this"
-				render="divEventsTree, usarModeloDiv" />
+				 event="change"
+				 listener="#{processoDocumentoHome.onSelectProcessoDocumento()}"
+				 execute="@this"
+				 render="divEventsTree, usarModeloDiv" />
 
+		
 		</wi:selectOneMenuEntity>
 
+	
 	</s:div>
 
 	<s:div id="divEventsTree">
+		
 
 		<wi:eventsTree
-			agrupamentos="#{processoDocumentoHome.idAgrupamentos}"
-			reRender="usarModeloDiv"
-			tree="#{eventsTipoDocumentoTree}"
-			inNewLine="true"
-			rendered="#{processoDocumentoHome.renderEventTree}" />
+			 agrupamentos="#{processoDocumentoHome.idAgrupamentos}"
+			 reRender="usarModeloDiv"
+			 tree="#{eventsTipoDocumentoTree}"
+			 inNewLine="true"
+			 rendered="#{processoDocumentoHome.renderEventTree}" />
 
+	
 	</s:div>
 
 	<wi:selectBooleanCheckbox
-		id="documentoSigiloso"
-		inNewLine="true"
-		value="#{processoDocumentoHome.instance.documentoSigiloso}"
-		label="#{messages['processoDocumento.documentoSigiloso']}" />
+		 id="documentoSigiloso"
+		 inNewLine="true"
+		 value="#{processoDocumentoHome.instance.documentoSigiloso}"
+		 label="#{messages['processoDocumento.documentoSigiloso']}" />
 
 	<s:div id="tipoDocumentoDiv">
+		
 
 
 		<wi:fileUploadBox
-			id="uploadArquivo"
-			rendered="#{!home.modelo}"
-			label="Arquivo"
-			onuploadcomplete="clearSign();">
+			 id="uploadArquivo"
+			 rendered="#{!home.modelo}"
+			 label="Arquivo"
+			 onuploadcomplete="clearSign();">
 		</wi:fileUploadBox>
 
 		<s:div
-			id="usarModeloDiv"
-			rendered="#{home.modelo}">
+			 id="usarModeloDiv"
+			 rendered="#{home.modelo}">
+			
 
 
 			<wi:selectOneMenuEntity
-				id="modeloDocumentoCombo"
-				label="#{messages['modeloDocumento.modeloDocumento']}"
-				value="#{processoDocumentoHome.modeloDocumentoCombo}"
-				items="#{modeloDocumentoPeticaoItems}"
-				noSelectionLabel="Selecione...">
+				 id="modeloDocumentoCombo"
+				 label="#{messages['modeloDocumento.modeloDocumento']}"
+				 value="#{processoDocumentoHome.modeloDocumentoCombo}"
+				 items="#{modeloDocumentoHome.getModeloDocumentoByGrupoAndTipo()}"
+				 noSelectionLabel="Selecione...">
+				
 
 				<a:ajax
-					render="modeloDocumento"
-					event="change"
-					action="#{processoDocumentoHome.processarModelo()}"
-					execute="@this"
-					onsubmit="showLoading()"
-					oncomplete="hideLoading()" />
+					 render="modeloDocumento"
+					 event="change"
+					 listener="#{processoDocumentoHome.processarModelo()}"
+					 execute="@this"
+					 onsubmit="showLoading()"
+					 oncomplete="hideLoading()" />
 
+			
 			</wi:selectOneMenuEntity>
 
 			<wi:editor
-				id="modeloDocumento"
-				label="Modelo"
-				value="#{processoDocumentoBinHome.instance.modeloDocumento}"
-				requiredField="false"
-				required="false"
-				showVariables="false"
-				onchange="clearSign()">
+				 id="modeloDocumento"
+				 label="Modelo"
+				 value="#{processoDocumentoBinHome.instance.modeloDocumento}"
+				 requiredField="false"
+				 required="false"
+				 showVariables="false"
+				 onchange="clearSign()">
 			</wi:editor>
 
 			<wi:imageUpload
-				style="width: 25%; right:5px; position:absolute;"
-				imageBean="#{imageFileUpload}" />
+				 style="width: 25%; right:5px; position:absolute;"
+				 imageBean="#{imageFileUpload}" />
 
 			<h:inputHidden
-				id="certChain"
-				value="#{processoDocumentoBinHome.certChain}" />
+				 id="certChain"
+				 value="#{processoDocumentoBinHome.certChain}" />
 			<h:inputHidden
-				id="signature"
-				value="#{processoDocumentoBinHome.signature}" />
+				 id="signature"
+				 value="#{processoDocumentoBinHome.signature}" />
 
 			<a:jsFunction
-				name="submitForm"
-				action="#{home.persist()}"
-				render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao" />
+				 name="submitForm"
+				 action="#{home.persist()}"
+				 render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao" />
 
 			<s:decorate
-				id="#{id}DecorationCertificado"
-				template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+				 id="#{id}DecorationCertificado"
+				 template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+				
 
 				<ui:param
-					name="inNewLine"
-					value="true" />
+					 name="inNewLine"
+					 value="true" />
 				<ui:param
-					name="showLock"
-					value="false" />
+					 name="showLock"
+					 value="false" />
 				<s:div rendered="#{eventsTree.allRootsSelected}">
+					
 
 					<applet
-						width="140"
-						height="25"
-						id="certificacao"
-						code="SmartCardSignerApplet"
-						archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+						 width="140"
+						 height="25"
+						 id="certificacao"
+						 code="SmartCardSignerApplet"
+						 archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+						
 
 						<param
-							name="formId"
-							value="#{formId}" />
+							 name="formId"
+							 value="#{formId}" />
 						<param
-							name="signButtonCaption"
-							value="Assinar Digitalmente" />
+							 name="signButtonCaption"
+							 value="Assinar Digitalmente" />
 						<param
-							name="certificationChainField"
-							value="#{form.formId}Form:#{id}:certChain" />
+							 name="certificationChainField"
+							 value="#{form.formId}Form:#{id}:certChain" />
 						<param
-							name="signatureField"
-							value="#{form.formId}Form:#{id}:signature" />
+							 name="signatureField"
+							 value="#{form.formId}Form:#{id}:signature" />
 						<param
-							name="urlDownload"
-							value="#{util.urlProject}/certificado/" />
+							 name="urlDownload"
+							 value="#{util.urlProject}/certificado/" />
 						<param
-							name="getDataFunction"
-							value="getData()" />
+							 name="getDataFunction"
+							 value="getData()" />
 						<param
-							name="useBase64Function"
-							value="useBase64()" />
+							 name="useBase64Function"
+							 value="useBase64()" />
 						<param
-							name="functionPreSign"
-							value="showLoading()" />
+							 name="functionPreSign"
+							 value="showLoading()" />
 						<param
-							name="functionPosSign"
-							value="hideLoading();submitForm()" />
+							 name="functionPosSign"
+							 value="hideLoading();submitForm()" />
 						<param
-							name="dataAtual"
-							value="#{currentDatetime}" />
+							 name="dataAtual"
+							 value="#{currentDatetime}" />
 						<param
-							name="caListDownloadFile"
-							value="#{util.urlProject}/downloadCaList.seam" />
+							 name="caListDownloadFile"
+							 value="#{util.urlProject}/downloadCaList.seam" />
 
+					
 					</applet>
 
+				
 				</s:div>
 
+			
 			</s:decorate>
 
 
+		
 		</s:div>
 		<script>
 			  function useBase64() {
@@ -187,6 +207,7 @@
 			  }
 			</script>
 
+	
 	</s:div>
 
 	<script>
@@ -208,6 +229,7 @@
 			  $('#{form.formId}Form:modelo:certChain').value = "";
 		  }			
 		</script>
+
 
 
 </ui:composition>

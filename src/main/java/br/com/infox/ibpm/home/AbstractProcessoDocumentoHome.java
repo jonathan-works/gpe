@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.event.AbortProcessingException;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.contexts.Contexts;
@@ -30,6 +32,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
+import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.component.tree.EventsTipoDocumentoTreeHandler;
@@ -54,7 +57,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	private Integer idDocumentoRerender;
 	private String numeroHash;
 	private String documento;
-	private String idAgrupamentos;
 	private Boolean renderEventTree = Boolean.FALSE;
 	private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
@@ -289,12 +291,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		EventsTipoDocumentoTreeHandler.instance().clearTree();
 		EventsTipoDocumentoTreeHandler.instance().clearList();
 		renderEventTree = false;
-		if(instance.getTipoProcessoDocumento() != null && instance.getTipoProcessoDocumento().getAgrupamento() != null) {
-			idAgrupamentos = Integer.toString(instance.getTipoProcessoDocumento().getAgrupamento().getIdAgrupamento());
-			if(!"".equals(getIdAgrupamentos())) {
-				renderEventTree = true;
-			}
-		}
 	}
 	
 	public void setNumeroHash(String numeroHash) {
@@ -316,6 +312,15 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		return ret;
 	}
 	
+	@Override
+	public void processItemChange(ItemChangeEvent event)
+			throws AbortProcessingException {
+		if (event.getNewItemName().equals("tabAnexar")){
+			newInstance();
+		}
+		super.processItemChange(event);
+	}
+	
 	public String getDocumento() {
 		return documento;
 	}
@@ -330,10 +335,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	
 	public String labelTipoProcessoDocumento() {
 		return "Tipo do Documento";
-	}
-	
-	public String getIdAgrupamentos() {
-		return idAgrupamentos;
 	}
 	
 }

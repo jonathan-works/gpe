@@ -131,7 +131,7 @@ public class UsuarioLocalizacaoHome
 		if (tree != null) {
 			tree.clearTree();
 		}
-		tree = getComponent("localizacaoSetorTree");
+		tree = getComponent("localizacaoEstruturaTree");
 		if (tree != null) {
 			tree.clearTree();
 		}

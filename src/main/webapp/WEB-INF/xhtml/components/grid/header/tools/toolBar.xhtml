@@ -11,14 +11,14 @@
 	<s:div style="text-align:center">
 		
 			
-		<a:include viewId="../include/reportButton.xhtml" />
+		<ui:include src="../include/reportButton.xhtml" />
 
 		<h:form style="display:inline">
 			
 			<a:jsFunction
 				 eventsQueue="edit"
-				 reRender="#{gridId}List"
-				 limitToList="true"
+				 render="#{gridId}List"
+				 limitRender="true"
 				 name="refreshView" />						
 		
 		</h:form>

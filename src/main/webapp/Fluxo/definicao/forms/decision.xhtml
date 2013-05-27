@@ -1,43 +1,40 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich">
 
-<!--
+    <!--
   IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+  Copyright (c) 1986-2009 Infox Tecnologia da Informa‹o Ltda.
  
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  Este programa Ž software livre; voc pode redistribu’-lo e/ou modific‡-lo 
   sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  Free Software Foundation; vers‹o 2 da Licena.
+  Este programa Ž distribu’do na expectativa de que seja œtil, porŽm, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia impl’cita de COMERCIABILIDADE OU 
+  ADEQUA‚ÌO A UMA FINALIDADE ESPECêFICA.
   
   Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  Voc deve ter recebido uma c—pia da GNU GPL junto com este programa; se n‹o, 
   veja em http://www.gnu.org/licenses/  
---> 
-	<rich:panel
-         bodyClass="panel"
-         style="clear:both; overflow:visible; padding:0px; margin:0px; width:721px; float:left;">
-		<f:facet
-             name="header">
-            <h:outputText
-                 value="#{messages['expressionWizard.title']}" />
+-->
+    <rich:panel
+        bodyClass="panel"
+        style="clear:both; overflow:visible; padding:0px; margin:0px; width:721px; float:left;">
+        <f:facet name="header">
+            <h:outputText value="#{messages['expressionWizard.title']}" />
         </f:facet>
-	   <ui:include
-             src="/js/expressionWizard.xhtml">
+	   <ui:include src="/WEB-INF/xhtml/tags/form/fields/specialized/expressionWizard.xhtml">
             <ui:param
-                 name="id"
-                 value="expression" />
+                name="id"
+                value="expression" />
             <ui:param
-                 name="value"
-                 value="#{nodeFitter.currentNode.decisionExpression}" />
-       </ui:include>
-	</rich:panel>
+                name="value"
+                value="#{nodeFitter.currentNode.decisionExpression}" />
+        </ui:include>
+    </rich:panel>
 
 </ui:composition>

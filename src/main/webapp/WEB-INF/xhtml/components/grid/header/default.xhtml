@@ -41,10 +41,10 @@
 		
   	<a:commandLink
 			 styleClass="columnHeader"
-			 reRender="#{gridId}"
+			 render="#{gridId}"
 			 status=":status"
 			 value="#{header} #{bean.order==asc ? messages.down : ( bean.order==desc ? messages.up : '' )} #{empty bean.entity[f.id] ? '' : '*'}"
-			 limitToList="true"
+			 limitRender="true"
 			 rendered="#{mostrarOrdenar}">
 			
        <f:param

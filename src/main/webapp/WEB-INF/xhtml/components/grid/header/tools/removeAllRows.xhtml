@@ -17,9 +17,9 @@
 	<h:form style="display: inline">
 		
 	<a:commandLink
-			 limitToList="true"
+			 limitRender="true"
 			 status=":status"
-			 reRender="#{reRenderRemove}"
+			 render="#{reRenderRemove}"
 			 action="#{expressions.createMethodExpression(removeAllExpression).invoke(null)}"
 			 rendered="#{canEdit}">
 			

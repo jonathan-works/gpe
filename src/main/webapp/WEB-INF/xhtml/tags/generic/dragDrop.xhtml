@@ -152,7 +152,8 @@
                  action="#{util.invokeMethod(actionSave)}"
                  style="#{buttonStyle}"
                  styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}"
-                 reRender="pageBody" />
+                 render="pageBody"
+                 limitRender="true"/>
 	                					  
 	        <a:commandButton
                  id="#{id}ResetButton"
@@ -160,7 +161,8 @@
                  value="Limpar"
                  style="#{buttonStyle}"
                  styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}"
-                 reRender="#{id}Panel,#{id}TableDrop" />
+                 render="#{id}Panel,#{id}TableDrop"
+                 limitRender="true"/>
 		 </ui:insert>
    	</h:form>
 	   

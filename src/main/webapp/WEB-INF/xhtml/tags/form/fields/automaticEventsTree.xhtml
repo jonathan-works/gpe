@@ -45,7 +45,8 @@
 						</legend>
 						<rich:tree
 							data="#{item}"
-							reRender="#{id}EventsTreeDiv, #{reRender}"
+                            render="#{id}EventsTreeDiv, #{reRender}"
+                            limitRender="true"
 							status="status"
 							toggleType="client"
 							execute="@this"

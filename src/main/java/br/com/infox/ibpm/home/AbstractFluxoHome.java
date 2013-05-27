@@ -61,7 +61,6 @@ public abstract class AbstractFluxoHome<T> extends AbstractHome<Fluxo> {
         setInstance(obj);
         String ret = super.remove();
         newInstance();
-        refreshGrid("fluxoGrid");
         return ret;
     }
 

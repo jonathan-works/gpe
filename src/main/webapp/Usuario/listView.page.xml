@@ -1,36 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <page xmlns="http://jboss.org/schema/seam/pages"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
 	  login-required="true"
 >
 	
-	<description>Usuario: #{usuarioHome.instance}</description>
-	
+	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true"/>
-	<param name="usuario.order" value="#{usuarioGrid.order}"/>
-	<param name="id" value="#{usuarioHome.usuarioIdUsuario}"/>
+	<param name="id" value="#{usuarioHome.id}"
+			converterId="integerConverter" />
 
 <!-- Parametros para RESTFull -->
 	<param name="tab" value="#{usuarioHome.tab}"/>
-	<param name="goBackUrl" value="#{usuarioHome.goBackUrl}"/>
-	<param name="goBackId" value="#{usuarioHome.goBackId}"/>
-	<param name="goBackTab" value="#{usuarioHome.goBackTab}"/>		
-	<param name="nome" value="#{usuarioSearch.nome}"/>		
-	<param name="bloqueio" value="#{usuarioSearch.bloqueio}"/>		
-	<param name="ativo" value="#{usuarioSearch.ativo}"/>		
-	<param name="provisorio" value="#{usuarioSearch.provisorio}"/>
-	<param name="cpf" value="#{usuarioHome.instance.cpf}"/>		
-
-
-	<action if="#{empty usuarioHome.tab}" execute="#{usuarioHome.setTab('search')}"/>
-
-	<!-- Parametros para a ordem de grids -->
-	<param name="fluxo.order" value="#{fluxoGrid.order}"/>		
-	<param name="bloqueioUsuario.order" value="#{bloqueioUsuarioGrid.order}"/>		
-	<param name="endereco.order" value="#{enderecoGrid.order}"/>		
-	<param name="processo.order" value="#{processoGrid.order}"/>		
-	<param name="usuarioLocalizacao.order" value="#{usuarioLocalizacaoGrid.order}"/>
- 
 </page>

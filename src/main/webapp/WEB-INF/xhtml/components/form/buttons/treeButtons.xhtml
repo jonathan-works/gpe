@@ -20,7 +20,8 @@
 			 style="width: 160px !important"
 			 action="#{home.persistAndNext}"
 			 eventsQueue="editQueue"
-			 reRender="#{reRenderSave}"
+			 render="#{reRenderSave}"
+             limitRender="true"
 			 value="Gravar Próximo Nível"
 			 styleClass="dr-tbpnl-tb-inact"
 			 rendered="#{!home.managed and !isUploadForm}">

@@ -41,7 +41,8 @@
                      value="OK"
                      oncomplete="$(idTextarea).setValue($('registraEventoForm:createdExpression').innerHTML); Richfaces.hideTopModalPanel(); $(idTextarea).onchange()"
                      styleClass="buttons dr-tbpnl-tb-inact"
-                     reRender="createdExpression"
+                     render="createdExpression"
+                     limitRender="true"
                      action="#{actionTemplate.createExpression}" />
 
 				<h:outputText

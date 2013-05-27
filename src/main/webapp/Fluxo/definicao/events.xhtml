@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 
 	<!--
 	  IBPM - Ferramenta de produtividade Java
@@ -26,201 +27,255 @@
 	  veja em http://www.gnu.org/licenses/  
 	-->
 	
-	<f:subview
-         id="#{id}eventSubView">
+	<f:subview id="#{id}eventSubView">
+		
 		<s:div
-             id="#{id}Div"
-             style="overflow:auto; padding:1px">
+			 id="#{id}Div"
+			 style="overflow:auto; padding:1px">
+			
 			<s:div
-                 style="width:200px; float:left"
-                 id="#{id}EventList">
-			<ui:decorate
-                     template="dataTable.xhtml">
-				<ui:param
-                         name="values"
-                         value="#{parent.eventList}" />
-				<ui:param
-                         name="styleClass"
-                         value="tabelaVariaveis" />
-				<ui:param
-                         name="parentId"
-                         value="#{id}" />
-				<ui:param
-                         name="id"
-                         value="#{id}Table" />
+				 style="width:200px;"
+				 id="#{id}EventList">
 				
-				<ui:define
-                         name="headerToolBar">
+			<ui:decorate template="dataTable.xhtml">
+					
+				<ui:param
+						 name="values"
+						 value="#{parent.eventList}" />
+				<ui:param
+						 name="styleClass"
+						 value="tabelaVariaveis" />
+				<ui:param
+						 name="parentId"
+						 value="#{id}" />
+				<ui:param
+						 name="id"
+						 value="#{id}Table" />
+				
+				<ui:define name="headerToolBar">
+						
 					 <a:commandLink
-                             action="#{parent.addEvent()}"
-                             ajaxSingle="true"
-                             immediate="true"
-                             reRender="#{parentId}Div">
+							 action="#{parent.addEvent()}"
+							 execute="@this"
+							 immediate="true"
+							 render="#{parentId}Div"
+							 limitRender="true">
+							
 							<h:graphicImage
-                                 url="/img/add.gif"
-                                 title="Novo evento"
-                                 style="margin-right:5px" />
-					 </a:commandLink>
-				</ui:define>
-				<ui:define
-                         name="toolBar">
+								 url="/img/add.gif"
+								 title="Novo evento"
+								 style="margin-right:5px" />
+					 
+						</a:commandLink>
+				
+					</ui:define>
+				<ui:define name="toolBar">
+						
 					<h:graphicImage
-                             title="Excluir "
-                             style="cursor:pointer"
-                             url="/img/remove.png">
+							 title="Excluir "
+							 style="cursor:pointer"
+							 url="/img/remove.png">
+							
 						<a:ajax
-                                 event="click"
-                                 action="#{parent.removeEvent(row)}"
-                                 onclick="if(!confirm('Confirma?')) return false;"
-                                 execute="@this"
-                                 render="#{parentId}Div" />
-					</h:graphicImage>
-				</ui:define>
-				<ui:define
-                         name="columns">
-					<rich:column
-                             style="padding-left:2px">
-						<f:facet
-                                 name="header">Eventos</f:facet>
+								 event="click"
+								 listener="#{parent.removeEvent(row)}"
+								 onbeforesubmit="if(!confirm('Confirma?')) return false;"
+								 execute="@this"
+								 render="#{parentId}Div"
+								 limitRender="true" />
+					
+						</h:graphicImage>
+				
+					</ui:define>
+				<ui:define name="columns">
+						
+					<rich:column style="padding-left:2px">
+							
+						<f:facet name="header">Eventos</f:facet>
 						 <a:commandLink
-                                 ajaxSingle="true"
-                                 action="#{parent.setCurrentEvent(row)}"
-                                 value="#{messages['jbpm.'.concat(row.event.eventType)]}"
-                                 rendered="#{row.event.eventType != 'new-event'}"
-                                 style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
-                                 reRender="#{parentId}Div" />
+								 execute="@this"
+								 action="#{parent.setCurrentEvent(row)}"
+								 value="#{messages['jbpm.'.concat(row.event.eventType)]}"
+								 rendered="#{row.event.eventType != 'new-event'}"
+								 style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
+								 render="#{parentId}Div"
+								 limitRender="true" />
 						<wi:selectOneMenu
-                                 id="events"
-                                 noSelectionLabel="Selecione..."
-                                 width="150px"
-                                 widthDiv="150px"
-                                 rendered="#{row.event.eventType == 'new-event'}"
-                                 items="#{parent.supportedEventTypes}"
-                                 optionLabel="#{messages['jbpm.'.concat(v)]}"
-                                 value="#{parent.eventType}">
-							<wi:ajaxSupport
-                                     reRender="#{parentId}Div" />
-						</wi:selectOneMenu>
-					</rich:column>
-				</ui:define>
-			</ui:decorate>
+								 id="events"
+								 noSelectionLabel="Selecione..."
+								 width="150px"
+								 widthDiv="150px"
+								 rendered="#{row.event.eventType == 'new-event'}"
+								 items="#{parent.supportedEventTypes}"
+								 optionLabel="#{messages['jbpm.'.concat(v)]}"
+								 value="#{parent.eventType}">
+								
+							<a:ajax
+									 execute="@this"
+									 event="change"
+									 render="#{parentId}Div"
+									 limitRender="true" />
+						
+							</wi:selectOneMenu>
+					
+						</rich:column>
+				
+					</ui:define>
+			
+				</ui:decorate>
 			
 			<ui:param
-                     name="event"
-                     value="#{parent.currentEvent}" />
+					 name="event"
+					 value="#{parent.currentEvent}" />
 			<s:div
-                     style="padding-top:5px"
-                     rendered="#{!empty event}">
-				<ui:decorate
-                         template="dataTable.xhtml">
-					<ui:param
-                             name="values"
-                             value="#{event.actions}" />
-					<ui:param
-                             name="styleClass"
-                             value="tabelaVariaveis" />
-					<ui:param
-                             name="parentId"
-                             value="#{id}" />
-					<ui:param
-                             name="id"
-                             value="#{id}Actions" />
+					 style="padding-top:5px"
+					 rendered="#{!empty event}">
 					
-					<ui:define
-                             name="headerToolBar">
+				<ui:decorate template="dataTable.xhtml">
+						
+					<ui:param
+							 name="values"
+							 value="#{event.actions}" />
+					<ui:param
+							 name="styleClass"
+							 value="tabelaVariaveis" />
+					<ui:param
+							 name="parentId"
+							 value="#{id}" />
+					<ui:param
+							 name="id"
+							 value="#{id}Actions" />
+					
+					<ui:define name="headerToolBar">
+							
 						 <a:commandLink
-                                 action="#{event.addAction()}"
-                                 ajaxSingle="true"
-                                 immediate="true"
-                                 reRender="#{parentId}Div">
+								 action="#{event.addAction()}"
+								 execute="@this"
+								 immediate="true"
+								 render="#{parentId}Div"
+								 limitRender="true">
+								
 								<h:graphicImage
-                                     url="/img/add.gif"
-                                     title="Nova ação"
-                                     style="margin-right:5px" />
-						 </a:commandLink>
-					</ui:define>
-					<ui:define
-                             name="toolBar">
+									 url="/img/add.gif"
+									 title="Nova ação"
+									 style="margin-right:5px" />
+						 
+							</a:commandLink>
+					
+						</ui:define>
+					<ui:define name="toolBar">
+							
 						<h:graphicImage
-                                 title="Excluir "
-                                 style="cursor:pointer"
-                                 url="/img/remove.png">
+								 title="Excluir "
+								 style="cursor:pointer"
+								 url="/img/remove.png">
+								
 							<a:ajax
-                                     event="click"
-                                     action="#{event.removeAction(row)}"
-                                     onclick="if(!confirm('Confirma?')) return false;"
-                                     execute="@this"
-                                     render="#{parentId}Div" />
-						</h:graphicImage>
-					</ui:define>
-					<ui:define
-                             name="columns">
-						<rich:column
-                                 style="padding-left:2px">
-							<f:facet
-                                     name="header">Ações</f:facet>
+									 event="click"
+									 listener="#{event.removeAction(row)}"
+									 onbeforesubmit="if(!confirm('Confirma?')) return false;"
+									 execute="@this"
+									 render="#{parentId}Div"
+									 limitRender="true" />
+						
+							</h:graphicImage>
+					
+						</ui:define>
+					<ui:define name="columns">
+							
+						<rich:column style="padding-left:2px">
+								
+							<f:facet name="header">Ações</f:facet>
 							 <a:commandLink
-                                     ajaxSingle="true"
-                                     action="#{event.setCurrentAction(row)}"
-                                     rendered="#{row.event.eventType != 'new-event'}"
-                                     style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
-                                     reRender="#{parentId}Div">
+									 execute="@this"
+									 action="#{event.setCurrentAction(row)}"
+									 rendered="#{row.event.eventType != 'new-event'}"
+									 style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
+									 render="#{parentId}Div"
+									 limitRender="true">
+									
 							 	<a:outputPanel>
+										
 							 		<h:panelGrid
-                                             columns="2"
-                                             cellpadding="0"
-                                             cellspacing="0">
-								 		<h:graphicImage
-                                                 url="/img/jbpm/#{event.getIcon(row)}.gif" />
+											 columns="2"
+											 cellpadding="0"
+											 cellspacing="0">
+											
+								 		<h:graphicImage url="/img/jbpm/#{event.getIcon(row)}.gif" />
 								 		<h:outputText
-                                                 style="#{row == event.currentAction ? 'font-weight: bold' : ''}"
-                                                 value="#{empty row.name ? 'Ação '.concat(key + 1) : row.name}" />
-							 		</h:panelGrid>
-							 	</a:outputPanel>
-							 </a:commandLink>
+												 style="#{row == event.currentAction ? 'font-weight: bold' : ''}"
+												 value="#{empty row.name ? 'Ação '.concat(key + 1) : row.name}" />
+							 		
+										</h:panelGrid>
+							 	
+									</a:outputPanel>
+							 
+								</a:commandLink>
 							<wi:selectOneMenu
-                                     id="events"
-                                     width="100%"
-                                     widthDiv="100%"
-                                     rendered="#{row.event.eventType == 'new-event'}"
-                                     items="#{parent.supportedEventTypes}"
-                                     value="#{parent.eventType}">
-								<wi:ajaxSupport
-                                         reRender="#{parentId}Div" />
-							</wi:selectOneMenu>
-						</rich:column>
-					</ui:define>
-				</ui:decorate>
-			</s:div>
+									 id="events"
+									 width="100%"
+									 widthDiv="100%"
+									 rendered="#{row.event.eventType == 'new-event'}"
+									 items="#{parent.supportedEventTypes}"
+									 value="#{parent.eventType}">
+									
+								<a:ajax
+										 execute="@this"
+										 event="change"
+										 render="#{parentId}Div"
+										 limitRender="true" />
+							
+								</wi:selectOneMenu>
+						
+							</rich:column>
+					
+						</ui:define>
+				
+					</ui:decorate>
+			
+				</s:div>
+			
 			</s:div>
 			
 			<s:div
-                 id="#{id}EventDiv"
-                 style="float:left; margin-left:5px; width:500px">
-				<c:if
-                     test="#{!empty event.currentActionType and !empty event.currentAction}">
+				 id="#{id}EventDiv"
+				 style="float:left; margin-left:5px; width:500px">
+				
+				<c:if test="#{!empty event.currentActionType and !empty event.currentAction}">
+					
 					<ui:param
-                         name="eventDiv"
-                         value="#{id}Div" />
+						 name="eventDiv"
+						 value="#{id}Div" />
 					<wi:inputText
-                         id="#{id}ActionName"
-                         value="#{event.currentAction.name}"
-                         label="Nome">
-						<wi:ajaxSupport
-                             reRender="#{eventDiv}" />
+						 id="#{id}ActionName"
+						 value="#{event.currentAction.name}"
+						 label="Nome">
+						
+						<a:ajax
+							 execute="@this"
+							 event="change"
+							 render="#{eventDiv}"
+							 limitRender="true" />
+					
 					</wi:inputText>
-					<ui:include
-                         src="forms/#{event.currentActionType}.xhtml">
+					<ui:include src="forms/#{event.currentActionType}.xhtml">
+						
 						<ui:param
-                             name="widthDiv"
-                             value="100%" />
+							 name="widthDiv"
+							 value="100%" />
 						<ui:param
-                             name="height"
-                             value="height:100px" />
+							 name="height"
+							 value="height:100px" />
+					
 					</ui:include>
+				
 				</c:if>
+			
 			</s:div>
+		
 		</s:div>
+	
 	</f:subview>
 	
+
 </ui:composition>

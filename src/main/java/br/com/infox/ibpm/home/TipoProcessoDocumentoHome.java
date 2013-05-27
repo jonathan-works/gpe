@@ -15,19 +15,22 @@
 */
 package br.com.infox.ibpm.home;
 
+import java.util.List;
+
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
+import br.com.infox.epp.manager.TipoProcessoDocumentoManager;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
+import br.com.infox.ibpm.type.TipoNumeracaoEnum;
 import br.com.infox.ibpm.type.VisibilidadeEnum;
 import br.com.infox.list.TipoProcessoDocumentoList;
 import br.com.itx.util.ComponentUtil;
 
 
 @Name(TipoProcessoDocumentoHome.NAME)
-@BypassInterceptors
 public class TipoProcessoDocumentoHome
 		extends
 			AbstractTipoProcessoDocumentoHome<TipoProcessoDocumento> {
@@ -38,6 +41,8 @@ public class TipoProcessoDocumentoHome
 	
 	private static final String TEMPLATE = "/ClassificacaoDocumento/tipoProcessoDocumentoTemplate.xls";
 	private static final String DOWNLOAD_XLS_NAME = "ClassificacaoDocumento.xls";
+	
+	@In private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
 
 	@Override
 	public EntityList<TipoProcessoDocumento> getBeanList() {
@@ -80,8 +85,16 @@ public class TipoProcessoDocumentoHome
 		return TipoDocumentoEnum.values();
 	}
 	
+	public TipoNumeracaoEnum[] getTipoNumeracaoEnumValues() {
+		return TipoNumeracaoEnum.values();
+	}
+	
 	public VisibilidadeEnum[] getVisibilidadeEnumValues(){
 		return VisibilidadeEnum.values();
+	}
+	
+	public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo){
+		return tipoProcessoDocumentoManager.getTipoProcessoDocumentoInterno(isModelo);
 	}
 	
 }
