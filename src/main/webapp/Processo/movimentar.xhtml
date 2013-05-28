@@ -82,15 +82,6 @@
 				name="renderButtons"
 				render="taskButtonsDiv" />
 		</h:form>
-		<s:div rendered="#{processoHome.managed and checkPermission}">
-			<wi:view
-				form="#{consultaSolicitacaoView}"
-				title="#{messages['consultaSolicitacaoGrid.titulo']} #{processoHome.instance} - #{taskInstance.name}: #{processoHandler.getItemDoProcesso(processoHome.instance.idProcesso).caminhoCompletoToString()}"
-				columns="4"
-				opened="false"
-				buttons="none">
-			</wi:view>
-		</s:div>
 		<h:form>
 			<rich:tabPanel
 				switchType="ajax"

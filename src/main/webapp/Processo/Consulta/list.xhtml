@@ -35,15 +35,7 @@
             globalOnly="true"
             styleClass="message"
             id="globalMessages" />
-
-        <wi:view
-            form="#{consultaSolicitacaoView}"
-            title="#{messages['consultaSolicitacao.titulo']} #{processoHome.instance}"
-            home="#{processoHome}"
-            columns="2"
-            buttons="none">
-        </wi:view>
-
+            
         <h:form>
             <rich:tabPanel
                 headerSpacing="2"
@@ -90,7 +82,6 @@
 											 columnHeader="Tamanho: "
 											 value="#{row.processoDocumentoBin.sizeFormatado}" />
 					</wi:dataTable>
-                    </wi:ajaxDiv>
                 </rich:tab>
 
                 <rich:tab
