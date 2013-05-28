@@ -33,8 +33,6 @@ public abstract class AbstractCaixaHome<T> extends AbstractHome<Caixa> {
 		setInstance(obj);
 		String ret = remove();
 		newInstance();
-		GridQuery grid = (GridQuery) Component.getInstance("caixaGrid");
-		grid.refresh();
 		return ret;
 	}
 	
