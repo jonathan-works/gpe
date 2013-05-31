@@ -148,7 +148,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 				Contexts.getSessionContext().set(PETICAO_INSERIDA, lista);
 			}
 		}	
-		refreshGrid();
 		return ret;
 	}
 	
@@ -163,9 +162,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		super.newInstance();
 	}
 		
-	protected void refreshGrid() {
-		refreshGrid("documentoProcessoGrid");
-	}
 
 	protected void setJbpmTask() {
 		if (TaskInstance.instance() != null) {
@@ -307,7 +303,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		IProcessoDocumentoBinHome procDocBinHome = getComponent("processoDocumentoBinHome");
 		if (procDocBinHome.update() != null) {
 			ret = super.update();
-			refreshGrid();
 		}
 		return ret;
 	}
