@@ -82,19 +82,16 @@
                 value="#{modeloDocumentoHome.instance.modeloDocumento}"
                 showVariables="true"
                 required="true"
-                skin=""/>
-
-			<wi:imageUpload imageBean="#{imageFileUpload}" />
-
+			<a:region>
+				<wi:imageUpload imageBean="#{imageFileUpload}" />
+			</a:region>
 		</wi:dataForm>
 	</ui:define>
 
 	<ui:define name="tabs">
 		<rich:tab id="historicoModeloDocumento" 
 					rendered="#{modeloDocumentoHome.isManaged()}"
-					eventsQueue="default" 
-					switchType="ajax"
-					label="#{messages['historicoModeloDocumento.titleTab']}">
+					header="#{messages['historicoModeloDocumento.titleTab']}">
 			<wi:dataTable values="#{historicoModeloDocumentoList.list(10)}"
 				bean="#{historicoModeloDocumentoList}"
 				tableTitle="#{messages['historicoModeloDocumento.titleView']}"

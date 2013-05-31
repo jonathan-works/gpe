@@ -20,11 +20,10 @@
 				style="width:auto; min-width:500px;">
 				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar">
-					<wi:toolBar
-						action="#{action.onSelectNatCatFluxo(row)}"
-						url="/img/jbpm/StartState.gif"
-						execute="@this"
-						render=":isCadastrandoPartes :itemProcessoForm" />
+					<h:commandLink
+						action="#{action.onSelectNatCatFluxo(row)}">
+						<h:graphicImage value="/img/jbpm/StartState.gif" />
+					</h:commandLink>
 				</ui:define>
 				<wi:columnOutputText
 					columnId="natureza"

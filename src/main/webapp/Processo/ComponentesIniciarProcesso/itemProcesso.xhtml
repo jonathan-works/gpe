@@ -24,18 +24,16 @@
 						<a:commandLink
 							action="#{action.onSelectItem(row)}"
 							execute="@this"
-							render=":itemProcessoForm"
+							render="@this"
+							limitRender="true"
 							oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{util.contextPath}/Painel/list.seam';">
 							<h:graphicImage url="/img/start.gif" />
 						</a:commandLink>
 					</c:if>
 					<c:if test="#{action.necessitaPartes()}">
-						<a:commandLink
-							action="#{action.onSelectItem(row)}"
-							execute="@this"
-							render="itemDiv, :partesForm">
+						<h:commandLink action="#{action.onSelectItem(row)}">
 							<h:graphicImage url="/img/start.gif" />
-						</a:commandLink>
+						</h:commandLink>
 					</c:if>
 				</rich:column>
 				<rich:column style="width: 90%">
