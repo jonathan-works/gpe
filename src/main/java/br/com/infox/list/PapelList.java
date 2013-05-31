@@ -2,10 +2,16 @@ package br.com.infox.list;
 
 import java.util.Map;
 
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+
 import br.com.infox.access.entity.Papel;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 
+@Name(PapelList.NAME)
+@Scope(ScopeType.PAGE)
 public class PapelList extends EntityList<Papel> {
 	
 	public static final String NAME = "papelList";

@@ -17,8 +17,6 @@ package br.com.infox.ibpm.home;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.contexts.Contexts;
-
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
 import br.com.itx.util.ComponentUtil;
@@ -47,27 +45,19 @@ public class TipoModeloDocumentoPapelHome extends AbstractTipoModeloDocumentoPap
 	public String persist() {
 		String msg = super.persist();
 		newInstance();
-		refresh();
 		return msg;
 	}
 
-	private void refresh() {
-		refreshGrid("tipoModeloDocumentoPapelGrid");
-		Contexts.removeFromAllContexts("papelItems");
-	}
-	
 	@Override
 	public String remove(TipoModeloDocumentoPapel obj) {
 		String msg = super.remove(obj);
 		newInstance();
-		refresh();
 		return msg;
 	}
 	
 	@Override
 	public String remove() {
 		String msg = super.remove();
-		refresh();
 		return msg;
 	}
 	

@@ -122,7 +122,7 @@ public class UserHandler {
 
     private String getLocalizacao(TaskInstance task) {
         String localizacao = JbpmUtil.instance().getLocalizacao(task)
-                .getCaminho();
+                .getCaminhoCompleto();
         return "Local: " + localizacao;
     }
 

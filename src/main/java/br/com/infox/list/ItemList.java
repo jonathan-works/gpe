@@ -6,7 +6,6 @@ import java.util.Map;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
@@ -14,7 +13,6 @@ import br.com.infox.ibpm.entity.Item;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ItemList.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class ItemList extends EntityList<Item> {
 	
