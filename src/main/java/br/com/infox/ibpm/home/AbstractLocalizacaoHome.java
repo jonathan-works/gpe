@@ -72,7 +72,6 @@ public abstract class AbstractLocalizacaoHome<T> extends
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("localizacaoGrid");
 		return ret;
 	}
 

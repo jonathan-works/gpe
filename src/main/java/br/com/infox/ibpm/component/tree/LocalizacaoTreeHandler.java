@@ -16,7 +16,6 @@
 package br.com.infox.ibpm.component.tree;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
@@ -24,11 +23,12 @@ import br.com.infox.ibpm.entity.Localizacao;
 import br.com.itx.util.ComponentUtil;
 
 
-@Name("localizacaoTree")
-@BypassInterceptors
+@Name(LocalizacaoTreeHandler.NAME)
 public class LocalizacaoTreeHandler extends AbstractTreeHandler<Localizacao> {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String NAME = "localizacaoTree";
 	
 	@Override
 	protected String getQueryRoots() {

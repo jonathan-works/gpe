@@ -9,7 +9,6 @@
 	<description>Localizacao: #{localizacaoHome.instance}</description>
 	
 	<begin-conversation join="true" flush-mode="MANUAL"/>
-	<param name="localizacao.order" value="#{localizacaoGrid.order}"/>
 	<param name="id" value="#{localizacaoHome.localizacaoIdLocalizacao}"/>
 
 <!-- Parametros para RESTFull -->

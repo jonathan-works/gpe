@@ -31,11 +31,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
+
+import br.com.infox.annotations.ChildList;
+import br.com.infox.annotations.HierarchicalPath;
+import br.com.infox.annotations.Parent;
+import br.com.infox.annotations.PathDescriptor;
+import br.com.infox.annotations.Recursive;
 import br.com.infox.epp.entity.LocalizacaoTurno;
 
 
@@ -45,6 +50,7 @@ import br.com.infox.epp.entity.LocalizacaoTurno;
 
 @Entity
 @Table(name = Localizacao.TABLE_NAME, schema="public")
+@Recursive
 public class Localizacao implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -56,13 +62,14 @@ public class Localizacao implements java.io.Serializable {
 	private Boolean ativo;
 	private Localizacao localizacaoPai;
 	private Localizacao estruturaFilho;
-	private boolean estrutura;
+	private Boolean estrutura;
 	
 	private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<LocalizacaoTurno>(0);
 	private List<ItemTipoDocumento> itemTipoDocumentoList = new ArrayList<ItemTipoDocumento>(0);
 	private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
 	private List<Localizacao> localizacaoList = new ArrayList<Localizacao>(0);
 	
+	private String caminhoCompleto;
 	private Boolean temContaTwitter=false;
 
 	public Localizacao() {
@@ -93,6 +100,7 @@ public class Localizacao implements java.io.Serializable {
 	@Column(name = "ds_localizacao", nullable = false, length = 100, unique = true)
 	@NotNull
 	@Size(max = 100)
+	@PathDescriptor
 	public String getLocalizacao() {
 		return this.localizacao;
 	}
@@ -113,6 +121,7 @@ public class Localizacao implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_localizacao_pai")
+	@Parent
 	public Localizacao getLocalizacaoPai() {
 		return this.localizacaoPai;
 	}
@@ -146,6 +155,7 @@ public class Localizacao implements java.io.Serializable {
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "localizacaoPai")
 	@OrderBy("localizacao")
+	@ChildList
 	public List<Localizacao> getLocalizacaoList() {
 		return this.localizacaoList;
 	}
@@ -157,11 +167,11 @@ public class Localizacao implements java.io.Serializable {
 	@Column(name = "in_estrutura", nullable = false)
 	@NotNull
 		
-	public boolean getEstrutura() {
+	public Boolean getEstrutura() {
 		return estrutura;
 	}
 	
-	public void setEstrutura(boolean estrutura) {
+	public void setEstrutura(Boolean estrutura) {
 		this.estrutura = estrutura;
 	}
 	
@@ -184,41 +194,14 @@ public class Localizacao implements java.io.Serializable {
 		this.temContaTwitter = temContaTwitter;
 	}
 
-	@Transient
-	public Endereco getEnderecoCompleto() {
-		if (getEndereco() == null) {
-			//TODO falta implementar o sistema de complemento
-			for (Localizacao pai : getListLocalizacaoAtePai()) {
-				if (pai.getEndereco() != null) {
-					return pai.getEndereco();
-				}
-			}
-			return null;
-		} 
-		return getEndereco();
+	@Column(name="ds_caminho_completo", unique=true)
+	@HierarchicalPath
+	public String getCaminhoCompleto() {
+		return caminhoCompleto;
 	}
 	
-	@Transient
-	public List<Localizacao> getListLocalizacaoAtePai() {
-		//TODO mudar esse nome ;/
-		List<Localizacao> listLocalizacaoAtePai = new ArrayList<Localizacao>();
-		Localizacao pai = getLocalizacaoPai();
-		while (pai != null) {
-			listLocalizacaoAtePai.add(pai);
-			pai = pai.getLocalizacaoPai();
-		}
-		return listLocalizacaoAtePai;
-	}
-
-	@Transient
-	public String getCaminho() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getLocalizacao());
-		if (! getListLocalizacaoAtePai().isEmpty()) {
-			sb.append(" ")
-				.append(getListLocalizacaoAtePai());
-		}
-		return sb.toString();
+	public void setCaminhoCompleto(String caminhoCompleto) {
+		this.caminhoCompleto = caminhoCompleto;
 	}
 	
 	@Override

@@ -17,115 +17,208 @@
 -->
 
 <ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:rich="http://richfaces.org/rich"
-	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-	<ui:define name="title">#{messages['localizacao.titlePage']}</ui:define>
-	<ui:param
-		name="home"
-		value="#{localizacaoHome}" />
+    <ui:define name="title">#{messages['localizacao.titlePage']}</ui:define>
+    <ui:param
+        name="home"
+        value="#{localizacaoHome}" />
 
-	<ui:define name="searchGrid">
-		<h:messages
-			globalOnly="true"
-			styleClass="message"
-			id="globalMessages" />
-		<wi:datagrid
-			useDatamodel="true"
-			datamodel="#{localizacaoHome.searchTree2GridList.list}"
-			bean="#{localizacaoGrid}"
-			searchBean="#{localizacaoSearch}"
-			title="#{messages['localizacao.titleGrid']}"
-			columnList="localizacao, estrutura, ativo"
-			headerToolBar="none"
-			treeMode="true"
-			toolBar="toolBarTree"
-			reRenderButtonLimpar="#{localizacaoHome.newInstance()}" />
-	</ui:define>
+    <ui:define name="searchGrid">
+        <wi:dataTable
+            values="#{localizacaoList.list(15)}"
+            bean="#{localizacaoList}"
+            tableTitle="#{messages['localizacao.titleGrid']}"
+            id="localizacaoList"
+            rowId="#{row.idLocalizacao}">
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarLocalizacaoForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText
+                        id="codigoItem"
+                        value="#{localizacaoList.entity.localizacao}"
+                        label="#{messages['localizacao.localizacao']}" />
+                    <wi:tree
+                        id="localizacaoPai"
+                        assignTo="localizacaoList.entity.localizacaoPai"
+                        tree="#{localizacaoTree}"
+                        icon="/img/nivelTree.gif"
+                        iconLeaf="/img/file.gif"
+                        label="#{messages['localizacao.localizacaoPai']}" />
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{localizacaoList.entity.ativo}" />
+                    <wi:selectBooleanMenu
+                        id="estrutura"
+                        label="#{messages['localizacao.estrutura']}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputTextIdent
+                columnId="localizacao"
+                columnHeader="#{messages['localizacao.localizacao']}"
+                value="#{row.localizacao}"
+                fullPath="#{row.caminhoCompleto}" />
+            <wi:columnBoolean
+                columnId="estrutura"
+                columnHeader="#{messages['localizacao.estrutura']}"
+                value="#{row.estrutura}" />
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
 
-	<ui:define name="form">
-		<wi:form
-			form="#{localizacaoForm}"
-			formTitle="#{messages['form.title']}"
-			persistSemNewInstance="true" />
-	</ui:define>
+    <ui:define name="form">
+        <wi:dataForm
+            formId="localizacaoForm"
+            formTitle="#{messages['form.title']}">
+            <wi:inputText
+                id="localizacao"
+                required="true"
+                label="#{messages['localizacao.localizacao']}"
+                value="#{localizacaoHome.instance.localizacao}" />
+            <wi:selectBooleanRadio
+                id="estrutura"
+                required="true"
+                label="#{messages['localizacao.estrutura']}"
+                value="#{localizacaoHome.instance.estrutura}" />
+            <wi:tree
+                id="localizacaoPai"
+                assignTo="localizacaoHome.instance.localizacaoPai"
+                tree="#{localizacaoTree}"
+                icon="/img/nivelTree.gif"
+                iconLeaf="/img/file.gif"
+                label="#{messages['localizacao.localizacaoPai']}" />
+            <wi:inputCep
+                id="numeroCep"
+                value="#{localizacaoHome.instance.endereco.cep}"
+                label="#{messages['cep.numeroCep']}" />
+            <wi:selectOneMenuEntity
+                id="estado"
+                label="#{messages['cep.municipio.estado']}"
+                value="#{localizacaoHome.instance.endereco.nomeEstado}"
+                items="#{estadoList}"
+                required="#{required}"
+                noSelectionLabel="Selecione...">
+                <a:ajax
+                    event="change"
+                    status=":status"
+                    render="municipioSuggestSearchDiv"
+                    execute="@this" />
+            </wi:selectOneMenuEntity>
+            <s:div id="municipioSuggestSearchDiv">
+                <wi:suggest
+                    id="municipio"
+                    bean="#{municipioSearchSuggest}"
+                    disabled="#{empty localizacaoHome.instance.endereco.nomeEstado}"
+                    assignTo="#{localizacaoHome.instance.endereco.nomeCidade}"
+                    label="#{messages['cep.municipio']}">
+                </wi:suggest>
+            </s:div>
+            <wi:inputText
+                id="nomeLogradouro"
+                label="#{messages['cep.nomeLogradouro']}"
+                value="#{localizacaoHome.instance.endereco.nomeLogradouro}" />
+            <wi:inputNumber
+                id="numero"
+                label="#{messages['endereco.numeroEndereco']}"
+                value="#{localizacaoHome.instance.endereco.numeroEndereco}" />
+            <wi:inputText
+                id="complemento"
+                label="#{messages['endereco.complemento']}"
+                value="#{localizacaoHome.instance.endereco.complemento}" />
+            <wi:inputText
+                id="nomeBairro"
+                label="#{messages['cep.nomeBairro']}"
+                value="#{localizacaoHome.instance.endereco.nomeBairro}" />
+            <wi:selectSituacaoOneMenu
+                id="ativo"
+                label="#{messages['field.situacao']}"
+                value="#{localizacaoHome.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
 
-	<ui:define name="tabs">
-		<rich:tab
-			header="#{messages['localizacao.itemTipoDocumentoList']}"
-			status=":status"
-			id="itemTipoDocumento"
-			action="#{itemTipoDocumentoHome.newInstance()}"
-			rendered="#{home.managed}">
+    <ui:define name="tabs">
+        <rich:tab
+            header="#{messages['localizacao.itemTipoDocumentoList']}"
+            status=":status"
+            id="itemTipoDocumento"
+            action="#{itemTipoDocumentoHome.newInstance()}"
+            rendered="#{home.managed}">
 
-			<wi:dataForm
-				home="#{itemTipoDocumentoHome}"
-				formId="itemTipoDocumentoForm"
-				formTitle="Adicionar Grupo de Documento à Localização - #{(localizacaoHome.instance)}">
+            <wi:dataForm
+                home="#{itemTipoDocumentoHome}"
+                formId="itemTipoDocumentoForm"
+                formTitle="Adicionar Grupo de Documento à Localização - #{(localizacaoHome.instance)}">
 
-				<wi:suggest
-					id="orgaoJulgador"
-					bean="#{grupoModeloDocumentoSuggest}"
-					assignTo="itemTipoDocumentoHome.instance.grupoModeloDocumento"
-					label="Grupo Documento" />
-			</wi:dataForm>
-			<br />
-			<wi:dataTable
-				id="itemTipoDocumentoList"
-				values="#{itemTipoDocumentoList.list(15)}"
-				bean="#{itemTipoDocumentoList}"
-				tableTitle="Grupo Documento"
-				rowId="#{row.idItemTipoDocumento}">
+                <wi:suggest
+                    id="orgaoJulgador"
+                    bean="#{grupoModeloDocumentoSuggest}"
+                    assignTo="itemTipoDocumentoHome.instance.grupoModeloDocumento"
+                    label="Grupo Documento" />
+            </wi:dataForm>
+            <br />
+            <wi:dataTable
+                id="itemTipoDocumentoList"
+                values="#{itemTipoDocumentoList.list(15)}"
+                bean="#{itemTipoDocumentoList}"
+                tableTitle="Grupo Documento"
+                rowId="#{row.idItemTipoDocumento}">
 
-				<ui:define name="toolBar">
-					<div style="width: 35px">
-						<a:region>
-							<a:commandLink
-								action="#{itemTipoDocumentoHome.remove(row)}"
-								rendered="#{wi:get(canEdit,true)}"
-								limitRender="true"
-								status=":status"
-								render="pageBody"
-								styleClass="opacityHover"
-								onclick="if(!confirm('Confirma?')) return false;">
-								<h:graphicImage
-									url="/img/remove.png"
-									title="Remover registro"
-									style="#{style}" />
-							</a:commandLink>
-						</a:region>
-					</div>
-				</ui:define>
+                <ui:define name="toolBar">
+                    <div style="width: 35px">
+                        <a:region>
+                            <a:commandLink
+                                action="#{itemTipoDocumentoHome.remove(row)}"
+                                rendered="#{wi:get(canEdit,true)}"
+                                limitRender="true"
+                                status=":status"
+                                render="pageBody"
+                                styleClass="opacityHover"
+                                onclick="if(!confirm('Confirma?')) return false;">
+                                <h:graphicImage
+                                    url="/img/remove.png"
+                                    title="Remover registro"
+                                    style="#{style}" />
+                            </a:commandLink>
+                        </a:region>
+                    </div>
+                </ui:define>
 
-				<wi:columnOutputText
-					columnId="grupoModeloDocumento"
-					columnHeader="Grupo Documento"
-					value="#{row.grupoModeloDocumento}" />
+                <wi:columnOutputText
+                    columnId="grupoModeloDocumento"
+                    columnHeader="Grupo Documento"
+                    value="#{row.grupoModeloDocumento}" />
 
-			</wi:dataTable>
-		</rich:tab>
+            </wi:dataTable>
+        </rich:tab>
 
-		<rich:tab
-			header="#{messages['localizacao.localizacaoTurno']}"
-			status=":status"
-			id="localizacaoTurnoTab"
-			action="#{localizacaoTurnoAction.newInstance(localizacaoHome.instance)}"
-			rendered="#{home.managed}">
-			<wi:turnoCalendar handler="#{localizacaoTurnoAction.turnoHandler}" />
+        <rich:tab
+            header="#{messages['localizacao.localizacaoTurno']}"
+            status=":status"
+            id="localizacaoTurnoTab"
+            action="#{localizacaoTurnoAction.newInstance(localizacaoHome.instance)}"
+            rendered="#{home.managed}">
+            <wi:turnoCalendar
+                handler="#{localizacaoTurnoAction.turnoHandler}" />
 
-			<a:commandButton
-				action="#{localizacaoTurnoAction.gravarTurnos()}"
-				value="Gravar" />
-		</rich:tab>
+            <a:commandButton
+                action="#{localizacaoTurnoAction.gravarTurnos()}"
+                value="Gravar" />
+        </rich:tab>
 
-	</ui:define>
+    </ui:define>
 
 </ui:composition>

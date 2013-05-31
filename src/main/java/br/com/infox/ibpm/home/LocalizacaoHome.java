@@ -38,7 +38,6 @@ import br.com.infox.ibpm.entity.Estado;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Municipio;
 import br.com.infox.ibpm.manager.LocalizacaoManager;
-import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 
 
@@ -71,7 +70,6 @@ public class LocalizacaoHome
 		getInstance().setAtivo(Boolean.TRUE);
 		limparTrees();
 		Contexts.removeFromAllContexts("cepSuggest");	
-		refreshGrid("localizacaoGrid");
 		super.newInstance();
 	}
 	
@@ -81,7 +79,7 @@ public class LocalizacaoHome
 	
 	private void limparTrees(){
 		LocalizacaoTreeHandler ret1 = getComponent("localizacaoSearchTree");
-		LocalizacaoTreeHandler ret2 = getComponent("localizacaoFormTree");
+		LocalizacaoTreeHandler ret2 = getComponent("localizacaoTree");
 		ret1.clearTree();
 		ret2.clearTree();
 		if(getLockedFields().contains("localizacaoPai")) ret2.clearTree();
@@ -198,7 +196,6 @@ public class LocalizacaoHome
 				return false;
 			}
 		}
-		refreshGrid("localizacaoGrid");
 		return true;
 	}
 	
@@ -214,7 +211,6 @@ public class LocalizacaoHome
 			localizacao.setAtivo(Boolean.FALSE);
 			String ret = super.update();
 			limparTrees();
-			refreshGrid("localizacaoGrid");
 			return ret;
 		}
 		FacesMessages.instance().add(StatusMessage.Severity.ERROR,
@@ -285,23 +281,6 @@ public class LocalizacaoHome
 			}
 		}
 		return outcome;
-	}
-
-	public SearchTree2GridList<Localizacao> getSearchTree2GridList() {
-		if (searchTree2GridList == null) {
-			Localizacao searchBean = getComponent("localizacaoSearch", ScopeType.CONVERSATION);
-			LocalizacaoEstruturaSearchTreeHandler tree = 
-				getLocalizacaoEstruturaSearch();
-			searchTree2GridList = new SearchTree2GridList<Localizacao>(searchBean, tree);
-			String filterName[] = {"ativo", "localizacao"};
-			searchTree2GridList.setFilterName(filterName);
-			searchTree2GridList.setGrid(getLocalizacaoGrid());
-		}
-		return searchTree2GridList;
-	}
-
-	private GridQuery getLocalizacaoGrid() {
-		return getComponent("localizacaoGrid", ScopeType.CONVERSATION);
 	}
 
 	private LocalizacaoEstruturaSearchTreeHandler getLocalizacaoEstruturaSearch() {

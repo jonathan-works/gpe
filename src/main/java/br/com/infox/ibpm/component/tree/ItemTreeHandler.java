@@ -25,7 +25,6 @@ import br.com.itx.util.ComponentUtil;
 
 
 @Name(ItemTreeHandler.NAME)
-@BypassInterceptors
 public class ItemTreeHandler extends AbstractTreeHandler<Item> {
 
 	public static final String NAME = "itemTree";
