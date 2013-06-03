@@ -3,6 +3,7 @@ package br.com.infox.ibpm.jbpm.actions;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
@@ -18,6 +19,7 @@ import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.list.CaixaList;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
@@ -25,7 +27,6 @@ import br.com.itx.util.EntityUtil;
 
 
 @Name(CaixaEventoAction.NAME)
-@BypassInterceptors
 @Scope(ScopeType.APPLICATION)
 /**
  * Classe responsável pela verificação e associação (se existir) para qual Caixa
@@ -37,8 +38,8 @@ public class CaixaEventoAction {
 
 	public static final String NAME = "caixaEvento";
 	private static final String PROCESSO = "processo";
-	private static final String FILTRO_CAIXA_SEARCH = "filtroCaixaSearch";
-	private static final String FILTRO_CAIXA_GRID = "filtroCaixaGrid";
+	
+	@In private CaixaList caixaList;
 	
 	/**
 	 * Método principal, onde ocorrerá a validação para verificar se o processo
@@ -69,9 +70,9 @@ public class CaixaEventoAction {
 			if(proc == null) {
 				return;
 			}
-			Contexts.getConversationContext().set(FILTRO_CAIXA_SEARCH, cf);
-			GridQuery gridQuery = (GridQuery)ComponentUtil.getComponent(FILTRO_CAIXA_GRID);
-			List<Caixa> caixaList = gridQuery.getResultList();
+			this.caixaList.setEntity(cf);
+			this.caixaList.getResultList();
+			List<Caixa> caixaList = this.caixaList.getResultList();
 			if(caixaList != null && caixaList.size() > 0) {
 				addProcessoCaixa(caixaList, proc);
 			}
