@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
- <!--
+<!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -16,149 +16,197 @@
   veja em http://www.gnu.org/licenses/  
 -->
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-				xmlns:f="http://java.sun.com/jsf/core"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:rich="http://richfaces.org/rich"
-			    xmlns:a="http://richfaces.org/a4j"
-			    xmlns:c="http://java.sun.com/jsp/jstl/core"
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-                      
-	<ui:define name="title">#{messages['tipoProcessoDocumento.titlePage']}</ui:define>
-	
-	<ui:param name="home" value="#{tipoProcessoDocumentoHome}" />
-	
-	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{tipoProcessoDocumentoList.list(15)}"
-					  bean="#{tipoProcessoDocumentoList}"
-					  tableTitle="#{messages['tipoProcessoDocumento.titleGrid']}"
-					  id="tipoProcessoDocumentoList"
-					  rowId="#{row.idTipoProcessoDocumento}" >
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarTipoProcessoDocumentoForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputText id="codigoDocumento"
-								 value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"
-								 label="#{messages['tipoProcessoDocumento.codigoDocumento']}"
-								 maxlength="30"/>
-					<wi:inputText id="tipoProcessoDocumento"
-								  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-								  value="#{tipoProcessoDocumentoList.entity.tipoProcessoDocumento}"
-								  maxlength="100"/>
-					<wi:selectOneMenuEnum id="usoTipoDocumento"
-								  label="#{messages['tipoProcessoDocumento.uso']}"
-								  items="#{home.getTipoDocumentoEnumValues()}"
-								  value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"
-								  noSelectionLabel="[Todos]" />
-					<wi:selectOneMenuEnum id="visibilidade"
-								  label="#{messages['tipoProcessoDocumento.visibilidade']}"
-								  items="#{home.getVisibilidadeEnumValues()}"
-								  value="#{tipoProcessoDocumentoList.entity.visibilidade}"
-								  noSelectionLabel="[Todos]" />
-					<wi:selectSituacaoOneMenu id="ativo"
-											  label="#{messages['field.situacao']}"
-											  value="#{tipoProcessoDocumentoList.entity.ativo}" />
-				</wi:searchForm>
-			</ui:define>
-			
-			<wi:columnOutputText columnId="codigoDocumento"
-								 columnHeader="#{messages['tipoProcessoDocumento.codigoDocumento']}"
-								 value="#{row.codigoDocumento}" />
-			<wi:columnOutputText columnId="tipoProcessoDocumento"
-								 columnHeader="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-								 value="#{row.tipoProcessoDocumento}" />
-			<wi:columnEnum columnId="inTipoDocumento"
-						   columnHeader="#{messages['tipoProcessoDocumento.uso']}"
-						   value="#{row.inTipoDocumento}" />
-			<wi:columnEnum columnId="visibilidade"
-						   columnHeader="#{messages['tipoProcessoDocumento.visibilidade']}"
-						   value="#{row.visibilidade}" />
-			<wi:columnSituacao columnId="ativo"
-							columnHeader="#{messages['field.situacao']}"
-							value="#{row.ativo}" />
-		</wi:dataTable>
-	</ui:define>
-	
-	<ui:define name="form">
-		<wi:dataForm formId="tipoProcessoDocumentoForm"
-					 formTitle="#{messages['form.title']}">
-			<wi:inputText id="codigoDocumento"
-						 value="#{tipoProcessoDocumentoHome.instance.codigoDocumento}"
-						 required="true"
-						 label="#{messages['tipoProcessoDocumento.codigoDocumento']}"
-						 maxlength="30"/>
-			<wi:inputText id="tipoProcessoDocumento"
-						  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-						  required="true"
-						  value="#{tipoProcessoDocumentoHome.instance.tipoProcessoDocumento}"
-						  maxlength="150" />
-			<wi:selectOneMenuEnum id="usoTipoDocumento"
-								  label="#{messages['tipoProcessoDocumento.uso']}"
-								  items="#{home.getTipoDocumentoEnumValues()}"
-								  value="#{home.instance.inTipoDocumento}"
-								  required="true"
-								  noSelectionLabel="#{messages['comboBox.select']}" />
-			<wi:selectOneMenuEnum id="visibilidade"
-								  label="#{messages['tipoProcessoDocumento.visibilidade']}"
-								  items="#{home.getVisibilidadeEnumValues()}"
-								  value="#{home.instance.visibilidade}"
-								  required="true"
-								  noSelectionLabel="#{messages['comboBox.select']}"/>
-			<wi:selectOneRadio	id="numera"
-								label="#{messages['tipoProcessoDocumento.numera']}"
-						    	value="#{home.instance.numera}"
-						    	valueList="true:Sim, false:Não">
-		    	<a:support reRender="mascaraDiv"
-		    			   ajaxSingle="true"
-		    			   event="onchange"
-		    			   status="status" />
-		    </wi:selectOneRadio>
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-			<s:div id="mascaraDiv">
-				<wi:selectOneMenuEnum id="tipoNumeracaoCombo"
-									  rendered="#{tipoProcessoDocumentoHome.instance.numera}"
-									  label="#{messages['classificacaoDocumento.tipoNumeracao']}"
-									  items="#{home.getTipoNumeracaoEnumValues()}"
-									  value="#{home.instance.tipoNumeracao}"
-									  required="true"
-									  noSelectionLabel="#{messages['comboBox.select']}"/>
-			</s:div>
-			<wi:selectBooleanRadio id="sistema"
-								    label="#{messages['tipoProcessoDocumento.sistema']}"
-								    value="#{home.instance.sistema}" />
-			<wi:selectSituacaoRadio id="ativo"
-								    label="#{messages['field.situacao']}"
-								    value="#{home.instance.ativo}" />
-			<wi:inputTextarea id="tipoProcessoDocumentoObservacao"
-						  label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
-						  value="#{home.instance.tipoProcessoDocumentoObservacao}"
-						  maxlength="150" />
-		</wi:dataForm>
-	</ui:define>
-	 <ui:define name="tabs">
-		 <rich:tab label="Associar Papel"
-		    	   status=":status"			
-		    	   id="associarPapelTab"			
-		    	   rendered="#{home.managed}">
-			<s:div id="divAssociarPapel">
-				<c:if test="#{canEdit}">
-					<wi:form msgRendered="false"				   		
-							 formTitle="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"						
-							 form="#{tipoProcessoDocumentoPapelForm}"						
-							 home="#{tipoProcessoDocumentoPapelHome}"						
-							 reRenderSave="divAssociarPapel"/>
-				</c:if>
-				<wi:datalist bean="#{tipoProcessoDocumentoPapelGrid}" 
-							 gridId="tipoProcessoDocumentoPapelGridTab"
-							 toolBar="toolBarEditRemove"
-							 listReRender="divAssociarPapel"
-							 headerToolBar="none"
-							 home="#{tipoProcessoDocumentoPapelHome}"
-							 title="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"/>				
-			</s:div>
-		</rich:tab>
-	</ui:define>
+    <ui:define name="title">#{messages['tipoProcessoDocumento.titlePage']}</ui:define>
+
+    <ui:param
+        name="home"
+        value="#{tipoProcessoDocumentoHome}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable
+            values="#{tipoProcessoDocumentoList.list(15)}"
+            bean="#{tipoProcessoDocumentoList}"
+            tableTitle="#{messages['tipoProcessoDocumento.titleGrid']}"
+            id="tipoProcessoDocumentoList"
+            rowId="#{row.idTipoProcessoDocumento}">
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarTipoProcessoDocumentoForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText
+                        id="codigoDocumento"
+                        value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"
+                        label="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+                        maxlength="30" />
+                    <wi:inputText
+                        id="tipoProcessoDocumento"
+                        label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                        value="#{tipoProcessoDocumentoList.entity.tipoProcessoDocumento}"
+                        maxlength="100" />
+                    <wi:selectOneMenuEnum
+                        id="usoTipoDocumento"
+                        label="#{messages['tipoProcessoDocumento.uso']}"
+                        items="#{home.getTipoDocumentoEnumValues()}"
+                        value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"
+                        noSelectionLabel="[Todos]" />
+                    <wi:selectOneMenuEnum
+                        id="visibilidade"
+                        label="#{messages['tipoProcessoDocumento.visibilidade']}"
+                        items="#{home.getVisibilidadeEnumValues()}"
+                        value="#{tipoProcessoDocumentoList.entity.visibilidade}"
+                        noSelectionLabel="[Todos]" />
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{tipoProcessoDocumentoList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+
+            <wi:columnOutputText
+                columnId="codigoDocumento"
+                columnHeader="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+                value="#{row.codigoDocumento}" />
+            <wi:columnOutputText
+                columnId="tipoProcessoDocumento"
+                columnHeader="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                value="#{row.tipoProcessoDocumento}" />
+            <wi:columnEnum
+                columnId="inTipoDocumento"
+                columnHeader="#{messages['tipoProcessoDocumento.uso']}"
+                value="#{row.inTipoDocumento}" />
+            <wi:columnEnum
+                columnId="visibilidade"
+                columnHeader="#{messages['tipoProcessoDocumento.visibilidade']}"
+                value="#{row.visibilidade}" />
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm
+            formId="tipoProcessoDocumentoForm"
+            formTitle="#{messages['form.title']}">
+            <wi:inputText
+                id="codigoDocumento"
+                value="#{tipoProcessoDocumentoHome.instance.codigoDocumento}"
+                required="true"
+                label="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+                maxlength="30" />
+            <wi:inputText
+                id="tipoProcessoDocumento"
+                label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                required="true"
+                value="#{tipoProcessoDocumentoHome.instance.tipoProcessoDocumento}"
+                maxlength="150" />
+            <wi:selectOneMenuEnum
+                id="usoTipoDocumento"
+                label="#{messages['tipoProcessoDocumento.uso']}"
+                items="#{home.getTipoDocumentoEnumValues()}"
+                value="#{home.instance.inTipoDocumento}"
+                required="true"
+                noSelectionLabel="#{messages['comboBox.select']}" />
+            <wi:selectOneMenuEnum
+                id="visibilidade"
+                label="#{messages['tipoProcessoDocumento.visibilidade']}"
+                items="#{home.getVisibilidadeEnumValues()}"
+                value="#{home.instance.visibilidade}"
+                required="true"
+                noSelectionLabel="#{messages['comboBox.select']}" />
+            <wi:selectOneRadio
+                id="numera"
+                label="#{messages['tipoProcessoDocumento.numera']}"
+                value="#{home.instance.numera}"
+                valueList="true:Sim, false:Não">
+                <a:ajax
+                    reRender="mascaraDiv"
+                    ajaxSingle="true"
+                    event="change"
+                    status="status" />
+            </wi:selectOneRadio>
+
+            <s:div id="mascaraDiv">
+                <wi:selectOneMenuEnum
+                    id="tipoNumeracaoCombo"
+                    rendered="#{tipoProcessoDocumentoHome.instance.numera}"
+                    label="#{messages['classificacaoDocumento.tipoNumeracao']}"
+                    items="#{home.getTipoNumeracaoEnumValues()}"
+                    value="#{home.instance.tipoNumeracao}"
+                    required="true"
+                    noSelectionLabel="#{messages['comboBox.select']}" />
+            </s:div>
+            <wi:selectBooleanRadio
+                id="sistema"
+                label="#{messages['tipoProcessoDocumento.sistema']}"
+                value="#{home.instance.sistema}" />
+            <wi:selectSituacaoRadio
+                id="ativo"
+                label="#{messages['field.situacao']}"
+                value="#{home.instance.ativo}" />
+            <wi:inputTextarea
+                id="tipoProcessoDocumentoObservacao"
+                label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
+                value="#{home.instance.tipoProcessoDocumentoObservacao}"
+                maxlength="150" />
+        </wi:dataForm>
+    </ui:define>
+    <ui:define name="tabs">
+        <rich:tab
+            label="Associar Papel"
+            status=":status"
+            id="associarPapelTab"
+            rendered="#{home.managed}">
+            <s:div id="divAssociarPapel">
+                <wi:dataForm
+                    formId="tipoProcessoDocumentoPapeçForm"
+                    formTitle="#{messages['form.title']}">
+                    <wi:selectOneMenuEntity
+                        id="papel"
+                        label="#{messages['tipoProcessoDocumentoPapel.papel']}"
+                        items="#{home.papelItems()}"
+                        value="#{tipoProcessoDocumentoPapelHome.instance.papel}"
+                        noSelectionLabel="Selecione..."
+                        required="true" />
+                    <wi:selectBooleanRadio
+                        id="obrigatorio"
+                        required="true"
+                        value="#{tipoProcessoDocumentoPapelHome.instance.obrigatorio}"
+                        label="#{messages['tipoProcessoDocumentoPapel.obrigatorio']}" />
+                </wi:dataForm>
+                
+                <wi:dataTable
+                    values="#{tipoProcessoDocumentoPapelList.list(15)}"
+                    bean="#{tipoProcessoDocumentoPapelList}"
+                    tableTitle="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"
+                    id="tipoProcessoDocumentoPapelList"
+                    rowId="#{row.tipoProcessoDocumentoPapel}"
+                    listReRender="divAssociarPapel">
+                    <wi:columnOutputText
+                        columnId="papel"
+                        columnHeader="#{messages['tipoProcessoDocumentoPapel.papel']}"
+                        value="#{row.papel}" />
+                    <wi:columnBoolean
+                        columnId="obrigatorio"
+                        columnHeader="#{messages['tipoProcessoDocumentoPapel.obrigatorio']}"
+                        value="#{row.obrigatorio}" />
+                    <ui:define name="headerToolBar" />
+                    <ui:insert name="toolBarEditRemove" />
+                </wi:dataTable>
+            </s:div>
+        </rich:tab>
+    </ui:define>
 </ui:composition>
