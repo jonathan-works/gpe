@@ -29,6 +29,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.ibpm.xpdl.FluxoXPDL;
+import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -123,5 +125,18 @@ public class FluxoHome
         }
         return "updated";
     }
-	
+
+    public String importarXPDL(byte[] bytes) {
+    	Fluxo fluxo = getInstance();
+		try {
+			FluxoXPDL fluxoXPDL = FluxoXPDL.createInstance(bytes);
+			fluxo.setXml(fluxoXPDL.toJPDL(fluxo.getFluxo()));
+		} catch (IllegalXPDLException e) {
+			LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage());
+		}
+		StringBuilder result = new StringBuilder();
+		result.append(FluxoHome.NAME).append(".update()");
+		return result.toString();
+	}
+    
 }
