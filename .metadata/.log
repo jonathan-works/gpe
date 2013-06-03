@@ -1,0 +1,25 @@
+!SESSION 2013-06-03 11:14:07.073 -----------------------------------------------
+eclipse.buildId=M20120914-1800
+java.version=1.7.0_07
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=pt_BR
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -data /home/erikliberal/apps/framework/workspaces/epp -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.core.net 1 0 2013-06-03 11:14:11.832
+!MESSAGE System property http.proxyHost is not set but should be wpad.infox.intranet.
+
+!ENTRY org.eclipse.core.net 1 0 2013-06-03 11:14:11.835
+!MESSAGE System property http.proxyPort is not set but should be 8080.
+
+!ENTRY org.eclipse.core.net 1 0 2013-06-03 11:14:11.836
+!MESSAGE System property https.proxyHost is not set but should be wpad.infox.intranet.
+
+!ENTRY org.eclipse.core.net 1 0 2013-06-03 11:14:11.836
+!MESSAGE System property https.proxyPort is not set but should be 8080.
+
+!ENTRY org.eclipse.core.net 1 0 2013-06-03 11:14:11.837
+!MESSAGE System property https.proxyHost is not set but should be wpad.infox.intranet.
+
+!ENTRY org.eclipse.core.net 1 0 2013-06-03 11:14:11.837
+!MESSAGE System property https.proxyPort is not set but should be 8080.
