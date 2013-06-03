@@ -4,13 +4,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.access.entity.Papel;
 import br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel;
 
 @Name("tipoProcessoDocumentoPapelHome")
-@BypassInterceptors
 public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocumentoPapelHome<TipoProcessoDocumentoPapel> {
 	private static final long serialVersionUID = 1L;
 	
@@ -18,7 +16,6 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	public String persist() {
 		instance.setTipoProcessoDocumento(TipoProcessoDocumentoHome.instance().getInstance());
 		String ret = super.persist();
-		refreshGrid("tipoProcessoDocumentoPapelGrid");
 		return ret;
 	}
 	
@@ -26,7 +23,6 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	public String update() {
 		instance.setTipoProcessoDocumento(TipoProcessoDocumentoHome.instance().getInstance());
 		String ret = super.update();
-		refreshGrid("tipoProcessoDocumentoPapelGrid");
 		return ret;
 	}
 	

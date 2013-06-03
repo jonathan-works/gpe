@@ -10,23 +10,23 @@ import br.com.infox.access.entity.Papel;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 
-@Name(PapelList.NAME)
+@Name(RecursoList.NAME)
 @Scope(ScopeType.PAGE)
-public class PapelList extends EntityList<Papel> {
-	
-	public static final String NAME = "papelList";
+public class RecursoList extends EntityList<Papel> {
+
 	private static final long serialVersionUID = 1L;
-	
+	public static final String NAME = "recursoList";
+
 	/*
 	 * Papel e Recurso fazem parte da mesma entidade, 
 	 * a diferença consiste em que o identificador dos 
 	 * recursos começa com '/'
 	 * */
-	public static final String DEFAULT_EJBQL = "select o from Papel o where identificador not like '/%'";
+	public static final String DEFAULT_EJBQL = "select o from Papel o where identificador like '/%'";
 	public static final String DEFAULT_ORDER = "o.nome";
 	
-	private static final String R1 = "lower(nome) like concat('%',lower(#{papelList.entity.nome}),'%')";
-	private static final String R2 = "lower(identificador) like concat('%',lower(#{papelList.entity.identificador}),'%')";
+	private static final String R1 = "lower(nome) like concat('%',lower(#{recursoList.entity.nome}),'%')";
+	private static final String R2 = "lower(identificador) like concat('%',lower(#{recursoList.entity.identificador}),'%')";
 
 	@Override
 	protected void addSearchFields() {

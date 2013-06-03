@@ -171,7 +171,6 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 				getEntityManager().persist(historico);
 				EntityUtil.flush();
 			}
-			refreshGrid("historicoAjudaGrid");
 			newInstance();
 		}
 		return ret;

@@ -178,7 +178,7 @@
                             label="#{messages['tipoModeloDocumento.papel']}"
                             required="true"
                             value="#{tipoModeloDocumentoPapelHome.instance.papel}"
-                            items="#{papelList}" />
+                            items="#{tipoModeloDocumentoPapelHome.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}" />
                     </wi:dataForm>
                 </ui:define>
 

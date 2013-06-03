@@ -15,20 +15,25 @@
 */
 package br.com.infox.ibpm.home;
 
+import java.util.List;
+
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
+import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.manager.PapelManager;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
 import br.com.itx.util.ComponentUtil;
 
 
 @Name(TipoModeloDocumentoPapelHome.NAME)
-@BypassInterceptors
 public class TipoModeloDocumentoPapelHome extends AbstractTipoModeloDocumentoPapelHome<TipoModeloDocumentoPapel> {
 
 	public static final String NAME = "tipoModeloDocumentoPapelHome";
 	private static final long serialVersionUID = 1L;
 
+	@In private PapelManager papelManager;
 
 	@Override
 	public void newInstance() {
@@ -59,6 +64,10 @@ public class TipoModeloDocumentoPapelHome extends AbstractTipoModeloDocumentoPap
 	public String remove() {
 		String msg = super.remove();
 		return msg;
+	}
+	
+	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumentoAtual(){
+		return papelManager.getPapeisNaoAssociadosATipoModeloDocumento(instance.getTipoModeloDocumento());
 	}
 	
 }

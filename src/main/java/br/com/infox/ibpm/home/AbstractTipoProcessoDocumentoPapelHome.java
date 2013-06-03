@@ -19,7 +19,6 @@ public abstract class AbstractTipoProcessoDocumentoPapelHome<T> extends Abstract
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("tipoProcessoDocumentoPapelGrid");
 		return ret;
 	}
 	

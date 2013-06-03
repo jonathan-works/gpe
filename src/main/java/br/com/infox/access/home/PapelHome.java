@@ -134,8 +134,6 @@ public class PapelHome extends AbstractHome<Papel> {
 		setInstance(p);
 		String ret = super.remove();
 		newInstance();
-		GridQuery grid = ComponentUtil.getComponent("papelGrid");
-		grid.refresh();
 		RolesMap.instance().clear();
 		return ret;
 	}
@@ -354,7 +352,6 @@ public class PapelHome extends AbstractHome<Papel> {
 			if (identificador.startsWith("/")) {
 				IdentityManager.instance().addRoleToGroup("admin", identificador);
 			}
-			refreshGrid("papelGrid");
 		}
 		String nome = instance.getNome();
 		instance = getPapel(getRoleaction().getRole());
