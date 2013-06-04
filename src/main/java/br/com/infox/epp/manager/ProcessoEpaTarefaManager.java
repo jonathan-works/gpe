@@ -78,6 +78,15 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		}
 	}
 	
+	public void updateTarefasFinalizadas() {
+		for (ProcessoEpaTarefa pt : processoEpaTarefaDAO.getTarefaEnded()) {
+			pt.setTempoGasto(0);
+			pt.setPorcentagem(0);
+			pt.setUltimoDisparo(pt.getDataInicio());
+			updateTempoGasto(pt.getDataFim(), pt);
+		}
+	}
+	
 	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) {
 		int incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
 		if (processoEpaTarefa.getUltimoDisparo().before(fireTime)) {

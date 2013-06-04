@@ -45,6 +45,10 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return result;		
 	}
 
+	public List<ProcessoEpaTarefa> getTarefaEnded() {
+		return getNamedResultList(ProcessoEpaTarefaQuery.TAREFA_ENDED, null);
+	}
+	
 	public List<ProcessoEpaTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put(ProcessoEpaTarefaQuery.QUERY_PARAM_TIPO_PRAZO, tipoPrazo);
