@@ -51,8 +51,6 @@ import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
 public class ProcessoHome extends AbstractHome<Processo> {
-
-	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
 
@@ -78,6 +76,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	private boolean renderEventsTree;
     private ProcessoDocumento pdFluxo;
 	private Integer idProcessoDocumento;
+	private boolean checkVisibilidade=true;
+	private boolean possuiPermissaoVisibilidade=false;
 
 	private Long tarefaId;
 
@@ -126,10 +126,14 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 	
 	public Boolean checarVisibilidade()	{
-		boolean possuiPermissao = processoLocalizacaoIbpmDAO.possuiPermissao();
-		if(!possuiPermissao)
+		if (checkVisibilidade) {
+			possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO.possuiPermissao();
+			checkVisibilidade = false;
+		}
+		if(!possuiPermissaoVisibilidade) {
 			avisarNaoHaPermissaoParaAcessarProcesso();
-		return possuiPermissao;
+		}
+		return possuiPermissaoVisibilidade;
 	}
 
 	private void avisarNaoHaPermissaoParaAcessarProcesso() {
