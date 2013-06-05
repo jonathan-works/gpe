@@ -43,8 +43,6 @@ public class PainelUsuarioHome implements Serializable {
 	public void onSelected(Object obj){
 		this.selected = (Map<String, Object>) obj;
 		processoIdList = null;
-		GridQuery grid = ComponentUtil.getComponent("consultaProcessoGrid");
-		grid.setPage(1);
 	}
 	
 	public Integer getIdCaixa() {
@@ -93,10 +91,9 @@ public class PainelUsuarioHome implements Serializable {
 		setProcessoCaixa(getProcessoIdList(evt.getDragValue()), caixa);
 		try {
 			Processo cpt = (Processo) evt.getDragValue();
-			
-			((GridQuery)ComponentUtil.getComponent("consultaProcessoGrid")).getResultList().remove(cpt);
+			consultaProcessoEpaList.getResultList().remove(cpt);
 		} catch (ClassCastException cce) {
-			((GridQuery)ComponentUtil.getComponent("consultaProcessoGrid")).getResultList().clear();
+			consultaProcessoEpaList.getResultList().clear();
 		}			
 	}
 

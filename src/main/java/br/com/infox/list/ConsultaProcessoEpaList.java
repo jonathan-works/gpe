@@ -3,6 +3,7 @@ package br.com.infox.list;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -12,6 +13,7 @@ import br.com.infox.epp.entity.ProcessoEpa;
 
 @Name(ConsultaProcessoEpaList.NAME)
 @Scope(ScopeType.PAGE)
+@AutoCreate
 public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
 
 	private static final long serialVersionUID = 1L;
