@@ -10,10 +10,10 @@ import java.util.Map;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
@@ -21,12 +21,12 @@ import org.richfaces.event.DropEvent;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.list.ConsultaProcessoEpaList;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(PainelUsuarioHome.NAME)
-@BypassInterceptors
 @Scope(ScopeType.CONVERSATION)
 @SuppressWarnings("unchecked")
 public class PainelUsuarioHome implements Serializable {
@@ -36,6 +36,8 @@ public class PainelUsuarioHome implements Serializable {
 
 	private Map<String, Object> selected;
 	private List<Integer> processoIdList;
+	
+	@In private ConsultaProcessoEpaList consultaProcessoEpaList;
 	
 	@Observer("selectedTarefasTree")
 	public void onSelected(Object obj){
@@ -91,6 +93,7 @@ public class PainelUsuarioHome implements Serializable {
 		setProcessoCaixa(getProcessoIdList(evt.getDragValue()), caixa);
 		try {
 			Processo cpt = (Processo) evt.getDragValue();
+			
 			((GridQuery)ComponentUtil.getComponent("consultaProcessoGrid")).getResultList().remove(cpt);
 		} catch (ClassCastException cce) {
 			((GridQuery)ComponentUtil.getComponent("consultaProcessoGrid")).getResultList().clear();
@@ -165,8 +168,6 @@ public class PainelUsuarioHome implements Serializable {
 	}
 	
 	public void refresh() {
-		GridQuery grid = ComponentUtil.getComponent("consultaProcessoGrid");
-		grid.refresh();
 		TarefasTreeHandler tree = ComponentUtil.getComponent("tarefasTree");
 		tree.refresh();
 	}
@@ -176,9 +177,8 @@ public class PainelUsuarioHome implements Serializable {
 	}
 
 	public void setProcessoCaixa(Caixa caixa) {
-		GridQuery grid = ComponentUtil.getComponent("consultaProcessoGrid");
-		if(grid.getResultList().size() > 0) {
-			List<Integer> idList = getProcessoIdList(grid.getResultList());
+		if(consultaProcessoEpaList.getResultCount() > 0) {
+			List<Integer> idList = getProcessoIdList(consultaProcessoEpaList.getResultList());
 			setProcessoCaixa(idList, caixa);
 			refresh();
 			processoIdList = null;
