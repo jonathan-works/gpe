@@ -6,9 +6,12 @@ import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.Begin;
+import org.jboss.seam.annotations.FlushModeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.core.Conversation;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.LocalizacaoTurnoDAO;
@@ -78,13 +81,15 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		}
 	}
 	
+	@Begin(nested=true, flushMode=FlushModeType.AUTO)
 	public void updateTarefasFinalizadas() {
 		for (ProcessoEpaTarefa pt : processoEpaTarefaDAO.getTarefaEnded()) {
+			pt.setUltimoDisparo(pt.getDataInicio());
 			pt.setTempoGasto(0);
 			pt.setPorcentagem(0);
-			pt.setUltimoDisparo(pt.getDataInicio());
 			updateTempoGasto(pt.getDataFim(), pt);
 		}
+		Conversation.instance().endAndRedirect();
 	}
 	
 	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) {
