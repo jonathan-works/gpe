@@ -89,7 +89,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 			pt.setPorcentagem(0);
 			updateTempoGasto(pt.getDataFim(), pt);
 		}
-		Conversation.instance().endAndRedirect();
+		Conversation.instance().end();
 	}
 	
 	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) {
