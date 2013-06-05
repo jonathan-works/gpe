@@ -35,13 +35,14 @@
             globalOnly="true"
             styleClass="message"
             id="globalMessages" />
-            
+
         <h:form>
             <rich:tabPanel
                 headerSpacing="2"
                 activeItem="#{processoHome.tab}">
-                <rich:itemChangeListener binding="#{processoHome}"/>
-                <rich:itemChangeListener binding="#{processoDocumentoHome}"/>
+                <rich:itemChangeListener binding="#{processoHome}" />
+                <rich:itemChangeListener
+                    binding="#{processoDocumentoHome}" />
                 <rich:tab
                     id="form"
                     name="form"
@@ -59,29 +60,35 @@
                     header="Documentos do Processo"
                     immediate="true"
                     status=":status">
-					<wi:dataTable values="#{processoDocumentoList.list(15)}"
-								  bean="#{processoDocumentoList}"
-								  tableTitle="Documentos do Processo"
-								  id="processoDocumentoList"
-								  rowId="#{row.idProcessoDocumento}" >
-								  <ui:define name="toolBar"></ui:define>
-								  <ui:define name="headerToolBar"></ui:define>
-						<wi:columnOutputText columnId="usuarioInclusao"
-											 columnHeader="Usuário"
-											 value="#{row.usuarioInclusao}" />
-						<wi:columnOutputText columnId="dataInclusao"
-											 columnHeader="Data"
-											 value="#{row.dataInclusao}" />
-						<wi:columnOutputText columnId="processoDocumento"
-											 columnHeader="Processo Documento"
-											 value="#{row.processoDocumento.equals('null') ? '-':row.processoDocumento}" />
-						<wi:columnOutputText columnId="processoDocumentoBin"
-											 columnHeader="Processo Documento Bin"
-											 value="#{row.processoDocumentoBin}" />
-						<wi:columnOutputText columnId="processoDocumentoBin.sizeFormatado"
-											 columnHeader="Tamanho: "
-											 value="#{row.processoDocumentoBin.sizeFormatado}" />
-					</wi:dataTable>
+                    <wi:dataTable
+                        values="#{processoDocumentoList.list(15)}"
+                        bean="#{processoDocumentoList}"
+                        tableTitle="Documentos do Processo"
+                        id="processoDocumentoList"
+                        rowId="#{row.idProcessoDocumento}">
+                        <ui:define name="toolBar"></ui:define>
+                        <ui:define name="headerToolBar"></ui:define>
+                        <wi:columnOutputText
+                            columnId="usuarioInclusao"
+                            columnHeader="Usuário"
+                            value="#{row.usuarioInclusao}" />
+                        <wi:columnOutputText
+                            columnId="dataInclusao"
+                            columnHeader="Data"
+                            value="#{row.dataInclusao}" />
+                        <wi:columnOutputText
+                            columnId="processoDocumento"
+                            columnHeader="Processo Documento"
+                            value="#{row.processoDocumento.equals('null') ? '-':row.processoDocumento}" />
+                        <wi:columnOutputText
+                            columnId="processoDocumentoBin"
+                            columnHeader="Processo Documento Bin"
+                            value="#{row.processoDocumentoBin}" />
+                        <wi:columnOutputText
+                            columnId="processoDocumentoBin.sizeFormatado"
+                            columnHeader="Tamanho: "
+                            value="#{row.processoDocumentoBin.sizeFormatado}" />
+                    </wi:dataTable>
                 </rich:tab>
 
                 <rich:tab
@@ -91,13 +98,15 @@
                     immediate="true"
                     status=":status">
                     <wi:ajaxDiv id="divAnexarDocumentos">
-                        <wi:form
-                            canEdit="true"
-                            isUploadForm="true"
-                            form="#{anexarDocumentoForm}"
-                            formTitle="Cadastro do Documento"
-                            home="#{processoDocumentoHome}"
-                            reRenderSave="divAnexarDocumentos" />
+                        <wi:dataForm
+                            formId="anexarDocumentosForm"
+                            formTitle="#{messages['processoDocumento.anexarDocumento']}">
+                            <ui:include
+                                src="/WEB-INF/xhtml/components/form/anexarDocumento.xhtml" />
+                            <ui:include
+                                src="/WEB-INF/xhtml/components/form/buttons/anexarDocumentoButtons.xhtml" />
+                            <ui:define name="buttons" />
+                        </wi:dataForm>
                     </wi:ajaxDiv>
                 </rich:tab>
 

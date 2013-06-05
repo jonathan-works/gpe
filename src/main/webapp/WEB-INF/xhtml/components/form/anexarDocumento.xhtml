@@ -10,7 +10,7 @@
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
 	
-		#{home.setModelo(false)}
+		#{processoDocumentoHome.setModelo(false)}
 		<ui:param
 		 name="reRenderSaveForm"
 		 value="#{reRenderSave}" />
@@ -34,7 +34,7 @@
 		<wi:selectOneMenuEntity
 			 id="#{f.id}tipoProcessoDocumento"
 			 label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-			 value="#{home.instance.tipoProcessoDocumento}"
+			 value="#{processoDocumentoHome.instance.tipoProcessoDocumento}"
 			 items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
 			 required="true"
 			 noSelectionLabel="Selecione...">
@@ -77,14 +77,14 @@
 
 		<wi:fileUploadBox
 			 id="uploadArquivo"
-			 rendered="#{!home.modelo}"
+			 rendered="#{!processoDocumentoHome.modelo}"
 			 label="Arquivo"
 			 onuploadcomplete="clearSign();">
 		</wi:fileUploadBox>
 
 		<s:div
 			 id="usarModeloDiv"
-			 rendered="#{home.modelo}">
+			 rendered="#{processoDocumentoHome.modelo}">
 			
 
 
@@ -130,7 +130,7 @@
 
 			<a:jsFunction
 				 name="submitForm"
-				 action="#{home.persist()}"
+				 action="#{processoDocumentoHome.persist()}"
 				 render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao" />
 
 			<s:decorate
@@ -203,7 +203,7 @@
 		</s:div>
 		<script>
 			  function useBase64() {
-				  return '#{!home.modelo}';
+				  return '#{!processoDocumentoHome.modelo}';
 			  }
 			</script>
 

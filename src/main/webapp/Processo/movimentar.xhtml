@@ -155,12 +155,13 @@
                     immediate="true">
                     <s:div id="divAnexarDocumentos">
                         <div style="width: 75%; left: 1px;">
-                            <wi:form
-                                isUploadForm="true"
-                                form="#{anexarDocumentoForm}"
-                                formTitle="#{messages['form.title']}"
-                                home="#{processoDocumentoHome}"
-                                reRenderSave="divAnexarDocumentos" />
+                            <wi:dataForm
+                                formId="anexarDocumentosForm"
+                                formTitle="#{messages['processoDocumento.anexarDocumento']}">
+                                <ui:include src="/WEB-INF/xhtml/components/form/anexarDocumento.xhtml" />
+                                <ui:include src="/WEB-INF/xhtml/components/form/buttons/anexarDocumentoButtons.xhtml" />
+                                <ui:define name="buttons"/>
+                            </wi:dataForm>
                         </div>
                     </s:div>
                 </rich:tab>
@@ -179,11 +180,11 @@
                             tableTitle="#{messages['processo.documentos']} #{home.instance}"
                             id="processoDocumentoList"
                             rowId="#{row.idProcessoDocumento}">
-                            <ui:define name="headerToolBar"/>
+                            <ui:define name="headerToolBar" />
                             <wi:columnOutputText
-                                columnId="nomeUsuarioInclusao"
+                                columnId="usuarioInclusao"
                                 columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-                                value="#{row.nomeUsuarioInclusao}" />
+                                value="#{row.usuarioInclusao}" />
                             <wi:columnDateTime
                                 columnId="dataInclusao"
                                 columnHeader="#{messages['processoDocumento.dataInclusao']}"
@@ -192,8 +193,8 @@
                                 columnId="processoDocumentoBin"
                                 columnHeader="#{messages['processoDocumentoBin.documento']}"
                                 value="#{row.processoDocumentoBin}" />
+                            <ui:define name="toolBar"/>
                         </wi:dataTable>
-                        
                     </s:div>
                 </rich:tab>
 
