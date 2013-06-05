@@ -15,6 +15,10 @@ public interface ProcessoEpaTarefaQuery {
 	
 	String TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY = "select o from ProcessoEpaTarefa o " +
 									  			  "where o.dataFim is null and o.tarefa.tipoPrazo = :" + QUERY_PARAM_TIPO_PRAZO;
+	
+	String TAREFA_ENDED = "listAllProcessoEppTarefaEnded";
+	String TAREFA_ENDED_QUERY = "select pet from ProcessoEpaTarefa pet " +
+								"where not pet.dataFim is null";
 
 	String QUERY_FORA_FLUXO = 
 		 "select f.fluxo, p, t.tarefa, pt from ProcessoEpaTarefa pt "+
