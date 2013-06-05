@@ -52,10 +52,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public ProcessoEpa getProcessoEpaByProcesso(Processo processo){
-		String hql = "select o from ProcessoEpa o where o.idProcesso = :idProcesso";
-		return (ProcessoEpa) entityManager.createQuery(hql)
-				.setParameter("idProcesso", processo.getIdProcesso())
-				.getSingleResult();
+		return entityManager.find(ProcessoEpa.class, processo.getIdProcesso());
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){

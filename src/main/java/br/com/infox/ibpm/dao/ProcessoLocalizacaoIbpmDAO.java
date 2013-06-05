@@ -35,7 +35,7 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 	
 	public boolean possuiPermissao() {
 		ControleFiltros.instance().iniciarFiltro();
-		String hql = "select o from ProcessoLocalizacaoIbpm o " +
+		String hql = "select 1 from ProcessoLocalizacaoIbpm o " +
 						"where o.processo.idProcesso = :id" +
 						" and o.localizacao = :localizacao" +
 						" and o.papel = :papel";
