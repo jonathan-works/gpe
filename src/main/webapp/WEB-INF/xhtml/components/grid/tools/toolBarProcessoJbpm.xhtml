@@ -10,10 +10,9 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 
 	<div style="width: 48px">
-		<h:form>
 			<ui:param
 				name="idProcesso"
-				value="#{row[bean.key]}" />
+				value="#{row.idProcesso}" />
 			<ui:param
 				name="tarefaId"
 				value="#{painelUsuarioHome.tarefaId}" />
@@ -80,6 +79,5 @@
 				url="/img/role.gif"
 				rendered="#{(owner != actor.id and ! empty owner)}"
 				title="Processo bloqueado pelo servidor #{owner}" />
-		</h:form>
 	</div>
 </ui:composition>
