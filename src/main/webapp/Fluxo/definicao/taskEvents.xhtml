@@ -54,11 +54,13 @@
                  immediate="true"
                  status=":status">
 				<a:region >
-					<wi:form
-                         form="#{tarefaEventoForm}"
-                         canEdit="true"
-                         showMsg="false"
-                         formTitle="#{messages['form.title']}" />
+                <wi:dataForm
+                    formId="eventosDeTarefaForm"
+                    formTitle="#{messages['form.title']}">
+                        <ui:include src="/WEB-INF/xhtml/components/form/comboEvents.xhtml"/>
+                        <ui:include src="/WEB-INF/xhtml/components/form/buttons/eventsButtons.xhtml"/>
+                        <ui:define name="buttons"/>
+                    </wi:dataForm>
 				</a:region>
 			</rich:tab>
 			<rich:tab
