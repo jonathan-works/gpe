@@ -93,11 +93,11 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	}
 	
 	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) {
-		int incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
+		float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
 		if (processoEpaTarefa.getUltimoDisparo().before(fireTime)) {
 			Integer prazo = processoEpaTarefa.getTarefa().getPrazo();
 			int porcentagem = 0;
-			int tempoGasto = processoEpaTarefa.getTempoGasto()+incrementoTempoGasto;
+			int tempoGasto = (int)(processoEpaTarefa.getTempoGasto()+incrementoTempoGasto);
 			if(prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
 				porcentagem = (tempoGasto*100)/prazo;
 			}
@@ -122,9 +122,9 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	 * @param processoEpaTarefa
 	 * @return Incremento a ser adicionado ao tempo gasto de um {@link ProcessoEpaTarefa}
 	 */
-	private int getIncrementoTempoGasto(Date horaDisparo, ProcessoEpaTarefa processoEpaTarefa) {
+	private float getIncrementoTempoGasto(Date horaDisparo, ProcessoEpaTarefa processoEpaTarefa) {
 		PrazoEnum tipoPrazo = processoEpaTarefa.getTarefa().getTipoPrazo();
-		int result = 0;
+		float result = 0;
 		switch (tipoPrazo) {
 		case H:
 			result = calcularTempoGastoHoras(horaDisparo, processoEpaTarefa);
@@ -162,7 +162,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	 * tarefa.
 	 * @return minutos gastos dentro do intervalo informado
 	 */
-	private long calcularMinutosEmIntervalo(Date inicio, Date fim, Date inicioTurno, Date fimTurno) {
+	private float calcularMinutosEmIntervalo(Date inicio, Date fim, Date inicioTurno, Date fimTurno) {
 		int minutesBegin = Math.max(getMinutesOfDay(inicio), getMinutesOfDay(inicioTurno));
 		int minutesEnd = Math.min(getMinutesOfDay(fim), getMinutesOfDay(fimTurno));
 		
@@ -185,10 +185,9 @@ public class ProcessoEpaTarefaManager extends GenericManager {
         }
 	}
 	
-	private int calcularTempoGastoHoras(Date dataDisparo, ProcessoEpaTarefa processoEpaTarefa) {
+	private float calcularTempoGastoHoras(Date dataDisparo, ProcessoEpaTarefa processoEpaTarefa) {
 		int result = 0;
 		Date ultimaAtualizacao = processoEpaTarefa.getUltimoDisparo();
-		
 		while(ultimaAtualizacao.before(dataDisparo))	{
 			Date disparoAtual = getDisparoIncrementado(ultimaAtualizacao, dataDisparo, Calendar.MINUTE, 30);
 			LocalizacaoTurno localizacaoTurno = getTurnoTarefa(processoEpaTarefa, disparoAtual);
@@ -197,7 +196,6 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 			}
 			ultimaAtualizacao = disparoAtual;
 		}
-		
 		return result/60;
 	}
 	
