@@ -34,10 +34,10 @@ import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.itx.util.ComponentUtil;
+import br.com.itx.util.EntityUtil;
 
 
 @Name("usuarioLocalizacaoHome")
-@BypassInterceptors
 public class UsuarioLocalizacaoHome
 		extends AbstractUsuarioLocalizacaoHome<UsuarioLocalizacao> {
 
@@ -113,14 +113,12 @@ public class UsuarioLocalizacaoHome
 		if (checkPapelLocalizacao(instance)){
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(Severity.ERROR, "Localização e papel duplicados");
-			refreshGrid("usuarioLocalizacaoGrid");
 			return null;
 		}
 		UsuarioLogin usuario = getInstance().getUsuario();
 		usuario.getUsuarioLocalizacaoList().add(getInstance());
 		String msg = super.persist();
 		getInstance().setUsuario(usuario);
-		refreshGrid("usuarioLocalizacaoGrid");
 		
 		//TODO isso tem de sair daqui, usar um observer para o evento de usuarioLocalizacao persist 
 		AbstractTreeHandler<?> tree = getComponent("localizacaoSetorPJETree");
@@ -153,11 +151,9 @@ public class UsuarioLocalizacaoHome
 		if (checkPapelLocalizacaoUpdate(instance)){
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(Severity.ERROR, "Localização e papel duplicados");
-			refreshGrid("usuarioLocalizacaoGrid");
 			return null;
 		}
 		String update = super.update();
-		refreshGrid("usuarioLocalizacaoGrid");
 		return update;
 	}
 	
@@ -168,6 +164,12 @@ public class UsuarioLocalizacaoHome
 		String msg = super.remove(obj);
 		getInstance().setUsuario(usuario);
 		return msg;
+	}
+	
+	public String removeFromUsuarioLogin(UsuarioLocalizacao ul){
+		ul.getUsuario().getUsuarioLocalizacaoList().remove(ul);
+		EntityUtil.flush();
+		return "removed";
 	}
 	
 	public void setPapel(Papel papel) {

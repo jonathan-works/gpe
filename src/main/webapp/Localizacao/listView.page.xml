@@ -16,14 +16,8 @@
 	<param name="goBackUrl" value="#{localizacaoHome.goBackUrl}"/>
 	<param name="goBackId" value="#{localizacaoHome.goBackId}"/>
 	<param name="goBackTab" value="#{localizacaoHome.goBackTab}"/>		
-	<param name="endereco" value="#{enderecoSearch.idEndereco}"/>			
 	<param name="localizacao" value="#{localizacaoSearch.localizacao}"/>		
 	<param name="ativo" value="#{localizacaoSearch.ativo}"/>		
 
 	<action if="#{empty localizacaoHome.tab}" execute="#{localizacaoHome.setTab('search')}"/>
-	
-	<!-- Parametros para a ordem de grids -->
-	<param name="passo.order" value="#{passoGrid.order}"/>		
-	<param name="usuarioLocalizacao.order" value="#{usuarioLocalizacaoGrid.order}"/>		
- 
 </page>

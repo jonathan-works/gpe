@@ -73,7 +73,6 @@ public abstract class AbstractUsuarioLocalizacaoHome<T>
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("usuarioLocalizacaoGrid");
 		return ret;
 	}
 
