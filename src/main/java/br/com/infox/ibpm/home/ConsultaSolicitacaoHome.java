@@ -22,16 +22,16 @@ import javax.persistence.EntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.ibpm.bean.ConsultaSolicitacao;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.itx.util.EntityUtil;
 
 
 @Scope(ScopeType.CONVERSATION)
-@Name("consultaSolicitacaoHome")
-@BypassInterceptors
+@Name(ConsultaSolicitacaoHome.NAME)
 public class ConsultaSolicitacaoHome implements Serializable {
+	
+	public static final String NAME = "consultaSolicitacaoHome";
 	
 	private static final long serialVersionUID = 1L;
 	private ConsultaSolicitacao instance = new ConsultaSolicitacao();
