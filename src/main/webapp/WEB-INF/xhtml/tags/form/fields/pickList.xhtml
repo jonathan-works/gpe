@@ -52,12 +52,12 @@
 	<f:verbatim>
 		<script>
 			var list = "#{id.replaceAll(':', '\\\\\\\\:')}";
-			list = "#" + j$("##{id}Filtro")[0].form.id + "\\:" + list;
-			j$(document).ready(function(){
-			j$("##{id}Filtro").keyup(function(){
-				 j$(list + 'internal_tab td').show();
-			   var s = j$(this).val();
-			   j$(list + 'internal_tab td:not(:Contains("' + s + '"))').hide();
+			list = "#" + jQuery("##{id}Filtro")[0].form.id + "\\:" + list;
+			jQuery(document).ready(function(){
+			jQuery("##{id}Filtro").keyup(function(){
+				 jQuery(list + 'internal_tab td').show();
+			   var s = jQuery(this).val();
+			   jQuery(list + 'internal_tab td:not(:Contains("' + s + '"))').hide();
 			 });
 			});
 		</script>
