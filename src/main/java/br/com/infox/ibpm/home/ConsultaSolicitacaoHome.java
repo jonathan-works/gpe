@@ -17,20 +17,14 @@ package br.com.infox.ibpm.home;
 
 
 import java.io.Serializable;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.faces.Redirect;
-
 import br.com.infox.ibpm.bean.ConsultaSolicitacao;
 import br.com.infox.ibpm.entity.Processo;
-import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.EntityUtil;
 
 
@@ -85,25 +79,6 @@ public class ConsultaSolicitacaoHome implements Serializable {
 		setIdPesquisa(null);
 	}
 	
-	/**
-	 * Retorna os resultados do grid ou redireciona para o processo, 
-	 * 	caso venha somente um registro
-	 * 
-	 * @return lista de processos
-	 */
-	public List<Processo> getResultList() {
-		GridQuery grid = (GridQuery) Component.getInstance("consultaSolicitacaoGrid");
-		List<Processo> list = grid.getResultList();
-		if (list.size() == 1) {
-			Processo p = list.get(0);
-			Redirect.instance().setViewId("/Processo/Consulta/list.seam");
-			Redirect.instance().setParameter("id", p.getIdProcesso());
-			Redirect.instance().execute();
-			return null; 
-		}
-		return list;
-	}
-
 	public String getHomeName() {
 		return "consultaSolicitacaoHome";
 	}
