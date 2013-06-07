@@ -122,7 +122,7 @@
 							<c:if test="#{showButtonLimpar}">
 
 								<a:commandButton
-									onclick="j$('##{rich:clientId(gridId)}SearchForm').clearForm();showLoading();"
+									onclick="jQuery('##{rich:clientId(gridId)}SearchForm').clearForm();showLoading();"
 									oncomplete="hideLoading();"
 									action="#{util.invokeMethod(actionButtonLimpar)}"
 									render="#{wi:get(reRenderButtonLimpar, gridId.concat('Search'))}"

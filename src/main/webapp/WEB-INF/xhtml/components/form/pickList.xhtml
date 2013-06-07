@@ -37,11 +37,11 @@
 		style="margin-top: 5px; margin-left: 8px; width: 250px;" />
 	<script>
 		var list = "##{rich:clientId(id).replaceAll(':', '\\\\\\\\:')}";
-		j$(document).ready(function(){
-		 j$("##{id}Filtro").keyup(function(){
-			 j$(list + 'internal_tab td').show();
-		   var s = j$(this).val();
-		   j$(list + 'internal_tab td:not(:Contains("' + s + '"))').hide();
+		jQuery(document).ready(function(){
+		 jQuery("##{id}Filtro").keyup(function(){
+			 jQuery(list + 'internal_tab td').show();
+		   var s = jQuery(this).val();
+		   jQuery(list + 'internal_tab td:not(:Contains("' + s + '"))').hide();
 		 });
 		});
 		</script>
