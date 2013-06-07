@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -28,7 +27,6 @@ import org.jboss.seam.security.management.action.RoleAction;
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

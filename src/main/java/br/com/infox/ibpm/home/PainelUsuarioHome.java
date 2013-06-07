@@ -22,7 +22,6 @@ import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.list.ConsultaProcessoEpaList;
-import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

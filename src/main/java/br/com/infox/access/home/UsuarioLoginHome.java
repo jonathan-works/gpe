@@ -3,7 +3,6 @@ package br.com.infox.access.home;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -14,7 +13,6 @@ import org.jboss.seam.security.management.action.UserAction;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 
 @Name(UsuarioLoginHome.NAME)
@@ -67,8 +65,6 @@ public class UsuarioLoginHome extends AbstractHome<UsuarioLogin> {
 		String ret = super.remove();
 		Conversation.instance().end();
 		newInstance();
-		GridQuery grid = (GridQuery) Component.getInstance("usuarioLoginGrid");
-		grid.refresh();
 		return ret;
 	}
 	
