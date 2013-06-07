@@ -56,7 +56,6 @@ public class ItemTipoDocumentoHome
 			FacesMessages.instance().add(Severity.ERROR, "É obrigatório selecionar um Grupo de Modelo");
 			return false;
 		}
-		refreshGrid("itemTipoDocumentoNivelGrid");
 		return true;
 	}
 

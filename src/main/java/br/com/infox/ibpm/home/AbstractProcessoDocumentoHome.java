@@ -118,7 +118,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("processoDocumentoGrid");
 		return ret;
 	}
 

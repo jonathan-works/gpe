@@ -49,22 +49,7 @@ public abstract class AbstractVariavelHome<T> extends AbstractHome<Variavel> {
 	@Override
 	public String persist() {
 		String action = super.persist();
-//		newInstance();
 		return action;
 	}
-
-//	public void addTipoModeloDocumento(TipoModeloDocumento obj, String gridId) {
-//		if (getInstance() != null) {
-//			getInstance().getTipoModeloDocumentoList().add(obj);
-//			refreshGrid(gridId);
-//		}
-//	}
-//
-//	public void removeTipoModeloDocumento(TipoModeloDocumento obj, String gridId) {
-//		if (getInstance() != null) {
-//			getInstance().getTipoModeloDocumentoList().remove(obj);
-//			refreshGrid(gridId);
-//		}
-//	}
 
 }
