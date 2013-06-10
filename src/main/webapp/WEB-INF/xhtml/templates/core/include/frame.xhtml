@@ -22,26 +22,13 @@
 
 	<ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
 
-	<div class="bordaBox">
-		<b class="b1" />
-		<b class="b2" />
-		<b class="b3" />
-		<b class="b4" />
-		<div class="conteudo">
-			<s:div styleClass="tituloPagina">
-				<ui:insert name="title">#{title}</ui:insert>
-			</s:div>
-			<div class="subBorda">
-				<div id="divOverflow">
-					<!-- Aki ficara o conteudo da pagina -->
-					<ui:insert />
-				</div>
-			</div>
+	<div class="conteudo">
+		<div class="tituloPagina">
+			<ui:insert name="title">#{title}</ui:insert>
 		</div>
-		<b class="b4" />
-		<b class="b3" />
-		<b class="b2" />
-		<b class="b1" />
+		<div class="subBorda">
+			<ui:insert />
+		</div>
 	</div>
 
 

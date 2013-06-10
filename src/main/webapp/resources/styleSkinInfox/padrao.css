@@ -14,15 +14,6 @@
   veja em http://www.gnu.org/licenses/  
 */     
 /* CSS para as Bordas Arredondadas */			
-.bordaBox {
-	margin:0 auto;
-}
-.bordaBox .b1, .bordaBox .b2, .bordaBox .b3, .bordaBox .b4, .bordaBox .b1b, .bordaBox .b2b, .bordaBox .b3b, .bordaBox .b4b {
-	display:block; 
-	overflow:hidden; 
-	font-size:1px;
-}
-
 tr.rf-dt-r:hover {
 	background-color:#E7E7E7;
 }
@@ -37,42 +28,14 @@ tr.rf-dt-r:hover {
 	background-color:#AFAFAF;
 }
 
-.bordaBox .b1, .bordaBox .b2, .bordaBox .b3, .bordaBox .b1b, .bordaBox .b2b, .bordaBox .b3b {
-	height:1px;
-}
-
-.bordaBox .b2, .bordaBox .b3, .bordaBox .b4 {
-	background:#FFFFFF; 
-	border-left:1px solid #999; 
-	border-right:1px solid #999;
-}
-
-.bordaBox .b1 {	
-	margin:0 5px;
-	background:#999;
-}
-
-.bordaBox .b2 {	
-	margin:0 3px; 
-	border-width:0 2px;
-}
-
-.bordaBox .b3 { 
-	margin:0 2px;
-}
-
-.bordaBox .b4 { 
-	height:2px;
-	margin:0 1px; 
-}
-
-.bordaBox .conteudo {
-	padding:5px;
-	display:block; 
-	text-align:left;
+.conteudo {
+	padding:10px 5px 10px 5px;
+	display:block;
 	background-color:#FFFFFF; 
 	border-left:1px solid #999; 
 	border-right:1px solid #999;
+	border-radius:10px;
+	margin: 2px 0px 0px 0px;
 }
 
 .banner {
@@ -136,7 +99,7 @@ div.rf-p {
 	padding-top:2px;
 }
 
-.bordaBox .tituloPagina {		
+.conteudo .tituloPagina {		
 	font-weight: bold;
 	font-size: 14pt;
 	color: #ffffff;
@@ -145,7 +108,7 @@ div.rf-p {
 	right: 30px;
 }
 
-.bordaBox, #papeisUsuarioForm option {
+.conteudo, #papeisUsuarioForm option {
 	text-align: left;
 }
 
@@ -632,12 +595,12 @@ img.disabled {
 .subBorda {
 	width: 99%;
 	height: 100%;
-	padding: 3px;
 	margin:0 auto;
-	padding-top: 10px;
+	padding: 30px 3px 3px 3px;
 	font-size: 14pt; 
 	text-align: left;
 	border-radius:7px 7px 0px 0px;
+	overflow:auto;
 }
 
 .formPesquisa div {
