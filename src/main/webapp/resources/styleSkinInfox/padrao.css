@@ -28,14 +28,48 @@ tr.rf-dt-r:hover {
 	background-color:#AFAFAF;
 }
 
+.conteudo, #papeisUsuarioForm option {
+	text-align: left;
+}
+
 .conteudo {
-	padding:10px 5px 10px 5px;
-	display:block;
-	background-color:#FFFFFF; 
-	border-left:1px solid #999; 
-	border-right:1px solid #999;
+	position:relative;
+	font-size: 14pt; 
+	text-align: left;
+	overflow:auto;
+	padding:30px 5px 5px 5px;
+}
+
+.tituloPagina {		
+	font-weight: bold;
+	font-size: 14pt;
+	color: #ffffff;
+	position:absolute;
+	margin: 4px 4px 0px 0px;
+	right: 0px;
+	top:0px;
+}
+
+.pageBody {
+	width:100%;
+	height:80%;
+}
+
+.pageContent {
+	background-color:#FFFFFF;
+	border:1px solid #999;
 	border-radius:10px;
 	margin: 2px 0px 0px 0px;
+	padding: 8px 8px 8px 8px;
+	position:relative;
+	height:100%;
+}
+
+.subBorda {
+	width:100%;
+	height: 100%;
+	border-radius:7px 7px 7px 7px;
+	position:relative;
 }
 
 .banner {
@@ -47,6 +81,10 @@ tr.rf-dt-r:hover {
 .banner, .pageBody {
 	position:relative;
 	min-width:859px;
+}
+
+.pageBody {
+	
 }
 
 .banner .left, .banner .center, .banner .right {
@@ -97,19 +135,6 @@ div.rf-p {
 	margin:20px 0 0 10px;
 	max-width:98%;
 	padding-top:2px;
-}
-
-.conteudo .tituloPagina {		
-	font-weight: bold;
-	font-size: 14pt;
-	color: #ffffff;
-	position:absolute;
-	margin-top: 3px;
-	right: 30px;
-}
-
-.conteudo, #papeisUsuarioForm option {
-	text-align: left;
 }
 
 #divOverflow {
@@ -592,17 +617,6 @@ img.disabled {
 	border: none;
 }
 
-.subBorda {
-	width: 99%;
-	height: 100%;
-	margin:0 auto;
-	padding: 30px 3px 3px 3px;
-	font-size: 14pt; 
-	text-align: left;
-	border-radius:7px 7px 0px 0px;
-	overflow:auto;
-}
-
 .formPesquisa div {
     border-radius: 5px 5px 5px 5px;
     height: 30px;
@@ -624,7 +638,6 @@ img.disabled {
 }
 
 .banner .divBg {
-      	float:right;
       	width:100%;
       	max-width:352px;
       	height:28px;

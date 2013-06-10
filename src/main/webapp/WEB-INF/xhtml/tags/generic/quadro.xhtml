@@ -22,12 +22,14 @@
 
 	<ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
 
-	<div class="conteudo">
-		<div class="tituloPagina">
-			<ui:insert name="title">#{title}</ui:insert>
-		</div>
+	<div class="pageContent">
 		<div class="subBorda">
-			<ui:insert />
+			<div class="tituloPagina">
+				<ui:insert name="title">#{title}</ui:insert>
+			</div>
+			<div class="conteudo">
+				<ui:insert />
+			</div>
 		</div>
 	</div>
 
