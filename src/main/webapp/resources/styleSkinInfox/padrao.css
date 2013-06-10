@@ -36,7 +36,6 @@ tr.rf-dt-r:hover {
 	position:relative;
 	font-size: 14pt; 
 	text-align: left;
-	overflow:auto;
 	padding:30px 5px 5px 5px;
 }
 
@@ -70,6 +69,7 @@ tr.rf-dt-r:hover {
 	height: 100%;
 	border-radius:7px 7px 7px 7px;
 	position:relative;
+	overflow:auto;
 }
 
 .banner {
