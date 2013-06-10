@@ -81,6 +81,11 @@ tr.rf-dt-r:hover {
 	border-bottom-width: 0px;
 }
 
+.banner, .pageBody {
+	position:relative;
+	min-width:859px;
+}
+
 .banner .left, .banner .center, .banner .right {
 	position:absolute;
 }
@@ -145,11 +150,24 @@ div.rf-p {
 }
 
 #divOverflow {
-	position:relative;
-	width:100%;
-	height:97%;
 	overflow:auto;
-	margin-top:0.8%;
+	margin-top:18px;
+}
+
+.rf-tb {
+	border-collapse:inherit; !important
+	color:inherit; !important
+	font-family:inherit; !important
+	font-size:inherit; !important
+	font-weight:inherit; !important
+}
+
+.rf-p-b div {
+	display:inline-block;
+}
+
+.rf-p-b div span {
+	display:inline;
 }
 
 /* CSS para a Pagina */									
@@ -550,6 +568,18 @@ body {
 .rich-spinner-button {
 	height: 7px;
 	width: 13px !important;
+}
+
+.rf-ddm-itm-sel {
+	
+}
+
+.rf-tab.tarefasDiv .rf-tab-cnt {
+		width:310px;
+		height:450px;
+		border-bottom-color:#C0C0C0;
+		border-left-color:#C0C0C0;
+		border-right-color:#C0C0C0;
 }
 
 /*Retira o sombreamento do ModalPanel*/
