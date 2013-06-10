@@ -60,4 +60,8 @@ public class ProcessoDocumentoHome
 		}
 		super.processItemChange(event);
 	}
+	
+	public boolean liberaCertificacao(){
+		return true;
+	}
 }

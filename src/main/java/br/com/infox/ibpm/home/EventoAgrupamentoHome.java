@@ -39,7 +39,6 @@ public class EventoAgrupamentoHome extends AbstractEventoAgrupamentoHome<EventoA
 		instance.setMultiplo(multiplo);
 		String persist = super.persist();
 		newInstance();
-		refreshGrid("eventoAgrupamentoGrid");
 		return persist;
 	}
 
@@ -94,7 +93,6 @@ public class EventoAgrupamentoHome extends AbstractEventoAgrupamentoHome<EventoA
 	public String remove() {
 		String remove = super.remove();
 		newInstance();
-		refreshGrid("eventoAgrupamentoGrid");
 		return remove;
 	}
 }

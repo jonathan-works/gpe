@@ -27,6 +27,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.ForeignKey;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
@@ -238,7 +239,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	}
 	
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario", orphanRemoval=true)
 	@OrderBy("idUsuarioLocalizacao")
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
 		return this.usuarioLocalizacaoList;

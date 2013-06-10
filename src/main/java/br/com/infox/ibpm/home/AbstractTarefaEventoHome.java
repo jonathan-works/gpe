@@ -30,7 +30,6 @@ public abstract class AbstractTarefaEventoHome<T> extends AbstractHome<TarefaEve
 		instance = obj;
 		String remove = super.remove();
 		if(remove != null && !"".equals(remove)) {
-			refreshGrid("tarefaEventoGrid");
 		}
 		super.newInstance();
 		return remove;
@@ -60,7 +59,6 @@ public abstract class AbstractTarefaEventoHome<T> extends AbstractHome<TarefaEve
 		String persist = super.persist();
 		if(persist != null && !"".equals(persist)) {
 			tarefaEventoItems = null;
-			refreshGrid("tarefaEventoGrid");
 		}
 		return persist;
 	}

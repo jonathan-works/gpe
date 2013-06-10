@@ -21,7 +21,8 @@
      xmlns:h="http://java.sun.com/jsf/html"
      xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<h:form>
+     <ui:param name="removeAction" value="#{empty removeAction ? 'home.remove(row)' : removeAction}"/>
+    
 		<div
              style="width: 35px">
 			<a:region
@@ -38,7 +39,7 @@
 				</a:commandLink>
 				
 				<a:commandLink
-                     action="#{home.remove(row)}"
+                     action="#{util.invokeMethod(removeAction)}"
                      rendered="#{wi:get(canEdit,true)}"
                      limitRender="true"
                      status=":status"
@@ -50,6 +51,5 @@
 				</a:commandLink>
 			</a:region>
 		</div>
-	</h:form>			
 
 </ui:composition>

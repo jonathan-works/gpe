@@ -129,9 +129,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 			getInstance().setCorrespondencia(Boolean.FALSE);
 		}
 		if (checkCep()){
-//			getInstance().setCodUf(getInstance().getCep().getMunicipio().getEstado().getCodEstado());
 			persist = super.persist();
-            refreshGrid("processoParteVinculoPessoaEnderecoGrid");
 			Contexts.removeFromAllContexts("cepSuggest");
 		}
 		return persist;

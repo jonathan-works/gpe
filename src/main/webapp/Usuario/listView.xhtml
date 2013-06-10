@@ -34,41 +34,44 @@
         value="#{usuarioHome}" />
 
     <ui:define name="searchGrid">
-	    <wi:dataTable values="#{usuarioLoginList.list(15)}"
+        <wi:dataTable
             values="#{usuarioLoginList.list(15)}"
-					  bean="#{usuarioLoginList}"
-					  tableTitle="#{messages['usuario.titleGrid']}"
-					  id="usuarioLoginList"
-					  rowId="#{row.idPessoa}">
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarUsuarioLoginForm"
-                    formId="pesquisarUsuarioForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputText id="nome"
-								  label="#{messages['usuarioLogin.nome']}"
-								  value="#{usuarioLoginList.entity.nome}"
-								  maxlength="150" />
-					<wi:selectSituacaoOneMenu id="ativo"
+            bean="#{usuarioLoginList}"
+            tableTitle="#{messages['usuario.titleGrid']}"
+            id="usuarioLoginList"
+            rowId="#{row.idPessoa}">
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarUsuarioLoginForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText
+                        id="nome"
+                        label="#{messages['usuarioLogin.nome']}"
+                        value="#{usuarioLoginList.entity.nome}"
+                        maxlength="150" />
+                    <wi:selectSituacaoOneMenu
                         id="ativo"
-											  label="#{messages['field.situacao']}"
-											  value="#{usuarioLoginList.entity.ativo}" />
-				</wi:searchForm>
-			</ui:define>
-			
-			<wi:columnOutputText columnId="nome"
-								 columnHeader="#{messages['usuarioLogin.nome']}"
+                        label="#{messages['field.situacao']}"
+                        value="#{usuarioLoginList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+
+            <wi:columnOutputText
+                columnId="nome"
+                columnHeader="#{messages['usuarioLogin.nome']}"
                 value="#{row.nome}" />
-			<wi:columnOutputText columnId="bloqueio"
-								 columnHeader="#{messages['usuarioLogin.bloqueio']}"
-								 value="#{row.bloqueio ? 'Sim' : 'Não'}" />
-			<wi:columnOutputText columnId="provisorio"
-								 columnHeader="#{messages['usuarioLogin.provisorio']}"
-								 value="#{row.provisorio  ? 'Sim' : 'Não'}" />
-			<wi:columnSituacao columnId="ativo"
+            <wi:columnOutputText
+                columnId="bloqueio"
+                columnHeader="#{messages['usuarioLogin.bloqueio']}"
+                value="#{row.bloqueio ? 'Sim' : 'Não'}" />
+            <wi:columnOutputText
+                columnId="provisorio"
+                columnHeader="#{messages['usuarioLogin.provisorio']}"
+                value="#{row.provisorio  ? 'Sim' : 'Não'}" />
+            <wi:columnSituacao
                 columnId="ativo"
-							columnHeader="#{messages['field.situacao']}"
-							value="#{row.ativo}" />
-		</wi:dataTable>
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
             <ui:define name="headerToolBar" />
         </wi:dataTable>
     </ui:define>
@@ -222,17 +225,18 @@
                     <s:div id="cadastroUsuarioLocalizacao">
                         <wi:dataForm
                             formId="localizacaoUsuarioForm"
-                            formTitle="#{messages['form.title']}">
+                            formTitle="#{messages['form.title']}"
+                            home="#{usuarioLocalizacaoHome}">
                             <wi:tree
                                 id="localizacao"
-                                assignTo="#{usuarioLocalizacaoHome.instance.localizacao}"
+                                assignTo="usuarioLocalizacaoHome.instance.localizacao"
                                 tree="#{localizacaoEstruturaTree}"
                                 icon="/img/nivelTree.gif"
                                 iconLeaf="/img/file.gif"
                                 label="#{messages['usuarioLocalizacao.localizacao']}" />
                             <wi:tree
                                 id="papel"
-                                assignTo="#{usuarioLocalizacaoHome.instance.papel}"
+                                assignTo="usuarioLocalizacaoHome.instance.papel"
                                 tree="#{papelTree}"
                                 icon="/img/nivelTree.gif"
                                 iconLeaf="/img/file.gif"
@@ -251,16 +255,30 @@
                             </ui:define>
                         </wi:dataForm>
                     </s:div>
-                   
-                    <wi:datalist
-                        home="#{usuarioLocalizacaoHome}"
-                        bean="#{usuarioLocalizacaoGrid}"
-                        gridId="usuarioLocalizacaoGridTab"
-                        toolBar="toolBarEditRemove"
-                        listReRender="divGridLU"
-                        headerToolBar="none"
-                        columnList="localizacao, papel"
-                        title="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioHome.instance)}" />
+
+                    <wi:dataTable
+                        values="#{usuarioHome.instance.usuarioLocalizacaoList}"
+                        tableTitle="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioHome.instance)}"
+                        id="usuarioLocalizacaoList"
+                        rowId="#{row.idUsuarioLocalizacao}"
+                        listReRender="divGridLU">
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <wi:toolBarSelectRemove
+                                home="#{usuarioLocalizacaoHome}"
+                                reRender="localizacaoUsuario"
+                                removeAction="usuarioLocalizacaoHome.removeFromUsuarioLogin(row)" />
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="localizacao"
+                            columnHeader="#{messages['usuarioLocalizacao.localizacao']}"
+                            value="#{row.localizacao}" />
+                        <wi:columnOutputText
+                            columnId="papel"
+                            columnHeader="#{messages['usuarioLocalizacao.papel']}"
+                            value="#{row.papel}" />
+                    </wi:dataTable>
+
                 </wi:ajaxDiv>
             </s:div>
         </rich:tab>

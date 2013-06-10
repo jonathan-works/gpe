@@ -1,13 +1,11 @@
 package br.com.infox.ibpm.home;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

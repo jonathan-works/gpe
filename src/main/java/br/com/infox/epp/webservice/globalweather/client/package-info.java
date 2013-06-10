@@ -1,2 +1,0 @@
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.webserviceX.NET", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package br.com.infox.epp.webservice.globalweather.client;
