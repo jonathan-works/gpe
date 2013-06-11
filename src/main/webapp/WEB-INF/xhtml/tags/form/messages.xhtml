@@ -57,45 +57,17 @@
 			actionDialogMessage();	
 		}		
 		actionDialogMessage();
-	</script>	
+	</script>
 
-	<style
-         type="text/css">
-			#dialogMessage {
-				visibility:hidden;
-				position:absolute;   
-				top:30%;
-				left:36%;			
-				width:300px;				
-				height:auto;
-				min-height:100px;
-				background-color:white;   				
-				border:1px solid #BCC1BD;
-				font-size:11px;	
-				padding:2px;				
-				z-index:10000;				
-			}		
-			#dialogMessage #title {
-				height:18px;
-				font-weight:bold;		
-				color:#{a4jSkin.headerTextColor};
-				border:1px solid #{a4jSkin.panelBorderColor};
-				background-color:#{a4jSkin.headerBackgroundColor};
-			}			
-	</style>
-
-	<div
-         id="dialogMessage">
-		<div
-             id="title">
+	<div id="dialogMessage">
+		<div id="title">
 			Mensagem
 			<h:graphicImage
                  style="padding-left: 218px; cursor: pointer;"
                  value="/img/closeMP.gif"
                  onclick="hideDialogMessage();" />	
     	</div>
-    	<div
-             style="overflow:auto;"> 
+    	<div> 
 			<rich:messages
                  id="#{formId}Message"
                  globalOnly="true"

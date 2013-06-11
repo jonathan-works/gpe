@@ -859,3 +859,97 @@ input[type='submit'],input[type='button'],.buttons {
 div {
 	font-size: #{wi:get(skinZoom.skinZoom,'12px')};
 }
+
+/* 
+	detalheLog.xhtml, documentoHTML.xhtml 
+*/
+@media print{
+	.onlyprint{display: block;visibility: visible;}
+	.noprint{display: none;visibility: hidden;}
+}
+
+/* movimentar.xhtml */
+.positionImg {
+	top: 63px;
+}
+
+.propertyView {
+	min-width: 150px
+}
+
+/* mail.xhtml */
+.rich-table-footercell .propertyView {
+	margin-top:0;
+}
+.propertyView {
+	min-width: 215px;
+}
+
+/*turnoCalendar.xhtml*/
+.selected {
+	background-color: #dd4422;
+}
+.fixed-selected {
+	background-color: #dd0000;
+}
+/*messages.xhtml*/
+#dialogMessage {
+	visibility:hidden;
+	position:absolute;   
+	top:30%;
+	left:36%;			
+	width:300px;				
+	height:auto;
+	min-height:100px;
+	background-color:white;   				
+	border:1px solid #BCC1BD;
+	font-size:11px;	
+	padding:2px;				
+	z-index:10000;				
+}		
+#dialogMessage #title {
+	height:18px;
+	font-weight:bold;		
+	color:#{a4jSkin.headerTextColor};
+	border:1px solid #{a4jSkin.panelBorderColor};
+	background-color:#{a4jSkin.headerBackgroundColor};
+}
+
+#dialogmessage div {
+	 overflow:auto;
+}
+
+/* dragDrop.xhtml */
+.panelc {
+    width:25%;
+    vertical-align:top;         
+}
+
+.dropTargetPanel {
+    width: 90%;
+}
+
+.headerClass {
+    text-align: center;
+    padding-top: 5px;
+}
+
+/*grid/dataTable.xhtml*/
+.noMaskClass .rich-mpnl-mask-div {
+	display: none;
+}
+
+/*templates/noMenuTemplate.xhtml*/
+.positionImg {
+	left:10px;
+	top:0px;
+}
+
+/*templates/templateLogin.xhtml*/
+input[type='text'],input[type='password'] {
+	border: 0px;
+	font-size: 12px;
+	background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputLogin}");
+	background-repeat: no-repeat;
+	color: black;					
+}
