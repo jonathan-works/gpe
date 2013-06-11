@@ -435,11 +435,7 @@ body {
 	color: red;
 }
 
-.errors input {
-	border: 1px solid red;
-}
-
-.errors textarea {
+.errors input, .errors textarea {
 	border: 1px solid red;
 }
 	
@@ -453,7 +449,7 @@ body {
 }
 
 .activeRow {
-	 background-color: #F0F8FF !important;
+	 background-color:#F0F8FF !important;
 }
 
 .dr-stglpnl-b {
@@ -484,7 +480,7 @@ body {
 }
 
 .folderSelected {
-	border: solid 1px transparent !important;
+	border:solid 1px transparent !important;
 }
 
 .rf-dt-ftr-c {
@@ -679,7 +675,8 @@ select {
 	max-height: 250px !important;
 	z-index: 10;
 	background-color: #FFF;
-	border: solid 1px #{a4jSkin.borderColorInputTree};
+	border:solid 1px;
+	border-color:'#{a4jSkin.borderColorInputTree}';
 }
 
 .reqSenha label {
@@ -729,7 +726,7 @@ select {
 }
 
 option {
-	background-color: #{a4jSkin.bgColorSelect};
+	background-color:'#{a4jSkin.bgColorSelect}';
 }
 			
 .expressionDiv span:hover {
@@ -744,8 +741,9 @@ option {
 textarea,select {
 	font-size: 12px;
 	color: #000;
-	border: 1px solid #{a4jSkin.borderColorInputTextareaSelect};
-	background: #{a4jSkin.bgColorInputTextareaSelect};
+	border:1px solid;
+	border-color:'#{a4jSkin.borderColorInputTextareaSelect}';
+	background:'#{a4jSkin.bgColorInputTextareaSelect}';
 }
 
 .inputTextMiniW69,.inputTextMiniW25,.foneDDD,.foneNormal {
@@ -768,15 +766,14 @@ textarea,select {
 	background-image: url("#{util.contextPath}#{a4jSkin.inputTextMiniW100}");
 }
 
-input[type='submit'],input[type='button'],.buttons {
+input[type="submit"],input[type="button"],.buttons {
 	height: 22px !important;
 	min-width: 80px;
 	margin: 5px;
-	padding: 0px 12px 3px;
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
+	padding: 0px 12px 3px 3px;
+	border:solid 1px;
 	background-color: transparent;
-	border: solid 1px #{a4jSkin.borderColorButton};
+	border-color:"#{a4jSkin.borderColorButton}";
 }
 
 .inputTreeHeader {
@@ -826,16 +823,16 @@ input[type='submit'],input[type='button'],.buttons {
 
 .required {
 	padding-left: 2px;
-	color: #{a4jSkin.bgColorRequired};
+	color:'#{a4jSkin.bgColorRequired}';
 }
 
 #papeisUsuarioForm option {
-	background-color: #{a4jSkin.additionalBackgroundColor};
-	color:#{a4jSkin.headerTextColor};
+	background-color:'#{a4jSkin.additionalBackgroundColor}';
+	color:'#{a4jSkin.headerTextColor}';
 }
 
 div {
-	font-size: #{wi:get(skinZoom.skinZoom,'12px')};
+	font-size:'#{skinZoom.skinZoom}';
 }
 
 /* 
@@ -888,9 +885,10 @@ div {
 #dialogMessage #title {
 	height:18px;
 	font-weight:bold;		
-	color:#{a4jSkin.headerTextColor};
-	border:1px solid #{a4jSkin.panelBorderColor};
-	background-color:#{a4jSkin.headerBackgroundColor};
+	color:'#{a4jSkin.headerTextColor}';
+	border:1px solid;
+	border-color:'#{a4jSkin.panelBorderColor}';
+	background-color:'#{a4jSkin.headerBackgroundColor}';
 }
 
 #dialogmessage div {
@@ -921,13 +919,4 @@ div {
 .positionImg {
 	left:10px;
 	top:0px;
-}
-
-/*templates/templateLogin.xhtml*/
-input[type='text'],input[type='password'] {
-	border: 0px;
-	font-size: 12px;
-	background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputLogin}");
-	background-repeat: no-repeat;
-	color: black;					
 }
