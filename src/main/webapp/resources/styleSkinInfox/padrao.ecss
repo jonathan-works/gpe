@@ -1,4 +1,4 @@
-/* ECSS para as Bordas Arredondadas */			
+/* Style das tabelas */
 .zebra tr.rf-dt-r:nth-child(odd) {
 	background-color:#FAFAFA;
 }
@@ -8,18 +8,18 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 .zebra tr.rf-dt-r:hover {
 	background-color:#AFAFAF;
 }
-
-#papeisUsuarioForm option {
-	text-align: left;
+/* END STYLE TABELAS */
+/*LAYOUT GERAL DA PÁGINA*/
+.banner, .pageBody {
+	position:relative;
+	min-width:859px;
 }
-
 .conteudo {
 	position:relative;
 	font-size: 14pt; 
 	text-align: left;
 	padding:30px 5px 5px 5px;
 }
-
 .tituloPagina {		
 	font-weight: bold;
 	font-size: 14pt;
@@ -29,12 +29,10 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 	right: 0px;
 	top:0px;
 }
-
 .pageBody {
 	width:100%;
 	height:80%;
 }
-
 .pageContent {
 	background-color:#FFFFFF;
 	border:1px solid #999;
@@ -44,7 +42,6 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 	position:relative;
 	height:100%;
 }
-
 .subBorda {
 	width:100%;
 	height: 100%;
@@ -52,91 +49,11 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 	position:relative;
 	overflow:auto;
 }
-
-.banner {
-	margin: 0px 0px 0px 0px;
-	height: 85px;
-	border-bottom-width: 0px;
+.SearchForm {
+	display: inline-block;
+	vertical-align: top;
+	overflow:visible;
 }
-
-.banner, .pageBody {
-	position:relative;
-	min-width:859px;
-}
-
-.banner .left, .banner .center, .banner .right {
-	position:absolute;
-}
-
-.banner .left {
-    height: 85px;
-    left: 0;
-    top: 0px;
-    width: 290px;
-    z-index: 1;
-}
-
-.banner .center {
-    font-size: 20pt;
-    height: 85px;
-    top: 0px;
-    left: 50%;
-    text-align: center;
-    width: 295px;
-    margin: 0 0 0 -147.5px;
-    z-index: 0;
-}
-
-.banner .center .title {
-	padding-top:15px;
-}
-
-.banner .right {
-    height: 85px;
-    top: 0px;
-    right:0px;
-    width: 290px;
-    z-index: 1;
-}
-
-.banner .clock {
-	right:0%;
-	top:0%;
-	text-align: right;
-	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-	font-size: 10pt;
-	font-weight: bold;
-}
-
-div.rf-p {
-	margin:20px 0 0 10px;
-	max-width:98%;
-	padding-top:2px;
-}
-
-#divOverflow {
-	overflow:auto;
-	margin-top:18px;
-	color: black;
-}
-
-.rf-tb {
-	border-collapse:inherit; !important
-	color:inherit; !important
-	font-family:inherit; !important
-	font-size:inherit; !important
-	font-weight:inherit; !important
-}
-
-.rf-p-b div {
-	display:inline-block;
-}
-
-.rf-p-b div span {
-	display:inline;
-}
-
-/* CSS para a Pagina */									
 img {
 	border: none;
 }
@@ -157,6 +74,92 @@ a:active, a:link, a:visited {
 
 a:hover {
 	color: #888888;
+}
+/* FIM LAYOUT GERAL */
+/* HEADER DA PÁGINA */
+.banner {
+	margin: 0px 0px 0px 0px;
+	height: 85px;
+	border-bottom-width: 0px;
+}
+.banner .divBg {
+      	width:100%;
+      	max-width:352px;
+      	height:28px;
+      	border-bottom-left-radius: 28px;
+      	overflow:hidden;
+}
+.banner .left, .banner .center, .banner .right {
+	position:absolute;
+}
+.banner .left {
+    height: 85px;
+    left: 0;
+    top: 0px;
+    width: 290px;
+    z-index: 1;
+}
+.banner .center {
+    font-size: 20pt;
+    height: 85px;
+    top: 0px;
+    left: 50%;
+    text-align: center;
+    width: 295px;
+    margin: 0 0 0 -147.5px;
+    z-index: 0;
+}
+.banner .center .title {
+	padding-top:15px;
+}
+.banner .right {
+    height: 85px;
+    top: 0px;
+    right:0px;
+    width: 290px;
+    z-index: 1;
+}
+.banner .clock {
+	right:0%;
+	top:0%;
+	text-align: right;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+}
+table.banner	{
+	margin: 0px 0px 0px 0px;
+	border-bottom-width: 0px;
+    width: 100%;
+}
+
+th.banner, td.banner {
+	font-size: 20pt;
+}
+/* FIM DO HEADER */
+#papeisUsuarioForm option {
+	text-align: left;
+}
+
+div.rf-p {
+	margin:20px 0 0 10px;
+	max-width:98%;
+	padding-top:2px;
+}
+
+.rf-tb {
+	border-collapse:inherit; !important
+	color:inherit; !important
+	font-family:inherit; !important
+	font-size:inherit; !important
+	font-weight:inherit; !important
+}
+
+.Panel.rf-p {
+	display: inline-block;
+	margin-left:10px;
+	margin-top:0px;
+	width:73%;
 }
 
 /* Layout Tela de Login */
@@ -300,12 +303,6 @@ label.label_login {
 	width: 15px;
 }
 
-/* Original
-	.propertyView input, .propertyView select {
-	width: 250px;
-}
-*/
-
 .readOnly {
 	color: gray !important;
 }
@@ -371,29 +368,36 @@ body {
 	color: #FF6600;
 }
 	
-.viewColumn {
+.viewColumn,.name {
 	vertical-align: top;	
 }
 
 .name {
-	vertical-align: top;
-	font-weight: bold;			
-	float: left;
-	padding: 5px;
+	font-weight: bold;
 	margin-top: 3px;
 	clear: left;
-	font-size:11px ;
-	color:black;
 }
 
-.value {
+.value,.name {
 	float: left;
 	padding: 5px;
 	font-size:11px ;
 	color:black;
 }
 
-.message {
+.DataTableToolbar {
+	padding:2px 0px 0px 0px;
+	text-align:center;
+	border: solid 1px;
+	border-color: #CCCCCC
+}
+
+.rf-p-b.panel .DataTableResultCount{
+	float: right;
+	margin-right: 1%;
+}
+
+.rf-msgs {
 	padding: 5px;
 	top: 47px;
 	color: green;
@@ -402,14 +406,13 @@ body {
 	position: absolute;
 	right: 10px;
 	font-size: 12pt;
+	margin:5px;
 }
 
-.error {
-	padding: 2px;
-	border: 1px solid red;
-	background-color: lightYellow;
-	display: block;
+.rf-msgs-wrn {
+	display:none;
 }
+
 
 .rf-msgs-err {
 	padding: 2px;
@@ -441,7 +444,7 @@ body {
 }
 	
 .leftPanel {
-	width: 100%;	
+	width: 100%;
 }
 
 .rightPanel {
@@ -527,9 +530,9 @@ body {
 }	
 			
 .painelLog{		 
-          width:350px; 	        
-       background: transparent;
-       border: none;      
+	width:350px; 	        
+	background: transparent;
+	border: none;      
 }
 
 .painelLoginHeader {
@@ -552,25 +555,20 @@ body {
 	width: 13px !important;
 }
 
-.rf-ddm-itm-sel {
-	
-}
-
 .rf-tab.tarefasDiv .rf-tab-cnt {
-		width:310px;
-		height:450px;
-		border-bottom-color:#C0C0C0;
-		border-left-color:#C0C0C0;
-		border-right-color:#C0C0C0;
+	width:310px;
+	height:450px;
+	border-bottom-color:#C0C0C0;
+	border-left-color:#C0C0C0;
+	border-right-color:#C0C0C0;
 }
 
 /*Retira o sombreamento do ModalPanel*/
 .noMaskClass .rich-mpnl-mask-div{
-       display:none;				       
-   } 
+	display:none;				       
+} 
    
 .columnDataListToolBar {
-	/*clear:left;*/
 	width: 40px;
 	padding: 2px 0px 0px 0px;
 	text-align: center;
@@ -586,8 +584,6 @@ body {
 }
 
 .transpToolBar:hover {
-	width: 100%; 
-    text-align: center;
     opacity:1.0;
     filter: alpha(opacity=100);
 }
@@ -628,14 +624,6 @@ img.disabled {
 .formPesquisa input[type="image"] {
     position: relative;
     top: 5px;
-}
-
-.banner .divBg {
-      	width:100%;
-      	max-width:352px;
-      	height:28px;
-      	border-bottom-left-radius: 28px;
-      	overflow:hidden;
 }
 
 .palette div {
@@ -680,16 +668,6 @@ select {
 	background-position: top left;
 }
 
-table.banner	{
-	margin: 0px 0px 0px 0px;
-	border-bottom-width: 0px;
-    width: 100%;
-}
-
-th.banner, td.banner {
-	font-size: 20pt;
-}
-
 .linkButton {
 	padding: 3px 12px;
 	font-size: 14px;
@@ -710,7 +688,7 @@ th.banner, td.banner {
 }
 
 .expressionDiv div {
-	display: inline;
+	display: inline-block;
 }
 
 .conclusionSelect {
