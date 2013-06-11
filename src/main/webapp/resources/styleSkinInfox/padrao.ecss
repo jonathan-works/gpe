@@ -1,19 +1,15 @@
 /* ECSS para as Bordas Arredondadas */			
-tr.rf-dt-r:hover {
-	background-color:#E7E7E7;
-}
-
 .zebra tr.rf-dt-r:nth-child(odd) {
 	background-color:#FAFAFA;
 }
-.zebra tr.rf-dt-r:nth-child(even) {
+tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 	background-color:#E7E7E7;
 }
 .zebra tr.rf-dt-r:hover {
 	background-color:#AFAFAF;
 }
 
-.conteudo, #papeisUsuarioForm option {
+#papeisUsuarioForm option {
 	text-align: left;
 }
 
@@ -66,10 +62,6 @@ tr.rf-dt-r:hover {
 .banner, .pageBody {
 	position:relative;
 	min-width:859px;
-}
-
-.pageBody {
-	
 }
 
 .banner .left, .banner .center, .banner .right {
@@ -236,12 +228,14 @@ a:hover {
     top: 13px;
     width: 240px;
 }
+
 label.label_login {
     padding-left: 0;
     padding-top: 8px;
     position: absolute;
     text-align: left;
 }
+
 .newPasswd .input_login {
     margin-top: 25px;
     padding-left: 0;
@@ -338,9 +332,6 @@ label.label_login {
 
 .tableControl {
 	width: 100%;
-}
-
-.tableControl {
 	text-align: right;
 }
 
@@ -669,23 +660,24 @@ img.disabled {
 select {
 	border: 0px;
 	width: 250px;
-}
-
-textArea, select {
-	font-size: 12px;
-}
-
-.rich-calendar-input  {
-	border: 0px;
-	font-size: 12px;
-	height: 15px;				
+	background-image: url("#{util.contextPath}#{a4jSkin.imgBgSelect}");
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: top;
 }
 
 .inputText {
+	width: 250px;
+}
+
+.rich-calendar-input,.inputText {
 	border: 0px;
 	font-size: 12px;
-	width: 250px;
-	height: 15px;		
+	height: 15px;
+	color: #000;
+	background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
+	background-repeat: no-repeat;
+	background-position: top left;
 }
 
 table.banner	{
@@ -698,30 +690,9 @@ th.banner, td.banner {
 	font-size: 20pt;
 }
 
-.inputTextMiniW69, .inputTextMiniW25, .foneDDD, .foneNormal {
-	border: 0px;
-	font-size: 12px;
-}
-
-input[type='submit'],input[type='button'], .buttons {
-	height: 22px !important;
-	min-width: 80px;
-	margin: 5px;
-	padding: 0px 12px 3px;
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;								
-}
-
 .linkButton {
 	padding: 3px 12px;
 	font-size: 14px;
-}
-
-.inputTreeHeader {
-	border: none !important;
-	font-size: 12px;
-	font-weight: normal;
-	text-align: left;		
 }
 
 .inputTreeBody {
@@ -729,34 +700,13 @@ input[type='submit'],input[type='button'], .buttons {
 	width: 224px !important;
 	max-height: 250px !important;
 	z-index: 10;
-}
-	
-.suggest {
-	padding-right: 20px;
-	border: 0px solid;
+	background-color: #FFF;
+	border: solid 1px #{a4jSkin.borderColorInputTree};
 }
 
 .reqSenha label {
     font-family: Arial,sans-serif;
     margin: 0;
-}
-
-.modPesqEsq{ 
-    width: 38px;
-	height: 25px;
-	margin-top:0px;
-}
-
-.modPesqInputText{
-    border: 0px;			    				    
-    width:134px;
-    height: 16px;		   
-    font-size: 11px; 
-    padding-left:3px;			    
-}	
-
-.required {
-	padding-left: 2px;
 }
 
 .expressionDiv div {
@@ -800,22 +750,8 @@ input[type='submit'],input[type='button'], .buttons {
     padding-top: 0;
 }
 
-select {
-	background-image: url("#{util.contextPath}#{a4jSkin.imgBgSelect}");
-	background-color: transparent;
-	background-repeat: no-repeat;
-	background-position: top;
-}
-
 option {
 	background-color: #{a4jSkin.bgColorSelect};
-}
-
-.rich-calendar-input,.inputText {
-	color: #000;
-	background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
-	background-repeat: no-repeat;
-	background-position: top left;
 }
 			
 .expressionDiv span:hover {
@@ -828,12 +764,15 @@ option {
 }
 
 textarea,select {
+	font-size: 12px;
 	color: #000;
-	border: 1px solid#{a4jSkin.borderColorInputTextareaSelect};
-	background: #{a4jSkin .bgColorInputTextareaSelect};
+	border: 1px solid #{a4jSkin.borderColorInputTextareaSelect};
+	background: #{a4jSkin.bgColorInputTextareaSelect};
 }
 
 .inputTextMiniW69,.inputTextMiniW25,.foneDDD,.foneNormal {
+	border: 0px;
+	font-size: 12px;
 	color: #000;
 	background-repeat: no-repeat;
 	background-position: top left;
@@ -852,11 +791,21 @@ textarea,select {
 }
 
 input[type='submit'],input[type='button'],.buttons {
+	height: 22px !important;
+	min-width: 80px;
+	margin: 5px;
+	padding: 0px 12px 3px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
 	background-color: transparent;
-	border: solid 1px#{a4jSkin.borderColorButton};
+	border: solid 1px #{a4jSkin.borderColorButton};
 }
 
 .inputTreeHeader {
+	border: none !important;
+	font-size: 12px;
+	font-weight: normal;
+	text-align: left;
 	background-repeat: no-repeat;
 	background-position: right;
 	background-color: #FFF !important;
@@ -864,18 +813,18 @@ input[type='submit'],input[type='button'],.buttons {
 	background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputTree}");
 }
 
-.inputTreeBody {
-	background-color: #FFF;
-	border: solid 1px#{a4jSkin.borderColorInputTree};
-}
-
 .suggest {
+	padding-right: 20px;
+	border: 0px solid;
 	background-image: url("#{util.contextPath}#{a4jSkin.imgBgSuggest}")	!important;
 	background-repeat: no-repeat;
 	background-position: top;
 }
 
-.modPesqEsq {
+.modPesqEsq { 
+    width: 38px;
+	height: 25px;
+	margin-top:0px;
 	background-repeat: no-repeat;
 	background-image: url("#{util.contextPath}#{a4jSkin.imgBgPesqCanto}");
 }
@@ -886,6 +835,11 @@ input[type='submit'],input[type='button'],.buttons {
 }
 
 .modPesqInputText {
+    border: 0px;			    				    
+    width:134px;
+    height: 16px;		   
+    font-size: 11px; 
+    padding-left:3px;
 	background-repeat: no-repeat;
 	background-color: transparent;
 	color: #FFF;
@@ -893,6 +847,7 @@ input[type='submit'],input[type='button'],.buttons {
 }
 
 .required {
+	padding-left: 2px;
 	color: #{a4jSkin.bgColorRequired};
 }
 
