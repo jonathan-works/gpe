@@ -24,53 +24,39 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<s:div
-		id="#{id}SearchForm"
-		style="display: inline-block; vertical-align: top; overflow:visible;">
+	<s:div id="#{id}SearchForm" styleClass="SearchForm">
 		<ui:insert name="searchForm" />
 	</s:div>
 	<a:region>
-		<ui:param
-			name="panelWidth"
-			value="#{wi:get(panelWidth, '73%')}" />
 		<rich:panel
 			rendered="#{wi:get(showGrid, true)}"
 			bodyClass="panel"
 			header="#{tableTitle}"
 			id="#{id}Panel"
-			style="display: inline-block; margin-left: 10px;margin-top:0px; width: #{panelWidth};#{style}">
+			styleClass="Panel"
+			style="#{style}">
 
 			<rich:messages
 				id="#{id}Messages"
 				rendered="#{empty showMsg ? true : showMsg}"
-				globalOnly="true"
-				infoClass="formMessage"
-				style="float:left; margin: 5px"
-				errorClass="error formMessage"
-				warnStyle="display: none" />
-
-			<f:verbatim>
-				<script>
-				    br.com.infox.applyCSSAfterTimeout({id:'#{id}Messages', style:{display:'none'}, timeout:5000});
-				</script>
-			</f:verbatim>
-
+				globalOnly="true"/>
+			
+			<script>br.com.infox.applyCSSAfterTimeout({id:'#{id}Messages', style:{display:'none'}, timeout:5000});</script>
 
 			<rich:dataTable
 				value="#{values}"
 				id="#{id}"
 				rowKeyVar="key"
 				rowClasses="#{rowClasses}"
-				onrowmouseout="#{wi:get(onrowmouseout, onMouseOut)}"
-				onrowmouseover="#{wi:get(onRowMouseOver, onMouseOver)}"
-							styleClass="#{styleClass} zebra"
+				styleClass="#{styleClass} zebra"
 				style="#{style}"
 				var="row">
 				<ui:param
 					name="toolBarColumnWidth"
 					value="#{wi:get(toolBarColumnWidth, '40px')}" />
 				<rich:column
-					style="width: #{toolBarColumnWidth}; padding:2px 0px 0px 0px;           text-align:center;           border: solid 1px; border-color: #CCCCCC"
+					style="width: #{toolBarColumnWidth};"
+					styleClass="DataTableToolbar"
 					rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
 					rowspan="#{empty columnRowspan ? '1':columnRowspan}">
 					<f:facet name="header">
@@ -96,12 +82,10 @@
 			</rich:dataTable>
 			<h:outputText
 				value="Foram encontrados:  #{bean.resultCount} resultados"
-				style="float: right; margin-right: 1%;"
+				styleClass="DataTableResultCount"
 				rendered="#{wi:get(showGridCount, true)}" />
 			<s:div rendered="#{bean.previousExists or bean.nextExists}">
-				<s:div>
-					<ui:include src="inputNumberSlider.xhtml" />
-				</s:div>
+				<ui:include src="inputNumberSlider.xhtml" />
 			</s:div>
 		</rich:panel>
 	</a:region>
