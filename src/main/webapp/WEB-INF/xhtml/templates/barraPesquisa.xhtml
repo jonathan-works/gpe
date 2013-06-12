@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ --><ui:composition
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:a="http://richfaces.org/a4j"
@@ -17,15 +18,12 @@
 	<h:form
          class="formPesquisa"
          rendered="#{mostrarMenu}">
-      <s:div>
-        <h:outputLabel for="searchText" value="#{messages['template.abaPesquisaText']}">
-		</h:outputLabel>
+        <h:outputLabel for="searchText" value="#{messages['template.abaPesquisaText']}" />
 		<h:inputText id="searchText"
                  value="#{search.searchText}" />					
-         <h:commandButton
+        <h:commandButton
                  action="/Pesquisa/searchResult.xhtml"
                  image="#{a4jSkin.imgBgButtonPesq}" />
-      </s:div>
 	</h:form>
 
 </ui:composition>
