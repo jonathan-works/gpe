@@ -11,13 +11,9 @@
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
 
-	<ui:param
-         name="mostrarMenu"
-         value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
-	
 	<h:form
          class="formPesquisa"
-         rendered="#{mostrarMenu}">
+         rendered="#{identity.loggedIn and !usuarioLogado.provisorio}">
         <h:outputLabel for="searchText" value="#{messages['template.abaPesquisaText']}" />
 		<h:inputText id="searchText"
                  value="#{search.searchText}" />					
