@@ -118,6 +118,15 @@ a:hover {
 	display:inline-block;
 }
 
+.banner .SeletorSkins input[type='image'] {
+	width:17px;
+	height:21px;
+}
+
+.banner .SeletorSkins img {
+	cursor:pointer;
+}
+
 .banner .left, .banner .center, .banner .right {
 	position:absolute;
 }
