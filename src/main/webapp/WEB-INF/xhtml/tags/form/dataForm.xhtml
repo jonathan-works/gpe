@@ -33,7 +33,7 @@
 			<s:token
 				allowMultiplePosts="true"
 				requireSession="true" />
-			<rich:panel style="overflow:auto; width: #{panelWidth}; #{style}">
+			<rich:panel styleClass="DataFormPanel" style="overflow:auto; width: #{panelWidth}; #{style}">
 				<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 				<ui:insert />
 				<br />
