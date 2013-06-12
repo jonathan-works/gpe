@@ -9,11 +9,13 @@
 	<!-- BANNER -->
 	<s:div styleClass="banner">
 		<s:div styleClass="left">
-			<s:link view="/home.xhtml">
-				<h:graphicImage
-						rendered="#{!hideImage}"
-						url="#{a4jSkin.imgLogoTopo}" />
-			</s:link>
+			<h:form>
+				<s:link view="/login.xhtml">
+					<h:graphicImage
+							rendered="#{!hideImage}"
+							url="#{a4jSkin.imgLogoTopo}" />
+				</s:link>
+			</h:form>
 		</s:div>
 		<s:div styleClass="center">
 			<s:div styleClass="title">
