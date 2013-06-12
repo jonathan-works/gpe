@@ -26,7 +26,8 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 	position:relative;
 	font-size:14pt; 
 	text-align:left;
-	padding:30px 5px 5px 5px;
+	padding:5px 5px 5px 5px;
+	top:25px;
 }
 .tituloPagina {		
 	font-weight:bold;
