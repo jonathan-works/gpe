@@ -123,6 +123,10 @@ a:hover {
 	height:21px;
 }
 
+.PaletteMenu {
+	width: 250px;
+}
+
 .banner .SeletorSkins img {
 	cursor:pointer;
 }

@@ -33,7 +33,7 @@
 				<h:outputText value="Escolha o esquema:" styleClass="label" />
 			</ui:define>
 			<h:form>
-				<h:selectOneMenu value="#{wiSkin.skin}" style="width: 250px"
+				<h:selectOneMenu value="#{wiSkin.skin}" styleClass="PaletteMenu"
 					onchange="this.form.submit()">
 					<f:selectItems value="#{wiSkin.skinList}" />
 				</h:selectOneMenu>
