@@ -28,7 +28,7 @@
 				<h:form>
 					<s:link
 						view="/home.xhtml"
-						style="color:#{a4jSkin.headerTextColor}; font-size:#{skinZoom.skinZoom};"
+						styleClass="LinkMenu"
 						value="Home" />
 				</h:form>
 			</rich:toolbarGroup>
@@ -60,17 +60,18 @@
 		</c:if>
 		<rich:toolbarGroup location="right">
 			<h:form>
-				<s:link
-					view="/login.xhtml"
-					value="Login"
-					style="color:#{a4jSkin.headerTextColor}"
-					rendered="#{not identity.loggedIn}" />
+				<s:link view="/login.xhtml"
+						value="Login"
+						styleClass="LinkMenu"
+						rendered="#{not identity.loggedIn}"/>
 				<s:link
 					view="/home.xhtml"
 					action="#{identity.logout}"
-					style="color:#{a4jSkin.headerTextColor}; font-size:#{skinZoom.skinZoom};"
+						styleClass="LinkMenu"
 					value="Logout"
 					rendered="#{identity.loggedIn}" />
+			</h:form>
+			<h:form>
 				<wi:helpIcon />
 			</h:form>
 		</rich:toolbarGroup>
