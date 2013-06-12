@@ -22,7 +22,7 @@
 		name="mostrarMenu"
 		value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
 
-	<rich:toolbar width="100%">
+	<rich:toolbar>
 		<c:if test="#{mostrarMenu}">
 			<rich:toolbarGroup>
 				<h:form>
@@ -35,27 +35,23 @@
 			<c:forEach
 				items="#{mainMenu.dropMenus}"
 				var="drop">
-				<c:if test="#{empty drop.url}">
-					<h:form>
-						<rich:dropDownMenu label="#{drop.label}">
-							<ui:include src="/WEB-INF/xhtml/templates/subMenu.xhtml">
-								<ui:param
-									name="subMenu"
-									value="#{drop}" />
-							</ui:include>
-						</rich:dropDownMenu>
-					</h:form>
-				</c:if>
-				<c:if test="#{!empty drop.url}">
-					<h:form>
-						<rich:menuItem
-							submitMode="server"
-							label="#{drop.label}"
-							action="#{drop.url}">
-							<s:conversationPropagation type="end" />
-						</rich:menuItem>
-					</h:form>
-				</c:if>
+				<h:form rendered="#{empty drop.url}">
+					<rich:dropDownMenu label="#{drop.label}">
+						<ui:include src="/WEB-INF/xhtml/templates/subMenu.xhtml">
+							<ui:param
+								name="subMenu"
+								value="#{drop}" />
+						</ui:include>
+					</rich:dropDownMenu>
+				</h:form>
+				<h:form rendered="#{!empty drop.url}">
+					<rich:menuItem
+						submitMode="server"
+						label="#{drop.label}"
+						action="#{drop.url}">
+						<s:conversationPropagation type="end" />
+					</rich:menuItem>
+				</h:form>
 			</c:forEach>
 		</c:if>
 		<rich:toolbarGroup location="right">
