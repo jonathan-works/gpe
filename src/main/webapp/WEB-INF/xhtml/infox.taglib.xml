@@ -554,4 +554,19 @@
 		<tag-name>numeravelMascara</tag-name>
 		<source>components/form/numeravelMascara.xhtml</source>
 	</tag>
+	
+	<tag>
+		<tag-name>tabPanel</tag-name>
+		<component>
+			<component-type>br.com.infox.component.tabs.TabPanel</component-type>
+			<renderer-type>br.com.infox.component.tabs.TabPanelRenderer</renderer-type>
+		</component>
+	</tag>
+	<tag>
+		<tag-name>tab</tag-name>
+		<component>
+			<component-type>br.com.infox.component.tabs.Tab</component-type>
+			<renderer-type>br.com.infox.component.tabs.TabRenderer</renderer-type>
+		</component>
+	</tag>
 </facelet-taglib>
