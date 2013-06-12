@@ -100,9 +100,13 @@ a:hover {
 	overflow:hidden;
 }
 
-.banner .divBg .BarraPesquisa {
+.banner .BarraPesquisa {
 	display:inline-block;
 	margin:0px 0px 0px 28px;
+}
+
+.banner .BarraPesquisa input[type='text']{
+	width:120px;
 }
 
 .banner .divBg .BarraPesquisa label {
@@ -141,7 +145,7 @@ a:hover {
     height: 85px;
     top: 0px;
     right:0px;
-    width: 361px;
+    width: 321px;
     z-index: 1;
 }
 .banner .liveclock {
