@@ -17,17 +17,16 @@
 	<h:form
          class="formPesquisa"
          rendered="#{mostrarMenu}">
-      <div>
-        <label>
-		    #{messages['template.abaPesquisaText']}
-		</label>
+      <s:div>
+        <h:outputLabel for="searchText" value="#{messages['template.abaPesquisaText']}">
+		</h:outputLabel>
 		<h:inputText
                  id="searchText"
                  value="#{search.searchText}" />					
          <h:commandButton
                  action="/Pesquisa/searchResult.xhtml"
                  image="#{a4jSkin.imgBgButtonPesq}" />
-      </div>
+      </s:div>
 	</h:form>
 
 </ui:composition>
