@@ -12,11 +12,10 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 /*LAYOUT GERAL DA PÁGINA*/
 .Panel.rf-p {
 	display: inline-block;
-	margin-left:10px;
-	margin-top:0px;
+	margin:0px;
 	width:73%;
 	max-width:98%;
-	padding-top:2px;
+	padding:0px;
 }
 
 .conteudo {
