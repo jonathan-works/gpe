@@ -24,7 +24,7 @@ html, body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bbcec2', endColorstr='#80a991',GradientType=1 );
 }
 
-.banner .clock, .banner .center, .banner label, .banner select {
+.banner {
 	color:#003300;
 }
 
