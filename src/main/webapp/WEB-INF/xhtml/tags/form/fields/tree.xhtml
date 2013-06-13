@@ -99,9 +99,10 @@
 
 			<rich:collapsiblePanel
 				id="#{id}Panel"
-				style="width: #{width - 20}px; border: solid 1px white;"
+				style="width: #{width - 20}px;"
 				headerClass="inputTreeHeader"
 				bodyClass="inputTreeBody"
+				styleClass="InputTreePanel"
 				onswitch="setZIndex('#{rich:clientId(id.concat('Panel'))}')"
 				immediate="true"
 				switchType="client"
