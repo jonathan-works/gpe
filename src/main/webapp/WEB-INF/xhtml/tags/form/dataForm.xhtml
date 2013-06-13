@@ -33,16 +33,14 @@
 			<s:token
 				allowMultiplePosts="true"
 				requireSession="true" />
-			<rich:panel style="overflow:auto; width: #{panelWidth}; #{style}">
+			<rich:panel styleClass="DataFormPanel" style="overflow:auto; width: #{panelWidth}; #{style}">
 				<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 				<ui:insert />
-				<s:div
-					style="clear:both; vertical-align: bottom;"
-					rendered="#{wi:get(requiredForm,true)}">
+				<br />
+				<s:div rendered="#{wi:get(requiredForm,true)}">
 					<img src="#{util.contextPath}#{a4jSkin.imgIconBalao}" />
-					<div style="display: inline;">
-						<span class="required">*</span> Campos Obrigatórios
-					</div>
+					<span class="required">*</span>
+					<span>Campos Obrigatórios</span>
 				</s:div>
 			</rich:panel>
 			<div style="clear: both" />

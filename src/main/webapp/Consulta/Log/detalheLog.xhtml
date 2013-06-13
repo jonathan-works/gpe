@@ -5,21 +5,11 @@
      xmlns:f="http://java.sun.com/jsf/core"
      xmlns:h="http://java.sun.com/jsf/html"
      xmlns:rich="http://richfaces.org/rich">
-	
-	<style
-         type="text/css">
-	    @media print{
-	      .onlyprint{display: block;visibility: visible;}
-	      .noprint{display: none;visibility: hidden;}
-	    }
-  	</style>
-   
+     
     <rich:dataTable
          value="#{entidadeLogList.getEntityLogDetailList(param.idPesquisa)}"
          var="var"
-         style="width: 100%"
-         onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
-         onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">   
+         style="width: 100%">   
 	    	<rich:column>
 	    		<f:facet
                  name="header">Atributo</f:facet>

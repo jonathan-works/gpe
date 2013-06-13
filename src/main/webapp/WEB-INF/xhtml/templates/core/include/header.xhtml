@@ -1,70 +1,44 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
 
 	<!-- BANNER -->
-	<div
-         class="banner">
-		<div
-             class="left">
-			<a
-                 href="#{util.contextPath}/">
-				<h:graphicImage
-                     rendered="#{!hideImage}"
-                     url="#{a4jSkin.imgLogoTopo}" /> 
-			</a>
-		</div>
-		<div
-             class="center">
-			<div
-                 class="title">
-			    <font
-                     size="5">#{nomeSistema}</font><br />
-	            <font
-                     size="4">#{subNomeSistema}</font>
-            </div>
-        </div>
-        <div
-             class="right">
-        	<div
-                 class="divBg">
-	        	<div
-                     style="position: absolute;              right:67px;              top:0px;              width:84%;              max-width:296px;              height:30px;              overflow:hidden;">
-	        		<ui:include
-                         src="/WEB-INF/xhtml/templates/barraPesquisa.xhtml" />
-	        	</div>
-	        	<div
-                     style="position: absolute;              right:3px;              top:2px;              width:67px;              height:21px;">
-	        		<ui:include
-                         src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
-						<ui:param
-                             name="id"
-                             value="palette" />
+	<s:div styleClass="banner">
+		<s:div styleClass="left">
+			<h:form>
+				<s:link view="/login.xhtml">
+					<h:graphicImage
+							rendered="#{!hideImage}"
+							url="#{a4jSkin.imgLogoTopo}" />
+				</s:link>
+			</h:form>
+		</s:div>
+		<s:div styleClass="center">
+			<s:div styleClass="title">
+				<font size="5">#{nomeSistema}</font><br />
+				<font size="4">#{subNomeSistema}</font>
+			</s:div>
+		</s:div>
+		<s:div styleClass="right">
+			<s:div styleClass="divBg">
+				<s:div styleClass="BarraPesquisa">
+					<ui:include src="/WEB-INF/xhtml/templates/barraPesquisa.xhtml" />
+				</s:div>
+				<s:div styleClass="SeletorSkins">
+					<ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
+						<ui:param name="id" value="palette" />
 					</ui:include>
-				</div>
-			</div>
+				</s:div>
+			</s:div>
 			<!-- Mini-Relógio -->
-			<div
-                 class="clock"
-                 style="height: 17px; width: 67px; position: absolute; top: 30px; right: 2px;">
-				<span
-                     id="liveclock" />
-				<script>
-				   newClock('#{currentTime}');
-				</script>
-			</div>
-			<div
-                 style="position:absolute; top:48px; right:2px">
-				<ui:include
-                     src="/WEB-INF/xhtml/templates/painelUsuario.xhtml" />
-			</div>
-        	
-		</div>
-	</div>
+			<s:div styleClass="liveclock"></s:div>
+			<s:div style="position: absolute; top: 48px; right: 2px">
+				<ui:include src="/WEB-INF/xhtml/templates/painelUsuario.xhtml" />
+			</s:div>
+		</s:div>
+	</s:div>
 </ui:composition>

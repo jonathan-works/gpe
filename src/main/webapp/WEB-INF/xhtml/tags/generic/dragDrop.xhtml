@@ -22,27 +22,9 @@
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
-
-	<style>
-        .panelc {
-            width:25%;
-            vertical-align:top;         
-        }
-        
-        .dropTargetPanel {
-            width: 90%;
-        }
-
-        .headerClass {
-            text-align: center;
-            padding-top: 5px;
-        }
-    </style>
     
-	<rich:dragIndicator
-         id="#{id}Indicator" />
-	<h:form
-         id="#{id}dragDropForm">
+	<rich:dragIndicator id="#{id}Indicator" />
+	<h:form id="#{id}dragDropForm">
 		<h:panelGrid
              columnClasses="panelc"
              columns="4"

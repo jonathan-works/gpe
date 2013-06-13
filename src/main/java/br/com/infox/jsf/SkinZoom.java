@@ -33,11 +33,11 @@ import br.com.itx.component.Util;
 public class SkinZoom extends Selector 
 {	
 	private static final long serialVersionUID = 1L;
-	private String skinZoom = "";	
-	private static final String TAM_NORMAL = "";
+	private String skinZoom = TAM_NORMAL;	
+	private static final String TAM_NORMAL = "12px";
 	private static final String TAM_MEDIO = "18px";
 	private static final String TAM_GRANDE = "22px";
-	private static final String[] TAMANHOS = {"","18px", "22px"}; 
+	private static final String[] TAMANHOS = {TAM_NORMAL,TAM_MEDIO, TAM_GRANDE}; 
 	
 	public SkinZoom() 
 	{

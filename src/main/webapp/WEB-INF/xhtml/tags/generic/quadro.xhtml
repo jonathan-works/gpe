@@ -13,61 +13,24 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:s="http://jboss.org/schema/seam/taglib">
+-->
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
 
-    <ui:include
-         src="/WEB-INF/xhtml/templates/cssPage.xhtml" />   
-         
-    <div
-         class="bordaBox">   
-       <b
-             class="b1" />      
-       <b
-             class="b2" />       
-       <b
-             class="b3" />        
-       <b
-             class="b4" />      
-       <div
-             class="conteudo">  			  
-	      <s:div
-                 styleClass="tituloPagina">
-  		  	  <ui:insert
-                     name="title" />
-  		  </s:div>	
-		  <div
-                 class="subBorda">
-		  	  <div
-                     id="divOverflow"
-                     style="color: black">			  
-	              <!-- Aki ficara o conteudo da pagina -->
-				  <ui:insert />
-			  </div>				  	   								   						   	    
-		  </div>	
-	   </div>
-	   <b
-             class="b4" />
-       <b
-             class="b3" />
-       <b
-             class="b2" />
-       <b
-             class="b1" />   
-    </div> 
- 
-    <script>
-		function ajusta() {
-			cl='.subBorda'  
-			jQuery(cl).css('height', document.body.clientHeight - jQuery(cl).offset().top - 30)
-		}
-		window.onresize=ajusta;
-		ajusta();
-	</script>
- 
-   
+	<ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
+
+	<div class="pageContent">
+		<div class="subBorda">
+			<div class="tituloPagina">
+				<ui:insert name="title">#{title}</ui:insert>
+			</div>
+			<div class="conteudo">
+				<ui:insert />
+			</div>
+		</div>
+	</div>
+
 </ui:composition>
