@@ -31,12 +31,32 @@
 	background-image: none !important;
 }
 
+.SwimlanePanel.rf-p {
+	position:relative;
+}
+
+div.Swimlane {
+	width:285px;
+}
+
+table.PerfilSwimlane {
+	
+}
+
+table.PerfilSwimlane .Contabilizar {
+	width:50px;
+}
+
+.CursorPointer {
+	cursor:pointer;
+}
+
 .bordaBox {
 	width: 100%;
 }
 
 .pageBody {
-	padding: 0;
+	height:695px;
 }
 
 input {
