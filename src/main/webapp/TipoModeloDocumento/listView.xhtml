@@ -6,7 +6,8 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+    xmlns:a="http://richfaces.org/a4j">
     <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -69,7 +70,7 @@
             <wi:columnOutputText
                 columnId="grupoModeloDocumento"
                 columnHeader="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
-                value="#{row.grupoModeloDocumento}" />
+                value="#{row.idTipoModeloDocumento} - #{row.grupoModeloDocumento}" />
             <wi:columnOutputText
                 columnId="tipoModeloDocumento"
                 columnHeader="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
@@ -120,6 +121,57 @@
             status=":status"
             id="modeloDocumento"
             rendered="#{home.managed}">
+            <wi:dataTable
+                values="#{associativeModeloDocumentoList.list(15)}"
+                bean="#{associativeModeloDocumentoList}"
+                tableTitle="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoHome.instance)}"
+                id="associativeModeloDocumentoList"
+                rowId="#{row.idModeloDocumento}">
+                <ui:define name="searchForm">
+                    <wi:searchForm
+                        formId="pesquisarModeloDocumentoForm"
+                        formTitle="#{messages['searchForm.title']}">
+                        <h:outputText
+                            value="[Falta] Suggest de Tipo de Modelo de Documento" />
+                        <wi:inputText
+                            id="tituloModeloDocumento"
+                            label="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
+                            value="#{associativeModeloDocumentoList.entity.tituloModeloDocumento}"
+                            maxlength="150" />
+                        <wi:selectSituacaoOneMenu
+                            id="ativo"
+                            label="#{messages['field.situacao']}"
+                            value="#{associativeModeloDocumentoList.entity.ativo}" />
+                    </wi:searchForm>
+                </ui:define>
+                <ui:define name="headerToolBar" />
+                <ui:define name="toolBar">
+                    <a:region>
+                        <a:commandLink
+                            limitRender="true"
+                            render="divM2MVar"
+                            action="#{variavel.addModelo(row)}"
+                            rendered="true">
+                            <h:graphicImage
+                                url="/img/grid/copyLeft.gif"
+                                title="Adicionar" />
+                        </a:commandLink>
+                    </a:region>
+                </ui:define>
+                <wi:columnOutputText
+                    columnId="tituloModeloDocumento"
+                    columnHeader="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
+                    value="#{row}" />
+                <wi:columnOutputText
+                    columnId="tipoModeloDocumento"
+                    columnHeader="#{messages['associativeModeloDocumento.tipoModeloDocumento']}"
+                    value="#{row.tipoModeloDocumento}" />
+                <wi:columnSituacao
+                    columnId="tituloModeloDocumento"
+                    columnHeader="#{messages['field.situacao']}"
+                    value="#{row.ativo}" />
+            </wi:dataTable>
+
             <wi:datalist
                 bean="#{modeloDocumentoGrid}"
                 gridId="modeloDocumentoGridTab"
