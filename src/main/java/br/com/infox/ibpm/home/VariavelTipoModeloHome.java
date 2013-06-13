@@ -67,7 +67,6 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 			
 			FacesMessages.instance().clear();
 			refreshGrid("tipoModeloVariavelGrid");
-			refreshGrid("tipoModeloDocumentoGrid");
 		}
 	}
 	
@@ -87,7 +86,6 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 			newInstance();
 			FacesMessages.instance().clear();
 			refreshGrid("tipoModeloVariavelGrid");
-			refreshGrid("tipoModeloDocumentoGrid");
 		}
 	}	
 }

@@ -9,7 +9,6 @@
 	<description>TipoModeloDocumento: #{tipoModeloDocumentoHome.instance}</description>
 	
 	<begin-conversation join="true"/>
-	<param name="tipoModeloDocumento.order" value="#{tipoModeloDocumentoGrid.order}"/>
 	<param name="id" value="#{tipoModeloDocumentoHome.tipoModeloDocumentoIdTipoModeloDocumento}"/>
 
 <!-- Parametros para RESTFull -->
