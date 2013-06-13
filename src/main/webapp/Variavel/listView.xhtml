@@ -109,8 +109,7 @@
             rendered="#{home.managed}">
             <wi:ajaxDiv id="divM2MVar">
                 <s:div
-                    id="associated"
-                    style="width: #{canEdit ? leftPanelWidth : '100%'}; float: left">
+                    styleClass="Associated">
                     <wi:dataTable
                         values="#{associatedTipoModeloVariavelList.list(15)}"
                         bean="#{associatedTipoModeloVariavelList}"
@@ -143,8 +142,7 @@
                     </wi:dataTable>
                 </s:div>
                 <s:div
-                    id="associative"
-                    style="width: #{rightPanelWidth}; float: left; margin-left: 1%">
+                    styleClass="Associative">
                     <wi:dataTable
                         values="#{associativeTipoModeloDocumentoList.list(15)}"
                         bean="#{associativeTipoModeloDocumentoList}"

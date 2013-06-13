@@ -14,6 +14,17 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 	display:inline-block;
 }
 
+.Associated, .Associative {
+	position:relative;
+	display:inline-block;
+	width:50%;
+}
+
+.Associated .Panel.rf-p, .Associative .Panel.rf-p {
+	width:100%;
+	max-width:100%;
+}
+
 div.InputTreePanel.rf-cp.rf-tgp {
 	border: solid 1px white;
 }
