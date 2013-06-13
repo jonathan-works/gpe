@@ -68,7 +68,6 @@ public abstract class AbstractTipoModeloDocumentoHome<T>
 		getInstance().setAtivo(Boolean.FALSE);
 		String ret = super.update();
 		newInstance();
-		refreshGrid("tipoModeloDocumentoGrid");
 		return ret;
 	}
 
