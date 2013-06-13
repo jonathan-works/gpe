@@ -57,7 +57,6 @@ public class TipoModeloDocumento implements java.io.Serializable {
 	private Boolean ativo;
 	private TipoModeloDocumento tipoModeloDocumentoCombo;
 	
-//	private List<Variavel> variavelList = new ArrayList<Variavel>(0);
 	private List<ModeloDocumento> modeloDocumentoList = new ArrayList<ModeloDocumento>(0);
 	
 	private List<VariavelTipoModelo> variavelTipoModeloList = new ArrayList<VariavelTipoModelo>(0);
@@ -131,17 +130,6 @@ public class TipoModeloDocumento implements java.io.Serializable {
 		this.variavelTipoModeloList = variavelTipoModeloList;
 	}
 	
-//	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-//			CascadeType.REFRESH}, fetch = FetchType.LAZY)
-//	@JoinTable(name = "tb_variavel_tipo_modelo", schema = "public", joinColumns = {@JoinColumn(name = "id_tipo_modelo_documento", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "id_variavel", nullable = false, updatable = false)})
-//	public List<Variavel> getVariavelList() {
-//		return this.variavelList;
-//	}
-//
-//	public void setVariavelList(List<Variavel> variavelList) {
-//		this.variavelList = variavelList;
-//	}
-
 	@Column(name = "in_ativo", nullable = false)
 	@NotNull
 	public Boolean getAtivo() {
