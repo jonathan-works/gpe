@@ -51,6 +51,7 @@ public class MeeterPhaseListener {
 	public void afterPhase(PhaseEvent event) {
 		System.out.println("Saiu: " + event.getPhaseId() + " - " + (new Date().getTime() - time));
 		time = 0; 
+		System.out.println(event.getFacesContext().getExternalContext().getRequestParameterMap().get("javax.faces.ViewState"));
 //		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 //			UIViewRoot root = event.getFacesContext().getViewRoot();
 //			showComponentsWithoutForm(root);
