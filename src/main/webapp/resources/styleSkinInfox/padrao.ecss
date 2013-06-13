@@ -10,8 +10,7 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 }
 /* END STYLE TABELAS */
 /*LAYOUT GERAL DA PÁGINA*/
-.DataFormPanel .rf-p-b div {
-	display:inline-block;
+.DataFormPanel .rf-p-b div {;
 }
 
 .Panel.rf-p {
