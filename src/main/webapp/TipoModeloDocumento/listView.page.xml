@@ -23,6 +23,5 @@
 	<action if="#{empty tipoModeloDocumentoHome.tab}" execute="#{tipoModeloDocumentoHome.setTab('search')}"/>
 	<action if="#{param.newInstance == 'true'}" execute="#{variavelHome.newInstance()}"/>
 	<!-- Parametros para a ordem de grids -->
-	<param name="modeloDocumento.order" value="#{modeloDocumentoGrid.order}"/>	
  
 </page>
