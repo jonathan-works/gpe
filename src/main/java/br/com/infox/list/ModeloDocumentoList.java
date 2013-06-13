@@ -5,7 +5,6 @@ import java.util.Map;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
@@ -13,7 +12,6 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ModeloDocumentoList.NAME)
-@BypassInterceptors
 @Scope(ScopeType.CONVERSATION)
 public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 

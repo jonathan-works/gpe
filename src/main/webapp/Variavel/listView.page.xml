@@ -8,7 +8,6 @@
 	<description>Variavel: #{variavelHome.instance}</description>
 	
 	<begin-conversation join="true"/>
-	<!-- <param name="variavel.order" value="#{variavelGrid.order}"/> -->
 	<param name="id" value="#{variavelHome.variavelIdVariavel}"/>
 
 <!-- Parametros para RESTFull -->
