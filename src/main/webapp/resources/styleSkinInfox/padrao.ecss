@@ -13,6 +13,15 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 .DataFormPanel .rf-p-b div {;
 }
 
+div.InputTreePanel.rf-cp.rf-tgp {
+	border: solid 1px white;
+}
+
+div.rf-cp-hdr,table.rf-cp-gr {
+	padding:0px;
+	border-spacing:0px;
+}
+
 .Panel.rf-p {
 	display: inline-block;
 	margin:0px;
