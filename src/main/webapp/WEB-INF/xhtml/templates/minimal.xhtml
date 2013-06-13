@@ -12,15 +12,12 @@
 	    <meta
              http-equiv="Content-Type"
              content="text/html; charset=UTF-8" />
-	    <title>#{nomeSistema}: <ui:insert
-                 name="title" /></title>
-		<h:outputScript name="liveclock.js" library="js"/>		
-            <link
-             rel="icon"
-             href="#{util.contextPath}/favicon.ico"
-             type="image/x-icon" />
-	    <ui:include
-             src="/WEB-INF/xhtml/templates/cssPage.xhtml" /> 
+	    <title>#{nomeSistema}: <ui:insert name="title" /></title>		
+            <link rel="icon"
+             	  href="#{util.contextPath}/favicon.ico"
+				  type="image/x-icon" />
+	    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
+	    <ui:insert name="head" /> 
 	</h:head>
 
 	<h:body>    
@@ -35,19 +32,13 @@
 		<ui:include
              src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 	
-		<s:div
-             styleClass="pageBody"
-             id="pageBody">
-			<div
-                 style="overflow: visible">	
-				<wi:quadro>	
-				   <h:graphicImage
-                         url="#{a4jSkin.imgLogoTopo}" /> <br
-                         clear="none" />
-				   <ui:insert
-                         name="body" />
-				</wi:quadro>	
-			</div>
+		<s:div styleClass="pageBody"
+               id="pageBody">	
+				<wi:quadro>
+				   <h:graphicImage url="#{a4jSkin.imgLogoTopo}" /> <br
+                         		   clear="none" />
+				   <ui:insert name="body" />
+				</wi:quadro>
 		</s:div>
 	</h:body>
 </html>

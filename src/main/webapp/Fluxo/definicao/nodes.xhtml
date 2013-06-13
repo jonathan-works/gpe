@@ -30,26 +30,15 @@
 
         <s:div id="divNodesGeral">
 
-            <s:div id="nodesDiv">
+            <s:div id="nodesDiv" style="min-height:657px">
 
-                <s:div style="width:200px; float:left;">
-
+                <s:div style="width:200px; display:inline-table;">
                     <ui:decorate template="dataTable.xhtml">
-
-                        <ui:param
-                            name="values"
-                            value="#{nodeFitter.nodes}" />
-                        <ui:param
-                            name="styleClass"
-                            value="tabelaVariaveis" />
-                        <ui:param
-                            name="id"
-                            value="nodesTable" />
-                        <ui:param
-                            name="style"
-                            value="width:100%" />
+                        <ui:param name="values" value="#{nodeFitter.nodes}" />
+                        <ui:param name="styleClass" value="tabelaVariaveis" />
+                        <ui:param name="id" value="nodesTable" />
+                        <ui:param name="style" value="width:100%" />
                         <ui:define name="headerToolBar">
-
                             <a:commandLink
                                 action="#{nodeFitter.setCurrentNode(null)}"
                                 render="nodesDiv"
@@ -166,7 +155,7 @@
 
                 <s:div
                     id="nodeDiv"
-                    style="width:auto; float:left; margin-left:5px">
+                    style="width:auto; display:inline-table; margin-left:5px">
 
                     <rich:panel
                         bodyClass="panel"
