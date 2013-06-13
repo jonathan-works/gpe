@@ -8,7 +8,8 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
-    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+    template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml"
+    xmlns:a="http://richfaces.org/a4j">
 
     <!--
 		  IBPM - Ferramenta de produtividade Java
@@ -106,7 +107,7 @@
         <rich:tab
             header="Tipos de Modelo de Documento"
             rendered="#{home.managed}">
-            <wi:ajaxDiv id="divM2MVar2">
+            <wi:ajaxDiv id="divM2MVar">
                 <s:div
                     id="associated"
                     style="width: #{canEdit ? leftPanelWidth : '100%'}; float: left">
@@ -118,7 +119,19 @@
                         rowId="#{row.idVariavelTipoModelo}">
                         <ui:define name="searchForm" />
                         <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar" />
+                        <ui:define name="toolBar">
+                            <a:region>
+                                <a:commandLink
+                                    limitRender="true"
+                                    render="divM2MVar"
+                                    action="#{variavelTipoModeloHome.removeTipoModeloVariavel(row)}"
+                                    rendered="true">
+                                    <h:graphicImage
+                                        url="/img/grid/copyRight.gif"
+                                        title="Remover" />
+                                </a:commandLink>
+                            </a:region>
+                        </ui:define>
                         <wi:columnOutputText
                             columnId="tipoModeloDocumento"
                             columnHeader="#{messages['associatedTipoModeloVariavel.tipoModeloDocumento']}"
@@ -129,12 +142,8 @@
                             value="#{row.tipoModeloDocumento.grupoModeloDocumento}" />
                     </wi:dataTable>
                 </s:div>
-            </wi:ajaxDiv>
-
-            <wi:ajaxDiv id="divM2MVar3">
                 <s:div
                     id="associative"
-                    rendered="#{canEdit}"
                     style="width: #{rightPanelWidth}; float: left; margin-left: 1%">
                     <wi:dataTable
                         values="#{associativeTipoModeloDocumentoList.list(15)}"
@@ -142,42 +151,60 @@
                         tableTitle="#{messages['associativeTipoModeloDocumento.titleGrid']}"
                         id="associativeTipoModeloDocumentoList"
                         rowId="#{row.idTipoModeloDocumento}">
-                        <ui:define name="searchForm" />
+                        <ui:define name="searchForm">
+                            <wi:searchForm
+                                formId="pesquisarTipoModeloDpcumentoForm"
+                                formTitle="#{messages['searchForm.title']}">
+                                <h:outputText
+                                    value="[Falta] Suggest de Grupo de Modelo de Documento" />
+                                <wi:inputText
+                                    id="tipoModeloDocumento"
+                                    label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+                                    value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumento}"
+                                    maxlength="150" />
+                                <wi:inputText
+                                    id="abreviacao"
+                                    label="#{messages['tipoModeloDocumento.abreviacao']}"
+                                    value="#{associativeTipoModeloDocumentoList.entity.abreviacao}"
+                                    maxlength="5" />
+                                <wi:selectSituacaoOneMenu
+                                    id="ativo"
+                                    label="#{messages['field.situacao']}"
+                                    value="#{associativeTipoModeloDocumentoList.entity.ativo}" />
+                            </wi:searchForm>
+                        </ui:define>
                         <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar" />
+                        <ui:define name="toolBar">
+                            <a:region>
+                                <a:commandLink
+                                    limitRender="true"
+                                    render="divM2MVar"
+                                    action="#{variavelTipoModeloHome.addTipoModeloVariavel(row)}"
+                                    rendered="true">
+                                    <h:graphicImage
+                                        url="/img/grid/copyLeft.gif"
+                                        title="Adicionar" />
+                                </a:commandLink>
+                            </a:region>
+                        </ui:define>
                         <wi:columnOutputText
                             columnId="tipoModeloDocumento"
                             columnHeader="#{messages['associativeTipoModeloVariavel.tipoModeloDocumento']}"
-                            value="#{row.tipoModeloDocumento}"/>
+                            value="#{row.tipoModeloDocumento}" />
                         <wi:columnOutputText
                             columnId="tipoModeloDocumento.grupoModeloDocumento"
                             columnHeader="#{messages['associativeTipoModeloVariavel.grupoModeloDocumento']}"
-                            value="#{row.tipoModeloDocumento}"/>
+                            value="#{row.tipoModeloDocumento}" />
                         <wi:columnOutputText
                             columnId="abreviacao"
                             columnHeader="#{messages['associativeTipoModeloVariavel.abreviacao']}"
-                            value="#{row.abreviacao}"/>
+                            value="#{row.abreviacao}" />
                         <wi:columnSituacao
                             columnId="ativo"
                             columnHeader="#{messages['field.situacao']}"
-                            value="#{row.ativo}"/>
+                            value="#{row.ativo}" />
                     </wi:dataTable>
                 </s:div>
-            </wi:ajaxDiv>
-
-            <wi:ajaxDiv id="divM2MVar">
-                <wi:m2mGrid
-                    title="Lista de Tipos de Modelo"
-                    gridId="tipoModeloDocumentoList"
-                    leftGrid="#{tipoModeloVariavelGrid}"
-                    useDatamodel="false"
-                    addExpression="variavelTipoModeloHome.addTipoModeloVariavel(row)"
-                    removeExpression="variavelTipoModeloHome.removeTipoModeloVariavel(row)"
-                    rightGrid="#{tipoModeloDocumentoGrid}"
-                    searchBean="#{tipoModeloDocumentoSearch}"
-                    showLogicOperator="false"
-                    showButtonLimpar="false"
-                    widthExterno="100%" />
             </wi:ajaxDiv>
         </rich:tab>
     </ui:define>
