@@ -29,7 +29,7 @@
 	</context-param>
 	<context-param>
 		<param-name>org.richfaces.resourceOptimization.enabled</param-name>
-		<param-value>true</param-value>
+		<param-value>false</param-value>
 	</context-param>
 	<!-- Fila padrão para as requisições ajax -->
 	<context-param>
