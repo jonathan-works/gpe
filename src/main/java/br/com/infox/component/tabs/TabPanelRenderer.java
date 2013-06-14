@@ -18,19 +18,20 @@ public class TabPanelRenderer extends Renderer {
 		super.encodeBegin(context, component);
 		TabPanel tabPanel = (TabPanel) component;
 		ResponseWriter writer = context.getResponseWriter();
+		tabPanel.getTabIndexMap().clear();
 		writer.startElement("div", tabPanel);
-		writer.writeAttribute("id", tabPanel.getId(), "id");
+		writer.writeAttribute("id", tabPanel.getClientId(), "clientId");
 		writer.startElement("ul", null);
 		int tabIndex = 0;
 		for (UIComponent child : tabPanel.getChildren()) {
 			if (!(child instanceof Tab)) {
-				break;
+				continue;
 			}
 			Tab tab = (Tab) child;
 			writer.startElement("li", null);
 			writer.writeAttribute("name", tab.getName(), "name");
 			writer.startElement("a", null);
-			writer.writeAttribute("href", "#" + tab.getId(), "id");
+			writer.writeAttribute("href", "#" + tab.getClientId(), "clientId");
 			writer.writeText(tab.getTitle(), "title");
 			writer.endElement("a");
 			writer.endElement("li");
@@ -74,7 +75,7 @@ public class TabPanelRenderer extends Renderer {
 		StringBuffer sb = new StringBuffer();
 		sb.append("$(function() {");
 		sb.append("$('#");
-		sb.append(tabPanel.getId());
+		sb.append(tabPanel.getClientId().replace(":", "\\\\:"));
 		sb.append("').tabs({");
 		sb.append("active: ");
 		String activeTab = tabPanel.getActiveTab();
@@ -98,9 +99,9 @@ public class TabPanelRenderer extends Renderer {
 			return sb.toString();
 		}
 		sb.append("event.preventDefault();");
-		sb.append("jsf.ajax.request(this, event, {");
+		sb.append("jsf.ajax.request(this, event, {execute: '@this',");
 		sb.append("render: '");
-		sb.append(tabPanel.getId());
+		sb.append(tabPanel.getClientId());
 		sb.append("',");
 		sb.append("newTab: ");
 		sb.append("ui.newTab.attr('name')");
