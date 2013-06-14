@@ -35,7 +35,9 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 import org.jbpm.taskmgmt.def.Task;
 
+import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.VariavelTipoModelo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
@@ -277,8 +279,8 @@ public class VariableAccessHandler implements Serializable {
 		}
 		modeloDocumentoList.add(modelo);
 		modeloList.add(modelo.getIdModeloDocumento());
-		GridQuery modeloDocumentoGrid = ComponentUtil.getComponent("modeloDocumentoGrid");
-		modeloDocumentoGrid.getResultList().remove(modelo);
+		EntityList modeloDocumentoList = ComponentUtil.getComponent("associatedTipoModeloVariavelList");
+		modeloDocumentoList.getResultList().add(modelo);
 		mudouModelo = true;
 		updateModelo();
 	}
@@ -287,8 +289,8 @@ public class VariableAccessHandler implements Serializable {
 	public void removeModelo(ModeloDocumento modelo) {
 		modeloDocumentoList.remove(modelo);
 		modeloList.remove(Integer.valueOf(modelo.getIdModeloDocumento()));
-		GridQuery modeloDocumentoGrid = ComponentUtil.getComponent("modeloDocumentoGrid");
-		modeloDocumentoGrid.getResultList().add(modelo);
+		EntityList<VariavelTipoModelo> modeloDocumentoList = ComponentUtil.getComponent("associatedTipoModeloVariavelList");
+		modeloDocumentoList.getResultList().remove(modelo);
 		mudouModelo = true;
 		updateModelo();
 	}
