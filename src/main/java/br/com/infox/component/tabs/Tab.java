@@ -107,8 +107,7 @@ public class Tab extends UIPanel implements ActionSource2 {
 
 	@Override
 	public MethodExpression getActionExpression() {
-		return (MethodExpression) getStateHelper().get(
-				PropertyKeys.actionExpression);
+		return (MethodExpression) getStateHelper().get(PropertyKeys.actionExpression);
 	}
 
 	@Override
@@ -119,9 +118,18 @@ public class Tab extends UIPanel implements ActionSource2 {
 	@Override
 	public void broadcast(FacesEvent event) throws AbortProcessingException {
 		super.broadcast(event);
-		ActionListener listener = FacesContext.getCurrentInstance().getApplication().getActionListener();
-		if (listener != null) {
-			listener.processAction((ActionEvent) event);
+		if (event instanceof ActionEvent) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			
+			MethodBinding defaultActionListener = getActionListener();
+			if (defaultActionListener != null) {
+				defaultActionListener.invoke(context, new Object[] {event});
+			}
+			
+			ActionListener listener = context.getApplication().getActionListener();
+			if (listener != null) {
+				listener.processAction((ActionEvent) event);
+			}
 		}
 	}
 }
