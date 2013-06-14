@@ -38,11 +38,11 @@
                 cellpadding="0">
                 <tr valign="top">
                     <td width="310"><h:form>
-                            <rich:tabPanel
+                            <wi:richTabPanel
                                 id="tabPainelUsuario"
                                 switchType="ajax"
                                 status=":status">
-                                <rich:tab
+                                <wi:richTab
                                     header="Caixas"
                                     render="painelProcessos"
                                     limitRender="true"
@@ -51,8 +51,8 @@
                                         <ui:include
                                             src="tarefasTree.xhtml" />
                                     </s:div>
-                                </rich:tab>
-                            </rich:tabPanel>
+                                </wi:richTab>
+                            </wi:richTabPanel>
                         </h:form></td>
                     <td><s:div id="painelProcessos">
                             <ui:param

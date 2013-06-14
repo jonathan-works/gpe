@@ -28,12 +28,12 @@
         value="#{tarefaEventoHome}" />
 
     <s:div id="pageBody">
-        <rich:tabPanel
+        <wi:richTabPanel
             switchType="client"
             headerSpacing="2"
             activeItem="#{home.tab}"
             itemChangeListener="#{home.processItemChange}">
-            <rich:tab
+            <wi:richTab
                 id="search"
                 name="search"
                 header="#{messages['tarefaEvento.labelSearchTab']}"
@@ -61,8 +61,8 @@
                     </wi:dataTable>
 
                 </a:region>
-            </rich:tab>
-            <rich:tab
+            </wi:richTab>
+            <wi:richTab
                 id="form"
                 name="form"
                 header="#{messages['tarefaEvento.labelFormTab']}"
@@ -79,8 +79,8 @@
                         <ui:define name="buttons" />
                     </wi:dataForm>
                 </a:region>
-            </rich:tab>
-            <rich:tab
+            </wi:richTab>
+            <wi:richTab
                 id="agrupamentoTarefa"
                 name="agrupamentoTarefa"
                 header="#{messages['tarefaEvento.agrupamentoTarefa']}"
@@ -113,8 +113,8 @@
                             action="#{tarefaEventoHome.update()}" />
                     </h:form>
                 </a:region>
-            </rich:tab>
-        </rich:tabPanel>
+            </wi:richTab>
+        </wi:richTabPanel>
     </s:div>
 
 </ui:composition>

@@ -29,11 +29,11 @@
 			required="true"
 			id="nome" />
 
-		<rich:tabPanel
+		<wi:richTabPanel
 			switchType="ajax"
 			rendered="#{papelHome.managed}"
 			style="margin-top: 10px; width: 660px; clear: both;">
-			<rich:tab
+			<wi:richTab
 				header="Papéis que acessam"
 				status=":status">
 				<a:region>
@@ -43,8 +43,8 @@
 						itemValues="#{papelHome.getPapeisDisponiveis(false)}"
 						itemLabel="#{papelHome.getNome(var)}" />
 				</a:region>
-			</rich:tab>
-		</rich:tabPanel>
+			</wi:richTab>
+		</wi:richTabPanel>
 
 		<div style="clear: both;" />
 

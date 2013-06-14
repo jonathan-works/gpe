@@ -89,7 +89,7 @@
 	</ui:define>
 
 	<ui:define name="tabs">
-		<rich:tab id="historicoModeloDocumento" 
+		<wi:richTab id="historicoModeloDocumento" 
 					rendered="#{modeloDocumentoHome.isManaged()}"
 					header="#{messages['historicoModeloDocumento.titleTab']}">
 			<wi:dataTable values="#{historicoModeloDocumentoList.list(10)}"
@@ -140,7 +140,7 @@
 				</ui:define>
 									 
 			</wi:dataTable>
-		</rich:tab>
+		</wi:richTab>
 	</ui:define>
 
 </ui:composition>

@@ -139,7 +139,7 @@
         </c:if>
     </ui:define>
     <ui:define name="tabs">
-        <rich:tab
+        <wi:richTab
             header="#{messages['endereco.titlePage']}"
             status=":status"
             id="endereco2"
@@ -213,8 +213,8 @@
                     </s:div>
                 </wi:ajaxDiv>
             </s:div>
-        </rich:tab>
-        <rich:tab
+        </wi:richTab>
+        <wi:richTab
             id="localizacaoUsuario"
             header="#{messages['localizacao.usuarioLocalizacaoList']}"
             status=":status"
@@ -281,9 +281,9 @@
 
                 </wi:ajaxDiv>
             </s:div>
-        </rich:tab>
+        </wi:richTab>
 
-        <rich:tab
+        <wi:richTab
             id="historicoBloqueioUsuario"
             header="#{messages['bloqueioUsuario.historicoBloqueioList']}"
             rendered="#{home.isManaged()}">
@@ -335,6 +335,6 @@
                     </wi:dataTable>
                 </wi:ajaxDiv>
             </s:div>
-        </rich:tab>
+        </wi:richTab>
     </ui:define>
 </ui:composition>

@@ -192,7 +192,7 @@
 
 	<ui:define
          name="tabs">
-		<rich:tab
+		<wi:richTab
              id="enderecoTab"
              label="#{messages['endereco.titlePage']}"
              action="#{action.newEndereco()}"
@@ -312,9 +312,9 @@
                      value="#{row.correspondencia ? 'Sim' : 'Não'}" />
 			</wi:dataTable>
 
-		</rich:tab>
+		</wi:richTab>
 
-		<rich:tab
+		<wi:richTab
              id="localizacaoTab"
              label="#{messages['usuarioLocalizacao.titlePage']}"
              action="#{action.newUsuarioLocalizacao()}"
@@ -385,7 +385,7 @@
                      value="#{row.papel}" />
 				</wi:dataTable>
 			
-		</rich:tab>
+		</wi:richTab>
 
 	</ui:define>
 

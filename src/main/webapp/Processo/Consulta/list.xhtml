@@ -37,13 +37,13 @@
             id="globalMessages" />
 
         <h:form>
-            <rich:tabPanel
+            <wi:richTabPanel
                 headerSpacing="2"
                 activeItem="#{processoHome.tab}">
                 <rich:itemChangeListener binding="#{processoHome}" />
                 <rich:itemChangeListener
                     binding="#{processoDocumentoHome}" />
-                <rich:tab
+                <wi:richTab
                     id="form"
                     name="form"
                     header="#{messages['acaoProcesso.menuText']}"
@@ -52,9 +52,9 @@
 
                     <ui:include
                         src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
-                </rich:tab>
+                </wi:richTab>
 
-                <rich:tab
+                <wi:richTab
                     id="tabAnexos"
                     name="tabAnexos"
                     header="Documentos do Processo"
@@ -89,9 +89,9 @@
                             columnHeader="Tamanho: "
                             value="#{row.processoDocumentoBin.sizeFormatado}" />
                     </wi:dataTable>
-                </rich:tab>
+                </wi:richTab>
 
-                <rich:tab
+                <wi:richTab
                     id="tabAnexar"
                     name="tabAnexar"
                     header="Anexar Documento"
@@ -108,9 +108,9 @@
                             <ui:define name="buttons" />
                         </wi:dataForm>
                     </wi:ajaxDiv>
-                </rich:tab>
+                </wi:richTab>
 
-                <rich:tab
+                <wi:richTab
                     id="tabPartesDoProcesso"
                     name="tabPartesDoProcesso"
                     header="#{messages['parteProcesso.partes']}"
@@ -119,8 +119,8 @@
                     rendered="#{processoHandler.hasPartes()}">
                     <ui:include
                         src="/Processo/parteProcessoGridRO.xhtml" />
-                </rich:tab>
-            </rich:tabPanel>
+                </wi:richTab>
+            </wi:richTabPanel>
         </h:form>
 
     </ui:define>

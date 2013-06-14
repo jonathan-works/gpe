@@ -38,11 +38,11 @@
 	
 	<h:form id="form">
 	
-		<rich:tabPanel 
+		<wi:richTabPanel 
 			activeItem="#{processBuilder.tab}"
 			switchType="ajax"
 			itemChangeListener="#{processBuilder.processItemChange}">
-			<rich:tab header="#{messages['processBuilder.properties']}" name="propriedadesTab" id="propriedadesTab">
+			<wi:richTab header="#{messages['processBuilder.properties']}" name="propriedadesTab" id="propriedadesTab">
 				<rich:panel style="clear:both; overflow:auto; padding-bottom:5px"
 					header="#{messages['processBuilder.info']}" >
 					<wi:inputText id="codFluxo" 
@@ -69,21 +69,21 @@
 					rendered="#{processBuilder.exists}">
 					<ui:include src="swimlanes.xhtml" />
 				</rich:panel>
-			</rich:tab>
+			</wi:richTab>
 			
-			<rich:tab header="#{messages['processBuilder.nodes']}" name="nodesTab" id="nodesTab" rendered="#{processBuilder.exists}">
+			<wi:richTab header="#{messages['processBuilder.nodes']}" name="nodesTab" id="nodesTab" rendered="#{processBuilder.exists}">
 				<ui:include src="nodes.xhtml" />
-			</rich:tab>
+			</wi:richTab>
 			
-			<rich:tab header="XML" name="xmlTab" id="xmlTab" 
+			<wi:richTab header="XML" name="xmlTab" id="xmlTab" 
 				rendered="#{processBuilder.exists}">
 				<ui:include src="xmlEdit.xhtml" />
-			</rich:tab>
+			</wi:richTab>
 	
-			<rich:tab header="#{messages['processBuilder.graph']}" name="graphTab" id="graphTab" >
+			<wi:richTab header="#{messages['processBuilder.graph']}" name="graphTab" id="graphTab" >
 				<ui:include src="graph.xhtml" />
-			</rich:tab>
-		</rich:tabPanel>
+			</wi:richTab>
+		</wi:richTabPanel>
 		
 		<h:commandButton
 			id="gravar"
