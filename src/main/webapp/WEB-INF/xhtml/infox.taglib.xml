@@ -479,6 +479,13 @@
 		<tag-name>toolBarReportExcel</tag-name>
 		<source>tags/grid/tools/toolBarReportExcel.xhtml</source>
 	</tag>
+    
+    <tag>
+        <tag-name>toolBarTab</tag-name>
+        <source>tags/grid/tools/toolBarTab.xhtml</source>
+    </tag>
+    
+    tags/grid/tools/toolBarTab.xhtml
 
 	<tag>
 		<tag-name>toolBarPrint</tag-name>

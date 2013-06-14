@@ -42,7 +42,6 @@ public abstract class AbstractVariavelHome<T> extends AbstractHome<Variavel> {
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("variavelGrid");
 		return ret;
 	}
 
