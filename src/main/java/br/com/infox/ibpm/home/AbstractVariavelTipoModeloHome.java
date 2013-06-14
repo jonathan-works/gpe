@@ -49,7 +49,6 @@ public abstract class AbstractVariavelTipoModeloHome<T> extends AbstractHome<Var
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("variavelTipoModeloGrid");
 		return ret;
 	}
 
