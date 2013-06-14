@@ -26,7 +26,7 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 }
 
 div.InputTreePanel.rf-cp.rf-tgp {
-	border: solid 1px white;
+	border: solid 1px #fff;
 }
 
 div.rf-cp-hdr,table.rf-cp-gr {
@@ -46,44 +46,41 @@ div.rf-cp-hdr,table.rf-cp-gr {
 	position:relative;
 	font-size:14pt; 
 	text-align:left;
-	padding:5px 5px 5px 5px;
-	top:25px;
+	padding:5px;
+	overflow:auto;
+	height:93%;
 }
 .tituloPagina {		
 	font-weight:bold;
 	font-size:14pt;
-	color:#ffffff;
-	position:absolute;
-	margin:4px 4px 0px 0px;
-	right:0px;
-	top:0px;
+	color:#fff;
+	display:block;
+	text-align:right;
 }
 .pageBody {
 	width:100%;
-	height:80%;
 	position:relative;
 	min-width:859px;
+	height:80%;
 }
 .pageContent {
-	background-color:#FFFFFF;
+	background-color:#FFF;
 	border:1px solid #999;
 	border-radius:10px;
-	margin: 0px 0px 0px 0px;
-	padding: 8px 8px 8px 8px;
 	position:relative;
 	height:100%;
 }
 .subBorda {
-	width:100%;
-	height: 100%;
-	border-radius:7px 7px 7px 7px;
+	border-radius:7px;
 	position:relative;
-	overflow:auto;
+	margin:8px;
+	padding:5px;
+	height:95%;
 }
 .SearchForm {
 	display: inline-block;
 	vertical-align: top;
-	overflow:visible;
+	margin: 0 5px 0;
 }
 img {
 	border: none;
@@ -95,7 +92,7 @@ input {
 }
 
 a:active, a:link, a:visited {
-	color: black;
+	color:#000;
 	text-decoration: none;
 }
 
@@ -419,25 +416,24 @@ body {
 .value,.name {
 	float: left;
 	padding: 5px;
-	color:black;
+	color:#000;
 }
 
 .DataTableToolbar {
 	padding:2px 0px 0px 0px;
 	text-align:center;
 	border: solid 1px;
-	border-color: #CCCCCC
+	border-color: #CCC;
 }
 
 .rf-p-b.panel .DataTableResultCount{
 	float: right;
-	margin-right: 1%;
 }
 
 .rf-msgs {
 	padding: 5px;
 	top: 47px;
-	color: green;
+	color: #0F0;
 	list-style-type: none;
 	text-align: center;
 	position: absolute;
@@ -453,7 +449,7 @@ body {
 .rf-msgs-err {
 	padding: 2px;
 	border: 1px solid red;
-	background-color: lightYellow;
+	background-color: #FFFFE0;
 	display: block;
 	background-image: none;
 }
@@ -464,7 +460,7 @@ body {
 	float: left;
 	padding: 2px;
 	border: 1px solid red;
-	background-color: lightYellow;
+	background-color: #FFFFE0;
 }
 
 .errors {
@@ -474,22 +470,13 @@ body {
 .errors input, .errors textarea {
 	border: 1px solid red;
 }
-	
-.leftPanel {
-	width: 100%;
-}
-
-.rightPanel {
-	width: 100%;
-	float: right;
-}
 
 .activeRow {
 	 background-color:#F0F8FF !important;
 }
 
 .dr-stglpnl-b {
-	padding: 0px 5px 5px 5px;
+	padding: 0px 5px;
 }
 
 .inativo {
@@ -507,12 +494,12 @@ body {
 }
 
 .dr-tree {
-	background-color: white;
+	background-color: #fff;
 }
 
 .folderHighlighted {
 	text-decoration: none !important;
-	color: black !important;
+	color: #000 !important;
 }
 
 .folderSelected {
@@ -542,7 +529,7 @@ body {
 }
 
 .yellow-back {
-	background-color: yellow;
+	background-color: #ff0;
 }
 
 .red-back {
@@ -550,11 +537,11 @@ body {
 }
 
 #help .highlight {
-	background-color: #ffffaa;
+	background-color: #ffa;
 }
 
 #pagina .highlight {
-	background-color: #ffffaa;
+	background-color: #ffa;
 }
 
 .defaultCell {
@@ -597,7 +584,7 @@ body {
 	padding: 2px 0px 0px 0px;
 	text-align: center;
 	border: solid 1px;
-	border-color: #CCCCCC;		 
+	border-color: #CCC;
 }
 
 .transpToolBar {							
@@ -631,8 +618,8 @@ img.disabled {
 }
 
 .formPesquisa div {
-    border-radius: 5px 5px 5px 5px;
-    height: 30px;
+    border-radius:5px;
+    height:30px;
     text-align: right;
     width: 100%;
 }
@@ -717,7 +704,7 @@ select {
     width: 100%;
     position: fixed;
     z-index: 1;
-    background-color: #000000;
+    background-color: #000;
     opacity: 0.75;
 }
 
@@ -729,11 +716,11 @@ select {
     margin: -68px 0 0 -197px;
     position: fixed;
     z-index: 2;
-    background-color: #FFFFFF;
+    background-color: #FFF;
 }
 
 #atividadeParteDiv input[type="button"], #atividadeParteDiv input[type="submit"] {
-    background-color: #FFFFFF;
+    background-color: #FFF;
 }
 
 #atividadeParteDiv form .rich-panel {
@@ -872,10 +859,10 @@ input[type="submit"],input[type="button"],.buttons {
 
 /*turnoCalendar.xhtml*/
 .selected {
-	background-color: #dd4422;
+	background-color: #d42;
 }
 .fixed-selected {
-	background-color: #dd0000;
+	background-color: #d00;
 }
 /*messages.xhtml*/
 #dialogMessage {
@@ -886,7 +873,7 @@ input[type="submit"],input[type="button"],.buttons {
 	width:300px;				
 	height:auto;
 	min-height:100px;
-	background-color:white;   				
+	background-color:#fff;   				
 	border:1px solid #BCC1BD;
 	padding:2px;				
 	z-index:10000;				
