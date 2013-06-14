@@ -12,8 +12,7 @@
 	xmlns:wi="http://www.itx.com.br/jsf">
 	<h:form id="#{id}Form">
 		<s:div
-			id="TarefasTree"
-			style="float: left;">
+			id="TarefasTree">
 			<s:div
 				id="#{id}NovaCaixaDiv"
 				style="font-weight:bold">
@@ -36,7 +35,7 @@
 						label="Remover a caixa"
 						icon="/img/remove.png"
 						rendered="#{painelUsuarioHome.selected.type == 'Caixa' and s:hasRole('/pages/Caixa/listView.seam')}"
-						onclick="if (!confirm('Confirma?')) return false;"
+						onclick="confirm('Confirma?')"
 						render="tarefasDiv"
 						action="#{caixaHome.removeCaixa(painelUsuarioHome.selected.idCaixa)}" />
 				</rich:contextMenu>

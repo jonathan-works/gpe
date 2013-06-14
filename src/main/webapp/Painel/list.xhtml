@@ -98,8 +98,7 @@
                                                     items="#{home.categoriaList}" />
                                                 <ui:define
                                                     name="buttons">
-                                                    <div
-                                                        style="float: left; clear: both;">
+                                                    <div>
                                                         <a:commandButton
                                                             id="consulta"
                                                             status="status"
@@ -130,8 +129,9 @@
                                 <s:div id="processoList">
                                     <h:form rendered="#{mostraGrid}">
                                         <wi:dataTable
-                                            values="#{consultaProcessoEpaList.list(20)}"
+                                            values="#{consultaProcessoEpaList.list(10)}"
                                             bean="#{consultaProcessoEpaList}"
+                                            styleClass="ProcessoEpaList"
                                             tableTitle="#{messages['consultaProcesso.processos']}"
                                             id="consultaProcessoEpaList"
                                             rowId="#{row.idProcesso}">

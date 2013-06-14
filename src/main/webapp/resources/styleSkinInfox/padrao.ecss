@@ -88,10 +88,6 @@ div.rf-cp-hdr,table.rf-cp-gr {
 img {
 	border: none;
 }
-
-form {
-	display: inline;				
-}
 			
 input {
 	border: 0px;
@@ -932,4 +928,9 @@ input[type="submit"],input[type="button"],.buttons {
 .positionImg {
 	left:10px;
 	top:0px;
+}
+
+/*Painel/list.xhtml*/
+.Panel.rf-p.ProcessoEpaList {
+	width:100%;
 }
