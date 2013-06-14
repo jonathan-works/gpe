@@ -70,7 +70,7 @@
             <wi:columnOutputText
                 columnId="grupoModeloDocumento"
                 columnHeader="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
-                value="#{row.idTipoModeloDocumento} - #{row.grupoModeloDocumento}" />
+                value="#{row.grupoModeloDocumento}" />
             <wi:columnOutputText
                 columnId="tipoModeloDocumento"
                 columnHeader="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
@@ -116,7 +116,7 @@
     </ui:define>
 
     <ui:define name="tabs">
-        <rich:tab
+        <wi:richTab
             label="#{messages['tipoModeloDocumento.modeloDocumentoList']}"
             status=":status"
             id="modeloDocumento"
@@ -184,9 +184,9 @@
                 headerToolBar="none"
                 columnList="tipoModeloDocumento,tituloModeloDocumento,ativo"
                 title="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoHome.instance)}" />
-        </rich:tab>
+        </wi:richTab>
 
-        <rich:tab
+        <wi:richTab
             label="#{messages['tipoModeloDocumento.variaveis']}"
             status=":status"
             id="variaveis"
@@ -207,9 +207,9 @@
                     widthExterno="100%" />
             </wi:ajaxDiv>
 
-        </rich:tab>
+        </wi:richTab>
 
-        <rich:tab
+        <wi:richTab
             label="#{messages['tipoModeloDocumento.papeis']}"
             action="#{tipoModeloDocumentoPapelHome.newInstance()}"
             status=":status"
@@ -246,7 +246,7 @@
                         value="#{row.papel}" />
                 </wi:dataTable>
             </rich:panel>
-        </rich:tab>
+        </wi:richTab>
 
     </ui:define>
 

@@ -72,11 +72,11 @@
                 render="taskButtonsDiv" />
         </h:form>
         <h:form>
-            <rich:tabPanel
+            <wi:richTabPanel
                 switchType="ajax"
                 activeItem="#{home.tab}"
                 rendered="#{checkPermission}">
-                <rich:tab
+                <wi:richTab
                     id="tabFluxo"
                     rendered="#{!processoHome.managed}"
                     header="Escolher fluxo"
@@ -87,9 +87,9 @@
                         id="globalMessages"
                         globalOnly="true"
                         styleClass="message" />
-                </rich:tab>
+                </wi:richTab>
 
-                <rich:tab
+                <wi:richTab
                     id="tabEntrada"
                     rendered="#{!empty taskInstanceView.fields}"
                     header="Entrada"
@@ -102,9 +102,9 @@
                             home="#{taskInstanceHome}"
                             form="#{taskInstanceView}" />
                     </s:div>
-                </rich:tab>
+                </wi:richTab>
 
-                <rich:tab
+                <wi:richTab
                     id="tabSaida"
                     rendered="#{processoHome.managed}"
                     header="Saída"
@@ -121,9 +121,9 @@
                         </s:div>
                     </c:if>
 
-                </rich:tab>
+                </wi:richTab>
 
-                <rich:tab
+                <wi:richTab
                     id="tabAnexos"
                     rendered="#{processoHome.managed}"
                     header="Documentos do Processo"
@@ -151,9 +151,9 @@
                                 value="#{row.processoDocumentoBin}" />
                         </wi:dataTable>
                     </s:div>
-                </rich:tab>
+                </wi:richTab>
 
-                <rich:tab
+                <wi:richTab
                     id="tabMovimentacoes"
                     rendered="#{processoHome.managed}"
                     header="Movimentações do Processo"
@@ -161,12 +161,12 @@
                     immediate="true">
                     <ui:include
                         src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
-                </rich:tab>
+                </wi:richTab>
 
                 <ui:param
                     name="action"
                     value="#{localizacaoDocumentoFisicoAction}" />
-                <rich:tab
+                <wi:richTab
                     id="documentoFisicoTab"
                     rendered="#{home.isManaged()}"
                     header="#{messages['documentoFisico.titleTab']}"
@@ -206,17 +206,17 @@
                             align="left"
                             renderIfSinglePage="false" />
                     </s:div>
-                </rich:tab>
+                </wi:richTab>
 
-                <rich:tab
+                <wi:richTab
                     id="tabPartesDoProcesso"
                     header="#{messages['parteProcesso.partes']}"
                     immediate="true"
                     status=":status"
                     rendered="#{processoHandler.hasPartes()}">
                     <ui:include src="parteProcessoGrid.xhtml" />
-                </rich:tab>
-            </rich:tabPanel>
+                </wi:richTab>
+            </wi:richTabPanel>
         </h:form>
         <c:if test="#{!checkPermission}">
             <wi:outputText

@@ -37,12 +37,12 @@
 			<ui:param
 				name="sourceListWidth"
 				value="400" />
-			<rich:tabPanel
+			<wi:richTabPanel
 				switchType="ajax"
 				immediate="true"
 				rendered="#{papelHome.managed}"
 				style="width: 870px; clear: both;">
-				<rich:tab
+				<wi:richTab
 					header="Papéis"
 					style="height: 200px"
 					status=":status">
@@ -54,8 +54,8 @@
 							itemValues="#{papelHome.getPapeisDisponiveis(true)}"
 							itemLabel="#{papelHome.getNome(var)}" />
 					</a:region>
-				</rich:tab>
-				<rich:tab
+				</wi:richTab>
+				<wi:richTab
 					header="Herdeiros"
 					status=":status">
 					<a:region>
@@ -66,8 +66,8 @@
 							itemValues="#{papelHome.getPapeisDisponiveis(false)}"
 							itemLabel="#{papelHome.getNome(var)}" />
 					</a:region>
-				</rich:tab>
-				<rich:tab
+				</wi:richTab>
+				<wi:richTab
 					header="Recursos"
 					style="height: 200px"
 					status=":status">
@@ -79,8 +79,8 @@
 							itemValues="#{papelHome.recursosDisponiveis}"
 							itemLabel="#{papelHome.getNome(var)}" />
 					</a:region>
-				</rich:tab>
-			</rich:tabPanel>
+				</wi:richTab>
+			</wi:richTabPanel>
 
 			<div style="clear: both;" />
 

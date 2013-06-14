@@ -49,10 +49,10 @@
 		id="pageBody">
 		<wi:quadro>
 			<h:form>
-				<rich:tabPanel
+				<wi:richTabPanel
 					switchType="ajax"
 					activeItem="#{home.tab}">
-					<rich:tab
+					<wi:richTab
 						id="search"
 						header="Pesquisa"
 						action="#{home.onClickSearchTab}"
@@ -62,8 +62,8 @@
 								<ui:insert name="searchGrid" />
 							</s:div>
 						</a:region>
-					</rich:tab>
-					<rich:tab
+					</wi:richTab>
+					<wi:richTab
 						id="form"
 						rendered="#{(home.managed or (canEdit and (hideTabForm != true)))}"
 						header="#{canEdit ? 'Formulário' : 'Detalhes'}"
@@ -74,9 +74,9 @@
 						<a:region>
 							<ui:insert name="form" />
 						</a:region>
-					</rich:tab>
+					</wi:richTab>
 					<ui:insert name="tabs" />
-				</rich:tabPanel>
+				</wi:richTabPanel>
 			</h:form>
 		</wi:quadro>
 	</s:div>

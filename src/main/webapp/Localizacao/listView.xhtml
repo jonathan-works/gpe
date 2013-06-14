@@ -151,7 +151,7 @@
     </ui:define>
 
     <ui:define name="tabs">
-        <rich:tab
+        <wi:richTab
             header="#{messages['localizacao.itemTipoDocumentoList']}"
             status=":status"
             id="itemTipoDocumento"
@@ -203,9 +203,9 @@
                     value="#{row.grupoModeloDocumento}" />
 
             </wi:dataTable>
-        </rich:tab>
+        </wi:richTab>
 
-        <rich:tab
+        <wi:richTab
             header="#{messages['localizacao.localizacaoTurno']}"
             status=":status"
             id="localizacaoTurnoTab"
@@ -217,7 +217,7 @@
             <a:commandButton
                 action="#{localizacaoTurnoAction.gravarTurnos()}"
                 value="Gravar" />
-        </rich:tab>
+        </wi:richTab>
 
     </ui:define>
 

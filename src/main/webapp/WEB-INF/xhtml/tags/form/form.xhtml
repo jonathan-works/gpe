@@ -54,7 +54,7 @@
 						<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 						<s:div style="max-width:800px">
 							<c:if test="#{form.tabbed}">
-								<rich:tabPanel switchType="client">
+								<wi:richTabPanel switchType="client">
 									<wi:repeat
 										value="#{form.rootFields}"
 										var="rf">
@@ -101,7 +101,7 @@
 											id="#{rf.id}"
 											src="/WEB-INF/xhtml/components/form/#{rf.type}.xhtml" />
 									</wi:repeat>
-								</rich:tabPanel>
+								</wi:richTabPanel>
 							</c:if>
 							<c:if test="#{!form.tabbed}">
 								<wi:repeat

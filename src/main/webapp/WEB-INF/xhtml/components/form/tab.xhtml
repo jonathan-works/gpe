@@ -10,7 +10,7 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<rich:tab
+	<wi:richTab
 		labelWidth="#{props.labelWidth}"
 		disabled="#{disabled}"
 		rendered="#{rendered}"
@@ -49,5 +49,5 @@
 
 			<ui:include src="/WEB-INF/xhtml/components/form/#{f.type}.xhtml" />
 		</wi:repeat>
-	</rich:tab>
+	</wi:richTab>
 </ui:composition>

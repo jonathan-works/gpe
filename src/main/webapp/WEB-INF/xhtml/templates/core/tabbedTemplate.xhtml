@@ -22,11 +22,11 @@
              name="showFormTab"
              value="#{wi:get(showFormTab, true)}" />
 		
-		<rich:tabPanel
+		<wi:richTabPanel
              switchType="ajax"
              headerSpacing="2"
              activeItem="#{home.tab}">		
-			<rich:tab
+			<wi:richTab
                  id="search"
                  header="Pesquisa"
                  action="#{home.onClickSearchTab}"
@@ -40,9 +40,9 @@
                              name="searchGrid" />
 					</s:div>
 				</a:region>
-			</rich:tab>	
+			</wi:richTab>	
 					
-			<rich:tab
+			<wi:richTab
                  id="form"
                  rendered="#{showFormTab}"
                  header="Formulário"
@@ -55,12 +55,12 @@
 					<ui:insert
                          name="form" />
 				</a:region>
-			</rich:tab>
+			</wi:richTab>
 			
 			<ui:insert
                  name="tabs" />
 			
-		</rich:tabPanel>
+		</wi:richTabPanel>
 	</ui:define>
 
 </ui:composition>
