@@ -2,6 +2,7 @@ package br.com.infox.component.tabs;
 
 import javax.faces.component.FacesComponent;
 import javax.faces.component.UIPanel;
+import javax.faces.context.FacesContext;
 
 @FacesComponent(Tab.COMPONENT_ID)
 public class Tab extends UIPanel {
@@ -32,10 +33,18 @@ public class Tab extends UIPanel {
 	}
 	
 	public String getTitle() {
-		return (String) getStateHelper().get(PropertyKeys.title);
+		return (String) getStateHelper().eval(PropertyKeys.title);
 	}
 	
 	public void setTitle(String title) {
 		getStateHelper().put(PropertyKeys.title, title);
+	}
+	
+	@Override
+	public void processValidators(FacesContext context) {
+	}
+	
+	@Override
+	public void processUpdates(FacesContext context) {
 	}
 }
