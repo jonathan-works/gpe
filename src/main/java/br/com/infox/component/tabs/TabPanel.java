@@ -6,12 +6,20 @@ import java.util.List;
 import java.util.Map;
 
 import javax.el.ValueExpression;
+import javax.faces.application.ResourceDependencies;
+import javax.faces.application.ResourceDependency;
 import javax.faces.component.FacesComponent;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 
 @FacesComponent(TabPanel.COMPONENT_ID)
+@ResourceDependencies({
+	@ResourceDependency(library = "stylesheet/jquery-ui/infox", name = "jquery-ui.css"),
+	@ResourceDependency(library = "org.richfaces.staticResource/4.3.2.Final/Static", name = "jquery.js"),
+	@ResourceDependency(library = "js", name = "jquery-ui.js"),
+	@ResourceDependency(library = "javax.faces", name = "jsf.js")
+})
 public class TabPanel extends UIPanel implements NamingContainer {
 	public static final String COMPONENT_ID = "br.com.infox.component.tabs.TabPanel";
 	public static final String RENDERER_TYPE = "br.com.infox.component.tabs.TabPanelRenderer";
