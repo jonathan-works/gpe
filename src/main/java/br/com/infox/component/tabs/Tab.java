@@ -3,6 +3,7 @@ package br.com.infox.component.tabs;
 import javax.el.MethodExpression;
 import javax.faces.component.ActionSource2;
 import javax.faces.component.FacesComponent;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
@@ -13,6 +14,7 @@ import javax.faces.event.FacesEvent;
 
 import com.sun.faces.application.MethodBindingMethodExpressionAdapter;
 
+@SuppressWarnings("deprecation")
 @FacesComponent(Tab.COMPONENT_ID)
 public class Tab extends UIPanel implements ActionSource2 {
 	public static final String COMPONENT_ID = "br.com.infox.component.tabs.Tab";
@@ -131,5 +133,13 @@ public class Tab extends UIPanel implements ActionSource2 {
 				listener.processAction((ActionEvent) event);
 			}
 		}
+	}
+	
+	public TabPanel getTabPanel() {
+		UIComponent parent = getParent();
+		while (parent != null && !(parent instanceof TabPanel)) {
+			parent = parent.getParent();
+		}
+		return (TabPanel) parent;
 	}
 }

@@ -1,11 +1,14 @@
 package br.com.infox.component.tabs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.el.ValueExpression;
 import javax.faces.component.FacesComponent;
 import javax.faces.component.NamingContainer;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 
 @FacesComponent(TabPanel.COMPONENT_ID)
@@ -60,11 +63,34 @@ public class TabPanel extends UIPanel implements NamingContainer {
 			return tabIndexMap;
 		}
 		tabIndexMap = new HashMap<String, Integer>();
+		int index = 0;
+		for (Tab tab : getTabs()) {
+			tabIndexMap.put(tab.getName(), index++);
+		}
 		setTabIndexMap(tabIndexMap);
 		return tabIndexMap;
 	}
 	
 	public void setTabIndexMap(Map<String, Integer> tabIndexMap) {
 		getStateHelper().put(PropertyKeys.tabIndexMap, tabIndexMap);
+	}
+	
+	public List<Tab> getTabs() {
+		List<Tab> tabs = new ArrayList<>();
+		for (UIComponent child : getChildren()) {
+			if (child instanceof Tab) {
+				tabs.add((Tab) child);
+			}
+		}
+		return tabs;
+	}
+	
+	public Tab getTab(String name) {
+		for (Tab tab : getTabs()) {
+			if (tab.getName().equals(name)) {
+				return tab;
+			}
+		}
+		return null;
 	}
 }
