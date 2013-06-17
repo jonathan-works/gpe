@@ -15,10 +15,11 @@
 		value="#{wi:get(selectable, true)}" />
 	<s:div styleClass="painelUsuario">
 
-		<h:outputLabel
+		<h:outputLabel 
+			styleClass="painelUsuario-label"
 			rendered="#{identity.loggedIn}"
-			for="usuarioLocalizacao">
-	    	#{usuarioLogado}
+			for="usuarioLocalizacao"
+			value="#{usuarioLogado}">
 	    </h:outputLabel>
 
 		<h:form id="papeisUsuarioForm">

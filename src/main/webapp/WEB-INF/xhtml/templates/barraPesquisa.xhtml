@@ -14,9 +14,14 @@
 	<h:form
          class="formPesquisa"
          rendered="#{identity.loggedIn and !usuarioLogado.provisorio}">
-        <h:outputLabel for="searchText" value="#{messages['template.abaPesquisaText']}" />
-		<h:inputText id="searchText"
-                 value="#{search.searchText}" />					
+        <h:outputLabel
+        	for="searchText"
+        	styleClass="BP-lbl"
+        	value="#{messages['template.abaPesquisaText']}" />
+		<h:inputText
+			id="searchText"
+			styleClass="BP-ipt"
+            value="#{search.searchText}" />					
         <h:commandButton
                  action="/Pesquisa/searchResult.xhtml"
                  image="#{a4jSkin.imgBgButtonPesq}" />
