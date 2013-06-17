@@ -57,7 +57,6 @@ public abstract class AbstractModeloDocumentoHome<T>
 		setInstance(obj);
 		String ret = super.remove();
 		newInstance();
-		refreshGrid("modeloDocumentoGrid");
 		return ret;
 	}
 

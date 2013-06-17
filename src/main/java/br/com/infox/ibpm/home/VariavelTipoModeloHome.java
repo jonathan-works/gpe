@@ -29,8 +29,6 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 			VariavelHome.instance().getInstance().getVariavelTipoModeloList().add(variavelTipoModelo);
 			
 			FacesMessages.instance().clear();
-			refreshGrid("variavelTipoModeloGrid");
-			refreshGrid("variavelGrid");
 		}
 	}
 	
@@ -50,8 +48,6 @@ public class VariavelTipoModeloHome extends AbstractVariavelTipoModeloHome<Varia
 
 			newInstance();
 			FacesMessages.instance().clear();
-			refreshGrid("variavelTipoModeloGrid");
-			refreshGrid("variavelGrid");
 		}
 	}	
 	

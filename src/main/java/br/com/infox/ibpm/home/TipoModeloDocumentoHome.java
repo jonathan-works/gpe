@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.home;
 
+import java.util.List;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -24,6 +26,8 @@ import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.list.TipoModeloDocumentoList;
+import br.com.infox.epp.manager.ModeloDocumentoManager;
+import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.manager.TipoModeloDocumentoManager;
 import br.com.itx.util.ComponentUtil;
@@ -40,6 +44,7 @@ public class TipoModeloDocumentoHome
 	public static final String NAME = "tipoModeloDocumentoHome";
 	
 	@In private TipoModeloDocumentoManager tipoModeloDocumentoManager;
+	@In private ModeloDocumentoManager modeloDocumentoManager;
 
 	public static final TipoModeloDocumentoHome instance() {
 		return ComponentUtil.getComponent(NAME);
@@ -81,14 +86,16 @@ public class TipoModeloDocumentoHome
 		return false;
 	}
 	
-	
-	
 	private boolean violaUnicidadeDeDescricao(){
 		if (tipoModeloDocumentoManager.violaUnicidadeDeDescricao(instance)){
 			FacesMessages.instance().add(Severity.ERROR,"Já existe um Tipo de Modelo de Documento com esta descrição.");
 			return true;
 		}
 		return false;
+	}
+	
+	public List<ModeloDocumento> getListaDeModeloDocumento(){
+		return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(instance.getGrupoModeloDocumento(), instance);
 	}
 	
 }
