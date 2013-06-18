@@ -1,8 +1,8 @@
 /* Style das tabelas */
-.zebra tr.rf-dt-r:nth-child(odd) {
+.zebra .rf-dt-r:nth-child(odd) {
 	background-color:#FAFAFA;
 }
-tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
+.rf-dt-r:hover, .zebra .rf-dt-r:nth-child(even) {
 	background-color:#E7E7E7;
 }
 .zebra tr.rf-dt-r:hover {
@@ -25,11 +25,11 @@ tr.rf-dt-r:hover, .zebra tr.rf-dt-r:nth-child(even) {
 	max-width:100%;
 }
 
-div.InputTreePanel.rf-cp.rf-tgp {
+.InputTreePanel.rf-cp.rf-tgp {
 	border: solid 1px #fff;
 }
 
-div.rf-cp-hdr,table.rf-cp-gr {
+.rf-cp-hdr,.rf-cp-gr {
 	padding:0px;
 	border-spacing:0px;
 }
@@ -82,23 +82,6 @@ div.rf-cp-hdr,table.rf-cp-gr {
 	vertical-align: top;
 	margin: 0 5px 0;
 }
-img {
-	border: none;
-}
-			
-input {
-	border: 0px;
-	border-radius:5px;
-}
-
-a:active, a:link, a:visited {
-	color:#000;
-	text-decoration: none;
-}
-
-a:hover {
-	color: #888888;
-}
 /* FIM LAYOUT GERAL */
 /* HEADER DA PÁGINA */
 .banner {
@@ -121,11 +104,11 @@ a:hover {
 	margin:0px 0px 0px 28px;
 }
 
-.banner .BarraPesquisa input[type='text']{
+.BP-ipt{
 	width:120px;
 }
 
-.banner .divBg .BarraPesquisa label {
+.BP-lbl {
 	font-size:11px;
 	font-weight:bold;
 }
@@ -186,41 +169,38 @@ a:hover {
 }
 /* FIM DO HEADER */
 /* MENU */
-a.LinkMenu {
+.LinkMenu {
 	color:'#{a4jSkin.headerTextColor}';
 }
 
-a.LinkMenu:hover {
+.LinkMenu:hover {
 	cursor:pointer;
 }
 /* FIM MENU*/
-#papeisUsuarioForm option {
-	text-align: left;
-}
 
 /* Layout Tela de Login */
 /* Início */
-.seletorSkinsLogin {
-	position:absolute; 
-	top:0px; 
-	right:0px;
-	z-index:1;
+.loginPageBody {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	text-align:center;
 }
-
+#gerarSenha {
+	text-align:center;
+}
+.seletorSkinsLogin {
+	position:fixed;
+	top:0px;
+	right:0px;
+	z-index:1000;
+}
 .corpoSuperior, .corpoInferior {
  	height: 50%;
-    position: absolute;
     width: 100%;
-    z-index: 0;
 }
-
-.corpoInferior {
-    bottom: 0;
-}
-.corpoSuperior {
-    top: 0;
-}
-
 .blocoCentralLogin {
     height: 282px;
     left: 50%;
@@ -231,83 +211,56 @@ a.LinkMenu:hover {
     width: 724px;
     z-index: 1;
 }
-
-.logo, .logo_inferior, .login {
-    text-align: center;
+.logo,.logo_inferior{
+	width: 373px;
+	height:141px;
 }
-.logo {
-    left: 0;
-    position: absolute;
-    top: 0;
-}
-.logo_inferior {
-    position: absolute;
-    top: 141px;
-}
-.reqSenha {
-    text-align: center;
-}
-.reqSenhaInferior {
-    text-align: center;
-}
-.login {
-    left: 373px;
-    position: absolute;
+.login.bg_login {
+	bottom:141px;
+	left:373px;
+	position:absolute;
 }
 .bg_login {
     border-radius: 10px 10px 0 0;
-    height: 140px;
     width: 350px;
+    font-size:16px;
+    padding:0 0 10px 0;
 }
-.newPasswd {
-    border-radius: 0 10px 0 0;
-    height: 127px;
-    left: 350px;
-    position: absolute;
-    top: 13px;
-    width: 240px;
+.novaSenha {
+	display:none;
 }
-
-label.label_login {
+.novaSenha.visible {
+	display:block;
+}
+.login-lbl {
     padding-left: 0;
     padding-top: 8px;
     position: absolute;
     text-align: left;
 }
-
-.newPasswd .input_login {
-    margin-top: 25px;
-    padding-left: 0;
-}
-.reqSenha .label_login {
-    font-size:16px;
-}
-.login .input_login, .reqSenha .input_login {
+.input_login {
     border-radius: 7px 7px 7px 7px;
     font-size: 20px !important;
     max-width: 200px;
-}
-.bg_login .input_login {
     margin-top: 25px;
-    padding-left: 4px;
+    padding-right: 4px;
 }
-.login_inferior {
-    left: 373px;
-    position: absolute;
-    text-align: center;
-    top: 141px;
+.bg_login_inferior.login {
+	top:141px;
+	left:373px;
+	position:absolute;
 }
 .bg_login_inferior {
+    text-align: center;
     border-radius: 0 0 10px 10px;
-    height: 140px;
     width: 350px;
+    padding:25px 0 25px 0;
 }
-.bg_login_inferior .input_button {
+.input_button {
     border-radius:5px 5px 5px 5px;
-    font-size:16px;
-    margin-top:25px;
-    padding-left:10px;
-    padding-right:10px;
+    font-size:16px !important;
+    margin:5px;
+    padding:2px 5px 2px 5px;
 }
 /* Fim */
 
@@ -393,6 +346,7 @@ body {
 	font-family: Arial, sans-serif;
 	color: #616161;
 	background-color: #E6ECF4;
+	overflow:hidden;
 }
 
 .panel {
@@ -644,7 +598,7 @@ img.disabled {
 	text-align: right;
 }
 
-.painelUsuario label {
+.painelUsuario-label {
 	font-weight: bold;
 }
 
@@ -769,7 +723,7 @@ textarea,select {
 	background-image: url("#{util.contextPath}#{a4jSkin.inputTextMiniW100}");
 }
 
-input[type="submit"],input[type="button"],.buttons {
+.buttons {
 	height: 22px !important;
 	min-width: 80px;
 	margin: 5px;
@@ -825,11 +779,6 @@ input[type="submit"],input[type="button"],.buttons {
 .required {
 	padding-left: 2px;
 	color:'#{a4jSkin.bgColorRequired}';
-}
-
-#papeisUsuarioForm option {
-	background-color:'#{a4jSkin.additionalBackgroundColor}';
-	color:'#{a4jSkin.headerTextColor}';
 }
 
 /* 
