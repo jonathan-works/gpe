@@ -17,48 +17,39 @@
         <ui:param
             name="showFormTab"
             value="#{empty showFormTab ? true : showFormTab}" />
+        <wi:tabPanel
+            id="defaultTabPanel"
+            switchType="ajax"
+            activeTab="#{home.tab}">
+            <h:form>
+                <wi:tabHeaders />
+            </h:form>
+            <wi:tab
+                id="search"
+                name="search"
+                title="#{messages['template.abaPesquisaText']}"
+                rendered="#{showSearchTab}">
+                <a:region>
+                    <s:div id="searchGridRegion">
+                        <ui:insert name="searchGrid" />
+                    </s:div>
+                </a:region>
+            </wi:tab>
 
-        <h:form id="tabForm">
+            <wi:tab
+                id="form"
+                name="form"
+                rendered="#{showFormTab}"
+                title="#{messages['template.abaFormularioText']}"
+                disabled="#{empty disabledForm ? false : disabledForm}">
+                <a:region>
+                    <ui:insert name="form" />
+                </a:region>
+            </wi:tab>
 
-            <wi:richTabPanel
-                id="defaultTabPanel"
-                switchType="ajax"
-                activeItem="#{home.tab}">
+            <ui:insert name="tabs" />
 
-                <ui:insert name="changeListeners">
-                    <rich:itemChangeListener binding="#{home}" />
-                </ui:insert>
-                <wi:richTab
-                    id="search"
-                    name="search"
-                    header="#{messages['template.abaPesquisaText']}"
-                    rendered="#{showSearchTab}"
-                    immediate="true"
-                    status=":status">
-                    <a:region>
-                        <s:div id="searchGridRegion">
-                            <ui:insert name="searchGrid" />
-                        </s:div>
-                    </a:region>
-                </wi:richTab>
-
-                <wi:richTab
-                    id="form"
-                    name="form"
-                    rendered="#{showFormTab}"
-                    header="#{messages['template.abaFormularioText']}"
-                    immediate="true"
-                    status=":status"
-                    disabled="#{empty disabledForm ? false : disabledForm}">
-                    <a:region>
-                        <ui:insert name="form" />
-                    </a:region>
-                </wi:richTab>
-
-                <ui:insert name="tabs" />
-
-            </wi:richTabPanel>
-        </h:form>
+        </wi:tabPanel>
     </ui:define>
 
 </ui:composition>
