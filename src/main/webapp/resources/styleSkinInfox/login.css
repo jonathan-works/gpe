@@ -1,0 +1,85 @@
+/* Layout Tela de Login */
+/* Início */
+.loginPageBody {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	text-align:center;
+}
+#gerarSenha {
+	text-align:center;
+}
+.seletorSkinsLogin {
+	position:fixed;
+	top:0px;
+	right:0px;
+	z-index:1000;
+}
+.corpoSuperior, .corpoInferior {
+ 	height: 50%;
+    width: 100%;
+}
+.blocoCentralLogin {
+    height: 282px;
+    left: 50%;
+    margin-left: -362px;
+    margin-top: -141px;
+    position: absolute;
+    top: 50%;
+    width: 724px;
+    z-index: 1;
+}
+.logo,.logo_inferior{
+	width: 373px;
+	height:141px;
+}
+.login.bg_login {
+	bottom:141px;
+	left:373px;
+	position:absolute;
+}
+.bg_login {
+    border-radius: 10px 10px 0 0;
+    width: 350px;
+    font-size:16px;
+    padding:0 0 10px 0;
+}
+.novaSenha {
+	display:none;
+}
+.novaSenha.visible {
+	display:block;
+}
+.login-lbl {
+    padding-left: 0;
+    padding-top: 8px;
+    position: absolute;
+    text-align: left;
+}
+.input_login {
+    border-radius: 7px 7px 7px 7px;
+    font-size: 20px !important;
+    max-width: 200px;
+    margin-top: 25px;
+    padding-right: 4px;
+}
+.bg_login_inferior.login {
+	top:141px;
+	left:373px;
+	position:absolute;
+}
+.bg_login_inferior {
+    text-align: center;
+    border-radius: 0 0 10px 10px;
+    width: 350px;
+    padding:25px 0 25px 0;
+}
+.input_button {
+    border-radius:5px 5px 5px 5px;
+    font-size:16px !important;
+    margin:5px;
+    padding:2px 5px 2px 5px;
+}
+/* Fim */

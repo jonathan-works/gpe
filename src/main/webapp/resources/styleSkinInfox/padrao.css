@@ -1,0 +1,836 @@
+/* Style das tabelas */
+.zebra .rf-dt-r:nth-child(odd) {
+	background-color:#FAFAFA;
+}
+.rf-dt-r:hover, .zebra .rf-dt-r:nth-child(even) {
+	background-color:#E7E7E7;
+}
+.zebra tr.rf-dt-r:hover {
+	background-color:#AFAFAF;
+}
+/* END STYLE TABELAS */
+/*LAYOUT GERAL DA PÁGINA*/
+.DataFormPanel .rf-p-b > div{
+	display:inline-block;
+}
+
+.Associated, .Associative {
+	position:relative;
+	display:inline-block;
+	width:50%;
+}
+
+.Associated .Panel.rf-p, .Associative .Panel.rf-p {
+	width:100%;
+	max-width:100%;
+}
+
+.InputTreePanel.rf-cp.rf-tgp {
+	border: solid 1px #fff;
+}
+
+.rf-cp-hdr,.rf-cp-gr {
+	padding:0px;
+	border-spacing:0px;
+}
+
+.Panel.rf-p {
+	display: inline-block;
+	margin:0px;
+	width:73%;
+	max-width:98%;
+	padding:0px;
+}
+
+.conteudo {
+	position:relative;
+	font-size:14pt; 
+	text-align:left;
+	padding:5px;
+	height:calc(100% - 31px);
+	overflow:auto;
+}
+.tituloPagina {		
+	font-weight:bold;
+	font-size:14pt;
+	color:#fff;
+	display:block;
+	text-align:right;
+}
+.pageBody {
+	width:100%;
+	position:relative;
+	min-width:859px;
+	height:calc(100% - 106px);
+}
+.pageContent {
+	background-color:#FFF;
+	border:1px solid #999;
+	border-radius:10px;
+	position:relative;
+	height:100%;
+}
+.subBorda {
+	border-radius:7px;
+	position:relative;
+	margin:8px;
+	padding:5px;
+	height:calc(100% - 26px);
+}
+.SearchForm {
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 5px 0;
+}
+/* FIM LAYOUT GERAL */
+/* HEADER DA PÁGINA */
+.banner {
+	position:relative;
+	min-width:859px;
+	margin: 0px 0px 0px 0px;
+	height: 85px;
+	border-bottom-width: 0px;
+}
+.banner .divBg {
+	right:0px;
+	width:100%;
+	height:28px;
+	border-bottom-left-radius: 28px;
+	overflow:hidden;
+}
+
+.banner .BarraPesquisa {
+	display:inline-block;
+	margin:0px 0px 0px 28px;
+}
+
+.BP-ipt{
+	width:120px;
+}
+
+.BP-lbl {
+	font-size:11px;
+	font-weight:bold;
+}
+
+.banner .divBg .SeletorSkins {
+	display:inline-block;
+}
+
+.banner .SeletorSkins input[type='image'] {
+	width:17px;
+	height:21px;
+}
+
+.PaletteMenu {
+	width: 250px;
+}
+
+.banner .SeletorSkins img {
+	cursor:pointer;
+}
+
+.banner .left, .banner .center, .banner .right {
+	position:absolute;
+}
+.banner .left {
+    height: 85px;
+    left: 0;
+    top: 0px;
+    width: 290px;
+    z-index: 1;
+}
+.banner .center {
+    font-size:20pt;
+    height:85px;
+    top:0px;
+    left:50%;
+    text-align:center;
+    width:295px;
+    margin:0 0 0 -147.5px;
+    z-index:0;
+}
+.banner .center .title {
+	padding-top:15px;
+}
+.banner .right {
+    height: 85px;
+    top: 0px;
+    right:0px;
+    width: 321px;
+    z-index: 1;
+}
+.banner .liveclock {
+	right:0%;
+	top:0%;
+	text-align: right;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+}
+/* FIM DO HEADER */
+/* MENU */
+
+.LinkMenu:hover {
+	cursor:pointer;
+}
+/* FIM MENU*/
+
+/* Layout Tela de Login */
+/* Início */
+.loginPageBody {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	text-align:center;
+}
+#gerarSenha {
+	text-align:center;
+}
+.seletorSkinsLogin {
+	position:fixed;
+	top:0px;
+	right:0px;
+	z-index:1000;
+}
+.corpoSuperior, .corpoInferior {
+ 	height: 50%;
+    width: 100%;
+}
+.blocoCentralLogin {
+    height: 282px;
+    left: 50%;
+    margin-left: -362px;
+    margin-top: -141px;
+    position: absolute;
+    top: 50%;
+    width: 724px;
+    z-index: 1;
+}
+.logo,.logo_inferior{
+	width: 373px;
+	height:141px;
+}
+.login.bg_login {
+	bottom:141px;
+	left:373px;
+	position:absolute;
+}
+.bg_login {
+    border-radius: 10px 10px 0 0;
+    width: 350px;
+    font-size:16px;
+    padding:0 0 10px 0;
+}
+.novaSenha {
+	display:none;
+}
+.novaSenha.visible {
+	display:block;
+}
+.login-lbl {
+    padding-left: 0;
+    padding-top: 8px;
+    position: absolute;
+    text-align: left;
+}
+.input_login {
+    border-radius: 7px 7px 7px 7px;
+    font-size: 20px !important;
+    max-width: 200px;
+    margin-top: 25px;
+    padding-right: 4px;
+}
+.bg_login_inferior.login {
+	top:141px;
+	left:373px;
+	position:absolute;
+}
+.bg_login_inferior {
+    text-align: center;
+    border-radius: 0 0 10px 10px;
+    width: 350px;
+    padding:25px 0 25px 0;
+}
+.input_button {
+    border-radius:5px 5px 5px 5px;
+    font-size:16px !important;
+    margin:5px;
+    padding:2px 5px 2px 5px;
+}
+/* Fim */
+
+.propertyView {
+	min-width: 250px;
+	min-height: 35px;
+	margin-top:5px;	
+	margin-right:10px;
+	display: table;			
+	overflow: visible;
+}
+
+.propertyView .name {
+	float: none;
+	margin: 0px;
+	padding: 0px;
+}
+	
+.propertyView .value {
+	float: none;
+	padding: 0px;
+}
+
+.propertyView input[type="radio"] {
+	width: 13px;
+}
+
+.propertyView input[type="checkbox"] {
+	width: 15px;
+}
+
+.readOnly {
+	color: gray !important;
+}
+
+#processoDadosForm .propertyView input, #processoDadosForm .propertyView select {
+	width: 500px;
+}
+
+.propertyView textarea {
+	width: 350px !important;	
+}
+			
+.checkbox {
+	width: 14px !important;	
+}
+
+.panelGridCell {
+	vertical-align: top;	
+}
+
+.grid {
+	overflow: auto;
+}
+
+.tableControl {
+	width: 100%;
+	text-align: right;
+}
+
+.footer {
+	text-align: center;
+}
+
+.rf-dt {
+	width: 99%;
+}
+
+h1 {
+	font-family: Arial, sans-serif;
+	color: #578BB8;
+	font-size: 1.6em;
+	margin-top: 0;
+}
+
+html, body {
+	width:100%;
+	height:100%;
+}
+
+body {
+	margin: 0px;
+	font-family: Arial, sans-serif;
+	color: #616161;
+}
+
+.panel {
+	padding: 2px;
+	overflow: auto;
+}
+.columnHeader:hover {
+	color: #FF6600;
+}
+	
+.viewColumn,.name {
+	vertical-align: top;	
+}
+
+.name {
+	font-weight: bold;
+	margin-top: 3px;
+	clear: left;
+}
+
+.value,.name {
+	float: left;
+	padding: 5px;
+	color:#000;
+}
+
+.DataTableToolbar {
+	padding:2px 0px 0px 0px;
+	text-align:center;
+	border: solid 1px;
+	border-color: #CCC;
+}
+
+.rf-p-b.panel .DataTableResultCount{
+	float: right;
+}
+
+.rf-msgs {
+	padding: 5px;
+	top: 47px;
+	color: #0F0;
+	list-style-type: none;
+	text-align: center;
+	position: absolute;
+	right: 10px;
+	margin:5px;
+}
+
+.rf-msgs-wrn {
+	display:none;
+}
+
+
+.rf-msgs-err {
+	padding: 2px;
+	border: 1px solid red;
+	background-color: #FFFFE0;
+	display: block;
+	background-image: none;
+}
+
+.errorFields {
+	margin-left: 20px;
+	margin-top: 5px;
+	float: left;
+	padding: 2px;
+	border: 1px solid red;
+	background-color: #FFFFE0;
+}
+
+.errors {
+	color: red;
+}
+
+.errors input, .errors textarea {
+	border: 1px solid red;
+}
+
+.activeRow {
+	 background-color:#F0F8FF !important;
+}
+
+.dr-stglpnl-b {
+	padding: 0px 5px;
+}
+
+.inativo {
+	text-decoration: line-through;
+	color: red;
+}
+
+.expirado {
+	color: red;
+}
+
+.nivelpai {
+	font-size: 115%;
+	font-weight: bolder;
+}
+
+.dr-tree {
+	background-color: #fff;
+}
+
+.folderHighlighted {
+	text-decoration: none !important;
+	color: #000 !important;
+}
+
+.folderSelected {
+	border:solid 1px transparent !important;
+}
+
+.rf-dt-ftr-c {
+	text-align: center;
+	padding: 0px
+}
+
+.rf-dt-sftr-c {
+	text-align: center;
+}
+
+.highlight {
+	font-weight: bold;
+}
+
+/* BAM */
+.circ {
+	width:15px;
+	height:15px;
+	border:0px;
+	border-radius:15px;
+    left: 10px;
+}
+
+.yellow-back {
+	background-color: #ff0;
+}
+
+.red-back {
+	background-color: red;
+}
+
+#help .highlight {
+	background-color: #ffa;
+}
+
+#pagina .highlight {
+	background-color: #ffa;
+}
+
+.defaultCell {
+	padding:2px 3px 0px 3px;
+}	
+			
+.painelLog{		 
+	width:350px; 	        
+	background: transparent;
+	border: none;      
+}	
+	
+.positionImg {
+	position:absolute;
+	left:10px;
+	top:121px;
+	z-index: 100;
+}
+
+.rich-spinner-button {
+	height: 7px;
+	width: 13px !important;
+}
+
+.rf-tab.tarefasDiv .rf-tab-cnt {
+	width:310px;
+	height:450px;
+	border-bottom-color:#C0C0C0;
+	border-left-color:#C0C0C0;
+	border-right-color:#C0C0C0;
+}
+
+/*Retira o sombreamento do ModalPanel*/
+.noMaskClass .rich-mpnl-mask-div{
+	display:none;				       
+} 
+   
+.columnDataListToolBar {
+	width: 40px;
+	padding: 2px 0px 0px 0px;
+	text-align: center;
+	border: solid 1px;
+	border-color: #CCC;
+}
+
+.transpToolBar {							
+    width: 100%; 
+    text-align: center;
+    opacity:0.30;	
+    filter: alpha(opacity=30);				    
+}
+
+.transpToolBar:hover {
+    opacity:1.0;
+    filter: alpha(opacity=100);
+}
+
+.opacityHover {
+	opacity:0.3;
+}
+
+.opacityHover:hover {
+	opacity:1;
+}
+
+img.disabled {
+	opacity: 0.3;
+	filter: alpha(opacity=3);		
+}
+
+.transparency {
+	background-color: transparent;
+	border: none;
+}
+
+.formPesquisa div {
+    border-radius:5px;
+    height:30px;
+    text-align: right;
+    width: 100%;
+}
+
+.formPesquisa input[type="image"] {
+    position: relative;
+    top: 5px;
+}
+
+.palette div {
+	width: 67px;
+	height: 21px;
+}
+
+.painelUsuario {
+    height: 38px;
+    text-align: right;
+    width: 360px;
+}
+
+.painelUsuario select {
+	text-align: right;
+}
+
+.painelUsuario-label {
+	font-weight: bold;
+}
+
+select {
+	border: 0px;
+	width: 250px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: top;
+}
+
+.inputText {
+	width: 250px;
+}
+
+.rich-calendar-input,.inputText {
+	border: 0px;
+	height: 15px;
+	color: #000;
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+
+.linkButton {
+	padding: 3px 12px;
+}
+
+.inputTreeBody {
+	position: absolute;
+	width: 224px !important;
+	max-height: 250px !important;
+	z-index: 10;
+	background-color: #FFF;
+	border:solid 1px;
+}
+
+.reqSenha label {
+    font-family: Arial,sans-serif;
+    margin: 0;
+}
+
+.expressionDiv div {
+	display: inline-block;
+}
+
+.conclusionSelect {
+	display: block;
+}
+
+#backgroundBlock {
+	left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    background-color: #000;
+    opacity: 0.75;
+}
+
+#atividadeParteDiv form {
+    left: 50%;
+    top: 50%;
+    height: 136px;
+    width: 284px;
+    margin: -68px 0 0 -197px;
+    position: fixed;
+    z-index: 2;
+    background-color: #FFF;
+}
+
+#atividadeParteDiv input[type="button"], #atividadeParteDiv input[type="submit"] {
+    background-color: #FFF;
+}
+
+#atividadeParteDiv form .rich-panel {
+    height: 100px;
+    margin: 0;
+    max-width: 99%;
+    padding-top: 0;
+}
+			
+.expressionDiv span:hover {
+	background-color:#BBCEC2;
+	cursor:pointer;
+}
+
+.painelUsuario select {
+	border: none;
+}
+
+textarea,select {
+	color: #000;
+	border:1px solid;
+}
+
+.inputTextMiniW69,.inputTextMiniW25,.foneDDD,.foneNormal {
+	border: 0px;
+	color: #000;
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+
+.buttons {
+	height: 22px !important;
+	min-width: 80px;
+	margin: 5px;
+	padding: 0px 12px 3px 3px;
+	border:solid 1px;
+	background-color: transparent;
+}
+
+.inputTreeHeader {
+	border: none !important;
+	font-weight: normal;
+	text-align: left;
+	background-repeat: no-repeat;
+	background-position: right;
+	background-color: #FFF !important;
+	color: #000 !important;
+}
+
+.suggest {
+	padding-right: 20px;
+	border: 0px solid;
+	background-repeat: no-repeat;
+	background-position: top;
+}
+
+.modPesqEsq { 
+    width: 38px;
+	height: 25px;
+	margin-top:0px;
+	background-repeat: no-repeat;
+}
+
+.modPesqBg {
+	background-repeat: repeat-x;
+}
+
+.modPesqInputText {
+    border: 0px;			    				    
+    width:134px;
+    height: 16px;
+    padding-left:3px;
+	background-repeat: no-repeat;
+	background-color: transparent;
+	color: #FFF;
+}
+
+.required {
+	padding-left: 2px;
+}
+
+/* 
+	detalheLog.xhtml, documentoHTML.xhtml 
+*/
+@media print{
+	.onlyprint{display: block;visibility: visible;}
+	.noprint{display: none;visibility: hidden;}
+}
+
+/* movimentar.xhtml */
+.positionImg {
+	top: 63px;
+}
+
+.propertyView {
+	min-width: 150px
+}
+
+/* mail.xhtml */
+.rich-table-footercell .propertyView {
+	margin-top:0;
+}
+.propertyView {
+	min-width: 215px;
+}
+
+/*turnoCalendar.xhtml*/
+.selected {
+	background-color: #d42;
+}
+.fixed-selected {
+	background-color: #d00;
+}
+/*messages.xhtml*/
+#dialogMessage {
+	visibility:hidden;
+	position:absolute;   
+	top:30%;
+	left:36%;			
+	width:300px;				
+	height:auto;
+	min-height:100px;
+	background-color:#fff;   				
+	border:1px solid #BCC1BD;
+	padding:2px;				
+	z-index:10000;				
+}		
+#dialogMessage #title {
+	height:18px;
+	font-weight:bold;
+	border:1px solid;
+}
+
+#dialogmessage div {
+	 overflow:auto;
+}
+
+/* dragDrop.xhtml */
+.panelc {
+    width:25%;
+    vertical-align:top;         
+}
+
+.dropTargetPanel {
+    width: 90%;
+}
+
+.headerClass {
+    text-align: center;
+    padding-top: 5px;
+}
+
+/*grid/dataTable.xhtml*/
+.noMaskClass .rich-mpnl-mask-div {
+	display: none;
+}
+
+/*templates/noMenuTemplate.xhtml*/
+.positionImg {
+	left:10px;
+	top:0px;
+}
+
+/*Painel/list.xhtml*/
+.Panel.rf-p.ProcessoEpaList {
+	width:100%;
+}
