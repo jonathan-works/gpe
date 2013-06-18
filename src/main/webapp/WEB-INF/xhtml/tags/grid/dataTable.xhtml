@@ -76,8 +76,10 @@
                         </s:div>
                     </f:facet>
                     <ui:insert name="toolBar">
-                        <wi:toolBarEdit id="#{id}edit" />
-                        <wi:toolBarInactive />
+                        <h:form>
+                            <wi:toolBarEdit id="#{id}edit" />
+                            <wi:toolBarInactive />
+                        </h:form>
                     </ui:insert>
                 </rich:column>
                 <ui:insert />
