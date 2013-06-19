@@ -28,9 +28,10 @@
 .InputTreePanel.rf-cp.rf-tgp {
 	border: solid 1px #fff;
 }
-
-.rf-cp-hdr,.rf-cp-gr {
+.rf-cp.rf-tgp,.rf-cp-hdr.rf-cp-hdr-exp {
 	padding:0px;
+}
+.rf-cp-gr,.rf-cp-hdr.rf-cp-hdr-exp {
 	border-spacing:0px;
 }
 
@@ -61,7 +62,7 @@
 	width:100%;
 	position:relative;
 	min-width:859px;
-	height:calc(100% - 108px);
+	height:calc(100% - 110px);
 }
 .pageContent {
 	background-color:#FFF;
@@ -80,94 +81,9 @@
 .SearchForm {
 	display: inline-block;
 	vertical-align: top;
-	margin: 0 5px 0;
+	margin: 0 5px 5px 0;
 }
 /* FIM LAYOUT GERAL */
-/* HEADER DA PÁGINA */
-.banner {
-	position:relative;
-	min-width:859px;
-	margin: 0px 0px 0px 0px;
-	height: 85px;
-	border-bottom-width: 0px;
-}
-.banner .divBg {
-	right:0px;
-	width:100%;
-	height:28px;
-	border-bottom-left-radius: 28px;
-	overflow:hidden;
-}
-
-.banner .BarraPesquisa {
-	display:inline-block;
-	margin:0px 0px 0px 28px;
-}
-
-.BP-ipt{
-	width:120px;
-}
-
-.BP-lbl {
-	font-size:11px;
-	font-weight:bold;
-}
-
-.banner .divBg .SeletorSkins {
-	display:inline-block;
-}
-
-.banner .SeletorSkins input[type='image'] {
-	width:17px;
-	height:21px;
-}
-
-.PaletteMenu {
-	width: 250px;
-}
-
-.banner .SeletorSkins img {
-	cursor:pointer;
-}
-
-.banner .left, .banner .center, .banner .right {
-	position:absolute;
-}
-.banner .left {
-    height: 85px;
-    left: 0;
-    top: 0px;
-    width: 290px;
-    z-index: 1;
-}
-.banner .center {
-    font-size:20pt;
-    height:85px;
-    top:0px;
-    left:50%;
-    text-align:center;
-    width:295px;
-    margin:0 0 0 -147.5px;
-    z-index:0;
-}
-.banner .center .title {
-	padding-top:15px;
-}
-.banner .right {
-    height: 85px;
-    top: 0px;
-    right:0px;
-    width: 321px;
-    z-index: 1;
-}
-.banner .liveclock {
-	right:0%;
-	top:0%;
-	text-align: right;
-	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-	font-weight:bold;
-}
-/* FIM DO HEADER */
 /* MENU */
 .LinkMenu {
 	text-decoration:none;
@@ -501,20 +417,6 @@ img.disabled {
 	height: 21px;
 }
 
-.painelUsuario {
-    height: 38px;
-    text-align: right;
-    width: 360px;
-}
-
-.painelUsuario select {
-	text-align: right;
-}
-
-.painelUsuario-label {
-	font-weight: bold;
-}
-
 select {
 	border: 0px;
 	width: 250px;
@@ -601,11 +503,6 @@ select {
 
 .painelUsuario select {
 	border: none;
-}
-
-textarea,select {
-	color: #000;
-	border:1px solid;
 }
 
 .inputTextMiniW69,.inputTextMiniW25,.foneDDD,.foneNormal {

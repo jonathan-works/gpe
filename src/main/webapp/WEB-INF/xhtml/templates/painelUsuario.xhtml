@@ -13,35 +13,26 @@
 	<ui:param
 		name="selectable"
 		value="#{wi:get(selectable, true)}" />
-	<s:div styleClass="painelUsuario">
-
-		<h:outputLabel 
-			styleClass="painelUsuario-label"
-			rendered="#{identity.loggedIn}"
-			for="usuarioLocalizacao"
-			value="#{usuarioLogado}">
-	    </h:outputLabel>
-
-		<h:form id="papeisUsuarioForm">
-			<c:if test="#{selectable}">
-				<wi:selectOneMenuEntity
-					value="#{authenticator.localizacaoAtualCombo}"
-					rendered="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}"
-					id="usuarioLocalizacao"
-					template="/WEB-INF/xhtml/components/templates/display.xhtml"
-					onchange="this.form.submit()"
-					items="#{authenticator.usuarioLocalizacaoListItems}">
-				</wi:selectOneMenuEntity>
-				<br />
-			</c:if>
-			<c:if test="#{not selectable}">
-				<br />
-				<h:outputLabel value="#{authenticator.localizacaoAtualCombo}" />
-			</c:if>
-			<h:outputText
-				value="#{authenticator.usuarioLocalizacaoListItems[0]}"
-				rendered="#{identity.loggedIn and authenticator.usuarioLocalizacaoListItems.size() == 1}" />
-		</h:form>
-	</s:div>
+	<h:form id="papeisUsuarioForm" styleClass="painelUsuario">
+		<c:if test="#{selectable}">
+			<wi:selectOneMenuEntity
+				value="#{authenticator.localizacaoAtualCombo}"
+				rendered="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}"
+				id="usuarioLocalizacao"
+				template="/WEB-INF/xhtml/components/templates/display.xhtml"
+				onchange="this.form.submit()"
+				items="#{authenticator.usuarioLocalizacaoListItems}"
+				label="#{usuarioLogado}"
+				labelClass="painelUsuario-label"
+				valueClass="painelUsuario-select">
+			</wi:selectOneMenuEntity>
+		</c:if>
+		<c:if test="#{not selectable}">
+			<h:outputLabel value="#{authenticator.localizacaoAtualCombo}" />
+		</c:if>
+		<h:outputText
+			value="#{authenticator.usuarioLocalizacaoListItems[0]}"
+			rendered="#{identity.loggedIn and authenticator.usuarioLocalizacaoListItems.size() == 1}" />
+	</h:form>
 
 </ui:composition>
