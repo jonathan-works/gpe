@@ -6,10 +6,10 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:wi="http://www.itx.com.br/jsf" xmlns:a="http://richfaces.org/a4j"
-	xmlns:s="http://jboss.com/products/seam/taglib">
+	xmlns:s="http://jboss.org/schema/seam/taglib">
 	<script language="javascript" charset="ISO-8859-1">
 	//<![CDATA[
-	require(["#{util.contextPath}/js/expressionWizard.js"], function() {
+	require(["#{util.urlProject}/resources/js/expressionWizard.js"], function() {
 		new br.com.infox.util.ExpressionWizard({
 			inputId:"#{rich:clientId(id)}TextDecoration:#{id}Text",
 			imagePath:"#{util.contextPath}/img/jbpm/wizard.gif",
@@ -64,7 +64,7 @@
 		<s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
 		<wi:inputTextarea id="#{id}Text" styleClass="expressionInput"
 			label="#{messages['expressionWizard.expressao']}" value="#{value}">
-			<a:support status=":status" event="onchange" reRender="#{id}" />
+			<a:ajax execute="@this" event="change" render="#{id}" limitRender="true"/>
 		</wi:inputTextarea>
 
 	</s:div>
