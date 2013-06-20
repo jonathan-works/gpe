@@ -243,7 +243,8 @@
 					 name="documentoFisicoTab"
 					 rendered="#{home.isManaged()}"
 					 immediate="true"
-					 title="#{messages['documentoFisico.titleTab']}">
+					 title="#{messages['documentoFisico.titleTab']}"
+                     action=#{localizacaoDocumentoFisicoAction.init()}>
 					
                     <wi:dataForm
 						 formId="documentoFisicoForm"

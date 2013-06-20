@@ -25,7 +25,7 @@ import br.com.infox.list.LocalizacaoFisicaList;
 @Name(LocalizacaoDocumentoFisicoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class LocalizacaoDocumentoFisicoAction extends
-		AbstractCrudAction<DocumentoFisico> implements Serializable, ItemChangeListener {
+		AbstractCrudAction<DocumentoFisico> implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "localizacaoDocumentoFisicoAction";
@@ -102,10 +102,4 @@ public class LocalizacaoDocumentoFisicoAction extends
 		return documentoFisicoList;
 	}
 
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if ("documentoFisicoTab".equals(event.getNewItemName())) {
-			init();
-		}
-	}
 }
