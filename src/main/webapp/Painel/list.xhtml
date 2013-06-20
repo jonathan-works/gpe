@@ -1,253 +1,214 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: list.xhtml 750 2010-08-24 14:10:58Z danielsilva $ --><ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/template-sample.xhtml">
-	
+<!-- $Id: list.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/template-sample.xhtml">
 
     <ui:param
-		 name="pageTitle"
-		 value="Painel do Usuário" />
+        name="pageTitle"
+        value="Painel do Usuário" />
     <ui:define name="title">#{pageTitle}</ui:define>
 
     <ui:define name="body">
-		
-
         <a:region>
-			
             <h:form>
-				
                 <a:jsFunction
-					 name="atualizaPainelFluxo"
-					 oncomplete="window.location='#{util.contextPath}/Painel/list.seam'"
-					 execute="@this"
-					 status="status" />
-            
-			</h:form>
+                    name="atualizaPainelFluxo"
+                    oncomplete="window.location='#{util.contextPath}/Painel/list.seam'"
+                    execute="@this"
+                    status="status" />
+            </h:form>
             <br />
             <table
-				 width="99%"
-				 border="0"
-				 cellspacing="0"
-				 cellpadding="0">
-				
+                width="99%"
+                border="0"
+                cellspacing="0"
+                cellpadding="0">
                 <tr valign="top">
-					
                     <td width="310"><h:form>
-							
                             <wi:tabPanel
-								 id="tabPainelUsuario"
-								 switchType="ajax"
-								 status=":status">
-								<h:form><wi:tabHeaders /></h:form>
+                                id="tabPainelUsuario"
+                                switchType="ajax"
+                                status=":status">
+                                <h:form>
+                                    <wi:tabHeaders />
+                                </h:form>
                                 <wi:tab
-									 render="painelProcessos"
-									 limitRender="true"
-									 action="#{tarefasTree.clearTree()}"
-									 title="Caixas">
-									
+                                    id="caixas"
+                                    name="caixas"
+                                    render="painelProcessos"
+                                    limitRender="true"
+                                    action="#{tarefasTree.clearTree()}"
+                                    title="Caixas">
                                     <s:div id="tarefasDiv">
-										
-                                        <ui:include src="tarefasTree.xhtml" />
-                                    
-									</s:div>
-                                
-								</wi:tab>
-                            
-							</wi:tabPanel>
-                        
-						</h:form></td>
+                                        <ui:include
+                                            src="tarefasTree.xhtml" />
+                                    </s:div>
+                                </wi:tab>
+                            </wi:tabPanel>
+
+                        </h:form></td>
                     <td><s:div id="painelProcessos">
-							
+
                             <ui:param
-								 name="home"
-								 value="#{consultaProcessoHome}" />
+                                name="home"
+                                value="#{consultaProcessoHome}" />
                             <ui:param
-								 name="mostraGrid"
-								 value="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}" />
+                                name="mostraGrid"
+                                value="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}" />
                             <s:div id="processos">
-								
+
                                 <s:div id="pesquisaList">
-									
+
                                     <h:form id="pesquisaListForm">
-										
+
                                         <rich:collapsiblePanel
-											 rendered="#{mostraGrid}"
-											 switchType="ajax"
-											 expanded="false"
-											 header="Pesquisar"
-											 styleClass="leftPanel">
-											
+                                            rendered="#{mostraGrid}"
+                                            switchType="ajax"
+                                            expanded="false"
+                                            header="Pesquisar"
+                                            styleClass="leftPanel">
+
                                             <wi:searchForm
-												 formId="consultaProcessoForm"
-												 formTitle="#{messages['form.title']}"
-												 widthSearchForm="100%">
-												
+                                                formId="consultaProcessoForm"
+                                                formTitle="#{messages['form.title']}"
+                                                widthSearchForm="100%">
                                                 <wi:inputText
-													 id="numeroProcesso"
-													 label="#{messages['consultaProcesso.numeroProcesso']}"
-													 value="#{home.instance.numeroProcesso}" />
+                                                    id="numeroProcesso"
+                                                    label="#{messages['consultaProcesso.numeroProcesso']}"
+                                                    value="#{home.instance.numeroProcesso}" />
                                                 <wi:inputDataPeriodo
-													 id="periodo"
-													 label="Período"
-													 valueDateFrom="#{home.instance.dataInicio}"
-													 valueDateTo="#{home.instance.dataFim}" />
+                                                    id="periodo"
+                                                    label="Período"
+                                                    valueDateFrom="#{home.instance.dataInicio}"
+                                                    valueDateTo="#{home.instance.dataFim}" />
                                                 <wi:selectOneMenuEntity
-													 id="natureza"
-													 label="#{messages['natureza.titleGrid']}"
-													 value="#{home.instance.natureza}"
-													 noSelectionLabel="Selecione um registro..."
-													 items="#{home.naturezaList}" />
+                                                    id="natureza"
+                                                    label="#{messages['natureza.titleGrid']}"
+                                                    value="#{home.instance.natureza}"
+                                                    noSelectionLabel="Selecione um registro..."
+                                                    items="#{home.naturezaList}" />
                                                 <wi:selectOneMenuEntity
-													 id="categoria"
-													 label="#{messages['categoria.titleGrid']}"
-													 value="#{home.instance.categoria}"
-													 noSelectionLabel="Selecione um registro..."
-													 inNewLine="true"
-													 items="#{home.categoriaList}" />
-                                                <ui:define name="buttons">
-													
+                                                    id="categoria"
+                                                    label="#{messages['categoria.titleGrid']}"
+                                                    value="#{home.instance.categoria}"
+                                                    noSelectionLabel="Selecione um registro..."
+                                                    inNewLine="true"
+                                                    items="#{home.categoriaList}" />
+                                                <ui:define
+                                                    name="buttons">
                                                     <div>
-														
                                                         <a:commandButton
-															 id="consulta"
-															 status="status"
-															 value="Consulta"
-															 styleClass="dr-tbpnl-tb-inact"
-															 limitRender="true"
-															 execute="@region"
-															 action="#{home.instance.setInPesquisa(true)}"
-															 render="painelProcessos" />
+                                                            id="consulta"
+                                                            status="status"
+                                                            value="Consulta"
+                                                            styleClass="dr-tbpnl-tb-inact"
+                                                            limitRender="true"
+                                                            execute="@region"
+                                                            action="#{home.instance.setInPesquisa(true)}"
+                                                            render="painelProcessos" />
                                                         <a:commandButton
-															 id="novaConsulta"
-															 status="status"
-															 style="width: 120px !important"
-															 value="Nova Consulta"
-															 limitRender="true"
-															 styleClass="dr-tbpnl-tb-inact"
-															 execute="@this"
-															 render="painelProcessos" />
-                                                    
-													</div>
-                                                
-												</ui:define>
-                                            
-											</wi:searchForm>
+                                                            id="novaConsulta"
+                                                            status="status"
+                                                            style="width: 120px !important"
+                                                            value="Nova Consulta"
+                                                            limitRender="true"
+                                                            styleClass="dr-tbpnl-tb-inact"
+                                                            execute="@this"
+                                                            render="painelProcessos" />
+                                                    </div>
+                                                </ui:define>
+                                            </wi:searchForm>
                                             <h:messages
-												 styleClass="message"
-												 id="globalMessages" />
-                                        
-										</rich:collapsiblePanel>
-                                    
-									</h:form>
-                                
-								</s:div>
+                                                styleClass="message"
+                                                id="globalMessages" />
+                                        </rich:collapsiblePanel>
+                                    </h:form>
+                                </s:div>
                                 <s:div id="processoList">
-									
                                     <h:form rendered="#{mostraGrid}">
-										
                                         <wi:dataTable
-											 values="#{consultaProcessoEpaList.list(10)}"
-											 bean="#{consultaProcessoEpaList}"
-											 styleClass="ProcessoEpaList"
-											 tableTitle="#{messages['consultaProcesso.processos']}"
-											 id="consultaProcessoEpaList"
-											 rowId="#{row.idProcesso}">
-											
+                                            values="#{consultaProcessoEpaList.list(10)}"
+                                            bean="#{consultaProcessoEpaList}"
+                                            styleClass="ProcessoEpaList"
+                                            tableTitle="#{messages['consultaProcesso.processos']}"
+                                            id="consultaProcessoEpaList"
+                                            rowId="#{row.idProcesso}">
                                             <wi:columnOutputText
-												 columnId="numeroProcesso"
-												 columnHeader="#{messages['consultaProcesso.numeroProcesso']}"
-												 value="#{row.numeroProcesso}" />
+                                                columnId="numeroProcesso"
+                                                columnHeader="#{messages['consultaProcesso.numeroProcesso']}"
+                                                value="#{row.numeroProcesso}" />
                                             <wi:columnOutputText
-												 columnId="usuarioSolicitante"
-												 columnHeader="#{messages['consultaProcesso.usuarioCadastroProcesso']}"
-												 value="#{row.usuarioCadastroProcesso}" />
+                                                columnId="usuarioSolicitante"
+                                                columnHeader="#{messages['consultaProcesso.usuarioCadastroProcesso']}"
+                                                value="#{row.usuarioCadastroProcesso}" />
                                             <wi:columnDateTime
-												 columnId="dataInicio"
-												 columnHeader="#{messages['consultaProcesso.dataInicio']}"
-												 value="#{row.dataInicio}" />
+                                                columnId="dataInicio"
+                                                columnHeader="#{messages['consultaProcesso.dataInicio']}"
+                                                value="#{row.dataInicio}" />
                                             <wi:columnOutputText
-												 columnId="natureza"
-												 columnHeader="#{messages['consultaProcesso.natureza']}"
-												 value="#{row.naturezaCategoriaFluxo.natureza}" />
+                                                columnId="natureza"
+                                                columnHeader="#{messages['consultaProcesso.natureza']}"
+                                                value="#{row.naturezaCategoriaFluxo.natureza}" />
                                             <wi:columnOutputText
-												 columnId="categoria"
-												 columnHeader="#{messages['consultaProcesso.categoria']}"
-												 value="#{row.naturezaCategoriaFluxo.categoria}" />
+                                                columnId="categoria"
+                                                columnHeader="#{messages['consultaProcesso.categoria']}"
+                                                value="#{row.naturezaCategoriaFluxo.categoria}" />
                                             <wi:columnOutputText
-												 columnId="itemDoProcesso"
-												 columnHeader="#{messages['consultaProcesso.item']}"
-												 value="#{row.itemDoProcesso}" />
-                                            <ui:define name="headerToolBar">
-												
-                                                <ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
-                                            
-											</ui:define>
+                                                columnId="itemDoProcesso"
+                                                columnHeader="#{messages['consultaProcesso.item']}"
+                                                value="#{row.itemDoProcesso}" />
+                                            <ui:define
+                                                name="headerToolBar">
+                                                <ui:include
+                                                    src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
+                                            </ui:define>
                                             <ui:define name="toolBar">
-												
-                                                <ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml" />
-                                            
-											</ui:define>
-                                        
-										</wi:dataTable>
-                                    
-									</h:form>
-                                
-								</s:div>
-                            
-							</s:div>
-                        
-						</s:div></td>
-                
-				</tr>
-            
-			</table>
+                                                <ui:include
+                                                    src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml" />
+                                            </ui:define>
+                                        </wi:dataTable>
+                                    </h:form>
+                                </s:div>
+                            </s:div>
+                        </s:div></td>
+                </tr>
+            </table>
 
             <rich:popupPanel
-				 id="novaCaixaPanel"
-				 height="110"
-				 left="40">
-				
+                id="novaCaixaPanel"
+                height="110"
+                left="40">
                 <f:facet name="header">
-					
                     <h:outputText value="Nova caixa para a tarefa" />
-                
-				</f:facet>
+                </f:facet>
                 <f:facet name="controls">
-					
                     <span
-						 style="cursor: pointer; font-family: Verdana, Arial; padding-right: 5px"
-						 onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
-                
-				</f:facet>
+                        style="cursor: pointer; font-family: Verdana, Arial; padding-right: 5px"
+                        onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
+                </f:facet>
                 <h:form id="modalForm">
-					
                     <wi:inputText
-						 id="nomeCaixa"
-						 label="Nome da caixa"
-						 value="#{caixaHome.nomeNovaCaixa}" />
+                        id="nomeCaixa"
+                        label="Nome da caixa"
+                        value="#{caixaHome.nomeNovaCaixa}" />
                     <a:commandButton
-						 value="Incluir"
-						 styleClass="dr-tbpnl-tb-inact"
-						 action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
-						 oncomplete="Richfaces.hideTopModalPanel()"
-						 render="tarefasDiv,painelProcessos" />
+                        value="Incluir"
+                        styleClass="dr-tbpnl-tb-inact"
+                        action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
+                        oncomplete="Richfaces.hideTopModalPanel()"
+                        render="tarefasDiv,painelProcessos" />
                     <rich:messages />
-                
-				</h:form>
-            
-			</rich:popupPanel>
-
-        
-		</a:region>
-    
-	</ui:define>
-
-
+                </h:form>
+            </rich:popupPanel>
+        </a:region>
+    </ui:define>
 </ui:composition>
