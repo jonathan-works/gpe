@@ -48,8 +48,9 @@
 .pageBody {
 	width:100%;
 	position:relative;
-	min-width:859px;
 	height:calc(100% - 110px);
+	min-width:1020px;
+	min-height:514px;
 }
 .pageContent {
 	background-color:#FFF;
@@ -72,11 +73,11 @@
 }
 /* FIM LAYOUT GERAL */
 /* MENU */
+.rf-tb.menu-tb {
+	min-width:1019px;
+}
 .LinkMenu {
 	text-decoration:none;
-}
-.LinkMenu:hover {
-	cursor:pointer;
 }
 /* FIM MENU*/
 
@@ -183,7 +184,8 @@ body {
 .DataTableToolbar {
 	padding:2px 0px 0px 0px;
 	text-align:center;
-	border: solid 1px;
+	border-style:solid;
+	border-width:1px;
 	border-color: #CCC;
 }
 
@@ -191,36 +193,12 @@ body {
 	float: right;
 }
 
-.rf-msgs {
-	padding: 5px;
-	top: 47px;
-	color: #0F0;
-	list-style-type: none;
-	text-align: center;
-	position: absolute;
-	right: 10px;
-	margin:5px;
-}
-
-.rf-msgs-wrn {
-	display:none;
-}
-
-
-.rf-msgs-err {
-	padding: 2px;
-	border: 1px solid red;
-	background-color: #FFFFE0;
-	display: block;
-	background-image: none;
-}
-
 .errorFields {
-	margin-left: 20px;
-	margin-top: 5px;
-	float: left;
-	padding: 2px;
-	border: 1px solid red;
+	margin-left:20px;
+	margin-top:5px;
+	float:left;
+	padding:2px;
+	border:1px solid red;
 	background-color: #FFFFE0;
 }
 
@@ -229,7 +207,7 @@ body {
 }
 
 .errors input, .errors textarea {
-	border: 1px solid red;
+	border:1px solid red;
 }
 
 .activeRow {
@@ -284,7 +262,7 @@ body {
 .circ {
 	width:15px;
 	height:15px;
-	border:0px;
+	border-width:0px;
 	border-radius:15px;
     left: 10px;
 }
@@ -315,13 +293,6 @@ body {
 	border: none;      
 }	
 	
-.positionImg {
-	position:absolute;
-	left:10px;
-	top:121px;
-	z-index: 100;
-}
-
 .rich-spinner-button {
 	height: 7px;
 	width: 13px !important;
@@ -344,8 +315,9 @@ body {
 	width: 40px;
 	padding: 2px 0px 0px 0px;
 	text-align: center;
-	border: solid 1px;
-	border-color: #CCC;
+	border-style:solid;
+	border-width:1px;
+	border-color:#CCC;
 }
 
 .transpToolBar {							
@@ -396,7 +368,7 @@ img.disabled {
 }
 
 select {
-	border: 0px;
+	border-width:0px;
 	width: 250px;
 	background-color: transparent;
 	background-repeat: no-repeat;
@@ -408,7 +380,7 @@ select {
 }
 
 .rich-calendar-input,.inputText {
-	border: 0px;
+	border-width:0px;
 	height: 15px;
 	color: #000;
 	background-repeat: no-repeat;
@@ -425,7 +397,8 @@ select {
 	max-height: 250px !important;
 	z-index: 10;
 	background-color: #FFF;
-	border:solid 1px;
+	border-style:solid;
+	border-width:1px;
 }
 
 .reqSenha label {
@@ -479,12 +452,8 @@ select {
 	cursor:pointer;
 }
 
-.painelUsuario select {
-	border: none;
-}
-
 .inputTextMiniW69,.inputTextMiniW25,.foneDDD,.foneNormal {
-	border: 0px;
+	border-width:0px;
 	color: #000;
 	background-repeat: no-repeat;
 	background-position: top left;
@@ -495,7 +464,8 @@ select {
 	min-width: 80px;
 	margin: 5px;
 	padding: 0px 12px 3px 3px;
-	border:solid 1px;
+	border-style:solid;
+	border-width:1px;
 	background-color: transparent;
 }
 
@@ -510,8 +480,8 @@ select {
 }
 
 .suggest {
-	padding-right: 20px;
-	border: 0px solid;
+	padding-right:20px;
+	border-width:0px;
 	background-repeat: no-repeat;
 	background-position: top;
 }
@@ -528,7 +498,7 @@ select {
 }
 
 .modPesqInputText {
-    border: 0px;			    				    
+    border-width:0px;			    				    
     width:134px;
     height: 16px;
     padding-left:3px;
@@ -547,11 +517,6 @@ select {
 @media print{
 	.onlyprint{display: block;visibility: visible;}
 	.noprint{display: none;visibility: hidden;}
-}
-
-/* movimentar.xhtml */
-.positionImg {
-	top: 63px;
 }
 
 .propertyView {
@@ -574,53 +539,59 @@ select {
 	background-color: #d00;
 }
 /*messages.xhtml*/
-#dialogMessage {
+.d-msg.hidden {
 	visibility:hidden;
-	position:absolute;   
-	top:30%;
-	left:36%;			
-	width:300px;				
-	height:auto;
-	min-height:100px;
-	background-color:#fff;   				
-	border:1px solid #BCC1BD;
-	padding:2px;				
-	z-index:10000;				
-}		
-#dialogMessage #title {
+}
+.d-msg-h {
 	height:18px;
 	font-weight:bold;
-	border:1px solid;
+	border-style:solid;
+	border-width:1px;
+	position:relative;
 }
-
-#dialogmessage div {
+.d-msg-h-close {
+	cursor: pointer;
+	position:absolute;
+	right:2px;
+	top:2px;
+}
+.d-msg-h-lbl {
+	position:absolute;
+	left:2px;
+	top:2px;
+}
+.d-msg-c {
 	 overflow:auto;
+	 height:120px;
+	 padding:5px;
+}
+.rf-msgs {
+	color:black;
 }
 
-/* dragDrop.xhtml */
-.panelc {
-    width:25%;
-    vertical-align:top;         
+.rf-msgs-wrn {
+	display:none;
 }
 
-.dropTargetPanel {
-    width: 90%;
+.rf-msgs-err {
+	padding: 2px;
+	border: 1px solid red;
+	background-color: #FFFFE0;
+	display: block;
+	background-image: none;
 }
 
-.headerClass {
-    text-align: center;
-    padding-top: 5px;
-}
 
-/*grid/dataTable.xhtml*/
-.noMaskClass .rich-mpnl-mask-div {
-	display: none;
-}
-
-/*templates/noMenuTemplate.xhtml*/
-.positionImg {
-	left:10px;
-	top:0px;
+.d-msg {
+	position:absolute; 
+	top:calc(50% - 77px);
+	left:calc(50% - 152px);			
+	width:300px;
+	height:150px;
+	background-color:#fff;   				
+	border:1px solid #BCC1BD;
+	padding:1px;
+	z-index:10000;				
 }
 
 /*Painel/list.xhtml*/

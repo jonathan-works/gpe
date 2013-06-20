@@ -13,66 +13,60 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/ 
---><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib">
-				
-	<ui:param
-         name="showDialogMessage"
-         value="#{empty showDialogMessage ? true : showDialogMessage}" />
-	<ui:param
-         name="timeCloseMSG"
-         value="#{empty timeCloseMSG ? '6000' : timeCloseMSG}" />
-				
-	<script
-         type="text/javascript">		
-		function showDialogMessage() {
-			element = document.getElementById("dialogMessage");
-			element.style.visibility = "visible";
-		}
-		function hideDialogMessage() {
-			element = document.getElementById("dialogMessage");
-			element.style.visibility = "hidden";
-		}	
-		function actionDialogMessage() {
-			var globalMessages = '#{!facesMessages.currentGlobalMessages.isEmpty()}';
-			if(globalMessages == 'true') {	
-				if('#{showDialogMessage}' == 'true') {		
-					if($('dt[class=rf-msgs-err]').html() == null) {
-						showDialogMessage();
-						setTimeout("hideDialogMessage()", "#{timeCloseMSG}");					
-					} else {
-						showDialogMessage();
-					}	
-				}			
-			}	
-		}	
-		//Executar o dialog ao fazer uma requisição AJAX ou NÃO-AJAX no formulário.	
-		window.onload = function() {
-			actionDialogMessage();	
-		}		
-		actionDialogMessage();
+-->
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+
+	<ui:param name="showDialogMessage"
+		value="#{empty showDialogMessage ? true : showDialogMessage}" />
+	<ui:param name="timeCloseMSG"
+		value="#{empty timeCloseMSG ? '6000' : timeCloseMSG}" />
+
+	<div id="dialogMessage" class="d-msg hidden">
+		<div id="title" class="d-msg-h">
+			<label class="d-msg-h-lbl">Mensagem</label>
+			<h:graphicImage
+				styleClass="d-msg-h-close"
+				value="/img/closeMP.gif" />
+		</div>
+		<div class="d-msg-c">
+			<rich:messages id="#{formId}Message" globalOnly="true"/>
+		</div>
+	</div>
+	<script type="text/javascript">
+	//<![CDATA[
+		var msgFuncs = msgFuncs || {
+			showDialogMessage:function showDialogMessage() {
+				$(".d-msg").removeClass("hidden");
+			},
+			hideDialogMessage:function hideDialogMessage() {
+				$(".d-msg").addClass("hidden");
+			},
+			actionDialogMessage:function actionDialogMessage() {
+				if (msgFuncs.existsGlobalMessages == 'true' 
+						&& msgFuncs.existsMessage == 'true') {
+					msgFuncs.showDialogMessage();
+					if ($('dt[class=rf-msgs-err]').html() == null) {
+						setTimeout(msgFuncs.hideDialogMessage, msgFuncs.timeout);
+					}
+				}
+			}
+		};
+		msgFuncs.existsGlobalMessages = '#{!facesMessages.currentGlobalMessages.isEmpty()}';
+		msgFuncs.existsMessage = '#{showDialogMessage}';
+		msgFuncs.timeout = "#{timeCloseMSG}";
+		
+		$("#dialogMessage").delegate(".d-msg-h-close","click",msgFuncs.hideDialogMessage);
+		
+		window.addEventListener("load",function() {
+			msgFuncs.actionDialogMessage();
+		});
+		msgFuncs.actionDialogMessage();
+		//]]>
 	</script>
 
-	<div id="dialogMessage">
-		<div id="title">
-			Mensagem
-			<h:graphicImage
-                 style="padding-left: 218px; cursor: pointer;"
-                 value="/img/closeMP.gif"
-                 onclick="hideDialogMessage();" />	
-    	</div>
-    	<div> 
-			<rich:messages
-                 id="#{formId}Message"
-                 globalOnly="true"
-                 style="margin: 5px"/>
-    	</div>
-	</div>
-	
 </ui:composition>

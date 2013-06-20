@@ -22,11 +22,13 @@
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
-    
+    <h:outputStylesheet
+        library="styleSkinInfox"
+        name="dragDrop.css" />
 	<rich:dragIndicator id="#{id}Indicator" />
 	<h:form id="#{id}dragDropForm">
 		<h:panelGrid
-             columnClasses="panelc"
+             columnClasses="drag-p-c"
              columns="4"
              width="100%">
 
@@ -43,12 +45,12 @@
                      id="#{id}ListDrag"
                      value="#{bean.dragEntityList.list(10)}"
                      var="varDrag"
-                     headerClass="headerClass">
+                     headerClass="drag-h">
                     <rich:column>
                         <a:outputPanel
-                             style="border:1px solid gray; padding:2px; cursor: pointer;"
-                             id="#{id}OutputPanel"
-                             layout="block">
+                        	styleClass="drag-dt-p"
+                            id="#{id}OutputPanel"
+                            layout="block">
                             <rich:dragSupport
                                  dragIndicator="#{id}Indicator"
                                  dragType="TYPE"
@@ -89,7 +91,7 @@
             </rich:panel>
             
             <rich:panel
-                 styleClass="dropTargetPanel">
+                 styleClass="drop-t-p">
                 <f:facet
                      name="header">
                     <h:outputText
