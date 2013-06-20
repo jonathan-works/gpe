@@ -1,6 +1,7 @@
 .banner {
-	min-width:859px;
+	min-width:1020px;
 	height: 87px;
+	position:relative;
 }
 .banner-lft, .banner-ctr, .banner-rgt {
 	position:absolute;

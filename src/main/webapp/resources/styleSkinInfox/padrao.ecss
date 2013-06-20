@@ -49,7 +49,7 @@ textarea,select {
 .required {
 	color:'#{a4jSkin.bgColorRequired}';
 }
-#dialogMessage #title {
+.d-msg-h {
 	color:'#{a4jSkin.headerTextColor}';
 	border-color:'#{a4jSkin.panelBorderColor}';
 	background-color:'#{a4jSkin.headerBackgroundColor}';
