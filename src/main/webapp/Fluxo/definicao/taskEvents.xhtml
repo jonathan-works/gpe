@@ -32,7 +32,6 @@
         <wi:tabPanel
 			 switchType="client"
 			 headerSpacing="2"
-			 itemChangeListener="#{home.processItemChange}"
 			 activeTab="#{home.tab}">
 			<h:form><wi:tabHeaders /></h:form>
             <wi:tab
@@ -98,7 +97,8 @@
 				 name="agrupamentoTarefa"
 				 status=":status"
 				 rendered="#{home.managed}"
-				 title="#{messages['tarefaEvento.agrupamentoTarefa']}">
+				 title="#{messages['tarefaEvento.agrupamentoTarefa']}"
+                 action="#{tarefaEventoHome.carregarAgrupamentos()}">
 				
                 <a:region>
 					
