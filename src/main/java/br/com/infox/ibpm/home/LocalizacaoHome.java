@@ -237,6 +237,14 @@ public class LocalizacaoHome
 		super.processItemChange(event);
 	}
 	
+	public void instanciarLocalizacaoPai(){
+		if (isManaged()) {
+			localizacaoPai = getInstance().getLocalizacaoPai();
+		} else {
+			localizacaoPai = null;
+		}
+	}
+	
 	private EnderecoHome getEnderecoHome() {
 		return getComponent("enderecoHome");
 	}
