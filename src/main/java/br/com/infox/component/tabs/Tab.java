@@ -12,6 +12,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.FacesEvent;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import com.sun.faces.application.MethodBindingMethodExpressionAdapter;
 
 @SuppressWarnings("deprecation")
@@ -36,7 +38,12 @@ public class Tab extends UIPanel implements ActionSource2 {
 	}
 
 	public String getName() {
-		return (String) getStateHelper().get(PropertyKeys.name);
+		String name = (String) getStateHelper().get(PropertyKeys.name);
+		if (name == null) {
+			name = RandomStringUtils.randomAlphabetic(5);
+			setName(name);
+		}
+		return name;
 	}
 
 	public void setName(String name) {
@@ -44,7 +51,12 @@ public class Tab extends UIPanel implements ActionSource2 {
 	}
 
 	public String getTitle() {
-		return (String) getStateHelper().eval(PropertyKeys.title);
+		String title = (String) getStateHelper().eval(PropertyKeys.title);
+		if (title == null) {
+			title = getName();
+			setTitle(title);
+		}
+		return title;
 	}
 
 	public void setTitle(String title) {
