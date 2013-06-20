@@ -118,11 +118,4 @@ public class NaturezaCategoriaFluxoAction extends AbstractHome<NaturezaCategoria
 		return fluxoList;
 	}
 	
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if (event.getNewItemName().equals("naturezaCatFluxoTab")){
-			init();
-		}
-		super.processItemChange(event);
-	}
 }
