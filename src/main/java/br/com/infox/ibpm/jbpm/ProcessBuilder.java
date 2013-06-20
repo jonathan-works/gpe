@@ -346,14 +346,11 @@ public class ProcessBuilder implements Serializable, ItemChangeListener {
 		return typeFitter;
 	}
 
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if  (event.getNewItemName().equals("graphTab")) {
-			try {
-				getProcessBuilderGraph().paintGraph();
-			} catch (IOException e) {
-				throw new AbortProcessingException(e);
-			}
+	public void getPaintedGraph() throws AbortProcessingException{
+		try {
+			getProcessBuilderGraph().paintGraph();
+		} catch (IOException e) {
+			throw new AbortProcessingException(e);
 		}
 	}
 	
