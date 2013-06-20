@@ -1,14 +1,3 @@
-/* Style das tabelas */
-.zebra .rf-dt-r:nth-child(odd) {
-	background-color:#FAFAFA;
-}
-.rf-dt-r:hover, .zebra .rf-dt-r:nth-child(even) {
-	background-color:#E7E7E7;
-}
-.zebra tr.rf-dt-r:hover {
-	background-color:#AFAFAF;
-}
-/* END STYLE TABELAS */
 /*LAYOUT GERAL DA PÁGINA*/
 .DataFormPanel .rf-p-b > div{
 	display:inline-block;
@@ -20,7 +9,7 @@
 	width:50%;
 }
 
-.Associated .Panel.rf-p, .Associative .Panel.rf-p {
+.Associated .dtable-p.rf-p, .Associative .dtable-p.rf-p {
 	width:100%;
 	max-width:100%;
 }
@@ -35,11 +24,9 @@
 	border-spacing:0px;
 }
 
-.Panel.rf-p {
+.dtable-p.rf-p {
 	display: inline-block;
-	margin:0px;
 	width:73%;
-	max-width:98%;
 	padding:0px;
 }
 .conteudo {
@@ -128,7 +115,6 @@
 #processoDadosForm .propertyView input, #processoDadosForm .propertyView select {
 	width: 500px;
 }
-
 .propertyView textarea {
 	width: 350px !important;	
 }
@@ -140,24 +126,16 @@
 .panelGridCell {
 	vertical-align: top;	
 }
-
 .grid {
 	overflow: auto;
 }
-
 .tableControl {
 	width: 100%;
 	text-align: right;
 }
-
 .footer {
 	text-align: center;
 }
-
-.rf-dt {
-	width: 99%;
-}
-
 h1 {
 	font-family: Arial, sans-serif;
 	color: #578BB8;
@@ -178,7 +156,7 @@ body {
 	color: #616161;
 }
 
-.panel {
+.dtable-p-b.rf-p-b {
 	padding: 2px;
 	overflow: auto;
 }
@@ -209,7 +187,7 @@ body {
 	border-color: #CCC;
 }
 
-.rf-p-b.panel .DataTableResultCount{
+.DataTableResultCount{
 	float: right;
 }
 

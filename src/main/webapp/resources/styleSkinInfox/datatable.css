@@ -1,0 +1,26 @@
+.dtable-search-form {
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 5px 5px 0;
+}
+.dtable-p-b.rf-p-b {
+	padding: 2px;
+	overflow: auto;
+}
+.dtable-p.rf-p {
+	display: inline-block;
+	width:73%;
+	padding:0px;
+}
+.zebra .rf-dt-r:nth-child(odd) {
+	background-color:#FAFAFA;
+}
+.rf-dt-r:hover, .zebra .rf-dt-r:nth-child(even) {
+	background-color:#E7E7E7;
+}
+.zebra tr.rf-dt-r:hover {
+	background-color:#AFAFAF;
+}
+.rf-dt {
+	width: 99%;
+}
