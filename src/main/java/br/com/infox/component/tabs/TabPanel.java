@@ -45,7 +45,12 @@ public class TabPanel extends UIPanel implements NamingContainer {
 		if (ve != null) {
 			return (String) ve.getValue(getFacesContext().getELContext());
 		}
-		return (String) getStateHelper().eval(PropertyKeys.activeTab);
+		String activeTab = (String) getStateHelper().eval(PropertyKeys.activeTab);
+		if (activeTab == null) {
+			activeTab = getTabs().get(0).getName();
+			setActiveTab(activeTab);
+		}
+		return activeTab;
 	}
 	
 	public void setActiveTab(String activeTab) {
