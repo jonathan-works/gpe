@@ -1,60 +1,82 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
 <h:head>
+		
 	<meta
-		http-equiv="Content-Type"
-		content="text/html; charset=UTF-8" />
-	<title>#{nomeSistema}: <ui:insert name="title" /></title>
-	<h:outputScript library="js" name="liveclock.js" />
+			 http-equiv="Content-Type"
+			 content="text/html; charset=UTF-8" />
+	<title>
+			#{nomeSistema}: <ui:insert name="title" />
+		</title>
+	<h:outputScript
+			 library="js"
+			 name="liveclock.js" />
 	<link
-		rel="icon"
-		href="#{util.contextPath}/favicon.ico"
-		type="image/x-icon" />
+			 rel="icon"
+			 href="#{util.contextPath}/favicon.ico"
+			 type="image/x-icon" />
 	<ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
-</h:head>
+
+	</h:head>
 
 <h:body>
+		
     <ui:param
-		name="canEdit"
-		value="#{home.editable}" />
+			 name="canEdit"
+			 value="#{home.editable}" />
 
 	<ui:include src="ajaxQueue.xhtml" />
 	<ui:include src="header.xhtml" />
 	<ui:include src="menu.xhtml">
+			
 		<ui:param
-			name="projectName"
-			value="#{nomeSistema}" />
-	</ui:include>
+				 name="projectName"
+				 value="#{nomeSistema}" />
+	
+		</ui:include>
 
 	<s:div
-		styleClass="pageBody"
-		id="pageBody">
-		<wi:richTabPanel
-			switchType="client"
-			height="100%"
-			width="100%"
-			headerAlignment="right">
-			<wi:richTab
-				id="search"
-				status=":status"
-				style="overflow: visible;">
+			 styleClass="pageBody"
+			 id="pageBody">
+			
+		<wi:tabPanel
+				 switchType="client"
+				 height="100%"
+				 width="100%"
+				 headerAlignment="right">
+				<h:form><wi:tabHeaders /></h:form>
+			<wi:tab
+					 id="search"
+					 status=":status"
+					 style="overflow: visible;"
+					 name="search">
+					
 				<f:facet name="header">
+						
 					<div style="font-size: 14pt; font-weight: bold; color: #888888;">#{pageTitle}</div>
-				</f:facet>
+				
+					</f:facet>
 				<div style="overflow: visible">
+						
 					<ui:insert name="body" />
-				</div>
-			</wi:richTab>
-		</wi:richTabPanel>
-	</s:div>
-</h:body>
+				
+					</div>
+			
+				</wi:tab>
+		
+			</wi:tabPanel>
+	
+		</s:div>
+
+	</h:body>
+
 </html>

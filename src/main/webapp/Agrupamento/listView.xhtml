@@ -13,128 +13,155 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-<ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	
 
 	<ui:define name="title">#{messages['agrupamento.titlePage']}</ui:define>
 
 	<ui:param
-		name="home"
-		value="#{agrupamentoHome}" />
+		 name="home"
+		 value="#{agrupamentoHome}" />
 
 	<ui:define name="searchGrid">
+		
 		<wi:dataTable
-			values="#{agrupamentoList.list(15)}"
-			bean="#{agrupamentoList}"
-			tableTitle="#{messages['agrupamento.titleGrid']}"
-			id="agrupamentoList"
-			rowId="#{row.idAgrupamento}">
+			 values="#{agrupamentoList.list(15)}"
+			 bean="#{agrupamentoList}"
+			 tableTitle="#{messages['agrupamento.titleGrid']}"
+			 id="agrupamentoList"
+			 rowId="#{row.idAgrupamento}">
+			
 			<ui:define name="searchForm">
+				
 				<wi:searchForm
-					formId="pesquisarAgrupamentoForm"
-					formTitle="#{messages['searchForm.title']}">
+					 formId="pesquisarAgrupamentoForm"
+					 formTitle="#{messages['searchForm.title']}">
+					
 					<wi:inputText
-						id="agrupamento"
-						value="#{agrupamentoList.entity.agrupamento}"
-						label="#{messages['agrupamento.agrupamento']}" />
+						 id="agrupamento"
+						 value="#{agrupamentoList.entity.agrupamento}"
+						 label="#{messages['agrupamento.agrupamento']}" />
 					<wi:selectSituacaoOneMenu
-						id="ativo"
-						label="#{messages['field.situacao']}"
-						value="#{agrupamentoList.entity.ativo}" />
+						 id="ativo"
+						 label="#{messages['field.situacao']}"
+						 value="#{agrupamentoList.entity.ativo}" />
+				
 				</wi:searchForm>
+			
 			</ui:define>
 
 			<wi:columnOutputText
-				columnId="agrupamento"
-				columnHeader="#{messages['agrupamento.agrupamento']}"
-				value="#{row.agrupamento}" />
+				 columnId="agrupamento"
+				 columnHeader="#{messages['agrupamento.agrupamento']}"
+				 value="#{row.agrupamento}" />
 			<wi:columnSituacao
-				columnId="ativo"
-				columnHeader="#{messages['field.situacao']}"
-				value="#{row.ativo}" />
+				 columnId="ativo"
+				 columnHeader="#{messages['field.situacao']}"
+				 value="#{row.ativo}" />
+		
 		</wi:dataTable>
+	
 	</ui:define>
 
 	<ui:define name="form">
+		
 		<wi:dataForm
-			formId="agrupamentoForm"
-			formTitle="#{messages['form.title']}">
+			 formId="agrupamentoForm"
+			 formTitle="#{messages['form.title']}">
+			
 			<wi:inputText
-				id="agrupamento"
-				required="true"
-				label="#{messages['agrupamento.agrupamento']}"
-				value="#{agrupamentoHome.instance.agrupamento}" />
+				 id="agrupamento"
+				 required="true"
+				 label="#{messages['agrupamento.agrupamento']}"
+				 value="#{agrupamentoHome.instance.agrupamento}" />
 			<wi:selectSituacaoRadio
-				id="ativo"
-				label="#{messages['field.situacao']}"
-				value="#{agrupamentoHome.instance.ativo}" />
+				 id="ativo"
+				 label="#{messages['field.situacao']}"
+				 value="#{agrupamentoHome.instance.ativo}" />
+		
 		</wi:dataForm>
+	
 	</ui:define>
 
 	<ui:define name="tabs">
-		<wi:richTab
-			id="tabEvento"
-			rendered="#{home.managed}"
-			header="#{messages['eventoAgrupamento.evento']}"
-			immediate="true"
-			status=":status"
-			action="#{eventoAgrupamentoHome.newInstance()}">
+		
+		<wi:tab
+			 id="tabEvento"
+			 rendered="#{home.managed}"
+			 immediate="true"
+			 status=":status"
+			 action="#{eventoAgrupamentoHome.newInstance()}"
+			 title="#{messages['eventoAgrupamento.evento']}"
+			 name="tabEvento">
+			
 			<wi:dataForm
-				formId="eventoAgrupamentoForm"
-				formTitle="#{messages['form.title']}">
+				 formId="eventoAgrupamentoForm"
+				 formTitle="#{messages['form.title']}">
+				
 				<wi:tree
-					id="evento"
-					required="true"
-					tree="#{eventoTree}"
-					icon="/img/nivelTree.gif"
-					iconLeaf="/img/file.gif"
-					assignTo="eventoAgrupamentoHome.instance.evento"
-					label="#{messages['eventoAgrupamento.evento']}"
-					value="#{eventoAgrupamentoHome.instance.evento}" />
+					 id="evento"
+					 required="true"
+					 tree="#{eventoTree}"
+					 icon="/img/nivelTree.gif"
+					 iconLeaf="/img/file.gif"
+					 assignTo="eventoAgrupamentoHome.instance.evento"
+					 label="#{messages['eventoAgrupamento.evento']}"
+					 value="#{eventoAgrupamentoHome.instance.evento}" />
 				<wi:selectBooleanCheckbox
-					id="multiplo"
-					label="#{messages['eventoAgrupamento.multiplo']}"
-					value="#{eventoAgrupamentoHome.instance.multiplo}" />
+					 id="multiplo"
+					 label="#{messages['eventoAgrupamento.multiplo']}"
+					 value="#{eventoAgrupamentoHome.instance.multiplo}" />
 				<ui:define name="buttons">
+					
 					<wi:commandButton
-						action="eventoAgrupamentoHome.persist"
-						value="Incluir"
-						id="persistEventoAgrupamento"
-						reRender="eventoAgrupamentoListDiv, eventoAgrupamentoForm" />
+						 action="eventoAgrupamentoHome.persist"
+						 value="Incluir"
+						 id="persistEventoAgrupamento"
+						 reRender="eventoAgrupamentoListDiv, eventoAgrupamentoForm" />
+				
 				</ui:define>
+			
 			</wi:dataForm>
 			<s:div id="eventoAgrupamentoListDiv">
+				
 				<wi:dataTable
-					values="#{eventoAgrupamentoList.list(15)}"
-					bean="#{eventoAgrupamentoList}"
-					tableTitle="#{messages['eventoAgrupamento.titleGrid']}"
-					id="eventoAgrupamentoList">
+					 values="#{eventoAgrupamentoList.list(15)}"
+					 bean="#{eventoAgrupamentoList}"
+					 tableTitle="#{messages['eventoAgrupamento.titleGrid']}"
+					 id="eventoAgrupamentoList">
+					
 					<ui:define name="toolBar">
+						
 						<wi:toolBarRemove
-							actionRemove="eventoAgrupamentoHome.remove(row)"
-							reRender="eventoAgrupamentoListDiv" />
+							 actionRemove="eventoAgrupamentoHome.remove(row)"
+							 reRender="eventoAgrupamentoListDiv" />
+					
 					</ui:define>
 					<wi:columnOutputText
-						columnId="evento"
-						columnHeader="#{messages['eventoAgrupamento.evento']}"
-						value="#{row.evento}" />
+						 columnId="evento"
+						 columnHeader="#{messages['eventoAgrupamento.evento']}"
+						 value="#{row.evento}" />
 					<wi:columnOutputText
-						columnId="caminhoCompleto"
-						columnHeader="#{messages['evento.caminhoCompleto']}"
-						value="#{row.evento.caminhoCompleto.replaceAll('\\|', '/')}" />
+						 columnId="caminhoCompleto"
+						 columnHeader="#{messages['evento.caminhoCompleto']}"
+						 value="#{row.evento.caminhoCompleto.replaceAll('\\|', '/')}" />
 					<wi:columnBoolean
-						columnId="multiplo"
-						columnHeader="#{messages['eventoAgrupamento.multiplo']}"
-						value="#{row.multiplo}" />
+						 columnId="multiplo"
+						 columnHeader="#{messages['eventoAgrupamento.multiplo']}"
+						 value="#{row.multiplo}" />
+				
 				</wi:dataTable>
+			
 			</s:div>
-		</wi:richTab>
+		
+		</wi:tab>
+	
 	</ui:define>
+
 
 </ui:composition>
