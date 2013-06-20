@@ -23,17 +23,19 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
-
-	<s:div id="#{id}SearchForm" styleClass="SearchForm">
+	<h:outputStylesheet
+        library="styleSkinInfox"
+        name="datatable.css" />
+	<s:div id="#{id}SearchForm" styleClass="dtable-search-form">
 		<ui:insert name="searchForm" />
 	</s:div>
 	<a:region>
 		<rich:panel
 			rendered="#{wi:get(showGrid, true)}"
-			bodyClass="panel"
 			header="#{tableTitle}"
 			id="#{id}Panel"
-			styleClass="Panel #{styleClass}"
+			bodyClass="dtable-p-b"
+			styleClass="dtable-p #{styleClass}"
 			style="#{style}">
 
 			<rich:messages
