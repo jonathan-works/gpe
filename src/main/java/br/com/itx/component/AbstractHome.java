@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
-import javax.faces.event.AbortProcessingException;
 import javax.persistence.EntityExistsException;
 
 import org.hibernate.AssertionFailure;
@@ -42,9 +41,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jboss.util.StopWatch;
-import org.richfaces.event.ItemChangeEvent;
-import org.richfaces.event.ItemChangeListener;
-
 import br.com.infox.core.action.list.EntityList;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.AplicationException;

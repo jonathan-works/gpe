@@ -4,16 +4,11 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.event.AbortProcessingException;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.richfaces.event.ItemChangeEvent;
-import org.richfaces.event.ItemChangeListener;
-
 import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.ibpm.entity.DocumentoFisico;
 import br.com.infox.ibpm.entity.LocalizacaoFisica;
