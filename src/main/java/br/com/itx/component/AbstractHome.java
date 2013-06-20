@@ -54,7 +54,7 @@ import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ExcelExportUtil;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractHome<T> extends EntityHome<T> implements ItemChangeListener {
+public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
 
@@ -397,16 +397,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> implements ItemChang
 		return (C) Component.getInstance(name, create);
 	}
 
-	/**
-	 * Evento acionado quando o usuário clica em alguma aba
-	 */
-
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if (event.getNewItemName().equals("search")) {
-			newInstance();
-		}
-		setTab(event.getNewItemName());
+	public void onClickSearchTab(){
+		newInstance();
+	}
+	
+	public void onClickFormTab(){
+		
 	}
 	
 	/**
