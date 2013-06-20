@@ -26,18 +26,14 @@
 				 activeTab="#{home.tab}">
 				<h:form><wi:tabHeaders /></h:form>
 
-                <ui:insert name="changeListeners">
-					
-                    <rich:itemChangeListener binding="#{home}" />
-                
-				</ui:insert>
                 <wi:tab
 					 id="search"
 					 name="search"
 					 rendered="#{showSearchTab}"
 					 immediate="true"
 					 status=":status"
-					 title="#{messages['template.abaPesquisaText']}">
+					 title="#{messages['template.abaPesquisaText']}"
+                     action="#{home.onClickSearchTab}">
 					
                     <a:region>
 						
@@ -58,7 +54,8 @@
 					 immediate="true"
 					 status=":status"
 					 disabled="#{empty disabledForm ? false : disabledForm}"
-					 title="#{messages['template.abaFormularioText']}">
+					 title="#{messages['template.abaFormularioText']}"
+                     action="#{home.onClickFormTab}">
 					
                     <a:region>
 						
