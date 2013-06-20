@@ -1,55 +1,80 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml"
-    xmlns:wi="http://www.itx.com.br/jsf">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+	
 
     <ui:define name="body">
         <ui:param
-            name="showSearchTab"
-            value="#{empty showSearchTab ? true : showSearchTab}" />
+			 name="showSearchTab"
+			 value="#{empty showSearchTab ? true : showSearchTab}" />
         <ui:param
-            name="showFormTab"
-            value="#{empty showFormTab ? true : showFormTab}" />
-        <wi:tabPanel
-            id="defaultTabPanel"
-            switchType="ajax"
-            activeTab="#{home.tab}">
-            <h:form>
-                <wi:tabHeaders />
-            </h:form>
-            <wi:tab
-                id="search"
-                name="search"
-                title="#{messages['template.abaPesquisaText']}"
-                rendered="#{showSearchTab}">
-                <a:region>
-                    <s:div id="searchGridRegion">
-                        <ui:insert name="searchGrid" />
-                    </s:div>
-                </a:region>
-            </wi:tab>
+			 name="showFormTab"
+			 value="#{empty showFormTab ? true : showFormTab}" />
 
-            <wi:tab
-                id="form"
-                name="form"
-                rendered="#{showFormTab}"
-                title="#{messages['template.abaFormularioText']}"
-                disabled="#{empty disabledForm ? false : disabledForm}">
-                <a:region>
-                    <ui:insert name="form" />
-                </a:region>
-            </wi:tab>
+        <h:form id="tabForm">
+			
 
-            <ui:insert name="tabs" />
+            <wi:tabPanel
+				 id="defaultTabPanel"
+				 switchType="ajax"
+				 activeTab="#{home.tab}">
+				<h:form><wi:tabHeaders /></h:form>
 
-        </wi:tabPanel>
-    </ui:define>
+                <ui:insert name="changeListeners">
+					
+                    <rich:itemChangeListener binding="#{home}" />
+                
+				</ui:insert>
+                <wi:tab
+					 id="search"
+					 name="search"
+					 rendered="#{showSearchTab}"
+					 immediate="true"
+					 status=":status"
+					 title="#{messages['template.abaPesquisaText']}">
+					
+                    <a:region>
+						
+                        <s:div id="searchGridRegion">
+							
+                            <ui:insert name="searchGrid" />
+                        
+						</s:div>
+                    
+					</a:region>
+                
+				</wi:tab>
+
+                <wi:tab
+					 id="form"
+					 name="form"
+					 rendered="#{showFormTab}"
+					 immediate="true"
+					 status=":status"
+					 disabled="#{empty disabledForm ? false : disabledForm}"
+					 title="#{messages['template.abaFormularioText']}">
+					
+                    <a:region>
+						
+                        <ui:insert name="form" />
+                    
+					</a:region>
+                
+				</wi:tab>
+
+                <ui:insert name="tabs" />
+
+            
+			</wi:tabPanel>
+        
+		</h:form>
+    
+	</ui:define>
 
 </ui:composition>

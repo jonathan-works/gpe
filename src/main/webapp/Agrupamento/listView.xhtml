@@ -12,16 +12,15 @@
   
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
--->
+  veja em http://www.gnu.org/licenses/  -->
+
 <ui:composition
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
-    xmlns:h="http://java.sun.com/jsf/html">
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
     <ui:define name="title">#{messages['agrupamento.titlePage']}</ui:define>
 
@@ -30,16 +29,20 @@
         value="#{agrupamentoHome}" />
 
     <ui:define name="searchGrid">
+
         <wi:dataTable
             values="#{agrupamentoList.list(15)}"
             bean="#{agrupamentoList}"
             tableTitle="#{messages['agrupamento.titleGrid']}"
             id="agrupamentoList"
             rowId="#{row.idAgrupamento}">
+
             <ui:define name="searchForm">
+
                 <wi:searchForm
                     formId="pesquisarAgrupamentoForm"
                     formTitle="#{messages['searchForm.title']}">
+
                     <wi:inputText
                         id="agrupamento"
                         value="#{agrupamentoList.entity.agrupamento}"
@@ -48,7 +51,9 @@
                         id="ativo"
                         label="#{messages['field.situacao']}"
                         value="#{agrupamentoList.entity.ativo}" />
+
                 </wi:searchForm>
+
             </ui:define>
 
             <wi:columnOutputText
@@ -59,13 +64,17 @@
                 columnId="ativo"
                 columnHeader="#{messages['field.situacao']}"
                 value="#{row.ativo}" />
+
         </wi:dataTable>
+
     </ui:define>
 
     <ui:define name="form">
+
         <wi:dataForm
             formId="agrupamentoForm"
             formTitle="#{messages['form.title']}">
+
             <wi:inputText
                 id="agrupamento"
                 required="true"
@@ -75,18 +84,26 @@
                 id="ativo"
                 label="#{messages['field.situacao']}"
                 value="#{agrupamentoHome.instance.ativo}" />
+
         </wi:dataForm>
+
     </ui:define>
 
     <ui:define name="tabs">
+
         <wi:tab
             id="tabEvento"
             rendered="#{home.managed}"
+            immediate="true"
+            status=":status"
+            action="#{eventoAgrupamentoHome.newInstance()}"
             title="#{messages['eventoAgrupamento.evento']}"
-            action="#{eventoAgrupamentoHome.newInstance()}">
+            name="tabEvento">
+
             <wi:dataForm
                 formId="eventoAgrupamentoForm"
                 formTitle="#{messages['form.title']}">
+
                 <wi:tree
                     id="evento"
                     required="true"
@@ -101,23 +118,30 @@
                     label="#{messages['eventoAgrupamento.multiplo']}"
                     value="#{eventoAgrupamentoHome.instance.multiplo}" />
                 <ui:define name="buttons">
+
                     <wi:commandButton
                         action="eventoAgrupamentoHome.persist"
                         value="Incluir"
                         id="persistEventoAgrupamento"
                         reRender="eventoAgrupamentoListDiv, eventoAgrupamentoForm" />
+
                 </ui:define>
+
             </wi:dataForm>
             <s:div id="eventoAgrupamentoListDiv">
+
                 <wi:dataTable
                     values="#{eventoAgrupamentoList.list(15)}"
                     bean="#{eventoAgrupamentoList}"
                     tableTitle="#{messages['eventoAgrupamento.titleGrid']}"
                     id="eventoAgrupamentoList">
+
                     <ui:define name="toolBar">
+
                         <wi:toolBarRemove
                             actionRemove="eventoAgrupamentoHome.remove(row)"
                             reRender="eventoAgrupamentoListDiv" />
+
                     </ui:define>
                     <wi:columnOutputText
                         columnId="evento"
@@ -131,9 +155,14 @@
                         columnId="multiplo"
                         columnHeader="#{messages['eventoAgrupamento.multiplo']}"
                         value="#{row.multiplo}" />
+
                 </wi:dataTable>
+
             </s:div>
+
         </wi:tab>
+
     </ui:define>
+
 
 </ui:composition>

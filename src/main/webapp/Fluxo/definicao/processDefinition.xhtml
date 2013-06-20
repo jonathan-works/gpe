@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-                xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:c="http://java.sun.com/jsp/jstl/core"
-		        xmlns:a="http://richfaces.org/a4j"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:rich="http://richfaces.org/rich"
-                template="/WEB-INF/xhtml/templates/minimal.xhtml">
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/minimal.xhtml">
+	
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -28,104 +28,166 @@
 <ui:define name="title">#{messages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
 
 <ui:define name="head">
-	<h:outputStylesheet name="processDefinition.css" library="stylesheet"/>
-	<h:outputScript name="jbpmGraph.js" library="js"/>
-    <h:outputScript name="underscore.js" library="js"/>
-</ui:define>
+		
+	<h:outputStylesheet
+			 name="processDefinition.css"
+			 library="stylesheet" />
+	<h:outputScript
+			 name="jbpmGraph.js"
+			 library="js" />
+    <h:outputScript
+			 name="underscore.js"
+			 library="js" />
+
+	</ui:define>
 
 <ui:define name="body">
-	<ui:param name="def" value="#{processBuilder.instance}" />
+		
+	<ui:param
+			 name="def"
+			 value="#{processBuilder.instance}" />
 	
 	<h:form id="form">
+			
 	
-		<wi:richTabPanel 
-			activeItem="#{processBuilder.tab}"
-			switchType="ajax"
-			itemChangeListener="#{processBuilder.processItemChange}">
-			<wi:richTab header="#{messages['processBuilder.properties']}" name="propriedadesTab" id="propriedadesTab">
-				<rich:panel style="clear:both; overflow:auto; padding-bottom:5px"
-					header="#{messages['processBuilder.info']}" >
-					<wi:inputText id="codFluxo" 
-	                              label="#{messages['fluxo.codFluxo']}"
-	                              value="#{processBuilder.id}" 
-						          readonly="true">
+		<wi:tabPanel
+				 switchType="ajax"
+				 itemChangeListener="#{processBuilder.processItemChange}"
+				 activeTab="#{processBuilder.tab}">
+				<h:form><wi:tabHeaders /></h:form>
+			<wi:tab
+					 name="propriedadesTab"
+					 id="propriedadesTab"
+					 title="#{messages['processBuilder.properties']}">
+					
+				<rich:panel
+						 style="clear:both; overflow:auto; padding-bottom:5px"
+						 header="#{messages['processBuilder.info']}">
+						
+					<wi:inputText
+							 id="codFluxo"
+							 label="#{messages['fluxo.codFluxo']}"
+							 value="#{processBuilder.id}"
+							 readonly="true">
+							
 						<f:validator validatorId="idValidator" />
-					</wi:inputText>
+					
+						</wi:inputText>
 	
-					<wi:inputText id="nome"
-	                              label="#{messages['fluxo.fluxo']}"
-	                              value="#{def.name}" 
-	                              readonly="true">
+					<wi:inputText
+							 id="nome"
+							 label="#{messages['fluxo.fluxo']}"
+							 value="#{def.name}"
+							 readonly="true">
 					</wi:inputText>
 					
-					<wi:inputTextarea id="description"
-	                                  value="#{def.description}" 
-						              label="#{messages['processBuilder.description']}">
+					<wi:inputTextarea
+							 id="description"
+							 value="#{def.description}"
+							 label="#{messages['processBuilder.description']}">
 					</wi:inputTextarea> 
-				</rich:panel>
 				
-				<rich:panel styleClass="SwimlanePanel"
-					header="#{messages['processBuilder.swimlanes']}" 
-					rendered="#{processBuilder.exists}">
+					</rich:panel>
+				
+				<rich:panel
+						 styleClass="SwimlanePanel"
+						 header="#{messages['processBuilder.swimlanes']}"
+						 rendered="#{processBuilder.exists}">
+						
 					<ui:include src="swimlanes.xhtml" />
-				</rich:panel>
-			</wi:richTab>
+				
+					</rich:panel>
 			
-			<wi:richTab header="#{messages['processBuilder.nodes']}" name="nodesTab" id="nodesTab" rendered="#{processBuilder.exists}">
+				</wi:tab>
+			
+			<wi:tab
+					 name="nodesTab"
+					 id="nodesTab"
+					 rendered="#{processBuilder.exists}"
+					 title="#{messages['processBuilder.nodes']}">
+					
 				<ui:include src="nodes.xhtml" />
-			</wi:richTab>
 			
-			<wi:richTab header="XML" name="xmlTab" id="xmlTab" 
-				rendered="#{processBuilder.exists}">
+				</wi:tab>
+			
+			<wi:tab
+					 name="xmlTab"
+					 id="xmlTab"
+					 rendered="#{processBuilder.exists}"
+					 title="XML">
+					
 				<ui:include src="xmlEdit.xhtml" />
-			</wi:richTab>
+			
+				</wi:tab>
 	
-			<wi:richTab header="#{messages['processBuilder.graph']}" name="graphTab" id="graphTab" >
+			<wi:tab
+					 name="graphTab"
+					 id="graphTab"
+					 title="#{messages['processBuilder.graph']}">
+					
 				<ui:include src="graph.xhtml" />
-			</wi:richTab>
-		</wi:richTabPanel>
+			
+				</wi:tab>
+		
+			</wi:tabPanel>
 		
 		<h:commandButton
-			id="gravar"
-			action="#{processBuilder.update()}"
-			value="#{messages['processBuilder.saveBtn']}" type="submit" 
-			rendered="#{processBuilder.exists}"/>
+				 id="gravar"
+				 action="#{processBuilder.update()}"
+				 value="#{messages['processBuilder.saveBtn']}"
+				 type="submit"
+				 rendered="#{processBuilder.exists}" />
 	
 		<a:commandButton
-			id="publicar"
-			render="form"
-			action="#{processBuilder.deploy()}"
-			value="#{messages['processBuilder.deployBtn']}" type="submit" 
-			rendered="#{processBuilder.exists}"
-	        limitRender="true"/>
+				 id="publicar"
+				 render="form"
+				 action="#{processBuilder.deploy()}"
+				 value="#{messages['processBuilder.deployBtn']}"
+				 type="submit"
+				 rendered="#{processBuilder.exists}"
+				 limitRender="true" />
 	
 		<h:commandButton
-			id="novoProcesso"
-			action="#{processBuilder.update()}"
-			value="#{messages['processBuilder.saveBtn']}" type="submit" 
-			rendered="#{!processBuilder.exists}"/>
+				 id="novoProcesso"
+				 action="#{processBuilder.update()}"
+				 value="#{messages['processBuilder.saveBtn']}"
+				 type="submit"
+				 rendered="#{!processBuilder.exists}" />
 		<h:commandButton
-						 id="new"
-						 action="#{processBuilder.clearDefinition()}"
-						 value="#{messages['processBuilder.newBtn']}" 
-						 type="submit"
-						 onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;" 
-						 rendered="#{processBuilder.exists}"/>
-    </h:form>
+				 id="new"
+				 action="#{processBuilder.clearDefinition()}"
+				 value="#{messages['processBuilder.newBtn']}"
+				 type="submit"
+				 onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;"
+				 rendered="#{processBuilder.exists}" />
+    
+		</h:form>
 
-	<rich:messages id="messages" ajaxRendered="true" globalOnly="false" />
+	<rich:messages
+			 id="messages"
+			 ajaxRendered="true"
+			 globalOnly="false" />
 
 	<s:div id="actionTemplate">
-		<wi:modalPanel id="actionTemplatePanel"
-					   style="padding:0"
-					   height="550" 
-					   width="920">
+			
+		<wi:modalPanel
+				 id="actionTemplatePanel"
+				 style="padding:0"
+				 height="550"
+				 width="920">
+				
 			<c:if test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}">
+					
 				<ui:include src="actions/#{actionTemplate.fileName}" />
-			</c:if>
-		</wi:modalPanel>
-	</s:div>
+			
+				</c:if>
+		
+			</wi:modalPanel>
+	
+		</s:div>
 
-</ui:define> 
+
+	</ui:define> 
+
 
 </ui:composition>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
+	
 
     <!--
 	  IBPM - Ferramenta de produtividade Java
@@ -28,23 +28,26 @@
 	-->
 
     <ui:param
-        name="pageTitle"
-        value="#{messages['processo.titlePage']}" />
+		 name="pageTitle"
+		 value="#{messages['processo.titlePage']}" />
     <ui:define name="title">#{pageTitle}</ui:define>
 
     <ui:param
-        name="home"
-        value="#{processoHome}" />
+		 name="home"
+		 value="#{processoHome}" />
     <ui:param
-        name="showMenu"
-        value="false" />
+		 name="showMenu"
+		 value="false" />
     <ui:param
-        name="checkPermission"
-        value="#{processoHome.checarVisibilidade()}" />
+		 name="checkPermission"
+		 value="#{processoHome.checarVisibilidade()}" />
 
     <ui:define name="body">
+		
         <s:div id="script">
+			
             <f:verbatim>
+				
                 <script type="text/javascript">
 		    	function verifyFields() { 
 		        	var taskCompleted = "#{util.getFromEventContext('taskCompleted')}";
@@ -63,165 +66,215 @@
 		        	}
 		    	}
 		    </script>
-            </f:verbatim>
-        </s:div>
+            
+			</f:verbatim>
+        
+		</s:div>
 
         <h:form>
+			
             <a:jsFunction
-                name="renderButtons"
-                render="taskButtonsDiv" />
-        </h:form>
+				 name="renderButtons"
+				 render="taskButtonsDiv" />
+        
+		</h:form>
         <h:form>
-            <wi:richTabPanel
-                switchType="ajax"
-                activeItem="#{home.tab}"
-                rendered="#{checkPermission}">
-                <wi:richTab
-                    id="tabFluxo"
-                    rendered="#{!processoHome.managed}"
-                    header="Escolher fluxo"
-                    status=":status"
-                    immediate="true"
-                    action="#{processoHome.limpar()}">
+			
+            <wi:tabPanel
+				 switchType="ajax"
+				 rendered="#{checkPermission}"
+				 activeTab="#{home.tab}">
+				<h:form><wi:tabHeaders /></h:form>
+                <wi:tab
+					 id="tabFluxo"
+					 rendered="#{!processoHome.managed}"
+					 status=":status"
+					 immediate="true"
+					 action="#{processoHome.limpar()}"
+					 title="Escolher fluxo"
+					 name="tabFluxo">
+					
                     <h:messages
-                        id="globalMessages"
-                        globalOnly="true"
-                        styleClass="message" />
-                </wi:richTab>
+						 id="globalMessages"
+						 globalOnly="true"
+						 styleClass="message" />
+                
+				</wi:tab>
 
-                <wi:richTab
-                    id="tabEntrada"
-                    rendered="#{!empty taskInstanceView.fields}"
-                    header="Entrada"
-                    immediate="true"
-                    status=":status">
+                <wi:tab
+					 id="tabEntrada"
+					 rendered="#{!empty taskInstanceView.fields}"
+					 immediate="true"
+					 status=":status"
+					 title="Entrada"
+					 name="tabEntrada">
+					
                     <s:div id="divDocAnterior">
+						
                         <wi:form
-                            canEdit="true"
-                            formTitle="#{taskInstance.name}"
-                            home="#{taskInstanceHome}"
-                            form="#{taskInstanceView}" />
-                    </s:div>
-                </wi:richTab>
+							 canEdit="true"
+							 formTitle="#{taskInstance.name}"
+							 home="#{taskInstanceHome}"
+							 form="#{taskInstanceView}" />
+                    
+					</s:div>
+                
+				</wi:tab>
 
-                <wi:richTab
-                    id="tabSaida"
-                    rendered="#{processoHome.managed}"
-                    header="Saída"
-                    status=":status"
-                    immediate="true">
+                <wi:tab
+					 id="tabSaida"
+					 rendered="#{processoHome.managed}"
+					 status=":status"
+					 immediate="true"
+					 title="Saída"
+					 name="tabSaida">
+					
                     <c:if test="#{empty taskPageAction.taskPagePath}">
+						
                         <s:div id="taskInstanceDiv">
+							
                             <wi:form
-                                canEdit="false"
-                                formTitle="#{taskInstance.name}"
-                                home="#{taskInstanceForm.home}"
-                                reRenderSave="taskInstanceDiv"
-                                form="#{taskInstaceForm}" />
-                        </s:div>
-                    </c:if>
+								 canEdit="false"
+								 formTitle="#{taskInstance.name}"
+								 home="#{taskInstanceForm.home}"
+								 reRenderSave="taskInstanceDiv"
+								 form="#{taskInstaceForm}" />
+                        
+						</s:div>
+                    
+					</c:if>
 
-                </wi:richTab>
+                
+				</wi:tab>
 
-                <wi:richTab
-                    id="tabAnexos"
-                    rendered="#{processoHome.managed}"
-                    header="Documentos do Processo"
-                    status=":status"
-                    immediate="true">
+                <wi:tab
+					 id="tabAnexos"
+					 rendered="#{processoHome.managed}"
+					 status=":status"
+					 immediate="true"
+					 title="Documentos do Processo"
+					 name="tabAnexos">
+					
                     <s:div id="divDocumentosProcesso">
+						
                         <wi:dataTable
-                            values="#{processoDocumentoList.list(15)}"
-                            bean="#{processoDocumentoList}"
-                            tableTitle="#{messages['processo.documentos']} #{home.instance}"
-                            id="processoDocumentoList"
-                            rowId="#{row.idProcessoDocumento}">
+							 values="#{processoDocumentoList.list(15)}"
+							 bean="#{processoDocumentoList}"
+							 tableTitle="#{messages['processo.documentos']} #{home.instance}"
+							 id="processoDocumentoList"
+							 rowId="#{row.idProcessoDocumento}">
+							
                             <ui:define name="headerToolBar" />
                             <wi:columnOutputText
-                                columnId="usuarioInclusao"
-                                columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-                                value="#{usuarioInclusao}" />
+								 columnId="usuarioInclusao"
+								 columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+								 value="#{usuarioInclusao}" />
                             <wi:columnDateTime
-                                columnId="dataInclusao"
-                                columnHeader="#{messages['processoDocumento.dataInclusao']}"
-                                value="#{row.dataInclusao}" />
+								 columnId="dataInclusao"
+								 columnHeader="#{messages['processoDocumento.dataInclusao']}"
+								 value="#{row.dataInclusao}" />
                             <wi:columnOutputText
-                                columnId="processoDocumentoBin"
-                                columnHeader="#{messages['processoDocumentoBin.documento']}"
-                                value="#{row.processoDocumentoBin}" />
-                        </wi:dataTable>
-                    </s:div>
-                </wi:richTab>
+								 columnId="processoDocumentoBin"
+								 columnHeader="#{messages['processoDocumentoBin.documento']}"
+								 value="#{row.processoDocumentoBin}" />
+                        
+						</wi:dataTable>
+                    
+					</s:div>
+                
+				</wi:tab>
 
-                <wi:richTab
-                    id="tabMovimentacoes"
-                    rendered="#{processoHome.managed}"
-                    header="Movimentações do Processo"
-                    status=":status"
-                    immediate="true">
-                    <ui:include
-                        src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
-                </wi:richTab>
+                <wi:tab
+					 id="tabMovimentacoes"
+					 rendered="#{processoHome.managed}"
+					 status=":status"
+					 immediate="true"
+					 title="Movimentações do Processo"
+					 name="tabMovimentacoes">
+					
+                    <ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+                
+				</wi:tab>
 
                 <ui:param
-                    name="action"
-                    value="#{localizacaoDocumentoFisicoAction}" />
-                <wi:richTab
-                    id="documentoFisicoTab"
-                    rendered="#{home.isManaged()}"
-                    header="#{messages['documentoFisico.titleTab']}"
-                    action="#{action.init()}"
-                    immediate="true">
+					 name="action"
+					 value="#{localizacaoDocumentoFisicoAction}" />
+                <wi:tab
+					 id="documentoFisicoTab"
+					 rendered="#{home.isManaged()}"
+					 action="#{action.init()}"
+					 immediate="true"
+					 title="#{messages['documentoFisico.titleTab']}"
+					 name="documentoFisicoTab">
+					
 
                     <s:div id="documentoFisicoDiv">
+						
                         <rich:dataTable
-                            id="documentoFisicoTable"
-                            value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
-                            var="row"
-                            rows="10"
-                            style="width: 75%">
+							 id="documentoFisicoTable"
+							 value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+							 var="row"
+							 rows="10"
+							 style="width: 75%">
+							
                             <rich:column style="width: 40%">
+								
                                 <f:facet name="header">
-                                    <h:outputText
-                                        value="#{messages['documentoFisico.localizacaoFisica']}" />
-                                </f:facet>
-                                <h:outputText
-                                    value="#{row.localizacaoFisica.caminhoCompletoToString()}" />
-                            </rich:column>
+									
+                                    <h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />
+                                
+								</f:facet>
+                                <h:outputText value="#{row.localizacaoFisica.caminhoCompletoToString()}" />
+                            
+							</rich:column>
 
                             <rich:column style="width: 40%">
+								
                                 <f:facet name="header">
-                                    <h:outputText
-                                        value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
-                                </f:facet>
-                                <h:outputText
-                                    value="#{row.descricaoDocumentoFisico}" />
-                            </rich:column>
+									
+                                    <h:outputText value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
+                                
+								</f:facet>
+                                <h:outputText value="#{row.descricaoDocumentoFisico}" />
+                            
+							</rich:column>
 
-                        </rich:dataTable>
+                        
+						</rich:dataTable>
                         <rich:dataScroller
-                            id="dsDocumentoFisicoTable"
-                            for="documentoFisicoTable"
-                            lastPageMode="full"
-                            align="left"
-                            renderIfSinglePage="false" />
-                    </s:div>
-                </wi:richTab>
+							 id="dsDocumentoFisicoTable"
+							 for="documentoFisicoTable"
+							 lastPageMode="full"
+							 align="left"
+							 renderIfSinglePage="false" />
+                    
+					</s:div>
+                
+				</wi:tab>
 
-                <wi:richTab
-                    id="tabPartesDoProcesso"
-                    header="#{messages['parteProcesso.partes']}"
-                    immediate="true"
-                    status=":status"
-                    rendered="#{processoHandler.hasPartes()}">
+                <wi:tab
+					 id="tabPartesDoProcesso"
+					 immediate="true"
+					 status=":status"
+					 rendered="#{processoHandler.hasPartes()}"
+					 title="#{messages['parteProcesso.partes']}"
+					 name="tabPartesDoProcesso">
+					
                     <ui:include src="parteProcessoGrid.xhtml" />
-                </wi:richTab>
-            </wi:richTabPanel>
-        </h:form>
+                
+				</wi:tab>
+            
+			</wi:tabPanel>
+        
+		</h:form>
         <c:if test="#{!checkPermission}">
+			
             <wi:outputText
-                id="error"
-                value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
-        </c:if>
-    </ui:define>
+				 id="error"
+				 value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
+        
+		</c:if>
+    
+	</ui:define>
+
 </ui:composition>
