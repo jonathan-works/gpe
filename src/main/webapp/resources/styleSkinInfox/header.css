@@ -64,14 +64,5 @@
 }
 
 .name.painelUsuario-label {
-	font-weight: bold;
-	float:inherit;
 	color:inherit;
-	padding:inherit;
-	margin:inherit;
-	clear:inherit;
-}
-.value.painelUsuario-select {
-	padding:inherit;
-	float:inherit;
 }

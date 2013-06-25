@@ -55,7 +55,9 @@
 			#{tree.setExpression(assignTo)}
 		</c:if>
 
-		<s:div id="#{id}Form">
+		<s:div
+			id="#{id}Form"
+			styleClass="tree">
 
 			<s:div id="#{id}HiddenId">
 				<h:inputHidden
@@ -66,10 +68,12 @@
 					<s:convertEntity />
 				</h:inputHidden>
 				<script>
-					if (#{empty tree.selected} &amp;&amp; #{required}) {
+				//<![CDATA[
+					if (#{empty tree.selected} && #{required}) {
 						var hiddenId = "#{rich:clientId(id.concat('Hidden'))}";
 						document.getElementById(hiddenId).value = -1;
 					}
+				//]]>
 				</script>
 			</s:div>
 
@@ -77,9 +81,26 @@
 				name="border"
 				value="#{invalid ? 'red' : 'inherit'}" />
 
+			<rich:collapsiblePanel
+				id="#{id}Panel"
+				headerClass="tree-hdr"
+				bodyClass="tree-b"
+				styleClass="tree-p"
+				onswitch="setZIndex('#{rich:clientId(id.concat('Panel'))}')"
+				immediate="true"
+				switchType="client"
+				status=":status"
+				header="#{tree.getSelectedView(tree.selected)}"
+				expanded="#{expanded}">
+				
+				<wi:treePanel
+					switchType="#{switchType}"
+					onclick="#{folderSelectable ? '' : 'return false;'};"/>
+			</rich:collapsiblePanel>
+			
 			<s:div
 				id="#{id}ClearDiv"
-				style="float: right; border: solid 1px #ffff; height: 18px;           border: solid 1px #{border}; text-align: right;">
+				styleClass="tree-div-clear">
 				<a:commandLink
 					id="#{id}Close"
 					status="status"
@@ -96,24 +117,6 @@
 					rendered="#{empty tree.selected}"
 					title="Limpar" />
 			</s:div>
-
-			<rich:collapsiblePanel
-				id="#{id}Panel"
-				style="width: #{width - 20}px;"
-				headerClass="inputTreeHeader"
-				bodyClass="inputTreeBody"
-				styleClass="InputTreePanel"
-				onswitch="setZIndex('#{rich:clientId(id.concat('Panel'))}')"
-				immediate="true"
-				switchType="client"
-				status=":status"
-				header="#{tree.getSelectedView(tree.selected)}"
-				expanded="#{expanded}">
-				
-				<wi:treePanel
-					switchType="#{switchType}"
-					onclick="#{folderSelectable ? '' : 'return false;'};"/>
-			</rich:collapsiblePanel>
 
 		</s:div>
 
