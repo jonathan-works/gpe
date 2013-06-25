@@ -60,7 +60,8 @@
 									id="searchButton"
 									value="Pesquisar"
 									action="#{searchAction}"
-									reRender="#{wi:get(searchReRender, 'pageBody')}">
+									reRender="#{wi:get(searchReRender, 'pageBody')}"
+									styleClass="buttons">
 									<a:param
 										assignTo="#{bean.page}"
 										value="1" />
@@ -74,7 +75,6 @@
 										action="#{util.invokeMethod(clearAction)}"
 										value="Limpar"
 										execute="@this"
-										style="min-width:65px; width:65px;"
 										render="#{wi:get(clearReRender, 'pageBody')}"
 										styleClass="buttons dr-tbpnl-tb-inact" />
 								</a:region>
