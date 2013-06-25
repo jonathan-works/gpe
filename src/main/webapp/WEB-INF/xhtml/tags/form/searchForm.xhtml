@@ -37,9 +37,8 @@
 					<rich:collapsiblePanel
 						expanded="#{wi:get(opened, true)}"
 						style="width: #{wi:get(widthSearchForm, '275px')}"
+						header="#{empty formTitle ? formId : formTitle}"
 						switchType="client">
-						<f:facet name="closeMarker">&#160;</f:facet>
-						<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 						<ui:param
 							name="template"
 							value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
