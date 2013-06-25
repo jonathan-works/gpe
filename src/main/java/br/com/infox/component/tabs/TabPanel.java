@@ -77,7 +77,12 @@ public class TabPanel extends UIPanel implements NamingContainer {
 	}
 
 	public String getSwitchType() {
-		return (String) getStateHelper().get(PropertyKeys.switchType);
+		String switchType = (String) getStateHelper().get(PropertyKeys.switchType);
+		if (switchType == null) {
+			switchType = "ajax";
+			setSwitchType(switchType);
+		}
+		return switchType;
 	}
 
 	public void setSwitchType(String switchType) {
