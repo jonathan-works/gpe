@@ -455,7 +455,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> implements ItemChang
 		ComponentUtil.setValue(instance, "ativo", false);
 		getEntityManager().merge(instance);
 		getEntityManager().flush();
-		instance().add(StatusMessage.Severity.ERROR, getInactiveSuccess());
+		instance().add(StatusMessage.Severity.INFO, getInactiveSuccess());
 		LOG.info(".inactive(" + instance + ")" + getInstanceClassName() + 
 				"): " + sw.getTime());		
 		return "update";
