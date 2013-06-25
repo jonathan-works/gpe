@@ -1,66 +1,79 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:h="http://java.sun.com/jsf/html"
-     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+	
 
-	<ui:define
-         name="head">
-		<h:outputScript library="js" mame ="jqueryExt.js" /> 
+	<ui:define name="head">
+		
+		<h:outputScript
+			 library="js"
+			 mame="jqueryExt.js" /> 
+	
 	</ui:define>
 	
-	<ui:define
-         name="body">
-		<ui:param
-             name="showSearchTab"
-             value="#{wi:get(showSearchTab, true)}" />
-		<ui:param
-             name="showFormTab"
-             value="#{wi:get(showFormTab, true)}" />
+	<ui:define name="body">
 		
-		<wi:richTabPanel
-             switchType="ajax"
-             headerSpacing="2"
-             activeItem="#{home.tab}">		
-			<wi:richTab
-                 id="search"
-                 header="Pesquisa"
-                 action="#{home.onClickSearchTab}"
-                 rendered="#{showSearchTab}"
-                 status=":status">
-				<a:region
-                     renderRegionOnly="true">
-					<s:div
-                         id="searchGridRegion">
-						<ui:insert
-                             name="searchGrid" />
-					</s:div>
-				</a:region>
-			</wi:richTab>	
+		<ui:param
+			 name="showSearchTab"
+			 value="#{wi:get(showSearchTab, true)}" />
+		<ui:param
+			 name="showFormTab"
+			 value="#{wi:get(showFormTab, true)}" />
+		
+		<wi:tabPanel
+			 switchType="ajax"
+			 activeTab="#{home.tab}">
+			<h:form><wi:tabHeaders /></h:form>		
+			<wi:tab
+				 id="search"
+				 action="#{home.onClickSearchTab}"
+				 rendered="#{showSearchTab}"
+				 status=":status"
+				 title="Pesquisa"
+				 name="search">
+				
+				<a:region renderRegionOnly="true">
 					
-			<wi:richTab
-                 id="form"
-                 rendered="#{showFormTab}"
-                 header="Formulário"
-                 immediate="true"
-                 status=":status"
-                 disabled="#{wi:get(disabledForm, false)}"
-                 action="#{home.onClickFormTab}">
-				<a:region
-                     renderRegionOnly="true">
-					<ui:insert
-                         name="form" />
+					<s:div id="searchGridRegion">
+						
+						<ui:insert name="searchGrid" />
+					
+					</s:div>
+				
 				</a:region>
-			</wi:richTab>
 			
-			<ui:insert
-                 name="tabs" />
+			</wi:tab>	
+					
+			<wi:tab
+				 id="form"
+				 rendered="#{showFormTab}"
+				 immediate="true"
+				 status=":status"
+				 disabled="#{wi:get(disabledForm, false)}"
+				 action="#{home.onClickFormTab}"
+				 title="Formulário"
+				 name="form">
+				
+				<a:region renderRegionOnly="true">
+					
+					<ui:insert name="form" />
+				
+				</a:region>
 			
-		</wi:richTabPanel>
+			</wi:tab>
+			
+			<ui:insert name="tabs" />
+			
+		
+		</wi:tabPanel>
+	
 	</ui:define>
+
 
 </ui:composition>

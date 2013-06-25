@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-<!--
+    <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -24,134 +24,130 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-		                  
-	<ui:define
-         name="title">#{messages['consultaEntidadeLog.titulo']}</ui:define>
-	<ui:param
-         name="showFormTab"
-         value="false" />
-	
-	<script>
+
+    <ui:define name="title">#{messages['consultaEntidadeLog.titulo']}</ui:define>
+
+
+    <script>
 		function abrirPopUp(){
 			openPopUp('comprovante', '');
 		}
 	</script>
 
-	<ui:define
-         name="searchGrid">
-		<wi:dataTable
-             values="#{entidadeLogList.list(15)}"
-             bean="#{entidadeLogList}"
-             tableTitle="#{messages['consultaEntidadeLogGrid.titulo']}"
-             id="entidadeLogListTable"
-             showGrid="#{entidadeLogList.instance.inPesquisa}">
-			<ui:define
-                 name="searchForm">
-				<wi:searchForm
-                     formId="pesquisarLogForm"
-                     formTitle="Consulta Log"
-                     showLogicOperator="false"
-                     showButtons="false">
-					<wi:selectOneMenu
-                         id="nomeEntidade"
-                         value="#{entidadeLogList.instance.nomeEntidade}"
-                         items="#{entidadeLogList.nomesDasEntidades}"
-                         noSelectionLabel="[Todos]"
-                         label="#{messages['entidadeLog.nomeEntidade']}" />
-								  	  
-					<wi:selectOneMenuEntity
-                         id="usuario"
-                         value="#{entidadeLogList.instance.usuario}"
-                         items="#{entidadeLogList.usuariosQuePossuemLogs}"
-                         noSelectionLabel="[Todos]"
-                         label="#{messages['entidadeLog.usuario']}" />
-											
-					<wi:inputText
-                         id="ip"
-                         value="#{entidadeLogList.instance.ip}"
-                         label="#{messages['entidadeLog.ip']}" />	
-								  
-					<wi:selectOneMenuEnum
-                         id="tipoOperacao"
-                         items="#{entidadeLogList.tipoOperacaoLogEnumValues}"
-                         value="#{entidadeLogList.instance.tipoOperacaoLogEnum}"
-                         label="#{messages['entidadeLog.tipoOperacao']}"
-                         noSelectionLabel="[Todos]" />
-					
-					<wi:inputDataPeriodo
-                         id="periodo"
-                         valueDateFrom="#{entidadeLogList.instance.dataInicio}"
-                         valueDateTo="#{entidadeLogList.instance.dataFim}"
-                         validatePastDateFrom="true"
-                         validatePastDateTo="true" />
-										  
-					<s:div
-                         styleClass="actionButtons"
-                         style="clear: both; width:250px">					  
-						<wi:commandButton
-                             id="consulta"
-                             value="Consulta"
-                             action="#{entidadeLogList.instance.setInPesquisa(true)}"
-                             onclick="showLoading();"
-                             oncomplete="hideLoading();"
-                             reRender="pageBody" />
-                         			  
-			            <wi:commandButton
-                             id="novaConsulta"
-                             value="Nova Consulta"
-                             onclick="showLoading();"
-                             oncomplete="hideLoading();"
-                             action="#{entidadeLogList.limparTela()}"
-                             reRender="pageBody" />
-					</s:div>
-				</wi:searchForm>
-			</ui:define>
-			
-			<ui:define
-                 name="headerToolBar">#{messages['entidadeLog.detalhe']}</ui:define>
-			<ui:define
-                 name="toolBar">
-				<s:link
-                     view="/Consulta/Log/detalheLog.seam"
-                     onclick="abrirPopUp();"
-                     target="comprovante">
-					<s:conversationPropagation
-                         type="none" />
-					<f:param
-                         name="idPesquisa"
-                         value="#{row.idLog}" />
-					<h:graphicImage
-                         title="Visualizar"
-                         url="#{a4jSkin.imgIconView}"
-                         style="cursor:pointer !important" />
-				</s:link>
-			</ui:define>
-			
-			<wi:columnOutputText
-                 columnId="nomeEntidade"
-                 columnHeader="#{messages['entidadeLog.nomeEntidade']}"
-                 value="#{row.nomeEntidade}" />
-			<wi:columnOutputText
-                 columnId="idEntidade"
-                 columnHeader="#{messages['entidadeLog.idEntidade']}"
-                 value="#{row.idEntidade}" />
-			<wi:columnOutputText
-                 columnId="ip"
-                 columnHeader="#{messages['entidadeLog.ip']}"
-                 value="#{row.ip}" />
-			<wi:columnDateTime
-                 columnId="dataLog"
-                 columnHeader="#{messages['entidadeLog.dataLog']}"
-                 value="#{row.dataLog}"
-                 pattern="dd/MM/yy" />
-			<wi:columnOutputText
-                 columnId="usuario"
-                 columnHeader="#{messages['entidadeLog.usuario']}"
-                 value="#{row.usuario}" />
-			<wi:columnEnum
-                 columnId="tipoOperacao"
-                 columnHeader="#{messages['entidadeLog.tipoOperacao']}"
-                 value="#{row.tipoOperacao}" />
-		</wi:dataTable>
-	</ui:define>
+    <ui:define name="body">
+        <h:form>
+            <rich:panel>
+                <wi:dataTable
+                    values="#{entidadeLogList.list(15)}"
+                    bean="#{entidadeLogList}"
+                    tableTitle="#{messages['consultaEntidadeLogGrid.titulo']}"
+                    id="entidadeLogListTable"
+                    showGrid="#{entidadeLogList.instance.inPesquisa}">
+                    <ui:define name="searchForm">
+                        <wi:searchForm
+                            formId="pesquisarLogForm"
+                            formTitle="Consulta Log"
+                            showLogicOperator="false"
+                            showButtons="false">
+                            <wi:selectOneMenu
+                                id="nomeEntidade"
+                                value="#{entidadeLogList.instance.nomeEntidade}"
+                                items="#{entidadeLogList.nomesDasEntidades}"
+                                noSelectionLabel="[Todos]"
+                                label="#{messages['entidadeLog.nomeEntidade']}" />
+
+                            <wi:selectOneMenuEntity
+                                id="usuario"
+                                value="#{entidadeLogList.instance.usuario}"
+                                items="#{entidadeLogList.usuariosQuePossuemLogs}"
+                                noSelectionLabel="[Todos]"
+                                label="#{messages['entidadeLog.usuario']}" />
+
+                            <wi:inputText
+                                id="ip"
+                                value="#{entidadeLogList.instance.ip}"
+                                label="#{messages['entidadeLog.ip']}" />
+
+                            <wi:selectOneMenuEnum
+                                id="tipoOperacao"
+                                items="#{entidadeLogList.tipoOperacaoLogEnumValues}"
+                                value="#{entidadeLogList.instance.tipoOperacaoLogEnum}"
+                                label="#{messages['entidadeLog.tipoOperacao']}"
+                                noSelectionLabel="[Todos]" />
+
+                            <wi:inputDataPeriodo
+                                id="periodo"
+                                valueDateFrom="#{entidadeLogList.instance.dataInicio}"
+                                valueDateTo="#{entidadeLogList.instance.dataFim}"
+                                validatePastDateFrom="true"
+                                validatePastDateTo="true" />
+
+                            <s:div
+                                styleClass="actionButtons"
+                                style="clear: both; width:250px">
+                                <wi:commandButton
+                                    id="consulta"
+                                    value="Consulta"
+                                    action="#{entidadeLogList.instance.setInPesquisa(true)}"
+                                    onclick="showLoading();"
+                                    oncomplete="hideLoading();"
+                                    reRender="pageBody" />
+
+                                <wi:commandButton
+                                    id="novaConsulta"
+                                    value="Nova Consulta"
+                                    onclick="showLoading();"
+                                    oncomplete="hideLoading();"
+                                    action="#{entidadeLogList.limparTela()}"
+                                    reRender="pageBody" />
+                            </s:div>
+                        </wi:searchForm>
+                    </ui:define>
+
+                    <ui:define name="headerToolBar">#{messages['entidadeLog.detalhe']}</ui:define>
+                    <ui:define name="toolBar">
+                        <s:link
+                            view="/Consulta/Log/detalheLog.seam"
+                            onclick="abrirPopUp();"
+                            target="comprovante">
+                            <s:conversationPropagation type="none" />
+                            <f:param
+                                name="idPesquisa"
+                                value="#{row.idLog}" />
+                            <h:graphicImage
+                                title="Visualizar"
+                                url="#{a4jSkin.imgIconView}"
+                                style="cursor:pointer !important" />
+                        </s:link>
+                    </ui:define>
+
+                    <wi:columnOutputText
+                        columnId="nomeEntidade"
+                        columnHeader="#{messages['entidadeLog.nomeEntidade']}"
+                        value="#{row.nomeEntidade}" />
+                    <wi:columnOutputText
+                        columnId="idEntidade"
+                        columnHeader="#{messages['entidadeLog.idEntidade']}"
+                        value="#{row.idEntidade}" />
+                    <wi:columnOutputText
+                        columnId="ip"
+                        columnHeader="#{messages['entidadeLog.ip']}"
+                        value="#{row.ip}" />
+                    <wi:columnDateTime
+                        columnId="dataLog"
+                        columnHeader="#{messages['entidadeLog.dataLog']}"
+                        value="#{row.dataLog}"
+                        pattern="dd/MM/yy" />
+                    <wi:columnOutputText
+                        columnId="usuario"
+                        columnHeader="#{messages['entidadeLog.usuario']}"
+                        value="#{row.usuario}" />
+                    <wi:columnEnum
+                        columnId="tipoOperacao"
+                        columnHeader="#{messages['entidadeLog.tipoOperacao']}"
+                        value="#{row.tipoOperacao}" />
+                </wi:dataTable>
+            </rich:panel>
+        </h:form>
+    </ui:define>
 </ui:composition>

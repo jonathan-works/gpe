@@ -39,8 +39,6 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
-import org.richfaces.event.ItemChangeEvent;
-import org.richfaces.event.ItemChangeListener;
 import org.xml.sax.InputSource;
 
 import br.com.infox.ibpm.entity.Fluxo;
@@ -56,7 +54,7 @@ import br.com.itx.util.EntityUtil;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessBuilder implements Serializable, ItemChangeListener {
+public class ProcessBuilder implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -346,14 +344,11 @@ public class ProcessBuilder implements Serializable, ItemChangeListener {
 		return typeFitter;
 	}
 
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if  (event.getNewItemName().equals("graphTab")) {
-			try {
-				getProcessBuilderGraph().paintGraph();
-			} catch (IOException e) {
-				throw new AbortProcessingException(e);
-			}
+	public void getPaintedGraph() throws AbortProcessingException{
+		try {
+			getProcessBuilderGraph().paintGraph();
+		} catch (IOException e) {
+			throw new AbortProcessingException(e);
 		}
 	}
 	

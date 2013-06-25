@@ -30,7 +30,7 @@
 	<ui:param
 		name="clearAction"
 		value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}" />
-	<f:subview id="#{formId}">
+	<h:form id="#{formId}">
 		<f:validateBean disabled="true">
 			<a:region>
 				<s:div styleClass="edit">
@@ -85,5 +85,5 @@
 				</s:div>
 			</a:region>
 		</f:validateBean>
-	</f:subview>
+	</h:form>
 </ui:composition>

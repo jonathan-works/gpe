@@ -13,116 +13,126 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-<ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+--><ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	
 
     <ui:param
-        name="pageTitle"
-        value="Detalhes do Processo" />
+		 name="pageTitle"
+		 value="Detalhes do Processo" />
     <ui:define name="title">#{pageTitle}</ui:define>
 
     <ui:define name="body">
+		
 
         <h:messages
-            globalOnly="true"
-            styleClass="message"
-            id="globalMessages" />
+			 globalOnly="true"
+			 styleClass="message"
+			 id="globalMessages" />
 
-        <h:form>
-            <wi:richTabPanel
-                headerSpacing="2"
-                activeItem="#{processoHome.tab}">
-                <rich:itemChangeListener binding="#{processoHome}" />
-                <rich:itemChangeListener
-                    binding="#{processoDocumentoHome}" />
-                <wi:richTab
-                    id="form"
-                    name="form"
-                    header="#{messages['acaoProcesso.menuText']}"
-                    immediate="true"
-                    status=":status">
+            <wi:tabPanel
+				 headerSpacing="2"
+				 activeTab="#{processoHome.tab}">
+				<h:form><wi:tabHeaders /></h:form>
+                <wi:tab
+					 id="form"
+					 name="form"
+					 immediate="true"
+					 status=":status"
+					 title="#{messages['acaoProcesso.menuText']}">
+					
 
-                    <ui:include
-                        src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
-                </wi:richTab>
+                    <ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+                
+				</wi:tab>
 
-                <wi:richTab
-                    id="tabAnexos"
-                    name="tabAnexos"
-                    header="Documentos do Processo"
-                    immediate="true"
-                    status=":status">
+                <wi:tab
+					 id="tabAnexos"
+					 name="tabAnexos"
+					 immediate="true"
+					 status=":status"
+					 title="Documentos do Processo">
+					
                     <wi:dataTable
-                        values="#{processoDocumentoList.list(15)}"
-                        bean="#{processoDocumentoList}"
-                        tableTitle="Documentos do Processo"
-                        id="processoDocumentoList"
-                        rowId="#{row.idProcessoDocumento}">
-                        <ui:define name="toolBar"></ui:define>
-                        <ui:define name="headerToolBar"></ui:define>
+						 values="#{processoDocumentoList.list(15)}"
+						 bean="#{processoDocumentoList}"
+						 tableTitle="Documentos do Processo"
+						 id="processoDocumentoList"
+						 rowId="#{row.idProcessoDocumento}">
+						
+                        <ui:define name="toolBar" />
+                        <ui:define name="headerToolBar" />
                         <wi:columnOutputText
-                            columnId="usuarioInclusao"
-                            columnHeader="Usuário"
-                            value="#{row.usuarioInclusao}" />
+							 columnId="usuarioInclusao"
+							 columnHeader="Usuário"
+							 value="#{row.usuarioInclusao}" />
                         <wi:columnOutputText
-                            columnId="dataInclusao"
-                            columnHeader="Data"
-                            value="#{row.dataInclusao}" />
+							 columnId="dataInclusao"
+							 columnHeader="Data"
+							 value="#{row.dataInclusao}" />
                         <wi:columnOutputText
-                            columnId="processoDocumento"
-                            columnHeader="Processo Documento"
-                            value="#{row.processoDocumento.equals('null') ? '-':row.processoDocumento}" />
+							 columnId="processoDocumento"
+							 columnHeader="Processo Documento"
+							 value="#{row.processoDocumento.equals('null') ? '-':row.processoDocumento}" />
                         <wi:columnOutputText
-                            columnId="processoDocumentoBin"
-                            columnHeader="Processo Documento Bin"
-                            value="#{row.processoDocumentoBin}" />
+							 columnId="processoDocumentoBin"
+							 columnHeader="Processo Documento Bin"
+							 value="#{row.processoDocumentoBin}" />
                         <wi:columnOutputText
-                            columnId="processoDocumentoBin.sizeFormatado"
-                            columnHeader="Tamanho: "
-                            value="#{row.processoDocumentoBin.sizeFormatado}" />
-                    </wi:dataTable>
-                </wi:richTab>
+							 columnId="processoDocumentoBin.sizeFormatado"
+							 columnHeader="Tamanho: "
+							 value="#{row.processoDocumentoBin.sizeFormatado}" />
+                    
+					</wi:dataTable>
+                
+				</wi:tab>
 
-                <wi:richTab
-                    id="tabAnexar"
-                    name="tabAnexar"
-                    header="Anexar Documento"
-                    immediate="true"
-                    status=":status">
+                <wi:tab
+					 id="tabAnexar"
+					 name="tabAnexar"
+					 immediate="true"
+					 status=":status"
+					 title="Anexar Documento"
+                     action="#{processoDocumentoHome.newInstance()}">
+					
                     <wi:ajaxDiv id="divAnexarDocumentos">
+						
                         <wi:dataForm
-                            formId="anexarDocumentosForm"
-                            formTitle="#{messages['processoDocumento.anexarDocumento']}">
-                            <ui:include
-                                src="/WEB-INF/xhtml/components/form/anexarDocumento.xhtml" />
-                            <ui:include
-                                src="/WEB-INF/xhtml/components/form/buttons/anexarDocumentoButtons.xhtml" />
+							 formId="anexarDocumentosForm"
+							 formTitle="#{messages['processoDocumento.anexarDocumento']}">
+							
+                            <ui:include src="/WEB-INF/xhtml/components/form/anexarDocumento.xhtml" />
+                            <ui:include src="/WEB-INF/xhtml/components/form/buttons/anexarDocumentoButtons.xhtml" />
                             <ui:define name="buttons" />
-                        </wi:dataForm>
-                    </wi:ajaxDiv>
-                </wi:richTab>
+                        
+						</wi:dataForm>
+                    
+					</wi:ajaxDiv>
+                
+				</wi:tab>
 
-                <wi:richTab
-                    id="tabPartesDoProcesso"
-                    name="tabPartesDoProcesso"
-                    header="#{messages['parteProcesso.partes']}"
-                    immediate="true"
-                    status=":status"
-                    rendered="#{processoHandler.hasPartes()}">
-                    <ui:include
-                        src="/Processo/parteProcessoGridRO.xhtml" />
-                </wi:richTab>
-            </wi:richTabPanel>
-        </h:form>
+                <wi:tab
+					 id="tabPartesDoProcesso"
+					 name="tabPartesDoProcesso"
+					 immediate="true"
+					 status=":status"
+					 rendered="#{processoHandler.hasPartes()}"
+					 title="#{messages['parteProcesso.partes']}">
+					
+                    <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
+                
+				</wi:tab>
+            
+			</wi:tabPanel>
+        
+    
+	</ui:define>
 
-    </ui:define>
 
 </ui:composition>

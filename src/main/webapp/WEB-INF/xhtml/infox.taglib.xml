@@ -577,6 +577,13 @@
 		</component>
 	</tag>
 	<tag>
+		<tag-name>tabHeaders</tag-name>
+		<component>
+			<component-type>br.com.infox.component.tabs.TabHeaders</component-type>
+			<renderer-type>br.com.infox.component.tabs.TabHeadersRenderer</renderer-type>
+		</component>
+	</tag>
+	<tag>
 		<tag-name>richTabPanel</tag-name>
 		<component>
 			<component-type>richTabPanel</component-type>

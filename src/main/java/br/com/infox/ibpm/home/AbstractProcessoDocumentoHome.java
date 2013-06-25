@@ -306,15 +306,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		return ret;
 	}
 	
-	@Override
-	public void processItemChange(ItemChangeEvent event)
-			throws AbortProcessingException {
-		if (event.getNewItemName().equals("tabAnexar")){
-			newInstance();
-		}
-		super.processItemChange(event);
-	}
-	
 	public String getDocumento() {
 		return documento;
 	}

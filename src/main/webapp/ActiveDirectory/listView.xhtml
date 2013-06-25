@@ -14,379 +14,421 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/core/tabbedTemplateCrudAction.xhtml">
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/tabbedTemplateCrudAction.xhtml">
+	
 
 
-	<ui:define
-         name="title">#{messages['activeDirectory.titlePage']}</ui:define>
+	<ui:define name="title">#{messages['activeDirectory.titlePage']}</ui:define>
 	<ui:param
-         name="action"
-         value="#{activeDirectoryAction}" />
+		 name="action"
+		 value="#{activeDirectoryAction}" />
 	<ui:param
-         name="showMenu"
-         value="#{identity.loggedIn}" />
+		 name="showMenu"
+		 value="#{identity.loggedIn}" />
 	<ui:param
-         name="selectedTab"
-         value="#{action.tab}" />
+		 name="selectedTab"
+		 value="#{action.tab}" />
 
 
-	<ui:define
-         name="searchGrid">
+	<ui:define name="searchGrid">
+		
 
-		<s:div
-             id="parametrosId">
+		<s:div id="parametrosId">
+			
 			<rich:panel
-                 id="paramId"
-                 header="Parametros"
-                 style="width:350px; margin:3px; padding:5px; float:left">
+				 id="paramId"
+				 header="Parametros"
+				 style="width:350px; margin:3px; padding:5px; float:left">
+				
 
 				<wi:outputText
-                     id="domain"
-                     value="#{empty action.getLDAPDomain() ?'Domínio não informado':action.getLDAPDomain()}"
-                     label="#{messages['activeDirectory.domain']}" />
+					 id="domain"
+					 value="#{empty action.getLDAPDomain() ?'Domínio não informado':action.getLDAPDomain()}"
+					 label="#{messages['activeDirectory.domain']}" />
 
 				<wi:outputText
-                     id="host"
-                     value="#{(action.getLDAPHost() == null)?'Host não informado':action.getLDAPHost()}"
-                     label="#{messages['activeDirectory.host']}" />
+					 id="host"
+					 value="#{(action.getLDAPHost() == null)?'Host não informado':action.getLDAPHost()}"
+					 label="#{messages['activeDirectory.host']}" />
 
 				<wi:outputText
-                     id="login"
-                     value="#{(action.getLDAPLogin() == null)?'Login não informada':action.getLDAPLogin()}"
-                     label="#{messages['activeDirectory.login']}" />
+					 id="login"
+					 value="#{(action.getLDAPLogin() == null)?'Login não informada':action.getLDAPLogin()}"
+					 label="#{messages['activeDirectory.login']}" />
 
 				<wi:outputText
-                     id="authentication"
-                     value="#{(action.getLDAPAuthentication() == null)?'Autenticação não informada':action.getLDAPAuthentication()}"
-                     label="#{messages['activeDirectory.authentication']}" />
+					 id="authentication"
+					 value="#{(action.getLDAPAuthentication() == null)?'Autenticação não informada':action.getLDAPAuthentication()}"
+					 label="#{messages['activeDirectory.authentication']}" />
 
+			
 			</rich:panel>
+		
 		</s:div>
 
 
-		<s:div
-             id="divUsuario">
+		<s:div id="divUsuario">
+			
 			<wi:dataTable
-                 id="idUsuarioList"
-                 values="#{activeDirectoryAction.usuariosADList.list(10)}"
-                 bean="#{activeDirectoryAction.usuariosADList}"
-                 hideOrder="true"
-                 tableTitle="#{messages['activeDirectory.titleGrid']}">
-				<ui:define
-                     name="searchForm">
+				 id="idUsuarioList"
+				 values="#{activeDirectoryAction.usuariosADList.list(10)}"
+				 bean="#{activeDirectoryAction.usuariosADList}"
+				 hideOrder="true"
+				 tableTitle="#{messages['activeDirectory.titleGrid']}">
+				
+				<ui:define name="searchForm">
+					
 					<wi:searchForm
-                         formId="activeDirecSearchForm"
-                         searchReRender="divUsuario"
-                         showSalvarPesquisa="false"
-                         searchAction="#{activeDirectoryAction.setUsuariosADList(null)}"
-                         clearAction="activeDirectoryAction.newInstance()"
-                         formTitle="#{messages['searchForm.title']}">
+						 formId="activeDirecSearchForm"
+						 searchReRender="divUsuario"
+						 showSalvarPesquisa="false"
+						 searchAction="#{activeDirectoryAction.setUsuariosADList(null)}"
+						 clearAction="activeDirectoryAction.newInstance()"
+						 formTitle="#{messages['searchForm.title']}">
+						
 						<wi:inputText
-                             id="nomeUsuario"
-                             label="#{messages['activeDirectory.nome']}"
-                             value="#{activeDirectoryAction.entity.nome}" />
+							 id="nomeUsuario"
+							 label="#{messages['activeDirectory.nome']}"
+							 value="#{activeDirectoryAction.entity.nome}" />
+					
 					</wi:searchForm>
+				
 				</ui:define>
-				<ui:define
-                     name="toolBar">
+				<ui:define name="toolBar">
+					
 					<wi:toolBarEdit
-                         rowId="#{row.idPessoa}"
-                         action="#{action.setInstance(row)}" />
+						 rowId="#{row.idPessoa}"
+						 action="#{action.setInstance(row)}" />
+				
 				</ui:define>
 
 				<wi:columnOutputText
-                     columnId="idNome"
-                     columnHeader="#{messages['activeDirectory.nome']}"
-                     value="#{row.nome}" />
+					 columnId="idNome"
+					 columnHeader="#{messages['activeDirectory.nome']}"
+					 value="#{row.nome}" />
 				<wi:columnOutputText
-                     columnId="idlogin"
-                     columnHeader="#{messages['activeDirectory.login']}"
-                     value="#{row.login}" />
+					 columnId="idlogin"
+					 columnHeader="#{messages['activeDirectory.login']}"
+					 value="#{row.login}" />
 				<wi:columnOutputText
-                     columnId="idEmail"
-                     columnHeader="#{messages['activeDirectory.email']}"
-                     value="#{row.email}" />
+					 columnId="idEmail"
+					 columnHeader="#{messages['activeDirectory.email']}"
+					 value="#{row.email}" />
 				<wi:columnOutputText
-                     columnId="cpfColumnID"
-                     columnHeader="#{messages['activeDirectory.cpf']}"
-                     value="#{row.cpf}" />
+					 columnId="cpfColumnID"
+					 columnHeader="#{messages['activeDirectory.cpf']}"
+					 value="#{row.cpf}" />
 				<wi:columnOutputText
-                     columnId="ldap"
-                     columnHeader="#{messages['activeDirectory.ldap']}"
-                     value="#{( row.ldap != null ) ? ( row.ldap ? 'Sim' : 'Não' ) : 'Não'}" />
+					 columnId="ldap"
+					 columnHeader="#{messages['activeDirectory.ldap']}"
+					 value="#{( row.ldap != null ) ? ( row.ldap ? 'Sim' : 'Não' ) : 'Não'}" />
 					============#{row.ldap}=========
+			
 			</wi:dataTable>
+		
 		</s:div>
+	
 	</ui:define>
-	<ui:define
-         name="form">
+	<ui:define name="form">
+		
 		<wi:dataForm
-             formId="usuarioForm"
-             formTitle="#{messages['form.title']} - #{action.instance.nome}">
+			 formId="usuarioForm"
+			 formTitle="#{messages['form.title']} - #{action.instance.nome}">
+			
 
 			<wi:inputText
-                 id="nomeId"
-                 required="true"
-                 value="#{action.instance.nome}"
-                 label="#{messages['usuarioLogin.nome']}" />
+				 id="nomeId"
+				 required="true"
+				 value="#{action.instance.nome}"
+				 label="#{messages['usuarioLogin.nome']}" />
 			<wi:inputText
-                 id="loginId"
-                 required="true"
-                 value="#{action.instance.login}"
-                 label="#{messages['usuarioLogin.login']}" />
+				 id="loginId"
+				 required="true"
+				 value="#{action.instance.login}"
+				 label="#{messages['usuarioLogin.login']}" />
 			<wi:inputCpf
-                 id="cpfId"
-                 required="true"
-                 value="#{action.instance.cpf}"
-                 label="#{messages['usuario.cpf']}" />
+				 id="cpfId"
+				 required="true"
+				 value="#{action.instance.cpf}"
+				 label="#{messages['usuario.cpf']}" />
 			<wi:inputEmail
-                 id="emailId"
-                 required="true"
-                 value="#{action.instance.email}"
-                 label="#{messages['usuario.email']}" />
+				 id="emailId"
+				 required="true"
+				 value="#{action.instance.email}"
+				 label="#{messages['usuario.email']}" />
 			<wi:selectBooleanCheckbox
-                 id="bloqueioId"
-                 required="false"
-                 value="#{action.instance.bloqueio}"
-                 label="#{messages['usuario.bloqueado']}" />
+				 id="bloqueioId"
+				 required="false"
+				 value="#{action.instance.bloqueio}"
+				 label="#{messages['usuario.bloqueado']}" />
 			<wi:selectBooleanRadio
-                 id="ativoId"
-                 required="true"
-                 value="#{action.instance.ativo}"
-                 label="#{messages['field.situacao']}" />
+				 id="ativoId"
+				 required="true"
+				 value="#{action.instance.ativo}"
+				 label="#{messages['field.situacao']}" />
 			<wi:selectBooleanRadio
-                 id="ldapId"
-                 required="true"
-                 disabled="true"
-                 value="#{action.instance.ldap}"
-                 label="#{messages['usuarioLogin.ldap']}" />
+				 id="ldapId"
+				 required="true"
+				 disabled="true"
+				 value="#{action.instance.ldap}"
+				 label="#{messages['usuarioLogin.ldap']}" />
 
 			<wi:selectBooleanCheckbox
-                 id="provisorioId"
-                 required="true"
-                 value="#{action.instance.provisorio}"
-                 label="#{messages['usuario.provisorio']}" />
+				 id="provisorioId"
+				 required="true"
+				 value="#{action.instance.provisorio}"
+				 label="#{messages['usuario.provisorio']}" />
 			<ui:define
-                 name="buttons"
-                 id="importarId">
+				 name="buttons"
+				 id="importarId">
+				
 				<a:commandButton
-                     value="Importar"
-                     action="#{action.importeUsuarioAD()}"
-                     styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
-                     status=":status"
-                     render="pageBody"
-                     limitRender="true" />
+					 value="Importar"
+					 action="#{action.importeUsuarioAD()}"
+					 styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
+					 status=":status"
+					 render="pageBody"
+					 limitRender="true" />
+			
 			</ui:define>
 
+		
 		</wi:dataForm>
+	
 	</ui:define>
 
-
-	<ui:define
-         name="tabs">
-		<wi:richTab
-             id="enderecoTab"
-             label="#{messages['endereco.titlePage']}"
-             action="#{action.newEndereco()}"
-             rendered="#{not empty action.instance.idPessoa}"
-             status=":status">
-			<s:div
-                 id="enderecoDiv">
-
+	<ui:define name="tabs">
+		
+		<wi:tab
+			 id="enderecoTab"
+			 label="#{messages['endereco.titlePage']}"
+			 action="#{action.newEndereco()}"
+			 rendered="#{not empty action.instance.idPessoa}"
+			 status=":status"
+			 name="enderecoTab">
+			
+			<s:div id="enderecoDiv">
+				
 				<wi:dataForm
-                     formId="endeId"
-                     formTitle="#{messages['form.title']} - #{action.instance.nome}">
+					 formId="endeId"
+					 formTitle="#{messages['form.title']} - #{action.instance.nome}">
+					
 
 						<wi:suggest
-                         id="#{id}Cep"
-                         bean="#{cepSuggest}"
-                         label="#{messages['endereco.cep']}"
-                         required="true"
-                         reRender="enderecoDiv"
-                         maxlength="9"
-                         minChars="3"
-                         onkeyup="onlyNumberCep(this)">
-							<ui:define
-                             name="columns">
+						 id="#{id}Cep"
+						 bean="#{cepSuggest}"
+						 label="#{messages['endereco.cep']}"
+						 required="true"
+						 reRender="enderecoDiv"
+						 maxlength="9"
+						 minChars="3"
+						 onkeyup="onlyNumberCep(this)">
+						
+							<ui:define name="columns">
+							
 								<h:column>
-									<h:outputText
-                                     value="#{var.numeroCep}" />
-								</h:column>
+								
+									<h:outputText value="#{var.numeroCep}" />
+								
+							</h:column>
 								<h:column>
-									<h:outputText
-                                     value="#{var.nomeLogradouro}" />
-								</h:column>
+								
+									<h:outputText value="#{var.nomeLogradouro}" />
+								
+							</h:column>
 								<h:column>
-									<h:outputText
-                                     value="#{var.nomeBairro}" />
-								</h:column>
-							</ui:define>
-						</wi:suggest>
+								
+									<h:outputText value="#{var.nomeBairro}" />
+								
+							</h:column>
+							
+						</ui:define>
+						
+					</wi:suggest>
 						<wi:inputText
-                         id="estadoId"
-                         required="true"
-                         disabled="true"
-                         value="#{enderecoHome.instance.nomeEstado}"
-                         label="#{messages['endereco.nomeEstado']}" />
+						 id="estadoId"
+						 required="true"
+						 disabled="true"
+						 value="#{enderecoHome.instance.nomeEstado}"
+						 label="#{messages['endereco.nomeEstado']}" />
 						<wi:inputText
-                         id="cidadeId"
-                         required="true"
-                         disabled="true"
-                         value="#{enderecoHome.instance.nomeCidade}"
-                         label="#{messages['endereco.nomeCidade']}" />
+						 id="cidadeId"
+						 required="true"
+						 disabled="true"
+						 value="#{enderecoHome.instance.nomeCidade}"
+						 label="#{messages['endereco.nomeCidade']}" />
 						<wi:inputText
-                         id="bairroId"
-                         required="true"
-                         disabled="true"
-                         value="#{enderecoHome.instance.nomeBairro}"
-                         label="#{messages['endereco.nomeBairro']}" />
+						 id="bairroId"
+						 required="true"
+						 disabled="true"
+						 value="#{enderecoHome.instance.nomeBairro}"
+						 label="#{messages['endereco.nomeBairro']}" />
 						<wi:inputText
-                         id="lougradouroId"
-                         required="true"
-                         disabled="true"
-                         value="#{enderecoHome.instance.nomeLogradouro}"
-                         label="#{messages['endereco.nomeLogradouro']}" />
+						 id="lougradouroId"
+						 required="true"
+						 disabled="true"
+						 value="#{enderecoHome.instance.nomeLogradouro}"
+						 label="#{messages['endereco.nomeLogradouro']}" />
 						<wi:inputText
-                         id="numeroId"
-                         required="true"
-                         value="#{enderecoHome.instance.numeroEndereco}"
-                         label="#{messages['endereco.numeroEndereco']}" />
+						 id="numeroId"
+						 required="true"
+						 value="#{enderecoHome.instance.numeroEndereco}"
+						 label="#{messages['endereco.numeroEndereco']}" />
 						<wi:inputText
-                         id="complementoId"
-                         required="false"
-                         value="#{enderecoHome.instance.complemento}"
-                         label="#{messages['endereco.complemento']}" />
+						 id="complementoId"
+						 required="false"
+						 value="#{enderecoHome.instance.complemento}"
+						 label="#{messages['endereco.complemento']}" />
 						<wi:selectBooleanCheckbox
-                         id="correspondenciaId"
-                         required="true"
-                         value="#{enderecoHome.instance.correspondencia}"
-                         label="#{messages['endereco.correspondencia']}" />
+						 id="correspondenciaId"
+						 required="true"
+						 value="#{enderecoHome.instance.correspondencia}"
+						 label="#{messages['endereco.correspondencia']}" />
 
 					<ui:define
-                         name="buttons"
-                         id="importarEndId">
+						 name="buttons"
+						 id="importarEndId">
+						
 						<a:commandButton
-                             value="Incluir"
-                             action="#{action.incluirEndereco()}"
-                             styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
-                             status=":status"
-                             render="enderecoDiv, enderecoList"
-                             limitRender="true"/>
+							 value="Incluir"
+							 action="#{action.incluirEndereco()}"
+							 styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
+							 status=":status"
+							 render="enderecoDiv, enderecoList"
+							 limitRender="true" />
+					
 					</ui:define>
 
+				
 				</wi:dataForm>
+			
 			</s:div>
 
 			<wi:dataTable
-                 id="enderecoList"
-                 values="#{action.listEndereco(20)}"
-                 bean="#{enderecoList}"
-                 tableTitle="#{messages['endereco.titleGrid']} - #{action.instance.nome}">
+				 id="enderecoList"
+				 values="#{action.listEndereco(20)}"
+				 bean="#{enderecoList}"
+				 tableTitle="#{messages['endereco.titleGrid']} - #{action.instance.nome}">
+				
 							
-				<ui:define
-                     name="toolBar">
+				<ui:define name="toolBar">
+					
 					<wi:toolBarRemove
-                         actionRemove="activeDirectoryAction.removeEndereco(row)"
-                         reRender="enderecoTab, enderecoDiv, enderecoList" />
+						 actionRemove="activeDirectoryAction.removeEndereco(row)"
+						 reRender="enderecoTab, enderecoDiv, enderecoList" />
+				
 				</ui:define>
 
 				<wi:columnOutputText
-                     columnId="logradouroID"
-                     columnHeader="#{messages['endereco.nomeLogradouro']}"
-                     value="#{row.nomeLogradouro}" />
+					 columnId="logradouroID"
+					 columnHeader="#{messages['endereco.nomeLogradouro']}"
+					 value="#{row.nomeLogradouro}" />
 				<wi:columnOutputText
-                     columnId="bairroID"
-                     columnHeader="#{messages['endereco.nomeBairro']}"
-                     value="#{row.nomeBairro}" />
+					 columnId="bairroID"
+					 columnHeader="#{messages['endereco.nomeBairro']}"
+					 value="#{row.nomeBairro}" />
 				<wi:columnOutputText
-                     columnId="correspondenciaId"
-                     columnHeader="#{messages['endereco.correspondencia']}"
-                     value="#{row.correspondencia ? 'Sim' : 'Não'}" />
+					 columnId="correspondenciaId"
+					 columnHeader="#{messages['endereco.correspondencia']}"
+					 value="#{row.correspondencia ? 'Sim' : 'Não'}" />
+			
 			</wi:dataTable>
 
-		</wi:richTab>
+		
+		</wi:tab>
 
-		<wi:richTab
-             id="localizacaoTab"
-             label="#{messages['usuarioLocalizacao.titlePage']}"
-             action="#{action.newUsuarioLocalizacao()}"
-             rendered="#{not empty action.instance.idPessoa}"
-             status=":status">
-			<s:div
-                 id="usuLocDiv">
+		<wi:tab
+			 id="localizacaoTab"
+			 label="#{messages['usuarioLocalizacao.titlePage']}"
+			 action="#{action.newUsuarioLocalizacao()}"
+			 rendered="#{not empty action.instance.idPessoa}"
+			 status=":status"
+			 name="localizacaoTab">
+			
+			<s:div id="usuLocDiv">
+				
 				<wi:dataForm
-                     formId="locId"
-                     formTitle="#{messages['form.title']} - #{action.instance.nome}">
+					 formId="locId"
+					 formTitle="#{messages['form.title']} - #{action.instance.nome}">
+					
 
 					<wi:tree
-                         id="usuarioLocalizacao"
-                         required="true"
-                         tree="#{localizacaoTree}"
-                         icon="/img/nivelTree.gif"
-                         iconLeaf="/img/file.gif"
-                         assignTo="usuarioLocalizacaoHome.localizacao"
-                         label="#{messages['usuarioLocalizacao.localizacao']}" />
+						 id="usuarioLocalizacao"
+						 required="true"
+						 tree="#{localizacaoTree}"
+						 icon="/img/nivelTree.gif"
+						 iconLeaf="/img/file.gif"
+						 assignTo="usuarioLocalizacaoHome.localizacao"
+						 label="#{messages['usuarioLocalizacao.localizacao']}" />
 
 					<wi:tree
-                         id="papel"
-                         required="true"
-                         tree="#{papelTree}"
-                         icon="/img/nivelTree.gif"
-                         iconLeaf="/img/file.gif"
-                         assignTo="usuarioLocalizacaoHome.papel"
-                         label="#{messages['usuarioLocalizacao.papel']}" />
+						 id="papel"
+						 required="true"
+						 tree="#{papelTree}"
+						 icon="/img/nivelTree.gif"
+						 iconLeaf="/img/file.gif"
+						 assignTo="usuarioLocalizacaoHome.papel"
+						 label="#{messages['usuarioLocalizacao.papel']}" />
 						
 					<wi:selectBooleanCheckbox
-                         id="resploc"
-                         label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}"
-                         value="#{action.usuarioLocalizacao.responsavelLocalizacao}" />
+						 id="resploc"
+						 label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}"
+						 value="#{action.usuarioLocalizacao.responsavelLocalizacao}" />
 					
 					<ui:define
-                         name="buttons"
-                         id="importarEndId">
+						 name="buttons"
+						 id="importarEndId">
+						
 						<a:commandButton
-                             value="Incluir"
-                             action="#{action.incluirUsuarioLocalizacao()}"
-                             styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
-                             status=":status"
-                             render="usuLocDiv, usuarioLocList" 
-                             limitRender="true"/>
+							 value="Incluir"
+							 action="#{action.incluirUsuarioLocalizacao()}"
+							 styleClass="dr-tbpnl-tb-inact rich-tab-inactive"
+							 status=":status"
+							 render="usuLocDiv, usuarioLocList"
+							 limitRender="true" />
+					
 					</ui:define>
+				
 				</wi:dataForm>
-				</s:div>
+				
+			</s:div>
 				
 				<wi:dataTable
-                 id="usuarioLocList"
-                 values="#{action.listUsuarioLocalizacao(20)}"
-                 bean="#{usuarioLocList}"
-                 tableTitle="#{messages['usuarioLocalizacao.titleGrid']} - #{action.instance.nome}">
-					<ui:define
-                     name="toolBar">
+				 id="usuarioLocList"
+				 values="#{action.listUsuarioLocalizacao(20)}"
+				 bean="#{usuarioLocList}"
+				 tableTitle="#{messages['usuarioLocalizacao.titleGrid']} - #{action.instance.nome}">
+				
+					<ui:define name="toolBar">
+					
 						<wi:toolBarRemove
-                         actionRemove="activeDirectoryAction.removeUsuarioLocalizacao(row)"
-                         reRender="localizacaoTab, usuLocDiv, usuarioLocList" />
-					</ui:define>
+						 actionRemove="activeDirectoryAction.removeUsuarioLocalizacao(row)"
+						 reRender="localizacaoTab, usuLocDiv, usuarioLocList" />
+					
+				</ui:define>
 	
 					<wi:columnOutputText
-                     columnId="locID"
-                     columnHeader="#{messages['usuarioLocalizacao.localizacao']}"
-                     value="#{row.localizacao}" />
+					 columnId="locID"
+					 columnHeader="#{messages['usuarioLocalizacao.localizacao']}"
+					 value="#{row.localizacao}" />
 					<wi:columnOutputText
-                     columnId="papID"
-                     columnHeader="#{messages['usuarioLocalizacao.papel']}"
-                     value="#{row.papel}" />
-				</wi:dataTable>
+					 columnId="papID"
+					 columnHeader="#{messages['usuarioLocalizacao.papel']}"
+					 value="#{row.papel}" />
+				
+			</wi:dataTable>
 			
-		</wi:richTab>
+		</wi:tab>
 
+	
 	</ui:define>
+
 
 </ui:composition>

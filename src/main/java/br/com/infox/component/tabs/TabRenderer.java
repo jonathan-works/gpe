@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 
@@ -27,5 +29,27 @@ public class TabRenderer extends Renderer {
 		super.encodeEnd(context, component);
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("div");
+	}
+	
+	@Override
+	public void decode(FacesContext context, UIComponent component) {
+		super.decode(context, component);
+		Tab tab = (Tab) component;
+		
+		String source = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
+		if (source == null || !source.equals(tab.getTabPanel().getId())) {
+			return;
+		}
+		
+		String jsfEvent = context.getExternalContext().getRequestParameterMap().get("javax.faces.partial.event");
+		if (jsfEvent != null && jsfEvent.endsWith("beforeactivate")) {
+			String newTab = context.getExternalContext().getRequestParameterMap().get("newTab");
+			if (newTab != null) {
+				Tab newActiveTab = tab.getTabPanel().getTab(newTab);
+				ActionEvent event = new ActionEvent(newActiveTab);
+				event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+				component.queueEvent(event);
+			}
+		}
 	}
 }
