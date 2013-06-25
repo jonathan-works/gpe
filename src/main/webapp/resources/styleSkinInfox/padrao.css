@@ -245,6 +245,14 @@ body {
 	border:solid 1px transparent !important;
 }
 
+.rf-dt-thd {
+	border-style:solid;
+}
+
+.rf-dt-shdr-c {
+	color:#000;
+}
+
 .rf-dt-ftr-c {
 	text-align: center;
 	padding: 0px
@@ -469,7 +477,7 @@ select {
 	background-color: transparent;
 }
 
-.inputTreeHeader {
+.rf-cp-hdr.inputTreeHeader {
 	border: none !important;
 	font-weight: normal;
 	text-align: left;

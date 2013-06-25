@@ -31,7 +31,7 @@ textarea,select {
 .buttons {
 	border-color:"#{a4jSkin.borderColorButton}";
 }
-.inputTreeHeader {
+.rf-cp-hdr.inputTreeHeader {
 	background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputTree}");
 }
 .suggest {
@@ -53,4 +53,14 @@ textarea,select {
 	color:'#{a4jSkin.headerTextColor}';
 	border-color:'#{a4jSkin.panelBorderColor}';
 	background-color:'#{a4jSkin.headerBackgroundColor}';
+}
+.rf-dt-thd {
+	border-color:'#{a4jSkin.tableBorderColor}';
+	border-width:'#{a4jSkin.tableBorderWidth}';
+}
+.rf-dt-hdr,.rf-dt-shdr {
+	background-color:'#{a4jSkin.headerBackgroundColor}';
+}
+.rf-dt-hdr-c {
+	color:'#{a4jSkin.headerTextColor}';
 }
