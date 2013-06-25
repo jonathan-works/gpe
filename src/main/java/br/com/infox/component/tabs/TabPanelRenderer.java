@@ -9,6 +9,11 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 
+/**
+ * Renderer padrão do componente TabPanel.
+ * @author gabriel
+ *
+ */
 @FacesRenderer(componentFamily = TabPanelRenderer.COMPONENT_FAMILY, rendererType = TabPanelRenderer.RENDERER_TYPE)
 public class TabPanelRenderer extends Renderer {
 	public static final String RENDERER_TYPE = "br.com.infox.component.tabs.TabPanelRenderer";
@@ -29,6 +34,9 @@ public class TabPanelRenderer extends Renderer {
 		writer.writeAttribute("id", tabPanel.getClientId(), "clientId");
 	}
 	
+	/**
+	 * Caso a aba não seja a ativa, não faz o encode dela.
+	 */
 	@Override
 	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
 		if (context == null || component == null) {

@@ -13,11 +13,16 @@ import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 
+/**
+ * Componente TabPanel. Representa o painel onde estão as abas e seus cabeçalhos.
+ * @author gabriel
+ *
+ */
 @FacesComponent(TabPanel.COMPONENT_ID)
 @ResourceDependencies({
 		@ResourceDependency(library = "stylesheet", name = "jquery-ui.css"),
 		@ResourceDependency(library = "stylesheet", name = "tabs.css"),
-	@ResourceDependency(name = "jquery.js"),
+		@ResourceDependency(name = "jquery.js"),
 		@ResourceDependency(library = "js", name = "jquery-ui.js"),
 		@ResourceDependency(library = "javax.faces", name = "jsf.js") })
 public class TabPanel extends UIPanel implements NamingContainer {
@@ -25,6 +30,14 @@ public class TabPanel extends UIPanel implements NamingContainer {
 	public static final String RENDERER_TYPE = "br.com.infox.component.tabs.TabPanelRenderer";
 	public static final String COMPONENT_FAMILY = "br.com.infox.component.tabs";
 
+	/**
+	 * Representa as properties do componente.
+	 * activeTab pode ser o nome de uma aba ou uma ValueExpression de String que guarde/retorne o nome de uma aba. 
+	 * switchType pode ser client ou ajax.
+	 * tabIndexMap é usado internamente.
+	 * @author gabriel
+	 *
+	 */
 	private static enum PropertyKeys {
 		activeTab, switchType, tabIndexMap;
 	}
@@ -71,6 +84,11 @@ public class TabPanel extends UIPanel implements NamingContainer {
 		getStateHelper().put(PropertyKeys.switchType, switchType);
 	}
 
+	/**
+	 * Constroi um mapa com o nome e os índices das abas, para ser utilizado pelo jQuery UI no parâmetro active.
+	 * Utilizado internamente.
+	 * @return mapa com os nomes e os índices das abas
+	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getTabIndexMap() {
 		Map<String, Integer> tabIndexMap = (Map<String, Integer>) getStateHelper()
