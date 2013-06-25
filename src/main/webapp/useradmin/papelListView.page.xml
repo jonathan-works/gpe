@@ -13,6 +13,5 @@
 
 	<param name="id" value="#{papelHome.papelId}"/>
 	<param name="tab" value="#{papelHome.tab}"/>
-	<action if="#{papelHome.tab == 'search'}" execute="#{papelHome.newInstance()}"/>
 	
 </page>

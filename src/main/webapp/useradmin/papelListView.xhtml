@@ -74,58 +74,58 @@
     <ui:define name="tabs">
 		
         <wi:tab
-			 id="tabPapeis"
-			 immediate="true"
-			 status=":status"
-			 title="Visão Hierárquica"
-			 name="tabPapeis">
-			
+             id="tabPapeis"
+             status=":status"
+             title="Visão Hierárquica"
+             name="tabPapeis"
+             rendered="#{home.managed}">
+            
             <a:commandButton
-				 styleClass="dr-tbpnl-tb-inact"
-				 value="Inverter"
-				 render="hForm"
-				 action="#{rolesTree.inverter()}">
-				
+                 styleClass="dr-tbpnl-tb-inact"
+                 value="Inverter"
+                 render="hForm"
+                 action="#{rolesTree.inverter()}">
+                
                 <f:param
-					 name="cid"
-					 value="#{conversation.id}" />
+                     name="cid"
+                     value="#{conversation.id}" />
             
-			</a:commandButton>
+            </a:commandButton>
             <span style="font-weight: bold;">
-				 <h:outputText
-					 rendered="#{rolesTree.invertida}"
-					 value="Estrutura dos papéis que cedem permissões " />
+                 <h:outputText
+                     rendered="#{rolesTree.invertida}"
+                     value="Estrutura dos papéis que cedem permissões " />
                 <h:outputText
-					 rendered="#{!rolesTree.invertida}"
-					 value="Estrutura dos papéis que recebem permissões " />
+                     rendered="#{!rolesTree.invertida}"
+                     value="Estrutura dos papéis que recebem permissões " />
             
-			</span>
+            </span>
             <rich:tree
-				 data="#{item}"
-				 selectionType="ajax"
-				 render="pageBody"
-				 nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
-				 style="height:450px; overflow:auto"
-				 var="item">
-				
+                 data="#{item}"
+                 selectionType="ajax"
+                 render="pageBody"
+                 nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
+                 style="height:450px; overflow:auto"
+                 var="item">
+                
                 <rich:treeModelRecursiveAdaptor
-					 roots="#{rolesTree.roots}"
-					 nodes="#{item.nodes}">
-					
+                     roots="#{rolesTree.roots}"
+                     nodes="#{item.nodes}">
+                    
                     <rich:treeNode
-						 iconCollapsed="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
-						 iconExpanded="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
-						 iconLeaf="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif">
-						
+                         iconCollapsed="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
+                         iconExpanded="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
+                         iconLeaf="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif">
+                        
                         <h:outputText value="#{item.entity}" />
                     
-					</rich:treeNode>
+                    </rich:treeNode>
                 
-				</rich:treeModelRecursiveAdaptor>
+                </rich:treeModelRecursiveAdaptor>
             
-			</rich:tree>
+            </rich:tree>
         
-		</wi:tab>
+        </wi:tab>
     
 	</ui:define>
 
