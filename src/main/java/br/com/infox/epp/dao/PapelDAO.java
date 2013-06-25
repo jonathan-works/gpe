@@ -19,7 +19,7 @@ public class PapelDAO extends GenericDAO {
 	@SuppressWarnings("unchecked")
 	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(
 			TipoModeloDocumento tipoModeloDocumento) {
-		String hql = "select o from Papel o where o.idPapel not in ("
+		String hql = "select o from Papel o where identificador not like '/%' and o.idPapel not in ("
 				+ "select p.papel.idPapel from TipoModeloDocumentoPapel p "
 				+ "where p.tipoModeloDocumento = :tipoModeloDocumento)";
 		return (List<Papel>) entityManager.createQuery(hql).setParameter("tipoModeloDocumento",
