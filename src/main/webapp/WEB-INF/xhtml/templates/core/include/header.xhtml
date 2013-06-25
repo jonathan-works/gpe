@@ -7,8 +7,11 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 
 	<!-- BANNER -->
+	<h:outputStylesheet
+        library="styleSkinInfox"
+        name="header.css" />
 	<s:div styleClass="banner">
-		<s:div styleClass="left">
+		<s:div styleClass="banner-lft">
 			<h:form>
 				<s:link view="/login.xhtml">
 					<h:graphicImage
@@ -17,13 +20,13 @@
 				</s:link>
 			</h:form>
 		</s:div>
-		<s:div styleClass="center">
-			<s:div styleClass="title">
+		<s:div styleClass="banner-ctr">
+			<s:div styleClass="banner-title">
 				<font size="5">#{nomeSistema}</font><br />
 				<font size="4">#{subNomeSistema}</font>
 			</s:div>
 		</s:div>
-		<s:div styleClass="right">
+		<s:div styleClass="banner-rgt">
 			<s:div styleClass="divBg">
 				<s:div styleClass="BarraPesquisa">
 					<ui:include src="/WEB-INF/xhtml/templates/barraPesquisa.xhtml" />
@@ -35,10 +38,8 @@
 				</s:div>
 			</s:div>
 			<!-- Mini-Relógio -->
-			<s:div styleClass="liveclock"></s:div>
-			<s:div style="position: absolute; top: 48px; right: 2px">
-				<ui:include src="/WEB-INF/xhtml/templates/painelUsuario.xhtml" />
-			</s:div>
+			<s:div styleClass="liveclock bannerclock"></s:div>
+			<ui:include src="/WEB-INF/xhtml/templates/painelUsuario.xhtml" />
 		</s:div>
 	</s:div>
 </ui:composition>

@@ -15,81 +15,81 @@
   veja em http://www.gnu.org/licenses/  
 -->
 <ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
+	<h:outputStylesheet
+        library="styleSkinInfox"
+        name="datatable.css" />
+	<s:div id="#{id}SearchForm" styleClass="dtable-search-form">
+		<ui:insert name="searchForm" />
+	</s:div>
+	<a:region>
+		<rich:panel
+			rendered="#{wi:get(showGrid, true)}"
+			header="#{tableTitle}"
+			id="#{id}Panel"
+			bodyClass="dtable-p-b"
+			styleClass="dtable-p #{styleClass}"
+			style="#{style}">
 
-    <s:div
-        id="#{id}SearchForm"
-        styleClass="SearchForm">
-        <ui:insert name="searchForm" />
-    </s:div>
-    <a:region>
-        <rich:panel
-            rendered="#{wi:get(showGrid, true)}"
-            bodyClass="panel"
-            header="#{tableTitle}"
-            id="#{id}Panel"
-            styleClass="Panel #{styleClass}"
-            style="#{style}">
+			<rich:messages
+				id="#{id}Messages"
+				rendered="#{empty showMsg ? true : showMsg}"
+				globalOnly="true"/>
+			
+			<script>br.com.infox.applyCSSAfterTimeout({id:'#{id}Messages', style:{display:'none'}, timeout:5000});</script>
 
-            <rich:messages
-                id="#{id}Messages"
-                rendered="#{empty showMsg ? true : showMsg}"
-                globalOnly="true" />
-
-            <script>br.com.infox.applyCSSAfterTimeout({id:'#{id}Messages', style:{display:'none'}, timeout:5000});</script>
-
-            <rich:dataTable
-                value="#{values}"
-                id="#{id}"
-                rowKeyVar="key"
-                rowClasses="#{rowClasses}"
-                styleClass="zebra #{styleClass}"
-                style="#{style}"
-                var="row">
-                <ui:param
-                    name="toolBarColumnWidth"
-                    value="#{wi:get(toolBarColumnWidth, '40px')}" />
-                <rich:column
-                    style="width: #{toolBarColumnWidth};"
-                    styleClass="DataTableToolbar"
-                    rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
-                    rowspan="#{empty columnRowspan ? '1':columnRowspan}">
-                    <f:facet name="header">
-                        <s:div>
-                            <ui:insert name="headerToolBar">
-                                <ui:param
-                                    name="home"
-                                    value="#{wi:get(home, '')}" />
-                                <wi:toolBarReport
-                                    rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}" />
-                                <wi:toolBarReportExcel
-                                    rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}"
-                                    action="#{home.exportarXLS()}" />
-                            </ui:insert>
-                        </s:div>
-                    </f:facet>
-                    <ui:insert name="toolBar">
-                        <wi:toolBarEdit id="#{id}edit" />
-                        <wi:toolBarInactive />
-                    </ui:insert>
-                </rich:column>
-                <ui:insert />
-            </rich:dataTable>
-            <h:outputText
-                value="Foram encontrados:  #{bean.resultCount} resultados"
-                styleClass="DataTableResultCount"
-                rendered="#{wi:get(showGridCount, true)}" />
-            <s:div rendered="#{bean.previousExists or bean.nextExists}">
-                <ui:include src="inputNumberSlider.xhtml" />
-            </s:div>
-        </rich:panel>
-    </a:region>
+			<rich:dataTable
+				value="#{values}"
+				id="#{id}"
+				rowKeyVar="key"
+				rowClasses="#{rowClasses}"
+				styleClass="zebra #{styleClass}"
+				style="#{style}"
+				var="row">
+				<ui:param
+					name="toolBarColumnWidth"
+					value="#{wi:get(toolBarColumnWidth, '40px')}" />
+				<rich:column
+					style="width: #{toolBarColumnWidth};"
+					styleClass="DataTableToolbar"
+					rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
+					rowspan="#{empty columnRowspan ? '1':columnRowspan}">
+					<f:facet name="header">
+						<s:div>
+							<ui:insert name="headerToolBar">
+								<ui:param
+									name="home"
+									value="#{wi:get(home, '')}" />
+								<wi:toolBarReport
+									rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}" />
+								<wi:toolBarReportExcel
+									rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}"
+									action="#{home.exportarXLS()}" />
+							</ui:insert>
+						</s:div>
+					</f:facet>
+					<ui:insert name="toolBar">
+						<wi:toolBarEdit id="#{id}edit" />
+						<wi:toolBarInactive />
+					</ui:insert>
+				</rich:column>
+				<ui:insert />
+			</rich:dataTable>
+			<h:outputText
+				value="Foram encontrados:  #{bean.resultCount} resultados"
+				styleClass="DataTableResultCount"
+				rendered="#{wi:get(showGridCount, true)}" />
+			<s:div rendered="#{bean.previousExists or bean.nextExists}">
+				<ui:include src="inputNumberSlider.xhtml" />
+			</s:div>
+		</rich:panel>
+	</a:region>
 
 </ui:composition>

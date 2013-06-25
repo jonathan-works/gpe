@@ -21,8 +21,14 @@
 	<ui:param
 		name="mostrarMenu"
 		value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
-
-	<rich:toolbar>
+	<script type="text/javascript">
+		window.addEventListener("load", function() {
+			$(".LinkMenu").addClass("rf-ddm-lbl rf-ddm-unsel").hover(function() {
+				$(this).toggleClass("rf-ddm-unsel").toggleClass("rf-ddm-sel");
+			});
+		});
+	</script>
+	<rich:toolbar styleClass="menu-tb">
 		<c:if test="#{mostrarMenu}">
 			<rich:toolbarGroup>
 				<h:form>

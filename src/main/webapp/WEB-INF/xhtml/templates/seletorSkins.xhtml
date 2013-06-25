@@ -10,13 +10,21 @@
 	xmlns:wi="http://www.itx.com.br/jsf">
 
 	<h:form rendered="#{wi:get(mostrarMenu, identity.loggedIn and !usuarioLogado.provisorio)}">
-		<h:graphicImage url="#{a4jSkin.imgIconPalette}"
+		<h:graphicImage
+			styleClass="palette-img-inpt"
+			url="#{a4jSkin.imgIconPalette}"
 			onclick="#{rich:component(id.concat('-skinPanel'))}.show()" />
-		<h:commandButton action="#{skinZoom.setTmNormal()}"
+		<h:commandButton
+			styleClass="palette-img-inpt"
+			action="#{skinZoom.setTmNormal()}"
 			image="#{a4jSkin.imgIconZoomNormal}" />
-		<h:commandButton action="#{skinZoom.setTmMedio()}"
+		<h:commandButton
+			styleClass="palette-img-inpt" 
+			action="#{skinZoom.setTmMedio()}"
 			image="#{a4jSkin.imgIconZoomMedio}" />
-		<h:commandButton action="#{skinZoom.setTmGrande()}"
+		<h:commandButton
+			styleClass="palette-img-inpt" 
+			action="#{skinZoom.setTmGrande()}"
 			image="#{a4jSkin.imgIconZoomGrande}" />
 	</h:form>
 

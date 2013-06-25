@@ -1,0 +1,77 @@
+.banner {
+	min-width:1020px;
+	height: 87px;
+	position:relative;
+}
+.banner-lft, .banner-ctr, .banner-rgt {
+	position:absolute;
+}
+.banner-lft {
+    left: 0;
+    top: 0px;
+    width: 290px;
+    z-index: 1;
+}
+.banner-ctr {
+    font-size:20pt;
+    top:0px;
+    left:50%;
+    text-align:center;
+    width:295px;
+    margin:0 0 0 -147.5px;
+    z-index:0;
+}
+.banner-title {
+	margin-top:15px;
+}
+.banner-rgt {
+    top: 0px;
+    right:0px;
+    width: 321px;
+    z-index: 1;
+    text-align: right;
+}
+.divBg {
+	width:100%;
+	height:28px;
+	border-bottom-left-radius: 28px;
+}
+.BP-ipt {
+	width:120px;
+}
+.BP-lbl {
+	font-size:11px;
+	font-weight:bold;
+}
+.BarraPesquisa,.SeletorSkins {
+	display:inline-table;
+	vertical-align:top;
+}
+.palette-img-inpt {
+	width:18px;
+	height:auto;
+	cursor:pointer;
+}
+.PaletteMenu {
+	width: 250px;
+}
+.bannerclock.liveclock {
+	right:0%;
+	top:0%;
+	text-align: right;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+}
+
+.name.painelUsuario-label {
+	font-weight: bold;
+	float:inherit;
+	color:inherit;
+	padding:inherit;
+	margin:inherit;
+	clear:inherit;
+}
+.value.painelUsuario-select {
+	padding:inherit;
+	float:inherit;
+}

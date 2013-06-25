@@ -17,7 +17,7 @@ import javax.faces.component.UIPanel;
 @ResourceDependencies({
 		@ResourceDependency(library = "stylesheet", name = "jquery-ui.css"),
 		@ResourceDependency(library = "stylesheet", name = "tabs.css"),
-		@ResourceDependency(library = "org.richfaces.staticResource/4.3.2.Final/Static", name = "jquery.js"),
+	@ResourceDependency(name = "jquery.js"),
 		@ResourceDependency(library = "js", name = "jquery-ui.js"),
 		@ResourceDependency(library = "javax.faces", name = "jsf.js") })
 public class TabPanel extends UIPanel implements NamingContainer {
