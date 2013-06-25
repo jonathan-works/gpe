@@ -15,44 +15,45 @@ import javax.faces.component.UIPanel;
 
 @FacesComponent(TabPanel.COMPONENT_ID)
 @ResourceDependencies({
-	@ResourceDependency(library = "stylesheet", name = "jquery-ui.css"),
-	@ResourceDependency(library = "stylesheet", name= "tabs.css"),
-	@ResourceDependency(library = "org.richfaces.staticResource/4.3.2.Final/Static", name = "jquery.js"),
-	@ResourceDependency(library = "js", name = "jquery-ui.js"),
-	@ResourceDependency(library = "javax.faces", name = "jsf.js")
-})
+		@ResourceDependency(library = "stylesheet", name = "jquery-ui.css"),
+		@ResourceDependency(library = "stylesheet", name = "tabs.css"),
+		@ResourceDependency(library = "org.richfaces.staticResource/4.3.2.Final/Static", name = "jquery.js"),
+		@ResourceDependency(library = "js", name = "jquery-ui.js"),
+		@ResourceDependency(library = "javax.faces", name = "jsf.js") })
 public class TabPanel extends UIPanel implements NamingContainer {
 	public static final String COMPONENT_ID = "br.com.infox.component.tabs.TabPanel";
 	public static final String RENDERER_TYPE = "br.com.infox.component.tabs.TabPanelRenderer";
 	public static final String COMPONENT_FAMILY = "br.com.infox.component.tabs";
-	
+
 	private static enum PropertyKeys {
 		activeTab, switchType, tabIndexMap;
 	}
-	
+
 	@Override
 	public String getRendererType() {
 		return RENDERER_TYPE;
 	}
-	
+
 	@Override
 	public String getFamily() {
 		return COMPONENT_FAMILY;
 	}
-	
+
 	public String getActiveTab() {
+		String activeTab;
 		ValueExpression ve = getValueExpression("activeTab");
 		if (ve != null) {
-			return (String) ve.getValue(getFacesContext().getELContext());
+			activeTab = (String) ve.getValue(getFacesContext().getELContext());
+		} else {
+			activeTab = (String) getStateHelper().eval(PropertyKeys.activeTab);
 		}
-		String activeTab = (String) getStateHelper().eval(PropertyKeys.activeTab);
-		if (activeTab == null) {
-			activeTab = getTabs().get(0).getName();
+		if (!isValidTab(activeTab)) {
+			activeTab = getFirstRenderedTab().getName();
 			setActiveTab(activeTab);
 		}
 		return activeTab;
 	}
-	
+
 	public void setActiveTab(String activeTab) {
 		ValueExpression ve = getValueExpression("activeTab");
 		if (ve != null) {
@@ -61,34 +62,37 @@ public class TabPanel extends UIPanel implements NamingContainer {
 			getStateHelper().put(PropertyKeys.activeTab, activeTab);
 		}
 	}
-	
+
 	public String getSwitchType() {
 		return (String) getStateHelper().get(PropertyKeys.switchType);
 	}
-	
+
 	public void setSwitchType(String switchType) {
 		getStateHelper().put(PropertyKeys.switchType, switchType);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getTabIndexMap() {
-		Map<String, Integer> tabIndexMap = (Map<String, Integer>) getStateHelper().get(PropertyKeys.tabIndexMap);
+		Map<String, Integer> tabIndexMap = (Map<String, Integer>) getStateHelper()
+				.get(PropertyKeys.tabIndexMap);
 		if (tabIndexMap != null) {
 			return tabIndexMap;
 		}
 		tabIndexMap = new HashMap<String, Integer>();
 		int index = 0;
 		for (Tab tab : getTabs()) {
-			tabIndexMap.put(tab.getName(), index++);
+			if (tab.isRendered()) {
+				tabIndexMap.put(tab.getName(), index++);
+			}
 		}
 		setTabIndexMap(tabIndexMap);
 		return tabIndexMap;
 	}
-	
+
 	public void setTabIndexMap(Map<String, Integer> tabIndexMap) {
 		getStateHelper().put(PropertyKeys.tabIndexMap, tabIndexMap);
 	}
-	
+
 	public List<Tab> getTabs() {
 		List<Tab> tabs = new ArrayList<>();
 		for (UIComponent child : getChildren()) {
@@ -98,12 +102,25 @@ public class TabPanel extends UIPanel implements NamingContainer {
 		}
 		return tabs;
 	}
-	
+
 	public Tab getTab(String name) {
 		for (Tab tab : getTabs()) {
 			if (tab.getName().equals(name)) {
 				return tab;
 			}
+		}
+		return null;
+	}
+	
+	public boolean isValidTab(String tabName){
+		Tab tab = getTab(tabName);
+		return tab != null && tab.isRendered();
+	}
+	
+	public Tab getFirstRenderedTab(){
+		for (Tab tab : getTabs()){
+			if (tab.isRendered())
+				return tab;
 		}
 		return null;
 	}

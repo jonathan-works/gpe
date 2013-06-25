@@ -45,7 +45,7 @@
 		<ui:param
 			 name="instance"
 			 value="#{home.instance}" />
-		<f:subview id="#{formId}">
+		<h:form id="#{formId}">
 			
 			<a:region>
 				
@@ -59,7 +59,7 @@
 							<c:if test="#{form.tabbed}">
 								
 								<wi:tabPanel switchType="client">
-									<h:form><wi:tabHeaders /></h:form>
+									<wi:tabHeaders />
 									<wi:repeat
 										 value="#{form.rootFields}"
 										 var="rf">
@@ -204,7 +204,7 @@
 			
 			</a:region>
 		
-		</f:subview>
+		</h:form>
 		<s:fragment rendered="#{!empty focus}">
 			
 			<script type="text/javascript">

@@ -79,12 +79,7 @@ public class TabPanelRenderer extends Renderer {
 		sb.append(tabPanel.getClientId().replace(":", "\\\\:"));
 		sb.append("').tabs({");
 		sb.append("active: ");
-		String activeTab = tabPanel.getActiveTab();
-		if (activeTab != null) {
-			sb.append(tabPanel.getTabIndexMap().get(activeTab));
-		} else {
-			sb.append(0);
-		}
+		sb.append(tabPanel.getTabIndexMap().get(tabPanel.getActiveTab()));
 		sb.append(",");
 		sb.append("beforeActivate: ");
 		sb.append(createBeforeActivateJavascript(tabPanel));

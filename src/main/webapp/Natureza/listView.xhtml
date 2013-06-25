@@ -21,7 +21,8 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	 xmlns:wi="http://www.itx.com.br/jsf" 
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 	
                        
 	<ui:define name="title">#{messages['natureza.titlePage']}</ui:define>
@@ -29,11 +30,6 @@
 	<ui:param
 		 name="home"
 		 value="#{naturezaAction}" />
-	
-	<ui:define name="changeListeners">
-		
-		<rich:itemChangeListener binding="#{home}" />
-		<rich:itemChangeListener binding="#{naturezaCategoriaFluxoAction}" />
 	
 	</ui:define>
 	

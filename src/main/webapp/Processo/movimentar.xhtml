@@ -78,7 +78,6 @@
 				 render="taskButtonsDiv" />
         
 		</h:form>
-        <h:form>
 			
             <wi:tabPanel
 				 switchType="ajax"
@@ -86,16 +85,11 @@
 				 activeTab="#{home.tab}">
 				<h:form><wi:tabHeaders /></h:form>
 
-                <rich:itemChangeListener binding="#{processoHome}" />
-                <rich:itemChangeListener binding="#{processoDocumentoHome}" />
-                <rich:itemChangeListener binding="#{localizacaoDocumentoFisicoAction}" />
-
                 <wi:tab
 					 id="tabFluxo"
 					 name="tabFluxo"
 					 rendered="#{!processoHome.managed}"
 					 status=":status"
-					 immediate="true"
 					 title="Escolher fluxo"
                      action="#{processoHome.limpar()}">
 					
@@ -110,7 +104,6 @@
 					 id="tabEntrada"
 					 name="tabEntrada"
 					 rendered="#{!empty taskInstanceView.fields}"
-					 immediate="true"
 					 status=":status"
 					 title="Entrada">
 					
@@ -130,7 +123,6 @@
 					 id="tabSaida"
 					 name="tabSaida"
 					 rendered="#{processoHome.managed}"
-					 immediate="true"
 					 status=":status"
 					 title="Saída">
 					
@@ -161,7 +153,6 @@
 					 name="tabAnexar"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 immediate="true"
 					 title="Anexar Documento"
                      action="#{processoDocumentoHome.newInstance()}">
 					
@@ -190,7 +181,6 @@
 					 name="tabAnexos"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 immediate="true"
 					 title="Documentos do Processo">
 					
                     <s:div id="divDocumentosProcesso">
@@ -228,7 +218,6 @@
 					 name="tabMovimentacoes"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 immediate="true"
 					 title="Movimentações do Processo">
 					
                     <ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
@@ -242,9 +231,8 @@
 					 id="documentoFisicoTab"
 					 name="documentoFisicoTab"
 					 rendered="#{home.isManaged()}"
-					 immediate="true"
 					 title="#{messages['documentoFisico.titleTab']}"
-                     action=#{localizacaoDocumentoFisicoAction.init()}>
+                     action="#{localizacaoDocumentoFisicoAction.init()}">
 					
                     <wi:dataForm
 						 formId="documentoFisicoForm"
@@ -335,7 +323,6 @@
 							 lastPageMode="full"
 							 align="left"
 							 renderIfSinglePage="false" />
-                    
 					</s:div>
                 
 				</wi:tab>
@@ -344,7 +331,6 @@
 					 id="tabPartesDoProcesso"
 					 name="tabPartesDoProcesso"
 					 status=":status"
-					 immediate="true"
 					 rendered="#{home.hasPartes()}"
 					 title="#{messages['parteProcesso.partes']}">
 					
@@ -354,7 +340,6 @@
             
 			</wi:tabPanel>
         
-		</h:form>
         <c:if test="#{!checkPermission}">
 			
             <wi:outputText

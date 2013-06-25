@@ -8,7 +8,8 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/minimal.xhtml">
+	 xmlns:wi="http://www.itx.com.br/jsf" 
+     template="/WEB-INF/xhtml/templates/minimal.xhtml">
 	
 <!--
   IBPM - Ferramenta de produtividade Java
@@ -47,12 +48,10 @@
 			 name="def"
 			 value="#{processBuilder.instance}" />
 	
-	<h:form id="form">
 			
 	
 		<wi:tabPanel
 				 switchType="ajax"
-				 itemChangeListener="#{processBuilder.processItemChange}"
 				 activeTab="#{processBuilder.tab}">
 				<h:form><wi:tabHeaders /></h:form>
 			<wi:tab
@@ -162,7 +161,6 @@
 				 onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;"
 				 rendered="#{processBuilder.exists}" />
     
-		</h:form>
 
 	<rich:messages
 			 id="messages"

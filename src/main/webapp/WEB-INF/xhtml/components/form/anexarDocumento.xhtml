@@ -53,16 +53,12 @@
 	</s:div>
 
 	<s:div id="divEventsTree">
-		
-
 		<wi:eventsTree
 			 agrupamentos="#{processoDocumentoHome.idAgrupamentos}"
 			 reRender="usarModeloDiv"
 			 tree="#{eventsTipoDocumentoTree}"
 			 inNewLine="true"
 			 rendered="#{processoDocumentoHome.renderEventTree}" />
-
-	
 	</s:div>
 
 	<wi:selectBooleanCheckbox
@@ -70,24 +66,16 @@
 		 inNewLine="true"
 		 value="#{processoDocumentoHome.instance.documentoSigiloso}"
 		 label="#{messages['processoDocumento.documentoSigiloso']}" />
-
 	<s:div id="tipoDocumentoDiv">
-		
-
-
 		<wi:fileUploadBox
 			 id="uploadArquivo"
 			 rendered="#{!processoDocumentoHome.modelo}"
 			 label="Arquivo"
 			 onuploadcomplete="clearSign();">
 		</wi:fileUploadBox>
-
 		<s:div
 			 id="usarModeloDiv"
 			 rendered="#{processoDocumentoHome.modelo}">
-			
-
-
 			<wi:selectOneMenuEntity
 				 id="modeloDocumentoCombo"
 				 label="#{messages['modeloDocumento.modeloDocumento']}"

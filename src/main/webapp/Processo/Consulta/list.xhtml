@@ -36,14 +36,10 @@
 			 styleClass="message"
 			 id="globalMessages" />
 
-        <h:form>
-			
             <wi:tabPanel
 				 headerSpacing="2"
 				 activeTab="#{processoHome.tab}">
 				<h:form><wi:tabHeaders /></h:form>
-                <rich:itemChangeListener binding="#{processoHome}" />
-                <rich:itemChangeListener binding="#{processoDocumentoHome}" />
                 <wi:tab
 					 id="form"
 					 name="form"
@@ -135,8 +131,6 @@
             
 			</wi:tabPanel>
         
-		</h:form>
-
     
 	</ui:define>
 
