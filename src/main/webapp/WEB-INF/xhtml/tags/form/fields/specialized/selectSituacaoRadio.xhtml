@@ -21,6 +21,7 @@
     <wi:selectOneRadio
          id="#{wi:get(columnId, 'ativo')}"
          label="#{wi:get(label, 'Situação')}"
+         value="#{wi:get(value, 'true')}"
          valueList="true:Ativo,false:Inativo"
          boxChecked="#{inativo ? 1 : 0}" />
     
