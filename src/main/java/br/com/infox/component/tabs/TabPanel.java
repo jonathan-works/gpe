@@ -95,7 +95,7 @@ public class TabPanel extends UIPanel implements NamingContainer {
 	 * @return mapa com os nomes e os índices das abas
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<String, Integer> getTabIndexMap() {
+	Map<String, Integer> getTabIndexMap() {
 		Map<String, Integer> tabIndexMap = (Map<String, Integer>) getStateHelper()
 				.get(PropertyKeys.tabIndexMap);
 		if (tabIndexMap != null) {
@@ -112,7 +112,7 @@ public class TabPanel extends UIPanel implements NamingContainer {
 		return tabIndexMap;
 	}
 
-	public void setTabIndexMap(Map<String, Integer> tabIndexMap) {
+	void setTabIndexMap(Map<String, Integer> tabIndexMap) {
 		getStateHelper().put(PropertyKeys.tabIndexMap, tabIndexMap);
 	}
 
