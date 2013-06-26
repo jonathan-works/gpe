@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:wi="http://www.itx.com.br/jsf"
+     xmlns:a="http://richfaces.org/a4j"
+     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+                       
+	<ui:define
+         name="title">#{messages['naturezaCategoriaFluxo.titlePage']}</ui:define>
+	<ui:param
+         name="home"
+         value="#{naturezaCategoriaFluxoAction}" />
+	<ui:define
+         name="searchGrid">
+	    <wi:dataTable
+             values="#{naturezaCategoriaFluxoList.list(15)}"
+             bean="#{naturezaCategoriaFluxoList}"
+             tableTitle="#{messages['naturezaCategoriaFluxo.titleGrid']}"
+             id="naturezaCategoriaFluxoList"
+             rowId="#{row.idNaturezaCategoriaFluxo}">
+			<ui:define
+                 name="searchForm">
+				<wi:searchForm
+                     formId="pesquisarNaturezaCategoriaFormForm"
+                     formTitle="#{messages['searchForm.title']}">
+					<wi:selectOneMenuEntity
+						id="natureza"
+						label="#{messages['naturezaCategoriaFluxo.natureza']}"
+						value="#{naturezaCategoriaFluxoList.entity.natureza}"
+						items="#{naturezaCategoriaFluxoList.naturezaList}"
+						noSelectionLabel="Selecione...">
+					</wi:selectOneMenuEntity>
+					<wi:selectOneMenuEntity
+						id="categoria"
+						label="#{messages['naturezaCategoriaFluxo.categoria']}"
+						value="#{naturezaCategoriaFluxoList.entity.categoria}"
+						items="#{naturezaCategoriaFluxoList.categoriaList}"
+						noSelectionLabel="Selecione...">
+					</wi:selectOneMenuEntity>
+					<wi:selectOneMenuEntity
+						id="fluxo"
+						label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+						value="#{naturezaCategoriaFluxoList.entity.fluxo}"
+						items="#{naturezaCategoriaFluxoList.fluxoList}"
+						noSelectionLabel="Selecione...">
+					</wi:selectOneMenuEntity>
+				</wi:searchForm>
+			</ui:define>
+			<ui:define
+                 name="headerToolBar">
+			</ui:define>
+			<wi:columnOutputText
+                 columnId="natureza"
+                 columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
+                 value="#{row.natureza}" />
+			<wi:columnOutputText
+                 columnId="categoria"
+                 columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+                 value="#{row.categoria}" />
+			<wi:columnOutputText
+                 columnId="fluxo"
+                 columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+                 value="#{row.fluxo}" />
+		</wi:dataTable>
+	</ui:define>
+
+	<ui:define name="form">
+		<wi:dataForm
+			formId="naturezaCatFluxoForm"
+			formTitle="#{messages['form.title']}">
+			<wi:selectOneMenuEntity
+				id="naturezas"
+				label="#{messages['naturezaCategoriaFluxo.natureza']}"
+				value="#{naturezaCategoriaFluxoAction.instance.natureza}"
+				required="true"
+				items="#{naturezaCategoriaFluxoAction.naturezaList}"
+				noSelectionLabel="Selecione..."/>
+			<wi:selectOneMenuEntity
+				id="categorias"
+				label="#{messages['naturezaCategoriaFluxo.categoria']}"
+				value="#{naturezaCategoriaFluxoAction.instance.categoria}"
+				required="true"
+				items="#{naturezaCategoriaFluxoAction.categoriaList}"
+				noSelectionLabel="Selecione..."/>
+			<wi:selectOneMenuEntity
+				id="fluxo"
+				label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+				value="#{naturezaCategoriaFluxoAction.instance.fluxo}"
+				required="true"
+				items="#{naturezaCategoriaFluxoAction.fluxoList}"
+				noSelectionLabel="Selecione..."/>
+		</wi:dataForm>
+	</ui:define>
+
+	<ui:define
+         name="tabs">
+	</ui:define>
+</ui:composition>
