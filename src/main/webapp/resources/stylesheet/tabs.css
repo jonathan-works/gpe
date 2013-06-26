@@ -1,6 +1,6 @@
 .ui-widget-header {
 	border: 1px solid #ffffff;
-	background: #D7E2DA url#{resource['img/tabs:ui-bg_highlight-soft_100_D7E2DA_1x100.png']}) 50% 50% repeat-x;
+	background: #D7E2DA url(#{resource['img/tabs:ui-bg_highlight-soft_100_D7E2DA_1x100.png']}) 50% 50% repeat-x;
 	color: #000000;
 	font-weight: bold;
 }
