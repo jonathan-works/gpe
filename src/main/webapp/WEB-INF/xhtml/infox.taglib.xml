@@ -577,17 +577,10 @@
 		</component>
 	</tag>
 	<tag>
-		<tag-name>richTabPanel</tag-name>
+		<tag-name>tabHeaders</tag-name>
 		<component>
-			<component-type>richTabPanel</component-type>
-			<renderer-type>org.richfaces.TabPanelRenderer</renderer-type>
-		</component>
-	</tag>
-	<tag>
-		<tag-name>richTab</tag-name>
-		<component>
-			<component-type>richTab</component-type>
-			<renderer-type>org.richfaces.TabRenderer</renderer-type>
+			<component-type>br.com.infox.component.tabs.TabHeaders</component-type>
+			<renderer-type>br.com.infox.component.tabs.TabHeadersRenderer</renderer-type>
 		</component>
 	</tag>
 </facelet-taglib>

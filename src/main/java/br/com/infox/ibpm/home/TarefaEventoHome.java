@@ -212,12 +212,4 @@ public class TarefaEventoHome extends AbstractTarefaEventoHome<TarefaEvento> {
 		this.tarefaOrigemList = tarefaOrigemList;
 	}
 	
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if (event.getNewItemName().equals("agrupamentoTarefa")){
-			carregarAgrupamentos();
-		}
-		super.processItemChange(event);
-	}
-
 }

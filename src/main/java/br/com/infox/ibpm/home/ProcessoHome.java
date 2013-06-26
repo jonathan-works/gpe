@@ -100,14 +100,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		newInstance();
 	}
 	
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if ("tabFluxo".equals(event.getNewItemName())) {
-			limpar();
-		}
-		super.processItemChange(event);
-	}
- 
 	public void iniciarTarefaProcesso() {
 		JbpmEventsHandler.instance().iniciarTask(instance, tarefaId);
 	}

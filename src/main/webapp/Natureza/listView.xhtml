@@ -13,195 +13,216 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-<ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     xmlns:a="http://richfaces.org/a4j"
+--><ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf" 
      template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	
                        
-	<ui:define
-         name="title">#{messages['natureza.titlePage']}</ui:define>
+	<ui:define name="title">#{messages['natureza.titlePage']}</ui:define>
 	
 	<ui:param
-         name="home"
-         value="#{naturezaAction}" />
+		 name="home"
+		 value="#{naturezaAction}" />
 	
-	<ui:define name="changeListeners">
-		<rich:itemChangeListener binding="#{home}" />
-		<rich:itemChangeListener binding="#{naturezaCategoriaFluxoAction}" />
-	</ui:define>
-	
-	<ui:define
-         name="searchGrid">
+	<ui:define name="searchGrid">
+		
 	    <wi:dataTable
-             values="#{naturezaList.list(15)}"
-             bean="#{naturezaList}"
-             tableTitle="#{messages['natureza.titleGrid']}"
-             id="naturezaList"
-             rowId="#{row.idNatureza}"
-             actionInactive="naturezaAction.inactive">
-			<ui:define
-                 name="searchForm">
+			 values="#{naturezaList.list(15)}"
+			 bean="#{naturezaList}"
+			 tableTitle="#{messages['natureza.titleGrid']}"
+			 id="naturezaList"
+			 rowId="#{row.idNatureza}"
+			 actionInactive="naturezaAction.inactive">
+			
+			<ui:define name="searchForm">
+				
 				<wi:searchForm
-                     formId="pesquisarNaturezaForm"
-                     formTitle="#{messages['searchForm.title']}">
+					 formId="pesquisarNaturezaForm"
+					 formTitle="#{messages['searchForm.title']}">
+					
 					<wi:inputText
-                         id="natureza"
-                         value="#{naturezaList.entity.natureza}"
-                         label="#{messages['natureza.natureza']}" />
+						 id="natureza"
+						 value="#{naturezaList.entity.natureza}"
+						 label="#{messages['natureza.natureza']}" />
 					<wi:selectBooleanMenu
-                         id="hasPartes"
-                         label="#{messages['natureza.hasPartes']}"
-                         value="#{naturezaList.entity.hasPartes}" />
+						 id="hasPartes"
+						 label="#{messages['natureza.hasPartes']}"
+						 value="#{naturezaList.entity.hasPartes}" />
                     <wi:selectSituacaoOneMenu
-                         id="ativo"
-                         label="#{messages['field.situacao']}"
-                         value="#{naturezaList.entity.ativo}" />
+						 id="ativo"
+						 label="#{messages['field.situacao']}"
+						 value="#{naturezaList.entity.ativo}" />
+				
 				</wi:searchForm>
+			
 			</ui:define>
-			<ui:define
-                 name="toolBar">
-				<wi:toolBarEdit id="naturezaListEditToolbar"/>
-				<wi:toolBarInactive
-                     actionInactive="naturezaAction.inactive(row)" />
+			<ui:define name="toolBar">
+				
+				<wi:toolBarEdit id="naturezaListEditToolbar" />
+				<wi:toolBarInactive actionInactive="naturezaAction.inactive(row)" />
+			
 			</ui:define>
 			<wi:columnOutputText
-                 columnId="natureza"
-                 columnHeader="#{messages['natureza.natureza']}"
-                 value="#{row.natureza}" />
+				 columnId="natureza"
+				 columnHeader="#{messages['natureza.natureza']}"
+				 value="#{row.natureza}" />
 			<wi:columnBoolean
-                 columnId="hasPartes"
-                 columnHeader="#{messages['natureza.hasPartes']}"
-                 columnWidth="15%"
-                 value="#{row.hasPartes}" />
+				 columnId="hasPartes"
+				 columnHeader="#{messages['natureza.hasPartes']}"
+				 columnWidth="15%"
+				 value="#{row.hasPartes}" />
             <wi:columnSituacao
-                 columnId="ativo"
-                 columnHeader="#{messages['field.situacao']}"
-                 columnWidth="15%"
-                 value="#{row.ativo}" />
+				 columnId="ativo"
+				 columnHeader="#{messages['field.situacao']}"
+				 columnWidth="15%"
+				 value="#{row.ativo}" />
+		
 		</wi:dataTable>
+	
 	</ui:define>
 
-	<ui:define
-         name="form">
+	<ui:define name="form">
+		
 		<wi:dataForm
-             formId="naturezaForm"
-             formTitle="#{messages['form.title']}">
+			 formId="naturezaForm"
+			 formTitle="#{messages['form.title']}">
+			
 			<wi:inputText
-                 id="natureza"
-                 value="#{naturezaAction.instance.natureza}"
-                 required="true"
-                 label="#{messages['natureza.natureza']}" />
+				 id="natureza"
+				 value="#{naturezaAction.instance.natureza}"
+				 required="true"
+				 label="#{messages['natureza.natureza']}" />
             <wi:selectBooleanRadio
-                 id="hasPartes"
-                 label="#{messages['natureza.hasPartes']}"
-                 value="#{naturezaAction.instance.hasPartes}" />
+				 id="hasPartes"
+				 label="#{messages['natureza.hasPartes']}"
+				 value="#{naturezaAction.instance.hasPartes}" />
 			<wi:selectSituacaoRadio
-                 id="ativo"
-                 label="#{messages['field.situacao']}"
-                 value="#{naturezaAction.instance.ativo}" />
+				 id="ativo"
+				 label="#{messages['field.situacao']}"
+				 value="#{naturezaAction.instance.ativo}" />
+		
 		</wi:dataForm>
+	
 	</ui:define>
 
-	<ui:define
-         name="tabs">
+	<ui:define name="tabs">
+		
 		<ui:param
-             name="action"
-             value="#{naturezaCategoriaFluxoAction}" />
-		<wi:richTab
-             id="naturezaCatFluxoTab"
-             name="naturezaCatFluxoTab"
-             rendered="#{home.managed}"
-             header="#{messages['naturezaCategoriaFluxo.titleTab']}">
-			<s:div
-                 id="naturezaCatFluxoFormDiv">
+			 name="action"
+			 value="#{naturezaCategoriaFluxoAction}" />
+		<wi:tab
+			 id="naturezaCatFluxoTab"
+			 name="naturezaCatFluxoTab"
+			 rendered="#{home.managed}"
+			 title="#{messages['naturezaCategoriaFluxo.titleTab']}"
+             action="#{naturezaCategoriaFluxoAction.init()}">
+			
+			<s:div id="naturezaCatFluxoFormDiv">
+				
 				<wi:dataForm
-                     formId="naturezaCatFluxoForm"
-                     formTitle="#{messages['form.title']}: #{naturezaAction.instance}">
+					 formId="naturezaCatFluxoForm"
+					 formTitle="#{messages['form.title']}: #{naturezaAction.instance}">
+					
 					<wi:selectOneMenuEntity
-                         id="categorias"
-                         label="#{messages['naturezaCategoriaFluxo.categoria']}"
-                         value="#{action.instance.categoria}"
-                         items="#{action.categoriaList}"
-                         noSelectionLabel="#{messages['naturezaCategoriaFluxo.categoriaCombo']}" />
+						 id="categorias"
+						 label="#{messages['naturezaCategoriaFluxo.categoria']}"
+						 value="#{action.instance.categoria}"
+						 items="#{action.categoriaList}"
+						 noSelectionLabel="#{messages['naturezaCategoriaFluxo.categoriaCombo']}" />
 					<wi:selectOneMenuEntity
-                         id="fluxo"
-                         label="#{messages['naturezaCategoriaFluxo.fluxo']}"
-                         value="#{action.instance.fluxo}"
-                         items="#{action.fluxoList}"
-                         noSelectionLabel="#{messages['naturezaCategoriaFluxo.fluxoCombo']}" />
-					<ui:define
-                         name="buttons">
+						 id="fluxo"
+						 label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+						 value="#{action.instance.fluxo}"
+						 items="#{action.fluxoList}"
+						 noSelectionLabel="#{messages['naturezaCategoriaFluxo.fluxoCombo']}" />
+					<ui:define name="buttons">
+						
 						<wi:commandButton
-                             id="saveButton"
-                             action="naturezaCategoriaFluxoAction.persist"
-                             reRender="naturezaCatFluxoFormDiv, natCatFluxoDiv"
-                             value="Incluir" />
+							 id="saveButton"
+							 action="naturezaCategoriaFluxoAction.persist"
+							 reRender="naturezaCatFluxoFormDiv, natCatFluxoDiv"
+							 value="Incluir" />
+					
 					</ui:define>
+				
 				</wi:dataForm>
+			
 			</s:div>
-			<s:div
-                 id="natCatFluxoDiv">
+			<s:div id="natCatFluxoDiv">
+				
 				<a:region>
+					
 					<rich:dataTable
-                         id="natCatFluxoTable"
-                         value="#{action.naturezaCategoriaFluxoList}"
-                         var="row"
-                         rows="10"
-                         title="#{home.instance.natureza}"
-                         style="width: 60%">
-						<rich:column
-                             style="width: 10%">
-							<f:facet
-                                 name="header">
+						 id="natCatFluxoTable"
+						 value="#{action.naturezaCategoriaFluxoList}"
+						 var="row"
+						 rows="10"
+						 title="#{home.instance.natureza}"
+						 style="width: 60%">
+						
+						<rich:column style="width: 10%">
+							
+							<f:facet name="header">
+								
 								<wi:toolBarRemove
-                                     id="headerRemove"
-                                     reRender="natCatFluxoDiv"
-                                     actionRemove="naturezaCategoriaFluxoAction.removeAll()"
-                                     title="Remover todos os Registros" />
+									 id="headerRemove"
+									 reRender="natCatFluxoDiv"
+									 actionRemove="naturezaCategoriaFluxoAction.removeAll()"
+									 title="Remover todos os Registros" />
+							
 							</f:facet>
 							<center>
+								
 								<wi:toolBarRemove
-                                     id="toolBarRemove"
-                                     reRender="natCatFluxoDiv"
-                                     actionRemove="naturezaCategoriaFluxoAction.remove(row)" />
+									 id="toolBarRemove"
+									 reRender="natCatFluxoDiv"
+									 actionRemove="naturezaCategoriaFluxoAction.remove(row)" />
+							
 							</center>
+						
 						</rich:column>
-						<rich:column
-                             style="width: 45%">
-							<f:facet
-                                 name="header">
-								<h:outputText
-                                     value="#{messages['naturezaCategoriaFluxo.categoria']}" />
+						<rich:column style="width: 45%">
+							
+							<f:facet name="header">
+								
+								<h:outputText value="#{messages['naturezaCategoriaFluxo.categoria']}" />
+							
 							</f:facet>
-							<h:outputText
-                                 value="#{row.categoria}" />
+							<h:outputText value="#{row.categoria}" />
+						
 						</rich:column>
-						<rich:column
-                             style="width: 45%">
-							<f:facet
-                                 name="header">
-								<h:outputText
-                                     value="#{messages['naturezaCategoriaFluxo.fluxo']}" />
+						<rich:column style="width: 45%">
+							
+							<f:facet name="header">
+								
+								<h:outputText value="#{messages['naturezaCategoriaFluxo.fluxo']}" />
+							
 							</f:facet>
-							<h:outputText
-                                 value="#{row.fluxo}" />
+							<h:outputText value="#{row.fluxo}" />
+						
 						</rich:column>
+					
 					</rich:dataTable>
 					<rich:dataScroller
-                         for="natCatFluxoTable"
-                         lastPageMode="full"
-                         id="dsNatCatFluxoTable"
-                         align="left"
-                         renderIfSinglePage="false" />
+						 for="natCatFluxoTable"
+						 lastPageMode="full"
+						 id="dsNatCatFluxoTable"
+						 align="left"
+						 renderIfSinglePage="false" />
+				
 				</a:region>
+			
 			</s:div>
-		</wi:richTab>
+		
+		</wi:tab>
+	
 	</ui:define>
+
 </ui:composition>

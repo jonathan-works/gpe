@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
-import javax.faces.event.AbortProcessingException;
 import javax.persistence.EntityExistsException;
 
 import org.hibernate.AssertionFailure;
@@ -42,9 +41,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jboss.util.StopWatch;
-import org.richfaces.event.ItemChangeEvent;
-import org.richfaces.event.ItemChangeListener;
-
 import br.com.infox.core.action.list.EntityList;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.AplicationException;
@@ -54,7 +50,7 @@ import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ExcelExportUtil;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractHome<T> extends EntityHome<T> implements ItemChangeListener {
+public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
 
@@ -69,7 +65,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> implements ItemChang
 	public static final String PERSISTED = "persisted";
 	public static final String UPDATED = "updated";
 	
-	private String tab = "search";
+	private String tab = null;
 	private String goBackUrl = null;
 	private String goBackId = null;
 	private String goBackTab = null;
@@ -397,16 +393,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> implements ItemChang
 		return (C) Component.getInstance(name, create);
 	}
 
-	/**
-	 * Evento acionado quando o usuário clica em alguma aba
-	 */
-
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if (event.getNewItemName().equals("search")) {
-			newInstance();
-		}
-		setTab(event.getNewItemName());
+	public void onClickSearchTab(){
+		newInstance();
+	}
+	
+	public void onClickFormTab(){
+		
 	}
 	
 	/**
