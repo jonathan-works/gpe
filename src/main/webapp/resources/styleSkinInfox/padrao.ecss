@@ -9,7 +9,7 @@ select {
 .rich-calendar-input,.inputText {
 	background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
 }
-.inputTreeBody {
+.tree-b {
 	border-color:'#{a4jSkin.borderColorInputTree}';
 }
 option {
@@ -31,8 +31,9 @@ textarea,select {
 .buttons {
 	border-color:"#{a4jSkin.borderColorButton}";
 }
-.inputTreeHeader {
-	background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputTree}");
+.rf-cp-hdr.tree-hdr {
+	background-image:url("#{util.contextPath}#{a4jSkin.imgBgInputTree}");
+	background-color:transparent;
 }
 .suggest {
 	background-image: url("#{util.contextPath}#{a4jSkin.imgBgSuggest}")	!important;
@@ -53,4 +54,14 @@ textarea,select {
 	color:'#{a4jSkin.headerTextColor}';
 	border-color:'#{a4jSkin.panelBorderColor}';
 	background-color:'#{a4jSkin.headerBackgroundColor}';
+}
+.rf-dt-thd {
+	border-color:'#{a4jSkin.tableBorderColor}';
+	border-width:'#{a4jSkin.tableBorderWidth}';
+}
+.rf-dt-hdr,.rf-dt-shdr {
+	background-color:'#{a4jSkin.headerBackgroundColor}';
+}
+.rf-dt-hdr-c {
+	color:'#{a4jSkin.headerTextColor}';
 }

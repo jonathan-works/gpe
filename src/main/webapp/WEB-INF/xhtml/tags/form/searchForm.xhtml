@@ -37,9 +37,8 @@
 					<rich:collapsiblePanel
 						expanded="#{wi:get(opened, true)}"
 						style="width: #{wi:get(widthSearchForm, '275px')}"
+						header="#{empty formTitle ? formId : formTitle}"
 						switchType="client">
-						<f:facet name="closeMarker">&#160;</f:facet>
-						<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 						<ui:param
 							name="template"
 							value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
@@ -75,7 +74,6 @@
 										action="#{util.invokeMethod(clearAction)}"
 										value="Limpar"
 										execute="@this"
-										style="min-width:65px; width:65px;"
 										render="#{wi:get(clearReRender, 'pageBody')}"
 										styleClass="buttons dr-tbpnl-tb-inact" />
 								</a:region>

@@ -14,9 +14,30 @@
 	max-width:100%;
 }
 
-.InputTreePanel.rf-cp.rf-tgp {
-	border: solid 1px #fff;
+.tree-p.rf-cp.rf-tgp {
+	border-color:#fff;
+	display:inline-table;
+	width:calc(100% - 21px);
 }
+
+.tree-b {
+	position: absolute;
+	width: 224px;
+	max-height: 250px;
+	z-index: 10;
+	background-color: #FFF;
+	border-style:solid;
+	border-width:1px;
+}
+
+.tree {
+}
+
+.tree-div-clear {
+	height:18px;
+	display:inline-table;
+}
+
 .rf-cp.rf-tgp,.rf-cp-hdr.rf-cp-hdr-exp {
 	padding:0px;
 }
@@ -47,7 +68,7 @@
 }
 .pageBody {
 	width:100%;
-	position:relative;
+	position:absolute;
 	height:calc(100% - 110px);
 	min-width:1020px;
 	min-height:514px;
@@ -88,17 +109,6 @@
 	margin-right:10px;
 	display: table;			
 	overflow: visible;
-}
-
-.propertyView .name {
-	float: none;
-	margin: 0px;
-	padding: 0px;
-}
-	
-.propertyView .value {
-	float: none;
-	padding: 0px;
 }
 
 .propertyView input[type="radio"] {
@@ -171,13 +181,11 @@ body {
 
 .name {
 	font-weight: bold;
-	margin-top: 3px;
-	clear: left;
+	margin: 0px;
 }
 
 .value,.name {
-	float: left;
-	padding: 5px;
+	padding: 0px;
 	color:#000;
 }
 
@@ -243,6 +251,14 @@ body {
 
 .folderSelected {
 	border:solid 1px transparent !important;
+}
+
+.rf-dt-thd {
+	border-style:solid;
+}
+
+.rf-dt-shdr-c {
+	color:#000;
 }
 
 .rf-dt-ftr-c {
@@ -391,16 +407,6 @@ select {
 	padding: 3px 12px;
 }
 
-.inputTreeBody {
-	position: absolute;
-	width: 224px !important;
-	max-height: 250px !important;
-	z-index: 10;
-	background-color: #FFF;
-	border-style:solid;
-	border-width:1px;
-}
-
 .reqSenha label {
     font-family: Arial,sans-serif;
     margin: 0;
@@ -469,14 +475,12 @@ select {
 	background-color: transparent;
 }
 
-.inputTreeHeader {
-	border: none !important;
+.rf-cp-hdr.tree-hdr {
+	border-width: 0px;
 	font-weight: normal;
-	text-align: left;
-	background-repeat: no-repeat;
-	background-position: right;
-	background-color: #FFF !important;
-	color: #000 !important;
+	background-size:100% auto;
+	min-width:224px;
+	padding:0px;
 }
 
 .suggest {
