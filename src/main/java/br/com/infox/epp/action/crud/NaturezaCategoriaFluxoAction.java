@@ -37,7 +37,7 @@ public class NaturezaCategoriaFluxoAction extends AbstractHome<NaturezaCategoria
 	}
 	
 	@PostConstruct
-    public void init() {
+	public void init() {
 		naturezaList = EntityUtil.getEntityList(Natureza.class);
 		categoriaList = EntityUtil.getEntityList(Categoria.class);
 		fluxoList = EntityUtil.getEntityList(Fluxo.class);

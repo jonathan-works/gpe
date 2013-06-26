@@ -16,6 +16,7 @@
 
 	<ui:define name="body">
 		<h:form>
+        <rich:panel >
 			<wi:dataTable
 				values="#{processoEpaList.list(15)}"
 				bean="#{processoEpaList}"
@@ -81,6 +82,7 @@
 					value="#{row.naturezaCategoriaFluxo}"
 					hideOrder="true" />
 			</wi:dataTable>
+            </rich:panel>
 		</h:form>
 	</ui:define>
 

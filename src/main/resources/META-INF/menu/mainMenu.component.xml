@@ -11,7 +11,6 @@
 			<value>menu.fluxos/menu.eventos/evento.menuText:/Evento/listView.seam</value>
 			<value>menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
 			<value>menu.fluxos/item.menuText:/Item/listView.seam</value>
-			<!-- <value>menu.fluxos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value> -->
 			<value>menu.fluxos/natureza.menuText:/Natureza/listView.seam</value>
 			<value>menu.fluxos/naturezaCategoriaFluxo.menuText:/NaturezaCategoriaFluxo/listView.seam</value>
 			<value>menu.fluxos/natCatFluxoLocalizacao.menuText:/NatCatFluxoLocalizacao/listView.seam</value>
@@ -20,7 +19,6 @@
 			<value>menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>
 			<value>menu.documentos/menu.modeloDocumento/modeloDocumento.menuText:/ModeloDocumento/listView.seam</value>
 			<value>menu.documentos/menu.modeloDocumento/twitterTemplate.menuText:/ModeloDocumento/TwitterTemplate/listView.xhtml</value>
-			<!-- <value>menu.documentos/protocoloDocumento.menuText:/ProtocoloDocumento/listView.seam</value> -->
 			<value>menu.documentos/tipoProcessoDocumento.menuText:/ClassificacaoDocumento/listView.seam</value>
 			<value>menu.documentos/variavel.menuText:/Variavel/listView.seam?newInstance=true</value>
 			<value>menu.documentos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>

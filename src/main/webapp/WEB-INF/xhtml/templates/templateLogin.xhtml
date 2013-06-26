@@ -17,45 +17,38 @@
 	    <title>
 			#{nomeSistema}: <ui:insert name="title" />
 		</title>
-		<h:outputScript
+	    <h:outputScript
 			 library="js"
-			 name="liveclock.js" />
+			 name="liveclock.js" />	   
 		<link
 			 rel="icon"
 			 href="#{util.contextPath}/favicon.ico"
-			 type="image/x-icon" />	
-	    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />  
+			 type="image/x-icon" />
+		
+		<ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />			
 	
 	</h:head>
 
 	<h:body>
-		&gt;     
+		&gt;  
 	    <ui:param
 			 name="canEdit"
 			 value="#{home.editable}" />
-	    
-	    <ui:include src="header.xhtml" />	         
-		<ui:include src="ajaxQueue.xhtml" />
+	    	   
+		<wi:tabPanel
+			 id="tabPanel"
+			 rendered="false">
+			<h:form><wi:tabHeaders /></h:form>
+			<wi:tab title="Definition" />
 		
-		<s:div
-			 styleClass="pageBody"
-			 id="pageBody">
-			  	 			
-			<wi:quadro>
-				
-				<ui:insert name="body" />		
-				<wi:tabPanel
-					 switchType="ajax"
-					 headerSpacing="2"
-					 activeTab="#{home.tab}">
-					<h:form><wi:tabHeaders /></h:form>			
-					<ui:insert name="tabs" />		
-				
-				</wi:tabPanel>
+		</wi:tabPanel>
+		
+		<div class="pageBody">
 			
-			</wi:quadro>			
+			<ui:insert name="body" />
 		
-		</s:div>	
+		</div>
+			
 	
 	</h:body>&gt;
 

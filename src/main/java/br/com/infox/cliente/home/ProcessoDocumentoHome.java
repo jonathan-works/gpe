@@ -53,14 +53,6 @@ public class ProcessoDocumentoHome
 		super.newInstance();
 	}
 	
-	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
-		if ("tabAnexar".equals(event.getNewItemName())) {
-			newInstance();
-		}
-		super.processItemChange(event);
-	}
-	
 	public boolean liberaCertificacao(){
 		return true;
 	}

@@ -25,7 +25,7 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<f:subview id="#{formId}">
+	<h:form id="#{formId}">
 		<a:region rendered="#{wi:get(rendered, true)}">
 			<ui:param
 				name="panelWidth"
@@ -53,5 +53,5 @@
 				showDialogMessage="#{showDialogMessage}"
 				timeCloseMSG="#{timeCloseMSG}" />
 		</a:region>
-	</f:subview>
+	</h:form>
 </ui:composition>

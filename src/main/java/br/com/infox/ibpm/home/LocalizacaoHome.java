@@ -228,13 +228,20 @@ public class LocalizacaoHome
 	}
 
 	@Override
-	public void processItemChange(ItemChangeEvent event) throws AbortProcessingException {
+	public void onClickFormTab() {
 		if (isManaged()) {
 			localizacaoPai = getInstance().getLocalizacaoPai();
 		} else {
 			localizacaoPai = null;
 		}
-		super.processItemChange(event);
+	}
+	
+	public void instanciarLocalizacaoPai(){
+		if (isManaged()) {
+			localizacaoPai = getInstance().getLocalizacaoPai();
+		} else {
+			localizacaoPai = null;
+		}
 	}
 	
 	private EnderecoHome getEnderecoHome() {

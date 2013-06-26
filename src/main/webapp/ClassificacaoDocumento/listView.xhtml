@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
@@ -15,18 +14,18 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-
 <ui:composition
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
 
     <ui:define name="title">#{messages['tipoProcessoDocumento.titlePage']}</ui:define>
 
@@ -35,16 +34,20 @@
         value="#{tipoProcessoDocumentoHome}" />
 
     <ui:define name="searchGrid">
+
         <wi:dataTable
             values="#{tipoProcessoDocumentoList.list(15)}"
             bean="#{tipoProcessoDocumentoList}"
             tableTitle="#{messages['tipoProcessoDocumento.titleGrid']}"
             id="tipoProcessoDocumentoList"
             rowId="#{row.idTipoProcessoDocumento}">
+
             <ui:define name="searchForm">
+
                 <wi:searchForm
                     formId="pesquisarTipoProcessoDocumentoForm"
                     formTitle="#{messages['searchForm.title']}">
+
                     <wi:inputText
                         id="codigoDocumento"
                         value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"
@@ -71,7 +74,9 @@
                         id="ativo"
                         label="#{messages['field.situacao']}"
                         value="#{tipoProcessoDocumentoList.entity.ativo}" />
+
                 </wi:searchForm>
+
             </ui:define>
 
             <wi:columnOutputText
@@ -94,13 +99,17 @@
                 columnId="ativo"
                 columnHeader="#{messages['field.situacao']}"
                 value="#{row.ativo}" />
+
         </wi:dataTable>
+
     </ui:define>
 
     <ui:define name="form">
+
         <wi:dataForm
             formId="tipoProcessoDocumentoForm"
             formTitle="#{messages['form.title']}">
+
             <wi:inputText
                 id="codigoDocumento"
                 value="#{tipoProcessoDocumentoHome.instance.codigoDocumento}"
@@ -132,14 +141,17 @@
                 label="#{messages['tipoProcessoDocumento.numera']}"
                 value="#{home.instance.numera}"
                 valueList="true:Sim, false:Não">
+
                 <a:ajax
                     reRender="mascaraDiv"
                     ajaxSingle="true"
                     event="change"
                     status="status" />
+
             </wi:selectOneRadio>
 
             <s:div id="mascaraDiv">
+
                 <wi:selectOneMenuEnum
                     id="tipoNumeracaoCombo"
                     rendered="#{tipoProcessoDocumentoHome.instance.numera}"
@@ -148,6 +160,7 @@
                     value="#{home.instance.tipoNumeracao}"
                     required="true"
                     noSelectionLabel="#{messages['comboBox.select']}" />
+
             </s:div>
             <wi:selectBooleanRadio
                 id="sistema"
@@ -162,22 +175,29 @@
                 label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
                 value="#{home.instance.tipoProcessoDocumentoObservacao}"
                 maxlength="150" />
+
         </wi:dataForm>
+
     </ui:define>
     <ui:define name="tabs">
-        <wi:richTab
-            label="Associar Papel"
+
+        <wi:tab
             status=":status"
             id="associarPapelTab"
-            rendered="#{home.managed}">
+            rendered="#{home.managed}"
+            name="associarPapelTab"
+            title="#{messages['tipoProcessoDocumento.papel']}">
+
             <s:div id="divAssociarPapel">
+
                 <wi:dataForm
-                    formId="tipoProcessoDocumentoPapeçForm"
+                    formId="tipoProcessoDocumentoPapelForm"
                     formTitle="#{messages['form.title']}">
+
                     <wi:selectOneMenuEntity
                         id="papel"
                         label="#{messages['tipoProcessoDocumentoPapel.papel']}"
-                        items="#{home.papelItems()}"
+                        items="#{tipoProcessoDocumentoPapelHome.papelItems()}"
                         value="#{tipoProcessoDocumentoPapelHome.instance.papel}"
                         noSelectionLabel="Selecione..."
                         required="true" />
@@ -186,15 +206,27 @@
                         required="true"
                         value="#{tipoProcessoDocumentoPapelHome.instance.obrigatorio}"
                         label="#{messages['tipoProcessoDocumentoPapel.obrigatorio']}" />
+                    <ui:define name="buttons">
+                        <wi:commandButtonPersist
+                            home="#{tipoProcessoDocumentoPapelHome}"
+                            persistAction="tipoProcessoDocumentoPapelHome.persist()" />
+                        <wi:commandButtonUpdate
+                            home="#{tipoProcessoDocumentoPapelHome}"
+                            updateAction="tipoProcessoDocumentoPapelHome.update()" />
+                        <wi:commandButtonNew
+                            home="#{tipoProcessoDocumentoPapelHome}"
+                            newInstanceAction="tipoProcessoDocumentoPapelHome.newInstance()" />
+                    </ui:define>
                 </wi:dataForm>
-                
+
                 <wi:dataTable
                     values="#{tipoProcessoDocumentoPapelList.list(15)}"
                     bean="#{tipoProcessoDocumentoPapelList}"
                     tableTitle="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"
                     id="tipoProcessoDocumentoPapelList"
-                    rowId="#{row.tipoProcessoDocumentoPapel}"
+                    rowId="#{row.idTipoProcessoDocumentoPapel}"
                     listReRender="divAssociarPapel">
+
                     <wi:columnOutputText
                         columnId="papel"
                         columnHeader="#{messages['tipoProcessoDocumentoPapel.papel']}"
@@ -204,9 +236,21 @@
                         columnHeader="#{messages['tipoProcessoDocumentoPapel.obrigatorio']}"
                         value="#{row.obrigatorio}" />
                     <ui:define name="headerToolBar" />
-                    <ui:insert name="toolBarEditRemove" />
+                    <ui:define name="toolBar">
+                        <wi:toolBar
+                            url="#{a4jSkin.imgIconView}"
+                            title="Selecionar" 
+                            action="tipoProcessoDocumentoPapelHome.setId(row.idTipoProcessoDocumentoPapel)"
+                            render="@form"
+                            execute="@this"/>
+                    </ui:define>
+
                 </wi:dataTable>
+
             </s:div>
-        </wi:richTab>
+
+        </wi:tab>
+
     </ui:define>
+
 </ui:composition>
