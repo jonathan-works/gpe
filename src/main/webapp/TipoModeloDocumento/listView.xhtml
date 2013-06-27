@@ -117,6 +117,7 @@
             name="modeloDocumento">
             <wi:dataTable
                 values="#{tipoModeloDocumentoHome.listaDeModeloDocumento}"
+                hideOrder="true"
                 tableTitle="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoHome.instance)}"
                 id="associativeModeloDocumentoList"
                 rowId="#{row.idModeloDocumento}">
@@ -273,7 +274,7 @@
                         id="removeButton"/>
                 </ui:define>
                 <wi:columnOutputText
-                    columnId="papel"
+                    columnId="o.papel.nome"
                     columnHeader="#{messages['tipoModeloDocumento.papel']}"
                     value="#{row.papel}" />
             </wi:dataTable>
