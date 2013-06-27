@@ -7,8 +7,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
@@ -20,9 +18,7 @@ import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.list.CaixaList;
-import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.AplicationException;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
