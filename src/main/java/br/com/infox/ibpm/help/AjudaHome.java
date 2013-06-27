@@ -54,7 +54,6 @@ import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
 @Name("ajudaHome")
-@BypassInterceptors
 @Scope(ScopeType.CONVERSATION)
 @SuppressWarnings("unchecked")
 public class AjudaHome extends AbstractHome<Ajuda>  {
@@ -101,7 +100,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 			String[] fields = new String[]{"texto"};
 			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, HelpUtil.getAnalyzer());
 			parser.setAllowLeadingWildcard(true);
-			org.apache.lucene.search.Query query = parser.parse("*"+getTextoPesquisa()+"*");
+			org.apache.lucene.search.Query query = parser.parse("+"+getTextoPesquisa()+"+");
 			
 			FullTextQuery textQuery = em.createFullTextQuery(query, Ajuda.class);
 
