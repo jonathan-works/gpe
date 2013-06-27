@@ -241,8 +241,16 @@
                             url="#{a4jSkin.imgIconView}"
                             title="Selecionar" 
                             action="tipoProcessoDocumentoPapelHome.setId(row.idTipoProcessoDocumentoPapel)"
-                            render="@form"
-                            execute="@this"/>
+                            render="divAssociarPapel"
+                            execute="@this"
+                            id="selectButton"/>
+                         <wi:toolBar url="/img/remove.png"
+                            title="Remover"
+                            action="tipoProcessoDocumentoPapelHome.remove(row)"
+                            render="divAssociarPapel"
+                            execute="@this"
+                            id="removeButton"/>
+                        
                     </ui:define>
 
                 </wi:dataTable>
