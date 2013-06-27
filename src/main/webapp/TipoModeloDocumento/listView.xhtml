@@ -240,15 +240,22 @@
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.papeis']}"
             name="papeis">
+            <s:div id="divAssociarPapel">
             <wi:dataForm
                 formId="tipoModeloDocumentoPapelForm"
                 formTitle="#{messages['form.title']}">
                 <wi:selectOneMenuEntity
                     id="papel"
                     label="#{messages['tipoModeloDocumento.papel']}"
-                    required="true"
+                    items="#{tipoModeloDocumentoPapelHome.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}"
                     value="#{tipoModeloDocumentoPapelHome.instance.papel}"
-                    items="#{tipoModeloDocumentoPapelHome.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}" />
+                    required="true" 
+                    showLabel="Selecione..."/>
+                <ui:define name="buttons">
+                    <wi:commandButtonPersist
+                        home="#{tipoModeloDocumentoPapelHome}"
+                        persistAction="tipoModeloDocumentoPapelHome.persist()" />
+                </ui:define>
             </wi:dataForm>
             <wi:dataTable
                 values="#{tipoModeloDocumentoPapelList.list(15)}"
@@ -256,12 +263,21 @@
                 tableTitle="#{messages['tipoModeloDocumentoPapel.titleGrid']}"
                 id="tipoModeloDocumentoPapelList"
                 rowId="#{row.idTipoModeloDocumentoPapel}">
-                <ui:define name="toolBar"/>
+                <ui:define name="toolBar">
+                    <wi:toolBar 
+                        url="/img/remove.png"
+                        title="Remover"
+                        action="tipoModeloDocumentoPapelHome.remove(row)"
+                        render="divAssociarPapel"
+                        execute="@this"
+                        id="removeButton"/>
+                </ui:define>
                 <wi:columnOutputText
                     columnId="papel"
                     columnHeader="#{messages['tipoModeloDocumento.papel']}"
                     value="#{row.papel}" />
             </wi:dataTable>
+            </s:div>
         </wi:tab>
     </ui:define>
 </ui:composition>
