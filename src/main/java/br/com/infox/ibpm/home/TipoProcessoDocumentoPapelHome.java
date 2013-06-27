@@ -16,6 +16,7 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	public String persist() {
 		instance.setTipoProcessoDocumento(TipoProcessoDocumentoHome.instance().getInstance());
 		String ret = super.persist();
+		newInstance();
 		return ret;
 	}
 	
