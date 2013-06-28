@@ -43,96 +43,23 @@
         <ui:param
             name="def"
             value="#{processBuilder.instance}" />
-        <wi:tabPanel
-            switchType="ajax"
-            activeTab="#{processBuilder.tab}">
-            <h:form>
-                <wi:tabHeaders />
-            </h:form>
-            <wi:tab
-                name="propriedadesTab"
-                id="propriedadesTab"
-                title="#{messages['processBuilder.properties']}">
-                <rich:panel
-                    style="clear:both; overflow:auto; padding-bottom:5px"
-                    header="#{messages['processBuilder.info']}">
-                    <wi:inputText
-                        id="codFluxo"
-                        label="#{messages['fluxo.codFluxo']}"
-                        value="#{processBuilder.id}"
-                        readonly="true">
-                        <f:validator validatorId="idValidator" />
-                    </wi:inputText>
-                    <wi:inputText
-                        id="nome"
-                        label="#{messages['fluxo.fluxo']}"
-                        value="#{def.name}"
-                        readonly="true">
-                    </wi:inputText>
-                    <wi:inputTextarea
-                        id="description"
-                        value="#{def.description}"
-                        label="#{messages['processBuilder.description']}">
-                    </wi:inputTextarea>
-                </rich:panel>
-                <h:form>
-                    <rich:panel
-                        styleClass="SwimlanePanel"
-                        header="#{messages['processBuilder.swimlanes']}"
-                        rendered="#{processBuilder.exists}">
-                        <ui:include src="swimlanes.xhtml" />
-                    </rich:panel>
-                </h:form>
-            </wi:tab>
-            <wi:tab
-                name="nodesTab"
-                id="nodesTab"
-                rendered="#{processBuilder.exists}"
-                title="#{messages['processBuilder.nodes']}">
-                <ui:include src="nodes.xhtml" />
-            </wi:tab>
-            <wi:tab
-                name="xmlTab"
-                id="xmlTab"
-                rendered="#{processBuilder.exists}"
-                title="XML">
-                <ui:include src="xmlEdit.xhtml" />
-            </wi:tab>
-            <wi:tab
-                name="graphTab"
-                id="graphTab"
-                title="#{messages['processBuilder.graph']}"
-                action="#{processBuilder.getPaintedGraph()}">
-                <ui:include src="graph.xhtml" />
-            </wi:tab>
-        </wi:tabPanel>
+        <h:form id="form">    
+        <wi:tabPanel>
+        <wi:tabHeaders/>
+        <wi:tab>
+                        <wi:inputTextarea
+                            id="description"
+                            value="#{def.description}"
+                            label="#{messages['processBuilder.description']}">
+                        </wi:inputTextarea>
+       </wi:tab> </wi:tabPanel>           
         <h:commandButton
             id="gravar"
             action="#{processBuilder.update()}"
             value="#{messages['processBuilder.saveBtn']}"
-            type="submit"
-            rendered="#{processBuilder.exists}" />
-        <a:commandButton
-            id="publicar"
-            render="form"
-            action="#{processBuilder.deploy()}"
-            value="#{messages['processBuilder.deployBtn']}"
-            type="submit"
-            rendered="#{processBuilder.exists}"
-            limitRender="true" />
-        <h:commandButton
-            id="novoProcesso"
-            action="#{processBuilder.update()}"
-            value="#{messages['processBuilder.saveBtn']}"
-            type="submit"
-            rendered="#{!processBuilder.exists}" />
-        <h:commandButton
-            id="new"
-            action="#{processBuilder.clearDefinition()}"
-            value="#{messages['processBuilder.newBtn']}"
-            type="submit"
-            onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;"
-            rendered="#{processBuilder.exists}" />
+            rendered="#{processBuilder.exists}"/>
+        
+        </h:form>
         <rich:messages
             id="messages"
             ajaxRendered="true"
