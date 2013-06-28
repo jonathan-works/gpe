@@ -83,7 +83,7 @@
 				<ui:insert />
 			</rich:dataTable>
 			<h:outputText
-				value="Foram encontrados:  #{bean.resultCount} resultados"
+				value="Foram encontrados:  #{not empty bean ? bean.resultCount : values.size()} resultados"
 				styleClass="DataTableResultCount"
 				rendered="#{wi:get(showGridCount, true)}" />
 			<s:div rendered="#{bean.previousExists or bean.nextExists}">
