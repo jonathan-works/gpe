@@ -11,7 +11,7 @@ import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Caixa;
 
 @Name(CaixaList.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.CONVERSATION)
 public class CaixaList extends EntityList<Caixa> {
 
 	private static final long serialVersionUID = 1L;
