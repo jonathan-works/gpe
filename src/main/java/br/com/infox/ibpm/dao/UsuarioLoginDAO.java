@@ -1,13 +1,16 @@
 package br.com.infox.ibpm.dao;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.access.query.UsuarioLoginQuery;
 import br.com.infox.core.dao.GenericDAO;
-import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioLoginDAO.NAME)
 @AutoCreate
@@ -43,6 +46,13 @@ public class UsuarioLoginDAO extends GenericDAO {
 	
 	public UsuarioLogin getUsuarioLogin(UsuarioLogin usuarioLogin){
 		return (UsuarioLogin) entityManager.find(UsuarioLogin.class, usuarioLogin.getIdPessoa());
+	}
+	
+	public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance, String actorId) {
+		Map<String,Object> parameters = new HashMap<String,Object>();
+		parameters.put(UsuarioLoginQuery.PARAM_LOGIN, actorId);
+		parameters.put(UsuarioLogin.PARAM_ID_TASK_INSTANCE, idTaskInstance);
+		return getNamedSingleResult(UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE, parameters);
 	}
 	
 }

@@ -3,30 +3,23 @@ package br.com.infox.ibpm.jbpm.actions;
 import java.io.Serializable;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TransactionRequiredException;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.End;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.bpm.Actor;
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Processo;
-import br.com.infox.ibpm.entity.UsuarioLocalizacao;
-import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
-import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
-import br.com.infox.ibpm.query.ProcessoLocalizacaoIbpmQuery;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -34,6 +27,7 @@ import br.com.itx.util.EntityUtil;
 @Name(JbpmEventsHandler.NAME)
 @Install(precedence=Install.FRAMEWORK)
 @BypassInterceptors
+@Scope(ScopeType.EVENT)
 public class JbpmEventsHandler implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -229,110 +223,6 @@ public class JbpmEventsHandler implements Serializable {
                     "JbpmEventsHandler", "BPM"));
         }
     }
-	
-	private Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo, Long idTarefa) {
-        Query q = getEntityManager()
-                .createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY);
-        
-        q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,processo)
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO,
-                        usrLoc.getLocalizacao())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,
-                        usrLoc.getPapel())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK,
-                        idTarefa.intValue());
-        
-        Long result = EntityUtil.getSingleResult(q);
-        result = result == null ? -1L : result;
-        
-        return result;
-    }
-	
-    private Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo) {
-        Query q = getEntityManager().createQuery(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY);
-        q.setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,processo)
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao())
-                .setParameter(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL,usrLoc.getPapel());
-        
-        Long result = EntityUtil.getSingleResult(q);
-        result = result == null ? -1L : result;
-        
-        return result;
-    }
-    
-    public void visualizarTask(Processo processo, Long idTarefa){
-        if (processo != null
-                && processo.getIdJbpm() != null
-                && !processo.getIdJbpm().equals(
-                        BusinessProcess.instance().getProcessId())) {
-            
-            BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-            UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
-            Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
-
-            if (taskInstanceId >= 0L) {
-                BusinessProcess.instance().setTaskId(taskInstanceId);
-            }
-        }
-    }
-	
-    public void iniciarTask(Processo processo, Long idTarefa) {
-        if (processo != null
-                && processo.getIdJbpm() != null
-                && !processo.getIdJbpm().equals(
-                        BusinessProcess.instance().getProcessId())) {
-            BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-            UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
-            Long taskInstanceId;
-            if (idTarefa != null) {
-                taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
-            } else {
-                taskInstanceId = getTaskInstanceId(usrLoc, processo);
-            }
-
-            if (taskInstanceId >= 0L) {
-                BusinessProcess.instance().setTaskId(taskInstanceId);
-                TaskInstance ti = (TaskInstance) JbpmUtil.getJbpmSession().get(
-                        TaskInstance.class, taskInstanceId);
-                if (ti != null) {
-                    if (ti.getStart() == null) {
-                        BusinessProcess.instance().startTask();
-                    }
-                    String actorId = Actor.instance().getId();
-
-                    processo.setActorId(actorId);
-                    storeUsuario(taskInstanceId, actorId);
-                    getEntityManager().merge(processo);
-                    EntityUtil.flush();
-                }
-            }
-        }
-    }
-	
-	/**
-	 * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os usuários das tarefas em execução, 
-	 * apagando o usuário sempre que a tarefa é finalizada (ver tabela jbpm_taskinstance, campo actorid_)
-	 * Porém surgiu a necessidade de armazenar os usuários das tarefas já finalizas para exibir no 
-	 * histórico de Movimentação do Processo
-	 * @param idTaskInstance
-	 * @param actorId				 
-	 * */
-	private void storeUsuario(Long idTaskInstance, String actorId){
-        String hql = "select o from UsuarioLogin o "
-                + "where o.login = :actorId "
-                + "and not exists (from UsuarioTaskInstance "
-                + "where idTaskInstance = :idTaskInstance)";
-        Query q = EntityUtil.createQuery(hql).setParameter("actorId", actorId)
-                .setParameter("idTaskInstance", idTaskInstance);
-
-        UsuarioLogin user = EntityUtil.getSingleResult(q);
-        if (user != null) {
-            UsuarioTaskInstance uti = new UsuarioTaskInstance();
-            uti.setIdTaskInstance(idTaskInstance);
-            uti.setUsuario(user);
-    		getEntityManager().persist(uti);
-        }
-	}
 	
 	private EntityManager getEntityManager() {
 		return EntityUtil.getEntityManager();

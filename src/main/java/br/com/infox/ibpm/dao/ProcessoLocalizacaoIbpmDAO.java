@@ -10,10 +10,11 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.access.entity.Papel;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.query.ProcessoLocalizacaoIbpmQuery;
@@ -46,4 +47,23 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 		Object result = EntityUtil.getSingleResult(query);
 		return result != null;
 	}
+	
+	public Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo, Long idTarefa) {
+        Map<String,Object> parameters = new HashMap<String, Object>();
+        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,processo);
+        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao());
+        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
+        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK, idTarefa.intValue());
+        return getNamedSingleResult(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, parameters);
+    }
+	
+	public Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo) {
+		Map<String,Object> parameters = new HashMap<String, Object>();
+        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,processo);
+        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao());
+        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
+        
+        return getNamedSingleResult(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, parameters);
+    }
+	
 }

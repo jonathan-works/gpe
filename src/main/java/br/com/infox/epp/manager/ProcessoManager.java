@@ -7,15 +7,22 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.Actor;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
+import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
+import br.com.infox.ibpm.dao.UsuarioLoginDAO;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
@@ -28,6 +35,8 @@ public class ProcessoManager extends GenericManager {
 	public static final String NAME = "processoManager";
 	
 	@In private ProcessoEpaDAO processoEpaDAO;
+	@In private ProcessoLocalizacaoIbpmDAO processoLocIbpmDAO;
+	@In private UsuarioLoginDAO usuarioLoginDAO;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
@@ -98,5 +107,62 @@ public class ProcessoManager extends GenericManager {
 	
 	public boolean hasPartes(Processo processo){
 		return processoEpaDAO.hasPartes(processo);
+	}
+	
+    public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc){
+        final BusinessProcess bp = BusinessProcess.instance();
+		if (!processo.getIdJbpm().equals(bp.getProcessId())) {            
+            final Long taskInstanceId = processoLocIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+            
+            bp.setProcessId(processo.getIdJbpm());
+            bp.setTaskId(taskInstanceId);
+        }
+    }
+	
+    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
+        final BusinessProcess bp = BusinessProcess.instance();
+		if (!processo.getIdJbpm().equals(bp.getProcessId())) {
+            final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+
+        	bp.setProcessId(processo.getIdJbpm());
+            bp.setTaskId(taskInstanceId);
+            try {
+            	bp.startTask();
+            	final String actorId = Actor.instance().getId();
+            	storeUsuario(taskInstanceId, actorId);
+            	vinculaUsuario(processo, taskInstanceId, actorId);
+            } catch (IllegalStateException e) {
+            	e.printStackTrace();
+            }
+        }
+    }
+
+	private void vinculaUsuario(Processo processo, Long taskInstanceId, String actorId) {
+		processo.setActorId(actorId);
+		EntityUtil.getEntityManager().merge(processo);
+		EntityUtil.flush();
+	}
+    
+	private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc, final Processo processo, final Long idTarefa) {
+        Long result;
+		if (idTarefa != null) {
+        	result = processoLocIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+        } else {
+        	result = processoLocIbpmDAO.getTaskInstanceId(usrLoc, processo);
+        }
+		return result;
+    }
+	
+	/**
+	 * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os usuários das tarefas em execução, 
+	 * apagando o usuário sempre que a tarefa é finalizada (ver tabela jbpm_taskinstance, campo actorid_)
+	 * Porém surgiu a necessidade de armazenar os usuários das tarefas já finalizas para exibir no 
+	 * histórico de Movimentação do Processo
+	 * @param idTaskInstance
+	 * @param actorId				 
+	 * */
+	private void storeUsuario(Long idTaskInstance, String actorId){
+        UsuarioLogin user = usuarioLoginDAO.getUsuarioByLoginTaskInstance(idTaskInstance, actorId);
+        EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user));
 	}
 }

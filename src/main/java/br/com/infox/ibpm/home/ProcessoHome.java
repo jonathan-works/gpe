@@ -16,17 +16,17 @@
 package br.com.infox.ibpm.home;
 
 import java.util.List;
-import javax.faces.event.AbortProcessingException;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
-import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
@@ -42,7 +42,6 @@ import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
-import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
@@ -50,6 +49,7 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
+@Scope(ScopeType.CONVERSATION)
 public class ProcessoHome extends AbstractHome<Processo> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
@@ -101,11 +101,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 	
 	public void iniciarTarefaProcesso() {
-		JbpmEventsHandler.instance().iniciarTask(instance, tarefaId);
+		processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
 	}
 	
 	public void visualizarTarefaProcesso(){
-		JbpmEventsHandler.instance().visualizarTask(instance, tarefaId);
+		processoManager.visualizarTask(instance, tarefaId,Authenticator. getUsuarioLocalizacaoAtual());
 	}
 	
 	public static ProcessoHome instance() {

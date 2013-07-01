@@ -19,6 +19,14 @@ public class UsuarioTaskInstance implements Serializable {
 	private Long idTaskInstance;
 	private UsuarioLogin usuario;
 
+	public UsuarioTaskInstance() {
+	}
+	
+	public UsuarioTaskInstance(final Long IdTaskinstance, final UsuarioLogin Usuario) {
+		this.idTaskInstance = IdTaskinstance;
+		this.usuario = Usuario;
+	}
+	
 	@Id
 	@Column(name = "id_taskinstance", unique = true, nullable = false)
 	public Long getIdTaskInstance() {
