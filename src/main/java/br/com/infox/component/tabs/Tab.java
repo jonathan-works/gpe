@@ -146,4 +146,8 @@ public class Tab extends UIPanel implements ActionSource2 {
 		}
 		return (TabPanel) parent;
 	}
+	
+	public boolean isActiveTab() {
+		return getTabPanel().getActiveTab().equals(getName());
+	}
 }
