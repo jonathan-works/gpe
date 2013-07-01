@@ -36,7 +36,7 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 	
 	public boolean possuiPermissao() {
 		ControleFiltros.instance().iniciarFiltro();
-		String hql = "select 1 from ProcessoLocalizacaoIbpm o " +
+		String hql = "select count(1)>0 from ProcessoLocalizacaoIbpm o " +
 						"where o.processo.idProcesso = :id" +
 						" and o.localizacao = :localizacao" +
 						" and o.papel = :papel";
@@ -44,8 +44,7 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 		query.setParameter("id", ProcessoHome.instance().getInstance().getIdProcesso());
 		query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
 		query.setParameter("papel", Authenticator.getPapelAtual());
-		Object result = EntityUtil.getSingleResult(query);
-		return result != null;
+		return EntityUtil.getSingleResult(query);
 	}
 	
 	public Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo, Long idTarefa) {

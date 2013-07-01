@@ -119,25 +119,32 @@ public class ProcessoManager extends GenericManager {
         }
     }
 	
-    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
-        final BusinessProcess bp = BusinessProcess.instance();
+    public boolean iniciaTask(final Processo processo, final Long taskInstanceId) {
+    	boolean result = false;
+    	final BusinessProcess bp = BusinessProcess.instance();
 		if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
-
         	bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
             try {
             	bp.startTask();
-            	final String actorId = Actor.instance().getId();
-            	storeUsuario(taskInstanceId, actorId);
-            	vinculaUsuario(processo, taskInstanceId, actorId);
+            	result = true;
             } catch (IllegalStateException e) {
             	e.printStackTrace();
             }
         }
+    	return result;
+    }
+    
+    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
+        final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+    	final String actorId = Actor.instance().getId();
+    	if (iniciaTask(processo, taskInstanceId)) {
+	    	storeUsuario(taskInstanceId, usrLoc.getUsuario());
+	    	vinculaUsuario(processo, actorId);
+    	}
     }
 
-	private void vinculaUsuario(Processo processo, Long taskInstanceId, String actorId) {
+	private void vinculaUsuario(Processo processo, String actorId) {
 		processo.setActorId(actorId);
 		EntityUtil.getEntityManager().merge(processo);
 		EntityUtil.flush();
@@ -161,8 +168,7 @@ public class ProcessoManager extends GenericManager {
 	 * @param idTaskInstance
 	 * @param actorId				 
 	 * */
-	private void storeUsuario(Long idTaskInstance, String actorId){
-        UsuarioLogin user = usuarioLoginDAO.getUsuarioByLoginTaskInstance(idTaskInstance, actorId);
+	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user){
         EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user));
 	}
 }
