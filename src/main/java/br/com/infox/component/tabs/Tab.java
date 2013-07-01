@@ -64,14 +64,6 @@ public class Tab extends UIPanel implements ActionSource2 {
 	}
 
 	@Override
-	public void processValidators(FacesContext context) {
-	}
-
-	@Override
-	public void processUpdates(FacesContext context) {
-	}
-
-	@Override
 	public MethodBinding getAction() {
 		MethodExpression expr = getActionExpression();
 		if (expr != null) {
