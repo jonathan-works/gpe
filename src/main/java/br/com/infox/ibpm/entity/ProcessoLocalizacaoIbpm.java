@@ -21,7 +21,7 @@ import br.com.infox.ibpm.query.ProcessoLocalizacaoIbpmQuery;
 @Entity
 @Ignore
 @Table(name = ProcessoLocalizacaoIbpm.TABLE_NAME, schema = "public")
-@NamedQueries({
+@NamedQueries(value={
 		@NamedQuery(name=ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE, 
 				query=ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE_QUERY),
 		@NamedQuery(name=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, 
