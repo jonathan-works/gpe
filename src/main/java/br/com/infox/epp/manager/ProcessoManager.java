@@ -35,7 +35,7 @@ public class ProcessoManager extends GenericManager {
 	public static final String NAME = "processoManager";
 	
 	@In private ProcessoEpaDAO processoEpaDAO;
-	@In private ProcessoLocalizacaoIbpmDAO processoLocIbpmDAO;
+	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	@In private UsuarioLoginDAO usuarioLoginDAO;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
@@ -112,7 +112,7 @@ public class ProcessoManager extends GenericManager {
     public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc){
         final BusinessProcess bp = BusinessProcess.instance();
 		if (!processo.getIdJbpm().equals(bp.getProcessId())) {            
-            final Long taskInstanceId = processoLocIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+            final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
             
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
@@ -153,9 +153,9 @@ public class ProcessoManager extends GenericManager {
 	private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc, final Processo processo, final Long idTarefa) {
         Long result;
 		if (idTarefa != null) {
-        	result = processoLocIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+        	result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
         } else {
-        	result = processoLocIbpmDAO.getTaskInstanceId(usrLoc, processo);
+        	result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo);
         }
 		return result;
     }
