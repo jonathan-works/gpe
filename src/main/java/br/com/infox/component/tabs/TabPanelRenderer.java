@@ -1,7 +1,6 @@
 package br.com.infox.component.tabs;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -20,11 +19,6 @@ public class TabPanelRenderer extends Renderer {
 	public static final String COMPONENT_FAMILY = "br.com.infox.component.tabs";
 	
 	@Override
-	public boolean getRendersChildren() {
-		return true;
-	}
-	
-	@Override
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		super.encodeBegin(context, component);
 		TabPanel tabPanel = (TabPanel) component;
@@ -33,32 +27,7 @@ public class TabPanelRenderer extends Renderer {
 		writer.startElement("div", tabPanel);
 		writer.writeAttribute("id", tabPanel.getClientId(), "clientId");
 	}
-	
-	/**
-	 * Caso a aba não seja a ativa, não faz o encode dela.
-	 */
-	@Override
-	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
-		if (context == null || component == null) {
-            throw new NullPointerException();
-        }
-        if (component.getChildCount() > 0) {
-        	TabPanel panel = (TabPanel) component;
-        	Iterator<UIComponent> kids = component.getChildren().iterator();
-        	while (kids.hasNext()) {
-        	    UIComponent kid = kids.next();
-        	    if (kid instanceof Tab) {
-        	    	Tab tab = (Tab) kid;
-        	    	if (tab.getName().equals(panel.getActiveTab())) {
-        	    		tab.encodeAll(context);
-        	    	}
-        	    } else {
-        	    	kid.encodeAll(context);
-        	    }
-        	}
-        }
-	}
-	
+
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		super.encodeEnd(context, component);
