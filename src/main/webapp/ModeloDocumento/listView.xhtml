@@ -132,8 +132,6 @@
 				
                 <ui:define name="headerToolBar">
 					
-                    <!-- <wi:toolBarReport rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}"
-                                      reportPath = "#{util.viewIdDirectory.concat('historicoReport.xhtml')}" /> -->
                     <wi:toolBarReportExcel
 						 rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}"
 						 action="#{historicoModeloDocumentoHome.exportarXLS()}" />                                      
@@ -144,8 +142,7 @@
 					
 					<wi:searchForm
 						 formId="historicoModeloDocumentoSearchForm"
-						 formTitle="#{messages['searchForm.title']}"
-						 opened="false">
+						 formTitle="#{messages['searchForm.title']}">
 						
 						<wi:inputText
 							 id="historicoTituloModeloDocumento"

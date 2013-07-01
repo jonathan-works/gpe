@@ -39,14 +39,10 @@
             tableTitle="#{messages['tipoModeloDocumento.titleGrid']}"
             id="tipoModeloDocumentoList"
             rowId="#{row.idTipoModeloDocumento}">
-
-
             <ui:define name="searchForm">
-
                 <wi:searchForm
                     formId="pesquisarTipoModeloDocumentoForm"
                     formTitle="#{messages['searchForm.title']}">
-
                     <wi:suggest
                         id="grupoModeloDocumento"
                         bean="#{grupoModeloDocumentoSuggest}"
@@ -65,11 +61,8 @@
                         id="ativo"
                         label="#{messages['field.situacao']}"
                         value="#{tipoModeloDocumentoList.entity.ativo}" />
-
                 </wi:searchForm>
-
             </ui:define>
-
             <wi:columnOutputText
                 columnId="grupoModeloDocumento"
                 columnHeader="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
@@ -86,18 +79,12 @@
                 columnId="ativo"
                 columnHeader="#{messages['field.situacao']}"
                 value="#{row.ativo}" />
-
         </wi:dataTable>
-
-
     </ui:define>
-
     <ui:define name="form">
-
         <wi:dataForm
             formId="tipoModeloDocumentoForm"
             formTitle="#{messages['form.title']}">
-
             <wi:suggest
                 id="grupoModeloDocumento"
                 bean="#{grupoModeloDocumentoSuggest}"
@@ -119,33 +106,25 @@
                 id="ativo"
                 label="#{messages['field.situacao']}"
                 value="#{tipoModeloDocumentoHome.instance.ativo}" />
-
         </wi:dataForm>
-
     </ui:define>
-
     <ui:define name="tabs">
-
         <wi:tab
             status=":status"
             id="modeloDocumento"
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.modeloDocumentoList']}"
             name="modeloDocumento">
-
-
             <wi:dataTable
                 values="#{tipoModeloDocumentoHome.listaDeModeloDocumento}"
+                hideOrder="true"
                 tableTitle="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoHome.instance)}"
                 id="associativeModeloDocumentoList"
                 rowId="#{row.idModeloDocumento}">
-
                 <ui:define name="headerToolBar" />
                 <ui:define name="toolBar">
-
                     <wi:toolBarTab
                         linkDetalhe="/ModeloDocumento/listView.seam" />
-
                 </ui:define>
                 <wi:columnOutputText
                     columnId="tipoModeloDocumento"
@@ -159,49 +138,36 @@
                     columnId="tituloModeloDocumento"
                     columnHeader="#{messages['field.situacao']}"
                     value="#{row.ativo}" />
-
             </wi:dataTable>
-
         </wi:tab>
-
         <wi:tab
             status=":status"
             id="variaveis"
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.variaveis']}"
             name="variaveis">
-
             <wi:ajaxDiv id="divM2MVar">
-
                 <s:div styleClass="Associated">
-
                     <wi:dataTable
                         values="#{associatedVariavelTipoModeloList.list(15)}"
                         bean="#{associatedVariavelTipoModeloList}"
                         tableTitle="#{messages['associatedVariavelTipoModelo.titleGrid']}"
                         id="associatedVariavelTipoModeloList"
                         rowId="#{row.idVariavelTipoModelo}">
-
                         <ui:define name="searchForm" />
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
-
                             <a:region>
-
                                 <a:commandLink
                                     limitRender="true"
                                     render="divM2MVar"
                                     action="#{variavelTipoModeloHome.removeVariavelTipoModelo(row)}"
                                     rendered="true">
-
                                     <h:graphicImage
                                         url="/img/grid/copyRight.gif"
                                         title="Remover" />
-
                                 </a:commandLink>
-
                             </a:region>
-
                         </ui:define>
                         <wi:columnOutputText
                             columnId="variavel"
@@ -211,27 +177,19 @@
                             columnId="variavel"
                             columnHeader="#{messages['associatedVariavelTipoModelo.valorVariavel']}"
                             value="#{row.variavel.valorVariavel}" />
-
-
-
                     </wi:dataTable>
-
                 </s:div>
                 <s:div styleClass="Associative">
-
                     <wi:dataTable
                         values="#{associativeVariavelList.list(15)}"
                         bean="#{associativeVariavelList}"
                         tableTitle="#{messages['associativeVariavel.titleGrid']}"
                         id="associativeVariavelList"
                         rowId="#{row.idVariavel}">
-
                         <ui:define name="searchForm">
-
                             <wi:searchForm
                                 formId="pesquisarTipoModeloDocumento"
                                 formTitle="#{messages['searchForm.title']}">
-
                                 <wi:inputText
                                     id="variavel"
                                     label="#{messages['associativeVariavel.variavel']}"
@@ -244,29 +202,21 @@
                                     id="ativo"
                                     label="#{messages['field.situacao']}"
                                     value="#{associativeVariavelList.entity.ativo}" />
-
                             </wi:searchForm>
-
                         </ui:define>
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
-
                             <a:region>
-
                                 <a:commandLink
                                     limitRender="true"
                                     render="divM2MVar"
                                     action="#{variavelTipoModeloHome.addVariavelTipoModelo(row)}"
                                     rendered="true">
-
                                     <h:graphicImage
                                         url="/img/grid/copyLeft.gif"
                                         title="Adicionar" />
-
                                 </a:commandLink>
-
                             </a:region>
-
                         </ui:define>
                         <wi:columnOutputText
                             columnId="variavel"
@@ -280,15 +230,10 @@
                             columnId="ativo"
                             columnHeader="#{messages['field.situacao']}"
                             value="#{row.ativo}" />
-
                     </wi:dataTable>
-
                 </s:div>
-
             </wi:ajaxDiv>
-
         </wi:tab>
-
         <wi:tab
             action="#{tipoModeloDocumentoPapelHome.newInstance()}"
             status=":status"
@@ -296,15 +241,22 @@
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.papeis']}"
             name="papeis">
+            <s:div id="divAssociarPapel">
             <wi:dataForm
                 formId="tipoModeloDocumentoPapelForm"
                 formTitle="#{messages['form.title']}">
                 <wi:selectOneMenuEntity
                     id="papel"
                     label="#{messages['tipoModeloDocumento.papel']}"
-                    required="true"
+                    items="#{tipoModeloDocumentoPapelHome.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}"
                     value="#{tipoModeloDocumentoPapelHome.instance.papel}"
-                    items="#{tipoModeloDocumentoPapelHome.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}" />
+                    required="true" 
+                    showLabel="Selecione..."/>
+                <ui:define name="buttons">
+                    <wi:commandButtonPersist
+                        home="#{tipoModeloDocumentoPapelHome}"
+                        persistAction="tipoModeloDocumentoPapelHome.persist()" />
+                </ui:define>
             </wi:dataForm>
             <wi:dataTable
                 values="#{tipoModeloDocumentoPapelList.list(15)}"
@@ -312,14 +264,21 @@
                 tableTitle="#{messages['tipoModeloDocumentoPapel.titleGrid']}"
                 id="tipoModeloDocumentoPapelList"
                 rowId="#{row.idTipoModeloDocumentoPapel}">
-                <ui:define name="toolBar"/>
+                <ui:define name="toolBar">
+                    <wi:toolBar 
+                        url="/img/remove.png"
+                        title="Remover"
+                        action="tipoModeloDocumentoPapelHome.remove(row)"
+                        render="divAssociarPapel"
+                        execute="@this"
+                        id="removeButton"/>
+                </ui:define>
                 <wi:columnOutputText
-                    columnId="papel"
+                    columnId="o.papel.nome"
                     columnHeader="#{messages['tipoModeloDocumento.papel']}"
                     value="#{row.papel}" />
             </wi:dataTable>
+            </s:div>
         </wi:tab>
     </ui:define>
-
-
 </ui:composition>

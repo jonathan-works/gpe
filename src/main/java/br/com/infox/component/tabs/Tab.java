@@ -63,13 +63,6 @@ public class Tab extends UIPanel implements ActionSource2 {
 		getStateHelper().put(PropertyKeys.title, title);
 	}
 
-	@Override
-	public void processValidators(FacesContext context) {
-	}
-
-	@Override
-	public void processUpdates(FacesContext context) {
-	}
 
 	@Override
 	public MethodBinding getAction() {

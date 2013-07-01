@@ -19,7 +19,7 @@ public class TipoProcessoDocumentoPapelList extends
 	public static final String NAME = "tipoProcessoDocumentoPapelList";
 	
 	public static final String DEFAULT_EJBQL = "select o from TipoProcessoDocumentoPapel o";
-	public static final String DEFAULT_ORDER = "o.idTipoProcessoDocumentoPapel";
+	public static final String DEFAULT_ORDER = "papel";
 	
 	public static final String R1 = "tipoProcessoDocumento = #{tipoProcessoDocumentoHome.instance}";
 	
