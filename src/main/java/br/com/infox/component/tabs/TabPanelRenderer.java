@@ -8,6 +8,8 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 
+import br.com.infox.component.HtmlConstants;
+
 /**
  * Renderer padrão do componente TabPanel.
  * @author gabriel
@@ -24,8 +26,8 @@ public class TabPanelRenderer extends Renderer {
 		TabPanel tabPanel = (TabPanel) component;
 		ResponseWriter writer = context.getResponseWriter();
 		tabPanel.setTabIndexMap(null);
-		writer.startElement("div", tabPanel);
-		writer.writeAttribute("id", tabPanel.getClientId(), "clientId");
+		writer.startElement(HtmlConstants.DIV_ELEMENT, tabPanel);
+		writer.writeAttribute(HtmlConstants.ID_ATTR, tabPanel.getClientId(context), "clientId");
 	}
 
 	@Override
@@ -33,10 +35,10 @@ public class TabPanelRenderer extends Renderer {
 		super.encodeEnd(context, component);
 		TabPanel tabPanel = (TabPanel) component;
 		ResponseWriter writer = context.getResponseWriter();
-		writer.endElement("div");
-		writer.startElement("script", null);
+		writer.endElement(HtmlConstants.DIV_ELEMENT);
+		writer.startElement(HtmlConstants.SCRIPT_ELEMENT, null);
 		writer.writeText(createTabInitializationJavascript(tabPanel, context), null);
-		writer.endElement("script");
+		writer.endElement(HtmlConstants.SCRIPT_ELEMENT);
 	}
 	
 	@Override

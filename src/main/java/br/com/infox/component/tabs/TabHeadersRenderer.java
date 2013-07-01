@@ -8,6 +8,8 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 
+import br.com.infox.component.HtmlConstants;
+
 @FacesRenderer(componentFamily = TabHeadersRenderer.COMPONENT_FAMILY, rendererType = TabHeadersRenderer.RENDERER_TYPE)
 public class TabHeadersRenderer extends Renderer {
 	public static final String RENDERER_TYPE = "br.com.infox.component.tabs.TabHeadersRenderer";
@@ -19,21 +21,21 @@ public class TabHeadersRenderer extends Renderer {
 		ResponseWriter writer = context.getResponseWriter();
 		TabHeaders tabHeaders = (TabHeaders) component;
 		TabPanel panel = tabHeaders.getTabPanel();
-		writer.startElement("ul", tabHeaders);
+		writer.startElement(HtmlConstants.UL_ELEMENT, tabHeaders);
 		for (Tab tab : panel.getTabs()) {
 			if (tab.isRendered()) {
-				writer.startElement("li", null);
-				writer.writeAttribute("name", tab.getName(), "name");
-				writer.startElement("a", null);
-				writer.writeAttribute("href", "#" + tab.getClientId(), "clientId");
+				writer.startElement(HtmlConstants.LI_ELEMENT, null);
+				writer.writeAttribute(HtmlConstants.NAME_ATTR, tab.getName(), "name");
+				writer.startElement(HtmlConstants.A_ELEMENT, null);
+				writer.writeAttribute(HtmlConstants.HREF_ATTR, "#" + tab.getClientId(context), "clientId");
 				writer.writeText(tab.getTitle(), "title");
-				writer.endElement("a");
-				writer.endElement("li");
+				writer.endElement(HtmlConstants.A_ELEMENT);
+				writer.endElement(HtmlConstants.LI_ELEMENT);
 			}
 		}
-		writer.endElement("ul");
+		writer.endElement(HtmlConstants.UL_ELEMENT);
 		
-		writer.startElement("script", null);
+		writer.startElement(HtmlConstants.SCRIPT_ELEMENT, null);
 		StringBuffer sb = new StringBuffer();
 		sb.append("function __");
 		sb.append(panel.getClientId().replace(":", ""));
@@ -48,6 +50,6 @@ public class TabHeadersRenderer extends Renderer {
 		sb.append("});");
 		sb.append("}");
 		writer.writeText(sb.toString(), null);
-		writer.endElement("script");
+		writer.endElement(HtmlConstants.SCRIPT_ELEMENT);
 	}
 }

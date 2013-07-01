@@ -10,6 +10,8 @@ import javax.faces.event.PhaseId;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 
+import br.com.infox.component.HtmlConstants;
+
 @FacesRenderer(componentFamily = TabRenderer.COMPONENT_FAMILY, rendererType = TabRenderer.RENDERER_TYPE)
 public class TabRenderer extends Renderer {
 	public static final String RENDERER_TYPE = "br.com.infox.component.tabs.TabRenderer";
@@ -31,8 +33,8 @@ public class TabRenderer extends Renderer {
 
 	private void doEncodeBegin(FacesContext context, Tab tab) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
-		writer.startElement("div", tab);
-		writer.writeAttribute("id", tab.getClientId(), "clientId");
+		writer.startElement(HtmlConstants.DIV_ELEMENT, tab);
+		writer.writeAttribute(HtmlConstants.ID_ATTR, tab.getClientId(context), "clientId");
 	}
 	
 	@Override
@@ -60,12 +62,22 @@ public class TabRenderer extends Renderer {
 		Tab tab = (Tab) component;
 		if (tab.getName().equals(tab.getTabPanel().getActiveTab())) {
 			doEncodeEnd(context, tab);
+		} else {
+			writePlaceholder(context, tab);
 		}
+	}
+
+	private void writePlaceholder(FacesContext context, Tab tab) throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
+		writer.startElement(HtmlConstants.DIV_ELEMENT, tab);
+		writer.writeAttribute(HtmlConstants.ID_ATTR, tab.getClientId(context), "clientId");
+		writer.writeAttribute(HtmlConstants.STYLE_ATTR, "display: none", null);
+		writer.endElement(HtmlConstants.DIV_ELEMENT);
 	}
 
 	private void doEncodeEnd(FacesContext context, Tab tab) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
-		writer.endElement("div");
+		writer.endElement(HtmlConstants.DIV_ELEMENT);
 	}
 	
 	@Override
