@@ -19,6 +19,7 @@ import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
+import br.com.itx.exception.AplicationException;
 
 /**
  * 
