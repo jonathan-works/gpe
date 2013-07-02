@@ -54,7 +54,6 @@ public class CaixaEventHandler {
 		final Caixa cf = getCaixa(context.getTransition());
 		final CaixaList caixaList = ComponentUtil.getComponent(CaixaList.NAME);
 		caixaList.setEntity(cf);
-		caixaList.getResultList();
 		return caixaList.getResultList();
 	}
 
