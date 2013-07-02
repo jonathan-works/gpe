@@ -26,7 +26,7 @@ public class TabRenderer extends Renderer {
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		super.encodeBegin(context, component);
 		Tab tab = (Tab) component;
-		if (tab.isActiveTab()) {
+		if (tab.shouldProcess()) {
 			doEncodeBegin(context, tab);
 		}
 	}
@@ -43,7 +43,7 @@ public class TabRenderer extends Renderer {
             throw new NullPointerException();
         }
 		Tab tab = (Tab) component;
-        if (tab.isActiveTab()) {
+        if (tab.shouldProcess()) {
         	doEncodeChildren(context, tab);
         }
 	}
@@ -60,7 +60,7 @@ public class TabRenderer extends Renderer {
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		super.encodeEnd(context, component);
 		Tab tab = (Tab) component;
-		if (tab.isActiveTab()) {
+		if (tab.shouldProcess()) {
 			doEncodeEnd(context, tab);
 		} else {
 			writePlaceholder(context, tab);

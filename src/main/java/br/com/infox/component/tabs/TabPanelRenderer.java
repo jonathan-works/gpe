@@ -66,6 +66,19 @@ public class TabPanelRenderer extends Renderer {
 		sb.append("active: ");
 		sb.append(tabPanel.getTabIndexMap().get(tabPanel.getActiveTab()));
 		sb.append(",");
+		sb.append("disabled: [");
+		boolean ok = false;
+		for (Tab tab : tabPanel.getTabs()) {
+			if (tab.isDisabled()) {
+				sb.append(tabPanel.getTabIndexMap().get(tab.getName()));
+				sb.append(",");
+				ok = true;
+			}
+		}
+		if (ok) {
+			sb.deleteCharAt(sb.length()-1);
+		}
+		sb.append("], ");
 		sb.append("beforeActivate: ");
 		sb.append(createBeforeActivateJavascript(tabPanel));
 		sb.append("});");

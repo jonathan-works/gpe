@@ -137,12 +137,12 @@ public class TabPanel extends UIPanel implements NamingContainer {
 	
 	public boolean isValidTab(String tabName){
 		Tab tab = getTab(tabName);
-		return tab != null && tab.isRendered();
+		return tab != null && tab.isRendered() && !tab.isDisabled();
 	}
 	
 	public Tab getFirstRenderedTab(){
 		for (Tab tab : getTabs()){
-			if (tab.isRendered())
+			if (tab.isRendered() && !tab.isDisabled())
 				return tab;
 		}
 		return null;
