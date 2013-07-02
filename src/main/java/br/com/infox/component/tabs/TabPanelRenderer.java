@@ -45,6 +45,12 @@ public class TabPanelRenderer extends Renderer {
 	public void decode(FacesContext context, UIComponent component) {
 		super.decode(context, component);
 		TabPanel tabPanel = (TabPanel) component;
+		
+		String source = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
+		if (source == null || !source.equals(tabPanel.getClientId(context))) {
+			return;
+		}
+		
 		String newTab = context.getExternalContext().getRequestParameterMap().get("newTab");
 		if (newTab != null) {
 			tabPanel.setActiveTab(newTab);
@@ -55,7 +61,7 @@ public class TabPanelRenderer extends Renderer {
 		StringBuffer sb = new StringBuffer();
 		sb.append("$(function() {");
 		sb.append("$('#");
-		sb.append(tabPanel.getClientId().replace(":", "\\\\:"));
+		sb.append(tabPanel.getClientId(context).replace(":", "\\\\:"));
 		sb.append("').tabs({");
 		sb.append("active: ");
 		sb.append(tabPanel.getTabIndexMap().get(tabPanel.getActiveTab()));

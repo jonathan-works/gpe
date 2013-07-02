@@ -40,6 +40,7 @@ public class TabHeadersRenderer extends Renderer {
 		sb.append("function __");
 		sb.append(panel.getClientId().replace(":", ""));
 		sb.append("(event, ui) {");
+		sb.append("event.type = 'activateTab';");
 		sb.append("jsf.ajax.request(document.getElementById('");
 		sb.append(panel.getClientId());
 		sb.append("'), event, {render: '");
