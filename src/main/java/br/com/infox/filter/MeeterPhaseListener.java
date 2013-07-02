@@ -17,17 +17,12 @@ package br.com.infox.filter;
 
 import java.util.Date;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
 import javax.faces.component.UIInput;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.html.HtmlForm;
 import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.richfaces.function.RichFunction;
 
 /**
  * Classe para medição de tempo das fases do ciclos de vida JSF
@@ -52,6 +47,12 @@ public class MeeterPhaseListener {
 	public void afterPhase(PhaseEvent event) {
 		System.out.println("Saiu: " + event.getPhaseId() + " - " + (new Date().getTime() - time));
 		time = 0; 
+		UIInput uiinput = (UIInput) RichFunction.findComponent("description");
+		if (uiinput != null){
+			System.out.println(uiinput.getSubmittedValue());
+			System.out.println(uiinput.getValue());
+			System.out.println(uiinput.isValid());
+		}
 //		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 //			UIViewRoot root = event.getFacesContext().getViewRoot();
 //			showComponentsWithoutForm(root);

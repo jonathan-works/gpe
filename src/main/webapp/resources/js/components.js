@@ -41,7 +41,7 @@ function validarPeriodoAnoMes(di, df, mesmaData) {
 
 function validarDataMaxima(data) {
 	if (getDateFirstDayOfMonth(data.value).getTime() > new Date().getTime() ) {
-		alert("A data não pode ser superior que a data atual.");
+		alert("A data n\u00E3o pode ser superior que a data atual.");
 		data.value = "";
 	} 
 }
@@ -63,7 +63,7 @@ function getDateLastDayOfMonth(string){
 
 function validarDataPassada(campoData){
 	if(toDate(campoData.value).getTime() > new Date().getTime()){
-		alert('A data informada não pode ser maior que a data atual.');
+		alert('A data informada n\u00E3o pode ser maior que a data atual.');
 		campoData.value = "";
 		campoData.focus();
 		return false;
@@ -74,14 +74,14 @@ function validarDataPassada(campoData){
 function validarDataBaseCalculoRpv(campoData){
     var dataLimite = '01/07/1994';
 	if(toDate(campoData.value).getTime() > new Date().getTime()){
-		alert('A data informada não pode ser maior que a data atual.');
+		alert('A data informada n\u00E3o pode ser maior que a data atual.');
 		campoData.value = "";
 		campoData.focus();
 		return false;
 	}
 	
 	if(toDate(campoData.value).getTime() < toDate(dataLimite).getTime()){
-		alert('A data informada não pode ser menor que 01/07/1994.');
+		alert('A data informada n\u00E3o pode ser menor que 01/07/1994.');
 		campoData.value = "";
 		campoData.focus();
 		return false;
@@ -105,12 +105,12 @@ function validarData(digData) {
         var mes = data.substr(0,2);
         var ano = data.substr(3,4);
     }else{
-        alert("A Data tem um formato inválido.");
+        alert(decodeURI("A Data tem um formato inv\u00E1lido."));
         digData.value = "";
         return false;
     }
     if (!validarDataDMA(dia, mes, ano)) {
-        alert("A Data "+data+" é inválida!");
+        alert("A Data "+data+" \u00E9 inv\u00E1lida!");
         digData.value = "";
 	return false;
     }
@@ -173,7 +173,7 @@ function validarEmail(obj) {
 	var er = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
 	if(mail == "")return;
 	if(!er.test(mail)){
-		alert("Formato inválido do e-mail.");
+		alert("Formato inv\u00E1lido do e-mail.");
 		obj.value = "";
 		obj.focus();
 	}
@@ -190,7 +190,7 @@ function validarCpf(obj) {
 	}
 	var filtro = /^\d{11}$/;
 	if (!filtro.test(cpf) || !isCpfValido(cpf)) {
-		window.alert("CPF inválido.");
+		window.alert("CPF inv\u00E1lido.");
 		obj.value = "";
 		obj.focus();
 	}
@@ -231,7 +231,7 @@ function validarCnpj(obj) {
 	}
 	var filtro = /^\d{14}$/;
 	if (!filtro.test(cnpj) || !isCnpjValido(cnpj)) {
-		window.alert("CNPJ inválido.");
+		window.alert("CNPJ inv\u00E1lido.");
 		obj.value = "";
 		obj.focus();
 	}

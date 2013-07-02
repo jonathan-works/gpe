@@ -33,7 +33,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Type;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 

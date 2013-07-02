@@ -53,7 +53,7 @@
 			
 			<ui:define name="columns">
 				<rich:column>
-					<f:facet name="header">#{messages['processBuilder.swimlanes']}</f:facet>
+					<f:facet name="header">#{messages['processBuilder.swimlanes']} #{inForm}</f:facet>
 					<ui:param name="current" value="#{row == swimlaneFitter.currentSwimlane}" />
 					<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
 					<a:commandLink	action="#{swimlaneFitter.setCurrentSwimlane(row)}"

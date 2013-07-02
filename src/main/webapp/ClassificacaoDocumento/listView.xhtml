@@ -210,12 +210,6 @@
                         <wi:commandButtonPersist
                             home="#{tipoProcessoDocumentoPapelHome}"
                             persistAction="tipoProcessoDocumentoPapelHome.persist()" />
-                        <wi:commandButtonUpdate
-                            home="#{tipoProcessoDocumentoPapelHome}"
-                            updateAction="tipoProcessoDocumentoPapelHome.update()" />
-                        <wi:commandButtonNew
-                            home="#{tipoProcessoDocumentoPapelHome}"
-                            newInstanceAction="tipoProcessoDocumentoPapelHome.newInstance()" />
                     </ui:define>
                 </wi:dataForm>
 
@@ -237,12 +231,12 @@
                         value="#{row.obrigatorio}" />
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
-                        <wi:toolBar
-                            url="#{a4jSkin.imgIconView}"
-                            title="Selecionar" 
-                            action="tipoProcessoDocumentoPapelHome.setId(row.idTipoProcessoDocumentoPapel)"
-                            render="@form"
-                            execute="@this"/>
+                         <wi:toolBar url="/img/remove.png"
+                            title="Remover"
+                            action="tipoProcessoDocumentoPapelHome.remove(row)"
+                            render="divAssociarPapel"
+                            execute="@this"
+                            id="removeButton"/>
                     </ui:define>
 
                 </wi:dataTable>
