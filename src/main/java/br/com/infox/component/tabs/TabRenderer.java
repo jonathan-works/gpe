@@ -35,6 +35,12 @@ public class TabRenderer extends Renderer {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.startElement(HtmlConstants.DIV_ELEMENT, tab);
 		writer.writeAttribute(HtmlConstants.ID_ATTR, tab.getClientId(context), "clientId");
+		if (tab.getStyle() != null) {
+			writer.writeAttribute(HtmlConstants.STYLE_ATTR, tab.getStyle(), "style");
+		}
+		if (tab.getStyleClass() != null) {
+			writer.writeAttribute(HtmlConstants.CLASS_ATTR, tab.getStyleClass(), "styleClass");
+		}
 	}
 	
 	@Override

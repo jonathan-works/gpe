@@ -11,7 +11,7 @@ import javax.faces.application.ResourceDependency;
 import javax.faces.component.FacesComponent;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIPanel;
+import javax.faces.component.UIComponentBase;
 
 /**
  * Componente TabPanel. Representa o painel onde estão as abas e seus cabeçalhos.
@@ -25,7 +25,7 @@ import javax.faces.component.UIPanel;
 		@ResourceDependency(name = "jquery.js"),
 		@ResourceDependency(library = "js", name = "jquery-ui.js"),
 		@ResourceDependency(library = "javax.faces", name = "jsf.js") })
-public class TabPanel extends UIPanel implements NamingContainer {
+public class TabPanel extends UIComponentBase implements NamingContainer {
 	public static final String COMPONENT_ID = "br.com.infox.component.tabs.TabPanel";
 	public static final String RENDERER_TYPE = "br.com.infox.component.tabs.TabPanelRenderer";
 	public static final String COMPONENT_FAMILY = "br.com.infox.component.tabs";
@@ -39,7 +39,7 @@ public class TabPanel extends UIPanel implements NamingContainer {
 	 *
 	 */
 	private static enum PropertyKeys {
-		activeTab, switchType, tabIndexMap;
+		activeTab, switchType, tabIndexMap, style, styleClass;
 	}
 
 	@Override
@@ -87,6 +87,22 @@ public class TabPanel extends UIPanel implements NamingContainer {
 
 	public void setSwitchType(String switchType) {
 		getStateHelper().put(PropertyKeys.switchType, switchType);
+	}
+	
+	public String getStyle() {
+		return (String) getStateHelper().eval(PropertyKeys.style);
+	}
+	
+	public void setStyle(String style) {
+		getStateHelper().put(PropertyKeys.style, style);
+	}
+	
+	public String getStyleClass() {
+		return (String) getStateHelper().eval(PropertyKeys.styleClass);
+	}
+	
+	public void setStyleClass(String styleClass) {
+		getStateHelper().put(PropertyKeys.styleClass, styleClass);
 	}
 
 	/**

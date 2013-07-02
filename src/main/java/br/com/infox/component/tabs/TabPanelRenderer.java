@@ -28,6 +28,12 @@ public class TabPanelRenderer extends Renderer {
 		tabPanel.setTabIndexMap(null);
 		writer.startElement(HtmlConstants.DIV_ELEMENT, tabPanel);
 		writer.writeAttribute(HtmlConstants.ID_ATTR, tabPanel.getClientId(context), "clientId");
+		if (tabPanel.getStyle() != null) {
+			writer.writeAttribute(HtmlConstants.STYLE_ATTR, tabPanel.getStyle(), "style");
+		}
+		if (tabPanel.getStyleClass() != null) {
+			writer.writeAttribute(HtmlConstants.CLASS_ATTR, tabPanel.getStyleClass(), "styleClass");
+		}
 	}
 
 	@Override

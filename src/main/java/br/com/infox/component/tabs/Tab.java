@@ -24,7 +24,7 @@ public class Tab extends UIPanel implements ActionSource2 {
 	public static final String COMPONENT_FAMILY = "br.com.infox.component.tabs";
 
 	private static enum PropertyKeys {
-		name, title, actionExpression, immediate, disabled;
+		name, title, actionExpression, immediate, disabled, style, styleClass;
 	}
 
 	@Override
@@ -69,6 +69,22 @@ public class Tab extends UIPanel implements ActionSource2 {
 	
 	public void setDisabled(boolean disabled) {
 		getStateHelper().put(PropertyKeys.disabled, disabled);
+	}
+	
+	public String getStyle() {
+		return (String) getStateHelper().eval(PropertyKeys.style);
+	}
+	
+	public void setStyle(String style) {
+		getStateHelper().put(PropertyKeys.style, style);
+	}
+	
+	public String getStyleClass() {
+		return (String) getStateHelper().eval(PropertyKeys.styleClass);
+	}
+	
+	public void setStyleClass(String styleClass) {
+		getStateHelper().put(PropertyKeys.styleClass, styleClass);
 	}
 	
 	public boolean shouldProcess() {
