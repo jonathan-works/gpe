@@ -210,5 +210,10 @@ public class Evento implements java.io.Serializable {
 		int result = 1;
 		result = prime * result + getIdEvento();
 		return result;
-	}	
+	}
+	
+	@Transient
+	public boolean possuiFilhos(){
+		return !eventoList.isEmpty();
+	}
 }
