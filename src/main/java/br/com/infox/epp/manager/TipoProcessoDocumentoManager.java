@@ -2,8 +2,6 @@ package br.com.infox.epp.manager;
 
 import java.util.List;
 
-import javax.persistence.Query;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -13,7 +11,6 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
-import br.com.itx.util.EntityUtil;
 
 @Name(TipoProcessoDocumentoManager.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -33,9 +30,7 @@ public class TipoProcessoDocumentoManager extends GenericManager {
 	 * automaticamente com um valor aleatorio
 	 **/
 	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
-		String sql = "select o from TipoProcessoDocumento o ";
-		Query q = EntityUtil.getEntityManager().createQuery(sql);
-		return (TipoProcessoDocumento) q.getResultList().get(0);
+		return tipoProcessoDocumentoDAO.getTipoProcessoDocumentoFluxo();
 	}
 	
 	public void limpar(){
