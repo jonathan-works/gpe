@@ -23,5 +23,9 @@ public class PapelManager extends GenericManager {
 	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento){
 		return papelDAO.getPapeisNaoAssociadosATipoModeloDocumento(tipoModeloDocumento);
 	}
+	
+	public Papel getPapelByIdentificador(String identificador){
+		return papelDAO.getPapelByIndentificador(identificador);
+	}
 
 }
