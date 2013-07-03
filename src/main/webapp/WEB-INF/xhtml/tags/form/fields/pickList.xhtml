@@ -41,20 +41,14 @@
         library="js" />
 	<script type="text/javascript">
 	//<![CDATA[
-	    if (jQuery) {
-	    	pickList.load("##{rich:clientId(id)}".split(":").join("\\:"),"##{id}Filtro");
-		} else {
-			window.addEventListener("load",function(){
-				pickList.load("##{rich:clientId(id)}".split(":").join("\\:"),"##{id}Filtro");
-			})
-		}
+		(function(id, inputId) {
+			jQuery ? pickList.load(id, inputId) : 
+				window.addEventListener("load", function() {
+					pickList.load(id, inputId);
+				});
+		})("##{rich:clientId(id)}".split(":").join("\\:"), "##{id}Filtro")
 	//]]>
 	</script>
-	<style>
-		.pick-filter,.pick-cont{
-			display:inline-table;
-		}
-	</style>
 	<s:div styleClass="pick-filter">
 		<h:graphicImage
 			url="/img/search.gif" />
@@ -87,6 +81,5 @@
 			<ui:insert />
 		</rich:pickList>
 	</s:div>
-	<rich:message for="#{id}List" />
 
 </ui:composition>
