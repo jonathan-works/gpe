@@ -33,5 +33,10 @@ public class PapelDAO extends GenericDAO {
 		Query query = entityManager.createQuery(hql).setParameter("identificador", identificador);
 		return EntityUtil.getSingleResult(query);
 	}
+	
+	public List<Papel> getPapeisByListaDeIdentificadores(List<String> idPapeis){
+		String hql = "select p from Papel p where identificador in (:list)";
+		return (List<Papel>) entityManager.createQuery(hql).setParameter("list", idPapeis).getResultList();
+	}
 
 }
