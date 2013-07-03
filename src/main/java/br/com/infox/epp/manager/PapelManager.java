@@ -1,5 +1,6 @@
 package br.com.infox.epp.manager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -26,6 +27,13 @@ public class PapelManager extends GenericManager {
 	
 	public Papel getPapelByIdentificador(String identificador){
 		return papelDAO.getPapelByIndentificador(identificador);
+	}
+	
+	public List<Papel> getPapeisByListaDeIdentificadores(List<String> identificadores){
+		if(identificadores == null || identificadores.isEmpty()) {
+			return new ArrayList<Papel>();
+		}
+		return papelDAO.getPapeisByListaDeIdentificadores(identificadores);
 	}
 
 }

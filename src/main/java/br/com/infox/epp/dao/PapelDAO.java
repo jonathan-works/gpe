@@ -34,6 +34,7 @@ public class PapelDAO extends GenericDAO {
 		return EntityUtil.getSingleResult(query);
 	}
 	
+	
 	@SuppressWarnings("unchecked")
 	public List<Papel> getPapeisByListaDeIdentificadores(List<String> identificadores){
 		String hql = "select p from Papel p where identificador in (:list)";
