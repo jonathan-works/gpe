@@ -272,13 +272,6 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		}
 	}
 	
-//	private boolean possuiFilhos(Evento evento) {
-//		String hql = "select o.idEvento from Evento o where o.eventoSuperior = :evento";
-//		Query query = getEntityManager().createQuery(hql);
-//		query.setParameter("evento", evento);
-//		return EntityUtil.getSingleResult(query) != null;
-//	}
-	
 	public void setSelecao(Evento selected, boolean isMultiplo, EventoBean eb) {
 		if (!selected.possuiFilhos()) {
 			super.setSelected(selected);
