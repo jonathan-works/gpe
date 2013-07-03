@@ -8,7 +8,8 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+	 template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
 	
 
     <ui:param
@@ -66,8 +67,9 @@
 	</ui:define>
 
     <ui:define name="form">
-		
-        <ui:include src="papelEdit.xhtml" />
+		<h:form>
+        	<ui:include src="papelEdit.xhtml" />
+        </h:form>
     
 	</ui:define>
 
