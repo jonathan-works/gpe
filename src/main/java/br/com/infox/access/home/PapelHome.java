@@ -356,7 +356,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			}
 		}
 		String nome = instance.getNome();
-		instance = getPapel(getRoleaction().getRole());
+		instance = papelManager.getPapelByIdentificador(getRoleaction().getRole());
 		instance.setNome(nome);
 		EntityUtil.flush();
 		clear();
