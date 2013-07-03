@@ -27,23 +27,21 @@
 	<h:graphicImage
 		url="/img/search.gif"
 		style="margin-top: 5px; margin-left:5px" />
-	<h:outputScript
-		library="js"
-		name="jqueryExt.js" />
 
 	<input
 		id="#{id}Filtro"
 		class="inputText"
 		style="margin-top: 5px; margin-left: 8px; width: 250px;" />
+	
 	<script>
-		var list = "##{rich:clientId(id).replaceAll(':', '\\\\\\\\:')}";
+		/*var list = "##{rich:clientId(id).replaceAll(':', '\\\\\\\\:')}";
 		jQuery(document).ready(function(){
 		 jQuery("##{id}Filtro").keyup(function(){
 			 jQuery(list + 'internal_tab td').show();
 		   var s = jQuery(this).val();
 		   jQuery(list + 'internal_tab td:not(:Contains("' + s + '"))').hide();
 		 });
-		});
+		});*/
 		</script>
 	<rich:pickList
 		id="#{id}"

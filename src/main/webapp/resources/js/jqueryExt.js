@@ -1,3 +1,7 @@
 // função contains sem casesensitive
-jQuery.expr[':'].Contains = function(a,i,m){
-	return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0; }; 
+window.addEventListener("load", function() {
+	jQuery.expr[':'].Contains = function(a,i,m){
+		var index = jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase());
+		return index>=0;
+	}; 
+});
