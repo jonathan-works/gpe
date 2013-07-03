@@ -30,10 +30,11 @@ import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
-@Name("papelHome")
+@Name(PapelHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
 public class PapelHome extends AbstractHome<Papel> {
+	
+	public static final String NAME = "papelHome";
 
 	private static final long serialVersionUID = 1L;
 	
