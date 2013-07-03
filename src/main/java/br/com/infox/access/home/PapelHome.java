@@ -377,15 +377,4 @@ public class PapelHome extends AbstractHome<Papel> {
 	public static PapelHome instance() {
 		return ComponentUtil.getComponent("papelHome");
 	}
-	
-	public Papel getPapel(String identificador) {
-		Query query = getEntityManager().createQuery(
-				"select o from Papel o where o.identificador = :identificador");
-		query.setParameter("identificador", identificador);
-		List<Papel> resultList = query.getResultList();
-		if (resultList.size() > 0) {
-			return resultList.get(0);
-		} 
-		return null;
-	}
 }
