@@ -7,11 +7,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -19,6 +19,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.ibpm.manager.ParametroManager;
 import br.com.infox.ibpm.util.CarregarParametrosAplicacao;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -31,6 +32,8 @@ public class ParametroUtil {
 
 	public static final String NAME = "parametroUtil";
 	public static LogProvider log = Logging.getLogProvider(ParametroUtil.class);
+	
+	@In ParametroManager parametroManager;
 	
 	public static String getLDAPDomain() {
 		String retorno = null;
