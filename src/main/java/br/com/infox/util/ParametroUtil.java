@@ -27,7 +27,6 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.APPLICATION)
 @Install(dependencies = { CarregarParametrosAplicacao.NAME })
 @Startup(depends = CarregarParametrosAplicacao.NAME)
-@BypassInterceptors
 public class ParametroUtil {
 
 	public static final String NAME = "parametroUtil";
