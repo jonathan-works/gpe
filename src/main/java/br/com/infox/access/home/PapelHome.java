@@ -12,10 +12,10 @@ import java.util.Map;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.Redirect;
@@ -26,6 +26,7 @@ import org.jboss.seam.security.management.action.RoleAction;
 
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.manager.PapelManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -51,6 +52,8 @@ public class PapelHome extends AbstractHome<Papel> {
 	private List<String> papeis;
 
 	private List<String> recursos;
+	
+	@In private PapelManager papelManager;
 	
 	public Integer getPapelId() {
 		return (Integer) getId();
