@@ -100,7 +100,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			for (Principal principal : list) {
 				idPapeis.add(principal.getName());
 			}
-			List<Papel> papelList = getPapelList(idPapeis);
+			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(idPapeis);
 			for (Papel papel : papelList) {
 				String id = papel.getIdentificador();
 				membros.add(id);
@@ -187,7 +187,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			if (papelMap == null) {
 				papelMap = new HashMap<String, Papel>();
 			}
-			List<Papel> papelList = getPapelList(assignableRoles);
+			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(assignableRoles);
 			for (Papel p : papelList) {
 				papelMap.put(p.getIdentificador(), p);
 			}
@@ -228,7 +228,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			if (papelMap == null) {
 				papelMap = new HashMap<String, Papel>();
 			}
-			List<Papel> papelList = getPapelList(recursosDisponiveis);
+			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(recursosDisponiveis);
 			for (Papel p : papelList) {
 				papelMap.put(p.getIdentificador(), p);
 			}
@@ -262,16 +262,16 @@ public class PapelHome extends AbstractHome<Papel> {
 		}
 	}
 
-	private List<Papel> getPapelList(List<String> idPapeis) {
-		if(idPapeis == null || idPapeis.isEmpty()) {
-			return new ArrayList<Papel>();
-		}
-		List<Papel> papelList = getEntityManager()
-			.createQuery("select p from Papel p where identificador in (:list)")
-			.setParameter("list", idPapeis)
-			.getResultList();
-		return papelList;
-	}
+//	private List<Papel> getPapelList(List<String> idPapeis) {
+//		if(idPapeis == null || idPapeis.isEmpty()) {
+//			return new ArrayList<Papel>();
+//		}
+//		List<Papel> papelList = getEntityManager()
+//			.createQuery("select p from Papel p where identificador in (:list)")
+//			.setParameter("list", idPapeis)
+//			.getResultList();
+//		return papelList;
+//	}
 
 	private void removePapeisImplicitos(List<String> list, List<String> from) {
 		if (from == null) {
