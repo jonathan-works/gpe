@@ -257,7 +257,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 	 * não estejam em nenhum deles.
 	 */
 	public void setSelected(Evento selected, boolean isMultiplo) {
-		if (!possuiFilhos(selected)) {
+		if (!selected.possuiFilhos()) {
 			super.setSelected(selected);
 			Evento parent = getDad(selected);
 			List<Evento> l = rootsSelectedMap.get(parent);
@@ -272,15 +272,15 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 		}
 	}
 	
-	private boolean possuiFilhos(Evento evento) {
-		String hql = "select o.idEvento from Evento o where o.eventoSuperior = :evento";
-		Query query = getEntityManager().createQuery(hql);
-		query.setParameter("evento", evento);
-		return EntityUtil.getSingleResult(query) != null;
-	}
+//	private boolean possuiFilhos(Evento evento) {
+//		String hql = "select o.idEvento from Evento o where o.eventoSuperior = :evento";
+//		Query query = getEntityManager().createQuery(hql);
+//		query.setParameter("evento", evento);
+//		return EntityUtil.getSingleResult(query) != null;
+//	}
 	
 	public void setSelecao(Evento selected, boolean isMultiplo, EventoBean eb) {
-		if (!possuiFilhos(selected)) {
+		if (!selected.possuiFilhos()) {
 			super.setSelected(selected);
 			Evento parent = getDad(selected);
 			List<Evento> l = rootsSelectedMap.get(parent);
