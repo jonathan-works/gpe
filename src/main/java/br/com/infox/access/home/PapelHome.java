@@ -262,17 +262,6 @@ public class PapelHome extends AbstractHome<Papel> {
 		}
 	}
 
-//	private List<Papel> getPapelList(List<String> idPapeis) {
-//		if(idPapeis == null || idPapeis.isEmpty()) {
-//			return new ArrayList<Papel>();
-//		}
-//		List<Papel> papelList = getEntityManager()
-//			.createQuery("select p from Papel p where identificador in (:list)")
-//			.setParameter("list", idPapeis)
-//			.getResultList();
-//		return papelList;
-//	}
-
 	private void removePapeisImplicitos(List<String> list, List<String> from) {
 		if (from == null) {
 			return;
