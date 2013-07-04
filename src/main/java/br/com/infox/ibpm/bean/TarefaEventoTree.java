@@ -54,13 +54,6 @@ public class TarefaEventoTree implements Serializable {
 		if(agrupamentos == null) {
 			StringBuilder agrupamentosId = new StringBuilder();
 			currentEvent = getNextEvent();
-//			StringBuilder sb = new StringBuilder();
-//			sb.append("select a from Agrupamento a ")
-//			  .append("inner join a.agrupamentoTarefaList at ")
-//			  .append("inner join at.tarefaEvento et ")
-//			  .append("where et = :tarefaEvento");
-//			Query q = getEntityManager().createQuery(sb.toString());
-//			q.setParameter("tarefaEvento", currentEvent);
 			int i = 0;
 			List<Agrupamento> agrupamentos = agrupamentoManager.getAgrupamentosByTarefaEvento(currentEvent);
 			for(Agrupamento a : agrupamentos) {
