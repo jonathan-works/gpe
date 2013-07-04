@@ -18,6 +18,7 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 
 import br.com.infox.epp.manager.AgrupamentoManager;
+import br.com.infox.epp.manager.ProcessoTarefaEventoManager;
 import br.com.infox.epp.manager.TarefaEventoManager;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Agrupamento;
@@ -43,6 +44,7 @@ public class TarefaEventoTree implements Serializable {
 	
 	@In private AgrupamentoManager agrupamentoManager;
 	@In private TarefaEventoManager tarefaEventoManager;
+	@In private ProcessoTarefaEventoManager processoTarefaEventoManager;
 	
 	public static TarefaEventoTree instance(){
 		return (TarefaEventoTree) Component.getInstance(TarefaEventoTree.NAME);
