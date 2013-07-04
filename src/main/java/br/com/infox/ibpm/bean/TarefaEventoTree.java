@@ -80,13 +80,14 @@ public class TarefaEventoTree implements Serializable {
 	 */
 	public void afterRegisterEvent() {
 		if(currentEvent != null) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("update ProcessoTarefaEvento set registrado = true where ")
-			  .append("tarefaEvento = :tarefaEvento and processo = :processo");
-			Query q = getEntityManager().createQuery(sb.toString());
-			q.setParameter("tarefaEvento", currentEvent);
-			q.setParameter("processo", JbpmUtil.getProcesso());
-			q.executeUpdate();
+//			StringBuilder sb = new StringBuilder();
+//			sb.append("update ProcessoTarefaEvento set registrado = true where ")
+//			  .append("tarefaEvento = :tarefaEvento and processo = :processo");
+//			Query q = getEntityManager().createQuery(sb.toString());
+//			q.setParameter("tarefaEvento", currentEvent);
+//			q.setParameter("processo", JbpmUtil.getProcesso());
+//			q.executeUpdate();
+			processoTarefaEventoManager.marcarProcessoTarefaEventoComoRegistrado(currentEvent);
 			currentEvent = null;
 			canLeave = hasNextEvent();
 			if(!canLeave) {
