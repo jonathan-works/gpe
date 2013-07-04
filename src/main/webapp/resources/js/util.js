@@ -34,19 +34,6 @@ namespace("infox.util",{
 	}
 });
 
-defineObject("br.com.infox.applyCSSAfterTimeout", function(args) {
-	if (args.id) {
-		var $id = args.id;
-		var $style = args.style || {};
-		var $timeout = args.timeout || 5000;
-		$($id).each(function() {
-			setTimeout(function() {
-				$(this).css($style);
-			},$timeout);
-		});
-	}
-});
-
 function showLoading() {	
 	if ($('#status')) {
 		$('#status').hide();
