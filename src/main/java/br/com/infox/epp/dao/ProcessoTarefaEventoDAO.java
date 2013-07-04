@@ -33,5 +33,14 @@ public class ProcessoTarefaEventoDAO extends GenericDAO {
 						.setParameter("processo", processo)
 						.executeUpdate();
 	}
+	
+	public boolean existemEventosNaoRegistrados(Processo processo, String task, String fluxo){
+       String hql = "select count(o) from ProcessoTarefaEvento o inner join o.tarefaEvento et " +
+                       "inner join et.tarefa t where o.registrado = false and o.processo = :processo and " +
+                       "t.tarefa = :tarefa and t.fluxo.fluxo = :fluxo";
+       return ((Long)entityManager.createQuery(hql).setParameter("processo", processo)
+                          .setParameter("tarefa", task)
+                          .setParameter("fluxo", fluxo).getSingleResult()) == 0;
+   }
 
 }
