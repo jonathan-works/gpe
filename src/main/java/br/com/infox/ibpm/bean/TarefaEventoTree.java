@@ -56,11 +56,11 @@ public class TarefaEventoTree implements Serializable {
 			currentEvent = getNextEvent();
 			int i = 0;
 			List<Agrupamento> agrupamentos = agrupamentoManager.getAgrupamentosByTarefaEvento(currentEvent);
-			for(Agrupamento a : agrupamentos) {
+			for(Agrupamento agrupamento : agrupamentos) {
 				if(i != 0) {
 					agrupamentosId.append(", ");
 				}
-				agrupamentosId.append(a.getIdAgrupamento());
+				agrupamentosId.append(agrupamento.getIdAgrupamento());
 				i++;
 			}
 			this.agrupamentos = agrupamentosId.toString();
