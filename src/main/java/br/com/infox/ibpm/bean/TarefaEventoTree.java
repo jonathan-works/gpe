@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
@@ -16,6 +17,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 
+import br.com.infox.epp.manager.AgrupamentoManager;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Agrupamento;
 import br.com.infox.ibpm.entity.TarefaEvento;
@@ -37,6 +39,8 @@ public class TarefaEventoTree implements Serializable {
 	private String agrupamentos;
 	private boolean canLeave;
 	private TarefaEvento currentEvent;
+	
+	@In private AgrupamentoManager agrupamentoManager;
 	
 	public static TarefaEventoTree instance(){
 		return (TarefaEventoTree) Component.getInstance(TarefaEventoTree.NAME);
