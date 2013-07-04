@@ -38,7 +38,11 @@
 
 	<f:verbatim>
 		<script>
-	       br.com.infox.applyCSSAfterTimeout({id:'#{id}', style:{display:'none'}, timeout:9000});
+			namespace.infox.util.applyCSS({
+				selector:"##{rich:clientId('id')}",
+				style:{display:'none'},
+				delay:9000
+			});
 		</script>
 	</f:verbatim>			
 		
