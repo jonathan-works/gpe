@@ -130,20 +130,6 @@ public class TarefaEventoTree implements Serializable {
 	@Observer(Event.EVENTTYPE_TASK_END)
 	public void onLeaveTask() {
 		try {
-//			StringBuilder sb = new StringBuilder();
-//			sb.append("delete from ProcessoTarefaEvento o ")
-//			  .append("where o.processo = :processo and ")
-//			  .append("exists (select 1 from TarefaEvento et ")
-//			  .append("inner join et.tarefa t ")
-//			  .append("where et = o.tarefaEvento and ")
-//			  .append("t.tarefa = :tarefa and ")
-//			  .append("t.fluxo.fluxo = :fluxo)");
-//			Query q = getEntityManager().createQuery(sb.toString());
-//			q.setParameter("processo", JbpmUtil.getProcesso());
-//			q.setParameter("tarefa", TaskInstance.instance().getTask().getName());
-//			q.setParameter("fluxo", TaskInstance.instance().getProcessInstance()
-//												.getProcessDefinition().getName());
-//			q.executeUpdate();
 			processoTarefaEventoManager.destroyProcessoTarefaEvento();
 		} catch (Exception ex) {
 			String action = "deletar da tabela processoTarefaEvento os eventos finalizados";
