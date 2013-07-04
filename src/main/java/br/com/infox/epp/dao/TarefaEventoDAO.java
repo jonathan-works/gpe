@@ -3,12 +3,9 @@ package br.com.infox.epp.dao;
 import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.bpm.TaskInstance;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.TarefaEvento;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(TarefaEventoDAO.NAME)
