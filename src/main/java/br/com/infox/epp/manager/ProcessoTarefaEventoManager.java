@@ -32,4 +32,11 @@ public class ProcessoTarefaEventoManager extends GenericManager {
 		processoTarefaEventoDAO.marcarProcessoTarefaEventoComoRegistrado(tarefaEvento, processo);
 	}
 	
+	public boolean existemEventosNaoRegistrados(){
+		Processo processo = JbpmUtil.getProcesso();
+		String task = TaskInstance.instance().getTask().getName();
+		String fluxo = TaskInstance.instance().getProcessInstance().getProcessDefinition().getName();
+		return processoTarefaEventoDAO.existemEventosNaoRegistrados(processo, task, fluxo);
+	}
+	
 }
