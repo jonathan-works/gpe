@@ -27,7 +27,7 @@
 -->
 <rich:panel
 		 bodyClass="panel"
-		 style="width:350px; margin:3px; padding:0; float:left">
+		 >
 		
 	<f:facet name="header">
 			
@@ -38,7 +38,7 @@
 				
 			<h:graphicImage
 					 url="/img/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif"
-					 style="margin-right:5px" />
+					  />
 			<h:outputText value="Transições que #{type == 'from' ? 'chegam ao' : 'saem do'} nó" />
 		
 			</h:panelGrid>
@@ -53,11 +53,11 @@
 			 onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
 			 onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
 			 styleClass="tabelaVariaveis"
-			 style="width:100%"
+			 
 			 var="transition">
 			
 		<rich:column
-				 style="padding:2px; width: 45px"
+				 
 				 styleClass="dr-table-subheader rich-table-subheader">
 				
 			<f:facet name="header">
@@ -70,20 +70,20 @@
 						
 					<h:graphicImage
 							 title="Adicionar transição"
-							 style="cursor:pointer"
+							 
 							 url="/img/add.gif" />
 				
 					</a:commandLink>
 			
 				</f:facet>
-			<div style="width: 99%; text-align: center;">
+			<div >
 					
                 <div>
 						
 					<h:graphicImage
 							 title="Definir condição"
 							 rendered="#{empty transition.transition.condition}"
-							 style="cursor:pointer"
+							 
 							 url="/img/help_dis.gif"
 							 styleClass="opacityHover">
 							
@@ -100,7 +100,7 @@
 							 title="Editar condição"
 							 rendered="#{!empty transition.transition.condition and            transition.transition.condition != '#{true}'}"
 							 styleClass="opacityHover"
-							 style="cursor:pointer"
+							 
 							 url="/img/help.gif">
 							
 						<a:ajax
@@ -113,7 +113,7 @@
 						</h:graphicImage>
 					<h:graphicImage
 							 title="Excluir transição"
-							 style="cursor:pointer"
+							 
 							 url="/img/remove.png"
 							 styleClass="opacityHover">
 							
@@ -135,14 +135,14 @@
 			</rich:column>
 
 		<rich:column
-				 style="width:150px"
+				 
 				 rendered="#{type=='from'}">
 				
 			<f:facet name="header">Nó Origem</f:facet>
 			<h:selectOneMenu
 					 id="from"
 					 valueChangeListener="#{nodeFitter.transitionChangeListener}"
-					 style="width:100%"
+					 
 					 rendered="#{empty transition.from}"
 					 value="#{transition.from}">
 					
@@ -158,20 +158,20 @@
 			
 				</h:selectOneMenu>
 			<h:outputText
-					 style="#{!empty transition.transition.condition ? 'font-style:italic' : ''}"
+					 
 					 rendered="#{!empty transition.from}"
 					 value="#{transition.fromName}" />
 		
 			</rich:column>
 
 		<rich:column
-				 style="width:150px"
+				 
 				 rendered="#{type=='to'}">
 				
 			<f:facet name="header">Nó Destino</f:facet>
 			<h:selectOneMenu
 					 id="to"
-					 style="width:100%"
+					 
 					 valueChangeListener="#{nodeFitter.transitionChangeListener}"
 					 rendered="#{empty transition.to}"
 					 required="true"
@@ -189,21 +189,21 @@
 			
 				</h:selectOneMenu>
 			<h:outputText
-					 style="#{!empty transition.transition.condition ? 'font-style:italic' : ''}"
+					 
 					 rendered="#{!empty transition.to}"
 					 value="#{transition.toName}" />
 		
 			</rich:column>
 
 		<rich:column
-				 style="width:150px"
+				 
 				 id="transitionName">
 				
 			<f:facet name="header">Nome</f:facet>
 			<h:inputText
 					 value="#{transition.name}"
 					 required="true"
-					 style="width:130px; float:left">
+					 >
 					
 				<a:ajax
 						 event="change"
@@ -216,7 +216,7 @@
 					 render="nodesDiv"
 					 title="Ir para o nó"
 					 execute="@this"
-					 style="float:right"
+					 
 					 action="#{nodeFitter.setCurrentNode(transition, type)}"
 					 limitRender="true">
 					
@@ -232,7 +232,7 @@
 			</rich:column>
 		
 		<rich:column
-				 style="width:40px"
+				 
 				 id="showTransitionButtonColumn">
 				
 			<f:facet name="header">Ocultar</f:facet>

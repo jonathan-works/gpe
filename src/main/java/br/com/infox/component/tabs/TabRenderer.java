@@ -16,17 +16,54 @@ public class TabRenderer extends Renderer {
 	public static final String COMPONENT_FAMILY = "br.com.infox.component.tabs";
 	
 	@Override
+	public boolean getRendersChildren() {
+		return true;
+	}
+	
+	@Override
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		super.encodeBegin(context, component);
 		Tab tab = (Tab) component;
+		if (tab.getName().equals(tab.getTabPanel().getActiveTab())) {
+			doEncodeBegin(context, tab);
+		}
+	}
+
+	private void doEncodeBegin(FacesContext context, Tab tab) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.startElement("div", tab);
-		writer.writeAttribute("id", tab.getId(), "id");
+		writer.writeAttribute("id", tab.getClientId(), "clientId");
+	}
+	
+	@Override
+	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
+		if (context == null || component == null) {
+            throw new NullPointerException();
+        }
+		Tab tab = (Tab) component;
+        if (tab.getName().equals(tab.getTabPanel().getActiveTab())) {
+        	doEncodeChildren(context, tab);
+        }
+	}
+	
+	private void doEncodeChildren(FacesContext context, Tab tab) throws IOException {
+		if (tab.getChildCount() > 0) {
+            for (UIComponent child : tab.getChildren()) {
+                child.encodeAll(context);
+            }
+        }
 	}
 	
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		super.encodeEnd(context, component);
+		Tab tab = (Tab) component;
+		if (tab.getName().equals(tab.getTabPanel().getActiveTab())) {
+			doEncodeEnd(context, tab);
+		}
+	}
+
+	private void doEncodeEnd(FacesContext context, Tab tab) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("div");
 	}
@@ -37,7 +74,7 @@ public class TabRenderer extends Renderer {
 		Tab tab = (Tab) component;
 		
 		String source = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
-		if (source == null || !source.equals(tab.getTabPanel().getId())) {
+		if (source == null || !source.equals(tab.getTabPanel().getClientId())) {
 			return;
 		}
 		

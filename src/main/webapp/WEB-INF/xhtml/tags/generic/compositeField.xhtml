@@ -26,7 +26,7 @@
         
     <div
          class="propertyView"
-         style="float: left; #{inNewLine != true ? '' : 'clear: both;'} width: #{width} !important;">
+         >
 		<rich:dataTable
              id="#{id}"
              value="#{value}"
@@ -41,7 +41,7 @@
 				</f:facet>
 			</c:if>
 			<rich:column
-                 style="width: 20px">
+                 >
 				<a:commandLink
                      action="#{util.invokeMethod(actionRemove)}"
                      render="#{id}"
@@ -49,7 +49,7 @@
 					<h:graphicImage
                          url="/img/remove.png"
                          title="Remover Filtro"
-                         style="cursor: pointer" />
+                          />
 				</a:commandLink>
 			</rich:column>
 			<rich:column
@@ -67,7 +67,7 @@
 			      	<h:graphicImage
                          url="/img/add.gif"
                          title="Adicionar Filtro"
-                         style="cursor: pointer" />
+                          />
 			    </a:commandLink>
 			</f:facet>
 		</rich:dataTable>

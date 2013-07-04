@@ -9,7 +9,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 
-	<div style="width: 48px">
+	<div >
 			<ui:param
 				name="idProcesso"
 				value="#{row.idProcesso}" />
@@ -27,7 +27,7 @@
 				<h:outputText
 					styleClass="actorId"
 					rendered="#{!empty actorId}"
-					style="display:none"
+					
 					value="#{actorId}" />
 				<h:graphicImage
 					url="/img/annotate.gif"

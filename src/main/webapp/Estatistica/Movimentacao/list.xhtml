@@ -54,7 +54,7 @@
 	    
 	    <div
              class="leftPanel"
-             style="width: 38%;">
+             >
 			<wi:dataForm
                  formId="estatisticaMovimentacaoForm"
                  formTitle="Pesquisar"
@@ -89,7 +89,7 @@
 	    <s:div
              id="rightPanelId"
              styleClass="rightPanel"
-             style="width: 60%; right: 5px; float: right; !important">
+             >
 	    	<s:div
                  rendered="#{estatisticaMovimentacaoHome.instance.inPesquisa}">
 	
@@ -97,7 +97,7 @@
 		
 	 				<h:outputText
                          value="#{numProcessos}"
-                         style="clear: both;"> <b>Número de Processos: </b></h:outputText>
+                         > <b>Número de Processos: </b></h:outputText>
 					<h:outputText
                          value="#{tempoMedio}">  <br /> <b>Tempo Médio:  </b> </h:outputText>
 	 				<h:outputText
@@ -109,12 +109,12 @@
                          id="lista"
                          value="#{estatisticaMovimentacaoHome.getGridEstatistica()}"
                          var="var"
-                         style="margin-left: 1px; margin-top: 1px"
+                         
                          onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
                          onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">   
 		                    	                    	
 		    			<rich:column
-                             style="width:25%">
+                             >
 		    				<f:facet
                                  name="header">Fluxo</f:facet>
 				    		<h:outputText
@@ -122,7 +122,7 @@
 		    			</rich:column>
 		    			
 		    			<rich:column
-                             style="width:25%">
+                             >
 		    				<f:facet
                                  name="header">Tarefa</f:facet>
 				    		<h:outputText
@@ -130,7 +130,7 @@
 		    			</rich:column>	    			
 		    			
 		    			<rich:column
-                             style="text-align:center">
+                             >
 		    				<f:facet
                                  name="header">Média</f:facet>
 				    		<h:outputText
@@ -138,7 +138,7 @@
 		    			</rich:column>
 		    			
 		    			<rich:column
-                             style="text-align:center">
+                             >
 		    				<f:facet
                                  name="header">Total</f:facet>
 				    		<h:outputText
@@ -146,7 +146,7 @@
 		    			</rich:column>	  
 		    			
 		    			<rich:column
-                             style="text-align:center">
+                             >
 		    				<f:facet
                                  name="header">Quantidade</f:facet>
 				    		<h:outputText

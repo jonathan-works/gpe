@@ -31,11 +31,11 @@
 		 name="checkBoxRendered"
 		 value="#{empty checkBoxRendered ? (empty props.checkBoxRendered ? (useCheckBox and !home.managed) : props.checkBoxRendered) : checkBoxRendered}" />
 	<ui:param
-		 name="reRenderDefault"
+		 name="renderDefault"
 		 value="#{id}HiddenId, #{id}ClearDiv, #{id}Panel" />
 	<ui:param
-		 name="reRender"
-		 value="#{empty reRender ? reRenderDefault : reRenderDefault.concat((',').concat(reRender)) }" />
+		 name="render"
+		 value="#{empty render ? renderDefault : renderDefault.concat((',').concat(render)) }" />
 
 	<rich:tree
 		 id="#{id}Tree"
@@ -43,7 +43,7 @@
 		 data="#{item}"
 		 immediate="true"
 		 nodeType="#{item.type}"
-		 render="#{reRender}"
+		 render="#{render}"
 		 selectionType="ajax"
 		 selectionChangeListener="#{tree.processTreeSelectionChange}"
 		 execute="@this"
@@ -80,7 +80,7 @@
 			<ui:param
 				 name="cor"
 				 value="#{ativo and not cantSelect  ? '' : 'red'}" />
-			<div style="width: 100%; text-decoration:#{decoration}; color: #{cor}">
+			<div >
 				
 				<h:selectBooleanCheckbox
 					 id="#{id}CheckBoxTree"
@@ -115,7 +115,7 @@
 			<ui:param
 				 name="cor"
 				 value="#{item.entity.ativo  ? '' : 'red'}" />
-			<div style="width: 100%; text-decoration:#{decoration}; color: #{cor}">
+			<div >
 				
 				<h:outputText value="#{item.entity}" />
 			

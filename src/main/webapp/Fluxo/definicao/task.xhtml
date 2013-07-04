@@ -29,13 +29,13 @@
 
 	<s:div
 		 id="taskDiv"
-		 style="float:left; margin-left:5px; width: 480px">
+		 >
 		
 		<wi:inputText
 			 id="taskName"
 			 value="#{taskFitter.taskName}"
 			 widthDiv="230px"
-			 style="width:100%"
+			 
 			 label="Nome">
 			
 			<a:ajax
@@ -50,7 +50,7 @@
 			 id="swimlaneTask"
 			 items="#{swimlaneFitter.swimlaneList}"
 			 label="Atribuir a"
-			 style="width:100%"
+			 
 			 widthDiv="230px"
 			 noSelectionLabel="Selecione..."
 			 value="#{t.swimlaneName}">
@@ -98,11 +98,11 @@
 			 onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
 			 onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
 			 styleClass="tabelaVariaveis"
-			 style="margin-top:4px; width:700px; clear:both"
+			 
 			 var="var">
 			
 		<rich:column
-				 style="padding:2px; width: 35px"
+				 
 				 styleClass="dr-table-subheader rich-table-subheader">
 				
 			<f:facet name="header">
@@ -119,7 +119,7 @@
 							
 						<h:graphicImage
 								 title="Adicionar variável"
-								 style="cursor:pointer"
+								 
 								 url="/img/add.gif" />
 					
 						</a:commandLink>
@@ -127,7 +127,7 @@
 					</s:div>
 			
 				</f:facet>
-			<div style="width: 100%; text-align: center}">
+			<div >
 					
 				<a:commandLink
 						 action="#{t.removeVar(var)}"
@@ -139,7 +139,7 @@
 						
 					<h:graphicImage
 							 title="Excluir variável"
-							 style="cursor:pointer"
+							 
 							 url="/img/remove.png" />
 				
 					</a:commandLink>
@@ -153,12 +153,12 @@
                          oncomplete="#{rich:component('actionTemplatePanel')}.show()">						
 					<h:graphicImage
 							 title="Adicionar modelo de documento"
-							 style="cursor:pointer"
+							 
 							 rendered="#{empty var.modeloList}"
 							 url="/img/newfile.gif" />
 					<h:graphicImage
 							 title="#{var.modeloDocumentoList.toString()}"
-							 style="cursor:pointer"
+							 
 							 rendered="#{!empty var.modeloList}"
 							 status=":status"
 							 url="/img/file.gif" />
@@ -173,12 +173,12 @@
 			<f:facet name="header">Variável</f:facet>
 			<s:div
 					 id="varDiv"
-					 style="overflow:hidden">
+					 >
 					
 				<h:inputText
 						 rendered="#{!empty var.name or empty t.previousVariables}"
 						 value="#{var.name}"
-						 style="width: 100%">
+						 >
 						
 					<a:ajax
 							 execute="@this"
@@ -189,7 +189,7 @@
 					</h:inputText>
 				<rich:autocomplete
 						 value="#{var.name}"
-						 style="width:205px"
+						 
 						 rendered="#{empty var.name and !empty t.previousVariables}"
 						 selectFirst="false"
 						 autocompleteList="#{t.previousVariables}">
@@ -217,11 +217,11 @@
 			<f:facet name="header">Label</f:facet>
 			<s:div
 					 id="varLabel"
-					 style="overflow:hidden">
+					 >
 					
 				<h:inputText
 						 value="#{var.label}"
-						 style="width: 100%">
+						 >
 						
 					<a:ajax
 							 execute="@this"
@@ -233,7 +233,7 @@
 				</s:div>
 		
 			</rich:column>
-		<rich:column style="width:30px; text-align:center">
+		<rich:column >
 				
 			<f:facet name="header">Escrita</f:facet>
 			<h:selectBooleanCheckbox
@@ -250,7 +250,7 @@
 				</h:selectBooleanCheckbox>
 		
 			</rich:column>
-		<rich:column style="width:30px; text-align:center">
+		<rich:column >
 				
 			<f:facet name="header">Obrig.</f:facet>
 			<h:selectBooleanCheckbox
@@ -267,7 +267,7 @@
 				</h:selectBooleanCheckbox>
 		
 			</rich:column>
-		<rich:column style="width:110px">
+		<rich:column >
 				
 			<f:facet name="header">Tipo</f:facet>
 			<wi:selectOneMenu
@@ -276,7 +276,7 @@
 					 items="#{typeFitter.typeList}"
 					 optionLabel="#{typeFitter.getTypeLabel(v)}"
 					 widthDiv="100%"
-					 style="width:100%">
+					 >
 					
 				<a:ajax
 						 event="change"

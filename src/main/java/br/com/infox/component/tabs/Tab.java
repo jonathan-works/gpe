@@ -63,8 +63,6 @@ public class Tab extends UIPanel implements ActionSource2 {
 		getStateHelper().put(PropertyKeys.title, title);
 	}
 
-
-	@Override
 	public MethodBinding getAction() {
 		MethodExpression expr = getActionExpression();
 		if (expr != null) {

@@ -41,7 +41,7 @@
         <rich:column styleClass="defaultCell">
 
             <f:facet name="header">Localização / Usuário</f:facet>
-            <div style="width: 50%; float: left">
+            <div >
 
                 <h:graphicImage
                     url="/img/localizacao.gif"
@@ -51,7 +51,7 @@
             </div>
             <s:div
                 id="usuarioTarefaDiv"
-                style="width:50%; float:left">
+                >
 
                 <h:graphicImage
                     url="/img/usuario.gif"
@@ -76,7 +76,7 @@
         </rich:column>
 
         <rich:column
-            style="text-align: center"
+            
             styleClass="defaultCell">
 
             <f:facet name="header">Início</f:facet>
@@ -89,7 +89,7 @@
         </rich:column>
 
         <rich:column
-            style="text-align: center"
+            
             styleClass="defaultCell">
 
             <f:facet name="header">Término</f:facet>
@@ -102,7 +102,7 @@
         </rich:column>
 
         <rich:column
-            style="text-align: center"
+            
             styleClass="defaultCell">
 
             <f:facet name="header">Dados</f:facet>
@@ -113,11 +113,11 @@
 
                 <h:graphicImage
                     url="#{a4jSkin.imgIconView}"
-                    style="cursor:pointer" />
+                     />
                 <h:graphicImage
                     rendered="#{!empty processoHandler.getAnexos(task)}"
                     url="/img/anexo.gif"
-                    style="cursor:pointer" />
+                     />
                 <f:param
                     name="inicio"
                     value="#{key + 1}" />

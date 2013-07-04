@@ -30,7 +30,7 @@
 		 name="imageUpload.js" />
 	<s:div
 		 id="uploadImagem"
-		 style="float: left; padding-left:10px">
+		 >
 		
 		<rich:collapsiblePanel
 			 switchType="ajax"
@@ -64,17 +64,17 @@
             <h:form>
 				
 	           	<rich:dataGrid
-					 style="margin-left: 1px; width: 251px;"
+					 
 					 value="#{helpFileUpload.images}"
 					 elements="20"
 					 columns="4"
 					 var="img">
 					
-	            	<s:div style="text-align:center">
+	            	<s:div >
 						
 		            	<img
 							 src="#{img}"
-							 style="max-width:50px;"
+							 
 							 title="Arraste para o documento" />
 	            	
 					</s:div>

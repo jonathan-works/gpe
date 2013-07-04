@@ -30,58 +30,56 @@
 	<ui:param
 		name="sourceListWidth"
 		value="#{wi:get(sourceListWidth, '350')}" />
-	<h:outputText
-		style="font-weight: bold; margin-top: 10px; margin-left:#{sourceListWidth + 55}px;        position: absolute;"
-		value="#{targetLabel}" />
 	<ui:param
 		name="sourceListWidth"
 		value="#{sourceListWidth}px" />
 	<ui:param
 		name="targetListWidth"
 		value="#{wi:get(targetListWidth, '350')}" />
-	<h:graphicImage
-		url="/img/search.gif"
-		style="margin-top: 5px; margin-left:5px" />
 	<h:outputScript
-		library="js"
-		name="jqueryExt.js" />
-	<input
-		id="#{id}Filtro"
-		class="inputText"
-		style="margin-top: 5px; margin-left: 8px; width: 250px;" />
-	<f:verbatim>
-		<script>
-			var list = "#{id.replaceAll(':', '\\\\\\\\:')}";
-			list = "#" + jQuery("##{id}Filtro")[0].form.id + "\\:" + list;
-			jQuery(document).ready(function(){
-			jQuery("##{id}Filtro").keyup(function(){
-				 jQuery(list + 'internal_tab td').show();
-			   var s = jQuery(this).val();
-			   jQuery(list + 'internal_tab td:not(:Contains("' + s + '"))').hide();
-			 });
-			});
-		</script>
-	</f:verbatim>
-	<rich:pickList
-		id="#{id}"
-		value="#{value}"
-		addAllText="Adiciona todos"
-		addText="Adicionar"
-		removeAllText="Remover todos"
-		removeText="Remover"
-		listsHeight="#{listsHeight}"
-		moveControlsVerticalAlign="top"
-		sourceListWidth="#{sourceListWidth}"
-		targetListWidth="#{targetListWidth}"
-		switchByClick="true"
-		style="#{style}"
-		showButtonsLabel="false">
-		<s:selectItems
-			value="#{itemValues}"
-			var="var"
-			label="#{itemLabel}" />
-		<ui:insert />
-	</rich:pickList>
-	<rich:message for="#{id}List" />
+        name="pickList.js"
+        library="js" />
+	<script type="text/javascript">
+	//<![CDATA[
+		(function(id, inputId) {
+			jQuery ? pickList.load(id, inputId) : 
+				window.addEventListener("load", function() {
+					pickList.load(id, inputId);
+				});
+		})("##{rich:clientId(id)}".split(":").join("\\:"), "##{id}Filtro")
+	//]]>
+	</script>
+	<s:div styleClass="pick-filter">
+		<h:graphicImage
+			url="/img/search.gif" />
+		<input
+			id="#{id}Filtro"
+			class="inputText"/>
+	</s:div>
+	<s:div styleClass="pick-cont">
+		<h:outputText
+			
+			value="#{targetLabel}" />
+		<rich:pickList
+			id="#{id}"
+			value="#{value}"
+			addAllText="Adiciona todos"
+			addText="Adicionar"
+			removeAllText="Remover todos"
+			removeText="Remover"
+			listHeight="#{listsHeight}"
+			moveControlsVerticalAlign="top"
+			sourceListWidth="#{sourceListWidth}"
+			targetListWidth="#{targetListWidth}"
+			switchByClick="true"
+			
+			showButtonsLabel="false">
+			<s:selectItems
+				value="#{itemValues}"
+				var="var"
+				label="#{itemLabel}" />
+			<ui:insert />
+		</rich:pickList>
+	</s:div>
 
 </ui:composition>
