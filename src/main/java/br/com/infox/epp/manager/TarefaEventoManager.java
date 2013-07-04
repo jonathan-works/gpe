@@ -1,7 +1,5 @@
 package br.com.infox.epp.manager;
 
-import java.util.List;
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -22,7 +20,7 @@ public class TarefaEventoManager extends GenericManager {
 	
 	@In private TarefaEventoDAO tarefaEventoDAO;
 	
-	public List<TarefaEvento> getNextTarefaEvento(){
+	public TarefaEvento getNextTarefaEvento(){
 		Processo processo = JbpmUtil.getProcesso();
 		String task = TaskInstance.instance().getTask().getName();
 		String fluxo = TaskInstance.instance().getProcessInstance().getProcessDefinition().getName();
