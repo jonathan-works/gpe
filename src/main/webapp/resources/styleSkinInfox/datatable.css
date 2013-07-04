@@ -1,7 +1,8 @@
 .dtable-search-form {
 	display: inline-block;
 	vertical-align: top;
-	margin: 5px 5px 5px 0;
+	margin: 0 5px 5px 0;
+	width:284px;
 }
 .dtable-p-b.rf-p-b {
 	padding: 2px;
@@ -9,7 +10,7 @@
 }
 .dtable-p.rf-p {
 	display: inline-block;
-	width:73%;
+	width:calc(100% - 291px);
 	padding:0px;
 }
 .zebra .rf-dt-r:nth-child(odd) {
