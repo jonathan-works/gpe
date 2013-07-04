@@ -25,3 +25,7 @@
 .rf-dt {
 	width: 99%;
 }
+.tb-rprt,.tb-rprt-xls {
+	display:inline-block;
+	margin:0px 3px;
+}
