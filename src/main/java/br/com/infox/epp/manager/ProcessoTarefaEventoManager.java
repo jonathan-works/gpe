@@ -8,6 +8,7 @@ import org.jboss.seam.bpm.TaskInstance;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoTarefaEventoDAO;
 import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.entity.TarefaEvento;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 
 @Name(ProcessoTarefaEventoManager.NAME)
@@ -24,6 +25,12 @@ public class ProcessoTarefaEventoManager extends GenericManager {
 		String task = TaskInstance.instance().getTask().getName();
 		String fluxo = TaskInstance.instance().getProcessInstance().getProcessDefinition().getName();
 		processoTarefaEventoDAO.destroyProcessoTarefaEvento(processo, task, fluxo);
+	}
+	
+	public void marcarProcessoTarefaEventoComoRegistrado(TarefaEvento tarefaEvento){
+		Processo processo = JbpmUtil.getProcesso();
+		processoTarefaEventoDAO.marcarProcessoTarefaEventoComoRegistrado(tarefaEvento, processo);
+		
 	}
 	
 }
