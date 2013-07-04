@@ -32,7 +32,7 @@
              id="login">
 
         <rich:panel
-                 style="width:400px">
+                 >
             <f:facet
                      name="header">Login</f:facet>
             <p>Caro(a) #{usuarioLogado}, favor trocar a senha provisória.</p>
@@ -40,15 +40,13 @@
                      class="dialog">
                 <div
                          id="novaSenha"
-                         style="display:block; padding-left:7px">
+                         >
                 	<h:outputLabel
                              for="password"
-                             style="margin-right:18px; font-weight: bold">Nova Senha</h:outputLabel>	
+                             >Nova Senha</h:outputLabel>	
                     <h:inputSecret
                              id="newPassword1"
-                             style="border:solid 1px #cccccc"
-                             value="#{authenticator.newPassword1}"
-                             required="true" />
+                              />
                               		   
                    <br
                              clear="none" /><br
@@ -56,12 +54,10 @@
                                 
                    <h:outputLabel
                              for="password"
-                             style="margin-right:11px; font-weight: bold">Confirmação</h:outputLabel>	
+                             >Confirmação</h:outputLabel>	
                    <h:inputSecret
                              id="newPassword2"
-                             style="border:solid 1px #cccccc"
-                             value="#{authenticator.newPassword2}"
-                             required="true" />                             
+                              />                             
                 </div>
                 
             </div>
@@ -73,8 +69,7 @@
             <h:commandButton
                      value="Trocar senha"
                      styleClass="buttons dr-tbpnl-tb-inact"
-                     style="width: 110px !important"
-                     action="#{authenticator.trocarSenha()}" />
+                      />
 
         </div>
         

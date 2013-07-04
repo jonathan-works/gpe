@@ -24,15 +24,7 @@
 
 	<rich:popupPanel
          id="#{id}"
-         style="#{style}"
-         styleClass="#{styleClass}"
-         resizeable="#{resizeable}"
-         height="#{height}"
-         width="#{width}"
-         onbeforeshow="#{onbeforeshow}"
-         onshow="#{onshow}"
-         showWhenRendered="#{showWhenRendered}"
-         rendered="#{wi:get(rendered, true)}">
+         >
 			<c:if
              test="#{not empty labelHeader}">
 				<f:facet
@@ -47,8 +39,7 @@
 	                <h:graphicImage
                      value="/img/close.gif"
                      title="Fechar"
-                     style="cursor:pointer"
-                     id="#{id}hidelink">
+                     >
 		                <rich:componentControl
                          target="#{id}"
                          operation="hide"

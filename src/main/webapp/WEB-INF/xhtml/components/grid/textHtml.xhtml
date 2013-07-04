@@ -9,20 +9,19 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib">
 	
 		
-		<div style="width: 100%; text-align: center">
+		<div >
 		
 			<h:graphicImage
 			 rendered="#{!empty c.value}"
 			 url="#{a4jSkin.imgIconView}"
-			 style="cursor:pointer"
-			 onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
+			  />
 			<rich:popupPanel
 			 id="mp_#{c.id}"
 			 height="600"
 			 width="800"
 			 rendered="#{!empty c.value}"
 			 resizeable="false"
-			 style="overflow: auto">
+			 >
 			
 				<f:facet name="header">
 				
@@ -32,8 +31,7 @@
 				<f:facet name="controls">
 				
 	          		<span
-					 style="cursor:pointer; font-family: Verdana, Arial;                   padding-right: 22px;"
-					 onclick="Richfaces.hideModalPanel(mp)">X</span>
+					 >X</span>
 				
 			</f:facet>
 				<h:outputText

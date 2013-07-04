@@ -58,8 +58,7 @@
              oninputblur="validarData(this); #{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}"
              onchanged="#{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}"
              reRender="#{empty props.reRender ? reRender : props.reRender}"
-             style="width: 200px;"
-             showApplyButton="#{empty props.showApplyButton ? (empty showApplyButton ? false : showApplyButton) : props.showApplyButton}">
+             >
 						   
 				<c:if
                  test="#{future}">

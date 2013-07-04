@@ -54,8 +54,7 @@
                 id="propriedadesTab"
                 title="#{messages['processBuilder.properties']}">
                 <rich:panel
-                    style="clear:both; overflow:auto; padding-bottom:5px"
-                    header="#{messages['processBuilder.info']}">
+                    >
                     <wi:inputText
                         id="codFluxo"
                         label="#{messages['fluxo.codFluxo']}"
@@ -140,9 +139,7 @@
         <s:div id="actionTemplate">
             <wi:modalPanel
                 id="actionTemplatePanel"
-                style="padding:0"
-                height="550"
-                width="920">
+                >
                 <c:if
                     test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}">
                     <ui:include src="actions/#{actionTemplate.fileName}" />

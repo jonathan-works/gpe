@@ -27,13 +27,6 @@
 
     <ui:define name="title">#{messages['consultaEntidadeLog.titulo']}</ui:define>
 
-
-    <script>
-		function abrirPopUp(){
-			openPopUp('comprovante', '');
-		}
-	</script>
-
     <ui:define name="body">
         <h:form>
             <rich:panel>
@@ -83,8 +76,7 @@
                                 validatePastDateTo="true" />
 
                             <s:div
-                                styleClass="actionButtons"
-                                style="clear: both; width:250px">
+                                styleClass="actionButtons">
                                 <wi:commandButton
                                     id="consulta"
                                     value="Consulta"
@@ -108,7 +100,7 @@
                     <ui:define name="toolBar">
                         <s:link
                             view="/Consulta/Log/detalheLog.seam"
-                            onclick="abrirPopUp();"
+                            onclick="openPopUp('comprovante', '')"
                             target="comprovante">
                             <s:conversationPropagation type="none" />
                             <f:param
@@ -117,7 +109,7 @@
                             <h:graphicImage
                                 title="Visualizar"
                                 url="#{a4jSkin.imgIconView}"
-                                style="cursor:pointer !important" />
+                                 />
                         </s:link>
                     </ui:define>
 

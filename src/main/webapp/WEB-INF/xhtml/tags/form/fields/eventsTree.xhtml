@@ -39,8 +39,8 @@
 					name="width"
 					value="#{wi:get(width, '400px')}" />
 				<s:div rendered="#{wi:get(rendered, tree.renderTree)}">
-					<fieldset style="border: solid 1px #BBBBBB; width: #{width}; background-color: white;">
-						<legend style="font-weight: bold">
+					<fieldset >
+						<legend >
 							<h:outputText value="Selecione o(s) Evento(s)" />
 						</legend>
 						<h:outputText
@@ -56,8 +56,7 @@
 							selectionType="ajax"
 							rendered="#{not empty agrupamentos}"
 							selectionChangeListener="#{tree.processTreeSelectionChange}"
-							style="height:200px; overflow:auto"
-							var="item">
+							>
 							<rich:treeModelRecursiveAdaptor
 								roots="#{tree.getRoots(agrupamentos)}"
 								nodes="#{item.nodes}">
@@ -78,7 +77,7 @@
 				rows="10"
 				value="#{tree.eventoBeanList}"
 				var="row"
-				style="margin-top: 11px; text-align: center; width: 400px; float: left;">
+				>
 				<f:facet name="header">
 					<rich:columnGroup>
 						<rich:column>
@@ -92,7 +91,7 @@
 						</rich:column>
 					</rich:columnGroup>
 				</f:facet>
-				<rich:column style="width: 40px;">
+				<rich:column >
 					<a:commandLink
 						action="#{tree.removeEvento(row)}"
 						execute="@this"
@@ -101,10 +100,10 @@
 						<h:graphicImage url="/img/remove.png" />
 					</a:commandLink>
 				</rich:column>
-				<rich:column style="width: 300px !important;">
+				<rich:column >
 					<h:outputText value="#{row.evento}" />
 				</rich:column>
-				<rich:column style="width: 50px;">
+				<rich:column >
 					<center>
 						<rich:inputNumberSpinner
 							minValue="1"

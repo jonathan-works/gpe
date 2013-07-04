@@ -11,7 +11,7 @@
 	<ui:param
 		 name="width"
 		 value="#{18 + (canReport ? 18 : 0) + (canEdit ? 18 : 0)}" />
-	<s:div style="width: #{width}px; text-align:center">
+	<s:div >
 		
 		
 		<h:graphicImage
@@ -19,7 +19,7 @@
 			 onclick="Richfaces.showModalPanel('#{gridId}SearchFields')"
 			 title="Pesquisar"
 			 url="/img/search.gif"
-			 style="cursor:pointer" />
+			  />
 
 		<s:link
 			 view="#{viewId}/edit.xhtml"
@@ -30,13 +30,12 @@
 			<h:graphicImage
 				 url="/img/add.gif"
 				 title="Adicionar novo registro"
-				 style="cursor:pointer"
-				 onclick="Richfaces.showModalPanel('#{modalPanelId}')" />
+				  />
 			<f:param name="id" />
 		
 		</s:link>
 			
-		<h:form style="display:inline">
+		<h:form >
 			
 			<a:jsFunction
 				 eventsQueue="edit"

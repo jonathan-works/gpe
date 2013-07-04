@@ -25,21 +25,13 @@
 			 view="/Fluxo/definicao/processDefinition.xhtml"
 			 action="#{processBuilder.load(fluxoHome.instance)}"
 			 styleClass="buttons dr-tbpnl-tb-inact"
-			 style="padding: 3px 12px 3px 12px; font-size: 13px;"
-			 target="processDefinition"
-			 value="Definição"
-			 rendered="#{fluxoHome.managed}"
-			 onclick="openPopUp('processDefinition', 'about:blank',1300,850);">
+			 >
 			</s:link>
 			
 			<s:link
 			 view="/Fluxo/importar/importarXPDL.xhtml"
 			 styleClass="buttons dr-tbpnl-tb-inact"
-			 style="padding: 3px 12px 3px 12px; font-size: 13px;"
-			 target="importarXPDL"
-			 value="#{messages['importarXPDL.button']}"
-			 rendered="#{fluxoHome.managed}"
-			 onclick="openPopUp('importarXPDL', 'about:blank',1300,850);">
+			 >
 			</s:link>
 		
 	</ui:define>

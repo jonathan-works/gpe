@@ -29,7 +29,7 @@
 	<s:div
 		id="taskButtonsDiv"
 		styleClass="actionButtons"
-		style="width:100%">
+		>
 		<ui:param
 			name="props"
 			value="#{form.buttons.properties}" />
@@ -73,12 +73,10 @@
 			action="#{taskInstanceHome.persist(home)}" />
 
 		<h:outputText
-			style="margin-left:40px; font-size:13px"
-			value="Próxima ação:" />
+			 />
 		<c:if test="#{taskInstanceHome.transitions.size gt 3}">
 			<h:selectOneMenu
-				style="min-width: 150px;"
-				value="#{taskInstanceHome.name}">
+				>
 				<f:selectItems value="#{taskInstanceHome.transtionsSelectItems}" />
 			</h:selectOneMenu>
 			<a:commandButton
@@ -101,8 +99,7 @@
 					render=":script,#{reRenderSave}"
 					value="#{transition.name}"
 					styleClass="buttons dr-tbpnl-tb-inact"
-					style="width: 200px;"
-					action="#{taskInstanceHome.end(transition.name)}">
+					>
 				</a:commandButton>
 			</a:repeat>
 		</c:if>
