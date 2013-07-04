@@ -37,7 +37,7 @@
 
 	<s:div
 		rendered="#{wi:get(rendered, true)}"
-		style="#{wi:get(style, 'float: left; padding-left:3px')}">
+		>
 		<rich:collapsiblePanel
 			id="uploadImagem"
 			switchType="ajax"
@@ -65,16 +65,11 @@
 				acceptedTypes="jpg, gif, png">
 			</rich:fileUpload>
 			<rich:dataGrid
-				style="margin-left: 1px; width: 351px;"
-				value="#{imageBean.images}"
-				elements="30"
-				columns="6"
-				var="img">
-				<s:div style="text-align:center">
+				>
+				<s:div >
 					<img
 						src="#{img}"
-						style="width: 50px;"
-						title="Arraste para o documento" />
+						 />
 				</s:div>
 				<f:facet name="footer">
 					<rich:dataScroller />

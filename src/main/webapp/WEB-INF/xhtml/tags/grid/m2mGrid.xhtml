@@ -74,7 +74,7 @@
 	<a:outputPanel
          ajaxRendered="true">
 	      <s:div
-             style="width: #{canEdit ? leftPanelWidth : '100%'}; float: left">
+             >
 	         #{leftTitle}
 	      	 <s:div
                  rendered="#{!customLeftGrid}">
@@ -96,7 +96,7 @@
       
 	      <s:div
              rendered="#{canEdit}"
-             style="width: #{rightPanelWidth}; float: left; margin-left: 1%">
+             >
 	         <wi:datagrid
                  bean="#{rightGrid}"
                  title="#{gridRightTitle}"

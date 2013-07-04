@@ -24,9 +24,7 @@
 			<h:selectOneMenu
 			 id="#{f.id}"
 			 value="#{searchBean[f.id]}"
-			 style="#{style}"
-			 required="#{true}"
-			 disabled="#{disabled}">
+			 >
 			
 				<f:selectItem itemLabel="Selecione..." />
 				<f:selectItems value="#{util.splitAsList('M:Masculino,F:Feminino')}" />

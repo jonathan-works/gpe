@@ -14,16 +14,12 @@
 	<ui:param
 		 name="width"
 		 value="#{18 + (canReport ? 18 : 0) + (canEdit ? 18 : 0)}" />
-	<s:div style="width: #{width}px; text-align:center">
+	<s:div >
 		
 		<ui:include src="../include/filterButton.xhtml" />
 
 		<h:form
-			 style="display:inline"
-			 ajaxSubmit="true"
-			 eventsQueue="edit"
-			 rendered="#{canEdit}"
-			 limitToList="true">
+			 >
 			
 			<a:commandLink
 				 status=":status"
@@ -35,13 +31,13 @@
 				<h:graphicImage
 					 url="/img/add.gif"
 					 title="Adicionar novo registro"
-					 style="cursor:pointer" />
+					  />
 			
 			</a:commandLink>
 		
 		</h:form>
 			
-		<h:form style="display:inline">
+		<h:form >
 			
 			<a:jsFunction
 				 eventsQueue="edit"

@@ -10,8 +10,6 @@
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
 	<s:div id="includePessoaFisicaDiv">
-		
-		<h:form id="pessoaFisicaForm">
 			
 			<wi:dataForm
 				 formId="pessoaFisicaForm"
@@ -28,10 +26,12 @@
 					
 					<a:ajax
 						 event="blur"
-						 listener="#{action.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}"
-						 execute="@this"
-						 render="nome, dataNascimentoDecoration"
-						 limitRender="true" />
+						 listener="#{iniciarProcessoAction.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}"
+						 execute="cpf"
+						 render="nome,dataNascimento,email"
+						 limitRender="true"
+						 onerror="console.log('error')"
+						 oncomplete="console.log('completed')"/>
 				
 				</wi:inputCpf>
 				<wi:inputText
@@ -65,8 +65,6 @@
 				</ui:define>
 			
 			</wi:dataForm>
-		
-		</h:form>
 	
 	</s:div>
 

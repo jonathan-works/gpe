@@ -40,10 +40,7 @@
              readonly="#{readonly}"
              disabled="#{empty disabled ? (props.disabled ? false : props.disabled) :disabled}"
              required="#{required}"
-             style="#{empty props.style ? (empty style ? '' : style) : props.style}"
-             onblur="#{onblur}"
-             onkeypress="#{onkeypress}"
-             maxlength="#{empty maxlength ? 255 : maxlength}">
+             >
 			<ui:insert />
 			<f:converter
                  converterId="#{empty converterId ? 'stringConverter' : converterId}" />

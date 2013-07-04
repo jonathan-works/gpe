@@ -33,8 +33,7 @@
              name="escape"
              value="#{wi:get(escape, true)}" />
 		<div
-             style="width: 100%;"
-             class="#{styleClass}">
+             >
 			<ui:insert />
 			
 			<ui:fragment
@@ -59,8 +58,7 @@
 						<h:outputText
                              value="#{value}"
                              escape="#{escape}"
-                             style="#{styleOutputText}"
-                             styleClass="#{styleClass}">
+                             >
 							<ui:insert
                                  name="outputText" />
 						</h:outputText>
@@ -70,12 +68,11 @@
 		</div>
 		<s:div
              rendered="#{not editRowOnClick}"
-             style="width: 100%;"
-             styleClass="#{styleClass}">
+             >
 			<h:outputText
                  value="#{value}"
                  escape="#{escape}"
-                 style="#{styleOutputText}">
+                 >
 				<ui:insert
                      name="outputText" />
 			</h:outputText>

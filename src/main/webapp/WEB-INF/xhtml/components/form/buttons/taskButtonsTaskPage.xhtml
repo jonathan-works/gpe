@@ -27,8 +27,7 @@
           <c:if
          test="#{taskAction.transitions.size gt 3}">
            	<h:selectOneMenu
-             style="min-width: 150px;"
-             value="#{taskAction.name}">
+             >
 				<f:selectItems
                  value="#{taskAction.transtionsSelectItems}" />
 			</h:selectOneMenu>
@@ -57,8 +56,7 @@
                  limitRender="true"
                  value="#{transition.name}"
                  styleClass="buttons dr-tbpnl-tb-inact"
-                 style="width: 200px;"
-                 action="#{taskAction.end(transition.name)}" />
+                  />
           </a:repeat>
          </c:if>
 
