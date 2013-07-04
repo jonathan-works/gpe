@@ -30,7 +30,6 @@ public class ProcessoTarefaEventoManager extends GenericManager {
 	public void marcarProcessoTarefaEventoComoRegistrado(TarefaEvento tarefaEvento){
 		Processo processo = JbpmUtil.getProcesso();
 		processoTarefaEventoDAO.marcarProcessoTarefaEventoComoRegistrado(tarefaEvento, processo);
-		
 	}
 	
 }
