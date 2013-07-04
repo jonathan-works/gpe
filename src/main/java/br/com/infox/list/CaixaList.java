@@ -11,22 +11,21 @@ import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Caixa;
 
 @Name(CaixaList.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.CONVERSATION)
 public class CaixaList extends EntityList<Caixa> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "caixaList";
 	
 	private static final String DEFAULT_EJBQL = "select o from Caixa o";
-	private static final String DEFAULT_ORDER = "o.caixa";
+	private static final String DEFAULT_ORDER = "o.dsCaixa";
 	
-	public static final String R1 = "o.tarefa = #{caixaList.entity.tarefa}";
-	public static final String R2 = "o.tarefaAnterior = #{caixaList.entity.tarefaAnterior} OR o.tarefaAnterior is null";
+	private static final String R1 = "o.tarefaAnterior = #{caixaList.entity.tarefaAnterior} OR o.tarefaAnterior is null";
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("tarefa", SearchCriteria.igual, R1);
-		addSearchField("tarefaAnterior", SearchCriteria.igual, R2);
+		addSearchField("tarefa", SearchCriteria.igual);
+		addSearchField("tarefaAnterior", SearchCriteria.igual, R1);
 	}
 
 	@Override

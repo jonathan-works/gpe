@@ -29,16 +29,19 @@
 			<ui:param name="id" value="swimlanesTable" />
 			
 			<ui:define name="headerToolBar">
-				<a:commandLink	action="#{swimlaneFitter.addSwimlane()}"
-						 	  	execute="@this"
-						 		render="swimlanesDiv"
-						 		limitRender="true">
-					<h:graphicImage title="#{messages['processBuilder.addSwimlane']}"
-							 		url="/img/add.gif" />
-				</a:commandLink>
+				<h:form>
+					<a:commandLink	action="#{swimlaneFitter.addSwimlane()}"
+							 	  	execute="@this"
+							 		render="swimlanesDiv"
+							 		limitRender="true">
+						<h:graphicImage title="#{messages['processBuilder.addSwimlane']}"
+								 		url="/img/add.gif" />
+					</a:commandLink>
+				</h:form>
 			</ui:define>
 			
 			<ui:define name="toolBar">
+				<h:form>
 				<h:graphicImage	title="#{messages['processBuilder.removeSwimlane']}"
 						 		url="/img/remove.png"
 						 		styleClass="opacityHover CursorPointer">
@@ -49,20 +52,23 @@
 							render="swimlanesDiv"
 							limitRender="true" />
 				</h:graphicImage>
+				</h:form>
 			</ui:define>
 			
 			<ui:define name="columns">
 				<rich:column>
-					<f:facet name="header">#{messages['processBuilder.swimlanes']} #{inForm}</f:facet>
-					<ui:param name="current" value="#{row == swimlaneFitter.currentSwimlane}" />
-					<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
-					<a:commandLink	action="#{swimlaneFitter.setCurrentSwimlane(row)}"
-							 		execute="@this"
-							 		render="swimlanesDiv"
-							 		limitRender="true">
-						<h:outputText	value="#{row.swimlane.name}"
-									 	style="#{styleNodeName}" />
-					</a:commandLink>
+					<h:form>
+						<f:facet name="header">#{messages['processBuilder.swimlanes']} #{inForm}</f:facet>
+						<ui:param name="current" value="#{row == swimlaneFitter.currentSwimlane}" />
+						<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
+						<a:commandLink	action="#{swimlaneFitter.setCurrentSwimlane(row)}"
+								 		execute="@this"
+								 		render="swimlanesDiv"
+								 		limitRender="true">
+							<h:outputText	value="#{row.swimlane.name}"
+										 	style="#{styleNodeName}" />
+						</a:commandLink>
+					</h:form>
 				</rich:column>
 			</ui:define>
 		</ui:decorate>
