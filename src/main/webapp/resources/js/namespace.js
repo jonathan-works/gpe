@@ -40,7 +40,18 @@
                         for(var i=0; i < $path.length; i++) {
                                 $item = $path[i];
                                 if (i==$path.length-1) {
-                                        $_namespace = $_namespace[$item] = $_namespace[$item] || object;
+                                		if ($_namespace[$item]) {
+                                			$_namespace = $_namespace[$item];
+                                			if (!Object.isFrozen($_namespace)) {
+	                                			for(var attr in object) {
+	                                				if (!$_namespace[attr]) {
+	                                					$_namespace[attr] = object[attr];
+	                                				}
+	                                			}
+                                			}
+                                		} else {
+                                			$_namespace = $_namespace[$item] = object;
+                                		}
                                 } else {
                                         $_namespace = $_namespace[$item] = $_namespace[$item] || {};
                                 }
