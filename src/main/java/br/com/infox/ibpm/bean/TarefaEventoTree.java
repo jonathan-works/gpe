@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -12,7 +11,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
@@ -23,7 +21,6 @@ import br.com.infox.epp.manager.TarefaEventoManager;
 import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.entity.Agrupamento;
 import br.com.infox.ibpm.entity.TarefaEvento;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.type.TarefaEventoEnum;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.EntityUtil;
@@ -94,27 +91,6 @@ public class TarefaEventoTree implements Serializable {
 		}
 	}
 	
-	/**
-	 * Verifica se ainda resta algum TarefaEvento a ser registrado.
-	 * @return True se existir.
-	 */
-	private boolean hasNextEvent() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select count(o) from ProcessoTarefaEvento o ")
-		  .append("inner join o.tarefaEvento et ")
-		  .append("inner join et.tarefa t ")
-		  .append("where o.registrado = false and ")
-		  .append("o.processo = :processo and ")
-		  .append("t.tarefa = :tarefa and ")
-		  .append("t.fluxo.fluxo = :fluxo");
-		Query q = getEntityManager().createQuery(sb.toString());
-		q.setParameter("processo", JbpmUtil.getProcesso());
-		q.setParameter("tarefa", TaskInstance.instance().getTask().getName());
-		q.setParameter("fluxo", TaskInstance.instance().getProcessInstance()
-											.getProcessDefinition().getName());
-		return (Long) q.getSingleResult() == 0 ? true : false;
-	}
-
 	/**
 	 * Método invocado quando finalmente o processo sai da tarefa, apagando assim
 	 * os registros de ProcessoTarefaEvento referente aquele processo, pois caso
