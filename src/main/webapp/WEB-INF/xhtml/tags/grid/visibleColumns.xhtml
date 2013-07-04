@@ -34,19 +34,22 @@
 			
 			<rich:dataTable
 				 value="#{bean.allColumns}"
-				 >
+				 style="margin-top: 6px; width: 100%"
+				 var="col"
+				 rowKeyVar="key">
 				
 				<ui:param
 					 name="visible"
 					 value="#{bean.visibleColumns.contains(col)}" />
 				<rich:column
-					 >
+					 style="width:40px; text-align:center"
+					 styleClass="dr-table-subheader rich-table-subheader">
 					
-					<div >
+					<div style="width: 100%; text-align: center}">
 						
 						<div>
 							
-                             &gt;
+                             style="visibility: hidden;"&gt;
 							<a:commandLink
 								 render="#{gridId}Div,#{gridId}ColumnListForm"
                                  limitRender="true"
@@ -95,7 +98,8 @@
 					
 					<f:facet name="header">Coluna</f:facet>
 					<h:outputText
-						  />
+						 style="#{!visible ? 'color: #888888' : ''}"
+						 value="#{messages[col.toString()]}" />
 				
 				</rich:column>
 			

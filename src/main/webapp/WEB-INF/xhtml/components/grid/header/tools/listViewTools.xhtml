@@ -8,11 +8,15 @@
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib">
 	
-	<s:div >
+	<s:div style="text-align:left; width: #{canEdit ? 48 : 18}px">
 		
 		<ui:include src="../include/filterButton.xhtml" />
 		<h:form
-			 >
+			 style="display:inline"
+			 rendered="#{canEdit}"
+			 ajaxSubmit="true"
+			 eventsQueue="edit"
+			 limitToList="true">
 			
 			<a:commandLink
 				 status=":status"
@@ -24,7 +28,7 @@
 				<h:graphicImage
 					 url="/img/add.gif"
 					 title="Adicionar novo registro"
-					  />
+					 style="cursor:pointer" />
 			
 			</a:commandLink>
 		

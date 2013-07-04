@@ -36,7 +36,9 @@
 				<s:div styleClass="edit">
 					<rich:collapsiblePanel
 						expanded="#{wi:get(opened, true)}"
-						>
+						style="width: #{wi:get(widthSearchForm, '275px')}"
+						header="#{empty formTitle ? formId : formTitle}"
+						switchType="client">
 						<ui:param
 							name="template"
 							value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
@@ -52,7 +54,8 @@
 								items="#{'and,or'.split(',')}" />
 
 							<s:div
-								>
+								style="clear: both; width:250px"
+								rendered="#{wi:get(showButtons, true)}">
 								<wi:commandButton
 									id="searchButton"
 									value="Pesquisar"

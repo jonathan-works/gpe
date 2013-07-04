@@ -31,10 +31,11 @@
 		
 		<s:div
 			 id="#{id}Div"
-			 >
+			 style="overflow:auto; padding:1px">
 			
 			<s:div
-				 >
+				 style="width:200px;"
+				 id="#{id}EventList">
 				
 			<ui:decorate template="dataTable.xhtml">
 					
@@ -63,7 +64,7 @@
 							<h:graphicImage
 								 url="/img/add.gif"
 								 title="Novo evento"
-								  />
+								 style="margin-right:5px" />
 					 
 						</a:commandLink>
 				
@@ -72,7 +73,8 @@
 						
 					<h:graphicImage
 							 title="Excluir "
-							 >
+							 style="cursor:pointer"
+							 url="/img/remove.png">
 							
 						<a:ajax
 								 event="click"
@@ -87,7 +89,7 @@
 					</ui:define>
 				<ui:define name="columns">
 						
-					<rich:column >
+					<rich:column style="padding-left:2px">
 							
 						<f:facet name="header">Eventos</f:facet>
 						 <a:commandLink
@@ -95,7 +97,9 @@
 								 action="#{parent.setCurrentEvent(row)}"
 								 value="#{messages['jbpm.'.concat(row.event.eventType)]}"
 								 rendered="#{row.event.eventType != 'new-event'}"
-								  />
+								 style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
+								 render="#{parentId}Div"
+								 limitRender="true" />
 						<wi:selectOneMenu
 								 id="events"
 								 noSelectionLabel="Selecione..."
@@ -124,7 +128,8 @@
 					 name="event"
 					 value="#{parent.currentEvent}" />
 			<s:div
-					 >
+					 style="padding-top:5px"
+					 rendered="#{!empty event}">
 					
 				<ui:decorate template="dataTable.xhtml">
 						
@@ -153,7 +158,7 @@
 								<h:graphicImage
 									 url="/img/add.gif"
 									 title="Nova ação"
-									  />
+									 style="margin-right:5px" />
 						 
 							</a:commandLink>
 					
@@ -162,7 +167,8 @@
 							
 						<h:graphicImage
 								 title="Excluir "
-								 >
+								 style="cursor:pointer"
+								 url="/img/remove.png">
 								
 							<a:ajax
 									 event="click"
@@ -177,14 +183,16 @@
 						</ui:define>
 					<ui:define name="columns">
 							
-						<rich:column >
+						<rich:column style="padding-left:2px">
 								
 							<f:facet name="header">Ações</f:facet>
 							 <a:commandLink
 									 execute="@this"
 									 action="#{event.setCurrentAction(row)}"
 									 rendered="#{row.event.eventType != 'new-event'}"
-									 >
+									 style="#{row == parent.currentEvent ? 'font-weight:bold' : ''}"
+									 render="#{parentId}Div"
+									 limitRender="true">
 									
 							 	<a:outputPanel>
 										
@@ -195,7 +203,8 @@
 											
 								 		<h:graphicImage url="/img/jbpm/#{event.getIcon(row)}.gif" />
 								 		<h:outputText
-												  />
+												 style="#{row == event.currentAction ? 'font-weight: bold' : ''}"
+												 value="#{empty row.name ? 'Ação '.concat(key + 1) : row.name}" />
 							 		
 										</h:panelGrid>
 							 	
@@ -230,7 +239,7 @@
 			
 			<s:div
 				 id="#{id}EventDiv"
-				 >
+				 style="float:left; margin-left:5px; width:500px">
 				
 				<c:if test="#{!empty event.currentActionType and !empty event.currentAction}">
 					

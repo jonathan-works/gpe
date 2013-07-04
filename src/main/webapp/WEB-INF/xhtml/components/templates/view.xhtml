@@ -20,15 +20,17 @@
 
 	<div
 		class="propertyView"
-		>
+		style="#{empty inNewLine ? '' : 'clear: both;'} width: #{widthDiv} !important; ">
 		<div class="name">
 			<ui:insert name="label" />
 			<c:if test="#{not empty tipMessage}">
 				<h:graphicImage
 					id="#{fieldId}ViewTipImg"
-					>
+					style="height:12px; margin-left:3px; margin-bottom:-2px"
+					url="/img/help.gif">
 					<rich:tooltip
-						 />
+						style="background-color:#{richSkin.generalBackgroundColor}; border-color:#{richSkin.panelBorderColor}; padding:5px; font-weight:normal;"
+						value="#{tipMessage}" />
 				</h:graphicImage>
 			</c:if>
 		</div>

@@ -25,7 +25,9 @@
          id="#{id}Script">
 		<wi:inputTextarea
              id="#{id}Event"
-             >
+             style="width:100%; #{height}"
+             value="#{event.currentAction.expression}"
+             label="Expressão">
 			<a:ajax
                 event="change"
                 execute="@this"

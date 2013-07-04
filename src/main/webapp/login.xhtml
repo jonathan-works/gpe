@@ -109,11 +109,13 @@
 					        </script>
 					
 					        <input class="input_button" id="btnTrocar"
-								type="button" value="#{messages['login.trocarSenhaBtn']}"  /> 
+								type="button" value="#{messages['login.trocarSenhaBtn']}" style="width: 110px"
+								onclick="mudar()" /> 
 							
 							<input class="input_button"
 								id="btnTrocarSenha" type="button" value="#{messages['login.requisitarSenhaBtn']}"
-								 />
+								style="width: 170px" 
+								onclick="#{rich:component('panelTeste')}.show();" />
 						</c:if>
 						
 						<c:if test="#{useCertLogin}">
@@ -204,7 +206,7 @@
 				<f:facet name="header">
 					<h:outputText value="Aguarde a incialização do SmartCard." />
 				</f:facet>
-				<div >
+				<div style="text-align: center; padding-top: 30px">
 					<h:graphicImage url="/img/ajax-loader.gif" />
 				</div>
 			</rich:popupPanel>					

@@ -39,11 +39,11 @@
 					<wi:dataForm formId="contaTwitterForm"
 								 formTitle="#{messages['form.title']}"
 								 requiredForm="false">
-						<rich:dataTable rendered="#{contaTwitterHome.managed}" >
+						<rich:dataTable rendered="#{contaTwitterHome.managed}" style="width: 350px">
 							<f:facet name="header">
 								<h:outputText value="#{messages['contaTwitter.contaCadastrada']}"/>
 							</f:facet>
-							<rich:column >
+							<rich:column style="width:20px;">
 								<f:facet name="header">
 									<wi:commandLink id="recadastrarLink"
 									                rendered="#{contaTwitterHome.managed}"

@@ -33,7 +33,9 @@
 			<h:selectOneMenu
 			 id="#{id}"
 			 value="#{value}"
-			 >
+			 style="#{style}"
+			 required="#{required}"
+			 disabled="#{disabled}">
 			
 				<s:selectItems
 				 value="#{empty items ? util.eval(props.items) : items}"

@@ -9,7 +9,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 
-	<div >
+	<div style="width: 48px">
 			<ui:param
 				name="idProcesso"
 				value="#{row.idProcesso}" />
@@ -27,7 +27,8 @@
 				<h:outputText
 					styleClass="actorId"
 					rendered="#{!empty actorId}"
-					 />
+					style="display:none"
+					value="#{actorId}" />
 				<h:graphicImage
 					url="/img/annotate.gif"
 					title="Mover para caixa" />

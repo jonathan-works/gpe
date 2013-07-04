@@ -10,7 +10,8 @@
 	
 		
 		<div
-		 >
+		 style="width: 100%;"
+		 class="#{styleClass}">
 		
 			<ui:param
 			 name="lista"
@@ -25,7 +26,7 @@
 			<h:outputText
 			 escape="false"
 			 value="#{row}"
-			  />
+			 style="#{lista.size() == 1 ? 'font-weight: bold' : ''}" />
 		
 	</div>
 		

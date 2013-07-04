@@ -17,17 +17,21 @@
 		 value="#{isAtivo ? '' : 'inativo'}" />
 	
 		<div
-		 >
+		 style="width: 100%;"
+		 class="#{styleClass}">
 		
 		
 		    <rich:dataTable
 			 id="documentosBinarios"
 			 value="#{processoHome.instance.getProcessoDocumentoList(true)}"
 			 var="var"
-			 >
+			 style="width: 100%"
+			 onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+			 onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+			 rows="15">
 			   
 
-		    	<rich:column >
+		    	<rich:column style="width:10%; padding: 0">
 				
 		    		<ui:include src="processoDocumentoBin.xhtml">
 					
@@ -42,13 +46,13 @@
 		    	
 			</rich:column>	    	
 	
-		    	<rich:column >
+		    	<rich:column style="text-align: left">
 				
 				    <h:outputText value="#{var.processoDocumento}" />
 		    	
 			</rich:column>
 		    	
-		    	<rich:column >
+		    	<rich:column style="width:65px">
 				
 				    <h:outputText value="#{var.processoDocumentoBin.dataInclusao}">
 					

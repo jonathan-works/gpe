@@ -26,7 +26,7 @@
 <f:subview
          id="#{id}Action">
 	<div
-              />
+             style="clear:both" />
 	<a:commandLink
              id="#{id}Link"
              render="actionTemplate"
@@ -36,7 +36,7 @@
 		<h:graphicImage
                  url="/img/jbpm/wizard.gif"
                  title="Assistente para expressão"
-                  />
+                 style="position: absolute; margin-left: 80px; margin-top: 3px;" />
         <rich:componentControl
                  target="actionTemplatePanel"
                  operation="show"
@@ -45,7 +45,8 @@
 	<wi:inputTextarea
              id="#{id}ActionExpression"
              value="#{event.currentAction.actionExpression}"
-             >		
+             style="width:100%; #{height}"
+             label="Expressão">		
 		<a:ajax
             event="change"
             limitRender="true"

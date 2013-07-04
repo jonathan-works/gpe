@@ -51,10 +51,10 @@
 				
 				<s:div styleClass="edit">
 					
-					<rich:panel >
+					<rich:panel style="height:#{panelHeight}">
 						
 						<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
-						<s:div >
+						<s:div style="max-width:800px">
 							
 							<c:if test="#{form.tabbed}">
 								
@@ -165,7 +165,7 @@
 								</wi:repeat>
 							
 							</c:if>
-							<div >
+							<div style="clear: both">
 								
 								<s:div rendered="#{canEdit and !empty form.fields and form.hasRequiredField()}">
 									

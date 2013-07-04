@@ -62,14 +62,14 @@
              class="rich-table-subheader">
 			<th
                  class="rich-table-subheadercell"
-                 > -
+                 style="width: 80px; border-bottom: solid 1px silver;"> -
 			</th>
 			<ui:repeat
                  value="#{handler.diasSemana}"
                  var="dia">				
 				<th
                      class="rich-table-subheadercell"
-                     >
+                     style="border-bottom: solid 1px silver;">
 					#{dia}
 				</th>
 			</ui:repeat>
@@ -86,7 +86,7 @@
                  onmouseout="this.style.backgroundColor=rowColor">
 				<td
                      class="rich-table-cell"
-                     >
+                     style="width: 9%; font-weight: bold; text-align: center; background-color: #E4E4E4">
 					#{horario} - #{rowStatus.index lt handler.horarios.size()-1 ? handler.horarios.get(rowStatus.index + 1) : '00:00:00'}
 				</td>
 				<c:forEach
@@ -102,11 +102,13 @@
                          id="td_#{rowStatus.index}_#{colStatus.index}"
                          onclick="markBeginOrEnd(#{rowStatus.index}, #{colStatus.index})"
                          class="rich-table-cell #{selected ? 'fixed-selected': ''}"
-                         >
+                         style="cursor: pointer; width: 13%"
+                         onmouseover="markInterval(#{rowStatus.index}, #{colStatus.index});">
 						
 						<h:selectBooleanCheckbox
                              id="check_#{rowStatus.index}_#{colStatus.index}"
-                              />
+                             style="display: none"
+                             value="#{selected}" />
 					</td>
 				</c:forEach>
 			</tr>

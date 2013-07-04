@@ -35,7 +35,12 @@
 			 required="#{required}"
 			 size="#{size}"
 			 styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
-			 >
+			 style="#{style}"
+			 onblur="#{onblur}"
+			 onchange="#{onchange}"
+			 onkeypress="#{onkeypress}"
+			 onkeyup="#{onkeyup}"
+			 maxlength="20">
 			
 			<c:if test="#{!readonly}">
 				

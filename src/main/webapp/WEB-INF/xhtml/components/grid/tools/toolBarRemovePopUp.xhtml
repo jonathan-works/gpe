@@ -20,7 +20,7 @@
 		
 			<a:region renderRegionOnly="false">
 			
-				<div >
+				<div style="width: 50px">
 				
 					<s:link
 					 view="#{linkDetalhe}"
@@ -34,7 +34,7 @@
 						<h:graphicImage
 						 title="Visualizar"
 						 url="/img/show.gif"
-						  />
+						 style="cursor:pointer !important" />
 					
 				</s:link>	
 					
@@ -49,7 +49,7 @@
 						<h:graphicImage
 						 url="/img/remove.png"
 						 title="Remover registro"
-						  />
+						 style="cursor:pointer" />
 						<f:param
 						 name="firstResult"
 						 value="#{bean.firstResult}" />

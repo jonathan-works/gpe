@@ -33,7 +33,7 @@
 			<s:token
 				allowMultiplePosts="true"
 				requireSession="true" />
-			<rich:panel styleClass="DataFormPanel" >
+			<rich:panel styleClass="DataFormPanel" style="width: #{panelWidth}; #{style}">
 				<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 				<ui:insert />
 				<br />
@@ -43,7 +43,7 @@
 					<span>Campos Obrigatórios</span>
 				</s:div>
 			</rich:panel>
-			<div  />
+			<div style="clear: both" />
 			<ui:insert name="buttons">
 				<wi:commandButtonPersist />
 				<wi:commandButtonUpdate />

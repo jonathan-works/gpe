@@ -11,7 +11,7 @@
 
     <h:form>
 
-        <div >
+        <div style="width: 50px">
 
             <a:commandLink
                 action="#{home.remove(row)}"
@@ -24,7 +24,7 @@
                 <h:graphicImage
                     url="/img/remove.png"
                     title="Remover registro"
-                     />
+                    style="cursor:pointer" />
                 <f:param
                     name="firstResult"
                     value="#{bean.firstResult}" />

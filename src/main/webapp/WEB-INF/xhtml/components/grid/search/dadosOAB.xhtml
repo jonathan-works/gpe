@@ -44,7 +44,7 @@
 			 id="#{f.id}EstadoCombo"
 			 value="#{search[estado]}"
 			 required="#{required}"
-			 >
+			 style="width: 100px !important">
 			
 				<s:convertEntity />
 				<s:selectItems
@@ -60,7 +60,10 @@
 			 id="#{id}NumeroOAB"
 			 value="#{search[numero]}"
 			 maxlength="6"
-			 >
+			 style="width: 70px !important"
+			 styleClass="#{readonly ? 'readOnly' : '' } inputText"
+			 onkeyup="onlyNumber(this)"
+			 required="#{required}">
 			
 				<ui:insert />
 			
@@ -69,7 +72,8 @@
 			<h:inputText
 			 value="#{search[letra]}"
 			 maxlength="1"
-			  />
+			 style="text-transform: uppercase !important; width: 30px !important"
+			 styleClass="#{readonly ? 'readOnly' : '' } inputText" />
 		
 	</s:decorate>
 

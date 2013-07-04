@@ -27,12 +27,12 @@
 -->
     <rich:panel
 		 bodyClass="panel"
-		 >
+		 style="width:706px; margin-left:3px; clear:both; margin-top:3px">
 		
 
         <s:div
 			 id="timersDiv"
-			 >
+			 style="width:200px; float:left;">
 			
 
             <ui:param
@@ -64,7 +64,7 @@
                         <h:graphicImage
 							 url="/img/add.gif"
 							 title="Novo temporizador"
-							  />
+							 style="margin-right:5px" />
                     
 					</a:commandLink>
                 
@@ -73,7 +73,8 @@
 					
                     <h:graphicImage
 						 title="Excluir temporizador"
-						 >
+						 style="cursor:pointer"
+						 url="/img/remove.png">
 						
                         <a:ajax
 							 event="click"
@@ -97,7 +98,7 @@
                         <ui:param
 							 name="styleTimerName"
 							 value="#{current ? 'font-weight:bold' : ''}" />
-                        <s:div >
+                        <s:div style="margin-left:2px;">
 							
                             <a:commandLink
 								 action="#{node.setCurrentTimer(row)}"
@@ -107,7 +108,7 @@
 								
                                 <h:outputText
 									 value="#{row.timerName}"
-									  />
+									 style="#{styleTimerName}" />
                             
 							</a:commandLink>
                         
@@ -124,7 +125,7 @@
 
         <s:div
 			 id="timerDiv"
-			 >
+			 style="float:left; margin-left:5px">
 			
             <s:div rendered="#{!empty node.currentTimer}">
 				
@@ -146,7 +147,9 @@
                 <wi:inputText
 					 id="duedate"
 					 value="#{node.dueDateValue}"
-					 >
+					 style="width:50px"
+					 widthDiv="50px"
+					 label="Prazo">
 					
                     <a:ajax
 						 execute="@this"
@@ -158,7 +161,12 @@
                 <wi:selectOneMenuEnum
 					 id="unit"
 					 value="#{node.dueDateUnit}"
-					 >
+					 style="width:100px"
+					 widthDiv="100px"
+					 label="Unidade"
+					 items="#{node.dueDateDefaultUnit.values()}"
+					 noSelectionLabel="[Selecione...]"
+					 optionText="label">
 					
                     <a:ajax
 						 execute="@this"
@@ -170,7 +178,9 @@
                 <wi:selectBooleanCheckbox
 					 id="business"
 					 value="#{node.dueDateBusiness}"
-					 >
+					 style="width:30px"
+					 widthDiv="40px"
+					 label="Comercial?">
 					
                     <a:ajax
 						 execute="@this"

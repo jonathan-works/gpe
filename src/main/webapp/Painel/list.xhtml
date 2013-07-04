@@ -118,7 +118,12 @@
                                                         <a:commandButton
                                                             id="novaConsulta"
                                                             status="status"
-                                                             />
+                                                            style="width: 120px !important"
+                                                            value="Nova Consulta"
+                                                            limitRender="true"
+                                                            styleClass="dr-tbpnl-tb-inact"
+                                                            execute="@this"
+                                                            render="painelProcessos" />
                                                     </div>
                                                 </ui:define>
                                             </wi:searchForm>
@@ -187,7 +192,8 @@
                 </f:facet>
                 <f:facet name="controls">
                     <span
-                        >X</span>
+                        style="cursor: pointer; font-family: Verdana, Arial; padding-right: 5px"
+                        onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
                 </f:facet>
                 <h:form id="modalForm">
                     <wi:inputText

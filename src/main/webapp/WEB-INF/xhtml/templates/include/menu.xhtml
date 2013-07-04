@@ -23,18 +23,19 @@
          value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
 	
 	<h:form
-         >			
+         style="position: absolute; right:0px; top:0px;"
+         rendered="#{mostrarMenu}">			
 		<table
              cellspacing="0"
              cellpadding="0"
-             >
+             style="vAlign: middle">
 	      <tr>
 	        <td
                      class="modPesqEsq" />		        
 	        <td
                      class="modPesqBg"> 
 	            <span
-                         >
+                         style="font-size: 11px; color: #FFFFFF; font-weight: bold;">
 				    Pesquisar
 				</span>
 				<h:inputText
@@ -45,36 +46,40 @@
 	        <td
                      class="modPesqBg">
 		         <h:commandButton
-                          />
+                         style="top:0px;"
+                         action="/Pesquisa/searchResult.xhtml"
+                         image="#{a4jSkin.imgBgButtonPesq}" />
 	        </td> 
 	        <td
                      class="modPesqBg"
                      valign="top">
 		        <h:graphicImage
                          url="#{a4jSkin.imgIconPalette}"
-                          />	
+                         style="cursor:pointer"
+                         title="Alterar o esquema de cores"
+                         onclick="Richfaces.showModalPanel('skinPanel')" />	
     				 							
 				<h:commandButton
                          action="#{skinZoom.setTmNormal()}"
                          image="#{a4jSkin.imgIconZoomNormal}"
-                          />	
+                         style="width: 17px; height: 21px;" />	
 					
 			    <h:commandButton
                          action="#{skinZoom.setTmMedio()}"
                          image="#{a4jSkin.imgIconZoomMedio}"
-                          />
+                         style="width: 17px; height: 21px;" />
 			    
 			    <h:commandButton
                          action="#{skinZoom.setTmGrande()}"
                          image="#{a4jSkin.imgIconZoomGrande}"
-                          />	
+                         style="width: 17px; height: 21px;" />	
 	        </td>      
 	      </tr>
 	    </table>			
 	</h:form>
 
 	<s:div
-         >
+         style="color:#{a4jSkin.colorTextMenu};     position: absolute; top: 47px;     text-align: right; height: 45px;    overflow:hidden;     width:50%;    right: 5px; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;        font-size: 10pt; font-weight: bold;">
 	    <h:outputText
              value="#{usuarioLogado}"
              rendered="#{identity.loggedIn}" />
@@ -86,11 +91,14 @@
                  rendered="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}"
                  id="usuarioLocalizacao"
                  template="/WEB-INF/xhtml/components/templates/display.xhtml"
-                 >
+                 style="position:absolute; right: 0px;      color:#{a4jSkin.colorTextMenu};         font-size:14px;         width:auto;         text-align:right;         background-color:transparent; border:none"
+                 onchange="this.form.submit()"
+                 items="#{authenticator.usuarioLocalizacaoListItems}">
 		    </wi:selectOneMenuEntity><br />
 		    <h:outputText
                  value="#{authenticator.usuarioLocalizacaoListItems[0]}"
-                  />
+                 style="position:absolute; right: 0px;         background-color:transparent;         font-size:14px;         color:#{a4jSkin.colorTextMenu};         font-weight: normal;"
+                 rendered="#{identity.loggedIn and authenticator.usuarioLocalizacaoListItems.size() == 1}" />
 	    </h:form>
 	    
 	</s:div>
@@ -102,7 +110,8 @@
 			<rich:toolbarGroup>
 				<s:link
                      view="/home.xhtml"
-                      />				
+                     style="color:#{a4jSkin.headerTextColor}; font-size:#{skinZoom.skinZoom};"
+                     value="Home" />				
 			</rich:toolbarGroup>
 			<c:forEach
                  items="#{mainMenu.dropMenus}"
@@ -140,11 +149,14 @@
 			<s:link
                  view="/login.xhtml"
                  value="Login"
-                  />
+                 style="color:#{a4jSkin.headerTextColor}"
+                 rendered="#{not identity.loggedIn}" />
 			<s:link
                  view="/home.xhtml"
                  action="#{identity.logout}"
-                  />
+                 style="color:#{a4jSkin.headerTextColor}; font-size:#{skinZoom.skinZoom};"
+                 value="Logout"
+                 rendered="#{identity.loggedIn}" />
 			<wi:helpIcon />								
 		</rich:toolbarGroup>
 	</rich:toolbar>
@@ -173,7 +185,8 @@
 			<h:form>
 				<h:selectOneMenu
                      value="#{wiSkin.skin}"
-                     >
+                     style="width: 250px"
+                     onchange="this.form.submit()">
 					<f:selectItems
                          value="#{wiSkin.skinList}" />
 				</h:selectOneMenu>

@@ -25,7 +25,7 @@
      xmlns:wi="http://www.itx.com.br/jsf">
                
         <div
-         >
+         style="float:left">
 	
 		<ui:param
              name="props"
@@ -45,7 +45,11 @@
            <a:commandButton
              id="novaConsulta"
              status="status"
-             />
+             style="width: 120px !important"
+             value="Nova Consulta"
+             styleClass="dr-tbpnl-tb-inact"
+             render="#{buttonReRender}" 
+             limitRender="true"/>
 
        </div>
 

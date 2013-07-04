@@ -58,10 +58,10 @@
 	    	});
     	});
     </script>
-    <div id="#{id}DefaultGaugeContainer" class="gaugeContainer" >
+    <div id="#{id}DefaultGaugeContainer" class="gaugeContainer" style="border:0.5px solid #CCCCCC;background-color:#FFFFFF;margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;#{style}">
     	<div id="#{id}DefaultGaugeHeader" class="rich-panel-header">#{label}</div>
         <div id="#{id}DefaultGauge" class="gauge"></div>
-        <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
+        <span style="display:inline;position:relative;left:10px;bottom:10px">#{wi:get(indicatorLabel, '')}: #{value}</span>
     </div>
 
 </ui:composition>

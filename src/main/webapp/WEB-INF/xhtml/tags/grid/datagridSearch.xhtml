@@ -53,7 +53,7 @@
 
 				</f:facet>
 				<f:facet name="closeMarker"> </f:facet>
-				<s:div >
+				<s:div style="overflow:visible;">
 
 					<h:form
 						id="#{gridId}SearchForm"
@@ -106,7 +106,8 @@
 							items="#{'and,or'.split(',')}" />
 						<s:div
 							styleClass="actionButtons"
-							>
+							style="clear: both; width:250px"
+							rendered="#{empty props.showButton ? true : props.showButton}">
 
 							<a:commandButton
 								id="search"
@@ -128,7 +129,8 @@
                                     limitRender="true"
 									id="clearButton"
 									value="Limpar"
-									 />
+									style="min-width:65px; width:65px;"
+									styleClass="buttons dr-tbpnl-tb-inact" />
 
 							</c:if>
 

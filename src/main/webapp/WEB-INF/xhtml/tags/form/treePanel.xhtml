@@ -80,7 +80,7 @@
 			<ui:param
 				 name="cor"
 				 value="#{ativo and not cantSelect  ? '' : 'red'}" />
-			<div >
+			<div style="width: 100%; text-decoration:#{decoration}; color: #{cor}">
 				
 				<h:selectBooleanCheckbox
 					 id="#{id}CheckBoxTree"
@@ -115,7 +115,7 @@
 			<ui:param
 				 name="cor"
 				 value="#{item.entity.ativo  ? '' : 'red'}" />
-			<div >
+			<div style="width: 100%; text-decoration:#{decoration}; color: #{cor}">
 				
 				<h:outputText value="#{item.entity}" />
 			

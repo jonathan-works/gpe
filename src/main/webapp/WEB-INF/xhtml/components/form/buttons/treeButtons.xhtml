@@ -17,7 +17,14 @@
 			<a:commandButton
 			 id="saveAndNext"
 			 status=":status"
-			 >
+			 style="width: 160px !important"
+			 action="#{home.persistAndNext}"
+			 eventsQueue="editQueue"
+			 render="#{reRenderSave}"
+             limitRender="true"
+			 value="Gravar Próximo Nível"
+			 styleClass="dr-tbpnl-tb-inact"
+			 rendered="#{!home.managed and !isUploadForm}">
 			</a:commandButton>
 			
 		

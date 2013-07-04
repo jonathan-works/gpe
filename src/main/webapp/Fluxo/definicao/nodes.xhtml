@@ -30,9 +30,9 @@
 
         <s:div id="divNodesGeral">
 
-            <s:div id="nodesDiv" >
+            <s:div id="nodesDiv" style="min-height:657px">
 
-                <s:div >
+                <s:div style="width:200px; display:inline-table;">
                     <ui:decorate template="dataTable.xhtml">
                         <ui:param name="values" value="#{nodeFitter.nodes}" />
                         <ui:param name="styleClass" value="tabelaVariaveis" />
@@ -46,18 +46,21 @@
 
                                 <h:graphicImage
                                     title="Adicionar nó"
-                                     />
+                                    style="cursor:pointer"
+                                    url="/img/add.gif" />
 
                             </a:commandLink>
 
                         </ui:define>
                         <ui:define name="toolBar">
 
-                            <s:div >
+                            <s:div style="width:40px; text-align:left">
 
                                 <h:graphicImage
                                     title="Excluir nó"
-                                    >
+                                    style="cursor:pointer"
+                                    url="/img/remove.png"
+                                    styleClass="opacityHover">
 
                                     <a:ajax
                                         event="click"
@@ -70,7 +73,10 @@
                                 </h:graphicImage>
                                 <h:graphicImage
                                     title="Subir na ordem"
-                                    >
+                                    style="cursor:pointer"
+                                    rendered="#{key != 0}"
+                                    url="/img/jbpm/up.gif"
+                                    styleClass="opacityHover">
 
                                     <a:ajax
                                         event="click"
@@ -82,7 +88,10 @@
                                 </h:graphicImage>
                                 <h:graphicImage
                                     title="Descer na ordem"
-                                    >
+                                    style="cursor:pointer"
+                                    rendered="#{key lt nodeFitter.nodes.size - 1}"
+                                    url="/img/jbpm/down.gif"
+                                    styleClass="opacityHover">
 
                                     <a:ajax
                                         event="click"
@@ -109,7 +118,10 @@
                                     value="#{current ? 'font-weight:bold' : ''}" />
                                 <a:commandLink
                                     action="#{nodeFitter.setCurrentNode(row)}"
-                                    >
+                                    style="float:left;"
+                                    render="divNodesGeral"
+                                    execute="@this"
+                                    limitRender="true">
 
                                     <a:outputPanel>
 
@@ -121,10 +133,11 @@
                                             <h:graphicImage
                                                 url="/img/jbpm/#{nodeFitter.getIcon(row)}.gif"
                                                 title="#{row.nodeType}"
-                                                 />
+                                                style="margin-right:5px; margin-left:2px" />
                                             <h:outputText
                                                 value="#{row.name}"
-                                                 />
+                                                style="#{styleNodeName}; #{!empty nodeFitter.getMessage(row) ? 'color:red' : ''} "
+                                                title="#{nodeFitter.getMessage(row)}" />
 
                                         </h:panelGrid>
 
@@ -142,11 +155,12 @@
 
                 <s:div
                     id="nodeDiv"
-                    >
+                    style="width:865px; display:inline-table; margin-left:5px">
 
                     <rich:panel
                         bodyClass="panel"
-                        >
+                        style="overflow:visible"
+                        rendered="#{!empty nodeFitter.currentNode}">
 
                         <f:facet name="header">
 
@@ -158,9 +172,13 @@
                                 <h:graphicImage
                                     url="/img/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif"
                                     title="#{nodeFitter.currentNode.nodeType}"
-                                     />
+                                    style="margin-right:5px" />
                                 <rich:inplaceInput
-                                    >
+                                    style="border:none; background-color:transparent"
+                                    value="#{nodeFitter.nodeName}"
+                                    inputWidth="150px"
+                                    title="Clique para alterar o nome do nó"
+                                    oninputkeyup="this.value = this.value.replace('/','_')">
 
                                     <a:ajax
                                         event="change"
@@ -215,7 +233,7 @@
 
                         <c:if test="#{! empty nodeFitter.nodeForm}">
 
-                            <s:div >
+                            <s:div style="margin-left:3px">
 
                                 <ui:include
                                     src="forms/#{nodeFitter.nodeForm}.xhtml" />
@@ -227,12 +245,15 @@
 
                         <rich:collapsiblePanel
                             switchType="ajax"
-                            >
+                            style="margin:3px; width:705px; clear:both"
+                            expanded="false"
+                            header="Descrição">
 
                             <wi:inputTextarea
                                 id="nodeDescription"
                                 label=""
-                                >
+                                style="width:680px; height:200px"
+                                value="#{nodeFitter.currentNode.description}">
 
                                 <a:ajax
                                     event="change"
@@ -247,7 +268,9 @@
 
                         <rich:collapsiblePanel
                             switchType="ajax"
-                            >
+                            style="margin:3px; width:705px; clear:both"
+                            expanded="false"
+                            header="Eventos">
 
                             <ui:include src="events.xhtml">
 
@@ -263,7 +286,10 @@
                         </rich:collapsiblePanel>
                         <rich:collapsiblePanel
                             switchType="ajax"
-                            >
+                            style="margin:3px; width:705px; clear:both"
+                            expanded="false"
+                            header="Eventos de Tarefa"
+                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
 
                             <c:if
                                 test="#{tarefaEventoHome.enableEvents}">
@@ -295,15 +321,18 @@
                     <br />
                     <rich:panel
                         header="Novo nó"
-                        >
+                        style="height: 290px; width:480px"
+                        rendered="#{empty nodeFitter.currentNode}">
 
 
                         <rich:dataTable
                             id="nodeTypes"
-                            >
+                            style="width: 150px; float:left"
+                            value="#{nodeFitter.nodeTypes}"
+                            var="node">
 
                             <f:facet name="header">Tipo de nó</f:facet>
-                            <rich:column >
+                            <rich:column style="width:18px">
 
                                 <h:graphicImage
                                     url="/img/jbpm/${node[0]}.gif" />
@@ -312,7 +341,7 @@
                             <rich:column>
 				 				#{node[1]}
 				 			</rich:column>
-                            <rich:column >
+                            <rich:column style="width:15px">
 
                                 <h:graphicImage
                                     url="/img/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
@@ -330,7 +359,7 @@
 
                         </rich:dataTable>
 
-                        <s:div >
+                        <s:div style="float:left; margin-left:10px">
 
                             <s:decorate
                                 template="/WEB-INF/xhtml/components/templates/edit.xhtml">
@@ -356,7 +385,8 @@
                                 <ui:define name="label">Inserir após:</ui:define>
                                 <h:selectOneMenu
                                     id="after"
-                                    >
+                                    style="min-width: 250px;"
+                                    value="#{nodeFitter.newNodeAfter}">
 
                                     <f:selectItems
                                         value="#{nodeFitter.nodesItems}" />
@@ -377,7 +407,8 @@
                                     <ui:define name="label">Na transição:</ui:define>
                                     <h:selectOneMenu
                                         id="after"
-                                        >
+                                        style="min-width: 250px;"
+                                        value="#{transitionFitter.newNodeTransitionName}">
 
                                         <f:selectItems
                                             value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}" />
@@ -427,20 +458,21 @@
                 <h:graphicImage
                     url="/img/jbpm/wizard.gif"
                     title="Assistente para expressão"
-                     />
+                    style="position: absolute; margin-left: 80px; margin-top: 3px;" />
                 <rich:componentControl
                     target="actionTemplatePanel"
                     operation="show"
                     event="complete" />
 
             </a:commandLink>
-            <div >
+            <div style="padding: 10px">
 
                 <wi:inputTextarea
                     id="conditionInput"
                     value="#{transitionFitter.getCurrentTransition().condition}"
                     widthDiv="500px"
-                    >
+                    style="width:100%"
+                    label="Expressão:">
 
                     <a:ajax
                         event="change"
@@ -451,7 +483,10 @@
                 </wi:inputTextarea>
                 <a:commandButton
                     type="button"
-                     />
+                    style="margin-left: 200px; margin-top: 10px"
+                    onclick="Richfaces.hideTopModalPanel()"
+                    styleClass="buttons dr-tbpnl-tb-inact"
+                    value="OK" />
 
             </div>
 

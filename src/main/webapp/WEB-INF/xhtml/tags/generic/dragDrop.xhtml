@@ -34,7 +34,7 @@
 
             <rich:panel
                  id="#{id}Panel"
-                 > 
+                 style="width: 250px"> 
                 <f:facet
                      name="header">
                     <h:outputText
@@ -117,7 +117,7 @@
                              url="/img/remove.png"
                              title="Remover registro"
                              reRender="#{id}dragDropForm"
-                              />
+                             style="cursor:pointer" />
 			        </rich:column>
                     <ui:insert
                          name="contentDrop" />
@@ -134,13 +134,19 @@
                  id="#{id}SaveButton"
                  value="Gravar"
                  action="#{util.invokeMethod(actionSave)}"
-                 />
+                 style="#{buttonStyle}"
+                 styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}"
+                 render="pageBody"
+                 limitRender="true"/>
 	                					  
 	        <a:commandButton
                  id="#{id}ResetButton"
                  action="#{bean.dropList.clear()}"
                  value="Limpar"
-                 />
+                 style="#{buttonStyle}"
+                 styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}"
+                 render="#{id}Panel,#{id}TableDrop"
+                 limitRender="true"/>
 		 </ui:insert>
    	</h:form>
 	   

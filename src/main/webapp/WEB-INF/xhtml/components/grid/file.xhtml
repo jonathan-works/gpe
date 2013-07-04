@@ -9,14 +9,15 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib">
 	
 	
-		<div >
+		<div style="width: 100%; text-align: center">
 		
 			<h:form>
 			
 				<h:commandLink
 				 target="_blank"
 				 rendered="#{! empty row[c.id]}"
-				 >
+				 style="margin-left: 20px"
+				 action="#{home.setDownloadInstance(row)}">
 				
 					<h:graphicImage value="#{a4jSkin.imgIconView}" />
 				

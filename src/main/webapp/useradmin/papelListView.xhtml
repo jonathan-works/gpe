@@ -93,7 +93,7 @@
                      value="#{conversation.id}" />
             
             </a:commandButton>
-            <span >
+            <span style="font-weight: bold;">
                  <h:outputText
                      rendered="#{rolesTree.invertida}"
                      value="Estrutura dos papéis que cedem permissões " />
@@ -107,7 +107,8 @@
                  selectionType="ajax"
                  render="pageBody"
                  nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
-                 >
+                 style="height:450px; overflow:auto"
+                 var="item">
                 
                 <rich:treeModelRecursiveAdaptor
                      roots="#{rolesTree.roots}"

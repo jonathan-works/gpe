@@ -18,8 +18,8 @@
 				var="row"
 				rows="10"
 				rendered="#{action.renderedByItem}"
-				>
-				<rich:column >
+				style="width: auto; min-width:100px">
+				<rich:column style="width: 10%">
 					<c:if test="#{!action.necessitaPartes()}">
 						<a:commandLink
 							action="#{action.onSelectItem(row)}"
@@ -36,7 +36,7 @@
 						</h:commandLink>
 					</c:if>
 				</rich:column>
-				<rich:column >
+				<rich:column style="width: 90%">
 					<f:facet name="header">
 						<h:outputText value="#{messages['item.descricaoItem']}" />
 					</f:facet>

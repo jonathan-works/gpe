@@ -42,7 +42,7 @@
 	
 	<s:div id="showHelp">
 			
-		<div >
+		<div style="position: absolute; right: 3px; top: 3px; z-index: 1000">
 				
 		   <a:status id="status">
 					
@@ -59,7 +59,7 @@
 		<h:form
 				 ajaxSubmit="true"
 				 focus="searchText"
-				 >
+				 style="position: absolute; right:5px">
 				
 			<table
 					 cellspacing="0"
@@ -68,10 +68,11 @@
 				<td
 							 rowspan="1"
 							 colspan="1">
-							<span >Pesquisar:</span>
+							<span style="font-size: 11px; padding-right: 3px">Pesquisar:</span>
 					<h:inputText
 								 id="searchText"
-								  />
+								 style="font-size: 11px; padding-left:2px"
+								 value="#{ajudaHome.textoPesquisa}" />
 				
 						</td><td
 							 rowspan="1"
@@ -96,7 +97,8 @@
 				
 			<h:outputText
 					 value="Nenhum resultado encontrado."
-					  />
+					 style="font-size: 13px; position: absolute;       color: red;      right: 250px; top: 2px"
+					 rendered="#{empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}" />
 			<wi:tabPanel
 					 id="helpPanel"
 					 height="650px"
@@ -111,7 +113,7 @@
 					<s:div
 							 id="helpLink"
 							 rendered="true"
-							 >
+							 style="position:fixed; top:25px; right:5px;">
 							
 						<h:outputLink value="#{util.contextPath}/help/show.seam?viewId=#{ajudaHome.viewId}">
 								
@@ -123,7 +125,9 @@
 						<h:graphicImage
 								 url="#{a4jSkin.imgIconEdit}"
 								 title="Editar conteúdo"
-								  />
+								 style="cursor:pointer;"
+								 rendered="#{s:hasRole('redator')}"
+								 onclick="openPopUp('_blank', '#{util.contextPath}/help/edit.seam?cid=#{conversation.id}','1024');" />
 					
 						</s:div>
 					<h:outputText
@@ -150,13 +154,15 @@
 								
 							<h:column>
 									
-								<div >
+								<div style="margin: 1em; font-family: arial,sans-serif; font-size: 11px;">
 										
 									<a:commandLink
 											 value="#{v[0].pagina.descricao}"
 											 render="helpText, helpLink"
 											 limitRender="true"
-											 >
+											 style="font-size: 13px; color:blue"
+											 oncomplete="RichFaces.switchTab('helpPanel', 'help')"
+											 action="#{ajudaHome.setViewId(v[0].pagina.url, false)}">
 											
 										<f:param
 												 name="queryString"

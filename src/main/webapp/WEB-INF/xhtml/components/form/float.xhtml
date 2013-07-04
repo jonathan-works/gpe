@@ -25,7 +25,9 @@
 			 readonly="#{readonly}"
 			 disabled="#{disabled}"
 			 required="#{required}"
-			 >
+			 style="#{style}"
+			 onkeypress="#{onkeypress}"
+			 maxlength="#{empty maxlength ? 255 : maxlength}">
 			
 				<ui:insert />
 				<f:converter converterId="floatConverter" />

@@ -65,7 +65,7 @@
 		<rich:panel
 			bodyClass="panel"
 			rendered="#{showDataList}"
-			>
+			style="margin-left: 1%; width:#{panelWidth}">
 			<f:facet name="header">
 				<h:outputText value="#{title}" />
 				<c:if test="#{useLink}">
@@ -77,7 +77,7 @@
 						onclick="openPopUp('painel', 'about:blank')">
 						<h:graphicImage
 							url="/img/view.gif"
-							 />
+							style="cursor:pointer" />
 					</s:link>
 				</c:if>
 				<ui:insert name="customHeader" />
@@ -135,13 +135,15 @@
 				#{bean.setTreeMode(treeMode)}
 			</c:if>
 
-					<div >
+					<div style="#{datalistHeight}">
 						<rich:messages
 							id="#{gridId}Messages"
 							globalOnly="true"
 							infoClass="formMessage"
 							rendered="#{showMsg}"
-							 />
+							style="float:left; margin: 5px"
+							errorClass="error formMessage"
+							warnStyle="display: none" />
 						<f:verbatim>
 							<script>
 							 br.com.infox.applyCSSAfterTimeout({id:'#{gridId}Messages', style:{display:'none'}, timeout:5000});
@@ -156,7 +158,8 @@
 							value="#{datamodel}"
 							rows="#{empty rows ? bean.maxResults : rows}"
 							onrowmouseout="this.style.backgroundColor=c"
-							>
+							style="margin-left: 1px; margin-top: 1px; clear: both;"
+							onrowmouseover="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">
 							<f:facet name="header">
 								<rich:columnGroup
 									columnClasses="dr-table-subheadercell dr-table-subheader"
@@ -200,7 +203,8 @@
 									name="columnRendered"
 									value="#{empty props.columnRendered ? true : util.eval(props.columnRendered)}" />
 								<rich:column
-									>
+									style="#{parentStyle}; #{columnStyle}; border: solid 1px; border-color: #CCCCCC "
+									rendered="#{columnRendered}">
 									<f:facet name="header">
 										<ui:param
 											value="#{empty props.order ? c.id : c.id.concat('.').concat(props.order)}"
@@ -230,7 +234,7 @@
 
 					<s:div
 						rendered="#{bean.previousExists or bean.nextExists}"
-						>
+						style="float: left;">
 						<h:form id="#{gridId}SliderForm">
 							<rich:inputNumberSlider
 								enableManualInput="false"
@@ -256,7 +260,8 @@
 
 					<h:outputText
 						value="Foram encontrados:  #{count} resultados"
-						 />
+						style="float: right; margin-right: 1%;"
+						rendered="#{rendered}" />
 				</div>
 
 				<!-- Inserir elementos no datalist -->

@@ -34,7 +34,7 @@
 		</f:facet>
 		<rich:panel
              header="#{messages['verificaEvento.panelHeader']}"
-             >
+             style="height:550px;">
 			<h:form
                  id="verificaEventoForm">
 				<wi:selectOneRadio
@@ -47,19 +47,21 @@
                      label="#{messages['verificaEvento.negarCondicao']}"
                      value="#{actionTemplate.notCondition}" />
 				<s:div
-                     >
+                     style="clear: both">
 					<wi:pickList
                          id="agrupamentoVerificarEventos"
                          value="#{actionTemplate.registrados}"
                          sourceListWidth="250"
                          targetListWidth="250"
                          listsHeight="200px"
-                         >
+                         style="margin-top: 10px;"
+                         itemValues="#{actionTemplate.agrupamentos}"
+                         itemLabel="#{var}">
 						<wi:ajaxSupport />
 					</wi:pickList>
 					<h:outputText
                          value="#{messages['verificaEvento.obs']}"
-                          />
+                         style="margin-left: 8px;" />
 					<br />
 					<a:commandButton
                          value="Gravar"
@@ -71,10 +73,13 @@
 				</s:div>
 				<rich:messages
                      id="messagesTrasition"
-                      />
+                     style="color:red"
+                     ajaxRendered="true"
+                     globalOnly="false" />
 				<h:outputText
                      id="createdExpression"
-                      />
+                     style="display:none"
+                     value="#{actionTemplate.createdExpression}" />
 			</h:form>
 		</rich:panel>
 	</s:div>
