@@ -20,7 +20,7 @@ public class AgrupamentoManager extends GenericManager {
 	
 	@In private AgrupamentoDAO agrupamentoDAO;
 	
-	public List<Agrupamento> getAgrupamentos(TarefaEvento tarefaEvento){
+	public List<Agrupamento> getAgrupamentosByTarefaEvento(TarefaEvento tarefaEvento){
 		return agrupamentoDAO.getAgrupamentosByTarefaEvento(tarefaEvento);
 	}
 
