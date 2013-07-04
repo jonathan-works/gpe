@@ -26,20 +26,24 @@ function existsObject(path, basePath) {
 	return true;
 }
 
+namespace("infox.util",{
+	applyCSS:function(args) {
+		setTimeout(function(){
+			$(args.selector).css(args.style);
+		},args.delay || 1);
+	}
+});
+
 defineObject("br.com.infox.applyCSSAfterTimeout", function(args) {
 	if (args.id) {
 		var $id = args.id;
 		var $style = args.style || {};
 		var $timeout = args.timeout || 5000;
-		if ($($id)) {
+		$($id).each(function() {
 			setTimeout(function() {
-				if ($($id)) {
-					for(var index in $style) {
-						$($id).css(index, $style[index]);
-					}
-				}
-			}, $timeout);
-		}
+				$(this).css($style);
+			},$timeout);
+		});
 	}
 });
 
