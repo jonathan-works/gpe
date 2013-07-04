@@ -13,7 +13,7 @@ import br.com.infox.ibpm.entity.TarefaEvento;
 public class AgrupamentoDAO extends GenericDAO {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "agrupamentoDao";
+	public static final String NAME = "agrupamentoDAO";
 	
 	@SuppressWarnings("unchecked")
 	public List<Agrupamento> getAgrupamentosByTarefaEvento(TarefaEvento tarefaEvento){
