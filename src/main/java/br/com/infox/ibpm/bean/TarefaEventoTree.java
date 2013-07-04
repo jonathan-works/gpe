@@ -55,7 +55,7 @@ public class TarefaEventoTree implements Serializable {
 	public String getAgrupamentos() {
 		if(agrupamentos == null) {
 			StringBuilder agrupamentosId = new StringBuilder();
-			currentEvent = getNextEvent();
+			currentEvent = tarefaEventoManager.getNextTarefaEvento();
 			int i = 0;
 			List<Agrupamento> agrupamentos = agrupamentoManager.getAgrupamentosByTarefaEvento(currentEvent);
 			for(Agrupamento agrupamento : agrupamentos) {
@@ -75,24 +75,24 @@ public class TarefaEventoTree implements Serializable {
 	 * ao evento TarefaEvento, que possuem os tipos do TarefaEventoEnum.
 	 * @return O próximo evento a ser registrado.
 	 */
-	private TarefaEvento getNextEvent() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select et from ProcessoTarefaEvento o ")
-		  .append("inner join o.tarefaEvento et ")
-		  .append("inner join et.tarefa t ")
-		  .append("where o.registrado = false and ")
-		  .append("o.processo = :processo and ")
-		  .append("t.tarefa = :tarefa and ")
-		  .append("t.fluxo.fluxo = :fluxo ")
-		  .append("order by et.evento");
-		Query q = getEntityManager().createQuery(sb.toString());
-		q.setParameter("processo", JbpmUtil.getProcesso());
-		q.setParameter("tarefa", TaskInstance.instance().getTask().getName());
-		q.setParameter("fluxo", TaskInstance.instance().getProcessInstance()
-				  							.getProcessDefinition().getName());
-		q.setMaxResults(1);
-		return (TarefaEvento) EntityUtil.getSingleResult(q);
-	}
+//	private TarefaEvento getNextEvent() {
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("select et from ProcessoTarefaEvento o ")
+//		  .append("inner join o.tarefaEvento et ")
+//		  .append("inner join et.tarefa t ")
+//		  .append("where o.registrado = false and ")
+//		  .append("o.processo = :processo and ")
+//		  .append("t.tarefa = :tarefa and ")
+//		  .append("t.fluxo.fluxo = :fluxo ")
+//		  .append("order by et.evento");
+//		Query q = getEntityManager().createQuery(sb.toString());
+//		q.setParameter("processo", JbpmUtil.getProcesso());
+//		q.setParameter("tarefa", TaskInstance.instance().getTask().getName());
+//		q.setParameter("fluxo", TaskInstance.instance().getProcessInstance()
+//				  							.getProcessDefinition().getName());
+//		q.setMaxResults(1);
+//		return (TarefaEvento) EntityUtil.getSingleResult(q);
+//	}
 
 	@Observer(AutomaticEventsTreeHandler.AFTER_REGISTER_EVENT)
 	/**
