@@ -23,7 +23,7 @@
             library="stylesheet" />
 
 
-        <div style="width: 100%; text-align: center">
+        <div >
 
             <div>
                 <h:form id="documento">
@@ -36,7 +36,7 @@
                         rows="1">
 
                         <rich:column
-                            style="vertical-align:top; background-color: #dddddd; padding:0">
+                            >
                             <f:facet name="header">Documento</f:facet>
                             <div id="areaPagina">
                                 <ui:include src="postit.xhtml" />
@@ -45,9 +45,9 @@
                                         value="#{variableHandler.getTaskVariables(task.id)}"
                                         var="v">
                                         <rich:column
-                                            style="width: 100%; text-align: left;">
+                                            >
                                             <h:outputText
-                                                style="font-weight:bold"
+                                                
                                                 value="#{v.label}" />
 
                                             <h:outputText
@@ -60,7 +60,7 @@
                         </rich:column>
 
                         <rich:column
-                            style="vertical-align:top; padding:0; background-color:#dddddd">
+                            >
                             <f:facet name="header">
                                 <ui:include
                                     src="/WEB-INF/xhtml/components/grid/header/documentoBin.xhtml" />
@@ -78,7 +78,7 @@
                         id="docScroller"
                         for="documentosGrid"
                         page="#{processoHandler.inicio}"
-                        style="color: black;" />
+                         />
                 </h:form>
             </div>
         </div>

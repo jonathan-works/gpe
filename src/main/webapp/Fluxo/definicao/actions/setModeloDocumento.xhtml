@@ -28,11 +28,11 @@
     <s:div id="modeloDocumentoDiv">
         <rich:panel
             header="Modelo de documento: #{variavel.name}"
-            style="height:550px;">
+            >
             <wi:ajaxDiv id="divM2MVar">
                 <s:div
                     id="associated"
-                    style="width: #{canEdit ? leftPanelWidth : '100%'}; float: left">
+                    >
                     <wi:dataTable
                         values="#{variavel.modeloDocumentoList}"
                         tableTitle="#{messages['associatedModeloDocumentoVariavel.titleGrid']}"
@@ -60,7 +60,7 @@
                 </s:div>
                 <s:div
                     id="associative"
-                    style="width: #{rightPanelWidth}; float: left; margin-left: 1%">
+                    >
                     <wi:dataTable
                         values="#{associativeModeloDocumentoList.list(15)}"
                         bean="#{associativeModeloDocumentoList}"

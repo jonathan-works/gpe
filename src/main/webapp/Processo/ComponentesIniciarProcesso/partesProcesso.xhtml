@@ -46,12 +46,12 @@
 					value="#{action.pessoaFisicaList}"
 					var="row"
 					rows="10"
-					style="width: 60%"
+					
 					rendered="#{!action.pessoaFisicaList.isEmpty()}">
 					<f:facet name="header">
 						<h:outputText value="Partes - Pessoas Fisicas" />
 					</f:facet>
-					<rich:column style="width: 10%">
+					<rich:column >
 						<f:facet name="header" />
 						<center>
 							<wi:toolBarRemove
@@ -60,13 +60,13 @@
 								actionRemove="#{action.removePessoaFisica(row)}" />
 						</center>
 					</rich:column>
-					<rich:column style="width: 45%">
+					<rich:column >
 						<f:facet name="header">
 							<h:outputText value="#{messages['pessoaFisica.nome']}" />
 						</f:facet>
 						<h:outputText value="#{row.nome}" />
 					</rich:column>
-					<rich:column style="width: 45%">
+					<rich:column >
 						<f:facet name="header">
 							<h:outputText value="#{messages['pessoaFisica.cpf']}" />
 						</f:facet>
@@ -87,12 +87,12 @@
 					value="#{action.pessoaJuridicaList}"
 					var="row"
 					rows="10"
-					style="width: 60%"
+					
 					rendered="#{!action.pessoaJuridicaList.isEmpty()}">
 					<f:facet name="header">
 						<h:outputText value="Partes - Pessoas Juridicas" />
 					</f:facet>
-					<rich:column style="width: 10%">
+					<rich:column >
 						<f:facet name="header" />
 						<center>
 							<wi:toolBarRemove
@@ -101,13 +101,13 @@
 								actionRemove="#{action.removePessoaJuridica(row)}" />
 						</center>
 					</rich:column>
-					<rich:column style="width: 45%">
+					<rich:column >
 						<f:facet name="header">
 							<h:outputText value="#{messages['pessoaJuridica.nome']}" />
 						</f:facet>
 						<h:outputText value="#{row.nome}" />
 					</rich:column>
-					<rich:column style="width: 45%">
+					<rich:column >
 						<f:facet name="header">
 							<h:outputText value="#{messages['pessoaJuridica.cnpj']}" />
 						</f:facet>

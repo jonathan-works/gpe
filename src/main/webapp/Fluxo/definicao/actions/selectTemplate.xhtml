@@ -26,22 +26,22 @@
          id="modeloDocumentoDiv">
 		<rich:panel
              header="Selecione o assistente:"
-             style="height:550px;">
+             >
 			<h:form>
 				<rich:dataTable
                      var="t"
-                     style="border:none"
+                     
                      value="#{actionTemplateHandler.publicTemplateList}">
 					<rich:column
-                         style="height:30px; border:none; width: 20px">
+                         >
 						<h:graphicImage
                              url="/img/jbpm/action.gif" />
 					</rich:column>
 					<rich:column
-                         style="height:30px; border:none">
+                         >
 						<a:commandLink
                              value="#{t.label}"
-                             style="font-size: 14px"
+                             
                              action="#{actionTemplateHandler.setCurrentTemplate(t)}"
                              render="actionTemplatePanel"
                              limitRender="true">

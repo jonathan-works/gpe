@@ -42,7 +42,7 @@
          rendered="#{!excludeFields.matches('.*\\b'.concat(id).concat('\\b.*'))}">
     <div
              class="propertyView"
-             style="#{inNewLine != true ? '' : 'clear: both;'} width: #{widthDiv}; #{styleDiv}">
+             >
         <s:div
                  id="#{fieldId}Div"
                  styleClass="name">    
@@ -62,7 +62,7 @@
                          render="#{fieldId}Div"
                          limitRender="true"
                          tabindex="-1"
-                         style="margin-left:5px; margin-top:15px">
+                         >
 		        	<h:graphicImage
                              url="/img/locked.gif"
                              rendered="#{homeRef.lockedFields.contains(fieldName)}"
@@ -78,18 +78,18 @@
                      test="#{not empty tipMessage}">
 				<h:graphicImage
                          id="#{fieldId}EditTipImg"
-                         style="height:12px; margin-left:3px; margin-bottom:-2px"
+                         
                          url="/img/help.gif" />
 				<rich:tooltip
                          for="#{fieldId}EditTipImg"
                          value="#{tipMessage}"
-                         style="background-color:#{richSkin.generalBackgroundColor};              border-color:#{richSkin.panelBorderColor}; padding:5px; font-weight:normal;">
+                         >
 				</rich:tooltip>
 			</c:if>
 				
 			<s:message
                      styleClass="errorFields errors"
-                     style="position: absolute; margin-top: -5px"
+                     
                      rendered="#{empty showMessage ? true : showMessage}" />
 
         </s:div>
