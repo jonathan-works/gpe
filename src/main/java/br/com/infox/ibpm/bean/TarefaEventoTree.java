@@ -62,14 +62,15 @@ public class TarefaEventoTree implements Serializable {
 			Query q = getEntityManager().createQuery(sb.toString());
 			q.setParameter("tarefaEvento", currentEvent);
 			int i = 0;
-			for(Agrupamento a : (List<Agrupamento>) q.getResultList()) {
+			List<Agrupamento> agrupamentos = (List<Agrupamento>)q.getResultList();
+			for(Agrupamento a : agrupamentos) {
 				if(i != 0) {
 					agrupamentosId.append(", ");
 				}
 				agrupamentosId.append(a.getIdAgrupamento());
 				i++;
 			}
-			agrupamentos = agrupamentosId.toString();
+			this.agrupamentos = agrupamentosId.toString();
 		}
 		return agrupamentos; 
 	}
