@@ -82,7 +82,7 @@ public class TarefaEventoTree implements Serializable {
 		if(currentEvent != null) {
 			processoTarefaEventoManager.marcarProcessoTarefaEventoComoRegistrado(currentEvent);
 			currentEvent = null;
-			canLeave = hasNextEvent();
+			canLeave = processoTarefaEventoManager.existemEventosNaoRegistrados();
 			if(!canLeave) {
 				agrupamentos = null;
 				AutomaticEventsTreeHandler.instance().getRoots(getAgrupamentos());
