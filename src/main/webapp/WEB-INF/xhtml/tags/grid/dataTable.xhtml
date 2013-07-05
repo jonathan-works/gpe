@@ -36,7 +36,7 @@
 			id="#{id}Panel"
 			bodyClass="dtable-p-b"
 			styleClass="dtable-p #{styleClass}"
-			style="#{style}">
+			>
 
 			<wi:messages
 				formId="#{id}Messages"
@@ -51,13 +51,13 @@
 				rowKeyVar="key"
 				rowClasses="#{rowClasses}"
 				styleClass="zebra #{styleClass}"
-				style="#{style}"
+				
 				var="row">
 				<ui:param
 					name="toolBarColumnWidth"
 					value="#{wi:get(toolBarColumnWidth, '40px')}" />
 				<rich:column
-					style="width: #{toolBarColumnWidth};"
+					
 					styleClass="DataTableToolbar"
 					rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
 					rowspan="#{empty columnRowspan ? '1':columnRowspan}">

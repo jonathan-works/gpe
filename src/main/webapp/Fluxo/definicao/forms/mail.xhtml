@@ -42,7 +42,7 @@
 				
 				<h:graphicImage
 					 title="Excluir destinatário"
-					 style="cursor:pointer"
+					 
 					 url="/img/remove.png">
 					
 					<a:ajax
@@ -58,19 +58,19 @@
 			</ui:define>
 			<ui:define name="columns">
 				 
-				<rich:column style="padding-left:2px">
+				<rich:column >
 					
 					<f:facet name="header">Estrutura</f:facet>
 					<h:outputText value="#{row.estrutura}" />
 				
 				</rich:column>
-				<rich:column style="padding-left:2px">
+				<rich:column >
 					
 					<f:facet name="header">Localização</f:facet>
 					<h:outputText value="#{row.localizacao}" />
 				
 				</rich:column>
-				<rich:column style="padding-left:2px">
+				<rich:column >
 					
 					<f:facet name="header">Papel</f:facet>
 					<h:outputText value="#{row.papel}" />
@@ -85,7 +85,7 @@
 							
 						<h:graphicImage
 								 title="Adicionar destinatários"
-								 style="cursor:pointer"
+								 
 								 id="novoLocPapel"
 								 url="/img/add.gif">
 								
@@ -99,7 +99,7 @@
 							</h:graphicImage>
 				 	
 						</rich:column>
-					<rich:column style="padding-left:2px;">
+					<rich:column >
 							
 						<wi:tree
 								 tree="#{estruturaTree}"
@@ -109,7 +109,7 @@
 								 folderSelectable="true" />
 					
 						</rich:column>
-					<rich:column style="padding-left:2px;">
+					<rich:column >
 							
 						<wi:tree
 								 tree="#{localizacaoTree}"
@@ -119,7 +119,7 @@
 								 folderSelectable="true" />
 					
 						</rich:column> 
-					<rich:column style="padding-left:2px;">
+					<rich:column >
 							
 						<wi:tree
 								 tree="#{papelTree}"
@@ -162,7 +162,7 @@
 			 id="twitterDiv"
 			 rendered="#{nodeFitter.currentNode.usaTwitter}"
 			 width="50%"
-			 style="float:left;">
+			 >
 			
 			<wi:selectOneMenuEntity
 				 id="modeloTwitter"
@@ -187,7 +187,7 @@
 		</s:div>
 		<s:div
 			 id="modeloDocDiv"
-			 style="float:left;">
+			 >
 			
 			<wi:selectOneMenuEntity
 				 id="modeloDocumento"

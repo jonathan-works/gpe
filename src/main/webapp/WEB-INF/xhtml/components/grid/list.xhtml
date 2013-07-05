@@ -21,14 +21,14 @@
 		 value="#{empty props.expressionValue ? '' : 'v.'.concat(props.expressionValue)}" />
 
 		<div
-		 style="width: 100%;"
+		 
 		 class="#{styleClass}">
 		
 		
 			<rich:list
 			 value="#{c.value}"
 			 var="v"
-			 style="margin:0px; padding:2px;"
+			 
 			 type="none">
 			
 				<h:outputText value="- #{empty expressionValue ? v : util.eval(expressionValue)}" />

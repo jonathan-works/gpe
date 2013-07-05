@@ -28,7 +28,7 @@
     <ui:define name="title">Ajuda</ui:define>
 
 	<ui:define name="baseBody">
-		<s:div id="formAjuda" style="width: 680px; float: left">
+		<s:div id="formAjuda" >
 			<wi:dataForm formId="ajudaForm" 
 									formTitle="Texto de ajuda">
 									
@@ -48,11 +48,11 @@
 	
 				</ui:define>
 				<wi:imageUpload imageBean="#{helpFileUpload}"
-							style="position:absolute; float:left; left:690px; top:0px;"/>
+							/>
 			</wi:dataForm>
 		</s:div>
 		
-		<s:div id="gridAjuda" style="float: left; width: 300px; position: relative; top: 420px;">
+		<s:div id="gridAjuda" >
 			<wi:dataTable values="#{historicoAjudaList.list(15)}"
 									bean="#{historicoAjudaList}"
 									tableTitle="Histórico das revisões"

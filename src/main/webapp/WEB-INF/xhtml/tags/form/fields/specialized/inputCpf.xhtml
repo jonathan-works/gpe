@@ -28,13 +28,13 @@
          id="#{id}"
          size="15"
          maxlength="15"
-         onblur="validarCpf(this)">
-		<wi:mask
-             id="#{id}"
-             mask="999.999.999-99" />
+         onblur="validarCpf(this)"
+         styleClass="#{id}">
 		<f:validator
              validatorId="cpfValidator" />
 		<ui:insert />
 	</wi:inputText>
+	<wi:mask selector=".#{id}"
+             mask="999.999.999-99" />
 					
 </ui:composition>

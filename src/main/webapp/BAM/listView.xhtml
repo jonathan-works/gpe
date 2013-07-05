@@ -70,7 +70,7 @@
 			<ui:define name="buttons"/>
 		</wi:dataForm>
 		<s:div id="processoList">
-			<rich:panel id="processoListPanel" style="overflow:auto; width: 100%; margin:0px 0px 0px 10px" rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}">
+			<rich:panel id="processoListPanel"  rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}">
 				<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
 							  bean="#{processoEpaNaoFinalizadoList}"
 							  tableTitle="Processos - Prazo: #{processoEpaNaoFinalizadoList.fluxo.qtPrazo} (dias)"
@@ -79,7 +79,7 @@
 							  id="processoDataTable">
 					<ui:define name="headerToolBar" />
 					<ui:define name="toolBar"> 
-						<div style="float:left" class="circ #{row.porcentagem > 100 ? 'red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'yellow-back' : '')}">
+						<div  class="circ #{row.porcentagem > 100 ? 'red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'yellow-back' : '')}">
 	    					<wi:toolBar url="/img/edit.gif"
 	    								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
 	    								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
@@ -117,7 +117,7 @@
 										 value="#{not empty row.porcentagem ? porc : 0}%" />
 					
 				</wi:dataTable>
-				<div style="float:left">
+				<div >
 					<dojo:defaultGauge id="processo#{row.numeroProcesso}"
 										max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
 										width="210"
@@ -155,7 +155,7 @@
 											max="#{row.tempoPrevisto}"
 											value="#{row.tempoGasto}"
 											hideTicks="true"
-											style="position:relative; top:50%; left:50%; margin:-6px 0px 0px -30px">
+											>
 					</dojo:progressBarGauge>
 				</wi:columnOutputText>
 				
@@ -166,12 +166,12 @@
 				<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
 				<rich:column styleClass="defaultCell">
 					<f:facet name="header">Localização / Usuário</f:facet>
-					<div style="width:50%; float:left">
+					<div >
 						<h:graphicImage url="/img/localizacao.gif"
 										rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
 						<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
 					</div>
-					<div style="width:50%; float:left">
+					<div >
 						<h:graphicImage url="/img/usuario.gif"
 										rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
 						<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
@@ -188,7 +188,7 @@
 									 value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}" />
 									 
 									 
-				<rich:column style="text-align: center" 
+				<rich:column  
 							 styleClass="defaultCell">
 					<f:facet name="header">Início</f:facet>
 					<h:outputText value="#{row.dataInicio}">
@@ -196,7 +196,7 @@
 					</h:outputText>
 				</rich:column>
 				
-				<rich:column style="text-align: center" 
+				<rich:column  
 							 styleClass="defaultCell">
 					<f:facet name="header">Término</f:facet>
 					<h:outputText value="#{row.dataFim}">
@@ -212,7 +212,7 @@
 									 columnHeader="Tempo Previsto"
 									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}" />
 			</wi:dataTable>
-			<div style="position:fixed; top:0px; left:0px;">
+			<div >
 				<dojo:defaultGauge id="#{processoEpaTarefaList.entity.processoEpa.numeroProcesso}"
 									max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
 									width="210"

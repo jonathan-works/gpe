@@ -8,7 +8,8 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+	 template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
 	
 
     <ui:param
@@ -66,8 +67,9 @@
 	</ui:define>
 
     <ui:define name="form">
-		
-        <ui:include src="papelEdit.xhtml" />
+		<h:form>
+        	<ui:include src="papelEdit.xhtml" />
+        </h:form>
     
 	</ui:define>
 
@@ -91,7 +93,7 @@
                      value="#{conversation.id}" />
             
             </a:commandButton>
-            <span style="font-weight: bold;">
+            <span >
                  <h:outputText
                      rendered="#{rolesTree.invertida}"
                      value="Estrutura dos papéis que cedem permissões " />
@@ -105,7 +107,7 @@
                  selectionType="ajax"
                  render="pageBody"
                  nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
-                 style="height:450px; overflow:auto"
+                 
                  var="item">
                 
                 <rich:treeModelRecursiveAdaptor

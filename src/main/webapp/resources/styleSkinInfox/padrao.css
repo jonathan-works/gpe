@@ -4,14 +4,14 @@
 }
 
 .Associated, .Associative {
-	position:relative;
-	display:inline-block;
+	display:inline-table;
 	width:50%;
 }
 
-.Associated .dtable-p.rf-p, .Associative .dtable-p.rf-p {
+.Associated > .dtable-p.rf-p, .Associative > .dtable-p.rf-p {
 	width:100%;
 	max-width:100%;
+	min-height:478px;
 }
 
 .tree-p.rf-cp.rf-tgp {
@@ -45,11 +45,6 @@
 	border-spacing:0px;
 }
 
-.dtable-p.rf-p {
-	display: inline-block;
-	width:73%;
-	padding:0px;
-}
 .conteudo {
 	position:relative;
 	font-size:14pt; 
@@ -568,9 +563,16 @@ select {
 	 overflow:auto;
 	 height:120px;
 	 padding:5px;
+	 color:#000;
 }
-.rf-msgs {
-	color:black;
+
+.d-msg-c > ul {
+	margin:0;
+	padding:4px;
+}
+
+.d-msg-c > ul > li {
+	 display:inline-block;
 }
 
 .rf-msgs-wrn {
@@ -585,17 +587,17 @@ select {
 	background-image: none;
 }
 
-
 .d-msg {
 	position:absolute; 
-	top:calc(50% - 77px);
+	top:calc(50% - 67px);
 	left:calc(50% - 152px);			
 	width:300px;
-	height:150px;
+	height:131px;
 	background-color:#fff;   				
 	border:1px solid #BCC1BD;
 	padding:1px;
-	z-index:10000;				
+	z-index:10000;
+	font-size:12px;		
 }
 
 /*Painel/list.xhtml*/

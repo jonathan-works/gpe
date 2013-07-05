@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+-->
 <ui:composition
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns="http://www.w3.org/1999/xhtml"
@@ -11,60 +26,60 @@
 
 	<ui:param
 		name="listsHeight"
-		value="#{empty listsHeight ? '300px' : listsHeight}" />
+		value="#{wi:get(listsHeight, '300px')}" />
 	<ui:param
 		name="sourceListWidth"
-		value="#{empty sourceListWidth ? '350' : sourceListWidth}" />
-	<h:outputText
-		style="font-weight: bold;     margin-top: 10px;    margin-left:#{sourceListWidth + 55}px;    position: absolute;"
-		value="#{targetLabel}" />
+		value="#{wi:get(sourceListWidth, '350')}" />
 	<ui:param
 		name="sourceListWidth"
 		value="#{sourceListWidth}px" />
 	<ui:param
 		name="targetListWidth"
-		value="#{empty targetListWidth ? '350' : targetListWidth}" />
-	<h:graphicImage
-		url="/img/search.gif"
-		style="margin-top: 5px; margin-left:5px" />
+		value="#{wi:get(targetListWidth, '350')}" />
 	<h:outputScript
-		library="js"
-		name="jqueryExt.js" />
-
-	<input
-		id="#{id}Filtro"
-		class="inputText"
-		style="margin-top: 5px; margin-left: 8px; width: 250px;" />
-	<script>
-		var list = "##{rich:clientId(id).replaceAll(':', '\\\\\\\\:')}";
-		jQuery(document).ready(function(){
-		 jQuery("##{id}Filtro").keyup(function(){
-			 jQuery(list + 'internal_tab td').show();
-		   var s = jQuery(this).val();
-		   jQuery(list + 'internal_tab td:not(:Contains("' + s + '"))').hide();
-		 });
-		});
-		</script>
-	<rich:pickList
-		id="#{id}"
-		value="#{value}"
-		addAllText="Adiciona todos"
-		addText="Adicionar"
-		removeAllText="Remover todos"
-		removeText="Remover"
-		listsHeight="#{listsHeight}"
-		moveControlsVerticalAlign="top"
-		sourceListWidth="#{sourceListWidth}"
-		targetListWidth="#{targetListWidth}"
-		switchByClick="true"
-		style="#{style}"
-		showButtonsLabel="false">
-		<s:selectItems
-			value="#{itemValues}"
-			var="var"
-			label="#{itemLabel}" />
-		<ui:insert />
-	</rich:pickList>
-	<rich:message for="#{id}List" />
+        name="pickList.js"
+        library="js" />
+	<script type="text/javascript">
+	//<![CDATA[
+		(function(id, inputId) {
+			jQuery ? pickList.load(id, inputId) : 
+				window.addEventListener("load", function() {
+					pickList.load(id, inputId);
+				});
+		})("##{rich:clientId(id)}".split(":").join("\\:"), "##{id}Filtro")
+	//]]>
+	</script>
+	<s:div styleClass="pick-filter">
+		<h:graphicImage
+			url="/img/search.gif" />
+		<input
+			id="#{id}Filtro"
+			class="inputText"/>
+	</s:div>
+	<s:div styleClass="pick-cont">
+		<h:outputText
+			
+			value="#{targetLabel}" />
+		<rich:pickList
+			id="#{id}"
+			value="#{value}"
+			addAllText="Adiciona todos"
+			addText="Adicionar"
+			removeAllText="Remover todos"
+			removeText="Remover"
+			listHeight="#{listsHeight}"
+			moveControlsVerticalAlign="top"
+			sourceListWidth="#{sourceListWidth}"
+			targetListWidth="#{targetListWidth}"
+			switchByClick="true"
+			
+			showButtonsLabel="false">
+			<s:selectItems
+				value="#{itemValues}"
+				var="var"
+				label="#{itemLabel}" />
+			<ui:insert />
+		</rich:pickList>
+	</s:div>
 
 </ui:composition>
