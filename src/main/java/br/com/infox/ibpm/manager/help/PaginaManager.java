@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.ibpm.dao.help.PaginaDAO;
+import br.com.infox.ibpm.entity.help.Pagina;
 
 @Name(PaginaManager.NAME)
 @AutoCreate
@@ -15,5 +16,9 @@ public class PaginaManager extends GenericManager {
 	public static final String NAME = "paginaManager";
 	
 	@In private PaginaDAO paginaDAO;
+	
+	public Pagina getPaginaByUrl(String url){
+		return paginaDAO.getPaginaByUrl(url);
+	}
 
 }
