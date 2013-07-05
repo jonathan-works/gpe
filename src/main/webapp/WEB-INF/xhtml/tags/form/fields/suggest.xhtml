@@ -67,7 +67,9 @@
              onkeyup="#{onkeyup}"
              disabled="#{disabled}"
              styleClass="suggest"
-             >
+             
+             value="#{bean.defaultValue}"
+             onselectitem="__autocompleteSelectItem#{id}()">
 			<ui:insert
                  name="columns">
 				<h:column>

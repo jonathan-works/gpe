@@ -34,7 +34,9 @@
 			 styleClass="#{readonly ? 'readOnly' : '' } inputText"
 			 readonly="#{readonly}"
 			 disabled="#{disabled}"
-			 >
+			 
+			 maxlength="#{maxlength}"
+			 onkeyup="onlyNumber(this)">
 			
 				<ui:insert />
 			

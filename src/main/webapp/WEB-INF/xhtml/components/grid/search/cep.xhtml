@@ -22,7 +22,9 @@
 			<ui:define name="label">#{label}</ui:define>
 			<wi:inputText
 			 id="#{f.id}"
-			 >
+			 
+			 styleClass="inputText"
+			 value="#{search[f.id]}">
 			
 				<wi:mask
 				 id="#{id}"

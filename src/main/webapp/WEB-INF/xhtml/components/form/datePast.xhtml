@@ -47,7 +47,8 @@
              oninputblur="validarData(this);               validarDataPassada(this);"
              onchanged="validarDataPassada(this);"
              reRender="#{empty props.reRender ? reRender : props.reRender}"
-             >
+             
+             showApplyButton="#{empty props.showApplyButton ? (empty showApplyButton ? false : showApplyButton) : props.showApplyButton}">
 				<ui:insert />
 			</rich:calendar>
 		<c:if

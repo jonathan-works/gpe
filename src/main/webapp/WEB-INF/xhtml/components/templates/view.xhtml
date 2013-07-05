@@ -26,9 +26,11 @@
 			<c:if test="#{not empty tipMessage}">
 				<h:graphicImage
 					id="#{fieldId}ViewTipImg"
-					>
+					
+					url="/img/help.gif">
 					<rich:tooltip
-						 />
+						
+						value="#{tipMessage}" />
 				</h:graphicImage>
 			</c:if>
 		</div>

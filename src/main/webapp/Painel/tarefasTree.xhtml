@@ -45,14 +45,18 @@
 				toggleType="client"
 				execute="@this"
 				selectionType="ajax"
-				>
+				
+				selectionChangeListener="#{tarefasTree.processTreeSelectionChange}"
+				render="painelProcessos,#{id}NovaCaixaDiv,:pesquisaListForm"
+				var="node">
 				<rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
 					<rich:treeNode
 						iconCollapsed="/img/globe16.png"
 						iconExpanded="/img/globe16.png"
 						iconLeaf="/img/messages.gif">
 						<h:outputText
-							 />
+							
+							value="#{node.entity.nomeFluxo}" />
 					</rich:treeNode>
 					<rich:treeModelAdaptor nodes="#{node.nodesTarefas}">
 						<rich:treeNode
@@ -61,9 +65,13 @@
 							iconLeaf="/img/messages.gif">
 							<h:outputText value="#{node.entity.nomeTarefa}" />
 							<h:outputText
-								 />
+								
+								rendered="#{node.entity.qtd - node.entity.qtdEmCaixa gt 0}"
+								value="(#{node.entity.qtd - node.entity.qtdEmCaixa})" />
 							<h:outputText
-								 />
+								
+								rendered="#{node.entity.qtdEmCaixa gt 0}"
+								value=" (Em caixas: #{node.entity.qtdEmCaixa})" />
 						</rich:treeNode>
 						<rich:treeModelAdaptor nodes="#{node.caixas}">
 							<rich:treeNode
@@ -72,7 +80,8 @@
 								iconLeaf="/img/message.gif">
 								<h:outputText value="#{node.entity.nomeCaixa}" />
 								<h:outputText
-									 />
+									
+									value="(#{node.entity.qtd})" />
 							</rich:treeNode>
 						</rich:treeModelAdaptor>
 					</rich:treeModelAdaptor>

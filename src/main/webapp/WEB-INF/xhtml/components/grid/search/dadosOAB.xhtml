@@ -60,7 +60,10 @@
 			 id="#{id}NumeroOAB"
 			 value="#{search[numero]}"
 			 maxlength="6"
-			 >
+			 
+			 styleClass="#{readonly ? 'readOnly' : '' } inputText"
+			 onkeyup="onlyNumber(this)"
+			 required="#{required}">
 			
 				<ui:insert />
 			
@@ -69,7 +72,8 @@
 			<h:inputText
 			 value="#{search[letra]}"
 			 maxlength="1"
-			  />
+			 
+			 styleClass="#{readonly ? 'readOnly' : '' } inputText" />
 		
 	</s:decorate>
 

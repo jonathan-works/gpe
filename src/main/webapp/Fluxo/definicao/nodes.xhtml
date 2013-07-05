@@ -45,7 +45,8 @@
 
                                 <h:graphicImage
                                     title="Adicionar nó"
-                                     />
+                                    
+                                    url="/img/add.gif" />
 
                             </a:commandLink>
 
@@ -56,7 +57,9 @@
 
                                 <h:graphicImage
                                     title="Excluir nó"
-                                    >
+                                    
+                                    url="/img/remove.png"
+                                    styleClass="opacityHover">
 
                                     <a:ajax
                                         event="click"
@@ -69,7 +72,10 @@
                                 </h:graphicImage>
                                 <h:graphicImage
                                     title="Subir na ordem"
-                                    >
+                                    
+                                    rendered="#{key != 0}"
+                                    url="/img/jbpm/up.gif"
+                                    styleClass="opacityHover">
 
                                     <a:ajax
                                         event="click"
@@ -81,7 +87,10 @@
                                 </h:graphicImage>
                                 <h:graphicImage
                                     title="Descer na ordem"
-                                    >
+                                    
+                                    rendered="#{key lt nodeFitter.nodes.size - 1}"
+                                    url="/img/jbpm/down.gif"
+                                    styleClass="opacityHover">
 
                                     <a:ajax
                                         event="click"
@@ -108,7 +117,10 @@
                                     value="#{current ? 'font-weight:bold' : ''}" />
                                 <a:commandLink
                                     action="#{nodeFitter.setCurrentNode(row)}"
-                                    >
+                                    
+                                    render="divNodesGeral"
+                                    execute="@this"
+                                    limitRender="true">
 
                                     <a:outputPanel>
 
@@ -123,7 +135,8 @@
                                                  />
                                             <h:outputText
                                                 value="#{row.name}"
-                                                 />
+                                                
+                                                title="#{nodeFitter.getMessage(row)}" />
 
                                         </h:panelGrid>
 
@@ -145,7 +158,8 @@
 
                     <rich:panel
                         bodyClass="panel"
-                        >
+                        
+                        rendered="#{!empty nodeFitter.currentNode}">
 
                         <f:facet name="header">
 
@@ -159,7 +173,11 @@
                                     title="#{nodeFitter.currentNode.nodeType}"
                                      />
                                 <rich:inplaceInput
-                                    >
+                                    
+                                    value="#{nodeFitter.nodeName}"
+                                    inputWidth="150px"
+                                    title="Clique para alterar o nome do nó"
+                                    oninputkeyup="this.value = this.value.replace('/','_')">
 
                                     <a:ajax
                                         event="change"
@@ -226,12 +244,15 @@
 
                         <rich:collapsiblePanel
                             switchType="ajax"
-                            >
+                            
+                            expanded="false"
+                            header="Descrição">
 
                             <wi:inputTextarea
                                 id="nodeDescription"
                                 label=""
-                                >
+                                
+                                value="#{nodeFitter.currentNode.description}">
 
                                 <a:ajax
                                     event="change"
@@ -246,7 +267,9 @@
 
                         <rich:collapsiblePanel
                             switchType="ajax"
-                            >
+                            
+                            expanded="false"
+                            header="Eventos">
 
                             <ui:include src="events.xhtml">
 
@@ -262,7 +285,10 @@
                         </rich:collapsiblePanel>
                         <rich:collapsiblePanel
                             switchType="ajax"
-                            >
+                            
+                            expanded="false"
+                            header="Eventos de Tarefa"
+                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
 
                             <c:if
                                 test="#{tarefaEventoHome.enableEvents}">
@@ -294,12 +320,15 @@
                     <br />
                     <rich:panel
                         header="Novo nó"
-                        >
+                        
+                        rendered="#{empty nodeFitter.currentNode}">
 
 
                         <rich:dataTable
                             id="nodeTypes"
-                            >
+                            
+                            value="#{nodeFitter.nodeTypes}"
+                            var="node">
 
                             <f:facet name="header">Tipo de nó</f:facet>
                             <rich:column >
@@ -355,7 +384,8 @@
                                 <ui:define name="label">Inserir após:</ui:define>
                                 <h:selectOneMenu
                                     id="after"
-                                    >
+                                    
+                                    value="#{nodeFitter.newNodeAfter}">
 
                                     <f:selectItems
                                         value="#{nodeFitter.nodesItems}" />
@@ -376,7 +406,8 @@
                                     <ui:define name="label">Na transição:</ui:define>
                                     <h:selectOneMenu
                                         id="after"
-                                        >
+                                        
+                                        value="#{transitionFitter.newNodeTransitionName}">
 
                                         <f:selectItems
                                             value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}" />
@@ -439,7 +470,8 @@
                     id="conditionInput"
                     value="#{transitionFitter.getCurrentTransition().condition}"
                     widthDiv="500px"
-                    >
+                    
+                    label="Expressão:">
 
                     <a:ajax
                         event="change"
@@ -450,7 +482,10 @@
                 </wi:inputTextarea>
                 <a:commandButton
                     type="button"
-                     />
+                    
+                    onclick="Richfaces.hideTopModalPanel()"
+                    styleClass="buttons dr-tbpnl-tb-inact"
+                    value="OK" />
 
             </div>
 

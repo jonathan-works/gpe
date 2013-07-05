@@ -30,7 +30,8 @@
 			<h:form>
 				<rich:dataTable
                      var="t"
-                     >
+                     
+                     value="#{actionTemplateHandler.publicTemplateList}">
 					<rich:column
                          >
 						<h:graphicImage
@@ -40,7 +41,10 @@
                          >
 						<a:commandLink
                              value="#{t.label}"
-                             >
+                             
+                             action="#{actionTemplateHandler.setCurrentTemplate(t)}"
+                             render="actionTemplatePanel"
+                             limitRender="true">
 							<rich:componentControl
                                  target="actionTemplatePanel"
                                  operation="show"

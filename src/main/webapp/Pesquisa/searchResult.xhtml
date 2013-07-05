@@ -72,7 +72,11 @@
                  id="pager">
 				<h:panelGrid
                      columns="5"
-                     >
+                     
+                     cellpadding="0"
+                     cellspacing="0"
+                     border="0"
+                     rendered="#{search.resultSize &gt; 0 and (search.previousPageAvailable or search.nextPageAvailable)}">
 					<h:commandButton
                          id="firstPage"
                          action="#{search.firstPage()}"

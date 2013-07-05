@@ -73,10 +73,12 @@
 			action="#{taskInstanceHome.persist(home)}" />
 
 		<h:outputText
-			 />
+			
+			value="Próxima ação:" />
 		<c:if test="#{taskInstanceHome.transitions.size gt 3}">
 			<h:selectOneMenu
-				>
+				
+				value="#{taskInstanceHome.name}">
 				<f:selectItems value="#{taskInstanceHome.transtionsSelectItems}" />
 			</h:selectOneMenu>
 			<a:commandButton
@@ -99,7 +101,8 @@
 					render=":script,#{reRenderSave}"
 					value="#{transition.name}"
 					styleClass="buttons dr-tbpnl-tb-inact"
-					>
+					
+					action="#{taskInstanceHome.end(transition.name)}">
 				</a:commandButton>
 			</a:repeat>
 		</c:if>

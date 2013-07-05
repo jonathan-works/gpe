@@ -34,7 +34,8 @@
 			 >
 			
 			<s:div
-				 >
+				 
+				 id="#{id}EventList">
 				
 			<ui:decorate template="dataTable.xhtml">
 					
@@ -72,7 +73,8 @@
 						
 					<h:graphicImage
 							 title="Excluir "
-							 >
+							 
+							 url="/img/remove.png">
 							
 						<a:ajax
 								 event="click"
@@ -95,7 +97,9 @@
 								 action="#{parent.setCurrentEvent(row)}"
 								 value="#{messages['jbpm.'.concat(row.event.eventType)]}"
 								 rendered="#{row.event.eventType != 'new-event'}"
-								  />
+								 
+								 render="#{parentId}Div"
+								 limitRender="true" />
 						<wi:selectOneMenu
 								 id="events"
 								 noSelectionLabel="Selecione..."
@@ -124,7 +128,8 @@
 					 name="event"
 					 value="#{parent.currentEvent}" />
 			<s:div
-					 >
+					 
+					 rendered="#{!empty event}">
 					
 				<ui:decorate template="dataTable.xhtml">
 						
@@ -162,7 +167,8 @@
 							
 						<h:graphicImage
 								 title="Excluir "
-								 >
+								 
+								 url="/img/remove.png">
 								
 							<a:ajax
 									 event="click"
@@ -184,7 +190,9 @@
 									 execute="@this"
 									 action="#{event.setCurrentAction(row)}"
 									 rendered="#{row.event.eventType != 'new-event'}"
-									 >
+									 
+									 render="#{parentId}Div"
+									 limitRender="true">
 									
 							 	<a:outputPanel>
 										
@@ -195,7 +203,8 @@
 											
 								 		<h:graphicImage url="/img/jbpm/#{event.getIcon(row)}.gif" />
 								 		<h:outputText
-												  />
+												 
+												 value="#{empty row.name ? 'Ação '.concat(key + 1) : row.name}" />
 							 		
 										</h:panelGrid>
 							 	

@@ -16,7 +16,8 @@
 				<h:commandLink
 				 target="_blank"
 				 rendered="#{! empty row[c.id]}"
-				 >
+				 
+				 action="#{home.setDownloadInstance(row)}">
 				
 					<h:graphicImage value="#{a4jSkin.imgIconView}" />
 				

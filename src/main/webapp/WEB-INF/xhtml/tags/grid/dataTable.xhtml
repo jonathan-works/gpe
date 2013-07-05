@@ -51,12 +51,16 @@
 				rowKeyVar="key"
 				rowClasses="#{rowClasses}"
 				styleClass="zebra #{styleClass}"
-				>
+				
+				var="row">
 				<ui:param
 					name="toolBarColumnWidth"
 					value="#{wi:get(toolBarColumnWidth, '40px')}" />
 				<rich:column
-					>
+					
+					styleClass="DataTableToolbar"
+					rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
+					rowspan="#{empty columnRowspan ? '1':columnRowspan}">
 					<f:facet name="header">
 						<s:div>
 							<ui:insert name="headerToolBar">

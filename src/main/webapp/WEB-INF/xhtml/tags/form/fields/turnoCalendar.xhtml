@@ -102,11 +102,13 @@
                          id="td_#{rowStatus.index}_#{colStatus.index}"
                          onclick="markBeginOrEnd(#{rowStatus.index}, #{colStatus.index})"
                          class="rich-table-cell #{selected ? 'fixed-selected': ''}"
-                         >
+                         
+                         onmouseover="markInterval(#{rowStatus.index}, #{colStatus.index});">
 						
 						<h:selectBooleanCheckbox
                              id="check_#{rowStatus.index}_#{colStatus.index}"
-                              />
+                             
+                             value="#{selected}" />
 					</td>
 				</c:forEach>
 			</tr>

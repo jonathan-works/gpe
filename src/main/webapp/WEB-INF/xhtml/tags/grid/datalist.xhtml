@@ -141,7 +141,9 @@
 							globalOnly="true"
 							infoClass="formMessage"
 							rendered="#{showMsg}"
-							 />
+							
+							errorClass="error formMessage"
+							warnStyle="display: none" />
 						<f:verbatim>
 							<script>
 							 br.com.infox.applyCSSAfterTimeout({id:'#{gridId}Messages', style:{display:'none'}, timeout:5000});
@@ -156,7 +158,8 @@
 							value="#{datamodel}"
 							rows="#{empty rows ? bean.maxResults : rows}"
 							onrowmouseout="this.style.backgroundColor=c"
-							>
+							
+							onrowmouseover="c=this.style.backgroundColor; this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'">
 							<f:facet name="header">
 								<rich:columnGroup
 									columnClasses="dr-table-subheadercell dr-table-subheader"
@@ -200,7 +203,8 @@
 									name="columnRendered"
 									value="#{empty props.columnRendered ? true : util.eval(props.columnRendered)}" />
 								<rich:column
-									>
+									
+									rendered="#{columnRendered}">
 									<f:facet name="header">
 										<ui:param
 											value="#{empty props.order ? c.id : c.id.concat('.').concat(props.order)}"
@@ -256,7 +260,8 @@
 
 					<h:outputText
 						value="Foram encontrados:  #{count} resultados"
-						 />
+						
+						rendered="#{rendered}" />
 				</div>
 
 				<!-- Inserir elementos no datalist -->

@@ -21,6 +21,9 @@
 	<h:graphicImage
          url="#{url}"
          title="#{title}"
-				 />
+				
+                styleClass="opacityHover"
+         rendered="#{empty rendered ? true : rendered}"
+         onclick="#{onclickGraphicImage}" />
 
 </ui:composition>

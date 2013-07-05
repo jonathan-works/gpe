@@ -24,7 +24,8 @@
 			<h:selectOneMenu
 			 id="#{f.id}"
 			 value="#{home.instance.sexo}"
-			 >
+			 
+			 required="#{required}">
 			
 				<f:selectItem itemLabel="Selecione..." />
 				<f:selectItems value="#{util.splitAsList('M:Masculino,F:Feminino')}" />

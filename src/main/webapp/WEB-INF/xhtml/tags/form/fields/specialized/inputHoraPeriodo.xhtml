@@ -41,7 +41,11 @@
              value="#{home.instance[de]}"
              required="#{required}"
              size="5"
-             >
+             
+             styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+             readonly="#{readonly}"
+             disabled="#{disabled}"
+             converter="horaConverter">
 			<wi:mask
                  id="#{id}De"
                  mask="99:99" />
@@ -54,7 +58,11 @@
              value="#{home.instance[ate]}"
              required="#{required}"
              size="5"
-             >
+             
+             styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+             readonly="#{readonly}"
+             disabled="#{disabled}"
+             converter="horaConverter">
 			<wi:mask
                  id="#{id}Ate"
                  mask="99:99" />

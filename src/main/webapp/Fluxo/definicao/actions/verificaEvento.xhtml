@@ -54,7 +54,9 @@
                          sourceListWidth="250"
                          targetListWidth="250"
                          listsHeight="200px"
-                         >
+                         
+                         itemValues="#{actionTemplate.agrupamentos}"
+                         itemLabel="#{var}">
 						<wi:ajaxSupport />
 					</wi:pickList>
 					<h:outputText
@@ -71,10 +73,13 @@
 				</s:div>
 				<rich:messages
                      id="messagesTrasition"
-                      />
+                     
+                     ajaxRendered="true"
+                     globalOnly="false" />
 				<h:outputText
                      id="createdExpression"
-                      />
+                     
+                     value="#{actionTemplate.createdExpression}" />
 			</h:form>
 		</rich:panel>
 	</s:div>

@@ -30,7 +30,8 @@
 			<h:selectOneMenu
 			 id="#{f.id}"
 			 value="#{search[f.id]}"
-			 >
+			 
+			 disabled="#{props.disabled}">
 			
 				<s:convertEntity />
 				<s:selectItems

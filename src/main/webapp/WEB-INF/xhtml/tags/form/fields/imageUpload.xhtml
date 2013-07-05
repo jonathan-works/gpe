@@ -65,11 +65,16 @@
 				acceptedTypes="jpg, gif, png">
 			</rich:fileUpload>
 			<rich:dataGrid
-				>
+				
+				value="#{imageBean.images}"
+				elements="30"
+				columns="6"
+				var="img">
 				<s:div >
 					<img
 						src="#{img}"
-						 />
+						
+						title="Arraste para o documento" />
 				</s:div>
 				<f:facet name="footer">
 					<rich:dataScroller />

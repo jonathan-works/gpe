@@ -64,13 +64,18 @@
             <h:form>
 				
 	           	<rich:dataGrid
-					 >
+					 
+					 value="#{helpFileUpload.images}"
+					 elements="20"
+					 columns="4"
+					 var="img">
 					
 	            	<s:div >
 						
 		            	<img
 							 src="#{img}"
-							  />
+							 
+							 title="Arraste para o documento" />
 	            	
 					</s:div>
 		           	<f:facet name="footer">

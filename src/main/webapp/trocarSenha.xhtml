@@ -46,7 +46,9 @@
                              >Nova Senha</h:outputLabel>	
                     <h:inputSecret
                              id="newPassword1"
-                              />
+                             
+                             value="#{authenticator.newPassword1}"
+                             required="true" />
                               		   
                    <br
                              clear="none" /><br
@@ -57,7 +59,9 @@
                              >Confirmação</h:outputLabel>	
                    <h:inputSecret
                              id="newPassword2"
-                              />                             
+                             
+                             value="#{authenticator.newPassword2}"
+                             required="true" />                             
                 </div>
                 
             </div>
@@ -69,7 +73,8 @@
             <h:commandButton
                      value="Trocar senha"
                      styleClass="buttons dr-tbpnl-tb-inact"
-                      />
+                     
+                     action="#{authenticator.trocarSenha()}" />
 
         </div>
         

@@ -107,7 +107,8 @@
                  selectionType="ajax"
                  render="pageBody"
                  nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
-                 >
+                 
+                 var="item">
                 
                 <rich:treeModelRecursiveAdaptor
                      roots="#{rolesTree.roots}"

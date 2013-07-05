@@ -56,7 +56,8 @@
 							selectionType="ajax"
 							rendered="#{not empty agrupamentos}"
 							selectionChangeListener="#{tree.processTreeSelectionChange}"
-							>
+							
+							var="item">
 							<rich:treeModelRecursiveAdaptor
 								roots="#{tree.getRoots(agrupamentos)}"
 								nodes="#{item.nodes}">

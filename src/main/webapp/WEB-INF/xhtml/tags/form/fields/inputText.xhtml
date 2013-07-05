@@ -41,30 +41,17 @@
              required="#{required}"
              size="#{size}"
              styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
-             >
+             
+             onblur="#{onblur}"
+             onchange="#{onchange}"
+             onkeypress="#{onkeypress}"
+             onkeyup="#{onkeyup}"
+             maxlength="#{wi:get(maxlength, 255)}"
+             immediate="#{immediate}">
 			<ui:insert />
 			<f:converter
                  converterId="#{wi:get(converterId, 'stringConverter')}" />
 		</h:inputText>
-		<script>
-			console.log({
-		id:"#{id}",
-		value:"#{value}",
-		readonly:"#{readonly}",
-		disabled:"#{disabled}",
-		required:"#{required}",
-		size:"#{size}",
-		styleClass:"#{readonly ? 'readOnly' : styleClass } inputText",
-		style:"#{style}",
-		onblur:"#{onblur}",
-		onchange:"#{onchange}",
-		onkeypress:"#{onkeypress}",
-		onkeyup:"#{onkeyup}",
-		maxlength:"#{wi:get(maxlength, 255)}",
-		immediate:"#{immediate}",
-		converterId:"#{wi:get(converterId, 'stringConverter')}"
-			});
-		</script>
 	</s:decorate>
 
 </ui:composition>

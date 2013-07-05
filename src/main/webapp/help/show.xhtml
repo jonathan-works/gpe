@@ -71,7 +71,8 @@
 							<span >Pesquisar:</span>
 					<h:inputText
 								 id="searchText"
-								  />
+								 
+								 value="#{ajudaHome.textoPesquisa}" />
 				
 						</td><td
 							 rowspan="1"
@@ -96,7 +97,8 @@
 				
 			<h:outputText
 					 value="Nenhum resultado encontrado."
-					  />
+					 
+					 rendered="#{empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}" />
 			<wi:tabPanel
 					 id="helpPanel"
 					 height="650px"
@@ -123,7 +125,9 @@
 						<h:graphicImage
 								 url="#{a4jSkin.imgIconEdit}"
 								 title="Editar conteúdo"
-								  />
+								 
+								 rendered="#{s:hasRole('redator')}"
+								 onclick="openPopUp('_blank', '#{util.contextPath}/help/edit.seam?cid=#{conversation.id}','1024');" />
 					
 						</s:div>
 					<h:outputText
@@ -156,7 +160,9 @@
 											 value="#{v[0].pagina.descricao}"
 											 render="helpText, helpLink"
 											 limitRender="true"
-											 >
+											 
+											 oncomplete="RichFaces.switchTab('helpPanel', 'help')"
+											 action="#{ajudaHome.setViewId(v[0].pagina.url, false)}">
 											
 										<f:param
 												 name="queryString"

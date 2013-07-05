@@ -63,7 +63,12 @@
              id="#{idFrom}"
              label=""
              value="#{valueDateFrom}"
-             >
+             
+             template="/WEB-INF/xhtml/components/templates/base.xhtml"
+             size="7"
+             maxlength="7"
+             required="#{required or requiredFrom}"
+             onchange="validarData(this);         validarPeriodoAnoMes(this, #{idToValidador}, false);        validarDataMaximaAtual(this);">
 			<wi:mask
                  id="#{idFrom}"
                  mask="99/9999" />
@@ -77,7 +82,12 @@
              id="#{idTo}"
              label=""
              value="#{valueDateTo}"
-             >
+             
+             template="/WEB-INF/xhtml/components/templates/base.xhtml"
+             size="7"
+             maxlength="7"
+             required="#{required or requiredTo}"
+             onchange="validarData(this);          validarPeriodoAnoMes(#{idFromValidador}, this, true);         validarDataMaxima(this);">
 			<wi:mask
                  id="#{idTo}"
                  mask="99/9999" />

@@ -35,7 +35,10 @@
          oncomplete="hideLoading();#{oncomplete}"
          value="#{value}"
          render="#{reRender}"
-         >
+         
+         disabled="#{disabled}"
+         immediate="#{immediate}"
+         styleClass="buttons #{wi:get(styleClass, 'dr-tbpnl-tb-inact')}">
 		<ui:insert />
 	</a:commandButton>	
 			   

@@ -22,7 +22,8 @@
 			<ui:define name="label">#{label}</ui:define>
 			<h:selectOneMenu
 			 id="#{id}"
-			 >
+			 
+			 value="#{consultaProcessoHome.instance.idTaskAnterior}">
 			
 				<f:selectItems value="#{caixaHome.getPreviousTasks(idTarefa)}" />
 			

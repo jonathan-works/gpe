@@ -32,7 +32,8 @@
 			<h:selectOneMenu
 			 id="#{f.id}"
 			 value="#{searchBean[f.id]}"
-			 >
+			 
+			 disabled="#{props.disabled}">
 			
 				<s:selectItems
 				 value="#{empty items ? util.eval(props.items) : items}"

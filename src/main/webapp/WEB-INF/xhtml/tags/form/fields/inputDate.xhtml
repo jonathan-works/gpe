@@ -65,7 +65,8 @@
              onchanged="#{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}#{onchanged}"
              reRender="#{reRender}"
              dataModel="#{dataModel}"
-             >
+             
+             showApplyButton="#{wi:get(showApplyButton, false)}">
 						   
 				<c:if
                  test="#{wi:get(future, false)}">

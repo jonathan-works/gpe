@@ -39,11 +39,13 @@
 		<f:facet
              name="controls">
          		<span
-                 >X</span>
+                 
+                 onclick="Richfaces.hideModalPanel(mp)">X</span>
 		</f:facet>
 		<h:inputTextarea
              readonly="true"
-              />
+             
+             value="#{value}" />
 	</rich:popupPanel>
 	
 </ui:composition>

@@ -40,7 +40,7 @@
                  onclick="#{rich:component('suggestion')}.callSuggestion(true)"
                  alt="" />
 					 
-			<rich:autocomplete id="suggestion" 
+			<rich:autocomplete> id="suggestion" 
 								height="200"  
 								width="250" 
 					            suggestionAction="#{bamAction.getFluxoSuggest}" 
@@ -70,7 +70,7 @@
 			<ui:define name="buttons"/>
 		</wi:dataForm>
 		<s:div id="processoList">
-			<rich:panel id="processoListPanel" >
+			<rich:panel id="processoListPanel"  rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}">
 				<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
 							  bean="#{processoEpaNaoFinalizadoList}"
 							  tableTitle="Processos - Prazo: #{processoEpaNaoFinalizadoList.fluxo.qtPrazo} (dias)"
@@ -79,7 +79,7 @@
 							  id="processoDataTable">
 					<ui:define name="headerToolBar" />
 					<ui:define name="toolBar"> 
-						<div circ #{row.porcentagem > 100 ? 'red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'yellow-back' : '')}">
+						<div  class="circ #{row.porcentagem > 100 ? 'red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'yellow-back' : '')}">
 	    					<wi:toolBar url="/img/edit.gif"
 	    								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
 	    								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
@@ -188,14 +188,16 @@
 									 value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}" />
 									 
 									 
-				<rich:column >
+				<rich:column  
+							 styleClass="defaultCell">
 					<f:facet name="header">Início</f:facet>
 					<h:outputText value="#{row.dataInicio}">
 						<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
 					</h:outputText>
 				</rich:column>
 				
-				<rich:column >
+				<rich:column  
+							 styleClass="defaultCell">
 					<f:facet name="header">Término</f:facet>
 					<h:outputText value="#{row.dataFim}">
 						<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />

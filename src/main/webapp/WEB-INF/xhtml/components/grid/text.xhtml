@@ -14,7 +14,8 @@
 			<h:graphicImage
 			 rendered="#{!empty c.value}"
 			 url="/img/view.gif"
-			  />
+			 
+			 onclick="mp = this.nextSibling.id; Richfaces.showModalPanel(mp)" />
 			<rich:popupPanel
 			 id="mp_#{c.id}"
 			 height="300"
@@ -30,12 +31,14 @@
 				<f:facet name="controls">
 				
 	          		<span
-					 >X</span>
+					 
+					 onclick="Richfaces.hideModalPanel(mp)">X</span>
 				
 			</f:facet>
 				<h:inputTextarea
 				 readonly="true"
-				  />
+				 
+				 value="#{c.value}" />
 			
 		</rich:popupPanel>
 		

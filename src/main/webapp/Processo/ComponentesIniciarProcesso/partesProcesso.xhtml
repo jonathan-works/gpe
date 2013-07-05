@@ -46,7 +46,8 @@
 					value="#{action.pessoaFisicaList}"
 					var="row"
 					rows="10"
-					>
+					
+					rendered="#{!action.pessoaFisicaList.isEmpty()}">
 					<f:facet name="header">
 						<h:outputText value="Partes - Pessoas Fisicas" />
 					</f:facet>
@@ -86,7 +87,8 @@
 					value="#{action.pessoaJuridicaList}"
 					var="row"
 					rows="10"
-					>
+					
+					rendered="#{!action.pessoaJuridicaList.isEmpty()}">
 					<f:facet name="header">
 						<h:outputText value="Partes - Pessoas Juridicas" />
 					</f:facet>

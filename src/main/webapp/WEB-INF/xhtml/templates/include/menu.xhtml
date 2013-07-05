@@ -23,7 +23,8 @@
          value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
 	
 	<h:form
-         >			
+         
+         rendered="#{mostrarMenu}">			
 		<table
              cellspacing="0"
              cellpadding="0"
@@ -45,14 +46,18 @@
 	        <td
                      class="modPesqBg">
 		         <h:commandButton
-                          />
+                         
+                         action="/Pesquisa/searchResult.xhtml"
+                         image="#{a4jSkin.imgBgButtonPesq}" />
 	        </td> 
 	        <td
                      class="modPesqBg"
                      valign="top">
 		        <h:graphicImage
                          url="#{a4jSkin.imgIconPalette}"
-                          />	
+                         
+                         title="Alterar o esquema de cores"
+                         onclick="Richfaces.showModalPanel('skinPanel')" />	
     				 							
 				<h:commandButton
                          action="#{skinZoom.setTmNormal()}"
@@ -86,11 +91,14 @@
                  rendered="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}"
                  id="usuarioLocalizacao"
                  template="/WEB-INF/xhtml/components/templates/display.xhtml"
-                 >
+                 
+                 onchange="this.form.submit()"
+                 items="#{authenticator.usuarioLocalizacaoListItems}">
 		    </wi:selectOneMenuEntity><br />
 		    <h:outputText
                  value="#{authenticator.usuarioLocalizacaoListItems[0]}"
-                  />
+                 
+                 rendered="#{identity.loggedIn and authenticator.usuarioLocalizacaoListItems.size() == 1}" />
 	    </h:form>
 	    
 	</s:div>
@@ -102,7 +110,8 @@
 			<rich:toolbarGroup>
 				<s:link
                      view="/home.xhtml"
-                      />				
+                     
+                     value="Home" />				
 			</rich:toolbarGroup>
 			<c:forEach
                  items="#{mainMenu.dropMenus}"
@@ -140,11 +149,14 @@
 			<s:link
                  view="/login.xhtml"
                  value="Login"
-                  />
+                 
+                 rendered="#{not identity.loggedIn}" />
 			<s:link
                  view="/home.xhtml"
                  action="#{identity.logout}"
-                  />
+                 
+                 value="Logout"
+                 rendered="#{identity.loggedIn}" />
 			<wi:helpIcon />								
 		</rich:toolbarGroup>
 	</rich:toolbar>
@@ -173,7 +185,8 @@
 			<h:form>
 				<h:selectOneMenu
                      value="#{wiSkin.skin}"
-                     >
+                     
+                     onchange="this.form.submit()">
 					<f:selectItems
                          value="#{wiSkin.skinList}" />
 				</h:selectOneMenu>

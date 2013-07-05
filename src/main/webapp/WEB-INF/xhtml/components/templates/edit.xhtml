@@ -78,7 +78,8 @@
                      test="#{not empty tipMessage}">
 				<h:graphicImage
                          id="#{fieldId}EditTipImg"
-                          />
+                         
+                         url="/img/help.gif" />
 				<rich:tooltip
                          for="#{fieldId}EditTipImg"
                          value="#{tipMessage}"
@@ -88,20 +89,21 @@
 				
 			<s:message
                      styleClass="errorFields errors"
-                      />
+                     
+                     rendered="#{empty showMessage ? true : showMessage}" />
 
         </s:div>
         <span
                  class="value #{invalid?'errors':''}">
            		<s:div id="#{fieldId}x"
                          rendered="#{!obfuscate}">
-               		
+               		<ui:insert />
                	</s:div>
                	<h:outputText
                          value="ocultado"
                          rendered="#{obfuscate}" />
         </span>
-		<ui:insert />
+
     </div>
     </s:fragment>
 </ui:composition>

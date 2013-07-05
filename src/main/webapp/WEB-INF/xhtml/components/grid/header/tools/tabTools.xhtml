@@ -19,7 +19,11 @@
 		<ui:include src="../include/filterButton.xhtml" />
 
 		<h:form
-			 >
+			 
+			 ajaxSubmit="true"
+			 eventsQueue="edit"
+			 rendered="#{canEdit}"
+			 limitToList="true">
 			
 			<a:commandLink
 				 status=":status"

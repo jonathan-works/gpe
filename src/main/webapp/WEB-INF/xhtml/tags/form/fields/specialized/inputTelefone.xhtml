@@ -36,7 +36,11 @@
 		<h:inputText
              id="#{id}DDD"
              value="#{home.instance[ddd]}"
-             >
+             
+             styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+             readonly="#{readonly}"
+             disabled="#{disabled}"
+             required="#{required}">
 			<wi:mask
                  id="#{id}DDD"
                  mask="99" />
@@ -47,7 +51,10 @@
              value="#{home.instance[numero]}"
              label=" "
              styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
-             >
+             
+             readonly="#{readonly}"
+             disabled="#{disabled}"
+             required="#{required}">
 			<wi:mask
                  id="#{id}Numero"
                  mask="9999-9999" />

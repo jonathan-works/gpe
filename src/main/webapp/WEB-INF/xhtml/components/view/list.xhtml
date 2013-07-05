@@ -19,13 +19,15 @@
 			 value="#{isAtivo ? '' : 'inativo'}" />
 		
 		<div
-			 >
+			 
+			 class="#{styleClass}">
 			
 		<ui:define name="label">#{label}</ui:define>
 			<rich:list
 				 value="#{f.value}"
 				 var="v"
-				 >
+				 
+				 type="none">
 				
 				<h:outputText value="- #{v}" />
 			

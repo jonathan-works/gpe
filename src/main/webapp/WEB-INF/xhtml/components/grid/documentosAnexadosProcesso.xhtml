@@ -17,14 +17,18 @@
 		 value="#{isAtivo ? '' : 'inativo'}" />
 	
 		<div
-		 >
+		 
+		 class="#{styleClass}">
 		
 		
 		    <rich:dataTable
 			 id="documentosBinarios"
 			 value="#{processoHome.instance.getProcessoDocumentoList(true)}"
 			 var="var"
-			 >
+			 
+			 onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+			 onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
+			 rows="15">
 			   
 
 		    	<rich:column >

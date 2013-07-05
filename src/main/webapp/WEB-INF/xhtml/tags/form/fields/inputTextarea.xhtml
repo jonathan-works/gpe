@@ -48,7 +48,9 @@
              rows="#{rows}"
              disabled="#{disabled}"
              required="#{required}"
-             >
+             
+             value="#{value}"
+             onkeyup="counterTextarea(this,#{maxlength});">
 			<ui:insert />
 		</h:inputTextarea>	
 		<div

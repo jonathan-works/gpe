@@ -34,13 +34,16 @@
 			
 			<rich:dataTable
 				 value="#{bean.allColumns}"
-				 >
+				 
+				 var="col"
+				 rowKeyVar="key">
 				
 				<ui:param
 					 name="visible"
 					 value="#{bean.visibleColumns.contains(col)}" />
 				<rich:column
-					 >
+					 
+					 styleClass="dr-table-subheader rich-table-subheader">
 					
 					<div >
 						
@@ -95,7 +98,8 @@
 					
 					<f:facet name="header">Coluna</f:facet>
 					<h:outputText
-						  />
+						 
+						 value="#{messages[col.toString()]}" />
 				
 				</rich:column>
 			
