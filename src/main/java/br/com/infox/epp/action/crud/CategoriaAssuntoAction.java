@@ -41,12 +41,11 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 	@Override
 	protected boolean beforePersistOrUpdate() {
 		getInstance().setCategoria(categoria);
-		List<CategoriaAssunto> list = getEntityManager().createQuery("select o from CategoriaAssunto o where o.categoria=:categoria and o.assunto=:assunto").setParameter("assunto", getInstance().getAssunto()).setParameter("categoria", getInstance().getCategoria()).getResultList();
-		if (!list.isEmpty())	{
+		if (!violaConstraintsDeUnicidade()) {
+			return super.beforePersistOrUpdate();
+		} else {
 			return false;
 		}
-		
-		return super.beforePersistOrUpdate();
 	}
 	
 	@Override
