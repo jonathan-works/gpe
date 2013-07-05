@@ -4,14 +4,14 @@
 }
 
 .Associated, .Associative {
-	position:relative;
-	display:inline-block;
+	display:inline-table;
 	width:50%;
 }
 
-.Associated .dtable-p.rf-p, .Associative .dtable-p.rf-p {
+.Associated > .dtable-p.rf-p, .Associative > .dtable-p.rf-p {
 	width:100%;
 	max-width:100%;
+	min-height:478px;
 }
 
 .tree-p.rf-cp.rf-tgp {

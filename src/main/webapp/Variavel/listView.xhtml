@@ -124,48 +124,6 @@
 			
             <wi:ajaxDiv id="divM2MVar">
 				
-                <s:div styleClass="Associated">
-					
-                    <wi:dataTable
-						 values="#{associatedTipoModeloVariavelList.list(15)}"
-						 bean="#{associatedTipoModeloVariavelList}"
-						 tableTitle="#{messages['associatedTipoModeloVariavel.titleGrid']}"
-						 id="associatedTipoModeloVariavelList"
-						 rowId="#{row.idVariavelTipoModelo}">
-						
-                        <ui:define name="searchForm" />
-                        <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar">
-							
-                            <a:region>
-								
-                                <a:commandLink
-									 limitRender="true"
-									 render="divM2MVar"
-									 action="#{variavelTipoModeloHome.removeTipoModeloVariavel(row)}"
-									 rendered="true">
-									
-                                    <h:graphicImage
-										 url="/img/grid/copyRight.gif"
-										 title="Remover" />
-                                
-								</a:commandLink>
-                            
-							</a:region>
-                        
-						</ui:define>
-                        <wi:columnOutputText
-							 columnId="tipoModeloDocumento"
-							 columnHeader="#{messages['associatedTipoModeloVariavel.tipoModeloDocumento']}"
-							 value="#{row.tipoModeloDocumento}" />
-                        <wi:columnOutputText
-							 columnId="tipoModeloDocumento.grupoModeloDocumento"
-							 columnHeader="#{messages['associatedTipoModeloVariavel.grupoModeloDocumento']}"
-							 value="#{row.tipoModeloDocumento.grupoModeloDocumento}" />
-                    
-					</wi:dataTable>
-                
-				</s:div>
                 <s:div styleClass="Associative">
 					
                     <wi:dataTable
@@ -212,7 +170,7 @@
 									 rendered="true">
 									
                                     <h:graphicImage
-										 url="/img/grid/copyLeft.gif"
+										 url="/img/grid/copyRight.gif"
 										 title="Adicionar" />
                                 
 								</a:commandLink>
@@ -240,7 +198,48 @@
 					</wi:dataTable>
                 
 				</s:div>
-            
+            	<s:div styleClass="Associated">
+					
+                    <wi:dataTable
+						 values="#{associatedTipoModeloVariavelList.list(15)}"
+						 bean="#{associatedTipoModeloVariavelList}"
+						 tableTitle="#{messages['associatedTipoModeloVariavel.titleGrid']}"
+						 id="associatedTipoModeloVariavelList"
+						 rowId="#{row.idVariavelTipoModelo}">
+						
+                        <ui:define name="searchForm" />
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+							
+                            <a:region>
+								
+                                <a:commandLink
+									 limitRender="true"
+									 render="divM2MVar"
+									 action="#{variavelTipoModeloHome.removeTipoModeloVariavel(row)}"
+									 rendered="true">
+									
+                                    <h:graphicImage
+										 url="/img/grid/copyLeft.gif"
+										 title="Remover" />
+                                
+								</a:commandLink>
+                            
+							</a:region>
+                        
+						</ui:define>
+                        <wi:columnOutputText
+							 columnId="tipoModeloDocumento"
+							 columnHeader="#{messages['associatedTipoModeloVariavel.tipoModeloDocumento']}"
+							 value="#{row.tipoModeloDocumento}" />
+                        <wi:columnOutputText
+							 columnId="tipoModeloDocumento.grupoModeloDocumento"
+							 columnHeader="#{messages['associatedTipoModeloVariavel.grupoModeloDocumento']}"
+							 value="#{row.tipoModeloDocumento.grupoModeloDocumento}" />
+                    
+					</wi:dataTable>
+                
+				</s:div>
 			</wi:ajaxDiv>
         
 		</wi:tab>
