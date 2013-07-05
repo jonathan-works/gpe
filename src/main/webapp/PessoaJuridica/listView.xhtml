@@ -38,9 +38,15 @@
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarPjForm"
 							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputCnpj id="cnpj"
-									value="#{pessoaJuridicaList.entity.cnpj}"
-									label="#{messages['pj.cnpj']}"/>
+					<wi:inputText id="cnpj"
+						value="#{pessoaJuridicaList.entity.cnpj}"
+						label="#{messages['pj.cnpj']}"
+				        styleClass="cnpj"
+				        size="18"
+				        maxlength="18">
+					</wi:inputText>
+					<wi:mask selector=".cnpj"
+				             mask="99.999.999/9999-99" />
 					<wi:inputText id="nomePessoa"
 								  label="#{messages['pj.nome']}"
 								  value="#{pessoaJuridicaList.entity.nome}"
