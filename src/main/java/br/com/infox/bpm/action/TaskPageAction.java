@@ -96,11 +96,11 @@ public class TaskPageAction implements Serializable {
 	 * @return
 	 */
 	private String getCodFluxoByDescricao(String descricao) {
-		String fluxoByDescricao = "select o from Fluxo o where " +
-								  "o.fluxo like :descricao";
-		Query query = EntityUtil.getEntityManager().createQuery(fluxoByDescricao);
-		query.setParameter("descricao", descricao);
-		Fluxo f = EntityUtil.getSingleResult(query);
+//		String fluxoByDescricao = "select o from Fluxo o where " +
+//								  "o.fluxo like :descricao";
+//		Query query = EntityUtil.getEntityManager().createQuery(fluxoByDescricao);
+//		query.setParameter("descricao", descricao);
+		Fluxo f = fluxoManager.getFluxoByDescricao(descricao);
 		if(f != null) {
 			return f.getCodFluxo();
 		}
