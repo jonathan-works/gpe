@@ -37,10 +37,11 @@ public class CategoriaAssuntoDAO extends GenericDAO {
 		return resultList;		
 	}
 	
-	public Long getQuantidadeDeCategoriasAssunto(Categoria categoria, Assunto assunto){
+	public boolean jaExisteCategoriaAssunto(CategoriaAssunto categoriaAssunto){
 		String hql = "select count(o) from CategoriaAssunto o where o.categoria=:categoria and o.assunto=:assunto";
 		return  (Long) entityManager.createQuery(hql)
-				.setParameter("assunto", assunto).setParameter("categoria", categoria).getSingleResult();
+				.setParameter("assunto", categoriaAssunto.getAssunto())
+				.setParameter("categoria", categoriaAssunto.getCategoria()).getSingleResult() > 0;
 	}
 	
 }
