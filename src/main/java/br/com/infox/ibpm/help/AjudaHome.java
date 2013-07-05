@@ -175,14 +175,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	}
 	
 	public Pagina verificaPagina(){
-		String sql = "select o from Pagina o " +
-					 "where o.url = :url";
-		Query q = getEntityManager().createQuery(sql);
-		q.setParameter("url", viewId);
-		if (q.getResultList().size() > 0){
-			return (Pagina) q.getSingleResult();
-		}
-		return null;
+		return paginaManager.getPaginaByUrl(viewId);
 	}
 	
 	public Pagina inserirPagina(){
