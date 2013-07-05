@@ -73,12 +73,12 @@ public class TaskTransitionAction {
 	private boolean canOpenTask(long currentTaskId) {
 		JbpmUtil.getJbpmSession().flush();
 		Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
-		List resultList = EntityUtil.getEntityManager().createQuery(
-				"select o.idTaskInstance from SituacaoProcesso o " +
-				"where o.idTaskInstance = :ti")
-			.setParameter("ti", currentTaskId)
-			.getResultList();
-		return resultList.size() > 0;
+//		List resultList = EntityUtil.getEntityManager().createQuery(
+//				"select o.idTaskInstance from SituacaoProcesso o " +
+//				"where o.idTaskInstance = :ti")
+//			.setParameter("ti", currentTaskId)
+//			.getResultList();
+		return situacaoProcessoManager.existemTarefasEmAberto(currentTaskId);
 	}
 	
 }
