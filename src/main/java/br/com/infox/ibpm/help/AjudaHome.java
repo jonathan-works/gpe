@@ -47,6 +47,7 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.help.Ajuda;
 import br.com.infox.ibpm.entity.help.HistoricoAjuda;
 import br.com.infox.ibpm.entity.help.Pagina;
+import br.com.infox.ibpm.manager.help.AjudaManager;
 import br.com.infox.ibpm.manager.help.PaginaManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
@@ -70,6 +71,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	private Ajuda anterior;
 	
 	@In private PaginaManager paginaManager;
+	@In private AjudaManager ajudaManager;
 	
 	@Override
 	public Ajuda createInstance() {
