@@ -189,15 +189,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 
 	public Pagina getPagina() {
 		if (pagina == null) {
-			String ejbql = "select p from Pagina p "
-					+ "where p.url = :url";
-			Query query = getEntityManager().createQuery(ejbql);
-			query.setParameter("url", viewId);
-			try {
-				pagina = (Pagina) query.getSingleResult();
-			} catch (Exception e) {
-				// para o caso de nao encontrar
-			}
+			return verificaPagina();
 		}
 		return pagina;
 	}
