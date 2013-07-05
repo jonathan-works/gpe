@@ -2,12 +2,14 @@ package br.com.infox.bpm.action;
 
 import java.util.List;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.itx.component.Util;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.EntityUtil;
@@ -18,6 +20,8 @@ import br.com.itx.util.EntityUtil;
  *
  */
 public class TaskTransitionAction {
+	
+	@In private SituacaoProcessoManager situacaoProcessoManager;
 
 	/**
 	 * Verifica se a mesma tarefa não foi encerrada por outro usuário,
