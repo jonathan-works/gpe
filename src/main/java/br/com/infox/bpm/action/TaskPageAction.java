@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
@@ -14,6 +15,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.manager.FluxoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.util.EntityUtil;
 
@@ -36,6 +38,8 @@ public class TaskPageAction implements Serializable {
 	public static final String TASK_PAGE_COMPONENT_NAME = "taskPage";
 	private static final String TASK_PAGE_COMPONENT_PATH = "/WEB-INF/xhtml/taskPages/";
 	private static final String TASK_PAGE_SUFFIX = ".xhtml";
+	
+	@In private FluxoManager fluxoManager;
 	
 	/**
 	 * Verifica se a tarefa atual está utilizando uma variável taskPage.
