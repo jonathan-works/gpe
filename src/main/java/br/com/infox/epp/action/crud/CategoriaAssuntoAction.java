@@ -145,7 +145,7 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 	}
 	
 	private boolean violaConstraintsDeUnicidade(){
-		return (violaConstraintsDeUnicidade());
+		return (violaUnicidadeDeCategoriaAssunto());
 	}
 	
 	private boolean violaUnicidadeDeCategoriaAssunto(){
