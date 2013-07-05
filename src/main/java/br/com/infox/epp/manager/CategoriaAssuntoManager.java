@@ -29,4 +29,8 @@ public class CategoriaAssuntoManager extends GenericManager{
 		return categoriaAssuntoDAO.listByCategoria(categoria);
 	}
 	
+	public boolean violaUnicidadeDeCategoriaAssunto(CategoriaAssunto categoriaAssunto){
+		return categoriaAssuntoDAO.jaExisteCategoriaAssunto(categoriaAssunto);
+	}
+	
 }
