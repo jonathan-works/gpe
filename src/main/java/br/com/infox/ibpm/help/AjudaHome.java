@@ -76,15 +76,10 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	@Override
 	public Ajuda createInstance() {
 		instance = new Ajuda();
-		List<Ajuda> ajudaList = getEntityManager()
-			.createQuery("select a from Ajuda a " +
-						 "where a.pagina.url = :url " +
-						 "order by a.dataRegistro desc")
-			.setParameter("url", viewId)
-			.getResultList();
-		if (ajudaList.size() > 0) {
-			anterior = ajudaList.get(0);
-			instance.setTexto(anterior.getTexto());
+		Ajuda ajuda = ajudaManager.getAjudaByPaginaUrl(viewId);
+		if (ajuda != null){
+			instance.setTexto(ajuda.getTexto());
+			anterior = ajuda;
 		}
 		instance.setPagina(getPagina());
 		return instance;
