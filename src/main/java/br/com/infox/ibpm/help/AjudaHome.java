@@ -47,6 +47,7 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.help.Ajuda;
 import br.com.infox.ibpm.entity.help.HistoricoAjuda;
 import br.com.infox.ibpm.entity.help.Pagina;
+import br.com.infox.ibpm.manager.help.PaginaManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
@@ -67,6 +68,8 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	@SuppressWarnings(RAWTYPES)
 	private List resultado;
 	private Ajuda anterior;
+	
+	@In private PaginaManager paginaManager;
 	
 	@Override
 	public Ajuda createInstance() {
