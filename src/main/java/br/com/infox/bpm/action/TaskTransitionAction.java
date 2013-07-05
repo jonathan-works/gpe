@@ -69,7 +69,6 @@ public class TaskTransitionAction {
 	 * @param currentTaskId
 	 * @return true se ele pode visualizar a próxima tarefa
 	 */
-	@SuppressWarnings("rawtypes")
 	private boolean canOpenTask(long currentTaskId) {
 		JbpmUtil.getJbpmSession().flush();
 		Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
