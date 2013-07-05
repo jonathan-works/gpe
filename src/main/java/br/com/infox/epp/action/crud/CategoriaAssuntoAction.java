@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.CategoriaAssunto;
@@ -142,6 +143,18 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 			}
 		}
 		return "persisted";
+	}
+	
+	private boolean violaConstraintsDeUnicidade(){
+		return (violaConstraintsDeUnicidade());
+	}
+	
+	private boolean violaUnicidadeDeCategoriaAssunto(){
+		if (categoriaAssuntoManager.violaUnicidadeDeCategoriaAssunto(instance)){
+			FacesMessages.instance().add(Severity.ERROR,"Combinação de Categoria e Assunto já existe!");
+			return true;
+		}
+		return false;
 	}
 	
 }
