@@ -28,7 +28,6 @@ import br.com.itx.exception.AplicationException;
  */
 @Name(value=TaskPageAction.NAME)
 @Scope(ScopeType.PAGE)
-@BypassInterceptors
 public class TaskPageAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
