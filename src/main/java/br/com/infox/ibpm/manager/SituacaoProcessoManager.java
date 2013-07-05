@@ -15,5 +15,9 @@ public class SituacaoProcessoManager extends GenericManager {
 	public static final String NAME = "situacaoProcessoManager";
 	
 	@In private SituacaoProcessoDAO situacaoProcessoDAO;
+	
+	public boolean existemTarefasEmAberto(long taskId){
+		return situacaoProcessoDAO.getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
+	}
 
 }
