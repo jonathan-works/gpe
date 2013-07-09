@@ -185,30 +185,37 @@ public class Authenticator {
 	}
 	
 	private void validateUser(UsuarioLogin usuario) throws LoginException {
-		if (!usuario.getAtivo()) {
-			throw new LoginException("O usuário " + usuario.getNome() + " não está ativo.\n");
-		} else if (usuario.getBloqueio()){
-			String query = "select o from BloqueioUsuario o where o.dataBloqueio = (select max(b.dataBloqueio) from BloqueioUsuario b where b.usuario = :usuario)";
-			BloqueioUsuario bloqueio = EntityUtil.getSingleResult(EntityUtil.createQuery(query).setParameter("usuario", usuario));
-			Date desbloqueio = bloqueio.getDataPrevisaoDesbloqueio();
-			if (desbloqueio.before(new Date())){
-				desbloquearUsuario(bloqueio);
+		if (usuario.getBloqueio()){
+			if(bloqueioUsuarioManager.liberarUsuarioBloqueado(usuario)){
+				bloqueioUsuarioManager.desfazerBloqueioUsuario(usuario);
 			} else{
-				throw new LoginException("O usuário " + usuario.getNome()
-						+ " está bloqueado." +
-						"Por favor, contate o adminstrador do sistema");
+				throwUsuarioBloqueado(usuario);
 			}
 		} else if (usuario.getProvisorio()){
 			Date hoje = new Date();
 			if (usuario.getDataExpiracao().before(hoje)){
 				inativarUsuario(usuario);
-				throw new LoginException("O usuário " + usuario.getNome()
-						+ " expirou. " +
-						"Por favor, contate o adminstrador do sistema");
+				throwUsuarioExpirou(usuario);
 			}
+		} else if(!usuario.getAtivo()) {
+			throwUsuarioInativo(usuario);
 		}
 	}
 
+	private void throwUsuarioExpirou(UsuarioLogin usuario) throws LoginException {
+		throw new LoginException("O usuário " + usuario.getNome() + " expirou. " 
+								+ "Por favor, contate o adminstrador do sistema");
+	}
+
+	private void throwUsuarioInativo(UsuarioLogin usuario) throws LoginException {
+		throw new LoginException("O usuário " + usuario.getNome() + " não está ativo.\n");
+	}
+
+	private void throwUsuarioBloqueado(UsuarioLogin usuario) throws LoginException {
+		throw new LoginException("O usuário " + usuario.getNome() + " está bloqueado." 
+								+ "Por favor, contate o adminstrador do sistema");
+	}
+	
 	private void inativarUsuario(UsuarioLogin usuario) {
 		String inativarProvisorio = 
 				"UPDATE UsuarioLogin u SET u.ativo = false " +
@@ -216,21 +223,6 @@ public class Authenticator {
 		EntityUtil.getEntityManager().createQuery(inativarProvisorio).executeUpdate();
 	}
 	
-	private void desbloquearUsuario(BloqueioUsuario bloqueioUsuario) {
-		String queryDesbloqueio = 
-				"update public.tb_usuario set in_bloqueio=false where id_usuario = :usuario";
-		EntityUtil.getEntityManager().createNativeQuery(queryDesbloqueio)
-			.setParameter("usuario", bloqueioUsuario.getUsuario().getIdPessoa())
-			.executeUpdate();
-		String queryDataDesbloqueio = 
-				"UPDATE BloqueioUsuario b SET b.dataDesbloqueio = :hoje " +
-				"WHERE b.idBloqueioUsuario = :bloqueio";
-		EntityUtil.getEntityManager().createQuery(queryDataDesbloqueio)
-			.setParameter("hoje", new Date())
-			.setParameter("bloqueio", bloqueioUsuario.getIdBloqueioUsuario())
-			.executeUpdate();
-	}
-
 	private void autenticaManualmenteNoSeamSecurity(String login, IdentityManager identityManager) {
 		Principal principal = new SimplePrincipal(login);
 		Identity identity = Identity.instance();
