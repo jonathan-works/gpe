@@ -34,5 +34,9 @@ public class UsuarioLoginManager extends GenericManager {
 	public void inativarUsuario(UsuarioLogin usuario){
 		usuarioLoginDAO.inativarUsuario(usuario);
 	}
+	
+	public UsuarioLogin getUsuarioLoginByCpf(String cpf){
+		return usuarioLoginDAO.getUsuarioLoginByCpf(cpf);
+	}
 
 }
