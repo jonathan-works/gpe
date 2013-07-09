@@ -146,10 +146,12 @@
 							warnStyle="display: none" />
 						<f:verbatim>
 							<script>
-							namespace.infox.util.applyCSS({
-								selector:"##{rich:clientId('gridId')}Messages",
-								style:{display:'none'},
-								delay:9000
+							namespace("infox.applyCSS",function(applyCSS) {
+								applyCSS({
+									selector:"##{rich:clientId('gridId')}Messages",
+									style:{display:'none'},
+									delay:9000
+								});
 							});
 					        </script>
 						</f:verbatim>

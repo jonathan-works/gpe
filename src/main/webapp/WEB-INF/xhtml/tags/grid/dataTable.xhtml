@@ -44,10 +44,12 @@
 				globalOnly="true"/>
 			
 			<script>
-			namespace.infox.util.applyCSS({
-				selector:"##{rich:clientId('id')}Messages",
-				style:{display:'none'},
-				delay:5000
+			namespace("infox.applyCSS",function(applyCSS){
+				applyCSS({
+					selector:"##{rich:clientId('id')}Messages",
+					style:{display:'none'},
+					delay:5000
+				});
 			});
 			</script>
 
