@@ -30,4 +30,8 @@ public class BloqueioUsuarioManager extends GenericManager {
 		assert bloqueioUsuario.getDataDesbloqueio() != null;
 		bloqueioUsuarioDAO.desfazerBloqueioUsuario(bloqueioUsuario);
 	}
+	
+	public boolean liberarUsuarioBloqueado(UsuarioLogin usuarioLogin){
+		return getDataParaDesbloqueio(usuarioLogin).before(new Date());
+	}
 }
