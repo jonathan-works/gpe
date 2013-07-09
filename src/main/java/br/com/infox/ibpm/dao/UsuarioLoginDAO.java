@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.access.query.UsuarioLoginQuery;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioLoginDAO.NAME)
 @AutoCreate
@@ -53,6 +54,11 @@ public class UsuarioLoginDAO extends GenericDAO {
 		parameters.put(UsuarioLoginQuery.PARAM_LOGIN, actorId);
 		parameters.put(UsuarioLogin.PARAM_ID_TASK_INSTANCE, idTaskInstance);
 		return getNamedSingleResult(UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE, parameters);
+	}
+	
+	public void inativarUsuario(UsuarioLogin usuario) {
+		String hql = "UPDATE UsuarioLogin u SET u.ativo = false WHERE u.idUsuario = " + usuario.getIdPessoa().toString();
+		entityManager.createQuery(hql).executeUpdate();
 	}
 	
 }
