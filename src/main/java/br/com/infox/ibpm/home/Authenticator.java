@@ -349,13 +349,6 @@ public class Authenticator {
 		}
 	}
 	
-	private void checkCertificadoUsuario(UsuarioLogin usuario) throws LoginException {
-		String assinaturaUsuario = StringUtil.replaceQuebraLinha(usuario.getAssinatura());
-		if (Strings.isEmpty(assinatura) || !assinatura.equals(assinaturaUsuario)) {
-			throw new LoginException("Assinatura inválida");
-		}
-	}	
-	
 	public static String getIdsLocalizacoesFilhas(Localizacao localizacao) {
 		StringBuilder sb = new StringBuilder();
 		List<Localizacao> localizacoesFilhas = getLocalizacoesFilhas(localizacao, new ArrayList<Localizacao>());
