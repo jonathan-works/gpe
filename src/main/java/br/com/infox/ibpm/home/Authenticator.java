@@ -24,7 +24,6 @@ import java.util.Set;
 
 import javax.naming.ldap.LdapContext;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
