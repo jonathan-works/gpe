@@ -8,6 +8,7 @@ import org.jboss.seam.core.Events;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.ibpm.dao.PessoaFisicaDAO;
 import br.com.infox.ibpm.dao.PessoaJuridicaDAO;
+import br.com.infox.ibpm.entity.PessoaFisica;
 
 @Name(PessoaManager.NAME)
 @AutoCreate
@@ -25,6 +26,10 @@ public class PessoaManager extends GenericManager {
 		} else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")){
 			Events.instance().raiseEvent("evtCarregarPessoaJuridica", pessoaJuridicaDAO.searchByCnpj(codigo));
 		} else return;
+	}
+	
+	public PessoaFisica getPessoaFisicaByCpf(String cpf){
+		return pessoaFisicaDAO.searchByCpf(cpf);
 	}
 
 }
