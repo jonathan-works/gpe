@@ -76,5 +76,12 @@ public class AuthenticatorService extends GenericManager {
 		throw new LoginException("O usuário " + usuario.getNome() + " está bloqueado." 
 								+ "Por favor, contate o adminstrador do sistema");
 	}
-
+	
+	public UsuarioLogin getUsuarioByCpf(String cpf) throws LoginException {
+		UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByCpf(cpf);
+		if (usuario == null) {
+			throw new LoginException("Não foi possível encontrar um usuário que corresponda a este SmartCard. ");
+		}
+		return usuario;
+	}
 }
