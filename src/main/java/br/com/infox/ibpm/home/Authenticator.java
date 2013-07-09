@@ -130,10 +130,7 @@ public class Authenticator {
 					.instance().getIdentityStore();
 			UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
 			// retorna false caso o usuario do Sistema não esteja ativo
-			if (usuario == null) {
-				throw new LoginException("O usuário '" + id
-						+ "' não está corretamente cadastrado no sistema.");
-			}
+			validaCadastroDeUsuario(id, usuario);
 			if (!Strings.isEmpty(assinatura)) {
 				assinatura = null;
 			}
@@ -153,6 +150,14 @@ public class Authenticator {
 				Identity.instance().unAuthenticate();
 				throw e;
 			}
+		}
+	}
+
+	private void validaCadastroDeUsuario(String id, UsuarioLogin usuario)
+			throws LoginException {
+		if (usuario == null) {
+			throw new LoginException("O usuário '" + id
+					+ "' não está corretamente cadastrado no sistema.");
 		}
 	}
 
