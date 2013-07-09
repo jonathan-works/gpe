@@ -1,4 +1,4 @@
-namespace("infox.util",{
+namespace("infox",{
 	applyCSS:function(args) {
 		setTimeout(function(){
 			$(args.selector).css(args.style);
@@ -23,13 +23,28 @@ namespace("infox.util",{
 		} catch (e) {
 			console.error(e);
 		}
+	},redirect:function(o) {
+		var destination = o.url;
+		var iter = 0;
+		if (o.params) {
+			destination += "?";
+			for(var name in o.params) {
+				if (iter++ > 0) {
+					destination += "&";
+				}
+				destination += name + "=" + o.params[name];
+			}
+		}
+		window.location = destination;
 	}
 });
-namespace("infox.util",function(util) {
+
+namespace("infox",function(util) {
 	window.showLoading = util.showLoading;
 	window.hideLoading = util.hideLoading;
 	window.refreshOpener = util.refreshOpener;
 	window.openPopUp = util.openPopUp;
+	infox = namespace.infox;
 	
 	if (!$.fn.clearForm) {
 		$.fn.clearForm = function() {
