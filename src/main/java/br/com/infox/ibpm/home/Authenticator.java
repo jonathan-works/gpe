@@ -71,10 +71,13 @@ import br.com.itx.util.HibernateUtil;
 import br.com.itx.util.StringUtil;
 
 
-@Name("authenticator")
+@Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)
 @BypassInterceptors
 public class Authenticator {
+	
+	public static final String NAME = "authenticator";
+	
 
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
 	private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
@@ -103,7 +106,7 @@ public class Authenticator {
 	}
 	
 	public static Authenticator instance() {
-		return ComponentUtil.getComponent("authenticator");
+		return ComponentUtil.getComponent(NAME);
 	}
 	   
 	public void setNewPassword1(String newPassword1){
