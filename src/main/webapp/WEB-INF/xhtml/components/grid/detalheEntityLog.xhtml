@@ -15,19 +15,13 @@
 		<ui:param
 		 name="styleClass"
 		 value="#{isAtivo ? '' : 'inativo'}" />
-	
-		<script>
-			function abrirPopUp(){
-				openPopUp('comprovante', '');
-			}
-		</script>
 		
 		<div >
 		
 		
 			<s:link
 			 view="/Consulta/Log/detalheLog.seam"
-			 onclick="abrirPopUp();"
+			 onclick="namespace.infox.openPopUp('comprovante', '');"
 			 target="comprovante">
 			
 				<s:conversationPropagation type="none" />
