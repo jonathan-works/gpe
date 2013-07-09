@@ -393,7 +393,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 		if (usuarioLogin == null){
 			hql = "select o from PessoaFisica o where o.cpf = :cpf";
 			query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
-			PessoaFisica pessoaFisica = EntityUtil.getSingleResult(query);
+			PessoaFisica pessoaFisica = pessoaManager.getPessoaFisicaByCpf(cpf);
 			if (pessoaFisica != null){
 				pessoaFisicaCadastrada = true;
 				instance = getInstance().loadDataFromPessoaFisica(pessoaFisica);
