@@ -28,7 +28,8 @@
 			</wi:selectOneMenuEntity>
 		</c:if>
 		<c:if test="#{not selectable}">
-			<h:outputLabel value="#{authenticator.localizacaoAtualCombo}" />
+			<h:outputLabel styleClass="painelUsuario-label" value="#{usuarioLogado}" />
+			<h:outputLabel styleClass="painelUsuario-select" value="#{authenticator.localizacaoAtualCombo}" />
 		</c:if>
 		<h:outputText
 			value="#{authenticator.usuarioLocalizacaoListItems[0]}"
