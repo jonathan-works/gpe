@@ -219,23 +219,6 @@ public class Authenticator {
 								+ "Por favor, contate o adminstrador do sistema");
 	}
 	
-	private void autenticaManualmenteNoSeamSecurity(String login, IdentityManager identityManager) {
-		Principal principal = new SimplePrincipal(login);
-		Identity identity = Identity.instance();
-		identity.acceptExternallyAuthenticatedPrincipal(principal);
-		Credentials credentials = (Credentials) Component.getInstance(Credentials.class);
-		credentials.clear();
-		credentials.setUsername(login);
-		identity.getCredentials().clear();
-		identity.getCredentials().setUsername(login);
-		List<String> roles = identityManager.getImpliedRoles(login);
-		if (roles != null) {
-			for (String role : roles) {
-				identity.addRole(role);
-			}
-		}
-	}
-	
 	public void login(){
 		//verificar se o login existe
 		UsuarioHome home = UsuarioHome.instance();
