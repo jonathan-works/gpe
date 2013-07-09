@@ -5,59 +5,65 @@
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:wi="http://www.itx.com.br/jsf" xmlns:a="http://richfaces.org/a4j"
-	xmlns:s="http://jboss.org/schema/seam/taglib">
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:h="http://java.sun.com/jsf/html">
+	
+	<h:outputScript
+        name="expressionWizard.js"
+        library="js" />
 	<script language="javascript" charset="ISO-8859-1">
 	//<![CDATA[
-	require(["#{util.urlProject}/resources/js/expressionWizard.js"], function() {
-		new br.com.infox.util.ExpressionWizard({
-			inputId:"#{rich:clientId(id)}TextDecoration:#{id}Text",
-			imagePath:"#{util.contextPath}/img/jbpm/wizard.gif",
-			id:"#{rich:clientId(id)}Div",
-			variables:{
-				boolean:#{nodeFitter.currentNode.getBooleanVariables()},
-				number:#{nodeFitter.currentNode.getNumberVariables()},
-				transition:#{nodeFitter.currentNode.getLeavingTransitionList()},
-			},
-			messages:{
-				image:{
-					title:"#{messages['expressionWizard.title']}"
+		namespace("infox.util.ExpressionWizard",function(ExpressionWizard){
+			new ExpressionWizard({
+				inputId:"#{rich:clientId(id)}TextDecoration:#{id}Text",
+				imagePath:"#{util.contextPath}/img/jbpm/wizard.gif",
+				id:"#{rich:clientId(id)}Div",
+				variables:{
+					boolean:#{nodeFitter.currentNode.getBooleanVariables()},
+					number:#{nodeFitter.currentNode.getNumberVariables()},
+					transition:#{nodeFitter.currentNode.getLeavingTransitionList()},
 				},
-				numberInput:{
-					label:"#{messages['expressionWizard.numberPrompt']}",
-					error:"#{messages['expressionWizard.numberPromptError']}"
-				},
-				select:{
-					arithmetic:{
-						null:"#{messages['expressionWizard.aritSelect.null']}",
-						plus:"#{messages['expressionWizard.aritSelect.plus']}",
-						minus:"#{messages['expressionWizard.aritSelect.minus']}",
-						mult:"#{messages['expressionWizard.aritSelect.mult']}",
-						div:"#{messages['expressionWizard.aritSelect.div']}",
-						number:"#{messages['expressionWizard.aritSelect.numb']}"
+				messages:{
+					image:{
+						title:"#{messages['expressionWizard.title']}"
 					},
-					boolean:{
-						null:"#{messages['expressionWizard.booleanSelect.null']}",
-						true:"#{messages['expressionWizard.booleanSelect.true']}",
-						false:"#{messages['expressionWizard.booleanSelect.false']}",
-						or:"#{messages['expressionWizard.booleanSelect.or']}",
-						and:"#{messages['expressionWizard.booleanSelect.and']}",
-						not:"#{messages['expressionWizard.booleanSelect.not']}",
-						equals:"#{messages['expressionWizard.booleanSelect.equals']}",
-						notEqual:"#{messages['expressionWizard.booleanSelect.notEqual']}",
-						gte:"#{messages['expressionWizard.booleanSelect.gte']}",
-						gt:"#{messages['expressionWizard.booleanSelect.gt']}",
-						lte:"#{messages['expressionWizard.booleanSelect.lte']}",
-						lt:"#{messages['expressionWizard.booleanSelect.lt']}"
+					numberInput:{
+						label:"#{messages['expressionWizard.numberPrompt']}",
+						error:"#{messages['expressionWizard.numberPromptError']}"
 					},
-					conclusion:{
-						null:"#{messages['expressionWizard.condSelect.null']}",
-						condition:"#{messages['expressionWizard.condSelect.cond']}"
+					select:{
+						arithmetic:{
+							null:"#{messages['expressionWizard.aritSelect.null']}",
+							plus:"#{messages['expressionWizard.aritSelect.plus']}",
+							minus:"#{messages['expressionWizard.aritSelect.minus']}",
+							mult:"#{messages['expressionWizard.aritSelect.mult']}",
+							div:"#{messages['expressionWizard.aritSelect.div']}",
+							number:"#{messages['expressionWizard.aritSelect.numb']}"
+						},
+						boolean:{
+							null:"#{messages['expressionWizard.booleanSelect.null']}",
+							true:"#{messages['expressionWizard.booleanSelect.true']}",
+							false:"#{messages['expressionWizard.booleanSelect.false']}",
+							or:"#{messages['expressionWizard.booleanSelect.or']}",
+							and:"#{messages['expressionWizard.booleanSelect.and']}",
+							not:"#{messages['expressionWizard.booleanSelect.not']}",
+							equals:"#{messages['expressionWizard.booleanSelect.equals']}",
+							notEqual:"#{messages['expressionWizard.booleanSelect.notEqual']}",
+							gte:"#{messages['expressionWizard.booleanSelect.gte']}",
+							gt:"#{messages['expressionWizard.booleanSelect.gt']}",
+							lte:"#{messages['expressionWizard.booleanSelect.lte']}",
+							lt:"#{messages['expressionWizard.booleanSelect.lt']}"
+						},
+						conclusion:{
+							null:"#{messages['expressionWizard.condSelect.null']}",
+							condition:"#{messages['expressionWizard.condSelect.cond']}"
+						}
 					}
 				}
-			}
-	  });
-	})
+		  });
+		});
 	//]]>
 	</script>
 	<s:div id="#{id}" >
