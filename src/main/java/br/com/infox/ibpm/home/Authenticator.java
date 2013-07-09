@@ -145,7 +145,7 @@ public class Authenticator {
 			}
 
 			try {
-				validateUser(usuario);
+				service.validarUsuario(usuario);
 				if (isTrocarSenha()) {
 					trocarSenhaUsuario(usuario);
 				}
