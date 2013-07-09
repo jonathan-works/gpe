@@ -39,6 +39,7 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
+import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -52,6 +53,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
 	
 	@In private UsuarioLoginManager usuarioLoginManager;
+	@In private PessoaManager pessoaManager;
 
 	private String login;
 	private String password;
