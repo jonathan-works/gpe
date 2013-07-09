@@ -30,5 +30,9 @@ public class UsuarioLoginManager extends GenericManager {
 	public boolean usuarioExpirou(UsuarioLogin usuarioLogin){
 		return usuarioLogin.getProvisorio() && usuarioLogin.getDataExpiracao().before(new Date());
 	}
+	
+	public void inativarUsuario(UsuarioLogin usuario){
+		usuarioLoginDAO.inativarUsuario(usuario);
+	}
 
 }
