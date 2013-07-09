@@ -30,6 +30,7 @@ import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -62,6 +63,7 @@ import br.com.infox.core.certificado.VerificaCertificado;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
+import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ldap.util.LdapUtil;
 import br.com.infox.util.ParametroUtil;
@@ -99,6 +101,8 @@ public class Authenticator {
 	//Eventos
 	public static final String SET_USUARIO_LOCALIZACAO_LIST_EVENT = "authenticator.setUsuarioLocalizacaoListEvent";
 	public static final String SET_USUARIO_LOCALIZACAO_EVENT = "authenticator.setUsuarioLocalizacaoEvent";
+	
+	@In private BloqueioUsuarioManager bloqueioUsuarioManager;
 	
 	public String getNewPassword1(){
 		return newPassword1;
