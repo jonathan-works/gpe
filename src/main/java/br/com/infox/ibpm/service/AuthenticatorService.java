@@ -84,4 +84,8 @@ public class AuthenticatorService extends GenericManager {
 		}
 		return usuario;
 	}
+	
+	public UsuarioLogin getUsuarioByLogin(String login){
+		return usuarioLoginManager.getUsuarioLoginByLogin(login);
+	}
 }
