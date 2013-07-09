@@ -210,7 +210,7 @@ public class Authenticator {
 	
 	@Observer(Identity.EVENT_LOGIN_FAILED)
 	public void loginFailed(Object obj) throws LoginException {
-		UsuarioLogin usuario = getUsuario(Identity.instance().getCredentials().getUsername());
+		UsuarioLogin usuario = authenticatorService.getUsuarioByLogin(Identity.instance().getCredentials().getUsername());
 		if (usuario != null && !usuario.getAtivo()) {
 			throw new LoginException("Este usuário não está ativo.");
 		}
