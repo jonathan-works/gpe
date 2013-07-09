@@ -387,20 +387,20 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	public void searchByCpf(String cpf){
 		String hql = "select o from UsuarioLogin o where o.cpf = :cpf";
 		Query query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
-		UsuarioLogin ul = EntityUtil.getSingleResult(query);
-		if (ul == null){
+		UsuarioLogin usuarioLogin = EntityUtil.getSingleResult(query);
+		if (usuarioLogin == null){
 			hql = "select o from PessoaFisica o where o.cpf = :cpf";
 			query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
-			PessoaFisica pf = EntityUtil.getSingleResult(query);
-			if (pf != null){
+			PessoaFisica pessoaFisica = EntityUtil.getSingleResult(query);
+			if (pessoaFisica != null){
 				pessoaFisicaCadastrada = true;
-				instance = getInstance().loadDataFromPessoaFisica(pf);
+				instance = getInstance().loadDataFromPessoaFisica(pessoaFisica);
 			}
 			else {
 				pessoaFisicaCadastrada = false;
 				}
 		} else{
-			instance = ul;
+			instance = usuarioLogin;
 		}
 	}
 	
