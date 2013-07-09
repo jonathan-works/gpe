@@ -182,37 +182,6 @@ public class Authenticator {
 		throw new LoginException("Nova senha não confere com a confirmação!");		
 	}
 	
-	private void validateUser(UsuarioLogin usuario) throws LoginException {
-		if (usuario.getBloqueio()){
-			if(bloqueioUsuarioManager.liberarUsuarioBloqueado(usuario)){
-				bloqueioUsuarioManager.desfazerBloqueioUsuario(usuario);
-			} else{
-				throwUsuarioBloqueado(usuario);
-			}
-		} else if (usuario.getProvisorio()){
-			if (usuarioLoginManager.usuarioExpirou(usuario)){
-				usuarioLoginManager.inativarUsuario(usuario);
-				throwUsuarioExpirou(usuario);
-			}
-		} else if(!usuario.getAtivo()) {
-			throwUsuarioInativo(usuario);
-		}
-	}
-
-	private void throwUsuarioExpirou(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usuário " + usuario.getNome() + " expirou. " 
-								+ "Por favor, contate o adminstrador do sistema");
-	}
-
-	private void throwUsuarioInativo(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usuário " + usuario.getNome() + " não está ativo.\n");
-	}
-
-	private void throwUsuarioBloqueado(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usuário " + usuario.getNome() + " está bloqueado." 
-								+ "Por favor, contate o adminstrador do sistema");
-	}
-	
 	public void login(){
 		//verificar se o login existe
 		UsuarioHome home = UsuarioHome.instance();
