@@ -5,7 +5,6 @@
 	      var $prechange = args.beforeOnChange || function(event){return true;};
 	      var $onchange = args.onChange || function(event){};
 	      var $postchange = args.afterOnChange || function(event){};
-	      var $onclick = args.onClick || function(event) {};
 	      
 	      function $addElementsToSelect(elements) {
 			for (var i=0; i<elements.length; i++) {
@@ -16,20 +15,18 @@
 				$element.appendChild($option);
 			}
 	      }
-	      
-	      $element.onchange = function(event) {
+	      $element.addEventListener("change", function(event) {
 		      if ($prechange(event)) {
 			      $onchange(event);
 		      }
 		      $postchange(event);
-	      };
+	      });
 	      
 	      if (args.options) {
 	    	  $addElementsToSelect(args.options);
 	      }
 	      
 	      if (args.variables) {
-	    	  //$addElementsToSelect(args.variables);
 	    	  for (var i=0; i<args.variables.length; i++) {
 					var $item = args.variables[i];
 					var $option = document.createElement("option");
@@ -45,7 +42,7 @@
 	function Image(args) {
 		var $image = document.createElement("img");
 		$image.src = args.src;
-		$image.onclick = args.onclick || function () {};
+		$image.addEventListener("click",args.onclick);
 		$image.title = args.title;
 		for(var row in args.style) {
 		    $image.style[row] = args.style[row];
@@ -61,9 +58,9 @@
 			$element.style.display = args.display;
 		}
 		$element.style.padding = "0px 5px 0px 5px";
-		$element.onmouseover = args.onmouseover || function(event) {};
-		$element.onmouseout = args.onmouseout || function(event) {};
-		$element.onclick = args.onclick || function(event) {};
+		$element.addEventListener("mouseenter",args.onmouseenter);
+		$element.addEventListener("mouseleave",args.onmouseleave);
+		$element.addEventListener("click",args.onclick);
 	
 		return $element;
 	}
@@ -126,9 +123,9 @@
 		return Select(args);
 	}
 
-	namespace("infox.util.ExpressionWizard",
-		function(args) {
-			if (this.ExpressionWizard && this.ExpressionWizard===br.com.infox.util.ExpressionWizard) {
+	namespace("infox.ExpressionWizard",
+		function ExpressionWizard(args) {
+			if (this.ExpressionWizard && this.ExpressionWizard===namespace.infox.ExpressionWizard) {
 				return;
 			}
 			/* Variables */
@@ -146,14 +143,14 @@
 			
 			/* EVENTS */
 			// private 
-			function onMouseOverSpan(event) {
+			function onMouseEnterSpan(event) {
 				var $parent = event.currentTarget.parentNode;
 				$parent.style.backgroundColor = "#D4F2D6";
 				$parent.style.padding = "5px 5px 5px 5px";
 				$parent.style.margin = "-5px 0px 0px -5px";
 			}
 			
-			function onMouseExitSpan(event) {
+			function onMouseLeaveSpan(event) {
 				var $parent = event.currentTarget.parentNode;
 				$parent.style.backgroundColor=$parent.style.padding=$parent.style.margin=$parent.style.cursor="";
 			}
@@ -175,8 +172,8 @@
 			}
 			
 			function createSpan(args) {
-				args.onmouseover = onMouseOverSpan;
-				args.onmouseout = onMouseExitSpan;
+				args.onmouseenter = onMouseEnterSpan;
+				args.onmouseleave = onMouseLeaveSpan;
 				return Span(args);
 			}
 			
