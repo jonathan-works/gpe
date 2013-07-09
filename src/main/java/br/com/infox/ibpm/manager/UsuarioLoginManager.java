@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.manager;
 
+import java.util.Date;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -23,6 +25,10 @@ public class UsuarioLoginManager extends GenericManager {
 	
 	public UsuarioLogin getUsuarioLogin(UsuarioLogin usuarioLogin){
 		return usuarioLoginDAO.getUsuarioLogin(usuarioLogin);
+	}
+	
+	public boolean usuarioExpirou(UsuarioLogin usuarioLogin){
+		return usuarioLogin.getProvisorio() && usuarioLogin.getDataExpiracao().before(new Date());
 	}
 
 }
