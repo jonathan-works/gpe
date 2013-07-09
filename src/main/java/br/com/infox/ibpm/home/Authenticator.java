@@ -57,8 +57,6 @@ import br.com.infox.core.certificado.DadosCertificado;
 import br.com.infox.core.certificado.VerificaCertificado;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
-import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
-import br.com.infox.ibpm.manager.UsuarioLoginManager;
 import br.com.infox.ibpm.service.AuthenticatorService;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ldap.util.LdapUtil;
@@ -97,9 +95,7 @@ public class Authenticator {
 	public static final String SET_USUARIO_LOCALIZACAO_LIST_EVENT = "authenticator.setUsuarioLocalizacaoListEvent";
 	public static final String SET_USUARIO_LOCALIZACAO_EVENT = "authenticator.setUsuarioLocalizacaoEvent";
 	
-	@In private BloqueioUsuarioManager bloqueioUsuarioManager;
-	@In private UsuarioLoginManager usuarioLoginManager;
-	@In private AuthenticatorService service;
+	@In private AuthenticatorService authenticatorService;
 	
 	public String getNewPassword1(){
 		return newPassword1;
@@ -144,7 +140,7 @@ public class Authenticator {
 			}
 
 			try {
-				service.validarUsuario(usuario);
+				authenticatorService.validarUsuario(usuario);
 				if (isTrocarSenha()) {
 					trocarSenhaUsuario(usuario);
 				}
@@ -200,7 +196,7 @@ public class Authenticator {
 			//Autenticado
 			if(ldap != null) {
 				IdentityManager identityManager = IdentityManager.instance();
-				service.autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
+				authenticatorService.autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
 				Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
 				Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
 			}
@@ -264,7 +260,7 @@ public class Authenticator {
 			throw new LoginException(e.getMessage());
 		}
 		EntityManager em = EntityUtil.getEntityManager();
-		UsuarioLogin usuario = service.getUsuarioByCpf(cpf);
+		UsuarioLogin usuario = authenticatorService.getUsuarioByCpf(cpf);
 		if (usuario == null) {
 			throw new LoginException("Usuário não encontrado");
 		} else {
@@ -280,7 +276,7 @@ public class Authenticator {
 		IdentityManager identityManager = IdentityManager.instance();
 		boolean userExists = identityManager.getIdentityStore().userExists(login);
 		if (userExists) {
-			service.autenticaManualmenteNoSeamSecurity(login, identityManager);
+			authenticatorService.autenticaManualmenteNoSeamSecurity(login, identityManager);
 			if (usuario.getCertChain() == null) {
 				//TODO isso é temporario ate que todo mundo tenha atualizado o certchain
 				usuario.setCertChain(certChain);
