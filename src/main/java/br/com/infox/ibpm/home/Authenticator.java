@@ -255,7 +255,7 @@ public class Authenticator {
 			//Autenticado
 			if(ldap != null) {
 				IdentityManager identityManager = IdentityManager.instance();
-				autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
+				service.autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
 				Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
 				Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
 			}
@@ -348,7 +348,7 @@ public class Authenticator {
 		IdentityManager identityManager = IdentityManager.instance();
 		boolean userExists = identityManager.getIdentityStore().userExists(login);
 		if (userExists) {
-			autenticaManualmenteNoSeamSecurity(login, identityManager);
+			service.autenticaManualmenteNoSeamSecurity(login, identityManager);
 			if (usuario.getCertChain() == null) {
 				//TODO isso é temporario ate que todo mundo tenha atualizado o certchain
 				usuario.setCertChain(certChain);
