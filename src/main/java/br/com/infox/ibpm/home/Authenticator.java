@@ -65,6 +65,7 @@ import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
+import br.com.infox.ibpm.service.AuthenticatorService;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ldap.util.LdapUtil;
 import br.com.infox.util.ParametroUtil;
@@ -105,6 +106,7 @@ public class Authenticator {
 	
 	@In private BloqueioUsuarioManager bloqueioUsuarioManager;
 	@In private UsuarioLoginManager usuarioLoginManager;
+	@In private AuthenticatorService service;
 	
 	public String getNewPassword1(){
 		return newPassword1;
