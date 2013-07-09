@@ -61,11 +61,10 @@
 	</s:div>			
 
 	<script>
+		// Sobrescrevendo funções usadas pelo editor
 		function useBase64() {
 			return 'false';
 		}
-	</script>   			
-	<script>
 		function getData() {
 			var data;
 			data = tinyMCE.editors['#{idEditor}'].getContent();
