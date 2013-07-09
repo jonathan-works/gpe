@@ -312,19 +312,6 @@ public class Authenticator {
 		return sb.toString();
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public UsuarioLogin getUsuario(String login) {
-		String sql = "select o from br.com.infox.access.entity.UsuarioLogin o where o.login = :login";
-		EntityManager entityManager = EntityUtil.getEntityManager();
-		Query query = entityManager.createQuery(sql);
-		query.setParameter("login", login);
-		List resultList = query.getResultList();
-		if (resultList.size() > 0) {
-			return (UsuarioLogin) resultList.get(0);
-		} 
-		return null;
-	}
-	
 	public void unAuthenticate() {
 		Identity.instance().unAuthenticate();
 		limparContexto();
