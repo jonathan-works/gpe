@@ -26,7 +26,8 @@ public class BloqueioUsuarioManager extends GenericManager {
 		return bloqueioUsuario.getDataPrevisaoDesbloqueio();
 	}
 	
-	public void desfazerBloqueioUsuario(BloqueioUsuario bloqueioUsuario) {
+	public void desfazerBloqueioUsuario(UsuarioLogin usuarioLogin) {
+		BloqueioUsuario bloqueioUsuario = bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
 		assert bloqueioUsuario.getDataDesbloqueio() != null;
 		bloqueioUsuarioDAO.desfazerBloqueioUsuario(bloqueioUsuario);
 	}
