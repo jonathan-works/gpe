@@ -24,14 +24,9 @@
 		<script>
 			namespace.whenReady(function() {
 				$("#btnTrocar").click( function (){
-					$(".novaSenha").toggleClass("visible");
-					if ($(".novaSenha").is(':hidden')){
-						$("#btnTrocar").val("#{messages['login.trocarSenhaBtn']}");
-					}
-					else{
-						$("#btnTrocar").val("#{messages['login.naoTrocarSenhaBtn']}");
-						$(".input_login.passwd").val('');
-					}
+					var isHidden = $(".novaSenha").toggleClass("visible").is(':hidden');
+					$("#btnTrocar").val(isHidden ? "#{messages['login.trocarSenhaBtn']}" :"#{messages['login.naoTrocarSenhaBtn']}");
+					$(".input_login.passwd").val('');
 				});
 				var panelTeste = new namespace.infox.Modal({id:'panelTeste'});
 				$("#btnTrocarSenha").click(panelTeste.show);
