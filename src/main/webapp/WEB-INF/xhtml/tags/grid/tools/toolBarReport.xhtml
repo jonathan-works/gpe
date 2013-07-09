@@ -20,7 +20,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
-	<s:span rendered="#{wi:get(rendered, 'true')}">
+	<s:span rendered="#{wi:get(rendered, 'true')}" styleClass="tb-rprt">
 		<s:link
 			view="#{empty reportPath ? util.viewIdDirectory.concat('report.xhtml') : reportPath}"
 			target="_blank">

@@ -38,13 +38,15 @@
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisarCnaeForm"
 							   formTitle="#{messages['searchForm.title']}">
-					<wi:inputText id="codCnae"
-								 value="#{cnaeList.entity.codCnae}"
-								 label="#{messages['cnae.codCnae']}"
-								 size="9" 
-								 maxlength="9">
-								 <wi:mask id="#{id}" mask="99.99-9"/>
+					<wi:inputText
+						id="codCnae"
+						value="#{cnaeList.entity.codCnae}"
+						label="#{messages['cnae.codCnae']}"
+						size="9"
+			 			styleClass="inputCnae"
+						maxlength="9">
 					</wi:inputText>
+					<wi:mask selector=".inputCnae" mask="99.99-9"/>
 					<wi:inputText id="descricaoCnae"
 								  label="#{messages['cnae.descricaoCnae']}"
 								  value="#{cnaeList.entity.descricaoCnae}"
@@ -73,11 +75,12 @@
 			<wi:inputText id="codCnae"
 						 value="#{cnaeHome.instance.codCnae}"
 						 required="true"
+						 styleClass="inputCnae"
 						 label="#{messages['cnae.codCnae']}"
 						 size="9" 
 						 maxlength="9">
-						 <wi:mask id="#{id}" mask="99.99-9" />
 			</wi:inputText>
+			<wi:mask selector=".inputCnae" mask="99.99-9" />
 			<wi:inputText id="descricaoCnae"
 						  label="#{messages['cnae.descricaoCnae']}"
 						  required="true"

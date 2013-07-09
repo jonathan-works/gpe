@@ -27,15 +27,15 @@
 	
 	<wi:inputText
          id="#{id}"
+         styleClass="#{id}"
          size="18"
          maxlength="18"
          onblur="validarCnpj(this)">
-		<wi:mask
-             id="#{id}"
-             mask="99.999.999/9999-99" />
 		<f:validator
              validatorId="cnpjValidator" />
 		<ui:insert />
 	</wi:inputText>
+	<wi:mask selector=".#{id}"
+             mask="99.999.999/9999-99" />
 	
 </ui:composition>

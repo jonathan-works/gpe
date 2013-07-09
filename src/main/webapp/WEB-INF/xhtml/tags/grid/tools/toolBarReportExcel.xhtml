@@ -22,7 +22,8 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:a="http://richfaces.org/a4j"
     xmlns:wi="http://www.itx.com.br/jsf">
-    <s:span rendered="#{wi:get(rendered, 'true')}">
+    <s:span rendered="#{wi:get(rendered, 'true')}"
+    		styleClass="tb-rprt-xls">
         <h:form>
             <c:if test="#{not empty reportPath}">
                 <s:link
