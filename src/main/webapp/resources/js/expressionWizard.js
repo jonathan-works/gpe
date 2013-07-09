@@ -126,7 +126,7 @@
 		return Select(args);
 	}
 
-	defineObject("br.com.infox.util.ExpressionWizard",
+	namespace("infox.util.ExpressionWizard",
 		function(args) {
 			if (this.ExpressionWizard && this.ExpressionWizard===br.com.infox.util.ExpressionWizard) {
 				return;
