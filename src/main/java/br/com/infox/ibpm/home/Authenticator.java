@@ -217,13 +217,6 @@ public class Authenticator {
 								+ "Por favor, contate o adminstrador do sistema");
 	}
 	
-	private void inativarUsuario(UsuarioLogin usuario) {
-		String inativarProvisorio = 
-				"UPDATE UsuarioLogin u SET u.ativo = false " +
-				"WHERE u.idUsuario = " + usuario.getIdPessoa().toString();
-		EntityUtil.getEntityManager().createQuery(inativarProvisorio).executeUpdate();
-	}
-	
 	private void autenticaManualmenteNoSeamSecurity(String login, IdentityManager identityManager) {
 		Principal principal = new SimplePrincipal(login);
 		Identity identity = Identity.instance();
