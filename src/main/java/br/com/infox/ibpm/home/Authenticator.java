@@ -17,10 +17,8 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +32,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
@@ -50,8 +47,6 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
-import org.jboss.ws.extensions.security.SimplePrincipal;
-
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.access.entity.UsuarioLogin;
@@ -60,7 +55,6 @@ import br.com.infox.core.certificado.CertificadoException;
 import br.com.infox.core.certificado.CertificadoLog;
 import br.com.infox.core.certificado.DadosCertificado;
 import br.com.infox.core.certificado.VerificaCertificado;
-import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
