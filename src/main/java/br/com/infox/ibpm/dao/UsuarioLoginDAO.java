@@ -20,9 +20,10 @@ public class UsuarioLoginDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioLoginDAO";
 	
-	public UsuarioLogin searchByCpf(String cpf){
-		String ejbqlString = "select o from UsuarioLogin o where o.cpf = :cpf";
-		return (UsuarioLogin) entityManager.createQuery(ejbqlString).setParameter("cpf", cpf).getSingleResult();
+	public UsuarioLogin getUsuarioLoginByCpf(String cpf){
+		String hql = "select o from UsuarioLogin o where o.cpf = :cpf";
+		Query query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
+		return EntityUtil.getSingleResult(query);
 	}
 	
 	public void inserirUsuarioParaPessoaFisica(String login, UsuarioLogin usuarioLogin){
