@@ -73,7 +73,6 @@ import br.com.itx.util.StringUtil;
 
 @Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)
-@BypassInterceptors
 public class Authenticator {
 	
 	public static final String NAME = "authenticator";
