@@ -74,7 +74,6 @@ import br.com.itx.util.StringUtil;
 public class Authenticator {
 	
 	public static final String NAME = "authenticator";
-	
 
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
 	private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
@@ -251,19 +250,6 @@ public class Authenticator {
 		return list;
 	}
 	
-	private UsuarioLogin getUsuarioByCpf(String cpf) throws LoginException {
-		String hql = "select o from Usuario o " +
-					 "where o.cpf = :cpf ";
-		Query q = EntityUtil.createQuery(hql);
-		q.setParameter("cpf", cpf);
-		UsuarioLogin usuario = EntityUtil.getSingleResult(q);
-		if (usuario == null) {
-			throw new LoginException("Não foi possível encontrar um usuário que corresponda a este SmartCard. " +
-					"Favor verificar junto com a Secretária Judiciaria os dados de CPF e data de nascimento");
-		}
-		return usuario;
-	}	
-	
 	public String authenticateSC() throws LoginException {
 		String cpf = null;
 		try {
@@ -278,7 +264,7 @@ public class Authenticator {
 			throw new LoginException(e.getMessage());
 		}
 		EntityManager em = EntityUtil.getEntityManager();
-		UsuarioLogin usuario = getUsuarioByCpf(cpf);
+		UsuarioLogin usuario = service.getUsuarioByCpf(cpf);
 		if (usuario == null) {
 			throw new LoginException("Usuário não encontrado");
 		} else {
