@@ -64,6 +64,7 @@ import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
+import br.com.infox.ibpm.manager.UsuarioLoginManager;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ldap.util.LdapUtil;
 import br.com.infox.util.ParametroUtil;
@@ -103,6 +104,7 @@ public class Authenticator {
 	public static final String SET_USUARIO_LOCALIZACAO_EVENT = "authenticator.setUsuarioLocalizacaoEvent";
 	
 	@In private BloqueioUsuarioManager bloqueioUsuarioManager;
+	@In private UsuarioLoginManager usuarioLoginManager;
 	
 	public String getNewPassword1(){
 		return newPassword1;
@@ -192,9 +194,8 @@ public class Authenticator {
 				throwUsuarioBloqueado(usuario);
 			}
 		} else if (usuario.getProvisorio()){
-			Date hoje = new Date();
-			if (usuario.getDataExpiracao().before(hoje)){
-				inativarUsuario(usuario);
+			if (usuarioLoginManager.usuarioExpirou(usuario)){
+				usuarioLoginManager.inativarUsuario(usuario);
 				throwUsuarioExpirou(usuario);
 			}
 		} else if(!usuario.getAtivo()) {
