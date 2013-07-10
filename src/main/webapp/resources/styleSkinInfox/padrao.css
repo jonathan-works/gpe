@@ -379,7 +379,7 @@ img.disabled {
 }
 
 select {
-	border-width:0px;
+	border-width:1px;
 	width: 250px;
 	background-color: transparent;
 	background-repeat: no-repeat;
