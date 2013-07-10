@@ -27,7 +27,6 @@ import javax.persistence.EntityManager;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -375,16 +374,10 @@ public class Authenticator {
 	 * @param loc
 	 */
 	public void setLocalizacaoAtual(UsuarioLocalizacao loc) {
-		Set<String> roleSet = (Set<String>) 
-				Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
-		if (roleSet != null) {
-			for (String r : roleSet) {
-				Identity.instance().removeRole(r);
-			}
-		}
+		removeRolesAntigas();
 		LOG.warn("Obter role da localizacao: " + loc);
 		LOG.warn("Obter role do papel: " + loc.getPapel());
-		roleSet = RolesMap.instance().getChildrenRoles(loc.getPapel().getIdentificador());
+		Set<String> roleSet = RolesMap.instance().getChildrenRoles(loc.getPapel().getIdentificador());
 		for (String r : roleSet) {
 			Identity.instance().addRole(r);
 		}
@@ -404,6 +397,15 @@ public class Authenticator {
 			redirect.setParameter("cid", null);
 			redirect.execute();
 		}	
+	}
+
+	private void removeRolesAntigas() {
+		Set<String> roleSet = (Set<String>) Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
+		if (roleSet != null) {
+			for (String r : roleSet) {
+				Identity.instance().removeRole(r);
+			}
+		}
 	}
 	
 	
