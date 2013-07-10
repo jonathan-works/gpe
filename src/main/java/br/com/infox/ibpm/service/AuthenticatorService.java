@@ -17,6 +17,7 @@ import org.jboss.ws.extensions.security.SimplePrincipal;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
+import br.com.infox.ibpm.manager.LocalizacaoManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
 
 @Name(AuthenticatorService.NAME)
@@ -28,6 +29,7 @@ public class AuthenticatorService extends GenericManager {
 	
 	@In private UsuarioLoginManager usuarioLoginManager;
 	@In private BloqueioUsuarioManager bloqueioUsuarioManager;
+	@In private LocalizacaoManager localizacaoManager;
 	
 	public void autenticaManualmenteNoSeamSecurity(String login, IdentityManager identityManager) {
 		Principal principal = new SimplePrincipal(login);
