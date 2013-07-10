@@ -371,21 +371,21 @@ public class Authenticator {
 	 * da localização anterior (se hover) e atribuindo os roles
 	 * da nova localização, recursivamente.
 	 * 
-	 * @param loc
+	 * @param localizacao
 	 */
-	public void setLocalizacaoAtual(UsuarioLocalizacao loc) {
+	public void setLocalizacaoAtual(UsuarioLocalizacao localizacao) {
 		removeRolesAntigas();
-		LOG.warn("Obter role da localizacao: " + loc);
-		LOG.warn("Obter role do papel: " + loc.getPapel());
-		Set<String> roleSet = RolesMap.instance().getChildrenRoles(loc.getPapel().getIdentificador());
+		LOG.warn("Obter role da localizacao: " + localizacao);
+		LOG.warn("Obter role do papel: " + localizacao.getPapel());
+		Set<String> roleSet = RolesMap.instance().getChildrenRoles(localizacao.getPapel().getIdentificador());
 		for (String r : roleSet) {
 			Identity.instance().addRole(r);
 		}
-		Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_ATUAL, loc);
-		Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, loc.getPapel().getIdentificador());
+		Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_ATUAL, localizacao);
+		Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, localizacao.getPapel().getIdentificador());
 		Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);
 		Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, 
-				getLocalizacoesFilhas(loc.getLocalizacao()));
+				getLocalizacoesFilhas(localizacao.getLocalizacao()));
 		Contexts.getSessionContext().remove("mainMenu");
 		Contexts.removeFromAllContexts("tarefasTree");
 
