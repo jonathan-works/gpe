@@ -94,8 +94,6 @@ public class Authenticator {
 	public static final String SET_USUARIO_LOCALIZACAO_LIST_EVENT = "authenticator.setUsuarioLocalizacaoListEvent";
 	public static final String SET_USUARIO_LOCALIZACAO_EVENT = "authenticator.setUsuarioLocalizacaoEvent";
 	
-	@In private AuthenticatorService authenticatorService;
-	
 	public String getNewPassword1(){
 		return newPassword1;
 	}
@@ -133,7 +131,7 @@ public class Authenticator {
 			validaCadastroDeUsuario(id, usuario);
 			limparAssinatura();
 			try {
-				authenticatorService.validarUsuario(usuario);
+				getAuthenticatorService().validarUsuario(usuario);
 				if (isTrocarSenha()) {
 					trocarSenhaUsuario(usuario);
 				}
@@ -205,7 +203,7 @@ public class Authenticator {
 			//Autenticado
 			if(ldap != null) {
 				IdentityManager identityManager = IdentityManager.instance();
-				authenticatorService.autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
+				getAuthenticatorService().autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
 				Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
 				Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
 			}
@@ -219,7 +217,7 @@ public class Authenticator {
 	
 	@Observer(Identity.EVENT_LOGIN_FAILED)
 	public void loginFailed(Object obj) throws LoginException {
-		UsuarioLogin usuario = authenticatorService.getUsuarioByLogin(Identity.instance().getCredentials().getUsername());
+		UsuarioLogin usuario = getAuthenticatorService().getUsuarioByLogin(Identity.instance().getCredentials().getUsername());
 		if (usuario != null && !usuario.getAtivo()) {
 			throw new LoginException("Este usuário não está ativo.");
 		}
@@ -269,7 +267,7 @@ public class Authenticator {
 			throw new LoginException(e.getMessage());
 		}
 		EntityManager em = EntityUtil.getEntityManager();
-		UsuarioLogin usuario = authenticatorService.getUsuarioByCpf(cpf);
+		UsuarioLogin usuario = getAuthenticatorService().getUsuarioByCpf(cpf);
 		if (usuario == null) {
 			throw new LoginException("Usuário não encontrado");
 		} else {
@@ -285,7 +283,7 @@ public class Authenticator {
 		IdentityManager identityManager = IdentityManager.instance();
 		boolean userExists = identityManager.getIdentityStore().userExists(login);
 		if (userExists) {
-			authenticatorService.autenticaManualmenteNoSeamSecurity(login, identityManager);
+			getAuthenticatorService().autenticaManualmenteNoSeamSecurity(login, identityManager);
 			if (usuario.getCertChain() == null) {
 				//TODO isso é temporario ate que todo mundo tenha atualizado o certchain
 				usuario.setCertChain(certChain);
@@ -520,4 +518,11 @@ public class Authenticator {
 		setLocalizacaoAtual(loc);
 	}	
 	
+	public UsuarioLocalizacao getLocalizacaoAtualCombo() {
+		return getUsuarioLocalizacaoAtual();
+	}
+	
+	private static AuthenticatorService getAuthenticatorService(){
+		return ComponentUtil.getComponent(AuthenticatorService.NAME);
+	}
 }
