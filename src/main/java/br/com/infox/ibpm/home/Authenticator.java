@@ -128,7 +128,7 @@ public class Authenticator {
 	public void postAuthenticate() throws LoginException {
 		String id = Identity.instance().getCredentials().getUsername();
 		if (id != null) {
-			JpaIdentityStore store = (JpaIdentityStore) IdentityManager.instance().getIdentityStore();
+			JpaIdentityStore store = getJpaIdentyStore();
 			UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
 			// retorna false caso o usuario do Sistema não esteja ativo
 			validaCadastroDeUsuario(id, usuario);
@@ -149,6 +149,10 @@ public class Authenticator {
 				throw e;
 			}
 		}
+	}
+
+	private JpaIdentityStore getJpaIdentyStore() {
+		return (JpaIdentityStore) IdentityManager.instance().getIdentityStore();
 	}
 
 	private void limparAssinatura() {
