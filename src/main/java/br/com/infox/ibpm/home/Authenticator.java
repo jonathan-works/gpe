@@ -359,6 +359,7 @@ public class Authenticator {
 	}
 
 	private void removeRolesAntigas() {
+		@SuppressWarnings("unchecked")
 		Set<String> roleSet = (Set<String>) Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
 		if (roleSet != null) {
 			for (String r : roleSet) {
@@ -368,6 +369,7 @@ public class Authenticator {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public static List<Localizacao> getLocalizacoesFilhasAtuais() {
 		return (List<Localizacao>) Contexts.getSessionContext().get(LOCALIZACOES_FILHAS_ATUAIS);
 	}
@@ -458,6 +460,7 @@ public class Authenticator {
 		CertificadoLog.executeLog(msg);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoListItems() {
 		List<UsuarioLocalizacao> list = (List<UsuarioLocalizacao>) 
 			Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_LIST);
