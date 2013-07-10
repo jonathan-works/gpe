@@ -147,7 +147,7 @@ public class Authenticator {
 	}
 
 	private void realizarLoginDoUsuario(UsuarioLogin usuario) throws LoginException {
-		setUsuarioLogadoSessao(usuario);
+		getAuthenticatorService().setUsuarioLogadoSessao(usuario);
 		obterLocalizacaoAtual(usuario);
 		Actor.instance().setId(usuario.getLogin());
 	}
@@ -351,19 +351,6 @@ public class Authenticator {
 		String query = "update public.tb_processo set nm_actor_id = null ";
 		HibernateUtil.getSession().createSQLQuery(query)
 			.executeUpdate();
-	}
-	
-	/**
-	 * Metodo que coloca o usuario logado na sessão
-	 * @param usuario
-	 */
-	private void setUsuarioLogadoSessao(UsuarioLogin usuario) {
-		Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
-		List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(
-				usuario.getUsuarioLocalizacaoList());
-		Collections.sort(usuarioLocalizacaoList, USUARIO_LOCALIZACAO_COMPARATOR);
-		Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_LIST, usuarioLocalizacaoList);
-		Events.instance().raiseEvent(SET_USUARIO_LOCALIZACAO_LIST_EVENT, usuarioLocalizacaoList);
 	}
 	
 	private boolean obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
