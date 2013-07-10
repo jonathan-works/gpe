@@ -255,50 +255,6 @@ public class Authenticator {
 		return list;
 	}
 	
-	public String authenticateSC() throws LoginException {
-		String cpf = null;
-		try {
-			Certificado c = new Certificado(certChain);
-			DadosCertificado dadosCertificado = DadosCertificado.parse(c);
-			cpf = dadosCertificado.getValor(DadosCertificado.CPF);
-			if (Strings.isEmpty(cpf)) {
-				throw new LoginException("Cpf não encontrado no cartão.");
-			}
-			cpf = StringUtil.formartCpf(cpf);
-		} catch (Exception e) {
-			throw new LoginException(e.getMessage());
-		}
-		EntityManager em = EntityUtil.getEntityManager();
-		UsuarioLogin usuario = getAuthenticatorService().getUsuarioByCpf(cpf);
-		if (usuario == null) {
-			throw new LoginException("Usuário não encontrado");
-		} else {
-			checkValidadeCertificado(certChain);
-			assinatura = StringUtil.replaceQuebraLinha(assinatura);
-			if (!usuario.getAtivo()) {
-				throw new LoginException("Este usuário não está ativo.");
-			}			
-		}
-		
-		String login = usuario.getLogin();
-		
-		IdentityManager identityManager = IdentityManager.instance();
-		boolean userExists = identityManager.getIdentityStore().userExists(login);
-		if (userExists) {
-			getAuthenticatorService().autenticaManualmenteNoSeamSecurity(login, identityManager);
-			if (usuario.getCertChain() == null) {
-				//TODO isso é temporario ate que todo mundo tenha atualizado o certchain
-				usuario.setCertChain(certChain);
-				em.merge(usuario);
-				EntityUtil.flush(em);
-			}
-			Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
-			Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
-			return null;
-		}
-		return null;
-	}
-	
 	private void checkValidadeCertificado(String certChain) throws LoginException {
 		try {
 			VerificaCertificado.verificaValidadeCertificado(certChain);
