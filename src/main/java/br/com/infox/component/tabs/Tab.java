@@ -1,10 +1,15 @@
 package br.com.infox.component.tabs;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 import javax.el.MethodExpression;
 import javax.faces.component.ActionSource2;
 import javax.faces.component.FacesComponent;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
+import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
 import javax.faces.event.AbortProcessingException;
@@ -18,7 +23,7 @@ import com.sun.faces.application.MethodBindingMethodExpressionAdapter;
 
 @SuppressWarnings("deprecation")
 @FacesComponent(Tab.COMPONENT_ID)
-public class Tab extends UIPanel implements ActionSource2 {
+public class Tab extends UIPanel implements ActionSource2, ClientBehaviorHolder {
 	public static final String COMPONENT_ID = "br.com.infox.component.tabs.Tab";
 	public static final String RENDERER_TYPE = "br.com.infox.component.tabs.TabRenderer";
 	public static final String COMPONENT_FAMILY = "br.com.infox.component.tabs";
@@ -26,6 +31,10 @@ public class Tab extends UIPanel implements ActionSource2 {
 	private static enum PropertyKeys {
 		name, title, actionExpression, immediate, disabled, style, styleClass;
 	}
+	
+	private static final Collection<String> EVENT_NAMES = Collections.unmodifiableCollection(Arrays.asList(
+	        "action"
+	));
 
 	@Override
 	public String getRendererType() {
@@ -91,6 +100,19 @@ public class Tab extends UIPanel implements ActionSource2 {
 		return isActiveTab() && !isDisabled();
 	}
 	
+	public TabPanel getTabPanel() {
+		UIComponent parent = getParent();
+		while (parent != null && !(parent instanceof TabPanel)) {
+			parent = parent.getParent();
+		}
+		return (TabPanel) parent;
+	}
+	
+	public boolean isActiveTab() {
+		return getTabPanel().getActiveTab().equals(getName());
+	}
+	
+	//-------------------------- Início ActionSource2 ---------------------------------------//
 	@Override
 	public MethodBinding getAction() {
 		MethodExpression expr = getActionExpression();
@@ -166,16 +188,14 @@ public class Tab extends UIPanel implements ActionSource2 {
 			}
 		}
 	}
+	//-------------------------- Fim ActionSource2 ---------------------------------------//
 	
-	public TabPanel getTabPanel() {
-		UIComponent parent = getParent();
-		while (parent != null && !(parent instanceof TabPanel)) {
-			parent = parent.getParent();
-		}
-		return (TabPanel) parent;
+	//-------------------------- Início ClientBehaviorHolder ---------------------------------------//
+	
+	@Override
+	public Collection<String> getEventNames() {
+		return EVENT_NAMES;
 	}
 	
-	public boolean isActiveTab() {
-		return getTabPanel().getActiveTab().equals(getName());
-	}
+	//-------------------------- Fim ClientBehaviorHolder ---------------------------------------//
 }
