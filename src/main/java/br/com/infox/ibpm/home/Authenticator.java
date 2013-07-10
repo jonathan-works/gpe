@@ -322,34 +322,8 @@ public class Authenticator {
 	public void unAuthenticate() {
 		Identity.instance().unAuthenticate();
 		limparContexto();
-		anulaActorId();
 	}
 	
-	/**
-	 * Ao encerrar uma sessao, limpa os processos que o servidor estava trabalhando
-	 * Obs.: usando session do hibernate pq o EM da erro de transação
-	 */
-	@Observer("org.jboss.seam.preDestroyContext.SESSION")
-	public void anulaActorId() {
-		String actorId = Actor.instance().getId();
-		if (actorId != null) {
-			String query = "update public.tb_processo set nm_actor_id = null " +
-			"where nm_actor_id = :actorId";
-			HibernateUtil.getSession().createSQLQuery(query)
-				.setParameter("actorId", actorId).executeUpdate();
-		}
-	}
-	
-	/**
-	 * Ao ligar a aplicação, limpa todos os actorIds dos processos
-	 */
-	@Observer("org.jboss.seam.postInitialization")
-	public void anulaTodosActorId() {
-		String query = "update public.tb_processo set nm_actor_id = null ";
-		HibernateUtil.getSession().createSQLQuery(query)
-			.executeUpdate();
-	}
-
 	/**
 	 * Metodo que coloca o usuario logado na sessão
 	 * @param usuario
