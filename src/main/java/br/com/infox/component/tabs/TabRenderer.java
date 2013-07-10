@@ -1,8 +1,11 @@
 package br.com.infox.component.tabs;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.behavior.ClientBehavior;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.FacesRenderer;
@@ -85,5 +88,29 @@ public class TabRenderer extends Renderer {
 	private void doEncodeEnd(FacesContext context, Tab tab) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement(HtmlConstants.DIV_ELEMENT);
+	}
+	
+	@Override
+	public void decode(FacesContext context, UIComponent component) {
+		super.decode(context, component);
+		Tab tab = (Tab) component;
+		Map<String, List<ClientBehavior>> behaviors = tab.getClientBehaviors();
+		if (behaviors.isEmpty()) {
+			return;
+		}
+		
+		String behaviorEvent = context.getExternalContext().getRequestParameterMap().get("javax.faces.behavior.event");
+		if (behaviorEvent != null) {
+			List<ClientBehavior> behaviorsForEvent = behaviors.get(behaviorEvent);
+			if (!behaviorsForEvent.isEmpty()) {
+				String behaviorSource = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
+				String tabPanelId = tab.getTabPanel().getClientId(context);
+				if (behaviorSource != null && tabPanelId.equals(behaviorSource)) {
+					for (ClientBehavior behavior : behaviorsForEvent) {
+						behavior.decode(context, tab);
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,8 +1,11 @@
 package br.com.infox.component.tabs;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.behavior.ClientBehavior;
+import javax.faces.component.behavior.ClientBehaviorContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.FacesRenderer;
@@ -27,6 +30,14 @@ public class TabHeadersRenderer extends Renderer {
 			if (tab.isRendered()) {
 				writer.startElement(HtmlConstants.LI_ELEMENT, null);
 				writer.writeAttribute(HtmlConstants.NAME_ATTR, tab.getName(), "name");
+				List<ClientBehavior> behaviors = tab.getClientBehaviors().get("action");
+				if (behaviors != null) {
+					ClientBehaviorContext behaviorContext = ClientBehaviorContext.createClientBehaviorContext(context, tab, "action", tab.getTabPanel().getClientId(context), null);
+					for (ClientBehavior behavior : behaviors) {
+						String script = behavior.getScript(behaviorContext);
+						writer.writeAttribute(HtmlConstants.ONCLICK_EVENT, script, null);
+					}
+				}
 //				writer.writeAttribute(HtmlConstants.ONCLICK_EVENT, "__" + tab.getTabPanel().getClientId().replace(":", "") + "({}, {'newTab': {'attr': function() { return '" + tab.getName() + "'}}})", null);
 				if (tab.isActiveTab()) {
 					writer.writeAttribute(HtmlConstants.CLASS_ATTR, getDefaultCssClassesHeaderActive(), null);
