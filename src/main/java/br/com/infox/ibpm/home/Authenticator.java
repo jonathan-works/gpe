@@ -65,7 +65,6 @@ import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 import br.com.itx.util.StringUtil;
 
-
 @Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)
 public class Authenticator {
@@ -74,6 +73,7 @@ public class Authenticator {
 
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
 	private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
+	
 	private String newPassword1;
 	private String newPassword2;
 	private String login;
@@ -115,11 +115,13 @@ public class Authenticator {
 	}
 	   
 	public void setNewPassword2(String newPassword2){
-		if (this.newPassword2 != newPassword2 && 
-				(this.newPassword2 == null || 
-						!this.newPassword2.equals(newPassword2))){
+		if (newPassword2IsValid(newPassword2)){
 			this.newPassword2 = newPassword2;
 	    }      
+	}
+
+	private boolean newPassword2IsValid(String newPassword2) {
+		return this.newPassword2 != newPassword2 && (this.newPassword2 == null || !this.newPassword2.equals(newPassword2));
 	}
 	
 	@Observer(Identity.EVENT_POST_AUTHENTICATE)
