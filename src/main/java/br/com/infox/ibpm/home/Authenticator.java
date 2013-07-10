@@ -128,15 +128,11 @@ public class Authenticator {
 	public void postAuthenticate() throws LoginException {
 		String id = Identity.instance().getCredentials().getUsername();
 		if (id != null) {
-			JpaIdentityStore store = (JpaIdentityStore) IdentityManager
-					.instance().getIdentityStore();
+			JpaIdentityStore store = (JpaIdentityStore) IdentityManager.instance().getIdentityStore();
 			UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
 			// retorna false caso o usuario do Sistema não esteja ativo
 			validaCadastroDeUsuario(id, usuario);
-			if (!Strings.isEmpty(assinatura)) {
-				assinatura = null;
-			}
-
+			limparAssinatura();
 			try {
 				authenticatorService.validarUsuario(usuario);
 				if (isTrocarSenha()) {
@@ -155,11 +151,15 @@ public class Authenticator {
 		}
 	}
 
-	private void validaCadastroDeUsuario(String id, UsuarioLogin usuario)
-			throws LoginException {
+	private void limparAssinatura() {
+		if (!Strings.isEmpty(assinatura)) {
+			assinatura = null;
+		}
+	}
+
+	private void validaCadastroDeUsuario(String id, UsuarioLogin usuario) throws LoginException {
 		if (usuario == null) {
-			throw new LoginException("O usuário '" + id
-					+ "' não está corretamente cadastrado no sistema.");
+			throw new LoginException("O usuário '" + id + "' não está corretamente cadastrado no sistema.");
 		}
 	}
 
