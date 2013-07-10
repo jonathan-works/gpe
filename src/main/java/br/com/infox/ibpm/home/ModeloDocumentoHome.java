@@ -18,12 +18,11 @@ package br.com.infox.ibpm.home;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.manager.ModeloDocumentoManager;
@@ -71,7 +70,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	}
 	
 	@Override
-	public void setId(Object id) {
+	public void setId(final Object id) {
 		boolean changed = id != null && !id.equals(getId());
 		super.setId(id);
 		if (changed) {
@@ -93,7 +92,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		this.grupoModeloDocumento = grupoModeloDocumento;
 	}
 	
-	public void setTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
+	public void setTipoModeloDocumento(final TipoModeloDocumento tipoModeloDocumento) {
 		this.tipoModeloDocumento = tipoModeloDocumento;
 	}
 	
@@ -105,7 +104,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	public List<Variavel> getVariaveis() {
 		List list = new ArrayList<Variavel>();
 		if (getInstance().getTipoModeloDocumento() != null) {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			sb.append("select o from Variavel o ");
 			sb.append("join o.variavelTipoModeloList tipos ");
 			sb.append("where tipos.tipoModeloDocumento = :tipo");
@@ -114,37 +113,36 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		return list;
 	}
 	
-	public boolean setHistorico(ModeloDocumento oldEntity)	{
+	public boolean setHistorico(final ModeloDocumento oldEntity)	{
+		boolean result = false;
 		if ( !instance.hasChanges(oldEntity) ) {
-			return false;
-		}
-		if ( oldEntity== null )	{
-			return true;
-		}
+			result = false;
+		} else if ( oldEntity== null )	{
+			result = true;
+		} else {
+			HistoricoModeloDocumento historico = new HistoricoModeloDocumento();
 			
-		
-		HistoricoModeloDocumentoHome home = (HistoricoModeloDocumentoHome)Component.getInstance(HistoricoModeloDocumentoHome.NAME);
-		home.newInstance();
-		HistoricoModeloDocumento historico = home.getInstance();
-		
-		historico.setTituloModeloDocumento(oldEntity.getTituloModeloDocumento());
-		historico.setDescricaoModeloDocumento(oldEntity.getModeloDocumento());
-		historico.setAtivo(oldEntity.getAtivo());
-		historico.setDataAlteracao(new Date());
-		historico.setModeloDocumento(instance);
-		historico.setUsuarioAlteracao((UsuarioLogin) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
-		
-		home.persist();
-		return true;
+			historico.setTituloModeloDocumento(oldEntity.getTituloModeloDocumento());
+			historico.setDescricaoModeloDocumento(oldEntity.getModeloDocumento());
+			historico.setAtivo(oldEntity.getAtivo());
+			historico.setDataAlteracao(new Date());
+			historico.setModeloDocumento(instance);
+			historico.setUsuarioAlteracao((UsuarioLogin) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
+			getEntityManager().persist(historico);
+			result = true;
+			FacesMessages.instance().clear();
+		}
+		return result;
 	}
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {
+		boolean result = true;
 		if (!setHistorico(getOldEntity()))	{
-				return false;
+				result = false;
 		}
 		
-		return super.beforePersistOrUpdate();
+		return result;
 	}
 	
 	public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos() {

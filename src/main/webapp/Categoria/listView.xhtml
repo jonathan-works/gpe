@@ -120,6 +120,7 @@
                         <h:outputText
                             value="#{messages['categoriaItem.titleDataTable']} - #{categoriaHome.instance.categoria}" />
                     </f:facet>
+                    <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBarRemove
                             id="toolBarRemove"
@@ -127,9 +128,10 @@
                             actionRemove="categoriaItemAction.remove(row)" />
                     </ui:define>
                     <wi:columnOutputText
-                        columnId="categoriaItem"
+                        columnId="item"
                         columnHeader="#{messages['categoriaItem.item']}"
-                        value="#{row.item.caminhoCompletoToString()}">
+                        value="#{row.item.caminhoCompletoToString()}"
+                        hideOrder="true">
                         
                     </wi:columnOutputText>
                 </wi:dataTable>

@@ -40,8 +40,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * registro com o mesmo registro de naturezaCategoriaFluxo.
 	 * @param natCatFluxoLocalizacao
 	 */
-	public void persistWithChildren(NatCatFluxoLocalizacao natCatFluxoLocalizacao)
-			throws Exception {
+	public void persistWithChildren(NatCatFluxoLocalizacao natCatFluxoLocalizacao) {
 		persist(natCatFluxoLocalizacao);
 		persistChildren(natCatFluxoLocalizacao.getLocalizacao(), natCatFluxoLocalizacao);
 	}

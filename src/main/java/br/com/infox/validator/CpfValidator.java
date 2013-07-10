@@ -28,10 +28,11 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 
-@org.jboss.seam.annotations.faces.Validator(id="cpfValidator")
-@Name("cpfValidator")
+@org.jboss.seam.annotations.faces.Validator(id=CpfValidator.NAME)
+@Name(CpfValidator.NAME)
 @BypassInterceptors
 public class CpfValidator implements Validator {
+	public static final String NAME = "cpfValidator";
 
 	public void validate(FacesContext context, UIComponent component, Object value) 
 		throws ValidatorException {
