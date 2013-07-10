@@ -38,10 +38,10 @@
 	display:inline-table;
 }
 
-.rf-cp.rf-tgp,.rf-cp-hdr.rf-cp-hdr-exp {
+.rf-cp.rf-tgp {
 	padding:0px;
 }
-.rf-cp-gr,.rf-cp-hdr.rf-cp-hdr-exp {
+.rf-cp-gr {
 	border-spacing:0px;
 }
 

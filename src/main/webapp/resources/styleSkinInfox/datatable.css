@@ -1,14 +1,17 @@
 .dtable-search-form {
-	display: inline-block;
-	vertical-align: top;
 	margin: 0 5px 5px 0;
 }
 .dtable-p-b.rf-p-b {
 	padding: 2px;
 	overflow: auto;
 }
-.dtable-p.rf-p {
+
+.dtable-p.rf-p,.dtable-search-form {
 	display: inline-block;
+	vertical-align:top;
+}
+
+.dtable-p.rf-p {
 	min-width:calc(100% - 291px);
 	padding:0px;
 }
@@ -27,4 +30,9 @@
 .tb-rprt,.tb-rprt-xls {
 	display:inline-block;
 	margin:0px 3px;
+}
+.rf-cp-hdr.rf-cp-hdr-exp,.rf-cp-hdr.rf-cp-hdr-colps{
+	min-width:280px;
+	border-spacing:0px;
+	padding:0px;
 }
