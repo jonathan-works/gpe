@@ -378,8 +378,8 @@ public class Authenticator {
 		LOG.warn("Obter role da localizacao: " + localizacao);
 		LOG.warn("Obter role do papel: " + localizacao.getPapel());
 		Set<String> roleSet = RolesMap.instance().getChildrenRoles(localizacao.getPapel().getIdentificador());
-		for (String r : roleSet) {
-			Identity.instance().addRole(r);
+		for (String role : roleSet) {
+			Identity.instance().addRole(role);
 		}
 		Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_ATUAL, localizacao);
 		Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, localizacao.getPapel().getIdentificador());
