@@ -136,9 +136,7 @@ public class Authenticator {
 					trocarSenhaUsuario(usuario);
 				}
 				else {
-					setUsuarioLogadoSessao(usuario);
-					obterLocalizacaoAtual(usuario);
-					Actor.instance().setId(usuario.getLogin());
+					realizarLoginDoUsuario(usuario);
 				}
 			}
 			catch (LoginException e) {
@@ -146,6 +144,12 @@ public class Authenticator {
 				throw e;
 			}
 		}
+	}
+
+	private void realizarLoginDoUsuario(UsuarioLogin usuario) throws LoginException {
+		setUsuarioLogadoSessao(usuario);
+		obterLocalizacaoAtual(usuario);
+		Actor.instance().setId(usuario.getLogin());
 	}
 
 	private JpaIdentityStore getJpaIdentyStore() {
