@@ -130,7 +130,6 @@ public class Authenticator {
 		if (id != null) {
 			JpaIdentityStore store = getJpaIdentyStore();
 			UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
-			// retorna false caso o usuario do Sistema não esteja ativo
 			validaCadastroDeUsuario(id, usuario);
 			limparAssinatura();
 			try {
