@@ -112,7 +112,62 @@
 		</wi:dataForm>
 	</ui:define>
 
-	<ui:define
-         name="tabs">
+	<ui:define name="tabs">
+		<wi:tab
+            id="localizacaoTab"
+            rendered="#{naturezaCategoriaFluxoAction.isManaged()}"
+            title="#{messages['naturezaCategoriaFluxo.localizacao']}"
+            name="localizacaoTab">
+            #{natCatFluxoLocalizacaoList.entity.setNaturezaCategoriaFluxo(home.instance)}
+            <s:div id="localizacaoFormDiv">
+	            #{natCatFluxoLocalizacaoAction.instance.setNaturezaCategoriaFluxo(home.instance)}
+	            <wi:dataForm
+					formId="natCatFluxoLocalizacaoForm"
+					formTitle="#{messages['form.title']}">
+					<ui:define name="buttons">
+						<wi:commandButton
+	                            id="saveButton"
+	                            action="natCatFluxoLocalizacaoAction.persist"
+	                            reRender="localizacaoFormDiv, localizacaoDtDiv"
+	                            value="Incluir" />
+					</ui:define>
+					<wi:tree
+						id="localizacao"
+						assignTo="natCatFluxoLocalizacaoAction.instance.localizacao"
+						label="#{messages['localizacao.localizacao']}"
+						required="true"
+						tree="#{natCatFluxoLocalizacaoAction.localizacaoTreeHandler}" />
+					<wi:selectBooleanCheckbox
+						id="heranca"
+						label="#{messages['natCatFluxoLocalizacao.heranca']}"
+						value="#{natCatFluxoLocalizacaoAction.instance.heranca}" />
+				</wi:dataForm>
+			</s:div>
+			<s:div id="localizacaoDtDiv">
+				<wi:dataTable
+					values="#{natCatFluxoLocalizacaoList.list(15)}"
+					bean="#{natCatFluxoLocalizacaoList}"
+					tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}"
+					id="natCatFluxoLocalizacaoList"
+					rowId="#{row.idNatCatFluxoLocalizacao}"
+					actionInactive="natCatFluxoLocalizacaoAction.inactive">
+					<ui:define name="searchForm">
+					</ui:define>
+					<ui:define name="headerToolBar">
+					</ui:define>
+					<ui:define name="toolBar">
+						<wi:toolBarRemove
+							actionRemove="natCatFluxoLocalizacaoAction.remove(row)" 
+							reRender="localizacaoFormDiv, localizacaoDtDiv"/>
+					</ui:define>
+					<wi:columnOutputText columnId="localizacao"
+						columnHeader="#{messages['localizacao.localizacao']}"
+						columnWidth="20%" value="#{row.localizacao}" />
+					<wi:columnBoolean columnId="heranca"
+						columnHeader="#{messages['natCatFluxoLocalizacao.heranca']}"
+						columnWidth="10%" value="#{row.heranca}" />
+				</wi:dataTable>
+			</s:div>
+		</wi:tab>
 	</ui:define>
 </ui:composition>
