@@ -520,7 +520,4 @@ public class Authenticator {
 		setLocalizacaoAtual(loc);
 	}	
 	
-	public UsuarioLocalizacao getLocalizacaoAtualCombo() {
-		return getUsuarioLocalizacaoAtual();
-	}		
 }
