@@ -48,11 +48,7 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.core.certificado.Certificado;
-import br.com.infox.core.certificado.CertificadoException;
 import br.com.infox.core.certificado.CertificadoLog;
-import br.com.infox.core.certificado.DadosCertificado;
-import br.com.infox.core.certificado.VerificaCertificado;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.ibpm.service.AuthenticatorService;
@@ -62,7 +58,6 @@ import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
-import br.com.itx.util.StringUtil;
 
 @Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)
@@ -253,16 +248,6 @@ public class Authenticator {
 			getLocalizacoesFilhas(locFilho, list);
 		}
 		return list;
-	}
-	
-	private void checkValidadeCertificado(String certChain) throws LoginException {
-		try {
-			VerificaCertificado.verificaValidadeCertificado(certChain);
-			VerificaCertificado.verificaRevogacaoCertificado(certChain);
-		} catch (CertificadoException e) {
-			LOG.warn("Certificado inválido: " + e.getMessage());
-			throw new LoginException(e.getMessage());	
-		}
 	}
 	
 	public static String getIdsLocalizacoesFilhas(Localizacao localizacao) {
