@@ -375,28 +375,46 @@ public class Authenticator {
 	 */
 	public void setLocalizacaoAtual(UsuarioLocalizacao usuarioLocalizacao) {
 		removeRolesAntigas();
-		LOG.warn("Obter role da localizacao: " + usuarioLocalizacao);
-		LOG.warn("Obter role do papel: " + usuarioLocalizacao.getPapel());
-		Set<String> roleSet = RolesMap.instance().getChildrenRoles(usuarioLocalizacao.getPapel().getIdentificador());
-		for (String role : roleSet) {
-			Identity.instance().addRole(role);
-		}
+		logDaBuscaDasRoles(usuarioLocalizacao);
+		Set<String> roleSet = getRolesAtuais(usuarioLocalizacao);
+		addRolesAtuais(roleSet);
+		setVariaveisDoContexto(usuarioLocalizacao, roleSet);
+		if (!getUsuarioLogado().getProvisorio()) {
+			redirectToPainelDoUsuario();
+		}	
+	}
+
+	private void redirectToPainelDoUsuario() {
+		Redirect redirect = Redirect.instance();
+		redirect.getParameters().clear();
+		redirect.setViewId("/Painel/list.seam");
+		redirect.setParameter("cid", null);
+		redirect.execute();
+	}
+
+	private void setVariaveisDoContexto(UsuarioLocalizacao usuarioLocalizacao,
+			Set<String> roleSet) {
 		Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_ATUAL, usuarioLocalizacao);
 		Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, usuarioLocalizacao.getPapel().getIdentificador());
 		Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);
-		Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, 
-				getLocalizacoesFilhas(usuarioLocalizacao.getLocalizacao()));
+		Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, getLocalizacoesFilhas(usuarioLocalizacao.getLocalizacao()));
 		Contexts.getSessionContext().remove("mainMenu");
 		Contexts.removeFromAllContexts("tarefasTree");
+	}
 
-		
-		if (!getUsuarioLogado().getProvisorio()) {
-			Redirect redirect = Redirect.instance();
-			redirect.getParameters().clear();
-			redirect.setViewId("/Painel/list.seam");
-			redirect.setParameter("cid", null);
-			redirect.execute();
-		}	
+	private void addRolesAtuais(Set<String> roleSet) {
+		for (String role : roleSet) {
+			Identity.instance().addRole(role);
+		}
+	}
+
+	private Set<String> getRolesAtuais(UsuarioLocalizacao usuarioLocalizacao) {
+		return RolesMap.instance().getChildrenRoles(usuarioLocalizacao.getPapel().getIdentificador());
+	}
+
+	private void logDaBuscaDasRoles(UsuarioLocalizacao usuarioLocalizacao) {
+		LOG.warn("Obter role da localizacao: " + usuarioLocalizacao);
+		LOG.warn("Obter role do papel: " + usuarioLocalizacao.getPapel());
 	}
 
 	private void removeRolesAntigas() {
