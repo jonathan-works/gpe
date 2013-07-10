@@ -17,6 +17,6 @@ public interface HtmlConstants {
 	
 	// Eventos Javascript
 	static final String ONCHANGE_EVENT = "onchange";
-	static final String ONCLICK_EVENT = "onchange";
-	static final String ONBLUR_EVENT = "onchange";
+	static final String ONCLICK_EVENT = "onclick";
+	static final String ONBLUR_EVENT = "onblur";
 }
