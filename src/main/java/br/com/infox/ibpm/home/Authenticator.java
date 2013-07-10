@@ -195,7 +195,6 @@ public class Authenticator {
 			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
 			return;
 		}
-		
 		//Autenticação via LDAP
 		if(user.getLdap() && ("sim".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()) ||
 							  "yes".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()))) {
