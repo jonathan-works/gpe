@@ -22,10 +22,19 @@ public class TabHeadersRenderer extends Renderer {
 		TabHeaders tabHeaders = (TabHeaders) component;
 		TabPanel panel = tabHeaders.getTabPanel();
 		writer.startElement(HtmlConstants.UL_ELEMENT, tabHeaders);
+		writer.writeAttribute(HtmlConstants.CLASS_ATTR, getDefaultCssClassesHeaderContainer(), null);
 		for (Tab tab : panel.getTabs()) {
 			if (tab.isRendered()) {
 				writer.startElement(HtmlConstants.LI_ELEMENT, null);
 				writer.writeAttribute(HtmlConstants.NAME_ATTR, tab.getName(), "name");
+//				writer.writeAttribute(HtmlConstants.ONCLICK_EVENT, "__" + tab.getTabPanel().getClientId().replace(":", "") + "({}, {'newTab': {'attr': function() { return '" + tab.getName() + "'}}})", null);
+				if (tab.isActiveTab()) {
+					writer.writeAttribute(HtmlConstants.CLASS_ATTR, getDefaultCssClassesHeaderActive(), null);
+				} else if (tab.isDisabled()) {
+					writer.writeAttribute(HtmlConstants.CLASS_ATTR, getDefaultCssClassesHeaderDisabled(), null);
+				} else {
+					writer.writeAttribute(HtmlConstants.CLASS_ATTR, getDefaultCssClassesHeaderInactive(), null);
+				}
 				writer.startElement(HtmlConstants.A_ELEMENT, null);
 				writer.writeAttribute(HtmlConstants.HREF_ATTR, "#" + tab.getClientId(context), "clientId");
 				writer.writeText(tab.getTitle(), "title");
@@ -52,5 +61,21 @@ public class TabHeadersRenderer extends Renderer {
 		sb.append("}");
 		writer.writeText(sb.toString(), null);
 		writer.endElement(HtmlConstants.SCRIPT_ELEMENT);
+	}
+
+	private String getDefaultCssClassesHeaderContainer() {
+		return "ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
+	}
+	
+	private String getDefaultCssClassesHeaderActive() {
+		return "ui-state-default ui-corner-top ui-tabs-active ui-state-active";
+	}
+	
+	private String getDefaultCssClassesHeaderInactive() {
+		return "ui-state-default ui-corner-top";
+	}
+	
+	private String getDefaultCssClassesHeaderDisabled() {
+		return "ui-state-default ui-corner-top ui-state-disabled";
 	}
 }

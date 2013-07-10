@@ -33,9 +33,12 @@ public class TabPanelRenderer extends Renderer {
 		if (tabPanel.getStyle() != null) {
 			writer.writeAttribute(HtmlConstants.STYLE_ATTR, tabPanel.getStyle(), "style");
 		}
-		if (tabPanel.getStyleClass() != null) {
-			writer.writeAttribute(HtmlConstants.CLASS_ATTR, tabPanel.getStyleClass(), "styleClass");
-		}
+		String styleClass = tabPanel.getStyleClass() != null ? tabPanel.getStyleClass() : "";
+		writer.writeAttribute(HtmlConstants.CLASS_ATTR, getDefaultCssClasses() + " " + styleClass, "styleClass");
+	}
+
+	private String getDefaultCssClasses() {
+		return "ui-tabs ui-widget ui-widget-content ui-corner-all";
 	}
 
 	@Override

@@ -36,9 +36,12 @@ public class TabRenderer extends Renderer {
 		if (tab.getStyle() != null) {
 			writer.writeAttribute(HtmlConstants.STYLE_ATTR, tab.getStyle(), "style");
 		}
-		if (tab.getStyleClass() != null) {
-			writer.writeAttribute(HtmlConstants.CLASS_ATTR, tab.getStyleClass(), "styleClass");
-		}
+		String styleClass = tab.getStyleClass() != null ? tab.getStyleClass() : "";
+		writer.writeAttribute(HtmlConstants.CLASS_ATTR, getDefaultCssClasses() + " " + styleClass, "styleClass");
+	}
+
+	private String getDefaultCssClasses() {
+		return "ui-tabs-panel ui-widget-content ui-corner-bottom";
 	}
 	
 	@Override
