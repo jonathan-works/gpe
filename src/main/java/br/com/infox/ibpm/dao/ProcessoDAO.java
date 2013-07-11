@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Caixa;
+import br.com.infox.ibpm.entity.Processo;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -34,6 +35,17 @@ public class ProcessoDAO extends GenericDAO {
 				.setParameter("idList", idList)
 				.executeUpdate();
 		EntityUtil.getEntityManager().flush();
+	}
+	
+	public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
+		EntityUtil.flush();
+		EntityUtil.getEntityManager().createNativeQuery(
+			"update public.tb_processo set id_caixa = :caixa " +
+			"where id_processo = :idProcesso")
+			.setParameter("caixa", caixa.getIdCaixa())
+			.setParameter("idProcesso", processo.getIdProcesso())
+			.executeUpdate();
+		return;
 	}
 
 }
