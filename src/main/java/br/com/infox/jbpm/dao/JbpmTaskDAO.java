@@ -30,5 +30,13 @@ public class JbpmTaskDAO extends GenericDAO {
 		}
 		JbpmUtil.getJbpmSession().flush();
 	}
+	
+	public BigInteger findTaskIdByIdProcessDefinitionAndName(BigInteger idProcessDefinition, String taskName){
+		String hql = "select max(id_) from jbpm_task where processdefinition_ = "
+				+ ":idProcessDefinition and name_ = :taskName";
+		return (BigInteger) JbpmUtil.getJbpmSession().createSQLQuery(hql)
+							.setParameter("idProcessDefinition", idProcessDefinition)
+							.setParameter("taskName", taskName).uniqueResult();
+	}
 
 }
