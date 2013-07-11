@@ -72,14 +72,12 @@ public class RegistraEstatistica implements Serializable {
 	}	
 	
 	private Fluxo getFluxo(String nomeFluxo) {
-		EntityManager em = EntityUtil.getEntityManager();
-		Query query = em.createQuery("select o from Fluxo o where o.fluxo = :nomeFluxo");
-		query.setParameter("nomeFluxo", nomeFluxo);
-		List<Fluxo> resultList = query.getResultList();
-		if (resultList.size() > 0) {
-			return resultList.get(0);
-		} 
-		throw new IllegalArgumentException("Fluxo não encontrado.");
+		Fluxo fluxo = fluxoDAO.getFluxoByName(nomeFluxo);
+		if (fluxo != null){
+			return fluxo;
+		} else {
+			throw new IllegalArgumentException("Fluxo não encontrado.");
+		}
 	}	
 	
 	
