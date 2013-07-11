@@ -72,7 +72,7 @@ public class CaixaEventoAction {
 			this.caixaList.getResultList();
 			List<Caixa> caixaList = this.caixaList.getResultList();
 			if(caixaList != null && caixaList.size() > 0) {
-				addProcessoCaixa(caixaList, proc);
+				caixaManager.moverProcessoParaCaixa(caixaList, proc);
 			}
 		} catch (Exception ex) {
 			LOG.warn("Erro ao filtrar os processos na caixa", ex);
