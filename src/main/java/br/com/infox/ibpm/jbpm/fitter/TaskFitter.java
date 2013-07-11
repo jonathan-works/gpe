@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.Query;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -28,6 +29,7 @@ import br.com.infox.ibpm.home.FluxoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.jbpm.manager.JbpmTaskManager;
 import br.com.itx.util.EntityUtil;
 
 @Name(TaskFitter.NAME)
@@ -44,6 +46,8 @@ public class TaskFitter extends Fitter implements Serializable {
 	private Integer prazo;
 	private PrazoEnum tipoPrazo;
 	private Map<String, PrazoTask> prazoTaskMap = new HashMap<String, PrazoTask>();
+	
+	@In private JbpmTaskManager jbpmTaskManager;
 	
 	public void addTask() {
 		Node currentNode = pb.getNodeFitter().getCurrentNode();
