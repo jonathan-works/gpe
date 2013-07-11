@@ -305,9 +305,9 @@ public class Authenticator {
 	 * @param usuarioLocalizacao
 	 */
 	public void setLocalizacaoAtual(UsuarioLocalizacao usuarioLocalizacao) {
+		Set<String> roleSet = getRolesAtuais(usuarioLocalizacao);
 		getAuthenticatorService().removeRolesAntigas();
 		getAuthenticatorService().logDaBuscaDasRoles(usuarioLocalizacao);
-		Set<String> roleSet = getRolesAtuais(usuarioLocalizacao);
 		getAuthenticatorService().addRolesAtuais(roleSet);
 		setVariaveisDoContexto(usuarioLocalizacao, roleSet);
 		if (!getUsuarioLogado().getProvisorio()) {
