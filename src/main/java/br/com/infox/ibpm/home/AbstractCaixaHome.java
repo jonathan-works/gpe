@@ -54,13 +54,7 @@ public abstract class AbstractCaixaHome<T> extends AbstractHome<Caixa> {
 	
 	@Override
 	public String remove() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("update Processo set caixa = :caixa ");
-		sb.append("where caixa.idCaixa = :idCaixa");
-		javax.persistence.Query q = getEntityManager().createQuery(sb.toString());
-		q.setParameter("caixa", null);
-		q.setParameter("idCaixa", instance.getIdCaixa());
-		q.executeUpdate();
+		caixaManager.removeCaixaByIdCaixa(instance.getIdCaixa());
 		return super.remove();
 	}
 	
