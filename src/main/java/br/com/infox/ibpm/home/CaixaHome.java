@@ -8,7 +8,6 @@ import javax.faces.model.SelectItem;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
@@ -19,7 +18,6 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(CaixaHome.NAME)
-@BypassInterceptors
 public class CaixaHome extends AbstractCaixaHome<Caixa> {
 
 	public static final String NAME = "caixaHome";
