@@ -23,7 +23,7 @@ import br.com.infox.ibpm.entity.Localizacao;
  *
  */
 @Name(NatCatFluxoLocalizacaoManager.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.EVENT)
 @AutoCreate
 public class NatCatFluxoLocalizacaoManager extends GenericManager {
 
@@ -159,6 +159,10 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	
 	public List<NaturezaCategoriaFluxo> listByLocalizacaoAndPapel(Localizacao l, Papel p) {
 		return natCatFluxoLocalizacaoDAO.listByLocalizacaoAndPapel(l, p);
+	}
+	
+	public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(NaturezaCategoriaFluxo ncf) {
+		return natCatFluxoLocalizacaoDAO.listByNaturezaCategoriaFluxo(ncf);
 	}
 	
 }
