@@ -99,15 +99,7 @@ public class PainelUsuarioHome implements Serializable {
 	}
 
 	public void setProcessoCaixa(List<Integer> idList, Caixa caixa) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("update Processo set caixa = :caixa ");
-		sb.append("where idProcesso in (:idList)");
-		EntityUtil.getEntityManager().createQuery(
-				sb.toString())
-				.setParameter("caixa", caixa)
-				.setParameter("idList", idList)
-				.executeUpdate();
-		EntityUtil.getEntityManager().flush();
+		processoManager.moverProcessosParaCaixa(idList, caixa);
 		refresh();
 	}
 
