@@ -148,7 +148,7 @@ public class NaturezaCategoriaFluxo implements Serializable{
 	
 	@Transient
 	public boolean isAtivo(){
-		return (natureza.getAtivo() && categoria.getAtivo() && fluxo.getAtivo());
+		return true;
 	}
 	
 }
