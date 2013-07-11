@@ -51,7 +51,6 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 	public String persist() {
 		String result = null;
 		try {
-			localizacaoTreeHandler.clearTree();
 			getInstance().setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
 			if(getInstance().getHeranca()) {
 				natCatFluxoLocalizacaoManager.persistWithChildren(getInstance());
@@ -59,7 +58,6 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 				natCatFluxoLocalizacaoManager.persist(getInstance());
 			}
 			result = PERSISTED;
-			newInstance();
 			FacesMessages.instance().add("Registro incluso com sucesso!");
 		} catch (EntityExistsException e) {
 			LOG.info(LOG_MESSAGE_PERSIST, e);
@@ -72,6 +70,9 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 			FacesMessages.instance().add(Severity.ERROR, "Falha de transação!");
 		} catch (Exception e) {
 			LOG.error(LOG_MESSAGE_PERSIST, e);
+		} finally {
+			localizacaoTreeHandler.clearTree();
+			newInstance();
 		}
 		return result;
 	}
