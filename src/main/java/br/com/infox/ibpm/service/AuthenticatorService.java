@@ -24,6 +24,7 @@ import org.jboss.ws.extensions.security.SimplePrincipal;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.ibpm.dao.ProcessoDAO;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.UsuarioLocalizacaoComparator;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
@@ -41,6 +42,8 @@ public class AuthenticatorService extends GenericManager {
 	@In private UsuarioLoginManager usuarioLoginManager;
 	@In private BloqueioUsuarioManager bloqueioUsuarioManager;
 	@In private LocalizacaoManager localizacaoManager;
+	
+	@In private ProcessoDAO processoDAO;
 	
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
 	private static final LogProvider LOG = Logging.getLogProvider(AuthenticatorService.class);
