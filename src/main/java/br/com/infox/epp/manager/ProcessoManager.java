@@ -14,6 +14,7 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
+import br.com.infox.ibpm.dao.ProcessoDAO;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.UsuarioLoginDAO;
 import br.com.infox.ibpm.entity.Processo;
@@ -34,6 +35,7 @@ public class ProcessoManager extends GenericManager {
 	private static final long serialVersionUID = 8095772422429350875L;
 	public static final String NAME = "processoManager";
 	
+	@In private ProcessoDAO processoDAO;
 	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	@In private UsuarioLoginDAO usuarioLoginDAO;
