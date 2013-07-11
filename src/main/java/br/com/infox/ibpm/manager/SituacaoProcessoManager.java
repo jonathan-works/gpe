@@ -1,5 +1,8 @@
 package br.com.infox.ibpm.manager;
 
+import java.util.List;
+import java.util.Map;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -18,6 +21,10 @@ public class SituacaoProcessoManager extends GenericManager {
 	
 	public boolean existemTarefasEmAberto(long taskId){
 		return situacaoProcessoDAO.getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
+	}
+	
+	public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
+		return situacaoProcessoDAO.getProcessosAbertosByIdTarefa(idTarefa, selected);
 	}
 
 }
