@@ -294,14 +294,9 @@ public class Authenticator {
 	}
 	
 	private boolean obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
-		List<UsuarioLocalizacao> listUsuarioLoc = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioLocalizacaoList()) ;
-		Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
-		if (listUsuarioLoc.size() > 0) {
-			UsuarioLocalizacao loc = listUsuarioLoc.get(0);
-			
-			EntityManager em = EntityUtil.getEntityManager();
-			loc = em.getReference(UsuarioLocalizacao.class, loc.getIdUsuarioLocalizacao());
-			setLocalizacaoAtual(loc);
+		UsuarioLocalizacao usuarioLocalizacao = getAuthenticatorService().obterLocalizacaoAtual(usuario);
+		if (usuarioLocalizacao != null){
+			setLocalizacaoAtual(usuarioLocalizacao);
 			return true;
 		} 
 		throw new LoginException("O usuário " + usuario + " não possui Localização");
