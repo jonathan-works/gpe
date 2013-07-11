@@ -22,6 +22,7 @@ import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.list.ConsultaProcessoEpaList;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -39,6 +40,7 @@ public class PainelUsuarioHome implements Serializable {
 	
 	@In private ConsultaProcessoEpaList consultaProcessoEpaList;
 	@In private ProcessoManager processoManager;
+	@In private SituacaoProcessoManager situacaoProcessoManager;
 	
 	@Observer("selectedTarefasTree")
 	public void onSelected(Object obj){
