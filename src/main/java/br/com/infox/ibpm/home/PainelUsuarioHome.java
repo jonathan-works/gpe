@@ -58,15 +58,7 @@ public class PainelUsuarioHome implements Serializable {
 	public List<Integer> getProcessoIdList() {
 		if (selected != null) {
 			if (processoIdList == null) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("select s.idProcesso from SituacaoProcesso s ");
-				sb.append("where s.idTarefa = :idTarefa ");
-				sb.append(getTreeTypeRestriction());
-				sb.append("group by s.idProcesso");
-				Query query = EntityUtil.getEntityManager().createQuery(sb.toString());
-				processoIdList = query
-					.setParameter("idTarefa", getTarefaId())
-					.getResultList();
+				processoIdList = situacaoProcessoManager.getProcessosAbertosByIdTarefa(getTarefaId(), selected);
 			}
 			if(processoIdList.size() == 0){
 				processoIdList.add(-1);
