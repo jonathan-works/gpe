@@ -84,24 +84,4 @@ public class CaixaEventoAction {
 		}
 	}
 	
-	/**
-	 * Adiciona o(s) processo(s) a(s) caixa(s)
-	 * @param caixaList - Lista da caixas que o processo pode ser inserido
-	 * @param processo - Processo em Movimentação
-	 */
-	private void addProcessoCaixa(List<Caixa> caixaList, Processo processo) throws Exception {
-		if(caixaList != null) {
-			for(Caixa c : caixaList) {
-				EntityUtil.flush();
-				EntityUtil.getEntityManager().createNativeQuery(
-						"update public.tb_processo set id_caixa = :caixa " +
-						"where id_processo = :idProcesso")
-						.setParameter("caixa", c.getIdCaixa())
-						.setParameter("idProcesso", processo.getIdProcesso())
-						.executeUpdate();
-				return;
-			}
-		}
-	}
-	
 }
