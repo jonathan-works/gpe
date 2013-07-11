@@ -22,5 +22,9 @@ public class JbpmTaskManager extends GenericManager {
 	public void atualizarTarefasModificadas(Map<BigInteger, String> modifiedTasks){
 		jbpmTaskDAO.atualizarTarefasModificadas(modifiedTasks);
 	}
+	
+	public BigInteger findTaskIdByIdProcessDefinitionAndName(BigInteger idProcessDefinition, String taskName){
+		return jbpmTaskDAO.findTaskIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
+	}
 
 }
