@@ -157,5 +157,13 @@ public class AuthenticatorService extends GenericManager {
 		} 
 		throw new LoginException("O usuário " + usuario + " não possui Localização");
 	}
+
+	public void anulaActorId(String actorId) {
+		processoDAO.anulaActorId(actorId);
+	}
+
+	public void anularTodosActorId() {
+		processoDAO.anularTodosActorId();
+	}
 	
 }
