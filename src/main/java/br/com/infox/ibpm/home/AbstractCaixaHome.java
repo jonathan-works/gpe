@@ -1,10 +1,12 @@
 package br.com.infox.ibpm.home;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
+import br.com.infox.ibpm.manager.CaixaManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -12,6 +14,8 @@ import br.com.itx.util.EntityUtil;
 public abstract class AbstractCaixaHome<T> extends AbstractHome<Caixa> {
 
 	private static final long serialVersionUID = 1L;
+	
+	@In protected CaixaManager caixaManager;
 
 	public void setCaixaIdCaixa(Integer id) {
 		setId(id);
