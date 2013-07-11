@@ -69,18 +69,6 @@ public class PainelUsuarioHome implements Serializable {
 		return null;
 	}
 
-	private String getTreeTypeRestriction() {
-		String treeType = (String) selected.get("tree");
-		String nodeType = (String) selected.get("type");
-		if ("caixa".equals(treeType) && "Task".equals(nodeType)) {
-			return "and s.idCaixa is null ";
-		}
-		if (treeType == null && "Caixa".equals(nodeType)) {
-			return "and s.idCaixa is not null ";
-		}
-		return "";
-	}
-	
 	public void processoCaixa(DropEvent evt) {
 		Caixa caixa = EntityUtil.find(Caixa.class, evt.getDropValue());
 		setProcessoCaixa(getProcessoIdList(evt.getDragValue()), caixa);
