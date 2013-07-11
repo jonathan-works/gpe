@@ -276,23 +276,18 @@ public class Authenticator {
 	public void anulaActorId() {
 		String actorId = Actor.instance().getId();
 		if (actorId != null) {
-			String query = "update public.tb_processo set nm_actor_id = null " +
-			"where nm_actor_id = :actorId";
-			HibernateUtil.getSession().createSQLQuery(query)
-				.setParameter("actorId", actorId).executeUpdate();
+			getAuthenticatorService().anulaActorId(actorId);
 		}
 	}
-	
+
 	/**
 	 * Ao ligar a aplicação, limpa todos os actorIds dos processos
 	 */
 	@Observer("org.jboss.seam.postInitialization")
 	public void anulaTodosActorId() {
-		String query = "update public.tb_processo set nm_actor_id = null ";
-		HibernateUtil.getSession().createSQLQuery(query)
-			.executeUpdate();
+		getAuthenticatorService().anularTodosActorId();
 	}
-	
+
 	private boolean obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
 		UsuarioLocalizacao usuarioLocalizacao = getAuthenticatorService().obterLocalizacaoAtual(usuario);
 		if (usuarioLocalizacao != null){
