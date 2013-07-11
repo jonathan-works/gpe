@@ -67,6 +67,9 @@
 		<ui:param
 			 name="cantSelect"
 			 value="#{not item.canSelect()}" />
+		<ui:param
+				 name="styleClass"
+				 value="#{ativo ? '' : 'tree-inactive'}" />
 		<rich:treeNode
 			 highlightedClass="#{folderSelectable ? '' : 'folderHighlighted'}"
 			 selectedClass="#{folderSelectable ? '' : 'folderSelected'}"
@@ -74,12 +77,6 @@
 			 iconExpanded="#{empty icon ? tree.iconFolder : icon}"
 			 iconLeaf="#{empty iconLeaf ? tree.iconLeaf : iconLeaf}">
 			
-			<ui:param
-				 name="decoration"
-				 value="#{ativo ? 'none' : 'line-through'}" />
-			<ui:param
-				 name="cor"
-				 value="#{ativo and not cantSelect  ? '' : 'red'}" />
 			<div >
 				
 				<h:selectBooleanCheckbox
@@ -96,12 +93,12 @@
 				
 				</h:selectBooleanCheckbox>
 				 
-				<h:outputText value="#{item.entity}" />
+				<h:outputText styleClass="#{styleClass}" value="#{item.entity}" />
 			
 			</div>
 		
 		</rich:treeNode>
-
+		
 		<rich:treeNode
 			 type="leaf"
 			 nodeClass=""
@@ -109,15 +106,9 @@
 			 iconExpanded="#{tree.iconLeaf}"
 			 iconLeaf="#{tree.iconLeaf}">
 			
-			<ui:param
-				 name="decoration"
-				 value="#{item.entity.ativo ? 'none' : 'line-through'}" />
-			<ui:param
-				 name="cor"
-				 value="#{item.entity.ativo  ? '' : 'red'}" />
 			<div >
 				
-				<h:outputText value="#{item.entity}" />
+				<h:outputText styleClass="#{styleClass}" value="#{item.entity}" />
 			
 			</div>
 		

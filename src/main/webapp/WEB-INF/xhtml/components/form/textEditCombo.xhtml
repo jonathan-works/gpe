@@ -26,7 +26,6 @@
 	
 		
 	<wi:selectOneMenuEntity
-		 id="tipoProcessoDocumento"
 		 label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
 		 value="#{processoHome.tipoProcessoDocumento}"
 		 items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
@@ -38,11 +37,11 @@
 			 event="change"
 			 listener="#{processoHome.onSelectProcessoDocumento()}"
 			 oncomplete="#{automaticEventsTree.carregaEventos()}"
-			 render="divEventsTreeTextEdit, divAppletId, appletAssinar" />
+			 render="#{f.id}EventsTree, divAppletId, appletAssinar" />
 	
 	</wi:selectOneMenuEntity>
 
-	<s:div id="divEventsTreeTextEdit">
+	<s:div id="#{f.id}EventsTree">
 		
 		<wi:automaticEventsTree
 			 agrupamentos="#{processoHome.idAgrupamentos}"
@@ -52,10 +51,10 @@
 	
 	</s:div>
 		
-	<s:div id="editorTextEditComboDiv">
+	<s:div id="#{f.id}EditorDiv">
 		
 		<wi:editor
-			 id="#{id}Editor"
+			 id="#{f.id}Editor"
 			 value="#{processoHome.processoDocumentoBin.modeloDocumento}" />
 	
 	</s:div>			

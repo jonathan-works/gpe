@@ -30,7 +30,9 @@
 	border-width:1px;
 }
 
-.tree {
+.tree-inactive {
+	color:red;
+	text-decoration:line-through;
 }
 
 .tree-div-clear {
