@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import org.hibernate.Query;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -128,16 +127,10 @@ public class TaskFitter extends Fitter implements Serializable {
 		if (this.taskName != null && !this.taskName.equals(taskName)) {
 			if (currentTask != null && currentTask.getTask() != null) {
 				currentTask.getTask().setName(taskName);
-				String query = "select max(id_) from jbpm_task where processdefinition_ = "
-						+ ":idProcessDefinition and name_ = :taskName";
-				List<Object> list = JbpmUtil
-						.getJbpmSession()
-						.createSQLQuery(query)
-						.setParameter("idProcessDefinition",
-								pb.getIdProcessDefinition())
-						.setParameter("taskName", this.taskName).list();
-				if (list != null && list.size() > 0 && list.get(0) != null) {
-					modifiedTasks.put((BigInteger) list.get(0), taskName);
+				BigInteger idTaskModificada = jbpmTaskManager
+						.findTaskIdByIdProcessDefinitionAndName(pb.getIdProcessDefinition(), this.taskName);
+				if (idTaskModificada != null) {
+					modifiedTasks.put(idTaskModificada, taskName);
 				}
 			}
 			this.taskName = taskName;
