@@ -8,6 +8,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.ClientBehavior;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 
@@ -103,6 +105,16 @@ public class TabRenderer extends Renderer {
 			return;
 		}
 		
+		String newTab = context.getExternalContext().getRequestParameterMap().get("newTab");
+		String jsfEvent = context.getExternalContext().getRequestParameterMap().get("javax.faces.partial.event");
+		if (newTab != null && jsfEvent != null && jsfEvent.equals("activateTab")) {
+			TabPanel tabPanel = tab.getTabPanel();
+			tabPanel.setActiveTab(newTab);
+			Tab newActiveTab = tabPanel.getTab(newTab);
+			ActionEvent event = new ActionEvent(newActiveTab);
+			event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+			component.queueEvent(event);
+		}
 	}
 
 	private void decodeBehaviors(FacesContext context, Tab tab) {

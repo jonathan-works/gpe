@@ -5,8 +5,6 @@ import java.io.IOException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.PhaseId;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 
@@ -52,29 +50,6 @@ public class TabPanelRenderer extends Renderer {
 		writer.endElement(HtmlConstants.SCRIPT_ELEMENT);
 	}
 	
-	@Override
-	public void decode(FacesContext context, UIComponent component) {
-		super.decode(context, component);
-		TabPanel tabPanel = (TabPanel) component;
-		
-		String source = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
-		if (source == null || !source.equals(tabPanel.getClientId(context))) {
-			return;
-		}
-		
-		String newTab = context.getExternalContext().getRequestParameterMap().get("newTab");
-		if (newTab != null) {
-			tabPanel.setActiveTab(newTab);
-			String jsfEvent = context.getExternalContext().getRequestParameterMap().get("javax.faces.partial.event");
-			if (jsfEvent != null && jsfEvent.equals("activateTab")) {
-				Tab newActiveTab = tabPanel.getTab(newTab);
-				ActionEvent event = new ActionEvent(newActiveTab);
-				event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-				component.queueEvent(event);
-			}
-		}
-	}
-
 	private String createTabInitializationJavascript(TabPanel tabPanel, FacesContext context) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("$(function() {");
