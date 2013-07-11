@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
@@ -28,6 +29,7 @@ import br.com.infox.ibpm.home.UsuarioLocalizacaoComparator;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
 import br.com.infox.ibpm.manager.LocalizacaoManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
+import br.com.itx.util.EntityUtil;
 
 @Name(AuthenticatorService.NAME)
 @AutoCreate
@@ -140,6 +142,17 @@ public class AuthenticatorService extends GenericManager {
 		for (String role : roleSet) {
 			Identity.instance().addRole(role);
 		}
+	}
+	
+	public UsuarioLocalizacao obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
+		List<UsuarioLocalizacao> listUsuarioLoc = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioLocalizacaoList()) ;
+		Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
+		if (listUsuarioLoc.size() > 0) {
+			UsuarioLocalizacao loc = listUsuarioLoc.get(0);
+			EntityManager em = EntityUtil.getEntityManager();
+			return em.getReference(UsuarioLocalizacao.class, loc.getIdUsuarioLocalizacao());
+		} 
+		throw new LoginException("O usuário " + usuario + " não possui Localização");
 	}
 	
 }
