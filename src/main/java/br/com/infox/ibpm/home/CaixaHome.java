@@ -7,6 +7,7 @@ import javax.faces.model.SelectItem;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
@@ -14,6 +15,7 @@ import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
+import br.com.infox.ibpm.manager.TarefaManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -27,6 +29,7 @@ public class CaixaHome extends AbstractCaixaHome<Caixa> {
 	private Integer idTarefaAnterior;
 	private Integer idTarefaSearch;
 	
+	@In private TarefaManager tarefaManager;
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {
