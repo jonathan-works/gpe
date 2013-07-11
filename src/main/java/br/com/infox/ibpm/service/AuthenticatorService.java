@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
@@ -13,6 +14,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
@@ -38,6 +41,9 @@ public class AuthenticatorService extends GenericManager {
 	@In private LocalizacaoManager localizacaoManager;
 	
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
+	private static final LogProvider LOG = Logging.getLogProvider(AuthenticatorService.class);
+	
+	public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
 	public static final String USUARIO_LOGADO = "usuarioLogado";
 	public static final String USUARIO_LOCALIZACAO_LIST = "usuarioLocalizacaoList";
 	public static final String SET_USUARIO_LOCALIZACAO_LIST_EVENT = "authenticator.setUsuarioLocalizacaoListEvent";
@@ -114,4 +120,26 @@ public class AuthenticatorService extends GenericManager {
 	public UsuarioLogin getUsuarioByLogin(String login){
 		return usuarioLoginManager.getUsuarioLoginByLogin(login);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void removeRolesAntigas() {
+		Set<String> roleSet = (Set<String>) Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
+		if (roleSet != null) {
+			for (String r : roleSet) {
+				Identity.instance().removeRole(r);
+			}
+		}
+	}
+	
+	public void logDaBuscaDasRoles(UsuarioLocalizacao usuarioLocalizacao) {
+		LOG.warn("Obter role da localizacao: " + usuarioLocalizacao);
+		LOG.warn("Obter role do papel: " + usuarioLocalizacao.getPapel());
+	}
+	
+	public void addRolesAtuais(Set<String> roleSet) {
+		for (String role : roleSet) {
+			Identity.instance().addRole(role);
+		}
+	}
+	
 }

@@ -315,10 +315,10 @@ public class Authenticator {
 	 * @param usuarioLocalizacao
 	 */
 	public void setLocalizacaoAtual(UsuarioLocalizacao usuarioLocalizacao) {
-		removeRolesAntigas();
-		logDaBuscaDasRoles(usuarioLocalizacao);
+		getAuthenticatorService().removeRolesAntigas();
+		getAuthenticatorService().logDaBuscaDasRoles(usuarioLocalizacao);
 		Set<String> roleSet = getRolesAtuais(usuarioLocalizacao);
-		addRolesAtuais(roleSet);
+		getAuthenticatorService().addRolesAtuais(roleSet);
 		setVariaveisDoContexto(usuarioLocalizacao, roleSet);
 		if (!getUsuarioLogado().getProvisorio()) {
 			redirectToPainelDoUsuario();
@@ -343,32 +343,12 @@ public class Authenticator {
 		Contexts.removeFromAllContexts("tarefasTree");
 	}
 
-	private void addRolesAtuais(Set<String> roleSet) {
-		for (String role : roleSet) {
-			Identity.instance().addRole(role);
-		}
-	}
-
 	private Set<String> getRolesAtuais(UsuarioLocalizacao usuarioLocalizacao) {
 		return RolesMap.instance().getChildrenRoles(usuarioLocalizacao.getPapel().getIdentificador());
 	}
 
-	private void logDaBuscaDasRoles(UsuarioLocalizacao usuarioLocalizacao) {
-		LOG.warn("Obter role da localizacao: " + usuarioLocalizacao);
-		LOG.warn("Obter role do papel: " + usuarioLocalizacao.getPapel());
-	}
+	
 
-	private void removeRolesAntigas() {
-		@SuppressWarnings("unchecked")
-		Set<String> roleSet = (Set<String>) Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
-		if (roleSet != null) {
-			for (String r : roleSet) {
-				Identity.instance().removeRole(r);
-			}
-		}
-	}
-	
-	
 	@SuppressWarnings("unchecked")
 	public static List<Localizacao> getLocalizacoesFilhasAtuais() {
 		return (List<Localizacao>) Contexts.getSessionContext().get(LOCALIZACOES_FILHAS_ATUAIS);
