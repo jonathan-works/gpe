@@ -139,8 +139,6 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 	public String update() {
 		String update = "";
 		if (checkCep()){
-//			getInstance().setCodUf(getInstance().getCep().getMunicipio().getEstado().getCodEstado());
-			//setando data e hora da alteração
 			getInstance().setDataAlteracao(new Date());
 			UsuarioLogin pessoaLogada = (UsuarioLogin) 
 					Contexts.getSessionContext().get("usuarioLogado");
