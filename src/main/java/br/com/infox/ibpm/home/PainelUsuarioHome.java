@@ -18,6 +18,7 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
+import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
@@ -37,6 +38,7 @@ public class PainelUsuarioHome implements Serializable {
 	private List<Integer> processoIdList;
 	
 	@In private ConsultaProcessoEpaList consultaProcessoEpaList;
+	@In private ProcessoManager processoManager;
 	
 	@Observer("selectedTarefasTree")
 	public void onSelected(Object obj){
