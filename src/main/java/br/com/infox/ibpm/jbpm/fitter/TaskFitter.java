@@ -172,18 +172,7 @@ public class TaskFitter extends Fitter implements Serializable {
 	}
 	
 	public void modifyTasks(){
-		String update;
-		Query q;
-		if (modifiedTasks.size() > 0) {
-			update = "update jbpm_task set name_ = :taskName where id_ = :taskId";
-			q = JbpmUtil.getJbpmSession().createSQLQuery(update);
-			for (Entry<BigInteger, String> e : modifiedTasks.entrySet()) {
-				q.setParameter("taskName", e.getValue());
-				q.setParameter("taskId", e.getKey());
-				q.executeUpdate();
-			}
-		}
-		JbpmUtil.getJbpmSession().flush();
+		jbpmTaskManager.atualizarTarefasModificadas(modifiedTasks);
 		modifiedTasks = new HashMap<BigInteger, String>();
 	}
 
