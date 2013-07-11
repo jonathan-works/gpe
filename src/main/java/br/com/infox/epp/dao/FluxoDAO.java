@@ -49,4 +49,10 @@ public class FluxoDAO extends GenericDAO {
 		return EntityUtil.getSingleResult(query);
 	}
 	
+	public Fluxo getFluxoByName(String nomeFluxo){
+		String hql = "select o from Fluxo o where o.fluxo = :nomeFluxo";
+		Query query = EntityUtil.createQuery(hql).setParameter("nomeFluxo", nomeFluxo);
+		return EntityUtil.getSingleResult(query);
+	}
+	
 }
