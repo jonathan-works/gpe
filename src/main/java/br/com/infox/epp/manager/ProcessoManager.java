@@ -1,6 +1,7 @@
 package br.com.infox.epp.manager;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -17,6 +18,7 @@ import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.ibpm.dao.ProcessoDAO;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.UsuarioLoginDAO;
+import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
@@ -172,5 +174,9 @@ public class ProcessoManager extends GenericManager {
 	 * */
 	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user){
         EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user));
+	}
+	
+	public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
+		processoDAO.moverProcessosParaCaixa(idList, caixa);
 	}
 }
