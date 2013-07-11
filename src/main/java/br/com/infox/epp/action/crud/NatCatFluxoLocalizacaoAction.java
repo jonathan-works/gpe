@@ -14,10 +14,8 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.list.NatCatFluxoLocalizacaoList;
 import br.com.infox.epp.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.itx.component.AbstractHome;
@@ -32,8 +30,6 @@ import br.com.itx.component.AbstractHome;
 public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocalizacao> {
 	private static final String	LOG_MESSAGE_PERSIST	= "NatCatFluxoLocalizacaoAction.persist()";
 	private static final long serialVersionUID = 1L;
-	private static final String TEMPLATE = "/NatCatFluxoLocalizacao/NatCatFluxoLocalizacaoTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "NatCatFluxoLoc.xls";
 	private static final LogProvider LOG = Logging.getLogProvider(NatCatFluxoLocalizacaoAction.class);
 
 	public static final String NAME = "natCatFluxoLocalizacaoAction";
@@ -44,21 +40,6 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
 	private List<NatCatFluxoLocalizacao> natCatFluxolocalizacaoList;
 	private boolean updateList = true;
-	
-	@Override
-	public EntityList<NatCatFluxoLocalizacao> getBeanList() {
-		return NatCatFluxoLocalizacaoList.instance();
-	}
-	
-	@Override
-	public String getTemplate() {
-		return TEMPLATE;
-	}
-	
-	@Override
-	public String getDownloadXlsName() {
-		return DOWNLOAD_XLS_NAME;
-	}
 	
 	@Override
 	public void newInstance() {
