@@ -33,7 +33,7 @@ public class Tab extends UIPanel implements ActionSource2, ClientBehaviorHolder 
 	}
 	
 	private static final Collection<String> EVENT_NAMES = Collections.unmodifiableCollection(Arrays.asList(
-	        "action"
+	        "action", "mouseover"
 	));
 
 	@Override

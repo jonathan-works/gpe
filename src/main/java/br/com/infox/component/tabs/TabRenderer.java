@@ -94,6 +94,18 @@ public class TabRenderer extends Renderer {
 	public void decode(FacesContext context, UIComponent component) {
 		super.decode(context, component);
 		Tab tab = (Tab) component;
+		if (tab.shouldProcess()) {
+			decodeBehaviors(context, tab);
+		}
+		
+		String source = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
+		if (source == null || !source.equals(tab.getClientId(context))) {
+			return;
+		}
+		
+	}
+
+	private void decodeBehaviors(FacesContext context, Tab tab) {
 		Map<String, List<ClientBehavior>> behaviors = tab.getClientBehaviors();
 		if (behaviors.isEmpty()) {
 			return;
@@ -104,8 +116,8 @@ public class TabRenderer extends Renderer {
 			List<ClientBehavior> behaviorsForEvent = behaviors.get(behaviorEvent);
 			if (!behaviorsForEvent.isEmpty()) {
 				String behaviorSource = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
-				String tabPanelId = tab.getTabPanel().getClientId(context);
-				if (behaviorSource != null && tabPanelId.equals(behaviorSource)) {
+				String clientId = tab.getClientId(context);
+				if (behaviorSource != null && clientId.equals(behaviorSource)) {
 					for (ClientBehavior behavior : behaviorsForEvent) {
 						behavior.decode(context, tab);
 					}
