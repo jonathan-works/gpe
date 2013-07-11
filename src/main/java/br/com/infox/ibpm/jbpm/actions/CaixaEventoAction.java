@@ -17,6 +17,7 @@ import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.manager.CaixaManager;
 import br.com.infox.list.CaixaList;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.EntityUtil;
@@ -36,6 +37,7 @@ public class CaixaEventoAction {
 	private static final String PROCESSO = "processo";
 	
 	@In private CaixaList caixaList;
+	@In private CaixaManager caixaManager;
 	
 	/**
 	 * Método principal, onde ocorrerá a validação para verificar se o processo
