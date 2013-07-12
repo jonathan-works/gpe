@@ -16,6 +16,7 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
@@ -157,19 +158,11 @@ public class JbpmEventsHandler implements Serializable {
 	 */ 
 	@Observer(Event.EVENTTYPE_TASK_END)
     public void removeCaixaProcesso(ExecutionContext context) {
-        Processo processo = JbpmUtil.getProcesso();
-        String sql = "update public.tb_processo set id_caixa = null where "
-                + "id_processo = :processo";
         try {
-            getEntityManager().createNativeQuery(sql)
-                    .setParameter("processo", processo.getIdProcesso())
-                    .executeUpdate();
+        	Processo processo = JbpmUtil.getProcesso();
+            getProcessoManager().removerProcessoDaCaixaAtual(processo);
         } catch (IllegalStateException e) {
-            String action = "Remover o processo da caixa: ";
-            LOG.warn(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(), "removeCaixaProcesso()",
-                    "JbpmEventsHandler", "BPM"));
+            throwErroAoTentarRemoverDaCaixa(e);
         } catch (TransactionRequiredException e) {
             String action = "Remover o processo da caixa: ";
             LOG.warn(action, e);
@@ -178,6 +171,14 @@ public class JbpmEventsHandler implements Serializable {
                     "JbpmEventsHandler", "BPM"));
         }
     }
+
+	private void throwErroAoTentarRemoverDaCaixa(Exception e) {
+		String action = "Remover o processo da caixa: ";
+		LOG.warn(action, e);
+		throw new AplicationException(AplicationException.createMessage(
+		        action + e.getLocalizedMessage(), "removeCaixaProcesso()",
+		        "JbpmEventsHandler", "BPM"));
+	}
 	
 	private EntityManager getEntityManager() {
 		return EntityUtil.getEntityManager();
@@ -202,5 +203,9 @@ public class JbpmEventsHandler implements Serializable {
 	private static TarefaJbpmManager getTarefaJbpmManager(){
 		return ComponentUtil.getComponent(TarefaJbpmManager.NAME);
 	}
-
+	
+	private static ProcessoManager getProcessoManager(){
+		return ComponentUtil.getComponent(ProcessoManager.NAME);
+	}
+	
 }
