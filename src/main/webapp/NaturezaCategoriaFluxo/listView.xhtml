@@ -116,11 +116,10 @@
 		<wi:tab
             id="localizacaoTab"
             rendered="#{naturezaCategoriaFluxoAction.isManaged()}"
+            action="#{natCatFluxoLocalizacaoAction.setNaturezaCategoriaFluxo(home.instance)}"
             title="#{messages['naturezaCategoriaFluxo.localizacao']}"
             name="localizacaoTab">
-            #{natCatFluxoLocalizacaoList.entity.setNaturezaCategoriaFluxo(home.instance)}
             <s:div id="localizacaoFormDiv">
-	            #{natCatFluxoLocalizacaoAction.instance.setNaturezaCategoriaFluxo(home.instance)}
 	            <wi:dataForm
 					formId="natCatFluxoLocalizacaoForm"
 					formTitle="#{messages['form.title']}">
@@ -145,12 +144,10 @@
 			</s:div>
 			<s:div id="localizacaoDtDiv">
 				<wi:dataTable
-					values="#{natCatFluxoLocalizacaoList.list(15)}"
-					bean="#{natCatFluxoLocalizacaoList}"
-					tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}"
 					id="natCatFluxoLocalizacaoList"
-					rowId="#{row.idNatCatFluxoLocalizacao}"
-					actionInactive="natCatFluxoLocalizacaoAction.inactive">
+					values="#{natCatFluxoLocalizacaoAction.getNatCatFluxolocalizacaoList()}"
+					var="row"
+					tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}">
 					<ui:define name="searchForm">
 					</ui:define>
 					<ui:define name="headerToolBar">

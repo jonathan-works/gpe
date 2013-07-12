@@ -24,14 +24,11 @@ import br.com.infox.ibpm.entity.Localizacao;
 	   uniqueConstraints={
 			@UniqueConstraint(columnNames={"id_nat_cat_fluxo", "id_localizacao"})
 	})
-@NamedQueries(value={
-		@NamedQuery(name=NatCatFluxoLocalizacaoQuery.GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF,
-				    query=NatCatFluxoLocalizacaoQuery.GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF_QUERY),
-	    @NamedQuery(name=NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF,
-			    	query=NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF_QUERY),
-    	@NamedQuery(name=NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL,
-			    query=NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL_QUERY)
-	  })
+@NamedQueries(value = {
+		@NamedQuery(name = NatCatFluxoLocalizacaoQuery.GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF, query = NatCatFluxoLocalizacaoQuery.GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF_QUERY),
+		@NamedQuery(name = NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF, query = NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF_QUERY),
+		@NamedQuery(name = NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL, query = NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL_QUERY),
+		@NamedQuery(name = NatCatFluxoLocalizacaoQuery.LIST_BY_NAT_CAT_FLUXO, query = NatCatFluxoLocalizacaoQuery.LIST_BY_NAT_CAT_FLUXO_QUERY) })
 public class NatCatFluxoLocalizacao implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
