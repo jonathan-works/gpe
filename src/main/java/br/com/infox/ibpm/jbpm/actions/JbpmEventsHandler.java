@@ -7,6 +7,7 @@ import javax.persistence.TransactionRequiredException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.End;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -19,6 +20,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.jbpm.manager.JbpmTaskManager;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -32,6 +34,8 @@ public class JbpmEventsHandler implements Serializable {
 	private static final LogProvider LOG = Logging.getLogProvider(JbpmEventsHandler.class);
 
 	public static final String NAME = "jbpmEventsHandler";
+	
+	@In private JbpmTaskManager jbpmTaskManager;
 	
 	@Observer(Event.EVENTTYPE_TASK_END)
     public void removerProcessoLocalizacao(ExecutionContext context) {
