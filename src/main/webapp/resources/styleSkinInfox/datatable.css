@@ -12,7 +12,7 @@
 }
 
 .dtable-p.rf-p {
-	min-width:calc(100% - 291px);
+	min-width:calc(100% - 340px);
 	padding:0px;
 }
 .zebra .rf-dt-r:nth-child(odd) {
@@ -32,7 +32,7 @@
 	margin:0px 3px;
 }
 .rf-cp-hdr.rf-cp-hdr-exp,.rf-cp-hdr.rf-cp-hdr-colps{
-	min-width:280px;
+	min-width:329px;
 	border-spacing:0px;
 	padding:0px;
 }
