@@ -64,11 +64,8 @@ public class JbpmEventsHandler implements Serializable {
 	@End(beforeRedirect=true)
     public void refreshPainel(ExecutionContext context) {
         context.getTaskInstance().setActorId(null);
-        String q = "update public.tb_processo set nm_actor_id = null where id_processo = :id";
         try {
-            getEntityManager().createNativeQuery(q)
-                    .setParameter("id", JbpmUtil.getProcesso().getIdProcesso())
-                    .executeUpdate();
+            getProcessoManager().apagarActorIdDoProcesso(JbpmUtil.getProcesso());
         } catch (IllegalStateException e) {
             String action = "Limpar as variáveis do painel para atualização: ";
             LOG.error(action, e);
