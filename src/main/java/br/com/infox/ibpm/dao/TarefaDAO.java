@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
+import javax.persistence.TransactionRequiredException;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -47,6 +48,22 @@ public class TarefaDAO extends GenericDAO {
 			previousTasksItems.add(new SelectItem(tarefaAnterior.getIdTarefa(), tarefaAnterior.getTarefa()));
 		}
 		return previousTasksItems;
+	}
+	
+	/**
+	 * Popula a tabela tb_tarefa com todas as tarefas de todos os fluxos, 
+	 * considerando como chave o nome da tarefa task.name_
+	 */
+	public void encontrarNovasTarefas() throws IllegalStateException, TransactionRequiredException{
+		String hql = "insert into public.tb_tarefa (id_fluxo, ds_tarefa) " +
+						"select f.id_fluxo, t.name_ from jbpm_task t " +
+							"inner join jbpm_processdefinition pd on (pd.id_ = t.processdefinition_) " +
+							"inner join public.tb_fluxo f on (f.ds_fluxo = pd.name_) " +
+							"inner join jbpm_node jn on (t.tasknode_ = jn.id_ and jn.class_ = 'K') " +
+							"where pd.id_ = t.processdefinition_ and not exists " +
+								"(select 1 from public.tb_tarefa where ds_tarefa = t.name_ and id_fluxo = f.id_fluxo) " +
+							"group by f.id_fluxo, t.name_";
+		EntityUtil.getEntityManager().createNativeQuery(hql).executeUpdate();
 	}
 	
 }
