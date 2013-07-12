@@ -168,10 +168,6 @@ public class JbpmEventsHandler implements Serializable {
 		        "JbpmEventsHandler", "BPM"));
 	}
 	
-	private EntityManager getEntityManager() {
-		return EntityUtil.getEntityManager();
-	}
-
 	/**
 	 * Retorna a instancia da classe JbpmEventsHandler
 	 * @return
