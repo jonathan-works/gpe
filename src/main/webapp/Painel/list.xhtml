@@ -110,7 +110,7 @@
                                                             id="consulta"
                                                             status="status"
                                                             value="Consulta"
-                                                            styleClass="dr-tbpnl-tb-inact"
+                                                            styleClass="buttons"
                                                             limitRender="true"
                                                             execute="@region"
                                                             action="#{home.instance.setInPesquisa(true)}"
@@ -121,7 +121,7 @@
                                                             
                                                             value="Nova Consulta"
                                                             limitRender="true"
-                                                            styleClass="dr-tbpnl-tb-inact"
+                                                            styleClass="buttons"
                                                             execute="@this"
                                                             render="painelProcessos" />
                                                     </div>
@@ -202,7 +202,7 @@
                         value="#{caixaHome.nomeNovaCaixa}" />
                     <a:commandButton
                         value="Incluir"
-                        styleClass="dr-tbpnl-tb-inact"
+                        styleClass="buttons"
                         action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
                         oncomplete="Richfaces.hideTopModalPanel()"
                         render="tarefasDiv,painelProcessos" />
