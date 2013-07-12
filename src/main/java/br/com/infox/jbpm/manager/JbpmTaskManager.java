@@ -29,12 +29,4 @@ public class JbpmTaskManager extends GenericManager {
 		return jbpmTaskDAO.findTaskIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
 	}
 	
-	/**
-	 * Popula a tabela tb_tarefa com todas as tarefas de todos os fluxos, 
-	 * considerando como chave o nome da tarefa task.name_
-	 */
-	public void encontrarNovasTarefas() throws IllegalStateException, TransactionRequiredException {
-		jbpmTaskDAO.encontrarNovasTarefas();
-	}
-
 }
