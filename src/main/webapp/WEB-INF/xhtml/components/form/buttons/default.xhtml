@@ -35,7 +35,7 @@
 			 eventsQueue="editQueue"
 			 action="#{home.persist()}"
 			 value="Incluir"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{!home.managed and !isUploadForm and persistSemNewInstance}">
 	        </h:commandButton>  	
 	          	 
@@ -48,7 +48,7 @@
 			 render="#{reRenderSave}"
 			 limitRender="true"
              value="Incluir"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{!home.managed and !isUploadForm and !persistSemNewInstance}">
 			</a:commandButton>  			
 		
@@ -57,7 +57,7 @@
 			 eventsQueue="editQueue"
 			 action="#{home.persist()}"
 			 value="Incluir"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{!home.managed and isUploadForm}">
 	        </h:commandButton>  
 	
@@ -65,7 +65,7 @@
 			 id="updateUpload"
 			 eventsQueue="editQueue"
 			 value="Gravar"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{home.update()}"
 			 rendered="#{home.managed and isUploadForm}">
 	        </h:commandButton>
@@ -79,7 +79,7 @@
 			 render="#{reRenderSave}"
              limitRender="true"
 			 value="Gravar"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{home.managed and !isUploadForm}">
 	        </a:commandButton>
 	
@@ -94,7 +94,7 @@
                  limitRender="true"
 				 execute="@this"
 				 value="Novo"
-				 styleClass="dr-tbpnl-tb-inact"
+				 styleClass="buttons"
 				 action="#{home.newInstance}"
 				 rendered="#{home.managed and !isUploadForm and mostrarNovo}">
 				</a:commandButton>
