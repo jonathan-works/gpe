@@ -20,6 +20,7 @@ import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.manager.ProcessoLocalizacaoIbpmManager;
+import br.com.infox.ibpm.manager.TarefaJbpmManager;
 import br.com.infox.ibpm.manager.TarefaManager;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
@@ -102,7 +103,7 @@ public class JbpmEventsHandler implements Serializable {
         try {
             atualizarProcessos();
             getTarefaManager().encontrarNovasTarefas();
-            inserirVersoesTarefas();
+            getTarefaJbpmManager().inserirVersoesTarefas();
         } catch (IllegalStateException e) {
             String action = "Realizar atualização automáticas após publicação do fluxo: ";
             LOG.error(action, e);
@@ -216,6 +217,10 @@ public class JbpmEventsHandler implements Serializable {
 	
 	private static ProcessoLocalizacaoIbpmManager getProcessoLocalizacaoIbpmManager() {
 		return ComponentUtil.getComponent(ProcessoLocalizacaoIbpmManager.NAME);
+	}
+	
+	private static TarefaJbpmManager getTarefaJbpmManager(){
+		return ComponentUtil.getComponent(TarefaJbpmManager.NAME);
 	}
 
 }
