@@ -152,26 +152,6 @@ public class JbpmEventsHandler implements Serializable {
 	}
 
 	/**
-	 * Insere para cada tarefa na tabela de tb_tarefa todos os ids que esse já
-	 * possuiu.
-	 */
-	private static void inserirVersoesTarefas() throws IllegalStateException, TransactionRequiredException {
-		StringBuilder builder = new StringBuilder();
-		builder.append("insert into public.tb_tarefa_jbpm (id_tarefa, id_jbpm_task) ");
-		builder.append("select t.id_tarefa, jt.id_ ");
-		builder.append("from public.tb_tarefa t ");
-		builder.append("inner join public.tb_fluxo f using (id_fluxo) ");
-		builder.append("inner join jbpm_task jt on jt.name_ = t.ds_tarefa ");
-		builder.append("inner join jbpm_processdefinition pd on pd.id_ = jt.processdefinition_ ");
-		builder.append("where f.ds_fluxo = pd.name_ and ");
-		builder.append("not exists (select 1 from public.tb_tarefa_jbpm tj ");
-		builder.append("where tj.id_tarefa = t.id_tarefa ");
-		builder.append("and tj.id_jbpm_task = jt.id_)");
-		javax.persistence.Query q = EntityUtil.getEntityManager().createNativeQuery(builder.toString());
-		q.executeUpdate();
-	}
-
-	/**
 	 * Antes de terminar a tarefa, remove a caixa do processo
 	 * @param transition
 	 */ 
