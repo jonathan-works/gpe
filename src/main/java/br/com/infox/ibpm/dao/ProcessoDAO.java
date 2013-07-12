@@ -23,6 +23,13 @@ public class ProcessoDAO extends GenericDAO {
 		HibernateUtil.getSession().createSQLQuery(query).setParameter("actorId", actorId).executeUpdate();
 	}
 	
+	public void apagarActorIdDoProcesso(Processo processo){
+		String hql = "update public.tb_processo set nm_actor_id = null where id_processo = :id";
+        entityManager.createNativeQuery(hql)
+                    .setParameter("id", processo.getIdProcesso())
+                    .executeUpdate();
+	}
+	
 	public void anularTodosActorId() {
 		String query = "update public.tb_processo set nm_actor_id = null ";
 		HibernateUtil.getSession().createSQLQuery(query).executeUpdate();
