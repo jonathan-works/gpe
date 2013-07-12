@@ -42,54 +42,7 @@ public class TabPanelRenderer extends Renderer {
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		super.encodeEnd(context, component);
-		TabPanel tabPanel = (TabPanel) component;
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement(HtmlConstants.DIV_ELEMENT);
-		writer.startElement(HtmlConstants.SCRIPT_ELEMENT, null);
-		writer.writeText(createTabInitializationJavascript(tabPanel, context), null);
-		writer.endElement(HtmlConstants.SCRIPT_ELEMENT);
-	}
-	
-	private String createTabInitializationJavascript(TabPanel tabPanel, FacesContext context) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("$(function() {");
-		sb.append("$('#");
-		sb.append(tabPanel.getClientId(context).replace(":", "\\\\:"));
-		sb.append("').tabs({");
-		sb.append("active: ");
-		sb.append(tabPanel.getTabIndexMap().get(tabPanel.getActiveTab()));
-		sb.append(",");
-		sb.append("disabled: [");
-		boolean ok = false;
-		for (Tab tab : tabPanel.getTabs()) {
-			if (tab.isDisabled()) {
-				sb.append(tabPanel.getTabIndexMap().get(tab.getName()));
-				sb.append(",");
-				ok = true;
-			}
-		}
-		if (ok) {
-			sb.deleteCharAt(sb.length()-1);
-		}
-		sb.append("], ");
-		sb.append("beforeActivate: ");
-		sb.append(createBeforeActivateJavascript(tabPanel));
-		sb.append("});");
-		sb.append("});");
-		return sb.toString();
-	}
-
-	private String createBeforeActivateJavascript(TabPanel tabPanel) {
-		StringBuffer sb = new StringBuffer("function(event, ui) {");
-		if (tabPanel.getSwitchType().equals("client")) {
-			sb.append("}");
-			return sb.toString();
-		}
-		sb.append("event.preventDefault();");
-		sb.append("__");
-		sb.append(tabPanel.getClientId().replace(":", ""));
-		sb.append("(event, ui);");
-		sb.append("}");
-		return sb.toString();
 	}
 }

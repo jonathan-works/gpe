@@ -23,7 +23,6 @@ import javax.faces.component.UIComponentBase;
 		@ResourceDependency(library = "stylesheet", name = "jquery-ui.css"),
 		@ResourceDependency(library = "stylesheet", name = "tabs.css"),
 		@ResourceDependency(name = "jquery.js"),
-		@ResourceDependency(library = "js", name = "jquery-ui.js"),
 		@ResourceDependency(library = "javax.faces", name = "jsf.js") })
 public class TabPanel extends UIComponentBase implements NamingContainer {
 	public static final String COMPONENT_ID = "br.com.infox.component.tabs.TabPanel";
