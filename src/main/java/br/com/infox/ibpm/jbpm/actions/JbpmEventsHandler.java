@@ -39,31 +39,26 @@ public class JbpmEventsHandler implements Serializable {
 	
 	@Observer(Event.EVENTTYPE_TASK_END)
     public void removerProcessoLocalizacao(ExecutionContext context) {
-        
         try {
         	Long taskId = context.getTask().getId();
             Long processId = context.getProcessInstance().getId();
             getProcessoLocalizacaoIbpmManager().deleteByTaskIdAndProcessId(taskId, processId);
         } catch (IllegalStateException e) {
-            String action = "Remover o processo da localizacao: ";
-            LOG.warn(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(),
-                    "removerProcessoLocalizacao()", "JbpmEventsHandler", "BPM"));
+            throwErroAoTentarRemoverProcessoLocalizacao(e);
         } catch (IllegalArgumentException e) {
-            String action = "Remover o processo da localizacao: ";
-            LOG.warn(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(),
-                    "removerProcessoLocalizacao()", "JbpmEventsHandler", "BPM"));
+        	 throwErroAoTentarRemoverProcessoLocalizacao(e);
         } catch (TransactionRequiredException e) {
-            String action = "Remover o processo da localizacao: ";
-            LOG.warn(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(),
-                    "removerProcessoLocalizacao()", "JbpmEventsHandler", "BPM"));
+        	 throwErroAoTentarRemoverProcessoLocalizacao(e);
         }
     }
+
+	private void throwErroAoTentarRemoverProcessoLocalizacao(Exception e) {
+		String action = "Remover o processo da localizacao: ";
+		LOG.warn(action, e);
+		throw new AplicationException(AplicationException.createMessage(
+		        action + e.getLocalizedMessage(),
+		        "removerProcessoLocalizacao()", "JbpmEventsHandler", "BPM"));
+	}
 
 	@Observer(Event.EVENTTYPE_TASK_END)
 	@End(beforeRedirect=true)
