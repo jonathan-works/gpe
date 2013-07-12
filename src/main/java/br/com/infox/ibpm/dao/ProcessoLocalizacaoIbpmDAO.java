@@ -65,4 +65,12 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
         return getNamedSingleResult(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, parameters);
     }
 	
+	public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId, Long processId){
+        String hql = "delete from ProcessoLocalizacaoIbpm o " +
+        		"where o.idProcessInstanceJbpm = :processId and o.idTaskJbpm = :taskId";
+        entityManager.createQuery(hql)
+                .setParameter("processId", processId)
+                .setParameter("taskId", taskId).executeUpdate();
+	}
+	
 }
