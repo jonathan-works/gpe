@@ -45,7 +45,7 @@
 			oncomplete="#{oncomplete};hideLoading()"
 			render="#{reRenderSave}"
 			value="Gravar"
-			styleClass="dr-tbpnl-tb-inact"
+			styleClass="buttons"
 			action="#{taskInstanceHome.update(home)}" />
 
 		<!-- Implementar -->
@@ -58,7 +58,7 @@
 			oncomplete="#{oncomplete};hideLoading()"
 			render="#{reRenderSave}"
 			value="Liberar Tarefa"
-			styleClass="dr-tbpnl-tb-inact"
+			styleClass="buttons"
 			action="#{taskInstanceHome.removeUsuario()}" />
 
 		<a:commandButton
@@ -69,7 +69,7 @@
 			oncomplete="hideLoading()"
 			render="#{reRenderSave}"
 			value="Incluir"
-			styleClass="dr-tbpnl-tb-inact"
+			styleClass="buttons"
 			action="#{taskInstanceHome.persist(home)}" />
 
 		<h:outputText
@@ -86,7 +86,7 @@
 				value="OK"
 				status="none"
 				onmouseup="showLoading()"
-				styleClass="dr-tbpnl-tb-inact"
+				styleClass="buttons"
 				oncomplete="verifyFields();"
 				render=":script,#{reRenderSave}" />
 		</c:if>
@@ -100,7 +100,7 @@
 					oncomplete="verifyFields()"
 					render=":script,#{reRenderSave}"
 					value="#{transition.name}"
-					styleClass="buttons dr-tbpnl-tb-inact"
+					styleClass="buttons buttons"
 					
 					action="#{taskInstanceHome.end(transition.name)}">
 				</a:commandButton>
