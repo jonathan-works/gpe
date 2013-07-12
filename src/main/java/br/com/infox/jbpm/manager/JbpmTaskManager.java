@@ -3,6 +3,8 @@ package br.com.infox.jbpm.manager;
 import java.math.BigInteger;
 import java.util.Map;
 
+import javax.persistence.TransactionRequiredException;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -25,6 +27,14 @@ public class JbpmTaskManager extends GenericManager {
 	
 	public BigInteger findTaskIdByIdProcessDefinitionAndName(BigInteger idProcessDefinition, String taskName){
 		return jbpmTaskDAO.findTaskIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
+	}
+	
+	/**
+	 * Popula a tabela tb_tarefa com todas as tarefas de todos os fluxos, 
+	 * considerando como chave o nome da tarefa task.name_
+	 */
+	public void encontrarNovasTarefas() throws IllegalStateException, TransactionRequiredException {
+		jbpmTaskDAO.encontrarNovasTarefas();
 	}
 
 }
