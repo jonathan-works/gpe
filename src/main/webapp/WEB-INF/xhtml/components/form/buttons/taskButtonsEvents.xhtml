@@ -54,7 +54,7 @@
              render="#{reRenderSave}, taskButtonsDiv"
              limitRender="true"
              value="Gravar"
-             styleClass="dr-tbpnl-tb-inact"
+             styleClass="buttons"
              action="#{taskInstanceHome.update(home)}" />
 
            <a:commandButton
@@ -65,7 +65,7 @@
              render="#{reRenderSave}, taskButtonsDiv"
              limitRender="true"
              value="Gravar"
-             styleClass="dr-tbpnl-tb-inact"
+             styleClass="buttons"
              action="#{taskInstanceHome.persist(home)}" />
            
            <h:outputText
@@ -85,7 +85,7 @@
                  value="OK"
                  onmouseup="showLoading()"
                  status="none"
-                 styleClass="buttons dr-tbpnl-tb-inact"
+                 styleClass="buttons buttons"
                  eventsQueue="editQueue"
                  oncomplete="#{oncomplete};verifyFields();"
                  render=":script,#{reRenderSave}" 
@@ -104,7 +104,7 @@
                      render=":script,#{reRenderSave}"
                      limitRender="true"
                      value="#{transition.name}"
-                     styleClass="buttons dr-tbpnl-tb-inact"
+                     styleClass="buttons buttons"
                      
                      action="#{taskInstanceHome.end(transition.name)}" />           	
             </a:repeat>
