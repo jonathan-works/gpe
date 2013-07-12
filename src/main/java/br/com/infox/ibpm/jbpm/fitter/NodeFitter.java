@@ -18,6 +18,7 @@ import org.hibernate.SQLQuery;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Factory;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
@@ -37,6 +38,7 @@ import br.com.infox.ibpm.jbpm.handler.NodeHandler;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.jbpm.node.MailNode;
+import br.com.infox.jbpm.manager.JbpmNodeManager;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -59,7 +61,8 @@ public class NodeFitter extends Fitter implements Serializable {
 	private String nodeName;
 	private Map<BigInteger, String> modifiedNodes = new HashMap<BigInteger, String>();
 	
-	
+	@In private JbpmNodeManager jbpmNodeManager;
+		
 	public void addNewNode() {
 		Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
 		ProcessDefinition processo = pb.getInstance();
