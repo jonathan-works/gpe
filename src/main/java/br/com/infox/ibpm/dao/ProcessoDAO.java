@@ -47,5 +47,13 @@ public class ProcessoDAO extends GenericDAO {
 			.executeUpdate();
 		return;
 	}
+	
+	public void removerProcessoDaCaixaAtual(Processo processo){
+		String sql = "update public.tb_processo set id_caixa = null where "
+                + "id_processo = :processo";
+        entityManager.createNativeQuery(sql)
+        				.setParameter("processo", processo.getIdProcesso())
+        				.executeUpdate();
+	}
 
 }
