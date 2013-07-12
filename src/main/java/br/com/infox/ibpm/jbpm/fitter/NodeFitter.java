@@ -14,7 +14,6 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Factory;
@@ -424,18 +423,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 	
 	public void modifyNodes(){
-		String update;
-		Query q;
-		if (modifiedNodes.size() > 0) {
-			update = "update jbpm_node set name_ = :nodeName where id_ = :nodeId";
-			q = JbpmUtil.getJbpmSession().createSQLQuery(update);
-			for (Entry<BigInteger, String> e : modifiedNodes.entrySet()) {
-				q.setParameter("nodeName", e.getValue());
-				q.setParameter("nodeId", e.getKey());
-				q.executeUpdate();
-			}
-		}
-		JbpmUtil.getJbpmSession().flush();
+		jbpmNodeManager.atualizarNodesModificados(modifiedNodes);
 		modifiedNodes = new HashMap<BigInteger, String>();
 	}
 
