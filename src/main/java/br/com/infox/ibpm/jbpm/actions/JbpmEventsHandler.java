@@ -161,14 +161,10 @@ public class JbpmEventsHandler implements Serializable {
         try {
         	Processo processo = JbpmUtil.getProcesso();
             getProcessoManager().removerProcessoDaCaixaAtual(processo);
-        } catch (IllegalStateException e) {
-            throwErroAoTentarRemoverDaCaixa(e);
-        } catch (TransactionRequiredException e) {
-            String action = "Remover o processo da caixa: ";
-            LOG.warn(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(), "removeCaixaProcesso()",
-                    "JbpmEventsHandler", "BPM"));
+        } catch (IllegalStateException ise) {
+            throwErroAoTentarRemoverDaCaixa(ise);
+        } catch (TransactionRequiredException tre) {
+            throwErroAoTentarRemoverDaCaixa(tre);
         }
     }
 
