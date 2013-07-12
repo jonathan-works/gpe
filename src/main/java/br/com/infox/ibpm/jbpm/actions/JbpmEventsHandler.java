@@ -35,8 +35,6 @@ public class JbpmEventsHandler implements Serializable {
 
 	public static final String NAME = "jbpmEventsHandler";
 	
-	@In private JbpmTaskManager jbpmTaskManager;
-	
 	@Observer(Event.EVENTTYPE_TASK_END)
     public void removerProcessoLocalizacao(ExecutionContext context) {
         Long taskId = context.getTask().getId();
@@ -236,5 +234,9 @@ public class JbpmEventsHandler implements Serializable {
 	 */
 	public static JbpmEventsHandler instance() {
 		return ComponentUtil.getComponent(JbpmEventsHandler.NAME);
+	}
+	
+	private static JbpmTaskManager getJbpmTaskManager(){
+		return ComponentUtil.getComponent(JbpmTaskManager.NAME);
 	}
 }
