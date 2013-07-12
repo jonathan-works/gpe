@@ -7,7 +7,6 @@ import javax.persistence.TransactionRequiredException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.End;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -20,7 +19,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
-import br.com.infox.jbpm.manager.JbpmTaskManager;
+import br.com.infox.ibpm.manager.TarefaManager;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -106,7 +105,7 @@ public class JbpmEventsHandler implements Serializable {
     public static void updatePostDeploy() {
         try {
             atualizarProcessos();
-            getJbpmTaskManager().encontrarNovasTarefas();
+            getTarefaManager().encontrarNovasTarefas();
             inserirVersoesTarefas();
         } catch (IllegalStateException e) {
             String action = "Realizar atualização automáticas após publicação do fluxo: ";
@@ -215,7 +214,7 @@ public class JbpmEventsHandler implements Serializable {
 		return ComponentUtil.getComponent(JbpmEventsHandler.NAME);
 	}
 	
-	private static JbpmTaskManager getJbpmTaskManager(){
-		return ComponentUtil.getComponent(JbpmTaskManager.NAME);
+	private static TarefaManager getTarefaManager(){
+		return ComponentUtil.getComponent(TarefaManager.NAME);
 	}
 }
