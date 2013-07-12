@@ -11,7 +11,6 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
@@ -26,7 +25,6 @@ import br.com.itx.util.EntityUtil;
 
 @Name(JbpmEventsHandler.NAME)
 @Install(precedence=Install.FRAMEWORK)
-@BypassInterceptors
 @Scope(ScopeType.EVENT)
 public class JbpmEventsHandler implements Serializable {
 
