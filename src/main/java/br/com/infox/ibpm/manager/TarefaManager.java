@@ -24,5 +24,9 @@ public class TarefaManager extends GenericManager {
 	public List<SelectItem> getPreviousTasks(Tarefa tarefa){
 		return tarefaDAO.getPreviousTasks(tarefa);
 	}
+	
+	public void encontrarNovasTarefas(){
+		tarefaDAO.encontrarNovasTarefas();
+	}
 
 }
