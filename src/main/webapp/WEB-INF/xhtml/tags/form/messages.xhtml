@@ -40,11 +40,14 @@
 	<script type="text/javascript">
 	//<![CDATA[
 		var msgFuncs = msgFuncs || {
+			invocations:0,
 			showDialogMessage:function showDialogMessage() {
 				$(".d-msg").removeClass("hidden");
+				msgFuncs.invocations++;
 			},
 			hideDialogMessage:function hideDialogMessage() {
 				$(".d-msg").addClass("hidden");
+				console.log("[",msgFuncs.invocations,"] > ");
 			},
 			actionDialogMessage:function actionDialogMessage() {
 				if (msgFuncs.existsGlobalMessages == 'true' 
@@ -59,8 +62,7 @@
 		msgFuncs.existsGlobalMessages = '#{!facesMessages.currentGlobalMessages.isEmpty()}';
 		msgFuncs.existsMessage = '#{showDialogMessage}';
 		msgFuncs.timeout = "#{timeCloseMSG}";
-		
-		$("#dialogMessage").delegate(".d-msg-h-close","click",msgFuncs.hideDialogMessage);
+		$(".d-msg-h-close").click(msgFuncs.hideDialogMessage);
 		
 		window.addEventListener("load",function() {
 			msgFuncs.actionDialogMessage();
