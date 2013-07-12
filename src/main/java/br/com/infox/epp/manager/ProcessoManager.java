@@ -187,4 +187,8 @@ public class ProcessoManager extends GenericManager {
 	public void removerProcessoDaCaixaAtual(Processo processo){
 		processoDAO.removerProcessoDaCaixaAtual(processo);
 	}
+	
+	public void apagarActorIdDoProcesso(Processo processo){
+		processoDAO.apagarActorIdDoProcesso(processo);
+	}
 }
