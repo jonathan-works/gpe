@@ -67,25 +67,21 @@ public class JbpmEventsHandler implements Serializable {
         try {
             getProcessoManager().apagarActorIdDoProcesso(JbpmUtil.getProcesso());
         } catch (IllegalStateException e) {
-            String action = "Limpar as variáveis do painel para atualização: ";
-            LOG.error(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(), "refreshPainel()",
-                    "JbpmEventsHandler", "BPM"));
+            throwErroAoLimparVariaveisDoPainel(e);
         } catch (IllegalArgumentException e) {
-            String action = "Limpar as variáveis do painel para atualização: ";
-            LOG.error(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(), "refreshPainel()",
-                    "JbpmEventsHandler", "BPM"));
+        	throwErroAoLimparVariaveisDoPainel(e);
         } catch (TransactionRequiredException e) {
-            String action = "Limpar as variáveis do painel para atualização: ";
-            LOG.error(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(), "refreshPainel()",
-                    "JbpmEventsHandler", "BPM"));
+        	throwErroAoLimparVariaveisDoPainel(e);
         }
     }
+
+	private void throwErroAoLimparVariaveisDoPainel(Exception e) {
+		String action = "Limpar as variáveis do painel para atualização: ";
+		LOG.error(action, e);
+		throw new AplicationException(AplicationException.createMessage(
+		        action + e.getLocalizedMessage(), "refreshPainel()",
+		        "JbpmEventsHandler", "BPM"));
+	}
 	
 	/**
 	 * Atualiza o dicionário de Tarefas (tb_tarefa) com seus respectivos id's 
