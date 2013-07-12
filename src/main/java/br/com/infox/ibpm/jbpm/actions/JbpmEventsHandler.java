@@ -220,7 +220,7 @@ public class JbpmEventsHandler implements Serializable {
 		return ComponentUtil.getComponent(TarefaManager.NAME);
 	}
 	
-	private static ProcessoLocalizacaoIbpmManager getProcessoLocalizacaoIbpmManager(){
+	private static ProcessoLocalizacaoIbpmManager getProcessoLocalizacaoIbpmManager() {
 		return ComponentUtil.getComponent(ProcessoLocalizacaoIbpmManager.NAME);
 	}
 
