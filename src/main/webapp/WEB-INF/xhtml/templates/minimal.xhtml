@@ -33,7 +33,10 @@
              src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 	
 		<s:div styleClass="pageBody"
-               id="pageBody">	
+               id="pageBody">
+               <wi:messages
+					showDialogMessage="#{showDialogMessage}"
+					timeCloseMSG="#{timeCloseMSG}" />	
 				<wi:quadro>
 				   <h:graphicImage url="#{a4jSkin.imgLogoTopo}" /> <br
                          		   clear="none" />
