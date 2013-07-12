@@ -106,7 +106,7 @@ public class JbpmEventsHandler implements Serializable {
     public static void updatePostDeploy() {
         try {
             atualizarProcessos();
-            inserirTarefas();
+            getJbpmTaskManager().encontrarNovasTarefas();
             inserirVersoesTarefas();
         } catch (IllegalStateException e) {
             String action = "Realizar atualização automáticas após publicação do fluxo: ";
