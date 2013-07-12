@@ -96,14 +96,16 @@ public class TabRenderer extends Renderer {
 	public void decode(FacesContext context, UIComponent component) {
 		super.decode(context, component);
 		Tab tab = (Tab) component;
-		if (tab.shouldProcess()) {
-			decodeBehaviors(context, tab);
+		if (!tab.shouldProcess()) {
+			return;
 		}
 		
 		String source = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
 		if (source == null || !source.equals(tab.getClientId(context))) {
 			return;
 		}
+		
+		decodeBehaviors(context, tab);
 		
 		String newTab = context.getExternalContext().getRequestParameterMap().get("newTab");
 		String jsfEvent = context.getExternalContext().getRequestParameterMap().get("javax.faces.partial.event");
@@ -112,7 +114,11 @@ public class TabRenderer extends Renderer {
 			tabPanel.setActiveTab(newTab);
 			Tab newActiveTab = tabPanel.getTab(newTab);
 			ActionEvent event = new ActionEvent(newActiveTab);
-			event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+			if (tab.isImmediate()) {
+				event.setPhaseId(PhaseId.APPLY_REQUEST_VALUES);
+			} else {
+				event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+			}
 			component.queueEvent(event);
 		}
 	}
