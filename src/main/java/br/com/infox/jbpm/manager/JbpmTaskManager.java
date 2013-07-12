@@ -3,8 +3,6 @@ package br.com.infox.jbpm.manager;
 import java.math.BigInteger;
 import java.util.Map;
 
-import javax.persistence.TransactionRequiredException;
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
