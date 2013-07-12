@@ -297,15 +297,9 @@ public class NodeFitter extends Fitter implements Serializable {
 		if (this.nodeName != null && !this.nodeName.equals(nodeName)) {
 			if (currentNode != null) {
 				currentNode.setName(nodeName);
-				String query = "select max(id_) from jbpm_node where processdefinition_ = "
-						+ ":idProcessDefinition and name_ = :nodeName";
-				SQLQuery sql = JbpmUtil.getJbpmSession().createSQLQuery(query);
-				Query param = sql.setParameter("idProcessDefinition",
-						pb.getIdProcessDefinition()).setParameter("nodeName",
-						nodeName);
-				List<Object> list = param.list();
-				if (list != null && list.size() > 0 && list.get(0) != null) {
-					modifiedNodes.put((BigInteger) list.get(0), nodeName);
+				BigInteger idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(pb.getIdProcessDefinition(), nodeName);
+				if (idNodeModificado != null) {
+					modifiedNodes.put(idNodeModificado, nodeName);
 				}
 			}
 			this.nodeName = nodeName;
