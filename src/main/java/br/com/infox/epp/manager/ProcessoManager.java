@@ -179,4 +179,12 @@ public class ProcessoManager extends GenericManager {
 	public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
 		processoDAO.moverProcessosParaCaixa(idList, caixa);
 	}
+	
+	public void moverProcessoParaCaixa(Caixa caixa, Processo processo){
+		processoDAO.moverProcessoParaCaixa(caixa, processo);
+	}
+	
+	public void removerProcessoDaCaixaAtual(Processo processo){
+		processoDAO.removerProcessoDaCaixaAtual(processo);
+	}
 }
