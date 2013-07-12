@@ -29,7 +29,7 @@ public class Tab extends UIPanel implements ActionSource2, ClientBehaviorHolder 
 	public static final String COMPONENT_FAMILY = "br.com.infox.component.tabs";
 
 	private static enum PropertyKeys {
-		name, title, actionExpression, immediate, disabled, style, styleClass;
+		name, title, actionExpression, immediate, disabled, style, styleClass, execute, render;
 	}
 	
 	private static final Collection<String> EVENT_NAMES = Collections.unmodifiableCollection(Arrays.asList(
@@ -94,6 +94,22 @@ public class Tab extends UIPanel implements ActionSource2, ClientBehaviorHolder 
 	
 	public void setStyleClass(String styleClass) {
 		getStateHelper().put(PropertyKeys.styleClass, styleClass);
+	}
+	
+	public String getExecute() {
+		return (String) getStateHelper().eval(PropertyKeys.execute, "@this");
+	}
+	
+	public void setExecute(String execute) {
+		getStateHelper().put(PropertyKeys.execute, execute);
+	}
+	
+	public String getRender() {
+		return (String) getStateHelper().eval(PropertyKeys.execute, getTabPanel().getClientId());
+	}
+	
+	public void setRender(String render) {
+		getStateHelper().put(PropertyKeys.render, render);
 	}
 	
 	public boolean shouldProcess() {
