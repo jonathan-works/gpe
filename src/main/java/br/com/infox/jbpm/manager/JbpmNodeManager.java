@@ -1,6 +1,7 @@
 package br.com.infox.jbpm.manager;
 
 import java.math.BigInteger;
+import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -17,6 +18,10 @@ public class JbpmNodeManager extends GenericManager {
 	public static final String NAME = "jbpmNodeManager";
 	
 	@In private JbpmNodeDAO jbpmNodeDAO;
+	
+	public void atualizarNodesModificados(Map<BigInteger, String> modifiedNodes){
+		jbpmNodeDAO.atualizarNodesModificados(modifiedNodes);
+	}
 	
 	public BigInteger findNodeIdByIdProcessDefinitionAndName(BigInteger idProcessDefinition, String taskName){
 		return jbpmNodeDAO.findNodeIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
