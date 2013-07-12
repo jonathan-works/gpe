@@ -41,13 +41,7 @@ public class JbpmEventsHandler implements Serializable {
         try {
         	Long taskId = context.getTask().getId();
             Long processId = context.getProcessInstance().getId();
-            StringBuilder sb = new StringBuilder();
-            sb.append("delete from ProcessoLocalizacaoIbpm o where ");
-            sb.append("o.idProcessInstanceJbpm = :processId ");
-            sb.append("and o.idTaskJbpm = :taskId");
-            getEntityManager().createQuery(sb.toString())
-                    .setParameter("processId", processId)
-                    .setParameter("taskId", taskId).executeUpdate();
+            getProcessoLocalizacaoIbpmManager().deleteByTaskIdAndProcessId(taskId, processId);
         } catch (IllegalStateException e) {
             String action = "Remover o processo da localizacao: ";
             LOG.warn(action, e);
