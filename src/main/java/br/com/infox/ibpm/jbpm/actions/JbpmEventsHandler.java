@@ -19,6 +19,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.ibpm.manager.ProcessoLocalizacaoIbpmManager;
 import br.com.infox.ibpm.manager.TarefaManager;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
@@ -36,13 +37,14 @@ public class JbpmEventsHandler implements Serializable {
 	
 	@Observer(Event.EVENTTYPE_TASK_END)
     public void removerProcessoLocalizacao(ExecutionContext context) {
-        Long taskId = context.getTask().getId();
-        Long processId = context.getProcessInstance().getId();
-        StringBuilder sb = new StringBuilder();
-        sb.append("delete from ProcessoLocalizacaoIbpm o where ");
-        sb.append("o.idProcessInstanceJbpm = :processId ");
-        sb.append("and o.idTaskJbpm = :taskId");
+        
         try {
+        	Long taskId = context.getTask().getId();
+            Long processId = context.getProcessInstance().getId();
+            StringBuilder sb = new StringBuilder();
+            sb.append("delete from ProcessoLocalizacaoIbpm o where ");
+            sb.append("o.idProcessInstanceJbpm = :processId ");
+            sb.append("and o.idTaskJbpm = :taskId");
             getEntityManager().createQuery(sb.toString())
                     .setParameter("processId", processId)
                     .setParameter("taskId", taskId).executeUpdate();
@@ -217,4 +219,9 @@ public class JbpmEventsHandler implements Serializable {
 	private static TarefaManager getTarefaManager(){
 		return ComponentUtil.getComponent(TarefaManager.NAME);
 	}
+	
+	private static ProcessoLocalizacaoIbpmManager getProcessoLocalizacaoIbpmManager(){
+		return ComponentUtil.getComponent(ProcessoLocalizacaoIbpmManager.NAME);
+	}
+
 }
