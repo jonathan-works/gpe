@@ -74,6 +74,16 @@
 			
 			<ui:define name="toolBar">
 				<wi:toolBarEdit  />
+				<wi:toolBar
+					id="#{row.id}Remove"
+			        action="calendarioEventosHome.remove(row)"
+			        rendered="true"
+			        limitToList="true"
+			        status=":status"
+			        render="searchGridRegion,modalPanelMessages"
+			        onclick="if(!confirm('Deseja remover este registro?')) return false;"
+			        url="/img/remove.png"
+			        title="Remover registro" />
 			</ui:define>
 			
 			<wi:columnOutputText columnId="localizacao"
