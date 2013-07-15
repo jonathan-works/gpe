@@ -30,7 +30,7 @@
 			 render="#{reRenderSave}"
              limitRender="true"
 			 value="Incluir"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{!home.managed and !isUploadForm}">
 			</a:commandButton>
 			  
@@ -39,7 +39,7 @@
 			 eventsQueue="editQueue"
 			 action="#{home.persist()}"
 			 value="Incluir"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{!home.managed and isUploadForm}">
             </h:commandButton>  
 
@@ -47,7 +47,7 @@
 			 id="updateUpload"
 			 eventsQueue="editQueue"
 			 value="Gravar"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{home.update()}"
 			 rendered="#{home.managed and isUploadForm}" />
 
@@ -59,7 +59,7 @@
              render="#{reRenderSave}"
              limitRender="true"
 			 value="Gravar"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{home.update()}"
 			 rendered="#{home.managed and !isUploadForm}" />
                         			                      
@@ -72,7 +72,7 @@
              limitRender="true"
 			 execute="@this"
 			 value="Novo"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{home.newInstance}"
 			 rendered="#{home.managed and !isUploadForm}" />
 			
@@ -85,12 +85,12 @@
              limitRender="true"
 			 execute="@this"
 			 value="Limpar"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{home.newInstance}"
 			 rendered="#{!home.managed and !isUploadForm}" />
                        
 			<s:button
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{not empty home.goBackUrl and (home.tab == 'form')}"
 			 value="Voltar"
 			 view="#{home.goBackUrl}">

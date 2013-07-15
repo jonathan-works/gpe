@@ -32,7 +32,7 @@
 			 render="pageBody"
              limitRender="true"
 			 value="Incluir"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{!home.managed and !isUploadForm}">
 			</a:commandButton>  
 
@@ -41,7 +41,7 @@
 			 eventsQueue="editQueue"
 			 action="#{home.persist()}"
 			 value="Incluir"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 rendered="#{!home.managed and isUploadForm}">
             </h:commandButton>  
 
@@ -49,7 +49,7 @@
 			 id="updateUpload"
 			 eventsQueue="editQueue"
 			 value="Gravar"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{home.update()}"
 			 rendered="#{home.managed and isUploadForm}" />
 
@@ -61,7 +61,7 @@
 			 render="#{reRenderSave}"
              limitRender="true"
 			 value="Gravar"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{home.update()}"
 			 onclick="if (jQuery('.error').length &gt; 0) return false;"
 			 rendered="#{home.managed and !isUploadForm}" />
@@ -75,7 +75,7 @@
 			 render="pageBody"
              limitRender="true"
 			 value="Novo"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{home.botaoNovo()}"
 			 rendered="#{home.managed and !isUploadForm}" />
                        
@@ -87,7 +87,7 @@
 			 render="#{reRenderSave}"
              limitRender="true"
 			 value="Gerar Senha"
-			 styleClass="dr-tbpnl-tb-inact"
+			 styleClass="buttons"
 			 action="#{usuarioHome.gerarNovaSenha()}"
 			 rendered="#{home.managed and !isUploadForm and home.tipoUsuarioSistema.toString() == 'I'}" />  
         

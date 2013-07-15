@@ -13,7 +13,6 @@
 			<value>menu.fluxos/item.menuText:/Item/listView.seam</value>
 			<value>menu.fluxos/natureza.menuText:/Natureza/listView.seam</value>
 			<value>menu.fluxos/naturezaCategoriaFluxo.menuText:/NaturezaCategoriaFluxo/listView.seam</value>
-			<value>menu.fluxos/natCatFluxoLocalizacao.menuText:/NatCatFluxoLocalizacao/listView.seam</value>
 			
 			<value>menu.documentos/menu.modeloDocumento/grupoModeloDocumento.menuText:/GrupoModeloDocumento/listView.seam</value>
 			<value>menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>

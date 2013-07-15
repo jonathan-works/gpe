@@ -135,7 +135,7 @@
                  value="Gravar"
                  action="#{util.invokeMethod(actionSave)}"
                  
-                 styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}"
+                 styleClass="#{wi:get(styleClass, 'buttons')}"
                  render="pageBody"
                  limitRender="true"/>
 	                					  
@@ -144,7 +144,7 @@
                  action="#{bean.dropList.clear()}"
                  value="Limpar"
                  
-                 styleClass="#{wi:get(styleClass, 'dr-tbpnl-tb-inact')}"
+                 styleClass="#{wi:get(styleClass, 'buttons')}"
                  render="#{id}Panel,#{id}TableDrop"
                  limitRender="true"/>
 		 </ui:insert>
