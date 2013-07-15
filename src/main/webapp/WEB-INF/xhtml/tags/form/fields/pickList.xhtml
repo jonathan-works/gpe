@@ -57,9 +57,6 @@
 			class="inputText"/>
 	</s:div>
 	<s:div styleClass="pick-cont">
-		<h:outputText
-			
-			value="#{targetLabel}" />
 		<rich:pickList
 			id="#{id}"
 			value="#{value}"
@@ -72,7 +69,8 @@
 			sourceListWidth="#{sourceListWidth}"
 			targetListWidth="#{targetListWidth}"
 			switchByClick="true"
-			
+			sourceCaption="#{sourceCaption}"
+			targetCaption="#{targetCaption}"
 			showButtonsLabel="false">
 			<s:selectItems
 				value="#{itemValues}"
