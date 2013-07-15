@@ -47,8 +47,7 @@
              required="#{required}"
              inputClass="#{id}maskDate"
              datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
-             onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false, true);                           #{validatePastDateFrom ? 'validarDataPassada(this)' : ''}                           #{onchanged}"
-             oninputblur="validarData(this);                          validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false, true);                          #{validatePastDateFrom ? 'validarDataPassada(this)' : ''}" />
+             oninputblur="validarData(this);validarPeriodo('##{rich:clientId(idFromForm)}InputDate', '##{rich:clientId(idToForm)}InputDate', false, true);#{validatePastDateFrom ? 'validarDataPassada(this)' : ''}" />
 			<h:outputText
              value=" Até: " />
 			<rich:calendar
@@ -62,8 +61,7 @@
              required="#{required}"
              inputClass="#{id}maskDate"
              datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
-             onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false, false);                                 #{validatePastDateTo ? 'validarDataPassada(this);' : ''}                                 #{onchanged}"
-             oninputblur="validarData(this);                          validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false, false);                          #{validatePastDateTo ? 'validarDataPassada(this)' : ''}" />
+             oninputblur="validarData(this);validarPeriodo('##{rich:clientId(idFromForm)}InputDate', '##{rich:clientId(idToForm)}InputDate', false, false);                          #{validatePastDateTo ? 'validarDataPassada(this)' : ''}" />
            <ui:insert />
 	</s:decorate>
 
