@@ -7,6 +7,7 @@
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf"
+	 xmlns:infox="http://www.infox.com.br/jsf"
 	 template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 	
 
@@ -18,13 +19,13 @@
 			 name="showFormTab"
 			 value="#{empty showFormTab ? true : showFormTab}" />
 
-            <wi:tabPanel
+            <infox:tabPanel
 				 id="defaultTabPanel"
 				 switchType="ajax"
 				 activeTab="#{home.tab}">
-				<h:form><wi:tabHeaders /></h:form>
+				<h:form><infox:tabHeaders /></h:form>
 
-                <wi:tab
+                <infox:tab
 					 id="search"
 					 name="search"
 					 rendered="#{showSearchTab}"
@@ -37,9 +38,9 @@
                             <ui:insert name="searchGrid" />
 						</s:div>
 					 </a:region>
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="form"
 					 name="form"
 					 rendered="#{showFormTab}"
@@ -51,10 +52,10 @@
 					<a:region>
 						<ui:insert name="form" />
 					</a:region>
-			</wi:tab>
+			</infox:tab>
 			
             <ui:insert name="tabs" />
             
-		</wi:tabPanel>
+		</infox:tabPanel>
 	</ui:define>
 </ui:composition>
