@@ -30,9 +30,7 @@
 	border-width:1px;
 }
 
-.tree-inactive {
-	color:red;
-	text-decoration:line-through;
+.tree {
 }
 
 .tree-div-clear {
@@ -40,10 +38,10 @@
 	display:inline-table;
 }
 
-.rf-cp.rf-tgp {
+.rf-cp.rf-tgp,.rf-cp-hdr.rf-cp-hdr-exp {
 	padding:0px;
 }
-.rf-cp-gr {
+.rf-cp-gr,.rf-cp-hdr.rf-cp-hdr-exp {
 	border-spacing:0px;
 }
 
@@ -381,7 +379,7 @@ img.disabled {
 }
 
 select {
-	border-width:1px;
+	border-width:0px;
 	width: 250px;
 	background-color: transparent;
 	background-repeat: no-repeat;

@@ -36,6 +36,9 @@
 	height:28px;
 	border-bottom-left-radius: 28px;
 }
+.divBg.hidden {
+	visibility:hidden;
+}
 .BP-ipt {
 	width:120px;
 }
@@ -62,7 +65,9 @@
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-weight:bold;
 }
-
 .name.painelUsuario-label {
 	color:inherit;
+}
+.painelUsuario-label,.painelUsuario-select {
+	display:block;
 }
