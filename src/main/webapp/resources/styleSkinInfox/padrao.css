@@ -82,6 +82,10 @@
 	padding:5px;
 	height:calc(100% - 26px);
 }
+.nodeDiv,.organized {
+	display:inline-block;
+	vertical-align:top;
+}
 .SearchForm {
 	display: inline-block;
 	vertical-align: top;
