@@ -468,6 +468,7 @@ select {
 	box-sizing:border-box;
 	vertical-align:top;
 	-moz-box-sizing:border-box;
+	cursor:default;
 }
 
 .buttons {
