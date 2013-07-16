@@ -52,10 +52,11 @@
 						
 						<wi:pickList
 							 id="papel"
-							 targetLabel="Papéis dos quais recebe permissões:"
 							 value="#{papelHome.papeis}"
 							 itemValues="#{papelHome.getPapeisDisponiveis(true)}"
-							 itemLabel="#{papelHome.getNome(var)}" />
+							 itemLabel="#{papelHome.getNome(var)}"
+							 sourceCaption=""
+							 targetCaption="Papéis dos quais recebe permissões:" />
 					
 					</a:region>
 				
@@ -68,7 +69,7 @@
 						
 						<wi:pickList
 							 id="herdeiros"
-							 targetLabel="Papéis para os quais cede permissões:"
+							 targetCaption="Papéis para os quais cede permissões:"
 							 value="#{papelHome.membros}"
 							 itemValues="#{papelHome.getPapeisDisponiveis(false)}"
 							 itemLabel="#{papelHome.getNome(var)}" />
@@ -84,7 +85,7 @@
 						
 						<wi:pickList
 							 id="recurso"
-							 targetLabel="Recursos do sistema aos quais tem permissão:"
+							 targetCaption="Recursos do sistema aos quais tem permissão:"
 							 value="#{papelHome.recursos}"
 							 itemValues="#{papelHome.recursosDisponiveis}"
 							 itemLabel="#{papelHome.getNome(var)}" />

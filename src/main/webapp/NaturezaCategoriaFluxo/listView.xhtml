@@ -157,12 +157,17 @@
 							actionRemove="natCatFluxoLocalizacaoAction.remove(row)" 
 							reRender="localizacaoFormDiv, localizacaoDtDiv"/>
 					</ui:define>
-					<wi:columnOutputText columnId="localizacao"
+					<wi:columnOutputText
+						hideOrder="true" 
+						columnId="localizacao"
 						columnHeader="#{messages['localizacao.localizacao']}"
-						columnWidth="20%" value="#{row.localizacao}" />
-					<wi:columnBoolean columnId="heranca"
+						value="#{row.localizacao}" />
+					<wi:columnBoolean 
+						hideOrder="true"
+						columnId="heranca"
 						columnHeader="#{messages['natCatFluxoLocalizacao.heranca']}"
-						columnWidth="10%" value="#{row.heranca}" />
+						columnWidth="10%"
+						value="#{row.heranca}" />
 				</wi:dataTable>
 			</s:div>
 		</wi:tab>

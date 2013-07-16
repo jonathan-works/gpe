@@ -389,13 +389,18 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public void removeUsuario() {
-        UsuarioTaskInstance uti = EntityUtil.getEntityManager().find(
-                UsuarioTaskInstance.class,
-                BusinessProcess.instance().getTaskId());
-        if (uti != null) {
-            EntityUtil.getEntityManager().remove(uti);
-            EntityUtil.getEntityManager().flush();
-        }
+    	try {
+	        UsuarioTaskInstance uti = EntityUtil.getEntityManager().find(
+	                UsuarioTaskInstance.class,
+	                BusinessProcess.instance().getTaskId());
+	    	
+	        if (uti != null) {
+	            EntityUtil.getEntityManager().remove(uti);
+	            EntityUtil.getEntityManager().flush();
+	        }
+    	} catch (Exception e) {
+    		LOG.error("TaskInstanceHome.removeUsuario()", e);
+    	}
     }
 
     /**

@@ -9,35 +9,34 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 
 	<!-- BANNER -->
+	<h:outputStylesheet
+        library="styleSkinInfox"
+        name="header.css" />
 	<div class="banner">
-		<div class="left">
-			<a href="#{util.contextPath}/"> <h:graphicImage
-					rendered="#{!hideImage}"
-					url="#{a4jSkin.imgLogoTopo}" />
-			</a>
+		<div class="banner-lft">
+			<h:form>
+				<s:link view="/login.xhtml">
+					<h:graphicImage
+							rendered="#{!hideImage}"
+							url="#{a4jSkin.imgLogoTopo}" />
+				</s:link>
+			</h:form>
 		</div>
-		<div class="center">
-			<div class="title">
-				<font size="5">#{nomeSistema}</font><br /> <font size="4">#{subNomeSistema}</font>
+		<div class="banner-ctr">
+			<div class="banner-title">
+				<font size="5">#{nomeSistema}</font><br />
+				<font size="4">#{subNomeSistema}</font>
 			</div>
 		</div>
-		<div class="right">
+		<div class="banner-rgt">
+			<s:div styleClass="divBg hidden">
+			</s:div>
 			<!-- Mini-Relógio -->
-			<div
-				class="clock"
-				>
-				<span id="liveclock" />
-				<script>
-					newClock('#{currentTime}');
-				</script>
-			</div>
-			<div >
-				<ui:include src="/WEB-INF/xhtml/templates/painelUsuario.xhtml">
-					<ui:param
-						name="selectable"
-						value="false" />
-				</ui:include>
-			</div>
+			<s:div styleClass="liveclock bannerclock"></s:div>
+			<ui:include src="/WEB-INF/xhtml/templates/painelUsuario.xhtml">
+				<ui:param name="selectable"
+						  value="false" />
+			</ui:include>
 
 		</div>
 	</div>
