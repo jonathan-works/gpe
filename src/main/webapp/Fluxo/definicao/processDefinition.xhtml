@@ -55,7 +55,6 @@
                 id="propriedadesTab"
                 title="#{messages['processBuilder.properties']}">
                 <rich:panel
-                    
                     header="#{messages['processBuilder.info']}">
                     <wi:inputText
                         id="codFluxo"
@@ -76,14 +75,12 @@
                         label="#{messages['processBuilder.description']}">
                     </wi:inputTextarea>
                 </rich:panel>
-                <h:form>
-                    <rich:panel
-                        styleClass="SwimlanePanel"
-                        header="#{messages['processBuilder.swimlanes']}"
-                        rendered="#{processBuilder.exists}">
-                        <ui:include src="swimlanes.xhtml" />
-                    </rich:panel>
-                </h:form>
+                <rich:panel id="swimlanesPanel"
+                    styleClass="SwimlanePanel"
+                    header="#{messages['processBuilder.swimlanes']}"
+                    rendered="#{processBuilder.exists}">
+                    <ui:include src="swimlanes.xhtml" />
+                </rich:panel>
             </wi:tab>
             <wi:tab
                 name="nodesTab"
@@ -111,24 +108,28 @@
             id="gravar"
             action="#{processBuilder.update()}"
             value="#{messages['processBuilder.saveBtn']}"
-            rendered="#{processBuilder.exists}" />
+            rendered="#{processBuilder.exists}"
+            styleClass="buttons" />
         <h:commandButton
             id="publicar"
             render="form"
             action="#{processBuilder.deploy()}"
             value="#{messages['processBuilder.deployBtn']}"
-            rendered="#{processBuilder.exists}" />
+            rendered="#{processBuilder.exists}"
+            styleClass="buttons" />
         <h:commandButton
             id="novoProcesso"
             action="#{processBuilder.update()}"
             value="#{messages['processBuilder.saveBtn']}"
-            rendered="#{!processBuilder.exists}" />
+            rendered="#{!processBuilder.exists}"
+            styleClass="buttons" />
         <h:commandButton
             id="new"
             action="#{processBuilder.clearDefinition()}"
             value="#{messages['processBuilder.newBtn']}"
             onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;"
-            rendered="#{processBuilder.exists}" />
+            rendered="#{processBuilder.exists}"
+            styleClass="buttons" />
         </h:form>
         <wi:messages
             id="messages"
