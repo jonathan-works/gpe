@@ -31,12 +31,11 @@
 
             <s:div id="nodesDiv" >
 
-                <s:div >
+                <s:div styleClass="organized">
                     <ui:decorate template="dataTable.xhtml">
                         <ui:param name="values" value="#{nodeFitter.nodes}" />
                         <ui:param name="styleClass" value="tabelaVariaveis" />
                         <ui:param name="id" value="nodesTable" />
-                        <ui:param name="style" value="width:100%" />
                         <ui:define name="headerToolBar">
                             <a:commandLink
                                 action="#{nodeFitter.setCurrentNode(null)}"
@@ -45,7 +44,6 @@
 
                                 <h:graphicImage
                                     title="Adicionar nó"
-                                    
                                     url="/img/add.gif" />
 
                             </a:commandLink>
@@ -57,7 +55,6 @@
 
                                 <h:graphicImage
                                     title="Excluir nó"
-                                    
                                     url="/img/remove.png"
                                     styleClass="opacityHover">
 
@@ -72,7 +69,6 @@
                                 </h:graphicImage>
                                 <h:graphicImage
                                     title="Subir na ordem"
-                                    
                                     rendered="#{key != 0}"
                                     url="/img/jbpm/up.gif"
                                     styleClass="opacityHover">
@@ -87,7 +83,6 @@
                                 </h:graphicImage>
                                 <h:graphicImage
                                     title="Descer na ordem"
-                                    
                                     rendered="#{key lt nodeFitter.nodes.size - 1}"
                                     url="/img/jbpm/down.gif"
                                     styleClass="opacityHover">
@@ -117,7 +112,6 @@
                                     value="#{current ? 'font-weight:bold' : ''}" />
                                 <a:commandLink
                                     action="#{nodeFitter.setCurrentNode(row)}"
-                                    
                                     render="divNodesGeral"
                                     execute="@this"
                                     limitRender="true">
@@ -131,11 +125,9 @@
 
                                             <h:graphicImage
                                                 url="/img/jbpm/#{nodeFitter.getIcon(row)}.gif"
-                                                title="#{row.nodeType}"
-                                                 />
+                                                title="#{row.nodeType}" />
                                             <h:outputText
                                                 value="#{row.name}"
-                                                
                                                 title="#{nodeFitter.getMessage(row)}" />
 
                                         </h:panelGrid>
@@ -154,11 +146,10 @@
 
                 <s:div
                     id="nodeDiv"
-                    >
+                    styleClass="nodeDiv">
 
                     <rich:panel
                         bodyClass="panel"
-                        
                         rendered="#{!empty nodeFitter.currentNode}">
 
                         <f:facet name="header">
@@ -317,30 +308,29 @@
 
 
                     </rich:panel>
-                    <br />
+                    
                     <rich:panel
                         header="Novo nó"
-                        
-                        rendered="#{empty nodeFitter.currentNode}">
-
+                        rendered="#{empty nodeFitter.currentNode}"
+                        styleClass="pd-panel"
+                        bodyClass="pd-panel-b"
+                        headerClass="pd-panel-h">
 
                         <rich:dataTable
                             id="nodeTypes"
-                            
                             value="#{nodeFitter.nodeTypes}"
-                            var="node">
+                            var="node"
+                            styleClass="organized n-type">
 
                             <f:facet name="header">Tipo de nó</f:facet>
                             <rich:column >
-
                                 <h:graphicImage
                                     url="/img/jbpm/${node[0]}.gif" />
-
                             </rich:column>
                             <rich:column>
 				 				#{node[1]}
 				 			</rich:column>
-                            <rich:column >
+                            <rich:column>
 
                                 <h:graphicImage
                                     url="/img/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
@@ -357,80 +347,73 @@
                             </rich:column>
 
                         </rich:dataTable>
-
-                        <s:div >
-
-                            <s:decorate
-                                template="/WEB-INF/xhtml/components/templates/edit.xhtml">
-
-                                <ui:define name="label">Nome:</ui:define>
-                                <h:inputText
-                                    id="newNodeName"
-                                    label="Nome"
-                                    styleClass="inputText"
-                                    value="#{nodeFitter.newNodeName}">
-
-                                    <a:ajax
-                                        event="change"
-                                        execute="@this"
-                                        limitRender="true" />
-
-                                </h:inputText>
-
-                            </s:decorate>
-                            <s:decorate
-                                template="/WEB-INF/xhtml/components/templates/edit.xhtml">
-
-                                <ui:define name="label">Inserir após:</ui:define>
-                                <h:selectOneMenu
-                                    id="after"
-                                    
-                                    value="#{nodeFitter.newNodeAfter}">
-
-                                    <f:selectItems
-                                        value="#{nodeFitter.nodesItems}" />
-                                    <a:ajax
-                                        event="click"
-                                        execute="@this"
-                                        limitRender="true" />
-
-                                </h:selectOneMenu>
-
-                            </s:decorate>
-                            <s:div id="inTransition">
-
-                                <s:decorate
-                                    rendered="#{nodeFitter.newNodeType != 'EndState'}"
-                                    template="/WEB-INF/xhtml/components/templates/edit.xhtml">
-
-                                    <ui:define name="label">Na transição:</ui:define>
-                                    <h:selectOneMenu
-                                        id="after"
-                                        
-                                        value="#{transitionFitter.newNodeTransitionName}">
-
-                                        <f:selectItems
-                                            value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}" />
-                                        <a:ajax
-                                            event="click"
-                                            execute="@this"
-                                            limitRender="true" />
-
-                                    </h:selectOneMenu>
-
-                                </s:decorate>
-
-                            </s:div>
-                            <a:commandButton
-                                styleClass="buttons"
-                                value="Inserir"
-                                render="nodesDiv"
-                                execute="@this"
-                                action="#{nodeFitter.addNewNode()}"
-                                limitRender="true" />
-
-                        </s:div>
-
+						<s:div styleClass="organized newNode">
+	                        <h:form>
+	                            <s:decorate
+	                                template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+	
+	                                <ui:define name="label">Nome:</ui:define>
+	                                <h:inputText
+	                                    id="newNodeName"
+	                                    label="Nome"
+	                                    styleClass="inputText"
+	                                    value="#{nodeFitter.newNodeName}">
+	
+	                                    <a:ajax
+	                                        event="change"
+	                                        execute="@this"
+	                                        limitRender="true" />
+	
+	                                </h:inputText>
+	
+	                            </s:decorate>
+	                            <s:decorate
+	                                template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+	
+	                                <ui:define name="label">Inserir após:</ui:define>
+	                                <h:selectOneMenu
+	                                    id="after"
+	                                    value="#{nodeFitter.newNodeAfter}">
+	
+	                                    <f:selectItems
+	                                        value="#{nodeFitter.nodesItems}" />
+	                                    <a:ajax
+	                                        event="click"
+	                                        execute="@this"
+	                                        limitRender="true" />
+	
+	                                </h:selectOneMenu>
+	
+	                            </s:decorate>
+	                            <s:decorate
+	                                rendered="#{nodeFitter.newNodeType != 'EndState'}"
+	                                template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+	
+	                                <ui:define name="label">Na transição:</ui:define>
+	                                <h:selectOneMenu
+	                                    id="after"
+	                                    value="#{transitionFitter.newNodeTransitionName}">
+	
+	                                    <f:selectItems
+	                                        value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}" />
+	                                    <a:ajax
+	                                        event="click"
+	                                        execute="@this"
+	                                        limitRender="true" />
+	
+	                                </h:selectOneMenu>
+	
+	                            </s:decorate>
+	                            <a:commandButton
+	                                styleClass="buttons"
+	                                value="Inserir"
+	                                render="nodesDiv"
+	                                execute="@this"
+	                                action="#{nodeFitter.addNewNode()}"
+	                                limitRender="true" />
+	
+	                        </h:form>
+						</s:div>
                     </rich:panel>
 
 
