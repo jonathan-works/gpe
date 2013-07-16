@@ -31,12 +31,16 @@
              src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />	
 		<ui:include
              src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
-	
+		<div class="banner">
+			<div class="banner-lft">
+				<h:graphicImage
+						rendered="#{!hideImage}"
+						url="#{a4jSkin.imgLogoTopo}" />
+			</div>
+		</div>
 		<s:div styleClass="pageBody"
                id="pageBody">	
 				<wi:quadro>
-				   <h:graphicImage url="#{a4jSkin.imgLogoTopo}" /> <br
-                         		   clear="none" />
 				   <ui:insert name="body" />
 				</wi:quadro>
 		</s:div>
