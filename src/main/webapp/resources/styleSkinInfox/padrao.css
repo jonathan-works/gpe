@@ -460,14 +460,23 @@ select {
 	background-position: top left;
 }
 
+.link.buttons {
+	padding:3px 12px 3px 3px;
+	text-decoration:none;
+	text-align:center;
+	display:inline-block;
+	-moz-box-sizing:border-box;
+}
+
 .buttons {
-	height: 22px !important;
+	background-color:transparent;
+	height: 22px;
 	min-width: 80px;
 	margin: 5px;
 	padding: 0px 12px 3px 3px;
 	border-style:solid;
 	border-width:1px;
-	background-color: transparent;
+	border-radius:5px;
 }
 
 .rf-cp-hdr.tree-hdr {
