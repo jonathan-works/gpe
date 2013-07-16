@@ -465,6 +465,8 @@ select {
 	text-decoration:none;
 	text-align:center;
 	display:inline-block;
+	box-sizing:border-box;
+	vertical-align:top;
 	-moz-box-sizing:border-box;
 }
 
