@@ -336,6 +336,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 			}
 			qInsert.executeUpdate();
 			if(evento.getStatus() != null) {
+				processoManager.atualizarStatusDeProcesso(evento.getStatus(), JbpmUtil.getProcesso());
 				String sql = "update public.tb_processo set id_status = :status " +
 							 "where id_processo = :processo";
 				org.hibernate.Query qStatus = JbpmUtil.getJbpmSession().createSQLQuery(sql);
