@@ -19,7 +19,7 @@ import br.com.infox.epp.query.NatCatFluxoLocalizacaoQuery;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Name(NatCatFluxoLocalizacaoDAO.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.EVENT)
 @AutoCreate
 public class NatCatFluxoLocalizacaoDAO extends GenericDAO {
 
@@ -62,6 +62,12 @@ public class NatCatFluxoLocalizacaoDAO extends GenericDAO {
 		List<NaturezaCategoriaFluxo> ncflList = getNamedResultList
 						(NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL, map);
 		return ncflList;
+	}
+	
+	public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(NaturezaCategoriaFluxo ncf) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(NatCatFluxoLocalizacaoQuery.QUERY_PARAM_NAT_CAT_FLUXO, ncf);
+		return getNamedResultList(NatCatFluxoLocalizacaoQuery.LIST_BY_NAT_CAT_FLUXO,map);
 	}
 	
 }

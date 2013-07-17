@@ -29,47 +29,52 @@
 			<ui:param name="id" value="swimlanesTable" />
 			
 			<ui:define name="headerToolBar">
-				<a:commandLink	action="#{swimlaneFitter.addSwimlane()}"
-						 	  	execute="@this"
-						 		render="swimlanesDiv"
-						 		limitRender="true">
-					<h:graphicImage title="#{messages['processBuilder.addSwimlane']}"
-							 		url="/img/add.gif" />
-				</a:commandLink>
+				<h:form>
+					<a:commandLink	action="#{swimlaneFitter.addSwimlane()}"
+							 	  	execute="@this"
+							 		render="swimlanesPanel"
+							 		limitRender="true">
+						<h:graphicImage title="#{messages['processBuilder.addSwimlane']}"
+								 		url="/img/add.gif" />
+					</a:commandLink>
+				</h:form>
 			</ui:define>
 			
 			<ui:define name="toolBar">
+				<h:form>
 				<h:graphicImage	title="#{messages['processBuilder.removeSwimlane']}"
 						 		url="/img/remove.png"
-						 		styleClass="opacityHover CursorPointer">
+						 		styleClass="opacityHover pointer">
 					<a:ajax	event="click"
 							listener="#{swimlaneFitter.removeSwimlane(row)}"
 							execute="@this"
 							onbeforesubmit="confirm('#{messages['processBuilder.confirm']}')"
-							render="swimlanesDiv"
+							render="swimlanesPanel"
 							limitRender="true" />
 				</h:graphicImage>
+				</h:form>
 			</ui:define>
 			
 			<ui:define name="columns">
 				<rich:column>
-					<f:facet name="header">#{messages['processBuilder.swimlanes']} #{inForm}</f:facet>
-					<ui:param name="current" value="#{row == swimlaneFitter.currentSwimlane}" />
-					<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
-					<a:commandLink	action="#{swimlaneFitter.setCurrentSwimlane(row)}"
-							 		execute="@this"
-							 		render="swimlanesDiv"
-							 		limitRender="true">
-						<h:outputText	value="#{row.swimlane.name}"
-									 	 />
-					</a:commandLink>
+					<h:form>
+						<f:facet name="header">#{messages['processBuilder.swimlanes']} #{inForm}</f:facet>
+						<ui:param name="current" value="#{row == swimlaneFitter.currentSwimlane}" />
+						<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
+						<a:commandLink	action="#{swimlaneFitter.setCurrentSwimlane(row)}"
+								 		execute="@this"
+								 		render="swimlanesPanel"
+								 		limitRender="true">
+							<h:outputText	value="#{row.swimlane.name}"
+										 	style="#{styleNodeName}" />
+						</a:commandLink>
+					</h:form>
 				</rich:column>
 			</ui:define>
 		</ui:decorate>
 	</s:div>
 	
-	<s:div
-		id="swimlanesDiv"
+	<s:div id="swimlanesDiv"
 		rendered="#{!empty swimlaneFitter.currentSwimlane}">
 		
 		<wi:inputText
@@ -92,7 +97,7 @@
 						 listener="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
 						 execute="@this"
 						 onbeforesubmit="if(!confirm('#{messages['processBuilder.confirm']}')) return false;"
-						 render="swimlanesDiv"
+						 render="swimlanesPanel"
 						 limitRender="true" />
 				</h:graphicImage>
 			</ui:define>
@@ -116,14 +121,14 @@
 						<rich:column>
 							<h:graphicImage
 								title="#{messages['processBuilder.swimlane.addLocalPapel']}"
-								styleClass="CursorPointer"
+								styleClass="pointer"
 								id="novoLocPapel"
 								url="/img/add.gif">
 								<a:ajax
 									event="click"
 									listener="#{swimlaneFitter.currentSwimlane.addLocalPapel()}"
 									execute="swimlaneName, localPapeis"
-									render="swimlanesDiv"
+									render="swimlanesPanel"
 									limitRender="true" />
 							</h:graphicImage>
 						</rich:column>

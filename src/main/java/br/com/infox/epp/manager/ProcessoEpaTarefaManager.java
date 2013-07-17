@@ -93,6 +93,9 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	}
 	
 	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) {
+		if (processoEpaTarefa.getTarefa().getTipoPrazo() == null) {
+			return;
+		}
 		float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
 		if (processoEpaTarefa.getUltimoDisparo().before(fireTime)) {
 			Integer prazo = processoEpaTarefa.getTarefa().getPrazo();

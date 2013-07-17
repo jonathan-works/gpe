@@ -28,7 +28,7 @@
          id="botaoAnexarDocumento"
          action="#{processoDocumentoHome.persist()}"
          value="#{messages['processo.anexarDocumentoBtn']}"
-         styleClass="dr-tbpnl-tb-inact" />
+         styleClass="buttons" />
     				 
     <a:commandButton
          rendered="true"
@@ -36,7 +36,7 @@
          render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao, divAnexarImagem"
          action="#{processoDocumentoHome.setModelo(not processoDocumentoHome.modelo)}"
          value="#{processoDocumentoHome.modelo ? messages['processo.associarDocumentoBtn'] : messages['processo.redigirDocumentoBtn']}"
-         styleClass="dr-tbpnl-tb-inact"
+         styleClass="buttons"
           />
     				 		
 </ui:composition>

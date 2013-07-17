@@ -23,7 +23,7 @@ import br.com.infox.ibpm.entity.Localizacao;
  *
  */
 @Name(NatCatFluxoLocalizacaoManager.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.EVENT)
 @AutoCreate
 public class NatCatFluxoLocalizacaoManager extends GenericManager {
 
@@ -40,8 +40,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * registro com o mesmo registro de naturezaCategoriaFluxo.
 	 * @param natCatFluxoLocalizacao
 	 */
-	public void persistWithChildren(NatCatFluxoLocalizacao natCatFluxoLocalizacao)
-			throws Exception {
+	public void persistWithChildren(NatCatFluxoLocalizacao natCatFluxoLocalizacao) {
 		persist(natCatFluxoLocalizacao);
 		persistChildren(natCatFluxoLocalizacao.getLocalizacao(), natCatFluxoLocalizacao);
 	}
@@ -160,6 +159,10 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	
 	public List<NaturezaCategoriaFluxo> listByLocalizacaoAndPapel(Localizacao l, Papel p) {
 		return natCatFluxoLocalizacaoDAO.listByLocalizacaoAndPapel(l, p);
+	}
+	
+	public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(NaturezaCategoriaFluxo ncf) {
+		return natCatFluxoLocalizacaoDAO.listByNaturezaCategoriaFluxo(ncf);
 	}
 	
 }

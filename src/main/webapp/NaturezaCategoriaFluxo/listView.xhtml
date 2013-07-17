@@ -112,7 +112,64 @@
 		</wi:dataForm>
 	</ui:define>
 
-	<ui:define
-         name="tabs">
+	<ui:define name="tabs">
+		<wi:tab
+            id="localizacaoTab"
+            rendered="#{naturezaCategoriaFluxoAction.isManaged()}"
+            action="#{natCatFluxoLocalizacaoAction.setNaturezaCategoriaFluxo(home.instance)}"
+            title="#{messages['naturezaCategoriaFluxo.localizacao']}"
+            name="localizacaoTab">
+            <s:div id="localizacaoFormDiv">
+	            <wi:dataForm
+					formId="natCatFluxoLocalizacaoForm"
+					formTitle="#{messages['form.title']}">
+					<ui:define name="buttons">
+						<wi:commandButton
+	                            id="saveButton"
+	                            action="natCatFluxoLocalizacaoAction.persist"
+	                            reRender="localizacaoFormDiv, localizacaoDtDiv"
+	                            value="Incluir" />
+					</ui:define>
+					<wi:tree
+						id="localizacao"
+						assignTo="natCatFluxoLocalizacaoAction.instance.localizacao"
+						label="#{messages['localizacao.localizacao']}"
+						required="true"
+						tree="#{natCatFluxoLocalizacaoAction.localizacaoTreeHandler}" />
+					<wi:selectBooleanCheckbox
+						id="heranca"
+						label="#{messages['natCatFluxoLocalizacao.heranca']}"
+						value="#{natCatFluxoLocalizacaoAction.instance.heranca}" />
+				</wi:dataForm>
+			</s:div>
+			<s:div id="localizacaoDtDiv">
+				<wi:dataTable
+					id="natCatFluxoLocalizacaoList"
+					values="#{natCatFluxoLocalizacaoAction.getNatCatFluxolocalizacaoList()}"
+					var="row"
+					tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}">
+					<ui:define name="searchForm">
+					</ui:define>
+					<ui:define name="headerToolBar">
+					</ui:define>
+					<ui:define name="toolBar">
+						<wi:toolBarRemove
+							actionRemove="natCatFluxoLocalizacaoAction.remove(row)" 
+							reRender="localizacaoFormDiv, localizacaoDtDiv"/>
+					</ui:define>
+					<wi:columnOutputText
+						hideOrder="true" 
+						columnId="localizacao"
+						columnHeader="#{messages['localizacao.localizacao']}"
+						value="#{row.localizacao}" />
+					<wi:columnBoolean 
+						hideOrder="true"
+						columnId="heranca"
+						columnHeader="#{messages['natCatFluxoLocalizacao.heranca']}"
+						columnWidth="10%"
+						value="#{row.heranca}" />
+				</wi:dataTable>
+			</s:div>
+		</wi:tab>
 	</ui:define>
 </ui:composition>

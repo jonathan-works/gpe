@@ -7,99 +7,49 @@
      xmlns:h="http://java.sun.com/jsf/html"
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
-
+     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+	
+	<ui:define name="head">
+		<ui:param
+			name="selectable"
+			value="false"/>
+	</ui:define>
+	<ui:define name="title">Pesquisa de documentos</ui:define>
 	<ui:define
          name="body">
-		<h:outputScript
-             library="js" name="jquery.hotkeys.js" />
-		<h:outputScript
-             library="js" namme="searchResult.js" />
 
-		<s:div
-             id="resultado">
-			<div
-                 >
-			<div
-                     >Pesquisa de
-			documentos</div>
-			<b>#{search.firstRow} a #{search.lastRow}</b> de <b>#{search.resultSize}</b>
-			documentos sobre <b>#{search.searchText}</b></div>
-			<h:form>
-				<h:dataTable
-                     id="searchResult"
-                     rows="#{search.pageSize}"
-                     rendered="#{! empty search.searchResult}"
-                     value="#{search.searchResult}"
-                     var="v">
-					<h:column>
-						<div
-                             >
-						<s:link
-                                 target="_blank"
-                                 view="/Processo/Consulta/paginator.xhtml"
-                                 value="Processo: #{processoHome.getNumeroProcesso(v.processo)} - #{v.taskName}"
-                                 >
-							<f:param
-                                     name="queryString"
-                                     value="#{search.searchText}" />
-							<f:param
-                                     name="inicio"
-                                     value="0" />
-							<f:param
-                                     name="taskId"
-                                     value="#{v.taskId}" />
-							<f:param
-                                     name="idProcesso"
-                                     value="#{v.processo}" />
-						</s:link>
-
-						<div
-                                 >
-							<h:outputText
-                                     value="#{v.texto}"
-                                     escape="false" /> <b>···</b>
-						</div>
-						</div>
-					</h:column>
-				</h:dataTable>
-			</h:form>
-		</s:div>
-
-		<s:div
-             id="searchPager">
-			<h:form
-                 id="pager">
-				<h:panelGrid
-                     columns="5"
-                     
-                     cellpadding="0"
-                     cellspacing="0"
-                     border="0"
-                     rendered="#{search.resultSize &gt; 0 and (search.previousPageAvailable or search.nextPageAvailable)}">
-					<h:commandButton
-                         id="firstPage"
-                         action="#{search.firstPage()}"
-                         disabled="#{!search.previousPageAvailable}"
-                         image="/img/grid/arrow-first#{search.previousPageAvailable ? '' : '-off'}.gif" />
-					<h:commandButton
-                         id="previousPage"
-                         action="#{search.previousPage()}"
-                         disabled="#{!search.previousPageAvailable}"
-                         image="/img/grid/arrow-previous#{search.previousPageAvailable ? '' : '-off'}.gif" />
-
-					<h:commandButton
-                         id="nextPage"
-                         action="#{search.nextPage()}"
-                         disabled="#{!search.nextPageAvailable}"
-                         image="/img/grid/arrow-next#{search.nextPageAvailable ? '' : '-off'}.gif" />
-					<h:commandButton
-                         id="lastPage"
-                         action="#{search.lastPage()}"
-                         disabled="#{!search.nextPageAvailable}"
-                         image="/img/grid/arrow-last#{search.nextPageAvailable ? '' : '-off'}.gif" />
-				</h:panelGrid>
-			</h:form>
+		<s:div id="resultado">
+			<wi:dataTable
+				id="searchResult"
+				values="#{search.searchResult}"
+				var="row"
+                rendered="#{! empty search.searchResult}"
+				tableTitle="Resultado da Pesquisa">
+				<ui:define name="searchForm"></ui:define>
+				<ui:define name="headerToolBar"></ui:define>
+				<ui:define name="toolBar">
+					<s:link target="_blank"
+                               view="/Processo/Consulta/paginator.xhtml"
+                               value="Processo: #{processoHome.getNumeroProcesso(v.processo)} - #{v.taskName}">
+						<f:param name="queryString"
+                                    value="#{search.searchText}" />
+						<f:param name="inicio"
+                                    value="0" />
+						<f:param name="taskId"
+                                    value="#{row.taskId}" />
+						<f:param name="idProcesso"
+                                    value="#{row.processo}" />
+					</s:link>
+				</ui:define>
+				<wi:columnOutputText
+					hideOrder="true" 
+					columnId="paginator">
+					<h:outputText
+						value="#{row.texto}"
+						escape="false" />
+						<b>···</b>
+				</wi:columnOutputText>
+			</wi:dataTable>
 		</s:div>
 
 	</ui:define>

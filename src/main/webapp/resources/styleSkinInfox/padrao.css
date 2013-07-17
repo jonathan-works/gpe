@@ -30,12 +30,13 @@
 	border-width:1px;
 }
 
-.tree {
-}
-
 .tree-div-clear {
 	height:18px;
 	display:inline-table;
+}
+
+.property.field.edit {
+	margin:0 15px 15px 0;
 }
 
 .rf-cp.rf-tgp,.rf-cp-hdr.rf-cp-hdr-exp {
@@ -82,6 +83,10 @@
 	padding:5px;
 	height:calc(100% - 26px);
 }
+.nodeDiv,.organized {
+	display:inline-block;
+	vertical-align:top;
+}
 .SearchForm {
 	display: inline-block;
 	vertical-align: top;
@@ -97,34 +102,10 @@
 }
 /* FIM MENU*/
 
-.propertyView {
-	min-width: 250px;
-	min-height: 35px;
-	margin-top:5px;	
-	margin-right:10px;
-	display: table;			
-	overflow: visible;
-}
-
-.propertyView input[type="radio"] {
-	width: 13px;
-}
-
-.propertyView input[type="checkbox"] {
-	width: 15px;
-}
-
 .readOnly {
 	color: gray !important;
 }
 
-#processoDadosForm .propertyView input, #processoDadosForm .propertyView select {
-	width: 500px;
-}
-.propertyView textarea {
-	width: 350px !important;	
-}
-			
 .checkbox {
 	width: 14px !important;	
 }
@@ -460,14 +441,26 @@ select {
 	background-position: top left;
 }
 
+.link.buttons {
+	padding:3px 12px 3px 3px;
+	text-decoration:none;
+	text-align:center;
+	display:inline-block;
+	box-sizing:border-box;
+	vertical-align:top;
+	-moz-box-sizing:border-box;
+	cursor:default;
+}
+
 .buttons {
-	height: 22px !important;
+	background-color:transparent;
+	height: 22px;
 	min-width: 80px;
 	margin: 5px;
 	padding: 0px 12px 3px 3px;
 	border-style:solid;
 	border-width:1px;
-	background-color: transparent;
+	border-radius:5px;
 }
 
 .rf-cp-hdr.tree-hdr {
@@ -516,18 +509,6 @@ select {
 @media print{
 	.onlyprint{display: block;visibility: visible;}
 	.noprint{display: none;visibility: hidden;}
-}
-
-.propertyView {
-	min-width: 150px
-}
-
-/* mail.xhtml */
-.rich-table-footercell .propertyView {
-	margin-top:0;
-}
-.propertyView {
-	min-width: 215px;
 }
 
 /*turnoCalendar.xhtml*/
@@ -603,4 +584,7 @@ select {
 /*Painel/list.xhtml*/
 .Panel.rf-p.ProcessoEpaList {
 	width:100%;
+}
+.status {
+	position:absolute;
 }
