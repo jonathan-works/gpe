@@ -13,13 +13,13 @@
 	width:calc(100% - 291px);
 	padding:0px;
 }
-.zebra .rf-dt-r:nth-child(odd) {
+.dtable .rf-dt-r:nth-child(odd) {
 	background-color:#FAFAFA;
 }
-.rf-dt-r:hover, .zebra .rf-dt-r:nth-child(even) {
+.rf-dt-r:hover, .dtable .rf-dt-r:nth-child(even) {
 	background-color:#E7E7E7;
 }
-.zebra tr.rf-dt-r:hover {
+.dtable tr.rf-dt-r:hover {
 	background-color:#AFAFAF;
 }
 .tb-rprt,.tb-rprt-xls {
