@@ -44,7 +44,7 @@
 				<h:form>
 				<h:graphicImage	title="#{messages['processBuilder.removeSwimlane']}"
 						 		url="/img/remove.png"
-						 		styleClass="opacityHover CursorPointer">
+						 		styleClass="opacityHover pointer">
 					<a:ajax	event="click"
 							listener="#{swimlaneFitter.removeSwimlane(row)}"
 							execute="@this"
@@ -121,7 +121,7 @@
 						<rich:column>
 							<h:graphicImage
 								title="#{messages['processBuilder.swimlane.addLocalPapel']}"
-								styleClass="CursorPointer"
+								styleClass="pointer"
 								id="novoLocPapel"
 								url="/img/add.gif">
 								<a:ajax
