@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.entity.Status;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
@@ -62,6 +63,15 @@ public class ProcessoDAO extends GenericDAO {
         entityManager.createNativeQuery(sql)
         				.setParameter("processo", processo.getIdProcesso())
         				.executeUpdate();
+	}
+	
+	public void atualizarStatusDeProcesso(Status status, Processo processo){
+		String sql = "update public.tb_processo set id_status = :status " +
+				 		"where id_processo = :processo";
+		org.hibernate.Query qStatus = JbpmUtil.getJbpmSession().createSQLQuery(sql);
+		qStatus.setParameter("status", status.getIdStatus());
+		qStatus.setParameter("processo", processo);
+		qStatus.executeUpdate();
 	}
 	
 	public void atualizarProcessos(){
