@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.dao;
 
-import java.util.List;
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -15,10 +13,9 @@ public class ParametroDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "parametroDAO";
 	
-	@SuppressWarnings("unchecked")
-	public List<Parametro> getParametrosByNomeVariavel(String nomeVariavel){
+	public Parametro getParametrosByNomeVariavel(String nomeVariavel){
 		String hql = "select p from Parametro p where nomeVariavel = :nome";
-		return (List<Parametro>) entityManager.createQuery(hql).setParameter("nomeVariavel",nomeVariavel).getResultList();
+		return (Parametro) entityManager.createQuery(hql).setParameter("nomeVariavel", nomeVariavel).getSingleResult();
 	}
 
 }
