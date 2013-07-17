@@ -620,3 +620,6 @@ select {
 .Panel.rf-p.ProcessoEpaList {
 	width:100%;
 }
+.status {
+	position:absolute;
+}
