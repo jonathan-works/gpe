@@ -2,9 +2,6 @@
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
-
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import org.jboss.seam.ScopeType;
@@ -18,11 +15,9 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.manager.ParametroManager;
 import br.com.infox.ibpm.util.CarregarParametrosAplicacao;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(ParametroUtil.NAME)
 @Scope(ScopeType.APPLICATION)
