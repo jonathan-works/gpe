@@ -38,36 +38,35 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-	//<![CDATA[
-		var msgFuncs = msgFuncs || {
-			invocations:0,
-			showDialogMessage:function showDialogMessage() {
-				$(".d-msg").removeClass("hidden");
-				msgFuncs.invocations++;
-			},
-			hideDialogMessage:function hideDialogMessage() {
-				$(".d-msg").addClass("hidden");
-				console.log("[",msgFuncs.invocations,"] > ");
-			},
-			actionDialogMessage:function actionDialogMessage() {
-				if (msgFuncs.existsGlobalMessages == 'true' 
-						&& msgFuncs.existsMessage == 'true') {
-					msgFuncs.showDialogMessage();
-					if ($('dt[class=rf-msgs-err]').html() == null) {
-						setTimeout(msgFuncs.hideDialogMessage, msgFuncs.timeout);
+		//<![CDATA[
+			var msgFuncs = msgFuncs || {
+				showDialogMessage:function showDialogMessage() {
+					$(".d-msg").removeClass("hidden");
+				},
+				hideDialogMessage:function hideDialogMessage() {
+					$(".d-msg").addClass("hidden");
+				},
+				actionDialogMessage:function actionDialogMessage() {
+					$(".d-msg-h-close").click(msgFuncs.hideDialogMessage);
+					if (msgFuncs.existsGlobalMessages == 'true' 
+							&& msgFuncs.existsMessage == 'true'
+							&& $(".d-msg-c").text().trim()!== "") {
+						msgFuncs.showDialogMessage();
+						if ($('dt[class=rf-msgs-err]').html() == null) {
+							setTimeout(msgFuncs.hideDialogMessage, msgFuncs.timeout);
+						}
 					}
-				}
+				},
+				existsGlobalMessages:'#{!facesMessages.currentGlobalMessages.isEmpty()}',
+				existsMessage:'#{showDialogMessage}',
+				timeout:"#{timeCloseMSG}"
+			};
+			
+			if (window.jQuery) {
+				msgFuncs.actionDialogMessage();
+			} else {
+				window.addEventListener("load",msgFuncs.actionDialogMessage);
 			}
-		};
-		msgFuncs.existsGlobalMessages = '#{!facesMessages.currentGlobalMessages.isEmpty()}';
-		msgFuncs.existsMessage = '#{showDialogMessage}';
-		msgFuncs.timeout = "#{timeCloseMSG}";
-		$(".d-msg-h-close").click(msgFuncs.hideDialogMessage);
-		
-		window.addEventListener("load",function() {
-			msgFuncs.actionDialogMessage();
-		});
-		msgFuncs.actionDialogMessage();
 		//]]>
 	</script>
 
