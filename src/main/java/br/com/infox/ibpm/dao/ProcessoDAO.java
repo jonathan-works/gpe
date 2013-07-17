@@ -70,7 +70,7 @@ public class ProcessoDAO extends GenericDAO {
 				 		"where id_processo = :processo";
 		org.hibernate.Query qStatus = JbpmUtil.getJbpmSession().createSQLQuery(sql);
 		qStatus.setParameter("status", status.getIdStatus());
-		qStatus.setParameter("processo", processo);
+		qStatus.setParameter("processo", processo.getIdProcesso());
 		qStatus.executeUpdate();
 	}
 	
