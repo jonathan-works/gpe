@@ -94,19 +94,19 @@ public class JbpmEventsHandler implements Serializable {
             getTarefaManager().encontrarNovasTarefas();
             getTarefaJbpmManager().inserirVersoesTarefas();
         } catch (IllegalStateException e) {
-            String action = "Realizar atualização automáticas após publicação do fluxo: ";
-            LOG.error(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(), "updatePostDeploy()",
-                    "JbpmEventsHandler", "BPM"));
+            throwErroAoRealizarAtualizacaoAutomatica(e);
         } catch (TransactionRequiredException e) {
-            String action = "Realizar atualização automáticas após publicação do fluxo: ";
-            LOG.error(action, e);
-            throw new AplicationException(AplicationException.createMessage(
-                    action + e.getLocalizedMessage(), "updatePostDeploy()",
-                    "JbpmEventsHandler", "BPM"));
+        	throwErroAoRealizarAtualizacaoAutomatica(e);
         }
     }
+
+	private static void throwErroAoRealizarAtualizacaoAutomatica(Exception e) {
+		String action = "Realizar atualização automáticas após publicação do fluxo: ";
+		LOG.error(action, e);
+		throw new AplicationException(AplicationException.createMessage(
+		        action + e.getLocalizedMessage(), "updatePostDeploy()",
+		        "JbpmEventsHandler", "BPM"));
+	}
 	
 	private static void atualizarProcessos() {
 		String sql = "update jbpm_processinstance pi set processdefinition_ = " +
