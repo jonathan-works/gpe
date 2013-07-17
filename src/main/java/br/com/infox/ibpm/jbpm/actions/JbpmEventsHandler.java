@@ -2,7 +2,6 @@ package br.com.infox.ibpm.jbpm.actions;
 
 import java.io.Serializable;
 
-import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 
 import org.jboss.seam.ScopeType;
@@ -25,7 +24,6 @@ import br.com.infox.ibpm.manager.TarefaJbpmManager;
 import br.com.infox.ibpm.manager.TarefaManager;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(JbpmEventsHandler.NAME)
 @Install(precedence=Install.FRAMEWORK)
