@@ -590,3 +590,11 @@ select {
 .status {
 	position:absolute;
 }
+
+/*Seleção de turnos no calendário de localização*/
+.hidden.turno.calendar {
+	visibility:hidden;
+}
+.turno.calendar.rf-dt-c {
+	background-color:#E0E0E0;	
+}
