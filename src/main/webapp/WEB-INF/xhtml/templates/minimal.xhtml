@@ -39,7 +39,10 @@
 			</div>
 		</div>
 		<s:div styleClass="pageBody"
-               id="pageBody">	
+               id="pageBody">
+               <wi:messages
+					showDialogMessage="#{showDialogMessage}"
+					timeCloseMSG="#{timeCloseMSG}" />	
 				<wi:quadro>
 				   <ui:insert name="body" />
 				</wi:quadro>
