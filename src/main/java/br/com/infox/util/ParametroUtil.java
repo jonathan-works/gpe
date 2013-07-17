@@ -93,6 +93,14 @@ public class ParametroUtil {
 			throw new IllegalArgumentException();
 		}
 	}
+	
+	public static String getParametroOrFalse(String nome) {
+		try{
+			return getParametroManager().getParametro(nome).getValorVariavel();
+		} catch (Exception exception){
+			return "false";
+		}
+	}
 
 	public String executarFactorys() {
 		for (Method metodo : this.getClass().getDeclaredMethods()) {
