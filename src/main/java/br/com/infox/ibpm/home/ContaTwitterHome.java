@@ -21,10 +21,10 @@ import br.com.infox.util.TwitterUtil;
 import br.com.itx.component.AbstractHome;
 
 @Name(ContaTwitterHome.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 
-	private static final long serialVersionUID = 203098369650080L;
+	private static final long serialVersionUID = 1L;
 	public static final String NAME = "contaTwitterHome";
 	
 	private Twitter twitter = TwitterUtil.getInstance().getFactory().getInstance();
