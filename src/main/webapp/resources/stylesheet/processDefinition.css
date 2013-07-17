@@ -5,14 +5,14 @@
 .pageBody {
 	height:calc(100% - 76px);
 }
-
-.dr-table-footer {
-	background-color: transparent;	
-}
 .newNode {
 	margin:0 0 0 15px; 
 }
 .nodeDiv {
 	margin:0 0 0 5px;
 	width:calc(100% - 161px);
+}
+.pd-xml.textarea{
+	min-height:465px;
+	resize:none;
 }
