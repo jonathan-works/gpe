@@ -45,7 +45,7 @@ public class CaixaEventHandler {
 		if(proc != null) {
 			final List<Caixa> caixaResList = getCaixaResultList(context);
 			if(caixaResList != null) {
-				addProcessoCaixa(caixaResList, proc);
+				processoManager.moverProcessoParaCaixa(caixaResList, proc);
 			}
 		}
 	}
