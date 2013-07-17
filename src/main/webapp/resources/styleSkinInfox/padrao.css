@@ -604,3 +604,10 @@ select {
 .Panel.rf-p.ProcessoEpaList {
 	width:100%;
 }
+
+.ajax-status {
+	position: absolute;
+	left: 30px;
+	top: 130px;
+	z-index: 100;
+}
