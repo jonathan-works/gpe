@@ -54,11 +54,13 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
-@Name("registraEventoAction")
+@Name(RegistraEventoAction.NAME)
 @Scope(ScopeType.SESSION)
 @Install(precedence=Install.FRAMEWORK)
 @Startup
 public class RegistraEventoAction extends AbstractEventoAction {
+	
+	public static final String NAME = "registraEventoAction";
 	
 	private static final LogProvider LOG = Logging.getLogProvider(RegistraEventoAction.class);
 	private static final long serialVersionUID = 1L;
