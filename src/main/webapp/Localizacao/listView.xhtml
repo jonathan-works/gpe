@@ -187,7 +187,6 @@
 					 label="Grupo Documento" />
             
 			</wi:dataForm>
-            <br />
             <wi:dataTable
 				 id="itemTipoDocumentoList"
 				 values="#{itemTipoDocumentoList.list(15)}"
@@ -241,12 +240,13 @@
 			 rendered="#{home.managed}"
 			 title="#{messages['localizacao.localizacaoTurno']}"
 			 name="localizacaoTurnoTab">
-			
-            <wi:turnoCalendar handler="#{localizacaoTurnoAction.turnoHandler}" />
-
-            <a:commandButton
-				 action="#{localizacaoTurnoAction.gravarTurnos()}"
-				 value="Gravar" />
+			<h:form>
+	            <wi:turnoCalendar handler="#{localizacaoTurnoAction.turnoHandler}" />
+				
+	            <a:commandButton
+					 action="#{localizacaoTurnoAction.gravarTurnos()}"
+					 value="Gravar" />
+			 </h:form>
         
 		</wi:tab>
 
