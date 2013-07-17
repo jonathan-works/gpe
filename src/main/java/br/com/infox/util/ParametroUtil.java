@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
@@ -91,13 +92,11 @@ public class ParametroUtil {
 	}
 
 	public static String getParametro(String nome) {
-		EntityManager em = EntityUtil.getEntityManager();
-		List<Parametro> resultList = em.createQuery("select p from Parametro p where nomeVariavel = :nome")
-				.setParameter("nome", nome).getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0).getValorVariavel();
+		try{
+			return getParametroManager().getParametro(nome).getValorVariavel();
+		} catch (NoResultException noResultException){
+			throw new IllegalArgumentException();
 		}
-		throw new IllegalArgumentException();
 	}
 
 	public String executarFactorys() {
@@ -115,7 +114,7 @@ public class ParametroUtil {
 		return "OK";
 	}
 	
-	private ParametroManager getParametroManager(){
+	private static ParametroManager getParametroManager(){
 		return ComponentUtil.getComponent(ParametroManager.NAME);
 	}
 }
