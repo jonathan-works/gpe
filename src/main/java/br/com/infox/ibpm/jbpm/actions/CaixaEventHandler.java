@@ -3,6 +3,7 @@ package br.com.infox.ibpm.jbpm.actions;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
@@ -10,6 +11,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;
@@ -30,6 +32,8 @@ public class CaixaEventHandler {
 
 	public static final String NAME = "caixaEvento";
 	private static final String PROCESSO = "processo";
+	
+	@In private ProcessoManager processoManager;
 	
 	/**
 	 * Método principal, onde ocorrerá a validação para verificar se o processo
