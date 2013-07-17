@@ -1,5 +1,5 @@
 /*LAYOUT GERAL DA PÁGINA*/
-.DataFormPanel .rf-p-b > div{
+.dt-form-p-b > div:not(.required-alert){
 	display:inline-block;
 }
 
