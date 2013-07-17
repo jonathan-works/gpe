@@ -13,23 +13,19 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf">
-	
-	<h:outputScript
-         library="js"
-         name="turnoCalendar.js" />
+-->
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
+
+	<h:outputScript library="js" name="turnoCalendar.js" />
 	<script>
 	// <![CDATA[
-	            
 	    var turnoCalendar = new TurnoCalendar();
 	    
 		function markBeginOrEnd(row, col) {
@@ -49,70 +45,42 @@
 				turnoCalendar.markInterval(row, col);
 			}
 		}
-		
 	// ]]>
 	</script>
-	
-	<table
-         class="rich-table"
-         border="0"
-         cellpadding="0"
-         cellspacing="0">
-		<tr
-             class="rich-table-subheader">
-			<th
-                 class="rich-table-subheadercell"
-                 > -
-			</th>
-			<ui:repeat
-                 value="#{handler.diasSemana}"
-                 var="dia">				
-				<th
-                     class="rich-table-subheadercell"
-                     >
-					#{dia}
-				</th>
+
+	<table class="rf-dt">
+		<tr class="rf-dt-shdr">
+			<th class="rf-dt-shdr-c">-</th>
+			<ui:repeat value="#{handler.diasSemana}" var="dia">
+				<th class="rf-dt-shdr-c">
+					#{dia}</th>
 			</ui:repeat>
 		</tr>
-		<c:forEach
-             items="#{handler.horarios}"
-             var="horario"
-             varStatus="rowStatus"
-             begin="0"
-             step="1">
-			<tr
-                 class="rich-table-row"
-                 onmouseover="rowColor=this.style.backgroundColor; this.style.backgroundColor='#f1f1f1'"
-                 onmouseout="this.style.backgroundColor=rowColor">
-				<td
-                     class="rich-table-cell"
-                     >
-					#{horario} - #{rowStatus.index lt handler.horarios.size()-1 ? handler.horarios.get(rowStatus.index + 1) : '00:00:00'}
-				</td>
-				<c:forEach
-                     items="#{handler.diasSemana}"
-                     var="dia"
-                     varStatus="colStatus"
-                     begin="0"
-                     step="1">
-					<ui:param
-                         name="selected"
-                         value="#{handler.getHorarioBean(dia, horario).selected}" /> 	
-					<td
-                         id="td_#{rowStatus.index}_#{colStatus.index}"
-                         onclick="markBeginOrEnd(#{rowStatus.index}, #{colStatus.index})"
-                         class="rich-table-cell #{selected ? 'fixed-selected': ''}"
-                         
-                         onmouseover="markInterval(#{rowStatus.index}, #{colStatus.index});">
-						
+		<c:forEach items="#{handler.horarios}" var="horario"
+			varStatus="rowStatus" begin="0" step="1">
+			<tr class="rf-dt-r"
+				onmouseover="rowColor=this.style.backgroundColor; this.style.backgroundColor='#f1f1f1'"
+				onmouseout="this.style.backgroundColor=rowColor">
+				<td class="rf-dt-c">#{horario} -
+					#{rowStatus.index lt handler.horarios.size()-1 ?
+					handler.horarios.get(rowStatus.index + 1) : '00:00:00'}</td>
+				<c:forEach items="#{handler.diasSemana}" var="dia"
+					varStatus="colStatus" begin="0" step="1">
+					<ui:param name="selected"
+						value="#{handler.getHorarioBean(dia, horario).selected}" />
+					<td id="td_#{rowStatus.index}_#{colStatus.index}"
+						onclick="markBeginOrEnd(#{rowStatus.index}, #{colStatus.index})"
+						class="turno calendar rf-dt-c #{selected ? 'fixed-selected': ''}"
+						onmouseover="markInterval(#{rowStatus.index}, #{colStatus.index});">
+
 						<h:selectBooleanCheckbox
-                             id="check_#{rowStatus.index}_#{colStatus.index}"
-                             
-                             value="#{selected}" />
+							id="check_#{rowStatus.index}_#{colStatus.index}"
+							value="#{selected}"
+							styleClass="hidden turno calendar" />
 					</td>
 				</c:forEach>
 			</tr>
 		</c:forEach>
 	</table>
-	
+
 </ui:composition>
