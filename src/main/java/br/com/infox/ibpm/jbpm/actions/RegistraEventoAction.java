@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -39,6 +40,7 @@ import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Agrupamento;
 import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.Processo;
@@ -67,6 +69,8 @@ public class RegistraEventoAction extends AbstractEventoAction {
 	private static final String FLUXO = "fluxo";
 	private static final String TAREFA = "tarefa";
 	public static final String REGISTRAR_EVENTO_ACTION_EVENT = "registrarEventosEvent";
+	
+	@In private ProcessoManager processoManager;
 	
 	@Override
 	public String getExpression() {
