@@ -13,7 +13,7 @@ public class ParametroDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "parametroDAO";
 	
-	public Parametro getParametrosByNomeVariavel(String nomeVariavel){
+	public Parametro getParametroByNomeVariavel(String nomeVariavel){
 		String hql = "select p from Parametro p where nomeVariavel = :nome";
 		return (Parametro) entityManager.createQuery(hql).setParameter("nomeVariavel", nomeVariavel).getSingleResult();
 	}

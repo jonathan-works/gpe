@@ -17,7 +17,7 @@ public class ParametroManager extends GenericManager {
 	@In private ParametroDAO parametroDAO;
 	
 	public Parametro getParametro(String nome) throws IllegalArgumentException {
-		return parametroDAO.getParametrosByNomeVariavel(nome);
+		return parametroDAO.getParametroByNomeVariavel(nome);
 	}
 
 }
