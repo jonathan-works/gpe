@@ -30,9 +30,6 @@
 	border-width:1px;
 }
 
-.tree {
-}
-
 .tree-div-clear {
 	height:18px;
 	display:inline-table;
@@ -101,34 +98,10 @@
 }
 /* FIM MENU*/
 
-.propertyView {
-	min-width: 250px;
-	min-height: 35px;
-	margin-top:5px;	
-	margin-right:10px;
-	display: table;			
-	overflow: visible;
-}
-
-.propertyView input[type="radio"] {
-	width: 13px;
-}
-
-.propertyView input[type="checkbox"] {
-	width: 15px;
-}
-
 .readOnly {
 	color: gray !important;
 }
 
-#processoDadosForm .propertyView input, #processoDadosForm .propertyView select {
-	width: 500px;
-}
-.propertyView textarea {
-	width: 350px !important;	
-}
-			
 .checkbox {
 	width: 14px !important;	
 }
@@ -532,18 +505,6 @@ select {
 @media print{
 	.onlyprint{display: block;visibility: visible;}
 	.noprint{display: none;visibility: hidden;}
-}
-
-.propertyView {
-	min-width: 150px
-}
-
-/* mail.xhtml */
-.rich-table-footercell .propertyView {
-	margin-top:0;
-}
-.propertyView {
-	min-width: 215px;
 }
 
 /*turnoCalendar.xhtml*/
