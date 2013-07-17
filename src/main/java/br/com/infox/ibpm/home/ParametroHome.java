@@ -21,7 +21,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -33,7 +32,6 @@ import br.com.itx.util.EntityUtil;
 
 
 @Name(ParametroHome.NAME)
-@BypassInterceptors
 public class ParametroHome
 		extends
 			AbstractParametroHome<Parametro> {
