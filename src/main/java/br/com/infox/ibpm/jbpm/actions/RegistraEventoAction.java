@@ -28,7 +28,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.contexts.Contexts;
@@ -58,7 +57,6 @@ import br.com.itx.util.EntityUtil;
 @Name("registraEventoAction")
 @Scope(ScopeType.SESSION)
 @Install(precedence=Install.FRAMEWORK)
-@BypassInterceptors
 @Startup
 public class RegistraEventoAction extends AbstractEventoAction {
 	
