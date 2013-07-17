@@ -18,6 +18,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.ibpm.manager.ParametroManager;
 import br.com.infox.ibpm.util.CarregarParametrosAplicacao;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -112,5 +113,9 @@ public class ParametroUtil {
 			}
 		}
 		return "OK";
+	}
+	
+	private ParametroManager getParametroManager(){
+		return ComponentUtil.getComponent(ParametroManager.NAME);
 	}
 }
