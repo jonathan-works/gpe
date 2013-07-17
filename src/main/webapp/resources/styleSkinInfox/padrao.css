@@ -1,6 +1,7 @@
 /*LAYOUT GERAL DA PÁGINA*/
 .dt-form-p-b > div:not(.required-alert){
 	display:inline-block;
+	vertical-align:top;
 }
 
 .Associated, .Associative {
