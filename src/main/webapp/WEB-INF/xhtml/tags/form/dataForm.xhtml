@@ -33,11 +33,10 @@
 			<s:token
 				allowMultiplePosts="true"
 				requireSession="true" />
-			<rich:panel styleClass="DataFormPanel" >
+			<rich:panel styleClass="dt-form-p" bodyClass="dt-form-p-b" headerClass="dt-form-p-h">
 				<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
 				<ui:insert />
-				<br />
-				<s:div rendered="#{wi:get(requiredForm,true)}">
+				<s:div styleClass="required-alert" rendered="#{wi:get(requiredForm,true)}">
 					<img src="#{util.contextPath}#{a4jSkin.imgIconBalao}" />
 					<span class="required">*</span>
 					<span>Campos Obrigatórios</span>
