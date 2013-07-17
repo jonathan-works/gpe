@@ -4,11 +4,12 @@
 }
 
 .Associated, .Associative {
-	display:inline-table;
+	display:inline-block;
+	vertical-align:bottom;
 	width:50%;
 }
 
-.Associated > .dtable-p.rf-p, .Associative > .dtable-p.rf-p {
+.Associated-dt.dtable-p.rf-p, .Associative-dt.dtable-p.rf-p {
 	width:100%;
 	max-width:100%;
 	min-height:478px;
