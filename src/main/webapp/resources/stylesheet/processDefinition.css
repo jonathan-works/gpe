@@ -1,7 +1,6 @@
-.CursorPointer {
+.pointer {
 	cursor:pointer;
 }
-
 .pageBody {
 	height:calc(100% - 76px);
 }
