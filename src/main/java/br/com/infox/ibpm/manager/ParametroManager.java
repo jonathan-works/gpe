@@ -18,11 +18,8 @@ public class ParametroManager extends GenericManager {
 	
 	@In private ParametroDAO parametroDAO;
 	
-	public String getParametro(String nome) throws IllegalArgumentException {
-		List<Parametro> resultList = parametroDAO.getParametrosByNomeVariavel(nome);
-		if (!resultList.isEmpty()) {
-			return resultList.get(0).getValorVariavel();
-		} else throw new IllegalArgumentException();
+	public Parametro getParametro(String nome) throws IllegalArgumentException {
+		return parametroDAO.getParametrosByNomeVariavel(nome);
 	}
 
 }
