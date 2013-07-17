@@ -6,8 +6,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -29,8 +27,6 @@ import br.com.itx.util.EntityUtil;
  * irá o processo que está sendo movimentado.
  */
 public class CaixaEventHandler {
-
-	private static final LogProvider LOG = Logging.getLogProvider(CaixaEventHandler.class);
 
 	public static final String NAME = "caixaEvento";
 	private static final String PROCESSO = "processo";
