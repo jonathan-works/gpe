@@ -42,13 +42,12 @@
              name="label">#{label}</ui:define>
         <h:inputTextarea
              id="#{id}"
-             styleClass="#{readonly ? 'readOnly' : ''}"
+             styleClass="#{styleClass} #{readonly ? 'readOnly' : ''}"
              readonly="#{readonly}"
              cols="#{empty cols ? 80 : cols}"
              rows="#{rows}"
              disabled="#{disabled}"
              required="#{required}"
-             
              value="#{value}"
              onkeyup="counterTextarea(this,#{maxlength});">
 			<ui:insert />
