@@ -191,4 +191,8 @@ public class ProcessoManager extends GenericManager {
 	public void apagarActorIdDoProcesso(Processo processo){
 		processoDAO.apagarActorIdDoProcesso(processo);
 	}
+	
+	public void atualizarProcessos(){
+		processoDAO.atualizarProcessos();
+	}
 }
