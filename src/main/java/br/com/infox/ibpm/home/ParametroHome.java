@@ -30,11 +30,8 @@ import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.entity.log.LogUtil;
 import br.com.itx.util.EntityUtil;
 
-
 @Name(ParametroHome.NAME)
-public class ParametroHome
-		extends
-			AbstractParametroHome<Parametro> {
+public class ParametroHome extends AbstractParametroHome<Parametro> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "parametroHome";
