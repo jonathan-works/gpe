@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.manager;
 
-import java.util.List;
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
