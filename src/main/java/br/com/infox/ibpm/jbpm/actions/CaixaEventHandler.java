@@ -82,22 +82,4 @@ public class CaixaEventHandler {
 		return idProcesso;
 	}
 	
-	/**
-	 * Adiciona o(s) processo(s) a(s) caixa(s)
-	 * @param caixaList - Lista da caixas que o processo pode ser inserido
-	 * @param processo - Processo em Movimentação
-	 */
-	private void addProcessoCaixa(final List<Caixa> caixaList, final Processo processo) {
-		for(Caixa c : caixaList) {
-			EntityUtil.flush();
-			EntityUtil.getEntityManager().createNativeQuery(
-					"update public.tb_processo set id_caixa = :caixa " +
-					"where id_processo = :idProcesso")
-					.setParameter("caixa", c.getIdCaixa())
-					.setParameter("idProcesso", processo.getIdProcesso())
-					.executeUpdate();
-			return;
-		}
-	}
-	
 }
