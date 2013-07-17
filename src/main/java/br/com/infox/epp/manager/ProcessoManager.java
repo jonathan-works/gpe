@@ -185,6 +185,18 @@ public class ProcessoManager extends GenericManager {
 		processoDAO.moverProcessoParaCaixa(caixa, processo);
 	}
 	
+	public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo){
+		Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
+		processoDAO.moverProcessoParaCaixa(caixaEscolhida, processo);
+	}
+	
+	/*
+	 * Atualmente a regra para escolher a caixa é simplesmente pegar a primeira
+	 * */
+	private Caixa escolherCaixaParaAlocarProcesso(List<Caixa> caixaList){
+		return caixaList.get(0);		
+	}
+	
 	public void removerProcessoDaCaixaAtual(Processo processo){
 		processoDAO.removerProcessoDaCaixaAtual(processo);
 	}
