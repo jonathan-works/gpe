@@ -1,3 +1,7 @@
+.dtable-search-form.hidden {
+	display:none;
+}
+
 .dtable-search-form {
 	display: inline-block;
 	vertical-align: top;
