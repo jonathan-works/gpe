@@ -35,10 +35,11 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
-@Name("usuarioLocalizacaoHome")
+@Name(UsuarioLocalizacaoHome.NAME)
 public class UsuarioLocalizacaoHome
 		extends AbstractUsuarioLocalizacaoHome<UsuarioLocalizacao> {
 
+	public static final String NAME = "usuarioLocalizacaoHome";
 	public static final String AFTER_NEW_INSTANCE_EVENT = "usuarioLocalizacao.afterNewInstanceEvent";
 	private static final long serialVersionUID = 1L;
 	private Localizacao localizacao;
