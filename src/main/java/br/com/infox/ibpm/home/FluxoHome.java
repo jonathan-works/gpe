@@ -18,8 +18,6 @@ package br.com.infox.ibpm.home;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.persistence.Query;
-
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -104,18 +102,10 @@ public class FluxoHome
 		return ret;
 	}	
 	
-	/*Remoção Lógica. Se possuir algum processo vinculado, verifica se o msm 
-	 * está arquivado ou não.
-	 */
     @Override
     public String remove(Fluxo obj) {
         setInstance(obj);
-        String query = "select count(o) from Processo o "
-                + "where o.fluxo = :fluxo2 ";
-        Query q = getEntityManager().createQuery(query).setMaxResults(1);
-        q.setParameter("fluxo2", obj);
-
-        if (((Long) q.getSingleResult() <= 0)) {
+        if (!fluxoManager.existemProcessosAssociadosAFluxo(obj)) {
             obj.setAtivo(Boolean.FALSE);
             super.update();
             newInstance();
