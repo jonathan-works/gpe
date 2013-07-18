@@ -9,48 +9,49 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<wi:inputText
-		id="identificador"
-		label="Identificador"
-		value="#{papelHome.instance.identificador}"
-		required="true"
-		rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}"
-		/>
-
-	<wi:outputText
-		id="identificadorOutput"
-		label="Identificador"
-		value="#{papelHome.instance.identificador}"
-		rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
-		/>
-
-	<wi:inputText
-		id="nome"
-		label="Nome"
-		value="#{papelHome.instance.nome}"
-		required="true"
-		/>
-
-	<wi:tabPanel
-		switchType="ajax"
-		rendered="#{papelHome.managed}">
-		<wi:tabHeaders />
-		<wi:tab
-			status=":status"
-			title="Papéis que acessam">
-
-			<a:region>
-
-				<wi:pickList
-					id="herdeiros"
-					value="#{papelHome.membros}"
-					itemValues="#{papelHome.getPapeisDisponiveis(false)}"
-					itemLabel="#{papelHome.getNome(var)}" />
-
-			</a:region>
-
-		</wi:tab>
-
-	</wi:tabPanel>
-
+	<a:region id="papelForm">
+		<wi:inputText
+			id="identificador"
+			label="Identificador"
+			value="#{papelHome.instance.identificador}"
+			required="true"
+			rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}"
+			/>
+	
+		<wi:outputText
+			id="identificadorOutput"
+			label="Identificador"
+			value="#{papelHome.instance.identificador}"
+			rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
+			/>
+	
+		<wi:inputText
+			id="nome"
+			label="Nome"
+			value="#{papelHome.instance.nome}"
+			required="true"
+			/>
+	
+		<wi:tabPanel
+			switchType="ajax"
+			rendered="#{papelHome.managed}">
+			<wi:tabHeaders />
+			<wi:tab
+				status=":status"
+				title="Papéis que acessam">
+	
+				<a:region>
+	
+					<wi:pickList
+						id="herdeiros"
+						value="#{papelHome.membros}"
+						itemValues="#{papelHome.getPapeisDisponiveis(false)}"
+						itemLabel="#{papelHome.getNome(var)}" />
+	
+				</a:region>
+	
+			</wi:tab>
+	
+		</wi:tabPanel>
+	</a:region>
 </ui:composition>
