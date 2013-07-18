@@ -20,10 +20,11 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.itx.util.ComponentUtil;
 
-@Name("variavelHome")
+@Name(VariavelHome.NAME)
 public class VariavelHome extends AbstractVariavelHome<Variavel> {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "variavelHome";
 	
 	@Override
 	public String persist() {		 
@@ -44,6 +45,6 @@ public class VariavelHome extends AbstractVariavelHome<Variavel> {
 	}
 
 	public static VariavelHome instance() {
-		return ComponentUtil.getComponent("variavelHome");
+		return ComponentUtil.getComponent(VariavelHome.NAME);
 	}
 }
