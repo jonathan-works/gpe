@@ -145,13 +145,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public void newInstance() {
 		oldEntity = null; 
 				
-//  ATENCAO!!! UM MÉTODO NEWINSTANCE NAO DEVE DAR REFRESH E SIM CLEAR
-//		PARA FAZER AS ENTIDADES SEREM LIDAS NOVAMENTE, QUANDO FOR NECESSARIO.
-//  	SE HOUVER QUALQUER PROBLEMA AVISE PD&I MAS NAO REMOVA ESSE COMENTARIO
-//		
-		if (super.isManaged()) {
-			getEntityManager().clear();
-		}
 		if(lockedFields.size() > 0){
 			try {
 				clearUnlocked();
