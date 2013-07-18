@@ -225,9 +225,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	 * @return true se o e-mail for enviado e false se falhar
 	 */
 	private boolean enviarModeloPorNome(String nomeModeloDocumento) {
-		if (nomeModeloDocumento == null) {
-			return false;
-		} else if ("false".equals(nomeModeloDocumento)) {
+		if (nomeModeloDocumento == null || "false".equals(nomeModeloDocumento)) {
 			return false;
 		}
 		ModeloDocumento modelo = modeloDocumentoManager.getModeloDocumentoByTitulo(nomeModeloDocumento);
