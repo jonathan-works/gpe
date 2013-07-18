@@ -161,6 +161,10 @@ body {
 .value,.name {
 	padding: 0px;
 	color:#000;
+	display:block;
+}
+.value{
+	min-width:140px
 }
 
 .DataTableToolbar {
@@ -452,8 +456,8 @@ select {
 .rf-cp-hdr.tree-hdr {
 	border-width: 0px;
 	font-weight: normal;
-	background-size:100% auto;
-	min-width:224px;
+	background-size:auto 100%;
+	background-position:right bottom;
 	padding:0px;
 }
 

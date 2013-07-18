@@ -52,7 +52,7 @@
 							&& msgFuncs.existsMessage == 'true'
 							&& $(".d-msg-c").text().trim()!== "") {
 						msgFuncs.showDialogMessage();
-						if ($('dt[class=rf-msgs-err]').html() == null) {
+						if ($('.rf-msgs-err').html() == null) {
 							setTimeout(msgFuncs.hideDialogMessage, msgFuncs.timeout);
 						}
 					}
