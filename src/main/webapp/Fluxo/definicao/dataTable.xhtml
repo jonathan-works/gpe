@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:rich="http://richfaces.org/rich">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich">
 
-<!--
+	<!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -21,29 +21,20 @@
   veja em http://www.gnu.org/licenses/  
 -->
 	<rich:dataTable
-         value="#{values}"
-         id="#{id}"
-         rowKeyVar="key"
-         styleClass="#{styleClass}"
-         
-         var="row">
-		<rich:column
-             
-             styleClass="dr-table-subheader rich-table-subheader">
-			<f:facet
-                 name="header">
-				<ui:insert
-                     name="headerToolBar" />
+		value="#{values}"
+		id="#{id}"
+		rowKeyVar="key"
+		styleClass="#{styleClass}"
+		var="row">
+		<rich:column styleClass="dr-dt-sh">
+			<f:facet name="header">
+				<ui:insert name="headerToolBar" />
 			</f:facet>
-			<div 
-				><div>
-					<ui:insert
-                         name="toolBar" />
-				</div>
+			<div>
+				<ui:insert name="toolBar" />
 			</div>
 		</rich:column>
-		<ui:insert
-             name="columns" />
+		<ui:insert name="columns" />
 	</rich:dataTable>
 
 </ui:composition>
