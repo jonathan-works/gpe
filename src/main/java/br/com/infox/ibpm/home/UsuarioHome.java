@@ -34,6 +34,7 @@ import org.jboss.seam.util.RandomStringUtils;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.command.EMailData;
 import br.com.infox.command.SendmailCommand;
+import br.com.infox.epp.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.PessoaFisica;
@@ -55,6 +56,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	
 	@In private UsuarioLoginManager usuarioLoginManager;
 	@In private PessoaManager pessoaManager;
+	@In private ModeloDocumentoManager modeloDocumentoManager;
 
 	private String login;
 	private String password;
