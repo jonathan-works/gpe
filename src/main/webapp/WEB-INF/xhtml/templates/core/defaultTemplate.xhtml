@@ -8,13 +8,10 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf"
 	 xmlns:infox="http://www.infox.com.br/jsf"
+	 xmlns:f="http://java.sun.com/jsf/core"
 	 template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 	
-	<ui:define name="head">
-		<h:outputStylesheet
-        library="styleSkinInfox"
-        name="defaultCRUD.css" />
-	</ui:define>
+
     <ui:define name="body">
         <ui:param
 			 name="showSearchTab"
@@ -22,7 +19,7 @@
         <ui:param
 			 name="showFormTab"
 			 value="#{empty showFormTab ? true : showFormTab}" />
-
+<f:subview id="teste">
             <infox:tabPanel
 				 id="defaultTabPanel"
 				 switchType="ajax"
@@ -61,5 +58,6 @@
             <ui:insert name="tabs" />
             
 		</infox:tabPanel>
+		</f:subview>
 	</ui:define>
 </ui:composition>

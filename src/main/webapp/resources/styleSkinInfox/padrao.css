@@ -573,6 +573,7 @@ select {
 }
 .status {
 	position:absolute;
+	z-index:10000;
 }
 
 /*Seleção de turnos no calendário de localização*/
