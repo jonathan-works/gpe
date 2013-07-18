@@ -1,14 +1,16 @@
 /*LAYOUT GERAL DA PÁGINA*/
-.DataFormPanel .rf-p-b > div{
+.dt-form-p-b > div:not(.required-alert){
 	display:inline-block;
+	vertical-align:top;
 }
 
 .Associated, .Associative {
-	display:inline-table;
+	display:inline-block;
+	vertical-align:bottom;
 	width:50%;
 }
 
-.Associated > .dtable-p.rf-p, .Associative > .dtable-p.rf-p {
+.Associated-dt.dtable-p.rf-p, .Associative-dt.dtable-p.rf-p {
 	width:100%;
 	max-width:100%;
 	min-height:478px;
@@ -456,7 +458,7 @@ select {
 	background-color:transparent;
 	height: 22px;
 	min-width: 80px;
-	margin: 5px;
+	margin: 5px 5px 0 0;
 	padding: 0px 12px 3px 3px;
 	border-style:solid;
 	border-width:1px;
@@ -587,4 +589,9 @@ select {
 }
 .status {
 	position:absolute;
+}
+
+/*Seleção de turnos no calendário de localização*/
+.hidden.turno.calendar {
+	visibility:hidden;
 }

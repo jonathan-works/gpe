@@ -110,8 +110,8 @@
     </ui:define>
     <ui:define name="tabs">
         <wi:tab
-            status=":status"
             id="modeloDocumento"
+            status=":status"
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.modeloDocumentoList']}"
             name="modeloDocumento">
@@ -141,8 +141,8 @@
             </wi:dataTable>
         </wi:tab>
         <wi:tab
-            status=":status"
             id="variaveis"
+            status=":status"
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.variaveis']}"
             name="variaveis">
@@ -153,8 +153,9 @@
                         bean="#{associatedVariavelTipoModeloList}"
                         tableTitle="#{messages['associatedVariavelTipoModelo.titleGrid']}"
                         id="associatedVariavelTipoModeloList"
-                        rowId="#{row.idVariavelTipoModelo}">
-                        <ui:define name="searchForm" />
+                        rowId="#{row.idVariavelTipoModelo}"
+                        styleClass="Associated-dt"
+                        searchFormStyleClass="hidden">
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
                             <a:region>
@@ -185,7 +186,8 @@
                         bean="#{associativeVariavelList}"
                         tableTitle="#{messages['associativeVariavel.titleGrid']}"
                         id="associativeVariavelList"
-                        rowId="#{row.idVariavel}">
+                        rowId="#{row.idVariavel}"
+                        styleClass="Associative-dt">
                         <ui:define name="searchForm">
                             <wi:searchForm
                                 formId="pesquisarTipoModeloDocumento"
@@ -235,9 +237,9 @@
             </wi:ajaxDiv>
         </wi:tab>
         <wi:tab
+            id="papeis"
             action="#{tipoModeloDocumentoPapelHome.newInstance()}"
             status=":status"
-            id="papeis"
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.papeis']}"
             name="papeis">
