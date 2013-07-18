@@ -102,20 +102,20 @@ public class FluxoHome
 		return ret;
 	}	
 	
-    @Override
-    public String remove(Fluxo obj) {
-        setInstance(obj);
-        if (!fluxoManager.existemProcessosAssociadosAFluxo(obj)) {
-            obj.setAtivo(Boolean.FALSE);
-            super.update();
-            newInstance();
-        } else {
-            final String message = "Este registro está em uso e não poderá ser excluído.";
-            LOG.warn(message);
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, message);
-        }
-        return "updated";
-    }
+	@Override
+	public String inactive(Fluxo instance) {
+		setInstance(instance);
+		if (!fluxoManager.existemProcessosAssociadosAFluxo(instance)) {
+			String ret = super.inactive(instance);
+			newInstance();
+			return ret;
+		} else {
+			final String message = "#{messages['fluxo.remocaoProibida']}";
+			LOG.warn(message);
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, message);
+		}
+		return null;
+	}
 
     public String importarXPDL(byte[] bytes) {
     	Fluxo fluxo = getInstance();
