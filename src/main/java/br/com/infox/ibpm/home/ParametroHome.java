@@ -99,7 +99,7 @@ public class ParametroHome extends AbstractParametroHome<Parametro> {
 	}
 
 	public static UsuarioLogin getUsuarioSistema() {
-		int idUsuarioSistema = Integer.parseInt(getParametro(ID_USUARIO_SISTEMA));
+		int idUsuarioSistema = Integer.parseInt(ParametroUtil.getParametro(ID_USUARIO_SISTEMA));
 		return EntityUtil.getEntityManager().find(UsuarioLogin.class, idUsuarioSistema);
 	}
 }
