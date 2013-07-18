@@ -16,14 +16,11 @@
 package br.com.infox.ibpm.home;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.itx.util.ComponentUtil;
 
-
 @Name("variavelHome")
-@BypassInterceptors
 public class VariavelHome extends AbstractVariavelHome<Variavel> {
 
 	private static final long serialVersionUID = 1L;
