@@ -44,4 +44,8 @@ public class FluxoManager extends GenericManager{
 		return fluxoDAO.getFluxoByDescricao(descricao);
 	}
 	
+	public boolean existemProcessosAssociadosAFluxo(Fluxo fluxo){
+		return fluxoDAO.getQuantidadeDeProcessoAssociadosAFluxo(fluxo) > 0;
+	}
+	
 }
