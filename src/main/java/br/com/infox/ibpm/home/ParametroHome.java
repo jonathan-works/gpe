@@ -16,10 +16,6 @@
 package br.com.infox.ibpm.home;
 
 import java.util.Date;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
@@ -57,15 +53,12 @@ public class ParametroHome extends AbstractParametroHome<Parametro> {
 		return true;
 	}
 	
-	public static String getParametroOrFalse(String nome)	{
-		EntityManager em = EntityUtil.getEntityManager();
-		List<Parametro> resultList = em.createQuery(
-			"select p from Parametro p where " +
-				"nomeVariavel = :nome").setParameter("nome", nome).getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0).getValorVariavel();
+	public static String getParametroOrFalse(String nome) {
+		try {
+			return ParametroUtil.getParametro(nome);
+		} catch (Exception e){
+			return "false";
 		}
-		return "false";
 	}	
 	
 	public static String getFromContext(String nomeParametro, boolean validar) {
