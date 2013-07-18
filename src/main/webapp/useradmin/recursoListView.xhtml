@@ -62,7 +62,9 @@
 		name="form">
 		<wi:dataForm
 			formId="recursos"
-			formTitle="#{messages['form.title']}">
+			formTitle="#{messages['form.title']}"
+			updateAction="papelHome.save()"
+			persistAction="papelHome.save()">
 			<ui:include
 	             src="recursoEdit.xhtml">
 	        </ui:include>
