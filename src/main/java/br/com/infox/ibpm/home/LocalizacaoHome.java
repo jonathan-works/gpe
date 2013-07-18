@@ -17,8 +17,6 @@ package br.com.infox.ibpm.home;
 
 import java.util.List;
 
-import javax.faces.event.AbortProcessingException;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -26,8 +24,6 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.util.Strings;
-import org.richfaces.event.ItemChangeEvent;
-
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.component.tree.SearchTree2GridList;
 import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaSearchTreeHandler;
