@@ -36,13 +36,13 @@
 				 name="id"
 				 value="listaEmail" />
 			<ui:param
-				 name="style"
-				 value="clear:both; width:99%; margin-top:5px;#{empty values ? 'border-collapse:separate':'' }" /> 
+				name="styleClass"
+				value="dt-destinatarios" />
+ 
 			<ui:define name="toolBar">
 				
 				<h:graphicImage
-					 title="Excluir destinatário"
-					 
+					 title="Excluir destinatário"					 
 					 url="/img/remove.png">
 					
 					<a:ajax
@@ -85,7 +85,6 @@
 							
 						<h:graphicImage
 								 title="Adicionar destinatários"
-								 
 								 id="novoLocPapel"
 								 url="/img/add.gif">
 								
@@ -104,7 +103,6 @@
 						<wi:tree
 								 tree="#{estruturaTree}"
 								 id="estruturaTree"
-								 width="210"
 								 assignTo="nodeFitter.currentNode.currentListaEmail.estrutura"
 								 folderSelectable="true" />
 					
@@ -114,7 +112,6 @@
 						<wi:tree
 								 tree="#{localizacaoTree}"
 								 id="localizacao"
-								 width="210"
 								 assignTo="nodeFitter.currentNode.currentListaEmail.localizacao"
 								 folderSelectable="true" />
 					
@@ -124,7 +121,6 @@
 						<wi:tree
 								 tree="#{papelTree}"
 								 id="papelTree"
-								 width="210"
 								 assignTo="nodeFitter.currentNode.currentListaEmail.papel"
 								 folderSelectable="true" />
 					
@@ -138,7 +134,6 @@
 					<h:outputText value="Destinatários" />
 				
 				</f:facet>
-				
 			
 			</ui:define>
 		

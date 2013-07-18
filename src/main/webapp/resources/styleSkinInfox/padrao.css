@@ -165,6 +165,10 @@ body {
 .value,.name {
 	padding: 0px;
 	color:#000;
+	display:block;
+}
+.value{
+	min-width:140px
 }
 
 .DataTableToolbar {
@@ -321,6 +325,10 @@ body {
     filter: alpha(opacity=30);				    
 }
 
+.status {
+	position:absolute;
+}
+
 .transpToolBar:hover {
     opacity:1.0;
     filter: alpha(opacity=100);
@@ -468,8 +476,8 @@ select {
 .rf-cp-hdr.tree-hdr {
 	border-width: 0px;
 	font-weight: normal;
-	background-size:100% auto;
-	min-width:224px;
+	background-size:auto 100%;
+	background-position:right bottom;
 	padding:0px;
 }
 
@@ -584,11 +592,20 @@ select {
 }
 
 /*Painel/list.xhtml*/
-.Panel.rf-p.ProcessoEpaList {
-	width:100%;
+.p-caixas,.p-list {
+	display:inline-block;
+	vertical-align:top;
 }
-.status {
-	position:absolute;
+.p-caixas {
+	width:calc(30% - 10px);
+	margin:0 5px 0 0;
+}
+.p-list {
+	width:calc(70% - 10px);
+	margin:0 0 0 5px;
+}
+.p-list-search.dtable-search-form, .dtable-p.p-list-panel.rf-p,.p-list-dtable.dtable.rf-dt {
+	width:100%;
 }
 
 /*Seleção de turnos no calendário de localização*/

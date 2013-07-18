@@ -35,15 +35,14 @@
 			header="#{tableTitle}"
 			id="#{id}Panel"
 			bodyClass="dtable-p-b"
-			styleClass="dtable-p #{styleClass}"
+			styleClass="dtable-p #{panelStyleClass}"
 			>
 
 			<wi:messages
 				formId="#{id}Messages"
 				rendered="#{empty showMsg ? true : showMsg}"
-				globalOnly="true"/>
-			
-			<script>br.com.infox.applyCSSAfterTimeout({id:'#{id}Messages', style:{display:'none'}, timeout:5000});</script>
+				globalOnly="true"
+				timeCloseMSG="5000" />
 
 			<rich:dataTable
 				value="#{values}"
