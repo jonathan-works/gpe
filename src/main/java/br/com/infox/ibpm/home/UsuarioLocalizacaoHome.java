@@ -71,21 +71,7 @@ public class UsuarioLocalizacaoHome
 	
 	@Override
 	public void newInstance() {
-		List<String> lockedFields = getLockedFields();
-		// Parte copiada do newInstance do AbstractHome, tirando a parte do getEntityManager.clear()
-		if(lockedFields.size() > 0){
-			try {
-				clearUnlocked();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {			
-			setId(null);
-			clearForm();
-			instance = createInstance();
-		}
-		// Fim da parte copiada
-		
+		super.newInstance();
 		localizacao = null;
 		papel = null;
 		Events.instance().raiseEvent(AFTER_NEW_INSTANCE_EVENT, getInstance());
