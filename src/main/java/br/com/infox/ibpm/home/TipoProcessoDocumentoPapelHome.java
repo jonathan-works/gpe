@@ -41,14 +41,6 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	}
 	
 	public List<Papel> papelItems() {
-		String ejbql = "select o from Papel o where o not in (select p.papel from TipoProcessoDocumentoPapel p where p.tipoProcessoDocumento = :tipoProcessoDocumento)";
-		List<Papel> papeis = getEntityManager().createQuery(ejbql).setParameter("tipoProcessoDocumento", TipoProcessoDocumentoHome.instance().getInstance()).getResultList();
-		for (Iterator<Papel> iterator = papeis.iterator(); iterator.hasNext();) {
-			Papel papel = iterator.next();
-			if (papel.getIdentificador().startsWith("/")) {
-				iterator.remove();
-			}
-		}
-		return papeis;
+		return papelManager.getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumentoHome.instance().getInstance());
 	}
 }
