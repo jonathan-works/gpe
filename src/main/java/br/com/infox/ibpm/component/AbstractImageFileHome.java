@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -28,6 +30,7 @@ import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.FileUtil;
 
+@Scope(ScopeType.CONVERSATION)
 public abstract class AbstractImageFileHome implements FileUploadListener {
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractImageFileHome.class);
 	private static boolean updated = false;
