@@ -15,7 +15,6 @@
 */
 package br.com.infox.ibpm.home;
 
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -23,7 +22,6 @@ import javax.persistence.Query;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
