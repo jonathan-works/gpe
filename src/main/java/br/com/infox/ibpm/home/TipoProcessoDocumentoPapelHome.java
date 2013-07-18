@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.home;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
