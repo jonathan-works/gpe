@@ -26,7 +26,7 @@
 	<h:outputStylesheet
         library="styleSkinInfox"
         name="datatable.css" />
-	<s:div id="#{id}SearchForm" styleClass="dtable-search-form">
+	<s:div id="#{id}SearchForm" styleClass="dtable-search-form #{searchFormStyleClass}">
 		<ui:insert name="searchForm" />
 	</s:div>
 	<a:region>
@@ -50,8 +50,7 @@
 				id="#{id}"
 				rowKeyVar="key"
 				rowClasses="#{rowClasses}"
-				styleClass="zebra #{styleClass}"
-				
+				styleClass="dtable #{styleClass}"
 				var="row">
 				<ui:param
 					name="toolBarColumnWidth"

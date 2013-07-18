@@ -10,7 +10,11 @@
 	 xmlns:infox="http://www.infox.com.br/jsf"
 	 template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 	
-
+	<ui:define name="head">
+		<h:outputStylesheet
+        library="styleSkinInfox"
+        name="defaultCRUD.css" />
+	</ui:define>
     <ui:define name="body">
         <ui:param
 			 name="showSearchTab"

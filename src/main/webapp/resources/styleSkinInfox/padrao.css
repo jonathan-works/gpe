@@ -1,14 +1,16 @@
 /*LAYOUT GERAL DA PÁGINA*/
-.DataFormPanel .rf-p-b > div{
+.dt-form-p-b > div:not(.required-alert){
 	display:inline-block;
+	vertical-align:top;
 }
 
 .Associated, .Associative {
-	display:inline-table;
+	display:inline-block;
+	vertical-align:bottom;
 	width:50%;
 }
 
-.Associated > .dtable-p.rf-p, .Associative > .dtable-p.rf-p {
+.Associated-dt.dtable-p.rf-p, .Associative-dt.dtable-p.rf-p {
 	width:100%;
 	max-width:100%;
 	min-height:478px;
@@ -30,12 +32,13 @@
 	border-width:1px;
 }
 
-.tree {
-}
-
 .tree-div-clear {
 	height:18px;
 	display:inline-table;
+}
+
+.property.field.edit {
+	margin:0 15px 15px 0;
 }
 
 .rf-cp.rf-tgp,.rf-cp-hdr.rf-cp-hdr-exp {
@@ -97,34 +100,10 @@
 }
 /* FIM MENU*/
 
-.propertyView {
-	min-width: 250px;
-	min-height: 35px;
-	margin-top:5px;	
-	margin-right:10px;
-	display: table;			
-	overflow: visible;
-}
-
-.propertyView input[type="radio"] {
-	width: 13px;
-}
-
-.propertyView input[type="checkbox"] {
-	width: 15px;
-}
-
 .readOnly {
 	color: gray !important;
 }
 
-#processoDadosForm .propertyView input, #processoDadosForm .propertyView select {
-	width: 500px;
-}
-.propertyView textarea {
-	width: 350px !important;	
-}
-			
 .checkbox {
 	width: 14px !important;	
 }
@@ -463,7 +442,7 @@ select {
 .buttons {
 	height: 22px !important;
 	min-width: 80px;
-	margin: 5px;
+	margin: 5px 5px 0 0;
 	padding: 0px 12px 3px 3px;
 	border-style:solid;
 	border-width:1px;
@@ -516,18 +495,6 @@ select {
 @media print{
 	.onlyprint{display: block;visibility: visible;}
 	.noprint{display: none;visibility: hidden;}
-}
-
-.propertyView {
-	min-width: 150px
-}
-
-/* mail.xhtml */
-.rich-table-footercell .propertyView {
-	margin-top:0;
-}
-.propertyView {
-	min-width: 215px;
 }
 
 /*turnoCalendar.xhtml*/
@@ -604,10 +571,11 @@ select {
 .Panel.rf-p.ProcessoEpaList {
 	width:100%;
 }
+.status {
+	position:absolute;
+}
 
-.ajax-status {
-	position: absolute;
-	left: 30px;
-	top: 130px;
-	z-index: 100;
+/*Seleção de turnos no calendário de localização*/
+.hidden.turno.calendar {
+	visibility:hidden;
 }

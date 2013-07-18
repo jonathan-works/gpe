@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/tabbedTemplate.xhtml">
-	
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-    <!--
+
+	<!--
 		  IBPM - Ferramenta de produtividade Java
 		  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
 		 
@@ -26,224 +25,183 @@
 		  veja em http://www.gnu.org/licenses/  
 		-->
 
-    <ui:define name="title"> #{messages['variavel.titlePage']} </ui:define>
+	<ui:define name="title"> #{messages['variavel.titlePage']} </ui:define>
 
-    <ui:param
-		 name="home"
-		 value="#{variavelHome}" />
+	<ui:param name="home" value="#{variavelHome}" />
 
-    <ui:define name="searchGrid">
-		
-        <wi:dataTable
-			 values="#{variavelList.list(15)}"
-			 bean="#{variavelList}"
-			 tableTitle="#{messages['variavel.titleView']}"
-			 id="variavelList"
-			 rowId="#{row.idVariavel}">
-			
-            <ui:define name="headerToolBar">
-				
-                <wi:toolBarReport rendered="false" />
-                <wi:toolBarReportExcel rendered="false" />
-            
+	<ui:define name="searchGrid">
+
+		<wi:dataTable values="#{variavelList.list(15)}" bean="#{variavelList}"
+			tableTitle="#{messages['variavel.titleView']}" id="variavelList"
+			rowId="#{row.idVariavel}">
+
+			<ui:define name="headerToolBar">
+
+				<wi:toolBarReport rendered="false" />
+				<wi:toolBarReportExcel rendered="false" />
+
 			</ui:define>
-            <ui:define name="searchForm">
-				
-                <wi:searchForm
-					 formId="pesquisarVariavelForm"
-					 formTitle="#{messages['searchForm.title']}">
-					
-                    <wi:inputText
-						 id="variavel"
-						 value="#{variavelList.entity.variavel}"
-						 label="#{messages['variavel.variavel']}"
-						 maxlength="100" />
-                    <wi:inputText
-						 id="valorVariavel"
-						 label="#{messages['variavel.valorVariavel']}"
-						 value="#{variavelList.entity.valorVariavel}"
-						 maxlength="200" />
-                    <wi:selectSituacaoOneMenu
-						 id="ativo"
-						 label="#{messages['field.situacao']}"
-						 value="#{variavelList.entity.ativo}" />
-                
+			<ui:define name="searchForm">
+
+				<wi:searchForm formId="pesquisarVariavelForm"
+					formTitle="#{messages['searchForm.title']}">
+
+					<wi:inputText id="variavel" value="#{variavelList.entity.variavel}"
+						label="#{messages['variavel.variavel']}" maxlength="100" />
+					<wi:inputText id="valorVariavel"
+						label="#{messages['variavel.valorVariavel']}"
+						value="#{variavelList.entity.valorVariavel}" maxlength="200" />
+					<wi:selectSituacaoOneMenu id="ativo"
+						label="#{messages['field.situacao']}"
+						value="#{variavelList.entity.ativo}" />
+
 				</wi:searchForm>
-            
+
 			</ui:define>
 
-            <wi:columnOutputText
-				 columnId="variavel"
-				 columnHeader="#{messages['variavel.variavel']}"
-				 value="#{row.variavel}" />
-            <wi:columnOutputText
-				 columnId="valorVariavel"
-				 columnHeader="#{messages['variavel.valorVariavel']}"
-				 value="#{row.valorVariavel}" />
-            <wi:columnSituacao
-				 columnId="ativo"
-				 columnHeader="#{messages['field.situacao']}"
-				 value="#{row.ativo}" />
-        
+			<wi:columnOutputText columnId="variavel"
+				columnHeader="#{messages['variavel.variavel']}"
+				value="#{row.variavel}" />
+			<wi:columnOutputText columnId="valorVariavel"
+				columnHeader="#{messages['variavel.valorVariavel']}"
+				value="#{row.valorVariavel}" />
+			<wi:columnSituacao columnId="ativo"
+				columnHeader="#{messages['field.situacao']}" value="#{row.ativo}" />
+
 		</wi:dataTable>
-    
+
 	</ui:define>
 
-    <ui:define name="form">
-		
-        <wi:dataForm
-			 formId="variavelForm"
-			 formTitle="#{messages['form.title']}">
-			
-            <wi:inputText
-				 id="variavel"
-				 value="#{home.instance.variavel}"
-				 label="#{messages['variavel.variavel']}"
-				 maxlength="100"
-				 required="true" />
-            <wi:inputText
-				 id="valorVariavel"
-				 label="#{messages['variavel.valorVariavel']}"
-				 value="#{home.instance.valorVariavel}"
-				 maxlength="200"
-				 required="true" />
-            <wi:selectSituacaoRadio
-				 id="ativo"
-				 label="#{messages['field.situacao']}"
-				 value="#{home.instance.ativo}" />
-        
+	<ui:define name="form">
+
+		<wi:dataForm formId="variavelForm"
+			formTitle="#{messages['form.title']}">
+
+			<wi:inputText id="variavel" value="#{home.instance.variavel}"
+				label="#{messages['variavel.variavel']}" maxlength="100"
+				required="true" />
+			<wi:inputText id="valorVariavel"
+				label="#{messages['variavel.valorVariavel']}"
+				value="#{home.instance.valorVariavel}" maxlength="200"
+				required="true" />
+			<wi:selectSituacaoRadio id="ativo"
+				label="#{messages['field.situacao']}" value="#{home.instance.ativo}" />
+
 		</wi:dataForm>
-    
+
 	</ui:define>
 
-    <ui:define name="tabs">
-		
-        <wi:tab
-			 rendered="#{home.managed}"
-			 title="Tipos de Modelo de Documento">
-			
-            <wi:ajaxDiv id="divM2MVar">
-				
-                <s:div styleClass="Associative">
-					
-                    <wi:dataTable
-						 values="#{associativeTipoModeloDocumentoList.list(15)}"
-						 bean="#{associativeTipoModeloDocumentoList}"
-						 tableTitle="#{messages['associativeTipoModeloDocumento.titleGrid']}"
-						 id="associativeTipoModeloDocumentoList"
-						 rowId="#{row.idTipoModeloDocumento}">
-						
-                        <ui:define name="searchForm">
-							
-                            <wi:searchForm
-								 formId="pesquisarTipoModeloDocumentoForm"
-								 formTitle="#{messages['searchForm.title']}">
-								
-                                <h:outputText value="[Falta] Suggest de Grupo de Modelo de Documento" />
-                                <wi:inputText
-									 id="tipoModeloDocumento"
-									 label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
-									 value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumento}"
-									 maxlength="150" />
-                                <wi:inputText
-									 id="abreviacao"
-									 label="#{messages['tipoModeloDocumento.abreviacao']}"
-									 value="#{associativeTipoModeloDocumentoList.entity.abreviacao}"
-									 maxlength="5" />
-                                <wi:selectSituacaoOneMenu
-									 id="ativo"
-									 label="#{messages['field.situacao']}"
-									 value="#{associativeTipoModeloDocumentoList.entity.ativo}" />
-                            
-							</wi:searchForm>
-                        
-						</ui:define>
-                        <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar">
-							
-                            <a:region>
-								
-                                <a:commandLink
-									 limitRender="true"
-									 render="divM2MVar"
-									 action="#{variavelTipoModeloHome.addTipoModeloVariavel(row)}"
-									 rendered="true">
-									
-                                    <h:graphicImage
-										 url="/img/grid/copyRight.gif"
-										 title="Adicionar" />
-                                
+	<ui:define name="tabs">
+
+		<wi:tab rendered="#{home.managed}"
+			title="Tipos de Modelo de Documento">
+
+			<wi:ajaxDiv id="divM2MVar">
+				<s:div styleClass="Associated">
+
+					<wi:dataTable values="#{associatedTipoModeloVariavelList.list(15)}"
+						bean="#{associatedTipoModeloVariavelList}"
+						tableTitle="#{messages['associatedTipoModeloVariavel.titleGrid']}"
+						id="associatedTipoModeloVariavelList"
+						rowId="#{row.idVariavelTipoModelo}" styleClass="Associated-dt"
+						searchFormStyleClass="hidden">
+
+						<ui:define name="searchForm" />
+						<ui:define name="headerToolBar" />
+						<ui:define name="toolBar">
+
+							<a:region>
+
+								<a:commandLink limitRender="true" render="divM2MVar"
+									action="#{variavelTipoModeloHome.removeTipoModeloVariavel(row)}"
+									rendered="true">
+
+									<h:graphicImage url="/img/grid/copyRight.gif" title="Remover" />
+
 								</a:commandLink>
-                            
+
 							</a:region>
-                        
+
 						</ui:define>
-                        <wi:columnOutputText
-							 columnId="tipoModeloDocumento"
-							 columnHeader="#{messages['associativeTipoModeloVariavel.tipoModeloDocumento']}"
-							 value="#{row.tipoModeloDocumento}" />
-                        <wi:columnOutputText
-							 columnId="tipoModeloDocumento.grupoModeloDocumento"
-							 columnHeader="#{messages['associativeTipoModeloVariavel.grupoModeloDocumento']}"
-							 value="#{row.tipoModeloDocumento}" />
-                        <wi:columnOutputText
-							 columnId="abreviacao"
-							 columnHeader="#{messages['associativeTipoModeloVariavel.abreviacao']}"
-							 value="#{row.abreviacao}" />
-                        <wi:columnSituacao
-							 columnId="ativo"
-							 columnHeader="#{messages['field.situacao']}"
-							 value="#{row.ativo}" />
-                    
+						<wi:columnOutputText columnId="tipoModeloDocumento"
+							columnHeader="#{messages['associatedTipoModeloVariavel.tipoModeloDocumento']}"
+							value="#{row.tipoModeloDocumento}" />
+						<wi:columnOutputText
+							columnId="tipoModeloDocumento.grupoModeloDocumento"
+							columnHeader="#{messages['associatedTipoModeloVariavel.grupoModeloDocumento']}"
+							value="#{row.tipoModeloDocumento.grupoModeloDocumento}" />
+
 					</wi:dataTable>
-                
+
 				</s:div>
-            	<s:div styleClass="Associated">
-					
-                    <wi:dataTable
-						 values="#{associatedTipoModeloVariavelList.list(15)}"
-						 bean="#{associatedTipoModeloVariavelList}"
-						 tableTitle="#{messages['associatedTipoModeloVariavel.titleGrid']}"
-						 id="associatedTipoModeloVariavelList"
-						 rowId="#{row.idVariavelTipoModelo}">
-						
-                        <ui:define name="searchForm" />
-                        <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar">
-							
-                            <a:region>
-								
-                                <a:commandLink
-									 limitRender="true"
-									 render="divM2MVar"
-									 action="#{variavelTipoModeloHome.removeTipoModeloVariavel(row)}"
-									 rendered="true">
-									
-                                    <h:graphicImage
-										 url="/img/grid/copyLeft.gif"
-										 title="Remover" />
-                                
-								</a:commandLink>
-                            
-							</a:region>
-                        
+
+				<s:div styleClass="Associative">
+
+					<wi:dataTable
+						values="#{associativeTipoModeloDocumentoList.list(15)}"
+						bean="#{associativeTipoModeloDocumentoList}"
+						tableTitle="#{messages['associativeTipoModeloDocumento.titleGrid']}"
+						id="associativeTipoModeloDocumentoList"
+						rowId="#{row.idTipoModeloDocumento}" styleClass="Associative-dt">
+
+						<ui:define name="searchForm">
+
+							<wi:searchForm formId="pesquisarTipoModeloDocumentoForm"
+								formTitle="#{messages['searchForm.title']}">
+
+								<h:outputText
+									value="[Falta] Suggest de Grupo de Modelo de Documento" />
+								<wi:inputText id="tipoModeloDocumento"
+									label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+									value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumento}"
+									maxlength="150" />
+								<wi:inputText id="abreviacao"
+									label="#{messages['tipoModeloDocumento.abreviacao']}"
+									value="#{associativeTipoModeloDocumentoList.entity.abreviacao}"
+									maxlength="5" />
+								<wi:selectSituacaoOneMenu id="ativo"
+									label="#{messages['field.situacao']}"
+									value="#{associativeTipoModeloDocumentoList.entity.ativo}" />
+
+							</wi:searchForm>
+
 						</ui:define>
-                        <wi:columnOutputText
-							 columnId="tipoModeloDocumento"
-							 columnHeader="#{messages['associatedTipoModeloVariavel.tipoModeloDocumento']}"
-							 value="#{row.tipoModeloDocumento}" />
-                        <wi:columnOutputText
-							 columnId="tipoModeloDocumento.grupoModeloDocumento"
-							 columnHeader="#{messages['associatedTipoModeloVariavel.grupoModeloDocumento']}"
-							 value="#{row.tipoModeloDocumento.grupoModeloDocumento}" />
-                    
+						<ui:define name="headerToolBar" />
+						<ui:define name="toolBar">
+
+							<a:region>
+
+								<a:commandLink limitRender="true" render="divM2MVar"
+									action="#{variavelTipoModeloHome.addTipoModeloVariavel(row)}"
+									rendered="true">
+
+									<h:graphicImage url="/img/grid/copyLeft.gif" title="Adicionar" />
+
+								</a:commandLink>
+
+							</a:region>
+
+						</ui:define>
+						<wi:columnOutputText columnId="tipoModeloDocumento"
+							columnHeader="#{messages['associativeTipoModeloVariavel.tipoModeloDocumento']}"
+							value="#{row.tipoModeloDocumento}" />
+						<wi:columnOutputText
+							columnId="tipoModeloDocumento.grupoModeloDocumento"
+							columnHeader="#{messages['associativeTipoModeloVariavel.grupoModeloDocumento']}"
+							value="#{row.tipoModeloDocumento}" />
+						<wi:columnOutputText columnId="abreviacao"
+							columnHeader="#{messages['associativeTipoModeloVariavel.abreviacao']}"
+							value="#{row.abreviacao}" />
+						<wi:columnSituacao columnId="ativo"
+							columnHeader="#{messages['field.situacao']}" value="#{row.ativo}" />
+
 					</wi:dataTable>
-                
+
 				</s:div>
 			</wi:ajaxDiv>
-        
+
 		</wi:tab>
-    
+
 	</ui:define>
 
 </ui:composition>

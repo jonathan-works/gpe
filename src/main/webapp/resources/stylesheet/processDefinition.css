@@ -1,75 +1,11 @@
-.propertyView {
-	height: inherit;
-}
-
-.tabelaVariaveis .dr-table-cell {
-	padding: 0px;
-}
-
-.tabelaVariaveis .propertyView {
-	margin: 0px;
-}
-
-.tabelaVariaveis input, .tabelaVariaveis textarea, .tabelaVariaveis select{
-	margin: 0px;
-	border: none;
-}
-
-.dr-table-cell {
-	padding: 2px 3px 0px 3px;
-}
-
-.dr-stglpnl-b {
-	padding: 5px;
-}
-
-.rich-mpnl-body {
-	padding: 0px;
-}
-
-.rich-table select {
-	background-image: none !important;
-}
-
-.SwimlanePanel.rf-p {
-	position:relative;
-}
-
-div.Swimlane {
-	width:285px;
-}
-
-table.PerfilSwimlane {
-	
-}
-
-table.PerfilSwimlane .Contabilizar {
-	width:50px;
-}
-
-.CursorPointer {
+.pointer {
 	cursor:pointer;
 }
-
-.bordaBox {
-	width: 100%;
-}
-
 .pageBody {
 	height:695px;
 }
-
-input {
-	height: 16px;
 }
-
-.positionImg {
-	position:absolute;
-	left:106px;
-	top:90px;
-	z-index: 100;
-}
-
-.dr-table-footer {
-	background-color: transparent;	
+.pd-xml.textarea{
+	min-height:465px;
+	resize:none;
 }
