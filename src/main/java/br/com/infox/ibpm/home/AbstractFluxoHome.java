@@ -75,7 +75,6 @@ public abstract class AbstractFluxoHome<T> extends AbstractHome<Fluxo> {
                 getEntityManager().refresh(usuarioPublicacao);
             }
         }
-        // newInstance();
         return persistMessage;
     }
 }
