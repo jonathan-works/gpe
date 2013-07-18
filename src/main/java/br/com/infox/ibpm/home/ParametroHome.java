@@ -50,11 +50,7 @@ public class ParametroHome extends AbstractParametroHome<Parametro> {
 	}
 	
 	public String getParametroOrFalse(String nome) {
-		try {
-			return ParametroUtil.getParametro(nome);
-		} catch (Exception e){
-			return "false";
-		}
+		return ParametroUtil.getParametroOrFalse(nome);
 	}	
 	
 	public String getIdPagina() {
