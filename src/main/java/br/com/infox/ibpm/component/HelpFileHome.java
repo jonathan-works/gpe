@@ -15,17 +15,10 @@
 */
 package br.com.infox.ibpm.component;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
 import br.com.itx.util.ComponentUtil;
 
-
 @Name(HelpFileHome.NAME)
-@BypassInterceptors
-@Scope(ScopeType.CONVERSATION)
 public class HelpFileHome extends AbstractImageFileHome {
 	public static final String NAME = "helpFileUpload";
 
