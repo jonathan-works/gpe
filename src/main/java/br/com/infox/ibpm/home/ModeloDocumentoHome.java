@@ -42,8 +42,6 @@ import br.com.itx.util.ComponentUtil;
 @Scope(ScopeType.PAGE)
 public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocumento> {
 
-	private static final String	RAWTYPES	= "rawtypes";
-	private static final String	UNCHECKED	= "unchecked";
 	private static final long serialVersionUID = 1L;
 	private static final String TEMPLATE = "/ModeloDocumento/modeloDocumentoTemplate.xls";
 	private static final String DOWNLOAD_XLS_NAME = "ModelosDocumento.xls";
@@ -102,17 +100,11 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 		return tipoModeloDocumento;
 	}
 
-	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	public List<Variavel> getVariaveis() {
-		List list = new ArrayList<Variavel>();
 		if (getInstance().getTipoModeloDocumento() != null) {
-			final StringBuilder sb = new StringBuilder();
-			sb.append("select o from Variavel o ");
-			sb.append("join o.variavelTipoModeloList tipos ");
-			sb.append("where tipos.tipoModeloDocumento = :tipo");
-			list = getEntityManager().createQuery(sb.toString()).setParameter("tipo", getInstance().getTipoModeloDocumento()).getResultList();
+			return variavelManager.getVariaveisByTipoModeloDocumento(getInstance().getTipoModeloDocumento());
 		}
-		return list;
+		return new ArrayList<Variavel>();
 	}
 	
 	public boolean setHistorico(final ModeloDocumento oldEntity)	{
