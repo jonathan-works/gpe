@@ -330,28 +330,21 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	 * @throws LoginException
 	 */
 	public void requisitarNovaSenha() throws LoginException {
+		UsuarioLogin usuario;
 		if (email.isEmpty() && login.isEmpty()) {
 			FacesMessages.instance().add(
 					"É preciso informar o login ou o e-mail do usuário");
+			return;
 		} else if (!login.isEmpty()) {
-			recoverBy("login", login);
+			usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
+			recoverUsuario(usuario, login);
 		} else if (!email.isEmpty()) {
-			recoverBy("email", email);
+			usuario = usuarioLoginManager.getUsuarioLoginByEmail(email);
+			recoverUsuario(usuario, email);
 		}
 	}
 
-	private void recoverBy(String parametro, String valor) {
-		// O StringBuilder constrói a Query com base no parametro passado
-		// deixando na forma
-		// "select o from UsuarioLogin o where o.parametro = :parametro"
-		StringBuilder sb = new StringBuilder();
-		sb.append("select o from UsuarioLogin o where o.");
-		sb.append(parametro);
-		sb.append(" = :");
-		sb.append(parametro);
-		Query query = getEntityManager().createQuery(sb.toString());
-		query.setParameter(parametro, valor);
-		UsuarioLogin usuario = (UsuarioLogin) query.getSingleResult();
+	private void recoverUsuario(UsuarioLogin usuario, String parametro) {
 		if (usuario == null) {
 			FacesMessages.instance().add("Usuário não encontrado");
 		} else {
