@@ -82,7 +82,7 @@ public class FluxoHome
 	    Date dataFimPublicacao = getInstance().getDataFimPublicacao();
 		if (dataFimPublicacao != null){
 			if (dataFimPublicacao.before(getInstance().getDataInicioPublicacao())){
-				FacesMessages.instance().add(Severity.ERROR, "Data Fim Publicação deve ser maior que a Data Iníco Publicação");
+				FacesMessages.instance().add(Severity.ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
 				return Boolean.FALSE;
 			}
 		}
