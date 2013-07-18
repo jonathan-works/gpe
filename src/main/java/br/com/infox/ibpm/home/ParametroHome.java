@@ -28,6 +28,7 @@ import org.jboss.seam.international.StatusMessage;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.entity.log.LogUtil;
+import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(ParametroHome.NAME)
@@ -54,17 +55,6 @@ public class ParametroHome extends AbstractParametroHome<Parametro> {
 		getInstance().setUsuarioModificacao(Authenticator.getUsuarioLogado());
 		getInstance().setDataAtualizacao(new Date());
 		return true;
-	}
-	
-	public static String getParametro(String nome) {
-		EntityManager em = EntityUtil.getEntityManager();
-		List<Parametro> resultList = em.createQuery(
-			"select p from Parametro p where " +
-				"nomeVariavel = :nome").setParameter("nome", nome).getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0).getValorVariavel();
-		}
-		throw new IllegalArgumentException();		
 	}
 	
 	public static String getParametroOrFalse(String nome)	{
