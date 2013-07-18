@@ -230,14 +230,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 		} else if ("false".equals(nomeModeloDocumento)) {
 			return false;
 		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("select o from ModeloDocumento o");
-		sb.append(" where o.tituloModeloDocumento = :titulo");
-
-		ModeloDocumento modelo = (ModeloDocumento) getEntityManager()
-				.createQuery(sb.toString())
-				.setParameter("titulo", nomeModeloDocumento).getSingleResult();
+		ModeloDocumento modelo = modeloDocumentoManager.getModeloDocumentoByTitulo(nomeModeloDocumento);
 		if (modelo == null) {
 			return false;
 		} else {
