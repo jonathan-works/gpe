@@ -8,8 +8,10 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel;
 
-@Name("tipoProcessoDocumentoPapelHome")
+@Name(TipoProcessoDocumentoPapelHome.NAME)
 public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocumentoPapelHome<TipoProcessoDocumentoPapel> {
+	
+	public static final String NAME = "tipoProcessoDocumentoPapelHome";
 	private static final long serialVersionUID = 1L;
 	
 	@Override
