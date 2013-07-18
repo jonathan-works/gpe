@@ -33,12 +33,12 @@ import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.home.Authenticator;
-import br.com.infox.ibpm.home.ParametroHome;
 import br.com.infox.ibpm.home.ProcessoDocumentoHome;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
+import br.com.infox.util.ParametroUtil;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -494,7 +494,7 @@ public class AutomaticEventsTreeHandler extends AbstractTreeHandler<Evento> {
 			}
 			sb.append(")");
 			
-			String origem = ParametroHome.getParametro("aplicacaoSistema");
+			String origem = ParametroUtil.getParametro("aplicacaoSistema");
 						
 			Query q = EntityUtil.getEntityManager().createNativeQuery(sb.toString());
 			Date dataMovimento = new Date();

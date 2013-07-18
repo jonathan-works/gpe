@@ -50,6 +50,7 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.home.ParametroHome;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.util.ParametroUtil;
 import br.com.itx.component.Util;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
@@ -325,7 +326,7 @@ public class RegistraEventoAction extends AbstractEventoAction {
 			qInsert.setParameter("processo", processo.getIdProcesso());
 			qInsert.setParameter("evento", evento.getIdEvento());
 			if(usuario == null) {
-				qInsert.setParameter("usuario", Integer.parseInt(ParametroHome.getParametro(ParametroHome.ID_USUARIO_SISTEMA)));
+				qInsert.setParameter("usuario", Integer.parseInt(ParametroUtil.getParametro(ParametroHome.ID_USUARIO_SISTEMA)));
 			} else {
 				qInsert.setParameter("usuario", usuario.getIdPessoa());
 			}
