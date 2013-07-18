@@ -20,6 +20,7 @@ import java.util.Date;
 
 import javax.persistence.Query;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -27,6 +28,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.manager.FluxoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.xpdl.IllegalXPDLException;
@@ -40,6 +42,8 @@ public class FluxoHome
     private static final LogProvider LOG = Logging.getLogProvider(FluxoHome.class);
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "fluxoHome";
+	
+	@In private FluxoManager fluxoManager;
 	
 	public static FluxoHome instance() {
 		return ComponentUtil.getComponent(FluxoHome.NAME);
