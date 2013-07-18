@@ -53,7 +53,7 @@ public class ParametroHome extends AbstractParametroHome<Parametro> {
 		return true;
 	}
 	
-	public static String getParametroOrFalse(String nome) {
+	public String getParametroOrFalse(String nome) {
 		try {
 			return ParametroUtil.getParametro(nome);
 		} catch (Exception e){
