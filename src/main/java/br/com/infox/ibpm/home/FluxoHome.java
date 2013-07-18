@@ -21,7 +21,6 @@ import java.util.Date;
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -36,7 +35,6 @@ import br.com.itx.util.HibernateUtil;
 
  
 @Name(FluxoHome.NAME)
-@BypassInterceptors
 public class FluxoHome 
 		extends AbstractFluxoHome<Fluxo>{
     private static final LogProvider LOG = Logging.getLogProvider(FluxoHome.class);
