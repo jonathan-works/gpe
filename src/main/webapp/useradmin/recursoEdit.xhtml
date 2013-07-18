@@ -1,84 +1,56 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf">
-	
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<rich:panel header="Recursos">
-		
-		<wi:inputText
-			 label="Identificador"
-			 value="#{papelHome.instance.identificador}"
-			 required="true"
-			 rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}"
-			 id="identificador" />
+	<wi:inputText
+		id="identificador"
+		label="Identificador"
+		value="#{papelHome.instance.identificador}"
+		required="true"
+		rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}"
+		/>
 
-		<wi:outputText
-			 label="Identificador"
-			 value="#{papelHome.instance.identificador}"
-			 rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
-			 id="identificadorOutput" />
+	<wi:outputText
+		id="identificadorOutput"
+		label="Identificador"
+		value="#{papelHome.instance.identificador}"
+		rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
+		/>
 
-		<wi:inputText
-			 label="Nome"
-			 value="#{papelHome.instance.nome}"
-			 required="true"
-			 id="nome" />
+	<wi:inputText
+		id="nome"
+		label="Nome"
+		value="#{papelHome.instance.nome}"
+		required="true"
+		/>
 
-		<wi:tabPanel
-			 switchType="ajax"
-			 rendered="#{papelHome.managed}"
-			 >
-			<h:form><wi:tabHeaders /></h:form>
-			<wi:tab
-				 status=":status"
-				 title="Papéis que acessam">
-				
-				<a:region>
-					
-					<wi:pickList
-						 id="herdeiros"
-						 value="#{papelHome.membros}"
-						 itemValues="#{papelHome.getPapeisDisponiveis(false)}"
-						 itemLabel="#{papelHome.getNome(var)}" />
-				
-				</a:region>
-			
-			</wi:tab>
-		
-		</wi:tabPanel>
+	<wi:tabPanel
+		switchType="ajax"
+		rendered="#{papelHome.managed}">
+		<wi:tabHeaders />
+		<wi:tab
+			status=":status"
+			title="Papéis que acessam">
 
-		<div  />
+			<a:region>
 
-	
-	</rich:panel>
+				<wi:pickList
+					id="herdeiros"
+					value="#{papelHome.membros}"
+					itemValues="#{papelHome.getPapeisDisponiveis(false)}"
+					itemLabel="#{papelHome.getNome(var)}" />
 
-	<s:div styleClass="actionButtons">
-		
-		<a:commandButton
-			 id="save"
-			 render="papelForm"
-			 styleClass="buttons buttons"
-			 value="Gravar"
-			 action="#{papelHome.save}" />
+			</a:region>
 
-		<a:commandButton
-			 id="new"
-			 render="papelForm"
-			 styleClass="buttons buttons"
-			 execute="@this"
-			 value="Novo"
-			 action="#{papelHome.newInstance()}" />
-	
-	</s:div>
+		</wi:tab>
 
-	<rich:messages styleClass="error errors" />
-
+	</wi:tabPanel>
 
 </ui:composition>
