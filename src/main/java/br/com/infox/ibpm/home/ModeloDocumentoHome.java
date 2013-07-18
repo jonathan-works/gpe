@@ -34,6 +34,7 @@ import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Variavel;
+import br.com.infox.ibpm.manager.VariavelManager;
 import br.com.infox.list.ModeloDocumentoList;
 import br.com.itx.util.ComponentUtil;
 
@@ -53,6 +54,7 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	
 	@In private TipoModeloDocumentoPapelManager tipoModeloDocumentoPapelManager;
 	@In private ModeloDocumentoManager modeloDocumentoManager;
+	@In private VariavelManager variavelManager;
 	
 	@Override
 	public EntityList<ModeloDocumento> getBeanList() {
