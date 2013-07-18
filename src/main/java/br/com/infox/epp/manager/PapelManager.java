@@ -11,6 +11,7 @@ import br.com.infox.access.entity.Papel;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.PapelDAO;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 
 @Name(PapelManager.NAME)
 @AutoCreate
@@ -23,6 +24,10 @@ public class PapelManager extends GenericManager {
 	
 	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento){
 		return papelDAO.getPapeisNaoAssociadosATipoModeloDocumento(tipoModeloDocumento);
+	}
+	
+	public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento){
+		return papelDAO.getPapeisNaoAssociadosATipoProcessoDocumento(tipoProcessoDocumento);
 	}
 	
 	public Papel getPapelByIdentificador(String identificador){
