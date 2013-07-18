@@ -56,7 +56,7 @@ public class FluxoDAO extends GenericDAO {
 	}
 	
 	public Long getQuantidadeDeProcessoAssociadosAFluxo(Fluxo fluxo){
-		String query = "select count(o) from Processo o where o.fluxo = :fluxo";
+		String query = "select count(o) from Processo o where o.naturezaCategoriaFluxo.fluxo = :fluxo";
         return (Long) entityManager.createQuery(query).setParameter("fluxo", fluxo).getSingleResult();
 	}
 	
