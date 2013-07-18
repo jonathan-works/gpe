@@ -61,15 +61,6 @@ public class ParametroHome extends AbstractParametroHome<Parametro> {
 		}
 	}	
 	
-	public static String getFromContext(String nomeParametro, boolean validar) {
-		String value = (String) Contexts.getApplicationContext().get(nomeParametro);
-		if (validar && value == null) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-					"Parâmetro não encontrado: " + nomeParametro);			
-		}
-		return value;
-	}
-	
 	public String getIdPagina() {
 		return LogUtil.getIdPagina();
 	}
