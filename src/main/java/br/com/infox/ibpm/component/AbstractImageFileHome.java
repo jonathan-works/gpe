@@ -13,6 +13,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
@@ -23,6 +24,7 @@ import org.richfaces.model.UploadedFile;
 
 import br.com.infox.epp.entity.ImagemBin;
 import br.com.infox.epp.home.ImagemBinHome;
+import br.com.infox.epp.manager.ImagemBinManager;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.component.Util;
@@ -38,6 +40,8 @@ public abstract class AbstractImageFileHome implements FileUploadListener {
 	private String fileName;
 	private Integer fileSize;
 	private byte[] data;
+	
+	@In private ImagemBinManager imagemBinManager;
 	
 	private String getUserImageDir() {
 		UsuarioLocalizacao usuarioLoc = (UsuarioLocalizacao) 
