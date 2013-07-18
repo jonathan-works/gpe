@@ -117,10 +117,7 @@ public abstract class AbstractImageFileHome implements FileUploadListener {
 			return;
 		}
 		
-		ImagemBinHome imagemBinHome = ImagemBinHome.instance();
-		EntityManager manager = imagemBinHome.getEntityManager();
-		String hql = "select o from ImagemBin o";
-		List<ImagemBin> list = manager.createQuery(hql).getResultList();
+		List<ImagemBin> list = imagemBinManager.getTodasAsImagens();
 		
 		for (ImagemBin imagemBin : list) {
 			String[] imagesDir = getImagesDir();
