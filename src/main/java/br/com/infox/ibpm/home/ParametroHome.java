@@ -17,10 +17,6 @@ package br.com.infox.ibpm.home;
 
 import java.util.Date;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
-
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.entity.log.LogUtil;
