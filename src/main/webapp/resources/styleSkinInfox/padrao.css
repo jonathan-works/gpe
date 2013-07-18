@@ -468,8 +468,8 @@ select {
 .rf-cp-hdr.tree-hdr {
 	border-width: 0px;
 	font-weight: normal;
-	background-size:100% auto;
-	min-width:224px;
+	background-size:auto 100%;
+	background-position:right bottom;
 	padding:0px;
 }
 
