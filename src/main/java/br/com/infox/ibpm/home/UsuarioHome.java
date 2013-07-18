@@ -41,6 +41,7 @@ import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
+import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -264,7 +265,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 			nomeParam = "tituloModeloEmailMudancaSenhaComLogin";
 		}
 
-		String nomeModelo = ParametroHome.getParametroOrFalse(nomeParam);
+		String nomeModelo = ParametroUtil.getParametroOrFalse(nomeParam);
 
 		if (!enviarModeloPorNome(nomeModelo)) {
 			FacesMessages.instance().add(
