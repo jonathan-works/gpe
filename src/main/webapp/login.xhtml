@@ -21,14 +21,14 @@
 
 	<ui:define name="baseBody">
 		<h:outputScript library="js/components" name="Modal.js" />
-		<script>
-			namespace.whenReady(function() {
+		<script type="text/javascript">
+			namespace(["infox.Modal"],function(Modal) {
 				$("#btnTrocar").click( function (){
 					var isHidden = $(".novaSenha").toggleClass("visible").is(':hidden');
 					$("#btnTrocar").val(isHidden ? "#{messages['login.trocarSenhaBtn']}" :"#{messages['login.naoTrocarSenhaBtn']}");
 					$(".input_login.passwd").val('');
 				});
-				var panelTeste = new namespace.infox.Modal({id:'panelTeste'});
+				var panelTeste = new Modal({id:'panelTeste'});
 				$("#btnTrocarSenha").click(panelTeste.show);
 				$("#btnTrocarSenha2").click(panelTeste.hide);
 				$("##{rich:clientId('closeBtn')}").click(panelTeste.hide);
@@ -216,7 +216,7 @@
 				</div>
 			</rich:popupPanel>					
 					
-			<rich:messages></rich:messages>
+			<wi:messages></wi:messages>
 		</s:div>
 	</ui:define>
 	
