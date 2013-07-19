@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
 	
 
     <!--
@@ -41,7 +42,11 @@
     <ui:param
 		 name="checkPermission"
 		 value="#{processoHome.checarVisibilidade()}" />
-
+	<ui:define name="head">
+		<h:outputStylesheet
+	        library="styleSkinInfox"
+	        name="movimentar.css" />
+	</ui:define>
     <ui:define name="body">
 		
         <s:div id="script">
@@ -107,7 +112,9 @@
 					 status=":status"
 					 title="Entrada">
 					
-                    <s:div id="divDocAnterior">
+                    <ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
 						
                         <wi:form
 							 canEdit="true"
@@ -115,7 +122,7 @@
 							 home="#{taskInstanceHome}"
 							 form="#{taskInstanceView}" />
                     
-					</s:div>
+					</ui:decorate>
                 
 				</wi:tab>
 
@@ -127,8 +134,9 @@
 					 title="Saída">
 					
                     <c:if test="#{empty taskPageAction.taskPagePath}">
-						
-                        <s:div id="taskInstanceDiv">
+						<ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
 							
                             <wi:form
 								 canEdit="true"
@@ -136,8 +144,8 @@
 								 home="#{taskInstanceForm.home}"
 								 reRenderSave="taskInstanceDiv"
 								 form="#{taskInstaceForm}" />
-                        
-						</s:div>
+	                        
+						</ui:decorate>
                     
 					</c:if>
                     <c:if test="#{not empty taskPageAction.taskPagePath}">
@@ -156,9 +164,9 @@
 					 title="Anexar Documento"
                      action="#{processoDocumentoHome.newInstance()}">
 					
-                    <s:div id="divAnexarDocumentos">
-						
-                        <div >
+                    <ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
 							
                             <wi:dataForm
 								 formId="anexarDocumentosForm"
@@ -170,9 +178,7 @@
                             
 							</wi:dataForm>
                         
-						</div>
-                    
-					</s:div>
+					</ui:decorate>
                 
 				</wi:tab>
 
@@ -183,7 +189,9 @@
 					 status=":status"
 					 title="Documentos do Processo">
 					
-                    <s:div id="divDocumentosProcesso">
+                    <ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
 						
                         <wi:dataTable
 							 values="#{processoDocumentoList.list(15)}"
@@ -209,7 +217,7 @@
                         
 						</wi:dataTable>
                     
-					</s:div>
+					</ui:decorate>
                 
 				</wi:tab>
 
@@ -219,8 +227,11 @@
 					 rendered="#{processoHome.managed}"
 					 status=":status"
 					 title="Movimentações do Processo">
-					
-                    <ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+					<ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+                    	<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+                    </ui:decorate>
                 
 				</wi:tab>
 
@@ -233,97 +244,100 @@
 					 rendered="#{home.isManaged()}"
 					 title="#{messages['documentoFisico.titleTab']}"
                      action="#{localizacaoDocumentoFisicoAction.init()}">
-					
-                    <wi:dataForm
-						 formId="documentoFisicoForm"
-						 formTitle="#{messages['form.title']}">
-						
-                        <wi:tree
-							 id="localizacaoFisica"
-							 assignTo="localizacaoDocumentoFisicoAction.instance.localizacaoFisica"
-							 tree="#{localizacaoFisicaTree}"
-							 label="#{messages['documentoFisico.localizacaoFisica']}"
-							 required="true"
-							 noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}" />
-
-                        <wi:inputText
-							 id="descricaoDocumentoFisico"
-							 label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
-							 required="true"
-							 value="#{action.instance.descricaoDocumentoFisico}"
-							 maxlength="150" />
-                        <ui:define name="buttons">
+					<ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+	                    <wi:dataForm
+							 formId="documentoFisicoForm"
+							 formTitle="#{messages['form.title']}">
 							
-                            <wi:commandButton
-								 id="saveDocumentoFisicoButton"
-								 action="localizacaoDocumentoFisicoAction.save"
-								 reRender="documentoFisicoForm, documentoFisicoDiv"
-								 value="Incluir" />
-                        
-						</ui:define>
-                    
-					</wi:dataForm>
-                    <s:div id="documentoFisicoDiv">
-						
-                        <rich:dataTable
-							 id="documentoFisicoTable"
-							 value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
-							 var="row"
-							 rows="10"
-							 >
+	                        <wi:tree
+								 id="localizacaoFisica"
+								 assignTo="localizacaoDocumentoFisicoAction.instance.localizacaoFisica"
+								 tree="#{localizacaoFisicaTree}"
+								 label="#{messages['documentoFisico.localizacaoFisica']}"
+								 required="true"
+								 noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}" />
+	
+	                        <wi:inputText
+								 id="descricaoDocumentoFisico"
+								 label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
+								 required="true"
+								 value="#{action.instance.descricaoDocumentoFisico}"
+								 maxlength="150" />
+	                        <ui:define name="buttons">
+								
+	                            <wi:commandButton
+									 id="saveDocumentoFisicoButton"
+									 action="localizacaoDocumentoFisicoAction.save"
+									 reRender="documentoFisicoForm, documentoFisicoDiv"
+									 value="Incluir" />
+	                        
+							</ui:define>
+	                    
+						</wi:dataForm>
+	                    <s:div id="documentoFisicoDiv">
 							
-                            <rich:column >
+	                        <rich:dataTable
+								 id="documentoFisicoTable"
+								 value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+								 var="row"
+								 rows="10"
+								 >
 								
-                                <f:facet name="header">
+	                            <rich:column >
 									
-                                    <wi:toolBarRemove
-										 id="headerInactivate"
-										 reRender="documentoFisicoDiv"
-										 actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
-										 title="Inativar todos os Registros" />
-                                
-								</f:facet>
-                                <center>
+	                                <f:facet name="header">
+										
+	                                    <wi:toolBarRemove
+											 id="headerInactivate"
+											 reRender="documentoFisicoDiv"
+											 actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
+											 title="Inativar todos os Registros" />
+	                                
+									</f:facet>
+	                                <center>
+										
+	                                    <wi:toolBarRemove
+											 id="toolBarInactivate"
+											 reRender="documentoFisicoDiv"
+											 actionRemove="localizacaoDocumentoFisicoAction.inactive(row)" />
+	                                
+									</center>
+	                            
+								</rich:column>
+	                            <rich:column >
 									
-                                    <wi:toolBarRemove
-										 id="toolBarInactivate"
-										 reRender="documentoFisicoDiv"
-										 actionRemove="localizacaoDocumentoFisicoAction.inactive(row)" />
-                                
-								</center>
-                            
-							</rich:column>
-                            <rich:column >
-								
-                                <f:facet name="header">
+	                                <f:facet name="header">
+										
+	                                    <h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />
+	                                
+									</f:facet>
+	                                <h:outputText value="#{row.localizacaoFisica.caminhoCompletoToString()}" />
+	                            
+								</rich:column>
+	
+	                            <rich:column >
 									
-                                    <h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />
-                                
-								</f:facet>
-                                <h:outputText value="#{row.localizacaoFisica.caminhoCompletoToString()}" />
-                            
-							</rich:column>
-
-                            <rich:column >
-								
-                                <f:facet name="header">
-									
-                                    <h:outputText value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
-                                
-								</f:facet>
-                                <h:outputText value="#{row.descricaoDocumentoFisico}" />
-                            
-							</rich:column>
-
-                        
-						</rich:dataTable>
-                        <rich:dataScroller
-							 id="dsDocumentoFisicoTable"
-							 for="documentoFisicoTable"
-							 lastPageMode="full"
-							 align="left"
-							 renderIfSinglePage="false" />
-					</s:div>
+	                                <f:facet name="header">
+										
+	                                    <h:outputText value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
+	                                
+									</f:facet>
+	                                <h:outputText value="#{row.descricaoDocumentoFisico}" />
+	                            
+								</rich:column>
+	
+	                        
+							</rich:dataTable>
+	                        <rich:dataScroller
+								 id="dsDocumentoFisicoTable"
+								 for="documentoFisicoTable"
+								 lastPageMode="full"
+								 align="left"
+								 renderIfSinglePage="false" />
+						</s:div>
+					</ui:decorate>
                 
 				</wi:tab>
 
@@ -333,8 +347,11 @@
 					 status=":status"
 					 rendered="#{home.hasPartes()}"
 					 title="#{messages['parteProcesso.partes']}">
-					
-                    <ui:include src="parteProcessoGrid.xhtml" />
+					<ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+                    	<ui:include src="parteProcessoGrid.xhtml" />
+                    </ui:decorate>
                 
 				</wi:tab>
             
