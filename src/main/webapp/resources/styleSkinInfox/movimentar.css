@@ -1,4 +1,5 @@
 .clean-pageBody {
+	width:100%;
 	height:calc(100% - 89px);
 	position:absolute;
 }
