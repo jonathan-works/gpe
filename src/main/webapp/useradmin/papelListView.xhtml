@@ -69,7 +69,9 @@
     <ui:define name="form">
 		<wi:dataForm
 			formId="papel"
-			formTitle="#{messages['form.title']}">
+			formTitle="#{messages['form.title']}"
+			updateAction="papelHome.save()"
+			persistAction="papelHome.save()">
         	<ui:include src="papelEdit.xhtml" />
         </wi:dataForm>
     

@@ -35,7 +35,7 @@
 			header="#{tableTitle}"
 			id="#{id}Panel"
 			bodyClass="dtable-p-b"
-			styleClass="dtable-p #{styleClass}"
+			styleClass="dtable-p #{panelStyleClass}"
 			>
 
 			<wi:messages
@@ -55,7 +55,6 @@
 					name="toolBarColumnWidth"
 					value="#{wi:get(toolBarColumnWidth, '40px')}" />
 				<rich:column
-					
 					styleClass="DataTableToolbar"
 					rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
 					rowspan="#{empty columnRowspan ? '1':columnRowspan}">

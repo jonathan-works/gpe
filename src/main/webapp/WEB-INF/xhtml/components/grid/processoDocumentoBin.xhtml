@@ -37,15 +37,9 @@
 		 >
 			
 	<span class="#{row.ativo ? '' : 'inativo'}" />
-	<script>
-		function abrirPopUpRecibo(){
-			openPopUp('PopUpDocumentoBin', '');
-		}
-		
-	</script>
 		<s:link
 			 view="/Painel/documentoHTML.seam"
-			 onclick="abrirPopUpRecibo();"
+			 onclick="namespace.infox.openPopUp('PopUpDocumentoBin', '');"
 			 rendered="#{not empty bin.modeloDocumento}"
 			 target="PopUpDocumentoBin">
 			

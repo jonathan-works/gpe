@@ -15,7 +15,7 @@
 		 value="#{value}" />
 		
 		<script>
-			$('#{form.formId}Form:#{f.id}:#{f.id}').value = "#{empty props.value ? value : props.value}";
+			$('##{form.formId}Form:#{f.id}:#{f.id}').split(":").join("\\:").val("#{empty props.value ? value : props.value}");
 		</script>
 		
 	

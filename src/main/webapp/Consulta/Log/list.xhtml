@@ -27,12 +27,6 @@
 
     <ui:define name="title">#{messages['consultaEntidadeLog.titulo']}</ui:define>
 
-
-    <script>
-		function abrirPopUp(){
-			openPopUp('comprovante', '');
-		}
-	</script>
 	<ui:define name="head">
 		<h:outputStylesheet
 	        library="styleSkinInfox"
@@ -113,7 +107,7 @@
                     <ui:define name="toolBar">
                         <s:link
                             view="/Consulta/Log/detalheLog.seam"
-                            onclick="abrirPopUp();"
+                            onclick="namespace.infox.openPopUp('comprovante', '');"
                             target="comprovante">
                             <s:conversationPropagation type="none" />
                             <f:param

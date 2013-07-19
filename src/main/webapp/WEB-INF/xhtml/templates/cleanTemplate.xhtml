@@ -20,6 +20,7 @@
 		href="#{util.contextPath}/favicon.ico"
 		type="image/x-icon" />
 	<ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
+	<ui:insert name="head" />
 </h:head>
 
 <h:body>
@@ -34,20 +35,10 @@
 	<ui:include src="cleanHeader.xhtml" />
 	<ui:include src="ajaxQueue.xhtml" />
 
-	<c:if test="#{showMenu}">
-		<ui:include src="menu.xhtml">
-			<ui:param
-				name="projectName"
-				value="#{nomeSistema}" />
-		</ui:include>
-	</c:if>
-
 	<s:div
-		styleClass="pageBody"
+		styleClass="clean-pageBody"
 		id="pageBody">
-		<div >
-			<ui:insert name="body" />
-		</div>
+		<ui:insert name="body" />
 	</s:div>
 
 </h:body>

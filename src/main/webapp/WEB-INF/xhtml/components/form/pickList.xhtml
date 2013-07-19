@@ -40,14 +40,11 @@
         name="pickList.js"
         library="js" />
 	<script type="text/javascript">
-	//<![CDATA[
-		(function(id, inputId) {
-			jQuery ? pickList.load(id, inputId) : 
-				window.addEventListener("load", function() {
-					pickList.load(id, inputId);
-				});
-		})("##{rich:clientId(id)}".split(":").join("\\:"), "##{id}Filtro")
-	//]]>
+		namespace(["infox.PickList"],function(pickList) {
+			var id = "##{rich:clientId(id)}".split(":").join("\\:");
+			var inputId = "##{id}Filtro";
+			pickList.load(id, inputId);
+		});
 	</script>
 	<s:div styleClass="pick-filter">
 		<h:graphicImage

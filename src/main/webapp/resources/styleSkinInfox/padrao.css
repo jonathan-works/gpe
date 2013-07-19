@@ -85,6 +85,10 @@
 	padding:5px;
 	height:calc(100% - 26px);
 }
+.nodeDiv,.organized {
+	display:inline-block;
+	vertical-align:top;
+}
 .SearchForm {
 	display: inline-block;
 	vertical-align: top;
@@ -321,6 +325,10 @@ body {
     filter: alpha(opacity=30);				    
 }
 
+.status {
+	position:absolute;
+}
+
 .transpToolBar:hover {
     opacity:1.0;
     filter: alpha(opacity=100);
@@ -443,14 +451,26 @@ select {
 	background-position: top left;
 }
 
+.link.buttons {
+	padding:3px 12px 3px 3px;
+	text-decoration:none;
+	text-align:center;
+	display:inline-block;
+	box-sizing:border-box;
+	vertical-align:top;
+	-moz-box-sizing:border-box;
+	cursor:default;
+}
+
 .buttons {
-	height: 22px !important;
+	background-color:transparent;
+	height: 22px;
 	min-width: 80px;
 	margin: 5px 5px 0 0;
 	padding: 0px 12px 3px 3px;
 	border-style:solid;
 	border-width:1px;
-	background-color: transparent;
+	border-radius:5px;
 }
 
 .rf-cp-hdr.tree-hdr {
@@ -572,12 +592,20 @@ select {
 }
 
 /*Painel/list.xhtml*/
-.Panel.rf-p.ProcessoEpaList {
-	width:100%;
+.p-caixas,.p-list {
+	display:inline-block;
+	vertical-align:top;
 }
-.status {
-	position:absolute;
-	z-index:10000;
+.p-caixas {
+	width:calc(30% - 10px);
+	margin:0 5px 0 0;
+}
+.p-list {
+	width:calc(70% - 10px);
+	margin:0 0 0 5px;
+}
+.p-list-search.dtable-search-form, .dtable-p.p-list-panel.rf-p,.p-list-dtable.dtable.rf-dt {
+	width:100%;
 }
 
 /*Seleção de turnos no calendário de localização*/

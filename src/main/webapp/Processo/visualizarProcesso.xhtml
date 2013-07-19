@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
 	
 
     <!--
@@ -41,7 +42,11 @@
     <ui:param
 		 name="checkPermission"
 		 value="#{processoHome.checarVisibilidade()}" />
-
+	<ui:define name="head">
+		<h:outputStylesheet
+	        library="styleSkinInfox"
+	        name="movimentar.css" />
+	</ui:define>
     <ui:define name="body">
 		
         <s:div id="script">
@@ -78,21 +83,20 @@
 				 render="taskButtonsDiv" />
         
 		</h:form>
-        <h:form>
 			
             <wi:tabPanel
 				 switchType="ajax"
 				 rendered="#{checkPermission}"
 				 activeTab="#{home.tab}">
 				<h:form><wi:tabHeaders /></h:form>
+
                 <wi:tab
 					 id="tabFluxo"
+					 name="tabFluxo"
 					 rendered="#{!processoHome.managed}"
 					 status=":status"
-					 immediate="true"
-					 action="#{processoHome.limpar()}"
 					 title="Escolher fluxo"
-					 name="tabFluxo">
+                     action="#{processoHome.limpar()}">
 					
                     <h:messages
 						 id="globalMessages"
@@ -103,72 +107,75 @@
 
                 <wi:tab
 					 id="tabEntrada"
+					 name="tabEntrada"
 					 rendered="#{!empty taskInstanceView.fields}"
-					 immediate="true"
 					 status=":status"
-					 title="Entrada"
-					 name="tabEntrada">
+					 title="Entrada">
 					
-                    <s:div id="divDocAnterior">
-						
+                    <ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">Entrada</ui:define>
                         <wi:form
 							 canEdit="true"
 							 formTitle="#{taskInstance.name}"
 							 home="#{taskInstanceHome}"
 							 form="#{taskInstanceView}" />
                     
-					</s:div>
+					</ui:decorate>
                 
 				</wi:tab>
 
                 <wi:tab
 					 id="tabSaida"
+					 name="tabSaida"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 immediate="true"
-					 title="Saída"
-					 name="tabSaida">
+					 title="Saída">
 					
                     <c:if test="#{empty taskPageAction.taskPagePath}">
-						
-                        <s:div id="taskInstanceDiv">
-							
+						<ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+							<ui:define name="title">Saída</ui:define>
                             <wi:form
 								 canEdit="false"
 								 formTitle="#{taskInstance.name}"
 								 home="#{taskInstanceForm.home}"
 								 reRenderSave="taskInstanceDiv"
 								 form="#{taskInstaceForm}" />
-                        
-						</s:div>
+							<div class="blocker"></div>
+	                        
+						</ui:decorate>
                     
 					</c:if>
-
                 
 				</wi:tab>
 
                 <wi:tab
 					 id="tabAnexos"
+					 name="tabAnexos"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 immediate="true"
-					 title="Documentos do Processo"
-					 name="tabAnexos">
-					
-                    <s:div id="divDocumentosProcesso">
+					 title="Documentos do Processo">
+                    <ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">Documentos do Processo</ui:define>
 						
                         <wi:dataTable
 							 values="#{processoDocumentoList.list(15)}"
 							 bean="#{processoDocumentoList}"
 							 tableTitle="#{messages['processo.documentos']} #{home.instance}"
 							 id="processoDocumentoList"
-							 rowId="#{row.idProcessoDocumento}">
+							 rowId="#{row.idProcessoDocumento}"
+							 searchFormStyleClass="hidden">
 							
                             <ui:define name="headerToolBar" />
                             <wi:columnOutputText
 								 columnId="usuarioInclusao"
 								 columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-								 value="#{usuarioInclusao}" />
+								 value="#{row.usuarioInclusao}" />
                             <wi:columnDateTime
 								 columnId="dataInclusao"
 								 columnHeader="#{messages['processoDocumento.dataInclusao']}"
@@ -177,22 +184,26 @@
 								 columnId="processoDocumentoBin"
 								 columnHeader="#{messages['processoDocumentoBin.documento']}"
 								 value="#{row.processoDocumentoBin}" />
+                            <ui:define name="toolBar" />
                         
 						</wi:dataTable>
                     
-					</s:div>
+					</ui:decorate>
                 
 				</wi:tab>
 
                 <wi:tab
 					 id="tabMovimentacoes"
+					 name="tabMovimentacoes"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 immediate="true"
-					 title="Movimentações do Processo"
-					 name="tabMovimentacoes">
-					
-                    <ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+					 title="Movimentações do Processo">
+					<ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">Movimentações do Processo</ui:define>
+                    	<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+                    </ui:decorate>
                 
 				</wi:tab>
 
@@ -201,80 +212,69 @@
 					 value="#{localizacaoDocumentoFisicoAction}" />
                 <wi:tab
 					 id="documentoFisicoTab"
+					 name="documentoFisicoTab"
 					 rendered="#{home.isManaged()}"
-					 action="#{action.init()}"
-					 immediate="true"
 					 title="#{messages['documentoFisico.titleTab']}"
-					 name="documentoFisicoTab">
-					
-
-                    <s:div id="documentoFisicoDiv">
-						
-                        <rich:dataTable
-							 id="documentoFisicoTable"
-							 value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
-							 var="row"
-							 rows="10"
-							 >
-							
-                            <rich:column >
-								
-                                <f:facet name="header">
-									
-                                    <h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />
-                                
-								</f:facet>
-                                <h:outputText value="#{row.localizacaoFisica.caminhoCompletoToString()}" />
-                            
-							</rich:column>
-
-                            <rich:column >
-								
-                                <f:facet name="header">
-									
-                                    <h:outputText value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
-                                
-								</f:facet>
-                                <h:outputText value="#{row.descricaoDocumentoFisico}" />
-                            
-							</rich:column>
-
-                        
-						</rich:dataTable>
-                        <rich:dataScroller
-							 id="dsDocumentoFisicoTable"
-							 for="documentoFisicoTable"
-							 lastPageMode="full"
-							 align="left"
-							 renderIfSinglePage="false" />
-                    
-					</s:div>
+                     action="#{localizacaoDocumentoFisicoAction.init()}">
+					<ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">#{messages['documentoFisico.titleTab']}</ui:define>
+	                    <s:div id="documentoFisicoDiv">
+							<wi:dataTable
+								id="documentoFisicoTable2"
+								value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+								var="row"
+								rows="10"
+								searchFormStyleClass="hidden"
+								>
+								<ui:define name="toolBar" />
+								<ui:define name="headerToolBar" />
+								<wi:columnOutputText
+									columnId="localizacaoFisica"
+									columnHeader="#{messages['documentoFisico.localizacaoFisica']}"
+									value="#{row.localizacaoFisica.caminhoCompletoToString()}"
+									hideOrder="true"
+									/>
+								<wi:columnOutputText
+									columnId="descricao"
+									columnHeader="#{messages['documentoFisico.descricaoDocumentoFisico']}"
+									value="#{row.descricaoDocumentoFisico}"
+									hideOrder="true"
+									/>
+							</wi:dataTable>
+						</s:div>
+					</ui:decorate>
                 
 				</wi:tab>
 
                 <wi:tab
 					 id="tabPartesDoProcesso"
-					 immediate="true"
+					 name="tabPartesDoProcesso"
 					 status=":status"
-					 rendered="#{processoHandler.hasPartes()}"
-					 title="#{messages['parteProcesso.partes']}"
-					 name="tabPartesDoProcesso">
-					
-                    <ui:include src="parteProcessoGrid.xhtml" />
+					 rendered="#{home.hasPartes()}"
+					 title="#{messages['parteProcesso.partes']}">
+					<ui:decorate
+							id="frameDecorate"
+							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">#{messages['parteProcesso.partes']}</ui:define>
+                    	<ui:include src="parteProcessoGrid.xhtml" />
+                    </ui:decorate>
                 
 				</wi:tab>
             
 			</wi:tabPanel>
         
-		</h:form>
         <c:if test="#{!checkPermission}">
 			
             <wi:outputText
 				 id="error"
-				 value="Você não pode mais efetuar transações neste registro, verifique se ele não foi movimentado" />
+				 value="#{messages['movimentar.noPermission']}" />
         
 		</c:if>
     
 	</ui:define>
+
+
 
 </ui:composition>

@@ -20,6 +20,20 @@
 	</ui:define>
 
 	<ui:define name="baseBody">
+		<h:outputScript library="js/components" name="Modal.js" />
+		<script type="text/javascript">
+			namespace(["infox.Modal"],function(Modal) {
+				$("#btnTrocar").click( function (){
+					var isHidden = $(".novaSenha").toggleClass("visible").is(':hidden');
+					$("#btnTrocar").val(isHidden ? "#{messages['login.trocarSenhaBtn']}" :"#{messages['login.naoTrocarSenhaBtn']}");
+					$(".input_login.passwd").val('');
+				});
+				var panelTeste = new Modal({id:'panelTeste'});
+				$("#btnTrocarSenha").click(panelTeste.show);
+				$("#btnTrocarSenha2").click(panelTeste.hide);
+				$("##{rich:clientId('closeBtn')}").click(panelTeste.hide);
+			});
+        </script>
 		<s:div id="pageBody" styleClass="loginPageBody">
 			<div class="corpoSuperior" />
 			<div class="corpoInferior" />
@@ -95,27 +109,18 @@
 								value="#{messages['login.entrarBtn']}" 
 								class="input_button"
 								action="#{authenticator.login()}"/>
-							<script>
-								function mudar(){
-									$(".novaSenha").toggleClass("visible");
-									if ($(".novaSenha").is(':hidden')){
-										$("#btnTrocar").val("#{messages['login.naoTrocarSenhaBtn']}");
-									}
-									else{
-										$("#btnTrocar").val("#{messages['login.trocarSenhaBtn']}");
-										$(".input_login.passwd").val('');
-									}
-								}
-					        </script>
 					
-					        <input class="input_button" id="btnTrocar"
-								type="button" value="#{messages['login.trocarSenhaBtn']}" 
-								onclick="mudar()" /> 
+					        <input
+					        	class="input_button"
+					        	id="btnTrocar"
+								type="button"
+								value="#{messages['login.trocarSenhaBtn']}" />
 							
-							<input class="input_button"
-								id="btnTrocarSenha" type="button" value="#{messages['login.requisitarSenhaBtn']}"
-								 
-								onclick="#{rich:component('panelTeste')}.show();" />
+							<input
+								class="input_button"
+								id="btnTrocarSenha"
+								type="button"
+								value="#{messages['login.requisitarSenhaBtn']}"/>
 						</c:if>
 						
 						<c:if test="#{useCertLogin}">
@@ -161,8 +166,9 @@
 				<f:facet name="header">#{messages['login.requisitarSenha']}</f:facet>			
 				<f:facet name="controls">
 					<h:panelGroup>
-						<h:graphicImage value="/img/closeMP.gif"
-							onclick="#{rich:component('panelTeste')}.hide()"/>
+						<h:graphicImage
+							id="closeBtn" 
+							value="/img/closeMP.gif"/>
 					</h:panelGroup>
 				</f:facet>			
 				<h:form id="gerarSenha" rendered="#{not useCertLogin}">
@@ -195,8 +201,7 @@
 						<input class="input_button"
 							   id="btnTrocarSenha2" 
 						       type="button"
-						       value="#{messages['login.cancelaTrocaSenhaBtn']}" 
-							   onclick="#{rich:component('panelTeste')}.hide()" />
+						       value="#{messages['login.cancelaTrocaSenhaBtn']}" />
 					</div>
 				</h:form>
 			</rich:popupPanel>
@@ -211,7 +216,7 @@
 				</div>
 			</rich:popupPanel>					
 					
-			<rich:messages></rich:messages>
+			<wi:messages></wi:messages>
 		</s:div>
 	</ui:define>
 	
