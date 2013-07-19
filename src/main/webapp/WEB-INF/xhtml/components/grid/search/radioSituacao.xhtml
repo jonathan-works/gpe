@@ -42,7 +42,7 @@
 		
 		<script>
 			if ('#{search[f.id]}' == '') {
-				$('#{gridId}SearchForm:j_id935:#{f.id}Decoration:#{f.id}:0').checked = true;					
+				$('##{gridId}SearchForm:j_id935:#{f.id}Decoration:#{f.id}:0').split(":").join("\\:").attr({checked:true});					
 			}
 		</script>
 	

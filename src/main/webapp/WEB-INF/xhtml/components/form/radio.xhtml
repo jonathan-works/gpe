@@ -45,9 +45,11 @@
 	</s:decorate>
 		
 		<script>
-			if ('#{value}' == '') {
-				$('#{formId}:#{f.id}:#{f.id}Decoration:#{f.id}:#{empty boxChecked ? 0 : boxChecked}').checked = true;			
-			}
+			namespace.whenReady(function() {
+				if ('#{value}' == '') {
+					$('##{formId}:#{f.id}:#{f.id}Decoration:#{f.id}:#{empty boxChecked ? 0 : boxChecked}').split(":").join("\\:").attr({checked:true});			
+				}
+			});
 		</script>
 			
 	

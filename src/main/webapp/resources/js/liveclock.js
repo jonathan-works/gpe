@@ -6,5 +6,5 @@
 			jQuery(".liveclock").html($digital.toLocaleTimeString());
 		}
 	}
-	window.clockTimer = window.clockTimer || setInterval($updateClock, 1000);
+	setInterval($updateClock, 1000);
 })()
