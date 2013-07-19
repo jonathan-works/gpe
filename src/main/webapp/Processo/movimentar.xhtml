@@ -115,7 +115,7 @@
                     <ui:decorate
 							id="frameDecorate"
 							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-						
+						<ui:define name="title">Entrada</ui:define>
                         <wi:form
 							 canEdit="true"
 							 formTitle="#{taskInstance.name}"
@@ -137,7 +137,7 @@
 						<ui:decorate
 							id="frameDecorate"
 							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-							
+							<ui:define name="title">Saída</ui:define>
                             <wi:form
 								 canEdit="true"
 								 formTitle="#{taskInstance.name}"
@@ -167,7 +167,7 @@
                     <ui:decorate
 							id="frameDecorate"
 							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-							
+							<ui:define name="title">Anexar Documento</ui:define>
                             <wi:dataForm
 								 formId="anexarDocumentosForm"
 								 formTitle="#{messages['processoDocumento.anexarDocumento']}">
@@ -188,17 +188,18 @@
 					 rendered="#{processoHome.managed}"
 					 status=":status"
 					 title="Documentos do Processo">
-					
                     <ui:decorate
 							id="frameDecorate"
 							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">Documentos do Processo</ui:define>
 						
                         <wi:dataTable
 							 values="#{processoDocumentoList.list(15)}"
 							 bean="#{processoDocumentoList}"
 							 tableTitle="#{messages['processo.documentos']} #{home.instance}"
 							 id="processoDocumentoList"
-							 rowId="#{row.idProcessoDocumento}">
+							 rowId="#{row.idProcessoDocumento}"
+							 searchFormStyleClass="hidden">
 							
                             <ui:define name="headerToolBar" />
                             <wi:columnOutputText
@@ -230,6 +231,7 @@
 					<ui:decorate
 							id="frameDecorate"
 							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">Movimentações do Processo</ui:define>
                     	<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
                     </ui:decorate>
                 
@@ -247,6 +249,7 @@
 					<ui:decorate
 							id="frameDecorate"
 							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">#{messages['documentoFisico.titleTab']}</ui:define>
 	                    <wi:dataForm
 							 formId="documentoFisicoForm"
 							 formTitle="#{messages['form.title']}">
@@ -277,65 +280,39 @@
 	                    
 						</wi:dataForm>
 	                    <s:div id="documentoFisicoDiv">
-							
-	                        <rich:dataTable
-								 id="documentoFisicoTable"
-								 value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
-								 var="row"
-								 rows="10"
-								 >
-								
-	                            <rich:column >
-									
-	                                <f:facet name="header">
-										
-	                                    <wi:toolBarRemove
-											 id="headerInactivate"
-											 reRender="documentoFisicoDiv"
-											 actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
-											 title="Inativar todos os Registros" />
-	                                
-									</f:facet>
-	                                <center>
-										
-	                                    <wi:toolBarRemove
-											 id="toolBarInactivate"
-											 reRender="documentoFisicoDiv"
-											 actionRemove="localizacaoDocumentoFisicoAction.inactive(row)" />
-	                                
-									</center>
-	                            
-								</rich:column>
-	                            <rich:column >
-									
-	                                <f:facet name="header">
-										
-	                                    <h:outputText value="#{messages['documentoFisico.localizacaoFisica']}" />
-	                                
-									</f:facet>
-	                                <h:outputText value="#{row.localizacaoFisica.caminhoCompletoToString()}" />
-	                            
-								</rich:column>
-	
-	                            <rich:column >
-									
-	                                <f:facet name="header">
-										
-	                                    <h:outputText value="#{messages['documentoFisico.descricaoDocumentoFisico']}" />
-	                                
-									</f:facet>
-	                                <h:outputText value="#{row.descricaoDocumentoFisico}" />
-	                            
-								</rich:column>
-	
-	                        
-							</rich:dataTable>
-	                        <rich:dataScroller
-								 id="dsDocumentoFisicoTable"
-								 for="documentoFisicoTable"
-								 lastPageMode="full"
-								 align="left"
-								 renderIfSinglePage="false" />
+							<wi:dataTable
+								id="documentoFisicoTable2"
+								value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+								var="row"
+								rows="10"
+								>
+								<ui:define name="toolBar">
+									<wi:toolBarRemove
+										id="toolBarInactivate"
+										reRender="documentoFisicoDiv"
+										actionRemove="localizacaoDocumentoFisicoAction.inactive(row)"
+										/>
+								</ui:define>
+								<ui:define name="headerToolBar">
+									<wi:toolBarRemove
+										id="headerInactivate"
+										reRender="documentoFisicoDiv"
+										actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
+										title="Inativar todos os Registros" />
+								</ui:define>
+								<wi:columnOutputText
+									columnId="localizacaoFisica"
+									columnHeader="#{messages['documentoFisico.localizacaoFisica']}"
+									value="#{row.localizacaoFisica.caminhoCompletoToString()}"
+									hideOrder="true"
+									/>
+								<wi:columnOutputText
+									columnId="descricao"
+									columnHeader="#{messages['documentoFisico.descricaoDocumentoFisico']}"
+									value="#{row.descricaoDocumentoFisico}"
+									hideOrder="true"
+									/>
+							</wi:dataTable>
 						</s:div>
 					</ui:decorate>
                 
@@ -350,6 +327,7 @@
 					<ui:decorate
 							id="frameDecorate"
 							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+						<ui:define name="title">#{messages['parteProcesso.partes']}</ui:define>
                     	<ui:include src="parteProcessoGrid.xhtml" />
                     </ui:decorate>
                 
