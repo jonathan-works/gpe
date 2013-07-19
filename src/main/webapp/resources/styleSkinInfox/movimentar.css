@@ -10,3 +10,10 @@
 	height:calc(100% - 30px);
 	padding:0;
 }
+.blocker {
+	height:100%;
+	width:100%;
+	position:absolute;
+	top:0;
+	left:0;
+}
