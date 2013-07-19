@@ -17,7 +17,7 @@ namespace("infox.Messages",function Messages(args) {
 	}
 	
 	function $_init() {
-		$(".d-msg-h-close").click($_showDialog);
+		$(".d-msg-h-close").click($_hideDialog);
 		if (existsGlobalMessages 
 				&& existsMessages
 				&& $(".d-msg-c").text().trim()!== "") {
