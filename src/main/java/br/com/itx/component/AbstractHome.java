@@ -62,6 +62,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
 
 	private static final String MSG_REGISTRO_CADASTRADO = "#{messages['constraintViolation.registroCadastrado']}";
+	private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
+	private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractHome.class);
 
@@ -358,11 +360,11 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	protected String afterPersistOrUpdate(String ret) {
 		if (PERSISTED.equals(ret)){
 			FacesMessages.instance().clear();
-			FacesMessages.instance().add("Registro inserido com sucesso");
+			FacesMessages.instance().add(MSG_REGISTRO_CRIADO);
 			return ret;
 		} else if (UPDATED.equals(ret)){
 			FacesMessages.instance().clear();
-			FacesMessages.instance().add("Registro alterado com sucesso");
+			FacesMessages.instance().add(MSG_REGISTRO_ALTERADO);
 			return ret;
 		}
 		return ret;
