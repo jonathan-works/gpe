@@ -47,11 +47,12 @@ import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
 
-@Name("processoHandler")
+@Name(ProcessoHandler.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoHandler implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "processoHandler";
 	
 	private List<TaskInstance> taskInstanceList;
 	private List<TaskInstance> taskDocumentList;
