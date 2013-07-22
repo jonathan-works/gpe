@@ -69,8 +69,6 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		this.modeloJbpm = modeloJbpm;
 	}
 
-
-
 	@Override
 	public String getExpression() {
 		return "modeloDocumento.set";
@@ -131,17 +129,11 @@ public class ModeloDocumentoAction extends ActionTemplate {
 	 * @param tipo Tipo do Documento a que as variáveis são atribuídas
 	 * @return Mapa de Variáveis em que o Nome é a chave de busca e os valores são os resultados
 	 */
-	@SuppressWarnings("unchecked")
 	private Map<String, String> getVariaveis(TipoModeloDocumento tipo)	{
 		List<Variavel> list = new ArrayList<Variavel>();
 		if (tipo != null) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("select o from Variavel o ");
-			sb.append("join o.variavelTipoModeloList tipos ");
-			sb.append("where tipos.tipoModeloDocumento = :tipo");
-			list = getEntityManager().createQuery(sb.toString()).setParameter("tipo", tipo).getResultList();
+			list = variavelManager.getVariaveisByTipoModeloDocumento(tipo);
 		}
-
 		Map<String, String> map = new HashMap<String, String>();
 		for (Variavel variavel : list) {
 			map.put(variavel.getVariavel(), variavel.getValorVariavel());
