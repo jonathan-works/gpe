@@ -29,6 +29,7 @@ import javax.persistence.Query;
 
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
@@ -43,6 +44,7 @@ import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.ibpm.manager.ClassificacaoDocumentoManager;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -60,6 +62,8 @@ public class ProcessoHandler implements Serializable {
 			new HashMap<TaskInstance, List<ProcessoDocumento>>();
 
 	private int inicio;
+	
+	@In private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	
 	@SuppressWarnings("unchecked")
 	public List<TaskInstance> getTaskInstanceList() {
@@ -108,14 +112,10 @@ public class ProcessoHandler implements Serializable {
 		return taskDocumentList ;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<ProcessoDocumento> getAnexos(TaskInstance task) {
 		List<ProcessoDocumento> anexoList = anexoMap.get(task);
 		if (anexoList == null) {
-			anexoList = EntityUtil.getEntityManager().createQuery(
-					"select o from ProcessoDocumento o where idJbpmTask = :id")
-					.setParameter("id", task.getId())
-					.getResultList();
+			anexoList = classificacaoDocumentoManager.getProcessoDocumentoByTask(task);
 			anexoMap.put(task, anexoList);
 		}
 		return anexoList ;
