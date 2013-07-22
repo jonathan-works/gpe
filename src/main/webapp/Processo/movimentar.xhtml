@@ -55,19 +55,17 @@
 				
                 <script type="text/javascript">
 		    	function verifyFields() { 
-		        	var taskCompleted = "#{util.getFromEventContext('taskCompleted')}";
-		        	if(taskCompleted != '') {
+		        	if("#{util.getFromEventContext('taskCompleted')}" != '') {
 			        	try {
 		        			opener.atualizaPainelFluxo();
 			        	} catch(e) {}
-			        	var canClosePanel = "#{util.getFromEventContext('canClosePanel')}";
-			        	if(canClosePanel != '') {
+			        	if("#{util.getFromEventContext('canClosePanel')}" != '') {
 			        		window.close();
 			        	} else {
 			        		location = location.href;
 			        	}
 		        	} else {
-		        		hideLoading();
+		        		namespace.infox.hideLoading();
 		        	}
 		    	}
 		    </script>
