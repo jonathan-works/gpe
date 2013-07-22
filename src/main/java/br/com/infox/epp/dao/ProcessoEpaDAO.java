@@ -85,10 +85,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public boolean hasPartes(Processo processo){
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", processo.getIdJbpm());
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
-		return (pe != null) && (pe.hasPartes());
+		return hasPartes(processo.getIdJbpm());
 	}
 	
 	public boolean hasPartes(Long idJbpm){
