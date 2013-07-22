@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.persistence.EntityManager;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -41,7 +39,6 @@ import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.manager.VariavelManager;
 import br.com.itx.component.Util;
-import br.com.itx.util.EntityUtil;
 
 @Name(ModeloDocumentoAction.NAME)
 @Scope(ScopeType.SESSION)
@@ -118,11 +115,6 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		}
 	}
 
-	private EntityManager getEntityManager() {
-		EntityManager em = EntityUtil.getEntityManager();
-		return em;
-	}
-	
 	/**
 	 * Recupera variáveis atreladas a um tipo de documento.
 	 * 
