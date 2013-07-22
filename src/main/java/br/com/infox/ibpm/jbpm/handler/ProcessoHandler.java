@@ -31,7 +31,6 @@ import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
@@ -50,7 +49,6 @@ import br.com.itx.util.HibernateUtil;
 
 @Name("processoHandler")
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
 public class ProcessoHandler implements Serializable {
 
 	private static final long serialVersionUID = 1L;
