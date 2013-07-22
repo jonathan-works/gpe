@@ -9,6 +9,7 @@
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf"
+     xmlns:richext="http://java.sun.com/jsf/composite/richext"
      template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
                        
 	<ui:define
@@ -23,8 +24,8 @@
 		<a:region
              renderRegionOnly="true">
 			<h:form>
-				<rich:spacer
-                     height="30px" />
+				<richext:spacer
+                     height="30" />
 		  		<h:outputText
                      value="Por Categoria:"
                       />
@@ -174,8 +175,8 @@
                      id="dsTarefaByCategoriaTable"
                      align="left"
                      renderIfSinglePage="false" />
-				<rich:spacer
-                     height="30px" />
+				<richext:spacer
+                     height="30" />
 		  		<h:outputText
                      value="Perto do Limite:"
                       />
@@ -252,13 +253,13 @@
                      id="gridByCurrentTask">
 					<s:div
                          rendered="#{action.showForaPrazoGrid}">
-						<rich:spacer
-                             height="15px" />
+						<richext:spacer
+                             height="15" />
 						<rich:panel
                              header="Por Tarefa"
                              >
-							<rich:spacer
-                                 height="15px" />
+							<richext:spacer
+                                 height="15" />
 					  		<h:outputText
                                  value="Fora do Prazo:"
                                   /> 

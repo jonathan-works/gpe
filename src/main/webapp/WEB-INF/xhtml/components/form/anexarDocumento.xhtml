@@ -189,34 +189,37 @@
 
 		
 		</s:div>
-		<script>
-			  function useBase64() {
-				  return '#{!processoDocumentoHome.modelo}';
-			  }
-			</script>
 
 	
 	</s:div>
 
 	<script>
-		  function getData() {
-				 var data;
-				 if (useBase64() == 'true') {
-					 data = $('#{form.formId}Form:#{id}:uploadArquivoDecoration:uploadArquivo').files[0].getAsDataURL();
-					 if (data != '') {
-						 data = data.split('base64,')[1];
-					 }
-				 } else {
-					 data = tinyMCE.editors['#{form.formId}Form:#{id}:modeloDocumentoDecoration:modeloDocumentoTextArea'].getContent();
-				 }
-			     return data;			     
-		  }			
-		  function clearSign() {
-			  //alert('limpando...');
-			  $('#{form.formId}Form:modelo:signature').value = "";
-			  $('#{form.formId}Form:modelo:certChain').value = "";
-		  }			
-		</script>
+		function useBase64() {
+			return '#{!processoDocumentoHome.modelo}';
+		}
+		function getData() {
+			var data;
+			var escapeId = namespace.infox.escapeId;
+			if (useBase64() == 'true') {
+				var id = escapeId("#{form.formId}Form:#{id}:uploadArquivoDecoration:uploadArquivo");
+				data = $(id).files[0]
+						.getAsDataURL();
+				if (data != '') {
+					data = data.split('base64,')[1];
+				}
+			} else {
+				var editorId = escapeId("#{form.formId}Form:#{id}:modeloDocumentoDecoration:modeloDocumentoTextArea");
+				data = tinyMCE.editors[editorId]
+						.getContent();
+			}
+			return data;
+		}
+		function clearSign() {
+			var escapeId = namespace.infox.escapeId;
+			$(escapeId("#{form.formId}Form:modelo:signature")).val("");
+			$(escapeId("#{form.formId}Form:modelo:certChain")).val("");
+		}
+	</script>
 
 
 

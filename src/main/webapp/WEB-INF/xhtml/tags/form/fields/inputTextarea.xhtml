@@ -51,7 +51,9 @@
              value="#{value}"
              onkeyup="counterTextarea(this,#{maxlength});">
 			<ui:insert />
-		</h:inputTextarea>
+		</h:inputTextarea>	
+		<div
+             >(0 / #{maxlength})</div>
 	</s:decorate>
 	
 </ui:composition>

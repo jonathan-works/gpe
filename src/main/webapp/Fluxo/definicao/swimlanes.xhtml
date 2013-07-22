@@ -32,7 +32,7 @@
 				<h:form>
 					<a:commandLink	action="#{swimlaneFitter.addSwimlane()}"
 							 	  	execute="@this"
-							 		render="swimlanesPanel"
+							 		render="swimlanesDiv"
 							 		limitRender="true">
 						<h:graphicImage title="#{messages['processBuilder.addSwimlane']}"
 								 		url="/img/add.gif" />
@@ -49,7 +49,7 @@
 							listener="#{swimlaneFitter.removeSwimlane(row)}"
 							execute="@this"
 							onbeforesubmit="confirm('#{messages['processBuilder.confirm']}')"
-							render="swimlanesPanel"
+							render="swimlanesDiv"
 							limitRender="true" />
 				</h:graphicImage>
 				</h:form>
@@ -63,10 +63,10 @@
 						<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
 						<a:commandLink	action="#{swimlaneFitter.setCurrentSwimlane(row)}"
 								 		execute="@this"
-								 		render="swimlanesPanel"
+								 		render="swimlanesDiv"
 								 		limitRender="true">
 							<h:outputText	value="#{row.swimlane.name}"
-										 	style="#{styleNodeName}" />
+									 	 />
 						</a:commandLink>
 					</h:form>
 				</rich:column>
@@ -74,7 +74,8 @@
 		</ui:decorate>
 	</s:div>
 	
-	<s:div id="swimlanesDiv"
+	<s:div
+		id="swimlanesDiv"
 		rendered="#{!empty swimlaneFitter.currentSwimlane}">
 		
 		<wi:inputText
@@ -97,7 +98,7 @@
 						 listener="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
 						 execute="@this"
 						 onbeforesubmit="if(!confirm('#{messages['processBuilder.confirm']}')) return false;"
-						 render="swimlanesPanel"
+						 render="swimlanesDiv"
 						 limitRender="true" />
 				</h:graphicImage>
 			</ui:define>
@@ -128,7 +129,7 @@
 									event="click"
 									listener="#{swimlaneFitter.currentSwimlane.addLocalPapel()}"
 									execute="swimlaneName, localPapeis"
-									render="swimlanesPanel"
+									render="swimlanesDiv"
 									limitRender="true" />
 							</h:graphicImage>
 						</rich:column>

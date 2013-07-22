@@ -16,6 +16,9 @@
 	<ui:param
          name="isModelo"
          value="#{not empty bin.modeloDocumento ? false : true}" />
+    <ui:param
+    	name="url"
+    	value="#{util.urlProject}/Painel/painel_usuario/documentoHashHTML.seam" />
 	<c:if
          test="#{isModelo}">
 		<script>
@@ -39,20 +42,14 @@
                          limitRender="true">
 			   		</a:commandButton>
 				</h:form>
-				<br />
 		   		<s:div
                      id="linkValidaHashDiv"
                      rendered="#{!empty documentoValidacaoHashHome.numeroHash}">
-			   		<script>
-			   			function redirectDocHash(){
-							window.location = '#{util.urlProject}/Painel/painel_usuario/documentoHashHTML.seam?hash=#{documentoValidacaoHashHome.numeroHash}&amp;idBin=#{idBin}&amp;idProcessoDoc=#{idProcessoDoc}'
-			   			}
-					</script>
-					<b>Para validar, utilize o link abaixo:</b><br />
+					<b>Para validar, utilize o link abaixo:</b>
 					<a:commandLink
                          id="cLValida"
-                         value="#{util.urlProject}/Painel/painel_usuario/documentoHashHTML.seam?hash=#{documentoValidacaoHashHome.numeroHash}&amp;idBin=#{idBin}&amp;idProcessoDoc=#{idProcessoDoc}"
-                         onclick="redirectDocHash();" />
+                         value="#{url}?hash=#{documentoValidacaoHashHome.numeroHash}&amp;idBin=#{idBin}&amp;idProcessoDoc=#{idProcessoDoc}"
+                         onclick="infox.redirect({url:'#{url}',params:{hash:'#{documentoValidacaoHashHome.numeroHash}',idProcessoDoc:'#{idProcessoDoc}'}});" />
 				</s:div>
 			</h:panelGroup>
 		</center>     

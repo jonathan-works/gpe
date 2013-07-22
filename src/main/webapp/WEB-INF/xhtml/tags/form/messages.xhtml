@@ -26,6 +26,10 @@
 	<ui:param name="timeCloseMSG"
 		value="#{empty timeCloseMSG ? '6000' : timeCloseMSG}" />
 
+    <h:outputScript
+        name="Messages.js"
+        library="js/components" />
+        
 	<div id="dialogMessage" class="d-msg hidden">
 		<div id="title" class="d-msg-h">
 			<label class="d-msg-h-lbl">Mensagem</label>
@@ -38,36 +42,13 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		//<![CDATA[
-			var msgFuncs = msgFuncs || {
-				showDialogMessage:function showDialogMessage() {
-					$(".d-msg").removeClass("hidden");
-				},
-				hideDialogMessage:function hideDialogMessage() {
-					$(".d-msg").addClass("hidden");
-				},
-				actionDialogMessage:function actionDialogMessage() {
-					$(".d-msg-h-close").click(msgFuncs.hideDialogMessage);
-					if (msgFuncs.existsGlobalMessages == 'true' 
-							&& msgFuncs.existsMessage == 'true'
-							&& $(".d-msg-c").text().trim()!== "") {
-						msgFuncs.showDialogMessage();
-						if ($('.rf-msgs-err').html() == null) {
-							setTimeout(msgFuncs.hideDialogMessage, msgFuncs.timeout);
-						}
-					}
-				},
-				existsGlobalMessages:'#{!facesMessages.currentGlobalMessages.isEmpty()}',
-				existsMessage:'#{showDialogMessage}',
+		namespace(["infox.Messages"],function(Messages) {
+			Messages({
+				existsMessages:"#{showDialogMessage}",
+				existsGlobalMessages:"#{!facesMessages.currentGlobalMessages.isEmpty()}",
 				timeout:"#{timeCloseMSG}"
-			};
-			
-			if (window.jQuery) {
-				msgFuncs.actionDialogMessage();
-			} else {
-				window.addEventListener("load",msgFuncs.actionDialogMessage);
-			}
-		//]]>
+			}).init();
+		});
 	</script>
 
 </ui:composition>

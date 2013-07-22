@@ -20,6 +20,7 @@
 	 xmlns:f="http://java.sun.com/jsf/core"
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:infox="http://www.infox.com.br/jsf"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 	
@@ -157,7 +158,7 @@
 		<ui:param
 			 name="action"
 			 value="#{fluxoPapelAction}" />
-		<wi:tab
+		<infox:tab
 			 id="fluxoPapelTab"
 			 rendered="#{home.isManaged()}"
 			 action="#{action.init()}"
@@ -236,7 +237,7 @@
 			
 			</s:div>
 		
-		</wi:tab>
+		</infox:tab>
 	
 	</ui:define>
 

@@ -6,7 +6,9 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+	 xmlns:infox="http://www.infox.com.br/jsf" 
+	 template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 	
 
 	<ui:define name="head">
@@ -26,11 +28,11 @@
 			 name="showFormTab"
 			 value="#{wi:get(showFormTab, true)}" />
 		
-		<wi:tabPanel
+		<infox:tabPanel
 			 switchType="ajax"
 			 activeTab="#{home.tab}">
-			<h:form><wi:tabHeaders /></h:form>		
-			<wi:tab
+			<h:form><infox:tabHeaders /></h:form>		
+			<infox:tab
 				 id="search"
 				 action="#{home.onClickSearchTab}"
 				 rendered="#{showSearchTab}"
@@ -48,9 +50,9 @@
 				
 				</a:region>
 			
-			</wi:tab>	
+			</infox:tab>	
 					
-			<wi:tab
+			<infox:tab
 				 id="form"
 				 rendered="#{showFormTab}"
 				 immediate="true"
@@ -66,12 +68,12 @@
 				
 				</a:region>
 			
-			</wi:tab>
+			</infox:tab>
 			
 			<ui:insert name="tabs" />
 			
 		
-		</wi:tabPanel>
+		</infox:tabPanel>
 	
 	</ui:define>
 

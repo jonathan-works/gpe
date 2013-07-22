@@ -15,7 +15,10 @@
 		 value="#{value}" />
 		
 		<script>
-			$('#{form.formId}Form:#{f.id}:#{f.id}').value = "#{empty props.value ? value : props.value}";
+			namespace(["infox.escapeId"],function(escapeId) {
+				var id=escapeId("##{form.formId}Form:#{f.id}:#{f.id}");
+				$(id).val("#{empty props.value ? value : props.value}");
+			});			
 		</script>
 		
 	

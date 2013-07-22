@@ -7,6 +7,7 @@
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:infox="http://www.infox.com.br/jsf"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
 	<h:head>
@@ -35,13 +36,13 @@
 			 name="canEdit"
 			 value="#{home.editable}" />
 	    	   
-		<wi:tabPanel
+		<infox:tabPanel
 			 id="tabPanel"
 			 rendered="false">
-			<h:form><wi:tabHeaders /></h:form>
-			<wi:tab title="Definition" />
+			<h:form><infox:tabHeaders /></h:form>
+			<infox:tab title="Definition" />
 		
-		</wi:tabPanel>
+		</infox:tabPanel>
 		
 		<div class="pageBody">
 			

@@ -39,10 +39,12 @@
     	- indicatorLabel: String que irá aparecer antecedendo o valor representado pela agulha
      -->
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
-
+	<h:outputScript
+        name="defaultGauge.js"
+        library="js/dojoCustom/gauges/defaultGauge.js" />
     <script>
-    	require(["#{util.contextPath}/js/dojoCustom/gauges/defaultGauge.js"], function() {
-	    	br.com.infox.dojoCustom.gauges.DefaultGauge({
+    	namespace("infox.DefaultGauge",function(DefaultGauge) {
+    		DefaultGauge({
 	    	    id:"#{id}DefaultGauge",
 	    	    containerId:"#{id}DefaultGaugeContainer",
 	    	    angle:#{wi:get(angle,300)},
@@ -59,7 +61,7 @@
     	});
     </script>
     <div id="#{id}DefaultGaugeContainer" class="gaugeContainer" >
-    	<div id="#{id}DefaultGaugeHeader" class="rich-panel-header">#{label}</div>
+    	<div id="#{id}DefaultGaugeHeader" class="rf-p-h">#{label}</div>
         <div id="#{id}DefaultGauge" class="gauge"></div>
         <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
     </div>

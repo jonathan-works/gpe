@@ -220,7 +220,7 @@
 		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
-			<version>2.1.23</version><!--$NO-MVN-MAN-VER$ -->
+			<version>2.1.24</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -479,7 +479,7 @@
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
 			<artifactId>core-renderer</artifactId>
-			<version>R8-final</version>
+			<version>R8</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.ejb</groupId>
@@ -710,7 +710,7 @@
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-impl</artifactId>
 			<scope>provided</scope>
-			<version>2.1.23</version><!--$NO-MVN-MAN-VER$ -->
+			<version>2.1.24</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.compass-project</groupId>
@@ -745,6 +745,11 @@
 			<groupId>org.jboss</groupId>
 			<artifactId>jboss-common-core</artifactId>
 			<version>2.2.17.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>br.com.infox</groupId>
+			<artifactId>componentes</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -819,7 +824,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<seam.version>2.3.1-SNAPSHOT</seam.version>
+		<seam.version>2.3.2-SNAPSHOT</seam.version>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
 		<hibernate.show_sql>true</hibernate.show_sql>
@@ -837,31 +842,6 @@
 		<maven.build.timestamp.format>dd/MM/yyyy - HH:mm</maven.build.timestamp.format>
 		<buildNumber>${maven.build.timestamp}</buildNumber>
 	</properties>
-	<repositories>
-		<repository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven</name>
-			<url>http://download.java.net/maven/2/</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<id>jboss</id>
-			<name>jboss</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/
-				</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>nuxeo</id>
-			<name>nuxeo maven rep</name>
-			<url>http://maven.nuxeo.org/nexus/content/groups/public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-	</repositories>
 	<profiles>
 		<profile>
 			<id>producao</id>

@@ -6,6 +6,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:infox="http://www.infox.com.br/jsf"
 	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
 
@@ -93,7 +94,7 @@
 
 	<ui:define name="tabs">
 
-		<wi:tab rendered="#{home.managed}"
+		<infox:tab rendered="#{home.managed}"
 			title="Tipos de Modelo de Documento">
 
 			<wi:ajaxDiv id="divM2MVar">
@@ -200,7 +201,7 @@
 				</s:div>
 			</wi:ajaxDiv>
 
-		</wi:tab>
+		</infox:tab>
 
 	</ui:define>
 

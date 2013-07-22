@@ -4,17 +4,19 @@
 	 xmlns="http://www.w3.org/1999/xhtml"
 	 xmlns:a="http://richfaces.org/a4j"
 	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+	 xmlns:infox="http://www.infox.com.br/jsf" 
+	 template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 	
 
 	<ui:define name="body">
 		
-		<wi:tabPanel switchType="ajax">
+		<infox:tabPanel switchType="ajax">
 			<h:form
-	 xmlns:h="http://java.sun.com/jsf/html"><wi:tabHeaders /></h:form>		
+	 xmlns:h="http://java.sun.com/jsf/html"><infox:tabHeaders /></h:form>		
 			<ui:insert name="tabs" />
 		
-		</wi:tabPanel>
+		</infox:tabPanel>
 	
 	</ui:define>
 

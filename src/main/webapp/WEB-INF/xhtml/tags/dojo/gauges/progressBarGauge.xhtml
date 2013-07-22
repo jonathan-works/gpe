@@ -28,7 +28,8 @@
     <h:outputScript library="js/dojoCustom/gauges" name="progressBarGauge.js"/>
 
     <script>
-    br.com.infox.dojoCustom.gauges.ProgressBarGauge({
+    namespace("infox.ProgressBarGauge",function(ProgressBarGauge) {
+    	ProgressBarGauge({
     	    id:"#{id}Gauge",
     	    containerId:"#{id}GaugeContainer",
     	    min:#{wi:get(min,false)},
@@ -46,6 +47,7 @@
     	    hideTicks:#{wi:get(hideTicks, false)},
     	    indicatorLabel:#{wi:get(indicatorLabel, false)}
     	});
+    });
     </script>
     <div id="#{id}GaugeContainer" class="barGaugeContainer" >
         <div id="#{id}Gauge" class="gauge">

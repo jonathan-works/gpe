@@ -7,7 +7,8 @@
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+	 xmlns:infox="http://www.infox.com.br/jsf">
 	
 <h:head>
 		    
@@ -99,13 +100,13 @@
 					 value="Nenhum resultado encontrado."
 					 
 					 rendered="#{empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}" />
-			<wi:tabPanel
+			<infox:tabPanel
 					 id="helpPanel"
 					 height="650px"
 					 switchType="client"
 					 activeTab="#{ajudaHome.tab}">
-					<h:form><wi:tabHeaders /></h:form>
-				<wi:tab
+					<h:form><infox:tabHeaders /></h:form>
+				<infox:tab
 						 id="help"
 						 title="Ajuda"
 						 name="help">
@@ -136,9 +137,9 @@
 							 rendered="#{! canEdit}"
 							 value="#{ajudaHome.texto}" />
 				
-					</wi:tab>
+					</infox:tab>
 		
-				<wi:tab
+				<infox:tab
 						 id="search"
 						 rendered="#{!empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}"
 						 title="Resultado da pesquisa"
@@ -186,9 +187,9 @@
 					
 						</h:form>
 				
-					</wi:tab>
+					</infox:tab>
 			
-				</wi:tabPanel>
+				</infox:tabPanel>
 		
 			</s:div>
 	

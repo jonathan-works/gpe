@@ -6,6 +6,7 @@
 	 xmlns:f="http://java.sun.com/jsf/core"
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:richext="http://java.sun.com/jsf/composite/richext"
 	 xmlns:s="http://jboss.org/schema/seam/taglib">
 	
 		
@@ -20,7 +21,7 @@
 			 var="x"
 			 value="#{lista.subList(0, lista.size() - 1)}">
 			
-				<rich:spacer width="20px" />
+				<richext:spacer width="20" />
 			
 		</ui:repeat>				
 			<h:outputText

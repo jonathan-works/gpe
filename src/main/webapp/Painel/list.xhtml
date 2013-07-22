@@ -8,6 +8,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:infox="http://www.infox.com.br/jsf"
 	template="/WEB-INF/xhtml/templates/template-sample.xhtml">
 
 	<ui:param name="pageTitle" value="Painel do Usuário" />
@@ -21,19 +22,19 @@
 					execute="@this" status="status" />
 			</h:form>
 			<div class="p-caixas">
-				<wi:tabPanel id="tabPainelUsuario" switchType="ajax"
+				<infox:tabPanel id="tabPainelUsuario" switchType="ajax"
 					status=":status">
 					<h:form>
-						<wi:tabHeaders />
+						<infox:tabHeaders />
 					</h:form>
-					<wi:tab id="caixas" name="caixas" render="painelProcessos"
+					<infox:tab id="caixas" name="caixas" render="painelProcessos"
 						limitRender="true" action="#{tarefasTree.clearTree()}"
 						title="Caixas">
 						<s:div id="tarefasDiv">
 							<ui:include src="tarefasTree.xhtml" />
 						</s:div>
-					</wi:tab>
-				</wi:tabPanel>
+					</infox:tab>
+				</infox:tabPanel>
 			</div>
 			<s:div id="painelProcessos" styleClass="p-list">
 				<ui:param name="home" value="#{consultaProcessoHome}" />

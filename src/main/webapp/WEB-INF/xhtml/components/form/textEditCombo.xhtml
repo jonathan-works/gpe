@@ -60,19 +60,19 @@
 	</s:div>			
 
 	<script>
+		// Sobrescrevendo funções usadas pelo editor
 		function useBase64() {
-			return 'false';
+			return false;
 		}
-	</script>   			
-	<script>
 		function getData() {
 			var data;
-			data = tinyMCE.editors['#{idEditor}'].getContent();
+			data = tinyMCE.editors[namespace.infox.escapeId("#{idEditor}")].getContent();
 			return data;			     
 		}			
 		function clearSign() {
-			$('#{signature}').value = "";
-			$('#{certChain}').value = "";
+			var escapeId = namespace.infox.escapeId;
+			$(escapeId("#{signature}")).val("");
+			$(escapeId("#{certChain}")).val("");
 		}			
 	</script>
 		

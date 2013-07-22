@@ -45,9 +45,12 @@
 	</s:decorate>
 
 		<script>
-			if ('#{search[f.id]}' == '') {
-				$('#{gridId}SearchForm:j_id250:#{f.id}Decoration:#{f.id}:0').checked = true;			
-			}
+			namespace(["infox.escapeId"],function(escapeId) {
+				if ("#{search[f.id]}" == "") {
+					var id = escapeId("##{gridId}SearchForm:j_id250:#{f.id}Decoration:#{f.id}:0"); 
+					$(id).attr({checked:true});					
+				}
+			});
 		</script>
 		
 	

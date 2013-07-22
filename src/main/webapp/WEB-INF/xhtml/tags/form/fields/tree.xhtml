@@ -69,10 +69,12 @@
 				</h:inputHidden>
 				<script>
 				//<![CDATA[
-					if (#{empty tree.selected} && #{required}) {
-						var hiddenId = "#{rich:clientId(id.concat('Hidden'))}";
-						document.getElementById(hiddenId).value = -1;
-					}
+				    namespace(["infox.escapeId"],function(escapeId) {
+						if (#{empty tree.selected} && #{required}) {
+							var id = escapeId("##{rich:clientId(id.concat('Hidden'))}"); 
+							$(id).val(-1);
+						}
+				    });
 				//]]>
 				</script>
 			</s:div>
