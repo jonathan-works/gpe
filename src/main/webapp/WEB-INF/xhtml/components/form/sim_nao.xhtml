@@ -31,6 +31,12 @@
                 <ui:insert />
             
 		</h:selectOneRadio>
+		<script type="text/javascript">
+			namespace(["infox.escapeId"],function(escapeId) {
+				var id = escapeId("##{rich:clientId(id)}:#{empty boxChecked ? 0 : boxChecked}");
+				$(id).attr({checked:true});
+			});
+		</script>
 			
 		
 	</s:decorate>
