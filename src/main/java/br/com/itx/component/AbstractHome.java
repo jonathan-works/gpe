@@ -309,6 +309,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             if (errorCode != null) {
             	ret = tratarErrosDePersistencia(errorCode.toString());
             }
+            
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
