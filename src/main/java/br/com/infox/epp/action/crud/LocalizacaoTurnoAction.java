@@ -1,7 +1,5 @@
 package br.com.infox.epp.action.crud;
 
-import javax.persistence.Query;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -13,7 +11,6 @@ import br.com.infox.epp.entity.LocalizacaoTurno;
 import br.com.infox.epp.manager.LocalizacaoTurnoManager;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.util.DateUtil;
-import br.com.itx.util.EntityUtil;
 
 /**
  * 
@@ -54,16 +51,10 @@ public class LocalizacaoTurnoAction {
 	}
 	
 	public void gravarTurnos() {
-		removerTurnosAnteriores();
+		localizacaoTurnoManager.removerTurnosAnteriores(localizacao);
 		inserirTurnosSelecionados();
 	}
 
-	private void removerTurnosAnteriores() {
-		Query q = EntityUtil.createQuery("delete from LocalizacaoTurno o where o.localizacao = :localizacao"); 
-		q.setParameter("localizacao", localizacao);
-		q.executeUpdate();
-	}
-	
 	private void inserirTurnosSelecionados() {
 		for (TurnoBean turno: turnoHandler.getTurnosSelecionados()) {
 			LocalizacaoTurno localizacaoTurno = new LocalizacaoTurno();

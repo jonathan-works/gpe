@@ -82,4 +82,7 @@ public class LocalizacaoTurnoManager extends GenericManager {
 		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR_OF_DAY)*60);
 	}
 	
+	public void removerTurnosAnteriores(Localizacao localizacao){
+		localizacaoTurnoDAO.removerTurnosAnteriores(localizacao);
+	}
 }

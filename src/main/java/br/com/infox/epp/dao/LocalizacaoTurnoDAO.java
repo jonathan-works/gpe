@@ -109,4 +109,9 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 				LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM, parameters);
 	}
 	
+	public void removerTurnosAnteriores(Localizacao localizacao){
+		String hql = "delete from LocalizacaoTurno o where o.localizacao = :localizacao";
+		entityManager.createQuery(hql).setParameter("localizacao", localizacao).executeUpdate();
+	}
+	
 }
