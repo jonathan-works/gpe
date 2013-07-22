@@ -39,10 +39,9 @@ import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.ibpm.jbpm.ActionTemplate;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.ibpm.manager.VariavelManager;
 import br.com.itx.component.Util;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
-
 
 @Name(ModeloDocumentoAction.NAME)
 @Scope(ScopeType.SESSION)
@@ -54,6 +53,8 @@ public class ModeloDocumentoAction extends ActionTemplate {
 	
 	@In
 	private ModeloDocumentoManager modeloDocumentoManager;
+	
+	@In private VariavelManager variavelManager;
 	
 	private ModeloDocumento modeloJbpm;
 	
