@@ -27,9 +27,7 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -43,11 +41,9 @@ import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.ParteProcesso;
-import br.com.infox.ibpm.entity.Pessoa;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
-import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
