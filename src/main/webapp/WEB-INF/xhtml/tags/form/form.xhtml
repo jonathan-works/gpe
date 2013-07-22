@@ -208,7 +208,10 @@
 		<s:fragment rendered="#{!empty focus}">
 			
 			<script type="text/javascript">
-				setTimeout("$('#{formId}:#{focus}:#{focus}Decoration:#{focus}').focus()", 100);
+				namespace(["infox.escapeId"],function(escapeId) {
+					var id = escapeId("#{formId}:#{focus}:#{focus}Decoration:#{focus}");
+					$(id).focus();
+				});
 			</script>
 		
 		</s:fragment>
