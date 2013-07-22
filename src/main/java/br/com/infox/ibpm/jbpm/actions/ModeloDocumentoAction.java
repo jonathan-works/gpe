@@ -146,7 +146,7 @@ public class ModeloDocumentoAction extends ActionTemplate {
 	}
 	
 	public ModeloDocumento getModeloDocumento(int idModeloDocumento)	{
-		return (ModeloDocumento) getEntityManager().createQuery("select o from ModeloDocumento o where o.idModeloDocumento = :id").setParameter("id", idModeloDocumento).getSingleResult();
+		return modeloDocumentoManager.find(ModeloDocumento.class, idModeloDocumento);
 	}
 
 	public String getConteudo(String tituloModeloDocumento) {
