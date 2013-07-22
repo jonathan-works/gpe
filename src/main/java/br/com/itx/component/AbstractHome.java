@@ -18,7 +18,6 @@ package br.com.itx.component;
 import static org.jboss.seam.faces.FacesMessages.instance;
 
 import java.beans.PropertyDescriptor;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,6 @@ import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
 
 import org.hibernate.AssertionFailure;
-import org.hibernate.JDBCException;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.Component;
@@ -45,7 +43,6 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.Strings;
 import org.jboss.util.StopWatch;
-import org.postgresql.util.PSQLException;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.util.PostgreSQLErrorCode;
@@ -298,8 +295,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				ret = afterPersistOrUpdate(ret);
 			}
 		} catch (AssertionFailure e) {
-			//Resolver o bug do AssertionFailure onde o hibernate consegue persistir com sucesso,
-			//mas lança um erro.
 			LOG.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
 			ret = PERSISTED;
 		} catch (EntityExistsException e) {
@@ -309,8 +304,11 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			instance().add(StatusMessage.Severity.ERROR, getNonUniqueObjectExceptionMessage());
 			LOG.error(msg, e);	
 		} catch (javax.persistence.PersistenceException e) {
-		    instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
-            LOG.error(msg, e);
+			LOG.error(msg, e);
+		    PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);
+            if (errorCode != null) {
+            	ret = tratarErrosDePersistencia(errorCode.toString());
+            }
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
