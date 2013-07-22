@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.access.entity.Papel;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.itx.util.EntityUtil;
@@ -49,6 +50,12 @@ public class PapelDAO extends GenericDAO {
 	public List<Papel> getPapeisByListaDeIdentificadores(List<String> identificadores){
 		String hql = "select p from Papel p where identificador in (:list)";
 		return (List<Papel>) entityManager.createQuery(hql).setParameter("list", identificadores).getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao){
+		String hql = "select distinct l.papel from UsuarioLocalizacao l where l.localizacao = :loc ";
+		return (List<Papel>) entityManager.createQuery(hql).setParameter("loc", localizacao).getResultList();
 	}
 
 }
