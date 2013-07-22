@@ -38,6 +38,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.entity.ProcessoEpa;
+import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.ParteProcesso;
@@ -64,6 +65,7 @@ public class ProcessoHandler implements Serializable {
 	private int inicio;
 	
 	@In private ClassificacaoDocumentoManager classificacaoDocumentoManager;
+	@In private ProcessoEpaManager processoEpaManager;
 	
 	@SuppressWarnings("unchecked")
 	public List<TaskInstance> getTaskInstanceList() {
@@ -148,18 +150,12 @@ public class ProcessoHandler implements Serializable {
 	}
 	
 	public Item getItemDoProcesso(int idProcesso){
-		String query = "select o from ProcessoEpa o where o.idProcesso =:idProcesso";
-		ProcessoEpa pepa = (ProcessoEpa) EntityUtil.getEntityManager().createQuery(query)
-				.setParameter("idProcesso", idProcesso).getSingleResult();
-		return pepa.getItemDoProcesso();
+		return processoEpaManager.getItemDoProcesso(idProcesso);
 	}
 	
 	public boolean hasPartes(){
 		Long idjbpm_ = ProcessInstance.instance().getId();
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
-		return (pe != null) && (pe.hasPartes());
+		return processoEpaManager.hasPartes(idjbpm_);
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){

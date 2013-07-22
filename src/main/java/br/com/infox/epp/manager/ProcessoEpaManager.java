@@ -13,6 +13,7 @@ import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Pessoa;
 import br.com.infox.ibpm.entity.Processo;
@@ -73,5 +74,17 @@ public class ProcessoEpaManager extends GenericManager {
 			}
 			update(processoEpa);
 		}
+	}
+	
+	public Item getItemDoProcesso(int idProcesso){
+		return processoEpaDAO.getItemDoProcesso(idProcesso);
+	}
+	
+	public boolean hasPartes(Processo processo){
+		return processoEpaDAO.hasPartes(processo);
+	}
+	
+	public boolean hasPartes(Long idJbpm){
+		return processoEpaDAO.hasPartes(idJbpm);
 	}
 }
