@@ -25,8 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -37,17 +35,12 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.manager.ProcessoEpaManager;
-import br.com.infox.epp.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.Item;
-import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.manager.ClassificacaoDocumentoManager;
-import br.com.itx.util.EntityUtil;
-import br.com.itx.util.HibernateUtil;
 
 
 @Name(ProcessoHandler.NAME)
@@ -159,31 +152,11 @@ public class ProcessoHandler implements Serializable {
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){
-		Long idjbpm_ = ProcessInstance.instance().getId();
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
-		List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
-		for (ParteProcesso parte : pe.getPartes()){
-			if (parte.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F)){
-				pessoaFisicaList.add((PessoaFisica) HibernateUtil.removeProxy(parte.getPessoa()));
-			}
-		}
-		return pessoaFisicaList;
+		return processoEpaManager.getPessoaFisicaList();
 	}
 	
 	public List<PessoaJuridica> getPessoaJuridicaList(){
-		Long idjbpm_ = ProcessInstance.instance().getId();
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
-		List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
-		for (ParteProcesso parte : pe.getPartes()){
-			if (parte.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.J)){
-				pessoaJuridicaList.add((PessoaJuridica) HibernateUtil.removeProxy(parte.getPessoa()));
-			}
-		}
-		return pessoaJuridicaList;
+		return processoEpaManager.getPessoaJuridicaList();
 	}
 	
 }
