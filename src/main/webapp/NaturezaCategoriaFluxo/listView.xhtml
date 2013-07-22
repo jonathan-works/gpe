@@ -21,6 +21,7 @@
      xmlns:h="http://java.sun.com/jsf/html"
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:infox="http://www.infox.com.br/jsf"
      xmlns:wi="http://www.itx.com.br/jsf"
      xmlns:a="http://richfaces.org/a4j"
      template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
@@ -113,7 +114,7 @@
 	</ui:define>
 
 	<ui:define name="tabs">
-		<wi:tab
+		<infox:tab
             id="localizacaoTab"
             rendered="#{naturezaCategoriaFluxoAction.isManaged()}"
             action="#{natCatFluxoLocalizacaoAction.setNaturezaCategoriaFluxo(home.instance)}"
@@ -170,6 +171,6 @@
 						value="#{row.heranca}" />
 				</wi:dataTable>
 			</s:div>
-		</wi:tab>
+		</infox:tab>
 	</ui:define>
 </ui:composition>

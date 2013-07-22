@@ -6,6 +6,7 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:infox="http://www.infox.com.br/jsf"
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
@@ -51,13 +52,13 @@
 		<wi:messages
 			showDialogMessage="#{showDialogMessage}"
 			timeCloseMSG="#{timeCloseMSG}" />	
-		<wi:tabPanel
+		<infox:tabPanel
 				 switchType="client"
 				 height="100%"
 				 width="100%"
 				 headerAlignment="right">
-				<h:form><wi:tabHeaders /></h:form>
-			<wi:tab
+				<h:form><infox:tabHeaders /></h:form>
+			<infox:tab
 					 id="search"
 					 status=":status"
 					 
@@ -74,9 +75,9 @@
 				
 					</div>
 			
-				</wi:tab>
+				</infox:tab>
 		
-			</wi:tabPanel>
+			</infox:tabPanel>
 	
 		</s:div>
 

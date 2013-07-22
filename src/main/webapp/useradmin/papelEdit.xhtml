@@ -7,7 +7,8 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+	 xmlns:infox="http://www.infox.com.br/jsf">
 	
 
 
@@ -38,11 +39,11 @@
 		<ui:param
 			 name="sourceListWidth"
 			 value="400" />
-		<wi:tabPanel
+		<infox:tabPanel
 			 switchType="ajax"
 			 rendered="#{papelHome.managed}">
-			<wi:tabHeaders />
-			<wi:tab
+			<infox:tabHeaders />
+			<infox:tab
 				 status=":status"
 				 title="Papéis">
 				
@@ -58,8 +59,8 @@
 				
 				</a:region>
 			
-			</wi:tab>
-			<wi:tab
+			</infox:tab>
+			<infox:tab
 				 status=":status"
 				 title="Herdeiros">
 				
@@ -74,8 +75,8 @@
 				
 				</a:region>
 			
-			</wi:tab>
-			<wi:tab
+			</infox:tab>
+			<infox:tab
 				 status=":status"
 				 title="Recursos">
 				
@@ -90,9 +91,9 @@
 				
 				</a:region>
 			
-			</wi:tab>
+			</infox:tab>
 		
-		</wi:tabPanel>
+		</infox:tabPanel>
 	
 	</a:region>
 

@@ -19,6 +19,7 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
@@ -86,7 +87,7 @@
         <ui:param
             name="action"
             value="#{categoriaItemAction}" />
-        <wi:tab
+        <infox:tab
             id="categoriaItemTab"
             rendered="#{categoriaHome.isManaged()}"
             title="#{messages['categoriaItem.titleTab']}"
@@ -137,6 +138,6 @@
                 </wi:dataTable>
 
             </s:div>
-        </wi:tab>
+        </infox:tab>
     </ui:define>
 </ui:composition>

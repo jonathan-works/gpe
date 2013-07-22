@@ -8,6 +8,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
     <!--
@@ -109,7 +110,7 @@
         </wi:dataForm>
     </ui:define>
     <ui:define name="tabs">
-        <wi:tab
+        <infox:tab
             id="modeloDocumento"
             status=":status"
             rendered="#{home.managed}"
@@ -139,8 +140,8 @@
                     columnHeader="#{messages['field.situacao']}"
                     value="#{row.ativo}" />
             </wi:dataTable>
-        </wi:tab>
-        <wi:tab
+        </infox:tab>
+        <infox:tab
             id="variaveis"
             status=":status"
             rendered="#{home.managed}"
@@ -235,8 +236,8 @@
                     </wi:dataTable>
                 </s:div>
             </wi:ajaxDiv>
-        </wi:tab>
-        <wi:tab
+        </infox:tab>
+        <infox:tab
             id="papeis"
             action="#{tipoModeloDocumentoPapelHome.newInstance()}"
             status=":status"
@@ -281,6 +282,6 @@
                     value="#{row.papel}" />
             </wi:dataTable>
             </s:div>
-        </wi:tab>
+        </infox:tab>
     </ui:define>
 </ui:composition>

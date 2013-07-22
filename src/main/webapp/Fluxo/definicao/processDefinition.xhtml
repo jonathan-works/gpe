@@ -9,6 +9,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
     <!--
@@ -44,13 +45,13 @@
             name="def"
             value="#{processBuilder.instance}" />
         <h:form id="form">
-        <wi:tabPanel
+        <infox:tabPanel
             switchType="ajax"
             activeTab="#{processBuilder.tab}">
             
-                <wi:tabHeaders />
+                <infox:tabHeaders />
             
-            <wi:tab
+            <infox:tab
                 name="propriedadesTab"
                 id="propriedadesTab"
                 title="#{messages['processBuilder.properties']}">
@@ -84,29 +85,29 @@
                         <ui:include src="swimlanes.xhtml" />
                     </rich:panel>
                 </h:form>
-            </wi:tab>
-            <wi:tab
+            </infox:tab>
+            <infox:tab
                 name="nodesTab"
                 id="nodesTab"
                 rendered="#{processBuilder.exists}"
                 title="#{messages['processBuilder.nodes']}">
                 <ui:include src="nodes.xhtml" />
-            </wi:tab>
-            <wi:tab
+            </infox:tab>
+            <infox:tab
                 name="xmlTab"
                 id="xmlTab"
                 rendered="#{processBuilder.exists}"
                 title="XML">
                 <ui:include src="xmlEdit.xhtml" />
-            </wi:tab>
-            <wi:tab
+            </infox:tab>
+            <infox:tab
                 name="graphTab"
                 id="graphTab"
                 title="#{messages['processBuilder.graph']}"
                 action="#{processBuilder.getPaintedGraph()}">
                 <ui:include src="graph.xhtml" />
-            </wi:tab>
-        </wi:tabPanel>
+            </infox:tab>
+        </infox:tabPanel>
         <h:commandButton
             id="gravar"
             action="#{processBuilder.update()}"

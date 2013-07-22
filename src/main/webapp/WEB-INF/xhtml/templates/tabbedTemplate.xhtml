@@ -8,6 +8,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:wi="http://www.itx.com.br/jsf">
 
 <h:head>
@@ -58,13 +59,13 @@
         <wi:quadro>
 
 
-                <wi:tabPanel
+                <infox:tabPanel
                     switchType="ajax"
                     activeTab="#{home.tab}">
                     <h:form>
-                        <wi:tabHeaders />
+                        <infox:tabHeaders />
                     </h:form>
-                    <wi:tab
+                    <infox:tab
                         id="search"
                         action="#{home.onClickSearchTab}"
                         status=":status"
@@ -81,8 +82,8 @@
 
                         </a:region>
 
-                    </wi:tab>
-                    <wi:tab
+                    </infox:tab>
+                    <infox:tab
                         id="form"
                         rendered="#{(home.managed or (canEdit and (hideTabForm != true)))}"
                         status=":status"
@@ -97,12 +98,12 @@
 
                         </a:region>
 
-                    </wi:tab>
+                    </infox:tab>
                     
                     <ui:insert name="tabs" />
                     
 
-                </wi:tabPanel>
+                </infox:tabPanel>
 
 
         </wi:quadro>

@@ -9,6 +9,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:infox="http://www.infox.com.br/jsf"
 	template="/WEB-INF/xhtml/templates/cleanTemplate.xhtml">
 	
 
@@ -84,13 +85,13 @@
         
 		</h:form>
 			
-            <wi:tabPanel
+            <infox:tabPanel
 				 switchType="ajax"
 				 rendered="#{checkPermission}"
 				 activeTab="#{home.tab}">
-				<h:form><wi:tabHeaders /></h:form>
+				<h:form><infox:tabHeaders /></h:form>
 
-                <wi:tab
+                <infox:tab
 					 id="tabFluxo"
 					 name="tabFluxo"
 					 rendered="#{!processoHome.managed}"
@@ -103,9 +104,9 @@
 						 globalOnly="true"
 						 styleClass="message" />
                 
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="tabEntrada"
 					 name="tabEntrada"
 					 rendered="#{!empty taskInstanceView.fields}"
@@ -124,9 +125,9 @@
                     
 					</ui:decorate>
                 
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="tabSaida"
 					 name="tabSaida"
 					 rendered="#{processoHome.managed}"
@@ -150,9 +151,9 @@
                     
 					</c:if>
                 
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="tabAnexos"
 					 name="tabAnexos"
 					 rendered="#{processoHome.managed}"
@@ -190,9 +191,9 @@
                     
 					</ui:decorate>
                 
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="tabMovimentacoes"
 					 name="tabMovimentacoes"
 					 rendered="#{processoHome.managed}"
@@ -205,12 +206,12 @@
                     	<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
                     </ui:decorate>
                 
-				</wi:tab>
+				</infox:tab>
 
                 <ui:param
 					 name="action"
 					 value="#{localizacaoDocumentoFisicoAction}" />
-                <wi:tab
+                <infox:tab
 					 id="documentoFisicoTab"
 					 name="documentoFisicoTab"
 					 rendered="#{home.isManaged()}"
@@ -246,9 +247,9 @@
 						</s:div>
 					</ui:decorate>
                 
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="tabPartesDoProcesso"
 					 name="tabPartesDoProcesso"
 					 status=":status"
@@ -261,9 +262,9 @@
                     	<ui:include src="parteProcessoGrid.xhtml" />
                     </ui:decorate>
                 
-				</wi:tab>
+				</infox:tab>
             
-			</wi:tabPanel>
+			</infox:tabPanel>
         
         <c:if test="#{!checkPermission}">
 			

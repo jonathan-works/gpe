@@ -7,6 +7,7 @@
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:infox="http://www.infox.com.br/jsf"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
 	<h:head>
@@ -47,12 +48,12 @@
 			 styleClass="pageBody"
 			 id="pageBody">
 			  	 		
-			<wi:tabPanel
+			<infox:tabPanel
 				 switchType="ajax"
 				 headerSpacing="2"
 				 activeTab="#{home.tab}">
-				<h:form><wi:tabHeaders /></h:form>			
-				<wi:tab
+				<h:form><infox:tabHeaders /></h:form>			
+				<infox:tab
 					 action="#{home.newInstance}"
 					 id="search"
 					 status=":status"
@@ -61,10 +62,10 @@
 					
 						<ui:insert name="searchGrid" />
 				
-				</wi:tab>			
+				</infox:tab>			
 				<ui:insert name="tabs" />		
 			
-			</wi:tabPanel>			
+			</infox:tabPanel>			
 		
 		</s:div>	
 	

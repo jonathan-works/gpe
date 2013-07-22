@@ -20,7 +20,9 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+	 xmlns:infox="http://www.infox.com.br/jsf" 
+	 template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 	
 
     <ui:param
@@ -36,11 +38,11 @@
 			 styleClass="message"
 			 id="globalMessages" />
 
-            <wi:tabPanel
+            <infox:tabPanel
 				 headerSpacing="2"
 				 activeTab="#{processoHome.tab}">
-				<h:form><wi:tabHeaders /></h:form>
-                <wi:tab
+				<h:form><infox:tabHeaders /></h:form>
+                <infox:tab
 					 id="form"
 					 name="form"
 					 immediate="true"
@@ -50,9 +52,9 @@
 
                     <ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
                 
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="tabAnexos"
 					 name="tabAnexos"
 					 immediate="true"
@@ -91,9 +93,9 @@
                     
 					</wi:dataTable>
                 
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="tabAnexar"
 					 name="tabAnexar"
 					 immediate="true"
@@ -115,9 +117,9 @@
                     
 					</wi:ajaxDiv>
                 
-				</wi:tab>
+				</infox:tab>
 
-                <wi:tab
+                <infox:tab
 					 id="tabPartesDoProcesso"
 					 name="tabPartesDoProcesso"
 					 immediate="true"
@@ -127,9 +129,9 @@
 					
                     <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
                 
-				</wi:tab>
+				</infox:tab>
             
-			</wi:tabPanel>
+			</infox:tabPanel>
         
     
 	</ui:define>

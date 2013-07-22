@@ -20,6 +20,7 @@
 	 xmlns:c="http://java.sun.com/jsp/jstl/core"
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:infox="http://www.infox.com.br/jsf"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/tabbedTemplateCrudAction.xhtml">
 	
@@ -206,7 +207,7 @@
 
 	<ui:define name="tabs">
 		
-		<wi:tab
+		<infox:tab
 			 id="enderecoTab"
 			 label="#{messages['endereco.titlePage']}"
 			 action="#{action.newEndereco()}"
@@ -342,9 +343,9 @@
 			</wi:dataTable>
 
 		
-		</wi:tab>
+		</infox:tab>
 
-		<wi:tab
+		<infox:tab
 			 id="localizacaoTab"
 			 label="#{messages['usuarioLocalizacao.titlePage']}"
 			 action="#{action.newUsuarioLocalizacao()}"
@@ -425,7 +426,7 @@
 				
 			</wi:dataTable>
 			
-		</wi:tab>
+		</infox:tab>
 
 	
 	</ui:define>
