@@ -210,15 +210,9 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		return modeloProcessado.toString();	
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<ModeloDocumento> getModeloItems(String variavel) {
 		String listaModelos = (String) new Util().eval(variavel);
-		List<ModeloDocumento> list = getEntityManager()
-			.createQuery("select o from ModeloDocumento o " +
-					"where o.idModeloDocumento in (" +
-					listaModelos + ") order by modeloDocumento")
-			.getResultList();
-		return list;
+		return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
 	}
 	
 	public static ModeloDocumentoAction instance()  {

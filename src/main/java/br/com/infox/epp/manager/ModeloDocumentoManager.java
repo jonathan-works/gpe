@@ -47,5 +47,9 @@ public class ModeloDocumentoManager extends GenericManager{
 	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(GrupoModeloDocumento grupo, TipoModeloDocumento tipo){
 		return modeloDocumentoDAO.getModeloDocumentoByGrupoAndTipo(grupo, tipo);
 	}
+	
+	public List<ModeloDocumento> getModelosDocumentoInListaModelo(String listaModelos){
+		return modeloDocumentoDAO.getModelosDocumentoInListaModelos(listaModelos);
+	}
 
 }

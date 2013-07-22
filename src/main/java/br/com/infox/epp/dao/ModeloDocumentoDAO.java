@@ -46,4 +46,12 @@ public class ModeloDocumentoDAO extends GenericDAO {
 				.setParameter("tipo", tipo).getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ModeloDocumento> getModelosDocumentoInListaModelos(String listaModelos){
+		String hql = "select o from ModeloDocumento o " +
+						"where o.idModeloDocumento in (" +
+						listaModelos + ") order by modeloDocumento";
+		return (List<ModeloDocumento>) entityManager.createQuery(hql).getResultList();
+	}
+	
 }
