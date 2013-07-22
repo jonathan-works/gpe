@@ -59,10 +59,6 @@ public class ModeloDocumentoAction extends ActionTemplate {
 	private ModeloDocumento modeloJbpm;
 	
 	public List<ModeloDocumento> getModeloDocumentoList() {
-		if (modeloDocumentoManager == null) {
-			modeloDocumentoManager = (ModeloDocumentoManager)Component.getInstance("modeloDocumentoManager");
-		}
-		
 		return modeloDocumentoManager.getModeloDocumentoList();
 	}
 
