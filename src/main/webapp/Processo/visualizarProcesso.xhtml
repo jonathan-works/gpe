@@ -49,33 +49,6 @@
 	        name="movimentar.css" />
 	</ui:define>
     <ui:define name="body">
-		
-        <s:div id="script">
-			
-            <f:verbatim>
-				
-                <script type="text/javascript">
-		    	function verifyFields() { 
-		        	var taskCompleted = "#{util.getFromEventContext('taskCompleted')}";
-		        	if(taskCompleted != '') {
-			        	try {
-		        			opener.atualizaPainelFluxo();
-			        	} catch(e) {}
-			        	var canClosePanel = "#{util.getFromEventContext('canClosePanel')}";
-			        	if(canClosePanel != '') {
-			        		window.close();
-			        	} else {
-			        		location = location.href;
-			        	}
-		        	} else {
-		        		hideLoading();
-		        	}
-		    	}
-		    </script>
-            
-			</f:verbatim>
-        
-		</s:div>
 
         <h:form>
 			

@@ -1,10 +1,10 @@
 namespace("infox",{
-	applyCSS:function(args) {
+	applyCSS:function applyCSS(args) {
 		setTimeout(function(){
 			$(args.selector).css(args.style);
 		},args.delay || 1);
 	},
-	openPopUp:function (id, url, width, height) {
+	openPopUp:function openPopUp(id, url, width, height) {
 		var featPopUp = ["width="		,width,
 			             "height="		,height,
 			             "resizable=YES",
@@ -13,17 +13,17 @@ namespace("infox",{
 			             "location=NO"];
 		var popUp = window.open(url, id, featPopUp.join(","));	
 		popUp.moveTo(0, 0);
-	},showLoading:function() {
+	},showLoading:function showLoading() {
 		RichFaces.$('modalStatus').show();	
-	},hideLoading:function() {
+	},hideLoading:function hideLoading() {
 		RichFaces.$('modalStatus').hide();
-	},refreshOpener:function() {
+	},refreshOpener:function refreshOpener() {
 		try {
 			opener.refreshPage();
 		} catch (e) {
 			console.error(e);
 		}
-	},redirect:function(o) {
+	},redirect:function redirect(o) {
 		var destination = o.url;
 		var iter = 0;
 		if (o.params) {
@@ -36,6 +36,11 @@ namespace("infox",{
 			}
 		}
 		window.location = destination;
+	},escapeId:function escapeId(id) {
+		if (typeof id !== "string") {
+			throw "Invalid argument type";
+		}
+		return id.split(":").join("\\:");
 	}
 });
 
@@ -44,7 +49,7 @@ namespace("infox",function(util) {
 	window.hideLoading = util.hideLoading;
 	window.refreshOpener = util.refreshOpener;
 	window.openPopUp = util.openPopUp;
-	infox = namespace.infox;
+	window.infox = util;
 	
 	if (!$.fn.clearForm) {
 		$.fn.clearForm = function() {

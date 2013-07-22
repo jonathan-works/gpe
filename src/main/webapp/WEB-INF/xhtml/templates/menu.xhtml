@@ -22,7 +22,7 @@
 		name="mostrarMenu"
 		value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
 	<script type="text/javascript">
-		namespace([],function() {
+		namespace.whenReady(function() {
 			$(".LinkMenu").addClass("rf-ddm-lbl rf-ddm-unsel").hover(function() {
 				$(this).toggleClass("rf-ddm-unsel").toggleClass("rf-ddm-sel");
 			});

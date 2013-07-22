@@ -40,10 +40,10 @@
         name="pickList.js"
         library="js" />
 	<script type="text/javascript">
-		namespace(["infox.PickList"],function(pickList) {
-			var id = "##{rich:clientId(id)}".split(":").join("\\:");
+		namespace(["infox.PickList","infox.escapeId"],function(pickList,escapeId) {
+			var id = escapeId("##{rich:clientId(id)}");
 			var inputId = "##{id}Filtro";
-			pickList.load(id, inputId);
+			pickList().load(id, inputId);
 		});
 	</script>
 	<s:div styleClass="pick-filter">
