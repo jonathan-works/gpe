@@ -32,7 +32,6 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.manager.ProcessoManager;
-import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
@@ -134,17 +133,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + getInstance().getNumeroProcesso());
 	}
 		
-	
-	public void onSelectProcessoDocumento() {
-		limparEventsTreeHandler();
-	}
-	
-	private void limparEventsTreeHandler() {
-		AutomaticEventsTreeHandler.instance().clearList();
-		AutomaticEventsTreeHandler.instance().clearTree();
-		renderEventsTree = false;
-	}
-
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
 		ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 		setIdProcessoDocumento(idDoc);
@@ -257,7 +245,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 			ProcessoDocumentoHome.instance().setInstance(processoDocumento);
 			setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
 			setTipoProcessoDocumento(processoDocumento.getTipoProcessoDocumento());
-			onSelectProcessoDocumento();
 		}
 	}
 	

@@ -35,14 +35,6 @@
 			 required="true"
 			 noSelectionLabel="Selecione...">
 			
-				<a:ajax
-				 event="change"
-				 oncomplete="#{automaticEventsTree.carregaEventos()}"
-				 listener="#{processoHome.onSelectProcessoDocumento()}"
-				 execute="@this"
-				 limitRender="true"
-				 render="divEventsTreeTextEdit, divAppletId, appletAssinar" />
-			
 		</wi:selectOneMenuEntity>
 			
 			<br />

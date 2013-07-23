@@ -33,12 +33,6 @@
 		 disabled="#{readonly ? true : false}"
 		 noSelectionLabel="Selecione...">
 		
-			<a:ajax
-			 event="change"
-			 listener="#{processoHome.onSelectProcessoDocumento()}"
-			 oncomplete="#{automaticEventsTree.carregaEventos()}"
-			 render="#{f.id}EventsTree, divAppletId, appletAssinar" />
-	
 	</wi:selectOneMenuEntity>
 
 	<s:div id="#{f.id}EventsTree">
