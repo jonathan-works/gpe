@@ -35,19 +35,10 @@
 		<ui:param
              name="reRenderSave"
              value="#{empty reRenderSave ? formId : reRenderSave}" />
-		<ui:param
-             name="allRootsSelected"
-             value="#{automaticEventsTree.allRootsSelected}" />
-		<ui:param
-             name="isEventoSairTarefa"
-             value="#{tarefaEventoTree.currentEvent.evento == 'ST'}" />
-		<ui:param
-             name="canLeave"
-             value="#{tarefaEventoTree.canLeave}" />
 
            <a:commandButton
              id="update"
-             rendered="#{!empty form.fields and processoHome.managed and                         (allRootsSelected or isEventoSairTarefa)}"
+             rendered="#{!empty form.fields and processoHome.managed}"
              status=":status"
              eventsQueue="editQueue"
              oncomplete="#{oncomplete}"
@@ -59,7 +50,7 @@
 
            <a:commandButton
              id="persist"
-             rendered="#{!empty form.fields and !processoHome.managed and                          (allRootsSelected or isEventoSairTarefa)}"
+             rendered="#{!empty form.fields and !processoHome.managed}"
              status=":status"
              eventsQueue="editQueue"
              render="#{reRenderSave}, taskButtonsDiv"
@@ -71,9 +62,9 @@
            <h:outputText
              
              value="Próxima ação:"
-             rendered="#{((canLeave and allRootsSelected) or                          automaticEventsTree.registred)}" />
+             rendered="true" />
            <c:if
-             test="#{taskInstanceHome.transitions.size gt 3 and ((canLeave                 and allRootsSelected) or automaticEventsTree.registred)}">
+             test="#{taskInstanceHome.transitions.size gt 3}">
             	<h:selectOneMenu
                  
                  value="#{taskInstanceHome.name}">
@@ -92,7 +83,7 @@
                  limitRender="true"/>
            </c:if>
            <c:if
-             test="#{taskInstanceHome.transitions.size le 3 and ((canLeave                 and allRootsSelected) or automaticEventsTree.registred)}">
+             test="#{taskInstanceHome.transitions.size le 3}">
             <a:repeat
                  value="#{taskInstanceHome.transitions}"
                  var="transition">
