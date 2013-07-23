@@ -72,7 +72,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	private String signature;
 	private String certChain;
 	private String idAgrupamentos;
-	private boolean renderEventsTree;
     private ProcessoDocumento pdFluxo;
 	private Integer idProcessoDocumento;
 	private boolean checkVisibilidade=true;
@@ -425,10 +424,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	
 	public String getIdAgrupamentos() {
 		return idAgrupamentos;
-	}
-
-	public boolean getRenderEventsTree() {
-		return renderEventsTree;
 	}
 
 	public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {
