@@ -50,7 +50,6 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.home.Authenticator;
@@ -281,7 +280,6 @@ public class TaskInstanceHome implements Serializable {
                 home.update();
             }
             update();
-            AutomaticEventsTreeHandler.instance().registraEventos();
         }
     }
 
@@ -299,7 +297,6 @@ public class TaskInstanceHome implements Serializable {
                 }
                 update();
             }
-            AutomaticEventsTreeHandler.instance().registraEventos();
         }
     }
 
@@ -357,7 +354,6 @@ public class TaskInstanceHome implements Serializable {
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
             processoHome.setIdProcessoDocumento(null);
             update();
-            AutomaticEventsTreeHandler.instance().registraEventos();
             try {
                 BusinessProcess.instance().endTask(transition);
             } catch (JbpmException e) {
