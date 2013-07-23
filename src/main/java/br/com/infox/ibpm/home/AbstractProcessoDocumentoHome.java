@@ -34,8 +34,6 @@ import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
 import org.richfaces.event.ItemChangeEvent;
 
-import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
-import br.com.infox.ibpm.component.tree.EventsTipoDocumentoTreeHandler;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
@@ -280,14 +278,6 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		return binario != null ? Base64.encodeBytes(binario) : null;
 	}
 
-	public void onSelectProcessoDocumento() {
-		AutomaticEventsTreeHandler.instance().clearTree();
-		AutomaticEventsTreeHandler.instance().clearList();
-		EventsTipoDocumentoTreeHandler.instance().clearTree();
-		EventsTipoDocumentoTreeHandler.instance().clearList();
-		renderEventTree = false;
-	}
-	
 	public void setNumeroHash(String numeroHash) {
 		this.numeroHash = numeroHash;
 	}
