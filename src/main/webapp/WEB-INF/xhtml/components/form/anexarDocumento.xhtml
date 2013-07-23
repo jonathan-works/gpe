@@ -45,15 +45,6 @@
 	
 	</s:div>
 
-	<s:div id="divEventsTree">
-		<wi:eventsTree
-			 agrupamentos="#{processoDocumentoHome.idAgrupamentos}"
-			 reRender="usarModeloDiv"
-			 tree="#{eventsTipoDocumentoTree}"
-			 inNewLine="true"
-			 rendered="#{processoDocumentoHome.renderEventTree}" />
-	</s:div>
-
 	<wi:selectBooleanCheckbox
 		 id="documentoSigiloso"
 		 inNewLine="true"
@@ -125,56 +116,6 @@
 				<ui:param
 					 name="showLock"
 					 value="false" />
-				<s:div rendered="#{eventsTree.allRootsSelected}">
-					
-
-					<applet
-						 width="140"
-						 height="25"
-						 id="certificacao"
-						 code="SmartCardSignerApplet"
-						 archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
-						
-
-						<param
-							 name="formId"
-							 value="#{formId}" />
-						<param
-							 name="signButtonCaption"
-							 value="Assinar Digitalmente" />
-						<param
-							 name="certificationChainField"
-							 value="#{form.formId}Form:#{id}:certChain" />
-						<param
-							 name="signatureField"
-							 value="#{form.formId}Form:#{id}:signature" />
-						<param
-							 name="urlDownload"
-							 value="#{util.urlProject}/certificado/" />
-						<param
-							 name="getDataFunction"
-							 value="getData()" />
-						<param
-							 name="useBase64Function"
-							 value="useBase64()" />
-						<param
-							 name="functionPreSign"
-							 value="showLoading()" />
-						<param
-							 name="functionPosSign"
-							 value="hideLoading();submitForm()" />
-						<param
-							 name="dataAtual"
-							 value="#{currentDatetime}" />
-						<param
-							 name="caListDownloadFile"
-							 value="#{util.urlProject}/downloadCaList.seam" />
-
-					
-					</applet>
-
-				
-				</s:div>
 
 			
 			</s:decorate>
@@ -213,7 +154,6 @@
 			$(escapeId("#{form.formId}Form:modelo:certChain")).val("");
 		}
 	</script>
-
 
 
 </ui:composition>
