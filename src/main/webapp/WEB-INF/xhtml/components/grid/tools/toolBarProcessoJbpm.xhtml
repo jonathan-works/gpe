@@ -65,11 +65,15 @@
 				<f:param
 					name="tarefaId"
 					value="#{tarefaId}" />
+            <a:outputPanel>
 				<h:graphicImage url="/img/task.gif" />
+            </a:outputPanel>
 			</a:commandLink>
-			<h:graphicImage
-				url="/img/role.gif"
-				rendered="#{(owner != actor.id and ! empty owner)}"
-				title="Processo bloqueado pelo servidor #{owner}" />
+            <a:outputPanel>
+        		<h:graphicImage
+        			url="/img/role.gif"
+        			rendered="#{(owner != actor.id and ! empty owner)}"
+        			title="Processo bloqueado pelo servidor #{owner}" />
+            </a:outputPanel>
 	</div>
 </ui:composition>
