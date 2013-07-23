@@ -358,11 +358,6 @@ public class JbpmUtil {
 		return null;
 	}
 	
-	/**
-	 * Obtem o evento desejado informando o nome do evento.
-	 * @param status Descrição do evento.
-	 * @return Evento
-	 */
 	public static Status getStatus(String status) {
 		String hql = "select s from Status s where s.status = :status";
 		Query q = EntityUtil.getEntityManager().createQuery(hql);
