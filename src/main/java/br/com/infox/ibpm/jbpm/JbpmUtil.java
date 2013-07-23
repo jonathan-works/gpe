@@ -47,7 +47,6 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.ibpm.entity.Evento;
 import br.com.infox.ibpm.entity.JbpmVariavelLabel;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Processo;
@@ -357,18 +356,6 @@ public class JbpmUtil {
 			return currentExecutionContext.getTransition();
 		} 
 		return null;
-	}
-	
-	/**
-	 * Obtem o evento desejado informando o nome do evento.
-	 * @param evento Descrição do evento.
-	 * @return Evento
-	 */
-	public static Evento getEvento(String evento) {
-		String hql = "select e from Evento e where e.evento = :dsEvento";
-		Query q = EntityUtil.getEntityManager().createQuery(hql);
-		q.setParameter("dsEvento", evento);
-		return EntityUtil.getSingleResult(q);
 	}
 	
 	/**
