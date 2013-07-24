@@ -52,10 +52,6 @@ public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 	@Override
 	// Variável retornada alterada de List<Query> para String[] contendo hql
 	protected String[] getQueryChildrenList() {
-//		List<Query> list = new ArrayList<Query>();
-//		list.add(getEntityManager().createQuery(
-//				invertida? QUERY_PAPEIS_INV : QUERY_PAPEIS));
-//		list.add(getEntityManager().createQuery(QUERY_RECURSOS));
 		String[] hql = new String[] { 
 				invertida? QUERY_PAPEIS_INV : QUERY_PAPEIS, 
 				QUERY_RECURSOS
