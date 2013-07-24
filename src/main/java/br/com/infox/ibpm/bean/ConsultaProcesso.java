@@ -5,7 +5,6 @@ import java.util.Date;
 
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.Natureza;
-import br.com.infox.ibpm.entity.Assunto;
 
 public class ConsultaProcesso implements Serializable {
 
@@ -18,7 +17,6 @@ public class ConsultaProcesso implements Serializable {
 	private String fluxo;
 	private Natureza natureza;
 	private Categoria categoria;
-	private Assunto assunto;
 
 	public String getNumeroProcesso() {
 		return numeroProcesso;
@@ -80,14 +78,6 @@ public class ConsultaProcesso implements Serializable {
 
 	public Categoria getCategoria() {
 		return categoria;
-	}
-
-	public void setAssunto(Assunto assunto) {
-		this.assunto = assunto;
-	}
-
-	public Assunto getAssunto() {
-		return assunto;
 	}
 
 }

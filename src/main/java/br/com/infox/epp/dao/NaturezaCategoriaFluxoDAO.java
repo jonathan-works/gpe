@@ -15,7 +15,7 @@ import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.query.NaturezaCategoriaFluxoQuery;
 
 /**
- * Classe DAO para a entidade NaturezaCategoriaAssunto
+ * Classe DAO para a entidade NaturezaCategoriaFluxo
  * @author Daniel
  *
  */

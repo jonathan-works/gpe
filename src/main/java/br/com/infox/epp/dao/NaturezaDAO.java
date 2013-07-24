@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.dao.GenericDAO;
 
 /**
- * Classe DAO para a entidade NaturezaCategoriaAssunto
+ * Classe DAO para a entidade Natureza
  * @author Daniel
  *
  */

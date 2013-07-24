@@ -15,7 +15,7 @@ import br.com.infox.epp.entity.NaturezaLocalizacao;
 import br.com.infox.epp.query.NaturezaLocalizacaoQuery;
 
 /**
- * Classe DAO para a entidade NaturezaCategoriaAssunto
+ * Classe DAO para a entidade NaturezaLocalizacao
  * @author Daniel
  *
  */
