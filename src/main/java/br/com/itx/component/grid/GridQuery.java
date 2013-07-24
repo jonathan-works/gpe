@@ -312,22 +312,4 @@ public class GridQuery extends EntityQuery {
 		this.selectedRow = selectedRow;
 	}
 	
-//	
-//	Método para implementar herança de grid
-//	
-//	public void setParent(GridQuery parent) {
-//		setColumns(parent.getColumns());
-//		setConditions(parent.getConditions());
-//		setEntity(parent.getEntity());
-//		setGridId(parent.getGridId());
-//		setHome(parent.getHomeName());
-//		setKey(parent.getKey());
-//		setMaxResults(parent.getMaxResults());
-//		setOrder(parent.getOrder());
-//		setRestrictions(parent.getRestrictions());
-//		setSearchFields(parent.getSearchFields());
-//		setViewId(parent.getViewId());
-//		setEjbql(parent.getEjbql());
-//	}
-	
 }
