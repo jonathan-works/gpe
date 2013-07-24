@@ -2,7 +2,7 @@ package br.com.infox.epp.query;
 
 /**
  * Interface com as queries da entidade de 
- * CategoriaAssunto
+ * CategoriaItem
  * @author Daniel
  *
  */

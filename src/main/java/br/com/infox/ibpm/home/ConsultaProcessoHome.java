@@ -4,7 +4,6 @@ package br.com.infox.ibpm.home;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.component.UIComponent;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.ScopeType;
@@ -19,8 +18,6 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.Natureza;
 import br.com.infox.ibpm.bean.ConsultaProcesso;
-import br.com.infox.ibpm.component.tree.AssuntoTreeHandler;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Scope(ScopeType.CONVERSATION)
@@ -34,7 +31,6 @@ public class ConsultaProcessoHome implements Serializable {
 	
 	private List<Natureza> naturezaList;
 	private List<Categoria> categoriaList;
-	private AssuntoTreeHandler assuntoTree;
 	
 	@In
 	private GenericManager genericManager;
@@ -43,7 +39,6 @@ public class ConsultaProcessoHome implements Serializable {
 	public void init() {
 		naturezaList = genericManager.findAll(Natureza.class);
 		categoriaList = genericManager.findAll(Categoria.class);
-		assuntoTree = new AssuntoTreeHandler();
 	}
 	
 	public ConsultaProcesso getInstance() {
@@ -87,14 +82,6 @@ public class ConsultaProcessoHome implements Serializable {
 
 	public List<Natureza> getNaturezaList() {
 		return naturezaList;
-	}
-
-	public void setAssuntoTree(AssuntoTreeHandler assuntoTree) {
-		this.assuntoTree = assuntoTree;
-	}
-
-	public AssuntoTreeHandler getAssuntoTree() {
-		return assuntoTree;
 	}
 
 	public void setCategoriaList(List<Categoria> categoriaList) {
