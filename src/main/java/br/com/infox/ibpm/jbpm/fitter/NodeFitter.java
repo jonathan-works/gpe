@@ -234,7 +234,6 @@ public class NodeFitter extends Fitter implements Serializable {
 				}
 			}
 		}
-		//getTransitionFitter().checkTransitions();
 		return nodes;
 	}
 	
