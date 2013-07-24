@@ -47,35 +47,6 @@ public class MeeterPhaseListener {
 	public void afterPhase(PhaseEvent event) {
 		System.out.println("Saiu: " + event.getPhaseId() + " - " + (new Date().getTime() - time));
 		time = 0; 
-		UIInput uiinput = (UIInput) RichFunction.findComponent("description");
-		if (uiinput != null){
-			System.out.println(uiinput.getSubmittedValue());
-			System.out.println(uiinput.getValue());
-			System.out.println(uiinput.isValid());
-		}
-//		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
-//			UIViewRoot root = event.getFacesContext().getViewRoot();
-//			showComponentsWithoutForm(root);
-//		}
 	}
 
-//	private void showComponentsWithoutForm(UIComponent root) {
-//		if (!hasParentForm(root)) {
-//			System.out.println(root.getClass() + " -> " + root.getId());
-//		}
-//		for (UIComponent child : root.getChildren()) {
-//			showComponentsWithoutForm(child);
-//		}
-//	}
-//	
-//	private boolean hasParentForm(UIComponent component) {
-//		UIComponent parent = component.getParent();
-//		while (parent != null) {
-//			if (parent instanceof UIForm || parent instanceof HtmlForm) {
-//				return true;
-//			}
-//			parent = parent.getParent();
-//		}
-//		return false;
-//	}
 }
