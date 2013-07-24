@@ -12,8 +12,6 @@ public abstract class Fitter {
     protected ProcessBuilder pb;
     
 	public abstract void clear();
-	//public void add();
-	//public void remove(<Handler> handler);
 	
 	@Create
 	public void init() {
