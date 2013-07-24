@@ -3,15 +3,15 @@ package br.com.infox.ibpm.jbpm.actions;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;
@@ -30,10 +30,10 @@ import br.com.itx.util.EntityUtil;
  */
 public class CaixaEventHandler {
 
-	private static final LogProvider LOG = Logging.getLogProvider(CaixaEventHandler.class);
-
 	public static final String NAME = "caixaEvento";
 	private static final String PROCESSO = "processo";
+	
+	@In private ProcessoManager processoManager;
 	
 	/**
 	 * Método principal, onde ocorrerá a validação para verificar se o processo
@@ -45,7 +45,7 @@ public class CaixaEventHandler {
 		if(proc != null) {
 			final List<Caixa> caixaResList = getCaixaResultList(context);
 			if(caixaResList != null) {
-				addProcessoCaixa(caixaResList, proc);
+				processoManager.moverProcessoParaCaixa(caixaResList, proc);
 			}
 		}
 	}
@@ -80,24 +80,6 @@ public class CaixaEventHandler {
 			}
 		}
 		return idProcesso;
-	}
-	
-	/**
-	 * Adiciona o(s) processo(s) a(s) caixa(s)
-	 * @param caixaList - Lista da caixas que o processo pode ser inserido
-	 * @param processo - Processo em Movimentação
-	 */
-	private void addProcessoCaixa(final List<Caixa> caixaList, final Processo processo) {
-		for(Caixa c : caixaList) {
-			EntityUtil.flush();
-			EntityUtil.getEntityManager().createNativeQuery(
-					"update public.tb_processo set id_caixa = :caixa " +
-					"where id_processo = :idProcesso")
-					.setParameter("caixa", c.getIdCaixa())
-					.setParameter("idProcesso", processo.getIdProcesso())
-					.executeUpdate();
-			return;
-		}
 	}
 	
 }

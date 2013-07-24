@@ -35,27 +35,10 @@
 			 required="true"
 			 noSelectionLabel="Selecione...">
 			
-				<a:ajax
-				 event="change"
-				 oncomplete="#{automaticEventsTree.carregaEventos()}"
-				 listener="#{processoHome.onSelectProcessoDocumento()}"
-				 execute="@this"
-				 limitRender="true"
-				 render="divEventsTreeTextEdit, divAppletId, appletAssinar" />
-			
 		</wi:selectOneMenuEntity>
 			
 			<br />
 			
-			<s:div id="divEventsTreeTextEdit">
-			
-				<wi:automaticEventsTree
-				 agrupamentos="#{processoHome.idAgrupamentos}"
-				 reRender="divAppletId"
-				 inNewLine="true"
-				 rendered="#{processoHome.renderEventsTree}" />
-			
-		</s:div>
 			
 			<s:div id="divAppletId">
 			 
@@ -117,69 +100,6 @@
 							 name="certChain"
 							 value="#{path.concat('certChain')}" />
 							
-							<s:div
-							 id="appletAssinar"
-							 rendered="#{not empty automaticEventsTree.eventoBeanList}">
-							
-								<applet
-								 width="140"
-								 height="25"
-								 id="certificacao"
-								 code="SmartCardSignerApplet"
-								 archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
-								
-									<param
-									 name="formId"
-									 value="taskInstanceForm" />
-									<param
-									 name="signButtonCaption"
-									 value="Assinar Digitalmente" />
-									<param
-									 name="certificationChainField"
-									 value="#{certChain}" />
-									<param
-									 name="signatureField"
-									 value="#{signature}" />
-									<param
-									 name="urlDownload"
-									 value="#{util.urlProject}/certificado/" />
-									<param
-									 name="getDataFunction"
-									 value="getData()" />	
-									<param
-									 name="useBase64Function"
-									 value="useBase64()" />
-									<param
-									 name="functionPreSign"
-									 value="showLoading()" />	
-									<param
-									 name="functionPosSign"
-									 value="hideLoading();submitForm();" />		
-									<param
-									 name="dataAtual"
-									 value="#{currentDatetime}" />	
-									<param
-									 name="caListDownloadFile"
-									 value="#{util.urlProject}/downloadCaList.seam" />				
-								
-							</applet> 
-								<script>
-									function useBase64() {
-										return false;
-									}
-									function getData() {
-										var data;
-										data = tinyMCE.editors[namespace.infox.escapeId("#{idEditor}")].getContent();
-										return data;			     
-									}			
-									function clearSign() {
-										var escapeId = namespace.infox.escapeId;
-										$(escapeId("#{signature}")).val("");
-										$(escapeId("#{certChain}")).val("");
-									}
-								</script>   			
-							
-						</s:div>
 				    	
 					</td>
 				 	

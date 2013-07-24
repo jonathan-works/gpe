@@ -18,6 +18,7 @@ import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.query.ProcessoEpaQuery;
 import br.com.infox.epp.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
@@ -84,8 +85,12 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public boolean hasPartes(Processo processo){
+		return hasPartes(processo.getIdJbpm());
+	}
+	
+	public boolean hasPartes(Long idJbpm){
 		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", processo.getIdJbpm());
+		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm",idJbpm);
 		ProcessoEpa pe = EntityUtil.getSingleResult(query);
 		return (pe != null) && (pe.hasPartes());
 	}
@@ -100,6 +105,11 @@ public class ProcessoEpaDAO extends GenericDAO {
 	public Boolean podeInativarPartes(ProcessoEpa processoEpa){
 		String hql = "select count(*) from ParteProcesso partes where partes.processo = :processoEpa and partes.ativo = true";
 		return (Boolean) (((Long) EntityUtil.createQuery(hql).setParameter("processoEpa", processoEpa).getSingleResult()).compareTo(1L) > 0);
+	}
+	
+	public Item getItemDoProcesso(int idProcesso){
+		String query = "select o.itemDoProcesso from ProcessoEpa o where o.idProcesso =:idProcesso";
+		return (Item) entityManager.createQuery(query).setParameter("idProcesso", idProcesso).getSingleResult();
 	}
 	
 }

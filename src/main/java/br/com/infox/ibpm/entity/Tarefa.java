@@ -39,7 +39,6 @@ public class Tarefa implements java.io.Serializable {
 	
 	private List<TarefaJbpm> tarefaJbpmList = new ArrayList<TarefaJbpm>(0);
 	private List<Caixa> caixaList = new ArrayList<Caixa>(0);
-	private List<TarefaEvento> tarefaEventoList = new ArrayList<TarefaEvento>(0);
 	
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tarefa")
 	@Id
@@ -93,15 +92,6 @@ public class Tarefa implements java.io.Serializable {
 		this.caixaList = caixaList;
 	}
 
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="tarefa")
-	public List<TarefaEvento> getTarefaEventoList() {
-		return tarefaEventoList;
-	}
-
-	public void setTarefaEventoList(List<TarefaEvento> tarefaEventoList) {
-		this.tarefaEventoList = tarefaEventoList;
-	}
-	
 	@Transient
 	public Long getLastIdJbpmTask() {
 		if(tarefaJbpmList == null || tarefaJbpmList.size() == 0) {

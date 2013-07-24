@@ -16,23 +16,22 @@
 package br.com.infox.ibpm.home;
 
 import java.util.List;
-import javax.faces.event.AbortProcessingException;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
-import org.richfaces.event.ItemChangeEvent;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.manager.ProcessoManager;
-import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
@@ -42,7 +41,6 @@ import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
-import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
@@ -50,6 +48,7 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
+@Scope(ScopeType.CONVERSATION)
 public class ProcessoHome extends AbstractHome<Processo> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
@@ -73,7 +72,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	private String signature;
 	private String certChain;
 	private String idAgrupamentos;
-	private boolean renderEventsTree;
     private ProcessoDocumento pdFluxo;
 	private Integer idProcessoDocumento;
 	private boolean checkVisibilidade=true;
@@ -101,11 +99,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 	
 	public void iniciarTarefaProcesso() {
-		JbpmEventsHandler.instance().iniciarTask(instance, tarefaId);
+		processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
 	}
 	
 	public void visualizarTarefaProcesso(){
-		JbpmEventsHandler.instance().visualizarTask(instance, tarefaId);
+		processoManager.visualizarTask(instance, tarefaId,Authenticator. getUsuarioLocalizacaoAtual());
 	}
 	
 	public static ProcessoHome instance() {
@@ -134,17 +132,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + getInstance().getNumeroProcesso());
 	}
 		
-	
-	public void onSelectProcessoDocumento() {
-		limparEventsTreeHandler();
-	}
-	
-	private void limparEventsTreeHandler() {
-		AutomaticEventsTreeHandler.instance().clearList();
-		AutomaticEventsTreeHandler.instance().clearTree();
-		renderEventsTree = false;
-	}
-
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
 		ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 		setIdProcessoDocumento(idDoc);
@@ -257,7 +244,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 			ProcessoDocumentoHome.instance().setInstance(processoDocumento);
 			setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
 			setTipoProcessoDocumento(processoDocumento.getTipoProcessoDocumento());
-			onSelectProcessoDocumento();
 		}
 	}
 	
@@ -438,10 +424,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	
 	public String getIdAgrupamentos() {
 		return idAgrupamentos;
-	}
-
-	public boolean getRenderEventsTree() {
-		return renderEventsTree;
 	}
 
 	public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {

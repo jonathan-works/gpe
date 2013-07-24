@@ -13,6 +13,7 @@ import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.manager.ParteProcessoManager;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.itx.component.AbstractHome;
 
 @Name(ProcessoEpaHome.NAME)
@@ -22,6 +23,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoEpaHome";
 	
+	@In private PessoaManager pessoaManager;
 	@In private ParteProcessoManager parteProcessoManager;
 	
 	public void incluirParteProcesso(Processo processo, String tipoPessoa){
@@ -36,7 +38,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 	}
 	
 	public void carregaPessoa(String tipoPessoa, String codigo){
-		parteProcessoManager.carregaPessoa(tipoPessoa, codigo);
+		pessoaManager.carregaPessoa(tipoPessoa, codigo);
 	}
 
 }

@@ -40,4 +40,12 @@ public class FluxoManager extends GenericManager{
 		return fluxoDAO.quantidadeProcessosAtrasados(fluxo) > 0;
 	}
 	
+	public Fluxo getFluxoByDescricao(String descricao){
+		return fluxoDAO.getFluxoByDescricao(descricao);
+	}
+	
+	public boolean existemProcessosAssociadosAFluxo(Fluxo fluxo){
+		return fluxoDAO.getQuantidadeDeProcessoAssociadosAFluxo(fluxo) > 0;
+	}
+	
 }

@@ -33,6 +33,7 @@ import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.PessoaFisicaHome;
 import br.com.infox.ibpm.home.PessoaJuridicaHome;
+import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.itx.util.EntityUtil;
 import javax.persistence.Query;
 
@@ -48,6 +49,8 @@ public class IniciarProcessoAction {
 	private IniciarProcessoService iniciarProcessoService;
 	@In
 	private ProcessoEpaManager processoEpaManager;
+	
+	@In private PessoaManager pessoaManager;
 	
 	private boolean renderedByItem;
 	private boolean renderizarCadastroPartes;
@@ -132,21 +135,7 @@ public class IniciarProcessoAction {
 	}
 	
 	public void carregaPessoa(String tipoPessoa, String codigo){
-		StringBuilder sb = new StringBuilder();
-		Pessoa pessoa;
-		sb.append("select o from ");
-		if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
-			sb.append("PessoaFisica o where o.cpf = :cpf");
-			Query query = EntityUtil.createQuery(sb.toString()).setParameter("cpf", codigo);
-			pessoa = EntityUtil.getSingleResult(query);
-			Events.instance().raiseEvent("evtCarregarPessoaFisica", pessoa);
-		} else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")){
-			sb.append("PessoaJuridica o where o.cnpj = :cnpj");
-			Query query = EntityUtil.createQuery(sb.toString()).setParameter("cnpj", codigo);
-			pessoa = EntityUtil.getSingleResult(query);
-			Events.instance().raiseEvent("evtCarregarPessoaJuridica", pessoa);
-		} else return;
-		
+		pessoaManager.carregaPessoa(tipoPessoa, codigo);
 	}
 	
 	public void incluir(String tipoPessoa){

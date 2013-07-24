@@ -23,7 +23,11 @@ import br.com.infox.ibpm.query.ProcessoLocalizacaoIbpmQuery;
 @Table(name = ProcessoLocalizacaoIbpm.TABLE_NAME, schema = "public")
 @NamedQueries(value={
 		@NamedQuery(name=ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE, 
-					query=ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE_QUERY)
+				query=ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE_QUERY),
+		@NamedQuery(name=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, 
+				query=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY),
+		@NamedQuery(name=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, 
+				query=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY)
 })
 public class ProcessoLocalizacaoIbpm implements java.io.Serializable {
 

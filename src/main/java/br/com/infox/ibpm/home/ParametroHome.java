@@ -16,27 +16,15 @@
 package br.com.infox.ibpm.home;
 
 import java.util.Date;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
-
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.entity.log.LogUtil;
+import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.EntityUtil;
 
-
 @Name(ParametroHome.NAME)
-@BypassInterceptors
-public class ParametroHome
-		extends
-			AbstractParametroHome<Parametro> {
+public class ParametroHome extends AbstractParametroHome<Parametro> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "parametroHome";
@@ -61,36 +49,9 @@ public class ParametroHome
 		return true;
 	}
 	
-	public static String getParametro(String nome) {
-		EntityManager em = EntityUtil.getEntityManager();
-		List<Parametro> resultList = em.createQuery(
-			"select p from Parametro p where " +
-				"nomeVariavel = :nome").setParameter("nome", nome).getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0).getValorVariavel();
-		}
-		throw new IllegalArgumentException();		
-	}
-	
-	public static String getParametroOrFalse(String nome)	{
-		EntityManager em = EntityUtil.getEntityManager();
-		List<Parametro> resultList = em.createQuery(
-			"select p from Parametro p where " +
-				"nomeVariavel = :nome").setParameter("nome", nome).getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0).getValorVariavel();
-		}
-		return "false";
+	public String getParametroOrFalse(String nome) {
+		return ParametroUtil.getParametroOrFalse(nome);
 	}	
-	
-	public static String getFromContext(String nomeParametro, boolean validar) {
-		String value = (String) Contexts.getApplicationContext().get(nomeParametro);
-		if (validar && value == null) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-					"Parâmetro não encontrado: " + nomeParametro);			
-		}
-		return value;
-	}
 	
 	public String getIdPagina() {
 		return LogUtil.getIdPagina();
@@ -104,7 +65,7 @@ public class ParametroHome
 	}
 
 	public static UsuarioLogin getUsuarioSistema() {
-		int idUsuarioSistema = Integer.parseInt(getParametro(ID_USUARIO_SISTEMA));
+		int idUsuarioSistema = Integer.parseInt(ParametroUtil.getParametro(ID_USUARIO_SISTEMA));
 		return EntityUtil.getEntityManager().find(UsuarioLogin.class, idUsuarioSistema);
 	}
 }

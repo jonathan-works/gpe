@@ -23,14 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.persistence.EntityManager;
-
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.manager.PapelManager;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
@@ -96,13 +96,8 @@ public class SwimlaneHandler implements Serializable {
 		if (papelList == null) {
 			papelList = new ArrayList<Papel>();
 			if (localizacao != null) {
-				EntityManager em = EntityUtil.getEntityManager();
-				papelList = em.createQuery("select distinct l.papel " +
-						"from UsuarioLocalizacao l " +
-						"where l.localizacao = :loc ")
-						.setParameter("loc", localizacao)
-						.getResultList();
-
+				PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
+				papelList = papelManager.getPapeisDeUsuarioByLocalizacao(localizacao);
 			}
 		}
 		return papelList;

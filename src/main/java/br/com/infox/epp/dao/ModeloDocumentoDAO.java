@@ -2,11 +2,8 @@ package br.com.infox.epp.dao;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.query.ModeloDocumentoQuery;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
@@ -32,6 +29,13 @@ public class ModeloDocumentoDAO extends GenericDAO {
 		return getNamedResultList(ModeloDocumentoQuery.LIST_ATIVOS, null);
 	}
 	
+	public ModeloDocumento getModeloDocumentoByTitulo(String titulo){
+		String hql = "select o from ModeloDocumento o where o.tituloModeloDocumento = :titulo";
+		return (ModeloDocumento) entityManager.createQuery(hql)
+				.setParameter("titulo", titulo).getSingleResult();
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(GrupoModeloDocumento grupo, TipoModeloDocumento tipo){
 		String hql = "select distinct o from ModeloDocumento o where " +
 				"o.tipoModeloDocumento.grupoModeloDocumento = :grupo and " +
@@ -40,6 +44,14 @@ public class ModeloDocumentoDAO extends GenericDAO {
 		return entityManager.createQuery(hql)
 				.setParameter("grupo", grupo)
 				.setParameter("tipo", tipo).getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ModeloDocumento> getModelosDocumentoInListaModelos(String listaModelos){
+		String hql = "select o from ModeloDocumento o " +
+						"where o.idModeloDocumento in (" +
+						listaModelos + ") order by modeloDocumento";
+		return (List<ModeloDocumento>) entityManager.createQuery(hql).getResultList();
 	}
 	
 }

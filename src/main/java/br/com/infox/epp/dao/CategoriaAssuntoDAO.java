@@ -13,6 +13,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.CategoriaAssunto;
 import br.com.infox.epp.query.CategoriaAssuntoQuery;
+import br.com.infox.ibpm.entity.Assunto;
 
 /**
  * Classe DAO para a entidade NaturezaCategoriaAssunto
@@ -34,6 +35,13 @@ public class CategoriaAssuntoDAO extends GenericDAO {
 								(CategoriaAssuntoQuery.LIST_BY_CATEGORIA, 
 								 parameters);
 		return resultList;		
+	}
+	
+	public boolean jaExisteCategoriaAssunto(CategoriaAssunto categoriaAssunto){
+		String hql = "select count(o) from CategoriaAssunto o where o.categoria=:categoria and o.assunto=:assunto";
+		return  (Long) entityManager.createQuery(hql)
+				.setParameter("assunto", categoriaAssunto.getAssunto())
+				.setParameter("categoria", categoriaAssunto.getCategoria()).getSingleResult() > 0;
 	}
 	
 }

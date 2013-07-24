@@ -17,11 +17,8 @@ package br.com.infox.ibpm.jbpm;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.Query;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -35,13 +32,10 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.ibpm.bean.TarefaEventoTree;
-import br.com.infox.ibpm.jbpm.actions.RegistraEventoAction;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.itx.component.Form;
 import br.com.itx.component.FormField;
 import br.com.itx.component.Template;
-import br.com.itx.util.EntityUtil;
 
 
 /**
@@ -70,7 +64,7 @@ public class TaskInstanceForm implements Serializable{
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "taskInstaceForm";
 	public static final String TASK_BUTTONS = "taskButtons";
-	public static final String TASK_BUTTONS_EVENTS = "taskButtonsEvents";
+//	public static final String TASK_BUTTONS_EVENTS = "taskButtonsEvents";
 	
 	private Form form;
 
@@ -84,7 +78,6 @@ public class TaskInstanceForm implements Serializable{
 		}
 		TaskController taskController = taskInstance.getTask().getTaskController();
 		Template buttons = new Template();
-		boolean hasEvents = hasEvents();
 		List<VariableAccess> list = null;
 		if (taskController != null) {
 			list = taskController.getVariableAccesses();
@@ -97,19 +90,7 @@ public class TaskInstanceForm implements Serializable{
 						String formName = name + "Form";
 						form = (Form) Component.getInstance(formName);
 						if (form != null) {
-							for (Iterator<FormField> iterator = form.getFields().iterator(); 
-																		iterator.hasNext();) {
-								FormField ff = iterator.next();
-								if(ff.getId().equals(TarefaEventoTree.NAME)) {
-									iterator.remove();
-									break;
-								}
-							}
-							if(hasEvents) {
-								addEventFeatures(buttons);
-							} else {
-								buttons.setId(TASK_BUTTONS);
-							}
+							buttons.setId(TASK_BUTTONS);
 							form.setButtons(buttons);
 							form.setHome(name + "Home");
 						} else {
@@ -125,11 +106,7 @@ public class TaskInstanceForm implements Serializable{
 			form = new Form();
 			form.setHome(TaskInstanceHome.NAME);
 			form.setFormId("taskInstance");
-			if (hasEvents) {
-				addEventFeatures(buttons);
-			} else {
-				buttons.setId(TASK_BUTTONS);
-			}
+			buttons.setId(TASK_BUTTONS);
 			form.setButtons(buttons);
 			addVariablesToForm(list);
 		}
@@ -177,38 +154,6 @@ public class TaskInstanceForm implements Serializable{
 		}
 	}
 	
-	/**
-	 * Adiciona no formulário a ser exibido as funcionalidades dos eventos 
-	 * manuais.
-	 */
-	private void addEventFeatures(Template buttons) {
-		FormField ff = new FormField();
-		ff.setFormId(form.getFormId());
-		ff.setId(TarefaEventoTree.NAME);
-		ff.setType(TarefaEventoTree.NAME);
-		form.getFields().add(ff);
-		buttons.setId(TASK_BUTTONS_EVENTS);
-	}
-	
-	/**
-	 * Verifica se existem eventos que irão precisar serem registrados 
-	 * manualmente nesta tarefa.
-	 * @return True - se existirem eventos.
-	 */
-	private boolean hasEvents() {
-		RegistraEventoAction.instance().verificarNovosEventos();
-		StringBuilder sb = new StringBuilder();
-		sb.append("select count(o) from ProcessoTarefaEvento o ")
-		  .append("inner join o.tarefaEvento et ")
-		  .append("where o.processo.idProcesso = :processo and ")
-		  .append("et.tarefa.tarefa = :tarefa and ")
-		  .append("o.registrado = false");
-		Query q = EntityUtil.getEntityManager().createQuery(sb.toString());
-		q.setParameter("processo", JbpmUtil.getProcessVariable("processo"));
-		q.setParameter("tarefa", taskInstance.getTask().getName());
-		return (Long) q.getSingleResult() != 0;
-	}
-
 	private void getTaskInstance() {
 		TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		if (newInstance == null || !newInstance.equals(taskInstance)) {

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
@@ -14,6 +15,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.manager.FluxoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.util.EntityUtil;
 
@@ -28,7 +30,6 @@ import br.com.itx.exception.AplicationException;
  */
 @Name(value=TaskPageAction.NAME)
 @Scope(ScopeType.PAGE)
-@BypassInterceptors
 public class TaskPageAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -37,6 +38,8 @@ public class TaskPageAction implements Serializable {
 	public static final String TASK_PAGE_COMPONENT_NAME = "taskPage";
 	private static final String TASK_PAGE_COMPONENT_PATH = "/WEB-INF/xhtml/taskPages/";
 	private static final String TASK_PAGE_SUFFIX = ".xhtml";
+	
+	@In private FluxoManager fluxoManager;
 	
 	/**
 	 * Verifica se a tarefa atual está utilizando uma variável taskPage.
@@ -93,11 +96,7 @@ public class TaskPageAction implements Serializable {
 	 * @return
 	 */
 	private String getCodFluxoByDescricao(String descricao) {
-		String fluxoByDescricao = "select o from Fluxo o where " +
-								  "o.fluxo like :descricao";
-		Query query = EntityUtil.getEntityManager().createQuery(fluxoByDescricao);
-		query.setParameter("descricao", descricao);
-		Fluxo f = EntityUtil.getSingleResult(query);
+		Fluxo f = fluxoManager.getFluxoByDescricao(descricao);
 		if(f != null) {
 			return f.getCodFluxo();
 		}

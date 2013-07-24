@@ -1,16 +1,15 @@
 package br.com.infox.bpm.action;
 
-import java.util.List;
-
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.itx.component.Util;
 import br.com.itx.exception.AplicationException;
-import br.com.itx.util.EntityUtil;
 
 /**
  * Classe responsável pelas validações na transição do fluxo.
@@ -18,6 +17,8 @@ import br.com.itx.util.EntityUtil;
  *
  */
 public class TaskTransitionAction {
+	
+	@In private SituacaoProcessoManager situacaoProcessoManager;
 
 	/**
 	 * Verifica se a mesma tarefa não foi encerrada por outro usuário,
@@ -65,16 +66,10 @@ public class TaskTransitionAction {
 	 * @param currentTaskId
 	 * @return true se ele pode visualizar a próxima tarefa
 	 */
-	@SuppressWarnings("rawtypes")
 	private boolean canOpenTask(long currentTaskId) {
 		JbpmUtil.getJbpmSession().flush();
 		Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
-		List resultList = EntityUtil.getEntityManager().createQuery(
-				"select o.idTaskInstance from SituacaoProcesso o " +
-				"where o.idTaskInstance = :ti")
-			.setParameter("ti", currentTaskId)
-			.getResultList();
-		return resultList.size() > 0;
+		return situacaoProcessoManager.existemTarefasEmAberto(currentTaskId);
 	}
 	
 }

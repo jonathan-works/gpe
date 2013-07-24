@@ -7,8 +7,6 @@
 
 		<property name="items">
 			<value>menu.fluxos/categoria.menuText:/Categoria/listView.seam</value>
-			<value>menu.fluxos/menu.eventos/agrupamento.menuText:/Agrupamento/listView.seam</value>
-			<value>menu.fluxos/menu.eventos/evento.menuText:/Evento/listView.seam</value>
 			<value>menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
 			<value>menu.fluxos/item.menuText:/Item/listView.seam</value>
 			<value>menu.fluxos/natureza.menuText:/Natureza/listView.seam</value>

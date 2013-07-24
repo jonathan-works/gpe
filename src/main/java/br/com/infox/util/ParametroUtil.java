@@ -2,32 +2,27 @@
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
-
-import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.ibpm.manager.ParametroManager;
 import br.com.infox.ibpm.util.CarregarParametrosAplicacao;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(ParametroUtil.NAME)
 @Scope(ScopeType.APPLICATION)
 @Install(dependencies = { CarregarParametrosAplicacao.NAME })
 @Startup(depends = CarregarParametrosAplicacao.NAME)
-@BypassInterceptors
 public class ParametroUtil {
 
 	public static final String NAME = "parametroUtil";
@@ -92,13 +87,19 @@ public class ParametroUtil {
 	}
 
 	public static String getParametro(String nome) {
-		EntityManager em = EntityUtil.getEntityManager();
-		List<Parametro> resultList = em.createQuery("select p from Parametro p where nomeVariavel = :nome")
-				.setParameter("nome", nome).getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0).getValorVariavel();
+		try{
+			return getParametroManager().getParametro(nome).getValorVariavel();
+		} catch (NoResultException noResultException){
+			throw new IllegalArgumentException();
 		}
-		throw new IllegalArgumentException();
+	}
+	
+	public static String getParametroOrFalse(String nome) {
+		try{
+			return getParametroManager().getParametro(nome).getValorVariavel();
+		} catch (Exception exception){
+			return "false";
+		}
 	}
 
 	public String executarFactorys() {
@@ -114,5 +115,9 @@ public class ParametroUtil {
 			}
 		}
 		return "OK";
+	}
+	
+	private static ParametroManager getParametroManager(){
+		return ComponentUtil.getComponent(ParametroManager.NAME);
 	}
 }

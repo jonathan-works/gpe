@@ -17,7 +17,6 @@ import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.ibpm.component.tree.AutomaticEventsTreeHandler;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.EntityUtil;
 
@@ -100,7 +99,6 @@ public abstract class TaskAction implements Serializable {
 			TaskTransitionAction tta = new TaskTransitionAction();
 			tta.canEndTask(getTaskInstance());
 			BusinessProcess.instance().endTask(transition);
-			AutomaticEventsTreeHandler.instance().registraEventos();
 			setTaskInstance(null);
 			setAvaliableTransitions(null);
 			setTaskInstance(tta.canSeeNextTaskInstance(nextTaskInstance));

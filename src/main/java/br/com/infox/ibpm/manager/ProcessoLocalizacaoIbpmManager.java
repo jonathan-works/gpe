@@ -26,4 +26,8 @@ public class ProcessoLocalizacaoIbpmManager implements Serializable {
 		return processoLocalizacaoIbpmDAO.listByTaskInstance(idTaskInstance);
 	}
 	
+	public void deleteByTaskIdAndProcessId(Long taskId, Long processId){
+		processoLocalizacaoIbpmDAO.deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(taskId, processId);
+	}
+	
 }

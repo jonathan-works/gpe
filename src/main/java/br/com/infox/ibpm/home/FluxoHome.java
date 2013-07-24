@@ -18,16 +18,15 @@ package br.com.infox.ibpm.home;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.persistence.Query;
-
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.manager.FluxoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.xpdl.IllegalXPDLException;
@@ -36,12 +35,13 @@ import br.com.itx.util.HibernateUtil;
 
  
 @Name(FluxoHome.NAME)
-@BypassInterceptors
 public class FluxoHome 
 		extends AbstractFluxoHome<Fluxo>{
     private static final LogProvider LOG = Logging.getLogProvider(FluxoHome.class);
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "fluxoHome";
+	
+	@In private FluxoManager fluxoManager;
 	
 	public static FluxoHome instance() {
 		return ComponentUtil.getComponent(FluxoHome.NAME);
@@ -82,7 +82,7 @@ public class FluxoHome
 	    Date dataFimPublicacao = getInstance().getDataFimPublicacao();
 		if (dataFimPublicacao != null){
 			if (dataFimPublicacao.before(getInstance().getDataInicioPublicacao())){
-				FacesMessages.instance().add(Severity.ERROR, "Data Fim Publicação deve ser maior que a Data Iníco Publicação");
+				FacesMessages.instance().add(Severity.ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
 				return Boolean.FALSE;
 			}
 		}
@@ -102,28 +102,20 @@ public class FluxoHome
 		return ret;
 	}	
 	
-	/*Remoção Lógica. Se possuir algum processo vinculado, verifica se o msm 
-	 * está arquivado ou não.
-	 */
-    @Override
-    public String remove(Fluxo obj) {
-        setInstance(obj);
-        String query = "select count(o) from Processo o "
-                + "where o.fluxo = :fluxo2 ";
-        Query q = getEntityManager().createQuery(query).setMaxResults(1);
-        q.setParameter("fluxo2", obj);
-
-        if (((Long) q.getSingleResult() <= 0)) {
-            obj.setAtivo(Boolean.FALSE);
-            super.update();
-            newInstance();
-        } else {
-            final String message = "Este registro está em uso e não poderá ser excluído.";
-            LOG.warn(message);
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, message);
-        }
-        return "updated";
-    }
+	@Override
+	public String inactive(Fluxo instance) {
+		setInstance(instance);
+		if (!fluxoManager.existemProcessosAssociadosAFluxo(instance)) {
+			String ret = super.inactive(instance);
+			newInstance();
+			return ret;
+		} else {
+			final String message = "#{messages['fluxo.remocaoProibida']}";
+			LOG.warn(message);
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, message);
+		}
+		return null;
+	}
 
     public String importarXPDL(byte[] bytes) {
     	Fluxo fluxo = getInstance();

@@ -17,14 +17,15 @@ import br.com.infox.epp.type.TipoTwitterEnum;
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.util.ParametroUtil;
 import br.com.infox.util.TwitterUtil;
 import br.com.itx.component.AbstractHome;
 
 @Name(ContaTwitterHome.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 
-	private static final long serialVersionUID = 203098369650080L;
+	private static final long serialVersionUID = 1L;
 	public static final String NAME = "contaTwitterHome";
 	
 	private Twitter twitter = TwitterUtil.getInstance().getFactory().getInstance();
@@ -116,7 +117,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 					usuario = Authenticator.getUsuarioLogado();
 					break;
 				case S:
-					usuario = getEntityManager().find(UsuarioLogin.class, Integer.parseInt(ParametroHome.getParametro("idUsuarioSistema")));
+					usuario = getEntityManager().find(UsuarioLogin.class, Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
 					break;
 				}
 				persist();
@@ -176,7 +177,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 			usuario = Authenticator.getUsuarioLogado();
 			break;
 		case S:
-			usuario = getEntityManager().find(UsuarioLogin.class, Integer.parseInt(ParametroHome.getParametro("idUsuarioSistema")));
+			usuario = getEntityManager().find(UsuarioLogin.class, Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
 			break;
 		default:
 			break;

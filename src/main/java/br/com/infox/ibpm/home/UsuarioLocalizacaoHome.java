@@ -15,32 +15,22 @@
 */
 package br.com.infox.ibpm.home;
 
-
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage.Severity;
-
 import br.com.infox.access.entity.Papel;
-import br.com.infox.component.tree.AbstractTreeHandler;
-import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 
-@Name("usuarioLocalizacaoHome")
+@Name(UsuarioLocalizacaoHome.NAME)
 public class UsuarioLocalizacaoHome
 		extends AbstractUsuarioLocalizacaoHome<UsuarioLocalizacao> {
 
+	public static final String NAME = "usuarioLocalizacaoHome";
 	public static final String AFTER_NEW_INSTANCE_EVENT = "usuarioLocalizacao.afterNewInstanceEvent";
 	private static final long serialVersionUID = 1L;
 	private Localizacao localizacao;
@@ -72,21 +62,7 @@ public class UsuarioLocalizacaoHome
 	
 	@Override
 	public void newInstance() {
-		List<String> lockedFields = getLockedFields();
-		// Parte copiada do newInstance do AbstractHome, tirando a parte do getEntityManager.clear()
-		if(lockedFields.size() > 0){
-			try {
-				clearUnlocked();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {			
-			setId(null);
-			clearForm();
-			instance = createInstance();
-		}
-		// Fim da parte copiada
-		
+		super.newInstance();
 		localizacao = null;
 		papel = null;
 		Events.instance().raiseEvent(AFTER_NEW_INSTANCE_EVENT, getInstance());
@@ -110,49 +86,13 @@ public class UsuarioLocalizacaoHome
 		if (getInstance().getResponsavelLocalizacao() == null){
 			getInstance().setResponsavelLocalizacao(Boolean.FALSE);
 		}
-		if (checkPapelLocalizacao(instance)){
-			FacesMessages.instance().clear();
-			FacesMessages.instance().add(Severity.ERROR, "Localização e papel duplicados");
-			return null;
-		}
 		UsuarioLogin usuario = getInstance().getUsuario();
 		usuario.getUsuarioLocalizacaoList().add(getInstance());
-		String msg = super.persist();
-		getInstance().setUsuario(usuario);
-		
-		//TODO isso tem de sair daqui, usar um observer para o evento de usuarioLocalizacao persist 
-		AbstractTreeHandler<?> tree = getComponent("localizacaoSetorPJETree");
-		if (tree != null) {
-			tree.clearTree();
-		}
-		tree = getComponent("papelUsuarioLocalizacaoPJETree");
-		if (tree != null) {
-			tree.clearTree();
-		}
-		tree = getComponent("localizacaoEstruturaTree");
-		if (tree != null) {
-			tree.clearTree();
-		}
-		tree = getComponent("uadLocalizacaoTree");
-		if (tree != null) {
-			tree.clearTree();
-		}
-		tree = getComponent("papelTree");
-		if (tree != null) {
-			tree.clearTree();
-		}
-		FacesMessages.instance().clear();
-		FacesMessages.instance().add("Registro inserido com sucesso");
-		return msg;
+		return super.persist();
 	}
 	
 	@Override
 	public String update() {
-		if (checkPapelLocalizacaoUpdate(instance)){
-			FacesMessages.instance().clear();
-			FacesMessages.instance().add(Severity.ERROR, "Localização e papel duplicados");
-			return null;
-		}
 		String update = super.update();
 		return update;
 	}
@@ -191,49 +131,6 @@ public class UsuarioLocalizacaoHome
 
 	public Localizacao getEstrutura() {
 		return estrutura;
-	}	
-	
-	public boolean checkPapelLocalizacao(UsuarioLocalizacao usuarioLocalizacao){
-		StringBuilder sb = new StringBuilder();
-		sb.append("select count(o) from UsuarioLocalizacao o where ");
-		sb.append(" o.usuario = :usuario and o.papel = :papel and ");
-		sb.append("o.localizacao = :localizacao");
-		if (estrutura != null) {
-			sb.append(" and o.estrutura = :estrutura");
-		}
-		String sql = sb.toString();
-		EntityManager em = getEntityManager();
-		Query query = em.createQuery(sql)
-			.setParameter("usuario", usuarioLocalizacao.getUsuario())
-			.setParameter("papel", papel)
-			.setParameter("localizacao", localizacao);
-		if (estrutura != null) {
-			query.setParameter("estrutura", estrutura);
-		}		
-		Long u = (Long) query.getSingleResult();
-		return u > 0;
 	}
 	
-
-	public boolean checkPapelLocalizacaoUpdate(UsuarioLocalizacao usuarioLocalizacao){
-		StringBuilder sb = new StringBuilder();
-		sb.append("select count(o) from UsuarioLocalizacao o where ");
-		sb.append(" o.usuario = :usuario and o.papel = :papel and ");
-		sb.append(" o.localizacao = :localizacao and o.idUsuarioLocalizacao != :idUsuarioLocalizacao");
-		if (estrutura != null) {
-			sb.append(" and o.estrutura = :estrutura");
-		}
-		String sql = sb.toString();
-		EntityManager em = getEntityManager();
-		Query query = em.createQuery(sql)
-			.setParameter("usuario", usuarioLocalizacao.getUsuario())
-			.setParameter("papel", papel)
-			.setParameter("localizacao", localizacao)
-			.setParameter("idUsuarioLocalizacao", usuarioLocalizacao.getIdUsuarioLocalizacao());
-		if (estrutura != null) {
-			query.setParameter("estrutura", estrutura);
-		}		
-		Long u = (Long) query.getSingleResult();
-		return u > 0;
-	}
 }

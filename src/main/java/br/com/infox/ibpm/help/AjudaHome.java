@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -37,7 +34,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions.ValueExpression;
@@ -48,6 +44,8 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.help.Ajuda;
 import br.com.infox.ibpm.entity.help.HistoricoAjuda;
 import br.com.infox.ibpm.entity.help.Pagina;
+import br.com.infox.ibpm.manager.help.AjudaManager;
+import br.com.infox.ibpm.manager.help.PaginaManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
@@ -69,21 +67,16 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	private List resultado;
 	private Ajuda anterior;
 	
-	@In
-	protected EntityManager entityManager;
+	@In private PaginaManager paginaManager;
+	@In private AjudaManager ajudaManager;
 	
 	@Override
 	public Ajuda createInstance() {
 		instance = new Ajuda();
-		List<Ajuda> ajudaList = getEntityManager()
-			.createQuery("select a from Ajuda a " +
-						 "where a.pagina.url = :url " +
-						 "order by a.dataRegistro desc")
-			.setParameter("url", viewId)
-			.getResultList();
-		if (ajudaList.size() > 0) {
-			anterior = ajudaList.get(0);
-			instance.setTexto(anterior.getTexto());
+		Ajuda ajuda = ajudaManager.getAjudaByPaginaUrl(viewId);
+		if (ajuda != null){
+			instance.setTexto(ajuda.getTexto());
+			anterior = ajuda;
 		}
 		instance.setPagina(getPagina());
 		return instance;
@@ -176,14 +169,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	}
 	
 	public Pagina verificaPagina(){
-		String sql = "select o from Pagina o " +
-					 "where o.url = :url";
-		Query q = getEntityManager().createQuery(sql);
-		q.setParameter("url", viewId);
-		if (q.getResultList().size() > 0){
-			return (Pagina) q.getSingleResult();
-		}
-		return null;
+		return paginaManager.getPaginaByUrl(viewId);
 	}
 	
 	public Pagina inserirPagina(){
@@ -197,15 +183,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 
 	public Pagina getPagina() {
 		if (pagina == null) {
-			String ejbql = "select p from Pagina p "
-					+ "where p.url = :url";
-			Query query = getEntityManager().createQuery(ejbql);
-			query.setParameter("url", viewId);
-			try {
-				pagina = (Pagina) query.getSingleResult();
-			} catch (Exception e) {
-				// para o caso de nao encontrar
-			}
+			return verificaPagina();
 		}
 		return pagina;
 	}

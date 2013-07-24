@@ -17,6 +17,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -27,7 +28,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.ForeignKey;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
@@ -51,7 +51,10 @@ import br.com.itx.util.StringUtil;
 
 @Entity
 @Table(name=UsuarioLogin.TABLE_NAME, schema="public" , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
-@NamedQuery(name=UsuarioLoginQuery.USUARIO_LOGIN_NAME, query=UsuarioLoginQuery.USUARIO_LOGIN_QUERY)
+@NamedQueries(value={
+	@NamedQuery(name=UsuarioLoginQuery.USUARIO_LOGIN_NAME, query=UsuarioLoginQuery.USUARIO_LOGIN_QUERY),
+	@NamedQuery(name=UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE, query=UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY)
+})
 @Inheritance(strategy=InheritanceType.JOINED)
 @BypassInterceptors
 @PrimaryKeyJoinColumn(name="id_pessoa", columnDefinition = "integer")

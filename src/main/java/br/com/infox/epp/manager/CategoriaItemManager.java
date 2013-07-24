@@ -17,7 +17,7 @@ import br.com.infox.ibpm.home.CategoriaHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(CategoriaItemManager.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.EVENT)
 @AutoCreate
 public class CategoriaItemManager extends GenericManager{
 

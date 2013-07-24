@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -18,9 +16,11 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
+import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.list.ConsultaProcessoEpaList;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -37,6 +37,8 @@ public class PainelUsuarioHome implements Serializable {
 	private List<Integer> processoIdList;
 	
 	@In private ConsultaProcessoEpaList consultaProcessoEpaList;
+	@In private ProcessoManager processoManager;
+	@In private SituacaoProcessoManager situacaoProcessoManager;
 	
 	@Observer("selectedTarefasTree")
 	public void onSelected(Object obj){
@@ -54,15 +56,7 @@ public class PainelUsuarioHome implements Serializable {
 	public List<Integer> getProcessoIdList() {
 		if (selected != null) {
 			if (processoIdList == null) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("select s.idProcesso from SituacaoProcesso s ");
-				sb.append("where s.idTarefa = :idTarefa ");
-				sb.append(getTreeTypeRestriction());
-				sb.append("group by s.idProcesso");
-				Query query = EntityUtil.getEntityManager().createQuery(sb.toString());
-				processoIdList = query
-					.setParameter("idTarefa", getTarefaId())
-					.getResultList();
+				processoIdList = situacaoProcessoManager.getProcessosAbertosByIdTarefa(getTarefaId(), selected);
 			}
 			if(processoIdList.size() == 0){
 				processoIdList.add(-1);
@@ -73,18 +67,6 @@ public class PainelUsuarioHome implements Serializable {
 		return null;
 	}
 
-	private String getTreeTypeRestriction() {
-		String treeType = (String) selected.get("tree");
-		String nodeType = (String) selected.get("type");
-		if ("caixa".equals(treeType) && "Task".equals(nodeType)) {
-			return "and s.idCaixa is null ";
-		}
-		if (treeType == null && "Caixa".equals(nodeType)) {
-			return "and s.idCaixa is not null ";
-		}
-		return "";
-	}
-	
 	public void processoCaixa(DropEvent evt) {
 		Caixa caixa = EntityUtil.find(Caixa.class, evt.getDropValue());
 		setProcessoCaixa(getProcessoIdList(evt.getDragValue()), caixa);
@@ -97,15 +79,7 @@ public class PainelUsuarioHome implements Serializable {
 	}
 
 	public void setProcessoCaixa(List<Integer> idList, Caixa caixa) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("update Processo set caixa = :caixa ");
-		sb.append("where idProcesso in (:idList)");
-		EntityUtil.getEntityManager().createQuery(
-				sb.toString())
-				.setParameter("caixa", caixa)
-				.setParameter("idList", idList)
-				.executeUpdate();
-		EntityUtil.getEntityManager().flush();
+		processoManager.moverProcessosParaCaixa(idList, caixa);
 		refresh();
 	}
 

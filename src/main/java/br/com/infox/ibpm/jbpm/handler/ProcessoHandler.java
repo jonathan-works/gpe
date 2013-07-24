@@ -25,39 +25,30 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.entity.ProcessoEpa;
-import br.com.infox.epp.type.TipoPessoaEnum;
+import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.entity.Item;
-import br.com.infox.ibpm.entity.ParteProcesso;
-import br.com.infox.ibpm.entity.Pessoa;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
-import br.com.itx.component.Util;
-import br.com.itx.util.EntityUtil;
-import br.com.itx.util.HibernateUtil;
+import br.com.infox.ibpm.manager.ClassificacaoDocumentoManager;
 
 
-@Name("processoHandler")
+@Name(ProcessoHandler.NAME)
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
 public class ProcessoHandler implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "processoHandler";
 	
 	private List<TaskInstance> taskInstanceList;
 	private List<TaskInstance> taskDocumentList;
@@ -65,6 +56,9 @@ public class ProcessoHandler implements Serializable {
 			new HashMap<TaskInstance, List<ProcessoDocumento>>();
 
 	private int inicio;
+	
+	@In private ClassificacaoDocumentoManager classificacaoDocumentoManager;
+	@In private ProcessoEpaManager processoEpaManager;
 	
 	@SuppressWarnings("unchecked")
 	public List<TaskInstance> getTaskInstanceList() {
@@ -113,14 +107,10 @@ public class ProcessoHandler implements Serializable {
 		return taskDocumentList ;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<ProcessoDocumento> getAnexos(TaskInstance task) {
 		List<ProcessoDocumento> anexoList = anexoMap.get(task);
 		if (anexoList == null) {
-			anexoList = EntityUtil.getEntityManager().createQuery(
-					"select o from ProcessoDocumento o where idJbpmTask = :id")
-					.setParameter("id", task.getId())
-					.getResultList();
+			anexoList = classificacaoDocumentoManager.getProcessoDocumentoByTask(task);
 			anexoMap.put(task, anexoList);
 		}
 		return anexoList ;
@@ -153,46 +143,20 @@ public class ProcessoHandler implements Serializable {
 	}
 	
 	public Item getItemDoProcesso(int idProcesso){
-		String query = "select o from ProcessoEpa o where o.idProcesso =:idProcesso";
-		ProcessoEpa pepa = (ProcessoEpa) EntityUtil.getEntityManager().createQuery(query)
-				.setParameter("idProcesso", idProcesso).getSingleResult();
-		return pepa.getItemDoProcesso();
+		return processoEpaManager.getItemDoProcesso(idProcesso);
 	}
 	
 	public boolean hasPartes(){
 		Long idjbpm_ = ProcessInstance.instance().getId();
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
-		return (pe != null) && (pe.hasPartes());
+		return processoEpaManager.hasPartes(idjbpm_);
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){
-		Long idjbpm_ = ProcessInstance.instance().getId();
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
-		List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
-		for (ParteProcesso parte : pe.getPartes()){
-			if (parte.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F)){
-				pessoaFisicaList.add((PessoaFisica) HibernateUtil.removeProxy(parte.getPessoa()));
-			}
-		}
-		return pessoaFisicaList;
+		return processoEpaManager.getPessoaFisicaList();
 	}
 	
 	public List<PessoaJuridica> getPessoaJuridicaList(){
-		Long idjbpm_ = ProcessInstance.instance().getId();
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
-		List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
-		for (ParteProcesso parte : pe.getPartes()){
-			if (parte.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.J)){
-				pessoaJuridicaList.add((PessoaJuridica) HibernateUtil.removeProxy(parte.getPessoa()));
-			}
-		}
-		return pessoaJuridicaList;
+		return processoEpaManager.getPessoaJuridicaList();
 	}
 	
 }

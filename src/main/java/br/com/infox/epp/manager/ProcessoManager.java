@@ -1,21 +1,32 @@
 package br.com.infox.epp.manager;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.Actor;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
+import br.com.infox.ibpm.dao.ProcessoDAO;
+import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
+import br.com.infox.ibpm.dao.UsuarioLoginDAO;
+import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
+import br.com.infox.ibpm.entity.Status;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
@@ -27,7 +38,10 @@ public class ProcessoManager extends GenericManager {
 	private static final long serialVersionUID = 8095772422429350875L;
 	public static final String NAME = "processoManager";
 	
+	@In private ProcessoDAO processoDAO;
 	@In private ProcessoEpaDAO processoEpaDAO;
+	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
+	@In private UsuarioLoginDAO usuarioLoginDAO;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
@@ -98,5 +112,104 @@ public class ProcessoManager extends GenericManager {
 	
 	public boolean hasPartes(Processo processo){
 		return processoEpaDAO.hasPartes(processo);
+	}
+	
+    public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc){
+        final BusinessProcess bp = BusinessProcess.instance();
+		if (!processo.getIdJbpm().equals(bp.getProcessId())) {            
+            final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+            
+            bp.setProcessId(processo.getIdJbpm());
+            bp.setTaskId(taskInstanceId);
+        }
+    }
+	
+    public boolean iniciaTask(final Processo processo, final Long taskInstanceId) {
+    	boolean result = false;
+    	final BusinessProcess bp = BusinessProcess.instance();
+		if (!processo.getIdJbpm().equals(bp.getProcessId())) {
+        	bp.setProcessId(processo.getIdJbpm());
+            bp.setTaskId(taskInstanceId);
+            try {
+            	bp.startTask();
+            	result = true;
+            } catch (IllegalStateException e) {
+            	e.printStackTrace();
+            }
+        }
+    	return result;
+    }
+    
+    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
+        final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+    	final String actorId = Actor.instance().getId();
+    	if (iniciaTask(processo, taskInstanceId)) {
+	    	storeUsuario(taskInstanceId, usrLoc.getUsuario());
+	    	vinculaUsuario(processo, actorId);
+    	}
+    }
+
+	private void vinculaUsuario(Processo processo, String actorId) {
+		processo.setActorId(actorId);
+		EntityUtil.getEntityManager().merge(processo);
+		EntityUtil.flush();
+	}
+    
+	private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc, final Processo processo, final Long idTarefa) {
+        Long result;
+		if (idTarefa != null) {
+        	result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+        } else {
+        	result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo);
+        }
+		return result;
+    }
+	
+	/**
+	 * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os usuários das tarefas em execução, 
+	 * apagando o usuário sempre que a tarefa é finalizada (ver tabela jbpm_taskinstance, campo actorid_)
+	 * Porém surgiu a necessidade de armazenar os usuários das tarefas já finalizas para exibir no 
+	 * histórico de Movimentação do Processo
+	 * @param idTaskInstance
+	 * @param actorId				 
+	 * */
+	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user){
+        EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user));
+	}
+	
+	public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
+		processoDAO.moverProcessosParaCaixa(idList, caixa);
+	}
+	
+	public void moverProcessoParaCaixa(Caixa caixa, Processo processo){
+		processoDAO.moverProcessoParaCaixa(caixa, processo);
+	}
+	
+	public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo){
+		Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
+		processoDAO.moverProcessoParaCaixa(caixaEscolhida, processo);
+	}
+	
+	/*
+	 * Atualmente a regra para escolher a caixa é simplesmente pegar a primeira
+	 * */
+	private Caixa escolherCaixaParaAlocarProcesso(List<Caixa> caixaList){
+		return caixaList.get(0);		
+	}
+	
+	public void removerProcessoDaCaixaAtual(Processo processo){
+		processoDAO.removerProcessoDaCaixaAtual(processo);
+	}
+	
+	public void apagarActorIdDoProcesso(Processo processo){
+		processoDAO.apagarActorIdDoProcesso(processo);
+	}
+	
+	public void atualizarStatusDeProcesso(Status status, Processo processo){
+		processoDAO.atualizarStatusDeProcesso(status, processo);
+	}
+	
+	public void atualizarProcessos(){
+		processoDAO.atualizarProcessos();
 	}
 }

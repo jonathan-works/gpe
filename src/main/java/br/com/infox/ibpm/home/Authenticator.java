@@ -17,23 +17,19 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.naming.ldap.LdapContext;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
@@ -49,35 +45,29 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
-import org.jboss.ws.extensions.security.SimplePrincipal;
-
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.core.certificado.Certificado;
-import br.com.infox.core.certificado.CertificadoException;
 import br.com.infox.core.certificado.CertificadoLog;
-import br.com.infox.core.certificado.DadosCertificado;
-import br.com.infox.core.certificado.VerificaCertificado;
-import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
+import br.com.infox.ibpm.service.AuthenticatorService;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ldap.util.LdapUtil;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
-import br.com.itx.util.StringUtil;
 
-
-@Name("authenticator")
+@Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)
-@BypassInterceptors
 public class Authenticator {
+	
+	public static final String NAME = "authenticator";
 
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
 	private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
+	
 	private String newPassword1;
 	private String newPassword2;
 	private String login;
@@ -103,7 +93,7 @@ public class Authenticator {
 	}
 	
 	public static Authenticator instance() {
-		return ComponentUtil.getComponent("authenticator");
+		return ComponentUtil.getComponent(NAME);
 	}
 	   
 	public void setNewPassword1(String newPassword1){
@@ -117,44 +107,58 @@ public class Authenticator {
 	}
 	   
 	public void setNewPassword2(String newPassword2){
-		if (this.newPassword2 != newPassword2 && 
-				(this.newPassword2 == null || 
-						!this.newPassword2.equals(newPassword2))){
+		if (newPassword2IsValid(newPassword2)){
 			this.newPassword2 = newPassword2;
 	    }      
+	}
+
+	private boolean newPassword2IsValid(String newPassword2) {
+		return this.newPassword2 != newPassword2 && (this.newPassword2 == null || !this.newPassword2.equals(newPassword2));
 	}
 	
 	@Observer(Identity.EVENT_POST_AUTHENTICATE)
 	public void postAuthenticate() throws LoginException {
 		String id = Identity.instance().getCredentials().getUsername();
 		if (id != null) {
-			JpaIdentityStore store = (JpaIdentityStore) IdentityManager
-					.instance().getIdentityStore();
+			JpaIdentityStore store = getJpaIdentyStore();
 			UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
-			// retorna false caso o usuario do Sistema não esteja ativo
-			if (usuario == null) {
-				throw new LoginException("O usuário '" + id
-						+ "' não está corretamente cadastrado no sistema.");
-			}
-			if (!Strings.isEmpty(assinatura)) {
-				assinatura = null;
-			}
-
+			validaCadastroDeUsuario(id, usuario);
+			limparAssinatura();
 			try {
-				validateUser(usuario);
+				getAuthenticatorService().validarUsuario(usuario);
 				if (isTrocarSenha()) {
 					trocarSenhaUsuario(usuario);
 				}
 				else {
-					setUsuarioLogadoSessao(usuario);
-					obterLocalizacaoAtual(usuario);
-					Actor.instance().setId(usuario.getLogin());
+					realizarLoginDoUsuario(usuario);
 				}
 			}
 			catch (LoginException e) {
 				Identity.instance().unAuthenticate();
 				throw e;
 			}
+		}
+	}
+
+	private void realizarLoginDoUsuario(UsuarioLogin usuario) throws LoginException {
+		getAuthenticatorService().setUsuarioLogadoSessao(usuario);
+		obterLocalizacaoAtual(usuario);
+		Actor.instance().setId(usuario.getLogin());
+	}
+
+	private JpaIdentityStore getJpaIdentyStore() {
+		return (JpaIdentityStore) IdentityManager.instance().getIdentityStore();
+	}
+
+	private void limparAssinatura() {
+		if (!Strings.isEmpty(assinatura)) {
+			assinatura = null;
+		}
+	}
+
+	private void validaCadastroDeUsuario(String id, UsuarioLogin usuario) throws LoginException {
+		if (usuario == null) {
+			throw new LoginException("O usuário '" + id + "' não está corretamente cadastrado no sistema.");
 		}
 	}
 
@@ -178,70 +182,6 @@ public class Authenticator {
 		throw new LoginException("Nova senha não confere com a confirmação!");		
 	}
 	
-	private void validateUser(UsuarioLogin usuario) throws LoginException {
-		if (!usuario.getAtivo()) {
-			throw new LoginException("O usuário " + usuario.getNome() + " não está ativo.\n");
-		} else if (usuario.getBloqueio()){
-			String query = "select o from BloqueioUsuario o where o.dataBloqueio = (select max(b.dataBloqueio) from BloqueioUsuario b where b.usuario = :usuario)";
-			BloqueioUsuario bloqueio = EntityUtil.getSingleResult(EntityUtil.createQuery(query).setParameter("usuario", usuario));
-			Date desbloqueio = bloqueio.getDataPrevisaoDesbloqueio();
-			if (desbloqueio.before(new Date())){
-				desbloquearUsuario(bloqueio);
-			} else{
-				throw new LoginException("O usuário " + usuario.getNome()
-						+ " está bloqueado." +
-						"Por favor, contate o adminstrador do sistema");
-			}
-		} else if (usuario.getProvisorio()){
-			Date hoje = new Date();
-			if (usuario.getDataExpiracao().before(hoje)){
-				inativarUsuario(usuario);
-				throw new LoginException("O usuário " + usuario.getNome()
-						+ " expirou. " +
-						"Por favor, contate o adminstrador do sistema");
-			}
-		}
-	}
-
-	private void inativarUsuario(UsuarioLogin usuario) {
-		String inativarProvisorio = 
-				"UPDATE UsuarioLogin u SET u.ativo = false " +
-				"WHERE u.idUsuario = " + usuario.getIdPessoa().toString();
-		EntityUtil.getEntityManager().createQuery(inativarProvisorio).executeUpdate();
-	}
-	
-	private void desbloquearUsuario(BloqueioUsuario bloqueioUsuario) {
-		String queryDesbloqueio = 
-				"update public.tb_usuario set in_bloqueio=false where id_usuario = :usuario";
-		EntityUtil.getEntityManager().createNativeQuery(queryDesbloqueio)
-			.setParameter("usuario", bloqueioUsuario.getUsuario().getIdPessoa())
-			.executeUpdate();
-		String queryDataDesbloqueio = 
-				"UPDATE BloqueioUsuario b SET b.dataDesbloqueio = :hoje " +
-				"WHERE b.idBloqueioUsuario = :bloqueio";
-		EntityUtil.getEntityManager().createQuery(queryDataDesbloqueio)
-			.setParameter("hoje", new Date())
-			.setParameter("bloqueio", bloqueioUsuario.getIdBloqueioUsuario())
-			.executeUpdate();
-	}
-
-	private void autenticaManualmenteNoSeamSecurity(String login, IdentityManager identityManager) {
-		Principal principal = new SimplePrincipal(login);
-		Identity identity = Identity.instance();
-		identity.acceptExternallyAuthenticatedPrincipal(principal);
-		Credentials credentials = (Credentials) Component.getInstance(Credentials.class);
-		credentials.clear();
-		credentials.setUsername(login);
-		identity.getCredentials().clear();
-		identity.getCredentials().setUsername(login);
-		List<String> roles = identityManager.getImpliedRoles(login);
-		if (roles != null) {
-			for (String role : roles) {
-				identity.addRole(role);
-			}
-		}
-	}
-	
 	public void login(){
 		//verificar se o login existe
 		UsuarioHome home = UsuarioHome.instance();
@@ -253,7 +193,6 @@ public class Authenticator {
 			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
 			return;
 		}
-		
 		//Autenticação via LDAP
 		if(user.getLdap() && ("sim".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()) ||
 							  "yes".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()))) {
@@ -261,7 +200,7 @@ public class Authenticator {
 			//Autenticado
 			if(ldap != null) {
 				IdentityManager identityManager = IdentityManager.instance();
-				autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
+				getAuthenticatorService().autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
 				Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
 				Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
 			}
@@ -275,7 +214,7 @@ public class Authenticator {
 	
 	@Observer(Identity.EVENT_LOGIN_FAILED)
 	public void loginFailed(Object obj) throws LoginException {
-		UsuarioLogin usuario = getUsuario(Identity.instance().getCredentials().getUsername());
+		UsuarioLogin usuario = getAuthenticatorService().getUsuarioByLogin(Identity.instance().getCredentials().getUsername());
 		if (usuario != null && !usuario.getAtivo()) {
 			throw new LoginException("Este usuário não está ativo.");
 		}
@@ -311,80 +250,6 @@ public class Authenticator {
 		return list;
 	}
 	
-	private UsuarioLogin getUsuarioByCpf(String cpf) throws LoginException {
-		String hql = "select o from Usuario o " +
-					 "where o.cpf = :cpf ";
-		Query q = EntityUtil.createQuery(hql);
-		q.setParameter("cpf", cpf);
-		UsuarioLogin usuario = EntityUtil.getSingleResult(q);
-		if (usuario == null) {
-			throw new LoginException("Não foi possível encontrar um usuário que corresponda a este SmartCard. " +
-					"Favor verificar junto com a Secretária Judiciaria os dados de CPF e data de nascimento");
-		}
-		return usuario;
-	}	
-	
-	public String authenticateSC() throws LoginException {
-		String cpf = null;
-		try {
-			Certificado c = new Certificado(certChain);
-			DadosCertificado dadosCertificado = DadosCertificado.parse(c);
-			cpf = dadosCertificado.getValor(DadosCertificado.CPF);
-			if (Strings.isEmpty(cpf)) {
-				throw new LoginException("Cpf não encontrado no cartão.");
-			}
-			cpf = StringUtil.formartCpf(cpf);
-		} catch (Exception e) {
-			throw new LoginException(e.getMessage());
-		}
-		EntityManager em = EntityUtil.getEntityManager();
-		UsuarioLogin usuario = getUsuarioByCpf(cpf);
-		if (usuario == null) {
-			throw new LoginException("Usuário não encontrado");
-		} else {
-			checkValidadeCertificado(certChain);
-			assinatura = StringUtil.replaceQuebraLinha(assinatura);
-			if (!usuario.getAtivo()) {
-				throw new LoginException("Este usuário não está ativo.");
-			}			
-		}
-		
-		String login = usuario.getLogin();
-		
-		IdentityManager identityManager = IdentityManager.instance();
-		boolean userExists = identityManager.getIdentityStore().userExists(login);
-		if (userExists) {
-			autenticaManualmenteNoSeamSecurity(login, identityManager);
-			if (usuario.getCertChain() == null) {
-				//TODO isso é temporario ate que todo mundo tenha atualizado o certchain
-				usuario.setCertChain(certChain);
-				em.merge(usuario);
-				EntityUtil.flush(em);
-			}
-			Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
-			Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
-			return null;
-		}
-		return null;
-	}
-	
-	private void checkValidadeCertificado(String certChain) throws LoginException {
-		try {
-			VerificaCertificado.verificaValidadeCertificado(certChain);
-			VerificaCertificado.verificaRevogacaoCertificado(certChain);
-		} catch (CertificadoException e) {
-			LOG.warn("Certificado inválido: " + e.getMessage());
-			throw new LoginException(e.getMessage());	
-		}
-	}
-	
-	private void checkCertificadoUsuario(UsuarioLogin usuario) throws LoginException {
-		String assinaturaUsuario = StringUtil.replaceQuebraLinha(usuario.getAssinatura());
-		if (Strings.isEmpty(assinatura) || !assinatura.equals(assinaturaUsuario)) {
-			throw new LoginException("Assinatura inválida");
-		}
-	}	
-	
 	public static String getIdsLocalizacoesFilhas(Localizacao localizacao) {
 		StringBuilder sb = new StringBuilder();
 		List<Localizacao> localizacoesFilhas = getLocalizacoesFilhas(localizacao, new ArrayList<Localizacao>());
@@ -395,19 +260,6 @@ public class Authenticator {
 			sb.append(loc.getIdLocalizacao());
 		}
 		return sb.toString();
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public UsuarioLogin getUsuario(String login) {
-		String sql = "select o from br.com.infox.access.entity.UsuarioLogin o where o.login = :login";
-		EntityManager entityManager = EntityUtil.getEntityManager();
-		Query query = entityManager.createQuery(sql);
-		query.setParameter("login", login);
-		List resultList = query.getResultList();
-		if (resultList.size() > 0) {
-			return (UsuarioLogin) resultList.get(0);
-		} 
-		return null;
 	}
 	
 	public void unAuthenticate() {
@@ -424,45 +276,22 @@ public class Authenticator {
 	public void anulaActorId() {
 		String actorId = Actor.instance().getId();
 		if (actorId != null) {
-			String query = "update public.tb_processo set nm_actor_id = null " +
-			"where nm_actor_id = :actorId";
-			HibernateUtil.getSession().createSQLQuery(query)
-				.setParameter("actorId", actorId).executeUpdate();
+			getAuthenticatorService().anulaActorId(actorId);
 		}
 	}
-	
+
 	/**
 	 * Ao ligar a aplicação, limpa todos os actorIds dos processos
 	 */
 	@Observer("org.jboss.seam.postInitialization")
 	public void anulaTodosActorId() {
-		String query = "update public.tb_processo set nm_actor_id = null ";
-		HibernateUtil.getSession().createSQLQuery(query)
-			.executeUpdate();
+		getAuthenticatorService().anularTodosActorId();
 	}
 
-	/**
-	 * Metodo que coloca o usuario logado na sessão
-	 * @param usuario
-	 */
-	private void setUsuarioLogadoSessao(UsuarioLogin usuario) {
-		Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
-		List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(
-				usuario.getUsuarioLocalizacaoList());
-		Collections.sort(usuarioLocalizacaoList, USUARIO_LOCALIZACAO_COMPARATOR);
-		Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_LIST, usuarioLocalizacaoList);
-		Events.instance().raiseEvent(SET_USUARIO_LOCALIZACAO_LIST_EVENT, usuarioLocalizacaoList);
-	}
-	
 	private boolean obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
-		List<UsuarioLocalizacao> listUsuarioLoc = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioLocalizacaoList()) ;
-		Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
-		if (listUsuarioLoc.size() > 0) {
-			UsuarioLocalizacao loc = listUsuarioLoc.get(0);
-			
-			EntityManager em = EntityUtil.getEntityManager();
-			loc = em.getReference(UsuarioLocalizacao.class, loc.getIdUsuarioLocalizacao());
-			setLocalizacaoAtual(loc);
+		UsuarioLocalizacao usuarioLocalizacao = getAuthenticatorService().obterLocalizacaoAtual(usuario);
+		if (usuarioLocalizacao != null){
+			setLocalizacaoAtual(usuarioLocalizacao);
 			return true;
 		} 
 		throw new LoginException("O usuário " + usuario + " não possui Localização");
@@ -473,41 +302,44 @@ public class Authenticator {
 	 * da localização anterior (se hover) e atribuindo os roles
 	 * da nova localização, recursivamente.
 	 * 
-	 * @param loc
+	 * @param usuarioLocalizacao
 	 */
-	public void setLocalizacaoAtual(UsuarioLocalizacao loc) {
-		Set<String> roleSet = (Set<String>) 
-				Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
-		if (roleSet != null) {
-			for (String r : roleSet) {
-				Identity.instance().removeRole(r);
-			}
-		}
-		LOG.warn("Obter role da localizacao: " + loc);
-		LOG.warn("Obter role do papel: " + loc.getPapel());
-		roleSet = RolesMap.instance().getChildrenRoles(loc.getPapel().getIdentificador());
-		for (String r : roleSet) {
-			Identity.instance().addRole(r);
-		}
-		Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_ATUAL, loc);
-		Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, loc.getPapel().getIdentificador());
-		Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);
-		Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, 
-				getLocalizacoesFilhas(loc.getLocalizacao()));
-		Contexts.getSessionContext().remove("mainMenu");
-		Contexts.removeFromAllContexts("tarefasTree");
-
-		
+	public void setLocalizacaoAtual(UsuarioLocalizacao usuarioLocalizacao) {
+		Set<String> roleSet = getRolesAtuais(usuarioLocalizacao);
+		getAuthenticatorService().removeRolesAntigas();
+		getAuthenticatorService().logDaBuscaDasRoles(usuarioLocalizacao);
+		getAuthenticatorService().addRolesAtuais(roleSet);
+		setVariaveisDoContexto(usuarioLocalizacao, roleSet);
 		if (!getUsuarioLogado().getProvisorio()) {
-			Redirect redirect = Redirect.instance();
-			redirect.getParameters().clear();
-			redirect.setViewId("/Painel/list.seam");
-			redirect.setParameter("cid", null);
-			redirect.execute();
+			redirectToPainelDoUsuario();
 		}	
 	}
+
+	private void redirectToPainelDoUsuario() {
+		Redirect redirect = Redirect.instance();
+		redirect.getParameters().clear();
+		redirect.setViewId("/Painel/list.seam");
+		redirect.setParameter("cid", null);
+		redirect.execute();
+	}
+
+	private void setVariaveisDoContexto(UsuarioLocalizacao usuarioLocalizacao,
+			Set<String> roleSet) {
+		Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_ATUAL, usuarioLocalizacao);
+		Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, usuarioLocalizacao.getPapel().getIdentificador());
+		Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);
+		Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, getLocalizacoesFilhas(usuarioLocalizacao.getLocalizacao()));
+		Contexts.getSessionContext().remove("mainMenu");
+		Contexts.removeFromAllContexts("tarefasTree");
+	}
+
+	private Set<String> getRolesAtuais(UsuarioLocalizacao usuarioLocalizacao) {
+		return RolesMap.instance().getChildrenRoles(usuarioLocalizacao.getPapel().getIdentificador());
+	}
+
 	
-	
+
+	@SuppressWarnings("unchecked")
 	public static List<Localizacao> getLocalizacoesFilhasAtuais() {
 		return (List<Localizacao>) Contexts.getSessionContext().get(LOCALIZACOES_FILHAS_ATUAIS);
 	}
@@ -598,6 +430,7 @@ public class Authenticator {
 		CertificadoLog.executeLog(msg);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoListItems() {
 		List<UsuarioLocalizacao> list = (List<UsuarioLocalizacao>) 
 			Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_LIST);
@@ -611,5 +444,9 @@ public class Authenticator {
 	
 	public UsuarioLocalizacao getLocalizacaoAtualCombo() {
 		return getUsuarioLocalizacaoAtual();
-	}		
+	}
+	
+	private static AuthenticatorService getAuthenticatorService(){
+		return ComponentUtil.getComponent(AuthenticatorService.NAME);
+	}
 }

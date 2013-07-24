@@ -12,6 +12,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -21,6 +24,7 @@ import org.richfaces.model.UploadedFile;
 
 import br.com.infox.epp.entity.ImagemBin;
 import br.com.infox.epp.home.ImagemBinHome;
+import br.com.infox.epp.manager.ImagemBinManager;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.component.Util;
@@ -28,6 +32,7 @@ import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.FileUtil;
 
+@Scope(ScopeType.CONVERSATION)
 public abstract class AbstractImageFileHome implements FileUploadListener {
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractImageFileHome.class);
 	private static boolean updated = false;
@@ -35,6 +40,8 @@ public abstract class AbstractImageFileHome implements FileUploadListener {
 	private String fileName;
 	private Integer fileSize;
 	private byte[] data;
+	
+	@In private ImagemBinManager imagemBinManager;
 	
 	private String getUserImageDir() {
 		UsuarioLocalizacao usuarioLoc = (UsuarioLocalizacao) 
@@ -110,10 +117,7 @@ public abstract class AbstractImageFileHome implements FileUploadListener {
 			return;
 		}
 		
-		ImagemBinHome imagemBinHome = ImagemBinHome.instance();
-		EntityManager manager = imagemBinHome.getEntityManager();
-		String hql = "select o from ImagemBin o";
-		List<ImagemBin> list = manager.createQuery(hql).getResultList();
+		List<ImagemBin> list = imagemBinManager.getTodasAsImagens();
 		
 		for (ImagemBin imagemBin : list) {
 			String[] imagesDir = getImagesDir();

@@ -1,10 +1,12 @@
 package br.com.infox.ibpm.home;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
+import br.com.infox.ibpm.manager.CaixaManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -12,6 +14,8 @@ import br.com.itx.util.EntityUtil;
 public abstract class AbstractCaixaHome<T> extends AbstractHome<Caixa> {
 
 	private static final long serialVersionUID = 1L;
+	
+	@In protected CaixaManager caixaManager;
 
 	public void setCaixaIdCaixa(Integer id) {
 		setId(id);
@@ -50,13 +54,7 @@ public abstract class AbstractCaixaHome<T> extends AbstractHome<Caixa> {
 	
 	@Override
 	public String remove() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("update Processo set caixa = :caixa ");
-		sb.append("where caixa.idCaixa = :idCaixa");
-		javax.persistence.Query q = getEntityManager().createQuery(sb.toString());
-		q.setParameter("caixa", null);
-		q.setParameter("idCaixa", instance.getIdCaixa());
-		q.executeUpdate();
+		caixaManager.removeCaixaByIdCaixa(instance.getIdCaixa());
 		return super.remove();
 	}
 	

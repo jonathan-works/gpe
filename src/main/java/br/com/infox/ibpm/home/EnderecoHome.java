@@ -20,7 +20,6 @@ import java.util.Date;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.util.Strings;
 
@@ -31,12 +30,13 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.itx.util.ComponentUtil;
 
 
-@Name("enderecoHome")
-@BypassInterceptors
+@Name(EnderecoHome.NAME)
 @Install(precedence=Install.FRAMEWORK)
 public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String NAME = "enderecoHome";
 
 	private CepSuggestBean getCepSuggestBean() {
 		return getComponent("cepSuggest");
@@ -139,8 +139,6 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 	public String update() {
 		String update = "";
 		if (checkCep()){
-//			getInstance().setCodUf(getInstance().getCep().getMunicipio().getEstado().getCodEstado());
-			//setando data e hora da alteração
 			getInstance().setDataAlteracao(new Date());
 			UsuarioLogin pessoaLogada = (UsuarioLogin) 
 					Contexts.getSessionContext().get("usuarioLogado");
@@ -153,7 +151,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 	}	
 	
 	public static EnderecoHome instance() {
-		return ComponentUtil.getComponent("enderecoHome");
+		return ComponentUtil.getComponent(EnderecoHome.NAME);
 	}
 
 	@Override

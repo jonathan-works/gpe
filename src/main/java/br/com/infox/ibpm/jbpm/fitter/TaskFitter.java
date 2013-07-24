@@ -11,8 +11,8 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import org.hibernate.Query;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -28,6 +28,7 @@ import br.com.infox.ibpm.home.FluxoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.jbpm.manager.JbpmTaskManager;
 import br.com.itx.util.EntityUtil;
 
 @Name(TaskFitter.NAME)
@@ -44,6 +45,8 @@ public class TaskFitter extends Fitter implements Serializable {
 	private Integer prazo;
 	private PrazoEnum tipoPrazo;
 	private Map<String, PrazoTask> prazoTaskMap = new HashMap<String, PrazoTask>();
+	
+	@In private JbpmTaskManager jbpmTaskManager;
 	
 	public void addTask() {
 		Node currentNode = pb.getNodeFitter().getCurrentNode();
@@ -124,16 +127,10 @@ public class TaskFitter extends Fitter implements Serializable {
 		if (this.taskName != null && !this.taskName.equals(taskName)) {
 			if (currentTask != null && currentTask.getTask() != null) {
 				currentTask.getTask().setName(taskName);
-				String query = "select max(id_) from jbpm_task where processdefinition_ = "
-						+ ":idProcessDefinition and name_ = :taskName";
-				List<Object> list = JbpmUtil
-						.getJbpmSession()
-						.createSQLQuery(query)
-						.setParameter("idProcessDefinition",
-								pb.getIdProcessDefinition())
-						.setParameter("taskName", this.taskName).list();
-				if (list != null && list.size() > 0 && list.get(0) != null) {
-					modifiedTasks.put((BigInteger) list.get(0), taskName);
+				BigInteger idTaskModificada = jbpmTaskManager
+						.findTaskIdByIdProcessDefinitionAndName(pb.getIdProcessDefinition(), this.taskName);
+				if (idTaskModificada != null) {
+					modifiedTasks.put(idTaskModificada, taskName);
 				}
 			}
 			this.taskName = taskName;
@@ -168,18 +165,7 @@ public class TaskFitter extends Fitter implements Serializable {
 	}
 	
 	public void modifyTasks(){
-		String update;
-		Query q;
-		if (modifiedTasks.size() > 0) {
-			update = "update jbpm_task set name_ = :taskName where id_ = :taskId";
-			q = JbpmUtil.getJbpmSession().createSQLQuery(update);
-			for (Entry<BigInteger, String> e : modifiedTasks.entrySet()) {
-				q.setParameter("taskName", e.getValue());
-				q.setParameter("taskId", e.getKey());
-				q.executeUpdate();
-			}
-		}
-		JbpmUtil.getJbpmSession().flush();
+		jbpmTaskManager.atualizarTarefasModificadas(modifiedTasks);
 		modifiedTasks = new HashMap<BigInteger, String>();
 	}
 

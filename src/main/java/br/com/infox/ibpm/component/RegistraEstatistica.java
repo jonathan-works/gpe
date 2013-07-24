@@ -19,18 +19,15 @@ import static org.jboss.seam.annotations.Install.FRAMEWORK;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.epp.dao.FluxoDAO;
 import br.com.infox.ibpm.entity.Estatistica;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Processo;
@@ -39,7 +36,6 @@ import br.com.itx.util.EntityUtil;
 
 
 @Name("estatistica")
-@BypassInterceptors
 @Install(precedence=FRAMEWORK)
 @Scope(ScopeType.SESSION)
 public class RegistraEstatistica implements Serializable {
@@ -48,6 +44,7 @@ public class RegistraEstatistica implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@In private FluxoDAO fluxoDAO;
 	
 	
 	public void registraAssignTask() {
@@ -71,14 +68,12 @@ public class RegistraEstatistica implements Serializable {
 	}	
 	
 	private Fluxo getFluxo(String nomeFluxo) {
-		EntityManager em = EntityUtil.getEntityManager();
-		Query query = em.createQuery("select o from Fluxo o where o.fluxo = :nomeFluxo");
-		query.setParameter("nomeFluxo", nomeFluxo);
-		List<Fluxo> resultList = query.getResultList();
-		if (resultList.size() > 0) {
-			return resultList.get(0);
-		} 
-		throw new IllegalArgumentException("Fluxo não encontrado.");
+		Fluxo fluxo = fluxoDAO.getFluxoByName(nomeFluxo);
+		if (fluxo != null){
+			return fluxo;
+		} else {
+			throw new IllegalArgumentException("Fluxo não encontrado.");
+		}
 	}	
 	
 	

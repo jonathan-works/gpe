@@ -34,12 +34,15 @@ import org.jboss.seam.util.RandomStringUtils;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.command.EMailData;
 import br.com.infox.command.SendmailCommand;
+import br.com.infox.epp.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
+import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
+import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -52,6 +55,8 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
 	
 	@In private UsuarioLoginManager usuarioLoginManager;
+	@In private PessoaManager pessoaManager;
+	@In private ModeloDocumentoManager modeloDocumentoManager;
 
 	private String login;
 	private String password;
@@ -220,19 +225,10 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	 * @return true se o e-mail for enviado e false se falhar
 	 */
 	private boolean enviarModeloPorNome(String nomeModeloDocumento) {
-		if (nomeModeloDocumento == null) {
-			return false;
-		} else if ("false".equals(nomeModeloDocumento)) {
+		if (nomeModeloDocumento == null || "false".equals(nomeModeloDocumento)) {
 			return false;
 		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("select o from ModeloDocumento o");
-		sb.append(" where o.tituloModeloDocumento = :titulo");
-
-		ModeloDocumento modelo = (ModeloDocumento) getEntityManager()
-				.createQuery(sb.toString())
-				.setParameter("titulo", nomeModeloDocumento).getSingleResult();
+		ModeloDocumento modelo = modeloDocumentoManager.getModeloDocumentoByTitulo(nomeModeloDocumento);
 		if (modelo == null) {
 			return false;
 		} else {
@@ -262,7 +258,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 			nomeParam = "tituloModeloEmailMudancaSenhaComLogin";
 		}
 
-		String nomeModelo = ParametroHome.getParametroOrFalse(nomeParam);
+		String nomeModelo = ParametroUtil.getParametroOrFalse(nomeParam);
 
 		if (!enviarModeloPorNome(nomeModelo)) {
 			FacesMessages.instance().add(
@@ -334,28 +330,21 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	 * @throws LoginException
 	 */
 	public void requisitarNovaSenha() throws LoginException {
+		UsuarioLogin usuario;
 		if (email.isEmpty() && login.isEmpty()) {
 			FacesMessages.instance().add(
 					"É preciso informar o login ou o e-mail do usuário");
+			return;
 		} else if (!login.isEmpty()) {
-			recoverBy("login", login);
+			usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
+			recoverUsuario(usuario, login);
 		} else if (!email.isEmpty()) {
-			recoverBy("email", email);
+			usuario = usuarioLoginManager.getUsuarioLoginByEmail(email);
+			recoverUsuario(usuario, email);
 		}
 	}
 
-	private void recoverBy(String parametro, String valor) {
-		// O StringBuilder constrói a Query com base no parametro passado
-		// deixando na forma
-		// "select o from UsuarioLogin o where o.parametro = :parametro"
-		StringBuilder sb = new StringBuilder();
-		sb.append("select o from UsuarioLogin o where o.");
-		sb.append(parametro);
-		sb.append(" = :");
-		sb.append(parametro);
-		Query query = getEntityManager().createQuery(sb.toString());
-		query.setParameter(parametro, valor);
-		UsuarioLogin usuario = (UsuarioLogin) query.getSingleResult();
+	private void recoverUsuario(UsuarioLogin usuario, String parametro) {
 		if (usuario == null) {
 			FacesMessages.instance().add("Usuário não encontrado");
 		} else {
@@ -385,22 +374,18 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	}
 	
 	public void searchByCpf(String cpf){
-		String hql = "select o from UsuarioLogin o where o.cpf = :cpf";
-		Query query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
-		UsuarioLogin ul = EntityUtil.getSingleResult(query);
-		if (ul == null){
-			hql = "select o from PessoaFisica o where o.cpf = :cpf";
-			query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
-			PessoaFisica pf = EntityUtil.getSingleResult(query);
-			if (pf != null){
+		UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioLoginByCpf(cpf);
+		if (usuarioLogin == null){
+			PessoaFisica pessoaFisica = pessoaManager.getPessoaFisicaByCpf(cpf);
+			if (pessoaFisica != null){
 				pessoaFisicaCadastrada = true;
-				instance = getInstance().loadDataFromPessoaFisica(pf);
+				instance = getInstance().loadDataFromPessoaFisica(pessoaFisica);
 			}
 			else {
 				pessoaFisicaCadastrada = false;
 				}
 		} else{
-			instance = ul;
+			instance = usuarioLogin;
 		}
 	}
 	

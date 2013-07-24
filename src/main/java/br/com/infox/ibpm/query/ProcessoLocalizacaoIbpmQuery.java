@@ -20,6 +20,7 @@ public interface ProcessoLocalizacaoIbpmQuery {
 			                                           " and o.localizacao = :localizacao" +
 			                                           " and o.papel = :papel";
 	
+	String LIST_ID_TASK_INSTANCE_BY_ID_TAREFA = "listIdTaskInstanceByIdTarefa";
 	String LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY = "select o.idTaskInstance from SituacaoProcesso o" +
 														" where o.idTarefa = :idTask " +
 														"and exists (from ProcessoLocalizacaoIbpm tl " +

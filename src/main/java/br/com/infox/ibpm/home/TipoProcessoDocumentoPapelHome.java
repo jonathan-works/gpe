@@ -1,16 +1,21 @@
 package br.com.infox.ibpm.home;
 
-import java.util.Iterator;
 import java.util.List;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.manager.PapelManager;
 import br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel;
 
-@Name("tipoProcessoDocumentoPapelHome")
+@Name(TipoProcessoDocumentoPapelHome.NAME)
 public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocumentoPapelHome<TipoProcessoDocumentoPapel> {
+	
+	public static final String NAME = "tipoProcessoDocumentoPapelHome";
 	private static final long serialVersionUID = 1L;
+	
+	@In PapelManager papelManager;
 	
 	@Override
 	public String persist() {
@@ -35,14 +40,6 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	}
 	
 	public List<Papel> papelItems() {
-		String ejbql = "select o from Papel o where o not in (select p.papel from TipoProcessoDocumentoPapel p where p.tipoProcessoDocumento = :tipoProcessoDocumento)";
-		List<Papel> papeis = getEntityManager().createQuery(ejbql).setParameter("tipoProcessoDocumento", TipoProcessoDocumentoHome.instance().getInstance()).getResultList();
-		for (Iterator<Papel> iterator = papeis.iterator(); iterator.hasNext();) {
-			Papel papel = iterator.next();
-			if (papel.getIdentificador().startsWith("/")) {
-				iterator.remove();
-			}
-		}
-		return papeis;
+		return papelManager.getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumentoHome.instance().getInstance());
 	}
 }

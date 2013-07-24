@@ -14,10 +14,10 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Factory;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
@@ -37,6 +37,7 @@ import br.com.infox.ibpm.jbpm.handler.NodeHandler;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.jbpm.node.MailNode;
+import br.com.infox.jbpm.manager.JbpmNodeManager;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -59,7 +60,8 @@ public class NodeFitter extends Fitter implements Serializable {
 	private String nodeName;
 	private Map<BigInteger, String> modifiedNodes = new HashMap<BigInteger, String>();
 	
-	
+	@In private JbpmNodeManager jbpmNodeManager;
+		
 	public void addNewNode() {
 		Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
 		ProcessDefinition processo = pb.getInstance();
@@ -294,15 +296,9 @@ public class NodeFitter extends Fitter implements Serializable {
 		if (this.nodeName != null && !this.nodeName.equals(nodeName)) {
 			if (currentNode != null) {
 				currentNode.setName(nodeName);
-				String query = "select max(id_) from jbpm_node where processdefinition_ = "
-						+ ":idProcessDefinition and name_ = :nodeName";
-				SQLQuery sql = JbpmUtil.getJbpmSession().createSQLQuery(query);
-				Query param = sql.setParameter("idProcessDefinition",
-						pb.getIdProcessDefinition()).setParameter("nodeName",
-						nodeName);
-				List<Object> list = param.list();
-				if (list != null && list.size() > 0 && list.get(0) != null) {
-					modifiedNodes.put((BigInteger) list.get(0), nodeName);
+				BigInteger idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(pb.getIdProcessDefinition(), nodeName);
+				if (idNodeModificado != null) {
+					modifiedNodes.put(idNodeModificado, nodeName);
 				}
 			}
 			this.nodeName = nodeName;
@@ -427,18 +423,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 	
 	public void modifyNodes(){
-		String update;
-		Query q;
-		if (modifiedNodes.size() > 0) {
-			update = "update jbpm_node set name_ = :nodeName where id_ = :nodeId";
-			q = JbpmUtil.getJbpmSession().createSQLQuery(update);
-			for (Entry<BigInteger, String> e : modifiedNodes.entrySet()) {
-				q.setParameter("nodeName", e.getValue());
-				q.setParameter("nodeId", e.getKey());
-				q.executeUpdate();
-			}
-		}
-		JbpmUtil.getJbpmSession().flush();
+		jbpmNodeManager.atualizarNodesModificados(modifiedNodes);
 		modifiedNodes = new HashMap<BigInteger, String>();
 	}
 

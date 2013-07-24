@@ -283,37 +283,6 @@
                             </ui:include>
 
                         </rich:collapsiblePanel>
-                        <rich:collapsiblePanel
-                            switchType="ajax"
-                            
-                            expanded="false"
-                            header="Eventos de Tarefa"
-                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
-
-                            <c:if
-                                test="#{tarefaEventoHome.enableEvents}">
-
-                                <ui:include src="taskEvents.xhtml">
-
-                                    <ui:param
-                                        name="parent"
-                                        value="#{nodeFitter.nodeHandler}" />
-                                    <ui:param
-                                        name="id"
-                                        value="nodeEvent" />
-
-                                </ui:include>
-
-                            </c:if>
-                            <c:if
-                                test="#{!tarefaEventoHome.enableEvents}">
-
-                                <h:outputText
-                                    value="É necessário publicar o fluxo para adicionar um evento!" />
-
-                            </c:if>
-
-                        </rich:collapsiblePanel>
 
 
                     </rich:panel>

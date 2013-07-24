@@ -9,13 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.Redirect;
@@ -26,14 +24,16 @@ import org.jboss.seam.security.management.action.RoleAction;
 
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.manager.PapelManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
-@Name("papelHome")
+@Name(PapelHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
 public class PapelHome extends AbstractHome<Papel> {
+	
+	public static final String NAME = "papelHome";
 
 	private static final long serialVersionUID = 1L;
 	
@@ -50,6 +50,8 @@ public class PapelHome extends AbstractHome<Papel> {
 	private List<String> papeis;
 
 	private List<String> recursos;
+	
+	@In private PapelManager papelManager;
 	
 	public Integer getPapelId() {
 		return (Integer) getId();
@@ -96,7 +98,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			for (Principal principal : list) {
 				idPapeis.add(principal.getName());
 			}
-			List<Papel> papelList = getPapelList(idPapeis);
+			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(idPapeis);
 			for (Papel papel : papelList) {
 				String id = papel.getIdentificador();
 				membros.add(id);
@@ -183,7 +185,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			if (papelMap == null) {
 				papelMap = new HashMap<String, Papel>();
 			}
-			List<Papel> papelList = getPapelList(assignableRoles);
+			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(assignableRoles);
 			for (Papel p : papelList) {
 				papelMap.put(p.getIdentificador(), p);
 			}
@@ -224,7 +226,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			if (papelMap == null) {
 				papelMap = new HashMap<String, Papel>();
 			}
-			List<Papel> papelList = getPapelList(recursosDisponiveis);
+			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(recursosDisponiveis);
 			for (Papel p : papelList) {
 				papelMap.put(p.getIdentificador(), p);
 			}
@@ -256,17 +258,6 @@ public class PapelHome extends AbstractHome<Papel> {
 				iterator.remove();
 			}
 		}
-	}
-
-	private List<Papel> getPapelList(List<String> idPapeis) {
-		if(idPapeis == null || idPapeis.isEmpty()) {
-			return new ArrayList<Papel>();
-		}
-		List<Papel> papelList = getEntityManager()
-			.createQuery("select p from Papel p where identificador in (:list)")
-			.setParameter("list", idPapeis)
-			.getResultList();
-		return papelList;
 	}
 
 	private void removePapeisImplicitos(List<String> list, List<String> from) {
@@ -352,7 +343,7 @@ public class PapelHome extends AbstractHome<Papel> {
 			}
 		}
 		String nome = instance.getNome();
-		instance = getPapel(getRoleaction().getRole());
+		instance = papelManager.getPapelByIdentificador(getRoleaction().getRole());
 		instance.setNome(nome);
 		EntityUtil.flush();
 		clear();
@@ -372,16 +363,5 @@ public class PapelHome extends AbstractHome<Papel> {
 	
 	public static PapelHome instance() {
 		return ComponentUtil.getComponent("papelHome");
-	}
-	
-	public Papel getPapel(String identificador) {
-		Query query = getEntityManager().createQuery(
-				"select o from Papel o where o.identificador = :identificador");
-		query.setParameter("identificador", identificador);
-		List<Papel> resultList = query.getResultList();
-		if (resultList.size() > 0) {
-			return resultList.get(0);
-		} 
-		return null;
 	}
 }

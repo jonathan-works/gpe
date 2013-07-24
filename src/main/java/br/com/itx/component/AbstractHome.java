@@ -31,6 +31,7 @@ import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
@@ -39,9 +40,13 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.Strings;
 import org.jboss.util.StopWatch;
+
 import br.com.infox.core.action.list.EntityList;
+import br.com.infox.util.PostgreSQLErrorCode;
+import br.com.infox.util.PostgreSQLExceptionManager;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.exception.ExcelExportException;
@@ -56,7 +61,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 
 	private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
 
-	private static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
+	private static final String MSG_REGISTRO_CADASTRADO = "#{messages['constraintViolation.registroCadastrado']}";
+	private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
+	private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractHome.class);
 
@@ -64,12 +71,16 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	public static final String PERSISTED = "persisted";
 	public static final String UPDATED = "updated";
+	public static final String CONSTRAINT_VIOLATED = "constraintViolated";
 	
 	private String tab = null;
 	private String goBackUrl = null;
 	private String goBackId = null;
 	private String goBackTab = null;
 	private T oldEntity;
+	
+	@In
+	private PostgreSQLExceptionManager postgreSQLExceptionManager;
 	
 	public T getOldEntity() {
 		return oldEntity;
@@ -145,13 +156,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public void newInstance() {
 		oldEntity = null; 
 				
-//  ATENCAO!!! UM MÉTODO NEWINSTANCE NAO DEVE DAR REFRESH E SIM CLEAR
-//		PARA FAZER AS ENTIDADES SEREM LIDAS NOVAMENTE, QUANDO FOR NECESSARIO.
-//  	SE HOUVER QUALQUER PROBLEMA AVISE PD&I MAS NAO REMOVA ESSE COMENTARIO
-//		
-		if (super.isManaged()) {
-			getEntityManager().clear();
-		}
 		if(lockedFields.size() > 0){
 			try {
 				clearUnlocked();
@@ -233,13 +237,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				afterPersistOrUpdate(ret);
 				raiseEventHome("afterPersist");
 			}
-		} catch (AssertionFailure e) {
-			//Resolver o bug do AssertionFailure onde o hibernate consegue persistir com sucesso,
-			//mas lança um erro.
-			LOG.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
-			ret = "persisted";
-			updateOldInstance();
-			raiseEventHome("afterPersist");
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
 			LOG.error(".persist() (" + getInstanceClassName() + ")", e);			
@@ -249,19 +246,20 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		} catch (AplicationException e){
 			throw new AplicationException("Erro: " + e.getMessage(), e);
 		} catch (javax.persistence.PersistenceException e) {
-            instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
             LOG.error(msg, e);
-		} catch (ConstraintViolationException e){
-		    instance().add(StatusMessage.Severity.ERROR, getConstraintViolationExceptionMessage());
-            LOG.warn(".persist() (" + getInstanceClassName() + ")", e.getCause());
+            PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);
+            if (errorCode != null) {
+            	ret = tratarErrosDePersistencia(errorCode.toString());
+            }
         } catch (Exception e) {
             instance().add(StatusMessage.Severity.ERROR,
                     "Erro ao gravar: " + e.getMessage(), e);
             LOG.error(".persist() (" + getInstanceClassName() + ")", e);
 		} 
-		if (ret == null) {
-			 // Caso ocorra algum erro, é criada uma copia do instance sem O Id e os List
+		if (!PERSISTED.equals(ret)) {
+			 // Caso ocorra algum erro, é criada uma copia do instance sem o Id e os List
 			try {
+				Transaction.instance().rollback();
 				setInstance((T) EntityUtil.cloneEntity(getInstance(), false));
 			} catch (Exception e) {
 				LOG.warn(".persist() (" + getInstanceClassName() + "): " + 
@@ -299,10 +297,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				ret = afterPersistOrUpdate(ret);
 			}
 		} catch (AssertionFailure e) {
-			//Resolver o bug do AssertionFailure onde o hibernate consegue persistir com sucesso,
-			//mas lança um erro.
 			LOG.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
-			ret = "persisted";
+			ret = PERSISTED;
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
 			LOG.error(msg, e);			
@@ -310,8 +306,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			instance().add(StatusMessage.Severity.ERROR, getNonUniqueObjectExceptionMessage());
 			LOG.error(msg, e);	
 		} catch (javax.persistence.PersistenceException e) {
-		    instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
-            LOG.error(msg, e);
+			LOG.error(msg, e);
+		    PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);
+            if (errorCode != null) {
+            	ret = tratarErrosDePersistencia(errorCode.toString());
+            }
+            
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
@@ -358,6 +358,15 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 * @param ret é o retorno da operação de persistência
 	 */
 	protected String afterPersistOrUpdate(String ret) {
+		if (PERSISTED.equals(ret)){
+			FacesMessages.instance().clear();
+			FacesMessages.instance().add(MSG_REGISTRO_CRIADO);
+			return ret;
+		} else if (UPDATED.equals(ret)){
+			FacesMessages.instance().clear();
+			FacesMessages.instance().add(MSG_REGISTRO_ALTERADO);
+			return ret;
+		}
 		return ret;
 	}
 
@@ -534,6 +543,18 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		className = className.replace(0, 1, className.substring(0, 1).toLowerCase());
 		map.put(className.toString(), beanList);
 		ExcelExportUtil.downloadXLS(urlTemplate, map, getDownloadXlsName());
+	}
+	
+	private String tratarErrosDePersistencia(String ret){
+		String message = null;
+		if (PostgreSQLErrorCode.unique_violation.toString().equals(ret)){
+			message = MSG_REGISTRO_CADASTRADO;
+		}
+		if (message != null) {
+			FacesMessages.instance().clear();
+			FacesMessages.instance().add(Severity.ERROR, message);
+		}
+		return ret;
 	}
 	
 }

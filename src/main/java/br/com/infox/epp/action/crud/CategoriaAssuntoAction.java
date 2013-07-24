@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.CategoriaAssunto;
@@ -40,12 +41,11 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 	@Override
 	protected boolean beforePersistOrUpdate() {
 		getInstance().setCategoria(categoria);
-		List<CategoriaAssunto> list = getEntityManager().createQuery("select o from CategoriaAssunto o where o.categoria=:categoria and o.assunto=:assunto").setParameter("assunto", getInstance().getAssunto()).setParameter("categoria", getInstance().getCategoria()).getResultList();
-		if (!list.isEmpty())	{
+		if (!violaConstraintsDeUnicidade()) {
+			return super.beforePersistOrUpdate();
+		} else {
 			return false;
 		}
-		
-		return super.beforePersistOrUpdate();
 	}
 	
 	@Override
@@ -142,6 +142,18 @@ public class CategoriaAssuntoAction extends AbstractHome<CategoriaAssunto> {
 			}
 		}
 		return "persisted";
+	}
+	
+	private boolean violaConstraintsDeUnicidade(){
+		return (violaUnicidadeDeCategoriaAssunto());
+	}
+	
+	private boolean violaUnicidadeDeCategoriaAssunto(){
+		if (categoriaAssuntoManager.violaUnicidadeDeCategoriaAssunto(instance)){
+			FacesMessages.instance().add(Severity.ERROR,"Combinação de Categoria e Assunto já existe!");
+			return true;
+		}
+		return false;
 	}
 	
 }
