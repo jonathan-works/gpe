@@ -22,12 +22,6 @@ public class AssociativeTipoModeloDocumentoList extends
 			+ "(select v.tipoModeloDocumento from VariavelTipoModelo v where v.variavel = #{variavelHome.definedInstance})";
 	private static final String DEFAULT_ORDER = "tipoModeloDocumento";
 	
-//	public static final String R1 = "grupoModeloDocumento = #{grupoModeloDocumentoSuggest.instance}";
-//	public static final String R2 = "grupoModeloDocumento.idGrupoModeloDocumento = #{grupoModeloDocumentoHome.id}";
-//	public static final String R3 = "lower(tipoModeloDocumento) like concat('%',lower(#{tipoModeloDocumentoSearch.tipoModeloDocumento}),'%')";
-//	public static final String R4 = "lower(abreviacao) like concat(lower(#{tipoModeloDocumentoSearch.abreviacao}),'%')";
-//	public static final String R5 = "ativo = #{tipoModeloDocumentoSearch.ativo}";
-
 	@Override
 	protected void addSearchFields() {
 		addSearchField("grupoModeloDocumento", SearchCriteria.igual);
