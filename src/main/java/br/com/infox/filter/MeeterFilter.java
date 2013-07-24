@@ -47,7 +47,6 @@ public class MeeterFilter extends AbstractFilter {
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		StopWatch sw = new StopWatch(true);
-		HttpServletRequest hsr = (HttpServletRequest) req;
 		chain.doFilter(req, resp);
 		String ajaxPushHeader = null;
 		long time = sw.getTime();
