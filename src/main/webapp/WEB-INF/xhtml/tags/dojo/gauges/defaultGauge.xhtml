@@ -39,6 +39,9 @@
     	- indicatorLabel: String que irá aparecer antecedendo o valor representado pela agulha
      -->
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
+    <h:outputScript
+        name="dojo.js"
+        library="js/dojo" />
 	<h:outputScript
         name="defaultGauge.js"
         library="js/dojoCustom/gauges/defaultGauge.js" />
