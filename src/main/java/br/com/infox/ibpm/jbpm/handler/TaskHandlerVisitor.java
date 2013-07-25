@@ -49,10 +49,12 @@ public class TaskHandlerVisitor {
 		return variableList;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void visit(Node n) {
 		addVariables(n.getArrivingTransitions());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void visit(Task t) {
 		visitedTasks.add(t);
 		Node n = (Node) t.getParent();
@@ -61,6 +63,7 @@ public class TaskHandlerVisitor {
 		addVariables(transitions);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addVariables(Set<Transition> transitions) {
 		if (transitions == null) {
 			return;
@@ -84,6 +87,7 @@ public class TaskHandlerVisitor {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addTaskNodeVariables(TaskNode tn) {
 		boolean filtered = types != null && types.size() > 0;
 		for (Object o : tn.getTasks()) {
