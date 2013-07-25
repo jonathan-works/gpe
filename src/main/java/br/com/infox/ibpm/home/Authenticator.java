@@ -62,7 +62,6 @@ public class Authenticator {
 	
 	public static final String NAME = "authenticator";
 
-	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
 	private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
 	
 	private String newPassword1;
