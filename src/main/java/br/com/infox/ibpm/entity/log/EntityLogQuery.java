@@ -30,6 +30,7 @@ import br.com.itx.util.EntityUtil;
 @BypassInterceptors
 public class EntityLogQuery {
 
+	@SuppressWarnings("unchecked")
 	public List<EntityLog> getResultList(Class<?> classEntidade, Object id) {
 		EntityManager manager = EntityUtil.getEntityManager();
 		List<EntityLog> list = null;
