@@ -51,7 +51,6 @@ import br.com.infox.ibpm.entity.JbpmVariavelLabel;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
-import br.com.infox.ibpm.entity.Status;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
@@ -356,13 +355,6 @@ public class JbpmUtil {
 			return currentExecutionContext.getTransition();
 		} 
 		return null;
-	}
-	
-	public static Status getStatus(String status) {
-		String hql = "select s from Status s where s.status = :status";
-		Query q = EntityUtil.getEntityManager().createQuery(hql);
-		q.setParameter("status", status);
-		return EntityUtil.getSingleResult(q);
 	}
 	
 	/**

@@ -22,7 +22,6 @@ import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
-import br.com.infox.ibpm.entity.Status;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
@@ -203,10 +202,6 @@ public class ProcessoManager extends GenericManager {
 	
 	public void apagarActorIdDoProcesso(Processo processo){
 		processoDAO.apagarActorIdDoProcesso(processo);
-	}
-	
-	public void atualizarStatusDeProcesso(Status status, Processo processo){
-		processoDAO.atualizarStatusDeProcesso(status, processo);
 	}
 	
 	public void atualizarProcessos(){

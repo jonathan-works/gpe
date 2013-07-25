@@ -62,7 +62,6 @@ public class Processo implements java.io.Serializable {
 	private Date dataFim;
 	private Long duracao;
 	private Caixa caixa;
-	private Status status;
 	
 	private Long idJbpm;
 	
@@ -267,16 +266,6 @@ public class Processo implements java.io.Serializable {
 		return list;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_status")
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
 	//Adicionado
 	
 	@Column(name = "ds_nome_usuario_cadastro_processo", length = 100)
