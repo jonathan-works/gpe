@@ -88,6 +88,7 @@ public class EventFitter extends Fitter implements Serializable{
 		List<String> list = new ArrayList<String>();
 		String[] eventTypes = pb.getInstance().getSupportedEventTypes();
 		List<String> currentEvents = new ArrayList<String>();
+		@SuppressWarnings("unchecked")
 		Collection<Event> values = pb.getInstance().getEvents().values();
 		for (Event event : values) {
 			currentEvents.add(event.getEventType());
