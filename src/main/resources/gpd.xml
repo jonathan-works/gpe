@@ -50,7 +50,6 @@
       <element value="/FI-BPM/WEB-INF/src/jpdl/DecisionNode.xml"/>
       <element value="/FI-BPM/WEB-INF/src/jpdl/MailNode.xml"/>
       <element value="/FI-BPM/WEB-INF/src/jpdl/actionTemplates.properties"/>
-      <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/component/RegistraEstatistica.java"/>
       <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/EntityAddressResolver.java"/>
       <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/JbpmUtil.java"/>
       <element value="/FI-BPM/WEB-INF/src/jpdl/br/com/infox/ibpm/jbpm/Mail.java"/>
