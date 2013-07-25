@@ -93,9 +93,10 @@ public class EntityNode<E> implements Serializable {
 		return ArrayUtil.copyOf(queryChildrenList);
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected List<E> getChildrenList(String hql, E entity) {
 		Query query = EntityUtil.createQuery(hql);
-		return query.setParameter(PARENT_NODE, entity).getResultList();
+		return (List<E>) query.setParameter(PARENT_NODE, entity).getResultList();
 	}
 
 	protected EntityNode<E> createChildNode(E n) {
