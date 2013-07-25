@@ -15,16 +15,18 @@ public class EntidadeLogDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "entidadeLogDAO";
 	
+	@SuppressWarnings("unchecked")
 	public List<UsuarioLogin> getUsuariosQuePossuemRegistrosDeLog(){
 		String hql = "select o from UsuarioLogin o " +
 				"where o.entityLogList.size > 0 " +
 				"order by o.idPessoa";
-		return entityManager.createQuery(hql).getResultList();
+		return (List<UsuarioLogin>) entityManager.createQuery(hql).getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<String> getEntidadesQuePodemPossuirLog(){
 		String hql = "select distinct o.nomeEntidade as entidade from EntityLog o order by o.nomeEntidade";
-		return entityManager.createQuery(hql).getResultList();
+		return (List<String>) entityManager.createQuery(hql).getResultList();
 	}
 	
 }
