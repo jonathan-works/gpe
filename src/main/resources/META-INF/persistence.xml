@@ -32,6 +32,7 @@
                       
 			<property name="hibernate.search.default.directory_provider"
 				value="filesystem" />
+			<property name="hibernate.search.lucene_version" value="LUCENE_36"/>
 <!--			<property name="hibernate.hbm2ddl.auto" value="create"/>-->
  
 			<property name="jboss.entity.manager.factory.jndi.name" 
@@ -54,6 +55,7 @@
 
 			<property name="hibernate.search.default.directory_provider"
 				value="filesystem" />
+			<property name="hibernate.search.lucene_version" value="LUCENE_36"/>
 			<!--			<property name="hibernate.hbm2ddl.auto" value="create"/>-->
 
 			<property name="jboss.entity.manager.factory.jndi.name"
