@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.event.AbortProcessingException;
 import javax.persistence.Query;
 
 import org.jboss.seam.Component;
@@ -12,8 +11,6 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
-import org.richfaces.event.TreeSelectionChangeEvent;
-
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.itx.util.EntityUtil;
 
