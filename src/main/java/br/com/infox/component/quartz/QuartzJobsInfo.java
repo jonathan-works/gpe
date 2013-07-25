@@ -191,6 +191,7 @@ public class QuartzJobsInfo implements Serializable {
 		EntityUtil.createQuery(hql).executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getMapParametroTriggers() throws SchedulerException {
 		List<String> triggersNames = getTriggersNames();
 		if (triggersNames.isEmpty()) {
@@ -204,7 +205,7 @@ public class QuartzJobsInfo implements Serializable {
 				"from Parametro o where o.valorVariavel like '________:___________:_____'";
 		Query query = EntityUtil.createQuery(hql);
 		query.setParameter("triggersNames", triggersNames);
-		return query.getResultList();
+		return (List<Map<String, Object>>) query.getResultList();
 	}
 	
 	public void removeParametro(int idParametro) {
