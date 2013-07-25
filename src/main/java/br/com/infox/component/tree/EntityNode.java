@@ -124,7 +124,8 @@ public class EntityNode<E> implements Serializable {
 	public List<EntityNode<E>> getRoots(Query queryRoots) {
 		if (rootNodes == null) {
 			rootNodes = new ArrayList<EntityNode<E>>();
-			List<E> roots = queryRoots.getResultList();
+			@SuppressWarnings("unchecked")
+			List<E> roots = (List<E>) queryRoots.getResultList();
 			for (E e : roots) {
 				if (!e.equals(ignore)) {
 					EntityNode<E> node = createRootNode(e);
