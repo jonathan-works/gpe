@@ -5,9 +5,7 @@
       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
 	  login-required="true"      
 >
-      <description>ConsultaSolicitacao: #{consultaSolicitacaoHome.instance}</description>
 	<begin-conversation join="true"/>
-	<param name="inPesquisa" value="#{consultaSolicitacaoHome.instance.inPesquisa}"/>
 	<param name="id" value="#{processoHome.processoIdProcesso}"/>
 	<param name="tab" value="#{processoHome.tab}"/>
 	<param name="idJbpm" value="#{org.jboss.seam.bpm.businessProcess.processId}" />
