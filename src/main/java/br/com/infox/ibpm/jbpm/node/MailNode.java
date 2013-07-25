@@ -60,6 +60,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		super.read(element, jpdlReader);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void write(Element nodeElement) {
 		if (action != null) {
@@ -185,6 +186,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		createAction();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<ListaEmail> getListaEmail() {
 		if (listaEmail == null) {
 			if (to != null) {
