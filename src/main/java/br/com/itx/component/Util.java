@@ -577,7 +577,6 @@ public class Util implements Serializable {
 	 * @param msg Mensagem a ser exibida.
 	 */
 	public static void setMessage(Severity severity, String msg) {
-//		FacesMessages.instance().clearGlobalMessages();
 		FacesMessages.instance().add(severity, msg);
 		LOG.warn(msg);
 	}
