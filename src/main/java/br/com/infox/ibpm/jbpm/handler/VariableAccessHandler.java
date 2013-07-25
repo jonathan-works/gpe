@@ -39,7 +39,6 @@ import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.VariavelTipoModelo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.itx.component.grid.GridQuery;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
