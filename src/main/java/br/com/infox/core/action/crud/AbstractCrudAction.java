@@ -66,6 +66,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 		this.tab = tab;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setId(Object id) {
 		if(id != null) {
@@ -124,6 +125,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 * Cria um novo objeto do tipo parametrizado para a variável
 	 * instance.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void newInstance() {
 		instance = (T) EntityUtil.newInstance(getClass());
