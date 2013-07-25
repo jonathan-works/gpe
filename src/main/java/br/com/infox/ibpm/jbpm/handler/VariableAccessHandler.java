@@ -285,7 +285,6 @@ public class VariableAccessHandler implements Serializable {
 		updateModelo();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void removeModelo(ModeloDocumento modelo) {
 		modeloDocumentoList.remove(modelo);
 		modeloList.remove(Integer.valueOf(modelo.getIdModeloDocumento()));
@@ -307,6 +306,7 @@ public class VariableAccessHandler implements Serializable {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<VariableAccessHandler> getList(Task task) {
 		List<VariableAccessHandler> ret = new ArrayList<VariableAccessHandler>();
 		if (task.getTaskController() == null) {
