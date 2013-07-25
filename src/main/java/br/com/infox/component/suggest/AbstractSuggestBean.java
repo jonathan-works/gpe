@@ -49,6 +49,7 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 
 	private String expression;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<E> suggestList(String typed) {
 		StopWatch sw = new StopWatch(true);
@@ -59,7 +60,7 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 			if (getLimitSuggest() != null) {
 				query.setMaxResults(getLimitSuggest());
 			}
-			result = query.getResultList();
+			result = (List<E>) query.getResultList();
 		} else {
 			result = new ArrayList<E>();
 		}
@@ -67,6 +68,7 @@ public abstract class AbstractSuggestBean<E> implements SuggestBean<E>, Serializ
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public E getInstance() {
 		if (expression == null) {
