@@ -19,7 +19,6 @@ import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
-import br.com.itx.exception.AplicationException;
 
 /**
  * 
@@ -67,7 +66,8 @@ public class IniciarProcessoService {
                 .instance();
         processInstance.getContextInstance().setVariable("processo",
                 processo.getIdProcesso());
-        Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance
+        @SuppressWarnings("unchecked")
+		Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance
                 .getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
         if (taskInstances != null && !taskInstances.isEmpty()) {
