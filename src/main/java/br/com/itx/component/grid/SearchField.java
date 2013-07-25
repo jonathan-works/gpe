@@ -117,7 +117,6 @@ public class SearchField implements Serializable {
 			order = "2 desc";
 		}
 		String entity = grid.getEntity().getClass().getSimpleName();
-		//entity = entity.substring(0, 1).toUpperCase() + entity.substring(1);
 		String pattern = "select o.{0} as name, " + count +
 				" as qtd from {1} o "
 			+ "where lower({0}) like concat(lower(:input), '''%''') " +
