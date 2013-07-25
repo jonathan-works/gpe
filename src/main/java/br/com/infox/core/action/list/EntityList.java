@@ -247,6 +247,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void newInstance() {
 		try {
 			setEntity((E) EntityUtil.newInstance(getClass()));
@@ -267,6 +268,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * 
 	 * @return a entidade informado genericamente
 	 */
+	@SuppressWarnings("unchecked")
 	public E getEntity() {
 		if (entity == null) {
 			entity = (E) Contexts.getConversationContext().get(getEntityComponentName());
