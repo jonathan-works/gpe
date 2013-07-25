@@ -15,12 +15,8 @@
 */
 package br.com.infox.cliente.home;
 
-import javax.faces.event.AbortProcessingException;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.richfaces.event.ItemChangeEvent;
-
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.home.AbstractProcessoDocumentoHome;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoHome;
