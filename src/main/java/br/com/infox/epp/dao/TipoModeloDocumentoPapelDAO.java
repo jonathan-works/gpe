@@ -20,6 +20,7 @@ public class TipoModeloDocumentoPapelDAO extends GenericDAO {
 	 * Retorna uma lista com os tipos de modelo de documento que o perfil (localização+papel)
 	 * do usuário logado possue permissão para acessar.
 	 * */
+	@SuppressWarnings("unchecked")
 	public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos(){
 		String hql = "select t from TipoModeloDocumentoPapel tmdp " +
 				"join tmdp.tipoModeloDocumento t " +
