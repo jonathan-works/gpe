@@ -128,7 +128,6 @@ public final class DigitalSignatureUtils {
     
     public static CertPath loadCertPathString(byte[] aCertChainBase64Encoded)
     throws CertificateException, IOException {
-        //byte[] certChainEncoded = Base64Utils.base64Decode(aCertChainBase64Encoded);
         byte[] certChainEncoded = aCertChainBase64Encoded;
         CertificateFactory cf = CertificateFactory.getInstance(X509_CERTIFICATE_TYPE);
         InputStream certChainStream = new ByteArrayInputStream(certChainEncoded);
