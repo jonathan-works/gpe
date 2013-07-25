@@ -17,6 +17,7 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoProcessoDocumentoDAO";
 	
+	@SuppressWarnings("unchecked")
 	public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo){
 		String restricaoDeTipo = "'";
 		if (isModelo){
