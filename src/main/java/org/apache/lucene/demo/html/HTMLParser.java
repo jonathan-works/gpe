@@ -832,12 +832,4 @@ public class HTMLParser implements HTMLParserConstants {
 		JJCalls next;
 	}
 
-	// void handleException(Exception e) {
-	// System.out.println(e.toString()); // print the error message
-	// System.out.println("Skipping...");
-	// Token t;
-	// do {
-	// t = getNextToken();
-	// } while (t.kind != TagEnd);
-	// }
 }
