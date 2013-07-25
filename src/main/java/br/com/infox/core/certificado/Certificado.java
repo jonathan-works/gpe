@@ -212,8 +212,6 @@ public class Certificado {
 	}
     
     public boolean isValidoParaSistema(List<String> acceptedCaList) {
-    	//System.out.println("nomeCertificadora: " + nomeCertificadora);
-    	//System.out.println(acceptedCaList);
         for (String name : acceptedCaList) {
 			if (name.equals(nomeCertificadora)) {
 				return true;
