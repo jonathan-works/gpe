@@ -17,12 +17,10 @@ package br.com.infox.filter;
 
 import java.util.Date;
 
-import javax.faces.component.UIInput;
 import javax.faces.event.PhaseEvent;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.richfaces.function.RichFunction;
 
 /**
  * Classe para medição de tempo das fases do ciclos de vida JSF
