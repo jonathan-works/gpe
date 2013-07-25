@@ -32,6 +32,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 		swimlanes.add(currentSwimlane);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void removeSwimlane(SwimlaneHandler s) {
 		swimlanes.remove(s);
 		currentSwimlane = null;
@@ -55,6 +56,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 		return swimlanes;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getSwimlaneList() {
 		Map<String, Swimlane> swimlaneList = pb.getInstance().getTaskMgmtDefinition()
 				.getSwimlanes();
