@@ -127,7 +127,8 @@ public class FluxoXPDL implements Serializable {
 	 * Adiciona o tratamento de eventos
 	 */
 	private void addEvents(ProcessDefinition definition) {
-		for (String e : ProcessDefinition.supportedEventTypes) {
+		String[] supportedEventTypes = definition.getSupportedEventTypes();
+		for (String e : supportedEventTypes) {
 			addEvent(e, "br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)", new Script(), definition);
 		}
 	}
