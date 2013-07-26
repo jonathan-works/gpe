@@ -64,6 +64,7 @@ public class ProcessDeployVerifier {
 	public static final String NAME = "processDeployVerifier";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessDeployVerifier.class);	
 	
+	@SuppressWarnings("unchecked")
 	@Create
 	public void init() {
 		long time = new Date().getTime();
