@@ -12,7 +12,7 @@
 		name="JAVASERVERFACES-1718-Workaround.js"
 		library="js" />
 	<script>
-		Object.freeze(window.CKEDITOR_BASEPATH = '#{request.contextPath}/org.richfaces.resources/javax.faces.resource/org.richfaces.ckeditor/');
+		const CKEDITOR_BASEPATH = '#{request.contextPath}/org.richfaces.resources/javax.faces.resource/org.richfaces.ckeditor/';
 	</script>
 	<h:form>
 		<a:poll
