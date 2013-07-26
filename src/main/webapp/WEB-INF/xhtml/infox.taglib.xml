@@ -290,11 +290,6 @@
 	</tag>	
 	
 	<tag>
-		<tag-name>dragDrop</tag-name>
-		<source>tags/generic/dragDrop.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>mask</tag-name>
 		<source>tags/generic/mask.xhtml</source>
 	</tag>
