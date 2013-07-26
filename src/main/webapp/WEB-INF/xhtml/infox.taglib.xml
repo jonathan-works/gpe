@@ -305,11 +305,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>compositeFieldGroup</tag-name>
-		<source>tags/generic/compositeFieldGroup.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>quadro</tag-name>
 		<source>tags/generic/quadro.xhtml</source>
 	</tag>	
