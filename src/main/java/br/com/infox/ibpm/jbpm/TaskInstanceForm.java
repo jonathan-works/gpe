@@ -69,6 +69,7 @@ public class TaskInstanceForm implements Serializable{
 
 	private TaskInstance taskInstance;
 
+	@SuppressWarnings("unchecked")
 	@Unwrap
 	public Form getTaskForm() {
 		getTaskInstance();
