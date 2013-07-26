@@ -260,11 +260,10 @@ public class JbpmUtil {
 		sb.append("like :param");
 		sb.append(") ");
 		String param = "%\\'" + loc.getLocalizacao().getIdLocalizacao() +":%";
-		List<Task> list = JbpmUtil.getJbpmSession().createSQLQuery(sb.toString())
+		return JbpmUtil.getJbpmSession().createSQLQuery(sb.toString())
 			.addEntity(Task.class)
 			.setString("param", param)
 			.list();
-		return list;
 	}
 
 	/**
