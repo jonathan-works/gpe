@@ -120,6 +120,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private Document createDomTree(ProcessDefinition processDefinition) {
 		Document document = DocumentHelper.createDocument();
 		Element root = null;
@@ -176,6 +177,7 @@ public class JpdlXmlWriter {
 		e.addCDATA(text);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void writeSwimlanes(Element root,ProcessDefinition processDefinition) {
 		Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
 		for (Entry<String, Swimlane> e : swimlanes.entrySet()) {
@@ -219,6 +221,7 @@ public class JpdlXmlWriter {
 		return newElement;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void writeNodes(Element parentElement, List<org.jbpm.graph.def.Node> nodes) {
 		Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
 		while (iter.hasNext()) {
@@ -248,6 +251,7 @@ public class JpdlXmlWriter {
 		}
 	}
     
+	@SuppressWarnings("unchecked")
 	private void writeProcessState(ProcessState node, Element nodeElement) {
 		Element subProcess = addElement(nodeElement, "sub-process");
 		subProcess.addAttribute("name", ReflectionsUtil.getStringValue(node, "subProcessName"));
@@ -273,6 +277,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void writeController(TaskController taskController, Element taskElement) {
 		if (taskController != null) {
 			Element controller = addElement(taskElement, "controller");
@@ -337,6 +342,7 @@ public class JpdlXmlWriter {
 		writeEvents(element, node);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void writeTransitions(Element element, org.jbpm.graph.def.Node node) {
 		if (node.getLeavingTransitionsMap() != null) {
 			Iterator<Transition> iter = node.getLeavingTransitionsList().iterator();
@@ -347,6 +353,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void writeTransition(Element transitionElement,
 			Transition transition) {
 		if (transition.getTo() != null) {
@@ -365,6 +372,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void writeEvents(Element element, GraphElement graphElement) {
 		if (graphElement.hasEvents()) {
 			Iterator<Event> iter = graphElement.getEvents().values().iterator();
@@ -375,6 +383,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void writeEvent(Element eventElement, Event event) {
 		boolean valid = false;
 		eventElement.addAttribute("type", event.getEventType());
