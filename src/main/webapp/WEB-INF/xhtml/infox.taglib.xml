@@ -376,11 +376,6 @@
 		<source>tags/grid/datalist.xhtml</source>
 	</tag>
 
-	<tag>
-		<tag-name>m2mGrid</tag-name>
-		<source>tags/grid/m2mGrid.xhtml</source>
-	</tag>
-	
 	<!-- Columns --> 
 	
 	<tag>
