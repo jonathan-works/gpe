@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.xpdl.activities;
 
-import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
