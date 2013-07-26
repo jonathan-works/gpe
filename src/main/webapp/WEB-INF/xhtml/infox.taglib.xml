@@ -335,11 +335,6 @@
 	</tag>
 
 	<tag>
-		<tag-name>outputLink</tag-name>
-		<source>tags/generic/outputLink.xhtml</source>
-	</tag>
-		
-	<tag>
 		<tag-name>graphicImage</tag-name>
 		<source>tags/generic/graphicImage.xhtml</source>
 	</tag>
