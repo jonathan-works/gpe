@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.Query;
+
+import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.jboss.seam.core.Expressions;
 import org.jbpm.graph.action.ActionTypes;
@@ -119,10 +121,19 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	
 	private void createAction() {
 		JpdlXmlReader jpdlReader = new JpdlXmlReader(new StringReader(""));
-		Delegation delegation = jpdlReader.createMailDelegation(template,
-				actors, to, subject, getParametros());
+		Delegation delegation = jpdlReader.readMailDelegation(createMailElement());
 		delegation.setProcessDefinition(this.getProcessDefinition());
 		this.action = new Action(delegation);
+	}
+	
+	private Element createMailElement(){
+		Element element = DocumentHelper.createElement("mailElement");
+		element.addAttribute("template", template);
+		element.addAttribute("actors", actors);
+		element.addAttribute("to", to);
+		element.addAttribute("subject", subject);
+		element.addAttribute("text", getParametros());
+		return element;
 	}
 
 	public ModeloDocumento getModeloDocumento() {
