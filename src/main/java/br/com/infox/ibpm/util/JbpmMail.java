@@ -46,7 +46,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 		return map;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initRemetentes() {
 		List recip = new ArrayList(getRecipients());
 				
