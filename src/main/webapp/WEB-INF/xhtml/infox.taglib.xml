@@ -300,11 +300,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>msgGeneric</tag-name>
-		<source>tags/generic/msgGeneric.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>modalPanel</tag-name>
 		<source>tags/generic/modalPanel.xhtml</source>
 	</tag>
