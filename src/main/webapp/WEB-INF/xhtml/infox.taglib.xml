@@ -328,11 +328,6 @@
 		<tag-name>commandLink</tag-name>
 		<source>tags/generic/commandLink.xhtml</source>
 	</tag>
-
-	<tag>
-		<tag-name>graphicImage</tag-name>
-		<source>tags/generic/graphicImage.xhtml</source>
-	</tag>
 	
 	<function>
 		<function-name>get</function-name>
