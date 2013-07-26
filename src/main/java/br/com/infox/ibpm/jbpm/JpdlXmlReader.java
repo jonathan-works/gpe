@@ -28,8 +28,6 @@ import org.xml.sax.InputSource;
 
 public class JpdlXmlReader extends org.jbpm.jpdl.xml.JpdlXmlReader {
 
-	private static final long serialVersionUID = 1L;
-
 	public JpdlXmlReader(String xmlResource) {
 		super((InputSource) null);
 	    URL resourceURL = ClassLoaderUtil.getClassLoader().getResource(xmlResource);
