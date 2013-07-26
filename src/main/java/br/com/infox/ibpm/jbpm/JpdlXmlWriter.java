@@ -251,7 +251,7 @@ public class JpdlXmlWriter {
 		}
 	}
     
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void writeProcessState(ProcessState node, Element nodeElement) {
 		Element subProcess = addElement(nodeElement, "sub-process");
 		subProcess.addAttribute("name", ReflectionsUtil.getStringValue(node, "subProcessName"));
