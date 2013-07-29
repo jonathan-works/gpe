@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
+
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
@@ -116,7 +117,11 @@ public class ProcessoEpaDAO extends GenericDAO {
 	public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
 		Query q = entityManager.createQuery(ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY)
 				.setParameter("idProcesso", processoEpa.getIdProcesso());
-		return (Map<String, Object>)q.getSingleResult();
+		Map<String,Object> result = null;
+		try {
+			result = (Map<String, Object>) q.getSingleResult();			
+		} catch(NoResultException e) {
+		}
+		return result;
 	}
-	
 }
