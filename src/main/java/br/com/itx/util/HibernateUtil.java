@@ -62,7 +62,6 @@ public final class HibernateUtil {
 		return (Session) EntityUtil.getEntityManager().getDelegate();
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void disableAllFilters() {
 		FullTextHibernateSessionProxy session = (FullTextHibernateSessionProxy) getSession();
 		Map m = session.getEnabledFilters();
