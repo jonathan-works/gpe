@@ -1,6 +1,8 @@
 package br.com.infox.epp.manager;
 
 import java.util.List;
+import java.util.Map;
+
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -61,13 +63,16 @@ public class ProcessoEpaManager extends GenericManager {
 	public void updateTempoGastoProcessoEpa() {
 		List<ProcessoEpa> listAllNotEnded = listAllNotEnded();
 		for (ProcessoEpa processoEpa : listAllNotEnded) {
+			Map<String, Object> result = processoEpaDAO.getTempoGasto(processoEpa);
+			
 			Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
 			
-			Integer tempoGasto = processoEpa.getTempoGasto();
-			if (tempoGasto == null) {
-				tempoGasto = 0;
+			Integer dias = (Integer) result.get("dias");
+			Integer tempoGasto = Integer.parseInt(((Long)result.get("horas")).toString())/24;
+			if (dias != null) {
+				tempoGasto += dias;
 			}
-			processoEpa.setTempoGasto(tempoGasto + 1);//? sem critério
+			processoEpa.setTempoGasto(tempoGasto);
 			if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
 				processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100) / f.getQtPrazo());
 			}
