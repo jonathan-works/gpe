@@ -65,21 +65,23 @@ public class ProcessoEpaManager extends GenericManager {
 		for (ProcessoEpa processoEpa : listAllNotEnded) {
 			Map<String, Object> result = processoEpaDAO.getTempoGasto(processoEpa);
 			
-			Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+			if (result != null) {
+				Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+				Long dias = (Long)result.get("dias");
+				Long tempoGasto = ((Long)result.get("horas"))/24;
+				if (dias != null) {
+					tempoGasto += dias;
+				}
+				processoEpa.setTempoGasto(tempoGasto.intValue());
 			
-			Integer dias = (Integer) result.get("dias");
-			Integer tempoGasto = Integer.parseInt(((Long)result.get("horas")).toString())/24;
-			if (dias != null) {
-				tempoGasto += dias;
+				if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
+					processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100) / f.getQtPrazo());
+				}
+				if (processoEpa.getPorcentagem() > 100) {
+					processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+				}
+				processoEpaDAO.update(processoEpa);
 			}
-			processoEpa.setTempoGasto(tempoGasto);
-			if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
-				processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100) / f.getQtPrazo());
-			}
-			if (processoEpa.getPorcentagem() > 100) {
-				processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
-			}
-			update(processoEpa);
 		}
 	}
 	
