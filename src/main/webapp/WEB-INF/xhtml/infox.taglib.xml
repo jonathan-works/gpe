@@ -300,11 +300,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>compositeField</tag-name>
-		<source>tags/generic/compositeField.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>quadro</tag-name>
 		<source>tags/generic/quadro.xhtml</source>
 	</tag>	
