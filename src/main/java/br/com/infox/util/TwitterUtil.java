@@ -311,7 +311,7 @@ public final class TwitterUtil {
 	 * @throws IllegalStateException
 	 * @throws TwitterException
 	 */
-	public User mutualApplicationUnfollow(ContaTwitter contaTwitter) TwitterException{
+	public User mutualApplicationUnfollow(ContaTwitter contaTwitter) throws TwitterException{
 		Twitter twitter = createTwitter(contaTwitter);
 		twitter.createFriendship(aplicacao.getId(), true);
 		return aplicacao.createFriendship(twitter.getId(), true);
