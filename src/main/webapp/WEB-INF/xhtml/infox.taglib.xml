@@ -42,11 +42,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>view</tag-name>
-		<source>tags/form/view.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>commandButton</tag-name>
 		<source>tags/form/buttons/commandButton.xhtml</source>
 	</tag>
