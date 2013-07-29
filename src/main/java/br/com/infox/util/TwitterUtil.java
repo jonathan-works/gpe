@@ -25,7 +25,7 @@ import twitter4j.conf.ConfigurationBuilder;
  * @author jonas
  *
  */
-public class TwitterUtil {
+public final class TwitterUtil {
 	
 	private static TwitterUtil instance = init();
 	private TwitterFactory factory;
