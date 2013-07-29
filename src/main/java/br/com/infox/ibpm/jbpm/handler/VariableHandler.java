@@ -59,6 +59,7 @@ public class VariableHandler implements Serializable {
 		return taskVariables;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Variavel> getVariables(long taskId, boolean readOnly) {
 		List<Variavel> ret = new ArrayList<Variavel>();
 		TaskInstance taskInstance = ManagedJbpmContext.instance()

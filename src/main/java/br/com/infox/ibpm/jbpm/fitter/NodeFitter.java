@@ -7,13 +7,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
-import org.hibernate.Query;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Factory;
@@ -31,7 +29,6 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
-import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.converter.NodeConverter;
 import br.com.infox.ibpm.jbpm.handler.NodeHandler;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
@@ -62,6 +59,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	
 	@In private JbpmNodeManager jbpmNodeManager;
 		
+	@SuppressWarnings("unchecked")
 	public void addNewNode() {
 		Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
 		ProcessDefinition processo = pb.getInstance();
@@ -133,6 +131,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		oldNodeTransition = NodeConverter.getAsObject((String) e.getOldValue());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void removeNode(Node node) {
 		nodes.remove(node);
 		pb.getInstance().removeNode(node);
@@ -223,6 +222,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		return oldNodeTransition;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Factory("processNodes")
 	public List<Node> getNodes() {
 		if (nodes == null) {
@@ -251,6 +251,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		return nodeList;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<SelectItem> getNodesItems() {
 		if (nodesItems == null) {
 			List<Node> list = pb.getInstance().getNodes();

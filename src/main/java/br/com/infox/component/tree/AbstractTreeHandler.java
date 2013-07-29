@@ -150,6 +150,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
 		// Considerando single selection

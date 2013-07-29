@@ -245,7 +245,7 @@ public class DecisionNode extends Node {
 		// taken transition will always be met. therefore we can safely turn off
 		// the standard condition enforcement in the transitions after a
 		// decision node.
-		transition.removeConditionEnforcement();
+		transition.setConditionEnforced(false);
 
 		log.debug("decision '" + name + "' is taking " + transition);
 		executionContext.leaveNode(transition);

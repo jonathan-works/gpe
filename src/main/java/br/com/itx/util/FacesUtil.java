@@ -130,6 +130,7 @@ public final class FacesUtil {
 	/**
      * Clona um objeto.
      */    
+	@SuppressWarnings("unchecked")
 	public static <T extends Object> T cloneBean(T obj) {
     	Object resp = null;
 	    try {

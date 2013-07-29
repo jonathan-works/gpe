@@ -59,11 +59,10 @@ import br.com.itx.util.EntityUtil;
 @Startup(depends="org.jboss.seam.bpm.jbpm")
 public class ProcessDeployVerifier {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final String NAME = "processDeployVerifier";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessDeployVerifier.class);	
 	
+	@SuppressWarnings("unchecked")
 	@Create
 	public void init() {
 		long time = new Date().getTime();

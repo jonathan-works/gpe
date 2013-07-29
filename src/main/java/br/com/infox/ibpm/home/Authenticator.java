@@ -18,12 +18,10 @@
 package br.com.infox.ibpm.home;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import javax.naming.ldap.LdapContext;
-import javax.persistence.EntityManager;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
@@ -57,7 +55,6 @@ import br.com.infox.ldap.util.LdapUtil;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
-import br.com.itx.util.HibernateUtil;
 
 @Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)
@@ -65,7 +62,6 @@ public class Authenticator {
 	
 	public static final String NAME = "authenticator";
 
-	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
 	private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
 	
 	private String newPassword1;

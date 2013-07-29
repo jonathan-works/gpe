@@ -239,6 +239,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		return texto;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public ValueExpression getCreatedMessage() {
 		return createValueExpression("Alteração concluída.");

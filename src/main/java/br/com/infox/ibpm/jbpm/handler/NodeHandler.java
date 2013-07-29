@@ -70,6 +70,7 @@ public class NodeHandler implements Serializable {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadTimers(Node node) {
 		Event enter = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
 		if (enter != null) {
@@ -139,6 +140,7 @@ public class NodeHandler implements Serializable {
 		node.addEvent(event);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getSupportedEventTypes() {
 		List<String> list = new ArrayList<String>();
 		List<String> nodeEvents = Arrays.asList(new Node().getSupportedEventTypes());

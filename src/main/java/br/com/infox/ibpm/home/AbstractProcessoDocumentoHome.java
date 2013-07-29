@@ -20,8 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.event.AbortProcessingException;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.contexts.Contexts;
@@ -32,8 +30,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
-import org.richfaces.event.ItemChangeEvent;
-
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
@@ -137,6 +133,7 @@ public abstract class AbstractProcessoDocumentoHome<T>
 		if (ret != null) {
 			setIdDocumentoRerender(instance.getIdProcessoDocumento());
 			if (isModelo) {
+				@SuppressWarnings("unchecked")
 				List<Integer> lista = (List<Integer>) Contexts.getSessionContext().get(PETICAO_INSERIDA);
 				if (lista == null) {
 					lista = new ArrayList<Integer>();

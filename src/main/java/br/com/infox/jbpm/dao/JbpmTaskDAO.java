@@ -4,15 +4,12 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.persistence.TransactionRequiredException;
-
 import org.hibernate.Query;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(JbpmTaskDAO.NAME)
 @AutoCreate

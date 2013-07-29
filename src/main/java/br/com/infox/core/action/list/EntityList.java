@@ -1,6 +1,5 @@
 package br.com.infox.core.action.list;
 
-import java.beans.PropertyDescriptor;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -8,12 +7,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.el.PropertyNotFoundException;
 
-import org.apache.commons.beanutils.ConvertUtils;
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions;
@@ -21,8 +18,6 @@ import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.framework.EntityQuery;
 import org.jboss.seam.international.Messages;
 
-import br.com.infox.entity.Pesquisa;
-import br.com.infox.entity.PesquisaCampo;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
@@ -43,8 +38,6 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	protected E entity;
 
 	private String orderedColumn;
-	
-	private Pesquisa pesquisa;
 	
 	public EntityList () {
 		addSearchFields();
@@ -247,6 +240,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void newInstance() {
 		try {
 			setEntity((E) EntityUtil.newInstance(getClass()));
@@ -267,6 +261,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * 
 	 * @return a entidade informado genericamente
 	 */
+	@SuppressWarnings("unchecked")
 	public E getEntity() {
 		if (entity == null) {
 			entity = (E) Contexts.getConversationContext().get(getEntityComponentName());
@@ -315,87 +310,13 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		return orderedColumn;
 	}
 	
-	public void setPesquisa(Pesquisa p) {
-		pesquisa = p;		
-		if(p != null) {
-			applyFields(pesquisa);
-			setOrderedColumn(pesquisa.getColunaOrdenacao());
-			setRestrictionLogicOperator(pesquisa.getOperadorLogico());
-		}
-	}
-
-	private void applyFields(Pesquisa p) {
-		String entityName = getEntityName();
-		for (PesquisaCampo cp : p.getPesquisaCampoList()) {
-			String exp = MessageFormat.format(FIELD_EXPRESSION, entityName, cp.getNome());
-			ValueExpression<Object> ve = Expressions.instance().createValueExpression(exp);
-			Class<Object> type = ve.getType();
-			Object o = null;
-			if (EntityUtil.isEntity(type)) {
-				PropertyDescriptor pd = EntityUtil.getId(type);
-				Class<?> pt = pd.getPropertyType();
-				Object id = ConvertUtils.convert(cp.getValor(), pt);
-				o = EntityUtil.find(type, id);
-			} else {
-				o = ConvertUtils.convert(cp.getValor(), type);
-			}
-			if (o != null) {
-				ve.setValue(o);
-			}
-		}
-	}
-
-	/**
-	 * Método chamado pelo botão de salvar a pesquisa
-	 * @param s não é utilizado, apenas para ter a assinatura esperada pelo actionParam
-	 */
-	public void saveSearch() {
-		if(pesquisa != null && pesquisa.getIdPesquisa() == 0) {
-			pesquisa.setOperadorLogico(getRestrictionLogicOperator());
-			pesquisa.setColunaOrdenacao(getOrderedColumn());
-			pesquisa.setEntityList(getEntityListName());
-			for (Entry<String, String> e : getSearchParameters().entrySet()) {
-				PesquisaCampo cp = new PesquisaCampo();
-				cp.setPesquisa(pesquisa);
-				cp.setNome(e.getKey());
-				cp.setValor(e.getValue());
-				pesquisa.getPesquisaCampoList().add(cp);
-			}
-			getEntityManager().persist(pesquisa);
-		}
-		getEntityManager().flush();
-	}
-
 	public String getEntityListName() {
 		return Component.getComponentName(this.getClass());
 	}
 
-	public Pesquisa getPesquisa() {
-		if (pesquisa == null) {
-			String name = getComponentPesquisa();
-			pesquisa = (Pesquisa) Contexts.getConversationContext().get(name);
-			if (pesquisa == null) {
-				pesquisa = new Pesquisa();
-			}
-		}
-		return pesquisa;
-	}
 	
 	protected String getComponentPesquisa() {
 		return this.getClass().getName() + ".pesquisa";
-	}
-
-	public void cleanSearch() {
-		if(pesquisa != null && pesquisa.getIdPesquisa() != 0) {
-			Contexts.getConversationContext().remove(getEntityComponentName());
-			pesquisa = null;
-			entity = null;
-		}
-	}
-	
-	public void remove(Pesquisa p) {
-		getEntityManager().remove(p);
-		getEntityManager().flush();
 	}
 
 	protected void setSearchFieldMap(Map<String, SearchField> searchFieldMap) {

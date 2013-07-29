@@ -281,6 +281,7 @@ public class ProcessBuilder implements Serializable {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public BigInteger getIdProcessDefinition() {
 		String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
 		Query param = JbpmUtil.getJbpmSession().createSQLQuery(query)

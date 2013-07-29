@@ -106,6 +106,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		return new TarefasEntityNode<Map<String,Object>>(null, n, getQueryChildren(), queryCaixas);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected List<Map<String,Object>> getChildrenList(String hql, Map<String,Object> entity) {
 		Query query = EntityUtil.createQuery(hql);
@@ -113,6 +114,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 				.getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected List<Map<String,Object>> getCaixasList(Query query, Map<String,Object> entity) {
 		return query.setParameter("taskId", entity.get("idTarefa"))
 				.getResultList();

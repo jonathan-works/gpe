@@ -250,6 +250,7 @@ public class ScannerTest {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		Set<String> packs = new HashSet<String>();
 		packs.add("br.com.infox.ibpm.entity");

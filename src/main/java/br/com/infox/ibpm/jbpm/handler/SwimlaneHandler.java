@@ -62,6 +62,7 @@ public class SwimlaneHandler implements Serializable {
 		return swimlane.getName();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setName(String name) {
 		Map<String, Swimlane> swimlanes = swimlane.getTaskMgmtDefinition().getSwimlanes();
 		swimlanes.remove(swimlane.getName());
@@ -148,6 +149,7 @@ public class SwimlaneHandler implements Serializable {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<SwimlaneHandler> createList(ProcessDefinition instance) {
 		List<SwimlaneHandler> ret = new ArrayList<SwimlaneHandler>();
 		Map<String, Swimlane> swimlanes = instance.getTaskMgmtDefinition().getSwimlanes();

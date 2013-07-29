@@ -210,6 +210,7 @@ public class SearchHandler implements Serializable {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static String getConteudo(TaskInstance ti) {
 		StringBuilder sb = new StringBuilder();
 		TaskController taskController = ti.getTask().getTaskController();

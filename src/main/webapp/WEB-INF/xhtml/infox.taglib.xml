@@ -42,11 +42,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>view</tag-name>
-		<source>tags/form/view.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>commandButton</tag-name>
 		<source>tags/form/buttons/commandButton.xhtml</source>
 	</tag>
@@ -290,33 +285,13 @@
 	</tag>	
 	
 	<tag>
-		<tag-name>dragDrop</tag-name>
-		<source>tags/generic/dragDrop.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>mask</tag-name>
 		<source>tags/generic/mask.xhtml</source>
 	</tag>
 	
 	<tag>
-		<tag-name>msgGeneric</tag-name>
-		<source>tags/generic/msgGeneric.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>modalPanel</tag-name>
 		<source>tags/generic/modalPanel.xhtml</source>
-	</tag>
-	
-	<tag>
-		<tag-name>compositeField</tag-name>
-		<source>tags/generic/compositeField.xhtml</source>
-	</tag>
-	
-	<tag>
-		<tag-name>compositeFieldGroup</tag-name>
-		<source>tags/generic/compositeFieldGroup.xhtml</source>
 	</tag>
 	
 	<tag>
@@ -332,16 +307,6 @@
 	<tag>
 		<tag-name>commandLink</tag-name>
 		<source>tags/generic/commandLink.xhtml</source>
-	</tag>
-
-	<tag>
-		<tag-name>outputLink</tag-name>
-		<source>tags/generic/outputLink.xhtml</source>
-	</tag>
-		
-	<tag>
-		<tag-name>graphicImage</tag-name>
-		<source>tags/generic/graphicImage.xhtml</source>
 	</tag>
 	
 	<function>
@@ -362,25 +327,10 @@
 	</tag>
 
 	<tag>
-		<tag-name>datagrid</tag-name>
-		<source>tags/grid/datagrid.xhtml</source>
-	</tag>
-
-	<tag>
-		<tag-name>datagridSearch</tag-name>
-		<source>tags/grid/datagridSearch.xhtml</source>
-	</tag>
-
-	<tag>
 		<tag-name>datalist</tag-name>
 		<source>tags/grid/datalist.xhtml</source>
 	</tag>
 
-	<tag>
-		<tag-name>m2mGrid</tag-name>
-		<source>tags/grid/m2mGrid.xhtml</source>
-	</tag>
-	
 	<!-- Columns --> 
 	
 	<tag>
@@ -421,11 +371,6 @@
 	<tag>
 		<tag-name>columnSelectBooleanCheckbox</tag-name>
 		<source>tags/grid/columns/columnSelectBooleanCheckbox.xhtml</source>
-	</tag>
-	
-	<tag>
-		<tag-name>columnDataList</tag-name>
-		<source>tags/grid/columns/columnDataList.xhtml</source>
 	</tag>
 	
 	<!-- Tools -->

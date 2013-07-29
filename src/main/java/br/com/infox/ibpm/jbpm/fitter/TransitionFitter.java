@@ -65,6 +65,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void checkTransitions() {
 		List<Node> nodes = pb.getNodeFitter().getNodes();
 		clear();
@@ -148,6 +149,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return newNodeTransition;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<TransitionHandler> getArrivingTransitions() {
 		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		if (arrivingTransitions == null) {
@@ -160,6 +162,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return arrivingTransitions;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<TransitionHandler> getLeavingTransitions() {
 		Node currentNode = pb.getNodeFitter().getCurrentNode();
 		if (leavingTransitions == null) {
@@ -172,6 +175,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return leavingTransitions;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<TransitionHandler> getTransitions() {
 		List<Node> nodes = pb.getNodeFitter().getNodes();
 		if (transitionList == null) {
@@ -213,6 +217,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public List<SelectItem> getTransitionsItems(List<Node> nodes) {
 		if (transitionsItems == null) {
 			transitionsItems = new ArrayList<SelectItem>();

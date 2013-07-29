@@ -125,6 +125,7 @@ public class TaskHandler implements Serializable {
 		return ret;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Task update() {
 		if (task.getTaskController() != null) {
 			List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
@@ -136,6 +137,7 @@ public class TaskHandler implements Serializable {
 		return task;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void newVar() {
 		if(!checkNullVariables()) {
 			VariableAccess v = new VariableAccess("", "read,write", "null:");

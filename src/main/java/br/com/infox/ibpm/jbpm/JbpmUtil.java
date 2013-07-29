@@ -157,6 +157,7 @@ public class JbpmUtil {
 		return session.createQuery(sb.toString()).list();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<TaskInstance> getAllTasks() { 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ti from org.jbpm.taskmgmt.exe.TaskInstance ti ");
@@ -168,6 +169,7 @@ public class JbpmUtil {
 				.list();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T> T getProcessVariable(String name) {
 		ProcessInstance processInstance = org.jboss.seam.bpm.ProcessInstance.instance();
 		if (processInstance != null) {
@@ -249,6 +251,7 @@ public class JbpmUtil {
 		return idProcesso != null ? EntityUtil.find(Processo.class, idProcesso) : null;
 	}		
 
+	@SuppressWarnings("unchecked")
 	public static List<Task> getTasksForLocalizacaoAtual() {
 		UsuarioLocalizacao loc = (UsuarioLocalizacao) Contexts.getSessionContext().get(
 				"usuarioLogadoLocalizacaoAtual");
@@ -260,11 +263,10 @@ public class JbpmUtil {
 		sb.append("like :param");
 		sb.append(") ");
 		String param = "%\\'" + loc.getLocalizacao().getIdLocalizacao() +":%";
-		List<Task> list = JbpmUtil.getJbpmSession().createSQLQuery(sb.toString())
+		return JbpmUtil.getJbpmSession().createSQLQuery(sb.toString())
 			.addEntity(Task.class)
 			.setString("param", param)
 			.list();
-		return list;
 	}
 
 	/**
@@ -374,6 +376,7 @@ public class JbpmUtil {
 	 * @param transitionDestino
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean canTransitTo(TaskInstance taskInstance, String transitionDestino) {
 		List<Transition> availableTransitions = taskInstance.getAvailableTransitions();
 		for (Transition transition : availableTransitions) {
@@ -390,6 +393,7 @@ public class JbpmUtil {
 	 * @param transitionDestino
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean transitionExists(TaskInstance taskInstance, String transitionDestino) {
 		List<Transition> transitionList = taskInstance.getTask().getTaskNode().getLeavingTransitions();
 		for (Transition transition : transitionList) {

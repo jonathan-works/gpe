@@ -1,6 +1,5 @@
 package br.com.infox.epp.manager;
 
-import javax.persistence.Query;
 import javax.xml.bind.ValidationException;
 
 import org.jboss.seam.Component;
@@ -9,7 +8,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
@@ -19,7 +17,6 @@ import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.HistoricoParteProcesso;
 import br.com.infox.ibpm.entity.ParteProcesso;
-import br.com.infox.ibpm.entity.Pessoa;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.Processo;

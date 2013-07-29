@@ -96,7 +96,8 @@ public class TaskInstanceHome implements Serializable {
     private TaskInstance currentTaskInstance;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 
-    public void createInstance() {
+    @SuppressWarnings("unchecked")
+	public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (instance == null && taskInstance != null) {
             instance = new HashMap<String, Object>();
@@ -194,7 +195,8 @@ public class TaskInstanceHome implements Serializable {
         return null;
     }
 
-    public void update() {
+    @SuppressWarnings("unchecked")
+	public void update() {
         modeloDocumento = null;
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 
@@ -468,7 +470,8 @@ public class TaskInstanceHome implements Serializable {
         return OCCULT_TRANSITION.equals(transition.getCondition());
     }
 
-    public void updateTransitions() {
+    @SuppressWarnings("unchecked")
+	public void updateTransitions() {
         availableTransitions = taskInstance.getAvailableTransitions();
         leavingTransitions = taskInstance.getTask().getTaskNode()
                 .getLeavingTransitions();

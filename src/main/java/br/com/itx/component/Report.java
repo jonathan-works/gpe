@@ -26,8 +26,6 @@ import br.com.itx.component.grid.GridQuery;
 
 public class Report {
 
-	private static final long serialVersionUID = 1L;
-
 	private List<GridColumn> columns = new ArrayList<GridColumn>();
 
 	private String reportId;

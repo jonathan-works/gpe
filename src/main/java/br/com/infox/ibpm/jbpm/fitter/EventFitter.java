@@ -31,7 +31,8 @@ public class EventFitter extends Fitter implements Serializable{
 	 */
 	public void addEvents() {
 		ProcessDefinition processDefinition = pb.getInstance();
-		for (String e : ProcessDefinition.supportedEventTypes) {
+		String[] supportedEvents = processDefinition.getSupportedEventTypes();
+		for (String e : supportedEvents) {
 			addEvent(processDefinition, e, "br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)", new Script());
 		}
 	}
@@ -88,6 +89,7 @@ public class EventFitter extends Fitter implements Serializable{
 		List<String> list = new ArrayList<String>();
 		String[] eventTypes = pb.getInstance().getSupportedEventTypes();
 		List<String> currentEvents = new ArrayList<String>();
+		@SuppressWarnings("unchecked")
 		Collection<Event> values = pb.getInstance().getEvents().values();
 		for (Event event : values) {
 			currentEvents.add(event.getEventType());

@@ -35,6 +35,7 @@ import br.com.itx.exception.AplicationException;
 @Scope(ScopeType.APPLICATION)
 public class SubprocessActionHandler {
 
+	@SuppressWarnings("unchecked")
 	@Observer(Event.EVENTTYPE_SUBPROCESS_CREATED)
 	public void copyVariablesToSubprocess() {
 		try {
@@ -51,6 +52,7 @@ public class SubprocessActionHandler {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Observer(Event.EVENTTYPE_SUBPROCESS_END)
 	public void copyVariablesFromSubprocess() {
 		try {

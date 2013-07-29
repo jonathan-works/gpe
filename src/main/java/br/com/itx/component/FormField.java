@@ -181,7 +181,7 @@ public class FormField implements Serializable {
 		this.formHome = formHome;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public List suggest(Object typed) {
 		String column = (String) properties.get("optionText");
 		if (column != null) {
