@@ -31,7 +31,7 @@ public final class TwitterUtil {
 	private TwitterFactory factory;
 	private Twitter aplicacao;
 		
-	private TwitterUtil() throws IllegalArgumentException {
+	private TwitterUtil() {
 		ConfigurationBuilder builder = new ConfigurationBuilder();
 		builder.setOAuthConsumerKey(ParametroUtil.getParametro("oauthConsumerKey"));
 		builder.setOAuthConsumerSecret(ParametroUtil.getParametro("oauthConsumerSecret"));
@@ -298,7 +298,7 @@ public final class TwitterUtil {
 	 * @throws IllegalStateException
 	 * @throws TwitterException
 	 */
-	public User mutualApplicationFollow(ContaTwitter contaTwitter) throws IllegalStateException, TwitterException{
+	public User mutualApplicationFollow(ContaTwitter contaTwitter) throws TwitterException{
 		Twitter twitter = createTwitter(contaTwitter);
 		twitter.createFriendship(aplicacao.getId(), true);
 		return aplicacao.createFriendship(twitter.getId(), true);
@@ -311,7 +311,7 @@ public final class TwitterUtil {
 	 * @throws IllegalStateException
 	 * @throws TwitterException
 	 */
-	public User mutualApplicationUnfollow(ContaTwitter contaTwitter) throws IllegalStateException, TwitterException{
+	public User mutualApplicationUnfollow(ContaTwitter contaTwitter) TwitterException{
 		Twitter twitter = createTwitter(contaTwitter);
 		twitter.createFriendship(aplicacao.getId(), true);
 		return aplicacao.createFriendship(twitter.getId(), true);
