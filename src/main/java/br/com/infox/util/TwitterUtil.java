@@ -381,7 +381,7 @@ public class TwitterUtil {
     =================================== Métodos Inicializadores e Auxiliares Privados ========================================
 */	
 	
-	private final void loadApplicationTwitter() {
+	private void loadApplicationTwitter() {
 		Integer idUsuarioSistema = Integer.valueOf(ParametroUtil.getParametro("idUsuarioSistema"));
 		String hql = "select o from ContaTwitter o where o.usuario.idPessoa = :usuario";
 		ContaTwitter ct = (ContaTwitter) EntityUtil.createQuery(hql)
@@ -402,7 +402,7 @@ public class TwitterUtil {
 	 * é registrada em https://dev.twitter.com/apps
 	 * @return uma instância do TwitterUtil
 	 * */
-	private final static TwitterUtil init(){
+	private static TwitterUtil init(){
 		TwitterUtil result = null;
 		try {
 			result = new TwitterUtil();
