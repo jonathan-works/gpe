@@ -327,16 +327,6 @@
 	</tag>
 
 	<tag>
-		<tag-name>datagrid</tag-name>
-		<source>tags/grid/datagrid.xhtml</source>
-	</tag>
-
-	<tag>
-		<tag-name>datagridSearch</tag-name>
-		<source>tags/grid/datagridSearch.xhtml</source>
-	</tag>
-
-	<tag>
 		<tag-name>datalist</tag-name>
 		<source>tags/grid/datalist.xhtml</source>
 	</tag>
