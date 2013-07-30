@@ -45,18 +45,29 @@
 				variaveis:{
 					label:"Variáveis",
 					list:[
-							<a:repeat value="#{modeloDocumentoHome.variaveis}"
-								var="v">
-								{
-									label:"#{v.variavel}",
-									value:"#"+"{#{v.variavel}}"
-								},
-							</a:repeat>
-						]
+						<a:repeat value="#{modeloDocumentoHome.variaveis}"
+							var="v">
+							{
+								label:"#{v.variavel}",
+								value:"#"+"{#{v.variavel}}"
+							},
+						</a:repeat>
+					],
+					instance:{
+						get function() {
+							return CKEDITOR.instances["#{rich:clientId(id)}:inp"];
+						}
+					}
 				}
 			});
-			namespace("infox.editor.#{id}",function(conteudo) {
+			namespace("infox.editor.#{id}",function(editor) {
 				CKEDITOR.plugins.addExternal("variables","#{util.contextPath}/resources/js/editor/","variables.js");
+				editor.instance.addCommand("teste",{
+					exec:function(editor) {
+						console.debug("executou teste");
+					}
+				});
+				editor.instance.execCommand("teste");
 			});
 		</script>
 
@@ -70,14 +81,14 @@
 			height="#{wi:get(height, 350)}"
 			readonly="#{readonly}"
 			required="#{required}"
-			onchange="#{wi:get(onchange, 'void(0);')}"
-			customPlugins="epaPlugins">
+			onchange="#{wi:get(onchange, 'void(0);')}">
 			
 			<f:facet name="config">
 				toolbar_InfoxToolbar:
 				[
 				{ name: 'editing', items: ['Cut', 'Copy', 'Paste', '-', 'Find', 'Replace', '-', 'Undo', 'Redo'] },
 				{ name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'Underline'] },
+				{ name: 'extra', items:['variables.btn']}
 				],
 				tabSpaces:4
 			</f:facet>
