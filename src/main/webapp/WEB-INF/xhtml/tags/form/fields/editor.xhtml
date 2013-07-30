@@ -40,26 +40,24 @@
 
 		<script
 			type="text/javascript">
-			// Conteudo da lista de selecao
-			var contents = {
-				<a:repeat
-                 value="#{modeloDocumentoHome.variaveis}"
-                 var="v">
-					'#{v.variavel}' : '\#{'+'#{v.variavel}'+'}' ,
-				</a:repeat>
-			};
 			// Label da lista de variáveis
-			var label = 'Variáveis';
-
-			function tabKeyAction(event) {
-				if (event.data.keyCode == 9) {
-					//insere espaços em branco
-					editor.selection.setContent("            ");
-					//cancelando a ação padrão da tecla tab, que seria ir para o próximo campo.
-					event.preventDefault();
-					return false;
+			namespace("infox.editor.#{id}",{
+				variaveis:{
+					label:"Variáveis",
+					list:[
+							<a:repeat value="#{modeloDocumentoHome.variaveis}"
+								var="v">
+								{
+									label:"#{v.variavel}",
+									value:"#"+"{#{v.variavel}}"
+								},
+							</a:repeat>
+						]
 				}
-			}
+			});
+			namespace("infox.editor.#{id}",function(conteudo) {
+				CKEDITOR.plugins.addExternal("variables","#{util.contextPath}/resources/js/editor/","variables.js");
+			});
 		</script>
 
 		<ui:define name="label">#{label}</ui:define>
@@ -81,11 +79,7 @@
 				{ name: 'editing', items: ['Cut', 'Copy', 'Paste', '-', 'Find', 'Replace', '-', 'Undo', 'Redo'] },
 				{ name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'Underline'] },
 				],
-				on: {
-					instanceReady: function() {
-						this.on('key', tabKeyAction);
-					}
-				}
+				tabSpaces:4
 			</f:facet>
 			
 			<f:param
