@@ -131,14 +131,6 @@ h1 {
 	font-size: 1.6em;
 	margin-top: 0;
 }
-
-html, body {
-	width:100%;
-	height:100%;
-}
-form {
-	margin:0px;
-}
 body {
 	margin: 0px;
 	font-family: Arial, sans-serif;
@@ -528,68 +520,6 @@ select {
 .fixed-selected {
 	background-color: #d00;
 }
-/*messages.xhtml*/
-.d-msg.hidden {
-	visibility:hidden;
-}
-.d-msg-h {
-	height:18px;
-	font-weight:bold;
-	border-style:solid;
-	border-width:1px;
-	position:relative;
-}
-.d-msg-h-close {
-	cursor: pointer;
-	position:absolute;
-	right:2px;
-	top:2px;
-}
-.d-msg-h-lbl {
-	position:absolute;
-	left:2px;
-	top:2px;
-}
-.d-msg-c {
-	 overflow:auto;
-	 height:120px;
-	 padding:5px;
-	 color:#000;
-}
-
-.d-msg-c > ul {
-	margin:0;
-	padding:4px;
-}
-
-.d-msg-c > ul > li {
-	 display:inline-block;
-}
-
-.rf-msgs-wrn {
-	display:none;
-}
-
-.rf-msgs-err {
-	padding: 2px;
-	border: 1px solid red;
-	background-color: #FFFFE0;
-	display: block;
-	background-image: none;
-}
-
-.d-msg {
-	position:absolute; 
-	top:calc(50% - 67px);
-	left:calc(50% - 152px);			
-	width:300px;
-	height:131px;
-	background-color:#fff;   				
-	border:1px solid #BCC1BD;
-	padding:1px;
-	z-index:10000;
-	font-size:12px;		
-}
 
 /*Painel/list.xhtml*/
 .p-caixas,.p-list {
@@ -599,6 +529,9 @@ select {
 .p-caixas {
 	width:calc(30% - 10px);
 	margin:0 5px 0 0;
+}
+.p-caixas-b {
+	min-height:378px;
 }
 .p-list {
 	width:calc(70% - 10px);
