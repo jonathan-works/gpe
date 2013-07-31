@@ -21,6 +21,7 @@ public interface LengthConstants {
     int ID_ENTIDADE = 200;
     
     //Tamanhos dos Nomes
+    int NOME_CAIXA = 100;
     int NOME_ATRIBUTO = 150;
 
 }
