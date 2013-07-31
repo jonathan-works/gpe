@@ -12,16 +12,19 @@ public interface LengthConstants {
     int CEP = 9;
     int CNAE = 9;
     
-    //Tamanhos das Descrições
+    //Tamanhos das Descrições Usuais
     int DESCRICAO_MINIMA = 15;
     int DESCRICAO_PEQUENA = 30;
+    int DESCRICAO_PADRAO = 100;
+    int DESCRICAO_MEDIA = 150;
+    int DESCRICAO_GRANDE = 255;
+    
+    //Tamanhos das Descrições Especiais
     int DESCRICAO_MD5 = 32;
     int DESCRICAO_ENTIDADE = 50;
-    int DESCRICAO_PADRAO = 100;
+    int DESCRICAO_TITULO = 60;
     int DESCRICAO_PACOTE = 150;
-    int DESCRICAO_MEDIA = 150;
     int DESCRICAO_CLASSIFICACAO = 150; //CBO e CNAE
-    int DESCRICAO_GRANDE = 255;
     int DESCRICAO_NOME_ARQUIVO = 300;
     
     //Tamanhos de Ids
