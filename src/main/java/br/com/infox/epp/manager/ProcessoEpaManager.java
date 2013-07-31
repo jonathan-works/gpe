@@ -1,6 +1,8 @@
 package br.com.infox.epp.manager;
 
 import java.util.List;
+import java.util.Map;
+
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -61,20 +63,25 @@ public class ProcessoEpaManager extends GenericManager {
 	public void updateTempoGastoProcessoEpa() {
 		List<ProcessoEpa> listAllNotEnded = listAllNotEnded();
 		for (ProcessoEpa processoEpa : listAllNotEnded) {
-			Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+			Map<String, Object> result = processoEpaDAO.getTempoGasto(processoEpa);
 			
-			Integer tempoGasto = processoEpa.getTempoGasto();
-			if (tempoGasto == null) {
-				tempoGasto = 0;
+			if (result != null) {
+				Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+				Long dias = (Long)result.get("dias");
+				Long tempoGasto = ((Long)result.get("horas"))/24;
+				if (dias != null) {
+					tempoGasto += dias;
+				}
+				processoEpa.setTempoGasto(tempoGasto.intValue());
+			
+				if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
+					processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100) / f.getQtPrazo());
+				}
+				if (processoEpa.getPorcentagem() > 100) {
+					processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+				}
+				processoEpaDAO.update(processoEpa);
 			}
-			processoEpa.setTempoGasto(tempoGasto + 1);//? sem critério
-			if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
-				processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100) / f.getQtPrazo());
-			}
-			if (processoEpa.getPorcentagem() > 100) {
-				processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
-			}
-			update(processoEpa);
 		}
 	}
 	

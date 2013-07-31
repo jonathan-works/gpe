@@ -11,64 +11,70 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.async.QuartzTriggerHandle;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.util.ClassLoaderUtil;
 import org.quartz.SchedulerException;
 
+import br.com.infox.component.quartz.QuartzConstant;
 import br.com.infox.epp.processor.TarefaTimerProcessor;
 import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.timer.TimerUtil;
 import br.com.itx.util.EntityUtil;
 
-
 @Name(TarefaTimerStarter.NAME)
 @Scope(ScopeType.APPLICATION)
-@Startup(depends="org.jboss.seam.async.dispatcher")
-@Install(dependencies={"org.jboss.seam.async.dispatcher"})
+@Startup(depends = QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER)
+@Install(dependencies = { QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER })
 public class TarefaTimerStarter {
 
 	private static final String DEFAULT_CRON_EXPRESSION = "0 0/30 * * * ?";
-	 
-    public static final String NAME = "tarefaTimerStarter";
+	private static final LogProvider LOG = Logging
+			.getLogProvider(TarefaTimerStarter.class);
+	public static final String NAME = "tarefaTimerStarter";
 
-    public static final String ID_INICIAR_TASK_TIMER_PARAMETER = "idTaskTimerParameter";
-    private static Properties quartzProperties = ClassLoaderUtil.getProperties("seam.quartz.properties");
-    
-    public TarefaTimerStarter(){    	 
-    }
+	public static final String ID_INICIAR_TASK_TIMER_PARAMETER = "idTaskTimerParameter";
+	private static final Properties quartzProperties = ClassLoaderUtil
+			.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
 
-    @Create
-    @Transactional
-    public void init() throws SchedulerException{
-        String enabled = quartzProperties.getProperty("org.quartz.timer.enabled", "false");
-        if (!"true".equals(enabled)) {
-            return;
-        }
+	public TarefaTimerStarter() {}
 
-        String idIniciarFluxoTimer = null; 
-		try {
-			idIniciarFluxoTimer = TimerUtil.getParametro(ID_INICIAR_TASK_TIMER_PARAMETER);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+	@Create
+	@Transactional
+	public void init() throws SchedulerException {
+		if (!Boolean.parseBoolean(quartzProperties
+				.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {
+			return;
 		}
-        if (idIniciarFluxoTimer == null) {
-            Parametro p = new Parametro();
-            p.setAtivo(true);
-            p.setDescricaoVariavel("ID do timer do sistema");
-            p.setDataAtualizacao(new Date());
-            p.setNomeVariavel(ID_INICIAR_TASK_TIMER_PARAMETER);
-            p.setSistema(true);
 
-            String cronExpression = quartzProperties.getProperty(
-           		 "org.quartz.cronExpression", DEFAULT_CRON_EXPRESSION);        
-            
-            TarefaTimerProcessor processor = TarefaTimerProcessor.instance();
-			QuartzTriggerHandle handle = processor.increaseTaskTimeSpent(cronExpression);                     
-            EntityUtil.getEntityManager().flush();
-            String triggerName = handle.getTrigger().getName();
-            p.setValorVariavel(triggerName);
-            EntityUtil.getEntityManager().persist(p);
-            EntityUtil.getEntityManager().flush();
-       }
-    }
-	
+		String idIniciarFluxoTimer = null;
+		try {
+			idIniciarFluxoTimer = TimerUtil
+					.getParametro(ID_INICIAR_TASK_TIMER_PARAMETER);
+		} catch (IllegalArgumentException e) {
+			LOG.error("TarefaTimerStarter.init()", e);
+		}
+		if (idIniciarFluxoTimer == null) {
+			Parametro p = new Parametro();
+			p.setAtivo(true);
+			p.setDescricaoVariavel("ID do timer do sistema");
+			p.setDataAtualizacao(new Date());
+			p.setNomeVariavel(ID_INICIAR_TASK_TIMER_PARAMETER);
+			p.setSistema(true);
+
+			String cronExpression = quartzProperties.getProperty(
+					QuartzConstant.QUARTZ_CRON_EXPRESSION,
+					DEFAULT_CRON_EXPRESSION);
+
+			TarefaTimerProcessor processor = TarefaTimerProcessor.instance();
+			QuartzTriggerHandle handle = processor
+					.increaseTaskTimeSpent(cronExpression);
+			EntityUtil.getEntityManager().flush();
+			String triggerName = handle.getTrigger().getName();
+			p.setValorVariavel(triggerName);
+			EntityUtil.getEntityManager().persist(p);
+			EntityUtil.getEntityManager().flush();
+		}
+	}
+
 }
