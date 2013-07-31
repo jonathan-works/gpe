@@ -13,6 +13,7 @@ public interface LengthConstants {
     int DESCRICAO_ENTIDADE = 50;
     int DESCRICAO_PADRAO = 100;
     int DESCRICAO_PACOTE = 150;
+    int DESCRICAO_CLASSIFICACAO = 150; //CBO e CNAE
     int DESCRICAO_GRANDE = 255;
     int DESCRICAO_NOME_ARQUIVO = 300;
     
