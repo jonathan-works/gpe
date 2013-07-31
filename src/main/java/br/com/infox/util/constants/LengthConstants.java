@@ -19,6 +19,7 @@ public interface LengthConstants {
     int DESCRICAO_ENTIDADE = 50;
     int DESCRICAO_PADRAO = 100;
     int DESCRICAO_PACOTE = 150;
+    int DESCRICAO_MEDIA = 150;
     int DESCRICAO_CLASSIFICACAO = 150; //CBO e CNAE
     int DESCRICAO_GRANDE = 255;
     int DESCRICAO_NOME_ARQUIVO = 300;
@@ -31,6 +32,7 @@ public interface LengthConstants {
     int NOME_CAIXA = 100;
     int NOME_BAIRRO = 100;
     int NOME_ATRIBUTO = 150;
+    int NOME_MEDIO = 150;
     int NOME_LOGRADOURO = 200;
     
     //Tamanhos de ~Números
