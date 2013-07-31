@@ -24,6 +24,7 @@ public interface LengthConstants {
     
     //Tamanhos dos Nomes
     int NOME_CAIXA = 100;
+    int NOME_BAIRRO = 100;
     int NOME_ATRIBUTO = 150;
     int NOME_LOGRADOURO = 200;
     
