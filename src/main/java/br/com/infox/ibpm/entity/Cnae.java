@@ -5,6 +5,9 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
+
+import br.com.infox.util.constants.LengthConstants;
+
 import javax.validation.constraints.Size;
 
 @Entity
@@ -39,8 +42,7 @@ public class Cnae implements Serializable {
 		this.codCnae = codCnae;
 	}
 	
-	@Column(name="ds_cnae", nullable=false, length=150)
-	@Size(max=150)
+	@Column(name="ds_cnae", nullable=false, length=LengthConstants.DESCRICAO_CLASSIFICACAO)
 	public String getDescricaoCnae() {
 		return descricaoCnae;
 	}
