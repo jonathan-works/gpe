@@ -31,5 +31,8 @@ public interface LengthConstants {
     //Tamnhos dos Códigos
     int CEP = 9;
     int CNAE = 9;
+    
+    //Tipos Especiais
+    int FLAG = 1;
 
 }
