@@ -25,6 +25,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.util.constants.LengthConstants;
+
 @Entity
 @Table(name = "tb_pagina", schema="public")
 public class Pagina implements java.io.Serializable {
@@ -50,9 +52,8 @@ public class Pagina implements java.io.Serializable {
 		this.idPagina = idPagina;
 	}
 	
-	@Column(name = "ds_descricao", nullable = false, length = 100)
+	@Column(name = "ds_descricao", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
-	@Size(max = 100)
 	public String getDescricao() {
 		return this.descricao;
 	}
@@ -61,9 +62,8 @@ public class Pagina implements java.io.Serializable {
 		this.descricao = descricao;
 	}
 	
-	@Column(name = "ds_url", nullable = false, length = 100)
+	@Column(name = "ds_url", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
-	@Size(max = 100)
 	public String getUrl() {
 		return this.url;
 	}
