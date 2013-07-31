@@ -19,6 +19,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(schema="public", name=CalendarioEventos.TABLE_NAME)
@@ -56,7 +57,7 @@ public class CalendarioEventos implements Serializable {
 		this.localizacao = localizacao;
 	}
 	
-	@Column(name="ds_evento", length=100, nullable=false)
+	@Column(name="ds_evento", length=LengthConstants.DESCRICAO_PADRAO, nullable=false)
 	@NotNull
 	public String getDescricaoEvento() {
 		return descricaoEvento;
