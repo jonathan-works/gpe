@@ -7,5 +7,6 @@ public interface LengthConstants {
     int DESCRICAO_MD5 = 32;
     int DESCRICAO_PADRAO = 100;
     int DESCRICAO_GRANDE = 255;
+    int DESCRICAO_NOME_ARQUIVO = 300;
 
 }
