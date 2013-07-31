@@ -18,6 +18,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import br.com.infox.util.constants.LengthConstants;
+
 @Entity
 @Table(name = "tb_imagem_bin", schema="public")
 public class ImagemBin implements Serializable {
@@ -43,8 +45,7 @@ public class ImagemBin implements Serializable {
 		this.idImagemBin = idImagemBin;
 	}
 	
-	@Column(name = "ds_extensao", length = 15)
-	@Length(max = 15)
+	@Column(name = "ds_extensao", length=LengthConstants.DESCRICAO_MINIMA)
 	public String getExtensao() {
 		return extensao;
 	}
@@ -52,8 +53,7 @@ public class ImagemBin implements Serializable {
 		this.extensao = extensao;
 	}
 	
-	@Column(name = "ds_md5_imagem", length = 32, nullable=false)
-	@Length(max = 32)
+	@Column(name = "ds_md5_imagem", length=LengthConstants.DESCRICAO_MD5, nullable=false)
 	@NotNull
 	public String getMd5Imagem() {
 		return md5Imagem;
@@ -62,8 +62,7 @@ public class ImagemBin implements Serializable {
 		this.md5Imagem = md5Imagem;
 	}
 	
-	@Column(name = "nm_arquivo", length = 300)
-	@Length(max = 300)
+	@Column(name = "nm_arquivo", length=LengthConstants.DESCRICAO_NOME_ARQUIVO)
 	public String getNomeArquivo() {
 		return nomeArquivo;
 	}
