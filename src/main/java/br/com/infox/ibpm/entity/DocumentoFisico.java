@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import br.com.infox.ibpm.query.DocumentoFisicoQuery;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(schema="public", name=DocumentoFisico.TABLE_NAME)
@@ -54,8 +55,7 @@ public class DocumentoFisico implements Serializable {
 		this.processo = processo;
 	}
 	
-	@Column(name="ds_documento_fisico", nullable=false, length=150)
-	@Size(max=150)
+	@Column(name="ds_documento_fisico", nullable=false, length=LengthConstants.DESCRICAO_PADRAO)
 	public String getDescricaoDocumentoFisico() {
 		return descricaoDocumentoFisico;
 	}
