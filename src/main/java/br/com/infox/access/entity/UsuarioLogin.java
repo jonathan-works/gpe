@@ -47,6 +47,7 @@ import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.entity.log.EntityLog;
+import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.StringUtil;
 
 @Entity
@@ -92,8 +93,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 		dataExpiracao = null;
 	}
 
-	@Column(name = "ds_senha", length = 100)
-	@Size(max = 100)
+	@Column(name = "ds_senha", length=LengthConstants.DESCRICAO_PADRAO)
 	@UserPassword(hash = "SHA")
 	public String getSenha() {
 		return this.senha;
@@ -103,9 +103,8 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 		this.senha = senha;
 	}
 
-	@Column(name = "ds_login", unique = true, nullable = false, length = 100)
+	@Column(name = "ds_login", unique = true, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
-	@Size(max = 100)
 	@UserPrincipal
 	public String getLogin() {
 		return this.login;
