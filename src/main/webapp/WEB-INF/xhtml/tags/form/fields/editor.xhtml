@@ -42,32 +42,27 @@
 			type="text/javascript">
 			// Label da lista de variáveis
 			namespace("infox.editor.#{id}",{
-				variaveis:{
-					label:"Variáveis",
-					list:[
-						<a:repeat value="#{modeloDocumentoHome.variaveis}"
-							var="v">
-							{
-								label:"#{v.variavel}",
-								value:"#"+"{#{v.variavel}}"
-							},
-						</a:repeat>
-					],
-					instance:{
-						get function() {
-							return CKEDITOR.instances["#{rich:clientId(id)}:inp"];
-						}
-					}
+				get variaveis() {
+					var result = {
+						label:"Variáveis",
+						list:[
+							<a:repeat value="#{modeloDocumentoHome.variaveis}"
+								var="v">
+								{
+									label:"#{v.variavel}",
+									value:"#"+"{#{v.variavel}}"
+								},
+							</a:repeat>
+						]
+					};
+					return result;
+				},
+				get id(){
+					return "#{rich:clientId(id)}:inp";
+				},
+				get instance() {
+					return CKEDITOR.instances["#{rich:clientId(id)}:inp"];
 				}
-			});
-			namespace("infox.editor.#{id}",function(editor) {
-				CKEDITOR.plugins.addExternal("variables","#{util.contextPath}/resources/js/editor/","variables.js");
-				editor.instance.addCommand("teste",{
-					exec:function(editor) {
-						console.debug("executou teste");
-					}
-				});
-				editor.instance.execCommand("teste");
 			});
 		</script>
 
@@ -88,9 +83,41 @@
 				[
 				{ name: 'editing', items: ['Cut', 'Copy', 'Paste', '-', 'Find', 'Replace', '-', 'Undo', 'Redo'] },
 				{ name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'Underline'] },
-				{ name: 'extra', items:['variables.btn']}
+				{ name: "extra", items:["-","variables.cmb","-"]}
 				],
-				tabSpaces:4
+				tabSpaces:4,
+				on:{
+					configLoaded:function(evt) {
+						console.debug("configLoaded",evt);
+						CKEDITOR.plugins.addExternal("variables","#{util.contextPath}/resources/js/editor/","variables.js");
+						evt.editor.addCommand("teste",{
+							exec:function(editor) {
+								console.debug("executou teste");
+							}
+						});
+						evt.editor.ui.addRichCombo("variables.cmb",{
+							label:"Variáveis",
+							title:"Variáveis",
+							voicelabel:"Variaveis",
+							className:"cke-var",
+							multiSelect:false,
+							icon:'#{util.contextPath}/img/level.png',
+							init:function() {
+								this.startGroup("ck-var");
+								<a:repeat value="#{modeloDocumentoHome.variaveis}"
+									var="v">
+									console.debug("#{v.variavel}");
+									this.add("1_#{v.variavel}","2_#{v.variavel}","3_#{v.variavel}");
+								</a:repeat>
+								console.debug(this);
+							},
+							onClick:function(value) {
+								editor.focus();
+								editor.insertHtml(value);
+							}
+						});
+					}
+				}
 			</f:facet>
 			
 			<f:param
