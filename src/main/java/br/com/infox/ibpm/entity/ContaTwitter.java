@@ -7,6 +7,7 @@ import javax.persistence.*;
 import twitter4j.auth.AccessToken;
 
 import br.com.infox.epp.type.TipoTwitterEnum;
+import br.com.infox.util.constants.LengthConstants;
 import br.com.infox.access.entity.UsuarioLogin;
 
 @Entity
@@ -57,7 +58,7 @@ public class ContaTwitter implements Serializable {
 		this.usuarioSecretToken = usuarioSecretToken;
 	}
 	
-	@Column(name="tp_conta_twitter", nullable=false, columnDefinition="varchar(1)", length = 1)
+	@Column(name="tp_conta_twitter", nullable=false, columnDefinition="varchar(1)", length=LengthConstants.FLAG)
 	@Enumerated(EnumType.STRING)
 	public TipoTwitterEnum getTipoTwitter() {
 		return tipoTwitter;
