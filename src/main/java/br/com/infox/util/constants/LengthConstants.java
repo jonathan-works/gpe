@@ -8,6 +8,7 @@ public interface LengthConstants {
      * */
     
   //Tamnhos dos Códigos
+    int UF = 2; //Unidade da Federação
     int CEP = 9;
     int CNAE = 9;
     
