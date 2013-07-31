@@ -4,6 +4,7 @@ public interface LengthConstants {
     
     /*
      * Favor, utilizar nomes intuitivos para as constantes mesmo que os valores se repitam
+     * além de agrupar por tipo e em ordem crescente.
      * */
     
     //Tamanhos das Descrições
@@ -24,5 +25,9 @@ public interface LengthConstants {
     //Tamanhos dos Nomes
     int NOME_CAIXA = 100;
     int NOME_ATRIBUTO = 150;
+    int NOME_LOGRADOURO = 200;
+    
+    //Tamnhos dos Códigos
+    int CEP = 9;
 
 }
