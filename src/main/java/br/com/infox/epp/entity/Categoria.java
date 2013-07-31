@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.query.CategoriaQuery;
+import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
@@ -50,9 +51,8 @@ public class Categoria implements Serializable{
 		this.idCategoria = idCategoria;
 	}
 	
-	@Column(name="ds_categoria", length=30, nullable=false)
+	@Column(name="ds_categoria", length=LengthConstants.DESCRICAO_PEQUENA, nullable=false)
 	@NotNull
-	@Size(max=30)
 	public String getCategoria() {
 		return categoria;
 	}
