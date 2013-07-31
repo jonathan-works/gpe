@@ -38,6 +38,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.query.FluxoQuery;
+import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
@@ -92,8 +93,7 @@ public class Fluxo implements java.io.Serializable {
 		this.usuarioPublicacao = usuarioPublicacao;
 	}
 
-	@Column(name = "cd_fluxo", length = 30)
-	@Size(max = 30)
+	@Column(name = "cd_fluxo", length=LengthConstants.DESCRICAO_PEQUENA)
 	public String getCodFluxo() {
 		return this.codFluxo;
 	}
@@ -105,9 +105,8 @@ public class Fluxo implements java.io.Serializable {
 		this.codFluxo = codFluxo;
 	}
 
-	@Column(name = "ds_fluxo", nullable = false, length = 100, unique = true)
+	@Column(name = "ds_fluxo", nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
 	@NotNull
-	@Size(max = 100)
 	public String getFluxo() {
 		return this.fluxo;
 	}
