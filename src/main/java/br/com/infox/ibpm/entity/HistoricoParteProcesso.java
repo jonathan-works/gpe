@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name=HistoricoParteProcesso.TABLE_NAME, schema="public")
@@ -76,7 +77,7 @@ public class HistoricoParteProcesso {
 		this.dataModificacao = dataModificacao;	
 	}
 
-	@Column(name="ds_motivo_modificacao", nullable=false, length=150)
+	@Column(name="ds_motivo_modificacao", nullable=false, length=LengthConstants.DESCRICAO_MEDIA)
 	public String getMotivoModificacao() {
 		return motivoModificacao;
 	}
