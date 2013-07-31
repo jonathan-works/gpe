@@ -7,6 +7,10 @@ public interface LengthConstants {
      * além de agrupar por tipo e em ordem crescente.
      * */
     
+  //Tamnhos dos Códigos
+    int CEP = 9;
+    int CNAE = 9;
+    
     //Tamanhos das Descrições
     int DESCRICAO_MINIMA = 15;
     int DESCRICAO_PEQUENA = 30;
@@ -18,7 +22,7 @@ public interface LengthConstants {
     int DESCRICAO_GRANDE = 255;
     int DESCRICAO_NOME_ARQUIVO = 300;
     
-    //Tamanhos de ids
+    //Tamanhos de Ids
     int ID_PAGINA = 200;
     int ID_ENTIDADE = 200;
     
@@ -28,9 +32,8 @@ public interface LengthConstants {
     int NOME_ATRIBUTO = 150;
     int NOME_LOGRADOURO = 200;
     
-    //Tamnhos dos Códigos
-    int CEP = 9;
-    int CNAE = 9;
+    //Tamanhos de ~Números
+    int NUMERO_ENDERECO = 15;
     
     //Tipos Especiais
     int FLAG = 1;
