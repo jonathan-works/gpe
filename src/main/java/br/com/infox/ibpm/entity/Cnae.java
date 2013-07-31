@@ -8,7 +8,6 @@ import org.hibernate.annotations.Type;
 
 import br.com.infox.util.constants.LengthConstants;
 
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(schema="public", name=Cnae.TABLE_NAME)
@@ -33,8 +32,7 @@ public class Cnae implements Serializable {
 		this.idCnae = idCnae;
 	}
 	
-	@Column(name="cd_cnae", nullable=false)
-	@Size(max=9)
+	@Column(name="cd_cnae", nullable=false, length=LengthConstants.CNAE)
 	public String getCodCnae() {
 		return codCnae;
 	}
