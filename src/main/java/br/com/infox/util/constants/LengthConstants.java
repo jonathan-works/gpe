@@ -19,5 +19,8 @@ public interface LengthConstants {
     //Tamanhos de ids
     int ID_PAGINA = 200;
     int ID_ENTIDADE = 200;
+    
+    //Tamanhos dos Nomes
+    int NOME_ATRIBUTO = 150;
 
 }
