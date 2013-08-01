@@ -3,9 +3,12 @@ package br.com.infox.ibpm.entity;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
-import javax.validation.constraints.Size;
+
+import br.com.infox.util.constants.LengthConstants;
+
 
 @Entity
 @Table(schema="public", name=Cnae.TABLE_NAME)
@@ -30,8 +33,8 @@ public class Cnae implements Serializable {
 		this.idCnae = idCnae;
 	}
 	
-	@Column(name="cd_cnae", nullable=false)
-	@Size(max=9)
+	@Column(name="cd_cnae", nullable=false, length=LengthConstants.CNAE)
+	@Size(max=LengthConstants.CNAE)
 	public String getCodCnae() {
 		return codCnae;
 	}
@@ -39,8 +42,8 @@ public class Cnae implements Serializable {
 		this.codCnae = codCnae;
 	}
 	
-	@Column(name="ds_cnae", nullable=false, length=150)
-	@Size(max=150)
+	@Column(name="ds_cnae", nullable=false, length=LengthConstants.DESCRICAO_CLASSIFICACAO)
+	@Size(max=LengthConstants.DESCRICAO_CLASSIFICACAO)
 	public String getDescricaoCnae() {
 		return descricaoCnae;
 	}

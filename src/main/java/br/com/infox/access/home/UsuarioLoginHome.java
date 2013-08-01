@@ -20,73 +20,73 @@ import br.com.itx.util.ComponentUtil;
 @BypassInterceptors
 public class UsuarioLoginHome extends AbstractHome<UsuarioLogin> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "usuarioLoginHome";
-	
-	private String papel;
-  
-	public void setUsuarioId(Integer id) {
-		super.setId(id);
-		Conversation.instance().end();
-		UsuarioLogin u = getInstance();
-		UserAction action = getUserAction();
-		action.editUser(u.getLogin());
-		action.setEnabled(u.getAtivo());
-		action.setFirstname(u.getNome());
-		papel = null;
-	}
-	
-	public Integer getUsuarioId() {
-		return (Integer) getId();
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "usuarioLoginHome";
 
-	@Override
-	public void newInstance() {
-		super.newInstance();
-		Contexts.removeFromAllContexts("org.jboss.seam.security.management.userAction");
-	}
+    private String papel;
 
-	@Override
-	protected UsuarioLogin createInstance() {
-		UsuarioLogin usuarioLogin = new UsuarioLogin();
-		UserAction action = getUserAction();
-		action.createUser();
-		action.setEnabled(true);
-		return usuarioLogin;
-	}
+    public void setUsuarioId(Integer id) {
+        super.setId(id);
+        Conversation.instance().end();
+        UsuarioLogin u = getInstance();
+        UserAction action = getUserAction();
+        action.editUser(u.getLogin());
+        action.setEnabled(u.getAtivo());
+        action.setFirstname(u.getNome());
+        papel = null;
+    }
 
-	private UserAction getUserAction() {
-		return ComponentUtil.getComponent("org.jboss.seam.security.management.userAction");
-	}
-	
-	@Override
-	public String remove(UsuarioLogin u) {
-		setInstance(u);
-		String ret = super.remove();
-		Conversation.instance().end();
-		newInstance();
-		return ret;
-	}
-	
-	public String getPapel() {
-		if (papel != null) {
-			return papel;
-		}
-		List<String> roles = getUserAction().getRoles();
-		if (!roles.isEmpty()) {
-			papel = roles.get(0);
-		}
-		return papel;
-	}
-	
-	public void setPapel(String papel) {
-		this.papel = papel;
-		List<String> list = Arrays.asList(new String[] {papel});
-		getUserAction().setRoles(list);
-	}
-	
-	public UsuarioLoginHome instance (){
-		return ComponentUtil.getComponent(NAME);
-	}
-	
+    public Integer getUsuarioId() {
+        return (Integer) getId();
+    }
+
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        Contexts.removeFromAllContexts("org.jboss.seam.security.management.userAction");
+    }
+
+    @Override
+    protected UsuarioLogin createInstance() {
+        UsuarioLogin usuarioLogin = new UsuarioLogin();
+        UserAction action = getUserAction();
+        action.createUser();
+        action.setEnabled(true);
+        return usuarioLogin;
+    }
+
+    private UserAction getUserAction() {
+        return ComponentUtil.getComponent("org.jboss.seam.security.management.userAction");
+    }
+
+    @Override
+    public String remove(UsuarioLogin u) {
+        setInstance(u);
+        String ret = super.remove();
+        Conversation.instance().end();
+        newInstance();
+        return ret;
+    }
+
+    public String getPapel() {
+        if (papel != null) {
+            return papel;
+        }
+        List<String> roles = getUserAction().getRoles();
+        if (!roles.isEmpty()) {
+            papel = roles.get(0);
+        }
+        return papel;
+    }
+
+    public void setPapel(String papel) {
+        this.papel = papel;
+        List<String> list = Arrays.asList(new String[] { papel });
+        getUserAction().setRoles(list);
+    }
+
+    public UsuarioLoginHome instance() {
+        return ComponentUtil.getComponent(NAME);
+    }
+
 }

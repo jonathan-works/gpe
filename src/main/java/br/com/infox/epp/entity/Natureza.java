@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
@@ -43,7 +45,8 @@ public class Natureza implements java.io.Serializable {
 		this.idNatureza = idNatureza;
 	}
 	
-	@Column(name="ds_natureza", length=30, nullable=false, unique=true)
+	@Column(name="ds_natureza", length=LengthConstants.DESCRICAO_PEQUENA, nullable=false, unique=true)
+	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
 	public String getNatureza() {
 		return natureza;
 	}

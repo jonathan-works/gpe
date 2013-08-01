@@ -22,6 +22,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name = Tarefa.TABLE_NAME, schema="public")
@@ -52,9 +53,9 @@ public class Tarefa implements java.io.Serializable {
 		this.idTarefa = idTarefa;
 	}
 	
-	@Column(name = "ds_tarefa", nullable= false, length=150, unique=true)
+	@Column(name = "ds_tarefa", nullable= false, length=LengthConstants.DESCRICAO_MEDIA, unique=true)
 	@NotNull
-	@Size(max=150)
+	@Size(max=LengthConstants.DESCRICAO_MEDIA)
 	public String getTarefa() {
 		return tarefa;
 	}

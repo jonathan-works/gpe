@@ -33,11 +33,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.query.FluxoQuery;
+import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
@@ -92,8 +93,8 @@ public class Fluxo implements java.io.Serializable {
 		this.usuarioPublicacao = usuarioPublicacao;
 	}
 
-	@Column(name = "cd_fluxo", length = 30)
-	@Size(max = 30)
+	@Column(name = "cd_fluxo", length=LengthConstants.DESCRICAO_PEQUENA)
+	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
 	public String getCodFluxo() {
 		return this.codFluxo;
 	}
@@ -105,9 +106,9 @@ public class Fluxo implements java.io.Serializable {
 		this.codFluxo = codFluxo;
 	}
 
-	@Column(name = "ds_fluxo", nullable = false, length = 100, unique = true)
+	@Column(name = "ds_fluxo", nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
-	@Size(max = 100)
 	public String getFluxo() {
 		return this.fluxo;
 	}

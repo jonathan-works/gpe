@@ -15,8 +15,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Length;
+import br.com.infox.util.constants.LengthConstants;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Entity
 @Table(name = "tb_imagem_bin", schema="public")
@@ -43,8 +46,8 @@ public class ImagemBin implements Serializable {
 		this.idImagemBin = idImagemBin;
 	}
 	
-	@Column(name = "ds_extensao", length = 15)
-	@Length(max = 15)
+	@Column(name = "ds_extensao", length=LengthConstants.DESCRICAO_MINIMA)
+	@Size(max=LengthConstants.DESCRICAO_MINIMA)
 	public String getExtensao() {
 		return extensao;
 	}
@@ -52,8 +55,8 @@ public class ImagemBin implements Serializable {
 		this.extensao = extensao;
 	}
 	
-	@Column(name = "ds_md5_imagem", length = 32, nullable=false)
-	@Length(max = 32)
+	@Column(name = "ds_md5_imagem", length=LengthConstants.DESCRICAO_MD5, nullable=false)
+	@Size(max=LengthConstants.DESCRICAO_MD5)
 	@NotNull
 	public String getMd5Imagem() {
 		return md5Imagem;
@@ -62,8 +65,8 @@ public class ImagemBin implements Serializable {
 		this.md5Imagem = md5Imagem;
 	}
 	
-	@Column(name = "nm_arquivo", length = 300)
-	@Length(max = 300)
+	@Column(name = "nm_arquivo", length=LengthConstants.DESCRICAO_NOME_ARQUIVO)
+	@Size(max=LengthConstants.DESCRICAO_NOME_ARQUIVO)
 	public String getNomeArquivo() {
 		return nomeArquivo;
 	}
@@ -105,6 +108,6 @@ public class ImagemBin implements Serializable {
 		return imagem;
 	}
 	public void setImagem(byte[] imagem) {
-		this.imagem = imagem;
+		this.imagem = Arrays.copyOf(imagem, imagem.length);
 	}
 }

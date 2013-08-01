@@ -13,8 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name = HistoricoModeloDocumento.TABLE_NAME, schema="public")
@@ -78,7 +80,8 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 	    return DateFormat.getDateInstance().format(dataAlteracao);
 	}
 	
-	@Column(name="ds_titulo_modelo_documento", nullable=false, length=60)
+	@Column(name="ds_titulo_modelo_documento", nullable=false, length=LengthConstants.DESCRICAO_TITULO)
+	@Size(max=LengthConstants.DESCRICAO_TITULO)
 	public String getTituloModeloDocumento() {
 		return tituloModeloDocumento;
 	}

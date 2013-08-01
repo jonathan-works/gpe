@@ -99,6 +99,7 @@ public final class XmlUtil {
 		format.setTextMode(Format.TextMode.TRIM_FULL_WHITE);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<Element> getChildren(Element element, String name) {
 		return element.getChildren(name, element.getNamespace());
 	}

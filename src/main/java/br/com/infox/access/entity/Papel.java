@@ -16,11 +16,14 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.jboss.seam.annotations.security.management.RoleConditional;
 import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
+
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name = "tb_papel", schema="public", uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))
@@ -50,8 +53,8 @@ public class Papel implements java.io.Serializable {
 		this.idPapel = idPerfil;
 	}
 
-	@Column(name = "ds_nome", length = 100)
-	@Size(max = 100)
+	@Column(name = "ds_nome", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getNome() {
 		return this.nome;
 	}
@@ -60,8 +63,8 @@ public class Papel implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	@Column(name = "ds_identificador", length = 100)
-	@Size(max = 100)
+	@Column(name = "ds_identificador", length = LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	@RoleName
 	public String getIdentificador() {

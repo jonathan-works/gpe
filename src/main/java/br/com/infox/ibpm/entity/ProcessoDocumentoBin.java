@@ -42,6 +42,7 @@ import javax.validation.constraints.NotNull;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.ArrayUtil;
 
 @Entity
@@ -90,8 +91,8 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
-	@Column(name = "ds_extensao", length = 15)
-	@Size(max = 15)
+	@Column(name = "ds_extensao", length=LengthConstants.DESCRICAO_MINIMA)
+	@Size(max=LengthConstants.DESCRICAO_MINIMA)
 	public String getExtensao() {
 		return this.extensao;
 	}
@@ -109,9 +110,9 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 		this.modeloDocumento = modeloDocumento;
 	}
 
-	@Column(name = "ds_md5_documento", nullable = false, length = 32)
+	@Column(name = "ds_md5_documento", nullable = false, length=LengthConstants.DESCRICAO_MD5)
 	@NotNull
-	@Size(max = 32)
+	@Size(max=LengthConstants.DESCRICAO_MD5)
 	public String getMd5Documento() {
 		return this.md5Documento;
 	}
@@ -120,8 +121,8 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 		this.md5Documento = md5Documento;
 	}
 
-	@Column(name = "nm_arquivo", length = 300)
-	@Size(max = 300)
+	@Column(name = "nm_arquivo", length=LengthConstants.DESCRICAO_NOME_ARQUIVO)
+	@Size(max=LengthConstants.DESCRICAO_NOME_ARQUIVO)
 	public String getNomeArquivo() {
 		return this.nomeArquivo;
 	}
@@ -204,8 +205,8 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 		return "0 Kb";
 	}
 
-	@Column(name = "ds_nome_usuario_ultimo_assinar", length = 100)
-	@Size(max = 100)
+	@Column(name = "ds_nome_usuario_ultimo_assinar", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getUsuarioUltimoAssinar() {
 		return usuarioUltimoAssinar;
 	}
@@ -214,8 +215,8 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 		this.usuarioUltimoAssinar = usuarioUltimoAssinar;
 	}
 
-	@Column(name = "ds_nome_usuario", length = 100)
-	@Size(max = 100)
+	@Column(name = "ds_nome_usuario", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getNomeUsuario() {
 		return nomeUsuario;
 	}

@@ -28,8 +28,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import br.com.infox.util.constants.LengthConstants;
 /**
  * Estado
  */
@@ -61,8 +63,8 @@ public class Estado implements java.io.Serializable {
 		this.idEstado = idEstado;
 	}
 
-	@Column(name = "ds_estado", length = 30)
-	@Size(max = 30)
+	@Column(name = "ds_estado", length=LengthConstants.DESCRICAO_PEQUENA)
+	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
 	public String getEstado() {
 		return this.estado;
 	}
@@ -71,8 +73,8 @@ public class Estado implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "cd_estado", length = 2)
-	@Size(max = 2)
+	@Column(name = "cd_estado", length=LengthConstants.UF)
+	@Size(max=LengthConstants.UF)
 	public String getCodEstado() {
 		return this.codEstado;
 	}

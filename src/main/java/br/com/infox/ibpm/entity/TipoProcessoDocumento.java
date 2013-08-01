@@ -39,6 +39,7 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
 import br.com.infox.ibpm.type.TipoNumeracaoEnum;
 import br.com.infox.ibpm.type.VisibilidadeEnum;
+import br.com.infox.util.constants.LengthConstants;
 
 /**
  * @author Desconhecido
@@ -79,9 +80,9 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.idTipoProcessoDocumento = idTipoProcessoDocumento;
 	}
 
-	@Column(name = "ds_tipo_processo_documento", nullable = false, length = 100)
+	@Column(name = "ds_tipo_processo_documento", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
-	@Size(max = 100)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getTipoProcessoDocumento() {
 		return this.tipoProcessoDocumento;
 	}
@@ -90,8 +91,8 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.tipoProcessoDocumento = tipoProcessoDocumento;
 	}
 	
-	@Column(name = "cd_documento", length = 30)
-	@Size(max = 30)
+	@Column(name = "cd_documento", length=LengthConstants.CODIGO_DOCUMENTO)
+	@Size(max=LengthConstants.CODIGO_DOCUMENTO)
 	public String getCodigoDocumento() {
 		return this.codigoDocumento;
 	}
@@ -122,7 +123,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.processoDocumentoList = processoDocumentoList;
 	}
 	
-	@Column(name = "in_tipo_documento", length = 1)
+	@Column(name = "in_tipo_documento", length=LengthConstants.FLAG)
 	@Enumerated(EnumType.STRING)
 	public TipoDocumentoEnum getInTipoDocumento() {
 		return this.inTipoDocumento;
@@ -132,8 +133,9 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.inTipoDocumento = inTipoDocumento;
 	}
 	
-	@Column(name = "tp_visibilidade", length = 1)
+	@Column(name = "tp_visibilidade", length=LengthConstants.FLAG)
 	@Enumerated(EnumType.STRING)
+	@Size(max=LengthConstants.FLAG)
 	public VisibilidadeEnum getVisibilidade() {
 		return this.visibilidade;
 	}
@@ -151,8 +153,8 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.numera = numera;
 	}
 	
-	@Column(name = "ds_tipo_processo_documento_observacao", length = 200)
-	@Size(max = 200)
+	@Column(name = "ds_tipo_processo_documento_observacao", length=LengthConstants.DESCRICAO_PADRAO_DOBRO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO_DOBRO)
 	public String getTipoProcessoDocumentoObservacao() {
 		return this.tipoProcessoDocumentoObservacao;
 	}

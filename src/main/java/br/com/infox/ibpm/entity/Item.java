@@ -31,14 +31,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.HierarchicalPath;
 import br.com.infox.annotations.Parent;
 import br.com.infox.annotations.PathDescriptor;
 import br.com.infox.annotations.Recursive;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name = Item.TABLE_NAME, schema="public")
@@ -82,8 +83,7 @@ public class Item implements java.io.Serializable {
 		this.itemPai = itemPai;
 	}
 
-	@Column(name = "cd_item", length = 30)
-	@Size(max = 30)
+	@Column(name = "cd_item", length=LengthConstants.DESCRICAO_PEQUENA)
 	public String getCodigoItem() {
 		return this.codigoItem;
 	}
@@ -92,9 +92,9 @@ public class Item implements java.io.Serializable {
 		this.codigoItem = codigoItem;
 	}
 
-	@Column(name = "ds_item", nullable = false, length = 100)
+	@Column(name = "ds_item", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
-	@Size(max = 100)
 	@PathDescriptor
 	public String getDescricaoItem() {
 		return this.descricaoItem;

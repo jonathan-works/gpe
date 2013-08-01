@@ -20,6 +20,8 @@ import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.Size;
 
+import br.com.infox.util.constants.LengthConstants;
+
 @Entity
 @Table(name = Caixa.TABLE_NAME, schema="public", uniqueConstraints = @UniqueConstraint(columnNames = {"nm_caixa", "id_tarefa"}))
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -52,8 +54,8 @@ public class Caixa implements java.io.Serializable {
 		this.idCaixa = idCaixa;
 	}
 
-	@Column(name="nm_caixa", length=100)
-	@Size(max=100)
+	@Column(name="nm_caixa", length=LengthConstants.NOME_PADRAO)
+	@Size(max=LengthConstants.NOME_PADRAO)
 	public String getNomeCaixa() {
 		return nomeCaixa;
 	}

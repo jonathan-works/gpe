@@ -5,6 +5,9 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
+
+import br.com.infox.util.constants.LengthConstants;
+
 import javax.validation.constraints.Size;
 
 @Entity
@@ -38,8 +41,8 @@ public class Cbo implements Serializable {
 		this.codCbo = codCbo;
 	}
 	
-	@Column(name="ds_cbo", nullable=false, length=150)
-	@Size(max=150)
+	@Column(name="ds_cbo", nullable=false, length=LengthConstants.DESCRICAO_CLASSIFICACAO)
+	@Size(max=LengthConstants.DESCRICAO_CLASSIFICACAO)
 	public String getDescricaoCbo() {
 		return descricaoCbo;
 	}

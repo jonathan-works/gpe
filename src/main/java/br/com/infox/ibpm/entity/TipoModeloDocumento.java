@@ -36,6 +36,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 /**
@@ -88,9 +89,9 @@ public class TipoModeloDocumento implements java.io.Serializable {
 		this.grupoModeloDocumento = grupoModeloDocumento;
 	}
 
-	@Column(name = "ds_tipo_modelo_documento", nullable = false, length = 50)
+	@Column(name = "ds_tipo_modelo_documento", nullable = false, length=LengthConstants.DESCRICAO_PADRAO_METADE)
 	@NotNull
-	@Size(max = 50)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO_METADE)
 	public String getTipoModeloDocumento() {
 		return this.tipoModeloDocumento;
 	}
@@ -99,9 +100,9 @@ public class TipoModeloDocumento implements java.io.Serializable {
 		this.tipoModeloDocumento = tipoModeloDocumento;
 	}
 
-	@Column(name = "ds_abreviacao", nullable = false, length = 5, unique=true)
+	@Column(name = "ds_abreviacao", nullable = false, length=LengthConstants.DESCRICAO_ABREVIADA, unique=true)
 	@NotNull
-	@Size(max = 50)
+	@Size(max=LengthConstants.DESCRICAO_ABREVIADA)
 	public String getAbreviacao() {
 		return this.abreviacao;
 	}

@@ -12,8 +12,10 @@ import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 import br.com.infox.epp.type.TipoPessoaEnum;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name=Pessoa.TABLE_NAME, schema="public")
@@ -39,8 +41,9 @@ public class Pessoa implements Serializable {
 		this.idPessoa = idPessoa;
 	}
 	
-	@Column(name="tp_pessoa", nullable=false, columnDefinition="varchar(1)", length = 1)
+	@Column(name="tp_pessoa", nullable=false, columnDefinition="varchar(1)", length=LengthConstants.FLAG)
 	@Enumerated(EnumType.STRING)
+	@Size(max=LengthConstants.FLAG)
 	public TipoPessoaEnum getTipoPessoa() {
 		return tipoPessoa;
 	}
@@ -49,7 +52,8 @@ public class Pessoa implements Serializable {
 		this.tipoPessoa = tipoPessoa;
 	}
 	
-	@Column(name="nm_pessoa", nullable=false, length=150)
+	@Column(name="nm_pessoa", nullable=false, length=LengthConstants.NOME_ATRIBUTO)
+	@Size(max=LengthConstants.NOME_ATRIBUTO)
 	public String getNome() {
 		return nome;
 	}

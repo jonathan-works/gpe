@@ -32,6 +32,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.util.constants.LengthConstants;
+
 
 @Entity
 @Table(name = "tb_estatistica", schema="public")
@@ -65,9 +67,9 @@ public class Estatistica implements java.io.Serializable {
 		this.idEstatistica = idEstatistica;
 	}
 
-	@Column(name = "nm_task", nullable = false, length = 150)
+	@Column(name = "nm_task", nullable = false, length=LengthConstants.NOME_MEDIO)
+	@Size(max=LengthConstants.NOME_MEDIO)
 	@NotNull
-	@Size(max = 150)
 	public String getTaskName() {
 		return taskName;
 	}
@@ -76,8 +78,8 @@ public class Estatistica implements java.io.Serializable {
 		this.taskName = taskName;
 	}
 
-	@Column(name = "nm_node", length = 150)
-	@Size(max = 150)
+	@Column(name = "nm_node", length=LengthConstants.NOME_MEDIO)
+	@Size(max=LengthConstants.NOME_MEDIO)
 	public String getNodeName() {
 		return nodeName;
 	}
@@ -86,8 +88,8 @@ public class Estatistica implements java.io.Serializable {
 		this.nodeName = nodeName;
 	}
 
-	@Column(name = "ds_fluxo", length = 150)
-	@Size(max = 150)	
+	@Column(name = "ds_fluxo", length=LengthConstants.DESCRICAO_MEDIA)
+	@Size(max=LengthConstants.DESCRICAO_MEDIA)
 	public String getNomeFluxo() {
 		return nomeFluxo;
 	}

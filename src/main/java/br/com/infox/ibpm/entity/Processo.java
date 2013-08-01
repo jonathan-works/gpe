@@ -43,6 +43,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name=Processo.TABLE_NAME, schema="public")
@@ -97,9 +98,9 @@ public class Processo implements java.io.Serializable {
 		this.usuarioCadastroProcesso = usuarioCadastroProcesso;
 	}
 
-	@Column(name = "nr_processo", nullable = false, length = 30)
+	@Column(name = "nr_processo", nullable = false, length=LengthConstants.NUMERO_PROCESSO)
 	@NotNull
-	@Size(max = 30)
+	@Size(max=LengthConstants.NUMERO_PROCESSO)
 	public String getNumeroProcesso() {
 		return this.numeroProcesso;
 	}
@@ -108,8 +109,8 @@ public class Processo implements java.io.Serializable {
 		this.numeroProcesso = numeroProcesso;
 	}
 
-	@Column(name = "nr_processo_origem", length = 30)
-	@Size(max = 30)
+	@Column(name = "nr_processo_origem", length=LengthConstants.NUMERO_PROCESSO)
+	@Size(max=LengthConstants.NUMERO_PROCESSO)
 	public String getNumeroProcessoOrigem() {
 		return this.numeroProcessoOrigem;
 	}
@@ -118,8 +119,8 @@ public class Processo implements java.io.Serializable {
 		this.numeroProcessoOrigem = numeroProcessoOrigem;
 	}
 
-	@Column(name = "ds_complemento", length = 100)
-	@Size(max = 100)
+	@Column(name = "ds_complemento", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getComplemento() {
 		return this.complemento;
 	}
@@ -268,8 +269,8 @@ public class Processo implements java.io.Serializable {
 	
 	//Adicionado
 	
-	@Column(name = "ds_nome_usuario_cadastro_processo", length = 100)
-	@Size(max = 100)
+	@Column(name = "ds_nome_usuario_cadastro_processo", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getNomeUsuarioCadastroProcesso() {
 		return nomeUsuarioCadastroProcesso;
 	}
