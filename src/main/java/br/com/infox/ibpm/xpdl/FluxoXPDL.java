@@ -16,13 +16,12 @@ import br.com.infox.ibpm.jbpm.JpdlXmlWriter;
 import br.com.infox.ibpm.xpdl.activities.ActivitiesXPDL;
 import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
 import br.com.infox.ibpm.xpdl.activities.AssignTaskXPDL;
-import br.com.infox.ibpm.xpdl.element.ParallelNodeXPDLException;
 import br.com.infox.ibpm.xpdl.lane.LaneXPDL;
 import br.com.infox.ibpm.xpdl.lane.LanesXPDLFactory;
 import br.com.infox.ibpm.xpdl.transition.TransitionsXPDL;
 import br.com.itx.util.XmlUtil;
 
-public class FluxoXPDL implements Serializable {
+public final class FluxoXPDL implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NO_NAME = "Indefinido ";

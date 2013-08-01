@@ -19,6 +19,8 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 @Entity
 @Table(name = "tb_imagem_bin", schema="public")
 public class ImagemBin implements Serializable {
@@ -106,6 +108,6 @@ public class ImagemBin implements Serializable {
 		return imagem;
 	}
 	public void setImagem(byte[] imagem) {
-		this.imagem = imagem;
+		this.imagem = Arrays.copyOf(imagem, imagem.length);
 	}
 }
