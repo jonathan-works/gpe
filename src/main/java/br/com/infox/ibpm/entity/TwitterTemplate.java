@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name=TwitterTemplate.TABLE_NAME, schema="public")
@@ -33,7 +36,8 @@ public class TwitterTemplate implements Serializable {
 		this.idTwitterTemplate = id;
 	}
 	
-	@Column(name="ds_titulo", nullable=false, length=50)
+	@Column(name="ds_titulo", nullable=false, length=LengthConstants.DESCRICAO_PADRAO_METADE)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO_METADE)
 	public String getTitulo() {
 		return titulo;
 	}

@@ -11,8 +11,10 @@ public interface LengthConstants {
     int UF = 2; //Unidade da Federação
     int CEP = 9;
     int CNAE = 9;
+    int CODIGO_DOCUMENTO = 30;
     
     //Tamanhos das Descrições Usuais
+    int DESCRICAO_ABREVIADA = 5;
     int DESCRICAO_MINIMA = 15;
     int DESCRICAO_PEQUENA = 30;
     int DESCRICAO_PADRAO_METADE = 50;
