@@ -15,8 +15,10 @@ public interface LengthConstants {
     //Tamanhos das Descrições Usuais
     int DESCRICAO_MINIMA = 15;
     int DESCRICAO_PEQUENA = 30;
+    int DESCRICAO_PADRAO_METADE = 50;
     int DESCRICAO_PADRAO = 100;
     int DESCRICAO_MEDIA = 150;
+    int DESCRICAO_PADRAO_DOBRO = 200;
     int DESCRICAO_GRANDE = 255;
     
     //Tamanhos das Descrições Especiais

@@ -34,6 +34,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.util.constants.LengthConstants;
 
 
 @Entity
@@ -77,9 +78,9 @@ public class Parametro implements java.io.Serializable {
 		this.usuarioModificacao = usuarioModificacao;
 	}
 
-	@Column(name = "nm_variavel", nullable = false, length = 100, unique = true)
+	@Column(name = "nm_variavel", nullable = false, length=LengthConstants.NOME_PADRAO, unique = true)
 	@NotNull
-	@Size(max = 100)
+	@Size(max=LengthConstants.NOME_PADRAO)
 	public String getNomeVariavel() {
 		return this.nomeVariavel;
 	}
@@ -88,9 +89,9 @@ public class Parametro implements java.io.Serializable {
 		this.nomeVariavel = nomeVariavel;
 	}
 
-	@Column(name = "ds_variavel", nullable = false, length = 200)
+	@Column(name = "ds_variavel", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
-	@Size(max = 100)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getDescricaoVariavel() {
 		return this.descricaoVariavel;
 	}
@@ -140,8 +141,8 @@ public class Parametro implements java.io.Serializable {
 		this.ativo = ativo;
 	}
 	
-	@Column(name = "ds_esquema_tabela_id", length = 200)
-	@Size(max = 200)
+	@Column(name = "ds_esquema_tabela_id", length=LengthConstants.DESCRICAO_PADRAO_DOBRO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO_DOBRO)
 	public String getEsquemaTabelaId() {
 		return this.esquemaTabelaId;
 	}

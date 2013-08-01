@@ -30,8 +30,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+
+import br.com.infox.util.constants.LengthConstants;
 /**
  * Municipio
  */
@@ -64,8 +65,7 @@ public class Municipio implements java.io.Serializable {
 		this.idMunicipio = idMunicipio;
 	}
 
-	@Column(name = "ds_municipio", length = 50)
-	@Size(max = 50)
+	@Column(name = "ds_municipio", length=LengthConstants.DESCRICAO_PADRAO_METADE)
 	public String getMunicipio() {
 		return this.municipio;
 	}
