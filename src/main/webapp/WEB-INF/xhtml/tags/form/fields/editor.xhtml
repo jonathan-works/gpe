@@ -88,32 +88,41 @@
 				tabSpaces:4,
 				on:{
 					configLoaded:function(evt) {
-						console.debug("configLoaded",evt);
-						CKEDITOR.plugins.addExternal("variables","#{util.contextPath}/resources/js/editor/","variables.js");
-						evt.editor.addCommand("teste",{
-							exec:function(editor) {
-								console.debug("executou teste");
-							}
-						});
-						evt.editor.ui.addRichCombo("variables.cmb",{
-							label:"Variáveis",
-							title:"Variáveis",
-							voicelabel:"Variaveis",
-							className:"cke-var",
-							multiSelect:false,
-							icon:'#{util.contextPath}/img/level.png',
-							init:function() {
-								this.startGroup("ck-var");
-								<a:repeat value="#{modeloDocumentoHome.variaveis}"
-									var="v">
-									console.debug("#{v.variavel}");
-									this.add("1_#{v.variavel}","2_#{v.variavel}","3_#{v.variavel}");
-								</a:repeat>
-								console.debug(this);
+						var editor = evt.editor;
+						var config = editor.config;
+						var tags = [
+							<a:repeat value="#{modeloDocumentoHome.variaveis}"
+								var="v">
+								{
+									label:"#{v.variavel}",
+									value:"#"+"{#{v.variavel}}"
+								},
+							</a:repeat>
+						];
+						editor.ui.addRichCombo('variables.cmb', {
+							label : "Variáveis",
+							title : "Variáveis",
+							voiceLabel : "Variaveis",
+							className : 'cke_format',
+							multiSelect : false,
+							panel : {
+								css : [ config.contentsCss,
+										CKEDITOR.getUrl(editor.skinPath + 'editor.ecss') ]
 							},
-							onClick:function(value) {
+							init : function() {
+								this.startGroup("Variaveis");
+								for ( var this_tag in tags) {
+									//this.add(VALOR_INSERIDO,LABEL_LIST,VALOR_SELECIONADO)
+									this.add(tags[this_tag].value, tags[this_tag].label,
+											tags[this_tag].label);
+								}
+							},
+				
+							onClick : function(value) {
 								editor.focus();
-								editor.insertHtml(value);
+								editor.fire('saveSnapshot');
+								editor.insertText(value);
+								editor.fire('saveSnapshot');
 							}
 						});
 					}
