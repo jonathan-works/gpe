@@ -80,6 +80,7 @@ public class ModeloDocumento implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_titulo_modelo_documento", nullable = false, length=LengthConstants.DESCRICAO_PADRAO_METADE)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO_METADE)
 	@NotNull
 	public String getTituloModeloDocumento() {
 		return this.tituloModeloDocumento;

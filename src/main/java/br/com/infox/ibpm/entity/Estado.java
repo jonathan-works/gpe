@@ -29,6 +29,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
 /**
@@ -63,6 +64,7 @@ public class Estado implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_estado", length=LengthConstants.DESCRICAO_PEQUENA)
+	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
 	public String getEstado() {
 		return this.estado;
 	}
@@ -72,6 +74,7 @@ public class Estado implements java.io.Serializable {
 	}
 
 	@Column(name = "cd_estado", length=LengthConstants.UF)
+	@Size(max=LengthConstants.UF)
 	public String getCodEstado() {
 		return this.codEstado;
 	}

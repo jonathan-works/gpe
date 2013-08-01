@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.util.constants.LengthConstants;
@@ -58,6 +59,7 @@ public class CalendarioEventos implements Serializable {
 	}
 	
 	@Column(name="ds_evento", length=LengthConstants.DESCRICAO_PADRAO, nullable=false)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	public String getDescricaoEvento() {
 		return descricaoEvento;

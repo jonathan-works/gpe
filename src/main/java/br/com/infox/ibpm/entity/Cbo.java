@@ -42,6 +42,7 @@ public class Cbo implements Serializable {
 	}
 	
 	@Column(name="ds_cbo", nullable=false, length=LengthConstants.DESCRICAO_CLASSIFICACAO)
+	@Size(max=LengthConstants.DESCRICAO_CLASSIFICACAO)
 	public String getDescricaoCbo() {
 		return descricaoCbo;
 	}

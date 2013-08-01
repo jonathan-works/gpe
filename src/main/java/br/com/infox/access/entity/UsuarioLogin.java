@@ -94,6 +94,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	}
 
 	@Column(name = "ds_senha", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@UserPassword(hash = "SHA")
 	public String getSenha() {
 		return this.senha;
@@ -104,6 +105,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	}
 
 	@Column(name = "ds_login", unique = true, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	@UserPrincipal
 	public String getLogin() {

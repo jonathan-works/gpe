@@ -53,6 +53,7 @@ public class Pagina implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_descricao", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	public String getDescricao() {
 		return this.descricao;
@@ -63,6 +64,7 @@ public class Pagina implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_url", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	public String getUrl() {
 		return this.url;

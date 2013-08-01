@@ -73,6 +73,7 @@ public class EntityLogDetail implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_atributo", length=LengthConstants.NOME_ATRIBUTO)
+	@Size(max=LengthConstants.NOME_ATRIBUTO)
 	public String getNomeAtributo() {
 		return nomeAtributo;
 	}

@@ -68,6 +68,7 @@ public class Estatistica implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_task", nullable = false, length=LengthConstants.NOME_MEDIO)
+	@Size(max=LengthConstants.NOME_MEDIO)
 	@NotNull
 	public String getTaskName() {
 		return taskName;
@@ -78,6 +79,7 @@ public class Estatistica implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_node", length=LengthConstants.NOME_MEDIO)
+	@Size(max=LengthConstants.NOME_MEDIO)
 	public String getNodeName() {
 		return nodeName;
 	}
@@ -87,6 +89,7 @@ public class Estatistica implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_fluxo", length=LengthConstants.DESCRICAO_MEDIA)
+	@Size(max=LengthConstants.DESCRICAO_MEDIA)
 	public String getNomeFluxo() {
 		return nomeFluxo;
 	}

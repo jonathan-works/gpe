@@ -30,6 +30,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
@@ -63,7 +64,8 @@ public class GrupoModeloDocumento implements java.io.Serializable {
 		this.idGrupoModeloDocumento = idGrupoModeloDocumento;
 	}
 
-	@Column(name = "ds_grupo_modelo_documento", nullable = false, length = LengthConstants.DESCRICAO_PEQUENA, unique=true)
+	@Column(name = "ds_grupo_modelo_documento", nullable = false, length=LengthConstants.DESCRICAO_PEQUENA, unique=true)
+	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
 	@NotNull
 	public String getGrupoModeloDocumento() {
 		return this.grupoModeloDocumento;

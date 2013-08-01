@@ -36,6 +36,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.util.constants.LengthConstants;
@@ -103,6 +104,7 @@ public class Endereco implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_logradouro", length=LengthConstants.NOME_LOGRADOURO)
+	@Size(max=LengthConstants.NOME_LOGRADOURO)
 	public String getNomeLogradouro() {
 		return this.nomeLogradouro;
 	}
@@ -112,6 +114,7 @@ public class Endereco implements java.io.Serializable {
 	}
 
 	@Column(name = "nr_endereco", length=LengthConstants.NUMERO_ENDERECO)
+	@Size(max=LengthConstants.NUMERO_ENDERECO)
 	public String getNumeroEndereco() {
 		return this.numeroEndereco;
 	}
@@ -121,6 +124,7 @@ public class Endereco implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_complemento", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getComplemento() {
 		return this.complemento;
 	}
@@ -130,6 +134,7 @@ public class Endereco implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_bairro", length=LengthConstants.NOME_BAIRRO)
+	@Size(max=LengthConstants.NOME_BAIRRO)
 	public String getNomeBairro() {
 		return this.nomeBairro;
 	}

@@ -3,6 +3,7 @@ package br.com.infox.ibpm.entity;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import twitter4j.auth.AccessToken;
 
@@ -59,6 +60,7 @@ public class ContaTwitter implements Serializable {
 	}
 	
 	@Column(name="tp_conta_twitter", nullable=false, columnDefinition="varchar(1)", length=LengthConstants.FLAG)
+	@Size(max=LengthConstants.FLAG)
 	@Enumerated(EnumType.STRING)
 	public TipoTwitterEnum getTipoTwitter() {
 		return tipoTwitter;

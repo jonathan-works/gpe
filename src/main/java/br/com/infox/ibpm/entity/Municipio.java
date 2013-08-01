@@ -31,6 +31,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
 /**
@@ -66,6 +67,7 @@ public class Municipio implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_municipio", length=LengthConstants.DESCRICAO_PADRAO_METADE)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO_METADE)
 	public String getMunicipio() {
 		return this.municipio;
 	}

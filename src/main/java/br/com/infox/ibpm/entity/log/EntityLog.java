@@ -35,6 +35,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.type.TipoOperacaoLogEnum;
@@ -88,6 +89,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 
 	@Column(name = "id_pagina", length=LengthConstants.ID_PAGINA)
+	@Size(max=LengthConstants.ID_PAGINA)
 	public String getUrlRequisicao() {
 		return urlRequisicao;
 	}
@@ -97,6 +99,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_ip", length=LengthConstants.DESCRICAO_MINIMA)
+	@Size(max=LengthConstants.DESCRICAO_MINIMA)
 	public String getIp() {
 		return ip;
 	}
@@ -106,6 +109,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_entidade", length=LengthConstants.DESCRICAO_ENTIDADE)
+	@Size(max=LengthConstants.DESCRICAO_ENTIDADE)
 	public String getNomeEntidade() {
 		return nomeEntidade;
 	}
@@ -115,6 +119,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_package", length=LengthConstants.DESCRICAO_PACOTE)
+	@Size(max=LengthConstants.DESCRICAO_PACOTE)
 	public String getNomePackage() {
 		return nomePackage;
 	}
@@ -124,6 +129,7 @@ public class EntityLog implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_id_entidade", length=LengthConstants.ID_ENTIDADE)
+	@Size(max=LengthConstants.ID_ENTIDADE)
 	public String getIdEntidade() {
 		return idEntidade;
 	}

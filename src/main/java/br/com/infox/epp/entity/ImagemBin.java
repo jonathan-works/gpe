@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
 
@@ -44,6 +45,7 @@ public class ImagemBin implements Serializable {
 	}
 	
 	@Column(name = "ds_extensao", length=LengthConstants.DESCRICAO_MINIMA)
+	@Size(max=LengthConstants.DESCRICAO_MINIMA)
 	public String getExtensao() {
 		return extensao;
 	}
@@ -52,6 +54,7 @@ public class ImagemBin implements Serializable {
 	}
 	
 	@Column(name = "ds_md5_imagem", length=LengthConstants.DESCRICAO_MD5, nullable=false)
+	@Size(max=LengthConstants.DESCRICAO_MD5)
 	@NotNull
 	public String getMd5Imagem() {
 		return md5Imagem;
@@ -61,6 +64,7 @@ public class ImagemBin implements Serializable {
 	}
 	
 	@Column(name = "nm_arquivo", length=LengthConstants.DESCRICAO_NOME_ARQUIVO)
+	@Size(max=LengthConstants.DESCRICAO_NOME_ARQUIVO)
 	public String getNomeArquivo() {
 		return nomeArquivo;
 	}

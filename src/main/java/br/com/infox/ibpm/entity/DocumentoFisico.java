@@ -56,6 +56,7 @@ public class DocumentoFisico implements Serializable {
 	}
 	
 	@Column(name="ds_documento_fisico", nullable=false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getDescricaoDocumentoFisico() {
 		return descricaoDocumentoFisico;
 	}

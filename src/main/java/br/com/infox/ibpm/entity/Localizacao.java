@@ -33,6 +33,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.HierarchicalPath;
@@ -97,6 +98,7 @@ public class Localizacao implements java.io.Serializable {
 	}
 	
 	@Column(name = "ds_localizacao", nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
+	@Size(max=LengthConstants.NOME_PADRAO)
 	@NotNull
 	@PathDescriptor
 	public String getLocalizacao() {

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import org.jboss.seam.annotations.security.permission.PermissionAction;
 import org.jboss.seam.annotations.security.permission.PermissionDiscriminator;
@@ -41,6 +42,7 @@ public class Permissao implements Serializable {
 	@PermissionUser
 	@PermissionRole
 	@Column(name = "ds_destinatario", length=LengthConstants.DESCRICAO_GRANDE)
+	@Size(max=LengthConstants.DESCRICAO_GRANDE)
 	public String getDestinatario() {
 		return destinatario;
 	}
@@ -51,6 +53,7 @@ public class Permissao implements Serializable {
 
 	@PermissionTarget
 	@Column(name = "ds_alvo", length=LengthConstants.DESCRICAO_GRANDE)
+	@Size(max=LengthConstants.DESCRICAO_GRANDE)
 	public String getAlvo() {
 		return alvo;
 	}
@@ -61,6 +64,7 @@ public class Permissao implements Serializable {
 
 	@PermissionAction
 	@Column(name = "ds_acao", length=LengthConstants.DESCRICAO_GRANDE)
+	@Size(max=LengthConstants.DESCRICAO_GRANDE)
 	public String getAcao() {
 		return acao;
 	}
@@ -71,6 +75,7 @@ public class Permissao implements Serializable {
 
 	@PermissionDiscriminator
 	@Column(name = "ds_discriminador", length=LengthConstants.DESCRICAO_GRANDE)
+	@Size(max=LengthConstants.DESCRICAO_GRANDE)
 	public String getDiscriminador() {
 		return discriminador;
 	}

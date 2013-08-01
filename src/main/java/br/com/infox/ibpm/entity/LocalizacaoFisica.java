@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.HierarchicalPath;
@@ -49,6 +50,7 @@ public class LocalizacaoFisica implements Serializable {
 		this.localizacaoFisicaPai = localizacaoFisicaPai;
 	}
 	@Column(name="ds_localizacao_fisica", nullable=false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.NOME_PADRAO)
 	@PathDescriptor
 	public String getDescricao() {
 		return descricao;

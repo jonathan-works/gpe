@@ -52,6 +52,7 @@ public class Categoria implements Serializable{
 	}
 	
 	@Column(name="ds_categoria", length=LengthConstants.DESCRICAO_PEQUENA, nullable=false)
+	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
 	@NotNull
 	public String getCategoria() {
 		return categoria;

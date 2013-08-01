@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.home.Authenticator;
@@ -78,6 +79,7 @@ public class HistoricoParteProcesso {
 	}
 
 	@Column(name="ds_motivo_modificacao", nullable=false, length=LengthConstants.DESCRICAO_MEDIA)
+	@Size(max=LengthConstants.DESCRICAO_MEDIA)
 	public String getMotivoModificacao() {
 		return motivoModificacao;
 	}

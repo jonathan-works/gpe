@@ -38,6 +38,7 @@ import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Type;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.cliente.entity.filters.CepFilter;
 import br.com.infox.util.constants.LengthConstants;
@@ -87,6 +88,7 @@ public class Cep implements java.io.Serializable {
 
 	
 	@Column(name = "nr_cep", nullable = false, length=LengthConstants.CEP, unique = true)
+	@Size(max=LengthConstants.CEP)
 	@NotNull
 	public String getNumeroCep() {
 		return this.numeroCep;
@@ -97,6 +99,7 @@ public class Cep implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_logradouro", length=LengthConstants.NOME_LOGRADOURO)
+	@Size(max=LengthConstants.NOME_LOGRADOURO)
 	public String getNomeLogradouro() {
 		return this.nomeLogradouro;
 	}
@@ -106,6 +109,7 @@ public class Cep implements java.io.Serializable {
 	}
 
 	@Column(name = "nm_bairro", length=LengthConstants.NOME_BAIRRO)
+	@Size(max=LengthConstants.NOME_BAIRRO)
 	public String getNomeBairro() {
 		return this.nomeBairro;
 	}
@@ -125,6 +129,7 @@ public class Cep implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_complemento", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getComplemento() {
 		return this.complemento;
 	}

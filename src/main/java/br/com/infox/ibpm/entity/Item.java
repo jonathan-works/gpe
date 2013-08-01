@@ -32,6 +32,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.HierarchicalPath;
@@ -92,6 +93,7 @@ public class Item implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_item", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	@PathDescriptor
 	public String getDescricaoItem() {

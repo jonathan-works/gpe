@@ -55,6 +55,7 @@ public class Caixa implements java.io.Serializable {
 	}
 
 	@Column(name="nm_caixa", length=LengthConstants.NOME_PADRAO)
+	@Size(max=LengthConstants.NOME_PADRAO)
 	public String getNomeCaixa() {
 		return nomeCaixa;
 	}

@@ -17,6 +17,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.jboss.seam.annotations.security.management.RoleConditional;
 import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
@@ -51,7 +53,8 @@ public class Papel implements java.io.Serializable {
 		this.idPapel = idPerfil;
 	}
 
-	@Column(name = "ds_nome", length = LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = "ds_nome", length=LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getNome() {
 		return this.nome;
 	}
@@ -61,6 +64,7 @@ public class Papel implements java.io.Serializable {
 	}
 
 	@Column(name = "ds_identificador", length = LengthConstants.DESCRICAO_PADRAO)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	@RoleName
 	public String getIdentificador() {
