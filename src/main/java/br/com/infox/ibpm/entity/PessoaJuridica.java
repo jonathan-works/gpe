@@ -2,9 +2,11 @@ package br.com.infox.ibpm.entity;
 
 import javax.persistence.*;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.type.TipoPessoaEnum;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(schema="public", name=PessoaJuridica.TABLE_NAME)
@@ -21,8 +23,9 @@ public class PessoaJuridica extends Pessoa {
 		setTipoPessoa(TipoPessoaEnum.J);
 	}
 	
-	@Column(name="nr_cnpj", nullable=false, unique=true, length=20)
-	@Size(max=20)
+	@Column(name="nr_cnpj", nullable=false, unique=true, length=LengthConstants.NUMERO_RAZAO_SOCIAL)
+	@Size(max=LengthConstants.NUMERO_RAZAO_SOCIAL)
+	@NotNull
 	public String getCnpj() {
 		return cnpj;
 	}
@@ -30,8 +33,9 @@ public class PessoaJuridica extends Pessoa {
 		this.cnpj = cnpj;
 	}
 	
-	@Column(name="nm_razao_social", nullable=false, length=100)
-	@Size(max=100)
+	@Column(name="nm_razao_social", nullable=false, length=LengthConstants.NOME_PADRAO)
+	@Size(max=LengthConstants.NOME_PADRAO)
+	@NotNull
 	public String getRazaoSocial() {
 		return razaoSocial;
 	}

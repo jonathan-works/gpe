@@ -42,6 +42,7 @@ public interface LengthConstants {
     
     //Tamanhos de ~Números
     int NUMERO_ENDERECO = 15;
+    int NUMERO_RAZAO_SOCIAL = 20;
     
     //Tipos Especiais
     int FLAG = 1;

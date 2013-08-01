@@ -4,9 +4,11 @@ import java.text.DateFormat;
 import java.util.Date;
 import javax.persistence.*;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.type.TipoPessoaEnum;
+import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(schema="public", name=PessoaFisica.TABLE_NAME)
@@ -41,8 +43,9 @@ public class PessoaFisica extends Pessoa{
 		this.dataNascimento = dataNascimento;
 	}
 	
-	@Column(name = "ds_email", length = 100, unique = true, nullable = false)
-	@Size(max = 100)
+	@Column(name = "ds_email", length=LengthConstants.DESCRICAO_PADRAO, unique = true, nullable = false)
+	@Size(max=LengthConstants.DESCRICAO_PADRAO)
+	@NotNull
 	public String getEmail() {
 		return this.email;
 	}
