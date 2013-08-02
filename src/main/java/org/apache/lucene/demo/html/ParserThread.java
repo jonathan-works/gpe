@@ -19,8 +19,12 @@ package org.apache.lucene.demo.html;
 
 import java.io.IOException;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 class ParserThread extends Thread {
   HTMLParser parser;
+  private static final LogProvider LOG = Logging.getLogProvider(ParserThread.class);
 
   ParserThread(HTMLParser p) {
     parser = p;
@@ -43,7 +47,7 @@ class ParserThread extends Thread {
 	    }
       }
     } catch (IOException e) {
-	  e.printStackTrace();
+        LOG.error(".run()", e);
     }
   }
 }

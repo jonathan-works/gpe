@@ -136,7 +136,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 			value = Expressions.instance().createValueExpression(expression)
 					.getValue();
 		} catch (Exception ignore) {
-			ignore.printStackTrace();
+		    LOG.error(".getSelected()", ignore);
 		}
 		return (E) value;
 	}
