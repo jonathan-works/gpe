@@ -9,6 +9,8 @@ import org.hibernate.event.spi.PreInsertEvent;
 import org.hibernate.event.spi.PreInsertEventListener;
 import org.hibernate.event.spi.PreUpdateEvent;
 import org.hibernate.event.spi.PreUpdateEventListener;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.annotations.HierarchicalPath;
 import br.com.infox.annotations.Parent;
@@ -30,6 +32,7 @@ public class RecursiveEventListener implements PreInsertEventListener,
 											   PreUpdateEventListener{
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(RecursiveEventListener.class);
 
 	public boolean onPreInsert(PreInsertEvent obj) {
 		if(RecursiveManager.isRecursive(obj.getEntity())) {
@@ -42,7 +45,7 @@ public class RecursiveEventListener implements PreInsertEventListener,
 				obj.getState()[names.indexOf(pathFieldName)] = ComponentUtil.getValue
 												(obj.getEntity(), pathFieldName);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOG.error(".onPreInsert()", e);
 			}
 		}
 		return false;
@@ -75,7 +78,7 @@ public class RecursiveEventListener implements PreInsertEventListener,
 			} catch (RecursiveException e) {
 				throw e;
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOG.error(".onPreUpdate()", e);
 			}
 		}
 		return false;
