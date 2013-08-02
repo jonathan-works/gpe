@@ -84,8 +84,9 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	 * Apaga a data de Expiração quando o Usário passa de Provisório para Permanente
 	 * */
 	private void validarPermanencia() {
-		if (!getInstance().getProvisorio())
-			getInstance().setDataExpiracao(null);
+		if (!getInstance().getProvisorio()) {
+		    getInstance().setDataExpiracao(null);
+		}
 	}
 
 	public UsuarioLogin checkUserByLogin(String login) {
@@ -147,8 +148,9 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 		if (estavaBloqueado()) {
 			desbloquear();
 		}
-		if (getInstance().getBloqueio().equals(Boolean.TRUE))
-			bloquear();
+		if (getInstance().getBloqueio().equals(Boolean.TRUE)) {
+		    bloquear();
+		}
 		return super.update();
 	}
 	
