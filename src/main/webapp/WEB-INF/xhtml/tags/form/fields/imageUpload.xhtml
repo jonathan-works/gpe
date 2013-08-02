@@ -29,11 +29,13 @@
 
 	<h:outputScript
 		library="js"
-		name="imageUpload.js" />
+		name="imageUpload.js"
+		/>
 
 	<ui:param
 		name="imageBean"
-		value="#{wi:get(imageBean, imageFileUpload)}" />
+		value="#{wi:get(imageBean, imageFileUpload)}"
+		/>
 
 	<s:div
 		rendered="#{wi:get(rendered, true)}"
@@ -42,7 +44,8 @@
 			id="uploadImagem"
 			switchType="ajax"
 			expanded="#{wi:get(opened, 'false')}"
-			label="Álbum de imagens">
+			label="Álbum de imagens"
+			>
 			<rich:fileUpload
 				id="upload"
 				execute="@this"
@@ -62,20 +65,24 @@
 				immediateUpload="true"
 				noDuplicate="true"
 				render="uploadImagem"
-				acceptedTypes="jpg, gif, png">
+				acceptedTypes="jpg, gif, png"
+				>
 			</rich:fileUpload>
 			<rich:dataGrid
-				
 				value="#{imageBean.images}"
 				elements="30"
 				columns="6"
-				var="img">
-				<s:div >
+				var="img"
+				styleClass="d-grid-img"
+				>
+				<div class="grid-img-div">
 					<img
 						src="#{img}"
-						
-						title="Arraste para o documento" />
-				</s:div>
+						class="grid-img"
+						title="Arraste para o documento"
+						onclick="infox.imageUpload.click(this,'#{wi:get(editorId, false)}')"
+						></img>
+				</div>
 				<f:facet name="footer">
 					<rich:dataScroller />
 				</f:facet>
