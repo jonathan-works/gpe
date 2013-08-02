@@ -25,6 +25,8 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -44,6 +46,7 @@ import br.com.itx.util.EntityUtil;
 public class QuartzJobsInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(QuartzJobsInfo.class);
 	public static final String NAME = "quartzJobsInfo";
 
 	private static Pattern patternExpr = Pattern
@@ -159,7 +162,7 @@ public class QuartzJobsInfo implements Serializable {
 		} catch (SchedulerException e) {
 			FacesMessages.instance().add(Severity.ERROR,
 					"Erro ao executar job " + jobName, e);
-			e.printStackTrace();
+			LOG.error(".triggerJob()", e);
 		}
 	}
 
@@ -171,7 +174,7 @@ public class QuartzJobsInfo implements Serializable {
 		} catch (SchedulerException e) {
 			FacesMessages.instance().add(Severity.ERROR,
 					"Erro ao remover job " + jobName, e);
-			e.printStackTrace();
+			LOG.error(".deleteJob()", e);
 		}
 	}
 
