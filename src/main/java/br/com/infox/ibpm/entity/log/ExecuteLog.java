@@ -128,8 +128,8 @@ public class ExecuteLog {
 					logEnt.getLogDetalheList().add(detail);
 				}
 			} catch (Exception e) {
-				LOG.error("Erro ao logar", e);
-				e.printStackTrace();
+                LOG.info("Erro ao logar", e);
+                LOG.error(".execute()", e);
 			} 
 		}
 		try {
