@@ -83,7 +83,9 @@ public class JbpmUtil {
 		SwimlaneInstance swimlaneInstance = task.getSwimlaneInstance();
 		if (swimlaneInstance != null) {
 			String expression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
-			if (expression == null) return null; 
+			if (expression == null) {
+			    return null; 
+			}
 			//TODO: verificar se pode ser dado um tratamento melhor
 			String localizacaoId = expression.substring(expression.indexOf("(") + 1);
 			localizacaoId = localizacaoId.substring(0, localizacaoId.lastIndexOf(")"));
