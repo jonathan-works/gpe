@@ -42,6 +42,8 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.itx.component.Util;
 
@@ -52,6 +54,7 @@ public class Indexer {
 	private Directory directory;
 	private IndexReader indexReader;
 	private IndexWriterConfig indexWriterConfig;
+	private static final LogProvider LOG = Logging.getLogProvider(Indexer.class);
 
 	public static File getIndexerPath() {
 		Util util = new Util();
@@ -93,7 +96,7 @@ public class Indexer {
 		    writer.updateDocument(new Term("id", id), doc);
 		    writer.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".index()", e);
 		}
 		
 	}
@@ -113,7 +116,7 @@ public class Indexer {
 		    isearcher.close();
 		    directory.close();	    
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".search()", e);
 		}
 		return list;
 	}
