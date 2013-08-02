@@ -470,7 +470,7 @@ public class Util implements Serializable {
 			return true;
 		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(".beginTransaction()", e);
 			throw new AplicationException(AplicationException.
 					createMessage("iniciar transação", 
 								  "beginTransaction()", 
