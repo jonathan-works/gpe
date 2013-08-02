@@ -25,6 +25,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.Jbpm;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.job.executor.JobExecutor;
 
 
@@ -42,6 +44,8 @@ import org.jbpm.job.executor.JobExecutor;
 @Install(dependencies="org.jboss.seam.bpm.jbpm", precedence=BUILT_IN)
 @Startup(depends="org.jboss.seam.bpm.jbpm")
 public class JobExecutorLaucher {
+    
+    private static final LogProvider LOG = Logging.getLogProvider(JobExecutorLaucher.class);
 
 	@Create
 	public void init() {
@@ -49,7 +53,7 @@ public class JobExecutorLaucher {
 			JobExecutor jobExecutor = Jbpm.instance().getJbpmConfiguration().getJobExecutor();
 			jobExecutor.start();
 		} catch (RuntimeException e) {
-			e.printStackTrace();
+		    LOG.error(".init()", e);
 		}
 	}
 	
