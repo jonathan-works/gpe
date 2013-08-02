@@ -545,3 +545,21 @@ select {
 .hidden.turno.calendar {
 	visibility:hidden;
 }
+
+.grid-img,.grid-img-div {
+	width:100%;
+}
+
+.grid-img-div {
+	height:100%;
+	overflow:hidden;
+}
+
+.rf-dg-c {
+	width:16%;
+	height:20%;
+}
+
+.rf-dg.d-grid-img {
+	width:400px;
+}
