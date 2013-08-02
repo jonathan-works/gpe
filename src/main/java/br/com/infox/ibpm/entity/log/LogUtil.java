@@ -207,7 +207,7 @@ public class LogUtil {
 			LOG.info("toStringFields(Object component): " + t.getTime());
 			return builder.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".toStringFields()", e);
 			return "";
 		}
 	}
