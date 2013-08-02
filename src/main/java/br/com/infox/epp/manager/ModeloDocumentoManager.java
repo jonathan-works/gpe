@@ -11,6 +11,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Expressions;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ModeloDocumentoDAO;
@@ -29,6 +31,7 @@ import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 @AutoCreate
 public class ModeloDocumentoManager extends GenericManager{
 	private static final long serialVersionUID = 4455754174682600299L;
+	private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoManager.class);
 	public static final String NAME = "modeloDocumentoManager";
 
 	@In
@@ -111,7 +114,7 @@ public class ModeloDocumentoManager extends GenericManager{
 			} catch (RuntimeException e) {
 				modeloProcessado.append("Erro na linha: '" +linhas[i]);
 				modeloProcessado.append("': " + e.getMessage());
-				e.printStackTrace();
+				LOG.error(".appendTail()", e);
 			}
 		}
 		return modeloProcessado.toString();
