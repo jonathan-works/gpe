@@ -80,8 +80,9 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 			javax.faces.component.UIComponent comp = RichFunction
 					.findComponent(treeId);
 
-			if (!comp.getClass().equals(UITree.class))
-				return;
+			if (!comp.getClass().equals(UITree.class)) {
+			    return;
+			}
 
 			UITree tree = (UITree) comp;
 			tree.setRowKey(null);
