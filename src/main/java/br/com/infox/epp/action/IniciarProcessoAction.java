@@ -115,8 +115,9 @@ public class IniciarProcessoAction {
 	public void onSelectItem(ItemBean bean) {
 		itemDoProcesso = bean.getItem();
 		renderedByItem = hasSelectedItem();
-		if (!necessitaPartes()) 
+		if (!necessitaPartes()) {
 			iniciarProcesso();
+		}
 		else{
 			renderizarCadastroPartes = true;
 			renderedByItem = false;
@@ -146,10 +147,12 @@ public class IniciarProcessoAction {
 				EntityUtil.getEntityManager().persist(p);
 				EntityUtil.getEntityManager().flush();
 			}
-			if (pessoaFisicaList.contains(p))
+			if (pessoaFisicaList.contains(p)) {
 				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			else
+			}
+			else {
 				pessoaFisicaList.add(p);
+			}
 			pf.setInstance(null);
 		}
 		else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
@@ -161,12 +164,16 @@ public class IniciarProcessoAction {
 				EntityUtil.getEntityManager().persist(p);
 				EntityUtil.getEntityManager().flush();
 			}
-			if (pessoaJuridicaList.contains(p))
+			if (pessoaJuridicaList.contains(p)) {
 				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			else
+			}
+			else {
 				pessoaJuridicaList.add(p);
+			}
 			pj.setInstance(null);
-		} else return;
+		} else {
+		    return;
+		}
 	}
 	
 	public void removePessoaFisica(PessoaFisica obj) {
@@ -199,9 +206,12 @@ public class IniciarProcessoAction {
 	}
 	
 	public boolean necessitaPartes(){
-		if (naturezaCategoriaFluxo != null)
+		if (naturezaCategoriaFluxo != null) {
 			return naturezaCategoriaFluxo.getNatureza().getHasPartes();
-		else return false;
+		}
+		else {
+		    return false;
+		}
 	}
 
 	public boolean isRenderizarCadastroPartes() {
