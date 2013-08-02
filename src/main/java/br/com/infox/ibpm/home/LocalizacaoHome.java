@@ -78,7 +78,9 @@ public class LocalizacaoHome
 		LocalizacaoTreeHandler ret2 = getComponent("localizacaoTree");
 		ret1.clearTree();
 		ret2.clearTree();
-		if(getLockedFields().contains("localizacaoPai")) ret2.clearTree();
+		if(getLockedFields().contains("localizacaoPai")) {
+		    ret2.clearTree();
+		}
 		if(searchTree2GridList != null) {
 			searchTree2GridList.refreshTreeList();
 			searchTree2GridList = null;
