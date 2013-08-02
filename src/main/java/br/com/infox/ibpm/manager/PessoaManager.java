@@ -25,7 +25,9 @@ public class PessoaManager extends GenericManager {
 			Events.instance().raiseEvent("evtCarregarPessoaFisica", pessoaFisicaDAO.searchByCpf(codigo));
 		} else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")){
 			Events.instance().raiseEvent("evtCarregarPessoaJuridica", pessoaJuridicaDAO.searchByCnpj(codigo));
-		} else return;
+		} else {
+		    return;
+		}
 	}
 	
 	public PessoaFisica getPessoaFisicaByCpf(String cpf){
