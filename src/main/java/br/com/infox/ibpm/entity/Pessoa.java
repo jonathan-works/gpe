@@ -93,18 +93,23 @@ public class Pessoa implements Serializable {
 	}
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Pessoa))
+		}
+		if (!(obj instanceof Pessoa)) {
 			return false;
+		}
 		Pessoa other = (Pessoa) obj;
 		if (idPessoa == null) {
-			if (other.idPessoa != null)
+			if (other.idPessoa != null) {
 				return false;
-		} else if (!idPessoa.equals(other.idPessoa))
+			}
+		} else if (!idPessoa.equals(other.idPessoa)) {
 			return false;
+		}
 		return true;
 	}
 	
