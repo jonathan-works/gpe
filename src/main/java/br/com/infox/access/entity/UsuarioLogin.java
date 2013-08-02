@@ -329,8 +329,9 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 
 	@Column(name="in_twitter", nullable=false)
 	public Boolean getTemContaTwitter() {
-		if (temContaTwitter == null)
-			temContaTwitter = false;
+		if (temContaTwitter == null) {
+		    temContaTwitter = false;
+		}
 		return temContaTwitter;
 	}
 
