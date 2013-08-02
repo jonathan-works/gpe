@@ -42,6 +42,9 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.util.constants.LengthConstants;
 
@@ -52,6 +55,7 @@ public class Processo implements java.io.Serializable {
 
 	public static final String TABLE_NAME = "tb_processo";
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(Processo.class);
 
 	private int idProcesso;
 	private UsuarioLogin usuarioCadastroProcesso;
@@ -214,7 +218,7 @@ public class Processo implements java.io.Serializable {
 				e = estatisticaList.get(estatisticaList.size() - 1);
 			}
 		} catch (Exception e2) {
-			e2.printStackTrace();
+		    LOG.error(".getLastEstatistica()", e);
 		}
 		return e;
 	}
