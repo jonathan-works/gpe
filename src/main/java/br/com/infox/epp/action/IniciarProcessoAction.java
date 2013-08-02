@@ -12,6 +12,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.bean.ItemBean;
@@ -40,6 +42,7 @@ import br.com.itx.util.EntityUtil;
 public class IniciarProcessoAction {
 
 	public static final String NAME = "iniciarProcessoAction";
+	private static final LogProvider LOG = Logging.getLogProvider(IniciarProcessoAction.class);
 
 	@In
 	private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
@@ -85,14 +88,14 @@ public class IniciarProcessoAction {
 			
 			FacesMessages.instance().add(Severity.INFO, "Processo inserido com sucesso!");
 		} catch(TypeMismatchException tme) {
-			tme.printStackTrace();
+		    LOG.error(".iniciarProcesso()", tme);
 			FacesMessages.instance().add(Severity.ERROR, IniciarProcessoService.
 										 TYPE_MISMATCH_EXCEPTION);
 		} catch(NullPointerException npe) {
-			npe.printStackTrace();
+		    LOG.error(".iniciarProcesso()", npe);
 			FacesMessages.instance().add(Severity.ERROR,"Nenhum processo informado.");
 		} catch(Exception e) {
-			e.printStackTrace();
+		    LOG.error(".iniciarProcesso()", e);
 			FacesMessages.instance().add(Severity.ERROR, "Não foi possível iniciar o processo");
 		}
 	}
