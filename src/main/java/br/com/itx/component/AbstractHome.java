@@ -160,7 +160,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			try {
 				clearUnlocked();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".newInstance()", e);
 			}
 		} else {			
 			setId(null);
@@ -178,7 +178,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				updateOldInstance();
 				Events.instance().raiseEvent("logLoadEventNow", instance);
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".setId", e);
 			}
 		}
 	}
@@ -191,7 +191,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		try {
 			oldEntity = (T) EntityUtil.cloneObject(instance, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".updateOldInstance()", e);
 		} 
 	}	
 
@@ -206,7 +206,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, getRemoveError());
-			e.printStackTrace();
+			LOG.error(".remove()", e);
 		}
 		return ret;
 	}
