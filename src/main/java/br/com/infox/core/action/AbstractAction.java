@@ -141,11 +141,11 @@ public abstract class AbstractAction {
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, "Não foi possível excluir.");
-			e.printStackTrace();
+			LOG.error(".remove()", e);
 		} catch (Exception e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, "Não foi possível excluir.");
-			e.printStackTrace();
+			LOG.error(".remove()", e);
 		}
 		return ret;
 	}
@@ -169,7 +169,7 @@ public abstract class AbstractAction {
 				LOG.info(".inactive(" + o + ")" + getObjectClassName(o) + 
 						"): " + sw.getTime());
 			} catch(Exception e) {
-				e.printStackTrace();
+			    LOG.error(".inactive()", e);
 				instance().add(StatusMessage.Severity.INFO, "Erro ao definir a propriedade " +
 						"ativo na entidade: "+getObjectClassName(o)+". Verifique se esse " +
 						"campo existe.");
