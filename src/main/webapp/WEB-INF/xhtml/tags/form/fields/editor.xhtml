@@ -79,7 +79,7 @@
 				},
 				insertImage:function(path) {
 					var img = document.createElement("img");
-					img.src = document.createElement("canvas").toDataURL(path);
+					img.src = namespace.infox.imageSrcToBase64(path);
 					var container = document.createElement("div");
 					container.appendChild(img);
 					this.insertHtml(container.innerHTML);
