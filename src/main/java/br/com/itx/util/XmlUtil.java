@@ -117,8 +117,9 @@ public final class XmlUtil {
 	
 	public static String getAttributeValue(Element element, String name) {
 		String temp = element.getAttributeValue(name);
-		if(temp == null)
-			temp = element.getAttributeValue(name, element.getNamespace());
+		if(temp == null) {
+		    temp = element.getAttributeValue(name, element.getNamespace());
+		}
 		return temp;
 	}
 }
