@@ -37,10 +37,10 @@ public class ProcessoEpaList extends EntityList<ProcessoEpa> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("numeroProcesso", SearchCriteria.igual);
-		addSearchField("usuarioCadastroProcesso", SearchCriteria.igual);
-		addSearchField("dataInicio", SearchCriteria.maiorIgual, R1);
-		addSearchField("dataFim", SearchCriteria.menorIgual, R2);
+		addSearchField("numeroProcesso", SearchCriteria.IGUAL);
+		addSearchField("usuarioCadastroProcesso", SearchCriteria.IGUAL);
+		addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL, R1);
+		addSearchField("dataFim", SearchCriteria.MENOR_IGUAL, R2);
 		iniciaListaUsuarios();
 	}
 

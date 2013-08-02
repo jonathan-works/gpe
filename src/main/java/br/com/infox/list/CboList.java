@@ -26,9 +26,9 @@ public class CboList extends EntityList<Cbo> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("codCbo", SearchCriteria.igual);
-		addSearchField("descricaoCbo", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("codCbo", SearchCriteria.IGUAL);
+		addSearchField("descricaoCbo", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 	
 	@Override

@@ -23,9 +23,9 @@ public class PessoaList extends EntityList<Pessoa> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("nome", SearchCriteria.contendo);
-		addSearchField("tipoPessoa", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);		
+		addSearchField("nome", SearchCriteria.CONTENDO);
+		addSearchField("tipoPessoa", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);		
 	}
 
 	@Override

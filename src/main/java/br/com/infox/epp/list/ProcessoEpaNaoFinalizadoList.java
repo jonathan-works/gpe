@@ -39,7 +39,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("fluxo", SearchCriteria.igual, R1);
+		addSearchField("fluxo", SearchCriteria.IGUAL, R1);
 	}
 
 	@Override

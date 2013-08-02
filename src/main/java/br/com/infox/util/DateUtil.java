@@ -46,7 +46,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * Metodo retorna um calendar com o horario igual a '23:59:59'
+	 * Metodo retorna um calendar com o horario IGUAL a '23:59:59'
 	 * @param date
 	 * @return
 	 */
@@ -77,7 +77,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * Metodo retorna um calendar com o horario igual a '00:00:00'
+	 * Metodo retorna um calendar com o horario IGUAL a '00:00:00'
 	 * @param date
 	 * @return
 	 */

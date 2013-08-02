@@ -24,11 +24,11 @@ public class TipoProcessoDocumentoList extends
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("codigoDocumento", SearchCriteria.contendo);
-		addSearchField("tipoProcessoDocumento", SearchCriteria.contendo);
-		addSearchField("inTipoDocumento", SearchCriteria.igual);
-		addSearchField("visibilidade", SearchCriteria.igual);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("codigoDocumento", SearchCriteria.CONTENDO);
+		addSearchField("tipoProcessoDocumento", SearchCriteria.CONTENDO);
+		addSearchField("inTipoDocumento", SearchCriteria.IGUAL);
+		addSearchField("visibilidade", SearchCriteria.IGUAL);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	@Override

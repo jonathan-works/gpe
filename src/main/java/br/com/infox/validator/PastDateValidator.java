@@ -22,7 +22,7 @@ public class PastDateValidator implements Validator {
 		Date date = (Date) value;
 		Date now = new Date();
 		if (date != null && date.after(now)) {
-			throw new ValidatorException(new FacesMessage("A data deve ser menor ou igual que a atual."));
+			throw new ValidatorException(new FacesMessage("A data deve ser menor ou IGUAL que a atual."));
 		}
 		
 	}

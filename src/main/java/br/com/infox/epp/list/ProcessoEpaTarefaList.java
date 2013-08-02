@@ -28,7 +28,7 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("processoEpa", SearchCriteria.igual);
+		addSearchField("processoEpa", SearchCriteria.IGUAL);
 	}
 	@Override
 	protected String getDefaultEjbql() {

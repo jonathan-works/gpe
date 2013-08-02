@@ -25,9 +25,9 @@ public class AssociatedTipoModeloVariavelList extends
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("tipoModeloDocumento", SearchCriteria.igual);
-		addSearchField("tipoModeloDocumento.grupoModeloDocumento", SearchCriteria.igual);
-		addSearchField("variavel", SearchCriteria.igual, R1);
+		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
+		addSearchField("tipoModeloDocumento.grupoModeloDocumento", SearchCriteria.IGUAL);
+		addSearchField("variavel", SearchCriteria.IGUAL, R1);
 	}
 
 	@Override

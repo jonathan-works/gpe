@@ -25,9 +25,9 @@ public class NaturezaCategoriaFluxoList extends EntityList<NaturezaCategoriaFlux
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("natureza", SearchCriteria.igual);
-		addSearchField("categoria", SearchCriteria.igual);
-		addSearchField("fluxo", SearchCriteria.igual);
+		addSearchField("natureza", SearchCriteria.IGUAL);
+		addSearchField("categoria", SearchCriteria.IGUAL);
+		addSearchField("fluxo", SearchCriteria.IGUAL);
 	}
 
 	@Override

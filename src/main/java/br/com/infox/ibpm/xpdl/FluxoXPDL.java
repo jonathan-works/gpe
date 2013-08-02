@@ -100,7 +100,7 @@ public final class FluxoXPDL implements Serializable {
 	/**
 	 * Cria uma instância do FluxoXPDL a partir do Element root do XPDL
 	 * 
-	 * @param bytes contendo o XPDL
+	 * @param bytes CONTENDO o XPDL
 	 * @return instância do FluxoXPDL
 	 */
 	public static FluxoXPDL createInstance(Element root) throws IllegalXPDLException {

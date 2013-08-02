@@ -31,10 +31,10 @@ public class AssociativeModeloDocumentoList extends EntityList<ModeloDocumento> 
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("tipoModeloDocumento.grupoModeloDocumento", SearchCriteria.igual, R1);
-		addSearchField("tituloModeloDocumento", SearchCriteria.contendo);
-		addSearchField("tipoModeloDocumento", SearchCriteria.igual);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("tipoModeloDocumento.grupoModeloDocumento", SearchCriteria.IGUAL, R1);
+		addSearchField("tituloModeloDocumento", SearchCriteria.CONTENDO);
+		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	@Override

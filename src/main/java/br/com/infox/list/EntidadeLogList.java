@@ -46,14 +46,14 @@ public class EntidadeLogList extends EntityList<EntityLog> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("ip", SearchCriteria.iniciando, R1);
-		addSearchField("usuario", SearchCriteria.igual, R2);
-		addSearchField("nomeEntidade", SearchCriteria.igual, R3);
-		addSearchField("tipoOperacao", SearchCriteria.igual, R4);
-		addSearchField("nomePackage", SearchCriteria.igual, R6);
-		addSearchField("idEntidade", SearchCriteria.igual, R7);
-		addSearchField("dataLogInicio", SearchCriteria.maiorIgual, R8);
-		addSearchField("dataLogFim", SearchCriteria.menorIgual, R9);
+		addSearchField("ip", SearchCriteria.INICIANDO, R1);
+		addSearchField("usuario", SearchCriteria.IGUAL, R2);
+		addSearchField("nomeEntidade", SearchCriteria.IGUAL, R3);
+		addSearchField("tipoOperacao", SearchCriteria.IGUAL, R4);
+		addSearchField("nomePackage", SearchCriteria.IGUAL, R6);
+		addSearchField("idEntidade", SearchCriteria.IGUAL, R7);
+		addSearchField("dataLogInicio", SearchCriteria.MAIOR_IGUAL, R8);
+		addSearchField("dataLogFim", SearchCriteria.MENOR_IGUAL, R9);
 	}
 
 	@Override

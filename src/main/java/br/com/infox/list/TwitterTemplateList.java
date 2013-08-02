@@ -28,9 +28,9 @@ public class TwitterTemplateList extends EntityList<TwitterTemplate> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("titulo", SearchCriteria.contendo);
-		addSearchField("mensagem", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("titulo", SearchCriteria.CONTENDO);
+		addSearchField("mensagem", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	@Override

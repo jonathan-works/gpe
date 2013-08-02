@@ -292,7 +292,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		}
 		Object object = ReflectionsUtil.getValue(entity, s.getName());
 		return !(object != null 
-			&& s.getCriteria().equals(SearchCriteria.igual)
+			&& s.getCriteria().equals(SearchCriteria.IGUAL)
 			&& "and".equals(getRestrictionLogicOperator()));
 	}
 

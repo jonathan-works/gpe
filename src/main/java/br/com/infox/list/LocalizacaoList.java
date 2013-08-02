@@ -22,10 +22,10 @@ public class LocalizacaoList extends EntityList<Localizacao> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("localizacao", SearchCriteria.contendo);
-		addSearchField("localizacaoPai", SearchCriteria.igual);
-		addSearchField("ativo", SearchCriteria.igual);
-		addSearchField("estrutura", SearchCriteria.igual);
+		addSearchField("localizacao", SearchCriteria.CONTENDO);
+		addSearchField("localizacaoPai", SearchCriteria.IGUAL);
+		addSearchField("ativo", SearchCriteria.IGUAL);
+		addSearchField("estrutura", SearchCriteria.IGUAL);
 	}
 
 	@Override

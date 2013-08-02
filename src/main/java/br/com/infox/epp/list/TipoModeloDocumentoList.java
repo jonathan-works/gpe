@@ -29,10 +29,10 @@ public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("grupoModeloDocumento", SearchCriteria.igual);
-		addSearchField("tipoModeloDocumento", SearchCriteria.contendo);
-		addSearchField("abreviacao", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("grupoModeloDocumento", SearchCriteria.IGUAL);
+		addSearchField("tipoModeloDocumento", SearchCriteria.CONTENDO);
+		addSearchField("abreviacao", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 	
 	@Override

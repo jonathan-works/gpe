@@ -23,10 +23,10 @@ public class ParteProcessoList extends EntityList<ParteProcesso> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("processo", SearchCriteria.igual);
-		addSearchField("pessoa", SearchCriteria.igual);
-		addSearchField("processoAtual", SearchCriteria.igual, REGRA1);
-	    addSearchField("isResponsavelLocalizacao",SearchCriteria.igual, REGRA_IS_RESPONSAVEL);
+		addSearchField("processo", SearchCriteria.IGUAL);
+		addSearchField("pessoa", SearchCriteria.IGUAL);
+		addSearchField("processoAtual", SearchCriteria.IGUAL, REGRA1);
+	    addSearchField("isResponsavelLocalizacao",SearchCriteria.IGUAL, REGRA_IS_RESPONSAVEL);
 	}
 
 	@Override

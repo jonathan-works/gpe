@@ -30,8 +30,8 @@ public class PapelList extends EntityList<Papel> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("nome", SearchCriteria.contendo, R1);
-		addSearchField("identificador", SearchCriteria.contendo, R2);
+		addSearchField("nome", SearchCriteria.CONTENDO, R1);
+		addSearchField("identificador", SearchCriteria.CONTENDO, R2);
 	}
 
 	@Override

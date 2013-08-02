@@ -26,11 +26,11 @@ public class ProtocoloDocumentoList extends EntityList<ProtocoloDocumento> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("documentoFisico", SearchCriteria.igual);
-		addSearchField("nomePessoa", SearchCriteria.contendo);
-		addSearchField("dataEntrada", SearchCriteria.dataIgual);
-		addSearchField("dataSaida", SearchCriteria.dataIgual);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("documentoFisico", SearchCriteria.IGUAL);
+		addSearchField("nomePessoa", SearchCriteria.CONTENDO);
+		addSearchField("dataEntrada", SearchCriteria.DATA_IGUAL);
+		addSearchField("dataSaida", SearchCriteria.DATA_IGUAL);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 		
 	}
 

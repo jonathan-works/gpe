@@ -23,10 +23,10 @@ public class BloqueioUsuarioList extends EntityList<BloqueioUsuario> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("usuario", SearchCriteria.igual, R1);
-		addSearchField("dataBloqueio", SearchCriteria.dataIgual);
-		addSearchField("dataDesbloqueio", SearchCriteria.dataIgual);
-		addSearchField("motivoBloqueio", SearchCriteria.contendo);
+		addSearchField("usuario", SearchCriteria.IGUAL, R1);
+		addSearchField("dataBloqueio", SearchCriteria.DATA_IGUAL);
+		addSearchField("dataDesbloqueio", SearchCriteria.DATA_IGUAL);
+		addSearchField("motivoBloqueio", SearchCriteria.CONTENDO);
 	}
 
 	@Override
