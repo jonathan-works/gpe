@@ -325,7 +325,7 @@ public class TaskInstanceHome implements Serializable {
             indexer.index(taskInstance.getId() + "",
                     new HashMap<String, String>(), fields);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(".updateIndex()", e);
         }
     }
 
@@ -359,7 +359,7 @@ public class TaskInstanceHome implements Serializable {
             try {
                 BusinessProcess.instance().endTask(transition);
             } catch (JbpmException e) {
-                e.printStackTrace();
+                LOG.error(".end()", e);
             }
             
             boolean canClosePanel = false;
