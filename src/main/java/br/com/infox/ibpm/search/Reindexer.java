@@ -78,7 +78,7 @@ public class Reindexer {
 				indexer.index(ti.getId() + "", Collections.EMPTY_MAP, fields);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+		    LOG.error(".execute()", e);
 		}
 		scroll.close();
 		session.getTransaction().commit();
