@@ -212,15 +212,15 @@ public class Processo implements java.io.Serializable {
 	
 	@Transient
 	public Estatistica getLastEstatistica() {
-		Estatistica e = null;
+		Estatistica estatistica = null;
 		try {
 			if (estatisticaList.size() > 0) {
-				e = estatisticaList.get(estatisticaList.size() - 1);
+				estatistica = estatisticaList.get(estatisticaList.size() - 1);
 			}
-		} catch (Exception e2) {
-		    LOG.error(".getLastEstatistica()", e);
+		} catch (Exception exception) {
+		    LOG.error(".getLastEstatistica()", exception);
 		}
-		return e;
+		return estatistica;
 	}
 	
 	@Override
