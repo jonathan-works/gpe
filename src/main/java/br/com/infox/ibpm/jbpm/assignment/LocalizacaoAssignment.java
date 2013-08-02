@@ -161,7 +161,7 @@ public class LocalizacaoAssignment implements Serializable {
 			this.currentTaskInstance = context.getTaskInstance();
 			getPooledActors(expression);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+		    LOG.error(".onTaskCreate", ex);
 			String action = "inserir processo localização: ";
 			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.
