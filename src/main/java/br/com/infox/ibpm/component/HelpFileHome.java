@@ -25,10 +25,12 @@ public class HelpFileHome extends AbstractImageFileHome {
 	public static final HelpFileHome instance() {
 		return ComponentUtil.getComponent(NAME);
 	}
+
+    public static final String HELP_IMAGE_RELATIVE_PATH = "/img/help/";
 	
 	@Override
-	public String getBaseImagesPath() {
-		return "/img/help/";
+	public String getImagesRelativePath() {
+		return HelpFileHome.HELP_IMAGE_RELATIVE_PATH;
 	}
 	
 }
