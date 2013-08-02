@@ -103,15 +103,19 @@ public class Categoria implements Serializable{
     }
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (!(obj instanceof Categoria))
+        }
+        if (!(obj instanceof Categoria)) {
             return false;
+        }
         Categoria other = (Categoria) HibernateUtil.removeProxy(obj);
-        if (idCategoria != other.idCategoria)
+        if (idCategoria != other.idCategoria) {
             return false;
+        }
         return true;
     }
 	
