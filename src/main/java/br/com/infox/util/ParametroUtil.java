@@ -106,12 +106,8 @@ public class ParametroUtil {
 		for (Method metodo : this.getClass().getDeclaredMethods()) {
 			try {
 				metodo.invoke(this);
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+			} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+			    log.error(".executarFactorys()", e);
 			}
 		}
 		return "OK";
