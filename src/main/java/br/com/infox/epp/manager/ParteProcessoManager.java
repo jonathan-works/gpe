@@ -52,10 +52,12 @@ public class ParteProcessoManager extends GenericManager {
 				EntityUtil.getEntityManager().persist(p);
 				EntityUtil.getEntityManager().flush();
 			}
-			if (processoEpa.getPartes().contains(p))
-				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			else
-				persist(new ParteProcesso(processoEpa, p));
+			if (processoEpa.getPartes().contains(p)) {
+			    FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
+			}
+			else {
+			    persist(new ParteProcesso(processoEpa, p));
+			}
 			pf.setInstance(null);
 		}
 		else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
@@ -67,17 +69,22 @@ public class ParteProcessoManager extends GenericManager {
 				EntityUtil.getEntityManager().persist(p);
 				EntityUtil.getEntityManager().flush();
 			}
-			if (processoEpa.getPartes().contains(p))
-				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			else
-				persist(new ParteProcesso(processoEpa, p));
+			if (processoEpa.getPartes().contains(p)) {
+			    FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
+			}
+			else {
+			    persist(new ParteProcesso(processoEpa, p));
+			}
 			pj.setInstance(null);
-		} else return;
+		} else {
+		    return;
+		}
 	}
 	
 	public HistoricoParteProcesso restaurarParteProcesso(ParteProcesso parteProcessoAtual, HistoricoParteProcesso versaoAnterior, String motivoRestauracao) throws ValidationException {
-		if (!parteProcessoAtual.getIdParteProcesso().equals(versaoAnterior.getParteModificada().getIdParteProcesso()))
+		if (!parteProcessoAtual.getIdParteProcesso().equals(versaoAnterior.getParteModificada().getIdParteProcesso())) {
 			throw new ValidationException("Restauração inválida: Histórico passado não pertence ao Histórico da Parte de Processo instanciada");
+		}
 		
 		HistoricoParteProcesso novoHistorico = new HistoricoParteProcesso(parteProcessoAtual, motivoRestauracao);
 		persist(novoHistorico);
