@@ -59,10 +59,11 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	
 	private AccessToken getAccessToken(String pin) throws TwitterException	{
 		AccessToken tok;
-		if (pin.length() > 0)
-			tok = twitter.getOAuthAccessToken(requestToken, pin);
-		else 
-			tok = twitter.getOAuthAccessToken();
+		if (pin.length() > 0) {
+		    tok = twitter.getOAuthAccessToken(requestToken, pin);
+		} else {
+		    tok = twitter.getOAuthAccessToken();
+		}
 		return tok;
 	}
 	
