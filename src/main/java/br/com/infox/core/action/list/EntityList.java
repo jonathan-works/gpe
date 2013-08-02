@@ -17,6 +17,8 @@ import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.framework.EntityQuery;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
@@ -26,6 +28,8 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	private static final String FIELD_EXPRESSION = "#'{'{0}List.entity.{1}}";
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final LogProvider LOG = Logging.getLogProvider(EntityList.class);
 
 	protected static final int DEFAULT_MAX_RESULT = 20;
 
@@ -176,7 +180,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 				o = ve.getValue();
 			} catch (PropertyNotFoundException e) {
 				// para o caso de uma restriction mapeada não seja um campo da entidade
-			    e.printStackTrace();
+			    LOG.error(".visitFields()", e);
 			}
 			if (o != null) {
 				command.execute(s, o);
@@ -245,7 +249,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		try {
 			setEntity((E) EntityUtil.newInstance(getClass()));
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".newInstance()", e);
 		}
 	}
 	
