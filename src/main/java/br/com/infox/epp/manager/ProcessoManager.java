@@ -10,6 +10,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
@@ -35,6 +37,7 @@ import br.com.itx.util.EntityUtil;
 public class ProcessoManager extends GenericManager {
 	
 	private static final long serialVersionUID = 8095772422429350875L;
+	private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
 	public static final String NAME = "processoManager";
 	
 	@In private ProcessoDAO processoDAO;
@@ -133,7 +136,7 @@ public class ProcessoManager extends GenericManager {
             	bp.startTask();
             	result = true;
             } catch (IllegalStateException e) {
-            	e.printStackTrace();
+                LOG.error(".iniciaTask()", e);
             }
         }
     	return result;
