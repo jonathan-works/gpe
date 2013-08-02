@@ -18,8 +18,9 @@ public class ElementXPDL implements Serializable {
 		this.element = element;
 		this.id = this.element.getAttributeValue("Id");
 		this.name = this.element.getAttributeValue("Name");
-		if(this.name == null || this.name.isEmpty())
-			this.name = name;
+		if(this.name == null || this.name.isEmpty()) {
+		    this.name = name;
+		}
 		this.graphics = GraphicsInfoXPDL.createInstance(XmlUtil.getChildByIndex(this.element, "NodeGraphicsInfos", 0));
 	}
 	
