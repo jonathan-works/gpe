@@ -487,7 +487,7 @@ public class Util implements Serializable {
 				ut.commit();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".commitTransction()", e);
 			throw new AplicationException(AplicationException.
 					createMessage("iniciar transação", 
 								  "beginTransaction()", 
