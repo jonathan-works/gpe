@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.TwitterTemplate;
@@ -30,6 +33,7 @@ public final class TwitterUtil {
 	private static TwitterUtil instance = init();
 	private TwitterFactory factory;
 	private Twitter aplicacao;
+	private static final LogProvider LOG = Logging.getLogProvider(TwitterUtil.class);
 		
 	private TwitterUtil() {
 		ConfigurationBuilder builder = new ConfigurationBuilder();
@@ -407,14 +411,10 @@ public final class TwitterUtil {
 		try {
 			result = new TwitterUtil();
 			result.loadApplicationTwitter();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e)	{
-			e.printStackTrace();
-		} catch (NoResultException nre){
-			nre.printStackTrace();
+		} catch (IllegalArgumentException | NullPointerException | NoResultException e) {
+		    LOG.error("Erro ao iniciar Twitter Util", e);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error("Erro ao iniciar Twitter Util", e);
 		}
 		return result;
 	}
