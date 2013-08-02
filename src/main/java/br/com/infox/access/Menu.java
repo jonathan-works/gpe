@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
@@ -24,6 +26,7 @@ import br.com.itx.util.EntityUtil;
 public class Menu implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(Menu.class);
 
     protected List<MenuItem> bookmark = new ArrayList<MenuItem>();
 
@@ -65,7 +68,7 @@ public class Menu implements Serializable {
                     buildItem(key, url);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error(".setItems()", e);
                 ok = false;
                 break;
             }
