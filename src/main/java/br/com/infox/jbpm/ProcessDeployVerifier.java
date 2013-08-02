@@ -74,7 +74,7 @@ public class ProcessDeployVerifier {
 				transaction = null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".init()", e);
 		}
 		GraphSession graphSession = JbpmUtil.getGraphSession();
 		List<ProcessDefinition> definitions = graphSession.findLatestProcessDefinitions();
@@ -100,7 +100,7 @@ public class ProcessDeployVerifier {
 			try {
 				transaction.commit();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".init()", e);
 			}
 		}
 		LOG.info(MessageFormat.format("Tempo de publicacao: {0}", (new Date().getTime() - time)));
