@@ -37,10 +37,11 @@ public class ModeloDocumentoManager extends GenericManager{
 	@In VariavelDAO variavelDAO;
 	
 	public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento){
-		if(modeloDocumento != null)
-			return ModeloDocumentoAction.instance().getConteudo(modeloDocumento);
-		else 
-			return "";
+		if(modeloDocumento != null) {
+		    return ModeloDocumentoAction.instance().getConteudo(modeloDocumento);
+		} else {
+		    return "";
+		}
 	}
 	
 	/**
