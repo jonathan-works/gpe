@@ -11,6 +11,8 @@ import javax.faces.model.SelectItem;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
@@ -24,6 +26,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(TransitionFitter.class);
 
 	public static final String NAME = "transitionFitter";
 	
@@ -60,7 +63,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 			try {
 				t.setName(t.getTo().getName());
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOG.error("changeTransition()", e);
 			}
 		}
 	}

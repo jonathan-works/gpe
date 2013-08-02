@@ -412,9 +412,9 @@ public final class TwitterUtil {
 			result = new TwitterUtil();
 			result.loadApplicationTwitter();
 		} catch (IllegalArgumentException | NullPointerException | NoResultException e) {
-		    LOG.error("Erro ao iniciar Twitter Util", e);
+		    LOG.error(".init()", e);
 		} catch (Exception e) {
-		    LOG.error("Erro ao iniciar Twitter Util", e);
+		    LOG.error(".init()", e);
 		}
 		return result;
 	}

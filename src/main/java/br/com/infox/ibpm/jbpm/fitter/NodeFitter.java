@@ -19,6 +19,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -44,6 +46,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "nodeFitter";
 	public static final String SET_CURRENT_NODE_EVENT = "NodeFitter.setCurrentNode";
+    private static final LogProvider LOG = Logging.getLogProvider(NodeFitter.class);
 
 	private List<Node> nodes;
 	private List<SelectItem> nodesItems;
@@ -68,7 +71,7 @@ public class NodeFitter extends Fitter implements Serializable {
 			try {
 				node = (Node) nodeType.newInstance();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error("addNewNode()", e);
 				return;
 			}
 			node.setName(newNodeName);
