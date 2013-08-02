@@ -96,10 +96,8 @@ public final class HelpUtil {
 			s = s.replaceAll(BEGIN_MARKER, BEGIN_TAG);
 			s= s.replaceAll(END_MARKER, END_TAG);
 			return s;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidTokenOffsetsException e) {
-			e.printStackTrace();
+		} catch (IOException | InvalidTokenOffsetsException e) {
+		    LOG.error(".highlightText()", e);
 		}
 		return "";
 	}
