@@ -41,6 +41,15 @@ namespace("infox",{
 			throw "Invalid argument type";
 		}
 		return id.split(":").join("\\:");
+	},imageSrcToBase64:function imageSrcToBase64(src) {
+		var img = document.createElement("img");
+		img.src = src;
+		var canvas = document.createElement("canvas");
+		canvas.width = img.width;
+		canvas.height = img.height;
+		var ctx = canvas.getContext("2d");
+		ctx.drawImage(img,0,0);
+		return canvas.toDataURL();
 	}
 });
 
