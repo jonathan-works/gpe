@@ -62,6 +62,27 @@
 				},
 				get instance() {
 					return CKEDITOR.instances["#{rich:clientId(id)}:inp"];
+				},
+				insertHtml:function(content) {
+					var editor = this.instance;
+					editor.focus();
+					editor.fire('saveSnapshot');
+					editor.insertHtml(content);
+					editor.fire('saveSnapshot');
+				},
+				insertText:function(content) {
+					var editor = this.instance;
+					editor.focus();
+					editor.fire('saveSnapshot');
+					editor.insertText(content);
+					editor.fire('saveSnapshot');
+				},
+				insertImage:function(path) {
+					var img = document.createElement("img");
+					img.src = document.createElement("canvas").toDataURL(path);
+					var container = document.createElement("div");
+					container.appendChild(img);
+					this.insertHtml(container.innerHTML);
 				}
 			});
 		</script>
