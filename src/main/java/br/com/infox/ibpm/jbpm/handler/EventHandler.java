@@ -107,8 +107,9 @@ public class EventHandler implements Serializable {
 			return false;
 		}
 		EventHandler other = (EventHandler) obj;
-		if(other.getEvent() != null)
-			return this.getEvent().getEventType().equals(other.getEvent().getEventType());
+		if(other.getEvent() != null) {
+		    return this.getEvent().getEventType().equals(other.getEvent().getEventType());
+		}
 		return false;
 	}
 
@@ -116,10 +117,12 @@ public class EventHandler implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		if(this.getEvent().getEventType()!= null)
-			result = prime * result + this.getEvent().getEventType().hashCode();
-		else
-			result = prime * result + this.getEvent().hashCode();
+		if(this.getEvent().getEventType()!= null) {
+		    result = prime * result + this.getEvent().getEventType().hashCode();
+		}
+		else {
+		    result = prime * result + this.getEvent().hashCode();
+		}
 		return result;
 	}
 	
