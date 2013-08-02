@@ -24,6 +24,8 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.ibpm.entity.ProcessoDocumento;
@@ -39,6 +41,7 @@ public abstract class AbstractProcessoDocumentoBinHome<T>
 	private ProcessoDocumento processoDocumento;
 	private boolean isModelo;
 	private boolean ignoraConteudoDocumento = Boolean.FALSE;
+	private static final LogProvider LOG = Logging.getLogProvider(AbstractProcessoDocumentoBinHome.class);
 	
 	public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
 		this.processoDocumento = processoDocumento;
@@ -215,7 +218,7 @@ public abstract class AbstractProcessoDocumentoBinHome<T>
 			file.setData( DocumentoBinHome.instance().getData(getInstance().getIdProcessoDocumentoBin()) );
 		} catch (Exception e) {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao descarregar o documento.");
-			e.printStackTrace();
+			LOG.error(".exportData()", e);
 		}
 		Contexts.getConversationContext().set("fileHome", file);
 	}
