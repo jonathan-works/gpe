@@ -262,7 +262,9 @@ public class SearchHandler implements Serializable {
 
     public void lastPage() {
         page = (resultSize / pageSize);
-        if (resultSize % pageSize == 0) page--;
+        if (resultSize % pageSize == 0) {
+            page--;
+        }
         search();
     }
 
