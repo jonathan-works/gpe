@@ -131,7 +131,9 @@ public final class ComponentUtil {
 	
 	public static Class<?> getType(Object component, String property) {
 		PropertyDescriptor pd = getPropertyDescriptor(component, property);
-		if (pd == null) { return null; }
+		if (pd == null) { 
+		    return null;
+		}
 		return getType(pd);
 	}
 
