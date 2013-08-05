@@ -44,10 +44,6 @@ public class MeasureTime {
 		return watch.getTime();
 	}
 	
-	public void print(String msg) {
-		System.out.println(msg + ". Tempo decorrido: " + watch.getTime());
-	}
-	
 	public void reset() {
 		watch.reset();
 	}
