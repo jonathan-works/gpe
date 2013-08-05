@@ -111,6 +111,7 @@ public class Reindexer {
 			}
 			return sb.toString();
 		} catch (Exception e) {
+		    LOG.error(".getTextoIndexavel()", e);
 		} finally {
 			FileUtil.close(reader);
 			FileUtil.close(br);
