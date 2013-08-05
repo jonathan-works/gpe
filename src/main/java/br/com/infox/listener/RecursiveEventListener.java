@@ -84,7 +84,7 @@ public class RecursiveEventListener implements PreInsertEventListener,
 		return false;
 	}
 
-	private static boolean compareById(Object object1, Object object2) throws Exception {
+	private static boolean compareById(Object object1, Object object2) {
 		if (object1 == null || object2 == null) {
 			return object1 == null && object2 == null;
 		} else {
