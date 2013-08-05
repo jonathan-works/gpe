@@ -111,7 +111,9 @@ public final class ComponentUtil {
 	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) {
 		try {
 			return Introspector.getBeanInfo(clazz).getPropertyDescriptors();
-		} catch (IntrospectionException e) { }
+		} catch (IntrospectionException e) {
+		    LOG.error(".getPropertyDescriptors()", e);
+		}
 		return new PropertyDescriptor[0];
 	}
 	
