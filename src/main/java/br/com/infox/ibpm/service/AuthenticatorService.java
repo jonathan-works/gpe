@@ -28,7 +28,6 @@ import br.com.infox.ibpm.dao.ProcessoDAO;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.UsuarioLocalizacaoComparator;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
-import br.com.infox.ibpm.manager.LocalizacaoManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
 import br.com.itx.util.EntityUtil;
 

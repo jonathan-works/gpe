@@ -19,7 +19,6 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.ibpm.dao.ProcessoDAO;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
-import br.com.infox.ibpm.dao.UsuarioLoginDAO;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;

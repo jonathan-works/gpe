@@ -29,7 +29,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
