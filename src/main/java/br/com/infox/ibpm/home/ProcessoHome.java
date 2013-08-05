@@ -166,7 +166,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
 	private String getDescricaoModeloDocumentoFluxoByValue(Object value, String modeloDocumentoFluxo) {
 	    String modeloDocumento = getValueOfModeloDocumento(value, modeloDocumentoFluxo);
-		if (!Strings.isEmpty(modeloDocumentoFluxo) && modeloDocumento != modeloDocumentoFluxo){
+		if (!Strings.isEmpty(modeloDocumentoFluxo) && !modeloDocumento.equals(modeloDocumentoFluxo)){
 			modeloDocumento = modeloDocumentoFluxo;
 		}
 		if (Strings.isEmpty(modeloDocumento)){
