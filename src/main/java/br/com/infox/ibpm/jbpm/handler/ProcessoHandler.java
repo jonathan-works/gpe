@@ -147,8 +147,8 @@ public class ProcessoHandler implements Serializable {
 	}
 	
 	public boolean hasPartes(){
-		Long idjbpm_ = ProcessInstance.instance().getId();
-		return processoEpaManager.hasPartes(idjbpm_);
+		Long idjbpm = ProcessInstance.instance().getId();
+		return processoEpaManager.hasPartes(idjbpm);
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){
