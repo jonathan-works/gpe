@@ -43,10 +43,4 @@ public abstract class AbstractVariavelHome<T> extends AbstractHome<Variavel> {
 		newInstance();
 		return ret;
 	}
-
-	@Override
-	public String persist() {
-		return super.persist();
-	}
-
 }

@@ -66,11 +66,6 @@ public class TipoModeloDocumentoPapelHome extends AbstractTipoModeloDocumentoPap
 		return msg;
 	}
 	
-	@Override
-	public String remove() {
-		return super.remove();
-	}
-	
 	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumentoAtual(){
 		return papelManager.getPapeisNaoAssociadosATipoModeloDocumento(instance.getTipoModeloDocumento());
 	}
