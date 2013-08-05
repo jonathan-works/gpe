@@ -163,15 +163,4 @@ public class Menu implements Serializable {
         Contexts.removeFromAllContexts("mainMenu");
     }
 
-    public static void main(String[] args) {
-        List<String> items = new ArrayList<String>();
-        items.add("Empresa 1:url.empresa1");
-        items.add("/Cadastro/1/Empresa 2:url.empresa2");
-        items.add("/Cadastro/2/Empresa 3:url.empresa3");
-        items.add("/Cadastro/2/Empresa 4:url.empresa4");
-        Menu m = new Menu();
-        m.setItems(items);
-        System.out.println(m.dropMenus);
-    }
-
 }
