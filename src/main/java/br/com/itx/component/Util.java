@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
@@ -192,8 +193,7 @@ public class Util implements Serializable {
 		return (action != null ? action[0] : "");
 	}
 	
-	public String homeEvent(String event, EntityHome<?> home, String type) 
-	throws Exception {
+	public String homeEvent(String event, EntityHome<?> home, String type) {
 		Context eventContext = Contexts.getEventContext();
 		eventContext.set("homeActionType", type);
 		eventContext.set("home", home);
@@ -433,19 +433,6 @@ public class Util implements Serializable {
 			Contexts.getMethodContext().remove("obj");
 		}
 		return obj;
-	}
-	
-	public static DataSource getDataSource(String dataSource) throws Exception {
-		InitialContext cxt = new InitialContext();
-		if ( cxt == null ) {
-			throw new Exception("No context!");
-		}		
-		return (DataSource) cxt.lookup(dataSource);
-	}
-	
-	public static DataSource getDataSourceBin() throws Exception {
-		String ds = "java:/" + new Util().eval("dataSourceNameBin");
-		return getDataSource(ds);
 	}
 	
 	public String getContextsAsString(Context context, boolean htmlBreak) {
