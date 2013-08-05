@@ -22,24 +22,22 @@ import javax.faces.validator.ValidatorException;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 
 @org.jboss.seam.annotations.faces.Validator(id="emailValidator")
 @Name("emailValidator")
 @BypassInterceptors
 public class EmailValidator implements Validator {
+    
+    private static final LogProvider LOG = Logging.getLogProvider(EmailValidator.class);
 
 	//@Override
 	public void validate(FacesContext context, UIComponent component,
 			Object value) throws ValidatorException {
-		// TODO: Achar solução pra isso aqui
-//		org.hibernate.validator.EmailValidator validator = 
-//			new org.hibernate.validator.EmailValidator();
-//		validator.initialize(null);
-//		if (! validator.isValid(value)) {
-//			FacesMessage fm = new FacesMessage("Email inválido");
-//			throw new ValidatorException(fm);
-//		}
+	    //TODO implementar, o antigo dava erro
+		LOG.error("Função de validar e-mail não está implementada");
 		
 	}
 	
