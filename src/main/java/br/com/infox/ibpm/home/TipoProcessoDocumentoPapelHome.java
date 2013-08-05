@@ -28,8 +28,7 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	@Override
 	public String update() {
 		instance.setTipoProcessoDocumento(TipoProcessoDocumentoHome.instance().getInstance());
-		String ret = super.update();
-		return ret;
+		return super.update();
 	}
 	
 	@Override
