@@ -548,7 +548,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	private String tratarErrosDePersistencia(String ret){
 		String message = null;
-		if (PostgreSQLErrorCode.unique_violation.toString().equals(ret)){
+		if (PostgreSQLErrorCode.UNIQUE_VIOLATION.toString().equals(ret)){
 			message = MSG_REGISTRO_CADASTRADO;
 		}
 		if (message != null) {
