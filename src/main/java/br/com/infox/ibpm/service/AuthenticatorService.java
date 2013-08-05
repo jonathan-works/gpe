@@ -41,7 +41,6 @@ public class AuthenticatorService extends GenericManager {
 	
 	@In private UsuarioLoginManager usuarioLoginManager;
 	@In private BloqueioUsuarioManager bloqueioUsuarioManager;
-	@In private LocalizacaoManager localizacaoManager;
 	
 	@In private ProcessoDAO processoDAO;
 	
