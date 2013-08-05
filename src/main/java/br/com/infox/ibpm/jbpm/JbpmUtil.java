@@ -93,7 +93,7 @@ public class JbpmUtil {
 				localizacaoId = localizacaoId.replaceAll("'", "");
 				localizacaoId = localizacaoId.split(":")[0];
 			}
-			return EntityUtil.find(Localizacao.class, new Integer(localizacaoId));
+			return EntityUtil.find(Localizacao.class, Integer.valueOf(localizacaoId));
 		}
 		return null;
 	}
