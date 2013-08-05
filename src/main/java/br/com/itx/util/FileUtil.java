@@ -29,7 +29,12 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.jar.JarFile;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 public final class FileUtil {
+    
+    private static final LogProvider LOG = Logging.getLogProvider(FileUtil.class);
 	
 	private FileUtil() {}
 
@@ -85,7 +90,7 @@ public final class FileUtil {
 		    toChannel = new FileOutputStream(toFile).getChannel();
 		    toChannel.transferFrom(fromChannel, 0, fromChannel.size());
 		} catch (IOException err) {
-			err.printStackTrace();
+		    LOG.error(".copy()", err);
 		} finally {
 			FileUtil.close(fromChannel);
 		    FileUtil.close(toChannel);
@@ -107,7 +112,7 @@ public final class FileUtil {
                 }
                 
             } catch (IOException err) {
-				err.printStackTrace();
+                LOG.error(".writeFile()", err);
 			} finally {
 				close(out);
 				close(in);
@@ -127,7 +132,7 @@ public final class FileUtil {
                     out.flush();
                 }
             } catch (IOException err) {
-				err.printStackTrace();
+                LOG.error(".readFile()", err);
 			} finally {
 				close(out);
 				close(in);
@@ -140,7 +145,7 @@ public final class FileUtil {
 			try {
 				stream.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+			    LOG.error(".close()", e);
 			}
 		}
 	}
@@ -150,7 +155,7 @@ public final class FileUtil {
 			try {
 				jarFile.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+			    LOG.error(".close()", e);
 			}
 		}
 	}
@@ -166,7 +171,7 @@ public final class FileUtil {
 				out.write(text);
 				
 			} catch (IOException e) {
-				e.printStackTrace(System.out);
+			    LOG.error(".writeText()", e);
 			} finally {
 				close(out);
 			}
@@ -190,7 +195,7 @@ public final class FileUtil {
 				
 			}	
 		} catch (IOException e) {
-			e.printStackTrace(System.out);
+		    LOG.error(".readText()", e);
 		} finally {
 			close(in);
 			close(br);
@@ -209,7 +214,7 @@ public final class FileUtil {
                     out.flush();
                 }
             } catch (IOException err) {
-				err.printStackTrace();
+                LOG.error(".readStreamAsText()", err);
 			} finally {
 				close(out);
 				close(in);
