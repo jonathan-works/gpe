@@ -177,9 +177,13 @@ public class SearchTree2GridList <E> {
 							}							
 						}
 						if (isLogicOperatorAnd()) {
-							if(!ret) { return ret; }
+							if(!ret) { 
+							    return ret;
+						    }
 						} else {
-							if(ret) { return ret; }									
+							if(ret) {
+							    return ret;
+						    }									
 						}						
 					}
 				}			
