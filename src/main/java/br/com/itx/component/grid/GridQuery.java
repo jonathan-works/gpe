@@ -65,7 +65,7 @@ public class GridQuery extends EntityQuery {
 
 	private String home;
 
-	private String visibleColumnList = new String();
+	private String visibleColumnList = "";
 	
 	private boolean treeMode;
 	
