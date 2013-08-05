@@ -12,7 +12,7 @@ import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
 import br.com.itx.util.XmlUtil;
 
 
-public class TransitionXPDL implements Serializable {
+public final class TransitionXPDL implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private String id;
