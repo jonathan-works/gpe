@@ -93,8 +93,7 @@ public class UsuarioLocalizacaoHome
 	
 	@Override
 	public String update() {
-		String update = super.update();
-		return update;
+		return super.update();
 	}
 	
 	@Override
