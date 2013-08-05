@@ -14,12 +14,10 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.entity.ProcessoEpaTarefa;
-import br.com.infox.epp.manager.LocalizacaoTurnoManager;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.ibpm.manager.ProcessoLocalizacaoIbpmManager;
 
 @Name(TaskListenerService.NAME)
 public class TaskListenerService extends AbstractAction {
@@ -28,10 +26,6 @@ public class TaskListenerService extends AbstractAction {
 	
 	@In
 	private ProcessoEpaTarefaManager processoEpaTarefaManager;
-	@In
-	private ProcessoLocalizacaoIbpmManager processoLocalizacaoIbpmManager;
-	@In
-	private LocalizacaoTurnoManager localizacaoTurnoManager;
 	
 	@Observer(IniciarProcessoService.ON_CREATE_PROCESS)
 	public void onStartProcess(TaskInstance taskInstance, Processo processo) { 
