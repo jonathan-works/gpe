@@ -23,6 +23,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.component.tree.SearchTree2GridList;
@@ -42,6 +44,7 @@ public class LocalizacaoHome
 		extends AbstractLocalizacaoHome<Localizacao>{
 
 	public static final String NAME = "localizacaoHome";
+	private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoHome.class);
 	
 	private static final long serialVersionUID = 1L;
 	private Localizacao localizacaoPai;
@@ -106,7 +109,7 @@ public class LocalizacaoHome
 			}
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+		    LOG.error(".persit()", e);
 		} 
 		return ret;	
 	}
@@ -161,7 +164,7 @@ public class LocalizacaoHome
 			}
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+		    LOG.error(".update()", e);
 		}
 		return ret;
 	}
@@ -273,7 +276,7 @@ public class LocalizacaoHome
 			outcome = persist();
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+		    LOG.error(".persistAndNext()", e);
 		} 
 		if (outcome != null){
 			if (!outcome.equals("")) {
@@ -327,7 +330,6 @@ public class LocalizacaoHome
 	}
 	
 	public boolean canSelect(EntityNode<Localizacao> node) {
-		System.out.println(node);
 		return true;
 	}
 
