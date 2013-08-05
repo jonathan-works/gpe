@@ -14,8 +14,8 @@ import br.com.itx.util.EntityUtil;
 public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	
 	private static final long serialVersionUID = 1L;
-	protected ArrayList<TarefasEntityNode<E>> rootNodes;
-	protected ArrayList<TarefasEntityNode<E>> nodes;
+	protected List<TarefasEntityNode<E>> rootNodes;
+	protected List<TarefasEntityNode<E>> nodes;
 	protected List<EntityNode<E>> caixas;
 	private List<Query> queryCaixas = new ArrayList<Query>();
 	
