@@ -33,11 +33,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 /**
  * Classe genérica para acesso ao container do myfaces.
  */
 public final class FacesUtil {
+    
+    private static final LogProvider LOG = Logging.getLogProvider(FacesUtil.class);
 	
 	private FacesUtil() {}
 	
@@ -125,7 +129,9 @@ public final class FacesUtil {
 	  		String encmsg = URLEncoder.encode(message, "iso-8859-1");
 	  		encmsg = encmsg.replace('+', ' ');
 			Contexts.getEventContext().set("errorMessage", encmsg);
-		} catch (UnsupportedEncodingException e) { }		
+		} catch (UnsupportedEncodingException e) {
+		    LOG.error(".setErrorMessage()", e);
+		}		
 	}
 	/**
      * Clona um objeto.
