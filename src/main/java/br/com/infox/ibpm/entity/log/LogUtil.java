@@ -17,6 +17,7 @@ package br.com.infox.ibpm.entity.log;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class LogUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean isBinario(Object entidade, String nomeAtributo) throws Exception {
+	public static boolean isBinario(Object entidade, String nomeAtributo) {
 		Class<?> classAtributo = getType(entidade, nomeAtributo);
 		return isBinario(classAtributo);
 	}
@@ -86,7 +87,7 @@ public class LogUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean isCollection(Object entidade, String nomeAtributo) throws Exception {
+	public static boolean isCollection(Object entidade, String nomeAtributo) {
 		Class<?> classAtributo = getType(entidade, nomeAtributo);
 		return isCollectionClass(classAtributo);
 	}
@@ -102,9 +103,14 @@ public class LogUtil {
 	 * @param entidade
 	 * @param nomeAtributo
 	 * @return
+	 * @throws InstantiationException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
 	 * @throws Exception
 	 */
-	public static boolean isSmallField(Object entidade, String nomeAtributo) throws Exception {
+	public static boolean isSmallField(Object entidade, String nomeAtributo) 
+	        throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
 		Class<?> classAtributo = getType(entidade, nomeAtributo);
 		if (String.class.equals(classAtributo)) {
 			PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(
