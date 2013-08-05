@@ -165,13 +165,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	private String getDescricaoModeloDocumentoFluxoByValue(Object value, String modeloDocumentoFluxo) {
-		if(value == null) {
-			value = modeloDocumentoFluxo;
-			if(value == null) {
-				value = "";
-			}
-		}
-		String modeloDocumento = String.valueOf(value);
+	    String modeloDocumento = getValueOfModeloDocumento(value, modeloDocumentoFluxo);
 		if (!Strings.isEmpty(modeloDocumentoFluxo) && modeloDocumento != modeloDocumentoFluxo){
 			modeloDocumento = modeloDocumentoFluxo;
 		}
@@ -180,6 +174,18 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		}
 		return modeloDocumento;
 	}
+
+    private String getValueOfModeloDocumento(Object value, String modeloDocumentoFluxo) {
+        String modeloDocumento;
+        if (value != null){
+		    modeloDocumento = String.valueOf(value);
+		} else if (modeloDocumentoFluxo != null) {
+		    modeloDocumento = modeloDocumentoFluxo;
+		} else {
+		    modeloDocumento = "";
+		}
+        return modeloDocumento;
+    }
 
 	private void gravarAlteracoes(ProcessoDocumento processoDocumento, ProcessoDocumentoBin processoDocumentoBin) {
 		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
