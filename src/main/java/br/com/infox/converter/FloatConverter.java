@@ -34,7 +34,7 @@ import org.jboss.seam.util.Strings;
 @BypassInterceptors
 public class FloatConverter implements Converter {
 	
-	private static final NumberFormat formatter = new DecimalFormat("#,##0.00");
+	private static final NumberFormat FORMATTER = new DecimalFormat("#,##0.00");
 
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component,
@@ -44,7 +44,7 @@ public class FloatConverter implements Converter {
 		}
 		Double valor = null;
 		try {
-			valor = formatter.parse(value).doubleValue();
+			valor = FORMATTER.parse(value).doubleValue();
 		} catch (Exception e) {
 			throw new ConverterException(new FacesMessage("Formato inválido: " + value), e);
 		}
@@ -54,7 +54,7 @@ public class FloatConverter implements Converter {
 	@Override
 	public String getAsString(FacesContext context, UIComponent component,
 			Object value) throws ConverterException {
-		return value == null ? null : formatter.format(value);
+		return value == null ? null : FORMATTER.format(value);
 	}
 	
 }
