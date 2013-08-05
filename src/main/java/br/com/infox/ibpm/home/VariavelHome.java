@@ -16,6 +16,8 @@
 package br.com.infox.ibpm.home;
 
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.itx.util.ComponentUtil;
@@ -24,6 +26,7 @@ import br.com.itx.util.ComponentUtil;
 public class VariavelHome extends AbstractVariavelHome<Variavel> {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(VariavelHome.class);
 	public static final String NAME = "variavelHome";
 	
 	@Override
@@ -33,7 +36,7 @@ public class VariavelHome extends AbstractVariavelHome<Variavel> {
 			ret = super.persist();
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+		    LOG.error(".persist()", e);
 		} 
 		return ret;	
 	}
