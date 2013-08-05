@@ -114,7 +114,7 @@ public class Menu implements Serializable {
         }
     }
 
-    protected void buildItem(String key, String url) throws Exception {
+    protected void buildItem(String key, String url) {
         String formatedKey = getFormatedKey(key);
         String[] groups = formatedKey.split("/");
         MenuItem parent = new MenuItem(null);
