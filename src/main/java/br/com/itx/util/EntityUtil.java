@@ -329,8 +329,11 @@ public final class EntityUtil implements Serializable {
 	 * com isso caso ocorra um erro, como de violação de contraint, a entidade fica com um
 	 * id inválido e ocorre um erro ao persiti essa entidade. 
 	 * @param entidade
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public static void setNullOnEntityId(Object entidade) throws Exception {
+	public static void setNullOnEntityId(Object entidade) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		PropertyDescriptor pd = EntityUtil.getId(entidade);
 		Method writeMethod = pd.getWriteMethod();
 		Class<?> propertyType = pd.getPropertyType();
@@ -344,9 +347,11 @@ public final class EntityUtil implements Serializable {
 	 * (O hibernate gera um id pra estidade antes de inserir e em uma execeção, os
 	 * list (PersistentBags) apontam para este id que não existe.
 	 * @param entidade
-	 * @throws Exception
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public static void clearEntityLists(Object entidade) throws Exception {
+	public static void clearEntityLists(Object entidade) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		List<PropertyDescriptor> descriptors = getPropertyDescriptors(entidade, OneToMany.class);
 		for (PropertyDescriptor pd : descriptors) {
 			Class<?> type = pd.getPropertyType();
