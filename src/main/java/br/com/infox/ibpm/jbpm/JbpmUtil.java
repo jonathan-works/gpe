@@ -346,8 +346,8 @@ public class JbpmUtil {
 	
 	public String getNomeTarefaAnteriorFromCurrentExecutionContext() {
 		Transition transition = getCurrentTransition();
-		Node from = null;
-		if (transition != null && (from = transition.getFrom()) != null) {
+		Node from = transition.getFrom();
+		if (transition != null && from != null) {
 			return from.getName();
 		}
 		return null;
