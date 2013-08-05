@@ -128,7 +128,7 @@ public class QuartzJobsInfo implements Serializable {
 	 * @return
 	 */
 	private boolean isJobValid(String jobExpression) {
-		if (jobExpression == null || jobExpression.indexOf(".") == -1) {
+		if (jobExpression == null || jobExpression.indexOf('.') == -1) {
 			return false;
 		}
 		String[] split = jobExpression.split("\\.");
