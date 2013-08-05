@@ -221,22 +221,4 @@ public class Certificado {
         return false;
     }
     
-    public static void main(String[] args) throws Exception {
-		BufferedReader reader = new BufferedReader(new FileReader(
-				"C:\\Users\\rodrigo\\Desktop\\PJE\\certificados\\cert_token.txt"));
-		StringBuilder sb = new StringBuilder();
-		String linha = null;
-		while ((linha = reader.readLine()) != null) {
-			sb.append(linha);
-		}
-		Certificado c = new Certificado(sb.toString());
-		System.out.println(c.getCertChain().length);
-		X509Certificate certificate = c.getMainCertificate();
-		Collection<?> col2 = X509ExtensionUtil.getIssuerAlternativeNames(certificate);
-		System.out.println(col2);
-		List<String> urls = ValidatorUtilities.getCRLDistUrls(certificate);
-		System.out.println(urls);
-		reader.close();
-	}
-    
 }
