@@ -65,28 +65,30 @@ public final class StringUtil {
 		return piece(text, delim, p, p);
 	}
 	
-	public static String piece(String text, String delim, int p1, int p2) {
+	public static String piece(String text, String delim, final int p1, final int p2) {
+	    int l1 = p1;
+	    int l2 = p2;
 		if ((text == null) || (text.length() == 0)) { return ""; }
 		if ((delim == null) || (delim.length() == 0)) { return text; }
-		if (p1 < 1) { p1 = 1; } 
-		if (p2 < 0) { p2 = 0; }
-		if ((p2 != 0) && (p2 < p1)) { return ""; }
+		if (l1 < 1) { l1 = 1; } 
+		if (l2 < 0) { l2 = 0; }
+		if ((l2 != 0) && (l2 < l1)) { return ""; }
 		int piece = 1;
 		int ini = 0;
 		int pos = 0;
 		int fim = text.length();
 		pos = text.indexOf(delim);
-		while (((piece <= p2) || (p2 == 0)) && (pos > -1)) {
-			if ((p2 > 0) && (piece == p2)) {
+		while (((piece <= l2) || (l2 == 0)) && (pos > -1)) {
+			if ((l2 > 0) && (piece == l2)) {
 				fim = pos;
 			}
 			piece++;
-			if (piece == p1) {
+			if (piece == l1) {
 				ini = pos + delim.length();
 			}
 			pos = text.indexOf(delim, pos + delim.length());
 		}
-		if (piece < p1) { return ""; }
+		if (piece < l1) { return ""; }
 		return text.substring(ini, fim);
 	}
 	
