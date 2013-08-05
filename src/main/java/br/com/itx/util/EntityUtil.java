@@ -71,7 +71,7 @@ public final class EntityUtil implements Serializable {
 					}
 					sb.append(getProperty(objId, pd));
 				} catch (Exception e) {
-					e.printStackTrace();
+				    LOG.error(".getCompositeId()", e);
 				}
 			}
 		}
@@ -117,7 +117,7 @@ public final class EntityUtil implements Serializable {
 					}	
 					cnt++;
 				} catch (Exception e) {
-					e.printStackTrace();
+				    LOG.error(".setCompositeId()", e);
 				}
 			}
 		}	
@@ -223,7 +223,7 @@ public final class EntityUtil implements Serializable {
 				try {
 					return readMethod.invoke(entidade, new Object[0]);
 				} catch (Exception e) {
-					e.printStackTrace();
+				    LOG.error(".getEntityIdObject()", e);
 				} 
 			} else {
 				LOG.error("Não foi encontrado um PropertyDescriptor para o " +
@@ -476,7 +476,7 @@ public final class EntityUtil implements Serializable {
 		try {
 			return getParameterizedTypeClass(clazz).newInstance();
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".newInstance()", e);
 		}
 		return null;
 	}
