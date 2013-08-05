@@ -337,8 +337,8 @@ public class VariableAccessHandler implements Serializable {
 	private static Map<String, List<Integer>> getModeloMap(String texto) {
 		Map<String, List<Integer>> ret = new LinkedHashMap<String, List<Integer>>();
 		if (texto != null && texto.startsWith(PREFIX)) {
-			texto = texto.substring(PREFIX.length());
-			StringTokenizer st = new StringTokenizer(texto, ",')}");
+			String textoAuxiliar = texto.substring(PREFIX.length());
+			StringTokenizer st = new StringTokenizer(textoAuxiliar, ",')}");
 			List<Integer> values = new ArrayList<Integer>();
 			ret.put(st.nextToken(), values);
 			while(st.hasMoreTokens()) {
@@ -355,10 +355,10 @@ public class VariableAccessHandler implements Serializable {
 	}
 
 	public void setLabel(String label) {
-		label = label.trim();
-		if (! label.equals(this.label) && !"".equals(label)) {
-			this.label = label;
-			JbpmUtil.instance().storeLabel(name, label);
+		String labelAuxiliar = label.trim();
+		if (! labelAuxiliar.equals(this.label) && !"".equals(labelAuxiliar)) {
+			this.label = labelAuxiliar;
+			JbpmUtil.instance().storeLabel(name, labelAuxiliar);
 		}
 	}
 
