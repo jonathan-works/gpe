@@ -67,8 +67,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 	
 	@Override
 	protected EntityNode<Localizacao> createNode() {
-		LocalizacaoNode node = new LocalizacaoNode(getQueryChildrenList());
-		return node;
+		return new LocalizacaoNode(getQueryChildrenList());
 	}
 	
 	@Override
