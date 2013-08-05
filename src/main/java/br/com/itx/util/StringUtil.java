@@ -159,10 +159,6 @@ public final class StringUtil {
     	return source.replaceAll("\\d", "");
     }    
     
-    public static void main(String[] args) {
-		System.out.println(removeNaoAlphaNumericos("5330-D"));
-	}
-    
     public static String capitalizeAllWords(String words){
     	StringBuilder out = new StringBuilder();
     	if(!Strings.isEmpty(words)){
