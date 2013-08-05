@@ -60,7 +60,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	@In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
 	
 	@In private ProcessoManager processoManager;
-	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoEpaManager processoEpaManager;
 
 	private ModeloDocumento modeloDocumento;
