@@ -1,24 +1,18 @@
 package br.com.infox.core.certificado;
 
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.math.BigInteger;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bouncycastle.x509.extension.X509ExtensionUtil;
-
 import br.com.infox.core.certificado.util.DigitalSignatureUtils;
-import br.com.infox.core.certificado.util.ValidatorUtilities;
 import br.com.itx.util.ArrayUtil;
 
 public class Certificado {
@@ -43,7 +37,7 @@ public class Certificado {
     private String nomeCertificadora;
     
     public Certificado(Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
-        this.certChain = Arrays.copyOf(certChain, certChain.length);
+        this.certChain = certChain.clone();
         this.mainCertificate = (X509Certificate) certChain[0];
         this.privateKey = privateKey;
         processSubject();
