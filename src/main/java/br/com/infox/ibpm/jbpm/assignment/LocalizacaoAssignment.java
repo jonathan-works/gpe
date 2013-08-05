@@ -139,14 +139,15 @@ public class LocalizacaoAssignment implements Serializable {
 	}
 
 	public static String[] parse(String expression) {
-		if(expression == null) {
+	    String auxiliarExpression = expression;
+		if(auxiliarExpression == null) {
 			return null;
 		}
-		expression = expression.substring(expression.indexOf("(") + 1);
-		expression = expression.replaceAll("'", "");
-		expression = expression.replace(")", "");
-		expression = expression.replace("}", "");
-		String[] localPapel = expression.split(",");
+		auxiliarExpression = auxiliarExpression.substring(auxiliarExpression.indexOf("(") + 1);
+		auxiliarExpression = auxiliarExpression.replaceAll("'", "");
+		auxiliarExpression = auxiliarExpression.replace(")", "");
+		auxiliarExpression = auxiliarExpression.replace("}", "");
+		String[] localPapel = auxiliarExpression.split(",");
 		return localPapel;
 	}
 	
