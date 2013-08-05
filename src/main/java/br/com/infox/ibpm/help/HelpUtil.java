@@ -36,7 +36,6 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.util.Version;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-
 import br.com.itx.util.FileUtil;
 
 
@@ -57,6 +56,7 @@ public final class HelpUtil {
 	public static String getBestFragments(Query query, String text) {
 		Reader reader = null;
 		BufferedReader br = null;
+		String returnText = text;
 		try {
 			reader = new HTMLParser(new StringReader(text)).getReader();
 			br = new BufferedReader(reader);
@@ -65,7 +65,7 @@ public final class HelpUtil {
 			while ((line=br.readLine()) != null) {
 				sb.append(line).append(System.getProperty("line.separator"));
 			}
-			text = sb.toString();
+			returnText = sb.toString();
 		} catch (Exception e) {
 			LOG.error(e);
 		} finally {
@@ -73,7 +73,7 @@ public final class HelpUtil {
 			FileUtil.close(br);
 		}
 		
-		return highlightText(query, text, true);
+		return highlightText(query, returnText, true);
 	}
 
 
@@ -87,12 +87,12 @@ public final class HelpUtil {
 			highlighter.setTextFragmenter(new NullFragmenter());
 		}
 		
-		text = Entities.decode(text);
+		String auxiliarText = Entities.decode(text);
 		TokenStream ts = getAnalyzer().tokenStream("texto",
-				new StringReader(text));
+				new StringReader(auxiliarText));
 		
 		try {
-			String s = highlighter.getBestFragments(ts, text, 3, SEPARATOR);
+			String s = highlighter.getBestFragments(ts, auxiliarText, 3, SEPARATOR);
 			s = s.replaceAll(BEGIN_MARKER, BEGIN_TAG);
 			s= s.replaceAll(END_MARKER, END_TAG);
 			return s;
