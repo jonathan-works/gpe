@@ -297,17 +297,18 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	}
 
 	public void setOrderedColumn(String order) {
-		if(!order.endsWith("asc") && !order.endsWith("desc")) {
-			order = order.trim().concat(" asc");
+	    String newOrder = order;
+		if(!newOrder.endsWith("asc") && !newOrder.endsWith("desc")) {
+			newOrder = newOrder.trim().concat(" asc");
 		}
-		String[] fields = order.split(" ");
-		order = customColumnsOrder.getProperty(fields[0], fields[0]);
+		String[] fields = newOrder.split(" ");
+		newOrder = customColumnsOrder.getProperty(fields[0], fields[0]);
 		this.orderedColumn = fields[0];
 		if (fields.length > 1) {
-			order = order + " " + fields[1];
+			newOrder = newOrder + " " + fields[1];
 			this.orderedColumn = fields[0] + " " + fields[1];
 		}
-		setOrder(order);
+		setOrder(newOrder);
 	}
 	
 	public String getOrderedColumn() {
