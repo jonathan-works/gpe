@@ -39,12 +39,16 @@ public class AssociativeModeloDocumentoList extends EntityList<ModeloDocumento> 
 
 	@Override
 	protected String getDefaultEjbql() {
-		if (taskFitter == null || taskFitter.getCurrentTask() == null || taskFitter.getCurrentTask().getCurrentVariable() == null || taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList() == null ||taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList().isEmpty()){
+		if (validateFitter()){
 			return DEFAULT_EJBQL;
 		} else{
 			return DEFAULT_EJBQL + " where o not in (#{taskFitter.currentTask.currentVariable.modeloDocumentoList})";
 		}
 	}
+
+    private boolean validateFitter() {
+        return taskFitter == null || taskFitter.getCurrentTask() == null || taskFitter.getCurrentTask().getCurrentVariable() == null || taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList() == null ||taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList().isEmpty();
+    }
 
 	@Override
 	protected String getDefaultOrder() {

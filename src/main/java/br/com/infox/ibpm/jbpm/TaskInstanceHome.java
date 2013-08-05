@@ -79,8 +79,6 @@ public class TaskInstanceHome implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceHome";
 
-    // TODO mudar o nome dessa variavel e o conteudo ficar #{HIDDEN_TRANSITION}
-    // criar um Factory para essa variável, de aplicaçao, retornando true
     private static final String OCCULT_TRANSITION = "#{true}";
 
     private TaskInstance taskInstance;
