@@ -34,7 +34,7 @@ public class TarefaTimerStarter {
 	public static final String NAME = "tarefaTimerStarter";
 
 	public static final String ID_INICIAR_TASK_TIMER_PARAMETER = "idTaskTimerParameter";
-	private static final Properties quartzProperties = ClassLoaderUtil
+	private static final Properties QUARTZ_PROPERTIES = ClassLoaderUtil
 			.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
 
 	public TarefaTimerStarter() {}
@@ -42,7 +42,7 @@ public class TarefaTimerStarter {
 	@Create
 	@Transactional
 	public void init() throws SchedulerException {
-		if (!Boolean.parseBoolean(quartzProperties
+		if (!Boolean.parseBoolean(QUARTZ_PROPERTIES
 				.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {
 			return;
 		}
@@ -62,7 +62,7 @@ public class TarefaTimerStarter {
 			p.setNomeVariavel(ID_INICIAR_TASK_TIMER_PARAMETER);
 			p.setSistema(true);
 
-			String cronExpression = quartzProperties.getProperty(
+			String cronExpression = QUARTZ_PROPERTIES.getProperty(
 					QuartzConstant.QUARTZ_CRON_EXPRESSION,
 					DEFAULT_CRON_EXPRESSION);
 
