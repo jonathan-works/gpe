@@ -60,7 +60,7 @@ import br.com.itx.util.ReflectionsUtil;
 public class JpdlXmlWriter {
 
 	static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
-	static final Namespace jbpmNamespace = new Namespace(null, JPDL_NAMESPACE);
+	static final Namespace JBPM_NAMESPACE = new Namespace(null, JPDL_NAMESPACE);
 
 	private Writer writer = null;
 	private List<String> problems = new ArrayList<String>();
@@ -126,7 +126,7 @@ public class JpdlXmlWriter {
 		Element root = null;
 
 		if (useNamespace) {
-			root = document.addElement("process-definition", jbpmNamespace
+			root = document.addElement("process-definition", JBPM_NAMESPACE
 					.getURI());
 		} else {
 			root = document.addElement("process-definition");
