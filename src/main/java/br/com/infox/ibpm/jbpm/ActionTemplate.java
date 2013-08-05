@@ -46,7 +46,7 @@ public abstract class ActionTemplate implements Serializable {
 		if (expression == null || expression.equals("")) {
 			return new String[0];
 		}
-		int i = expression.indexOf("(");
+		int i = expression.indexOf('(');
 		String texto = expression.substring(i + 1);
 		StringTokenizer st = new StringTokenizer(texto, ",')}");
 		List<String> list = new ArrayList<String>();
