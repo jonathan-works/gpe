@@ -18,6 +18,7 @@ package br.com.itx.component;
 import static org.jboss.seam.faces.FacesMessages.instance;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -482,9 +483,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	/**
 	 * Limpa todos os campos que não foram marcados.
-	 * @throws Exception
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
 	 */
-	public void clearUnlocked() throws Exception {
+	public void clearUnlocked() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(getInstance());	 
 		T t = (T) getInstance().getClass().newInstance();
 		for (PropertyDescriptor pd : pds) {
