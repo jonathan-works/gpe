@@ -44,7 +44,6 @@ public class LocalizacaoDocumentoFisicoAction extends
 
 	@Override
 	protected void afterSave() {
-		System.out.println(processo);
 		newInstance();
 		listByProcesso();
 	}
