@@ -26,7 +26,7 @@ import br.com.itx.util.ComponentUtil;
 public class ParametroUtil {
 
 	public static final String NAME = "parametroUtil";
-	public static LogProvider LOG = Logging.getLogProvider(ParametroUtil.class);
+	public static final LogProvider LOG = Logging.getLogProvider(ParametroUtil.class);
 	
 	public static String getLDAPDomain() {
 		String retorno = null;
