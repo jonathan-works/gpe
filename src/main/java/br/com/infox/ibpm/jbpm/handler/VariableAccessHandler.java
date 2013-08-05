@@ -63,7 +63,7 @@ public class VariableAccessHandler implements Serializable {
 		this.task = task;
 		this.variableAccess = variableAccess;
 		String mappedName = variableAccess.getMappedName();
-		if (mappedName.indexOf(":") > 0) {
+		if (mappedName.indexOf(':') > 0) {
 			this.type = mappedName.split(":")[0];
 		} else {
 			this.type = "default";
