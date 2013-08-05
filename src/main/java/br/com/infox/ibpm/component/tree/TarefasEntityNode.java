@@ -127,8 +127,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	
 	@Override
 	protected TarefasEntityNode<Map<String,Object>> createChildNode(Map<String,Object> n) {
-		TarefasEntityNode<Map<String,Object>> node = new TarefasEntityNode<Map<String,Object>>(this, n, getQueryChildren(), queryCaixas);
-		return node;
+		return new TarefasEntityNode<Map<String,Object>>(this, n, getQueryChildren(), queryCaixas);
 	}
 
 	public Integer getTarefaId() {
