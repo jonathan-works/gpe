@@ -41,8 +41,6 @@ public class ModeloDocumentoAction extends ActionTemplate {
 	@In
 	private ModeloDocumentoManager modeloDocumentoManager;
 	
-	@In private VariavelManager variavelManager;
-	
 	private ModeloDocumento modeloJbpm;
 	
 	public List<ModeloDocumento> getModeloDocumentoList() {
