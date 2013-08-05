@@ -44,6 +44,7 @@ import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
+import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -464,14 +465,14 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return String.valueOf(idProcesso);
 	}
 	
-	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws Exception {
+	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) {
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
 			limparAssinatura();
-			throw new Exception("O cadastro do usuário não está assinado.");
+			throw new AplicationException("O cadastro do usuário não está assinado.");
 		}
 		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
 			limparAssinatura();
-			throw new Exception("O certificado não é o mesmo do cadastro do usuario");
+			throw new AplicationException("O certificado não é o mesmo do cadastro do usuario");
 		}
 		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
 		//TODO esperando Tássio verificar (21 de março de 2013)
