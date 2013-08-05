@@ -19,6 +19,8 @@ import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.manager.TipoProcessoDocumentoManager;
@@ -38,6 +40,7 @@ public class TipoProcessoDocumentoHome
 	
 	public static final String NAME = "tipoProcessoDocumentoHome";
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(TipoProcessoDocumentoHome.class);
 	
 	private static final String TEMPLATE = "/ClassificacaoDocumento/tipoProcessoDocumentoTemplate.xls";
 	private static final String DOWNLOAD_XLS_NAME = "ClassificacaoDocumento.xls";
@@ -70,7 +73,7 @@ public class TipoProcessoDocumentoHome
 			ret = super.persist();
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+			LOG.error(".persist()", e);
 		} 
 		return ret;	
 	}
