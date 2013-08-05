@@ -35,7 +35,7 @@ public class LogEventListener implements PostUpdateEventListener,
 		PostInsertEventListener, PostDeleteEventListener {
 
 	private static final long serialVersionUID = 1L;
-	private static String ENABLE_LOG_VAR_NAME = "executeLog";
+	private static final String ENABLE_LOG_VAR_NAME = "executeLog";
 	
 	private static final LogProvider LOG = Logging.getLogProvider(LogEventListener.class);
 
