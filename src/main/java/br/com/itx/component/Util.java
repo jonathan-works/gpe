@@ -33,11 +33,7 @@ import java.util.Map.Entry;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-
 import org.hibernate.AnnotationException;
 import org.hibernate.LazyInitializationException;
 import org.jboss.seam.Component;

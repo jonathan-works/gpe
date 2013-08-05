@@ -18,6 +18,7 @@ package br.com.itx.util;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +80,7 @@ public final class EntityUtil implements Serializable {
 	}
 	
 	private static String getProperty(Object objId, PropertyDescriptor pd) 
-	throws Exception {
+	        throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Class<?> cl = pd.getPropertyType();
 		Object value = null;
 		Method m = pd.getReadMethod();
@@ -123,8 +124,9 @@ public final class EntityUtil implements Serializable {
 		}	
 	}
 	
-	private static void setProperty(Object objId, 
-			PropertyDescriptor pd, String strValue) throws Exception {
+	private static void setProperty(Object objId, PropertyDescriptor pd, String strValue) 
+	        throws InstantiationException, IllegalAccessException, IllegalArgumentException, 
+	            InvocationTargetException, NoSuchMethodException, SecurityException {
 		Class<?> cl = pd.getPropertyType();
 		Object value = null;
 		if (cl.isAnnotationPresent(Entity.class)) {
