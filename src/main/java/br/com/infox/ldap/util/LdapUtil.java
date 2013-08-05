@@ -149,7 +149,7 @@ public final class LdapUtil {
 			ctx.close();
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			LOG.error(".pesquisarLDAP()", e);
 		}
 
 		return results;
