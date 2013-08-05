@@ -87,9 +87,9 @@ public class JbpmUtil {
 			    return null; 
 			}
 			//TODO: verificar se pode ser dado um tratamento melhor
-			String localizacaoId = expression.substring(expression.indexOf("(") + 1);
-			localizacaoId = localizacaoId.substring(0, localizacaoId.lastIndexOf(")"));
-			if (localizacaoId.indexOf(":") > 0) {
+			String localizacaoId = expression.substring(expression.indexOf('(') + 1);
+			localizacaoId = localizacaoId.substring(0, localizacaoId.lastIndexOf(')'));
+			if (localizacaoId.indexOf(':') > 0) {
 				localizacaoId = localizacaoId.replaceAll("'", "");
 				localizacaoId = localizacaoId.split(":")[0];
 			}
