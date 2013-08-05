@@ -23,6 +23,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.List;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -32,6 +34,8 @@ import org.jdom.output.XMLOutputter;
 public final class XmlUtil {
 	
 	private static final String ENCODING = "ISO-8859-1";
+	
+	private static final LogProvider LOG = Logging.getLogProvider(XmlUtil.class);
 	
 	private XmlUtil() { }
 	
@@ -43,7 +47,7 @@ public final class XmlUtil {
 				doc = builder.build(file);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LOG.error(".readDocument()", ex);
 		}	
 		return doc;
 	}
@@ -56,7 +60,7 @@ public final class XmlUtil {
 				doc = builder.build(file);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+		    LOG.error(".readDocument()", ex);
 		}	
 		return doc;
 	}
@@ -86,7 +90,7 @@ public final class XmlUtil {
 				}
 				fout.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+			    LOG.error(".writeDocument()", ex);
 			}
 		}
 	}
