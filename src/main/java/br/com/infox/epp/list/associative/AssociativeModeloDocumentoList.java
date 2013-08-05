@@ -47,7 +47,10 @@ public class AssociativeModeloDocumentoList extends EntityList<ModeloDocumento> 
 	}
 
     private boolean validateFitter() {
-        return taskFitter == null || taskFitter.getCurrentTask() == null || taskFitter.getCurrentTask().getCurrentVariable() == null || taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList() == null ||taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList().isEmpty();
+        return taskFitter == null || taskFitter.getCurrentTask() == null || 
+                taskFitter.getCurrentTask().getCurrentVariable() == null || 
+                taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList() == null ||
+                taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList().isEmpty();
     }
 
 	@Override
