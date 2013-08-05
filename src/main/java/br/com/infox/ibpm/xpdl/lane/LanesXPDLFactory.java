@@ -9,7 +9,7 @@ import org.jdom.Element;
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.itx.util.XmlUtil;
 
-public class LanesXPDLFactory implements Serializable {
+public final class LanesXPDLFactory implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
