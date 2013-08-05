@@ -43,7 +43,6 @@ public class ProcessoManager extends GenericManager {
 	@In private ProcessoDAO processoDAO;
 	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-	@In private UsuarioLoginDAO usuarioLoginDAO;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
