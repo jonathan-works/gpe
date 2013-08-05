@@ -45,8 +45,6 @@ public class IniciarProcessoAction {
 	private static final LogProvider LOG = Logging.getLogProvider(IniciarProcessoAction.class);
 
 	@In
-	private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
-	@In
 	private IniciarProcessoService iniciarProcessoService;
 	@In
 	private ProcessoEpaManager processoEpaManager;
