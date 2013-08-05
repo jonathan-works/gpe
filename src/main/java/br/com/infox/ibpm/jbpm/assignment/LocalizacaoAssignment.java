@@ -143,7 +143,7 @@ public class LocalizacaoAssignment implements Serializable {
 		if(auxiliarExpression == null) {
 			return null;
 		}
-		auxiliarExpression = auxiliarExpression.substring(auxiliarExpression.indexOf("(") + 1);
+		auxiliarExpression = auxiliarExpression.substring(auxiliarExpression.indexOf('(') + 1);
 		auxiliarExpression = auxiliarExpression.replaceAll("'", "");
 		auxiliarExpression = auxiliarExpression.replace(")", "");
 		auxiliarExpression = auxiliarExpression.replace("}", "");
