@@ -8,7 +8,7 @@ import org.jdom.Element;
 
 import br.com.itx.util.XmlUtil;
 
-public class GraphicsInfoXPDL implements Serializable {
+public final class GraphicsInfoXPDL implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private Rectangle2D rectangle;
