@@ -52,7 +52,7 @@ public class ImagemBinManager extends GenericManager {
     }
 
     private String getNewFileConflict(String nome) {
-        int localPonto = nome.lastIndexOf(".");
+        int localPonto = nome.lastIndexOf('.');
         String ext = nome.substring(localPonto);
         String pre = nome.substring(0, localPonto);
         return pre + "_" + ext;
