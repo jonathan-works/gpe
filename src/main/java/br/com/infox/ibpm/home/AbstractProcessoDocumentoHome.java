@@ -237,7 +237,7 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	 * @param md5 - Md5 do ProcessoDocumentoBin
 	 * @throws Exception
 	 */
-	public void downloadDocumento(Integer id, String codIni, String md5) throws Exception {
+	public void downloadDocumento(Integer id, String codIni, String md5) {
 		FileHome fileHome = FileHome.instance();
 		ProcessoDocumento pd = getEntityManager().find(ProcessoDocumento.class, id);
 		if (pd == null) {
