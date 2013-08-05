@@ -93,8 +93,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 		Query query = getEntityManager().createNamedQuery(
 				UsuarioLogin.USUARIO_LOGIN_NAME);
 		query.setParameter(UsuarioLogin.PARAM_LOGIN, login);
-		UsuarioLogin usu = EntityUtil.getSingleResult(query);
-		return usu;
+		return EntityUtil.getSingleResult(query);
 	}
 
 	@Override
