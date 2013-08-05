@@ -34,8 +34,7 @@ public class LocalizacaoEstruturaSearchTreeHandler extends LocalizacaoEstruturaT
 
 	@Override
 	protected EntityNode<Localizacao> createNode() {
-		LocalizacaoNodeSearch node = new LocalizacaoNodeSearch(getQueryChildrenList());
-		return node;
+		return new LocalizacaoNodeSearch(getQueryChildrenList());
 	}	
 
 }
