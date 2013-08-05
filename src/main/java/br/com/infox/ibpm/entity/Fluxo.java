@@ -114,10 +114,10 @@ public class Fluxo implements java.io.Serializable {
 	}
 
 	public void setFluxo(String fluxo) {
-		if (fluxo != null) {
-			fluxo = fluxo.trim();
+	    this.fluxo = fluxo;
+	    if (fluxo != null) {
+			this.fluxo = fluxo.trim();
 		}
-		this.fluxo = fluxo;
 	}
 
 	@Column(name = "ds_xml")
