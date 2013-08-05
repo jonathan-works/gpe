@@ -147,8 +147,7 @@ public class LocalizacaoAssignment implements Serializable {
 		auxiliarExpression = auxiliarExpression.replaceAll("'", "");
 		auxiliarExpression = auxiliarExpression.replace(")", "");
 		auxiliarExpression = auxiliarExpression.replace("}", "");
-		String[] localPapel = auxiliarExpression.split(",");
-		return localPapel;
+		return auxiliarExpression.split(",");
 	}
 	
 	public void setPooledActors(String expression) {
