@@ -60,13 +60,14 @@ public class MenuItem implements Serializable {
 	}
 	
 	public MenuItem add(MenuItem item) {
-		int i = children.indexOf(item);
+	    MenuItem auxiliarItem = item;
+		int i = children.indexOf(auxiliarItem);
 		if (i != -1) {
-			item = children.get(i);
+			auxiliarItem = children.get(i);
 		} else {
-			children.add(item);
+			children.add(auxiliarItem);
 		}
-		return item;
+		return auxiliarItem;
 	}
 
 	@Override
