@@ -84,7 +84,7 @@ public class SearchTree2GridList <E> {
 			}
 		} else {
 			for (EntityNode<E> node : treeHandler.getRoots()) {
-				if (canAdd(node, result)) {
+				if (canAdd(node)) {
 					result.add(node);
 				}
 				getChildren(node, result);
@@ -132,7 +132,7 @@ public class SearchTree2GridList <E> {
 	private void getChildren(EntityNode<E> node, List<EntityNode<E>> result){
 		List<EntityNode<E>> childList = getChildList(node);
 		for (EntityNode<E> loc : childList) {
-			if (canAdd(loc, result)) {
+			if (canAdd(loc)) {
 				result.add(loc);
 			}
 			getChildren(loc, result);
@@ -147,7 +147,7 @@ public class SearchTree2GridList <E> {
 	 * @param result - A lista que será exibida na Grid
 	 * @return Se True deve ser adicionado, se False, não deve.
 	 */
-	private boolean canAdd(EntityNode<E> node, List<EntityNode<E>> result) {
+	private boolean canAdd(EntityNode<E> node) {
 		boolean ret = isLogicOperatorAnd();
 		if (searchBean != null) {
 			if (filterName !=  null) {
