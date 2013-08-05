@@ -98,7 +98,7 @@ public final class ComponentUtil {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+		    LOG.error(".getProperties()", ex);
 		}
 		return resp;
 	}
@@ -124,7 +124,7 @@ public final class ComponentUtil {
 		try {
 			return PropertyUtils.getPropertyDescriptor(component, property);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+		    LOG.error(".getPropertyDescriptor()", ex);
 			return null;
 		}
 	}
