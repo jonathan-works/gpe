@@ -17,6 +17,9 @@ package br.com.infox.ibpm.home;
 
 import java.util.Date;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.entity.log.LogUtil;
@@ -27,6 +30,7 @@ import br.com.itx.util.EntityUtil;
 public class ParametroHome extends AbstractParametroHome<Parametro> {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(ParametroHome.class);
 	public static final String NAME = "parametroHome";
 	public static final String ID_USUARIO_SISTEMA = "idUsuarioSistema";
 	
@@ -37,7 +41,7 @@ public class ParametroHome extends AbstractParametroHome<Parametro> {
 			ret = super.persist();
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+			LOG.error(".persit()", e);
 		} 
 		return ret;	
 	}
