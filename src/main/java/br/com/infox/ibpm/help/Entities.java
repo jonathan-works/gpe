@@ -283,27 +283,31 @@ public final class Entities {
     }
     
     public static String decodeEntity(String entity) {
-		if (entity.charAt(entity.length() - 1) == ';') { // remove trailing
-															// semicolon
-			entity = entity.substring(0, entity.length() - 1);
-		}
-		if (entity.charAt(1) == '#') {
+		String auxiliarEntity = removeSemicolon(entity);
+		if (auxiliarEntity.charAt(1) == '#') {
 			int start = 2;
 			int radix = 10;
-			if ((entity.charAt(2) == 'X') || (entity.charAt(2) == 'x')) {
+			if ((auxiliarEntity.charAt(2) == 'X') || (auxiliarEntity.charAt(2) == 'x')) {
 				start++;
 				radix = 16;
 			}
 			Character c = Character.valueOf((char) Integer.parseInt(
-					entity.substring(start), radix));
+					auxiliarEntity.substring(start), radix));
 			return c.toString();
 		}
-		String s = DECODER.get(entity);
+		String s = DECODER.get(auxiliarEntity);
 		if (s != null) {
 			return s;
 		}
 		return "";
 	}
+
+    private static String removeSemicolon(String entity) {
+        if (entity.charAt(entity.length() - 1) == ';') { // remove trailing semicolon
+			return entity.substring(0, entity.length() - 1);
+		}
+        return entity;
+    }
 
     public static String encode(String s) {
         int length = s.length();
