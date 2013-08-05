@@ -29,7 +29,7 @@ import br.com.itx.util.EntityUtil;
 public class ProcessoTimerStarter {
 
 	private static final String DEFAULT_CRON_EXPRESSION = "0 0 0 * * ?";
-	private static final Properties quartzProperties = ClassLoaderUtil
+	private static final Properties QUARTZ_PROPERTIES = ClassLoaderUtil
 			.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
 	private static final LogProvider LOG = Logging
 			.getLogProvider(ProcessoTimerStarter.class);
@@ -41,7 +41,7 @@ public class ProcessoTimerStarter {
 	@Create
 	@Transactional
 	public void init() throws SchedulerException {
-		if (!Boolean.parseBoolean(quartzProperties
+		if (!Boolean.parseBoolean(QUARTZ_PROPERTIES
 				.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {
 			return;
 		}
@@ -61,7 +61,7 @@ public class ProcessoTimerStarter {
 			p.setNomeVariavel(ID_INICIAR_PROCESSO_TIMER_PARAMETER);
 			p.setSistema(true);
 
-			String cronExpression = quartzProperties.getProperty(
+			String cronExpression = QUARTZ_PROPERTIES.getProperty(
 					QuartzConstant.QUARTZ_CRON_EXPRESSION,
 					DEFAULT_CRON_EXPRESSION);
 
