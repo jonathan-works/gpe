@@ -24,6 +24,8 @@ import java.util.GregorianCalendar;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 
@@ -32,6 +34,8 @@ import org.jboss.seam.util.Strings;
 @BypassInterceptors
 public class DateUtil {
 	
+    private static final LogProvider LOG = Logging.getLogProvider(DateUtil.class);
+    
 	public static final int QUANTIDADE_DIAS_SEMANA = 7;
 	public static final int QUANTIDADE_MESES_ANO = 12;
 	
@@ -118,7 +122,7 @@ public class DateUtil {
 		try {
 			data = fm.format(new Date());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			LOG.error(".getDataAtual()", e);
 		}
 		return data;
 	}
