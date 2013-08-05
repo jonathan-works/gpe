@@ -278,16 +278,6 @@ public final class EntityUtil implements Serializable {
 		return destino;
 	}
 	
-	public static <E> List<E> cloneListEntity(List<E> origem, boolean copyLists) throws 
-				InstantiationException, IllegalAccessException {
-		List<E> destino = new ArrayList<E>();
-		for (E entity: origem) {
-			destino.add(cloneEntity(entity, copyLists));
-		}
-		return destino;
-	}
-	
-	//TODO metodo de teste pois o acina estava dando erro em: oldEntity = (T) EntityUtil.cloneEntity(instance, false);
 	public static Object cloneObject(Object origem, boolean copyLists) throws 
 				InstantiationException, IllegalAccessException {
 		Class<?> cl = getEntityClass(origem);
