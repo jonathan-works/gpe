@@ -115,10 +115,8 @@ public class Menu implements Serializable {
     }
 
     protected void buildItem(String key, String url) throws Exception {
-        if (key.startsWith("/")) {
-            key = key.substring(1);
-        }
-        String[] groups = key.split("/");
+        String formatedKey = getFormatedKey(key);
+        String[] groups = formatedKey.split("/");
         MenuItem parent = new MenuItem(null);
         for (int i = 0; i < groups.length; i++) {
             String label = groups[i];
@@ -144,6 +142,13 @@ public class Menu implements Serializable {
                 parent.getChildren().add(item);
             }
         }
+    }
+
+    private String getFormatedKey(String key) {
+        if (key.startsWith("/")) {
+            key = key.substring(1);
+        }
+        return key;
     }
 
     public List<MenuItem> getBookmark() {
