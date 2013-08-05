@@ -80,7 +80,8 @@ public class ResourceFilter extends AbstractFilter {
 			try {
 				ServletOutputStream os = response.getOutputStream();
 				byte[] trecho = new byte[10240];
-			    for ( int n; (n = is.read(trecho)) != -1; ) {
+			    for ( int n; is.read(trecho) != -1; ) {
+			        n = is.read(trecho);
 			    	os.write(trecho, 0, n);
 			    }
                 is.close();
