@@ -16,19 +16,15 @@
 package br.com.infox.ibpm.component;
 
 import org.jboss.seam.annotations.Name;
-import br.com.itx.util.ComponentUtil;
 
 @Name(ImageFileHome.NAME)
 public class ImageFileHome extends AbstractImageFileHome {
 	public static final String NAME = "imageFileUpload";
+    public static final String IMAGE_RELATIVE_PATH = "/img/imageFile/";
 
-	public static final ImageFileHome instance() {
-		return ComponentUtil.getComponent(NAME);
-	}
-	
 	@Override
-	public String getBaseImagesPath() {
-		return "/img/imageFile/";
+	public String getImagesRelativePath() {
+		return ImageFileHome.IMAGE_RELATIVE_PATH;
 	}
 	
 }
