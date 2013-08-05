@@ -35,8 +35,7 @@ public abstract class AbstractItemTipoDocumentoHome<T>
 
 	@Override
 	protected ItemTipoDocumento createInstance() {
-		ItemTipoDocumento itemTipoDocumento = new ItemTipoDocumento();
-		return itemTipoDocumento;
+		return new ItemTipoDocumento();
 	}
 
 	@Override
