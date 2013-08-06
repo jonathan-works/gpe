@@ -45,9 +45,6 @@ public class VariableHandler implements Serializable {
 
 	private transient LogProvider log = Logging.getLogProvider(VariableHandler.class);
 	
-//	private List<Variavel> variables;
-//	private List<Variavel> taskVariables;
-	
 	public List<Variavel> getVariables(long taskId) {
 		return getVariables(taskId, false);
 	}
