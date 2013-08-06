@@ -12,7 +12,7 @@ import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.TwitterTemplate;
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.home.Authenticator;
+//import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -334,14 +334,6 @@ public final class TwitterUtil {
 	public TwitterFactory getFactory() {
 		return factory;
 	}
-	
-	/**
-	 * @return a conta do twitter do usuário logado ou null caso ela não exista
-	 */
-	public ContaTwitter getContaTwitterUsuarioLogado() {
-		return getContaTwitter(Authenticator.getUsuarioLogado());
-	}
-	
 	
 	/**
 	 * @param usuario
