@@ -149,46 +149,44 @@ public class SearchTree2GridList <E> {
 	 */
 	private boolean canAdd(EntityNode<E> node) {
 		boolean ret = isLogicOperatorAnd();
-		if (searchBean != null) {
-			if (filterName !=  null) {
-				for (String atributeName : filterName) {
-					Object searchField = ComponentUtil.getValue(searchBean, atributeName);
-					Object nodeField = ComponentUtil.getValue(node.getEntity(), atributeName);
-					if (searchField instanceof String) {
-						//Caso o campo do search seja String e venha uam String vazia muda seu valor 
-						//para null de modo que o filtro seja ignorado
-						searchField = Strings.nullIfEmpty((String) searchField);
-					}
-					if (searchField != null) {
-						if (nodeField instanceof String) {
-							boolean condEval = nodeField.toString().toLowerCase()
-									.contains(searchField.toString().toLowerCase());
-							//Se a pesquisa na grid estiver usando qualquer 
-							//expressão ele usa um 'or'
-							if (isLogicOperatorAnd()) {
-								ret &= condEval;
-							} else {
-								ret |= condEval;
-							}
-						} else {
-							if (isLogicOperatorAnd()) {
-								ret &= searchField.equals(nodeField);
-							} else {
-								ret |= searchField.equals(nodeField);
-							}							
-						}
+		if (searchBean != null && filterName !=  null) {
+			for (String atributeName : filterName) {
+				Object searchField = ComponentUtil.getValue(searchBean, atributeName);
+				Object nodeField = ComponentUtil.getValue(node.getEntity(), atributeName);
+				if (searchField instanceof String) {
+					//Caso o campo do search seja String e venha uam String vazia muda seu valor 
+					//para null de modo que o filtro seja ignorado
+					searchField = Strings.nullIfEmpty((String) searchField);
+				}
+				if (searchField != null) {
+					if (nodeField instanceof String) {
+						boolean condEval = nodeField.toString().toLowerCase()
+								.contains(searchField.toString().toLowerCase());
+						//Se a pesquisa na grid estiver usando qualquer 
+						//expressão ele usa um 'or'
 						if (isLogicOperatorAnd()) {
-							if(!ret) { 
-							    return ret;
-						    }
+							ret &= condEval;
 						} else {
-							if(ret) {
-							    return ret;
-						    }									
-						}						
+							ret |= condEval;
+						}
+					} else {
+						if (isLogicOperatorAnd()) {
+							ret &= searchField.equals(nodeField);
+						} else {
+							ret |= searchField.equals(nodeField);
+						}							
 					}
-				}			
-			}
+					if (isLogicOperatorAnd()) {
+						if(!ret) { 
+						    return ret;
+					    }
+					} else {
+						if(ret) {
+						    return ret;
+					    }									
+					}						
+				}
+			}			
 		}
 		return ret;
 	}
