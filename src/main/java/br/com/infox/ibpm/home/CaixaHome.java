@@ -93,10 +93,8 @@ public class CaixaHome extends AbstractCaixaHome<Caixa> {
 	}
 
 	public Integer getIdTarefaAnterior() {
-		if(isManaged()) {
-			if(instance.getTarefaAnterior() != null) {
-				idTarefaAnterior = instance.getTarefaAnterior().getIdTarefa();
-			}
+		if(isManaged() && instance.getTarefaAnterior() != null) {
+			idTarefaAnterior = instance.getTarefaAnterior().getIdTarefa();
 		}
 		return idTarefaAnterior;
 	}
