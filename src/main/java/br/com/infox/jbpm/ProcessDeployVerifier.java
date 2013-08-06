@@ -84,16 +84,14 @@ public class ProcessDeployVerifier {
 		}
 		List<Fluxo> list = EntityUtil.getEntityList(Fluxo.class);
 		for (Fluxo f : list) {
-			if (f.getAtivo() && f.getPublicado() && f.getXml() != null && !"".equals(f.getXml())) {
-				if (!processNames.contains(f.getFluxo())) {
-					ProcessDefinition instance = parseInstance(f.getXml());
-					instance.setName(f.getFluxo());
-					graphSession.deployProcessDefinition(instance);
-					JbpmUtil.getJbpmSession().flush();
-					Events.instance().raiseEvent(ProcessBuilder.POST_DEPLOY_EVENT, 
-							instance);
-					LOG.info(MessageFormat.format("Publicando fluxo {0}", f.getFluxo()));
-				}
+			if (f.getAtivo() && f.getPublicado() && f.getXml() != null && !"".equals(f.getXml()) && !processNames.contains(f.getFluxo())) {
+				ProcessDefinition instance = parseInstance(f.getXml());
+				instance.setName(f.getFluxo());
+				graphSession.deployProcessDefinition(instance);
+				JbpmUtil.getJbpmSession().flush();
+				Events.instance().raiseEvent(ProcessBuilder.POST_DEPLOY_EVENT, 
+						instance);
+				LOG.info(MessageFormat.format("Publicando fluxo {0}", f.getFluxo()));
 			}
 		}
 		if (transaction != null) {
