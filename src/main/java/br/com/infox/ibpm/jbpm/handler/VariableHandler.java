@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
