@@ -34,7 +34,6 @@ import java.util.Map.Entry;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-import org.hibernate.AnnotationException;
 import org.hibernate.LazyInitializationException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
