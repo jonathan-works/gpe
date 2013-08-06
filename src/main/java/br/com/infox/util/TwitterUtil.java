@@ -377,7 +377,7 @@ public final class TwitterUtil {
     ================================== Métodos Inicializadores e Auxiliares Públicos ========================================
 */	
 	
-	public static final void restart(){
+	public static void restart(){
 		instance = init();
 	}
 
