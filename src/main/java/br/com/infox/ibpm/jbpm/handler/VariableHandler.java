@@ -38,7 +38,6 @@ import br.com.itx.util.ComponentUtil;
 
 
 @Name(VariableHandler.NAME)
-@BypassInterceptors
 public class VariableHandler implements Serializable {
 	private static final long serialVersionUID = -6777955765635127593L;
 	
@@ -46,17 +45,15 @@ public class VariableHandler implements Serializable {
 
 	private transient LogProvider log = Logging.getLogProvider(VariableHandler.class);
 	
-	private List<Variavel> variables;
-	private List<Variavel> taskVariables;
+//	private List<Variavel> variables;
+//	private List<Variavel> taskVariables;
 	
 	public List<Variavel> getVariables(long taskId) {
-		variables = getVariables(taskId, false);
-		return variables;
+		return getVariables(taskId, false);
 	}
 
 	public List<Variavel> getTaskVariables(long taskId) {
-		taskVariables = getVariables(taskId, true);
-		return taskVariables;
+		return getVariables(taskId, true);
 	}
 
 	@SuppressWarnings("unchecked")

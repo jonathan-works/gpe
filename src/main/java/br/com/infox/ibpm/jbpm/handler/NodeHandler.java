@@ -80,7 +80,7 @@ public class NodeHandler implements Serializable {
 					CreateTimerAction createTimerAction = (CreateTimerAction) action;
 					timerList.add(createTimerAction);
 					if (currentTimer == null) {
-						setCurrentTimer(createTimerAction);
+						setInternalCurrentTimer(createTimerAction);
 					}
 				}
 			}
@@ -160,12 +160,16 @@ public class NodeHandler implements Serializable {
 		return list;
 	}
 	
-	public void setCurrentTimer(CreateTimerAction currentTimer) {
+	private void setInternalCurrentTimer(CreateTimerAction currentTimer) {
 		this.currentTimer = currentTimer;
 		dueDateBusiness = false;
 		dueDateValue = null;
 		dueDateUnit = null;
 		setDueDate(currentTimer.getDueDate());
+	}
+	
+	public void setCurrentTimer(CreateTimerAction currentTimer){
+	    setInternalCurrentTimer(currentTimer);
 	}
 
 	private void setDueDate(String dueDate) {
@@ -195,7 +199,7 @@ public class NodeHandler implements Serializable {
 	}
 
 	public void addTimer() {
-		setCurrentTimer(new CreateTimerAction());
+		setInternalCurrentTimer(new CreateTimerAction());
 		timerList.add(currentTimer);
 		String timerName = node.getName();
 		if (timerList.size() > 1) {

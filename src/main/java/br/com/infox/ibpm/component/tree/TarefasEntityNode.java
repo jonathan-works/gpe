@@ -25,7 +25,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 
 	public TarefasEntityNode(String[] queryChildren, List<Query> queryCaixas) {
 		super(queryChildren);
-		this.setQueryCaixas(queryCaixas);
+		this.queryCaixas = queryCaixas;
 	}
 
 	public TarefasEntityNode(EntityNode<Map<String,Object>> parent, 
