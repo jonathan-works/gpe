@@ -50,15 +50,13 @@ public class EventHandler implements Serializable {
 		if (currentAction != null) {
 			return currentAction.getActionExpression();
 		}
-		if (expression == null) {
-			if (event.getActions() != null && event.getActions().size() > 0) {
-				Action action = (Action) event.getActions().get(0);
-				if (action instanceof Script) {
-					Script s = (Script) action;
-					expression = s.getExpression();
-				} else {
-					expression = action.getActionExpression();
-				}
+		if (expression == null && event.getActions() != null && event.getActions().size() > 0) {
+			Action action = (Action) event.getActions().get(0);
+			if (action instanceof Script) {
+				Script s = (Script) action;
+				expression = s.getExpression();
+			} else {
+				expression = action.getActionExpression();
 			}
 		}
 		return expression;
