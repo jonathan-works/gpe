@@ -278,15 +278,13 @@ public class LocalizacaoHome
 		catch (Exception e) {
 		    LOG.error(".persistAndNext()", e);
 		} 
-		if (outcome != null){
-			if (!outcome.equals("")) {
-				Localizacao me = getInstance();
-				newInstance();
-				getInstance().setLocalizacaoPai(me);
-				getEntityManager().flush();
-				localizacaoPai = getInstance().getLocalizacaoPai();
-				getInstance().setLocalizacaoPai(localizacaoPai);
-			}
+		if (outcome != null && !outcome.equals("")){
+			Localizacao me = getInstance();
+			newInstance();
+			getInstance().setLocalizacaoPai(me);
+			getEntityManager().flush();
+			localizacaoPai = getInstance().getLocalizacaoPai();
+			getInstance().setLocalizacaoPai(localizacaoPai);
 		}
 		return outcome;
 	}
