@@ -14,7 +14,7 @@ public class TriggerListenerLog implements TriggerListener, Serializable {
 	
 	public static final String NAME = "TriggerListenerLog";
 	private static final long serialVersionUID = 1L;
-	private static transient final LogProvider LOG = Logging.getLogProvider(TriggerListenerLog.class);
+	private static final transient LogProvider LOG = Logging.getLogProvider(TriggerListenerLog.class);
 
 	@Override
 	public String getName() {

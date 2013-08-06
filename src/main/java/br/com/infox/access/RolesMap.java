@@ -24,7 +24,7 @@ import org.jboss.seam.util.Reflections;
 @Startup
 public class RolesMap {
 
-	public final static String NAME = "rolesMap";
+	public static final String NAME = "rolesMap";
 	private static final LogProvider LOG = Logging.getLogProvider(RolesMap.class);
 	
 	private Map<String,Set<String>> roles = new HashMap<String, Set<String>>();

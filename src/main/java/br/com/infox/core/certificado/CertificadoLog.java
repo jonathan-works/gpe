@@ -21,7 +21,7 @@ public class CertificadoLog {
 	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
 	private static File logFileDir;
 	 
-	private synchronized static void initLogDir() throws IOException {
+	private static synchronized void initLogDir() throws IOException {
 		if (logFileDir == null || !logFileDir.exists()) {
 			logFileDir = new File(getLogDir() + getFilename());
 			if (!logFileDir.exists()) {
