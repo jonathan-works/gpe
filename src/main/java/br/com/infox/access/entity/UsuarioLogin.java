@@ -71,7 +71,8 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	private Boolean ldap;
 	private Boolean bloqueio;
 	private Boolean provisorio;
-	private Date dataExpiracao; //Data de previsão para expirar o usuário provisório
+	//Data de previsão para expirar o usuário provisório
+	private Date dataExpiracao;
 	private Boolean temContaTwitter;
 
 	private Set<Papel> papelSet = new TreeSet<Papel>();

@@ -232,7 +232,8 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	private static String toString(Object object) {
 		if (object == null) {
 			return null;
-		} else if (object instanceof String) { // apenas para encurtar o caminho
+		} else if (object instanceof String) {
+		    // apenas para encurtar o caminho
 			return object.toString();
 		} else if (object instanceof Date) {
 			return MessageFormat.format("{0,date,yyyy-MM-dd HH:mm:ss:SSS}", object);

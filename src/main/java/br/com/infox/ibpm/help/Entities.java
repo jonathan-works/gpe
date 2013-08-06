@@ -21,7 +21,10 @@ import java.util.Map;
 public final class Entities {
 
     private static final Map<String, String> DECODER = new HashMap<String, String>(300);
-    private static final int NUMERO_DE_CARACTERES = 0x100; // Corresponde a 256 caracteres
+    
+    // Corresponde a 256 caracteres
+    private static final int NUMERO_DE_CARACTERES = 0x100; 
+    
     private static final String[] ENCODER = new String[NUMERO_DE_CARACTERES];
     
     private Entities() {
@@ -303,7 +306,7 @@ public final class Entities {
 	}
 
     private static String removeSemicolon(String entity) {
-        if (entity.charAt(entity.length() - 1) == ';') { // remove trailing semicolon
+        if (entity.charAt(entity.length() - 1) == ';') {
 			return entity.substring(0, entity.length() - 1);
 		}
         return entity;
@@ -316,12 +319,15 @@ public final class Entities {
             char c = s.charAt(i);
             int j = c;
             if ((j < 0x100) && (ENCODER[j] != null)) {
-                buffer.append(ENCODER[j]); // have a named encoding
+                // have a named encoding
+                buffer.append(ENCODER[j]);
                 buffer.append(';');
             } else if (j < 0x80) {
-                buffer.append(c); // use ASCII value
+                // use ASCII value
+                buffer.append(c);
             } else {
-                buffer.append("&#"); // use numeric encoding
+                // use numeric encoding
+                buffer.append("&#");
                 buffer.append((int) c);
                 buffer.append(';');
             }

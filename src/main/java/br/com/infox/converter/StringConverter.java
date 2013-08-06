@@ -37,7 +37,8 @@ public class StringConverter implements Converter {
 			{(char) 8220, '"'},
 			{(char) 28, '"'},
 			{(char) 29, '"'},
-			{(char) 8594, '-'} ////referente ao caractere: flecha
+			//referente ao caractere: flecha
+			{(char) 8594, '-'}
 	};
 
 	@Override
