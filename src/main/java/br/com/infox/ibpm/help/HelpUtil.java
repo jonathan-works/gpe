@@ -15,15 +15,12 @@
 */
 package br.com.infox.ibpm.help;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
-import org.apache.lucene.demo.html.HTMLParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.highlight.Formatter;
 import org.apache.lucene.search.highlight.Highlighter;
@@ -36,7 +33,8 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.util.Version;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import br.com.itx.util.FileUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 
 public final class HelpUtil {
@@ -54,26 +52,8 @@ public final class HelpUtil {
 
 
 	public static String getBestFragments(Query query, String text) {
-		Reader reader = null;
-		BufferedReader br = null;
-		String returnText = text;
-		try {
-			reader = new HTMLParser(new StringReader(text)).getReader();
-			br = new BufferedReader(reader);
-			String line = null;
-			StringBuilder sb = new StringBuilder();
-			while ((line=br.readLine()) != null) {
-				sb.append(line).append(System.getProperty("line.separator"));
-			}
-			returnText = sb.toString();
-		} catch (Exception e) {
-			LOG.error(e);
-		} finally {
-			FileUtil.close(reader);
-			FileUtil.close(br);
-		}
-		
-		return highlightText(query, returnText, true);
+		    Document doc = Jsoup.parse(text);
+	        return highlightText(query, doc.body().text(), true);
 	}
 
 

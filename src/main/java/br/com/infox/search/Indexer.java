@@ -52,8 +52,6 @@ public class Indexer {
 	
 	private Analyzer analyzer = new LimitTokenCountAnalyzer(new BrazilianAnalyzer(Version.LUCENE_36), Integer.MAX_VALUE);
 	private Directory directory;
-	private IndexReader indexReader;
-	private IndexWriterConfig indexWriterConfig;
 	private static final LogProvider LOG = Logging.getLogProvider(Indexer.class);
 
 	public static File getIndexerPath() {
@@ -76,13 +74,12 @@ public class Indexer {
 	
 	public Indexer(File indexPath) throws IOException {
 		directory = FSDirectory.open(indexPath);
-		indexReader = IndexReader.open(directory);
-		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, analyzer).setOpenMode(OpenMode.CREATE_OR_APPEND);
 	}
 	
 	public void index(String id, Map<String, String> storedFields, Map<String, String> fields) {
 		try {
-			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
+		    IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, analyzer).setOpenMode(OpenMode.CREATE_OR_APPEND);
+	        IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
 			Document doc = new Document();
 			doc.add(new Field("id", id, Field.Store.YES, Field.Index.ANALYZED));
 			for (Entry<String, String> e : fields.entrySet()) {
@@ -104,6 +101,7 @@ public class Indexer {
 	public List<Document> search(String searchText, String[] fields, int maxResult) {
 	    List<Document> list = new ArrayList<Document>();
 		try {
+		    IndexReader indexReader = IndexReader.open(directory);
 			IndexSearcher isearcher = new IndexSearcher(indexReader);
 		    Query query = getQuery(searchText, fields);
 		    TopScoreDocCollector collector = TopScoreDocCollector.create(maxResult, true);
