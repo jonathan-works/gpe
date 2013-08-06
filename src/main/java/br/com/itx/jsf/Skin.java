@@ -49,13 +49,11 @@ public class Skin extends Selector {
 		setCookiePath(cookiePath);
 		setCookieEnabled(true);
 		String skinCookie = getCookieValueIfEnabled();
-		if (!Strings.isEmpty(skinCookie)) {
-			if (skinCookie.startsWith("skin/")) {
-				for(String arg : SKINS) {
-					if (arg.equalsIgnoreCase(skinCookie.substring(5))) {
-						skin = skinCookie;
-						break;
-					}
+		if (!Strings.isEmpty(skinCookie) && skinCookie.startsWith("skin/")) {
+			for(String arg : SKINS) {
+				if (arg.equalsIgnoreCase(skinCookie.substring(5))) {
+					skin = skinCookie;
+					break;
 				}
 			}
 		}
