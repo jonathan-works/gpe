@@ -343,12 +343,9 @@ public class TaskInstanceHome implements Serializable {
     public String end(String transition) {
         if (checkAccess()) {
             TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
-            if (currentTaskInstance != null) {
-                if (tempTask == null
-                        || tempTask.getId() != currentTaskInstance.getId()) {
-                    FacesMessages.instance().clear();
-                    throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
-                }
+            if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
+                FacesMessages.instance().clear();
+                throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
             }
             this.currentTaskInstance = null;
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
