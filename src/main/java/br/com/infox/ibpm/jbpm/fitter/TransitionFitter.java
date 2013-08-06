@@ -168,12 +168,8 @@ public class TransitionFitter extends Fitter implements Serializable {
 	@SuppressWarnings("unchecked")
 	public List<TransitionHandler> getLeavingTransitions() {
 		Node currentNode = pb.getNodeFitter().getCurrentNode();
-		if (leavingTransitions == null) {
-			if (currentNode != null
-					&& currentNode.getLeavingTransitions() != null) {
-				leavingTransitions = TransitionHandler.getList(currentNode
-						.getLeavingTransitions());
-			}
+		if (leavingTransitions == null && currentNode != null && currentNode.getLeavingTransitions() != null) {
+			leavingTransitions = TransitionHandler.getList(currentNode.getLeavingTransitions());
 		}
 		return leavingTransitions;
 	}
