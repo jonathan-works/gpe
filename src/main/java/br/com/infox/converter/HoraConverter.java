@@ -40,8 +40,7 @@ public class HoraConverter implements Converter {
 	private static final int MAX_MINUTO = 59;
 	
 	@Override
-	public Object getAsObject(FacesContext context, UIComponent component,
-			String value) throws ConverterException {
+	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		if (value == null || value.trim().length() == 0) {
 			return null;
 		}
@@ -74,8 +73,7 @@ public class HoraConverter implements Converter {
 	}
 
 	@Override
-	public String getAsString(FacesContext context, UIComponent component,
-			Object value) throws ConverterException {
+	public String getAsString(FacesContext context, UIComponent component, Object value) {
 		return value.toString().substring(0, 5);
 	}
 

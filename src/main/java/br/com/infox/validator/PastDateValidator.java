@@ -16,8 +16,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 @BypassInterceptors
 public class PastDateValidator implements Validator {
 
-	public void validate(FacesContext context, UIComponent component, Object value)
-			throws ValidatorException {
+	public void validate(FacesContext context, UIComponent component, Object value) {
 		
 		Date date = (Date) value;
 		Date now = new Date();

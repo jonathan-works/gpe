@@ -59,7 +59,7 @@ public final class RecursiveManager {
 		return getFullPath(object, dadField, pathDescriptorField, new StringBuilder());
 	}
 
-	public static void refactor(Object object) throws RecursiveException {
+	public static void refactor(Object object) {
 		try {
 			if(!isRecursive(object)) {
 				throw new AnnotationException("Missing annotation @Recursive: " +
@@ -101,8 +101,7 @@ public final class RecursiveManager {
 	 * @throws InvalidTargetObjectTypeException 
 	 * @throws AnnotationException 
 	 */
-	public static void setFullPath(Object object) throws AnnotationException, 
-												InvalidTargetObjectTypeException {
+	public static void setFullPath(Object object) throws InvalidTargetObjectTypeException {
 		String dad = AnnotationUtil.getAnnotationField(object, Parent.class);
 		String pathDescriptor = AnnotationUtil.getAnnotationField(object, PathDescriptor.class);
 		String hierarchicalPath = AnnotationUtil.getAnnotationField(object, HierarchicalPath.class);
@@ -135,8 +134,7 @@ public final class RecursiveManager {
 		return false;
 	}
 	
-	private static boolean hasParentDuplicity(Object o, Integer checkId) throws 
-						AnnotationException, InvalidTargetObjectTypeException {
+	private static boolean hasParentDuplicity(Object o, Integer checkId) throws InvalidTargetObjectTypeException {
 		Object dad = AnnotationUtil.getValue(o, Parent.class);
 		if(dad != null) {
 			Integer id = (Integer) AnnotationUtil.getValue(dad, Id.class);

@@ -34,8 +34,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 public class CpfValidator implements Validator {
 	public static final String NAME = "cpfValidator";
 
-	public void validate(FacesContext context, UIComponent component, Object value) 
-		throws ValidatorException {
+	public void validate(FacesContext context, UIComponent component, Object value) {
 		try {
 			String cpfValue = (String) value;
 			cpfValue = cpfValue.replaceAll("\\.", "");

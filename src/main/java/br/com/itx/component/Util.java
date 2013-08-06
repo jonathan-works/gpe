@@ -570,7 +570,7 @@ public class Util implements Serializable {
 	 * @return Valor do Id
 	 * @throws AnnotationException
 	 */
-	public Object getIdValue(Object object) throws AnnotationException {
+	public Object getIdValue(Object object) {
 		return AnnotationUtil.getIdValue(object);
 	}
 	

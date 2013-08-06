@@ -33,8 +33,7 @@ public class LongConverter implements Converter {
 	
 
 	@Override
-	public Object getAsObject(FacesContext context, UIComponent component,
-			String value) throws ConverterException {
+	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		if (Strings.isEmpty(value)) {
 			return null;
 		}
@@ -48,8 +47,7 @@ public class LongConverter implements Converter {
 	}
 
 	@Override
-	public String getAsString(FacesContext context, UIComponent component,
-			Object value) throws ConverterException {
+	public String getAsString(FacesContext context, UIComponent component, Object value) {
 		return value == null ? null : value.toString();
 	}
 	

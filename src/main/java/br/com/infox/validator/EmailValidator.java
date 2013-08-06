@@ -18,8 +18,6 @@ package br.com.infox.validator;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
-import javax.faces.validator.ValidatorException;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.log.LogProvider;
@@ -34,8 +32,7 @@ public class EmailValidator implements Validator {
     private static final LogProvider LOG = Logging.getLogProvider(EmailValidator.class);
 
 	//@Override
-	public void validate(FacesContext context, UIComponent component,
-			Object value) throws ValidatorException {
+	public void validate(FacesContext context, UIComponent component, Object value) {
 	    //TODO implementar, o antigo dava erro
 		LOG.error("Função de validar e-mail não está implementada");
 		

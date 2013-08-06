@@ -80,7 +80,7 @@ public final class EntityUtil implements Serializable {
 	}
 	
 	private static String getProperty(Object objId, PropertyDescriptor pd) 
-	        throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	        throws IllegalAccessException, InvocationTargetException {
 		Class<?> cl = pd.getPropertyType();
 		Object value = null;
 		Method m = pd.getReadMethod();
@@ -125,8 +125,8 @@ public final class EntityUtil implements Serializable {
 	}
 	
 	private static void setProperty(Object objId, PropertyDescriptor pd, String strValue) 
-	        throws InstantiationException, IllegalAccessException, IllegalArgumentException, 
-	            InvocationTargetException, NoSuchMethodException, SecurityException {
+	        throws InstantiationException, IllegalAccessException,
+	            InvocationTargetException, NoSuchMethodException {
 		Class<?> cl = pd.getPropertyType();
 		Object value = null;
 		if (cl.isAnnotationPresent(Entity.class)) {
@@ -323,7 +323,7 @@ public final class EntityUtil implements Serializable {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	public static void setNullOnEntityId(Object entidade) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static void setNullOnEntityId(Object entidade) throws IllegalAccessException, InvocationTargetException {
 		PropertyDescriptor pd = EntityUtil.getId(entidade);
 		Method writeMethod = pd.getWriteMethod();
 		Class<?> propertyType = pd.getPropertyType();
@@ -341,7 +341,7 @@ public final class EntityUtil implements Serializable {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	public static void clearEntityLists(Object entidade) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static void clearEntityLists(Object entidade) throws IllegalAccessException, InvocationTargetException {
 		List<PropertyDescriptor> descriptors = getPropertyDescriptors(entidade, OneToMany.class);
 		for (PropertyDescriptor pd : descriptors) {
 			Class<?> type = pd.getPropertyType();

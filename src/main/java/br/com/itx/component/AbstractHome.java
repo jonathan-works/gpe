@@ -488,7 +488,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalArgumentException 
 	 */
-	public void clearUnlocked() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void clearUnlocked() throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(getInstance());	 
 		T t = (T) getInstance().getClass().newInstance();
 		for (PropertyDescriptor pd : pds) {

@@ -348,7 +348,7 @@ public class ProcessBuilder implements Serializable {
 		return typeFitter;
 	}
 
-	public void getPaintedGraph() throws AbortProcessingException{
+	public void getPaintedGraph() {
 		try {
 			getProcessBuilderGraph().paintGraph();
 		} catch (IOException e) {
