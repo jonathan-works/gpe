@@ -102,10 +102,8 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 	@Override
 	public void setId(Object id) {
 		super.setId(id);
-		if(isManaged()){
-			if (getInstance().getCep() != null){
-				getCepSuggestBean().setInstance(getInstance().getCep());
-			}
+		if(isManaged() && getInstance().getCep() != null){
+			getCepSuggestBean().setInstance(getInstance().getCep());
 		}
 	}
 
