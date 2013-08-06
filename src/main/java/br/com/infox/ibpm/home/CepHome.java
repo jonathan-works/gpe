@@ -66,10 +66,8 @@ public class CepHome extends AbstractHome<Cep> {
 	public void setId(Object id) {
 		boolean changed = id != null && !id.equals(getId());
 		super.setId(id);
-		if (changed) {
-			if (instance.getMunicipio() != null) {
-				estado = instance.getMunicipio().getEstado();
-			}
+		if (changed && instance.getMunicipio() != null) {
+			estado = instance.getMunicipio().getEstado();
 		}
 	}
 
