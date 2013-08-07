@@ -50,7 +50,8 @@ import br.com.itx.util.EntityUtil;
 
 public final class LogUtil {
 
-	private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
+	private static final int MAX_SMALL_FIELD_LIMIT = 300;
+    private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
 	private static final LogProvider LOG = Logging.getLogProvider(LogUtil.class);
 	
 	private LogUtil(){
@@ -120,7 +121,7 @@ public final class LogUtil {
 			PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(
 					entidade.getClass().newInstance(), nomeAtributo);	
 			Size lengthAnnotation = pd.getReadMethod().getAnnotation(Size.class);
-			return lengthAnnotation != null && lengthAnnotation.max() <= 300;
+			return lengthAnnotation != null && lengthAnnotation.max() <= MAX_SMALL_FIELD_LIMIT;
 		} else {
 			return !isBinario(classAtributo);
 		}
