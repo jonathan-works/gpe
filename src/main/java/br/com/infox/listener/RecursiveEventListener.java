@@ -76,7 +76,7 @@ public class RecursiveEventListener implements PreInsertEventListener,
 														(obj.getEntity(), pathFieldName);
 				}
 			} catch (RecursiveException e) {
-				throw e;
+			    LOG.error(".onPreUpdate()", e);
 			} catch (Exception e) {
 				LOG.error(".onPreUpdate()", e);
 			}
