@@ -70,7 +70,7 @@ public final class CertificadoLog {
 		}
 	}	
 	
-	public static String getTextLogFile() throws Exception {
+	public static String getTextLogFile() throws IOException {
 		initLogDir();
 		if (logFileDir != null && logFileDir.exists()) {
 			Reader r = null;
