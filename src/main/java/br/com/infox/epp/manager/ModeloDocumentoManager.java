@@ -37,7 +37,7 @@ public class ModeloDocumentoManager extends GenericManager{
 	@In
 	private ModeloDocumentoDAO modeloDocumentoDAO;
 	
-	@In VariavelDAO variavelDAO;
+	@In private VariavelDAO variavelDAO;
 	
 	public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento){
 		if(modeloDocumento != null) {
