@@ -48,14 +48,15 @@ public class MonetarioConverter implements Converter {
 		if (Strings.isEmpty(value)) {
 			return null;
 		}
+		String newValue = value;
 		if (!value.startsWith(SYMBOL)) {
-			value = SYMBOL + " " + value;
+			newValue = SYMBOL + " " + value;
 		}
 		Double valor = null;
 		try {
-			valor = FORMATTER.parse(value).doubleValue();
+			valor = FORMATTER.parse(newValue).doubleValue();
 		} catch (Exception e) {
-			throw new ConverterException(new FacesMessage("Formato inválido: " + value), e);
+			throw new ConverterException(new FacesMessage("Formato inválido: " + newValue), e);
 		}
 		return valor;
 	}
