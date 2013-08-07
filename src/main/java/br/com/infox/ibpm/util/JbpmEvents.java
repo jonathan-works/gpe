@@ -8,7 +8,11 @@ import org.jboss.seam.transaction.UserTransaction;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
-public class JbpmEvents {
+public final class JbpmEvents {
+    
+    private JbpmEvents(){
+        super();
+    }
     
     private static final LogProvider LOG = Logging.getLogProvider(JbpmEvents.class);
 
