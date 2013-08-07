@@ -86,7 +86,7 @@ public class ModeloDocumentoAction extends ActionTemplate {
 	}
 
 	public void set(String variavel, int... idModeloDocumento) {
-		variavel += "Modelo";
+		String variavelModelo = variavel + "Modelo";
 		StringBuilder s = new StringBuilder();
 		for (int i : idModeloDocumento) {
 			if (s.length() != 0) {
@@ -94,11 +94,11 @@ public class ModeloDocumentoAction extends ActionTemplate {
 			}
 			s.append(i);
 		}
-		Object valor = JbpmUtil.getProcessVariable(variavel);
+		Object valor = JbpmUtil.getProcessVariable(variavelModelo);
 		if (valor == null) {
-			JbpmUtil.createProcessVariable(variavel, s.toString());
+			JbpmUtil.createProcessVariable(variavelModelo, s.toString());
 		} else {
-			JbpmUtil.setProcessVariable(variavel, valor + "," + s.toString());
+			JbpmUtil.setProcessVariable(variavelModelo, valor + "," + s.toString());
 		}
 	}
 
