@@ -147,8 +147,9 @@ public class Menu implements Serializable {
     private String getFormatedKey(String key) {
         if (key.startsWith("/")) {
             return key.substring(1);
+        } else {
+            return key;
         }
-        return key;
     }
 
     public List<MenuItem> getBookmark() {
