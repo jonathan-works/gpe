@@ -214,8 +214,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	//Método para Inserir o documento do fluxo
 	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
 		if (validacaoCertificadoBemSucedida(assinado)) {
-			value = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
-			ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(value, certChain, signature);
+			Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
+			ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue, certChain, signature);
 			ProcessoDocumento doc = processoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
 			getEntityManager().flush();
 	        setIdProcessoDocumento(doc.getIdProcessoDocumento());
