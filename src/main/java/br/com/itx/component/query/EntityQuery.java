@@ -42,9 +42,9 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 
 	private String beforeResultEvent;	
 	
-	protected List fullList;
+	private List fullList;
 
-	protected Long resultCount;
+	private Long resultCount;
 	
 	public List<String> getConditions() {
 		return conditions;
