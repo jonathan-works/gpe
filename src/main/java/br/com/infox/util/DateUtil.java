@@ -34,6 +34,14 @@ import org.jboss.seam.util.Strings;
 @BypassInterceptors
 public class DateUtil {
 	
+    private static final int MILESIMOS_DO_SEGUNDO = 1000;
+
+    private static final int SEGUNDOS_DO_MINUTO = 60;
+
+    private static final int MINUTOS_DA_HORA = 60;
+
+    private static final int HORAS_DO_DIA = 24;
+
     private static final LogProvider LOG = Logging.getLogProvider(DateUtil.class);
     
 	public static final int QUANTIDADE_DIAS_SEMANA = 7;
@@ -46,7 +54,7 @@ public class DateUtil {
 	 * @return A diferencas em dias das datas informadas.
 	 */
 	public static long diferencaDias(Date dataFim, Date dataIni) {
-		return (dataFim.getTime() - dataIni.getTime()) / (1000*60*60*24);
+		return (dataFim.getTime() - dataIni.getTime()) / (MILESIMOS_DO_SEGUNDO*SEGUNDOS_DO_MINUTO*MINUTOS_DA_HORA*HORAS_DO_DIA);
 	}
 	
 	/**
@@ -185,7 +193,7 @@ public class DateUtil {
 	public static Calendar dataProximoMes(Calendar data, int mes) {
 		int diferenca = (mes - data.get(Calendar.MONTH));
 		if (diferenca < 0) {
-			diferenca += 12;
+			diferenca += QUANTIDADE_MESES_ANO;
 		}
 		data.add(Calendar.MONTH, diferenca);
 		return data;
@@ -214,7 +222,7 @@ public class DateUtil {
 	public static int calculateMinutesBetweenTimes(Calendar dataInicial, Calendar dataFim) {
 		long dataInicialMilli = dataInicial.getTimeInMillis();
 		long dataFimMilli = dataFim.getTimeInMillis();
-		return (int) (dataFimMilli-dataInicialMilli)/(1000*60);
+		return (int) (dataFimMilli-dataInicialMilli)/(MILESIMOS_DO_SEGUNDO*SEGUNDOS_DO_MINUTO);
 	}
 	
 	/**
@@ -227,7 +235,7 @@ public class DateUtil {
 	public static int calculateMinutesBetweenTimes(Date dataInicial, Date dataFim) {
 		long dataInicialMilli = dataInicial.getTime();
 		long dataFimMilli = dataFim.getTime();
-		return (int) (dataFimMilli-dataInicialMilli)/(1000*60);
+		return (int) (dataFimMilli-dataInicialMilli)/(MILESIMOS_DO_SEGUNDO*SEGUNDOS_DO_MINUTO);
 	}
 	
 }
