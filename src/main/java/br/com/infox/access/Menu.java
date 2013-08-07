@@ -146,7 +146,7 @@ public class Menu implements Serializable {
 
     private String getFormatedKey(String key) {
         if (key.startsWith("/")) {
-            key = key.substring(1);
+            return key.substring(1);
         }
         return key;
     }
