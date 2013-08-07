@@ -26,9 +26,9 @@ public class ImagemBinManager extends GenericManager {
 	public static final String NAME = "imagemBinManager";
 	
 	@In
-    public ImagemBinDAO imagemBinDAO;
+    private ImagemBinDAO imagemBinDAO;
 	@In 
-	public ImageUtil imageUtil;
+	private ImageUtil imageUtil;
 
     public void persistImageBin(ImagemBin imagemBin, String imagesRelativePath) throws IOException {
         String imagesDir = getImagesDir(imagesRelativePath);
