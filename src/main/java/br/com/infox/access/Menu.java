@@ -28,9 +28,9 @@ public class Menu implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(Menu.class);
 
-    protected List<MenuItem> bookmark = new ArrayList<MenuItem>();
+    private List<MenuItem> bookmark = new ArrayList<MenuItem>();
 
-    protected List<MenuItem> dropMenus;
+    private List<MenuItem> dropMenus;
 
     /**
      * Flag para indicar que as páginas já foram verificadas Isso ocorre apenas
