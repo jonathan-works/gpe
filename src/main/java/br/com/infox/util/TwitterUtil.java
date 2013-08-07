@@ -12,7 +12,6 @@ import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.TwitterTemplate;
 import br.com.infox.access.entity.UsuarioLogin;
-//import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.EntityUtil;
 
