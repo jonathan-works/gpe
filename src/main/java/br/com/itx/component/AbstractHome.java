@@ -58,7 +58,9 @@ import br.com.itx.util.ExcelExportUtil;
 @SuppressWarnings("unchecked")
 public abstract class AbstractHome<T> extends EntityHome<T> {
 	
-	private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
+	private static final int TAMANHO_XLS_PADRAO = 10000;
+
+    private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
 
 	private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
 
@@ -532,7 +534,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	public void exportarXLS() {
-		List<T> beanList = getBeanList().list(10000);
+		List<T> beanList = getBeanList().list(TAMANHO_XLS_PADRAO);
 		try {
 			if (beanList == null || beanList.isEmpty()) {
 				FacesMessages.instance().add(Severity.INFO, "Não há dados para exportar!");
