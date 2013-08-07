@@ -34,13 +34,13 @@ import org.jboss.seam.util.Strings;
 @BypassInterceptors
 public class DateUtil {
 	
-    private static final int MILESIMOS_DO_SEGUNDO = 1000;
+    public static final int MILESIMOS_DO_SEGUNDO = 1000;
 
-    private static final int SEGUNDOS_DO_MINUTO = 60;
+    public static final int SEGUNDOS_DO_MINUTO = 60;
 
-    private static final int MINUTOS_DA_HORA = 60;
+    public static final int MINUTOS_DA_HORA = 60;
 
-    private static final int HORAS_DO_DIA = 24;
+    public static final int HORAS_DO_DIA = 24;
 
     private static final LogProvider LOG = Logging.getLogProvider(DateUtil.class);
     
@@ -236,6 +236,10 @@ public class DateUtil {
 		long dataInicialMilli = dataInicial.getTime();
 		long dataFimMilli = dataFim.getTime();
 		return (int) (dataFimMilli-dataInicialMilli)/(MILESIMOS_DO_SEGUNDO*SEGUNDOS_DO_MINUTO);
+	}
+	
+	public static int minutesToHour(int minutes){
+	    return minutes / MINUTOS_DA_HORA;
 	}
 	
 }
