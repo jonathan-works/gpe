@@ -21,7 +21,11 @@ import org.jbpm.graph.def.Node;
 
 import br.com.itx.util.ComponentUtil;
 
-public class NodeConverter {
+public final class NodeConverter {
+    
+    private NodeConverter(){
+        super();
+    }
 
 	public static Node getAsObject(String nodeString) {
 		List<Node> nodes = ComponentUtil.getComponent("processNodes");
