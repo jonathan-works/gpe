@@ -27,7 +27,7 @@ public class PessoaFisica extends Pessoa{
 	}
 	
 	@Column(name="nr_cpf", nullable=false, unique=true)
-	@Size(max=20)
+	@Size(max=LengthConstants.NUMERO_CPF)
 	public String getCpf() {
 		return cpf;
 	}
