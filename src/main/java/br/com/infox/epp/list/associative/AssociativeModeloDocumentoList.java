@@ -27,7 +27,7 @@ public class AssociativeModeloDocumentoList extends EntityList<ModeloDocumento> 
 	private static final String R1 = "tipoModeloDocumento.grupoModeloDocumento = #{modeloDocumentoHome.grupoModeloDocumento}";
 
 	@In(required=false)
-	TaskFitter taskFitter;
+	private TaskFitter taskFitter;
 
 	@Override
 	protected void addSearchFields() {
