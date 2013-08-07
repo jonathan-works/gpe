@@ -15,7 +15,7 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	public static final String NAME = "tipoProcessoDocumentoPapelHome";
 	private static final long serialVersionUID = 1L;
 	
-	@In PapelManager papelManager;
+	@In private PapelManager papelManager;
 	
 	@Override
 	public String persist() {
