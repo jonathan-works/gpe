@@ -420,14 +420,14 @@ public class Util implements Serializable {
 	 * @return
 	 */
 	public Object getSelectExpressionSelectItem(String expression, Object obj) {
+	    Object returnObject = "";
 		if (!Strings.isEmpty(expression)) {
 			Contexts.getMethodContext().set("obj", obj);
-			expression = expression.replace("{", "#{obj.");
-			obj = obj == null ? "" : 
-			Expressions.instance().createValueExpression(expression).getValue();
+			String auxiliarExpression = expression.replace("{", "#{obj.");
+			returnObject = obj == null ? "" : Expressions.instance().createValueExpression(auxiliarExpression).getValue();
 			Contexts.getMethodContext().remove("obj");
 		}
-		return obj;
+		return returnObject;
 	}
 	
 	public String getContextsAsString(Context context, boolean htmlBreak) {
