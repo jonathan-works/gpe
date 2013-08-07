@@ -41,7 +41,8 @@ import br.com.itx.component.Util;
 public abstract class AbstractProcessoDocumentoHome<T>
 		extends AbstractHome<ProcessoDocumento> {
 
-	private static final long serialVersionUID = 1L; 
+	private static final String PROCESSO_DOCUMENTO_BIN_HOME_NAME = "processoDocumentoBinHome";
+    private static final long serialVersionUID = 1L; 
 	public static final String PETICAO_INSERIDA = "peticaoInseridaMap";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoHome.class);
 	private ModeloDocumento modeloDocumentoCombo;
@@ -118,7 +119,7 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	@Override
 	public String persist()
 	{
-		IProcessoDocumentoBinHome procDocBinHome = getComponent("processoDocumentoBinHome");
+		IProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
 		procDocBinHome.isModelo(isModelo);
 		if (procDocBinHome.persist() == null) {
 			return null;
@@ -151,7 +152,7 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	
 	@Override
 	public void newInstance() {
-		IProcessoDocumentoBinHome procDocBin = getComponent("processoDocumentoBinHome");
+		IProcessoDocumentoBinHome procDocBin = getProcessoDocumentoBinHome();
 		procDocBin.newInstance();
 		super.newInstance();
 	}
@@ -167,10 +168,14 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	public void processarModelo(){
 		if (modeloDocumentoCombo != null) {
 			ModeloDocumento modeloDocumento = getEntityManager().merge(modeloDocumentoCombo);
-			IProcessoDocumentoBinHome procDocBinHome = getComponent("processoDocumentoBinHome");
+			IProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
 			procDocBinHome.getInstance().setModeloDocumento(processarModelo(modeloDocumento.getModeloDocumento()));
 		}
 	}
+
+    private IProcessoDocumentoBinHome getProcessoDocumentoBinHome() {
+        return getComponent(PROCESSO_DOCUMENTO_BIN_HOME_NAME);
+    }
 	
 	/**
 	 * Processa um modelo avaliando linha a linha.
@@ -286,7 +291,7 @@ public abstract class AbstractProcessoDocumentoHome<T>
 	@Override
 	public String update() {
 		String ret = null;
-		IProcessoDocumentoBinHome procDocBinHome = getComponent("processoDocumentoBinHome");
+		IProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
 		if (procDocBinHome.update() != null) {
 			ret = super.update();
 		}
