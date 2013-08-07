@@ -87,9 +87,10 @@ public class ProcessoManager extends GenericManager {
 	 * */
 	public Object getAlteracaoModeloDocumento(ProcessoDocumentoBin processoDocumentoBinAtual, Object value) {
 		if(processoDocumentoBinAtual.getModeloDocumento() != null) {
-			value = processoDocumentoBinAtual.getModeloDocumento();
+			return processoDocumentoBinAtual.getModeloDocumento();
+		} else {
+		    return value;
 		}
-		return value;
 	}
 	
 	public void addProcessoConexoForIdProcesso(Processo processoAtual, Processo processoConexo) {
