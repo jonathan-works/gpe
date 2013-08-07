@@ -6,7 +6,7 @@ import org.jdom.Element;
 
 import br.com.itx.util.XmlUtil;
 
-public class ActivityXPDLFactory {
+public final class ActivityXPDLFactory {
 	
 	private static final String START_EVENT = "StartEvent";
     private static final String END_EVENT = "EndEvent";
@@ -19,6 +19,10 @@ public class ActivityXPDLFactory {
     private static final String INTERMEDIATE_EVENT = "IntermediateEvent";
     private static final String EVENT = "Event";
     private static final String	PARALLEL = "Parallel";
+    
+    private ActivityXPDLFactory(){
+        super();
+    }
 	
 	public static ActivityXPDL createInstance(Element element, String name) throws ActivityNotAllowedXPDLException {
 		ActivityXPDL activity = null;
