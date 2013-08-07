@@ -41,7 +41,9 @@ import br.com.itx.util.EntityUtil;
 public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		Serializable {
 
-	private static final LogProvider LOG = Logging
+	private static final int LIMITE_VISUALIZACAO = 25;
+
+    private static final LogProvider LOG = Logging
 			.getLogProvider(AbstractTreeHandler.class);
 
 	private static final long serialVersionUID = 1L;
@@ -225,8 +227,8 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		if (selected == null || selected.toString() == null) {
 			return selecionado;
 		}
-		if (selected.toString().length() > 25) {
-			selecionado = selected.toString().substring(0, 25) + "...";
+		if (selected.toString().length() > LIMITE_VISUALIZACAO) {
+			selecionado = selected.toString().substring(0, LIMITE_VISUALIZACAO) + "...";
 		} else {
 			selecionado = selected.toString();
 		}

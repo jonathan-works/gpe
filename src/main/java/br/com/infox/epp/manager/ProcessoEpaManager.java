@@ -27,7 +27,11 @@ import br.com.infox.ibpm.entity.Processo;
 @AutoCreate
 public class ProcessoEpaManager extends GenericManager {
 
-	private static final long serialVersionUID = 168832523707680478L;
+	private static final int PORCENTAGEM = 100;
+
+    private static final int HOURS_OF_DAY = 24;
+
+    private static final long serialVersionUID = 168832523707680478L;
 
 	public static final String NAME = "processoEpaManager";
 
@@ -68,16 +72,16 @@ public class ProcessoEpaManager extends GenericManager {
 			if (result != null) {
 				Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
 				Long dias = (Long)result.get("dias");
-				Long tempoGasto = ((Long)result.get("horas"))/24;
+				Long tempoGasto = ((Long)result.get("horas"))/HOURS_OF_DAY;
 				if (dias != null) {
 					tempoGasto += dias;
 				}
 				processoEpa.setTempoGasto(tempoGasto.intValue());
 			
 				if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
-					processoEpa.setPorcentagem((processoEpa.getTempoGasto()*100) / f.getQtPrazo());
+					processoEpa.setPorcentagem((processoEpa.getTempoGasto()*PORCENTAGEM) / f.getQtPrazo());
 				}
-				if (processoEpa.getPorcentagem() > 100) {
+				if (processoEpa.getPorcentagem() > PORCENTAGEM) {
 					processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
 				}
 				processoEpaDAO.update(processoEpa);
