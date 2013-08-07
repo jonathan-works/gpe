@@ -32,7 +32,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	public static final String NAME = "natCatFluxoLocalizacaoManager";
 
 	@In
-	public NatCatFluxoLocalizacaoDAO natCatFluxoLocalizacaoDAO;
+	private NatCatFluxoLocalizacaoDAO natCatFluxoLocalizacaoDAO;
 	
 	/**
 	 * Persiste o registro e para cada localizacao filha a localizacao contida
