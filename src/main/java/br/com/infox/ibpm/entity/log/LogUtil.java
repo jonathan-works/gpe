@@ -48,10 +48,14 @@ import br.com.itx.component.MeasureTime;
 import br.com.itx.util.EntityUtil;
 
 
-public class LogUtil {
+public final class LogUtil {
 
 	private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
 	private static final LogProvider LOG = Logging.getLogProvider(LogUtil.class);
+	
+	private LogUtil(){
+	    super();
+	}
 
 	/**
 	 * Checa se a classe é um array de bytes.
