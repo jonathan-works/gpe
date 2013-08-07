@@ -17,6 +17,7 @@ package br.com.infox.ibpm.jbpm;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,7 +64,7 @@ public abstract class ActionTemplate implements Serializable {
 	}
 	
 	protected void setParameters(Object[] parameters) {
-        this.parameters = parameters;
+        this.parameters = Arrays.copyOf(parameters, parameters.length);
     }
 
 	public boolean isPublic() {
