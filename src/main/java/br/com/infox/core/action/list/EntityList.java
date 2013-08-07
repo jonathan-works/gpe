@@ -38,7 +38,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	private Integer page = 1;
 
-	protected E entity;
+	private E entity;
 
 	private String orderedColumn;
 	
