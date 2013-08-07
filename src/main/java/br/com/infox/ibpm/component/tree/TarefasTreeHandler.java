@@ -23,7 +23,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	public static final String FILTER_TAREFAS_TREE = "br.com.infox.ibpm.component.tree.FilterTarefasTree";
 	public static final String CLEAR_TAREFAS_TREE_EVENT = "clearTarefasTreeEvent";
 	private static final long serialVersionUID = 1L;
-	protected List<TarefasEntityNode<Map<String,Object>>> rootList;		
+	private List<TarefasEntityNode<Map<String,Object>>> rootList;		
 	 
 	@Override
 	protected String getQueryRoots() {
