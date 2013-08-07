@@ -16,6 +16,7 @@
 package br.com.infox.ibpm.jbpm.actions;
 
 import java.util.List;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -78,10 +79,10 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		if (expression == null || "".equals(expression)) {
 			return;
 		}
-		parameters = getExpressionParameters(expression);
-		if (parameters.length > 0) {
+		setParameters(getExpressionParameters(expression));
+		if (getParameters().length > 0) {
 			ProcessBuilder.instance().getTaskFitter().getCurrentTask().setCurrentVariable(
-					(String) parameters[0]);
+					(String) getParameters()[0]);
 		}
 	}
 

@@ -31,9 +31,9 @@ public abstract class ActionTemplate implements Serializable {
 	
 	public static Set<Class<? extends ActionTemplate>> templates = new HashSet<Class<? extends ActionTemplate>>();
 
-	protected Object[] parameters;
+	private Object[] parameters;
 	
-	public abstract String getFileName();
+    public abstract String getFileName();
 	
 	public abstract String getExpression();
 
@@ -61,6 +61,10 @@ public abstract class ActionTemplate implements Serializable {
 	public Object[] getParameters() {
 		return parameters;
 	}
+	
+	protected void setParameters(Object[] parameters) {
+        this.parameters = parameters;
+    }
 
 	public boolean isPublic() {
 		return true;
