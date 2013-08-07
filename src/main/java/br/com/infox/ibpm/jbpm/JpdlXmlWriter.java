@@ -59,7 +59,8 @@ import br.com.itx.util.ReflectionsUtil;
 
 public class JpdlXmlWriter {
 
-	static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
+	private static final String ELEMENT_NAME = "name";
+    static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
 	static final Namespace JBPM_NAMESPACE = new Namespace(null, JPDL_NAMESPACE);
 
 	private Writer writer = null;
@@ -131,7 +132,7 @@ public class JpdlXmlWriter {
 		} else {
 			root = document.addElement("process-definition");
 		}
-		addAttribute(root, "name", processDefinition.getName());
+		addAttribute(root, ELEMENT_NAME, processDefinition.getName());
 
 		writeDescription(root, processDefinition.getDescription());
 		
@@ -182,7 +183,7 @@ public class JpdlXmlWriter {
 		Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
 		for (Entry<String, Swimlane> e : swimlanes.entrySet()) {
 			Element swimlane = addElement(root, "swimlane");
-			addAttribute(swimlane, "name", e.getKey());
+			addAttribute(swimlane, ELEMENT_NAME, e.getKey());
 			Swimlane s = e.getValue();
 			if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
 				Element assignment = addElement(swimlane, "assignment");
@@ -254,7 +255,7 @@ public class JpdlXmlWriter {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void writeProcessState(ProcessState node, Element nodeElement) {
 		Element subProcess = addElement(nodeElement, "sub-process");
-		subProcess.addAttribute("name", ReflectionsUtil.getStringValue(node, "subProcessName"));
+		subProcess.addAttribute(ELEMENT_NAME, ReflectionsUtil.getStringValue(node, "subProcessName"));
 		subProcess.addAttribute("binding", "late");
 		//TODO: Verificar isso aqui
 		Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
@@ -264,7 +265,7 @@ public class JpdlXmlWriter {
 	private void writeTasks(Set<Task> tasks, Element element) {
 		for (Task task : tasks) {
 			Element taskElement = addElement(element, "task");
-			addAttribute(taskElement, "name", task.getName());
+			addAttribute(taskElement, ELEMENT_NAME, task.getName());
 			if (task.getSwimlane() != null) {
 				addAttribute(taskElement, "swimlane", task.getSwimlane().getName());
 			}
@@ -292,7 +293,7 @@ public class JpdlXmlWriter {
 		}
 		for (VariableAccess va : list) {
 			Element ve = addElement(controller, "variable");
-			addAttribute(ve, "name", va.getVariableName());
+			addAttribute(ve, ELEMENT_NAME, va.getVariableName());
 			addAttribute(ve, "mapped-name", va.getMappedName());
 			if (va.getAccess().toString().trim().length() > 0) {
 				addAttribute(ve, "access", va.getAccess().toString());
@@ -306,7 +307,7 @@ public class JpdlXmlWriter {
 			Element description = addElement(element, "description");
 			description.addCDATA(node.getDescription());
 		}
-		addAttribute(element, "name", node.getName());
+		addAttribute(element, ELEMENT_NAME, node.getName());
 		if (node.isAsync()) {
 			addAttribute(element, "async", "true");
 		}
@@ -360,7 +361,7 @@ public class JpdlXmlWriter {
 			transitionElement.addAttribute("to", transition.getTo().getName());
 		}
 		if (transition.getName() != null) {
-			transitionElement.addAttribute("name", transition.getName());
+			transitionElement.addAttribute(ELEMENT_NAME, transition.getName());
 		}
 		Event transitionEvent = transition.getEvent(Event.EVENTTYPE_TRANSITION);
 		if ((transitionEvent != null) && (transitionEvent.hasActions())) {
@@ -423,7 +424,7 @@ public class JpdlXmlWriter {
 			}
 			Element node = parentElement.getParent();
 			Element timer = addElement(node, "timer");
-			timer.addAttribute("name", name);
+			timer.addAttribute(ELEMENT_NAME, name);
 			timer.addAttribute("duedate", create.getDueDate());
 			timer.addAttribute("repeat", create.getRepeat());
 			timer.addAttribute("transition", create.getTransitionName());
@@ -433,7 +434,7 @@ public class JpdlXmlWriter {
 		Element actionElement = parentElement.addElement(actionName);
 
 		if (action.getName() != null) {
-			actionElement.addAttribute("name", action.getName());
+			actionElement.addAttribute(ELEMENT_NAME, action.getName());
 		}
 
 		if (!action.acceptsPropagatedEvents()) {
