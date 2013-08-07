@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.util.constants.LengthConstants;
+
 
 @Entity
 @Table(schema="public", name=ProtocoloDocumento.NAME)
@@ -53,7 +55,7 @@ public class ProtocoloDocumento implements Serializable {
 	}
 	
 	@Column(name="nm_pessoa", nullable=false)
-	@Size(max=100)
+	@Size(max=LengthConstants.NOME_PADRAO)
 	public String getNomePessoa() {
 		return nomePessoa;
 	}
