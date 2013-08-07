@@ -66,7 +66,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void addNewNode() {
 		Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
-		ProcessDefinition processo = pb.getInstance();
+		ProcessDefinition processo = getProcessBuilder().getInstance();
 		if (nodeType != null) {
 			Node node = null;
 			try {
@@ -92,7 +92,7 @@ public class NodeFitter extends Fitter implements Serializable {
 			}
 			// insere o novo nó entre os nós da transição selecionada
 			// Se for EndState, liga apenas ao newNodeAfter
-			TransitionHandler newNodeTransition = pb.getTransitionFitter().getNewNodeTransition();
+			TransitionHandler newNodeTransition = getProcessBuilder().getTransitionFitter().getNewNodeTransition();
 			if (nodeType.equals(EndState.class)) {
 				Transition t = new Transition();
 				t.setFrom(newNodeAfter);
@@ -123,11 +123,11 @@ public class NodeFitter extends Fitter implements Serializable {
 			nodesItems = null;
 			setCurrentNode(node);
 			if (nodeType.equals(TaskNode.class)) {
-				pb.getTaskFitter().addTask();
+				getProcessBuilder().getTaskFitter().addTask();
 			}
-			pb.getTransitionFitter().clearNewNodeTransition();
-			pb.getTransitionFitter().clear();
-			pb.getTransitionFitter().checkTransitions();
+			getProcessBuilder().getTransitionFitter().clearNewNodeTransition();
+			getProcessBuilder().getTransitionFitter().clear();
+			getProcessBuilder().getTransitionFitter().checkTransitions();
 		}
 	}
 	
@@ -138,7 +138,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void removeNode(Node node) {
 		nodes.remove(node);
-		pb.getInstance().removeNode(node);
+		getProcessBuilder().getInstance().removeNode(node);
 		if (node.equals(currentNode)) {
 			currentNode = null;
 		}
@@ -165,19 +165,19 @@ public class NodeFitter extends Fitter implements Serializable {
 				}
 			}
 		}
-		pb.getTransitionFitter().checkTransitions();
+		getProcessBuilder().getTransitionFitter().checkTransitions();
 	}
 	
 	public void moveUp(Node node) {
 		int i = nodes.indexOf(node);
-		pb.getInstance().reorderNode(i, i - 1);
+		getProcessBuilder().getInstance().reorderNode(i, i - 1);
 		nodes = null;
 		nodesItems = null;
 	}
 
 	public void moveDown(Node node) {
 		int i = nodes.indexOf(node);
-		pb.getInstance().reorderNode(i, i + 1);
+		getProcessBuilder().getInstance().reorderNode(i, i + 1);
 		nodes = null;
 		nodesItems = null;
 	}
@@ -231,7 +231,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	public List<Node> getNodes() {
 		if (nodes == null) {
 			nodes = new ArrayList<Node>();
-			List<Node> list = pb.getInstance().getNodes();
+			List<Node> list = getProcessBuilder().getInstance().getNodes();
 			if (list != null) {
 				for (Node node : list) {
 					nodes.add(node);
@@ -258,7 +258,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	@SuppressWarnings("unchecked")
 	public List<SelectItem> getNodesItems() {
 		if (nodesItems == null) {
-			List<Node> list = pb.getInstance().getNodes();
+			List<Node> list = getProcessBuilder().getInstance().getNodes();
 			if (list != null) {
 				nodesItems = new ArrayList<SelectItem>();
 				nodesItems.add(new SelectItem(null, "Selecione uma tarefa..."));
@@ -300,7 +300,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		if (this.nodeName != null && !this.nodeName.equals(nodeName)) {
 			if (currentNode != null) {
 				currentNode.setName(nodeName);
-				BigInteger idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(pb.getIdProcessDefinition(), nodeName);
+				BigInteger idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(getProcessBuilder().getIdProcessDefinition(), nodeName);
 				if (idNodeModificado != null) {
 					modifiedNodes.put(idNodeModificado, nodeName);
 				}
@@ -321,12 +321,12 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 
 	public void setCurrentNode(Node cNode) {
-		TaskFitter tf = pb.getTaskFitter();
+		TaskFitter tf = getProcessBuilder().getTaskFitter();
 		Node lastNode = this.currentNode;
 		this.currentNode = cNode;
 		tf.getTasks();
 		tf.clear();
-		Map<Node, List<TaskHandler>> taskNodeMap = pb.getTaskNodeMap();
+		Map<Node, List<TaskHandler>> taskNodeMap = getProcessBuilder().getTaskNodeMap();
 		if (taskNodeMap != null && taskNodeMap.containsKey(cNode)) {
 			List<TaskHandler> list = taskNodeMap.get(cNode);
 			if (!list.isEmpty()) {
@@ -336,8 +336,8 @@ public class NodeFitter extends Fitter implements Serializable {
 		}
 		nodeHandler = new NodeHandler(cNode);
 		newNodeType = NodeTypeConstants.TASK;
-		pb.getTransitionFitter().clearArrivingAndLeavingTransitions();
-		pb.getTypeFitter().setTypeList(null);
+		getProcessBuilder().getTransitionFitter().clearArrivingAndLeavingTransitions();
+		getProcessBuilder().getTypeFitter().setTypeList(null);
 		if (tf.getCurrentTask() != null) {
 			tf.getCurrentTask().clearHasTaskPage();
 		}

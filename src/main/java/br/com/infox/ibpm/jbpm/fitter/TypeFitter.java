@@ -83,7 +83,7 @@ public class TypeFitter extends Fitter implements Serializable{
 	}
 	
 	private void verifyAvaliableTypes(List<String> tList) {
-		TaskHandler currentTask = pb.getTaskFitter().getCurrentTask();
+		TaskHandler currentTask = getProcessBuilder().getTaskFitter().getCurrentTask();
 		if (currentTask != null) {
 			for (VariableAccessHandler vah : currentTask.getVariables()) {
 				if (vah.getType().equals(

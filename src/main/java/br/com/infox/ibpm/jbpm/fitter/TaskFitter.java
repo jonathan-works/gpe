@@ -49,15 +49,15 @@ public class TaskFitter extends Fitter implements Serializable {
 	@In private JbpmTaskManager jbpmTaskManager;
 	
 	public void addTask() {
-		Node currentNode = pb.getNodeFitter().getCurrentNode();
-		ProcessDefinition process = pb.getInstance();
+		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
+		ProcessDefinition process = getProcessBuilder().getInstance();
 		if (currentNode instanceof TaskNode) {
 			getTasks();
 			TaskNode tn = (TaskNode) currentNode;
 			Task t = new Task();
 			t.setProcessDefinition(process);
 			t.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
-			List<TaskHandler> list = pb.getTaskNodeMap().get(currentNode);
+			List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(currentNode);
 			t.setName(currentNode.getName());
 			tn.addTask(t);
 			tn.setEndTasks(true);
@@ -70,11 +70,11 @@ public class TaskFitter extends Fitter implements Serializable {
 	}
 
 	public void removeTask(TaskHandler t) {
-		Node currentNode = pb.getNodeFitter().getCurrentNode();
+		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		if (currentNode instanceof TaskNode) {
 			TaskNode tn = (TaskNode) currentNode;
 			tn.getTasks().remove(t.getTask());
-			pb.getTaskNodeMap().remove(currentNode);
+			getProcessBuilder().getTaskNodeMap().remove(currentNode);
 		}
 	}
 	
@@ -128,7 +128,7 @@ public class TaskFitter extends Fitter implements Serializable {
 			if (currentTask != null && currentTask.getTask() != null) {
 				currentTask.getTask().setName(taskName);
 				BigInteger idTaskModificada = jbpmTaskManager
-						.findTaskIdByIdProcessDefinitionAndName(pb.getIdProcessDefinition(), this.taskName);
+						.findTaskIdByIdProcessDefinitionAndName(getProcessBuilder().getIdProcessDefinition(), this.taskName);
 				if (idTaskModificada != null) {
 					modifiedTasks.put(idTaskModificada, taskName);
 				}
@@ -146,7 +146,7 @@ public class TaskFitter extends Fitter implements Serializable {
 	
 	public TaskHandler getStartTaskHandler() {
 		if (startTaskHandler == null) {
-			Task startTask = pb.getInstance().getTaskMgmtDefinition().getStartTask();
+			Task startTask = getProcessBuilder().getInstance().getTaskMgmtDefinition().getStartTask();
 			startTaskHandler = new TaskHandler(startTask);
 		}
 		return startTaskHandler;
@@ -170,14 +170,14 @@ public class TaskFitter extends Fitter implements Serializable {
 	}
 
 	public List<TaskHandler> getTasks() {
-		Node currentNode = pb.getNodeFitter().getCurrentNode();
-		Map<Node, List<TaskHandler>> taskNodeMap = pb.getTaskNodeMap();
+		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
+		Map<Node, List<TaskHandler>> taskNodeMap = getProcessBuilder().getTaskNodeMap();
 		List<TaskHandler> taskList = new ArrayList<TaskHandler>();
 		if (currentNode instanceof TaskNode) {
 			TaskNode node = (TaskNode) currentNode;
 			if (taskNodeMap == null) {
-				pb.setTaskNodeMap(new HashMap<Node, List<TaskHandler>>());
-				taskNodeMap = pb.getTaskNodeMap();
+				getProcessBuilder().setTaskNodeMap(new HashMap<Node, List<TaskHandler>>());
+				taskNodeMap = getProcessBuilder().getTaskNodeMap();
 			}
 			taskList = taskNodeMap.get(node);
 			if (taskList == null) {
@@ -188,7 +188,7 @@ public class TaskFitter extends Fitter implements Serializable {
 				setCurrentTask(taskList.get(0));
 			}
 		} else if (currentNode instanceof StartState) {
-			Task startTask = pb.getInstance().getTaskMgmtDefinition().getStartTask();
+			Task startTask = getProcessBuilder().getInstance().getTaskMgmtDefinition().getStartTask();
 			startTaskHandler = new TaskHandler(startTask);
 			taskList.add(startTaskHandler);
 			if (! taskList.isEmpty() && currentTask == null) {
