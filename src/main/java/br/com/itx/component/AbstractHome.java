@@ -230,7 +230,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public String persist() {
 		StopWatch sw = new StopWatch(true);
 		String ret = null;
-		String msg = ".persist() (" + getInstanceClassName() + ")";
+		String msg = getPersistLogMessage();
 		try {
 			if (beforePersistOrUpdate()) {
 				ret = super.persist();
@@ -240,10 +240,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			}
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
-			LOG.error(".persist() (" + getInstanceClassName() + ")", e);			
+			LOG.error(getPersistLogMessage(), e);			
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, getNonUniqueObjectExceptionMessage());
-			LOG.error(".persist() (" + getInstanceClassName() + ")", e);	
+			LOG.error(getPersistLogMessage(), e);	
 		} catch (AplicationException e){
 			throw new AplicationException("Erro: " + e.getMessage(), e);
 		} catch (javax.persistence.PersistenceException e) {
@@ -255,7 +255,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         } catch (Exception e) {
             instance().add(StatusMessage.Severity.ERROR,
                     "Erro ao gravar: " + e.getMessage(), e);
-            LOG.error(".persist() (" + getInstanceClassName() + ")", e);
+            LOG.error(getPersistLogMessage(), e);
 		} 
 		if (!PERSISTED.equals(ret)) {
 			 // Caso ocorra algum erro, é criada uma copia do instance sem o Id e os List
@@ -263,14 +263,17 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				Transaction.instance().rollback();
 				setInstance((T) EntityUtil.cloneEntity(getInstance(), false));
 			} catch (Exception e) {
-				LOG.warn(".persist() (" + getInstanceClassName() + "): " + 
-						Strings.toString(getInstance()), e);
+				LOG.warn(getPersistLogMessage() + Strings.toString(getInstance()), e);
 				newInstance();
 			}
 		} 
-		LOG.info(".persist() (" + getInstanceClassName() + "): " + sw.getTime());
+		LOG.info(getPersistLogMessage() + sw.getTime());
 		return ret;
 	}
+    
+    private String getPersistLogMessage() {
+        return ".persist() (" + getInstanceClassName() + "):";
+    }
 	
 
 	/**
@@ -298,7 +301,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				ret = afterPersistOrUpdate(ret);
 			}
 		} catch (AssertionFailure e) {
-			LOG.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
+			LOG.warn(getPersistLogMessage()  + e.getMessage());
 			ret = PERSISTED;
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
