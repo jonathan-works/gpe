@@ -21,7 +21,9 @@ import br.com.infox.ibpm.type.PrazoEnum;
 @Table(name=TempoMedioTarefa.TABLE_NAME, schema="public")
 public class TempoMedioTarefa implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
+	private static final int MINUTES_OF_HOUR = 60;
+    private static final int MINUTES_OF_DAY = 1440;
+    private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "vs_tempo_medio_tarefa";
 
 	private Integer idTarefa;
@@ -81,9 +83,9 @@ public class TempoMedioTarefa implements Serializable {
 	public String getTempoMedioFormatado() {
 	    float resultTempo = tempoMedio;
 	    if(PrazoEnum.D.equals(tipoPrazo)) {
-	        resultTempo = resultTempo / 1440;
+	        resultTempo = resultTempo / MINUTES_OF_DAY;
 	    } else if (PrazoEnum.H.equals(tipoPrazo)) {
-	        resultTempo = resultTempo / 60;
+	        resultTempo = resultTempo / MINUTES_OF_HOUR;
 	    }
 	    return String.format("%.2f %s", resultTempo, tipoPrazo == null ? "":tipoPrazo.getLabel());
 	}
