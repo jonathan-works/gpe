@@ -59,7 +59,7 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 		for (Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
 			FluxoPapel nl = iterator.next();
 			try {
-				genericManager.remove(nl);
+				getGenericManager().remove(nl);
 			} catch (Exception e) {
 			    LOG.error(".removeAll()", e);
 			}

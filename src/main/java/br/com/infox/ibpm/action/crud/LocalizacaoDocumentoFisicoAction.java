@@ -63,7 +63,7 @@ public class LocalizacaoDocumentoFisicoAction extends
 			DocumentoFisico nl = iterator.next();
 			try {
 				nl.setAtivo(false);
-				genericManager.update(nl);
+				getGenericManager().update(nl);
 			} catch (Exception e) {
 			    LOG.error(".inactiveAll()", e);
 			}

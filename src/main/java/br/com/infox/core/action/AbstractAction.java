@@ -44,9 +44,9 @@ public abstract class AbstractAction {
 	public static final String REMOVED = "removed";
 	
 	@In
-	protected GenericManager genericManager;
+	private GenericManager genericManager;
 	
-	/**
+    /**
 	 * Mensagem default para um registro já cadastrado.
 	 */
 	protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
@@ -208,5 +208,9 @@ public abstract class AbstractAction {
 	private String getObjectClassName(Object o) {
 		return o != null ? o.getClass().getName() : "";
 	}
+	
+	protected GenericManager getGenericManager() {
+        return genericManager;
+    }
 	
 }
