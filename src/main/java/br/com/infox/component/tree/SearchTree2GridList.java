@@ -97,14 +97,15 @@ public class SearchTree2GridList <E> {
 	 * Verifica se o registro selecionado é um dos filhos do nó em execução.
 	 */
 	private boolean isChildren(EntityNode<E> node, boolean ret){
+	    boolean retorno = ret;
 		List<EntityNode<E>> childList = getChildList(node);
 		for (EntityNode<E> e : childList) {
 			if(e.equals(treeHandler.getSelected())) {
 				return true;
 			}
-			ret = isChildren(e, ret);
+			retorno = isChildren(e, ret);
 		}
-		return ret;
+		return retorno;
 	}
 
 	/**
