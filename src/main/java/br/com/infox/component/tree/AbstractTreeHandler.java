@@ -50,11 +50,11 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 
 	private E selected;
 
-	protected List<EntityNode<E>> rootList;
+	private List<EntityNode<E>> rootList;
 
-	protected String treeId;
+	private String treeId;
 
-	private String iconFolder;
+    private String iconFolder;
 
 	private String iconLeaf;
 
@@ -274,6 +274,10 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 			selectAllChildren(node, true);
 		}
 	}
+	
+	protected void setTreeId(String treeId) {
+        this.treeId = treeId;
+    }
 
 	private void selectAllChildren(EntityNode<E> selectedNode, boolean operation) {
 		for (EntityNode<E> node : selectedNode.getNodes()) {
