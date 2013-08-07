@@ -34,12 +34,16 @@ import br.com.itx.util.ComponentUtil;
 @Install(precedence=Install.FRAMEWORK)
 public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 
-	private static final long serialVersionUID = 1L;
+	private static final String USUARIO_LOGADO = "usuarioLogado";
+
+    private static final String CEP_SUGGEST = "cepSuggest";
+
+    private static final long serialVersionUID = 1L;
 	
 	public static final String NAME = "enderecoHome";
 
 	private CepSuggestBean getCepSuggestBean() {
-		return getComponent("cepSuggest");
+		return getComponent(CEP_SUGGEST);
 	}
 	
 	public void setCep(Cep cep) {
@@ -57,7 +61,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 	public void setEndereco(Cep cep) {
 		if (cep == null)
 		{
-			Contexts.removeFromAllContexts("cepSuggest");
+			Contexts.removeFromAllContexts(CEP_SUGGEST);
 			this.setInstance(new Endereco());
 		}else{		
 			this.getInstance().setCep(cep);
@@ -117,7 +121,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 	@Override
 	public String persist() {
 		UsuarioLogin pessoaLogada = (UsuarioLogin) 
-					Contexts.getSessionContext().get("usuarioLogado");
+					Contexts.getSessionContext().get(USUARIO_LOGADO);
 
 		//setando data e hora da alteração
 		getInstance().setDataAlteracao(new Date());
@@ -128,7 +132,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 		}
 		if (checkCep()){
 			persist = super.persist();
-			Contexts.removeFromAllContexts("cepSuggest");
+			Contexts.removeFromAllContexts(CEP_SUGGEST);
 		}
 		return persist;
 	}
@@ -139,7 +143,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 		if (checkCep()){
 			getInstance().setDataAlteracao(new Date());
 			UsuarioLogin pessoaLogada = (UsuarioLogin) 
-					Contexts.getSessionContext().get("usuarioLogado");
+					Contexts.getSessionContext().get(USUARIO_LOGADO);
 
 			getInstance().setUsuarioCadastrador( pessoaLogada );
 
@@ -154,7 +158,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 
 	@Override
 	 public void newInstance() {
-	  Contexts.removeFromAllContexts("cepSuggest");
+	  Contexts.removeFromAllContexts(CEP_SUGGEST);
 	  super.newInstance();
 	 }
 	
