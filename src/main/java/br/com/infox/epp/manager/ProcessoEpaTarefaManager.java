@@ -30,7 +30,13 @@ import br.com.infox.util.DateUtil;
 @AutoCreate
 public class ProcessoEpaTarefaManager extends GenericManager {
 
-	private static final long serialVersionUID = 7702766272346991620L;
+	private static final int MEIA_HORA = 30;
+
+    private static final int MINUTES_OF_HOUR = 60;
+
+    private static final int PORCENTAGEM_MAXIMA = 100;
+
+    private static final long serialVersionUID = 7702766272346991620L;
 
 	public static final String NAME = "processoEpaTarefaManager";
 
@@ -102,11 +108,11 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 			int porcentagem = 0;
 			int tempoGasto = (int)(processoEpaTarefa.getTempoGasto()+incrementoTempoGasto);
 			if(prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
-				porcentagem = (tempoGasto*100)/prazo;
+				porcentagem = (tempoGasto*PORCENTAGEM_MAXIMA)/prazo;
 			}
             
             ProcessoEpa processoEpa = processoEpaTarefa.getProcessoEpa();
-		    if (porcentagem > 100 
+		    if (porcentagem > PORCENTAGEM_MAXIMA 
 		    		&& processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
 		        processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
 		    }
@@ -155,7 +161,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	private int getMinutesOfDay(Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR_OF_DAY)*60);
+		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR_OF_DAY)*MINUTES_OF_HOUR);
 	}
 	
 	/**
@@ -192,14 +198,14 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		int result = 0;
 		Date ultimaAtualizacao = processoEpaTarefa.getUltimoDisparo();
 		while(ultimaAtualizacao.before(dataDisparo))	{
-			Date disparoAtual = getDisparoIncrementado(ultimaAtualizacao, dataDisparo, Calendar.MINUTE, 30);
+			Date disparoAtual = getDisparoIncrementado(ultimaAtualizacao, dataDisparo, Calendar.MINUTE, MEIA_HORA);
 			LocalizacaoTurno localizacaoTurno = getTurnoTarefa(processoEpaTarefa, disparoAtual);
 			if (localizacaoTurno != null) {
 				result += calcularMinutosEmIntervalo(ultimaAtualizacao, disparoAtual, localizacaoTurno.getHoraInicio(), localizacaoTurno.getHoraFim());
 			}
 			ultimaAtualizacao = disparoAtual;
 		}
-		return result/60;
+		return result/MINUTES_OF_HOUR;
 	}
 	
 	private int calcularTempoGastoDias(Date dataDisparo, ProcessoEpaTarefa processoEpaTarefa) {
