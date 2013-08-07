@@ -33,7 +33,6 @@ public class ParametroUtil {
 		try {
 			retorno = getParametro("ldap.domain");
 		} catch (IllegalArgumentException e) {
-			LOG.error("[#####] Erro ao acessar o parâmetro [#####]");
 			LOG.error(".getLDAPDomain()", e);
 		}
 		return retorno;
@@ -44,7 +43,6 @@ public class ParametroUtil {
 		try {
 			retorno = getParametro("ldap.host");
 		} catch (IllegalArgumentException e) {
-			LOG.error("[#####] Erro ao acessar o parâmetro [#####]");
 			LOG.error(".getLDAPHost()", e);
 		}
 		return retorno;
@@ -55,7 +53,6 @@ public class ParametroUtil {
 		try {
 			retorno = getParametro("ldap.authentication");
 		} catch (IllegalArgumentException e) {
-			LOG.error("[#####] Erro ao acessar o parâmetro [#####]");
 			LOG.error(".getLDAPAuthentication()", e);
 		}
 		return retorno;
@@ -66,7 +63,6 @@ public class ParametroUtil {
 		try {
 			retorno = getParametro("ldap.login");
 		} catch (IllegalArgumentException e) {
-			LOG.error("[#####] Erro ao acessar o parâmetro [#####]");
 			LOG.error(".getLDAPLogin()", e);
 		}
 		return retorno;
