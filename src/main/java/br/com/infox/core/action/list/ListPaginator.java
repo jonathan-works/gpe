@@ -4,8 +4,8 @@ import java.util.List;
 
 public class ListPaginator<T> implements Pageable {
 	
-	private Integer page = 1;
-	private Integer pageElements = 20;
+    private Integer page = 1;
+	private Integer pageElements;
 	private List<T> resultList;
 	
 	public ListPaginator(List<T> list, int pageElements) {
