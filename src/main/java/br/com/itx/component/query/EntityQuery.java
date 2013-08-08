@@ -76,7 +76,6 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		this.countEjbql = countEjbql;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public List getResultList() {
 		if (!checkConditions()) {
@@ -110,7 +109,6 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		return dataModel;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List getFullList() {
 		if (fullList != null) {
 			return fullList;
