@@ -67,8 +67,9 @@ public class TipoModeloDocumentoHome
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {
-		if (!violaConstraintsDeUnicidade())
-			return super.beforePersistOrUpdate();
+		if (!violaConstraintsDeUnicidade()) {
+		    return super.beforePersistOrUpdate();
+		}
 		else{
 			return false;
 		}

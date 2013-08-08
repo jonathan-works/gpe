@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.manager;
 
-import javax.persistence.TransactionRequiredException;
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -18,7 +16,7 @@ public class TarefaJbpmManager extends GenericManager {
 	
 	@In private TarefaJbpmDAO tarefaJbpmDAO;
 	
-	public void inserirVersoesTarefas() throws IllegalStateException, TransactionRequiredException {
+	public void inserirVersoesTarefas() {
 		tarefaJbpmDAO.inserirVersoesTarefas();
 	}
 

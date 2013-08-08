@@ -23,7 +23,7 @@ public class UsuarioLocList extends EntityList<UsuarioLocalizacao> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("usuario", SearchCriteria.contendo, "o.usuario = #{usuarioLocList.entity.usuario}");
+		addSearchField("usuario", SearchCriteria.CONTENDO, "o.usuario = #{usuarioLocList.entity.usuario}");
 	}
 
 	@Override

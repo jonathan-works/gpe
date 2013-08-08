@@ -27,7 +27,7 @@ public abstract class AbstractImageFileHome implements FileUploadListener {
 	private byte[] data;
 	
 	@In
-    public ImagemBinManager imagemBinManager;
+    private ImagemBinManager imagemBinManager;
     
     public abstract String getImagesRelativePath();
 	

@@ -22,6 +22,8 @@ import java.util.Map;
 import org.jboss.seam.Component;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.component.grid.SearchField;
@@ -29,6 +31,7 @@ import br.com.itx.component.grid.SearchField;
 public class FormField implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(FormField.class);
 
 	private String id;
 
@@ -128,6 +131,7 @@ public class FormField implements Serializable {
 				value = Boolean.FALSE;
 			}
 		} catch (RuntimeException e) {
+		    LOG.error("isRequired()", e);
 		}
 		return value.booleanValue();
 	}
@@ -145,6 +149,7 @@ public class FormField implements Serializable {
 				value = Boolean.TRUE;
 			}
 		} catch (RuntimeException e) {
+		    LOG.error("isRendered()", e);
 		}
 		return value.booleanValue();
 	}

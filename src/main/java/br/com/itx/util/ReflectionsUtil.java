@@ -53,7 +53,7 @@ public final class ReflectionsUtil {
 				return field.get(o);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(".getValue()", e);
 		}
 		return null;
 	}
@@ -69,7 +69,7 @@ public final class ReflectionsUtil {
 				field.set(o, value);
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+		    LOG.error(".setValue()", e);
 		}
 	}
 	

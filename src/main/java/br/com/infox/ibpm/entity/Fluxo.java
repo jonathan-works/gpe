@@ -100,10 +100,10 @@ public class Fluxo implements java.io.Serializable {
 	}
 
 	public void setCodFluxo(String codFluxo) {
-		if (codFluxo != null) {
-			codFluxo = codFluxo.trim();
-		}		
-		this.codFluxo = codFluxo;
+	    this.codFluxo = codFluxo;
+	    if (codFluxo != null){
+	        this.codFluxo = codFluxo.trim();
+	    }
 	}
 
 	@Column(name = "ds_fluxo", nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
@@ -114,10 +114,10 @@ public class Fluxo implements java.io.Serializable {
 	}
 
 	public void setFluxo(String fluxo) {
-		if (fluxo != null) {
-			fluxo = fluxo.trim();
+	    this.fluxo = fluxo;
+	    if (fluxo != null) {
+			this.fluxo = fluxo.trim();
 		}
-		this.fluxo = fluxo;
 	}
 
 	@Column(name = "ds_xml")

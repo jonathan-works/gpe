@@ -33,8 +33,7 @@ public abstract class AbstractVariavelHome<T> extends AbstractHome<Variavel> {
 
 	@Override
 	protected Variavel createInstance() {
-		Variavel variavel = new Variavel();
-		return variavel;
+		return new Variavel();
 	}
 
 	@Override
@@ -44,11 +43,4 @@ public abstract class AbstractVariavelHome<T> extends AbstractHome<Variavel> {
 		newInstance();
 		return ret;
 	}
-
-	@Override
-	public String persist() {
-		String action = super.persist();
-		return action;
-	}
-
 }

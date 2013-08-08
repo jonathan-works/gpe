@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import br.com.infox.ibpm.entity.ContaTwitter;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.TwitterTemplate;
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -30,6 +32,7 @@ public final class TwitterUtil {
 	private static TwitterUtil instance = init();
 	private TwitterFactory factory;
 	private Twitter aplicacao;
+	private static final LogProvider LOG = Logging.getLogProvider(TwitterUtil.class);
 		
 	private TwitterUtil() {
 		ConfigurationBuilder builder = new ConfigurationBuilder();
@@ -332,14 +335,6 @@ public final class TwitterUtil {
 	}
 	
 	/**
-	 * @return a conta do twitter do usuário logado ou null caso ela não exista
-	 */
-	public ContaTwitter getContaTwitterUsuarioLogado() {
-		return getContaTwitter(Authenticator.getUsuarioLogado());
-	}
-	
-	
-	/**
 	 * @param usuario
 	 * @return a conta do twitter do usuário passado como parametro ou null caso ela não exista 
 	 */
@@ -373,7 +368,7 @@ public final class TwitterUtil {
     ================================== Métodos Inicializadores e Auxiliares Públicos ========================================
 */	
 	
-	public static final void restart(){
+	public static void restart(){
 		instance = init();
 	}
 
@@ -407,14 +402,10 @@ public final class TwitterUtil {
 		try {
 			result = new TwitterUtil();
 			result.loadApplicationTwitter();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e)	{
-			e.printStackTrace();
-		} catch (NoResultException nre){
-			nre.printStackTrace();
+		} catch (IllegalArgumentException | NullPointerException | NoResultException e) {
+		    LOG.error(".init()", e);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".init()", e);
 		}
 		return result;
 	}

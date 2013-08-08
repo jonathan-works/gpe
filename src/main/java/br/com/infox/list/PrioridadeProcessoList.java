@@ -27,9 +27,9 @@ public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso>{
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("peso", SearchCriteria.maior);
-		addSearchField("descricaoPrioridade", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("peso", SearchCriteria.MAIOR);
+		addSearchField("descricaoPrioridade", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 		
 	}
 

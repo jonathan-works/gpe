@@ -98,7 +98,7 @@ public final class ComponentUtil {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+		    LOG.error(".getProperties()", ex);
 		}
 		return resp;
 	}
@@ -111,7 +111,9 @@ public final class ComponentUtil {
 	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) {
 		try {
 			return Introspector.getBeanInfo(clazz).getPropertyDescriptors();
-		} catch (IntrospectionException e) { }
+		} catch (IntrospectionException e) {
+		    LOG.error(".getPropertyDescriptors()", e);
+		}
 		return new PropertyDescriptor[0];
 	}
 	
@@ -124,14 +126,16 @@ public final class ComponentUtil {
 		try {
 			return PropertyUtils.getPropertyDescriptor(component, property);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+		    LOG.error(".getPropertyDescriptor()", ex);
 			return null;
 		}
 	}
 	
 	public static Class<?> getType(Object component, String property) {
 		PropertyDescriptor pd = getPropertyDescriptor(component, property);
-		if (pd == null) { return null; }
+		if (pd == null) { 
+		    return null;
+		}
 		return getType(pd);
 	}
 

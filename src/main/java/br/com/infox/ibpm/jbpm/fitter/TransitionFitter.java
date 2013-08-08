@@ -11,6 +11,8 @@ import javax.faces.model.SelectItem;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
@@ -24,6 +26,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(TransitionFitter.class);
 
 	public static final String NAME = "transitionFitter";
 	
@@ -37,7 +40,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	private List<String[]> transitionNames;
 	
 	public void changeTransition(TransitionHandler th, String type) {
-		Node oldNodeTransition = pb.getNodeFitter().getOldNodeTransition();
+		Node oldNodeTransition = getProcessBuilder().getNodeFitter().getOldNodeTransition();
 		Transition t = th.getTransition();
 		if (type.equals("from")) {
 			if (t.getFrom() != null) {
@@ -60,14 +63,14 @@ public class TransitionFitter extends Fitter implements Serializable {
 			try {
 				t.setName(t.getTo().getName());
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOG.error("changeTransition()", e);
 			}
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void checkTransitions() {
-		List<Node> nodes = pb.getNodeFitter().getNodes();
+		List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
 		clear();
 		Map<Node, String> nodeMessageMap = new HashMap<Node, String>();
 		for (Node n : nodes) {
@@ -84,11 +87,11 @@ public class TransitionFitter extends Fitter implements Serializable {
 				}
 			}
 		}
-		pb.getNodeFitter().setNodeMessageMap(nodeMessageMap);
+		getProcessBuilder().getNodeFitter().setNodeMessageMap(nodeMessageMap);
 	}
 	
 	public void addTransition(String type) {
-		Node currentNode = pb.getNodeFitter().getCurrentNode();
+		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		Transition t = new Transition("");
 		if (type.equals("from")) {
 			currentNode.addArrivingTransition(t);
@@ -107,7 +110,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	}
 
 	public void removeTransition(TransitionHandler th, String type) {
-		Node currentNode = pb.getNodeFitter().getCurrentNode();
+		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		Transition t = th.getTransition();
 		if (type.equals("from") && t.getFrom() != null) {
 			t.getFrom().removeLeavingTransition(t);
@@ -151,33 +154,25 @@ public class TransitionFitter extends Fitter implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<TransitionHandler> getArrivingTransitions() {
-		Node currentNode = pb.getNodeFitter().getCurrentNode();
-		if (arrivingTransitions == null) {
-			if (currentNode != null
-					&& currentNode.getArrivingTransitions() != null) {
-				arrivingTransitions = TransitionHandler.getList(currentNode
-						.getArrivingTransitions());
-			}
+		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
+		if (arrivingTransitions == null && currentNode != null && currentNode.getArrivingTransitions() != null) {
+			arrivingTransitions = TransitionHandler.getList(currentNode.getArrivingTransitions());
 		}
 		return arrivingTransitions;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<TransitionHandler> getLeavingTransitions() {
-		Node currentNode = pb.getNodeFitter().getCurrentNode();
-		if (leavingTransitions == null) {
-			if (currentNode != null
-					&& currentNode.getLeavingTransitions() != null) {
-				leavingTransitions = TransitionHandler.getList(currentNode
-						.getLeavingTransitions());
-			}
+		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
+		if (leavingTransitions == null && currentNode != null && currentNode.getLeavingTransitions() != null) {
+			leavingTransitions = TransitionHandler.getList(currentNode.getLeavingTransitions());
 		}
 		return leavingTransitions;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<TransitionHandler> getTransitions() {
-		List<Node> nodes = pb.getNodeFitter().getNodes();
+		List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
 		if (transitionList == null) {
 			transitionList = new ArrayList<TransitionHandler>();
 			for (Node n : nodes) {

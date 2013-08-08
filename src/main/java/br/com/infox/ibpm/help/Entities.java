@@ -21,7 +21,10 @@ import java.util.Map;
 public final class Entities {
 
     private static final Map<String, String> DECODER = new HashMap<String, String>(300);
-    private static final int NUMERO_DE_CARACTERES = 0x100; // Corresponde a 256 caracteres
+    
+    // Corresponde a 256 caracteres
+    private static final int NUMERO_DE_CARACTERES = 0x100; 
+    
     private static final String[] ENCODER = new String[NUMERO_DE_CARACTERES];
     
     private Entities() {
@@ -283,27 +286,31 @@ public final class Entities {
     }
     
     public static String decodeEntity(String entity) {
-		if (entity.charAt(entity.length() - 1) == ';') { // remove trailing
-															// semicolon
-			entity = entity.substring(0, entity.length() - 1);
-		}
-		if (entity.charAt(1) == '#') {
+		String auxiliarEntity = removeSemicolon(entity);
+		if (auxiliarEntity.charAt(1) == '#') {
 			int start = 2;
 			int radix = 10;
-			if ((entity.charAt(2) == 'X') || (entity.charAt(2) == 'x')) {
+			if ((auxiliarEntity.charAt(2) == 'X') || (auxiliarEntity.charAt(2) == 'x')) {
 				start++;
 				radix = 16;
 			}
 			Character c = Character.valueOf((char) Integer.parseInt(
-					entity.substring(start), radix));
+					auxiliarEntity.substring(start), radix));
 			return c.toString();
 		}
-		String s = DECODER.get(entity);
+		String s = DECODER.get(auxiliarEntity);
 		if (s != null) {
 			return s;
 		}
 		return "";
 	}
+
+    private static String removeSemicolon(String entity) {
+        if (entity.charAt(entity.length() - 1) == ';') {
+			return entity.substring(0, entity.length() - 1);
+		}
+        return entity;
+    }
 
     public static String encode(String s) {
         int length = s.length();
@@ -312,12 +319,15 @@ public final class Entities {
             char c = s.charAt(i);
             int j = c;
             if ((j < 0x100) && (ENCODER[j] != null)) {
-                buffer.append(ENCODER[j]); // have a named encoding
+                // have a named encoding
+                buffer.append(ENCODER[j]);
                 buffer.append(';');
             } else if (j < 0x80) {
-                buffer.append(c); // use ASCII value
+                // use ASCII value
+                buffer.append(c);
             } else {
-                buffer.append("&#"); // use numeric encoding
+                // use numeric encoding
+                buffer.append("&#");
                 buffer.append((int) c);
                 buffer.append(';');
             }

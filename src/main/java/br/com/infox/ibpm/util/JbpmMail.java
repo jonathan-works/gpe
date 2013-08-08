@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import twitter4j.TwitterException;
 import br.com.infox.command.EMailData;
 import br.com.infox.command.SendmailCommand;
@@ -20,7 +23,7 @@ import br.com.itx.util.EntityUtil;
 public class JbpmMail extends org.jbpm.mail.Mail {
 	private static final long serialVersionUID = 1L;
 	private Map<String, String> parameters = new HashMap<String, String>();
-	
+	private static final LogProvider LOG = Logging.getLogProvider(JbpmMail.class);
 	
 	/**
 	 * Método separa conteúdo de saída de um Map e interpreta seus atributos com base
@@ -91,7 +94,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 			try {
 				TwitterUtil.getInstance().sendMessage(MailResolver.instance().listaContasTwitter(idGrupo), mensagem);
 			} catch (TwitterException e) {
-				e.printStackTrace();
+			    LOG.error(".sendTwitter()", e);
 			}
 		}
 	}

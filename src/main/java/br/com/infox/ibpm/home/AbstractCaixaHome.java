@@ -15,7 +15,7 @@ public abstract class AbstractCaixaHome<T> extends AbstractHome<Caixa> {
 
 	private static final long serialVersionUID = 1L;
 	
-	@In protected CaixaManager caixaManager;
+	@In private CaixaManager caixaManager;
 
 	public void setCaixaIdCaixa(Integer id) {
 		setId(id);

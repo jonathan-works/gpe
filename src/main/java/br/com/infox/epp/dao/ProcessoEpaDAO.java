@@ -14,6 +14,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.ProcessInstance;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.entity.ProcessoEpa;
@@ -39,6 +41,7 @@ import br.com.itx.util.HibernateUtil;
 public class ProcessoEpaDAO extends GenericDAO {
 
 	private static final long serialVersionUID = 8899227886410190168L;
+	private static final LogProvider LOG = Logging.getLogProvider(ProcessoEpaDAO.class);
 	public static final String NAME = "processoEpaDAO";
 
 	public List<ProcessoEpa> listAllNotEnded() {
@@ -59,9 +62,9 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){
-		Long idjbpm_ = ProcessInstance.instance().getId();
+		Long idJbpm = ProcessInstance.instance().getId();
 		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
+		Query query = EntityUtil.createQuery(busca).setParameter("idJbpm", idJbpm);
 		ProcessoEpa pe = EntityUtil.getSingleResult(query);
 		List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
 		for (ParteProcesso parte : pe.getPartes()){
@@ -73,9 +76,9 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public List<PessoaJuridica> getPessoaJuridicaList(){
-		Long idjbpm_ = ProcessInstance.instance().getId();
+		Long idJbpm = ProcessInstance.instance().getId();
 		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm", idjbpm_);
+		Query query = EntityUtil.createQuery(busca).setParameter("idJbpm", idJbpm);
 		ProcessoEpa pe = EntityUtil.getSingleResult(query);
 		List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
 		for (ParteProcesso parte : pe.getPartes()){
@@ -92,7 +95,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	
 	public boolean hasPartes(Long idJbpm){
 		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca.toString()).setParameter("idJbpm",idJbpm);
+		Query query = EntityUtil.createQuery(busca).setParameter("idJbpm",idJbpm);
 		ProcessoEpa pe = EntityUtil.getSingleResult(query);
 		return (pe != null) && (pe.hasPartes());
 	}
@@ -114,13 +117,15 @@ public class ProcessoEpaDAO extends GenericDAO {
 		return (Item) entityManager.createQuery(query).setParameter("idProcesso", idProcesso).getSingleResult();
 	}
 	
-	public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
+	@SuppressWarnings("unchecked")
+    public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
 		Query q = entityManager.createQuery(ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY)
 				.setParameter("idProcesso", processoEpa.getIdProcesso());
 		Map<String,Object> result = null;
 		try {
 			result = (Map<String, Object>) q.getSingleResult();			
 		} catch(NoResultException e) {
+		    LOG.info(".getTempoGasto()", e);
 		}
 		return result;
 	}

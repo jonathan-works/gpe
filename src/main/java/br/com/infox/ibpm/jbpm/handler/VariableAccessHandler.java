@@ -63,7 +63,7 @@ public class VariableAccessHandler implements Serializable {
 		this.task = task;
 		this.variableAccess = variableAccess;
 		String mappedName = variableAccess.getMappedName();
-		if (mappedName.indexOf(":") > 0) {
+		if (mappedName.indexOf(':') > 0) {
 			this.type = mappedName.split(":")[0];
 		} else {
 			this.type = "default";
@@ -80,14 +80,14 @@ public class VariableAccessHandler implements Serializable {
 	}
 	
 	public void setName(String name) {
-	    String Name = name.replace(' ', '_').replace('/', '_');
-		if (!Name.equals(this.name)){
-			this.name = Name;
+	    String auxiliarName = name.replace(' ', '_').replace('/', '_');
+		if (!auxiliarName.equals(this.name)){
+			this.name = auxiliarName;
 			if ("page".equals(type) && !pageExists()) {
 				return;
 			}
-			ReflectionsUtil.setValue(variableAccess, "variableName", Name);
-			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + Name);
+			ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
+			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + auxiliarName);
 		}
 	}
 	
@@ -337,8 +337,8 @@ public class VariableAccessHandler implements Serializable {
 	private static Map<String, List<Integer>> getModeloMap(String texto) {
 		Map<String, List<Integer>> ret = new LinkedHashMap<String, List<Integer>>();
 		if (texto != null && texto.startsWith(PREFIX)) {
-			texto = texto.substring(PREFIX.length());
-			StringTokenizer st = new StringTokenizer(texto, ",')}");
+			String textoAuxiliar = texto.substring(PREFIX.length());
+			StringTokenizer st = new StringTokenizer(textoAuxiliar, ",')}");
 			List<Integer> values = new ArrayList<Integer>();
 			ret.put(st.nextToken(), values);
 			while(st.hasMoreTokens()) {
@@ -355,10 +355,10 @@ public class VariableAccessHandler implements Serializable {
 	}
 
 	public void setLabel(String label) {
-		label = label.trim();
-		if (! label.equals(this.label) && !"".equals(label)) {
-			this.label = label;
-			JbpmUtil.instance().storeLabel(name, label);
+		String labelAuxiliar = label.trim();
+		if (! labelAuxiliar.equals(this.label) && !"".equals(labelAuxiliar)) {
+			this.label = labelAuxiliar;
+			JbpmUtil.instance().storeLabel(name, labelAuxiliar);
 		}
 	}
 

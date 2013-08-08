@@ -26,7 +26,7 @@ public class ItemTipoDocumentoList extends EntityList<ItemTipoDocumento> {
 	private static final String R1 = "o.localizacao = #{localizacaoHome.instance}";
 	 
 	protected void addSearchFields() {
-		addSearchField("localizacao", SearchCriteria.igual, R1);
+		addSearchField("localizacao", SearchCriteria.IGUAL, R1);
 	}
 
 	protected Map<String, String> getCustomColumnsOrder() {

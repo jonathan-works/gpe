@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
@@ -24,10 +26,11 @@ import br.com.itx.util.EntityUtil;
 public class Menu implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(Menu.class);
 
-    protected List<MenuItem> bookmark = new ArrayList<MenuItem>();
+    private List<MenuItem> bookmark = new ArrayList<MenuItem>();
 
-    protected List<MenuItem> dropMenus;
+    private List<MenuItem> dropMenus;
 
     /**
      * Flag para indicar que as páginas já foram verificadas Isso ocorre apenas
@@ -65,7 +68,7 @@ public class Menu implements Serializable {
                     buildItem(key, url);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error(".setItems()", e);
                 ok = false;
                 break;
             }
@@ -111,11 +114,9 @@ public class Menu implements Serializable {
         }
     }
 
-    protected void buildItem(String key, String url) throws Exception {
-        if (key.startsWith("/")) {
-            key = key.substring(1);
-        }
-        String[] groups = key.split("/");
+    protected void buildItem(String key, String url) {
+        String formatedKey = getFormatedKey(key);
+        String[] groups = formatedKey.split("/");
         MenuItem parent = new MenuItem(null);
         for (int i = 0; i < groups.length; i++) {
             String label = groups[i];
@@ -143,6 +144,14 @@ public class Menu implements Serializable {
         }
     }
 
+    private String getFormatedKey(String key) {
+        if (key.startsWith("/")) {
+            return key.substring(1);
+        } else {
+            return key;
+        }
+    }
+
     public List<MenuItem> getBookmark() {
         return bookmark;
     }
@@ -153,17 +162,6 @@ public class Menu implements Serializable {
 
     public void clearMenu() {
         Contexts.removeFromAllContexts("mainMenu");
-    }
-
-    public static void main(String[] args) {
-        List<String> items = new ArrayList<String>();
-        items.add("Empresa 1:url.empresa1");
-        items.add("/Cadastro/1/Empresa 2:url.empresa2");
-        items.add("/Cadastro/2/Empresa 3:url.empresa3");
-        items.add("/Cadastro/2/Empresa 4:url.empresa4");
-        Menu m = new Menu();
-        m.setItems(items);
-        System.out.println(m.dropMenus);
     }
 
 }

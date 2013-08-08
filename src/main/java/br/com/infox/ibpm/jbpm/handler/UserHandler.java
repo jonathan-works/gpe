@@ -37,7 +37,7 @@ import br.com.itx.util.EntityUtil;
 public class UserHandler {
     private static final LogProvider LOG = Logging
             .getLogProvider(UserHandler.class);
-    public final static String NAME = "userHandler";
+    public static final String NAME = "userHandler";
     
     private Integer idProcesso;
     private TaskInstance taskInstance;

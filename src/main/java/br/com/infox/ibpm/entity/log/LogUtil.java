@@ -17,6 +17,7 @@ package br.com.infox.ibpm.entity.log;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,10 +48,15 @@ import br.com.itx.component.MeasureTime;
 import br.com.itx.util.EntityUtil;
 
 
-public class LogUtil {
+public final class LogUtil {
 
-	private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
+	private static final int MAX_SMALL_FIELD_LIMIT = 300;
+    private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
 	private static final LogProvider LOG = Logging.getLogProvider(LogUtil.class);
+	
+	private LogUtil(){
+	    super();
+	}
 
 	/**
 	 * Checa se a classe é um array de bytes.
@@ -69,7 +75,7 @@ public class LogUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean isBinario(Object entidade, String nomeAtributo) throws Exception {
+	public static boolean isBinario(Object entidade, String nomeAtributo) {
 		Class<?> classAtributo = getType(entidade, nomeAtributo);
 		return isBinario(classAtributo);
 	}
@@ -86,7 +92,7 @@ public class LogUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean isCollection(Object entidade, String nomeAtributo) throws Exception {
+	public static boolean isCollection(Object entidade, String nomeAtributo) {
 		Class<?> classAtributo = getType(entidade, nomeAtributo);
 		return isCollectionClass(classAtributo);
 	}
@@ -102,15 +108,20 @@ public class LogUtil {
 	 * @param entidade
 	 * @param nomeAtributo
 	 * @return
+	 * @throws InstantiationException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
 	 * @throws Exception
 	 */
-	public static boolean isSmallField(Object entidade, String nomeAtributo) throws Exception {
+	public static boolean isSmallField(Object entidade, String nomeAtributo) 
+	        throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
 		Class<?> classAtributo = getType(entidade, nomeAtributo);
 		if (String.class.equals(classAtributo)) {
 			PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(
 					entidade.getClass().newInstance(), nomeAtributo);	
 			Size lengthAnnotation = pd.getReadMethod().getAnnotation(Size.class);
-			return lengthAnnotation != null && lengthAnnotation.max() <= 300;
+			return lengthAnnotation != null && lengthAnnotation.max() <= MAX_SMALL_FIELD_LIMIT;
 		} else {
 			return !isBinario(classAtributo);
 		}
@@ -207,7 +218,7 @@ public class LogUtil {
 			LOG.info("toStringFields(Object component): " + t.getTime());
 			return builder.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".toStringFields()", e);
 			return "";
 		}
 	}

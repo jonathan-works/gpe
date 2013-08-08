@@ -74,7 +74,7 @@ public class ProcessDeployVerifier {
 				transaction = null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".init()", e);
 		}
 		GraphSession graphSession = JbpmUtil.getGraphSession();
 		List<ProcessDefinition> definitions = graphSession.findLatestProcessDefinitions();
@@ -84,27 +84,29 @@ public class ProcessDeployVerifier {
 		}
 		List<Fluxo> list = EntityUtil.getEntityList(Fluxo.class);
 		for (Fluxo f : list) {
-			if (f.getAtivo() && f.getPublicado() && f.getXml() != null && !"".equals(f.getXml())) {
-				if (!processNames.contains(f.getFluxo())) {
-					ProcessDefinition instance = parseInstance(f.getXml());
-					instance.setName(f.getFluxo());
-					graphSession.deployProcessDefinition(instance);
-					JbpmUtil.getJbpmSession().flush();
-					Events.instance().raiseEvent(ProcessBuilder.POST_DEPLOY_EVENT, 
-							instance);
-					LOG.info(MessageFormat.format("Publicando fluxo {0}", f.getFluxo()));
-				}
+			if (verify(processNames, f)) {
+				ProcessDefinition instance = parseInstance(f.getXml());
+				instance.setName(f.getFluxo());
+				graphSession.deployProcessDefinition(instance);
+				JbpmUtil.getJbpmSession().flush();
+				Events.instance().raiseEvent(ProcessBuilder.POST_DEPLOY_EVENT, 
+						instance);
+				LOG.info(MessageFormat.format("Publicando fluxo {0}", f.getFluxo()));
 			}
 		}
 		if (transaction != null) {
 			try {
 				transaction.commit();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".init()", e);
 			}
 		}
 		LOG.info(MessageFormat.format("Tempo de publicacao: {0}", (new Date().getTime() - time)));
 	}
+
+    private boolean verify(List<String> processNames, Fluxo f) {
+        return f.getAtivo() && f.getPublicado() && f.getXml() != null && !"".equals(f.getXml()) && !processNames.contains(f.getFluxo());
+    }
 
 	private ProcessDefinition parseInstance(String xml) {
 	    StringReader stringReader = new StringReader(xml);

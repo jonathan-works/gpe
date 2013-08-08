@@ -139,15 +139,15 @@ public class LocalizacaoAssignment implements Serializable {
 	}
 
 	public static String[] parse(String expression) {
-		if(expression == null) {
+	    String auxiliarExpression = expression;
+		if(auxiliarExpression == null) {
 			return null;
 		}
-		expression = expression.substring(expression.indexOf("(") + 1);
-		expression = expression.replaceAll("'", "");
-		expression = expression.replace(")", "");
-		expression = expression.replace("}", "");
-		String[] localPapel = expression.split(",");
-		return localPapel;
+		auxiliarExpression = auxiliarExpression.substring(auxiliarExpression.indexOf('(') + 1);
+		auxiliarExpression = auxiliarExpression.replaceAll("'", "");
+		auxiliarExpression = auxiliarExpression.replace(")", "");
+		auxiliarExpression = auxiliarExpression.replace("}", "");
+		return auxiliarExpression.split(",");
 	}
 	
 	public void setPooledActors(String expression) {
@@ -161,7 +161,7 @@ public class LocalizacaoAssignment implements Serializable {
 			this.currentTaskInstance = context.getTaskInstance();
 			getPooledActors(expression);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+		    LOG.error(".onTaskCreate", ex);
 			String action = "inserir processo localização: ";
 			LOG.warn(action, ex);
 			throw new AplicationException(AplicationException.

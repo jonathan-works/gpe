@@ -39,12 +39,4 @@ public class PropertyMap<K,V> extends LinkedHashMap<K,V> {
 		}
 		return o;
 	}
-	
-	public static void main(String[] args) {
-		PropertyMap prop = new PropertyMap<String, Object>();
-		String key = "required";
-		prop.put(key, "#{true}");
-		System.out.println(prop.get(key));
-	}
-
 }

@@ -163,9 +163,10 @@ public class DecisionNode extends Node {
 			if (decisionDelegation != null) {
 				DecisionHandler decisionHandler = (DecisionHandler) decisionDelegation
 						.getInstance();
-				if (decisionHandler == null)
+				if (decisionHandler == null) {
 					decisionHandler = (DecisionHandler) decisionDelegation
 							.instantiate();
+				}
 
 				String transitionName = decisionHandler
 						.decide(executionContext);
@@ -201,8 +202,9 @@ public class DecisionNode extends Node {
 						String transitionName = decisionCondition
 								.getTransitionName();
 						transition = getLeavingTransition(transitionName);
-						if (transition != null)
+						if (transition != null) {
 							break;
+						}
 					}
 				}
 			} else {
@@ -232,9 +234,9 @@ public class DecisionNode extends Node {
 		if (transition == null) {
 			transition = getDefaultLeavingTransition();
 
-			if (transition == null)
-				throw new JbpmException("decision cannot select transition: "
-						+ this);
+			if (transition == null) {
+				throw new JbpmException("decision cannot select transition: " + this);
+			}
 
 			log.debug("decision did not select transition, taking default "
 					+ transition);

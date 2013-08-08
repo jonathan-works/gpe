@@ -30,9 +30,10 @@ public class CustomResourceResolver extends DefaultResourceResolver
         {
             if (resource.startsWith("/"))
             {
-                resource = resource.substring(1);
+                return Thread.currentThread().getContextClassLoader().getResource(resource.substring(1));
+            } else {
+                return Thread.currentThread().getContextClassLoader().getResource(resource);
             }
-            resourceUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
         }
         return resourceUrl;
     }

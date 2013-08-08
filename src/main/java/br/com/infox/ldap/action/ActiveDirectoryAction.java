@@ -38,8 +38,10 @@ import br.com.itx.util.ComponentUtil;
 @AutoCreate
 public class ActiveDirectoryAction implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+	private static final int NUMBER_OF_PAGE_ELEMENTS = 20;
+    private static final long serialVersionUID = 1L;
 	public static final String NAME = "activeDirectoryAction";
+	private static final LogProvider LOG = Logging.getLogProvider(ActiveDirectoryAction.class);
 	private UsuarioLogin entity = new UsuarioLogin();
 	private UsuarioLogin instance = new UsuarioLogin();
 	private Endereco endereco;
@@ -131,7 +133,7 @@ public class ActiveDirectoryAction implements Serializable{
 	
 	public ListPaginator<UsuarioLogin> getUsuariosADList() {
 		if (usuariosADList == null) {
-			usuariosADList = new ListPaginator<UsuarioLogin>(listarUsuariosAD(), 20);
+			usuariosADList = new ListPaginator<UsuarioLogin>(listarUsuariosAD(), NUMBER_OF_PAGE_ELEMENTS);
 		}
 		return usuariosADList;
 	}
@@ -172,7 +174,8 @@ public class ActiveDirectoryAction implements Serializable{
 			}
 			results.close();
 		} catch (Exception e) {
-			System.err.println("[######] Erro ao preencher usuário AD [######]");
+			LOG.error("[######] Erro ao preencher usuário AD [######]");
+			LOG.error(".listarUsuariosAD()", e);
 			LdapUtil.exibirMenssagemLDAP();
 		}
 		return usuarios;

@@ -18,8 +18,6 @@ package br.com.infox.converter;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.util.Strings;
@@ -37,11 +35,12 @@ public class StringConverter implements Converter {
 			{(char) 8220, '"'},
 			{(char) 28, '"'},
 			{(char) 29, '"'},
-			{(char) 8594, '-'} ////referente ao caractere: flecha
+			//referente ao caractere: flecha
+			{(char) 8594, '-'}
 	};
 
 	@Override
-	public Object getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException {
+	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		String saida = value;
 		for (char[] tupla : replaceCharTable) {
 			saida = saida.replace(tupla[0], tupla[1]);
@@ -50,7 +49,7 @@ public class StringConverter implements Converter {
 	}
 
 	@Override
-	public String getAsString(FacesContext context, UIComponent component, Object value) throws ConverterException {
+	public String getAsString(FacesContext context, UIComponent component, Object value) {
 		return value == null ? null : value.toString();
 	}
 	

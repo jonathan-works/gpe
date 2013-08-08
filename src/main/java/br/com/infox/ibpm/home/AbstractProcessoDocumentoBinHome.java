@@ -24,6 +24,8 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.ibpm.entity.ProcessoDocumento;
@@ -35,10 +37,12 @@ import br.com.itx.util.Crypto;
 public abstract class AbstractProcessoDocumentoBinHome<T>
 		extends	AbstractHome<ProcessoDocumentoBin> {
 
-	private static final long serialVersionUID = 1L;
+	private static final int TAMANHO_MAXIMO_ARQUIVO = 1572864;
+    private static final long serialVersionUID = 1L;
 	private ProcessoDocumento processoDocumento;
 	private boolean isModelo;
 	private boolean ignoraConteudoDocumento = Boolean.FALSE;
+	private static final LogProvider LOG = Logging.getLogProvider(AbstractProcessoDocumentoBinHome.class);
 	
 	public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
 		this.processoDocumento = processoDocumento;
@@ -145,7 +149,7 @@ public abstract class AbstractProcessoDocumentoBinHome<T>
 					"O documento deve ser do tipo PDF.");
 			return false;
 		}
-		if(file.getSize() != null && file.getSize() > 1572864){
+		if(file.getSize() != null && file.getSize() > TAMANHO_MAXIMO_ARQUIVO){
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
 					"O documento deve ter o tamanho máximo de 1.5MB!");
 			return false;
@@ -215,7 +219,7 @@ public abstract class AbstractProcessoDocumentoBinHome<T>
 			file.setData( DocumentoBinHome.instance().getData(getInstance().getIdProcessoDocumentoBin()) );
 		} catch (Exception e) {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao descarregar o documento.");
-			e.printStackTrace();
+			LOG.error(".exportData()", e);
 		}
 		Contexts.getConversationContext().set("fileHome", file);
 	}

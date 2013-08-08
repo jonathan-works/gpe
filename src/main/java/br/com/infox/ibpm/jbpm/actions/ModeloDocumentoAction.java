@@ -16,6 +16,7 @@
 package br.com.infox.ibpm.jbpm.actions;
 
 import java.util.List;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -27,7 +28,6 @@ import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.jbpm.ActionTemplate;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
-import br.com.infox.ibpm.manager.VariavelManager;
 import br.com.itx.component.Util;
 
 @Name(ModeloDocumentoAction.NAME)
@@ -40,8 +40,6 @@ public class ModeloDocumentoAction extends ActionTemplate {
 	
 	@In
 	private ModeloDocumentoManager modeloDocumentoManager;
-	
-	@In private VariavelManager variavelManager;
 	
 	private ModeloDocumento modeloJbpm;
 	
@@ -81,15 +79,15 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		if (expression == null || "".equals(expression)) {
 			return;
 		}
-		parameters = getExpressionParameters(expression);
-		if (parameters.length > 0) {
+		setParameters(getExpressionParameters(expression));
+		if (getParameters().length > 0) {
 			ProcessBuilder.instance().getTaskFitter().getCurrentTask().setCurrentVariable(
-					(String) parameters[0]);
+					(String) getParameters()[0]);
 		}
 	}
 
 	public void set(String variavel, int... idModeloDocumento) {
-		variavel += "Modelo";
+		String variavelModelo = variavel + "Modelo";
 		StringBuilder s = new StringBuilder();
 		for (int i : idModeloDocumento) {
 			if (s.length() != 0) {
@@ -97,11 +95,11 @@ public class ModeloDocumentoAction extends ActionTemplate {
 			}
 			s.append(i);
 		}
-		Object valor = JbpmUtil.getProcessVariable(variavel);
+		Object valor = JbpmUtil.getProcessVariable(variavelModelo);
 		if (valor == null) {
-			JbpmUtil.createProcessVariable(variavel, s.toString());
+			JbpmUtil.createProcessVariable(variavelModelo, s.toString());
 		} else {
-			JbpmUtil.setProcessVariable(variavel, valor + "," + s.toString());
+			JbpmUtil.setProcessVariable(variavelModelo, valor + "," + s.toString());
 		}
 	}
 

@@ -26,9 +26,9 @@ public class CnaeList extends EntityList<Cnae> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("codCnae", SearchCriteria.igual);
-		addSearchField("descricaoCnae", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("codCnae", SearchCriteria.IGUAL);
+		addSearchField("descricaoCnae", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 	
 	@Override

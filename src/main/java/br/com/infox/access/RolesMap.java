@@ -12,6 +12,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Reflections;
@@ -22,7 +24,8 @@ import org.jboss.seam.util.Reflections;
 @Startup
 public class RolesMap {
 
-	public final static String NAME = "rolesMap";
+	public static final String NAME = "rolesMap";
+	private static final LogProvider LOG = Logging.getLogProvider(RolesMap.class);
 	
 	private Map<String,Set<String>> roles = new HashMap<String, Set<String>>();
 
@@ -53,7 +56,7 @@ public class RolesMap {
 					IdentityManager.instance().getIdentityStore(),
 					role, roleSet);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".getChildren()", e);
 		}
 		return roleSet;
 	}

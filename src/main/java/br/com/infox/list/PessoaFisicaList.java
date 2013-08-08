@@ -26,10 +26,10 @@ public class PessoaFisicaList extends EntityList<PessoaFisica>{
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("cpf", SearchCriteria.contendo);
-		addSearchField("nome", SearchCriteria.contendo);
-		addSearchField("dataNascimento", SearchCriteria.dataIgual);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("cpf", SearchCriteria.CONTENDO);
+		addSearchField("nome", SearchCriteria.CONTENDO);
+		addSearchField("dataNascimento", SearchCriteria.DATA_IGUAL);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	@Override

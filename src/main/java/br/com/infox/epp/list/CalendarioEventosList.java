@@ -26,11 +26,11 @@ public class CalendarioEventosList extends EntityList<CalendarioEventos> {
 	 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("descricaoEvento", SearchCriteria.contendo);
-		addSearchField("localizacao", SearchCriteria.igual);
-		addSearchField("dia", SearchCriteria.igual);
-		addSearchField("mes", SearchCriteria.igual);
-		addSearchField("ano", SearchCriteria.igual);
+		addSearchField("descricaoEvento", SearchCriteria.CONTENDO);
+		addSearchField("localizacao", SearchCriteria.IGUAL);
+		addSearchField("dia", SearchCriteria.IGUAL);
+		addSearchField("mes", SearchCriteria.IGUAL);
+		addSearchField("ano", SearchCriteria.IGUAL);
 	}
 
 	@Override

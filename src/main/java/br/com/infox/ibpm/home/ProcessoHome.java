@@ -29,7 +29,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
@@ -44,6 +43,7 @@ import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
+import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -59,7 +59,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	@In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
 	
 	@In private ProcessoManager processoManager;
-	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoEpaManager processoEpaManager;
 
 	private ModeloDocumento modeloDocumento;
@@ -165,14 +164,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	private String getDescricaoModeloDocumentoFluxoByValue(Object value, String modeloDocumentoFluxo) {
-		if(value == null) {
-			value = modeloDocumentoFluxo;
-			if(value == null) {
-				value = "";
-			}
-		}
-		String modeloDocumento = String.valueOf(value);
-		if (!Strings.isEmpty(modeloDocumentoFluxo) && modeloDocumento != modeloDocumentoFluxo){
+	    String modeloDocumento = getValueOfModeloDocumento(value, modeloDocumentoFluxo);
+		if (!Strings.isEmpty(modeloDocumentoFluxo) && !modeloDocumento.equals(modeloDocumentoFluxo)){
 			modeloDocumento = modeloDocumentoFluxo;
 		}
 		if (Strings.isEmpty(modeloDocumento)){
@@ -180,6 +173,18 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		}
 		return modeloDocumento;
 	}
+
+    private String getValueOfModeloDocumento(Object value, String modeloDocumentoFluxo) {
+        String modeloDocumento;
+        if (value != null){
+		    modeloDocumento = String.valueOf(value);
+		} else if (modeloDocumentoFluxo != null) {
+		    modeloDocumento = modeloDocumentoFluxo;
+		} else {
+		    modeloDocumento = "";
+		}
+        return modeloDocumento;
+    }
 
 	private void gravarAlteracoes(ProcessoDocumento processoDocumento, ProcessoDocumentoBin processoDocumentoBin) {
 		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
@@ -209,8 +214,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	//Método para Inserir o documento do fluxo
 	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
 		if (validacaoCertificadoBemSucedida(assinado)) {
-			value = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
-			ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(value, certChain, signature);
+			Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
+			ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue, certChain, signature);
 			ProcessoDocumento doc = processoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
 			getEntityManager().flush();
 	        setIdProcessoDocumento(doc.getIdProcessoDocumento());
@@ -458,14 +463,14 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return String.valueOf(idProcesso);
 	}
 	
-	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws Exception {
+	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) {
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
 			limparAssinatura();
-			throw new Exception("O cadastro do usuário não está assinado.");
+			throw new AplicationException("O cadastro do usuário não está assinado.");
 		}
 		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
 			limparAssinatura();
-			throw new Exception("O certificado não é o mesmo do cadastro do usuario");
+			throw new AplicationException("O certificado não é o mesmo do cadastro do usuario");
 		}
 		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
 		//TODO esperando Tássio verificar (21 de março de 2013)

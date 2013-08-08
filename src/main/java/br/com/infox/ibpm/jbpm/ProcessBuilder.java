@@ -32,6 +32,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
@@ -57,6 +59,7 @@ import br.com.itx.util.EntityUtil;
 public class ProcessBuilder implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
 
 	public static final String NAME = "processBuilder";
 	public static final String POST_DEPLOY_EVENT = "postDeployEvent";
@@ -135,7 +138,7 @@ public class ProcessBuilder implements Serializable {
 				instance.setName(fluxo.getFluxo());
 				processBuilderGraph.clear();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".load()", e);
 			}
 			exists = true;
 			this.id = newId;
@@ -199,7 +202,7 @@ public class ProcessBuilder implements Serializable {
 				FacesMessages.instance().clear();
 				FacesMessages.instance().add("Fluxo publicado com sucesso!");
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".deploy()", e);
 			}
 			needToPublic = false;
 		}
@@ -276,7 +279,7 @@ public class ProcessBuilder implements Serializable {
 			try {
 				createInstance();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".setId()", e);
 			}
 		}
 	}
@@ -345,7 +348,7 @@ public class ProcessBuilder implements Serializable {
 		return typeFitter;
 	}
 
-	public void getPaintedGraph() throws AbortProcessingException{
+	public void getPaintedGraph() {
 		try {
 			getProcessBuilderGraph().paintGraph();
 		} catch (IOException e) {

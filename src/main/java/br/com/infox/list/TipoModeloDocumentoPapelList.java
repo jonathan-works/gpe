@@ -26,7 +26,7 @@ public class TipoModeloDocumentoPapelList extends
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("tipoModeloDocumento", SearchCriteria.igual, R1);
+		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL, R1);
 
 	}
 

@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -38,7 +37,6 @@ import br.com.itx.util.ComponentUtil;
 
 
 @Name(VariableHandler.NAME)
-@BypassInterceptors
 public class VariableHandler implements Serializable {
 	private static final long serialVersionUID = -6777955765635127593L;
 	
@@ -46,17 +44,12 @@ public class VariableHandler implements Serializable {
 
 	private transient LogProvider log = Logging.getLogProvider(VariableHandler.class);
 	
-	private List<Variavel> variables;
-	private List<Variavel> taskVariables;
-	
 	public List<Variavel> getVariables(long taskId) {
-		variables = getVariables(taskId, false);
-		return variables;
+		return getVariables(taskId, false);
 	}
 
 	public List<Variavel> getTaskVariables(long taskId) {
-		taskVariables = getVariables(taskId, true);
-		return taskVariables;
+		return getVariables(taskId, true);
 	}
 
 	@SuppressWarnings("unchecked")

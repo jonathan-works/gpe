@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.dao;
 
-import javax.persistence.TransactionRequiredException;
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -17,7 +15,7 @@ public class TarefaJbpmDAO extends GenericDAO {
 	/**
 	 * Insere para cada tarefa na tabela de tb_tarefa todos os ids que esse já possuiu.
 	 */
-	public void inserirVersoesTarefas() throws IllegalStateException, TransactionRequiredException {
+	public void inserirVersoesTarefas() {
 		String hql = "insert into public.tb_tarefa_jbpm (id_tarefa, id_jbpm_task) " +
 						"select t.id_tarefa, jt.id_ from public.tb_tarefa t " +
 							"inner join public.tb_fluxo f using (id_fluxo) " +

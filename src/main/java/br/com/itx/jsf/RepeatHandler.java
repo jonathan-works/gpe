@@ -18,13 +18,10 @@ package br.com.itx.jsf;
 import java.io.IOException;
 import java.util.List;
 
-import javax.el.ELException;
 import javax.el.ValueExpression;
 import javax.el.VariableMapper;
-import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.view.facelets.FaceletContext;
-import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
@@ -41,7 +38,7 @@ public final class RepeatHandler extends TagHandler {
     }
 
     public void apply(FaceletContext ctx, UIComponent parent)
-            throws IOException, FacesException, FaceletException, ELException {
+            throws IOException {
                 
         ValueExpression srcVE = value.getValueExpression(ctx, Object.class);
         List list = (List)srcVE.getValue(ctx);

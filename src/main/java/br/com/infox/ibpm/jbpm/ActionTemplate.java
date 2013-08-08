@@ -17,6 +17,7 @@ package br.com.infox.ibpm.jbpm;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,9 +32,9 @@ public abstract class ActionTemplate implements Serializable {
 	
 	public static Set<Class<? extends ActionTemplate>> templates = new HashSet<Class<? extends ActionTemplate>>();
 
-	protected Object[] parameters;
+	private Object[] parameters;
 	
-	public abstract String getFileName();
+    public abstract String getFileName();
 	
 	public abstract String getExpression();
 
@@ -46,7 +47,7 @@ public abstract class ActionTemplate implements Serializable {
 		if (expression == null || expression.equals("")) {
 			return new String[0];
 		}
-		int i = expression.indexOf("(");
+		int i = expression.indexOf('(');
 		String texto = expression.substring(i + 1);
 		StringTokenizer st = new StringTokenizer(texto, ",')}");
 		List<String> list = new ArrayList<String>();
@@ -61,6 +62,10 @@ public abstract class ActionTemplate implements Serializable {
 	public Object[] getParameters() {
 		return parameters;
 	}
+	
+	protected void setParameters(Object[] parameters) {
+        this.parameters = Arrays.copyOf(parameters, parameters.length);
+    }
 
 	public boolean isPublic() {
 		return true;

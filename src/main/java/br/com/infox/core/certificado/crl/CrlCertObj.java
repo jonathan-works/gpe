@@ -145,7 +145,7 @@ public class CrlCertObj {
 				" crls listads pelo certificado: " + sb.toString());
 	}
 	
-	private File downloadTempFile(String url) throws Exception {
+	private File downloadTempFile(String url) throws IOException {
 		InputStream inputStream = UrlUtil.getInputStreamUrl(url);
 		String fileName = getFileName(url);
 		File f = File.createTempFile(fileName, ".tmp");

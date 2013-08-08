@@ -10,7 +10,11 @@ import br.com.infox.core.certificado.crl.CrlCheckException;
 import br.com.infox.core.certificado.crl.jobs.LoginCrlCertTestJobActionListner;
 import br.com.infox.core.certificado.util.DigitalSignatureUtils;
 
-public class VerificaCertificado {
+public final class VerificaCertificado {
+    
+    private VerificaCertificado(){
+        super();
+    }
 	
 	private static final LogProvider LOG = Logging.getLogProvider(VerificaCertificado.class);
 	

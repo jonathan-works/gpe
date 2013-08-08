@@ -28,7 +28,7 @@ import br.com.infox.access.entity.UsuarioLogin;
 @BypassInterceptors
 public class EMailData {
 	
-	public final static String NAME = "emailData";
+	public static final String NAME = "emailData";
 	
 	private String fromName;
 	private String fromAdress;

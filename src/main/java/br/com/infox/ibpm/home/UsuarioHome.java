@@ -49,7 +49,8 @@ import br.com.itx.util.EntityUtil;
 @Name(UsuarioHome.NAME)
 public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 
-	public static final String AFTER_SET_USUARIO_LOCALIZACAO_ATUAL_EVENT = "br.com.infox.ibpm.home.UsuarioHome.afterSetLocalizacaoAtual";
+	private static final int PASSWORD_LENGTH = 8;
+    public static final String AFTER_SET_USUARIO_LOCALIZACAO_ATUAL_EVENT = "br.com.infox.ibpm.home.UsuarioHome.afterSetLocalizacaoAtual";
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioHome";
 	public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
@@ -84,16 +85,16 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	 * Apaga a data de Expiração quando o Usário passa de Provisório para Permanente
 	 * */
 	private void validarPermanencia() {
-		if (!getInstance().getProvisorio())
-			getInstance().setDataExpiracao(null);
+		if (!getInstance().getProvisorio()) {
+		    getInstance().setDataExpiracao(null);
+		}
 	}
 
 	public UsuarioLogin checkUserByLogin(String login) {
 		Query query = getEntityManager().createNamedQuery(
 				UsuarioLogin.USUARIO_LOGIN_NAME);
 		query.setParameter(UsuarioLogin.PARAM_LOGIN, login);
-		UsuarioLogin usu = EntityUtil.getSingleResult(query);
-		return usu;
+		return EntityUtil.getSingleResult(query);
 	}
 
 	@Override
@@ -147,8 +148,9 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 		if (estavaBloqueado()) {
 			desbloquear();
 		}
-		if (getInstance().getBloqueio().equals(Boolean.TRUE))
-			bloquear();
+		if (getInstance().getBloqueio().equals(Boolean.TRUE)) {
+		    bloquear();
+		}
 		return super.update();
 	}
 	
@@ -293,7 +295,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	}
 
 	public void gerarNovaSenha(String parametro) {
-		password = RandomStringUtils.randomAlphabetic(8);
+		password = RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH);
 		getInstance().setSenha(password);
 		new RunAsOperation(true) {
 			@Override

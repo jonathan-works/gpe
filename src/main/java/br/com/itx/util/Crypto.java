@@ -24,6 +24,9 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 /**
  * Classe utilizada para criptogratia de textos.
  *
@@ -34,6 +37,8 @@ import javax.crypto.SecretKey;
  */
 public class Crypto {
     private SecretKey desKey;
+    
+    private static final LogProvider LOG = Logging.getLogProvider(Crypto.class);
 
     /**
      * Cria um novo Crypto.
@@ -49,7 +54,7 @@ public class Crypto {
             kg.init(sr);
             desKey = kg.generateKey();
         } catch (Exception err) {
-        	err.printStackTrace(System.err);
+            LOG.error(" new Crypto()", err);
             // Nunca deve ocorrer.
         }
     }
@@ -75,7 +80,7 @@ public class Crypto {
                     resp.append(Long.toString((int) enc[i] & 0xff, 16));
                 }
             } catch (Exception err) {
-                err.printStackTrace(System.err);
+                LOG.error(".encodeDES()", err);
                 // Nunca deve ocorrer.
             }
         }
@@ -106,7 +111,9 @@ public class Crypto {
             byte[] dec = cipher.doFinal(msg);
             return new String(dec).trim();
         } catch (Exception err) {
-        	System.err.println(err.getMessage() + " in password \"" + text + "\"");
+        	String message = err.getMessage() + " in password \"" + text + "\"";
+        	LOG.error(message);
+        	LOG.error(".descodeDES()", err);
         }
         return "";
     }
@@ -142,7 +149,7 @@ public class Crypto {
                     resp.append(Long.toString((int) hash[i] & 0xff, 16));
                 }
             } catch (NoSuchAlgorithmException err) {
-            	err.printStackTrace(System.err);
+                LOG.error(".encodeMD5()", err);
                 // Nunca deve ocorrer.
             }
         }

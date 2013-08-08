@@ -78,7 +78,7 @@ public final class HibernateUtil {
 	
 	public static Object removeProxy(Object object) {
 		if (object instanceof HibernateProxy) {
-			object = ((HibernateProxy) object).getHibernateLazyInitializer().getImplementation();
+			return ((HibernateProxy) object).getHibernateLazyInitializer().getImplementation();
 		}
 		return object;
 	}

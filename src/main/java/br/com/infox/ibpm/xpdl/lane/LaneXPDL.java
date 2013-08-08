@@ -9,7 +9,7 @@ import org.jdom.Element;
 import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
 import br.com.infox.ibpm.xpdl.element.ElementXPDL;
 
-public class LaneXPDL extends ElementXPDL {
+public final class LaneXPDL extends ElementXPDL {
 	
 	private static final long serialVersionUID = 1L;
 	private Swimlane swimlane;

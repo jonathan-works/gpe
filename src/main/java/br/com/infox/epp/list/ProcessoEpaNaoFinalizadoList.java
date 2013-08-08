@@ -39,7 +39,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("fluxo", SearchCriteria.igual, R1);
+		addSearchField("fluxo", SearchCriteria.IGUAL, R1);
 	}
 
 	@Override
@@ -57,11 +57,6 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 		return null;
 	}
 	
-	@Override
-	public void setOrderedColumn(String order) {
-		setOrder(order);
-	}
-
 	public Fluxo getFluxo() {
 		if (fluxoName != null && fluxo == null) {
 			Query q = EntityUtil.createQuery("select o from Fluxo o where o.fluxo = :name");

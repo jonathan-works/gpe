@@ -24,7 +24,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import br.com.infox.ibpm.component.suggest.GrupoModeloDocumentoSuggestBean;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.ItemTipoDocumento;
-import br.com.infox.ibpm.entity.Localizacao;
 import br.com.itx.util.EntityUtil;
 
 
@@ -36,12 +35,8 @@ public class ItemTipoDocumentoHome
 
 	private static final long serialVersionUID = 1L;
 	
-	@SuppressWarnings("unused")
-	private Localizacao localizacao;	
-	
 	public void set(ItemTipoDocumento itemTipoDocumento) {
 		instance = itemTipoDocumento;
-		localizacao = instance.getLocalizacao();
 		getGrupoModeloSuggest().setInstance(instance.getGrupoModeloDocumento());
 	}
 

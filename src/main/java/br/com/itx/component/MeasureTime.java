@@ -17,7 +17,7 @@ package br.com.itx.component;
 
 import org.jboss.util.StopWatch;
 
-public class MeasureTime {
+public final class MeasureTime {
 	private StopWatch watch;
 
 	public MeasureTime() {
@@ -42,10 +42,6 @@ public class MeasureTime {
 	
 	public long getTime() {
 		return watch.getTime();
-	}
-	
-	public void print(String msg) {
-		System.out.println(msg + ". Tempo decorrido: " + watch.getTime());
 	}
 	
 	public void reset() {

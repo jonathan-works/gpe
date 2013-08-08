@@ -22,7 +22,7 @@ import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
 import br.com.infox.core.certificado.util.DigitalSignatureUtils;
 
-public class DadosCertificado {
+public final class DadosCertificado {
 
 	public static final String PJ_NOME = "PJ_NOME";
 	public static final String PJ_INSS = "PJ_INSS";

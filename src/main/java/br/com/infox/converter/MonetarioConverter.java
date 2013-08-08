@@ -35,36 +35,35 @@ import org.jboss.seam.util.Strings;
 @BypassInterceptors
 public class MonetarioConverter implements Converter {
 	
-	private static final NumberFormat formatter;
+	private static final NumberFormat FORMATTER;
 	private static final String SYMBOL;
 	
 	static {
-		 formatter = NumberFormat.getCurrencyInstance();
-		 SYMBOL = formatter.getCurrency().getSymbol();
+		 FORMATTER = NumberFormat.getCurrencyInstance();
+		 SYMBOL = FORMATTER.getCurrency().getSymbol();
 	}
 	
 	@Override
-	public Object getAsObject(FacesContext context, UIComponent component,
-			String value) throws ConverterException {
+	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		if (Strings.isEmpty(value)) {
 			return null;
 		}
+		String newValue = value;
 		if (!value.startsWith(SYMBOL)) {
-			value = SYMBOL + " " + value;
+			newValue = SYMBOL + " " + value;
 		}
 		Double valor = null;
 		try {
-			valor = formatter.parse(value).doubleValue();
+			valor = FORMATTER.parse(newValue).doubleValue();
 		} catch (Exception e) {
-			throw new ConverterException(new FacesMessage("Formato inválido: " + value), e);
+			throw new ConverterException(new FacesMessage("Formato inválido: " + newValue), e);
 		}
 		return valor;
 	}
 
 	@Override
-	public String getAsString(FacesContext context, UIComponent component,
-			Object value) throws ConverterException {
-		return value == null ? null : formatter.format(value);
+	public String getAsString(FacesContext context, UIComponent component, Object value) {
+		return value == null ? null : FORMATTER.format(value);
 	}
 	
 }

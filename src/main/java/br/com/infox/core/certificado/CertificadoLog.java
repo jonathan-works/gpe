@@ -14,14 +14,18 @@ import java.util.Date;
 import br.com.itx.component.Util;
 import br.com.itx.util.FileUtil;
 
-public class CertificadoLog {
+public final class CertificadoLog {
 	private static final String FILE_NAME = "certificado.log";
 	private static final char BARRA = File.separatorChar;
 	private static final String BR = System.getProperty("line.separator");
 	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
 	private static File logFileDir;
+	
+	private CertificadoLog(){
+	    super();
+	}
 	 
-	private synchronized static void initLogDir() throws IOException {
+	private static synchronized void initLogDir() throws IOException {
 		if (logFileDir == null || !logFileDir.exists()) {
 			logFileDir = new File(getLogDir() + getFilename());
 			if (!logFileDir.exists()) {
@@ -66,7 +70,7 @@ public class CertificadoLog {
 		}
 	}	
 	
-	public static String getTextLogFile() throws Exception {
+	public static String getTextLogFile() throws IOException {
 		initLogDir();
 		if (logFileDir != null && logFileDir.exists()) {
 			Reader r = null;

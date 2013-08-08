@@ -83,15 +83,17 @@ public class JbpmUtil {
 		SwimlaneInstance swimlaneInstance = task.getSwimlaneInstance();
 		if (swimlaneInstance != null) {
 			String expression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
-			if (expression == null) return null; 
+			if (expression == null) {
+			    return null; 
+			}
 			//TODO: verificar se pode ser dado um tratamento melhor
-			String localizacaoId = expression.substring(expression.indexOf("(") + 1);
-			localizacaoId = localizacaoId.substring(0, localizacaoId.lastIndexOf(")"));
-			if (localizacaoId.indexOf(":") > 0) {
+			String localizacaoId = expression.substring(expression.indexOf('(') + 1);
+			localizacaoId = localizacaoId.substring(0, localizacaoId.lastIndexOf(')'));
+			if (localizacaoId.indexOf(':') > 0) {
 				localizacaoId = localizacaoId.replaceAll("'", "");
 				localizacaoId = localizacaoId.split(":")[0];
 			}
-			return EntityUtil.find(Localizacao.class, new Integer(localizacaoId));
+			return EntityUtil.find(Localizacao.class, Integer.valueOf(localizacaoId));
 		}
 		return null;
 	}
@@ -344,8 +346,8 @@ public class JbpmUtil {
 	
 	public String getNomeTarefaAnteriorFromCurrentExecutionContext() {
 		Transition transition = getCurrentTransition();
-		Node from = null;
-		if (transition != null && (from = transition.getFrom()) != null) {
+		Node from = transition.getFrom();
+		if (transition != null && from != null) {
 			return from.getName();
 		}
 		return null;

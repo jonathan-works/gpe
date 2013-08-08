@@ -250,30 +250,29 @@ public class CertificadosCaCheckManager {
 		}
 		if (dirURL.getProtocol().equals("jar")) {
 			/* A JAR path */
-			String jarPath = dirURL.getPath().substring(5,
-					dirURL.getPath().indexOf("!")); // strip out only the JAR
-													// file
+		    // strip out only the JAR file
+			String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!"));
 			JarFile jar = null;
 			Enumeration<JarEntry> entries = null;
 			try {
 				jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
-				entries = jar.entries(); // gives ALL entries
+				// gives ALL entries
+				entries = jar.entries();
 			} finally {
 				FileUtil.close(jar);
 			}
-															// in jar
-			List<URL> result = new ArrayList<URL>(); // avoid duplicates in case
-														// it is a subdirectory
+			
+			// in jar avoid duplicates in case it is a subdirectory
+			List<URL> result = new ArrayList<URL>(); 
+														
 			while (entries != null && entries.hasMoreElements()) {
 				String name = entries.nextElement().getName();
-				if (name.startsWith(path) && !name.equals(path)
-						&& name.matches(pattern)) { // filter according to the
-													// path
+				if (name.startsWith(path) && !name.equals(path) && name.matches(pattern)) { 
+				    // filter according to the path
 					String entry = name.substring(path.length());
-					int checkSubdir = entry.indexOf("/");
+					int checkSubdir = entry.indexOf('/');
 					if (checkSubdir >= 0) {
-						// if it is a subdirectory, we just return the directory
-						// name
+						// if it is a subdirectory, we just return the directory name
 						entry = entry.substring(0, checkSubdir);
 					}
 					URL u = new URL("jar:file:" + jarPath + "!/" + name);

@@ -19,6 +19,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -35,22 +37,24 @@ import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.jbpm.node.MailNode;
 import br.com.infox.jbpm.manager.JbpmNodeManager;
+import br.com.infox.util.constants.jbpm.NodeTypeConstants;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class NodeFitter extends Fitter implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 	public static final String NAME = "nodeFitter";
 	public static final String SET_CURRENT_NODE_EVENT = "NodeFitter.setCurrentNode";
+    private static final LogProvider LOG = Logging.getLogProvider(NodeFitter.class);
 
 	private List<Node> nodes;
 	private List<SelectItem> nodesItems;
 	private Map<Node, String> nodeMessageMap = new HashMap<Node, String>();
 	private Node oldNodeTransition;
 	private String newNodeName;
-	private String newNodeType = "Task";
+	private String newNodeType = NodeTypeConstants.TASK;
 	private Node newNodeAfter;
 	private Node currentNode;
 	private NodeHandler nodeHandler;
@@ -62,13 +66,13 @@ public class NodeFitter extends Fitter implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void addNewNode() {
 		Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
-		ProcessDefinition processo = pb.getInstance();
+		ProcessDefinition processo = getProcessBuilder().getInstance();
 		if (nodeType != null) {
 			Node node = null;
 			try {
 				node = (Node) nodeType.newInstance();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error("addNewNode()", e);
 				return;
 			}
 			node.setName(newNodeName);
@@ -88,7 +92,7 @@ public class NodeFitter extends Fitter implements Serializable {
 			}
 			// insere o novo nó entre os nós da transição selecionada
 			// Se for EndState, liga apenas ao newNodeAfter
-			TransitionHandler newNodeTransition = pb.getTransitionFitter().getNewNodeTransition();
+			TransitionHandler newNodeTransition = getProcessBuilder().getTransitionFitter().getNewNodeTransition();
 			if (nodeType.equals(EndState.class)) {
 				Transition t = new Transition();
 				t.setFrom(newNodeAfter);
@@ -119,11 +123,11 @@ public class NodeFitter extends Fitter implements Serializable {
 			nodesItems = null;
 			setCurrentNode(node);
 			if (nodeType.equals(TaskNode.class)) {
-				pb.getTaskFitter().addTask();
+				getProcessBuilder().getTaskFitter().addTask();
 			}
-			pb.getTransitionFitter().clearNewNodeTransition();
-			pb.getTransitionFitter().clear();
-			pb.getTransitionFitter().checkTransitions();
+			getProcessBuilder().getTransitionFitter().clearNewNodeTransition();
+			getProcessBuilder().getTransitionFitter().clear();
+			getProcessBuilder().getTransitionFitter().checkTransitions();
 		}
 	}
 	
@@ -134,7 +138,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void removeNode(Node node) {
 		nodes.remove(node);
-		pb.getInstance().removeNode(node);
+		getProcessBuilder().getInstance().removeNode(node);
 		if (node.equals(currentNode)) {
 			currentNode = null;
 		}
@@ -161,19 +165,19 @@ public class NodeFitter extends Fitter implements Serializable {
 				}
 			}
 		}
-		pb.getTransitionFitter().checkTransitions();
+		getProcessBuilder().getTransitionFitter().checkTransitions();
 	}
 	
 	public void moveUp(Node node) {
 		int i = nodes.indexOf(node);
-		pb.getInstance().reorderNode(i, i - 1);
+		getProcessBuilder().getInstance().reorderNode(i, i - 1);
 		nodes = null;
 		nodesItems = null;
 	}
 
 	public void moveDown(Node node) {
 		int i = nodes.indexOf(node);
-		pb.getInstance().reorderNode(i, i + 1);
+		getProcessBuilder().getInstance().reorderNode(i, i + 1);
 		nodes = null;
 		nodesItems = null;
 	}
@@ -227,7 +231,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	public List<Node> getNodes() {
 		if (nodes == null) {
 			nodes = new ArrayList<Node>();
-			List<Node> list = pb.getInstance().getNodes();
+			List<Node> list = getProcessBuilder().getInstance().getNodes();
 			if (list != null) {
 				for (Node node : list) {
 					nodes.add(node);
@@ -254,7 +258,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	@SuppressWarnings("unchecked")
 	public List<SelectItem> getNodesItems() {
 		if (nodesItems == null) {
-			List<Node> list = pb.getInstance().getNodes();
+			List<Node> list = getProcessBuilder().getInstance().getNodes();
 			if (list != null) {
 				nodesItems = new ArrayList<SelectItem>();
 				nodesItems.add(new SelectItem(null, "Selecione uma tarefa..."));
@@ -296,7 +300,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		if (this.nodeName != null && !this.nodeName.equals(nodeName)) {
 			if (currentNode != null) {
 				currentNode.setName(nodeName);
-				BigInteger idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(pb.getIdProcessDefinition(), nodeName);
+				BigInteger idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(getProcessBuilder().getIdProcessDefinition(), nodeName);
 				if (idNodeModificado != null) {
 					modifiedNodes.put(idNodeModificado, nodeName);
 				}
@@ -317,12 +321,12 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 
 	public void setCurrentNode(Node cNode) {
-		TaskFitter tf = pb.getTaskFitter();
+		TaskFitter tf = getProcessBuilder().getTaskFitter();
 		Node lastNode = this.currentNode;
 		this.currentNode = cNode;
 		tf.getTasks();
 		tf.clear();
-		Map<Node, List<TaskHandler>> taskNodeMap = pb.getTaskNodeMap();
+		Map<Node, List<TaskHandler>> taskNodeMap = getProcessBuilder().getTaskNodeMap();
 		if (taskNodeMap != null && taskNodeMap.containsKey(cNode)) {
 			List<TaskHandler> list = taskNodeMap.get(cNode);
 			if (!list.isEmpty()) {
@@ -331,9 +335,9 @@ public class NodeFitter extends Fitter implements Serializable {
 			tf.setPrazoTasks(lastNode, cNode);
 		}
 		nodeHandler = new NodeHandler(cNode);
-		newNodeType = "Task";
-		pb.getTransitionFitter().clearArrivingAndLeavingTransitions();
-		pb.getTypeFitter().setTypeList(null);
+		newNodeType = NodeTypeConstants.TASK;
+		getProcessBuilder().getTransitionFitter().clearArrivingAndLeavingTransitions();
+		getProcessBuilder().getTypeFitter().setTypeList(null);
 		if (tf.getCurrentTask() != null) {
 			tf.getCurrentTask().clearHasTaskPage();
 		}
@@ -361,35 +365,35 @@ public class NodeFitter extends Fitter implements Serializable {
 
 	public List<String[]> getNodeTypes() {
 		List<String[]> list = new ArrayList<String[]>();
-		list.add(new String[] { "StartState", "Nó inicial" });
-		list.add(new String[] { "Task", "Tarefa" });
-		list.add(new String[] { "Decision", "Decisão" });
-		list.add(new String[] { "MailNode", "Email" });
-		list.add(new String[] { "Fork", "Separação" });
-		list.add(new String[] { "Join", "Junção" });
-		list.add(new String[] { "ProcessState", "SubProcesso" });
-		list.add(new String[] { "Node", "Sistema" });
-		list.add(new String[] { "EndState", "Nó Final" });
+		list.add(new String[] { NodeTypeConstants.START_STATE, "Nó inicial" });
+		list.add(new String[] { NodeTypeConstants.TASK, "Tarefa" });
+		list.add(new String[] { NodeTypeConstants.DECISION, "Decisão" });
+		list.add(new String[] { NodeTypeConstants.MAIL_NODE, "Email" });
+		list.add(new String[] { NodeTypeConstants.FORK, "Separação" });
+		list.add(new String[] { NodeTypeConstants.JOIN, "Junção" });
+		list.add(new String[] { NodeTypeConstants.PROCESS_STATE, "SubProcesso" });
+		list.add(new String[] { NodeTypeConstants.NODE, "Sistema" });
+		list.add(new String[] { NodeTypeConstants.END_STATE, "Nó Final" });
 		return list;
 	}
 
 	public String getNodeType(String nodeType) {
-		if (nodeType.equals("Task")) {
+		if (nodeType.equals(NodeTypeConstants.TASK)) {
 			return "task-node";
 		}
-		if (nodeType.equals("MailNode")) {
+		if (nodeType.equals(NodeTypeConstants.MAIL_NODE)) {
 			return "mail-node";
 		}
-		if (nodeType.equals("Decision")) {
+		if (nodeType.equals(NodeTypeConstants.DECISION)) {
 			return "decision";
 		}
-		if (nodeType.equals("StartState")) {
+		if (nodeType.equals(NodeTypeConstants.START_STATE)) {
 			return "start-state";
 		}
-		if (nodeType.equals("EndState")) {
+		if (nodeType.equals(NodeTypeConstants.END_STATE)) {
 			return "end-state";
 		}
-		if (nodeType.equals("ProcessState")) {
+		if (nodeType.equals(NodeTypeConstants.PROCESS_STATE)) {
 			return "process-state";
 		}
 		return nodeType.substring(0, 1).toLowerCase() + nodeType.substring(1);
@@ -398,10 +402,10 @@ public class NodeFitter extends Fitter implements Serializable {
 	public String getIcon(Node node) {
 		String icon = node.getNodeType().toString();
 		if (node instanceof MailNode) {
-			icon = "MailNode";
+			icon = NodeTypeConstants.MAIL_NODE;
 		}
 		if (node instanceof ProcessState) {
-			icon = "ProcessState";
+			icon = NodeTypeConstants.PROCESS_STATE;
 		}
 		return icon;
 	}

@@ -30,9 +30,9 @@ public class LocalizacaoFisicaList extends EntityList<LocalizacaoFisica> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("descricao", SearchCriteria.contendo);
-		addSearchField("localizacaoFisicaPai", SearchCriteria.contendo, R1);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("descricao", SearchCriteria.CONTENDO);
+		addSearchField("localizacaoFisicaPai", SearchCriteria.CONTENDO, R1);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 	
 	@Override

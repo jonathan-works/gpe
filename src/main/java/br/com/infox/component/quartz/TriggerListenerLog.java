@@ -14,7 +14,7 @@ public class TriggerListenerLog implements TriggerListener, Serializable {
 	
 	public static final String NAME = "TriggerListenerLog";
 	private static final long serialVersionUID = 1L;
-	private static transient final LogProvider log = Logging.getLogProvider(TriggerListenerLog.class);
+	private static final transient LogProvider LOG = Logging.getLogProvider(TriggerListenerLog.class);
 
 	@Override
 	public String getName() {
@@ -26,18 +26,18 @@ public class TriggerListenerLog implements TriggerListener, Serializable {
 		Date fireTime = executionContext.getFireTime();
 		long time = new Date().getTime() - fireTime.getTime();
 		JobDataMap jobDataMap = executionContext.getJobDetail().getJobDataMap();
-		log.info("triggerComplete: Job (" + trigger.getJobName() + ") / " + QuartzJobsInfo.getJobExpression(jobDataMap) + " [" + time + " ms]");
+		LOG.info("triggerComplete: Job (" + trigger.getJobName() + ") / " + QuartzJobsInfo.getJobExpression(jobDataMap) + " [" + time + " ms]");
 	}
 
 	@Override
 	public void triggerFired(Trigger trigger, JobExecutionContext executionContext) {
 		JobDataMap jobDataMap = executionContext.getJobDetail().getJobDataMap();
-		log.info("triggerFired: Job (" + trigger.getJobName() + ") / " + QuartzJobsInfo.getJobExpression(jobDataMap));
+		LOG.info("triggerFired: Job (" + trigger.getJobName() + ") / " + QuartzJobsInfo.getJobExpression(jobDataMap));
 	}
 
 	@Override
 	public void triggerMisfired(Trigger trigger) {
-		log.info("triggerMisfired: " + trigger.getName());
+		LOG.info("triggerMisfired: " + trigger.getName());
 	}
 
 	@Override

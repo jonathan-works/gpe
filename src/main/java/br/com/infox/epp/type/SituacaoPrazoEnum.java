@@ -4,7 +4,7 @@ public enum SituacaoPrazoEnum {
 	
 	PAT("Processo Atrasado"), TAT("Tarefa Atrasada"), SAT("Sem atraso");
 	
-	String label;
+	private String label;
 	
 	SituacaoPrazoEnum(String label) {
 		this.label = label;

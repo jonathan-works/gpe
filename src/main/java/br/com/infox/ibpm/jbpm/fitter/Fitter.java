@@ -9,11 +9,16 @@ import br.com.itx.util.ComponentUtil;
 
 @Scope(ScopeType.CONVERSATION)
 public abstract class Fitter {
-    protected ProcessBuilder pb;
+    
+    private ProcessBuilder pb;
     
 	public abstract void clear();
 	
-	@Create
+	protected ProcessBuilder getProcessBuilder() {
+        return pb;
+    }
+
+    @Create
 	public void init() {
 	    pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
 	}

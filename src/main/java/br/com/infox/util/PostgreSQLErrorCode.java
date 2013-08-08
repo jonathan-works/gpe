@@ -7,9 +7,9 @@ public enum PostgreSQLErrorCode {
 	 * http://www.postgresql.org/docs/9.1/static/errcodes-appendix.html
 	 * */
 	
-	integrity_constraint_violation("23000"),
-	restrict_violation("23001"), not_null_violation("23502"), foreign_key_violation("23503"), unique_violation("23505"),
-	check_violation("23514"), exclusion_violation("23P01");
+	INTEGRITY_CONSTRAINT_VIOLATION("23000"),
+	RESTRICT_VIOLATION("23001"), NOT_NULL_VIOLATION("23502"), FOREIGN_KEY_VIOLATION("23503"), UNIQUE_VIOLATION("23505"),
+	CHECK_VIOLATION("23514"), EXCLUSION_VIOLATION("23P01");
 	
 	private String code;
 

@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.manager.CategoriaManager;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
+import br.com.infox.util.DateUtil;
 
 @Name(value=DashBoardAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -60,14 +61,14 @@ public class DashBoardAction {
 	public String getTempo(Integer tempo) {
 		int dias = 0;
 		int minutos = 0;
-		int horas = tempo / 60;
+		int horas = DateUtil.minutesToHour(tempo);
 		StringBuilder sb = new StringBuilder();
-		if(horas > 24) {
-			dias = horas / 24;
-			horas = horas % 24;
+		if(horas > DateUtil.HORAS_DO_DIA) {
+			dias = horas / DateUtil.HORAS_DO_DIA;
+			horas = horas % DateUtil.HORAS_DO_DIA;
 			sb.append(dias+" dia(s) "+horas+" hora(s)");
 		} else {
-			minutos = tempo % 60;
+			minutos = tempo % DateUtil.MINUTOS_DA_HORA;
 			sb.append(horas+" hora(s) "+minutos+" minuto(s)");
 		}
 		return sb.toString();

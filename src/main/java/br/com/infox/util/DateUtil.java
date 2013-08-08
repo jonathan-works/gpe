@@ -24,6 +24,8 @@ import java.util.GregorianCalendar;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 
@@ -32,6 +34,16 @@ import org.jboss.seam.util.Strings;
 @BypassInterceptors
 public class DateUtil {
 	
+    public static final int MILESIMOS_DO_SEGUNDO = 1000;
+
+    public static final int SEGUNDOS_DO_MINUTO = 60;
+
+    public static final int MINUTOS_DA_HORA = 60;
+
+    public static final int HORAS_DO_DIA = 24;
+
+    private static final LogProvider LOG = Logging.getLogProvider(DateUtil.class);
+    
 	public static final int QUANTIDADE_DIAS_SEMANA = 7;
 	public static final int QUANTIDADE_MESES_ANO = 12;
 	
@@ -42,11 +54,11 @@ public class DateUtil {
 	 * @return A diferencas em dias das datas informadas.
 	 */
 	public static long diferencaDias(Date dataFim, Date dataIni) {
-		return (dataFim.getTime() - dataIni.getTime()) / (1000*60*60*24);
+		return (dataFim.getTime() - dataIni.getTime()) / (MILESIMOS_DO_SEGUNDO*SEGUNDOS_DO_MINUTO*MINUTOS_DA_HORA*HORAS_DO_DIA);
 	}
 	
 	/**
-	 * Metodo retorna um calendar com o horario igual a '23:59:59'
+	 * Metodo retorna um calendar com o horario IGUAL a '23:59:59'
 	 * @param date
 	 * @return
 	 */
@@ -77,7 +89,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * Metodo retorna um calendar com o horario igual a '00:00:00'
+	 * Metodo retorna um calendar com o horario IGUAL a '00:00:00'
 	 * @param date
 	 * @return
 	 */
@@ -118,7 +130,7 @@ public class DateUtil {
 		try {
 			data = fm.format(new Date());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			LOG.error(".getDataAtual()", e);
 		}
 		return data;
 	}
@@ -181,7 +193,7 @@ public class DateUtil {
 	public static Calendar dataProximoMes(Calendar data, int mes) {
 		int diferenca = (mes - data.get(Calendar.MONTH));
 		if (diferenca < 0) {
-			diferenca += 12;
+			diferenca += QUANTIDADE_MESES_ANO;
 		}
 		data.add(Calendar.MONTH, diferenca);
 		return data;
@@ -210,7 +222,7 @@ public class DateUtil {
 	public static int calculateMinutesBetweenTimes(Calendar dataInicial, Calendar dataFim) {
 		long dataInicialMilli = dataInicial.getTimeInMillis();
 		long dataFimMilli = dataFim.getTimeInMillis();
-		return (int) (dataFimMilli-dataInicialMilli)/(1000*60);
+		return (int) (dataFimMilli-dataInicialMilli)/(MILESIMOS_DO_SEGUNDO*SEGUNDOS_DO_MINUTO);
 	}
 	
 	/**
@@ -223,7 +235,11 @@ public class DateUtil {
 	public static int calculateMinutesBetweenTimes(Date dataInicial, Date dataFim) {
 		long dataInicialMilli = dataInicial.getTime();
 		long dataFimMilli = dataFim.getTime();
-		return (int) (dataFimMilli-dataInicialMilli)/(1000*60);
+		return (int) (dataFimMilli-dataInicialMilli)/(MILESIMOS_DO_SEGUNDO*SEGUNDOS_DO_MINUTO);
+	}
+	
+	public static int minutesToHour(int minutes){
+	    return minutes / MINUTOS_DA_HORA;
 	}
 	
 }

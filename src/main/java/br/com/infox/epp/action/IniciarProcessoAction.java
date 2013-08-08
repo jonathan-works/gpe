@@ -12,13 +12,14 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.bean.ItemBean;
 import br.com.infox.epp.entity.CategoriaItem;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.entity.ProcessoEpa;
-import br.com.infox.epp.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.service.IniciarProcessoService;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
@@ -40,9 +41,8 @@ import br.com.itx.util.EntityUtil;
 public class IniciarProcessoAction {
 
 	public static final String NAME = "iniciarProcessoAction";
+	private static final LogProvider LOG = Logging.getLogProvider(IniciarProcessoAction.class);
 
-	@In
-	private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
 	@In
 	private IniciarProcessoService iniciarProcessoService;
 	@In
@@ -85,14 +85,14 @@ public class IniciarProcessoAction {
 			
 			FacesMessages.instance().add(Severity.INFO, "Processo inserido com sucesso!");
 		} catch(TypeMismatchException tme) {
-			tme.printStackTrace();
+		    LOG.error(".iniciarProcesso()", tme);
 			FacesMessages.instance().add(Severity.ERROR, IniciarProcessoService.
 										 TYPE_MISMATCH_EXCEPTION);
 		} catch(NullPointerException npe) {
-			npe.printStackTrace();
+		    LOG.error(".iniciarProcesso()", npe);
 			FacesMessages.instance().add(Severity.ERROR,"Nenhum processo informado.");
 		} catch(Exception e) {
-			e.printStackTrace();
+		    LOG.error(".iniciarProcesso()", e);
 			FacesMessages.instance().add(Severity.ERROR, "Não foi possível iniciar o processo");
 		}
 	}
@@ -115,8 +115,9 @@ public class IniciarProcessoAction {
 	public void onSelectItem(ItemBean bean) {
 		itemDoProcesso = bean.getItem();
 		renderedByItem = hasSelectedItem();
-		if (!necessitaPartes()) 
+		if (!necessitaPartes()) {
 			iniciarProcesso();
+		}
 		else{
 			renderizarCadastroPartes = true;
 			renderedByItem = false;
@@ -146,10 +147,12 @@ public class IniciarProcessoAction {
 				EntityUtil.getEntityManager().persist(p);
 				EntityUtil.getEntityManager().flush();
 			}
-			if (pessoaFisicaList.contains(p))
+			if (pessoaFisicaList.contains(p)) {
 				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			else
+			}
+			else {
 				pessoaFisicaList.add(p);
+			}
 			pf.setInstance(null);
 		}
 		else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
@@ -161,12 +164,16 @@ public class IniciarProcessoAction {
 				EntityUtil.getEntityManager().persist(p);
 				EntityUtil.getEntityManager().flush();
 			}
-			if (pessoaJuridicaList.contains(p))
+			if (pessoaJuridicaList.contains(p)) {
 				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			else
+			}
+			else {
 				pessoaJuridicaList.add(p);
+			}
 			pj.setInstance(null);
-		} else return;
+		} else {
+		    return;
+		}
 	}
 	
 	public void removePessoaFisica(PessoaFisica obj) {
@@ -199,9 +206,12 @@ public class IniciarProcessoAction {
 	}
 	
 	public boolean necessitaPartes(){
-		if (naturezaCategoriaFluxo != null)
+		if (naturezaCategoriaFluxo != null) {
 			return naturezaCategoriaFluxo.getNatureza().getHasPartes();
-		else return false;
+		}
+		else {
+		    return false;
+		}
 	}
 
 	public boolean isRenderizarCadastroPartes() {

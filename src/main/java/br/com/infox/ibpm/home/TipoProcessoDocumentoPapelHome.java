@@ -15,7 +15,7 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	public static final String NAME = "tipoProcessoDocumentoPapelHome";
 	private static final long serialVersionUID = 1L;
 	
-	@In PapelManager papelManager;
+	@In private PapelManager papelManager;
 	
 	@Override
 	public String persist() {
@@ -28,8 +28,7 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	@Override
 	public String update() {
 		instance.setTipoProcessoDocumento(TipoProcessoDocumentoHome.instance().getInstance());
-		String ret = super.update();
-		return ret;
+		return super.update();
 	}
 	
 	@Override

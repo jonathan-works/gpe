@@ -1,24 +1,18 @@
 package br.com.infox.core.certificado;
 
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.math.BigInteger;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bouncycastle.x509.extension.X509ExtensionUtil;
-
 import br.com.infox.core.certificado.util.DigitalSignatureUtils;
-import br.com.infox.core.certificado.util.ValidatorUtilities;
 import br.com.itx.util.ArrayUtil;
 
 public class Certificado {
@@ -44,7 +38,7 @@ public class Certificado {
     
     public Certificado(Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
         this.certChain = Arrays.copyOf(certChain, certChain.length);
-        this.mainCertificate = (X509Certificate) certChain[0];
+        this.mainCertificate = (X509Certificate) this.certChain[0];
         this.privateKey = privateKey;
         processSubject();
     }
@@ -220,23 +214,5 @@ public class Certificado {
 		}
         return false;
     }
-    
-    public static void main(String[] args) throws Exception {
-		BufferedReader reader = new BufferedReader(new FileReader(
-				"C:\\Users\\rodrigo\\Desktop\\PJE\\certificados\\cert_token.txt"));
-		StringBuilder sb = new StringBuilder();
-		String linha = null;
-		while ((linha = reader.readLine()) != null) {
-			sb.append(linha);
-		}
-		Certificado c = new Certificado(sb.toString());
-		System.out.println(c.getCertChain().length);
-		X509Certificate certificate = c.getMainCertificate();
-		Collection<?> col2 = X509ExtensionUtil.getIssuerAlternativeNames(certificate);
-		System.out.println(col2);
-		List<String> urls = ValidatorUtilities.getCRLDistUrls(certificate);
-		System.out.println(urls);
-		reader.close();
-	}
     
 }

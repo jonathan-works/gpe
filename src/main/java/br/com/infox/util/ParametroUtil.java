@@ -26,14 +26,14 @@ import br.com.itx.util.ComponentUtil;
 public class ParametroUtil {
 
 	public static final String NAME = "parametroUtil";
-	public static LogProvider log = Logging.getLogProvider(ParametroUtil.class);
+	public static final LogProvider LOG = Logging.getLogProvider(ParametroUtil.class);
 	
 	public static String getLDAPDomain() {
 		String retorno = null;
 		try {
 			retorno = getParametro("ldap.domain");
 		} catch (IllegalArgumentException e) {
-			System.err.println("[#####] Erro ao acessar o parâmetro [#####]");
+			LOG.error(".getLDAPDomain()", e);
 		}
 		return retorno;
 	}
@@ -43,7 +43,7 @@ public class ParametroUtil {
 		try {
 			retorno = getParametro("ldap.host");
 		} catch (IllegalArgumentException e) {
-			System.err.println("[#####] Erro ao acessar o parâmetro [#####]");
+			LOG.error(".getLDAPHost()", e);
 		}
 		return retorno;
 	}
@@ -53,7 +53,7 @@ public class ParametroUtil {
 		try {
 			retorno = getParametro("ldap.authentication");
 		} catch (IllegalArgumentException e) {
-			System.err.println("[#####] Erro ao acessar o parâmetro [#####]");
+			LOG.error(".getLDAPAuthentication()", e);
 		}
 		return retorno;
 	}
@@ -63,7 +63,7 @@ public class ParametroUtil {
 		try {
 			retorno = getParametro("ldap.login");
 		} catch (IllegalArgumentException e) {
-			System.err.println("[#####] Erro ao acessar o parâmetro [#####]");
+			LOG.error(".getLDAPLogin()", e);
 		}
 		return retorno;
 	}
@@ -76,7 +76,7 @@ public class ParametroUtil {
 		String value = (String) Contexts.getApplicationContext().get(nomeParametro);
 		if (validar && value == null) {
 			String erroMsg = "Parâmetro não encontrado: " + nomeParametro;
-			log.error(erroMsg);
+			LOG.error(erroMsg);
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, erroMsg);
 		}
 		return value;
@@ -106,12 +106,8 @@ public class ParametroUtil {
 		for (Method metodo : this.getClass().getDeclaredMethods()) {
 			try {
 				metodo.invoke(this);
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+			} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+			    LOG.error(".executarFactorys()", e);
 			}
 		}
 		return "OK";

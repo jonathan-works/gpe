@@ -18,15 +18,12 @@ package br.com.infox.ibpm.home;
 
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoBinHome;
 import br.com.itx.util.ComponentUtil;
 
 @Install(precedence=Install.FRAMEWORK)
-@Name("processoDocumentoBinHome")
-@BypassInterceptors
+@Name(ProcessoDocumentoBinHome.NAME)
 public class ProcessoDocumentoBinHome 
 		extends AbstractProcessoDocumentoBinHome<ProcessoDocumentoBin> 
 		implements IProcessoDocumentoBinHome {
@@ -34,6 +31,8 @@ public class ProcessoDocumentoBinHome
 	private static final long serialVersionUID = 1L;
 	private String certChain;
 	private String signature;
+	
+	public static final String NAME = "processoDocumentoBinHome";
 	
 	public static ProcessoDocumentoBinHome instance() {
 		return ComponentUtil.getComponent("processoDocumentoBinHome");

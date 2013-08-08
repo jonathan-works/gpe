@@ -92,12 +92,6 @@ public class UsuarioLocalizacaoHome
 	}
 	
 	@Override
-	public String update() {
-		String update = super.update();
-		return update;
-	}
-	
-	@Override
 	public String remove(UsuarioLocalizacao obj) {
 		setInstance(obj);
 		UsuarioLogin usuario = getInstance().getUsuario();

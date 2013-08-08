@@ -22,7 +22,7 @@ public class EstadoList extends EntityList<Estado> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("estado", SearchCriteria.igual);
+		addSearchField("estado", SearchCriteria.IGUAL);
 
 	}
 

@@ -27,8 +27,8 @@ public class NaturezaCategoriaProcessoList extends EntityList<NaturezaCategoriaF
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("localizacao", SearchCriteria.igual, R1);
-		addSearchField("papel", SearchCriteria.igual, R2);
+		addSearchField("localizacao", SearchCriteria.IGUAL, R1);
+		addSearchField("papel", SearchCriteria.IGUAL, R2);
 	}
 
 	@Override

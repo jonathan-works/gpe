@@ -37,8 +37,9 @@ public class HistoricoModeloDocumentoAction extends AbstractHome<HistoricoModelo
 	}
 	
 	public void restaurarSelecionado()	{
-		if (selecionado==null)
-			return;
+		if (selecionado==null) {
+		    return;
+		}
 		
 		ModeloDocumento modelo = selecionado.getModeloDocumento();
 		ModeloDocumentoHome modeloHome = (ModeloDocumentoHome)Component.getInstance(ModeloDocumentoHome.NAME);

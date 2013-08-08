@@ -18,6 +18,7 @@ package br.com.itx.util;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +72,7 @@ public final class EntityUtil implements Serializable {
 					}
 					sb.append(getProperty(objId, pd));
 				} catch (Exception e) {
-					e.printStackTrace();
+				    LOG.error(".getCompositeId()", e);
 				}
 			}
 		}
@@ -79,7 +80,7 @@ public final class EntityUtil implements Serializable {
 	}
 	
 	private static String getProperty(Object objId, PropertyDescriptor pd) 
-	throws Exception {
+	        throws IllegalAccessException, InvocationTargetException {
 		Class<?> cl = pd.getPropertyType();
 		Object value = null;
 		Method m = pd.getReadMethod();
@@ -117,14 +118,15 @@ public final class EntityUtil implements Serializable {
 					}	
 					cnt++;
 				} catch (Exception e) {
-					e.printStackTrace();
+				    LOG.error(".setCompositeId()", e);
 				}
 			}
 		}	
 	}
 	
-	private static void setProperty(Object objId, 
-			PropertyDescriptor pd, String strValue) throws Exception {
+	private static void setProperty(Object objId, PropertyDescriptor pd, String strValue) 
+	        throws InstantiationException, IllegalAccessException,
+	            InvocationTargetException, NoSuchMethodException {
 		Class<?> cl = pd.getPropertyType();
 		Object value = null;
 		if (cl.isAnnotationPresent(Entity.class)) {
@@ -223,7 +225,7 @@ public final class EntityUtil implements Serializable {
 				try {
 					return readMethod.invoke(entidade, new Object[0]);
 				} catch (Exception e) {
-					e.printStackTrace();
+				    LOG.error(".getEntityIdObject()", e);
 				} 
 			} else {
 				LOG.error("Não foi encontrado um PropertyDescriptor para o " +
@@ -276,16 +278,6 @@ public final class EntityUtil implements Serializable {
 		return destino;
 	}
 	
-	public static <E> List<E> cloneListEntity(List<E> origem, boolean copyLists) throws 
-				InstantiationException, IllegalAccessException {
-		List<E> destino = new ArrayList<E>();
-		for (E entity: origem) {
-			destino.add(cloneEntity(entity, copyLists));
-		}
-		return destino;
-	}
-	
-	//TODO metodo de teste pois o acina estava dando erro em: oldEntity = (T) EntityUtil.cloneEntity(instance, false);
 	public static Object cloneObject(Object origem, boolean copyLists) throws 
 				InstantiationException, IllegalAccessException {
 		Class<?> cl = getEntityClass(origem);
@@ -327,8 +319,11 @@ public final class EntityUtil implements Serializable {
 	 * com isso caso ocorra um erro, como de violação de contraint, a entidade fica com um
 	 * id inválido e ocorre um erro ao persiti essa entidade. 
 	 * @param entidade
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public static void setNullOnEntityId(Object entidade) throws Exception {
+	public static void setNullOnEntityId(Object entidade) throws IllegalAccessException, InvocationTargetException {
 		PropertyDescriptor pd = EntityUtil.getId(entidade);
 		Method writeMethod = pd.getWriteMethod();
 		Class<?> propertyType = pd.getPropertyType();
@@ -342,9 +337,11 @@ public final class EntityUtil implements Serializable {
 	 * (O hibernate gera um id pra estidade antes de inserir e em uma execeção, os
 	 * list (PersistentBags) apontam para este id que não existe.
 	 * @param entidade
-	 * @throws Exception
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public static void clearEntityLists(Object entidade) throws Exception {
+	public static void clearEntityLists(Object entidade) throws IllegalAccessException, InvocationTargetException {
 		List<PropertyDescriptor> descriptors = getPropertyDescriptors(entidade, OneToMany.class);
 		for (PropertyDescriptor pd : descriptors) {
 			Class<?> type = pd.getPropertyType();
@@ -476,7 +473,7 @@ public final class EntityUtil implements Serializable {
 		try {
 			return getParameterizedTypeClass(clazz).newInstance();
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".newInstance()", e);
 		}
 		return null;
 	}

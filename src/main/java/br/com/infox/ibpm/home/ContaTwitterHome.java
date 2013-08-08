@@ -8,6 +8,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -25,8 +27,10 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.CONVERSATION)
 public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 
-	private static final long serialVersionUID = 1L;
+	private static final int UNAUTHORIZED = 401;
+    private static final long serialVersionUID = 1L;
 	public static final String NAME = "contaTwitterHome";
+	private static final LogProvider LOG = Logging.getLogProvider(ContaTwitterHome.class);
 	
 	private Twitter twitter = TwitterUtil.getInstance().getFactory().getInstance();
 	private RequestToken requestToken;
@@ -48,21 +52,19 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 		try {
 			requestToken = twitter.getOAuthRequestToken();
 			return requestToken.getAuthorizationURL();
-		} catch (TwitterException te){
-			te.printStackTrace();
-			return "";
-		} catch (IllegalStateException ise){
-			ise.printStackTrace();
+		} catch (TwitterException | IllegalStateException e){
+		    LOG.error(".getAuthorizationURL()", e);
 			return "";
 		}
 	}
 	
 	private AccessToken getAccessToken(String pin) throws TwitterException	{
 		AccessToken tok;
-		if (pin.length() > 0)
-			tok = twitter.getOAuthAccessToken(requestToken, pin);
-		else 
-			tok = twitter.getOAuthAccessToken();
+		if (pin.length() > 0) {
+		    tok = twitter.getOAuthAccessToken(requestToken, pin);
+		} else {
+		    tok = twitter.getOAuthAccessToken();
+		}
 		return tok;
 	}
 	
@@ -122,10 +124,10 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 				}
 				persist();
 			} catch (TwitterException e) {
-				if(401 == e.getStatusCode()){
+				if(UNAUTHORIZED == e.getStatusCode()){
 					FacesMessages.instance().add(Severity.ERROR, "Unable to get the access token.");
 			    }else{
-			    	e.printStackTrace();
+			        LOG.error(".getAutorizacao()", e);
 			    }
 			}
 		} else {
@@ -186,7 +188,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 		try {
 			conta = TwitterUtil.getInstance().getContaTwitter(usuario);
 		} catch (NoResultException e) {
-			e.printStackTrace();
+		    LOG.error(".setContaTwitter()", e);
 		}
 		if (conta != null) {
 			setId(conta.getIdTwitter());

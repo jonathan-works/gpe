@@ -26,6 +26,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.jbpm.ActionTemplate;
 
@@ -36,6 +38,7 @@ import br.com.infox.ibpm.jbpm.ActionTemplate;
 public class ActionTemplateHandler implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(ActionTemplateHandler.class);
 	
 	public static final String SET_CURRENT_TEMPLATE_EVENT = "setCurrentTemplateEvent";
 	private List<ActionTemplate> templateList;
@@ -58,7 +61,7 @@ public class ActionTemplateHandler implements Serializable {
 						}
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+				    LOG.error(".getTemplateList()", e);
 				}
 			}
 		}

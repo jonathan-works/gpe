@@ -11,7 +11,11 @@ import br.com.infox.ibpm.entity.Parametro;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
-public class TimerUtil {
+public final class TimerUtil {
+    
+    private TimerUtil(){
+        super();
+    }
 	
 	/**
 	 * Foi necessário duplicar esse método já existente em ParametroHome pois

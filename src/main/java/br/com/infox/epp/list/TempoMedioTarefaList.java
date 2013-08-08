@@ -24,7 +24,7 @@ public class TempoMedioTarefaList extends EntityList<TempoMedioTarefa> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("tempoMedioProcesso", SearchCriteria.igual);
+		addSearchField("tempoMedioProcesso", SearchCriteria.IGUAL);
 	}
 
 	@Override

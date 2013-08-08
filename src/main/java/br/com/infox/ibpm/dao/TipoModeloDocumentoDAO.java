@@ -26,9 +26,9 @@ public class TipoModeloDocumentoDAO extends GenericDAO {
 	}
 	
 	public boolean existeOutroTipoModeloDocumentoComMesmaDescricao(TipoModeloDocumento tipoModeloDocumento){
-		String TipoModeloDocumentoUniqueConstraint = "select count(o) from TipoModeloDocumento o where o.tipoModeloDocumento = :tipoModeloDocumento " +
+		String tipoModeloDocumentoUniqueConstraint = "select count(o) from TipoModeloDocumento o where o.tipoModeloDocumento = :tipoModeloDocumento " +
 				"and o.idTipoModeloDocumento != :id";
-		return (((Long) entityManager.createQuery(TipoModeloDocumentoUniqueConstraint)
+		return (((Long) entityManager.createQuery(tipoModeloDocumentoUniqueConstraint)
 			.setParameter("tipoModeloDocumento", tipoModeloDocumento.getTipoModeloDocumento())
 			.setParameter("id", tipoModeloDocumento.getIdTipoModeloDocumento())
 			.getSingleResult()) > 0);

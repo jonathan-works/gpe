@@ -24,7 +24,7 @@ public class AssinaturaList extends EntityList<ProcessoDocumento> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("idProcessoDocumento", SearchCriteria.igual, R1);
+		addSearchField("idProcessoDocumento", SearchCriteria.IGUAL, R1);
 	}
 
 	@Override

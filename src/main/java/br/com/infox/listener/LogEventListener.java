@@ -23,6 +23,8 @@ import org.hibernate.event.spi.PostUpdateEvent;
 import org.hibernate.event.spi.PostUpdateEventListener;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.log.ExecuteLog;
 import br.com.infox.ibpm.entity.log.LogUtil;
@@ -33,7 +35,9 @@ public class LogEventListener implements PostUpdateEventListener,
 		PostInsertEventListener, PostDeleteEventListener {
 
 	private static final long serialVersionUID = 1L;
-	private static String ENABLE_LOG_VAR_NAME = "executeLog";
+	private static final String ENABLE_LOG_VAR_NAME = "executeLog";
+	
+	private static final LogProvider LOG = Logging.getLogProvider(LogEventListener.class);
 
 	public void onPostUpdate(PostUpdateEvent event) {
 		if (LogUtil.isLogable(event.getEntity()) && isLogEnabled()) {
@@ -46,7 +50,7 @@ public class LogEventListener implements PostUpdateEventListener,
 			try {
 				executeLog.execute();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".onPostUpdate()", e);
 			}
 		}
 	}
@@ -62,7 +66,7 @@ public class LogEventListener implements PostUpdateEventListener,
 			try {
 				executeLog.execute();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".onPostInsert()", e);
 			} 
 		}
 	}
@@ -78,7 +82,7 @@ public class LogEventListener implements PostUpdateEventListener,
 			try {
 				executeLog.execute();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".onPostDelete()", e);
 			}
 		}
 	}

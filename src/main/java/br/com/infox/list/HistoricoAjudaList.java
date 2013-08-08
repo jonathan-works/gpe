@@ -26,7 +26,7 @@ public class HistoricoAjudaList extends EntityList<HistoricoAjuda> {
 	private static final String R1 = "pagina.url = #{ajudaHome.viewId}";
 
 	protected void addSearchFields() {
-		addSearchField("pagina.url", SearchCriteria.igual, R1);
+		addSearchField("pagina.url", SearchCriteria.IGUAL, R1);
 	}
 
 	@Override

@@ -9,6 +9,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
@@ -21,6 +23,7 @@ import br.com.infox.ibpm.manager.FluxoPapelManager;
 @Scope(ScopeType.CONVERSATION)
 public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(FluxoPapelAction.class);
 
 	public static final String NAME = "fluxoPapelAction";
 
@@ -56,9 +59,9 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 		for (Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
 			FluxoPapel nl = iterator.next();
 			try {
-				genericManager.remove(nl);
+				getGenericManager().remove(nl);
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".removeAll()", e);
 			}
 			iterator.remove();
 		}

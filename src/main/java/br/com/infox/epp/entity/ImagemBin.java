@@ -23,7 +23,9 @@ import br.com.infox.util.constants.LengthConstants;
 @Entity
 @Table(name = "tb_imagem_bin", schema="public")
 public class ImagemBin implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final float BYTES_IN_A_KILOBYTE = 1024f;
+
+    private static final long serialVersionUID = 1L;
 	
 	private Integer idImagemBin;
 	private String extensao;
@@ -95,7 +97,7 @@ public class ImagemBin implements Serializable {
 	public String getTamanhoFormatado() {
 		if (tamanho != null && tamanho > 0) {
 			NumberFormat formatter = new DecimalFormat("###,##0.00");
-			float sizeF = tamanho / 1024f;
+			float sizeF = tamanho / BYTES_IN_A_KILOBYTE;
 			return formatter.format(sizeF) + " Kb";
 		} 
 		return "0 Kb";

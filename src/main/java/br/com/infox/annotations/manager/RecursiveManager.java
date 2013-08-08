@@ -7,6 +7,8 @@ import javax.management.modelmbean.InvalidTargetObjectTypeException;
 import javax.persistence.Id;
 
 import org.hibernate.AnnotationException;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.HierarchicalPath;
@@ -29,6 +31,7 @@ public final class RecursiveManager {
 	private RecursiveManager() { }
 	
 	public static final String MSG_PARENT_EXCEPTION = "Este registro já está nesta hierarquia";
+	private static final LogProvider LOG = Logging.getLogProvider(RecursiveManager.class);
 	
 	/**
 	 * Retorna uma string com o valor do campo com a anotação PathDescriptor
@@ -56,7 +59,7 @@ public final class RecursiveManager {
 		return getFullPath(object, dadField, pathDescriptorField, new StringBuilder());
 	}
 
-	public static void refactor(Object object) throws RecursiveException {
+	public static void refactor(Object object) {
 		try {
 			if(!isRecursive(object)) {
 				throw new AnnotationException("Missing annotation @Recursive: " +
@@ -66,7 +69,7 @@ public final class RecursiveManager {
 			}
 			refactorFieldPath(object);
 		} catch (AnnotationException e) {
-			e.printStackTrace();
+		    LOG.error(".refactor()", e);
 		}
 	}
 	
@@ -87,7 +90,7 @@ public final class RecursiveManager {
 				}
 			}
 		} catch (InvalidTargetObjectTypeException ex) {
-			ex.printStackTrace();
+		    LOG.error(".refactorFieldPath()", ex);
 		}
 	}
 	
@@ -98,8 +101,7 @@ public final class RecursiveManager {
 	 * @throws InvalidTargetObjectTypeException 
 	 * @throws AnnotationException 
 	 */
-	public static void setFullPath(Object object) throws AnnotationException, 
-												InvalidTargetObjectTypeException {
+	public static void setFullPath(Object object) throws InvalidTargetObjectTypeException {
 		String dad = AnnotationUtil.getAnnotationField(object, Parent.class);
 		String pathDescriptor = AnnotationUtil.getAnnotationField(object, PathDescriptor.class);
 		String hierarchicalPath = AnnotationUtil.getAnnotationField(object, HierarchicalPath.class);
@@ -126,16 +128,13 @@ public final class RecursiveManager {
 		try {
 			Integer id = (Integer) AnnotationUtil.getValue(object, Id.class);
 			return hasParentDuplicity(object, id);
-		} catch (AnnotationException e) {
-			e.printStackTrace();
-		} catch (InvalidTargetObjectTypeException e) {
-			e.printStackTrace();
+		} catch (AnnotationException | InvalidTargetObjectTypeException e) {
+		    LOG.error(".verifyParent()", e);
 		}
 		return false;
 	}
 	
-	private static boolean hasParentDuplicity(Object o, Integer checkId) throws 
-						AnnotationException, InvalidTargetObjectTypeException {
+	private static boolean hasParentDuplicity(Object o, Integer checkId) throws InvalidTargetObjectTypeException {
 		Object dad = AnnotationUtil.getValue(o, Parent.class);
 		if(dad != null) {
 			Integer id = (Integer) AnnotationUtil.getValue(dad, Id.class);
@@ -161,7 +160,7 @@ public final class RecursiveManager {
 					refactorFieldPath(o);
 				}
 			} catch (AnnotationException e) {
-				e.printStackTrace();
+			    LOG.error(".populateAllHierarchicalPaths()", e);
 			}
 		}
 	}

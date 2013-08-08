@@ -22,6 +22,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.DocumentoBin;
 import br.com.itx.component.AbstractHome;
@@ -33,6 +35,7 @@ public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "documentoBinHome";
+	private static final LogProvider LOG = Logging.getLogProvider(DocumentoBinHome.class);
 	
 	@Override
 	protected String getPersistenceContextName() {
@@ -69,7 +72,7 @@ public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
 		}
 		catch (Exception e) {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao persistir o arquivo.");
-			e.printStackTrace();
+			LOG.error(".persistData()", e);
 			return false;
 		}
 	}

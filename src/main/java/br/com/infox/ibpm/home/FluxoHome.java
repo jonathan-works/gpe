@@ -80,16 +80,18 @@ public class FluxoHome
 	@Override
 	protected boolean beforePersistOrUpdate() {
 	    Date dataFimPublicacao = getInstance().getDataFimPublicacao();
-		if (dataFimPublicacao != null){
-			if (dataFimPublicacao.before(getInstance().getDataInicioPublicacao())){
-				FacesMessages.instance().add(Severity.ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
-				return Boolean.FALSE;
-			}
+		if (isValidaDataFimPublicacao(dataFimPublicacao)){
+			FacesMessages.instance().add(Severity.ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
+			return Boolean.FALSE;
 		}
 		
 		verificaPublicacao();
 		return true;
 	}
+
+    private boolean isValidaDataFimPublicacao(Date dataFimPublicacao) {
+        return dataFimPublicacao != null && dataFimPublicacao.before(getInstance().getDataInicioPublicacao());
+    }
 
 	@Override
 	public String update() {

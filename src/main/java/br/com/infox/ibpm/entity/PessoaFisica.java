@@ -27,7 +27,7 @@ public class PessoaFisica extends Pessoa{
 	}
 	
 	@Column(name="nr_cpf", nullable=false, unique=true)
-	@Size(max=20)
+	@Size(max=LengthConstants.NUMERO_CPF)
 	public String getCpf() {
 		return cpf;
 	}
@@ -69,18 +69,23 @@ public class PessoaFisica extends Pessoa{
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof PessoaFisica))
-			return false;
+		}
+		if (obj == null) {
+		    return false;
+		}
+		if (!(obj instanceof PessoaFisica)) {
+		    return false;
+		}
 		PessoaFisica other = (PessoaFisica) obj;
 		if (cpf == null) {
-			if (other.cpf != null)
-				return false;
-		} else if (!cpf.equals(other.cpf))
-			return false;
+			if (other.cpf != null) {
+			    return false;
+			}
+		} else if (!cpf.equals(other.cpf)) {
+		    return false;
+		}
 		return true;
 	}
 

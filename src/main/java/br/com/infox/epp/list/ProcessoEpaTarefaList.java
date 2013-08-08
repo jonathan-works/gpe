@@ -20,7 +20,9 @@ import br.com.itx.util.StringUtil;
 @Name(ProcessoEpaTarefaList.NAME)
 public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 	
-	private static final long serialVersionUID = 1L;
+	private static final int PORCENTAGEM = 100;
+    private static final int LIMITE_PADRAO = 15;
+    private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoEpaTarefaList";
 	
 	private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o";
@@ -28,7 +30,7 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("processoEpa", SearchCriteria.igual);
+		addSearchField("processoEpa", SearchCriteria.IGUAL);
 	}
 	@Override
 	protected String getDefaultEjbql() {
@@ -45,8 +47,8 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 	
 	public String rowClasses() {
 		List<Object> classes = new ArrayList<Object>();
-		for (ProcessoEpaTarefa row: list(15)) {
-			if (row.getPorcentagem() != null && row.getPorcentagem() > 100) {
+		for (ProcessoEpaTarefa row: list(LIMITE_PADRAO)) {
+			if (row.getPorcentagem() != null && row.getPorcentagem() > PORCENTAGEM) {
 				classes.add("red-back");
 			} else {
 				classes.add("white-back");

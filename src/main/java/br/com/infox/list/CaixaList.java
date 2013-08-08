@@ -24,8 +24,8 @@ public class CaixaList extends EntityList<Caixa> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("tarefa", SearchCriteria.igual);
-		addSearchField("tarefaAnterior", SearchCriteria.igual, R1);
+		addSearchField("tarefa", SearchCriteria.IGUAL);
+		addSearchField("tarefaAnterior", SearchCriteria.IGUAL, R1);
 	}
 
 	@Override

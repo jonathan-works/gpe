@@ -29,12 +29,12 @@ public class CepList extends EntityList<Cep> {
 	private static final String R1 = "o.municipio.estado = #{cepList.estado}";
 	 
 	protected void addSearchFields() {
-		addSearchField("numeroCep", SearchCriteria.contendo);
-		addSearchField("nomeLogradouro", SearchCriteria.contendo);
-		addSearchField("nomeBairro", SearchCriteria.contendo);
-		addSearchField("municipio", SearchCriteria.igual);
-		addSearchField("municipio.estado", SearchCriteria.igual, R1);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("numeroCep", SearchCriteria.CONTENDO);
+		addSearchField("nomeLogradouro", SearchCriteria.CONTENDO);
+		addSearchField("nomeBairro", SearchCriteria.CONTENDO);
+		addSearchField("municipio", SearchCriteria.IGUAL);
+		addSearchField("municipio.estado", SearchCriteria.IGUAL, R1);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	protected Map<String, String> getCustomColumnsOrder() {

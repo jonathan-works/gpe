@@ -26,9 +26,9 @@ public class ImagemBinManager extends GenericManager {
 	public static final String NAME = "imagemBinManager";
 	
 	@In
-    public ImagemBinDAO imagemBinDAO;
+    private ImagemBinDAO imagemBinDAO;
 	@In 
-	public ImageUtil imageUtil;
+	private ImageUtil imageUtil;
 
     public void persistImageBin(ImagemBin imagemBin, String imagesRelativePath) throws IOException {
         String imagesDir = getImagesDir(imagesRelativePath);
@@ -52,7 +52,7 @@ public class ImagemBinManager extends GenericManager {
     }
 
     private String getNewFileConflict(String nome) {
-        int localPonto = nome.lastIndexOf(".");
+        int localPonto = nome.lastIndexOf('.');
         String ext = nome.substring(localPonto);
         String pre = nome.substring(0, localPonto);
         return pre + "_" + ext;

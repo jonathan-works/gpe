@@ -30,6 +30,8 @@ import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.framework.EntityHome;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.itx.component.query.EntityQuery;
 
@@ -38,6 +40,8 @@ import br.com.itx.component.query.EntityQuery;
 public class GridQuery extends EntityQuery {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final LogProvider LOG = Logging.getLogProvider(GridQuery.class);
 
 	private List<GridColumn> columns = new ArrayList<GridColumn>();
 
@@ -61,7 +65,7 @@ public class GridQuery extends EntityQuery {
 
 	private String home;
 
-	private String visibleColumnList = new String();
+	private String visibleColumnList = "";
 	
 	private boolean treeMode;
 	
@@ -270,6 +274,7 @@ public class GridQuery extends EntityQuery {
 			try {
 				entity = getHome().getEntityClass().newInstance();
 			} catch (Exception e) {
+			    LOG.error(".getEntity()", e);
 			}
 		}
 		return entity;

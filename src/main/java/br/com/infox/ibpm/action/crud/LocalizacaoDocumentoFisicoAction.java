@@ -9,6 +9,9 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.ibpm.entity.DocumentoFisico;
 import br.com.infox.ibpm.entity.LocalizacaoFisica;
@@ -22,6 +25,7 @@ import br.com.infox.list.LocalizacaoFisicaList;
 public class LocalizacaoDocumentoFisicoAction extends
 		AbstractCrudAction<DocumentoFisico> implements Serializable{
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoDocumentoFisicoAction.class);
 
 	public static final String NAME = "localizacaoDocumentoFisicoAction";
 
@@ -40,7 +44,6 @@ public class LocalizacaoDocumentoFisicoAction extends
 
 	@Override
 	protected void afterSave() {
-		System.out.println(processo);
 		newInstance();
 		listByProcesso();
 	}
@@ -60,9 +63,9 @@ public class LocalizacaoDocumentoFisicoAction extends
 			DocumentoFisico nl = iterator.next();
 			try {
 				nl.setAtivo(false);
-				genericManager.update(nl);
+				getGenericManager().update(nl);
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".inactiveAll()", e);
 			}
 			iterator.remove();
 		}

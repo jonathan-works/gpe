@@ -31,9 +31,9 @@ public class NaturezaList extends EntityList<Natureza> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("natureza", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
-		addSearchField("hasPartes", SearchCriteria.igual);
+		addSearchField("natureza", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
+		addSearchField("hasPartes", SearchCriteria.IGUAL);
 	}
 
 	@Override

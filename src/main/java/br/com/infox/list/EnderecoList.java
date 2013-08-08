@@ -21,7 +21,7 @@ public class EnderecoList extends EntityList<Endereco> {
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("usuario", SearchCriteria.contendo, "o.usuario = #{enderecoList.entity.usuario}");
+		addSearchField("usuario", SearchCriteria.CONTENDO, "o.usuario = #{enderecoList.entity.usuario}");
 	}
 
 	@Override

@@ -33,7 +33,7 @@ import br.com.infox.access.entity.Papel;
 @Table(name = ListaEmail.TABLE_NAME, schema="public")
 public class ListaEmail implements java.io.Serializable {
 
-	public final static String TABLE_NAME = "tb_lista_email";
+	public static final String TABLE_NAME = "tb_lista_email";
 	
 	private static final long serialVersionUID = 1L;
 

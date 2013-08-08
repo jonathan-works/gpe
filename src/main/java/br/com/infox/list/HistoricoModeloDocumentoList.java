@@ -27,11 +27,11 @@ public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocu
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("modeloDocumento", SearchCriteria.igual, R1);
-		addSearchField("usuarioAlteracao", SearchCriteria.igual);
-		addSearchField("dataAlteracao", SearchCriteria.dataIgual);
-		addSearchField("tituloModeloDocumento", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("modeloDocumento", SearchCriteria.IGUAL, R1);
+		addSearchField("usuarioAlteracao", SearchCriteria.IGUAL);
+		addSearchField("dataAlteracao", SearchCriteria.DATA_IGUAL);
+		addSearchField("tituloModeloDocumento", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	@Override

@@ -28,8 +28,8 @@ public class GrupoModeloDocumentoList extends EntityList<GrupoModeloDocumento> {
 	}
 	
 	protected void addSearchFields() {
-		addSearchField("grupoModeloDocumento", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("grupoModeloDocumento", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	protected Map<String, String> getCustomColumnsOrder() {

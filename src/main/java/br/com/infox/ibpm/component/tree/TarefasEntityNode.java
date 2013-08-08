@@ -14,9 +14,9 @@ import br.com.itx.util.EntityUtil;
 public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	
 	private static final long serialVersionUID = 1L;
-	protected ArrayList<TarefasEntityNode<E>> rootNodes;
-	protected ArrayList<TarefasEntityNode<E>> nodes;
-	protected List<EntityNode<E>> caixas;
+	private List<TarefasEntityNode<E>> rootNodes;
+	private List<TarefasEntityNode<E>> nodes;
+	private List<EntityNode<E>> caixas;
 	private List<Query> queryCaixas = new ArrayList<Query>();
 	
 	public TarefasEntityNode(String queryChildren) {
@@ -25,7 +25,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 
 	public TarefasEntityNode(String[] queryChildren, List<Query> queryCaixas) {
 		super(queryChildren);
-		this.setQueryCaixas(queryCaixas);
+		this.queryCaixas = queryCaixas;
 	}
 
 	public TarefasEntityNode(EntityNode<Map<String,Object>> parent, 
@@ -127,8 +127,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	
 	@Override
 	protected TarefasEntityNode<Map<String,Object>> createChildNode(Map<String,Object> n) {
-		TarefasEntityNode<Map<String,Object>> node = new TarefasEntityNode<Map<String,Object>>(this, n, getQueryChildren(), queryCaixas);
-		return node;
+		return new TarefasEntityNode<Map<String,Object>>(this, n, getQueryChildren(), queryCaixas);
 	}
 
 	public Integer getTarefaId() {

@@ -36,8 +36,7 @@ public class MinutoTimeConverter implements Converter {
 	private static final int MINUTOS_HORA = 60;
 	
 	@Override
-	public Object getAsObject(FacesContext context, UIComponent component,
-			String value) throws ConverterException {
+	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		if (value == null || value.trim().length() == 0) {
 			return null;
 		}
@@ -59,8 +58,7 @@ public class MinutoTimeConverter implements Converter {
 	
 
 	@Override
-	public String getAsString(FacesContext context, UIComponent component,
-			Object value) throws ConverterException {
+	public String getAsString(FacesContext context, UIComponent component, Object value) {
 		long minutos = 0;
 		if (value instanceof Time) {
 			Time time = (Time) value;

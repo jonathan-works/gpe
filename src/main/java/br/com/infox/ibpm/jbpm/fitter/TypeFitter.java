@@ -13,6 +13,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.bpm.action.TaskPageAction;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
@@ -26,6 +28,7 @@ public class TypeFitter extends Fitter implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "typeFitter";
+	private static final LogProvider LOG = Logging.getLogProvider(TypeFitter.class);
 	
 	private List<String> typeList;
 	private Properties types;
@@ -60,7 +63,7 @@ public class TypeFitter extends Fitter implements Serializable{
 			} catch (Exception e) {
 				FacesMessages.instance().add(Severity.ERROR,
 						"Erro ao carregar a lista de componentes: {0}", e);
-				e.printStackTrace();
+				LOG.error(".getTypeList()", e);
 			} finally {
 				FileUtil.close(input);
 			}
@@ -80,7 +83,7 @@ public class TypeFitter extends Fitter implements Serializable{
 	}
 	
 	private void verifyAvaliableTypes(List<String> tList) {
-		TaskHandler currentTask = pb.getTaskFitter().getCurrentTask();
+		TaskHandler currentTask = getProcessBuilder().getTaskFitter().getCurrentTask();
 		if (currentTask != null) {
 			for (VariableAccessHandler vah : currentTask.getVariables()) {
 				if (vah.getType().equals(

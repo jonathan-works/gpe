@@ -15,17 +15,13 @@
 */
 package br.com.infox.ibpm.search;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.lucene.demo.html.HTMLParser;
 import org.hibernate.Query;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
@@ -38,11 +34,12 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import br.com.infox.search.Indexer;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
-import br.com.itx.util.FileUtil;
 
 @Name("reindexer")
 @BypassInterceptors
@@ -78,7 +75,7 @@ public class Reindexer {
 				indexer.index(ti.getId() + "", Collections.EMPTY_MAP, fields);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+		    LOG.error(".execute()", e);
 		}
 		scroll.close();
 		session.getTransaction().commit();
@@ -99,23 +96,8 @@ public class Reindexer {
 	}
 
 	public static String getTextoIndexavel(String texto) {
-		BufferedReader br = null;
-		Reader reader = null;
-		try {
-			reader = new HTMLParser(new StringReader(texto)).getReader();
-			br = new BufferedReader(reader);
-			String line = null;
-			StringBuilder sb = new StringBuilder();
-			while ((line=br.readLine()) != null) {
-				sb.append(line).append(System.getProperty("line.separator"));
-			}
-			return sb.toString();
-		} catch (Exception e) {
-		} finally {
-			FileUtil.close(reader);
-			FileUtil.close(br);
-		}
-		return texto;
+		    Document doc = Jsoup.parse(texto);
+	        return doc.body().text();
 	}
 
 	

@@ -67,14 +67,13 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 	
 	@Override
 	protected EntityNode<Localizacao> createNode() {
-		LocalizacaoNode node = new LocalizacaoNode(getQueryChildrenList());
-		return node;
+		return new LocalizacaoNode(getQueryChildrenList());
 	}
 	
 	@Override
 	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
 		UITree tree = (UITree) ev.getSource();
-		treeId = tree.getId();
+		setTreeId(tree.getId());
 		@SuppressWarnings("unchecked")
 		EntityNode<Localizacao> en = (EntityNode<Localizacao>) tree.getData(); 
 		setSelected(en.getEntity());

@@ -53,18 +53,23 @@ public class PessoaJuridica extends Pessoa {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof PessoaJuridica))
+		}
+		if (!(obj instanceof PessoaJuridica)) {
 			return false;
+		}
 		PessoaJuridica other = (PessoaJuridica) obj;
 		if (cnpj == null) {
-			if (other.cnpj != null)
+			if (other.cnpj != null) {
 				return false;
-		} else if (!cnpj.equals(other.cnpj))
+			}
+		} else if (!cnpj.equals(other.cnpj)) {
 			return false;
+		}
 		return true;
 	}
 }

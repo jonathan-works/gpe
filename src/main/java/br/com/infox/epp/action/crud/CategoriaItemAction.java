@@ -30,6 +30,7 @@ public class CategoriaItemAction extends AbstractHome<CategoriaItem> {
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "categoriaItemAction";
+    private static final String PERSISTED = "persisted";
 
     @In
     private CategoriaItemManager categoriaItemManager;
@@ -115,7 +116,6 @@ public class CategoriaItemAction extends AbstractHome<CategoriaItem> {
     @Override
     public String persist() {
         Set<Item> folhas = getFolhas(getInstance().getItem());
-        final String PERSISTED = "persisted";
         boolean hasInserted = false;
         if (folhas != null) {
             Categoria categoria = categoriaItemManager.getCategoriaAtual();

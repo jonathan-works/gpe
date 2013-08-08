@@ -35,10 +35,10 @@ public class ItemList extends EntityList<Item> {
 	}
 	
 	protected void addSearchFields() {
-		addSearchField("descricaoItem", SearchCriteria.contendo);
-		addSearchField("itemPai", SearchCriteria.contendo, R1);
-		addSearchField("codigoItem", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("descricaoItem", SearchCriteria.CONTENDO);
+		addSearchField("itemPai", SearchCriteria.CONTENDO, R1);
+		addSearchField("codigoItem", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	protected Map<String, String> getCustomColumnsOrder() {

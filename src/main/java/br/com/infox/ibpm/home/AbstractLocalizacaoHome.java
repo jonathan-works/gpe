@@ -78,12 +78,10 @@ public abstract class AbstractLocalizacaoHome<T> extends
 	@Override
 	public String persist() {		
 		String action = super.persist();
-		if (action != null){
-			if (getInstance().getLocalizacaoPai() != null){
-				List<Localizacao> localizacaoPaiList = getInstance().getLocalizacaoPai().getLocalizacaoList();
-				if (!localizacaoPaiList.contains(instance)){
-					getEntityManager().refresh(getInstance().getLocalizacaoPai());
-				}
+		if (action != null && getInstance().getLocalizacaoPai() != null){
+			List<Localizacao> localizacaoPaiList = getInstance().getLocalizacaoPai().getLocalizacaoList();
+			if (!localizacaoPaiList.contains(instance)){
+				getEntityManager().refresh(getInstance().getLocalizacaoPai());
 			}
 		}
 		return action;

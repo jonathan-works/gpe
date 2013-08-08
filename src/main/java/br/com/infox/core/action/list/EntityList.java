@@ -1,6 +1,5 @@
 package br.com.infox.core.action.list;
 
-import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +16,8 @@ import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.framework.EntityQuery;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
@@ -26,6 +27,8 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	private static final String FIELD_EXPRESSION = "#'{'{0}List.entity.{1}}";
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final LogProvider LOG = Logging.getLogProvider(EntityList.class);
 
 	protected static final int DEFAULT_MAX_RESULT = 20;
 
@@ -35,7 +38,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	private Integer page = 1;
 
-	protected E entity;
+	private E entity;
 
 	private String orderedColumn;
 	
@@ -114,35 +117,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	public String getCriteria() {
 		final StringBuilder sb = new StringBuilder();
-		visitFields(new FieldCommand() {
-
-			@Override
-			public void execute(SearchField s, Object object) {
-
-				// Trata os tipos Booleanos
-				String atributeLabel = "";
-				String entityName = getEntityName();
-				if (object instanceof Boolean) {
-				    atributeLabel = Messages.instance().get(MessageFormat.format(
-                            "{0}.{1}.{2}", entityName, s.getName(), (Boolean)object));
-				} else if (object instanceof Date) {
-				    atributeLabel = DateFormat.getDateInstance().format(object);
-				} else {
-					// Caso não for booleano
-					atributeLabel = object.toString();
-				}
-
-				
-				sb.append(Messages.instance().get(MessageFormat.format(
-						"{0}.{1}", entityName, s.getName())))
-						.append(" ")
-						.append(s.getCriteria())
-						.append(" '")
-						.append(atributeLabel)
-						.append("'\n");
-			}
-
-		});
+		visitFields(new FieldCommandImpl(getEntityName(), sb));
 		if (sb.length() != 0) {
 		    sb.insert(0, ":\n");
 	        sb.insert(0,(getRestrictionLogicOperator().equals("and") ?
@@ -176,7 +151,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 				o = ve.getValue();
 			} catch (PropertyNotFoundException e) {
 				// para o caso de uma restriction mapeada não seja um campo da entidade
-			    e.printStackTrace();
+			    LOG.error(".visitFields()", e);
 			}
 			if (o != null) {
 				command.execute(s, o);
@@ -228,7 +203,8 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	private static String toString(Object object) {
 		if (object == null) {
 			return null;
-		} else if (object instanceof String) { // apenas para encurtar o caminho
+		} else if (object instanceof String) {
+		    // apenas para encurtar o caminho
 			return object.toString();
 		} else if (object instanceof Date) {
 			return MessageFormat.format("{0,date,yyyy-MM-dd HH:mm:ss:SSS}", object);
@@ -245,7 +221,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		try {
 			setEntity((E) EntityUtil.newInstance(getClass()));
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".newInstance()", e);
 		}
 	}
 	
@@ -288,22 +264,23 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		}
 		Object object = ReflectionsUtil.getValue(entity, s.getName());
 		return !(object != null 
-			&& s.getCriteria().equals(SearchCriteria.igual)
+			&& s.getCriteria().equals(SearchCriteria.IGUAL)
 			&& "and".equals(getRestrictionLogicOperator()));
 	}
 
-	public void setOrderedColumn(String order) {
-		if(!order.endsWith("asc") && !order.endsWith("desc")) {
-			order = order.trim().concat(" asc");
+	public final void setOrderedColumn(String order) {
+	    String newOrder = order;
+		if(!newOrder.endsWith("asc") && !newOrder.endsWith("desc")) {
+			newOrder = newOrder.trim().concat(" asc");
 		}
-		String[] fields = order.split(" ");
-		order = customColumnsOrder.getProperty(fields[0], fields[0]);
+		String[] fields = newOrder.split(" ");
+		newOrder = customColumnsOrder.getProperty(fields[0], fields[0]);
 		this.orderedColumn = fields[0];
 		if (fields.length > 1) {
-			order = order + " " + fields[1];
+			newOrder = newOrder + " " + fields[1];
 			this.orderedColumn = fields[0] + " " + fields[1];
 		}
-		setOrder(order);
+		setOrder(newOrder);
 	}
 	
 	public String getOrderedColumn() {

@@ -71,7 +71,6 @@ public abstract class AbstractModeloDocumentoHome<T>
 						getInstance().getTipoModeloDocumento());
 			}
 		}
-		//newInstance();
 		return action;
 	}
 

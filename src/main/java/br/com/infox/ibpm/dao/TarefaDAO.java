@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
-import javax.persistence.TransactionRequiredException;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.annotations.AutoCreate;
@@ -54,7 +52,7 @@ public class TarefaDAO extends GenericDAO {
 	 * Popula a tabela tb_tarefa com todas as tarefas de todos os fluxos, 
 	 * considerando como chave o nome da tarefa task.name_
 	 */
-	public void encontrarNovasTarefas() throws IllegalStateException, TransactionRequiredException{
+	public void encontrarNovasTarefas() {
 		String hql = "insert into public.tb_tarefa (id_fluxo, ds_tarefa) " +
 						"select f.id_fluxo, t.name_ from jbpm_task t " +
 							"inner join jbpm_processdefinition pd on (pd.id_ = t.processdefinition_) " +

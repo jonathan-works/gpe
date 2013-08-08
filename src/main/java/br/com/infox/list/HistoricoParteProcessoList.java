@@ -17,12 +17,12 @@ public class HistoricoParteProcessoList extends EntityList<ParteProcesso> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("parteProcesso", SearchCriteria.igual, R1);
-		addSearchField("responsavelPorModificacao", SearchCriteria.igual);
-		addSearchField("dataModificacao", SearchCriteria.dataIgual);
-		addSearchField("motivoModificacao", SearchCriteria.contendo);
-		addSearchField("nomeParte", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("parteProcesso", SearchCriteria.IGUAL, R1);
+		addSearchField("responsavelPorModificacao", SearchCriteria.IGUAL);
+		addSearchField("dataModificacao", SearchCriteria.DATA_IGUAL);
+		addSearchField("motivoModificacao", SearchCriteria.CONTENDO);
+		addSearchField("nomeParte", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	@Override

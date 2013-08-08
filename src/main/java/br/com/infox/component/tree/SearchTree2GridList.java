@@ -21,6 +21,7 @@ import java.util.List;
 import org.jboss.seam.util.Strings;
 
 import br.com.itx.component.grid.GridQuery;
+import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.ComponentUtil;
 
@@ -83,7 +84,7 @@ public class SearchTree2GridList <E> {
 			}
 		} else {
 			for (EntityNode<E> node : treeHandler.getRoots()) {
-				if (canAdd(node, result)) {
+				if (canAdd(node)) {
 					result.add(node);
 				}
 				getChildren(node, result);
@@ -96,14 +97,15 @@ public class SearchTree2GridList <E> {
 	 * Verifica se o registro selecionado é um dos filhos do nó em execução.
 	 */
 	private boolean isChildren(EntityNode<E> node, boolean ret){
+	    boolean retorno = ret;
 		List<EntityNode<E>> childList = getChildList(node);
 		for (EntityNode<E> e : childList) {
 			if(e.equals(treeHandler.getSelected())) {
 				return true;
 			}
-			ret = isChildren(e, ret);
+			retorno = isChildren(e, ret);
 		}
-		return ret;
+		return retorno;
 	}
 
 	/**
@@ -131,7 +133,7 @@ public class SearchTree2GridList <E> {
 	private void getChildren(EntityNode<E> node, List<EntityNode<E>> result){
 		List<EntityNode<E>> childList = getChildList(node);
 		for (EntityNode<E> loc : childList) {
-			if (canAdd(loc, result)) {
+			if (canAdd(loc)) {
 				result.add(loc);
 			}
 			getChildren(loc, result);
@@ -146,44 +148,46 @@ public class SearchTree2GridList <E> {
 	 * @param result - A lista que será exibida na Grid
 	 * @return Se True deve ser adicionado, se False, não deve.
 	 */
-	private boolean canAdd(EntityNode<E> node, List<EntityNode<E>> result) {
+	private boolean canAdd(EntityNode<E> node) {
 		boolean ret = isLogicOperatorAnd();
-		if (searchBean != null) {
-			if (filterName !=  null) {
-				for (String atributeName : filterName) {
-					Object searchField = ComponentUtil.getValue(searchBean, atributeName);
-					Object nodeField = ComponentUtil.getValue(node.getEntity(), atributeName);
-					if (searchField instanceof String) {
-						//Caso o campo do search seja String e venha uam String vazia muda seu valor 
-						//para null de modo que o filtro seja ignorado
-						searchField = Strings.nullIfEmpty((String) searchField);
-					}
-					if (searchField != null) {
-						if (nodeField instanceof String) {
-							boolean condEval = nodeField.toString().toLowerCase()
-									.contains(searchField.toString().toLowerCase());
-							//Se a pesquisa na grid estiver usando qualquer 
-							//expressão ele usa um 'or'
-							if (isLogicOperatorAnd()) {
-								ret &= condEval;
-							} else {
-								ret |= condEval;
-							}
-						} else {
-							if (isLogicOperatorAnd()) {
-								ret &= searchField.equals(nodeField);
-							} else {
-								ret |= searchField.equals(nodeField);
-							}							
-						}
+		if (searchBean != null && filterName !=  null) {
+			for (String atributeName : filterName) {
+				Object searchField = ComponentUtil.getValue(searchBean, atributeName);
+				Object nodeField = ComponentUtil.getValue(node.getEntity(), atributeName);
+				if (searchField instanceof String) {
+					//Caso o campo do search seja String e venha uam String vazia muda seu valor 
+					//para null de modo que o filtro seja ignorado
+					searchField = Strings.nullIfEmpty((String) searchField);
+				}
+				if (searchField != null) {
+					if (nodeField instanceof String) {
+						boolean condEval = nodeField.toString().toLowerCase()
+								.contains(searchField.toString().toLowerCase());
+						//Se a pesquisa na grid estiver usando qualquer 
+						//expressão ele usa um 'or'
 						if (isLogicOperatorAnd()) {
-							if(!ret) { return ret; }
+							ret &= condEval;
 						} else {
-							if(ret) { return ret; }									
-						}						
+							ret |= condEval;
+						}
+					} else {
+						if (isLogicOperatorAnd()) {
+							ret &= searchField.equals(nodeField);
+						} else {
+							ret |= searchField.equals(nodeField);
+						}							
 					}
-				}			
-			}
+					if (isLogicOperatorAnd()) {
+						if(!ret) { 
+						    return ret;
+					    }
+					} else {
+						if(ret) {
+						    return ret;
+					    }									
+					}						
+				}
+			}			
 		}
 		return ret;
 	}
@@ -204,7 +208,7 @@ public class SearchTree2GridList <E> {
 				ident.append("    ");
 			}
 			if (pai == pai.getParent()) {
-				throw new RuntimeException("A tree esta em loop");
+				throw new AplicationException("A tree esta em loop");
 			}
 			pai = pai.getParent();
 		}

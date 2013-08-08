@@ -42,10 +42,8 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 
 	private String beforeResultEvent;	
 	
-	protected List fullList;
+	private List fullList;
 
-	protected Long resultCount;
-	
 	public List<String> getConditions() {
 		return conditions;
 	}
@@ -78,7 +76,6 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		this.countEjbql = countEjbql;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public List getResultList() {
 		if (!checkConditions()) {
@@ -112,7 +109,6 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		return dataModel;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List getFullList() {
 		if (fullList != null) {
 			return fullList;
@@ -140,8 +136,7 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		if (!checkConditions()){
 			return 0L;
 		}
-		resultCount = super.getResultCount();
-		return resultCount;
+		return super.getResultCount();
 	}
 	
 	private boolean checkConditions() {

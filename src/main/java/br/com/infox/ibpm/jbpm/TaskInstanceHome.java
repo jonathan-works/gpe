@@ -79,8 +79,6 @@ public class TaskInstanceHome implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceHome";
 
-    // TODO mudar o nome dessa variavel e o conteudo ficar #{HIDDEN_TRANSITION}
-    // criar um Factory para essa variável, de aplicaçao, retornando true
     private static final String OCCULT_TRANSITION = "#{true}";
 
     private TaskInstance taskInstance;
@@ -212,16 +210,13 @@ public class TaskInstanceHome implements Serializable {
                     String name = var.getMappedName().split(":")[1];
                     Object value = getValueFromInstanceMap(name);
 
-                    if ("numberMoney".equals(type)) {
-                        if (value != null) {
-                            String val = String.valueOf(value);
-
-                            try {
-                                value = Float.parseFloat(val);
-                            } catch (NumberFormatException e) {
-                                value = Float.parseFloat(val.replace(".", "")
-                                        .replace(",", "."));
-                            }
+                    if ("numberMoney".equals(type) && value != null) {
+                        String val = String.valueOf(value);
+                        try {
+                            value = Float.parseFloat(val);
+                        } catch (NumberFormatException e) {
+                            value = Float.parseFloat(val.replace(".", "")
+                                    .replace(",", "."));
                         }
                     }
 
@@ -325,7 +320,7 @@ public class TaskInstanceHome implements Serializable {
             indexer.index(taskInstance.getId() + "",
                     new HashMap<String, String>(), fields);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(".updateIndex()", e);
         }
     }
 
@@ -345,12 +340,9 @@ public class TaskInstanceHome implements Serializable {
     public String end(String transition) {
         if (checkAccess()) {
             TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
-            if (currentTaskInstance != null) {
-                if (tempTask == null
-                        || tempTask.getId() != currentTaskInstance.getId()) {
-                    FacesMessages.instance().clear();
-                    throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
-                }
+            if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
+                FacesMessages.instance().clear();
+                throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
             }
             this.currentTaskInstance = null;
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
@@ -359,7 +351,7 @@ public class TaskInstanceHome implements Serializable {
             try {
                 BusinessProcess.instance().endTask(transition);
             } catch (JbpmException e) {
-                e.printStackTrace();
+                LOG.error(".end()", e);
             }
             
             boolean canClosePanel = false;

@@ -132,8 +132,7 @@ public final class LdapUtil {
 	 */
 	public static NamingEnumeration<SearchResult> pesquisarUsuariosLDAP() {
 		String pes = "(objectclass=person)";
-		NamingEnumeration<SearchResult> results = pesquisarLDAP(pes);
-		return results;
+		return pesquisarLDAP(pes);
 	}
 
 	private static NamingEnumeration<SearchResult> pesquisarLDAP(String search) {
@@ -149,7 +148,7 @@ public final class LdapUtil {
 			ctx.close();
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			LOG.error(".pesquisarLDAP()", e);
 		}
 
 		return results;

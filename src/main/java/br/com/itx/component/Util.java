@@ -33,11 +33,7 @@ import java.util.Map.Entry;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-
-import org.hibernate.AnnotationException;
 import org.hibernate.LazyInitializationException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -71,6 +67,7 @@ public class Util implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(Util.class);
+    private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
 	/**
 	 * Retorna o caminho do projeto.
@@ -192,8 +189,7 @@ public class Util implements Serializable {
 		return (action != null ? action[0] : "");
 	}
 	
-	public String homeEvent(String event, EntityHome<?> home, String type) 
-	throws Exception {
+	public String homeEvent(String event, EntityHome<?> home, String type) {
 		Context eventContext = Contexts.getEventContext();
 		eventContext.set("homeActionType", type);
 		eventContext.set("home", home);
@@ -425,27 +421,14 @@ public class Util implements Serializable {
 	 * @return
 	 */
 	public Object getSelectExpressionSelectItem(String expression, Object obj) {
+	    Object returnObject = "";
 		if (!Strings.isEmpty(expression)) {
 			Contexts.getMethodContext().set("obj", obj);
-			expression = expression.replace("{", "#{obj.");
-			obj = obj == null ? "" : 
-			Expressions.instance().createValueExpression(expression).getValue();
+			String auxiliarExpression = expression.replace("{", "#{obj.");
+			returnObject = obj == null ? "" : Expressions.instance().createValueExpression(auxiliarExpression).getValue();
 			Contexts.getMethodContext().remove("obj");
 		}
-		return obj;
-	}
-	
-	public static DataSource getDataSource(String dataSource) throws Exception {
-		InitialContext cxt = new InitialContext();
-		if ( cxt == null ) {
-			throw new Exception("No context!");
-		}		
-		return (DataSource) cxt.lookup(dataSource);
-	}
-	
-	public static DataSource getDataSourceBin() throws Exception {
-		String ds = "java:/" + new Util().eval("dataSourceNameBin");
-		return getDataSource(ds);
+		return returnObject;
 	}
 	
 	public String getContextsAsString(Context context, boolean htmlBreak) {
@@ -470,7 +453,7 @@ public class Util implements Serializable {
 			return true;
 		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(".beginTransaction()", e);
 			throw new AplicationException(AplicationException.
 					createMessage("iniciar transação", 
 								  "beginTransaction()", 
@@ -487,7 +470,7 @@ public class Util implements Serializable {
 				ut.commit();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".commitTransction()", e);
 			throw new AplicationException(AplicationException.
 					createMessage("iniciar transação", 
 								  "beginTransaction()", 
@@ -587,7 +570,7 @@ public class Util implements Serializable {
 	 * @return Valor do Id
 	 * @throws AnnotationException
 	 */
-	public Object getIdValue(Object object) throws AnnotationException {
+	public Object getIdValue(Object object) {
 		return AnnotationUtil.getIdValue(object);
 	}
 	
@@ -602,7 +585,7 @@ public class Util implements Serializable {
 			formatter.setMinimumIntegerDigits(1);
 			formatter.setMaximumFractionDigits(2);
 			formatter.setMinimumFractionDigits(2);
-			float kbytes = bytes / 1024f;
+			float kbytes = bytes / BYTES_IN_A_KILOBYTE;
 			return formatter.format(kbytes) + " Kb";
 		} else {
 			return null;

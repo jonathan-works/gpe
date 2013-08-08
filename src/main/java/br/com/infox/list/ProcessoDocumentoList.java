@@ -22,7 +22,7 @@ public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("idProcesso", SearchCriteria.igual, ProcessoDocumentoList.R1);
+		addSearchField("idProcesso", SearchCriteria.IGUAL, ProcessoDocumentoList.R1);
 	}
 
 	@Override

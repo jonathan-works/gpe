@@ -18,6 +18,7 @@ package br.com.itx.component;
 import static org.jboss.seam.faces.FacesMessages.instance;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,9 @@ import br.com.itx.util.ExcelExportUtil;
 @SuppressWarnings("unchecked")
 public abstract class AbstractHome<T> extends EntityHome<T> {
 	
-	private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
+	private static final int TAMANHO_XLS_PADRAO = 10000;
+
+    private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
 
 	private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
 
@@ -160,7 +163,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			try {
 				clearUnlocked();
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".newInstance()", e);
 			}
 		} else {			
 			setId(null);
@@ -178,7 +181,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				updateOldInstance();
 				Events.instance().raiseEvent("logLoadEventNow", instance);
 			} catch (Exception e) {
-				e.printStackTrace();
+			    LOG.error(".setId", e);
 			}
 		}
 	}
@@ -191,7 +194,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		try {
 			oldEntity = (T) EntityUtil.cloneObject(instance, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    LOG.error(".updateOldInstance()", e);
 		} 
 	}	
 
@@ -206,7 +209,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, getRemoveError());
-			e.printStackTrace();
+			LOG.error(".remove()", e);
 		}
 		return ret;
 	}
@@ -229,7 +232,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public String persist() {
 		StopWatch sw = new StopWatch(true);
 		String ret = null;
-		String msg = ".persist() (" + getInstanceClassName() + ")";
+		String msg = getPersistLogMessage();
 		try {
 			if (beforePersistOrUpdate()) {
 				ret = super.persist();
@@ -239,10 +242,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			}
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
-			LOG.error(".persist() (" + getInstanceClassName() + ")", e);			
+			LOG.error(getPersistLogMessage(), e);			
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, getNonUniqueObjectExceptionMessage());
-			LOG.error(".persist() (" + getInstanceClassName() + ")", e);	
+			LOG.error(getPersistLogMessage(), e);	
 		} catch (AplicationException e){
 			throw new AplicationException("Erro: " + e.getMessage(), e);
 		} catch (javax.persistence.PersistenceException e) {
@@ -254,7 +257,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         } catch (Exception e) {
             instance().add(StatusMessage.Severity.ERROR,
                     "Erro ao gravar: " + e.getMessage(), e);
-            LOG.error(".persist() (" + getInstanceClassName() + ")", e);
+            LOG.error(getPersistLogMessage(), e);
 		} 
 		if (!PERSISTED.equals(ret)) {
 			 // Caso ocorra algum erro, é criada uma copia do instance sem o Id e os List
@@ -262,14 +265,17 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				Transaction.instance().rollback();
 				setInstance((T) EntityUtil.cloneEntity(getInstance(), false));
 			} catch (Exception e) {
-				LOG.warn(".persist() (" + getInstanceClassName() + "): " + 
-						Strings.toString(getInstance()), e);
+				LOG.warn(getPersistLogMessage() + Strings.toString(getInstance()), e);
 				newInstance();
 			}
 		} 
-		LOG.info(".persist() (" + getInstanceClassName() + "): " + sw.getTime());
+		LOG.info(getPersistLogMessage() + sw.getTime());
 		return ret;
 	}
+    
+    private String getPersistLogMessage() {
+        return ".persist() (" + getInstanceClassName() + "):";
+    }
 	
 
 	/**
@@ -297,7 +303,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				ret = afterPersistOrUpdate(ret);
 			}
 		} catch (AssertionFailure e) {
-			LOG.warn(".persist() (" + getInstanceClassName() + "): " + e.getMessage());
+			LOG.warn(getPersistLogMessage()  + e.getMessage());
 			ret = PERSISTED;
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
@@ -482,9 +488,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	/**
 	 * Limpa todos os campos que não foram marcados.
-	 * @throws Exception
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
 	 */
-	public void clearUnlocked() throws Exception {
+	public void clearUnlocked() throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(getInstance());	 
 		T t = (T) getInstance().getClass().newInstance();
 		for (PropertyDescriptor pd : pds) {
@@ -525,7 +534,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	public void exportarXLS() {
-		List<T> beanList = getBeanList().list(10000);
+		List<T> beanList = getBeanList().list(TAMANHO_XLS_PADRAO);
 		try {
 			if (beanList == null || beanList.isEmpty()) {
 				FacesMessages.instance().add(Severity.INFO, "Não há dados para exportar!");
@@ -548,7 +557,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	private String tratarErrosDePersistencia(String ret){
 		String message = null;
-		if (PostgreSQLErrorCode.unique_violation.toString().equals(ret)){
+		if (PostgreSQLErrorCode.UNIQUE_VIOLATION.toString().equals(ret)){
 			message = MSG_REGISTRO_CADASTRADO;
 		}
 		if (message != null) {

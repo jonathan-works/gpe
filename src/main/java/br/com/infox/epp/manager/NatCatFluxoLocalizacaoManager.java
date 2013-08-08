@@ -32,7 +32,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	public static final String NAME = "natCatFluxoLocalizacaoManager";
 
 	@In
-	public NatCatFluxoLocalizacaoDAO natCatFluxoLocalizacaoDAO;
+	private NatCatFluxoLocalizacaoDAO natCatFluxoLocalizacaoDAO;
 	
 	/**
 	 * Persiste o registro e para cada localizacao filha a localizacao contida
@@ -75,9 +75,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * onde a heranca = true.
 	 * @param natCatFluxoLocalizacao
 	 */
-	public void saveWithChidren(NatCatFluxoLocalizacao natCatFluxoLocalizacao,
-								NatCatFluxoLocalizacao dataBaseOldObject) 
-			throws Exception {
+	public void saveWithChidren(NatCatFluxoLocalizacao natCatFluxoLocalizacao, NatCatFluxoLocalizacao dataBaseOldObject) {
 		/*
 		 * Verifica se a heranca nunca foi ativada
 		 */
@@ -128,7 +126,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * @param newNCF naturezaCategoriaFluxo nova a ser atualizada.
 	 */
 	private void updateChildren(Localizacao localizacao, NaturezaCategoriaFluxo oldNCF, 
-							   NaturezaCategoriaFluxo newNCF) throws Exception {
+							   NaturezaCategoriaFluxo newNCF) {
 		if(localizacao.getLocalizacaoList() != null && localizacao.getLocalizacaoList().size() > 0) {
 			for(Localizacao l : localizacao.getLocalizacaoList()) {
 				updateChildren(l, oldNCF, newNCF);
@@ -146,8 +144,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * @param localizacao
 	 * @param ncfl
 	 */
-	private void removeChildren(Localizacao localizacao, NatCatFluxoLocalizacao ncfl) 
-			throws Exception{
+	private void removeChildren(Localizacao localizacao, NatCatFluxoLocalizacao ncfl) {
 		if(localizacao.getLocalizacaoList() != null && localizacao.getLocalizacaoList().size() > 0) {
 			for(Localizacao l : localizacao.getLocalizacaoList()) {
 				removeChildren(l, ncfl);

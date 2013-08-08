@@ -23,9 +23,9 @@ public class VariavelList extends EntityList<Variavel> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("variavel", SearchCriteria.contendo);
-		addSearchField("valorVariavel", SearchCriteria.contendo);
-		addSearchField("ativo", SearchCriteria.igual);
+		addSearchField("variavel", SearchCriteria.CONTENDO);
+		addSearchField("valorVariavel", SearchCriteria.CONTENDO);
+		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
 	@Override

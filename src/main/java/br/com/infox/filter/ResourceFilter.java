@@ -33,6 +33,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.annotations.web.Filter;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Resources;
 import org.jboss.seam.util.Strings;
 import org.jboss.seam.web.AbstractFilter;
@@ -46,6 +48,7 @@ public class ResourceFilter extends AbstractFilter {
 
 	
 	private static final String PATTERN = "/img/.*|/resources/js/.*|/resources/stylesheet/.*|/resources/styleSkinInfox/.*";
+	private static final LogProvider LOG = Logging.getLogProvider(ResourceFilter.class);
  
 	@Override
 	public String getRegexUrlPattern() {
@@ -77,13 +80,14 @@ public class ResourceFilter extends AbstractFilter {
 			try {
 				ServletOutputStream os = response.getOutputStream();
 				byte[] trecho = new byte[10240];
-			    for ( int n; (n = is.read(trecho)) != -1; ) {
+			    for ( int n; is.read(trecho) != -1; ) {
+			        n = is.read(trecho);
 			    	os.write(trecho, 0, n);
 			    }
                 is.close();
     	        os.flush();
             } catch (IOException err) {
-				err.printStackTrace();
+                LOG.error(".writeResponse()", err);
 			}
 		} else {
 			try {
@@ -91,7 +95,7 @@ public class ResourceFilter extends AbstractFilter {
 				response.getWriter().write(text.trim());
 				response.getWriter().flush();
 			} catch (IOException e) {
-				e.printStackTrace();
+			    LOG.error(".writeResponse()", e);
 			}
 		}
 		response.setStatus(HttpServletResponse.SC_OK);

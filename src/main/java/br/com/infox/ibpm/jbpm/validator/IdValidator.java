@@ -31,8 +31,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 @BypassInterceptors
 public class IdValidator implements Validator {
 
-	public void validate(FacesContext fc, UIComponent ui, Object obj)
-			throws ValidatorException {
+	public void validate(FacesContext fc, UIComponent ui, Object obj) {
 		String id = (String) obj;
 		UIComponent test = new UIMessage();
 		try {

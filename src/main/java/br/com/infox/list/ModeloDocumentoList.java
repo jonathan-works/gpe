@@ -29,10 +29,10 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 	}
 	
 	protected void addSearchFields() {
-		addSearchField("ativo", SearchCriteria.igual);
-		addSearchField("tipoModeloDocumento", SearchCriteria.igual);
-		addSearchField("tituloModeloDocumento", SearchCriteria.contendo);
-		addSearchField("validaPapel", SearchCriteria.igual, R1);
+		addSearchField("ativo", SearchCriteria.IGUAL);
+		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
+		addSearchField("tituloModeloDocumento", SearchCriteria.CONTENDO);
+		addSearchField("validaPapel", SearchCriteria.IGUAL, R1);
 	}
 
 	protected Map<String, String> getCustomColumnsOrder() {

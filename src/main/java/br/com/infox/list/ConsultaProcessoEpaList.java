@@ -30,11 +30,11 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("idProcesso", SearchCriteria.igual, R1);
-		addSearchField("caixa.idCaixa", SearchCriteria.igual, R2);
-		addSearchField("numeroProcesso", SearchCriteria.igual, R3);
-		addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.igual, R4);
-		addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.igual, R5);
+		addSearchField("idProcesso", SearchCriteria.IGUAL, R1);
+		addSearchField("caixa.idCaixa", SearchCriteria.IGUAL, R2);
+		addSearchField("numeroProcesso", SearchCriteria.IGUAL, R3);
+		addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL, R4);
+		addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL, R5);
 	}
 
 	@Override

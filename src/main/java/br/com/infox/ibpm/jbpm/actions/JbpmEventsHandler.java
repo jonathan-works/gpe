@@ -30,7 +30,9 @@ import br.com.itx.util.ComponentUtil;
 @Scope(ScopeType.EVENT)
 public class JbpmEventsHandler implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final String BPM = "BPM";
+    private static final String JBPM_EVENTS_HANDLER = "JbpmEventsHandler";
+    private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(JbpmEventsHandler.class);
 
 	public static final String NAME = "jbpmEventsHandler";
@@ -55,7 +57,7 @@ public class JbpmEventsHandler implements Serializable {
 		LOG.warn(action, e);
 		throw new AplicationException(AplicationException.createMessage(
 		        action + e.getLocalizedMessage(),
-		        "removerProcessoLocalizacao()", "JbpmEventsHandler", "BPM"));
+		        "removerProcessoLocalizacao()", JBPM_EVENTS_HANDLER, BPM));
 	}
 
 	@Observer(Event.EVENTTYPE_TASK_END)
@@ -78,7 +80,7 @@ public class JbpmEventsHandler implements Serializable {
 		LOG.error(action, e);
 		throw new AplicationException(AplicationException.createMessage(
 		        action + e.getLocalizedMessage(), "refreshPainel()",
-		        "JbpmEventsHandler", "BPM"));
+		        JBPM_EVENTS_HANDLER, BPM));
 	}
 	
 	/**
@@ -103,7 +105,7 @@ public class JbpmEventsHandler implements Serializable {
 		LOG.error(action, e);
 		throw new AplicationException(AplicationException.createMessage(
 		        action + e.getLocalizedMessage(), "updatePostDeploy()",
-		        "JbpmEventsHandler", "BPM"));
+		        JBPM_EVENTS_HANDLER, BPM));
 	}
 	
 	/**
@@ -127,7 +129,7 @@ public class JbpmEventsHandler implements Serializable {
 		LOG.warn(action, e);
 		throw new AplicationException(AplicationException.createMessage(
 		        action + e.getLocalizedMessage(), "removeCaixaProcesso()",
-		        "JbpmEventsHandler", "BPM"));
+		        JBPM_EVENTS_HANDLER, BPM));
 	}
 	
 	/**

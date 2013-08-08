@@ -5,7 +5,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class UrlUtil {
+public final class UrlUtil {
+    
+    private UrlUtil(){
+        super();
+    }
 	
 	public static InputStream getInputStreamUrl(String fileAddress) throws IOException {
 		URLConnection urlConn = null;

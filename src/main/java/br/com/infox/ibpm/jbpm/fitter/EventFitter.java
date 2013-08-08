@@ -30,7 +30,7 @@ public class EventFitter extends Fitter implements Serializable{
 	 * Metodo que adiciona o tratamento de eventos 
 	 */
 	public void addEvents() {
-		ProcessDefinition processDefinition = pb.getInstance();
+		ProcessDefinition processDefinition = getProcessBuilder().getInstance();
 		String[] supportedEvents = processDefinition.getSupportedEventTypes();
 		for (String e : supportedEvents) {
 			addEvent(processDefinition, e, "br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)", new Script());
@@ -70,14 +70,14 @@ public class EventFitter extends Fitter implements Serializable{
 	
 	public void setEventType(String type) {
 		Event event = currentEvent.getEvent();
-		pb.getInstance().removeEvent(event);
+		getProcessBuilder().getInstance().removeEvent(event);
 		ReflectionsUtil.setValue(event, "eventType", type);
-		pb.getInstance().addEvent(event);
+		getProcessBuilder().getInstance().addEvent(event);
 	}
 	
 	public List<EventHandler> getEventList() {
 		if (eventList == null) {
-			eventList = EventHandler.createList(pb.getInstance());
+			eventList = EventHandler.createList(getProcessBuilder().getInstance());
 			if (eventList.size() == 1) {
 				setCurrentEvent(eventList.get(0));
 			}
@@ -87,10 +87,10 @@ public class EventFitter extends Fitter implements Serializable{
 	
 	public List<String> getSupportedEventTypes() {
 		List<String> list = new ArrayList<String>();
-		String[] eventTypes = pb.getInstance().getSupportedEventTypes();
+		String[] eventTypes = getProcessBuilder().getInstance().getSupportedEventTypes();
 		List<String> currentEvents = new ArrayList<String>();
 		@SuppressWarnings("unchecked")
-		Collection<Event> values = pb.getInstance().getEvents().values();
+		Collection<Event> values = getProcessBuilder().getInstance().getEvents().values();
 		for (Event event : values) {
 			currentEvents.add(event.getEventType());
 		}

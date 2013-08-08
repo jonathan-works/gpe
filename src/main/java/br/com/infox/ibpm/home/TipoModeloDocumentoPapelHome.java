@@ -56,20 +56,13 @@ public class TipoModeloDocumentoPapelHome extends AbstractTipoModeloDocumentoPap
 	@Override
 	public String update() {
 		instance.setTipoModeloDocumento(TipoModeloDocumentoHome.instance().getInstance());
-		String ret = super.update();
-		return ret;
+		return super.update();
 	}
 
 	@Override
 	public String remove(TipoModeloDocumentoPapel obj) {
 		String msg = super.remove(obj);
 		newInstance();
-		return msg;
-	}
-	
-	@Override
-	public String remove() {
-		String msg = super.remove();
 		return msg;
 	}
 	

@@ -10,6 +10,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
@@ -17,7 +19,6 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.ibpm.dao.ProcessoDAO;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
-import br.com.infox.ibpm.dao.UsuarioLoginDAO;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
@@ -35,12 +36,12 @@ import br.com.itx.util.EntityUtil;
 public class ProcessoManager extends GenericManager {
 	
 	private static final long serialVersionUID = 8095772422429350875L;
+	private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
 	public static final String NAME = "processoManager";
 	
 	@In private ProcessoDAO processoDAO;
 	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-	@In private UsuarioLoginDAO usuarioLoginDAO;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
@@ -86,9 +87,10 @@ public class ProcessoManager extends GenericManager {
 	 * */
 	public Object getAlteracaoModeloDocumento(ProcessoDocumentoBin processoDocumentoBinAtual, Object value) {
 		if(processoDocumentoBinAtual.getModeloDocumento() != null) {
-			value = processoDocumentoBinAtual.getModeloDocumento();
+			return processoDocumentoBinAtual.getModeloDocumento();
+		} else {
+		    return value;
 		}
-		return value;
 	}
 	
 	public void addProcessoConexoForIdProcesso(Processo processoAtual, Processo processoConexo) {
@@ -133,7 +135,7 @@ public class ProcessoManager extends GenericManager {
             	bp.startTask();
             	result = true;
             } catch (IllegalStateException e) {
-            	e.printStackTrace();
+                LOG.error(".iniciaTask()", e);
             }
         }
     	return result;

@@ -71,7 +71,8 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	private Boolean ldap;
 	private Boolean bloqueio;
 	private Boolean provisorio;
-	private Date dataExpiracao; //Data de previsão para expirar o usuário provisório
+	//Data de previsão para expirar o usuário provisório
+	private Date dataExpiracao;
 	private Boolean temContaTwitter;
 
 	private Set<Papel> papelSet = new TreeSet<Papel>();
@@ -329,8 +330,9 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 
 	@Column(name="in_twitter", nullable=false)
 	public Boolean getTemContaTwitter() {
-		if (temContaTwitter == null)
-			temContaTwitter = false;
+		if (temContaTwitter == null) {
+		    temContaTwitter = false;
+		}
 		return temContaTwitter;
 	}
 
