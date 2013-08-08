@@ -25,10 +25,11 @@ import javax.persistence.Query;
 
 import org.jboss.seam.international.Messages;
 
-@SuppressWarnings("unchecked")
 public class SearchField implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
+	private static final int DEFAULT_MAX_RESULTS = 100;
+
+    private static final long serialVersionUID = 1L;
 
 	private String id;
 
@@ -128,7 +129,7 @@ public class SearchField implements Serializable {
 		String s = getQueryExpression();
 		Query query = grid.getEntityManager().createQuery(s);
 		query.setParameter("input", typed);
-		query.setMaxResults(100);
+		query.setMaxResults(DEFAULT_MAX_RESULTS);
 		return query.getResultList();
 	}
 
