@@ -49,7 +49,8 @@ import br.com.itx.util.EntityUtil;
 @Name(UsuarioHome.NAME)
 public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 
-	public static final String AFTER_SET_USUARIO_LOCALIZACAO_ATUAL_EVENT = "br.com.infox.ibpm.home.UsuarioHome.afterSetLocalizacaoAtual";
+	private static final int PASSWORD_LENGTH = 8;
+    public static final String AFTER_SET_USUARIO_LOCALIZACAO_ATUAL_EVENT = "br.com.infox.ibpm.home.UsuarioHome.afterSetLocalizacaoAtual";
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioHome";
 	public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
@@ -294,7 +295,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	}
 
 	public void gerarNovaSenha(String parametro) {
-		password = RandomStringUtils.randomAlphabetic(8);
+		password = RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH);
 		getInstance().setSenha(password);
 		new RunAsOperation(true) {
 			@Override
