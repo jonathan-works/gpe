@@ -16,7 +16,8 @@ import br.com.itx.util.ComponentUtil;
 @BypassInterceptors
 @Scope(ScopeType.CONVERSATION)
 public class ImagemBinHome extends AbstractHome<ImagemBin> {
-	private static final long serialVersionUID = 1L;
+	private static final int TAMANHO_MAXIMO_IMAGEM = 1572864;
+    private static final long serialVersionUID = 1L;
 	public static final String NAME = "imagemBinHome";
 	
 	public static final ImagemBinHome instance() {
@@ -55,7 +56,7 @@ public class ImagemBinHome extends AbstractHome<ImagemBin> {
 			return false;
 		}
 		Integer tamanho = instance.getTamanho();
-		if(tamanho != null && tamanho > 1572864){
+		if(tamanho != null && tamanho > TAMANHO_MAXIMO_IMAGEM){
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
 					"A imagem deve ter o tamanho máximo de 1.5MB!");
 			return false;
