@@ -49,7 +49,9 @@ import br.com.itx.util.ArrayUtil;
 @Table(name = "tb_processo_documento_bin", schema="public")
 public class ProcessoDocumentoBin implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final float BYTES_IN_A_KILOBYTE = 1024f;
+
+    private static final long serialVersionUID = 1L;
 
 	private int idProcessoDocumentoBin;
 	private UsuarioLogin usuario;
@@ -199,7 +201,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 	public String getSizeFormatado() {
 		if (size != null && size > 0) {
 			NumberFormat formatter = new DecimalFormat("###,##0.00");
-			float sizeF = size / 1024f;
+			float sizeF = size / BYTES_IN_A_KILOBYTE;
 			return formatter.format(sizeF) + " Kb";
 		} 
 		return "0 Kb";
