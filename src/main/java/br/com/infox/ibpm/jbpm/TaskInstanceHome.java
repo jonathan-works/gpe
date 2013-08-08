@@ -104,66 +104,70 @@ public class TaskInstanceHome implements Serializable {
             if (taskController != null) {
                 List<VariableAccess> list = taskController
                         .getVariableAccesses();
-                for (VariableAccess var : list) {
-                    String type = var.getMappedName().split(":")[0];
-                    String name = var.getMappedName().split(":")[1];
-                    Object variable = JbpmUtil.instance().getConteudo(var,
-                            taskInstance);
-                    String modelo = (String) ProcessInstance.instance()
-                            .getContextInstance().getVariable(name + "Modelo");
-                    Boolean assinado = Boolean.FALSE;
-                    Boolean isEditor = JbpmUtil.isTypeEditor(type);
-                    if (isEditor) {
-                        Integer id = (Integer) taskInstance.getVariable(var
-                                .getMappedName());
-                        if (id != null) {
-                            AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
-                            assinado = documentoService.isDocumentoAssinado(id);
-                        }
-                        if ((id != null) && (!assinado) && var.isWritable()) {
-                            ProcessoHome.instance().carregarDadosFluxo(id);
-                            instance.put(name, variable);
-                        }
-                    }
-                    if (modelo != null) {
-                        variavelDocumento = name;
-                        if (variable == null) {
-                            String s = modelo.split(",")[0].trim();
-                            modeloDocumento = EntityUtil.getEntityManager()
-                                    .find(ModeloDocumento.class,
-                                            Integer.parseInt(s));
-                            variable = ModeloDocumentoAction.instance()
-                                    .getConteudo(modeloDocumento);
-                            if (variable != null) {
-                                ProcessoHome
-                                        .instance()
-                                        .getProcessoDocumentoBin()
-                                        .setModeloDocumento(variable.toString());
-                            }
-                        }
-                    }
-                    if (!isEditor) {
-                        if (("numberMoney".equals(type)) && (variable != null)
-                                && (variable.getClass().equals(Float.class))) {
-                            variable = String.format("%.2f", variable);
-                        }
-                        instance.put(name, variable);
-                    }
-
-                    if ("form".equals(type)) {
-                        varName = name;
-                        if (null != variable) {
-                            AbstractHome<?> home = ComponentUtil
-                                    .getComponent(name + "Home");
-                            home.setId(variable);
-                        }
-                    }
-                }
+                avaliarVariaveis(list);
                 // Atualizar as transições possiveis. Isso é preciso, pois as
                 // condições das transições são avaliadas antes
                 // deste metodo ser executado.
                 updateTransitions();
 
+            }
+        }
+    }
+
+    private void avaliarVariaveis(List<VariableAccess> list) {
+        for (VariableAccess var : list) {
+            String type = var.getMappedName().split(":")[0];
+            String name = var.getMappedName().split(":")[1];
+            Object variable = JbpmUtil.instance().getConteudo(var,
+                    taskInstance);
+            String modelo = (String) ProcessInstance.instance()
+                    .getContextInstance().getVariable(name + "Modelo");
+            Boolean assinado = Boolean.FALSE;
+            Boolean isEditor = JbpmUtil.isTypeEditor(type);
+            if (isEditor) {
+                Integer id = (Integer) taskInstance.getVariable(var
+                        .getMappedName());
+                if (id != null) {
+                    AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
+                    assinado = documentoService.isDocumentoAssinado(id);
+                }
+                if ((id != null) && (!assinado) && var.isWritable()) {
+                    ProcessoHome.instance().carregarDadosFluxo(id);
+                    instance.put(name, variable);
+                }
+            }
+            if (modelo != null) {
+                variavelDocumento = name;
+                if (variable == null) {
+                    String s = modelo.split(",")[0].trim();
+                    modeloDocumento = EntityUtil.getEntityManager()
+                            .find(ModeloDocumento.class,
+                                    Integer.parseInt(s));
+                    variable = ModeloDocumentoAction.instance()
+                            .getConteudo(modeloDocumento);
+                    if (variable != null) {
+                        ProcessoHome
+                                .instance()
+                                .getProcessoDocumentoBin()
+                                .setModeloDocumento(variable.toString());
+                    }
+                }
+            }
+            if (!isEditor) {
+                if (("numberMoney".equals(type)) && (variable != null)
+                        && (variable.getClass().equals(Float.class))) {
+                    variable = String.format("%.2f", variable);
+                }
+                instance.put(name, variable);
+            }
+
+            if ("form".equals(type)) {
+                varName = name;
+                if (null != variable) {
+                    AbstractHome<?> home = ComponentUtil
+                            .getComponent(name + "Home");
+                    home.setId(variable);
+                }
             }
         }
     }
