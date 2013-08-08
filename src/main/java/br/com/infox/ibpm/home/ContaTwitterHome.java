@@ -27,7 +27,8 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.CONVERSATION)
 public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 
-	private static final long serialVersionUID = 1L;
+	private static final int UNAUTHORIZED = 401;
+    private static final long serialVersionUID = 1L;
 	public static final String NAME = "contaTwitterHome";
 	private static final LogProvider LOG = Logging.getLogProvider(ContaTwitterHome.class);
 	
@@ -123,7 +124,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 				}
 				persist();
 			} catch (TwitterException e) {
-				if(401 == e.getStatusCode()){
+				if(UNAUTHORIZED == e.getStatusCode()){
 					FacesMessages.instance().add(Severity.ERROR, "Unable to get the access token.");
 			    }else{
 			        LOG.error(".getAutorizacao()", e);
