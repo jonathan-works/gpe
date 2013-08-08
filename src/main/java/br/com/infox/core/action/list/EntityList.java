@@ -268,7 +268,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 			&& "and".equals(getRestrictionLogicOperator()));
 	}
 
-	public void setOrderedColumn(String order) {
+	public final void setOrderedColumn(String order) {
 	    String newOrder = order;
 		if(!newOrder.endsWith("asc") && !newOrder.endsWith("desc")) {
 			newOrder = newOrder.trim().concat(" asc");
