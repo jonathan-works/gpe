@@ -3,6 +3,7 @@ package br.com.infox.epp.entity;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -18,8 +19,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Entity
 @Table(name = "tb_imagem_bin", schema="public")
