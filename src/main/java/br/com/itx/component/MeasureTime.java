@@ -17,7 +17,7 @@ package br.com.itx.component;
 
 import org.jboss.util.StopWatch;
 
-public class MeasureTime {
+public final class MeasureTime {
 	private StopWatch watch;
 
 	public MeasureTime() {
