@@ -37,7 +37,8 @@ import br.com.itx.util.Crypto;
 public abstract class AbstractProcessoDocumentoBinHome<T>
 		extends	AbstractHome<ProcessoDocumentoBin> {
 
-	private static final long serialVersionUID = 1L;
+	private static final int TAMANHO_MAXIMO_ARQUIVO = 1572864;
+    private static final long serialVersionUID = 1L;
 	private ProcessoDocumento processoDocumento;
 	private boolean isModelo;
 	private boolean ignoraConteudoDocumento = Boolean.FALSE;
@@ -148,7 +149,7 @@ public abstract class AbstractProcessoDocumentoBinHome<T>
 					"O documento deve ser do tipo PDF.");
 			return false;
 		}
-		if(file.getSize() != null && file.getSize() > 1572864){
+		if(file.getSize() != null && file.getSize() > TAMANHO_MAXIMO_ARQUIVO){
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
 					"O documento deve ter o tamanho máximo de 1.5MB!");
 			return false;
