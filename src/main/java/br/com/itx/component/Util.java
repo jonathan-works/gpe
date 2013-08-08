@@ -67,6 +67,7 @@ public class Util implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(Util.class);
+    private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
 	/**
 	 * Retorna o caminho do projeto.
@@ -584,7 +585,7 @@ public class Util implements Serializable {
 			formatter.setMinimumIntegerDigits(1);
 			formatter.setMaximumFractionDigits(2);
 			formatter.setMinimumFractionDigits(2);
-			float kbytes = bytes / 1024f;
+			float kbytes = bytes / BYTES_IN_A_KILOBYTE;
 			return formatter.format(kbytes) + " Kb";
 		} else {
 			return null;
