@@ -38,7 +38,7 @@ public class Certificado {
     
     public Certificado(Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
         this.certChain = Arrays.copyOf(certChain, certChain.length);
-        this.mainCertificate = (X509Certificate) certChain[0];
+        this.mainCertificate = (X509Certificate) this.certChain[0];
         this.privateKey = privateKey;
         processSubject();
     }

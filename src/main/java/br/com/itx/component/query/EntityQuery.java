@@ -44,8 +44,6 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 	
 	private List fullList;
 
-	private Long resultCount;
-	
 	public List<String> getConditions() {
 		return conditions;
 	}
@@ -140,8 +138,7 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		if (!checkConditions()){
 			return 0L;
 		}
-		resultCount = super.getResultCount();
-		return resultCount;
+		return super.getResultCount();
 	}
 	
 	private boolean checkConditions() {
