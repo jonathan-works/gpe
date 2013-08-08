@@ -22,7 +22,9 @@ import br.com.infox.ibpm.entity.Localizacao;
 @AutoCreate
 public class LocalizacaoTurnoManager extends GenericManager {
 
-	private static final long serialVersionUID = -7441171561119813498L;
+	private static final int MINUTES_OF_HOUR = 60;
+
+    private static final long serialVersionUID = -7441171561119813498L;
 
 	public static final String NAME = "localizacaoTurnoManager";
 
@@ -79,7 +81,7 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	private int getMinutesOfDay(Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR_OF_DAY)*60);
+		return calendar.get(Calendar.MINUTE) + (calendar.get(Calendar.HOUR_OF_DAY)*MINUTES_OF_HOUR);
 	}
 	
 	public void removerTurnosAnteriores(Localizacao localizacao){
