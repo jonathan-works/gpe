@@ -59,7 +59,9 @@ import br.com.itx.util.ReflectionsUtil;
 
 public class JpdlXmlWriter {
 
-	private static final String ELEMENT_NAME = "name";
+	private static final String DEFAULT_ENCODING = "ISO-8859-1";
+    private static final int DEFAULT_IDENT_SIZE = 4;
+    private static final String ELEMENT_NAME = "name";
     static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
 	static final Namespace JBPM_NAMESPACE = new Namespace(null, JPDL_NAMESPACE);
 
@@ -105,8 +107,8 @@ public class JpdlXmlWriter {
 			
 			// write the dom-tree to the given writer
 			OutputFormat outputFormat = OutputFormat.createPrettyPrint();
-			outputFormat.setIndentSize(4);
-			outputFormat.setEncoding("ISO-8859-1");
+			outputFormat.setIndentSize(DEFAULT_IDENT_SIZE);
+			outputFormat.setEncoding(DEFAULT_ENCODING);
 			XMLWriter xmlWriter = new XMLWriter(writer, outputFormat);
 			xmlWriter.write(document);
 			xmlWriter.flush();
