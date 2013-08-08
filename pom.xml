@@ -852,7 +852,14 @@
 				<hibernate.format_sql>false</hibernate.format_sql>
 				<log.jbpm>WARNING</log.jbpm>
 				<log.hibernate.sql>ERROR</log.hibernate.sql>
+				<project.stage>Production</project.stage>
 			</properties>
+		</profile>
+		<profile>
+            <id>desenvolvimento</id>
+            <properties>
+                <project.stage>Development</project.stage>
+            </properties>
 		</profile>
 	</profiles>
 	<organization>
