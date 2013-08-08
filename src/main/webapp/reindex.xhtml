@@ -1,117 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/template.xhtml">
 
-<ui:define
-         name="body">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a="http://richfaces.org/a4j"
+                template="/WEB-INF/xhtml/templates/template.xhtml">
 
-	<s:div
-             
-             id="pagina">
-
- 		<wi:dataTable
-                 rowKeyVar="key"
-                 id="collectionTable"
-                 var="row"
-                 panelWidth="99%"
-                 showToolbarColumn="false"
-                 showGridCount="false"
-                 tableTitle="Quartz Jobs List"
-                 values="#{quartzJobsInfo.detailJobsInfo}">
-
-			<rich:column>
-				<f:facet
-                         name="header">Trigger Name</f:facet>
-				<h:outputText
-                         value="#{row.triggerName}" />
-			</rich:column>	
-			
-			<rich:column>
-				<f:facet
-                         name="header">Job Name</f:facet>
-				<h:outputText
-                         value="#{row.jobName}" />
-			</rich:column>	
-	
-			<rich:column>
-				<f:facet
-                         name="header">Cron Expression</f:facet>
-				<h:outputText
-                         value="#{row.cronExpression}" />
-			</rich:column>			
-	
-			<rich:column>
-				<f:facet
-                         name="header">Previous Fire Time</f:facet>
-				<h:outputText
-                         value="#{row.previousFireTime}">
-					<s:convertDateTime
-                             pattern="dd/MM/yy kk:mm:ss" />						
-				</h:outputText>						
-			</rich:column>			
-	
-			<rich:column>
-				<f:facet
-                         name="header">Next Fire Time</f:facet>
-				<h:outputText
-                         value="#{row.nextFireTime}">
-					<s:convertDateTime
-                             pattern="dd/MM/yy kk:mm:ss" />						
-				</h:outputText>
-			</rich:column>	
-			
-			
-			<rich:column>
-				<f:facet
-                         name="header">Job Expression</f:facet>
-				<h:outputText
-                         value="#{row.jobExpression}" />
-			</rich:column>	
-			
-			<rich:column>
-				<f:facet
-                         name="header">Valid Job</f:facet>
-				<h:outputText
-                         value="#{row.jobValid}" />
-			</rich:column>					
-			
-			<rich:column
-                     rendered="#{s:hasRole('admin') or s:hasRole('administrador')}">
-				<h:form>
-					<h:commandLink
-                             value="Executar"
-                             action="#{quartzJobsInfo.triggerJob(row.jobName, row.groupName)}"
-                             rendered="#{row.jobValid}" />
-					<h:commandLink
-                             value="Remover"
-                             action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName)}"
-                             rendered="#{not row.jobValid}" />
-				</h:form>
-			</rich:column>				
-		</wi:dataTable>
-	
+<ui:define name="body">
+    <rich:panel header="Reindex">
 		<h:form>
-			<wi:commandButton
-                     id="btAtualizar"
-                     reRender="pagina"
-                     value="Atualizar Página" />		
-			<wi:commandButton
-                     rendered="#{(s:hasRole('admin') or s:hasRole('administrador')) and not producao}"
-                     id="btApagarJobs"
-                     reRender="pagina"
-                     action="#{quartzJobsInfo.apagarJobs()}"
-                     value="Apagar Jobs" />
-			
+		    <a:commandButton value="Reindex Ajuda" action="#{ajudaHome.reindex}" />
+		    <a:commandButton value="Reindex Documentos" action="#{reindexer.execute}" />
 		</h:form>
-	</s:div>
-	
-	
+    </rich:panel>
 </ui:define> 
 </ui:composition>
