@@ -21,7 +21,9 @@ import br.com.infox.util.DateUtil;
 @Scope(ScopeType.CONVERSATION)
 public class LocalizacaoTurnoAction {
 
-	public static final String NAME = "localizacaoTurnoAction";
+	private static final int UMA_HORA_EM_MINUTOS = 60;
+
+    public static final String NAME = "localizacaoTurnoAction";
 
 	@In
 	private LocalizacaoTurnoManager localizacaoTurnoManager; 
@@ -36,7 +38,7 @@ public class LocalizacaoTurnoAction {
 	}
 	
 	private void createTurnoHandler() {
-		turnoHandler = new TurnoHandler(60);
+		turnoHandler = new TurnoHandler(UMA_HORA_EM_MINUTOS);
 		for (LocalizacaoTurno localizacaoTurno: localizacaoTurnoManager.listByLocalizacao(localizacao)) {
 			turnoHandler.addIntervalo(localizacaoTurno.getDiaSemana(), localizacaoTurno.getHoraInicio(), localizacaoTurno.getHoraFim());
 		}
