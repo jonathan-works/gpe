@@ -84,7 +84,7 @@ public class ProcessDeployVerifier {
 		}
 		List<Fluxo> list = EntityUtil.getEntityList(Fluxo.class);
 		for (Fluxo f : list) {
-			if (f.getAtivo() && f.getPublicado() && f.getXml() != null && !"".equals(f.getXml()) && !processNames.contains(f.getFluxo())) {
+			if (verify(processNames, f)) {
 				ProcessDefinition instance = parseInstance(f.getXml());
 				instance.setName(f.getFluxo());
 				graphSession.deployProcessDefinition(instance);
@@ -103,6 +103,10 @@ public class ProcessDeployVerifier {
 		}
 		LOG.info(MessageFormat.format("Tempo de publicacao: {0}", (new Date().getTime() - time)));
 	}
+
+    private boolean verify(List<String> processNames, Fluxo f) {
+        return f.getAtivo() && f.getPublicado() && f.getXml() != null && !"".equals(f.getXml()) && !processNames.contains(f.getFluxo());
+    }
 
 	private ProcessDefinition parseInstance(String xml) {
 	    StringReader stringReader = new StringReader(xml);
