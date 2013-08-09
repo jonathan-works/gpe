@@ -564,11 +564,6 @@ select {
 	width:400px;
 }
 
-.selecao-resultado-ajuda, a:active, a:link, a:visited {
-	font-size: 13px;
-	color: blue;
-}
-
 .resultado-pesquisa-ajuda {
 	margin: 1em;
 	font-family: arial, sans-serif;

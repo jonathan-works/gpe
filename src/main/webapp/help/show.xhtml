@@ -93,7 +93,7 @@
 										render="helpText, helpLink" limitRender="true"
 										oncomplete="#{rich:component('helpPanel')}.switchToItem('help');"
 										action="#{ajudaHome.setViewId(v[0].pagina.url, false)}"
-										styleClass="selecao-resultado-ajuda">
+										style="color: blue; font-size: 13px;">
 										<f:param name="queryString" value="#{ajudaHome.textoPesquisa}" />
 									</a:commandLink>
 									<div>
