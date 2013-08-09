@@ -203,24 +203,24 @@
 			<artifactId>richfaces-components-ui</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
-			<version>4.3.2.Final</version><!--$NO-MVN-MAN-VER$ -->
+			<version>4.3.3.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
 			<artifactId>richfaces-components-api</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
-			<version>4.3.2.Final</version><!--$NO-MVN-MAN-VER$ -->
+			<version>4.3.3.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.richfaces.core</groupId>
 			<artifactId>richfaces-core-impl</artifactId>
-			<version>4.3.2.Final</version><!--$NO-MVN-MAN-VER$ -->
+			<version>4.3.3.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.richfaces.core</groupId>
 			<artifactId>richfaces-core-api</artifactId>
-			<version>4.3.2.Final</version><!--$NO-MVN-MAN-VER$ -->
+			<version>4.3.3.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>com.sun.faces</groupId>
