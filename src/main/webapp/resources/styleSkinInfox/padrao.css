@@ -563,3 +563,39 @@ select {
 .rf-dg.d-grid-img {
 	width:400px;
 }
+
+.selecao-resultado-ajuda, a:active, a:link, a:visited {
+	font-size: 13px;
+	color: blue;
+}
+
+.resultado-pesquisa-ajuda {
+	margin: 1em;
+	font-family: arial, sans-serif;
+	font-size: 11px;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.help-link {
+	position:fixed;
+	top:25px;
+	right:5px;
+}
+
+.sem-resultado-ajuda {
+	font-size: 13px;
+	position: absolute;
+    color: red;
+    right: 250px;
+    top: 2px;
+}
+
+.status-ajuda {
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	z-index: 1000
+}
