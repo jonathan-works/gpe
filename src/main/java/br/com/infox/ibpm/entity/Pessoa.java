@@ -43,7 +43,6 @@ public class Pessoa implements Serializable {
 	
 	@Column(name="tp_pessoa", nullable=false, columnDefinition="varchar(1)", length=LengthConstants.FLAG)
 	@Enumerated(EnumType.STRING)
-	@Size(max=LengthConstants.FLAG)
 	public TipoPessoaEnum getTipoPessoa() {
 		return tipoPessoa;
 	}
