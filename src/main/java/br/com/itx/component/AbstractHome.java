@@ -158,6 +158,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 */
 	public void newInstance() {
 		oldEntity = null; 
+		
+		getEntityManager().clear();
 				
 		if(lockedFields.size() > 0){
 			try {
