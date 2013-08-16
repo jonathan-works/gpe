@@ -19,7 +19,6 @@ import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.Cep;
@@ -29,7 +28,6 @@ import br.com.itx.component.AbstractHome;
 
 @Name(CepHome.NAME)
 @Scope(ScopeType.PAGE)
-@BypassInterceptors
 public class CepHome extends AbstractHome<Cep> {
 	private static final long serialVersionUID = 1L;
 	private static final String TEMPLATE = "/CEP/CepTemplate.xls";
