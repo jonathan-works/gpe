@@ -19,7 +19,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.component.suggest.AbstractSuggestBean;
 import br.com.infox.ibpm.entity.Estado;
@@ -28,8 +27,7 @@ import br.com.infox.ibpm.home.CepHome;
 
 
 @Name(MunicipioSuggestBean.NAME)
-@Scope(ScopeType.PAGE)
-@BypassInterceptors
+@Scope(ScopeType.EVENT)
 @Install(precedence=Install.FRAMEWORK)
 public class MunicipioSuggestBean extends AbstractSuggestBean<Municipio> {
  
@@ -43,7 +41,8 @@ public class MunicipioSuggestBean extends AbstractSuggestBean<Municipio> {
 			return null;
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("select o from Municipio o ");
+		sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idMunicipio, o.municipio)");
+		sb.append(" from Municipio o ");
 		sb.append("where o.estado.idEstado = ");
 		sb.append(estado.getIdEstado());
 		sb.append(" and ");
@@ -58,4 +57,8 @@ public class MunicipioSuggestBean extends AbstractSuggestBean<Municipio> {
 		return CepHome.instance().getEstado();
 	}
 	
+	@Override
+	public Municipio load(Object id) {
+	    return entityManager.find(Municipio.class, id);
+	}
 }

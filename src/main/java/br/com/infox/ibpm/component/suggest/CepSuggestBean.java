@@ -18,23 +18,22 @@ package br.com.infox.ibpm.component.suggest;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.component.suggest.AbstractSuggestBean;
 import br.com.infox.ibpm.entity.Cep;
 
 
-@Name("cepSuggest")
+@Name(CepSuggestBean.NAME)
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
 public class CepSuggestBean extends AbstractSuggestBean<Cep> {
  
-	private static final long serialVersionUID = 1L;
+	public static final String NAME = "cepSuggest";
+    private static final long serialVersionUID = 1L;
 
 	@Override
 	public String getEjbql() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select o from Cep o ");
+		sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idCep, o.cep) from Cep o ");
 		sb.append("where lower(numeroCep) like lower(concat (:");
 		sb.append(INPUT_PARAMETER);
 		sb.append(", '%')) ");
@@ -43,8 +42,7 @@ public class CepSuggestBean extends AbstractSuggestBean<Cep> {
 	}
 	
 	@Override
-	protected String getEventSelected() {
-		return "cepChangedEvent";
+	public Cep load(Object id) {
+	    return entityManager.find(Cep.class, id);
 	}
-
 }

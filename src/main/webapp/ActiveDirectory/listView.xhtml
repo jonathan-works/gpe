@@ -31,6 +31,7 @@
 	<ui:param
 		 name="action"
 		 value="#{activeDirectoryAction}" />
+    <ui:param name="home" value="#{activeDirectoryAction}" />
 	<ui:param
 		 name="showMenu"
 		 value="#{identity.loggedIn}" />
@@ -225,12 +226,13 @@
 
 						<wi:suggest
 						 id="#{id}Cep"
-						 bean="#{cepSuggest}"
+						 suggestProvider="#{cepSuggest}"
 						 label="#{messages['endereco.cep']}"
 						 required="true"
-						 reRender="enderecoDiv"
+						 render="enderecoDiv"
 						 maxlength="9"
 						 minChars="3"
+						 value="#{enderecoHome.endereco}"
 						 onkeyup="onlyNumberCep(this)">
 						
 							<ui:define name="columns">
@@ -254,6 +256,11 @@
 						</ui:define>
 						
 					</wi:suggest>
+					   <h:outputScript>
+					       $(#{rich:element(''.concat(id).concat('Cep'))}).data('ui-autocomplete')._renderItem = function(ul, item) {
+					           return $('&lt;li&gt;').append('&lt;table&gt;&lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;C&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;').appendTo(ul);
+					       }
+					   </h:outputScript>
 						<wi:inputText
 						 id="estadoId"
 						 required="true"

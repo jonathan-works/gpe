@@ -18,15 +18,14 @@ package br.com.infox.ibpm.component.suggest;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.ibpm.entity.Estado;
 import br.com.infox.list.CepList;
+import br.com.itx.util.EntityUtil;
 
 
 @Name(MunicipioSuggestSearchBean.NAME)
-@Scope(ScopeType.PAGE)
-@BypassInterceptors
+@Scope(ScopeType.EVENT)
 public class MunicipioSuggestSearchBean extends MunicipioSuggestBean {
  
 	public static final String NAME = "municipioSearchSuggest";
@@ -34,7 +33,9 @@ public class MunicipioSuggestSearchBean extends MunicipioSuggestBean {
 
 	@Override
 	public Estado getEstado() {
-		return CepList.instance().getEstado();
+	    if (CepList.instance().getEstado() != null) {
+	        return CepList.instance().getEstado();
+	    }
+		return EntityUtil.getEntityManager().find(Estado.class, 1);
 	}
-	
 }

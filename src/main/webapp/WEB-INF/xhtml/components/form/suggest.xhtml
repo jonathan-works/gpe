@@ -21,8 +21,8 @@
 			 value="#{empty props.assignTo ? assignTo : props.assignTo}" />
 			
 			<wi:suggest
-			 assignTo="#{assignTo}"
-			 bean="#{handler}"
+			 value="#{value}"
+			 suggestProvider="#{handler}"
 			 label="#{label}"
 			 maxlength="#{empty props.maxlength ? '250' : props.maxlength}" />
 		

@@ -21,7 +21,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.ibpm.component.suggest.GrupoModeloDocumentoSuggestBean;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.ItemTipoDocumento;
 import br.com.itx.util.EntityUtil;
@@ -37,16 +36,10 @@ public class ItemTipoDocumentoHome
 	
 	public void set(ItemTipoDocumento itemTipoDocumento) {
 		instance = itemTipoDocumento;
-		getGrupoModeloSuggest().setInstance(instance.getGrupoModeloDocumento());
 	}
 
-	private GrupoModeloDocumentoSuggestBean getGrupoModeloSuggest() {
-		return getComponent("grupoModeloDocumentoSuggest");
-	}
-	
 	@Override
 	protected boolean beforePersistOrUpdate() {
-		getInstance().setGrupoModeloDocumento(getGrupoModeloSuggest().getInstance());
 		if (getInstance().getGrupoModeloDocumento() == null) {
 			FacesMessages.instance().add(Severity.ERROR, "É obrigatório selecionar um Grupo de Modelo");
 			return false;
@@ -60,7 +53,6 @@ public class ItemTipoDocumentoHome
 	
 	@Override
 	public void newInstance() {
-		getGrupoModeloSuggest().setInstance(null);
 		super.newInstance();
 	}
 	

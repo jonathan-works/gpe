@@ -179,7 +179,7 @@ public class LocalizacaoHome
 			limparTrees();
 		}
 		if ((getEnderecoHome().checkEndereco()) &&
-			(getEnderecoHome().getCep() != null)) {
+			(getEnderecoHome().getInstance().getCep() != null)) {
 			Endereco endereco = getEnderecoHome().getInstance();
 			endereco = getEntityManager().merge(endereco);
 			Cep cep = endereco.getCep();

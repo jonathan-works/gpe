@@ -71,8 +71,11 @@
                             <wi:searchForm
                                 formId="pesquisarModeloDocumentoForm"
                                 formTitle="#{messages['searchForm.title']}">
-                                <h:outputText
-                                    value="[Falta] Suggest de Tipo de Modelo de Documento" />
+                                <wi:suggest
+					                id="tipoModeloDocumento"
+					                suggestProvider="#{tipoModeloDocumentoSuggest}"
+					                value="#{associativeModeloDocumentoList.entity.tipoModeloDocumento}"
+					                label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"/>
                                 <wi:inputText
                                     id="tituloModeloDocumento"
                                     label="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"

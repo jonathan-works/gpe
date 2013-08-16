@@ -134,7 +134,7 @@
 					 id="municipio"
 					 bean="#{municipioSearchSuggest}"
 					 disabled="#{empty localizacaoHome.instance.endereco.nomeEstado}"
-					 assignTo="#{localizacaoHome.instance.endereco.nomeCidade}"
+					 value="#{localizacaoHome.instance.endereco.nomeCidade}"
 					 label="#{messages['cep.municipio']}">
                 </wi:suggest>
             
@@ -184,7 +184,7 @@
                 <wi:suggest
 					 id="orgaoJulgador"
 					 bean="#{grupoModeloDocumentoSuggest}"
-					 assignTo="itemTipoDocumentoHome.instance.grupoModeloDocumento"
+					 value="#{itemTipoDocumentoHome.instance.grupoModeloDocumento}"
 					 label="Grupo Documento" />
             
 			</wi:dataForm>

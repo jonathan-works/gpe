@@ -45,10 +45,10 @@
                     formId="pesquisarTipoModeloDocumentoForm"
                     formTitle="#{messages['searchForm.title']}">
                     <wi:suggest
-                        id="grupoModeloDocumento"
-                        bean="#{grupoModeloDocumentoSuggest}"
-                        assignTo="tipoModeloDocumentoList.entity.grupoModeloDocumento"
-                        label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}" />
+		                id="grupoModeloDocumento"
+		                suggestProvider="#{grupoModeloDocumentoSuggest}"
+		                value="#{tipoModeloDocumentoList.entity.grupoModeloDocumento}"
+		                label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}" />
                     <wi:inputText
                         id="tipoModeloDocumento"
                         label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
@@ -88,8 +88,8 @@
             formTitle="#{messages['form.title']}">
             <wi:suggest
                 id="grupoModeloDocumento"
-                bean="#{grupoModeloDocumentoSuggest}"
-                assignTo="tipoModeloDocumentoHome.instance.grupoModeloDocumento"
+                suggestProvider="#{grupoModeloDocumentoSuggest}"
+                value="#{tipoModeloDocumentoHome.instance.grupoModeloDocumento}"
                 label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
                 required="true" />
             <wi:inputText

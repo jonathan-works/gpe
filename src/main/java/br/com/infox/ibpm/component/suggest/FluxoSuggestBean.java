@@ -16,22 +16,21 @@
 package br.com.infox.ibpm.component.suggest;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.component.suggest.AbstractSuggestBean;
 import br.com.infox.ibpm.entity.Fluxo;
 
 
-@Name("fluxoSuggest")
-@BypassInterceptors
+@Name(FluxoSuggestBean.NAME)
 public class FluxoSuggestBean extends AbstractSuggestBean<Fluxo> {
 
-	private static final long serialVersionUID = 1L;
+	public static final String NAME = "fluxoSuggest";
+    private static final long serialVersionUID = 1L;
 
 	@Override
 	public String getEjbql() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select o from Fluxo o ");
+		sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idFluxo, o.fluxo) from Fluxo o ");
 		sb.append("where lower(fluxo) like lower(concat ('%', :");
 		sb.append(INPUT_PARAMETER);
 		sb.append(", '%')) ");
@@ -39,9 +38,8 @@ public class FluxoSuggestBean extends AbstractSuggestBean<Fluxo> {
 		return sb.toString();
 	}
 	
-	@Override
-	protected String getEventSelected() {
-		return "fluxoChangedEvent";
-	}
-
+    @Override
+    public Fluxo load(Object id) {
+        return entityManager.find(Fluxo.class, id);
+    }
 }

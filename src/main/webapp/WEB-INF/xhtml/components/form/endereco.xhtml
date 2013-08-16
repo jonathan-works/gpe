@@ -47,10 +47,10 @@
 			 value="cep" />
 			<wi:suggest
 			 id="#{id}Cep"
-			 bean="#{cepSuggest}"
+			 suggestProvider="#{cepSuggest}"
 			 label="#{messages['endereco.cep']}"
 			 required="#{props.cepObrigatorio}"
-			 reRender="enderecoDiv"
+			 render="enderecoDiv"
 			 maxlength="9"
 			 minChars="3"
 			 onkeyup="onlyNumberCep(this)">

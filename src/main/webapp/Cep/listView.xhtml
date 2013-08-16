@@ -22,7 +22,10 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf"
-	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	xmlns:infox-cc="http://java.sun.com/jsf/composite/infox-cc"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+    xmlns:f="http://java.sun.com/jsf/core">
 
 	<ui:define name="title">#{messages['cep.titlePage']}</ui:define>
 
@@ -59,13 +62,11 @@
 							execute="@this" />
 					</wi:selectOneMenuEntity>
 					<s:div id="municipioSuggestSearchDiv">
-						<wi:suggest
-							id="municipio"
-							bean="#{municipioSearchSuggest}"
-							disabled="#{empty cepList.estado}"
-							assignTo="cepList.entity.municipio"
-							label="#{messages['cep.municipio']}">
-						</wi:suggest>
+	                    <wi:suggest id="municipio" 
+	                        suggestProvider="#{municipioSearchSuggest}"
+	                        disabled="#{empty cepList.estado}"
+	                        label="#{messages['cep.municipio']}"
+	                        value="#{cepList.entity.municipio}" />
 					</s:div>
 					<wi:inputText
 						id="nomeLogradouro"
@@ -149,14 +150,12 @@
 					execute="@this" />
 			</wi:selectOneMenuEntity>
 			<s:div id="municipioSuggestDiv">
-				<wi:suggest
-					id="municipio"
-					bean="#{municipioSuggest}"
-					disabled="#{empty cepHome.estado}"
-					required="true"
-					assignTo="cepHome.instance.municipio"
-					label="#{messages['cep.municipio']}">
-				</wi:suggest>
+                <wi:suggest id="municipio" 
+	                suggestProvider="#{municipioSuggest}"
+	                disabled="#{empty cepList.estado}"
+	                required="true"
+	                value="#{cepHome.instance.municipio}"
+	                label="#{messages['cep.municipio']}" />
 			</s:div>
 			<wi:selectSituacaoRadio
 				id="ativo"

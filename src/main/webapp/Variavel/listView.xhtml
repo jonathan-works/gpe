@@ -150,11 +150,14 @@
 							<wi:searchForm formId="pesquisarTipoModeloDocumentoForm"
 								formTitle="#{messages['searchForm.title']}">
 
-								<h:outputText
-									value="[Falta] Suggest de Grupo de Modelo de Documento" />
+								<wi:suggest
+					                id="grupoModeloDocumento"
+					                suggestProvider="#{grupoModeloDocumentoSuggest}"
+					                value="#{associativeTipoModeloDocumentoList.entity.grupoModeloDocumento}"
+					                label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"/>
 								<wi:inputText id="tipoModeloDocumento"
 									label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
-									value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumento}"
+									value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumentoCombo}"
 									maxlength="150" />
 								<wi:inputText id="abreviacao"
 									label="#{messages['tipoModeloDocumento.abreviacao']}"

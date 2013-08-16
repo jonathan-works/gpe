@@ -16,12 +16,8 @@
 --><ui:composition
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:c="http://java.sun.com/jsp/jstl/core"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib"
+     xmlns:infox="http://www.infox.com.br/jsf"
      xmlns:wi="http://www.itx.com.br/jsf">
 
 	<ui:param
@@ -38,60 +34,14 @@
          value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
 	<ui:param
          name="minChars"
-         value="#{empty props.minChars ? (empty minChars ? '1' : minChars) : props.minChars}" />		
-	<ui:param
-         name="id"
-         value="#{empty id ? f.id : id}" />
+         value="#{empty props.minChars ? (empty minChars ? '1' : minChars) : props.minChars}" />
 
-	<s:decorate
-         template="#{template}"
-         rendered="#{wi:get(rendered, true)}">
-
-		<ui:define
-             name="label">#{label}</ui:define>
-		
-		<c:if
-             test="#{!empty assignTo}">
-			#{bean.setExpression(assignTo)}
-		</c:if>			
-
-	  	<rich:autocomplete
-	  		 id="#{id}"
-             minChars="#{minChars}"
-             rendered="#{empty props.hideSuggest}"
-             var="var"
-             fetchValue="#{fetch}"
-             autocompleteMethod="#{bean.suggestList}"
-             mode="ajax"
-             required="#{required}"
-             onkeyup="#{onkeyup}"
-             disabled="#{disabled}"
-             styleClass="suggest"
-             
-             value="#{bean.defaultValue}"
-             onselectitem="__autocompleteSelectItem#{id}()">
-			<ui:insert
-                 name="columns">
-				<h:column>
-					<h:outputText
-                         value="#{var}" />
-				</h:column>
-			</ui:insert>
-
-			<ui:insert />
-	  	</rich:autocomplete>
-	</s:decorate>
-	
-	<a:jsFunction name="__autocompleteSelectItem#{id}"
-		oncomplete="#{oncomplete}"
-		status=":status"
-		render="#{reRender}"
-		execute="@this, #{id}"
-		limitRender="#{empty reRender ? false : true}"
-		queueId="suggest">
-		<f:setPropertyActionListener
-			value="#{var}"
-			target="#{bean.instance}"/>
-	</a:jsFunction>
-	
+    <s:decorate id="#{id}Decoration" template="#{template}">
+        <ui:define name="label">#{label}</ui:define>
+		<infox:suggest id="#{id}"
+		        minChars="#{minChars}"
+		        value="#{value}"
+		        suggestProvider="#{suggestProvider}"
+		        disabled="#{disabled}" />
+    </s:decorate>
 </ui:composition>

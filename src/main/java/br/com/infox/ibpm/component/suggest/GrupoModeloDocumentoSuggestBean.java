@@ -17,14 +17,12 @@ package br.com.infox.ibpm.component.suggest;
 
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.component.suggest.AbstractSuggestBean;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 
 
 @Name(GrupoModeloDocumentoSuggestBean.NAME)
-@BypassInterceptors
 @Install(precedence=Install.FRAMEWORK)
 public class GrupoModeloDocumentoSuggestBean extends AbstractSuggestBean<GrupoModeloDocumento> {
 	public static final String NAME = "grupoModeloDocumentoSuggest"; 
@@ -34,7 +32,7 @@ public class GrupoModeloDocumentoSuggestBean extends AbstractSuggestBean<GrupoMo
 	@Override
 	public String getEjbql() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select o ");
+		sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idGrupoModeloDocumento, o.grupoModeloDocumento) ");
 		sb.append("from GrupoModeloDocumento o ");
 		sb.append("where lower(grupoModeloDocumento) ");
 		sb.append("like lower(concat ('%', :");
@@ -43,10 +41,10 @@ public class GrupoModeloDocumentoSuggestBean extends AbstractSuggestBean<GrupoMo
 		sb.append("and o.ativo = true order by 1");
 		return sb.toString();
 	}
-	
-	@Override
-	protected String getEventSelected() {
-		return "gurpoModeloDocumentoChangedEvent";
-	}
 
+    @Override
+    public GrupoModeloDocumento load(Object id) {
+        return entityManager.find(GrupoModeloDocumento.class, id);
+    }
+	
 }
