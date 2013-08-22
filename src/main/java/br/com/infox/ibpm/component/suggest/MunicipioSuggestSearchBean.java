@@ -21,7 +21,6 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.ibpm.entity.Estado;
 import br.com.infox.list.CepList;
-import br.com.itx.util.EntityUtil;
 
 
 @Name(MunicipioSuggestSearchBean.NAME)
@@ -33,9 +32,6 @@ public class MunicipioSuggestSearchBean extends MunicipioSuggestBean {
 
 	@Override
 	public Estado getEstado() {
-	    if (CepList.instance().getEstado() != null) {
-	        return CepList.instance().getEstado();
-	    }
-		return EntityUtil.getEntityManager().find(Estado.class, 1);
+        return CepList.instance().getEstado();
 	}
 }
