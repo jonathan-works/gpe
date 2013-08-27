@@ -267,14 +267,12 @@
                 tableTitle="#{messages['tipoModeloDocumentoPapel.titleGrid']}"
                 id="tipoModeloDocumentoPapelList"
                 rowId="#{row.idTipoModeloDocumentoPapel}">
+                <ui:define name="headerToolBar"/>
                 <ui:define name="toolBar">
-                    <wi:toolBar 
-                        url="/img/remove.png"
-                        title="Remover"
-                        action="tipoModeloDocumentoPapelHome.remove(row)"
-                        render="divAssociarPapel"
-                        execute="@this"
-                        id="removeButton"/>
+                    <wi:toolBarRemove
+                        id="toolBarRemove"
+                        reRender="divAssociarPapel"
+                        actionRemove="tipoModeloDocumentoPapelHome.remove(row)" />
                 </ui:define>
                 <wi:columnOutputText
                     columnId="o.papel.nome"
