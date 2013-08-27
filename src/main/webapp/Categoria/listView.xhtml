@@ -84,9 +84,6 @@
         </wi:dataForm>
     </ui:define>
     <ui:define name="tabs">
-        <ui:param
-            name="action"
-            value="#{categoriaItemAction}" />
         <infox:tab
             id="categoriaItemTab"
             rendered="#{categoriaHome.isManaged()}"
@@ -98,15 +95,15 @@
                     formTitle="#{messages['form.title']} #{categoriaHome.instance.categoria}">
                     <wi:tree
                         id="itemTree"
-                        assignTo="categoriaItemAction.instance.item"
+                        assignTo="categoriaHome.itemASerAdicionado"
                         tree="#{itemTree}"
                         required="true"
                         label="#{messages['categoriaItem.item']}" />
                     <ui:define name="buttons">
                         <wi:commandButton
                             id="saveButton"
-                            action="categoriaItemAction.persist"
-                            reRender="categoriaItemFormDiv, categoriaItemDiv"
+                            action="categoriaHome.addCategoriaItem(categoriaHome.itemASerAdicionado)"
+                            reRender="categoriaItemFormDiv, categoriaItemDiv, categoriaItemTab"
                             value="Incluir" />
                     </ui:define>
                 </wi:dataForm>
@@ -114,7 +111,7 @@
             <s:div id="categoriaItemDiv">
                 <wi:dataTable
                     id="categoriaItemTable"
-                    values="#{action.categoriaItemList}"
+                    values="#{home.instance.categoriaItemList}"
                     var="row"
                     rows="10">
                     <f:facet name="header">
@@ -126,7 +123,7 @@
                         <wi:toolBarRemove
                             id="toolBarRemove"
                             reRender="categoriaItemFormDiv, categoriaItemDiv"
-                            actionRemove="categoriaItemAction.remove(row)" />
+                            actionRemove="categoriaHome.removeCategoriaItem(row)" />
                     </ui:define>
                     <wi:columnOutputText
                         columnId="item"

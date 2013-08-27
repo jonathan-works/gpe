@@ -39,6 +39,15 @@ public class CategoriaItem implements Serializable{
 	private Categoria categoria;
 	private Item item;
 	
+	public CategoriaItem(){
+	    
+	}
+	
+	public CategoriaItem(Categoria categoria, Item item){
+	    this.categoria = categoria;
+	    this.item = item;
+	}
+	
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_categoria_item")
 	@Id
 	@GeneratedValue(generator = "generator")

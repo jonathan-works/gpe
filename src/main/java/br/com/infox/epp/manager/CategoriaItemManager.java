@@ -1,13 +1,12 @@
 package br.com.infox.epp.manager;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.CategoriaItemDAO;
 import br.com.infox.epp.entity.Categoria;
@@ -17,7 +16,6 @@ import br.com.infox.ibpm.home.CategoriaHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(CategoriaItemManager.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 public class CategoriaItemManager extends GenericManager{
 
@@ -43,6 +41,21 @@ public class CategoriaItemManager extends GenericManager{
 	public Categoria getCategoriaAtual() {
 	    CategoriaHome categoriaHome = ComponentUtil.getComponent(CategoriaHome.NAME);
 	    return categoriaHome.getInstance();
+	}
+	
+	public List<CategoriaItem> createCategoriaItemList(Categoria categoria, Set<Item> itens){
+//	    Set<Item> folhas = getFolhas(pai);
+	    List<CategoriaItem> categoriaItemList = new ArrayList<CategoriaItem>();
+        if (itens != null) {
+            for (Item item : itens) {
+                if (item.getAtivo()) {
+                    CategoriaItem ci = new CategoriaItem(categoria, item);
+                    persist(ci);
+                    categoriaItemList.add(ci);
+                }
+            }
+        }
+        return categoriaItemList;
 	}
 	
 }

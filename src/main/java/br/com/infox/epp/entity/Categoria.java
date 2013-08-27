@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -77,7 +78,7 @@ public class Categoria implements Serializable{
 		return categoria;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "categoria", cascade = CascadeType.ALL)
 	public List<CategoriaItem> getCategoriaItemList() {
 		return categoriaItemList;
 	}
