@@ -77,12 +77,10 @@ public class LocalizacaoHome
 	}
 	
 	private void limparTrees(){
-		LocalizacaoTreeHandler ret1 = getComponent("localizacaoSearchTree");
-		LocalizacaoTreeHandler ret2 = getComponent("localizacaoTree");
-		ret1.clearTree();
-		ret2.clearTree();
+		LocalizacaoTreeHandler ret = getComponent("localizacaoTree");
+		ret.clearTree();
 		if(getLockedFields().contains("localizacaoPai")) {
-		    ret2.clearTree();
+		    ret.clearTree();
 		}
 		if(searchTree2GridList != null) {
 			searchTree2GridList.refreshTreeList();
