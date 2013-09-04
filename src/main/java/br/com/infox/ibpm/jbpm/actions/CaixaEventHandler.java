@@ -44,7 +44,7 @@ public class CaixaEventHandler {
 		final Processo proc = EntityUtil.find(Processo.class, getIdProcesso());
 		if(proc != null) {
 			final List<Caixa> caixaResList = getCaixaResultList(context);
-			if(caixaResList != null) {
+			if(caixaResList != null && !caixaResList.isEmpty()) {
 				processoManager.moverProcessoParaCaixa(caixaResList, proc);
 			}
 		}

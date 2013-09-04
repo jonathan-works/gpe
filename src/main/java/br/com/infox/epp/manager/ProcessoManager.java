@@ -144,10 +144,9 @@ public class ProcessoManager extends GenericManager {
     public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
         final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
     	final String actorId = Actor.instance().getId();
-    	if (iniciaTask(processo, taskInstanceId)) {
-	    	storeUsuario(taskInstanceId, usrLoc.getUsuario());
-	    	vinculaUsuario(processo, actorId);
-    	}
+    	iniciaTask(processo, taskInstanceId);
+    	storeUsuario(taskInstanceId, usrLoc.getUsuario());
+    	vinculaUsuario(processo, actorId);
     }
 
 	private void vinculaUsuario(Processo processo, String actorId) {
@@ -175,7 +174,9 @@ public class ProcessoManager extends GenericManager {
 	 * @param actorId				 
 	 * */
 	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user){
-        EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user));
+        if (EntityUtil.getEntityManager().find(UsuarioTaskInstance.class, idTaskInstance) == null){
+            EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user));
+        }
 	}
 	
 	public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
