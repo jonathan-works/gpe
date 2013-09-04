@@ -155,10 +155,10 @@
 				 id="nomeBairro"
 				 label="#{messages['cep.nomeBairro']}"
 				 value="#{localizacaoHome.instance.endereco.nomeBairro}" />
-            <wi:selectSituacaoOneMenu
-				 id="ativo"
-				 label="#{messages['field.situacao']}"
-				 value="#{localizacaoHome.instance.ativo}" />
+            <wi:selectSituacaoRadio
+                id="ativo"
+                label="#{messages['field.situacao']}"
+                value="#{localizacaoHome.instance.ativo}" />
         
 		</wi:dataForm>
     
@@ -180,12 +180,11 @@
 				 formId="itemTipoDocumentoForm"
 				 formTitle="Adicionar Grupo de Documento à Localização - #{(localizacaoHome.instance)}">
 				
-
                 <wi:suggest
-					 id="orgaoJulgador"
-					 bean="#{grupoModeloDocumentoSuggest}"
-					 value="#{itemTipoDocumentoHome.instance.grupoModeloDocumento}"
-					 label="Grupo Documento" />
+                        id="grupoModeloDocumento"
+                        suggestProvider="#{grupoModeloDocumentoSuggest}"
+                        value="#{itemTipoDocumentoHome.instance.grupoModeloDocumento}"
+                        label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}" />
             
 			</wi:dataForm>
             <wi:dataTable
