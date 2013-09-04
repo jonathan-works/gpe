@@ -143,11 +143,12 @@
                 value="#{home.instance.numera}"
                 valueList="true:Sim, false:Não">
 
-                <a:ajax
-                    reRender="mascaraDiv"
-                    ajaxSingle="true"
+                <a:ajax 
                     event="change"
-                    status="status" />
+                    render="mascaraDiv"
+                    limitRender="true"
+                    status=":status"
+                    execute="@this"/>
 
             </wi:selectOneRadio>
 
