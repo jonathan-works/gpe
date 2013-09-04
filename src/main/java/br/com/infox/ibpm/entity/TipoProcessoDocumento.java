@@ -65,6 +65,8 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 
 	private List<ProcessoDocumento> processoDocumentoList = new ArrayList<ProcessoDocumento>(0);
 
+    private Boolean publico;
+
 	public TipoProcessoDocumento() {
 	}
 
@@ -100,6 +102,16 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 	public void setCodigoDocumento(String codigoDocumento) {
 		this.codigoDocumento = codigoDocumento;
 	}
+	
+	@Column(name = "in_publico", nullable = false)
+    @NotNull
+    public Boolean getPublico() {
+        return this.publico;
+    }
+
+    public void setPublico(Boolean publico) {
+        this.publico = publico;
+    }
 
 	@Column(name = "in_ativo", nullable = false)
 	@NotNull
@@ -123,7 +135,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.processoDocumentoList = processoDocumentoList;
 	}
 	
-	@Column(name = "in_tipo_documento", length=LengthConstants.FLAG)
+	@Column(name = "in_tipo_documento")
 	@Enumerated(EnumType.STRING)
 	public TipoDocumentoEnum getInTipoDocumento() {
 		return this.inTipoDocumento;
@@ -133,9 +145,8 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.inTipoDocumento = inTipoDocumento;
 	}
 	
-	@Column(name = "tp_visibilidade", length=LengthConstants.FLAG)
+	@Column(name = "tp_visibilidade")
 	@Enumerated(EnumType.STRING)
-	@Size(max=LengthConstants.FLAG)
 	public VisibilidadeEnum getVisibilidade() {
 		return this.visibilidade;
 	}
