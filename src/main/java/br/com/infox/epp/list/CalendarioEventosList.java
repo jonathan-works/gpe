@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
+import br.com.infox.epp.action.crud.CalendarioEventosHome;
 import br.com.infox.epp.entity.CalendarioEventos;
 import br.com.itx.util.ComponentUtil;
 
@@ -50,6 +51,13 @@ public class CalendarioEventosList extends EntityList<CalendarioEventos> {
 	
 	public static CalendarioEventosList instance() {
 		return ComponentUtil.getComponent(CalendarioEventosList.NAME);
+	}
+	
+	@Override
+	public void newInstance() {
+	    super.newInstance();
+	    CalendarioEventosHome home = ComponentUtil.getComponent(CalendarioEventosHome.NAME);
+	    home.getLocalizacaoTreeHandler().clearTree();
 	}
 	
 }
