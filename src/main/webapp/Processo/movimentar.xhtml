@@ -281,11 +281,10 @@
 	                    <s:div id="documentoFisicoDiv">
 							<wi:dataTable
 								id="documentoFisicoTable2"
-								value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+								values="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
 								var="row"
 								rows="10"
-								searchFormStyleClass="hidden"
-								>
+								searchFormStyleClass="hidden">
 								<ui:define name="toolBar">
 									<wi:toolBarRemove
 										id="toolBarInactivate"
