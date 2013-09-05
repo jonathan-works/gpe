@@ -93,6 +93,9 @@ public class LocalizacaoHome
 	protected Localizacao createInstance() {
 		instance = super.createInstance();
 		instance.setLocalizacaoPai(new Localizacao());
+		if (instance.getEndereco() == null){
+		    instance.setEndereco(new Endereco());
+		}
 		getEnderecoHome().newInstance();
 		return instance;
 	}
@@ -196,6 +199,11 @@ public class LocalizacaoHome
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	protected String afterPersistOrUpdate(String ret) {
+	    return super.afterPersistOrUpdate(ret);
 	}
 	
 	/**
@@ -347,6 +355,12 @@ public class LocalizacaoHome
 	
 	public List<Localizacao> getLocalizacoesEstrutura(){
 		return localizacaoManager.getLocalizacoesEstrutura();
+	}
+	
+	@Override
+	public void onClickSearchTab() {
+	    getEnderecoHome().newInstance();
+	    super.onClickSearchTab();
 	}
 
 }

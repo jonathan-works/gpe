@@ -73,6 +73,7 @@ public class Localizacao implements java.io.Serializable {
 	private Boolean temContaTwitter=false;
 
 	public Localizacao() {
+	    endereco = new Endereco();
 	}
 
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_localizacao")

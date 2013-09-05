@@ -111,50 +111,43 @@
 				 label="#{messages['localizacao.localizacaoPai']}" />
             <wi:inputCep
 				 id="numeroCep"
-				 value="#{localizacaoHome.instance.endereco.cep}"
-				 label="#{messages['cep.numeroCep']}" />
-            <wi:selectOneMenuEntity
+				 value="#{enderecoHome.searchCep}"
+				 label="#{messages['cep.numeroCep']}" >
+                 <a:ajax
+                    event="blur"
+                    listener="#{enderecoHome.loadEnderecoByCep(enderecoHome.searchCep)}"
+                    execute="@this"
+                    render="estado municipio nomeLogradouro nomeBairro"
+                    limitRender="true"/>
+            </wi:inputCep>
+            <wi:inputText
 				 id="estado"
 				 label="#{messages['cep.municipio.estado']}"
-				 value="#{localizacaoHome.instance.endereco.nomeEstado}"
-				 items="#{estadoList}"
-				 required="#{required}"
-				 noSelectionLabel="Selecione...">
-				
-                <a:ajax
-					 event="change"
-					 status=":status"
-					 render="municipioSuggestSearchDiv"
-					 execute="@this" />
-            
-			</wi:selectOneMenuEntity>
-            <s:div id="municipioSuggestSearchDiv">
-				
-                <wi:suggest
-					 id="municipio"
-					 bean="#{municipioSearchSuggest}"
-					 disabled="#{empty localizacaoHome.instance.endereco.nomeEstado}"
-					 value="#{localizacaoHome.instance.endereco.nomeCidade}"
-					 label="#{messages['cep.municipio']}">
-                </wi:suggest>
-            
-			</s:div>
+				 value="#{enderecoHome.instance.nomeEstado}"/>
+            <wi:inputText
+                 id="municipio"
+                 label="#{messages['cep.municipio']}"
+                 value="#{enderecoHome.instance.nomeCidade}"/>
             <wi:inputText
 				 id="nomeLogradouro"
 				 label="#{messages['cep.nomeLogradouro']}"
-				 value="#{localizacaoHome.instance.endereco.nomeLogradouro}" />
-            <wi:inputNumber
+				 value="#{enderecoHome.instance.nomeLogradouro}" />
+            <wi:inputText
 				 id="numero"
 				 label="#{messages['endereco.numeroEndereco']}"
-				 value="#{localizacaoHome.instance.endereco.numeroEndereco}" />
+				 value="#{enderecoHome.instance.numeroEndereco}" />
             <wi:inputText
 				 id="complemento"
 				 label="#{messages['endereco.complemento']}"
-				 value="#{localizacaoHome.instance.endereco.complemento}" />
+				 value="#{enderecoHome.instance.complemento}" />
             <wi:inputText
 				 id="nomeBairro"
 				 label="#{messages['cep.nomeBairro']}"
-				 value="#{localizacaoHome.instance.endereco.nomeBairro}" />
+				 value="#{enderecoHome.instance.nomeBairro}" />
+            <wi:selectBooleanRadio
+                id="publico"
+                label="#{messages['endereco.correspondencia']}"
+                value="#{enderecoHome.instance.correspondencia}" />
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{messages['field.situacao']}"

@@ -16,15 +16,18 @@ package br.com.infox.ibpm.home;
 
 import java.util.Date;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.ibpm.dao.CepDAO;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Endereco;
 import br.com.itx.util.ComponentUtil;
+import br.com.itx.util.EntityUtil;
 
 @Name(EnderecoHome.NAME)
 @Install(precedence = Install.FRAMEWORK)
@@ -33,6 +36,19 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "enderecoHome";
+    
+    private String searchCep;
+    @In private CepDAO cepDAO;
+
+    public String getSearchCep() {
+        if ((searchCep == null || "_____-___".equals(searchCep)) && instance.getCep() != null)
+            searchCep = instance.getCep().getNumeroCep();
+        return searchCep;
+    }
+
+    public void setSearchCep(String searchCep) {
+        this.searchCep = searchCep;
+    }
 
     /**
      * Método que traz os dados de endereço do CEP informado (se houver em base)
@@ -46,6 +62,17 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
             this.getInstance().setNomeCidade(cep.getMunicipio().getMunicipio());
             this.getInstance().setNomeLogradouro(cep.getNomeLogradouro());
             this.getInstance().setNomeBairro(cep.getNomeBairro());
+        }
+    }
+    
+    public Cep getCep() {
+        return getInstance().getCep();
+    }
+    
+    public void loadEnderecoByCep(){
+        if (searchCep != null){
+//            Cep cep = (Cep) EntityUtil.createQuery("select o from Cep o where o.numeroCep =:searchCep").setParameter("searchCep", searchCep).setMaxResults(1).getSingleResult();
+            setEndereco(cepDAO.findCep(searchCep));
         }
     }
 
@@ -131,6 +158,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 
     @Override
     public void newInstance() {
+        searchCep = null;
         super.newInstance();
     }
 }
