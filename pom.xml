@@ -91,17 +91,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-ioc</artifactId>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>javassist</artifactId>
-					<groupId>javassist</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam-mail</artifactId>
 			<scope>compile</scope>
 			<exclusions>
@@ -584,9 +573,10 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>el-api</artifactId>
+			<groupId>org.jboss.spec.javax.el</groupId>
+			<artifactId>jboss-el-api_2.2_spec</artifactId>
 			<type>jar</type>
+			<version>1.0.2.Final</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
