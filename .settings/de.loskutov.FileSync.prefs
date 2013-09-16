@@ -1,7 +1,0 @@
-WARNING=DO NOT MODIFY THIS FILE IF YOU DON'T UNDERSTAND
-defaultDestination=E\:/Framework/jboss-eap-5.1/jboss-as/server/default/deploy/epa2.war
-defaultVariables=
-eclipse.preferences.version=1
-includeTeamPrivateFiles=false
-map|0=src/main/webapp|,|,|WEB-INF/web.xml;WEB-INF/pages.xml;WEB-INF/lib/;WEB-INF/jboss-web.xml;WEB-INF/hibernate-console.properties;WEB-INF/faces-config.xml;WEB-INF/components.xml;WEB-INF/.faces-config.xml.jsfdia|,
-useCurrentDateForDestinationFiles=false
