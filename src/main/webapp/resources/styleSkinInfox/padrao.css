@@ -24,8 +24,6 @@
 
 .tree-b {
 	position: absolute;
-	width: 224px;
-	max-height: 250px;
 	z-index: 10;
 	background-color: #FFF;
 	border-style:solid;
@@ -362,7 +360,6 @@ img.disabled {
 }
 
 select {
-	border-width:0px;
 	width: 250px;
 	background-color: transparent;
 	background-repeat: no-repeat;

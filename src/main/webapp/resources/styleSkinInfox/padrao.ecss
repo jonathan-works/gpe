@@ -9,6 +9,7 @@ select {
 .rich-calendar-input,.inputText {
 	background-image: url("#{util.contextPath}#{a4jSkin.imgBgInputText}");
 }
+
 .tree-b {
 	border-color:'#{a4jSkin.borderColorInputTree}';
 }
