@@ -35,7 +35,6 @@
 }
 
 .conteudo {
-	position:relative;
 	font-size:14pt; 
 	text-align:left;
 	padding:5px;
@@ -47,26 +46,16 @@
 	font-weight:bold;
 	font-size:14pt;
 	color:#fff;
-	display:block;
 	text-align:right;
-}
-.pageBody {
-	width:100%;
-	position:absolute;
-	height:calc(100% - 110px);
-	min-width:1020px;
-	min-height:514px;
 }
 .pageContent {
 	background-color:#FFF;
 	border:1px solid #999;
 	border-radius:10px;
-	position:relative;
 	height:100%;
 }
 .subBorda {
 	border-radius:7px;
-	position:relative;
 	margin:8px;
 	padding:5px;
 	height:calc(100% - 26px);
@@ -80,10 +69,14 @@
 	vertical-align: top;
 	margin: 0 5px 5px 0;
 }
+.pageBody {
+	height:calc(100% - 108px);
+	position:relative;
+}
 /* FIM LAYOUT GERAL */
 /* MENU */
 .rf-tb.menu-tb {
-	min-width:1019px;
+	position:relative;
 }
 .LinkMenu {
 	text-decoration:none;
@@ -116,6 +109,9 @@ h1 {
 	color: #578BB8;
 	font-size: 1.6em;
 	margin-top: 0;
+}
+html,body {
+	height:100%;width:100%;
 }
 body {
 	margin: 0px;

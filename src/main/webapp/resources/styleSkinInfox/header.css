@@ -1,25 +1,18 @@
 .banner {
-	min-width:1020px;
-	height: 87px;
+	width:100%;
 	position:relative;
+	height:85px;
 }
 .banner-lft, .banner-ctr, .banner-rgt {
 	position:absolute;
 }
 .banner-lft {
-    left: 0;
-    top: 0px;
-    width: 290px;
-    z-index: 1;
+	width:317px;
 }
 .banner-ctr {
     font-size:20pt;
-    top:0px;
-    left:50%;
     text-align:center;
-    width:295px;
-    margin:0 0 0 -147.5px;
-    z-index:0;
+    left:calc(50% - 147.5px);
 }
 .banner-title {
 	margin-top:15px;
@@ -29,11 +22,9 @@
 	font-size:18px;
 }
 .banner-rgt {
-    top: 0px;
-    right:0px;
-    width: 321px;
-    z-index: 1;
+	right:0;
     text-align: right;
+    width:317px;
 }
 .divBg {
 	width:100%;
