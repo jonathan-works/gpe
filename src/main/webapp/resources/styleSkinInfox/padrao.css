@@ -584,3 +584,13 @@ form {
 	margin:0;
 	padding:0;
 }
+
+.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all,
+.ui-tabs.ui-widget.ui-widget-content.ui-corner-all {
+	background:none;
+	border-width:0;
+}
+
+.ui-tabs-panel.ui-widget-content.ui-corner-bottom {
+	background:white;
+} 
