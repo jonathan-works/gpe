@@ -145,18 +145,6 @@ body {
 	min-width:140px
 }
 
-.DataTableToolbar {
-	padding:2px 0px 0px 0px;
-	text-align:center;
-	border-style:solid;
-	border-width:1px;
-	border-color: #CCC;
-}
-
-.DataTableResultCount{
-	float: right;
-}
-
 .errorFields {
 	margin-left:20px;
 	margin-top:5px;
@@ -209,22 +197,6 @@ body {
 	border:solid 1px transparent !important;
 }
 
-.rf-dt-thd {
-	border-style:solid;
-}
-
-.rf-dt-shdr-c {
-	color:#000;
-}
-
-.rf-dt-ftr-c {
-	text-align: center;
-	padding: 0px
-}
-
-.rf-dt-sftr-c {
-	text-align: center;
-}
 
 .highlight {
 	font-weight: bold;
@@ -517,9 +489,6 @@ select {
 .p-list {
 	width:calc(70% - 10px);
 	margin:0 0 0 5px;
-}
-.p-list-search.dtable-search-form, .dtable-p.p-list-panel.rf-p,.p-list-dtable.dtable.rf-dt {
-	width:100%;
 }
 
 /*Seleção de turnos no calendário de localização*/

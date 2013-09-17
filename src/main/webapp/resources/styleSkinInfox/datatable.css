@@ -28,6 +28,7 @@
 }
 .rf-dt {
 	width: 100%;
+	text-align:center;
 }
 .tb-rprt,.tb-rprt-xls {
 	display:inline-block;
@@ -43,4 +44,36 @@
 .picklist.dtable-p.rf-p {
 	width:100%;
 	min-height:478px;
+}
+.dt-toolbar-col {
+	width:55px;
+	padding:2px 0px 0px 0px;
+	text-align:center;
+	border-style:solid;
+	border-width:1px;
+	border-color: #CCC;
+}
+
+.dt-res-count {
+	float: right;
+}
+.rf-dt-thd {
+	border-style:solid;
+}
+
+.rf-dt-shdr-c {
+	color:#000;
+}
+
+.rf-dt-ftr-c {
+	text-align: center;
+	padding: 0px
+}
+
+.rf-dt-sftr-c {
+	text-align: center;
+}
+
+.p-list-search.dtable-search-form, .dtable-p.p-list-panel.rf-p,.p-list-dtable.dtable.rf-dt {
+	width:100%;
 }
