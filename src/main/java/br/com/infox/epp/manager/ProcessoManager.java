@@ -155,7 +155,7 @@ public class ProcessoManager extends GenericManager {
 
 	private void vinculaUsuario(Processo processo, String actorId) {
 		processo.setActorId(actorId);
-		EntityUtil.getEntityManager().merge(processo);
+		processo = EntityUtil.getEntityManager().merge(processo);
 		EntityUtil.flush();
 	}
     
