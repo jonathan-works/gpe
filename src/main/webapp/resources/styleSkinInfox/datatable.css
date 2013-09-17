@@ -17,17 +17,17 @@
 	width:calc(100% - 291px);
 	padding:0px;
 }
-.dtable .rf-dt-r:nth-child(odd) {
+.rf-dt-b > .rf-dt-r:nth-child(odd) {
 	background-color:#FAFAFA;
 }
-.rf-dt-r:hover, .dtable .rf-dt-r:nth-child(even) {
+.rf-dt-b > .rf-dt-r:nth-child(even) {
 	background-color:#E7E7E7;
 }
-.dtable tr.rf-dt-r:hover {
+.rf-dt-b > .rf-dt-r:hover {
 	background-color:#AFAFAF;
 }
 .rf-dt {
-	width: 99%;
+	width: 100%;
 }
 .tb-rprt,.tb-rprt-xls {
 	display:inline-block;
@@ -44,4 +44,3 @@
 	width:100%;
 	min-height:478px;
 }
-
