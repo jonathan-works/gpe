@@ -33,3 +33,15 @@
 	display:inline-block;
 	margin:0px 3px;
 }
+
+.picklist-div {
+	display:inline-block;
+	vertical-align:bottom;
+	width:calc(50% - 7px);
+	margin:0 2px;
+}
+.picklist.dtable-p.rf-p {
+	width:100%;
+	min-height:478px;
+}
+
