@@ -148,93 +148,95 @@
             title="#{messages['tipoModeloDocumento.variaveis']}"
             name="variaveis">
             <wi:ajaxDiv id="divM2MVar">
-                <s:div styleClass="Associated">
-                    <wi:dataTable
-                        values="#{associatedVariavelTipoModeloList.list(15)}"
-                        bean="#{associatedVariavelTipoModeloList}"
-                        tableTitle="#{messages['associatedVariavelTipoModelo.titleGrid']}"
-                        id="associatedVariavelTipoModeloList"
-                        rowId="#{row.idVariavelTipoModelo}"
-                        styleClass="Associated-dt"
-                        searchFormStyleClass="hidden">
-                        <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar">
-                            <a:region>
-                                <a:commandLink
-                                    limitRender="true"
-                                    render="divM2MVar"
-                                    action="#{variavelTipoModeloHome.removeVariavelTipoModelo(row)}"
-                                    rendered="true">
-                                    <h:graphicImage
-                                        url="/img/grid/copyRight.gif"
-                                        title="Remover" />
-                                </a:commandLink>
-                            </a:region>
-                        </ui:define>
-                        <wi:columnOutputText
-                            columnId="variavel"
-                            columnHeader="#{messages['associatedVariavelTipoModelo.variavel']}"
-                            value="#{row.variavel}" />
-                        <wi:columnOutputText
-                            columnId="variavel"
-                            columnHeader="#{messages['associatedVariavelTipoModelo.valorVariavel']}"
-                            value="#{row.variavel.valorVariavel}" />
-                    </wi:dataTable>
-                </s:div>
-                <s:div styleClass="Associative">
-                    <wi:dataTable
-                        values="#{associativeVariavelList.list(15)}"
-                        bean="#{associativeVariavelList}"
-                        tableTitle="#{messages['associativeVariavel.titleGrid']}"
-                        id="associativeVariavelList"
-                        rowId="#{row.idVariavel}"
-                        styleClass="Associative-dt">
-                        <ui:define name="searchForm">
-                            <wi:searchForm
-                                formId="pesquisarTipoModeloDocumento"
-                                formTitle="#{messages['searchForm.title']}">
-                                <wi:inputText
-                                    id="variavel"
-                                    label="#{messages['associativeVariavel.variavel']}"
-                                    value="#{associativeVariavelList.entity.variavel}" />
-                                <wi:inputText
-                                    id="valorVariavel"
-                                    label="#{messages['associativeVariavel.valorVariavel']}"
-                                    value="#{associativeVariavelList.entity.valorVariavel}" />
-                                <wi:selectSituacaoOneMenu
-                                    id="ativo"
-                                    label="#{messages['field.situacao']}"
-                                    value="#{associativeVariavelList.entity.ativo}" />
-                            </wi:searchForm>
-                        </ui:define>
-                        <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar">
-                            <a:region>
-                                <a:commandLink
-                                    limitRender="true"
-                                    render="divM2MVar"
-                                    action="#{variavelTipoModeloHome.addVariavelTipoModelo(row)}"
-                                    rendered="true">
-                                    <h:graphicImage
-                                        url="/img/grid/copyLeft.gif"
-                                        title="Adicionar" />
-                                </a:commandLink>
-                            </a:region>
-                        </ui:define>
-                        <wi:columnOutputText
-                            columnId="variavel"
-                            columnHeader="#{messages['associativeVariavel.variavel']}"
-                            value="#{row.variavel}" />
-                        <wi:columnOutputText
-                            columnId="valorVariavel"
-                            columnHeader="#{messages['associativeVariavel.valorVariavel']}"
-                            value="#{row.valorVariavel}" />
-                        <wi:columnSituacao
-                            columnId="ativo"
-                            columnHeader="#{messages['field.situacao']}"
-                            value="#{row.ativo}" />
-                    </wi:dataTable>
-                </s:div>
+				<div class="picklist-div">
+				<wi:dataTable
+				    values="#{associatedVariavelTipoModeloList.list(15)}"
+				    bean="#{associatedVariavelTipoModeloList}"
+				    tableTitle="#{messages['associatedVariavelTipoModelo.titleGrid']}"
+				    id="associatedVariavelTipoModeloList"
+				    rowId="#{row.idVariavelTipoModelo}"
+				    panelStyleClass="picklist"
+				    styleClass="picklist-dt"
+				    searchFormStyleClass="hidden">
+				    <ui:define name="headerToolBar" />
+				    <ui:define name="toolBar">
+				        <a:region>
+				            <a:commandLink
+				                limitRender="true"
+				                render="divM2MVar"
+				                action="#{variavelTipoModeloHome.removeVariavelTipoModelo(row)}"
+				                rendered="true">
+				                <h:graphicImage
+				                    url="/img/grid/copyRight.gif"
+				                    title="Remover" />
+				            </a:commandLink>
+				        </a:region>
+				    </ui:define>
+				    <wi:columnOutputText
+				        columnId="variavel"
+				        columnHeader="#{messages['associatedVariavelTipoModelo.variavel']}"
+				        value="#{row.variavel}" />
+				    <wi:columnOutputText
+				        columnId="variavel"
+				        columnHeader="#{messages['associatedVariavelTipoModelo.valorVariavel']}"
+				        value="#{row.variavel.valorVariavel}" />
+				</wi:dataTable>
+				</div>
+				<div class="picklist-div">
+				<wi:dataTable
+				    values="#{associativeVariavelList.list(15)}"
+				    bean="#{associativeVariavelList}"
+				    tableTitle="#{messages['associativeVariavel.titleGrid']}"
+				    id="associativeVariavelList"
+				    rowId="#{row.idVariavel}"
+				    panelStyleClass="picklist"
+				    styleClass="picklist-dt">
+				    <ui:define name="searchForm">
+				        <wi:searchForm
+				            formId="pesquisarTipoModeloDocumento"
+				            formTitle="#{messages['searchForm.title']}">
+				            <wi:inputText
+				                id="variavel"
+				                label="#{messages['associativeVariavel.variavel']}"
+				                value="#{associativeVariavelList.entity.variavel}" />
+				            <wi:inputText
+				                id="valorVariavel"
+				                label="#{messages['associativeVariavel.valorVariavel']}"
+				                value="#{associativeVariavelList.entity.valorVariavel}" />
+				            <wi:selectSituacaoOneMenu
+				                id="ativo"
+				                label="#{messages['field.situacao']}"
+				                value="#{associativeVariavelList.entity.ativo}" />
+				        </wi:searchForm>
+				    </ui:define>
+				    <ui:define name="headerToolBar" />
+				    <ui:define name="toolBar">
+				        <a:region>
+				            <a:commandLink
+				                limitRender="true"
+				                render="divM2MVar"
+				                action="#{variavelTipoModeloHome.addVariavelTipoModelo(row)}"
+				                rendered="true">
+				                <h:graphicImage
+				                    url="/img/grid/copyLeft.gif"
+				                    title="Adicionar" />
+				            </a:commandLink>
+				        </a:region>
+				    </ui:define>
+				    <wi:columnOutputText
+				        columnId="variavel"
+				        columnHeader="#{messages['associativeVariavel.variavel']}"
+				        value="#{row.variavel}" />
+				    <wi:columnOutputText
+				        columnId="valorVariavel"
+				        columnHeader="#{messages['associativeVariavel.valorVariavel']}"
+				        value="#{row.valorVariavel}" />
+				    <wi:columnSituacao
+				        columnId="ativo"
+				        columnHeader="#{messages['field.situacao']}"
+				        value="#{row.ativo}" />
+				</wi:dataTable>
+				</div>
             </wi:ajaxDiv>
         </infox:tab>
         <infox:tab
