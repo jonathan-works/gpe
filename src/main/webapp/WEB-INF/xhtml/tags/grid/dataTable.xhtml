@@ -51,11 +51,8 @@
 				rowClasses="#{rowClasses}"
 				styleClass="dtable #{styleClass}"
 				var="row">
-				<ui:param
-					name="toolBarColumnWidth"
-					value="#{wi:get(toolBarColumnWidth, '40px')}" />
 				<rich:column
-					styleClass="DataTableToolbar"
+					styleClass="dt-toolbar-col"
 					rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
 					rowspan="#{empty columnRowspan ? '1':columnRowspan}">
 					<f:facet name="header">
@@ -81,7 +78,7 @@
 			</rich:dataTable>
 			<h:outputText
 				value="Foram encontrados:  #{not empty bean ? bean.resultCount : values.size()} resultados"
-				styleClass="DataTableResultCount"
+				styleClass="dt-res-count"
 				rendered="#{wi:get(showGridCount, true)}" />
 			<s:div rendered="#{bean.previousExists or bean.nextExists}">
             <ui:fragment rendered="#{!empty inForm ? false : inForm}"> <ui:include src="inputNumberSlider.xhtml" /> </ui:fragment>
