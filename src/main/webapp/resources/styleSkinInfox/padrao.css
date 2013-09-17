@@ -4,18 +4,6 @@
 	vertical-align:top;
 }
 
-.Associated, .Associative {
-	display:inline-block;
-	vertical-align:bottom;
-	width:50%;
-}
-
-.Associated-dt.dtable-p.rf-p, .Associative-dt.dtable-p.rf-p {
-	width:100%;
-	max-width:100%;
-	min-height:478px;
-}
-
 .tree-p.rf-cp.rf-tgp {
 	border-color:#fff;
 	display:inline-table;
