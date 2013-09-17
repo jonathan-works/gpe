@@ -91,9 +91,6 @@ public class IniciarProcessoAction {
 		} catch(NullPointerException npe) {
 		    LOG.error(".iniciarProcesso()", npe);
 			FacesMessages.instance().add(Severity.ERROR,"Nenhum processo informado.");
-		} catch(Exception e) {
-		    LOG.error(".iniciarProcesso()", e);
-			FacesMessages.instance().add(Severity.ERROR, "Não foi possível iniciar o processo");
 		}
 	}
 

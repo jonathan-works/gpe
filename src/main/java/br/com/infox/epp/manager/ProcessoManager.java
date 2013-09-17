@@ -27,6 +27,7 @@ import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
+import br.com.itx.exception.AplicationException;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
@@ -143,6 +144,9 @@ public class ProcessoManager extends GenericManager {
     
     public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
         final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+        if (taskInstanceId == null) {
+        	throw new AplicationException("Erro ao iniciar tarefa. Você possui permissão para iniciá-la?");
+        }
     	final String actorId = Actor.instance().getId();
     	iniciaTask(processo, taskInstanceId);
     	storeUsuario(taskInstanceId, usrLoc.getUsuario());
