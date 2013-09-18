@@ -1,14 +1,10 @@
 .clean-pageBody {
 	width:100%;
-	height:calc(100% - 89px);
-	position:absolute;
+	height:calc(100% - 2px);
 }
 .ui-widget-content {
-	height:calc(100% - 6px);
 }
 .ui-tabs-panel.ui-widget-content.ui-corner-bottom {
-	height:calc(100% - 30px);
-	padding:0;
 }
 .blocker {
 	height:100%;
