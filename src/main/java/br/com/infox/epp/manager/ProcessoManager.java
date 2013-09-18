@@ -144,13 +144,12 @@ public class ProcessoManager extends GenericManager {
     
     public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
         final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
-        if (taskInstanceId == null) {
-        	throw new AplicationException("Erro ao iniciar tarefa. Você possui permissão para iniciá-la?");
-        }
     	final String actorId = Actor.instance().getId();
     	iniciaTask(processo, taskInstanceId);
-    	storeUsuario(taskInstanceId, usrLoc.getUsuario());
-    	vinculaUsuario(processo, actorId);
+    	if (taskInstanceId != null) {
+        	storeUsuario(taskInstanceId, usrLoc.getUsuario());
+        	vinculaUsuario(processo, actorId);
+    	}
     }
 
 	private void vinculaUsuario(Processo processo, String actorId) {
