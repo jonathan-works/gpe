@@ -35,7 +35,7 @@ public class CaixaHome extends AbstractCaixaHome<Caixa> {
 			instance.setTarefaAnterior(null);
 		}
 		
-		return super.beforePersistOrUpdate();
+		return true;
 	}
 
 	public List<SelectItem> getPreviousTasks() {
