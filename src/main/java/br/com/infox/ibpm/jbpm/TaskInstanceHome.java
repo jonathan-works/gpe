@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.faces.component.EditableValueHolder;
 import javax.faces.model.SelectItem;
 import javax.persistence.Query;
 
@@ -49,6 +50,7 @@ import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.richfaces.function.RichFunction;
 
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.ModeloDocumento;
@@ -353,19 +355,21 @@ public class TaskInstanceHome implements Serializable {
             } catch (JbpmException e) {
                 LOG.error(".end()", e);
             }
-            
+            EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
             boolean canClosePanel = false;
             if (this.currentTaskInstance == null) {
-                Util.setToEventContext("canClosePanel", true);
+                //Util.setToEventContext("canClosePanel", true);
+                canClosePanelVal.setValue(true);
                 canClosePanel = true;
             } else if (canOpenTask(this.currentTaskInstance.getId())) {
                 setTaskId(currentTaskInstance.getId());
             } else {
-                Util.setToEventContext("canClosePanel", true);
+//                Util.setToEventContext("canClosePanel", true);
+                canClosePanelVal.setValue(true);
                 canClosePanel = true;
             }
-            
-            Util.setToEventContext("taskCompleted", true);
+            EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent("taskCompleted");
+            taskCompleted.setValue(true);
             if (!canClosePanel) {
                 Redirect red = Redirect.instance();
                 red.setViewId("/Processo/movimentar.seam");
