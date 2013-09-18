@@ -125,7 +125,7 @@
 			<version>4.3.3.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
-			<groupId>br.com.infox.epa</groupId>
+			<groupId>br.com.infox.epp</groupId>
 			<artifactId>jbpmgraph</artifactId>
 			<version>1.0.1</version>
 			<type>jar</type>
