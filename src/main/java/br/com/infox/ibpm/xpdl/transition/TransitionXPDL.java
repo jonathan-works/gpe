@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.jbpm.graph.def.Transition;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.xpdl.IllegalXPDLException;

@@ -19,11 +19,11 @@ import java.security.Security;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Renderer;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.util.StopWatch;
 
 
 public class SendmailCommand  {
@@ -31,7 +31,8 @@ public class SendmailCommand  {
 	private static final LogProvider LOG = Logging.getLogProvider(SendmailCommand.class);
 
 	public void execute(String templateFile) {
-		StopWatch sw = new StopWatch(true);
+		StopWatch sw = new StopWatch();
+		sw.start();
 		Renderer renderer = Renderer.instance();
 		FacesMessages fm = FacesMessages.instance();
 		try {

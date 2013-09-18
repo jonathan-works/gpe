@@ -15,7 +15,7 @@
 */
 package br.com.itx.component;
 
-import org.jboss.util.StopWatch;
+import org.apache.commons.lang3.time.StopWatch;
 
 public final class MeasureTime {
 	private StopWatch watch;
@@ -37,7 +37,8 @@ public final class MeasureTime {
 	}
 	
 	public long stop() {
-		return watch.stop();
+		watch.stop();
+		return watch.getTime();
 	}
 	
 	public long getTime() {

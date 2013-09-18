@@ -2,7 +2,7 @@ package br.com.infox.ibpm.xpdl.element;
 
 import java.io.Serializable;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import br.com.itx.util.XmlUtil;
 

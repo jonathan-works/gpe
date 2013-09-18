@@ -1,7 +1,7 @@
 package br.com.infox.ibpm.xpdl.activities;
 
 import org.jbpm.graph.def.Node;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class SystemActivityXPDL extends ActivityXPDL {
 

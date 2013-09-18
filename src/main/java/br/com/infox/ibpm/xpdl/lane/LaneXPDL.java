@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jbpm.taskmgmt.def.Swimlane;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
 import br.com.infox.ibpm.xpdl.element.ElementXPDL;

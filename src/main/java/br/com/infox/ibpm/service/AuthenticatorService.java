@@ -19,8 +19,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
+import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
-import org.jboss.ws.extensions.security.SimplePrincipal;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.manager.GenericManager;

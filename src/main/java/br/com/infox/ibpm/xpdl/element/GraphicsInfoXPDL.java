@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import br.com.itx.util.XmlUtil;
 

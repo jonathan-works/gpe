@@ -2,7 +2,7 @@ package br.com.infox.ibpm.xpdl.activities;
 
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.node.EndState;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class EndActivityXPDL extends ActivityXPDL {
 

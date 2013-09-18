@@ -9,13 +9,14 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
-import org.jdom.Document;
-import org.jdom.Element;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import br.com.infox.ibpm.jbpm.JpdlXmlWriter;
 import br.com.infox.ibpm.xpdl.activities.ActivitiesXPDL;
 import br.com.infox.ibpm.xpdl.activities.ActivityXPDL;
 import br.com.infox.ibpm.xpdl.activities.AssignTaskXPDL;
+import br.com.infox.ibpm.xpdl.element.ParallelNodeXPDLException;
 import br.com.infox.ibpm.xpdl.lane.LaneXPDL;
 import br.com.infox.ibpm.xpdl.lane.LanesXPDLFactory;
 import br.com.infox.ibpm.xpdl.transition.TransitionsXPDL;

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.EntityExistsException;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -15,7 +16,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.util.StopWatch;
 
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.manager.RecursiveManager;
@@ -160,7 +160,8 @@ public abstract class AbstractAction {
 			return null;
 		}
 		String ret = null;
-		StopWatch sw = new StopWatch(true);
+		StopWatch sw = new StopWatch();
+		sw.start();
 		if(EntityUtil.isEntity(o)) {
 			try {
 				inactiveRecursive(o);

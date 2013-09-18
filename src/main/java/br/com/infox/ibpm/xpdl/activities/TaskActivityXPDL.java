@@ -4,15 +4,15 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class TaskActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
-
-	private static final long serialVersionUID = 1L;
 
 	public TaskActivityXPDL(Element element, String name) {
 		super(element, name);
 	}
+
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public TaskNode toNode() {

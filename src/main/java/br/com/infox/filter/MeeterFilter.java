@@ -23,6 +23,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -32,7 +33,6 @@ import org.jboss.seam.core.Init;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.web.AbstractFilter;
-import org.jboss.util.StopWatch;
 
 
 @Name("meeterFilter")
@@ -46,7 +46,8 @@ public class MeeterFilter extends AbstractFilter {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
-		StopWatch sw = new StopWatch(true);
+		StopWatch sw = new StopWatch();
+		sw.start();
 		chain.doFilter(req, resp);
 		String ajaxPushHeader = null;
 		long time = sw.getTime();

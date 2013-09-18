@@ -2,7 +2,7 @@ package br.com.infox.ibpm.xpdl.activities;
 
 import java.util.List;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import br.com.itx.util.XmlUtil;
 

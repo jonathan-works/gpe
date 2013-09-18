@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -43,7 +44,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.Strings;
-import org.jboss.util.StopWatch;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.util.PostgreSQLErrorCode;
@@ -232,7 +232,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 */
 	@Override
 	public String persist() {
-		StopWatch sw = new StopWatch(true);
+		StopWatch sw = new StopWatch();
+		sw.start();
 		String ret = null;
 		String msg = getPersistLogMessage();
 		try {
@@ -296,7 +297,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 */
 	@Override
 	public String update() {
-		StopWatch sw = new StopWatch(true);		
+		StopWatch sw = new StopWatch();
+		sw.start();
 		String ret = null;
 		String msg = ".update() (" + getInstanceClassName() + ")";
 		try {
@@ -423,7 +425,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 * Chamado pelo newInstance
 	 */
 	public void clearForm() {
-		StopWatch sw = new StopWatch(true);
+		StopWatch sw = new StopWatch();
+		sw.start();
 		StringBuilder formName = new StringBuilder(this.getClass().getSimpleName());
 		formName.replace(0, 1, formName.substring(0, 1).toLowerCase());
 		formName.replace(formName.length() - 4, formName.length(), "");
@@ -435,7 +438,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	public void refreshGrid(String gridId) {
-		StopWatch sw = new StopWatch(true);		
+		StopWatch sw = new StopWatch();
+		sw.start();
 		GridQuery g = getComponent(gridId, false);
 		if (g != null) {
 			g.refresh();
@@ -460,7 +464,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	public String inactive(T instance) {
-		StopWatch sw = new StopWatch(true);			
+		StopWatch sw = new StopWatch();
+		sw.start();
 		ComponentUtil.setValue(instance, "ativo", false);
 		getEntityManager().merge(instance);
 		getEntityManager().flush();

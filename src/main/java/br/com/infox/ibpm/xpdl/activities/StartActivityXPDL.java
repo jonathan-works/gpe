@@ -5,7 +5,7 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class StartActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 

@@ -2,7 +2,7 @@ package br.com.infox.ibpm.xpdl.activities;
 
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.ProcessState;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class SubProcessActivityXPDL extends ActivityXPDL implements AssignTaskXPDL {
 

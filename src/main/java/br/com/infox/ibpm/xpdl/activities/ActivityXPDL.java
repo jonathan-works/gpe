@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jbpm.graph.def.Node;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import br.com.infox.ibpm.xpdl.element.ElementXPDL;
 import br.com.infox.ibpm.xpdl.lane.LaneXPDL;

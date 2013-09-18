@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.xpdl.IllegalXPDLException;

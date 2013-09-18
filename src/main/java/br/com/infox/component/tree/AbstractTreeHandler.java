@@ -23,13 +23,13 @@ import javax.faces.component.UIComponent;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.util.StopWatch;
 import org.richfaces.component.UICollapsiblePanel;
 import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
@@ -96,7 +96,8 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 	@Override
 	public List<EntityNode<E>> getRoots() {
 		if (rootList == null) {
-			StopWatch sw = new StopWatch(true);
+			StopWatch sw = new StopWatch();
+			sw.start();
 			Query queryRoots = getEntityManager().createQuery(getQueryRoots());
 			EntityNode<E> entityNode = createNode();
 			entityNode.setIgnore(getEntityToIgnore());

@@ -17,13 +17,13 @@ package br.com.infox.ibpm.entity.log;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
 import org.hibernate.persister.entity.EntityPersister;
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.util.StopWatch;
 
 import br.com.infox.type.TipoOperacaoLogEnum;
 import br.com.itx.util.ArrayUtil;
@@ -45,7 +45,8 @@ public class ExecuteLog {
 	private StopWatch sw;
 	
 	public ExecuteLog() {
-		sw = new StopWatch(true);
+		sw = new StopWatch();
+		sw.start();
 		em = (EntityManager) Component.getInstance("entityManagerLog");
 	}
 

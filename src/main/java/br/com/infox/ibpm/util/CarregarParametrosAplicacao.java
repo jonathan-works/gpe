@@ -17,6 +17,7 @@ package br.com.infox.ibpm.util;
 
 import java.util.List;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Install;
@@ -27,7 +28,6 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.util.StopWatch;
 
 import br.com.infox.ibpm.entity.Parametro;
 import br.com.itx.util.EntityUtil;
@@ -45,7 +45,8 @@ public class CarregarParametrosAplicacao {
 	
 	@Create
 	public void init() {
-		StopWatch sw = new StopWatch(true);
+		StopWatch sw = new StopWatch();
+		sw.start();
 		for (Parametro parametro : getParametroAtivoList()) {
 			Contexts.getApplicationContext().set(parametro.getNomeVariavel().trim(), 
 					parametro.getValorVariavel());
