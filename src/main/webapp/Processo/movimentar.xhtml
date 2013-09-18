@@ -51,16 +51,15 @@
     <ui:define name="body">
 		
         <s:div id="script">
-			
-            <f:verbatim>
-				
-                <script type="text/javascript">
-		    	function verifyFields() { 
-		        	if("#{util.getFromEventContext('taskCompleted')}" != '') {
+			<h:inputHidden id="taskCompleted"></h:inputHidden>
+			<h:inputHidden id="canClosePanel"></h:inputHidden>
+            <script type="text/javascript">
+		    	function verifyFields() {
+		    		if($('#taskCompleted').val()!='') {
 			        	try {
 		        			opener.atualizaPainelFluxo();
 			        	} catch(e) {}
-			        	if("#{util.getFromEventContext('canClosePanel')}" != '') {
+			        	if($('#canClosePanel').val()!='') {
 			        		window.close();
 			        	} else {
 			        		location = location.href;
@@ -71,8 +70,6 @@
 		    	}
 		    </script>
             
-			</f:verbatim>
-        
 		</s:div>
 
         <h:form>
