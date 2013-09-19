@@ -26,6 +26,8 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
@@ -50,6 +52,7 @@ import br.com.itx.util.EntityUtil;
 @Name(ProcessoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoHome extends AbstractHome<Processo> {
+    private static final LogProvider LOG = Logging.getLogProvider(Processo.class);
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoHome";
 
@@ -98,7 +101,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 	
 	public void iniciarTarefaProcesso() {
-		processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
+	    try {
+	        processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
+	    }catch(java.lang.NullPointerException e) {
+	        LOG.error("ProcessoHome.iniciarTarefaProcesso()", e);
+	    }
 	}
 	
 	public void visualizarTarefaProcesso(){
