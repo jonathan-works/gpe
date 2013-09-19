@@ -74,6 +74,6 @@ namespace("infox",function(util) {
 				else if (tag == 'select')
 					this.selectedIndex = 0;
 			});
-		}	
+		};	
 	}
 });
