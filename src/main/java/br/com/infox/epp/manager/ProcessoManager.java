@@ -136,7 +136,9 @@ public class ProcessoManager extends GenericManager {
             	bp.startTask();
             	result = true;
             } catch (IllegalStateException e) {
-                LOG.error(".iniciaTask()", e);
+                // Caso já exista deve-se ignorar este trecho, outras illegalstate devem ser averiguadas
+                // Ideal para processos já iniciados seria chamar o método resumeTask
+                LOG.warn(".iniciaTask()", e);
             }
         }
     	return result;
