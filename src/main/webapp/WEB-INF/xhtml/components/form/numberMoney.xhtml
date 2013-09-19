@@ -48,7 +48,15 @@
 			<rich:jQuery
 				selector="##{id}"
 				timing="domready"
-				query="maskMoney()"
+				query="maskMoney({
+						symbol:'R$',
+						decimal:',',
+						precision:2,
+						thousands:'.',
+						allowZero:false,
+						allowNegative:false,
+						showSymbol:false
+					})"
 			/>
 		</s:div>
 
