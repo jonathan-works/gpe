@@ -5,13 +5,13 @@ namespace("infox",{
 		},args.delay || 1);
 	},
 	openPopUp:function openPopUp(id, url, width, height) {
-		var featPopUp = ["width="		,width,
-			             "height="		,height,
-			             "resizable=YES",
-			             "scrollbars=YES",
-			             "status=NO",
-			             "location=NO"];
-		var popUp = window.open(url, id, featPopUp.join(","));	
+		var featPopUp = ["width=",width,
+			             ",height=",height,
+			             ",resizable=YES",
+			             ",scrollbars=YES",
+			             ",status=NO",
+			             ",location=NO"];
+		var popUp = window.open(url, id, featPopUp.join(""));	
 		popUp.moveTo(0, 0);
 	},showLoading:function showLoading() {
 		RichFaces.$('modalStatus').show();	
