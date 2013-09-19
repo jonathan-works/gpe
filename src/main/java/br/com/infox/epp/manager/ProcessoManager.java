@@ -27,7 +27,6 @@ import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
-import br.com.itx.exception.AplicationException;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
@@ -63,11 +62,7 @@ public class ProcessoManager extends GenericManager {
 		doc.setDataInclusao(new Date());
 		doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
 		doc.setProcesso(processo);
-		if (label == null) {
-			doc.setProcessoDocumento("null");
-		} else {
-			doc.setProcessoDocumento(label);
-		}
+		doc.setProcessoDocumento(label);
 		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
 		EntityUtil.getEntityManager().persist(doc);
 		return doc;
