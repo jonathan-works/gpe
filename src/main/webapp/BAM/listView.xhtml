@@ -26,11 +26,90 @@
 				xmlns:s="http://jboss.org/schema/seam/taglib"
 				xmlns:a="http://richfaces.org/a4j"
 				xmlns:dojo="http://www.itx.com.br/dojo"
-			    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                        
 	<ui:define name="title">BAM</ui:define>
-
-	<ui:define name="body">
+	
+	<ui:param name="home" value="#{bamHome}" />
+	
+	<ui:define name="searchGrid">
+		<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
+					  bean="#{processoEpaNaoFinalizadoList}"
+					  tableTitle="#{messages['bam.titleGrid']}"
+					  id="processoEpaNaoFinalizadoList"
+					  rowId="#{row.idProcesso}"
+					  toolBarColumnWidth="69px">
+			<ui:define name="searchForm">
+				<wi:searchForm formId="pesquisaFluxoForm"
+							   formTitle="#{messages['searchForm.title']}">
+		                 
+			        <wi:selectOneMenuEntity id="comboFluxo"
+										    value="#{processoEpaNaoFinalizadoList.fluxo}"
+										    label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+										    items="#{processoEpaNaoFinalizadoList.fluxoList}"/>
+			        <wi:selectOneMenuEnum id="tipoDeprocesso"
+								  label="#{messages['bam.tipoAtraso']}"
+								  items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
+								  value="#{processoEpaNaoFinalizadoList.entity.situacaoPrazo}" />
+				</wi:searchForm>
+				<dojo:defaultGauge
+					id="processo"
+					max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+					width="250"
+					height="200"
+					radius="50"
+					label="Medidor para os processos selecionados"
+					draggable="false"
+					indicatorLabel="#{messages['bam.tempoMedio']} (dias)"
+					value="#{processoEpaNaoFinalizadoList.getMediaTempoGasto()}"
+				/>
+			</ui:define>
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<div class="tbar-div">
+					<h:graphicImage
+						value="/img/balao.png"
+						rendered="#{not (row.situacaoPrazo == 'SAT')}" />
+					<h:form id="#{row.numeroProcesso}Form">
+	                    <h:selectBooleanCheckbox
+	                    	id="#{row.numeroProcesso}Contab" 
+					        styleClass="checkbox"
+					        value="#{row.contabilizar}"
+							required="false"
+					        disabled="false"
+						>
+							<a:ajax
+								event="change"
+								listener="#{processoEpaAction.alternarContabilizar(row)}"
+							    render="processoListPanel gaugeAjaxDivprocesso"
+	                            limitRender="true"
+								status=":status"
+								rendered="true"
+								execute="@this"
+							>
+							</a:ajax>
+							
+						</h:selectBooleanCheckbox>
+					</h:form>
+					<wi:toolBarEdit 
+						action="#{processoEpaTarefaList.entity.setProcessoEpa(row)}"/>
+				</div>
+			</ui:define>
+			<wi:columnOutputText columnId="numeroProcesso"
+							   columnHeader="#{messages['processo.numeroProcesso']}"
+							   value="#{row.numeroProcesso}" />
+			<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"
+							   columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
+							   value="#{row.naturezaCategoriaFluxo.natureza}" />
+			<wi:columnOutputText columnId="naturezaCategoriaFluxo.fluxo"
+							   columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+							   value="#{row.naturezaCategoriaFluxo.fluxo}" />
+			<wi:columnOutputText columnId="naturezaCategoriaFluxo.categoria"
+							   columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+							   value="#{row.naturezaCategoriaFluxo.categoria}" />
+		</wi:dataTable>
+	</ui:define>
+	<!-- <ui:define name="body">
 		<wi:dataForm formId="pesquisaFluxoForm"
 					 formTitle="Pesquisar Fluxo"
 					 requiredForm="false">
@@ -224,6 +303,6 @@
 									value="#{processoEpaTarefaList.entity.processoEpa.tempoGasto}"/>
 			</div>
 		</wi:modalPanel>
-	</ui:define>
+	</ui:define> -->
 	 
 </ui:composition>
