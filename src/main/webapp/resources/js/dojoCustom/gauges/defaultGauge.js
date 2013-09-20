@@ -1,6 +1,7 @@
-namespace("infox.DefaultGauge", function(args) {
+namespace("infox.DefaultGauge", function DefaultGauge(args) {
 	require({
-		async : true
+		async : true,
+		baseUrl:args.baseUrl || ""
 	}, [ "dojox/gauges/AnalogGauge", "dojox/gauges/AnalogArcIndicator",
 			"dojox/gauges/AnalogNeedleIndicator" ], function() {
 		dojo.ready(function() {
