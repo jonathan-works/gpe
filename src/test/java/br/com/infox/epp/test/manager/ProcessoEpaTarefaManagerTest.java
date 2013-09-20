@@ -55,8 +55,8 @@ public class ProcessoEpaTarefaManagerTest {
 		Method method =ProcessoEpaTarefaManager.class.getDeclaredMethod("calcularMinutosEmIntervalo", Date.class, Date.class, Date.class, Date.class);
 		method.setAccessible(true);
 
-		long result = (Long) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
-		Assert.assertEquals(240, result);
+		float result = (Float) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
+		Assert.assertEquals(240.0f, result);
 		
 		calendar.set(Calendar.HOUR_OF_DAY, 8);
 		calendar.set(Calendar.MINUTE, 45);
@@ -64,8 +64,8 @@ public class ProcessoEpaTarefaManagerTest {
 		calendar.set(Calendar.HOUR_OF_DAY, 13);
 		calendar.set(Calendar.MINUTE, 00);
 		fim = calendar.getTime();
-		result = (Long) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
-		Assert.assertEquals(195, result);
+		result = (Float) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
+		Assert.assertEquals(195.0f, result);
 		
 		calendar.set(Calendar.HOUR_OF_DAY, 7);
 		calendar.set(Calendar.MINUTE, 45);
@@ -73,8 +73,8 @@ public class ProcessoEpaTarefaManagerTest {
 		calendar.set(Calendar.HOUR_OF_DAY, 11);
 		calendar.set(Calendar.MINUTE, 00);
 		fim = calendar.getTime();
-		result = (Long) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
-		Assert.assertEquals(180, result);
+		result = (Float) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
+		Assert.assertEquals(180.0f, result);
 		
 		calendar.set(Calendar.HOUR_OF_DAY, 8);
 		calendar.set(Calendar.MINUTE, 45);
@@ -82,7 +82,7 @@ public class ProcessoEpaTarefaManagerTest {
 		calendar.set(Calendar.HOUR_OF_DAY, 11);
 		calendar.set(Calendar.MINUTE, 00);
 		fim = calendar.getTime();
-		result = (Long) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
-		Assert.assertEquals(135, result);
+		result = (Float) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
+		Assert.assertEquals(135.0f, result);
 	}
 }
