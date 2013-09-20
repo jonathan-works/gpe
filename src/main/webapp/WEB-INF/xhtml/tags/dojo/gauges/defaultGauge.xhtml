@@ -67,7 +67,14 @@
     <div id="#{id}DefaultGaugeContainer" class="gaugeContainer" >
     	<div id="#{id}DefaultGaugeHeader" class="rf-p-h">#{label}</div>
         <div id="#{id}DefaultGauge" class="gauge"></div>
-        <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
+        <s:div id="gaugeAjaxDiv#{id}">
+	        <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
+	        <script>
+	        try {
+				infox["#{id}DefaultGauge"].updateValue(#{wi:get(value,0)});
+			}catch(e){}
+			</script>
+		</s:div>
     </div>
 
 </ui:composition>
