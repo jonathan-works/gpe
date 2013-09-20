@@ -44,7 +44,7 @@
         library="js/dojo" />
 	<h:outputScript
         name="defaultGauge.js"
-        library="js/dojoCustom/gauges/defaultGauge.js" />
+        library="js/dojoCustom/gauges" />
     <script>
     	namespace("infox.DefaultGauge",function(DefaultGauge) {
     		DefaultGauge({
@@ -59,7 +59,8 @@
 	    	    tickInterval:#{wi:get(tickInterval, max/4)},
 	    	    width:#{wi:get(width, radius*4)},
 	    	    height:#{wi:get(height, radius*4)},
-	    	    draggable:#{wi:get(draggable, 'false')}
+	    	    draggable:#{wi:get(draggable, 'false')},
+	    	    baseUrl:"#{util.getContextPath()}/resources/js/dojo/"
 	    	});
     	});
     </script>
