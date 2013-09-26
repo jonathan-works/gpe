@@ -83,8 +83,11 @@ namespace("infox.DefaultGauge", function DefaultGauge(args) {
 					color : 'black'
 				};
 			}
-			var $gauge = dojo.byId($props.id);
-			$props.id = $props.id;
+			var $gauge = dijit.byId($props.id);
+			if ($gauge) {
+				$gauge.destroyRecursive();
+			}
+			$gauge = dojo.byId($props.id);
 			$gauge = new dojox.gauges.AnalogGauge($props, $gauge);
 			$gauge.updateValue = function UpdateValue(value) {
 				var ind = this.indicators[3];
@@ -93,8 +96,7 @@ namespace("infox.DefaultGauge", function DefaultGauge(args) {
 			};
 			$gauge.startup();
 			$gauge.updateValue($value);
-			namespace.infox[$props.id] = $gauge;
-			var $containerId = args.containerId || false;
+			namespace("infox.DefaultGauge.instance."+$props.id, $gauge);
 		});
 	});
 });
