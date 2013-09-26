@@ -46,8 +46,8 @@
         name="defaultGauge.js"
         library="js/dojoCustom/gauges" />
     <script>
-    	namespace("infox.DefaultGauge",function(DefaultGauge) {
-    		DefaultGauge({
+	   	namespace("infox.DefaultGauge",function(DefaultGauge) {
+	   		DefaultGauge({
 	    	    id:"#{id}DefaultGauge",
 	    	    containerId:"#{id}DefaultGaugeContainer",
 	    	    angle:#{wi:get(angle,300)},
@@ -62,7 +62,7 @@
 	    	    draggable:#{wi:get(draggable, 'false')},
 	    	    baseUrl:"#{util.getContextPath()}/resources/js/dojo/"
 	    	});
-    	});
+	   	});
     </script>
     <div id="#{id}DefaultGaugeContainer" class="gaugeContainer" >
     	<div id="#{id}DefaultGaugeHeader" class="rf-p-h">#{label}</div>
@@ -71,8 +71,8 @@
 	        <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
 	        <script>
 	        try {
-				infox["#{id}DefaultGauge"].updateValue(#{wi:get(value,0)});
-			}catch(e){}
+	        	namespace.infox.DefaultGauge.instance["#{id}DefaultGauge"].updateValue(#{wi:get(value,0)});
+			} catch(e) {}
 			</script>
 		</s:div>
     </div>
