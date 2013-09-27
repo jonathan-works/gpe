@@ -83,6 +83,13 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>br.com.infox.epp</groupId>
+			<artifactId>taskpage</artifactId>
+			<type>jar</type>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<type>jar</type>
