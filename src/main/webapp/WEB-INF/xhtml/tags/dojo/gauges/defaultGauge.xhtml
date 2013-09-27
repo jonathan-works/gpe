@@ -40,12 +40,6 @@
      -->
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
     <ui:param name="value" value="#{wi:get(value,0)}" />
-    <h:outputScript
-        name="dojo.js"
-        library="js/dojo" />
-	<h:outputScript
-        name="defaultGauge.js"
-        library="js/dojoCustom/gauges" />
     <script>
 	   	namespace("infox.DefaultGauge",function(DefaultGauge) {
 	   		DefaultGauge({

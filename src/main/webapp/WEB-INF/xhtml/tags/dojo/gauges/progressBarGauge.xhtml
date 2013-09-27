@@ -25,10 +25,6 @@
 	xmlns:f="http://java.sun.com/jsf/core">
     
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
-    <h:outputScript
-        name="dojo.js"
-        library="js/dojo" />
-    <h:outputScript library="js/dojoCustom/gauges" name="progressBarGauge.js"/>
 
     <script>
     namespace("infox.ProgressBarGauge",function(ProgressBarGauge) {
