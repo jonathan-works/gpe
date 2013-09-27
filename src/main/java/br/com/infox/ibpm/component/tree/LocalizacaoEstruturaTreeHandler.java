@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.component.tree;
 
+import java.util.ArrayList;
+
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
@@ -70,12 +72,18 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 		return new LocalizacaoNode(getQueryChildrenList());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
+		// Considerando single selection
+		Object selectionKey = new ArrayList<Object>(ev.getNewSelection()).get(0);
 		UITree tree = (UITree) ev.getSource();
 		setTreeId(tree.getId());
-		@SuppressWarnings("unchecked")
-		EntityNode<Localizacao> en = (EntityNode<Localizacao>) tree.getData(); 
+
+		Object key = tree.getRowKey();
+		tree.setRowKey(selectionKey);
+		EntityNode<Localizacao> en = (EntityNode<Localizacao>) tree.getRowData();
+		tree.setRowKey(key);
 		setSelected(en.getEntity());
 		closeParentPanel(tree);
 		Events.instance().raiseEvent("evtSelectLocalizacaoEstrutura", getSelected(), getEstrutura(en));
