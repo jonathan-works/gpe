@@ -25,15 +25,15 @@
      xmlns:wi="http://www.itx.com.br/jsf">
 
           <c:if
-         test="#{taskAction.transitions.size gt 3}">
+         test="#{taskInstanceHome.transitions.size gt 3}">
            	<h:selectOneMenu
              
-             value="#{taskAction.name}">
+             value="#{taskInstanceHome.name}">
 				<f:selectItems
-                 value="#{taskAction.transtionsSelectItems}" />
+                 value="#{taskInstanceHome.transtionsSelectItems}" />
 			</h:selectOneMenu>
            	<a:commandButton
-             action="#{taskAction.end(taskAction.name)}"
+             action="#{taskInstanceHome.end(taskInstanceHome.name)}"
              value="OK"
              status="none"
              onmouseup="showLoading()"
@@ -44,9 +44,9 @@
              limitRender="true"/>
          </c:if>
          <c:if
-         test="#{taskAction.transitions.size le 3}">
+         test="#{taskInstanceHome.transitions.size le 3}">
           <a:repeat
-             value="#{taskAction.transitions}"
+             value="#{taskInstanceHome.transitions}"
              var="transition">
            <a:commandButton
                  eventsQueue="editQueue"
@@ -58,7 +58,7 @@
                  value="#{transition.name}"
                  styleClass="buttons buttons"
                  
-                 action="#{taskAction.end(transition.name)}" />
+                 action="#{taskInstanceHome.end(transition.name)}" />
           </a:repeat>
          </c:if>
 
