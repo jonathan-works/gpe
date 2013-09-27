@@ -5,7 +5,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.entity.ProcessoEpaTarefa;
-import br.com.infox.epp.list.ProcessoEpaNaoFinalizadoList;
+import br.com.infox.epp.list.ProcessoEpaTarefaList;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
@@ -18,15 +18,14 @@ public class BamHome extends AbstractHome<ProcessoEpaTarefa> {
     
     @Override
     public void setInstance(ProcessoEpaTarefa instance) {
-        
         super.setInstance(instance);
     }
 
     @Override
     public void onClickSearchTab() {
         super.onClickSearchTab();
-        ProcessoEpaNaoFinalizadoList instance = ComponentUtil.getComponent(ProcessoEpaNaoFinalizadoList.NAME);
-        instance.newInstance();
+        ProcessoEpaTarefaList instance = ComponentUtil.getComponent(ProcessoEpaTarefaList.NAME);
+        instance.newInstance(); 
     }
     
 }
