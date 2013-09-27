@@ -31,6 +31,18 @@
 	<ui:define name="title">BAM</ui:define>
 	
 	<ui:param name="home" value="#{bamHome}" />
+	<ui:param name="showFormTab" value="#{not empty processoEpaTarefaList.entity.processoEpa}" />
+	<ui:define name="head">
+	    <h:outputScript
+	        name="dojo.js"
+	        library="js/dojo" />
+		<h:outputScript
+	        name="defaultGauge.js"
+	        library="js/dojoCustom/gauges" />
+	    <h:outputScript
+	        name="progressBarGauge.js"
+	        library="js/dojoCustom/gauges" />
+	</ui:define>
 	
 	<ui:define name="searchGrid">
 		<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
@@ -109,200 +121,98 @@
 							   value="#{row.naturezaCategoriaFluxo.categoria}" />
 		</wi:dataTable>
 	</ui:define>
-	<!-- <ui:define name="body">
-		<wi:dataForm formId="pesquisaFluxoForm"
-					 formTitle="Pesquisar Fluxo"
-					 requiredForm="false">
-					 
-			 <wi:inputText value="#{processoEpaNaoFinalizadoList.fluxoName}" styleDiv="margin:0px; padding-right: 0px" id="statesinput" />
-             <h:graphicImage value="/img/arrow.png"
-                 onclick="#{rich:component('suggestion')}.callSuggestion(true)"
-                 alt="" />
-					 
-			<rich:autocomplete> id="suggestion" 
-								height="200"  
-								width="250" 
-					            suggestionAction="#{bamAction.getFluxoSuggest}" 
-					            var="row"
-					            for="statesinput"
-					            fetchValue="#{row.fluxo}">
-	            <h:column>
-	                <h:graphicImage value="/img/balao.png" rendered="#{bamAction.contemProcessoAtrasado(row)}" />
-	            </h:column>
-	            <h:column>
-	                <h:outputText value="#{row.fluxo}" />
-	            </h:column>
-	        </rich:autocomplete>
-	        
-	        <wi:commandButton id="pesquisar"
-							  value="Pesquisar"
-							  action="#{processoEpaNaoFinalizadoList.setFluxo(null)}"
-							  reRender="processoList" />
-			<wi:commandButton id="reRenderPg"
-							  value="ReRenderPage"
-							  action=""
-							  buttonStyle="display:none"
-							  reRender="processoList" />
-			<a:jsFunction name="atualizarFinalizados"
-						  action="#{processoEpaAction.atualizarFinalizadas()}" />
-								  
-			<ui:define name="buttons"/>
-		</wi:dataForm>
-		<s:div id="processoList">
-			<rich:panel id="processoListPanel"  rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}">
-				<wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
-							  bean="#{processoEpaNaoFinalizadoList}"
-							  tableTitle="Processos - Prazo: #{processoEpaNaoFinalizadoList.fluxo.qtPrazo} (dias)"
-							  showGrid="#{not empty processoEpaNaoFinalizadoList.fluxo}"
-							  panelWidth="70%"
-							  id="processoDataTable">
-					<ui:define name="headerToolBar" />
-					<ui:define name="toolBar"> 
-						<div  class="circ #{row.porcentagem > 100 ? 'red-back' : (processoEpaNaoFinalizadoList.contemTarefaForaPrazo(row) ? 'yellow-back' : '')}">
-	    					<wi:toolBar url="/img/edit.gif"
-	    								action="processoEpaTarefaList.entity.setProcessoEpa(row)"
-	    								oncomplete="Richfaces.showModalPanel('processoEpaTarefaModal')"
-	    								reRender="processoEpaTarefaModal"/>
-	                    </div>
-	                    <h:form id="#{row.numeroProcesso}Form">
-		                    <h:selectBooleanCheckbox id="#{row.numeroProcesso}Contab" 
-						            	styleClass="checkbox"
-						            	value="#{row.contabilizar}"
-										required="false"
-						                disabled="false">
-								<a:ajax event="change"
-										   listener="#{processoEpaAction.alternarContabilizar(row)}"
-						                   render="processoListPanel"
-                                           limitRender="true"
-										   status=":status"
-										   rendered="true"
-										   execute="@this">
-								</a:ajax>
-							</h:selectBooleanCheckbox>
-						</h:form>
-					</ui:define>
-					
-					<wi:columnOutputText columnId="numeroProcesso"
-										 columnHeader="Número do Processo"
-										 value="#{row.numeroProcesso}" />
-										 
-					<wi:columnOutputText columnId="tempoGasto"
-										 columnHeader="Tempo Gasto (em dias)"
-										 value="#{row.tempoGasto}" />
-										 
-					<ui:param name="porc" value="#{row.porcentagem > 100 ? '> 100' : row.porcentagem}" />
-					<wi:columnOutputText columnId="porcentagem"
-										 columnHeader="Porcentagem"
-										 value="#{not empty row.porcentagem ? porc : 0}%" />
-					
-				</wi:dataTable>
+	
+	<ui:define name="form">
+		<wi:dataTable values="#{processoEpaTarefaList.list(15)}"
+					  bean="#{processoEpaTarefaList}"
+					  tableTitle="Tarefas"
+					  showToolbarColumn="false" 
+					  panelWidth="97%"
+					  showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
+					  rowClasses="#{processoEpaTarefaList.rowClasses()}"
+					  id="processoTarefaDataTable">
+			<ui:define name="toolBar"></ui:define>
+			<ui:define name="headerToolBar"></ui:define>
+			<wi:columnOutputText columnId="medidor"
+								 columnHeader="Medidor"
+								 hideOrder="true"
+								 columnWidth="60">
+				<dojo:progressBarGauge id="#{row.idProcessoTarefa}"
+										width="60"
+										height="13"
+										barWidth="60"
+										barHeight="13"
+										min="0"
+										max="#{row.tempoPrevisto}"
+										value="#{row.tempoGasto}"
+										hideTicks="true"
+										>
+				</dojo:progressBarGauge>
+			</wi:columnOutputText>
+			
+			<wi:columnOutputText columnId="tarefa"
+								 columnHeader="Tarefa"
+								 value="#{row.tarefa.tarefa}" />
+								 
+			<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
+			<rich:column styleClass="defaultCell">
+				<f:facet name="header">Localização / Usuário</f:facet>
 				<div >
-					<dojo:defaultGauge id="processo#{row.numeroProcesso}"
-										max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-										width="210"
-										height="200"
-										radius="50"
-										label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
-										draggable="true"
-										indicatorLabel="#{messages['bam.tempoMedio']} (dias)"
-										value="#{processoEpaNaoFinalizadoList.getMediaTempoGasto()}"/>
+					<h:graphicImage url="/img/localizacao.gif"
+									rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
+					<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
 				</div>
-			</rich:panel>
-		</s:div>
-		<wi:modalPanel id="processoEpaTarefaModal"
-					   labelHeader="Detalhe do Processo"
-					   width="800"
-					   height="400">
-			<wi:dataTable values="#{processoEpaTarefaList.list(15)}"
-						  bean="#{processoEpaTarefaList}"
-						  tableTitle="Tarefas"
-						  showToolbarColumn="false" 
-						  panelWidth="97%"
-						  showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
-						  rowClasses="#{processoEpaTarefaList.rowClasses()}"
-						  id="processoTarefaDataTable">
-				<wi:columnOutputText columnId="medidor"
-									 columnHeader="Medidor"
-									 hideOrder="true"
-									 columnWidth="60">
-					<dojo:progressBarGauge id="#{row.idProcessoTarefa}"
-											width="60"
-											height="13"
-											barWidth="60"
-											barHeight="13"
-											min="0"
-											max="#{row.tempoPrevisto}"
-											value="#{row.tempoGasto}"
-											hideTicks="true"
-											>
-					</dojo:progressBarGauge>
-				</wi:columnOutputText>
-				
-				<wi:columnOutputText columnId="tarefa"
-									 columnHeader="Tarefa"
-									 value="#{row.tarefa.tarefa}" />
-									 
-				<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
-				<rich:column styleClass="defaultCell">
-					<f:facet name="header">Localização / Usuário</f:facet>
-					<div >
-						<h:graphicImage url="/img/localizacao.gif"
-										rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
-						<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
-					</div>
-					<div >
-						<h:graphicImage url="/img/usuario.gif"
-										rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
-						<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
-					<c:if test="#{empty userHandler.getUsuario(task.actorId)}">
-						<h:outputText value="#{userHandler.getUsuarioByTarefa(task)}" />
-					</c:if>
-					</div>
-				</rich:column>
-				
-				<ui:param name="prazoEstourado" value="#{row.porcentagem > 100}" />
-				<ui:param name="porc" value="#{prazoEstourado ? '> 100' : row.porcentagem}" />
-				<wi:columnOutputText columnId="porcentagem"
-									 columnHeader="Porcentagem"
-									 value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}" />
-									 
-									 
-				<rich:column  
-							 styleClass="defaultCell">
-					<f:facet name="header">Início</f:facet>
-					<h:outputText value="#{row.dataInicio}">
-						<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
-					</h:outputText>
-				</rich:column>
-				
-				<rich:column  
-							 styleClass="defaultCell">
-					<f:facet name="header">Término</f:facet>
-					<h:outputText value="#{row.dataFim}">
-						<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
-					</h:outputText>
-				</rich:column>
-				
-				<wi:columnOutputText columnId="tempoGasto"
-									 columnHeader="Tempo Gasto"
-									 value="#{row.tempoGasto} #{row.tarefa.tipoPrazo.getLabel()}" />
-									 
-				<wi:columnOutputText columnId="tempoPrevisto"
-									 columnHeader="Tempo Previsto"
-									 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}" />
-			</wi:dataTable>
-			<div >
-				<dojo:defaultGauge id="#{processoEpaTarefaList.entity.processoEpa.numeroProcesso}"
-									max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-									width="210"
-									height="200"
-									radius="50"
-									label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
-									draggable="true"
-									indicatorLabel="#{messages['processoEpa.tempoGasto']} (dias)"
-									value="#{processoEpaTarefaList.entity.processoEpa.tempoGasto}"/>
-			</div>
-		</wi:modalPanel>
-	</ui:define> -->
+				<div >
+					<h:graphicImage url="/img/usuario.gif"
+									rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
+					<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
+				<c:if test="#{empty userHandler.getUsuario(task.actorId)}">
+					<h:outputText value="#{userHandler.getUsuarioByTarefa(task)}" />
+				</c:if>
+				</div>
+			</rich:column>
+			
+			<ui:param name="prazoEstourado" value="#{row.porcentagem > 100}" />
+			<ui:param name="porc" value="#{prazoEstourado ? '> 100' : row.porcentagem}" />
+			<wi:columnOutputText columnId="porcentagem"
+								 columnHeader="Porcentagem"
+								 value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}" />
+								 
+								 
+			<rich:column  
+						 styleClass="defaultCell">
+				<f:facet name="header">Início</f:facet>
+				<h:outputText value="#{row.dataInicio}">
+					<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+				</h:outputText>
+			</rich:column>
+			
+			<rich:column  
+						 styleClass="defaultCell">
+				<f:facet name="header">Término</f:facet>
+				<h:outputText value="#{row.dataFim}">
+					<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+				</h:outputText>
+			</rich:column>
+			
+			<wi:columnOutputText columnId="tempoGasto"
+								 columnHeader="Tempo Gasto"
+								 value="#{row.tempoGasto} #{row.tarefa.tipoPrazo.getLabel()}" />
+								 
+			<wi:columnOutputText columnId="tempoPrevisto"
+								 columnHeader="Tempo Previsto"
+								 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}" />
+		</wi:dataTable>
+		<dojo:defaultGauge
+			id="#{processoEpaTarefaList.entity.processoEpa.numeroProcesso}"
+			max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+			width="210"
+			height="200"
+			radius="50"
+			label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
+			draggable="true"
+			indicatorLabel="#{messages['processoEpa.tempoGasto']} (dias)"
+			value="#{processoEpaTarefaList.entity.processoEpa.tempoGasto}"/>
+	</ui:define>
 	 
 </ui:composition>
