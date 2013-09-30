@@ -1,8 +1,4 @@
 /*LAYOUT GERAL DA PÁGINA*/
-.dt-form-p-b > div:not(.required-alert){
-	display:inline-block;
-	vertical-align:top;
-}
 
 .tree-p.rf-cp.rf-tgp {
 	border-color:#fff;
@@ -160,6 +156,11 @@ body {
 .errors input, .errors textarea {
 	border:1px solid red;
 	border-radius:5px;
+}
+
+.decoration-div {
+	display:inline-block;
+	vertical-align:top;
 }
 
 .activeRow {
