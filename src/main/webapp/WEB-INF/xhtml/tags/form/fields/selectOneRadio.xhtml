@@ -31,6 +31,7 @@
 	<s:decorate
          id="#{id}Decoration"
          template="#{template}"
+         styleClass="decoration-div sel-one-radio-div #{wi:get(decorationClass,'')}"
          rendered="#{wi:get(rendered, true)}">
 		<ui:define
              name="label">#{label}</ui:define>

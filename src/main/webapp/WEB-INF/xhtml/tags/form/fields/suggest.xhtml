@@ -36,7 +36,10 @@
          name="minChars"
          value="#{empty props.minChars ? (empty minChars ? '1' : minChars) : props.minChars}" />
 
-    <s:decorate id="#{id}Decoration" template="#{template}">
+    <s:decorate
+    	id="#{id}Decoration"
+    	template="#{template}"
+    	styleClass="decoration-div suggest-div #{wi:get(decorationClass,'')}">
         <ui:define name="label">#{label}</ui:define>
 		<infox:suggest id="#{id}"
 		        minChars="#{minChars}"
