@@ -215,7 +215,6 @@
                             </ui:include>
 
                         </s:fragment>
-
                         <s:fragment
                             rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
 
@@ -230,16 +229,12 @@
 
                         </s:fragment>
 
-                        <c:if test="#{! empty nodeFitter.nodeForm}">
+                        <s:div rendered="#{! empty nodeFitter.nodeForm}">
 
-                            <s:div >
+                            <ui:include
+                                src="forms/#{nodeFitter.nodeForm}.xhtml" />
 
-                                <ui:include
-                                    src="forms/#{nodeFitter.nodeForm}.xhtml" />
-
-                            </s:div>
-
-                        </c:if>
+                        </s:div>
 
 
                         <rich:collapsiblePanel

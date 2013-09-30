@@ -39,34 +39,37 @@
     	- indicatorLabel: String que irá aparecer antecedendo o valor representado pela agulha
      -->
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
-    <h:outputScript
-        name="dojo.js"
-        library="js/dojo" />
-	<h:outputScript
-        name="defaultGauge.js"
-        library="js/dojoCustom/gauges/defaultGauge.js" />
+    <ui:param name="value" value="#{wi:get(value,0)}" />
     <script>
-    	namespace("infox.DefaultGauge",function(DefaultGauge) {
-    		DefaultGauge({
+	   	namespace("infox.DefaultGauge",function(DefaultGauge) {
+	   		DefaultGauge({
 	    	    id:"#{id}DefaultGauge",
 	    	    containerId:"#{id}DefaultGaugeContainer",
 	    	    angle:#{wi:get(angle,300)},
 	    	    radius:#{wi:get(radius,150)},
 	    	    min:#{wi:get(min,0)},
 	    	    max:#{wi:get(max,100)},
-	    	    value:#{wi:get(value,0)},
+	    	    value:#{value},
 	    	    hideValues:#{wi:get(hideValues,'false')},
 	    	    tickInterval:#{wi:get(tickInterval, max/4)},
 	    	    width:#{wi:get(width, radius*4)},
 	    	    height:#{wi:get(height, radius*4)},
-	    	    draggable:#{wi:get(draggable, 'false')}
+	    	    draggable:#{wi:get(draggable, 'false')},
+	    	    baseUrl:"#{util.getContextPath()}/resources/js/dojo/"
 	    	});
-    	});
+	   	});
     </script>
     <div id="#{id}DefaultGaugeContainer" class="gaugeContainer" >
     	<div id="#{id}DefaultGaugeHeader" class="rf-p-h">#{label}</div>
         <div id="#{id}DefaultGauge" class="gauge"></div>
-        <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
+        <s:div id="gaugeAjaxDiv#{id}">
+	        <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
+	        <script>
+	        try {
+	        	namespace.infox.DefaultGauge.instance["#{id}DefaultGauge"].updateValue(#{value});
+			} catch(e) {}
+			</script>
+		</s:div>
     </div>
 
 </ui:composition>

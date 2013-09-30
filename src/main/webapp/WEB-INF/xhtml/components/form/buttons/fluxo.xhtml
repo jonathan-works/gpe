@@ -13,34 +13,31 @@
 	
 
 		<ui:define name="customButtons">
-		        <wi:commandButton id="updateButton"
-					  action="fluxoHome.persistAs()"
-  					  reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
-  					  rendered="#{fluxoHome.managed}"
-  					  value="Incluir como..." >
+			<wi:commandButton
+				id="updateButton"
+				action="fluxoHome.persistAs()"
+				reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
+				rendered="#{fluxoHome.managed}"
+				value="Incluir como..."
+			>
 			</wi:commandButton>
 
-		
-                         <s:link
-			 view="/Fluxo/definicao/processDefinition.xhtml"
-			 action="#{processBuilder.load(fluxoHome.instance)}"
-			 styleClass="buttons buttons"
-			 
-			 target="processDefinition"
-			 value="Definição"
-			 rendered="#{fluxoHome.managed}"
-			 onclick="openPopUp('processDefinition', 'about:blank',1300,850);">
-			</s:link>
+			<wi:commandButton
+				id="definicao"
+				action="#{processBuilder.load(fluxoHome.instance)}"
+				value="Definição"
+				rendered="#{fluxoHome.managed}"
+				oncomplete="openPopUp('processDefinition', '#{util.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);"
+			>			
+			</wi:commandButton>
 			
-			<s:link
-			 view="/Fluxo/importar/importarXPDL.xhtml"
-			 styleClass="buttons buttons"
-			 
-			 target="importarXPDL"
-			 value="#{messages['importarXPDL.button']}"
-			 rendered="#{fluxoHome.managed}"
-			 onclick="openPopUp('importarXPDL', 'about:blank',1300,850);">
-			</s:link>
+			<wi:commandButton
+				id="importarXPDL"
+				value="#{messages['importarXPDL.button']}"
+				rendered="#{fluxoHome.managed}"
+				onclick="openPopUp('importarXPDL', '#{util.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);"
+			>
+			</wi:commandButton>
 		
 	</ui:define>
 		

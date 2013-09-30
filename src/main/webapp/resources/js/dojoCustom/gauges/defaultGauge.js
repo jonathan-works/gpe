@@ -1,6 +1,7 @@
-namespace("infox.DefaultGauge", function(args) {
+namespace("infox.DefaultGauge", function DefaultGauge(args) {
 	require({
-		async : true
+		async : true,
+		baseUrl:args.baseUrl || ""
 	}, [ "dojox/gauges/AnalogGauge", "dojox/gauges/AnalogArcIndicator",
 			"dojox/gauges/AnalogNeedleIndicator" ], function() {
 		dojo.ready(function() {
@@ -21,7 +22,7 @@ namespace("infox.DefaultGauge", function(args) {
 				hideValues : args.hideValues || false,
 				useTooltip : false,
 				background : 'rgba(0,0,0,0)'
-			}
+			};
 
 			var $min = args.min || 0;
 			var $max = args.max || 100;
@@ -66,13 +67,13 @@ namespace("infox.DefaultGauge", function(args) {
 				color : "#00CC00"
 			}), new dojox.gauges.AnalogNeedleIndicator({
 				id : dijit.getUniqueId($props.id + 'Needle'),
-				value : $value,
+				value : $min,
 				width : Math.max(2, $radius / 10),
 				length : $radius * 1.2,
 				color : '#000000',
 				hover : (args.indicatorLabel || "") + ": " + $value,
 				noChange : true
-			}) ]
+			}) ];
 
 			if (!$props.hideValues) {
 				$props.majorTicks = {
@@ -82,11 +83,20 @@ namespace("infox.DefaultGauge", function(args) {
 					color : 'black'
 				};
 			}
-			var $gauge = dojo.byId($props.id);
-			$props.id = dijit.getUniqueId($props.id);
+			var $gauge = dijit.byId($props.id);
+			if ($gauge) {
+				$gauge.destroyRecursive();
+			}
+			$gauge = dojo.byId($props.id);
 			$gauge = new dojox.gauges.AnalogGauge($props, $gauge);
+			$gauge.updateValue = function UpdateValue(value) {
+				var ind = this.indicators[3];
+				ind.value = value;
+				ind.draw();
+			};
 			$gauge.startup();
-			var $containerId = args.containerId || false;
+			$gauge.updateValue($value);
+			namespace("infox.DefaultGauge.instance."+$props.id, $gauge);
 		});
 	});
 });

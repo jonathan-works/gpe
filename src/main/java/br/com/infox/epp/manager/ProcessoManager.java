@@ -27,7 +27,6 @@ import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
-import br.com.itx.exception.AplicationException;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
@@ -63,11 +62,7 @@ public class ProcessoManager extends GenericManager {
 		doc.setDataInclusao(new Date());
 		doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
 		doc.setProcesso(processo);
-		if (label == null) {
-			doc.setProcessoDocumento("null");
-		} else {
-			doc.setProcessoDocumento(label);
-		}
+		doc.setProcessoDocumento(label);
 		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
 		EntityUtil.getEntityManager().persist(doc);
 		return doc;
@@ -136,7 +131,9 @@ public class ProcessoManager extends GenericManager {
             	bp.startTask();
             	result = true;
             } catch (IllegalStateException e) {
-                LOG.error(".iniciaTask()", e);
+                // Caso já exista deve-se ignorar este trecho, outras illegalstate devem ser averiguadas
+                // Ideal para processos já iniciados seria chamar o método resumeTask
+                LOG.warn(".iniciaTask()", e);
             }
         }
     	return result;
@@ -144,13 +141,12 @@ public class ProcessoManager extends GenericManager {
     
     public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
         final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
-        if (taskInstanceId == null) {
-        	throw new AplicationException("Erro ao iniciar tarefa. Você possui permissão para iniciá-la?");
-        }
     	final String actorId = Actor.instance().getId();
     	iniciaTask(processo, taskInstanceId);
-    	storeUsuario(taskInstanceId, usrLoc.getUsuario());
-    	vinculaUsuario(processo, actorId);
+    	if (taskInstanceId != null) {
+        	storeUsuario(taskInstanceId, usrLoc.getUsuario());
+        	vinculaUsuario(processo, actorId);
+    	}
     }
 
 	private void vinculaUsuario(Processo processo, String actorId) {
