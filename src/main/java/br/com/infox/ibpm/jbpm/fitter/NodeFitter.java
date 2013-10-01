@@ -2,7 +2,6 @@ package br.com.infox.ibpm.jbpm.fitter;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -347,13 +346,16 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 
 	public String getNodeForm() {
-		String type = "mail";
+		String type = "empty";
 		if (currentNode != null) {
     		if (NodeType.Decision.equals(currentNode.getNodeType())) {
     			type = "decision";
-    		} else if (NodeType.Node.equals(currentNode.getNodeType())
-    		            && currentNode instanceof ProcessState) {
+    		} else if (NodeType.Node.equals(currentNode.getNodeType())) {
+    			if (currentNode instanceof ProcessState) {
     				type = "processState";
+    			} else if (currentNode instanceof MailNode) {
+    				type ="mail";
+    			}
     		}
 		}
 		return type;
