@@ -79,7 +79,8 @@
 		debug="false"
 		ssl="false"
 		username="sistemaepa@infox.com.br"
-		password="minot@uro" />
+		password="minot@uro"
+		session-jndi-name="java:jboss/mail/epp" />
 
 	<!-- ITX: Added -->
 	<component
