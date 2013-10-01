@@ -52,6 +52,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
+import br.com.infox.bpm.action.TaskPageAction;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.home.Authenticator;
@@ -204,49 +205,52 @@ public class TaskInstanceHome implements Serializable {
             TaskController taskController = taskInstance.getTask()
                     .getTaskController();
             if (taskController != null) {
-                List<VariableAccess> list = taskController
-                        .getVariableAccesses();
-                for (VariableAccess var : list) {
-
-                    String type = var.getMappedName().split(":")[0];
-                    String name = var.getMappedName().split(":")[1];
-                    Object value = getValueFromInstanceMap(name);
-
-                    if ("numberMoney".equals(type) && value != null) {
-                        String val = String.valueOf(value);
-                        try {
-                            value = Float.parseFloat(val);
-                        } catch (NumberFormatException e) {
-                            value = Float.parseFloat(val.replace(".", "")
-                                    .replace(",", "."));
-                        }
-                    }
-
-                    if (var.isWritable()) {
-                        if (JbpmUtil.isTypeEditor(type)) {
-                            Integer idDoc = null;
-                            if (taskInstance.getVariable(var.getMappedName()) != null) {
-                                idDoc = (Integer) taskInstance.getVariable(var
-                                        .getMappedName());
-                            }
-                            String label = JbpmUtil.instance().getMessages()
-                                    .get(name);
-                            Integer valueInt = ProcessoHome.instance()
-                                    .salvarProcessoDocumentoFluxo(value, idDoc,
-                                            assinar, label);
-                            if (valueInt != 0) {
-                                value = valueInt;
-                                Contexts.getBusinessProcessContext().set(
-                                        var.getMappedName(), value);
-                            }
-
-                            assinar = Boolean.FALSE;
-                        } else {
-                            Contexts.getBusinessProcessContext().set(
-                                    var.getMappedName(), value);
-                        }
-                    }
-                }
+            	TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
+            	if (!taskPageAction.getHasTaskPage()) {
+	                List<VariableAccess> list = taskController
+	                        .getVariableAccesses();
+	                for (VariableAccess var : list) {
+	
+	                    String type = var.getMappedName().split(":")[0];
+	                    String name = var.getMappedName().split(":")[1];
+	                    Object value = getValueFromInstanceMap(name);
+	
+	                    if ("numberMoney".equals(type) && value != null) {
+	                        String val = String.valueOf(value);
+	                        try {
+	                            value = Float.parseFloat(val);
+	                        } catch (NumberFormatException e) {
+	                            value = Float.parseFloat(val.replace(".", "")
+	                                    .replace(",", "."));
+	                        }
+	                    }
+	
+	                    if (var.isWritable()) {
+	                        if (JbpmUtil.isTypeEditor(type)) {
+	                            Integer idDoc = null;
+	                            if (taskInstance.getVariable(var.getMappedName()) != null) {
+	                                idDoc = (Integer) taskInstance.getVariable(var
+	                                        .getMappedName());
+	                            }
+	                            String label = JbpmUtil.instance().getMessages()
+	                                    .get(name);
+	                            Integer valueInt = ProcessoHome.instance()
+	                                    .salvarProcessoDocumentoFluxo(value, idDoc,
+	                                            assinar, label);
+	                            if (valueInt != 0) {
+	                                value = valueInt;
+	                                Contexts.getBusinessProcessContext().set(
+	                                        var.getMappedName(), value);
+	                            }
+	
+	                            assinar = Boolean.FALSE;
+	                        } else {
+	                            Contexts.getBusinessProcessContext().set(
+	                                    var.getMappedName(), value);
+	                        }
+	                    }
+	                }
+            	}
                 Contexts.getBusinessProcessContext().flush();
                 Util.setToEventContext(UPDATED_VAR_NAME, true);
                 updateIndex();

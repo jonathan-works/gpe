@@ -32,6 +32,7 @@ public class TaskPageAction implements Serializable {
 	public static final String TASK_PAGE_COMPONENT_NAME = "taskPage";
 	public static final String TASK_PAGE_COMPONENT_PATH = "/taskpages/";
 	private static final String TASK_PAGE_SUFFIX = ".xhtml";
+	private boolean hasTaskPage = false;
 	
 	@In private FluxoManager fluxoManager;
 	
@@ -45,6 +46,7 @@ public class TaskPageAction implements Serializable {
 			String[] tokens = va.getMappedName().split(":");
 			String type = tokens[0];
 			if(type.equals(TASK_PAGE_COMPONENT_NAME)) {
+				hasTaskPage = true;
 				String pageName = tokens[1] + TASK_PAGE_SUFFIX;
 
 				//Caso a pagina não seja encontrada no TASK_PAGE_COMPONENT_PATH é porque essa pagina é 
@@ -56,7 +58,7 @@ public class TaskPageAction implements Serializable {
 				break;
 			}
 		}
-		if (taskPagePath == null) {
+		if (taskPagePath == null && hasTaskPage) {
 			throw new AplicationException("TaskPageAction não encontrada: " + taskPagePath);
 		}
 	}
@@ -89,4 +91,10 @@ public class TaskPageAction implements Serializable {
 		return taskPagePath;
 	}
 	
+	public boolean getHasTaskPage() {
+		if (!hasTaskPage) {
+			readTaskPagePath();
+		}
+		return hasTaskPage;
+	}
 }

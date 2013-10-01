@@ -126,7 +126,7 @@
 					 status=":status"
 					 title="Saída">
 					
-                    <c:if test="#{empty taskPageAction.taskPagePath}">
+                    <c:if test="#{not taskPageAction.hasTaskPage}">
 						<wi:form
 							canEdit="true"
 							formTitle="#{taskInstance.name}"
@@ -136,7 +136,7 @@
 						/>
                     
 					</c:if>
-                    <c:if test="#{not empty taskPageAction.taskPagePath}">
+                    <c:if test="#{taskPageAction.hasTaskPage}">
 						
                         <ui:include src="#{taskPageAction.taskPagePath}" />
                     

@@ -19,6 +19,6 @@
 	<param name="idBin" value="#{processoDocumentoBinHome.processoDocumentoBinIdProcessoDocumentoBin}" />
 	<param name="idProcesso" value="#{processoHome.processoIdProcesso}" />
 	<param name="tarefaId" value="#{processoHome.tarefaId}" />
-	<action execute="#{processoHome.iniciarTarefaProcesso()}" />	
+	<action execute="#{processoHome.iniciarTarefaProcesso()}" if="#{not util.ajaxRequest}"/>	
  
 </page>

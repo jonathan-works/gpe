@@ -24,6 +24,8 @@
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
 
+		<ui:param name="taskEndAction" value="#{empty taskEndAction ? 'taskInstanceHome.end(taskInstanceHome.name)' : taskEndAction}"></ui:param>
+
           <c:if
          test="#{taskInstanceHome.transitions.size gt 3}">
            	<h:selectOneMenu
@@ -33,7 +35,7 @@
                  value="#{taskInstanceHome.transtionsSelectItems}" />
 			</h:selectOneMenu>
            	<a:commandButton
-             action="#{taskInstanceHome.end(taskInstanceHome.name)}"
+             action="#{util.invokeMethod(taskEndAction)}"
              value="OK"
              status="none"
              onmouseup="showLoading()"
@@ -57,8 +59,9 @@
                  limitRender="true"
                  value="#{transition.name}"
                  styleClass="buttons buttons"
-                 
-                 action="#{taskInstanceHome.end(transition.name)}" />
+                 action="#{util.invokeMethod(taskEndAction)}">
+                 <f:setPropertyActionListener target="#{taskInstanceHome.name}" value="#{transition.name}" />
+          	</a:commandButton>
           </a:repeat>
          </c:if>
 
