@@ -339,10 +339,10 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 			return;
 		} else if (!login.isEmpty()) {
 			usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
-			recoverUsuario(usuario, login);
+			recoverUsuario(usuario, "login");
 		} else if (!email.isEmpty()) {
 			usuario = usuarioLoginManager.getUsuarioLoginByEmail(email);
-			recoverUsuario(usuario, email);
+			recoverUsuario(usuario, "email");
 		}
 	}
 
