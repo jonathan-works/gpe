@@ -30,6 +30,7 @@
 	<s:decorate
          id="#{id}Decoration"
          template="#{template}"
+         styleClass="decoration-div inputText-div #{wi:get(decorationClass,'')}"
          rendered="#{wi:get(rendered, true)}">
 		<ui:define
              name="label">#{label}</ui:define>

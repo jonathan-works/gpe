@@ -219,7 +219,14 @@ public class Endereco implements java.io.Serializable {
 		this.usuarioCadastrador = usuarioCadastrador;
 	}
 	
-	@Override
+	@Transient
+	public Boolean getAtivo() {
+        return true;
+    }
+    public void setAtivo(Boolean ativo) {
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

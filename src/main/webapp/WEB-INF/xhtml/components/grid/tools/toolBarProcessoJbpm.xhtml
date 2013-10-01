@@ -72,8 +72,19 @@
             <a:outputPanel>
         		<h:graphicImage
         			url="/img/role.gif"
-        			rendered="#{(owner != actor.id and ! empty owner)}"
+        			rendered="#{(owner != actor.id and ! empty owner and !jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}"
         			title="Processo bloqueado pelo servidor #{owner}" />
+                <a:commandLink 
+                	action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}"
+                    execute="@this"
+                    render="painelProcessos"
+                    onclick="if (!confirm('Liberar tarefa?')) return false;"
+                    limitRender="true"
+                    rendered="#{(owner != actor.id and ! empty owner and jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}">
+        			<h:graphicImage
+	        			url="/img/role.gif"
+	        			title="Liberar tarefa bloqueada pelo servidor #{owner}" />
+                </a:commandLink>
             </a:outputPanel>
 	</div>
 </ui:composition>

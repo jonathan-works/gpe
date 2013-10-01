@@ -47,6 +47,7 @@
 	<s:decorate
 		template="#{template}"
 		id="#{id}TreeDecoration"
+		styleClass="decoration-div tree-div #{wi:get(decorationClass,'')}"
 		rendered="#{empty rendered or rendered}">
 
 		<ui:define name="label">#{label}</ui:define>

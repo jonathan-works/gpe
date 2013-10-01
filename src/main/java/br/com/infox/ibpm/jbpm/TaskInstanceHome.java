@@ -26,6 +26,8 @@ import java.util.Map.Entry;
 
 import javax.faces.component.EditableValueHolder;
 import javax.faces.model.SelectItem;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.Component;
@@ -386,19 +388,41 @@ public class TaskInstanceHome implements Serializable {
         return null;
     }
 
+    public void removeUsuario(final Long idTaskInstance) {
+        try {
+            UsuarioTaskInstance uti = EntityUtil.find(UsuarioTaskInstance.class, idTaskInstance);
+            
+            if (uti!= null) {
+                EntityUtil.getEntityManager().remove(uti);
+                EntityUtil.getEntityManager().flush();
+            }
+        } catch (Exception e) {
+            LOG.error("TaskInstanceHome.removeUsuario()", e);
+        }
+    }
+    
+    public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
+        final String hql = "select new map(pet.taskInstance as idTaskInstance) " +
+                    		"from ProcessoEpaTarefa pet " +
+                    		"where pet.tarefa.idTarefa=:idTarefa " +
+                    		"and pet.processoEpa.idProcesso=:idProcesso";
+        final Query query = EntityUtil.createQuery(hql)
+                            .setParameter("idProcesso",idProcesso)
+                            .setParameter("idTarefa", idTarefa);
+        try {
+            final Map<String,Object> result = (Map<String, Object>) query.getSingleResult();
+            removeUsuario((Long)result.get("idTaskInstance"));
+        } catch (NoResultException e) {
+            LOG.error("Sem resultado", e);
+        } catch (NonUniqueResultException e) {
+            LOG.error("Mais de um resultado", e);
+        } catch (IllegalStateException e) {
+            LOG.error("Estado ilegal", e);
+        }
+    }
+    
     public void removeUsuario() {
-    	try {
-	        UsuarioTaskInstance uti = EntityUtil.getEntityManager().find(
-	                UsuarioTaskInstance.class,
-	                BusinessProcess.instance().getTaskId());
-	    	
-	        if (uti != null) {
-	            EntityUtil.getEntityManager().remove(uti);
-	            EntityUtil.getEntityManager().flush();
-	        }
-    	} catch (Exception e) {
-    		LOG.error("TaskInstanceHome.removeUsuario()", e);
-    	}
+        removeUsuario(BusinessProcess.instance().getTaskId());
     }
 
     /**
