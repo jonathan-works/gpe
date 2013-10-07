@@ -16,7 +16,7 @@ public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 
 	private static final long serialVersionUID = 1L;
 
-/** Expressıes para montar a ·rvore invertida (do menor papel para o maior)
+/** Express√µes para montar a √°rvore invertida (do menor papel para o maior)
 */	
 	private static final String QUERY_PAPEIS_INV = "select p from Papel p " +
 			"join p.grupos grupo " +
@@ -50,7 +50,7 @@ public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 	} 
 
 	@Override
-	// Vari·vel retornada alterada de List<Query> para String[] contendo hql
+	// Vari√°vel retornada alterada de List<Query> para String[] contendo hql
 	protected String[] getQueryChildrenList() {
 		String[] hql = new String[] { 
 				invertida? QUERY_PAPEIS_INV : QUERY_PAPEIS, 

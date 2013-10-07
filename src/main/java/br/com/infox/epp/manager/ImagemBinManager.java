@@ -63,7 +63,7 @@ public class ImagemBinManager extends GenericManager {
             if (fileDestino.length() != bytesOrigem.length) {
                 fileDestino = new File(getNewFileConflict(fileDestino.getAbsolutePath()));
             } else {
-                throw new IOException(MessageFormat.format("Arquivo j· existente: {0}{1}", fileDestino.getAbsolutePath(),fileDestino.getName()));
+                throw new IOException(MessageFormat.format("Arquivo j√° existente: {0}{1}", fileDestino.getAbsolutePath(),fileDestino.getName()));
             }
         }
         imagemBinDAO.saveFile(bytesOrigem, fileDestino);

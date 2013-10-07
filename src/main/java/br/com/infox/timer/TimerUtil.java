@@ -18,8 +18,8 @@ public final class TimerUtil {
     }
 	
 	/**
-	 * Foi necess·rio duplicar esse mÈtodo j· existente em ParametroHome pois
-	 * o mÈtodo dessa classe que o invoca n„o possui provavelmente o mesmo 
+	 * Foi necess√°rio duplicar esse m√©todo j√° existente em ParametroHome pois
+	 * o m√©todo dessa classe que o invoca n√£o possui provavelmente o mesmo 
 	 * classLoader do seam, o que gerava um ClassNotFoundException
 	 * @param nome - Nome do parametro
 	 * @return Valor do parametro

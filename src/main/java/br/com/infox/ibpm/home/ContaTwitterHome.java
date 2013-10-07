@@ -45,7 +45,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter>{
 	}
 	
 	/**
-	 * Inicializa o Token de Requisição de Autorização
+	 * Inicializa o Token de RequisiÃ§Ã£o de AutorizaÃ§Ã£o
 	 * e gera a URL correspondente
 	 * */
 	public String getAuthorizationURL(){

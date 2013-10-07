@@ -32,7 +32,7 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 		return entityManager.createQuery(hql).getResultList();
 	}
 	
-	//Retorna um TipoProcessoDocumento ~aleatório
+	//Retorna um TipoProcessoDocumento ~aleatÃ³rio
 	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
 		String sql = "select o from TipoProcessoDocumento o ";
 		Query q = entityManager.createQuery(sql);

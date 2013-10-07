@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.ibpm.jbpm;
@@ -45,12 +45,12 @@ import br.com.itx.component.Template;
  * 		tipo:nome_da_variavel
  * 
  * Onde:
- * 		- tipo È o nome do componente de formulario para o campo
- * 		- nome_da_variavel È como sera armazenada no contexto.
- * 				Serve tambÈm para gerar o label (Nome da variavel)
+ * 		- tipo √© o nome do componente de formulario para o campo
+ * 		- nome_da_variavel √© como sera armazenada no contexto.
+ * 				Serve tamb√©m para gerar o label (Nome da variavel)
  * 
  * Esse formulario contem apenas campos que possam ser escritos (access=write),
- * para os outros campos È usada a classe TaskInstanceView
+ * para os outros campos √© usada a classe TaskInstanceView
  * 
  * @author luizruiz
  *
@@ -95,7 +95,7 @@ public class TaskInstanceForm implements Serializable{
 							form.setHome(name + "Home");
 						} else {
 							FacesMessages.instance().add(StatusMessage.Severity.INFO,
-								"O form '" + formName + "' n„o foi encontrado.");
+								"O form '" + formName + "' n√£o foi encontrado.");
 						}
 						return form;
 					}
@@ -114,8 +114,8 @@ public class TaskInstanceForm implements Serializable{
 	}
 
 	/**
-	 * Adiciona as variaveis da list informada ao form que est· sendo criado.
-	 * @param list - Lista das variavÈis que desejam ser adicionadas ao form.
+	 * Adiciona as variaveis da list informada ao form que est√° sendo criado.
+	 * @param list - Lista das variav√©is que desejam ser adicionadas ao form.
 	 */
 	private void addVariablesToForm(List<VariableAccess> list) {
 		if(list != null) {

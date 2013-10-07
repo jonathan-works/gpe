@@ -6,12 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Anotação para definir se a entidade é recursiva 
+ * AnotaÃ§Ã£o para definir se a entidade Ã© recursiva 
  * @author Infox
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Recursive {
-	//Definição das anotações utilizada pelo framework infox
+	//DefiniÃ§Ã£o das anotaÃ§Ãµes utilizada pelo framework infox
 }

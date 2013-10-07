@@ -69,7 +69,7 @@ public class AuthenticatorService extends GenericManager {
 	}
 	
 	/**
-	 * Metodo que coloca o usuario logado na sess„o
+	 * Metodo que coloca o usuario logado na sess√£o
 	 * @param usuario
 	 */
 	public void setUsuarioLogadoSessao(UsuarioLogin usuario) {
@@ -99,23 +99,23 @@ public class AuthenticatorService extends GenericManager {
 	}
 
 	private void throwUsuarioExpirou(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usu·rio " + usuario.getNome() + " expirou. " 
+		throw new LoginException("O usu√°rio " + usuario.getNome() + " expirou. " 
 								+ "Por favor, contate o adminstrador do sistema");
 	}
 
 	private void throwUsuarioInativo(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usu·rio " + usuario.getNome() + " n„o est· ativo.\n");
+		throw new LoginException("O usu√°rio " + usuario.getNome() + " n√£o est√° ativo.\n");
 	}
 
 	private void throwUsuarioBloqueado(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usu·rio " + usuario.getNome() + " est· bloqueado." 
+		throw new LoginException("O usu√°rio " + usuario.getNome() + " est√° bloqueado." 
 								+ "Por favor, contate o adminstrador do sistema");
 	}
 	
 	public UsuarioLogin getUsuarioByCpf(String cpf) throws LoginException {
 		UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByCpf(cpf);
 		if (usuario == null) {
-			throw new LoginException("N„o foi possÌvel encontrar um usu·rio que corresponda a este SmartCard. ");
+			throw new LoginException("N√£o foi poss√≠vel encontrar um usu√°rio que corresponda a este SmartCard. ");
 		}
 		return usuario;
 	}
@@ -153,7 +153,7 @@ public class AuthenticatorService extends GenericManager {
 			EntityManager em = EntityUtil.getEntityManager();
 			return em.getReference(UsuarioLocalizacao.class, loc.getIdUsuarioLocalizacao());
 		} 
-		throw new LoginException("O usu·rio " + usuario + " n„o possui LocalizaÁ„o");
+		throw new LoginException("O usu√°rio " + usuario + " n√£o possui Localiza√ß√£o");
 	}
 
 	public void anulaActorId(String actorId) {

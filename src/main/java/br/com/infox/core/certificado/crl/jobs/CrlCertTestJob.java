@@ -10,7 +10,7 @@ import br.com.infox.core.certificado.crl.CrlCheckException;
 import br.com.itx.component.MeasureTime;
 
 	/**
-	 * Classe Runnable responsavel por fazer a verificação de revogação do certificado utilizando o objeto CrlCertObj.
+	 * Classe Runnable responsavel por fazer a verificaÃ§Ã£o de revogaÃ§Ã£o do certificado utilizando o objeto CrlCertObj.
 	 * 
 	 * @author rodrigo
 	 *
@@ -44,7 +44,7 @@ import br.com.itx.component.MeasureTime;
 				MeasureTime mt = new MeasureTime(true);
 				revoked = crlThreadCheck.isCertificadoRevogado(certificado.getMainCertificate());
 				LOG.info(MessageFormat.format(
-						"Verificada a revogação do certificado {0}. ({1} ms)",
+						"Verificada a revogaÃ§Ã£o do certificado {0}. ({1} ms)",
 						certificado.getCn(), mt.getTime()));
 				if (jobActionListner != null) {
 					jobActionListner.execute(revoked);

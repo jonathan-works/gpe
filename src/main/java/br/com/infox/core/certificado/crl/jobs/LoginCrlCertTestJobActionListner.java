@@ -10,7 +10,7 @@ public class LoginCrlCertTestJobActionListner implements CrlCertTestJobActionLis
 		try {
 			this.identity = Identity.instance();
 		} catch (IllegalStateException e) {
-			// n„o h· contexto
+			// n√£o h√° contexto
 		}
 	}
 

@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.ibpm.search;
@@ -112,16 +112,16 @@ public class SearchHandler implements Serializable {
 	}
 	
 	/**
-	 * MÈtodo realiza busca de processos no sistema
+	 * M√©todo realiza busca de processos no sistema
 	 * 
-	 * 		Caso o texto de busca seja n˙mero de processo realiza uma busca
-	 * 	por este valor {@link #searchNrProcesso()}, caso n„o seja,
+	 * 		Caso o texto de busca seja n√∫mero de processo realiza uma busca
+	 * 	por este valor {@link #searchNrProcesso()}, caso n√£o seja,
 	 * 	tenta uma busca de processo pelo ID {@link #searchIdProcesso()}
 	 * 
-	 * 		Se qualquer dos mÈtodos de busca retornar um processo, este
-	 * 	È chamado na p·gina {@link #visualizarProcesso(Processo)}
+	 * 		Se qualquer dos m√©todos de busca retornar um processo, este
+	 * 	√© chamado na p√°gina {@link #visualizarProcesso(Processo)}
 	 * 
-	 * @return	TRUE se o resultado for um processo, FALSE do contr·rio
+	 * @return	TRUE se o resultado for um processo, FALSE do contr√°rio
 	 */
 	public boolean searchProcesso()	{
 		Processo processo = null;
@@ -140,7 +140,7 @@ public class SearchHandler implements Serializable {
 	}
 	
 	/**
-	 * 	MÈtodo redireciona para visualizaÁ„o do processo escolhido no paginador
+	 * 	M√©todo redireciona para visualiza√ß√£o do processo escolhido no paginador
 	 * 
 	 * @param processo	Processo a ser visualizado no paginador
 	 */
@@ -153,10 +153,10 @@ public class SearchHandler implements Serializable {
 	}
 	
 	/**
-	 * MÈtodo que realiza a busca indexada pelo conte˙do do site
+	 * M√©todo que realiza a busca indexada pelo conte√∫do do site
 	 * 
 	 * @throws IOException		Ao construir o Indexer
-	 * @throws ParseException	Ao retornar a busca no mÈtodo getQuery do Indexer
+	 * @throws ParseException	Ao retornar a busca no m√©todo getQuery do Indexer
 	 */
 	private void searchIndexer() throws IOException, ParseException	{
 		searchResult = new ArrayList<Map<String,Object>>();
@@ -171,7 +171,7 @@ public class SearchHandler implements Serializable {
 			TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
 			
 			if (ti == null) {
-				LOG.warn("Task n„o encontrada: " + taskId);
+				LOG.warn("Task n√£o encontrada: " + taskId);
 			} else {
 				String s = HelpUtil.getBestFragments(query, getConteudo(ti));
 				Map<String, Object> m = new HashMap<String, Object>();
@@ -186,11 +186,11 @@ public class SearchHandler implements Serializable {
 	}
 	
 	/**
-	 * MÈtodo que realiza busca no sistema de acordo com o texto contido
+	 * M√©todo que realiza busca no sistema de acordo com o texto contido
 	 * 
 	 *   Analisa se existe texto a ser buscado e confere se o texto a ser
-	 *   buscado È Numero de Processo, Id de Processo ({@link #searchProcesso()}),
-	 *   ou se È texto normal ({@link #searchIndexer()})
+	 *   buscado √© Numero de Processo, Id de Processo ({@link #searchProcesso()}),
+	 *   ou se √© texto normal ({@link #searchIndexer()})
 	 */
 	public void search() {
 		if (searchText == null || "".equals(searchText.trim())) {
@@ -304,7 +304,7 @@ public class SearchHandler implements Serializable {
 		if (JbpmUtil.isTypeEditor(type)){
 			texto = JbpmUtil.instance().valorProcessoDocumento((Integer) value);
 		} else if("sim_nao".equals(type)) {
-			texto = Boolean.valueOf(value.toString()) ? "Sim" : "N„o";
+			texto = Boolean.valueOf(value.toString()) ? "Sim" : "N√£o";
 		} else if ("numberMoney".equalsIgnoreCase(type)){
             texto = String.format("%.2f", value);
         } else {

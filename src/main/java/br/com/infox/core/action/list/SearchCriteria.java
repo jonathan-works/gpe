@@ -22,9 +22,9 @@ public enum SearchCriteria {
 	
 	/**
 	 * Construtor do enum, que recebe o padrao
-	 * @param pattern é o padrão para construir a expressão onde:
+	 * @param pattern Ã© o padrÃ£o para construir a expressÃ£o onde:
 	 *  {0} = nome do campo
-	 *  {1} = nome da entidade (primeira minúscula) 
+	 *  {1} = nome da entidade (primeira minÃºscula) 
 	 */
 	private SearchCriteria(String pattern) {
 		this.setPattern(pattern);

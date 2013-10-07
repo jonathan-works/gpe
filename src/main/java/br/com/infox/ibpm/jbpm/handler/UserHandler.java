@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
  */
 package br.com.infox.ibpm.jbpm.handler;
@@ -72,11 +72,11 @@ public class UserHandler {
                 this.usuarioProcesso = (String) query.getSingleResult();
             } catch (NoResultException e) {
                 this.usuarioProcesso = "";
-                LOG.warn("N„o houve resultado. UserHandler.getActorIdTarefaAtual(Integer)");
+                LOG.warn("N√£o houve resultado. UserHandler.getActorIdTarefaAtual(Integer)");
             } catch (NonUniqueResultException e) {
-                LOG.error("M˙ltiplos resultados. UserHandler.getActorIdTarefaAtual(Integer)", e);
+                LOG.error("M√∫ltiplos resultados. UserHandler.getActorIdTarefaAtual(Integer)", e);
             } catch (IllegalStateException e) {
-                LOG.error("Estado inv·lido. UserHandler.getActorIdTarefaAtual(Integer)", e);
+                LOG.error("Estado inv√°lido. UserHandler.getActorIdTarefaAtual(Integer)", e);
             }
         }
         return this.usuarioProcesso;
@@ -94,11 +94,11 @@ public class UserHandler {
                 this.usuarioTarefa = (String) query.getSingleResult();
             } catch (NoResultException e) {
                 this.usuarioTarefa = "";
-                LOG.warn("N„o houve resultado. UserHandler.getUsuarioByTarefa(TaskInstance)");
+                LOG.warn("N√£o houve resultado. UserHandler.getUsuarioByTarefa(TaskInstance)");
             } catch (NonUniqueResultException e) {
-                LOG.error("M˙ltiplos resultados. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
+                LOG.error("M√∫ltiplos resultados. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
             } catch (IllegalStateException e) {
-                LOG.error("Estado inv·lido. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
+                LOG.error("Estado inv√°lido. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
             }
         }
         return this.usuarioTarefa;
@@ -114,9 +114,9 @@ public class UserHandler {
             u = (UsuarioLogin) EntityUtil.getEntityManager().createQuery(sql)
                     .setParameter("login", login).getSingleResult();
         } catch (NoResultException e) {
-            LOG.warn("Usu·rio n„o encontrado. Login: " + login);
+            LOG.warn("Usu√°rio n√£o encontrado. Login: " + login);
         } catch (Exception e) {
-            LOG.error("Erro ao buscar usu·rio. Login: " + login, e);
+            LOG.error("Erro ao buscar usu√°rio. Login: " + login, e);
         }
         return u;
     }

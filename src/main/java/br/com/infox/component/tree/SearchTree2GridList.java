@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.component.tree;
@@ -37,14 +37,14 @@ public class SearchTree2GridList <E> {
 	/**
 	 * Lista dos atributos referente aos campos de pesquisa(searchBean), ou seja,
 	 * para que todos os campos fora a tree filtrem dados na pesquisa, deve ser 
-	 * passado os seus respectivos nomes do Entity, cada um em uma posiÁ„o do vetor.
+	 * passado os seus respectivos nomes do Entity, cada um em uma posi√ß√£o do vetor.
 	 */
 	private String[] filterName;
 	
 	private GridQuery grid;
 	
 	/**
-	 * Construtor padr„o.
+	 * Construtor padr√£o.
 	 * @param searchBean - Nome do searchBean da aba de pesquisa
 	 * @param treeHandler - Nome do treeHandler criado para a treeView da pesquisa
 	 */
@@ -58,16 +58,16 @@ public class SearchTree2GridList <E> {
 	}
 	
 	/**
-	 * MÈtodo que recebe os parametros e ativa os mÈtodos para construÁ„o da list.
-	 * @return A lista que ser· exibida na Grid
+	 * M√©todo que recebe os parametros e ativa os m√©todos para constru√ß√£o da list.
+	 * @return A lista que ser√° exibida na Grid
 	 */
 	public List<EntityNode<E>> getList() {
 		return getSearchTreeList();
 	}
 	
 	/**
-	 * MÈtodo que ir· montar a lista validando os devidos filtros.
-	 * @return A lista que ser· exibida na Grid
+	 * M√©todo que ir√° montar a lista validando os devidos filtros.
+	 * @return A lista que ser√° exibida na Grid
 	 */
 	private List<EntityNode<E>> getSearchTreeList() {
 		List<EntityNode<E>> result = new ArrayList<EntityNode<E>>();
@@ -94,7 +94,7 @@ public class SearchTree2GridList <E> {
 	}
 
 	/**
-	 * Verifica se o registro selecionado È um dos filhos do nÛ em execuÁ„o.
+	 * Verifica se o registro selecionado √© um dos filhos do n√≥ em execu√ß√£o.
 	 */
 	private boolean isChildren(EntityNode<E> node, boolean ret){
 	    boolean retorno = ret;
@@ -109,7 +109,7 @@ public class SearchTree2GridList <E> {
 	}
 
 	/**
-	 * Retorna o nÛ selecionado que pertence a ·rvore do registro pai informado. 
+	 * Retorna o n√≥ selecionado que pertence a √°rvore do registro pai informado. 
 	 */
 	private EntityNode<E> getSelectedNode(EntityNode<E> node) {
 		List<EntityNode<E>> childList = getChildList(node);
@@ -125,10 +125,10 @@ public class SearchTree2GridList <E> {
 	
 	/**
 	 * Verifica se todos os filhos, netos, bisnetos e etc.. devem ser adicionados
-	 * na lista a ser exibida, atravÈs da recursividade.
-	 * @param node - Representa o nÛ que ser„o verificados os registros da sua 
-	 * sub ·rvore.
-	 * @param result A lista que ser· exibida na Grid
+	 * na lista a ser exibida, atrav√©s da recursividade.
+	 * @param node - Representa o n√≥ que ser√£o verificados os registros da sua 
+	 * sub √°rvore.
+	 * @param result A lista que ser√° exibida na Grid
 	 */
 	private void getChildren(EntityNode<E> node, List<EntityNode<E>> result){
 		List<EntityNode<E>> childList = getChildList(node);
@@ -141,12 +141,12 @@ public class SearchTree2GridList <E> {
 	}
 
 	/**
-	 * MÈtodo de verificaÁ„o chamado para cada nÛ nos mÈtodos getSearchTreeList()
+	 * M√©todo de verifica√ß√£o chamado para cada n√≥ nos m√©todos getSearchTreeList()
 	 * e getChildren() para informar se o registro deve ser adicionado ao 
 	 * resultado da pesquisa. 
-	 * @param node - NÛ que ser· validado
-	 * @param result - A lista que ser· exibida na Grid
-	 * @return Se True deve ser adicionado, se False, n„o deve.
+	 * @param node - N√≥ que ser√° validado
+	 * @param result - A lista que ser√° exibida na Grid
+	 * @return Se True deve ser adicionado, se False, n√£o deve.
 	 */
 	private boolean canAdd(EntityNode<E> node) {
 		boolean ret = isLogicOperatorAnd();
@@ -164,7 +164,7 @@ public class SearchTree2GridList <E> {
 						boolean condEval = nodeField.toString().toLowerCase()
 								.contains(searchField.toString().toLowerCase());
 						//Se a pesquisa na grid estiver usando qualquer 
-						//express„o ele usa um 'or'
+						//express√£o ele usa um 'or'
 						if (isLogicOperatorAnd()) {
 							ret &= condEval;
 						} else {
@@ -193,9 +193,9 @@ public class SearchTree2GridList <E> {
 	}
 		
 	/**
-	 * Faz a lÛgica da identaÁ„o para o filhos de um nÛ.
-	 * @param e - NÛ a ser identado, ou n„o caso seja folha
-	 * @param scape - Usado para identificar se ser· concatenado &#160 ou " "
+	 * Faz a l√≥gica da identa√ß√£o para o filhos de um n√≥.
+	 * @param e - N√≥ a ser identado, ou n√£o caso seja folha
+	 * @param scape - Usado para identificar se ser√° concatenado &#160 ou " "
 	 * @return Retorna a string a ser exibida na Grid
 	 */
 	public String getIdent(EntityNode<E> e, boolean scape){
@@ -216,8 +216,8 @@ public class SearchTree2GridList <E> {
 	}
 	
 	/**
-	 * Verifica se o registro È um nÛ folha, ou seja, se ele n„o possui pai.
-	 * @param node - NÛ a ser verificado se È ou n„o pai
+	 * Verifica se o registro √© um n√≥ folha, ou seja, se ele n√£o possui pai.
+	 * @param node - N√≥ a ser verificado se √© ou n√£o pai
 	 * @return True se for um registro folha
 	 */
 	public boolean isDad(EntityNode<E> node){
@@ -226,17 +226,17 @@ public class SearchTree2GridList <E> {
 	
 	/**
 	 * Obtem a lista dos registros filhos ao registro informado
-	 * @param node - NÛ que ser· obtido a lista dos filhos
-	 * @return A lista dos filhos de um determinado nÛ
+	 * @param node - N√≥ que ser√° obtido a lista dos filhos
+	 * @return A lista dos filhos de um determinado n√≥
 	 */
 	private List<EntityNode<E>> getChildList(EntityNode<E> node) {
 		return node.getNodes();
 	}
 	
 	/**
-	 * Deve ser informado nesta vari·vel todos os nomes dos campos que dever„o
-	 * realizar um filtro alÈm da treeView.
-	 * @param filterName - Vetor com os nomes dos atributos que far„o o filtro
+	 * Deve ser informado nesta vari√°vel todos os nomes dos campos que dever√£o
+	 * realizar um filtro al√©m da treeView.
+	 * @param filterName - Vetor com os nomes dos atributos que far√£o o filtro
 	 */
 	public void setFilterName(String[] filterName) {
 		this.filterName = ArrayUtil.copyOf(filterName);

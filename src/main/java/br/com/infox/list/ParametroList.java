@@ -43,7 +43,7 @@ public class ParametroList extends EntityList<Parametro> {
 
 	/**
 	 * Coluna usuarioModificacao ordenada pelo nome do usuario.
-	 * Caso seja a coluna usuarioModificacao nula, coloca os registros n„o nulos antes
+	 * Caso seja a coluna usuarioModificacao nula, coloca os registros n√£o nulos antes
 	 */
 	protected Map<String, String> getCustomColumnsOrder() {
 		Map<String, String> map = new HashMap<String, String>();

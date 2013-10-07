@@ -85,11 +85,11 @@ public final class FluxoXPDL implements Serializable {
 	}
 
 	/**
-	 * Cria uma instância do FluxoXPDL a partir de uma cadeia de bytes contendo
+	 * Cria uma instÃ¢ncia do FluxoXPDL a partir de uma cadeia de bytes contendo
 	 * o XPDL
 	 * 
 	 * @param bytes contendo o XPDL
-	 * @return instância do FluxoXPDL
+	 * @return instÃ¢ncia do FluxoXPDL
 	 */
 	public static FluxoXPDL createInstance(byte[] bytes) throws IllegalXPDLException {
 		ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
@@ -99,10 +99,10 @@ public final class FluxoXPDL implements Serializable {
 	}
 
 	/**
-	 * Cria uma instância do FluxoXPDL a partir do Element root do XPDL
+	 * Cria uma instÃ¢ncia do FluxoXPDL a partir do Element root do XPDL
 	 * 
 	 * @param bytes CONTENDO o XPDL
-	 * @return instância do FluxoXPDL
+	 * @return instÃ¢ncia do FluxoXPDL
 	 */
 	public static FluxoXPDL createInstance(Element root) throws IllegalXPDLException {
 		List<LaneXPDL> lanes = LanesXPDLFactory.getLanes(root);

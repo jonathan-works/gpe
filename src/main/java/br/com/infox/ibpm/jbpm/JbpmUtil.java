@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.ibpm.jbpm;
@@ -74,7 +74,7 @@ public class JbpmUtil {
 	private static Map<String, String> messagesMap;	
 	
 	/**
-	 * Busca a localizaÁ„o de uma tarefa
+	 * Busca a localiza√ß√£o de uma tarefa
 	 * 
 	 * @param task
 	 * @return
@@ -99,10 +99,10 @@ public class JbpmUtil {
 	}
 
 	/**
-	 * Busca a localizaÁ„o de um processo
+	 * Busca a localiza√ß√£o de um processo
 	 * 
-	 * @param jbpmProcessId È o id do Processo no contexto jBPM (Processo.getIdJbpm())
-	 * @return retorna a primeira localizaÁ„o encontrada
+	 * @param jbpmProcessId √© o id do Processo no contexto jBPM (Processo.getIdJbpm())
+	 * @return retorna a primeira localiza√ß√£o encontrada
 	 */
 	public Localizacao getLocalizacao(long jbpmProcessId) {
 		ProcessInstance pi = ManagedJbpmContext.instance().getProcessInstance(jbpmProcessId);
@@ -192,8 +192,8 @@ public class JbpmUtil {
 	}
 	
 	/**
-	 * Retorna as tarefas (from / to) de uma transiÁ„o
-	 * Pode ocorrer null quando algum dos nÛs n„o È de tarefa
+	 * Retorna as tarefas (from / to) de uma transi√ß√£o
+	 * Pode ocorrer null quando algum dos n√≥s n√£o √© de tarefa
 	 */
 	public static Task[] getTasksFromTransition(Transition t) {
 		Task[] ret = new Task[2];
@@ -203,8 +203,8 @@ public class JbpmUtil {
 	}
 
 	/**
-	 * Retorna a tarefas de um nÛ
-	 * Pode ocorrer null quando o nÛ n„o È de tarefa
+	 * Retorna a tarefas de um n√≥
+	 * Pode ocorrer null quando o n√≥ n√£o √© de tarefa
 	 */
 	public static Task getTaskFromNode(Node node) {
 		Task t = null;
@@ -231,7 +231,7 @@ public class JbpmUtil {
 			if (id != null){
 				ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, id);
 				if (processoDocumento == null) {
-					LOG.warn("ProcessoDocumento n„o encontrado: " + id);
+					LOG.warn("ProcessoDocumento n√£o encontrado: " + id);
 				} else {
 					variable = processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
 				}
@@ -373,7 +373,7 @@ public class JbpmUtil {
 	}
 	
 	/**
-	 * Verifica se uam transiÁ„o de destino est· disponÌvel
+	 * Verifica se uam transi√ß√£o de destino est√° dispon√≠vel
 	 * @param taskInstance
 	 * @param transitionDestino
 	 * @return
@@ -390,7 +390,7 @@ public class JbpmUtil {
 	}
 	
 	/**
-	 * Verifica se uam transiÁ„o de destino existe. Ela pode n„o estar disponÌvel.
+	 * Verifica se uam transi√ß√£o de destino existe. Ela pode n√£o estar dispon√≠vel.
 	 * @param taskInstance
 	 * @param transitionDestino
 	 * @return

@@ -24,7 +24,7 @@ public class ItemList extends EntityList<Item> {
 	private static final String DEFAULT_ORDER = "caminhoCompleto";
 	
 	/**
-	 * Restricao por seleção de um item (o.itemPai)
+	 * Restricao por seleÃ§Ã£o de um item (o.itemPai)
 	 */
 	private static final String R1 = "o.caminhoCompleto like concat(" +
 									"#{itemList.entity.itemPai.caminhoCompleto}, '%')";

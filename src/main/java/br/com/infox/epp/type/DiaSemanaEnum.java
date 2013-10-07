@@ -3,8 +3,8 @@ package br.com.infox.epp.type;
 import java.util.Arrays;
 
 public enum DiaSemanaEnum {
-	DOM("Domingo"), SEG("Segunda"), TER("Terça"), QUA("Quarta"), 
-	QUI("Quinta"), SEX("Sexta"), SAB("Sábado");
+	DOM("Domingo"), SEG("Segunda"), TER("TerÃ§a"), QUA("Quarta"), 
+	QUI("Quinta"), SEX("Sexta"), SAB("SÃ¡bado");
 	
 	private String label;
 	

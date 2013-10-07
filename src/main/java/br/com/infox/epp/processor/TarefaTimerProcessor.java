@@ -19,9 +19,9 @@ import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.timer.TimerUtil;
 
 /**
- * Processor que ir· incrementar os tempos decorridos para cada tarefa aberta no
- * sistema, verificando a partir da localizaÁ„o do processo seus respectivos
- * turnos, calculando somente o hor·rio ˙til gasto para cada tarefa em execuÁ„o
+ * Processor que ir√° incrementar os tempos decorridos para cada tarefa aberta no
+ * sistema, verificando a partir da localiza√ß√£o do processo seus respectivos
+ * turnos, calculando somente o hor√°rio √∫til gasto para cada tarefa em execu√ß√£o
  * do sistema.
  * 
  * @author Daniel
@@ -42,11 +42,11 @@ public class TarefaTimerProcessor {
 	}
 
 	/**
-	 * Incrementa o tempo de cada tarefa, verificando se est· dentro do turno da
-	 * sua localizaÁ„o.
+	 * Incrementa o tempo de cada tarefa, verificando se est√° dentro do turno da
+	 * sua localiza√ß√£o.
 	 * 
 	 * @param cron
-	 *            - que est· em execuÁ„o
+	 *            - que est√° em execu√ß√£o
 	 * @return null
 	 */
 	@Asynchronous

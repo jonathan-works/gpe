@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
  */
 package br.com.infox.ibpm.jbpm;
@@ -76,8 +76,8 @@ import br.com.itx.util.EntityUtil;
 @BypassInterceptors
 public class TaskInstanceHome implements Serializable {
 
-    private static final String MSG_USUARIO_SEM_ACESSO = "VocÍ n„o pode mais efetuar transaÁıes "
-            + "neste registro, verifique se ele n„o foi movimentado";
+    private static final String MSG_USUARIO_SEM_ACESSO = "Voc√™ n√£o pode mais efetuar transa√ß√µes "
+            + "neste registro, verifique se ele n√£o foi movimentado";
 
     private static final LogProvider LOG = Logging
             .getLogProvider(TaskInstanceHome.class);
@@ -164,8 +164,8 @@ public class TaskInstanceHome implements Serializable {
                         }
                     }
                 }
-                // Atualizar as transiÁıes possiveis. Isso È preciso, pois as
-                // condiÁıes das transiÁıes s„o avaliadas antes
+                // Atualizar as transi√ß√µes possiveis. Isso √© preciso, pois as
+                // condi√ß√µes das transi√ß√µes s√£o avaliadas antes
                 // deste metodo ser executado.
                 updateTransitions();
 
@@ -178,7 +178,7 @@ public class TaskInstanceHome implements Serializable {
         return instance;
     }
 
-    // MÈtodo que ser· chamado pelo bot„o "Assinar Digitalmente"
+    // M√©todo que ser√° chamado pelo bot√£o "Assinar Digitalmente"
     public void assinarDocumento() {
         assinar = Boolean.TRUE;
         this.update();
@@ -426,7 +426,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     /**
-     * Verifica se a tarefa destino da transiÁ„o apareceria no painel do usuario
+     * Verifica se a tarefa destino da transi√ß√£o apareceria no painel do usuario
      * 
      * @param currentTaskId
      * @return
@@ -502,11 +502,11 @@ public class TaskInstanceHome implements Serializable {
     }
 
     /**
-     * Refeita a combobox com as transiÁıes utilizando um f:selectItem pois o
+     * Refeita a combobox com as transi√ß√µes utilizando um f:selectItem pois o
      * componente do Seam (s:convertEntity) estava dando problemas com as
      * entidades do JBPM.
      * 
-     * @return Lista das transiÁıes.
+     * @return Lista das transi√ß√µes.
      */
     public List<SelectItem> getTranstionsSelectItems() {
         List<SelectItem> selectList = new ArrayList<SelectItem>();

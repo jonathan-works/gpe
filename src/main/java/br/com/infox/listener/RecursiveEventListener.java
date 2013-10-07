@@ -22,9 +22,9 @@ import br.com.itx.util.ComponentUtil;
 
 /**
  * Classe listener do entityManager registrada no persistence.xml que
- * verifica se a entidade a ser inserida ou atualizada È recursiva,
+ * verifica se a entidade a ser inserida ou atualizada √© recursiva,
  * sendo assim ela verifica se foi modificado o estado do Parent na 
- * hierarquia, caso sim o campo caminho completo ir· ser refatorado.
+ * hierarquia, caso sim o campo caminho completo ir√° ser refatorado.
  * @author Infox
  *
  */

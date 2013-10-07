@@ -1,4 +1,4 @@
-Provavelmente ser· preciso instalar as libs abaixo no repositÛrio do Maven
+Provavelmente ser√° preciso instalar as libs abaixo no reposit√≥rio do Maven
 
 mvn install:install-file -DgroupId=br.com.infox -DartifactId=jbpmGraph -Dpackaging=jar -Dversion=1.0 -Dfile=jbpmGraph-1.0.jar -DgeneratePom=true
 

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Anotação para definir qual campo representa o caminho completo da 
+ * AnotaÃ§Ã£o para definir qual campo representa o caminho completo da 
  * recursivadade da entidade 
  * @author Infox
  *
@@ -14,5 +14,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
 public @interface HierarchicalPath {
-	//Definição das anotações utilizada pelo framework infox
+	//DefiniÃ§Ã£o das anotaÃ§Ãµes utilizada pelo framework infox
 }

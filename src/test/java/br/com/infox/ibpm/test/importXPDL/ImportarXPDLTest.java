@@ -53,7 +53,7 @@ public class ImportarXPDLTest {
 		}
 		fileStream.close();
  		if (i == MAX) {
-			throw new OutOfMemoryError("Espaço alocado para leitura do arquivo foi insuficiente.");
+			throw new OutOfMemoryError("EspaÃ§o alocado para leitura do arquivo foi insuficiente.");
  		}
 		
 		return Arrays.copyOf(buffered, i);

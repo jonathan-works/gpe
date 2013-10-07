@@ -107,7 +107,7 @@ public final class LdapUtil {
 			FacesMessages
 					.instance()
 					.add(Severity.INFO,
-							"Erro ao acessar o servidor Active Directory. Verifique os par‚metro de acesso ao Active Directory : "
+							"Erro ao acessar o servidor Active Directory. Verifique os par√¢metro de acesso ao Active Directory : "
 									+ " ldap.domain, ldap.host, ldap.login, ldap.password, ldap.authentication");
 		}
 	}
@@ -126,7 +126,7 @@ public final class LdapUtil {
 	}
 
 	/**
-	 * ApÛs pesquisar sobre o Enumeration deve-se fechar a conex„o
+	 * Ap√≥s pesquisar sobre o Enumeration deve-se fechar a conex√£o
 	 * 
 	 * @return
 	 */

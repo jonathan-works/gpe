@@ -35,7 +35,7 @@ public class ControleFiltros {
 	public void iniciarFiltro() {	
 		MeasureTime mt = new MeasureTime(true);
 		if (!firstTime) {
-			LOG.info("Ignorando execuÁ„o duplicada. " + mt.getTime());
+			LOG.info("Ignorando execu√ß√£o duplicada. " + mt.getTime());
 			return;
 		}
 		firstTime = false;
@@ -48,7 +48,7 @@ public class ControleFiltros {
 				SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO, usuarioLocalizacaoAtual.getLocalizacao().getIdLocalizacao());
 		
 		LOG.info(MessageFormat.format(
-				"Filtro executado para usu·rio [{0} | {1}] ({2} ms)", usuarioLocalizacaoAtual.getUsuario(),
+				"Filtro executado para usu√°rio [{0} | {1}] ({2} ms)", usuarioLocalizacaoAtual.getUsuario(),
 				LogUtil.getIdPagina(), mt.getTime()));
 	}
 	

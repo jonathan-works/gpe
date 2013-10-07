@@ -42,10 +42,10 @@ public class ActivitiesXPDL implements Serializable {
 	public static ActivitiesXPDL createInstance(Element root) throws IllegalXPDLException {
 		List<Element> workFlowList = XmlUtil.getChildren(root, "WorkflowProcesses");
 		if(workFlowList == null || workFlowList.isEmpty()) {
-			throw new IllegalActivityXPDLException("Arquivo XPDL inv·lido. N„o h· a seÁ„o de definiÁ„o dos NÛs.");
+			throw new IllegalActivityXPDLException("Arquivo XPDL inv√°lido. N√£o h√° a se√ß√£o de defini√ß√£o dos N√≥s.");
 		}
 		if(workFlowList.size() > 1) {
-			throw new IllegalActivityXPDLException("Arquivo XPDL inv·lido. N„o h· mais de uma seÁ„o de definiÁ„o dos NÛs.");
+			throw new IllegalActivityXPDLException("Arquivo XPDL inv√°lido. N√£o h√° mais de uma se√ß√£o de defini√ß√£o dos N√≥s.");
 		}
 		Element activitiesElement = XmlUtil.getChildByIndex(workFlowList.get(0), "WorkflowProcess", 1);
 		List<Element> activitiesList = XmlUtil.getChildren(activitiesElement, "Activities");
@@ -91,9 +91,9 @@ public class ActivitiesXPDL implements Serializable {
 		} else if (arrives != null && leaves != null && leaves.size() == 1 && arrives.size() > 1) {
 			createJoinNode(lista, parallelTransitions, parallel, position);
 		} else {
-			throw new ParallelNodeXPDLException("ImpossÌvel verificar se o NÛ ("
+			throw new ParallelNodeXPDLException("Imposs√≠vel verificar se o N√≥ ("
 					+ (parallel.getName() != null ? parallel.getName() : "Paralelo")
-					+ ") È do tipo Join ou Fork.");
+					+ ") √© do tipo Join ou Fork.");
 		}
 	}
 
@@ -154,7 +154,7 @@ public class ActivitiesXPDL implements Serializable {
 			if (node instanceof EndState) {
 				if (endState == null) {
 					endState = node;
-					endState.setName("TÈrmino");
+					endState.setName("T√©rmino");
 				} else {
 					iter.remove();
 					

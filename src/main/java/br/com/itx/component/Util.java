@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.itx.component;
@@ -79,7 +79,7 @@ public class Util implements Serializable {
 	}
 
 	/**
-	 * Retorna o nome definido na anotaÁ„o @Name do componente
+	 * Retorna o nome definido na anota√ß√£o @Name do componente
 	 * @param obj componente
 	 * return Nome do componente
 	 */
@@ -180,7 +180,7 @@ public class Util implements Serializable {
 	}
 	
 	/**
-	 * Retorna o parametro de requisiÁ„o action.
+	 * Retorna o parametro de requisi√ß√£o action.
 	 * @return
 	 */
 	public String action() {
@@ -228,11 +228,11 @@ public class Util implements Serializable {
 	}
 	
 	/**
-	 * Busca o componente GridQuery que ir· popular uma combo.
-	 * Ao encontrar o grid, os campos de pesquisa s„o removidos para limpar
-	 * possÌvel consulta anteriormente realizada.
+	 * Busca o componente GridQuery que ir√° popular uma combo.
+	 * Ao encontrar o grid, os campos de pesquisa s√£o removidos para limpar
+	 * poss√≠vel consulta anteriormente realizada.
 	 * 
-	 * @param gridId È o id do grid a ser utilizado como origem dos registros
+	 * @param gridId √© o id do grid a ser utilizado como origem dos registros
 	 * 
 	 */
 	public Object getComboQuery(String gridId) {
@@ -250,7 +250,7 @@ public class Util implements Serializable {
 	}
 
 	/**
-	 * @return Retorna o diretÛrio do JSF View Id, ou seja, o diretÛrio da p·gina atual.
+	 * @return Retorna o diret√≥rio do JSF View Id, ou seja, o diret√≥rio da p√°gina atual.
 	 */
 	public String getViewIdDirectory() {
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -259,8 +259,8 @@ public class Util implements Serializable {
 	}
 	
     /**
-     * Gera uma lista de SelectItem partindo de uma String separada por vÌrgula 
-     * @param values s„o os valores separados por vÌrgulas, no formato valor:label
+     * Gera uma lista de SelectItem partindo de uma String separada por v√≠rgula 
+     * @param values s√£o os valores separados por v√≠rgulas, no formato valor:label
      * @return lista de SelectItem
      */
 	
@@ -279,10 +279,10 @@ public class Util implements Serializable {
     }
 	
     /**
-     * Gera uma lista de SelectItem partindo de uma String separada por vÌrgula
-     * neste metodo o valor antes dos dois pontos, dever· ser um inteiro. 
-     * @param values s„o os valores separados por vÌrgulas, no formato valor:label
-     * onde valor È um inteiro.
+     * Gera uma lista de SelectItem partindo de uma String separada por v√≠rgula
+     * neste metodo o valor antes dos dois pontos, dever√° ser um inteiro. 
+     * @param values s√£o os valores separados por v√≠rgulas, no formato valor:label
+     * onde valor √© um inteiro.
      * @return lista de SelectItem
      */
 	
@@ -301,8 +301,8 @@ public class Util implements Serializable {
     }
     
     /**
-     * Retorna uma lista de String a partir de um string separado por vÌrgula 
-     * @param values A string unificada separada por vÌrgula.
+     * Retorna uma lista de String a partir de um string separado por v√≠rgula 
+     * @param values A string unificada separada por v√≠rgula.
      * @return Lista de strings.
      */
     public List<String> getStringAsList(String values) {
@@ -318,9 +318,9 @@ public class Util implements Serializable {
     }
     
     /**
-     * Cria um valor de express„o a partir de um mÈtodo do Seam. 
-     * @param expression - Express„o a ser criada.
-     * @return Express„o criada.
+     * Cria um valor de express√£o a partir de um m√©todo do Seam. 
+     * @param expression - Express√£o a ser criada.
+     * @return Express√£o criada.
      */
 	@SuppressWarnings("unchecked")
 	public <C> C eval(String expression) {
@@ -335,8 +335,8 @@ public class Util implements Serializable {
 	}	
     
     /**
-     * Verifica se a classe È um subtipo de AbstractHome.
-     * @param object - Home em execuÁ„o.
+     * Verifica se a classe √© um subtipo de AbstractHome.
+     * @param object - Home em execu√ß√£o.
      * @return True se for um subtipo de AbstractHome
      */
     public boolean isAbstractChild(Object object) {
@@ -409,14 +409,14 @@ public class Util implements Serializable {
 		return Collections.EMPTY_LIST;
 	}
 	
-	//TODO verificar se este metodo ficar· aqui mesmo, pois no SelectsItensQuery n„o estava funcionando
+	//TODO verificar se este metodo ficar√° aqui mesmo, pois no SelectsItensQuery n√£o estava funcionando
 	/**
-	 * MÈtodo que trata a express„o a ser mostrada nas opÁıes chamadas pelo 
+	 * M√©todo que trata a express√£o a ser mostrada nas op√ß√µes chamadas pelo 
 	 * componente s:selectItems
 	 * 
-	 * @param expression È a express„o no formato {campo}, onde campo È o nome de um 
+	 * @param expression √© a express√£o no formato {campo}, onde campo √© o nome de um 
 	 * 					atributo da entidade a ser mostrada.
-	 * @param obj È a inst‚ncia do objeto em cada uma das opÁıes, corresponde ao atributo 
+	 * @param obj √© a inst√¢ncia do objeto em cada uma das op√ß√µes, corresponde ao atributo 
 	 * 					var do componente s:selectItems
 	 * @return
 	 */
@@ -455,7 +455,7 @@ public class Util implements Serializable {
 		} catch (Exception e) {
 			LOG.error(".beginTransaction()", e);
 			throw new AplicationException(AplicationException.
-					createMessage("iniciar transaÁ„o", 
+					createMessage("iniciar transa√ß√£o", 
 								  "beginTransaction()", 
 								  "RegistraEventoAction", 
 								  "BPM"), e);
@@ -472,7 +472,7 @@ public class Util implements Serializable {
 		} catch (Exception e) {
 		    LOG.error(".commitTransction()", e);
 			throw new AplicationException(AplicationException.
-					createMessage("iniciar transaÁ„o", 
+					createMessage("iniciar transa√ß√£o", 
 								  "beginTransaction()", 
 								  "RegistraEventoAction", 
 								  "BPM"), e);
@@ -481,7 +481,7 @@ public class Util implements Serializable {
 	
 	/**
 	 * Cria um method expression para a string informada no parametro.
-	 * @param methodName MÈtodo a ser chamado
+	 * @param methodName M√©todo a ser chamado
 	 * @return MethodExpression
 	 */
 	public static void invokeMethod(String action) {
@@ -496,8 +496,8 @@ public class Util implements Serializable {
     }
 
 	/**
-	 * Verifica se todos os elementos do Array s„o null
-	 * @param o Array que deseja-se verificar se È vazio
+	 * Verifica se todos os elementos do Array s√£o null
+	 * @param o Array que deseja-se verificar se √© vazio
 	 * @return True se for vazio
 	 */
 	public static boolean isEmpty(Object[] o) {
@@ -555,7 +555,7 @@ public class Util implements Serializable {
     }
 	
 	/**
-	 * Adiciona a mensagem passada como par‚metro no FacesMessages e no log. 
+	 * Adiciona a mensagem passada como par√¢metro no FacesMessages e no log. 
 	 * @param severity
 	 * @param msg Mensagem a ser exibida.
 	 */
@@ -566,7 +566,7 @@ public class Util implements Serializable {
 	
 	/**
 	 * Retorna o valor do Id da entidade.
-	 * @param object Objeto em que ser· pesquisada o mÈtodo que possui a anotaÁ„o
+	 * @param object Objeto em que ser√° pesquisada o m√©todo que possui a anota√ß√£o
 	 * @return Valor do Id
 	 * @throws AnnotationException
 	 */
@@ -575,9 +575,9 @@ public class Util implements Serializable {
 	}
 	
 	/**
-	 * Recebe o n˙mero de bytes e retorna o n˙mero em Kb (kilobytes).
-	 * @param bytes n˙mero em bytes
-	 * @return n˙mero em kilobytes
+	 * Recebe o n√∫mero de bytes e retorna o n√∫mero em Kb (kilobytes).
+	 * @param bytes n√∫mero em bytes
+	 * @return n√∫mero em kilobytes
 	 */
 	public String getFormattedKb(Integer bytes) {
 		if (bytes != null && bytes > 0) {

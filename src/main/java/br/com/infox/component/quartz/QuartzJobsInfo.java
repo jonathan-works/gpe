@@ -122,7 +122,7 @@ public class QuartzJobsInfo implements Serializable {
 	}
 
 	/**
-	 * Test se o a express„o do job È valida.
+	 * Test se o a express√£o do job √© valida.
 	 * 
 	 * @param jobExpression
 	 * @return

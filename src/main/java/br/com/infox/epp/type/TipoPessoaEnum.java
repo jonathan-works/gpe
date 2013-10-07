@@ -2,7 +2,7 @@ package br.com.infox.epp.type;
 
 public enum TipoPessoaEnum {
 
-	F("Física"), J("Jurídica");
+	F("FÃ­sica"), J("JurÃ­dica");
 	
 	private String label;
 	

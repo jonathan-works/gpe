@@ -27,7 +27,7 @@ class FieldCommandImpl implements FieldCommand {
         } else if (object instanceof Date) {
             atributeLabel = DateFormat.getDateInstance().format(object);
         } else {
-            // Caso n„o for booleano
+            // Caso n√£o for booleano
             atributeLabel = object.toString();
         }
 

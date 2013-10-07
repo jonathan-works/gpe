@@ -1,16 +1,16 @@
 /*
  * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
- * Tecnologia da InformaÁ„o Ltda.
+ * Tecnologia da Informa√ß√£o Ltda.
  * 
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo sob
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo sob
  * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
- * Software Foundation; vers„o 2 da LicenÁa. Este programa È distribuÌdo na
- * expectativa de que seja ˙til, porÈm, SEM NENHUMA GARANTIA; nem mesmo a
- * garantia implÌcita de COMERCIABILIDADE OU ADEQUA«√O A UMA FINALIDADE
- * ESPECÕFICA.
+ * Software Foundation; vers√£o 2 da Licen√ßa. Este programa √© distribu√≠do na
+ * expectativa de que seja √∫til, por√©m, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia impl√≠cita de COMERCIABILIDADE OU ADEQUA√á√ÉO A UMA FINALIDADE
+ * ESPEC√çFICA.
  * 
- * Consulte a GNU GPL para mais detalhes. VocÍ deve ter recebido uma cÛpia da
- * GNU GPL junto com este programa; se n„o, veja em http://www.gnu.org/licenses/
+ * Consulte a GNU GPL para mais detalhes. Voc√™ deve ter recebido uma c√≥pia da
+ * GNU GPL junto com este programa; se n√£o, veja em http://www.gnu.org/licenses/
  */
 package br.com.infox.ibpm.home;
 
@@ -51,7 +51,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
     }
 
     /**
-     * MÈtodo que traz os dados de endereÁo do CEP informado (se houver em base)
+     * M√©todo que traz os dados de endere√ßo do CEP informado (se houver em base)
      */
     public void setEndereco(Cep cep) {
         if (cep == null) {
@@ -77,7 +77,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
     }
 
     /**
-     * FunÁ„o para checar se o cep È null
+     * Fun√ß√£o para checar se o cep √© null
      * 
      * @return
      */
@@ -89,10 +89,10 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
     }
 
     /**
-     * FunÁ„o que checa se existe algum campo de endereÁo preenchido. (Se algum
-     * campo for diferente de vazio o campo cep passa a ser obrigatÛrio) Caso
-     * todos os campos estiverem vazios ou nulls retorna true e o cep n„o ser·
-     * obrigatÛrio Se os campos de endereÁo forem iguais a null retorna false
+     * Fun√ß√£o que checa se existe algum campo de endere√ßo preenchido. (Se algum
+     * campo for diferente de vazio o campo cep passa a ser obrigat√≥rio) Caso
+     * todos os campos estiverem vazios ou nulls retorna true e o cep n√£o ser√°
+     * obrigat√≥rio Se os campos de endere√ßo forem iguais a null retorna false
      * 
      * @return
      */
@@ -125,7 +125,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
     public String persist() {
         UsuarioLogin pessoaLogada = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
 
-        // setando data e hora da alteraÁ„o
+        // setando data e hora da altera√ß√£o
         getInstance().setDataAlteracao(new Date());
         getInstance().setUsuarioCadastrador(pessoaLogada);
         String persist = "";

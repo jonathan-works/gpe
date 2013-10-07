@@ -174,7 +174,7 @@ public class ActiveDirectoryAction implements Serializable{
 			}
 			results.close();
 		} catch (Exception e) {
-			LOG.error("[######] Erro ao preencher usu·rio AD [######]");
+			LOG.error("[######] Erro ao preencher usu√°rio AD [######]");
 			LOG.error(".listarUsuariosAD()", e);
 			LdapUtil.exibirMenssagemLDAP();
 		}
@@ -193,7 +193,7 @@ public class ActiveDirectoryAction implements Serializable{
 		usu = new UsuarioLogin();
 		usu.setLogin(tokens.nextToken());
 
-		// Verifica se o usu·rio j· foi cadastrado
+		// Verifica se o usu√°rio j√° foi cadastrado
 		UsuarioHome home = UsuarioHome.instance();
 		UsuarioLogin user = home.checkUserByLogin(usu.getLogin());
 

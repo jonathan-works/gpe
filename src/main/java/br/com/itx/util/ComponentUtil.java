@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.itx.util;
@@ -50,7 +50,7 @@ public final class ComponentUtil {
 	 * Busca um componente pelo identificador
 	 * @param componentId identificador do component
 	 * @return componente com o nome solicitado ou null, 
-	 * 		especialmente em testes de integraÁ„o.
+	 * 		especialmente em testes de integra√ß√£o.
 	 */
 	public static UIComponent getUIComponent(String componentId) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -205,7 +205,7 @@ public final class ComponentUtil {
 
 	/**
 	 * Metodo que recebe o nome de um home e devolve o getInstance() deste home, fazendo 
-	 * o cast. Retorna uma exceÁ„o caso o componente n„o seja encontrado.
+	 * o cast. Retorna uma exce√ß√£o caso o componente n√£o seja encontrado.
 	 * @param <C>
 	 * @param homeName
 	 * @return
@@ -214,7 +214,7 @@ public final class ComponentUtil {
 		AbstractHome<C> home = getComponent(homeName);
 		if (home == null) {
 			throw new IllegalArgumentException("O home '" + homeName + 
-					"' n„o foi encontrado.");
+					"' n√£o foi encontrado.");
 		}
 		return home.getInstance();
 	}
@@ -276,7 +276,7 @@ public final class ComponentUtil {
 	}		
 	
 	/**
-	 * Retorna a nome do componente atraves da anotaÁ„o @Name
+	 * Retorna a nome do componente atraves da anota√ß√£o @Name
 	 * @param clazz
 	 * @return
 	 */
@@ -286,7 +286,7 @@ public final class ComponentUtil {
 	}
 	
 	/**
-	 * Testa de um componente est· no contexto de conversaÁ„o
+	 * Testa de um componente est√° no contexto de conversa√ß√£o
 	 * @param clazz
 	 * @return
 	 */
@@ -295,12 +295,12 @@ public final class ComponentUtil {
 		if (componentName != null) {
 			return isOnConversationContext(componentName);
 		} else {
-			throw new IllegalArgumentException("Classe n„o possui @Name");
+			throw new IllegalArgumentException("Classe n√£o possui @Name");
 		}
 	}	
 	
 	/**
-	 * Testa de um componente est· no contexto de conversaÁ„o
+	 * Testa de um componente est√° no contexto de conversa√ß√£o
 	 * @param name
 	 * @return
 	 */

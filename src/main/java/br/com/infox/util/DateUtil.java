@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.util;
@@ -136,31 +136,31 @@ public class DateUtil {
 	}
 	
 	/**
-	 * Testa se a data informada est· entre a data inicio e a data fim
-	 * @param data - Data que deseja testar se est· no intervalo
+	 * Testa se a data informada est√° entre a data inicio e a data fim
+	 * @param data - Data que deseja testar se est√° no intervalo
 	 * @param dataInicio - Data inicio do intervalo
 	 * @param dataFim - Data fim do intervalo
 	 * @return  Verdadeiro se a data estiver no intervalo / 
-	 * 			Falso se a data n„o estiver no intervalo
+	 * 			Falso se a data n√£o estiver no intervalo
 	 */
 	public static Boolean isBetweenDates(Date data, Date dataInicio, Date dataFim){
 		return (data.equals(dataInicio) || (data.after(dataInicio) && data.before(dataFim)) || data.equals(dataFim) );
 	} 
 	
 	/**
-	 * Testa se a hora informada est· entre a hora inicio e a hora fim
-	 * @param hora - Hora que deseja testar se est· no intervalo
+	 * Testa se a hora informada est√° entre a hora inicio e a hora fim
+	 * @param hora - Hora que deseja testar se est√° no intervalo
 	 * @param horaInicio - Hora inicio do intervalo
 	 * @param horaFim - Hora fim do intervalo
 	 * @return  Verdadeiro se a hora estiver no intervalo / 
-	 * 			Falso se a hora n„o estiver no intervalo
+	 * 			Falso se a hora n√£o estiver no intervalo
 	 */
 	public static Boolean isBetweenHours(Time hora, Time horaInicio, Time horaFim){
 		return (hora.equals(horaInicio) || (hora.after(horaInicio) && hora.before(horaFim)) || hora.equals(horaFim));
 	}
 	
 	/**
-	 * Valida se a hora final est· depois da hora inicial
+	 * Valida se a hora final est√° depois da hora inicial
 	 * @param horaInicio
 	 * @param horaFim
 	 * @return
@@ -213,11 +213,11 @@ public class DateUtil {
 	}
 	
 	/**
-	 * Calcula a diferenÁa em minutos entre as datas (Calendar) informadas
+	 * Calcula a diferen√ßa em minutos entre as datas (Calendar) informadas
 	 * nos parametros.
 	 * @param dataInicial
 	 * @param dataFim
-	 * @return diferenÁa em minutos entre as duas datas.
+	 * @return diferen√ßa em minutos entre as duas datas.
 	 */
 	public static int calculateMinutesBetweenTimes(Calendar dataInicial, Calendar dataFim) {
 		long dataInicialMilli = dataInicial.getTimeInMillis();
@@ -226,11 +226,11 @@ public class DateUtil {
 	}
 	
 	/**
-	 * Calcula a diferenÁa em minutos entre as datas (Date) informadas
+	 * Calcula a diferen√ßa em minutos entre as datas (Date) informadas
 	 * nos parametros.
 	 * @param dataInicial
 	 * @param dataFim
-	 * @return diferenÁa em minutos entre as duas datas.
+	 * @return diferen√ßa em minutos entre as duas datas.
 	 */
 	public static int calculateMinutesBetweenTimes(Date dataInicial, Date dataFim) {
 		long dataInicialMilli = dataInicial.getTime();

@@ -66,7 +66,7 @@ public final class HibernateUtil {
 		FullTextHibernateSessionProxy session = (FullTextHibernateSessionProxy) getSession();
 		Map m = session.getEnabledFilters();
 		
-		// Dividido em dois fors para evitar o erro de acesso concorrente ao Map que contém os filtros ativos
+		// Dividido em dois fors para evitar o erro de acesso concorrente ao Map que contÃ©m os filtros ativos
 		List<String> filters = new ArrayList<String>();
 		for (Object s : m.keySet()) {
 			filters.add(s.toString());
