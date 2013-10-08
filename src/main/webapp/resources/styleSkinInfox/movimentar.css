@@ -13,3 +13,6 @@
 	top:0;
 	left:0;
 }
+.applet-div.hidden {
+	visibility:hidden;
+}
