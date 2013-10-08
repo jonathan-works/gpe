@@ -13,102 +13,106 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
---><ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf">
+-->
+<ui:composition
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf"
+>
 	
+	<wi:selectOneMenuEntity
+		id="tipoProcessoDocumento"
+		label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+		value="#{processoHome.tipoProcessoDocumento}"
+		items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+		required="true"
+		noSelectionLabel="Selecione..."
+	>
+		<a:ajax
+			render="signatureDiv"
+			execute="@this"
+			limitRender="true"
+			event="change"
+		>
+		</a:ajax>
+	</wi:selectOneMenuEntity>
 		
-		<s:div id="testeEditSignatureDiv">
-		
-			<wi:selectOneMenuEntity
-			 id="tipoProcessoDocumento"
-			 label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
-			 value="#{processoHome.tipoProcessoDocumento}"
-			 items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
-			 required="true"
-			 noSelectionLabel="Selecione...">
-			
-		</wi:selectOneMenuEntity>
-			
-			<br />
-			
-			
-			<s:div id="divAppletId">
-			 
-				<br />
-				<table
-				 width="100%"
-				 border="0"
-				 cellspacing="0"
-				 cellpadding="0">
+	<s:div id="editorDiv">
+		<wi:editor
+			id="#{id}Editor"
+			value="#{processoHome.processoDocumentoBin.modeloDocumento}"
+		/>
+	</s:div>
+	
+	<a:jsFunction
+		name="submitForm"
+		action="#{home.assinarDocumento()}"
+		render="signatureDiv"
+		oncomplete="infox.editor['#{id}Editor'].postSign()"
+	/>
+	<s:div id="signatureDiv">
+		<h:inputHidden
+			id="#{id}certChain"
+			value="#{processoHome.certChain}"
+		/>
+		<h:inputHidden
+			id="#{id}signature"
+			value="#{processoHome.signature}"
+		/>
+	</s:div>
+	<s:div id="appletDiv" styleClass="applet-div">
+		<wi:appletAssinatura
+			id="#{id}"
+			urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
+			formId="taskInstanceForm"
+			certificationChainField="#{certChain}"
+			signatureField="#{signature}"
+			getDataFunction="infox.editor['#{id}Editor'].instance.getData()"
+			useBase64Function="infox.editor['#{id}Editor'].useBase64()"
+			functionPreSign="infox.editor['#{id}Editor'].addSignature()"
+			functionPosSign=""
+			debug="false"
+			loginMode="false"
+			useProviderDll="false"
+		>
+		</wi:appletAssinatura>
+	</s:div>
+		<script type="text/javascript">
+			//<![CDATA[
+			namespace("infox.editor.#{id}Editor",function (Editor) {
+				var appletDiv = #{rich:jQuery("appletDiv")};
+				var signatureInpt = #{rich:jQuery(id.concat("signature"))};
+				var certChainInpt = #{rich:jQuery(id.concat("certChain"))};
 				
-					<tr>
-					
-				    	<td>
-						
-				    		<s:div id="editorTextEditComboDiv">
-							
-								<wi:editor
-								 id="#{id}Editor"
-								 value="#{processoHome.processoDocumentoBin.modeloDocumento}" />
-							
-						</s:div>
-				    	
-					</td>
-				  	
-				</tr>
-				  	<tr>
-					
-				    	<td>
-						
-				    		<a:jsFunction
-							 name="renderTransitions"
-							 render="taskButtonsDiv"
-                             limitRender="true" />
-					        <a:jsFunction
-							 name="submitForm"
-							 action="#{home.assinarDocumento()}"
-							 oncomplete="window.location.reload()" />					
-					
-							<h:inputHidden
-							 id="#{id}certChain"
-							 value="#{processoHome.certChain}" />					
-							<h:inputHidden
-							 id="#{id}signature"
-							 value="#{processoHome.signature}" />
-							 
-							<ui:param
-							 name="path"
-							 value="#{'taskInstanceForm:'.concat(id)                  .concat(':').concat(id)}" />
-							<ui:param
-							 name="path2"
-							 value="#{'taskInstanceForm:'.concat(id)                  .concat(':').concat(id).concat('EditorDecoration:')                  .concat(id)}" />										   
-							<ui:param
-							 name="idEditor"
-							 value="#{path2.concat('EditorTextArea')}" />
-							<ui:param
-							 name="signature"
-							 value="#{path.concat('signature')}" />
-							<ui:param
-							 name="certChain"
-							 value="#{path.concat('certChain')}" />
-							
-				    	
-					</td>
-				 	
-				</tr>
-				
-			</table>		
-			
-		</s:div>	
-		
-	</s:div>	
+				Editor.useBase64 = function useBase64() {
+					return "true";
+				};
+				Editor.addSignature = function addSignature() {
+					infox.showLoading();
+					submitForm();
+				};
+				Editor.isSigned = function isSigned() {
+					return ((signatureInpt.val().trim() != "") && (certChainInpt.val().trim() != "")) 
+				};
+				Editor.postSign = function postSign() {
+					infox.hideLoading();
+					if (this.isSigned()) {
+						appletDiv.addClass("hidden");
+					}
+				};
+				Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
+					signatureInpt.val("");
+					certChainInpt.val("");
+					appletDiv.removeClass("hidden");
+				});
+			});
+			//]]>
+		</script>
 
 </ui:composition>
