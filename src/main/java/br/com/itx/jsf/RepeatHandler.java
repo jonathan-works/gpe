@@ -37,11 +37,12 @@ public final class RepeatHandler extends TagHandler {
         this.var = this.getAttribute("var");
     }
 
-    public void apply(FaceletContext ctx, UIComponent parent)
+    @SuppressWarnings("unchecked")
+	public void apply(FaceletContext ctx, UIComponent parent)
             throws IOException {
                 
         ValueExpression srcVE = value.getValueExpression(ctx, Object.class);
-        List list = (List)srcVE.getValue(ctx);
+        List<Object> list = (List<Object>) srcVE.getValue(ctx);
         if (list == null) {
         	return;
         }

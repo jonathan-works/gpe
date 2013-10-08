@@ -28,7 +28,7 @@ import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
 import br.com.itx.component.grid.GridQuery;
 
-public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
+public class EntityQuery<T> extends org.jboss.seam.framework.EntityQuery<T> {
 	
 	private static final LogProvider LOG = Logging.getLogProvider(EntityQuery.class);
 
@@ -42,7 +42,7 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 
 	private String beforeResultEvent;	
 	
-	private List fullList;
+	private List<T> fullList;
 
 	public List<String> getConditions() {
 		return conditions;
@@ -77,7 +77,7 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 	}
 	
 	@Override
-	public List getResultList() {
+	public List<T> getResultList() {
 		if (!checkConditions()) {
 			return null;
 		}
@@ -85,10 +85,10 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 		if(beforeResultEvent != null && !"".equals(beforeResultEvent)) {
 			Events.instance().raiseEvent(beforeResultEvent);
 		}
-		List resultListSuper = super.getResultList();
+		List<T> resultListSuper = super.getResultList();
 		mt.stop();
 		if (this instanceof GridQuery) {
-			GridQuery grid = (GridQuery) this;
+			GridQuery<?> grid = (GridQuery<?>) this;
 			LOG.info("Grid: " + grid.getGridId() + " - " + getEjbql() + " (" +
 					resultListSuper.size() +
 					" registros): " + mt.getTime());					
@@ -101,15 +101,15 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 	}
 	
 	@Override
-	public DataModel getDataModel() {
+	public DataModel<?> getDataModel() {
 		MeasureTime mt = new MeasureTime(true);
-		DataModel dataModel = super.getDataModel();
+		DataModel<?> dataModel = super.getDataModel();
 		mt.stop();
 		LOG.info("getDataModel(): " + mt.getTime());			
 		return dataModel;
 	}
 	
-	public List getFullList() {
+	public List<T> getFullList() {
 		if (fullList != null) {
 			return fullList;
 		}
@@ -124,7 +124,7 @@ public class EntityQuery extends org.jboss.seam.framework.EntityQuery {
 	}
 	
 	@Override
-	public Object getSingleResult() {
+	public T getSingleResult() {
 		if (!checkConditions()){
 			return null;
 		}

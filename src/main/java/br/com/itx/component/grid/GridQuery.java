@@ -37,7 +37,7 @@ import br.com.itx.component.query.EntityQuery;
 
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
-public class GridQuery extends EntityQuery {
+public class GridQuery<T> extends EntityQuery<T> {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -231,11 +231,10 @@ public class GridQuery extends EntityQuery {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map getFields() {
+	public Map<?, ?> getFields() {
 		Context ctx = Contexts.getEventContext();
 		if (ctx.get("instance") == null) {
-			ctx.set("instance", new HashMap());
+			ctx.set("instance", new HashMap<Object, Object>());
 		}
 		return searchFieldsMap;
 	}
@@ -261,8 +260,8 @@ public class GridQuery extends EntityQuery {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public EntityHome getHome() {
-		return (EntityHome) Component.getInstance(getHomeName(), true);
+	public EntityHome<T> getHome() {
+		return (EntityHome<T>) Component.getInstance(getHomeName(), true);
 	}
 	
 	public void setHome(String home) {

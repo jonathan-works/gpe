@@ -27,7 +27,6 @@ import br.com.infox.ibpm.dao.CepDAO;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Endereco;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(EnderecoHome.NAME)
 @Install(precedence = Install.FRAMEWORK)

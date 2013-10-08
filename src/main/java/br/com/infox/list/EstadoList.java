@@ -38,7 +38,6 @@ public class EstadoList extends EntityList<Estado> {
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

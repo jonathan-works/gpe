@@ -5,10 +5,10 @@ package br.com.itx.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Filter;
 import org.hibernate.Session;
+import org.hibernate.engine.spi.LoadQueryInfluencers;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.persistence.FullTextHibernateSessionProxy;
 
@@ -64,12 +64,12 @@ public final class HibernateUtil {
 
 	public static void disableAllFilters() {
 		FullTextHibernateSessionProxy session = (FullTextHibernateSessionProxy) getSession();
-		Map m = session.getEnabledFilters();
+		LoadQueryInfluencers loadQueryInfluencers = session.getLoadQueryInfluencers();
 		
 		// Dividido em dois fors para evitar o erro de acesso concorrente ao Map que contém os filtros ativos
 		List<String> filters = new ArrayList<String>();
-		for (Object s : m.keySet()) {
-			filters.add(s.toString());
+		for (String filter : loadQueryInfluencers.getEnabledFilters().keySet()) {
+			filters.add(filter);
 		}
 		for (String s: filters) {
 			session.disableFilter(s);

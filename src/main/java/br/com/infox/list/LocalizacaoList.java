@@ -40,7 +40,6 @@ public class LocalizacaoList extends EntityList<Localizacao> {
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -43,7 +43,7 @@ public class SearchField implements Serializable {
 
 	private Map<String, Object> properties = new LinkedHashMap<String, Object>();
 
-	private GridQuery grid;
+	private GridQuery<?> grid;
 
 	public String getId() {
 		return id;
@@ -125,7 +125,7 @@ public class SearchField implements Serializable {
 		return MessageFormat.format(pattern, id, entity);
 	}
 	
-	public List suggest(Object typed) {
+	public List<?> suggest(Object typed) {
 		String s = getQueryExpression();
 		Query query = grid.getEntityManager().createQuery(s);
 		query.setParameter("input", typed);
@@ -133,7 +133,7 @@ public class SearchField implements Serializable {
 		return query.getResultList();
 	}
 
-	public void setGrid(GridQuery grid) {
+	public void setGrid(GridQuery<?> grid) {
 		this.grid = grid;
 	}
 }

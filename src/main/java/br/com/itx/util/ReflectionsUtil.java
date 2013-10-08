@@ -78,10 +78,9 @@ public final class ReflectionsUtil {
 	 * @param clazz
 	 * @return lista dos campos
 	 */
-	@SuppressWarnings("unchecked")
-	public static List<Field> getFields(Class clazz) {
+	public static List<Field> getFields(Class<?> clazz) {
 		List<Field> fields = new ArrayList<Field>();
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
+		for (Class<?> superClass = clazz; superClass != Object.class; superClass = superClass
 				.getSuperclass()) {
 			for (Field field : superClass.getDeclaredFields()) {
 				fields.add(field);
