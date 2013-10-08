@@ -56,7 +56,7 @@
 			</a:commandLink>
 			<a:commandLink
 				execute="@this"
-				rendered="#{owner == actor.id}"
+				rendered="#{owner == authenticator.getUsuarioLogado().getNome()}"
 				target="#{idProcesso}popUpFluxo"
 				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 				<f:param
@@ -72,7 +72,7 @@
             <a:outputPanel>
         		<h:graphicImage
         			url="/img/role.gif"
-        			rendered="#{(owner != actor.id and ! empty owner and !jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}"
+        			rendered="#{(owner != authenticator.getUsuarioLogado().getNome() and ! empty owner and !jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}"
         			title="Processo bloqueado pelo servidor #{owner}" />
                 <a:commandLink 
                 	action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}"
@@ -80,7 +80,7 @@
                     render="painelProcessos"
                     onclick="if (!confirm('Liberar tarefa?')) return false;"
                     limitRender="true"
-                    rendered="#{(owner != actor.id and ! empty owner and jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}">
+                    rendered="#{(owner != authenticator.getUsuarioLogado().getNome() and ! empty owner and jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}">
         			<h:graphicImage
 	        			url="/img/role.gif"
 	        			title="Liberar tarefa bloqueada pelo servidor #{owner}" />
