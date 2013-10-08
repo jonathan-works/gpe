@@ -34,8 +34,8 @@ public class ImagemBinDAO extends GenericDAO {
     /**
      * Metodo que recebe um array de bytes e um File indicando o destino e salva
      * os bytes no arquivo de destino.
-     * @param bytesOrigem TODO
-     * @param fileDestino TODO
+     * @param bytesOrigem
+     * @param fileDestino
      * @throws IOException
      */
     public void saveFile(byte[] bytesOrigem, File fileDestino) throws IOException {

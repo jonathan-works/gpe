@@ -109,8 +109,6 @@ public class TypeFitter extends Fitter implements Serializable{
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
 		
 	}
-
 }

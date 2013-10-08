@@ -127,11 +127,11 @@ public class Report {
 		}
 	}
 
-	public GridQuery getGrid() {
+	public GridQuery<?> getGrid() {
 		if (grid == null) {
 			grid = reportId + "Grid";
 		}
-		return (GridQuery) Component.getInstance(grid, true);
+		return (GridQuery<?>) Component.getInstance(grid, true);
 	}
 	
 	public void setGrid(String grid) {

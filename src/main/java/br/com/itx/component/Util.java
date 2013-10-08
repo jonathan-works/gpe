@@ -236,7 +236,7 @@ public class Util implements Serializable {
 	 * 
 	 */
 	public Object getComboQuery(String gridId) {
-		GridQuery grid = (GridQuery) Component.getInstance(gridId + "Grid", true);
+		GridQuery<?> grid = (GridQuery<?>) Component.getInstance(gridId + "Grid", true);
 		if (grid != null) {
 			grid.setSearchFields(new ArrayList<SearchField>());
 		}

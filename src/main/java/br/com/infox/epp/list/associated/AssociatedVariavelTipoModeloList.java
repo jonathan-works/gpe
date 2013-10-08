@@ -22,8 +22,6 @@ public class AssociatedVariavelTipoModeloList extends
 
 	@Override
 	protected void addSearchFields() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -38,7 +36,6 @@ public class AssociatedVariavelTipoModeloList extends
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
