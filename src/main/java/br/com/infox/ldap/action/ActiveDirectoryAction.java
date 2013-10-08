@@ -20,16 +20,14 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.action.list.ListPaginator;
 import br.com.infox.ibpm.entity.Endereco;
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.EnderecoHome;
 import br.com.infox.ibpm.home.UsuarioHome;
-import br.com.infox.ibpm.home.UsuarioLocalizacaoHome;
 import br.com.infox.ldap.util.LdapUtil;
 import br.com.infox.list.EnderecoList;
-import br.com.infox.list.UsuarioLocList;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 
@@ -87,9 +85,9 @@ public class ActiveDirectoryAction implements Serializable{
 	}
 	
 	public void incluirUsuarioLocalizacao() {
-		UsuarioLocalizacaoHome home = UsuarioLocalizacaoHome.instance();
-		home.getInstance().setUsuario(instance);
-		home.persist();
+//		UsuarioLocalizacaoHome home = UsuarioLocalizacaoHome.instance();
+//		home.getInstance().setUsuario(instance);
+//		home.persist();
 	}
 	
 	public List<Endereco> listEndereco(int elements) {
@@ -99,9 +97,10 @@ public class ActiveDirectoryAction implements Serializable{
 	}
 	
 	public List<UsuarioLocalizacao> listUsuarioLocalizacao(int elements) {
-		UsuarioLocList usuLocList = ComponentUtil.getComponent(UsuarioLocList.NAME);
-		usuLocList.getEntity().setUsuario(instance);
-		return usuLocList.list(elements);
+//		UsuarioLocList usuLocList = ComponentUtil.getComponent(UsuarioLocList.NAME);
+//		usuLocList.getEntity().setUsuario(instance);
+//		return usuLocList.list(elements);
+		return null;
 	}
 	
 	public void newInstance() {
@@ -127,8 +126,8 @@ public class ActiveDirectoryAction implements Serializable{
 	public void newUsuarioLocalizacao() {
 		usuarioLocalizacao = new UsuarioLocalizacao();
 		usuarioLocalizacao.setUsuario(instance);
-		UsuarioLocalizacaoHome home = UsuarioLocalizacaoHome.instance();
-		home.setInstance(usuarioLocalizacao);
+//		UsuarioLocalizacaoHome home = UsuarioLocalizacaoHome.instance();
+//		home.setInstance(usuarioLocalizacao);
 	}
 	
 	public ListPaginator<UsuarioLogin> getUsuariosADList() {
@@ -148,8 +147,8 @@ public class ActiveDirectoryAction implements Serializable{
 	}
 	
 	public void removeUsuarioLocalizacao(UsuarioLocalizacao usu) {
-		UsuarioLocalizacaoHome home = UsuarioLocalizacaoHome.instance();
-		home.remove(usu);
+//		UsuarioLocalizacaoHome home = UsuarioLocalizacaoHome.instance();
+//		home.remove(usu);
 	}
 	
 	public List<UsuarioLogin> listarUsuariosAD() {
