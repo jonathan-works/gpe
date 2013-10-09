@@ -24,19 +24,20 @@
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<h:commandButton
-         id="botaoAnexarDocumento"
-         action="#{processoDocumentoHome.persist()}"
-         value="#{messages['processo.anexarDocumentoBtn']}"
-         styleClass="buttons" />
-    				 
-    <a:commandButton
-         rendered="true"
-         execute="@this"
-         render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao, divAnexarImagem"
-         action="#{processoDocumentoHome.setModelo(not processoDocumentoHome.modelo)}"
-         value="#{processoDocumentoHome.modelo ? messages['processo.associarDocumentoBtn'] : messages['processo.redigirDocumentoBtn']}"
-         styleClass="buttons"
-          />
-    				 		
+	<s:div id="buttonsDiv">
+		<h:commandButton
+	         id="botaoAnexarDocumento"
+	         action="#{processoDocumentoHome.persist()}"
+	         value="#{messages['processo.anexarDocumentoBtn']}"
+	         styleClass="buttons" />
+	    				 
+	    <a:commandButton
+	         rendered="true"
+	         execute="@this"
+	         render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, documentoDiv, buttonsDiv"
+	         action="#{processoDocumentoHome.setModelo(not processoDocumentoHome.modelo)}"
+	         value="#{processoDocumentoHome.modelo ? messages['processo.associarDocumentoBtn'] : messages['processo.redigirDocumentoBtn']}"
+	         styleClass="buttons"
+	          />
+	</s:div>
 </ui:composition>
