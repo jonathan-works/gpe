@@ -17,6 +17,7 @@ package br.com.itx.type;
 
 import org.hibernate.type.CharBooleanType;
 
+@SuppressWarnings("deprecation")
 public class SNType extends CharBooleanType {
 
 	private static final long serialVersionUID = 1L;

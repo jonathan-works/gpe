@@ -31,7 +31,6 @@ public class HistoricoAjudaList extends EntityList<HistoricoAjuda> {
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

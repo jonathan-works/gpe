@@ -1,5 +1,6 @@
 package br.com.infox.epp.list;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -8,8 +9,6 @@ import javax.persistence.Query;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
@@ -117,7 +116,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 	
     public List<Fluxo> getFluxoList() {
         if (updateFluxoList) {
-            fluxoList = getEntityManager().createQuery("select o from Fluxo o order by o.fluxo").getResultList();
+            fluxoList = getEntityManager().createQuery("select o from Fluxo o order by o.fluxo", Fluxo.class).getResultList();
         }
         return fluxoList;
     }

@@ -190,12 +190,11 @@ public class FormField implements Serializable {
 		this.formHome = formHome;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public List suggest(Object typed) {
+	public List<?> suggest(Object typed) {
 		String column = (String) properties.get("optionText");
 		if (column != null) {
 			String gridId = (String) properties.get("source") + "Grid";
-			GridQuery grid = (GridQuery) Component.getInstance(gridId);
+			GridQuery<?> grid = (GridQuery<?>) Component.getInstance(gridId);
 			for (SearchField sf : grid.getSearchFields()) {
 				if (sf.getId().equals(column)) {
 					return sf.suggest(typed);

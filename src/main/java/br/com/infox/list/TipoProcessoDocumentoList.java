@@ -43,7 +43,6 @@ public class TipoProcessoDocumentoList extends
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

@@ -49,7 +49,6 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

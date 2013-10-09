@@ -355,6 +355,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static String gerarHashSenha(UsuarioLogin usuarioLogin) {
 		String hash = new PasswordHash().generateSaltedHash(
 				usuarioLogin.getLogin(), usuarioLogin.getLogin(), "SHA");

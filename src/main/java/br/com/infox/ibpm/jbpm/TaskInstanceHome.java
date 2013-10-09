@@ -401,7 +401,8 @@ public class TaskInstanceHome implements Serializable {
         }
     }
     
-    public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
+    @SuppressWarnings("unchecked")
+	public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         final String hql = "select new map(pet.taskInstance as idTaskInstance) " +
                     		"from ProcessoEpaTarefa pet " +
                     		"where pet.tarefa.idTarefa=:idTarefa " +

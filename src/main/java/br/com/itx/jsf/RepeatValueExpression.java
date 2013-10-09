@@ -29,10 +29,10 @@ public final class RepeatValueExpression extends ValueExpression {
     private static final long serialVersionUID = 1L;
 
     private ValueExpression orig;
-    private List list;
+    private List<Object> list;
     private int i;
 
-    public RepeatValueExpression(ValueExpression orig, List list, int i) {
+    public RepeatValueExpression(ValueExpression orig, List<Object> list, int i) {
     	this.orig = orig;
         this.list = list;
         this.i = i;
@@ -46,7 +46,7 @@ public final class RepeatValueExpression extends ValueExpression {
        	list.set(i, value);
     }
 
-    public Class getType(ELContext context) {
+    public Class<?> getType(ELContext context) {
        	return list.get(i).getClass();
     }
 
@@ -54,7 +54,7 @@ public final class RepeatValueExpression extends ValueExpression {
         return false;
     }
 
-    public Class getExpectedType() {
+    public Class<?> getExpectedType() {
         return Object.class;
     }
 

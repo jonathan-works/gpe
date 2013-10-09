@@ -45,7 +45,6 @@ public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso>{
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

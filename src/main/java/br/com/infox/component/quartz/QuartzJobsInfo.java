@@ -210,6 +210,7 @@ public class QuartzJobsInfo implements Serializable {
 		EntityUtil.createQuery(hql).executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getMapParametroTriggers()
 			throws SchedulerException {
 		List<String> triggersNames = getTriggersNames();

@@ -256,8 +256,8 @@
         <infox:tab
 			 id="localizacaoUsuario"
 			 status=":status"
-			 rendered="#{home.isManaged()}"
-			 action="#{usuarioLocalizacaoHome.newInstance()}"
+			 rendered="#{home.managed}"
+			 action="#{usuarioLocalizacaoAction.newInstance}"
 			 title="#{messages['localizacao.usuarioLocalizacaoList']}"
 			 name="localizacaoUsuario">
 			
@@ -270,18 +270,18 @@
                         <wi:dataForm
 							 formId="localizacaoUsuarioForm"
 							 formTitle="#{messages['form.title']}"
-							 home="#{usuarioLocalizacaoHome}">
+							 home="#{usuarioLocalizacaoAction}">
 							
                             <wi:tree
 								 id="localizacao"
-								 assignTo="usuarioLocalizacaoHome.instance.localizacao"
+								 assignTo="usuarioLocalizacaoAction.instance.localizacao"
 								 tree="#{localizacaoEstruturaTree}"
 								 icon="/img/nivelTree.gif"
 								 iconLeaf="/img/file.gif"
 								 label="#{messages['usuarioLocalizacao.localizacao']}" />
                             <wi:tree
 								 id="papel"
-								 assignTo="usuarioLocalizacaoHome.instance.papel"
+								 assignTo="usuarioLocalizacaoAction.instance.papel"
 								 tree="#{papelTree}"
 								 icon="/img/nivelTree.gif"
 								 iconLeaf="/img/file.gif"
@@ -289,16 +289,30 @@
                             <wi:selectBooleanRadio
 								 id="responsavelLocalizacao"
 								 required="true"
-								 value="#{usuarioLocalizacaoHome.instance.responsavelLocalizacao}"
+								 value="#{usuarioLocalizacaoAction.instance.responsavelLocalizacao}"
 								 label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}" />
                             <ui:define name="buttons">
 								
                                 <wi:commandButton
 									 id="saveButton"
-									 action="usuarioLocalizacaoHome.persist"
-									 reRender="listLocalizacoes"
+									 action="usuarioLocalizacaoAction.persist"
+									 reRender="localizacaoUsuario"
+									 rendered="#{not home.managed}"
 									 value="Incluir" />
                             
+                            	<wi:commandButton
+									 id="updateButton"
+									 action="usuarioLocalizacaoAction.update"
+									 reRender="localizacaoUsuario"
+									 rendered="#{home.managed}"
+									 value="Gravar" />
+									 
+								<wi:commandButton
+									 id="newButton"
+									 action="usuarioLocalizacaoAction.newInstance"
+									 reRender="localizacaoUsuario"
+									 rendered="#{home.managed}"
+									 value="Novo" />
 							</ui:define>
                         
 						</wi:dataForm>
@@ -306,7 +320,8 @@
 					</s:div>
 
                     <wi:dataTable
-						 values="#{usuarioHome.instance.usuarioLocalizacaoList}"
+                    	 bean="#{usuarioLocalizacaoEntityList}"
+						 values="#{usuarioLocalizacaoEntityList.list(20)}"
 						 tableTitle="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioHome.instance)}"
 						 id="usuarioLocalizacaoList"
 						 rowId="#{row.idUsuarioLocalizacao}"
@@ -316,9 +331,9 @@
                         <ui:define name="toolBar">
 							
                             <wi:toolBarSelectRemove
-								 home="#{usuarioLocalizacaoHome}"
+								 home="#{usuarioLocalizacaoAction}"
 								 reRender="localizacaoUsuario"
-								 removeAction="usuarioLocalizacaoHome.removeFromUsuarioLogin(row)" />
+								 removeAction="usuarioLocalizacaoAction.remove(row)" />
                         
 						</ui:define>
                         <wi:columnOutputText

@@ -1,43 +1,38 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da InformaÃ§Ã£o Ltda.
 
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+ Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+ Free Software Foundation; versÃ£o 2 da LicenÃ§a.
+ Este programa Ã© distribuÃ­do na expectativa de que seja Ãºtil, porÃ©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia implÃ­cita de COMERCIABILIDADE OU 
+ ADEQUAÃÃO A UMA FINALIDADE ESPECÃFICA.
  
  Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+ VocÃª deve ter recebido uma cÃ³pia da GNU GPL junto com este programa; se nÃ£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.validator;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
+import javax.faces.validator.ValidatorException;
+
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 
 
 @org.jboss.seam.annotations.faces.Validator(id="emailValidator")
 @Name("emailValidator")
 @BypassInterceptors
 public class EmailValidator implements Validator {
-    
-    private static final LogProvider LOG = Logging.getLogProvider(EmailValidator.class);
 
-	//@Override
+	@Override
 	public void validate(FacesContext context, UIComponent component, Object value) {
 	    //TODO implementar, o antigo dava erro
-		LOG.error("Função de validar e-mail não está implementada");
-		
+		throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_FATAL, "Validador de email não implementado", null));
 	}
-	
-	
-
 }

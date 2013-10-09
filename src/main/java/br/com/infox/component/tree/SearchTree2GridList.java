@@ -41,7 +41,7 @@ public class SearchTree2GridList <E> {
 	 */
 	private String[] filterName;
 	
-	private GridQuery grid;
+	private GridQuery<?> grid;
 	
 	/**
 	 * Construtor padrão.
@@ -242,11 +242,11 @@ public class SearchTree2GridList <E> {
 		this.filterName = ArrayUtil.copyOf(filterName);
 	}
 
-	public void setGrid(GridQuery grid) {
+	public void setGrid(GridQuery<?> grid) {
 		this.grid = grid;
 	}
 
-	public GridQuery getGrid() {
+	public GridQuery<?> getGrid() {
 		return grid;
 	}
 	

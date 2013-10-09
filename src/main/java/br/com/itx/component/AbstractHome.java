@@ -440,7 +440,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public void refreshGrid(String gridId) {
 		StopWatch sw = new StopWatch();
 		sw.start();
-		GridQuery g = getComponent(gridId, false);
+		GridQuery<?> g = getComponent(gridId, false);
 		if (g != null) {
 			g.refresh();
 		}

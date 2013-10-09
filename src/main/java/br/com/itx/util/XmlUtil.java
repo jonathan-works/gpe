@@ -28,6 +28,7 @@ import org.jboss.seam.log.Logging;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.input.sax.XMLReaders;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
@@ -67,7 +68,7 @@ public final class XmlUtil {
 	
 	public static SAXBuilder getSAXBuilder() {
 		SAXBuilder builder = new SAXBuilder();
-		builder.setValidation(false);
+		builder.setXMLReaderFactory(XMLReaders.NONVALIDATING);
 		builder.setFeature("http://apache.org/xml/features/"
 				+ "nonvalidating/load-external-dtd", false);
 		return builder;
@@ -103,7 +104,6 @@ public final class XmlUtil {
 		format.setTextMode(Format.TextMode.TRIM_FULL_WHITE);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static List<Element> getChildren(Element element, String name) {
 		return element.getChildren(name, element.getNamespace());
 	}
