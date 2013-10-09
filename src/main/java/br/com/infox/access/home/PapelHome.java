@@ -163,8 +163,8 @@ public class PapelHome extends AbstractHome<Papel> {
 	
 	/**
 	 * Busca os papeis que podem ser atribuidos ao papel atual,
-	 * removendo aqueles que s„o implÌcitos, isso È, atribuidos 
-	 * por heranÁa de papel
+	 * removendo aqueles que s√£o impl√≠citos, isso √©, atribuidos 
+	 * por heran√ßa de papel
 	 * 
 	 * @return
 	 */

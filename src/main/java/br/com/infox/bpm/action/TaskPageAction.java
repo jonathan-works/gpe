@@ -17,8 +17,8 @@ import br.com.infox.epp.manager.FluxoManager;
 import br.com.itx.exception.AplicationException;
 
 /**
- * Classe respons·vel por incluir a p·gina referente a variavel
- * taskPage incluida na definiÁ„o do fluxo.
+ * Classe respons√°vel por incluir a p√°gina referente a variavel
+ * taskPage incluida na defini√ß√£o do fluxo.
  * @author Daniel
  *
  */
@@ -37,8 +37,8 @@ public class TaskPageAction implements Serializable {
 	@In private FluxoManager fluxoManager;
 	
 	/**
-	 * Verifica se a tarefa atual est· utilizando uma vari·vel taskPage.
-	 * Se estiver, obtem o caminho dessa p·gina e atribuÌ a taskPagePath
+	 * Verifica se a tarefa atual est√° utilizando uma vari√°vel taskPage.
+	 * Se estiver, obtem o caminho dessa p√°gina e atribu√≠ a taskPagePath
 	 */
 	private void readTaskPagePath() {
 		List<VariableAccess> variableAccesses = getVariableAccesses();
@@ -49,8 +49,8 @@ public class TaskPageAction implements Serializable {
 				hasTaskPage = true;
 				String pageName = tokens[1] + TASK_PAGE_SUFFIX;
 
-				//Caso a pagina n„o seja encontrada no TASK_PAGE_COMPONENT_PATH È porque essa pagina È 
-				//exclusiva do fluxo e vai estar no diretÛrio que o nome È o cÛdigo
+				//Caso a pagina n√£o seja encontrada no TASK_PAGE_COMPONENT_PATH √© porque essa pagina √© 
+				//exclusiva do fluxo e vai estar no diret√≥rio que o nome √© o c√≥digo
 				URL taskPageUrl = getClass().getResource(TASK_PAGE_COMPONENT_PATH + pageName);
 				if (taskPageUrl != null) {
 					setTaskPagePath(taskPageUrl.toString());
@@ -59,7 +59,7 @@ public class TaskPageAction implements Serializable {
 			}
 		}
 		if (taskPagePath == null && hasTaskPage) {
-			throw new AplicationException("TaskPageAction n„o encontrada: " + taskPagePath);
+			throw new AplicationException("TaskPageAction n√£o encontrada: " + taskPagePath);
 		}
 	}
 	
@@ -80,9 +80,9 @@ public class TaskPageAction implements Serializable {
 	}
 
 	/**
-	 * Obtem o caminho da taskPage que dever· ser exibida nessa
+	 * Obtem o caminho da taskPage que dever√° ser exibida nessa
 	 * tarefa do fluxo (taskInstance atual)
-	 * @return null se n„o foi definido um componente taskPage.
+	 * @return null se n√£o foi definido um componente taskPage.
 	 */
 	public String getTaskPagePath() {
 		if(taskPagePath == null) {

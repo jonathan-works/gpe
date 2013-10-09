@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.ibpm.home;
@@ -135,7 +135,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	private void avisarNaoHaPermissaoParaAcessarProcesso() {
 		Util.setToEventContext("canClosePanel", true);
 		FacesMessages.instance().clear();
-		FacesMessages.instance().add(Severity.ERROR, "Sem permiss„o para acessar o processo: " + getInstance().getNumeroProcesso());
+		FacesMessages.instance().add(Severity.ERROR, "Sem permiss√£o para acessar o processo: " + getInstance().getNumeroProcesso());
 	}
 		
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
@@ -158,7 +158,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 	}
 	
-	//MÈtodo para Atualizar o documento do fluxo
+	//M√©todo para Atualizar o documento do fluxo
 	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado){
 		if (validacaoCertificadoBemSucedida(assinado)) {
 			ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
@@ -209,7 +209,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
 	/**
 	 *Se o tipoProcessoDocumento for nulo (caso o componente utilizado seja
-	 *o editor sem assinatura digital, o tipoProcessoDOcumento ser· setado
+	 *o editor sem assinatura digital, o tipoProcessoDOcumento ser√° setado
 	 *automaticamente com um valor aleatorio 
 	 */
 	private void inicializarTipoProcessoDocumento() {
@@ -218,7 +218,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		}
 	}
 	
-	//MÈtodo para Inserir o documento do fluxo
+	//M√©todo para Inserir o documento do fluxo
 	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
 		if (validacaoCertificadoBemSucedida(assinado)) {
 			Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
@@ -299,8 +299,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	/**
-	 * Metodo que adiciona o processo passado como par‚metro a lista dos processos
-	 * que s„o conexos ao processo da inst‚ncia.
+	 * Metodo que adiciona o processo passado como par√¢metro a lista dos processos
+	 * que s√£o conexos ao processo da inst√¢ncia.
 	 * @param processoConexo
 	 * @param gridId
 	 */
@@ -319,8 +319,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	/**
-	 * Metodo que adiciona o processo passado como par‚metro ‡ lista dos processos
-	 * que o processo da inst‚ncia È conexo.
+	 * Metodo que adiciona o processo passado como par√¢metro √† lista dos processos
+	 * que o processo da inst√¢ncia √© conexo.
 	 * @param processo
 	 * @param gridId
 	 */
@@ -474,14 +474,14 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) {
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
 			limparAssinatura();
-			throw new AplicationException("O cadastro do usu·rio n„o est· assinado.");
+			throw new AplicationException("O cadastro do usu√°rio n√£o est√° assinado.");
 		}
 		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
 			limparAssinatura();
-			throw new AplicationException("O certificado n„o È o mesmo do cadastro do usuario");
+			throw new AplicationException("O certificado n√£o √© o mesmo do cadastro do usuario");
 		}
-		//TODO usar o VerificaCertificado que hoje sim est· no PJE2, tem de migrar o que nao È do PJE2 pro core.
-		//TODO esperando T·ssio verificar (21 de marÁo de 2013)
+		//TODO usar o VerificaCertificado que hoje sim est√° no PJE2, tem de migrar o que nao √© do PJE2 pro core.
+		//TODO esperando T√°ssio verificar (21 de mar√ßo de 2013)
 	}
 
 	public Boolean getPodeInativarParteProcesso() {

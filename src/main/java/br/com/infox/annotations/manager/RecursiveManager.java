@@ -21,7 +21,7 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 /**
- * Classe que gerencia a consistÍncia dos valores no campo que possui o caminho
+ * Classe que gerencia a consist√™ncia dos valores no campo que possui o caminho
  * completo da recursividade na entidade.
  * @author Infox
  *
@@ -30,12 +30,12 @@ public final class RecursiveManager {
 
 	private RecursiveManager() { }
 	
-	public static final String MSG_PARENT_EXCEPTION = "Este registro j· est· nesta hierarquia";
+	public static final String MSG_PARENT_EXCEPTION = "Este registro j√° est√° nesta hierarquia";
 	private static final LogProvider LOG = Logging.getLogProvider(RecursiveManager.class);
 	
 	/**
-	 * Retorna uma string com o valor do campo com a anotaÁ„o PathDescriptor
-	 * concatenado por '/' de todos os elementos superiores na ·rvore do registro informado.
+	 * Retorna uma string com o valor do campo com a anota√ß√£o PathDescriptor
+	 * concatenado por '/' de todos os elementos superiores na √°rvore do registro informado.
 	 * @param object Registro que se deseja obter o fullPath
 	 * @param sb informe um new StringBuilder()
 	 * @param dadField Nome do campo da entidade que representa o pai do field 
@@ -74,8 +74,8 @@ public final class RecursiveManager {
 	}
 	
 	/**
-	 * MÈtodo que atualiza o fullPath do registro informado no argumento e 
-	 * modifica todos os fullPaths de seus dependentes na ·rvore.
+	 * M√©todo que atualiza o fullPath do registro informado no argumento e 
+	 * modifica todos os fullPaths de seus dependentes na √°rvore.
 	 * @param object Registro que se deseja atualizar
 	 */
 	@SuppressWarnings("unchecked")
@@ -95,8 +95,8 @@ public final class RecursiveManager {
 	}
 	
 	/**
-	 * Obtem atravÈs das anotaÁıes os nomes dos campos que ser„o necess·rios 
-	 * para efetuar as atualizaÁıes.
+	 * Obtem atrav√©s das anota√ß√µes os nomes dos campos que ser√£o necess√°rios 
+	 * para efetuar as atualiza√ß√µes.
 	 * @param object Registro que se deseja atualizar
 	 * @throws InvalidTargetObjectTypeException 
 	 * @throws AnnotationException 
@@ -109,9 +109,9 @@ public final class RecursiveManager {
 	}
 	
 	/**
-	 * Verifica se a classe do argumento informado possui a anotaÁ„o de 
+	 * Verifica se a classe do argumento informado possui a anota√ß√£o de 
 	 * recursividade.
-	 * @param object Registro que se deseja saber se est· mapeado como recursive.
+	 * @param object Registro que se deseja saber se est√° mapeado como recursive.
 	 * @return True se possuir
 	 */
 	public static boolean isRecursive(Object object) {
@@ -119,7 +119,7 @@ public final class RecursiveManager {
 	}	
 	
 	/**
-	 * Verifica se o registro n„o est· apontando para seu pai como ele mesmo.
+	 * Verifica se o registro n√£o est√° apontando para seu pai como ele mesmo.
 	 * @return True se possuir ele mesmo na hierarquia
 	 * @throws InvalidTargetObjectTypeException 
 	 * @throws AnnotationException 
@@ -148,7 +148,7 @@ public final class RecursiveManager {
 	}
 	
 	/**
-	 * MÈtodo util para popular todos os registro da entidade no banco com seus 
+	 * M√©todo util para popular todos os registro da entidade no banco com seus 
 	 * fullPaths.
 	 * @param clazz Entidade que se deseja atualizar todos os registros.
 	 */
@@ -184,8 +184,8 @@ public final class RecursiveManager {
 	}
 	
 	/**
-	 * MÈtodo para inativar recursivamente todos os filhos do objeto passado
-	 * @param obj raiz da sub-·rvore que ser· inativada
+	 * M√©todo para inativar recursivamente todos os filhos do objeto passado
+	 * @param obj raiz da sub-√°rvore que ser√° inativada
 	 */
 	@SuppressWarnings("unchecked")
 	public static void inactiveRecursive(Object obj) {

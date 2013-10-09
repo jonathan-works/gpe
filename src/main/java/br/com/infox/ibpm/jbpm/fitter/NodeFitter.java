@@ -83,14 +83,14 @@ public class NodeFitter extends Fitter implements Serializable {
 				int i = nodes.indexOf(newNodeAfter);
 				processo.reorderNode(nodes.indexOf(node), i + 1);
 			} else {
-				// Sen„o coloca antes do primeiro EndState
+				// Sen√£o coloca antes do primeiro EndState
 				int i = nodes.size() - 1;
 				do {
 					i--;
 				} while (nodes.get(i) instanceof EndState);
 				processo.reorderNode(nodes.indexOf(node), i + 1);
 			}
-			// insere o novo nÛ entre os nÛs da transiÁ„o selecionada
+			// insere o novo n√≥ entre os n√≥s da transi√ß√£o selecionada
 			// Se for EndState, liga apenas ao newNodeAfter
 			TransitionHandler newNodeTransition = getProcessBuilder().getTransitionFitter().getNewNodeTransition();
 			if (nodeType.equals(EndState.class)) {
@@ -363,15 +363,15 @@ public class NodeFitter extends Fitter implements Serializable {
 
 	public List<String[]> getNodeTypes() {
 		List<String[]> list = new ArrayList<String[]>();
-		list.add(new String[] { NodeTypeConstants.START_STATE, "NÛ inicial" });
+		list.add(new String[] { NodeTypeConstants.START_STATE, "N√≥ inicial" });
 		list.add(new String[] { NodeTypeConstants.TASK, "Tarefa" });
-		list.add(new String[] { NodeTypeConstants.DECISION, "Decis„o" });
+		list.add(new String[] { NodeTypeConstants.DECISION, "Decis√£o" });
 		list.add(new String[] { NodeTypeConstants.MAIL_NODE, "Email" });
-		list.add(new String[] { NodeTypeConstants.FORK, "SeparaÁ„o" });
-		list.add(new String[] { NodeTypeConstants.JOIN, "JunÁ„o" });
+		list.add(new String[] { NodeTypeConstants.FORK, "Separa√ß√£o" });
+		list.add(new String[] { NodeTypeConstants.JOIN, "Jun√ß√£o" });
 		list.add(new String[] { NodeTypeConstants.PROCESS_STATE, "SubProcesso" });
 		list.add(new String[] { NodeTypeConstants.NODE, "Sistema" });
-		list.add(new String[] { NodeTypeConstants.END_STATE, "NÛ Final" });
+		list.add(new String[] { NodeTypeConstants.END_STATE, "N√≥ Final" });
 		return list;
 	}
 

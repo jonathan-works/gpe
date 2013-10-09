@@ -18,7 +18,7 @@ import br.com.infox.access.entity.Papel;
 import br.com.itx.util.EntityUtil;
 
 /**
- * Monta o menu do usu·rio baseado nas permissıes de acesso ‡s p·ginas
+ * Monta o menu do usu√°rio baseado nas permiss√µes de acesso √†s p√°ginas
  * 
  * @author luizruiz
  * 
@@ -33,7 +33,7 @@ public class Menu implements Serializable {
     private List<MenuItem> dropMenus;
 
     /**
-     * Flag para indicar que as p·ginas j· foram verificadas Isso ocorre apenas
+     * Flag para indicar que as p√°ginas j√° foram verificadas Isso ocorre apenas
      * uma vez (static)
      */
     private static boolean pagesChecked;
@@ -43,8 +43,8 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Cria o menu, verificando para cada Ìtem se o usu·rio È admin ou tem um
-     * role no formato SecurityUtil.PAGES_PREFIX seguido da url da p·gina a ser
+     * Cria o menu, verificando para cada √≠tem se o usu√°rio √© admin ou tem um
+     * role no formato SecurityUtil.PAGES_PREFIX seguido da url da p√°gina a ser
      * acessada
      * 
      * @param items
@@ -77,8 +77,8 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Verifica se existe o role para a p·gina, se n„o existir registra o role e
-     * atribui permiss„o ao role admin
+     * Verifica se existe o role para a p√°gina, se n√£o existir registra o role e
+     * atribui permiss√£o ao role admin
      * 
      * @param pageRole
      */
@@ -101,7 +101,7 @@ public class Menu implements Serializable {
                 }
                 sb.append(Messages.instance().get(s));
             }
-            role.setNome("P·gina " + sb.toString());
+            role.setNome("P√°gina " + sb.toString());
             new RunAsOperation(true) {
                 @Override
                 public void execute() {

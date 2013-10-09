@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.core.certificado;
@@ -51,8 +51,8 @@ public class ValidaDocumentoHome {
 	}
 	
 	/**
-	 * Valida a assinatura de um ProcessoDocumento. Quando o documento È do tipo
-	 * modelo as quebras de linha s„o retiradas.
+	 * Valida a assinatura de um ProcessoDocumento. Quando o documento √© do tipo
+	 * modelo as quebras de linha s√£o retiradas.
 	 * @param id
 	 */
 	public void validaDocumento(ProcessoDocumentoBin bin, String certChain, String signature) {
@@ -63,7 +63,7 @@ public class ValidaDocumentoHome {
 		
 		if (Strings.isEmpty(bin.getCertChain()) || Strings.isEmpty(bin.getSignature())) {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-					"O documento n„o est· assinado");
+					"O documento n√£o est√° assinado");
 			return;
 		}
 		
@@ -73,12 +73,12 @@ public class ValidaDocumentoHome {
 			try {
 				data = DocumentoBinHome.instance().getData(bin.getIdProcessoDocumentoBin()); 
 			} catch (Exception e) {
-				throw new IllegalArgumentException("Erro ao obter os dados do bin·rio", e);
+				throw new IllegalArgumentException("Erro ao obter os dados do bin√°rio", e);
 			}
 		}
 		if (data == null) {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-				"Documento inv·lido");
+				"Documento inv√°lido");
 			return;
 		}
 		try {
@@ -96,12 +96,12 @@ public class ValidaDocumentoHome {
 	
 	public void validaDocumentoId(Integer idDocumento) {
 		if (idDocumento == null) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Id do documento n„o informado");
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Id do documento n√£o informado");
 			return;
 		}
 		ProcessoDocumento processoDocumento = getEntityManager().find(ProcessoDocumento.class, idDocumento);
 		if (processoDocumento == null) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Documento n„o encontrado.");
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Documento n√£o encontrado.");
 			return;
 		}		
 		validaDocumento(processoDocumento);

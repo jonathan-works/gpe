@@ -54,7 +54,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	}
 	
 	/**
-	 * MÈtodo para adicionar campos de pesquisa, utilizando um dos mÈtodos:
+	 * M√©todo para adicionar campos de pesquisa, utilizando um dos m√©todos:
 	 * - {@link addSearchField(String fieldName, SearchCriteria criteria)}
 	 * - {@link addSearchField(String fieldName, SearchCriteria criteria, 
 						String expression)}
@@ -121,7 +121,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		if (sb.length() != 0) {
 		    sb.insert(0, ":\n");
 	        sb.insert(0,(getRestrictionLogicOperator().equals("and") ?
-	                "Todas as expressıes" : "Qualquer express„o"));
+	                "Todas as express√µes" : "Qualquer express√£o"));
 		}
 		sb.append("Classificado por: ");
 		String column = getOrder();
@@ -135,10 +135,10 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	}
 
 	/**
-	 * Metodo que percorre todos os campos da entidade, chamando o mÈtodo
-	 * execute do command sempre que um campo n„o for nulo
+	 * Metodo que percorre todos os campos da entidade, chamando o m√©todo
+	 * execute do command sempre que um campo n√£o for nulo
 	 * 
-	 * @param command objeto que ir· tratar os campos n„o nulos da
+	 * @param command objeto que ir√° tratar os campos n√£o nulos da
 	 * 		  entidade de pesquisa
 	 */
 	protected void visitFields(FieldCommand command) {
@@ -150,7 +150,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 			try {
 				o = ve.getValue();
 			} catch (PropertyNotFoundException e) {
-				// para o caso de uma restriction mapeada n„o seja um campo da entidade
+				// para o caso de uma restriction mapeada n√£o seja um campo da entidade
 			    LOG.error(".visitFields()", e);
 			}
 			if (o != null) {
@@ -187,9 +187,9 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	}
 	
 	/**
-	 * Adicona restrictions do EntityQuery baseado na string com as expressıes. 
+	 * Adicona restrictions do EntityQuery baseado na string com as express√µes. 
 	 * 
-	 * @param restriction - String da restriction com ou sem expressıes
+	 * @param restriction - String da restriction com ou sem express√µes
 	 */
 	@SuppressWarnings("rawtypes")
 	public final void setRestrictions() {
@@ -231,9 +231,9 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	}
 	
 	/**
-	 * Busca a entidade no contexto da conversaÁ„o, se n„o encontrar cria
-	 * por reflex„o e armazena na conversaÁ„o, para ser utilizado tambÈm
-	 * na p·gina do relatÛrio, evitando a propagaÁ„o por par‚metros
+	 * Busca a entidade no contexto da conversa√ß√£o, se n√£o encontrar cria
+	 * por reflex√£o e armazena na conversa√ß√£o, para ser utilizado tamb√©m
+	 * na p√°gina do relat√≥rio, evitando a propaga√ß√£o por par√¢metros
 	 * 
 	 * @return a entidade informado genericamente
 	 */
@@ -249,7 +249,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	}
 
 	/**
-	 * Cria o nome do componente da entidade que ser· armazenado na conversaÁ„o
+	 * Cria o nome do componente da entidade que ser√° armazenado na conversa√ß√£o
 	 * 
 	 * @return
 	 */

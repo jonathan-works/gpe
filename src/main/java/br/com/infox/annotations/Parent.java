@@ -6,12 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Anotação para definir qual campo representa o pai da entidade 
+ * AnotaÃ§Ã£o para definir qual campo representa o pai da entidade 
  * @author Infox
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
 public @interface Parent {
-	//Definição das anotações utilizada pelo framework infox
+	//DefiniÃ§Ã£o das anotaÃ§Ãµes utilizada pelo framework infox
 }

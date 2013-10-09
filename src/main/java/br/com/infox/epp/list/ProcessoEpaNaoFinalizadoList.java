@@ -18,7 +18,7 @@ import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.util.EntityUtil;
 
 /**
- * EntityList que consulta todos os processos n„o finalizados de um determinado fluxo
+ * EntityList que consulta todos os processos n√£o finalizados de um determinado fluxo
  * @author tassio
  */
 @Name(ProcessoEpaNaoFinalizadoList.NAME)

@@ -37,7 +37,7 @@ public class IniciarProcessoService {
 		"br.com.infox.epp.IniciarProcessoService.ONCREATEPROCESS";
 	public static final String NAME = "iniciarProcessoService";
 	public static final String TYPE_MISMATCH_EXCEPTION = 
-				"Tipo informado n„o È uma inst‚ncia de " +
+				"Tipo informado n√£o √© uma inst√¢ncia de " +
 				"br.com.infox.ibpm.entity.Processo";
 	
 	/**

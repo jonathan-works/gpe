@@ -25,8 +25,8 @@ import br.com.itx.util.EntityUtil;
 @Name(CaixaEventHandler.NAME)
 @Scope(ScopeType.APPLICATION)
 /**
- * Classe respons·vel pela verificaÁ„o e associaÁ„o (se existir) para qual Caixa
- * ir· o processo que est· sendo movimentado.
+ * Classe respons√°vel pela verifica√ß√£o e associa√ß√£o (se existir) para qual Caixa
+ * ir√° o processo que est√° sendo movimentado.
  */
 public class CaixaEventHandler {
 
@@ -36,8 +36,8 @@ public class CaixaEventHandler {
 	@In private ProcessoManager processoManager;
 	
 	/**
-	 * MÈtodo principal, onde ocorrer· a validaÁ„o para verificar se o processo
-	 * se encaixa em alguma Caixa, para ent„o adicion·-lo ‡ ela.
+	 * M√©todo principal, onde ocorrer√° a valida√ß√£o para verificar se o processo
+	 * se encaixa em alguma Caixa, para ent√£o adicion√°-lo √† ela.
 	 */
 	@Observer(Event.EVENTTYPE_TRANSITION)
  	public void filtrarProcessos(final ExecutionContext context) {

@@ -30,7 +30,7 @@ public class SecurityUtil {
 		boolean hasRole = Identity.instance().hasRole(PAGES_PREFIX + servletPath);
 		if (!hasRole) {
 			LOG.info(MessageFormat.format(
-					"Bloqueado o acesso do perfil ''{0}'' para p·gina ''{1}''.",
+					"Bloqueado o acesso do perfil ''{0}'' para p√°gina ''{1}''.",
 					Contexts.getSessionContext().get("identificadorPapelAtual"), servletPath));
 		}
 		return hasRole;

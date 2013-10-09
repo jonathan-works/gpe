@@ -1,16 +1,16 @@
 /*
  * IBPM - Ferramenta de produtividade Java
- * Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ * Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  * sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- * Free Software Foundation; vers„o 2 da LicenÁa.
- * Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- * NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ * Free Software Foundation; vers√£o 2 da Licen√ßa.
+ * Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  * 
  * Consulte a GNU GPL para mais detalhes.
- * VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ * Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  * veja em http://www.gnu.org/licenses/  
  */
 package br.com.infox.ibpm.jbpm;
@@ -44,12 +44,12 @@ import br.com.itx.util.EntityUtil;
  * 		tipo:nome_da_variavel
  * 
  * Onde:
- * 		- tipo È o nome do componente de formulario para o campo
- * 		- nome_da_variavel È como sera armazenada no contexto.
- * 				Serve tambÈm para gerar o label (Nome da variavel)
+ * 		- tipo √© o nome do componente de formulario para o campo
+ * 		- nome_da_variavel √© como sera armazenada no contexto.
+ * 				Serve tamb√©m para gerar o label (Nome da variavel)
  * 
  * Esse formulario contem apenas campos somente leitura (access=read),
- * para os outros campos È usada a classe TaskInstanceForm
+ * para os outros campos √© usada a classe TaskInstanceForm
  * 
  * @author luizruiz
  *

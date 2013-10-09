@@ -77,13 +77,13 @@ public class TransitionFitter extends Fitter implements Serializable {
 			if (!(n instanceof EndState)) {
 				List<Transition> transitions = n.getLeavingTransitions();
 				if (transitions == null || transitions.isEmpty()) {
-					nodeMessageMap.put(n, "Nó sem transição de saída");
+					nodeMessageMap.put(n, "NÃ³ sem transiÃ§Ã£o de saÃ­da");
 				}
 			}
 			if (!(n instanceof StartState)) {
 				Set<Transition> transitionSet = n.getArrivingTransitions();
 				if (transitionSet == null || transitionSet.isEmpty()) {
-					nodeMessageMap.put(n, "Nó sem transição de entrada");
+					nodeMessageMap.put(n, "NÃ³ sem transiÃ§Ã£o de entrada");
 				}
 			}
 		}
@@ -186,8 +186,8 @@ public class TransitionFitter extends Fitter implements Serializable {
 	}
 	
 	/**
-	 * Seta a #{true} na condição da transição para o botão não ser exibido na
-	 * tab de saída do fluxo.
+	 * Seta a #{true} na condiÃ§Ã£o da transiÃ§Ã£o para o botÃ£o nÃ£o ser exibido na
+	 * tab de saÃ­da do fluxo.
 	 * 
 	 * @param th
 	 */

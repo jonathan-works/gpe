@@ -15,7 +15,7 @@ import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 public class UsuarioLocalizacaoList extends EntityList<UsuarioLocalizacao> {
 
 	private static final long serialVersionUID = 1L;
-	// N„o pode ser usuarioLocalizacaoList por causa da vari·vel de sess„o que o Authenticator cria
+	// N√£o pode ser usuarioLocalizacaoList por causa da vari√°vel de sess√£o que o Authenticator cria
 	public static final String NAME = "usuarioLocalizacaoEntityList";
 	private static final String DEFAULT_EJBQL = "select o from UsuarioLocalizacao o";
 	private static final String DEFAULT_ORDER = "o.localizacao";

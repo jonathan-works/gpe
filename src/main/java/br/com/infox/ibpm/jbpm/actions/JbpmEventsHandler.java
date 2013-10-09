@@ -76,7 +76,7 @@ public class JbpmEventsHandler implements Serializable {
     }
 
 	private void throwErroAoLimparVariaveisDoPainel(Exception e) {
-		String action = "Limpar as vari·veis do painel para atualizaÁ„o: ";
+		String action = "Limpar as vari√°veis do painel para atualiza√ß√£o: ";
 		LOG.error(action, e);
 		throw new AplicationException(AplicationException.createMessage(
 		        action + e.getLocalizedMessage(), "refreshPainel()",
@@ -84,8 +84,8 @@ public class JbpmEventsHandler implements Serializable {
 	}
 	
 	/**
-	 * Atualiza o dicion·rio de Tarefas (tb_tarefa) com seus respectivos id's 
-	 * de todas as versıes.
+	 * Atualiza o dicion√°rio de Tarefas (tb_tarefa) com seus respectivos id's 
+	 * de todas as vers√µes.
 	 **/
 	@Observer(ProcessBuilder.POST_DEPLOY_EVENT)
     public static void updatePostDeploy() {
@@ -101,7 +101,7 @@ public class JbpmEventsHandler implements Serializable {
     }
 
 	private static void throwErroAoRealizarAtualizacaoAutomatica(Exception e) {
-		String action = "Realizar atualizaÁ„o autom·ticas apÛs publicaÁ„o do fluxo: ";
+		String action = "Realizar atualiza√ß√£o autom√°ticas ap√≥s publica√ß√£o do fluxo: ";
 		LOG.error(action, e);
 		throw new AplicationException(AplicationException.createMessage(
 		        action + e.getLocalizedMessage(), "updatePostDeploy()",

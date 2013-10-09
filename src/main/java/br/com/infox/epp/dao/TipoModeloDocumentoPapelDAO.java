@@ -17,8 +17,8 @@ public class TipoModeloDocumentoPapelDAO extends GenericDAO {
 	public static final String NAME = "tipoModeloDocumentoPapelDAO";
 	
 	/**
-	 * Retorna uma lista com os tipos de modelo de documento que o perfil (localizaÁ„o+papel)
-	 * do usu·rio logado possue permiss„o para acessar.
+	 * Retorna uma lista com os tipos de modelo de documento que o perfil (localiza√ß√£o+papel)
+	 * do usu√°rio logado possue permiss√£o para acessar.
 	 * */
 	@SuppressWarnings("unchecked")
 	public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos(){

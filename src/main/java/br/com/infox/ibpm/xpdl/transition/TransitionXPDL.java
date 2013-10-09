@@ -38,15 +38,15 @@ public final class TransitionXPDL implements Serializable {
 		
 		String from = XmlUtil.getAttributeValue(element, "From");
 		if(from == null || from.isEmpty()) {
-			throw new IllegalTransitionXPDLException("Transição ilegal. Nó de destino nulo");
+			throw new IllegalTransitionXPDLException("TransiÃ§Ã£o ilegal. NÃ³ de destino nulo");
 		}
 		
 		String to = XmlUtil.getAttributeValue(element, "To");
 		if(to == null || to.isEmpty()) {
-			throw new IllegalTransitionXPDLException("Transição ilegal. Nó de origem nulo");
+			throw new IllegalTransitionXPDLException("TransiÃ§Ã£o ilegal. NÃ³ de origem nulo");
 		}
 		if(to.equals(from)) {
-			throw new IllegalTransitionXPDLException("Transição ilegal. Transição cíclica para o mesmo nó.");
+			throw new IllegalTransitionXPDLException("TransiÃ§Ã£o ilegal. TransiÃ§Ã£o cÃ­clica para o mesmo nÃ³.");
 		}
 		
 		return new TransitionXPDL(id, elementName, to, from);

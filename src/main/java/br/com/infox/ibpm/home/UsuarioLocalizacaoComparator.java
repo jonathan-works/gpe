@@ -5,10 +5,10 @@ import java.util.Comparator;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 
 /**
- * Comparator usado para ordenação da Lista de Localizações do usuário interno pelos criterios:
- * 1º Administrador
- * 2º Se for primeiro grau numero da Vara
- * 3º toString do UsuarioLocalizacaoMagistradoServidor
+ * Comparator usado para ordenaÃ§Ã£o da Lista de LocalizaÃ§Ãµes do usuÃ¡rio interno pelos criterios:
+ * 1Âº Administrador
+ * 2Âº Se for primeiro grau numero da Vara
+ * 3Âº toString do UsuarioLocalizacaoMagistradoServidor
  * @author rodrigo
  *
  */

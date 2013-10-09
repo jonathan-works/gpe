@@ -60,7 +60,7 @@ public class BamAction {
 	}
 	
 	/**
-	 * Retorna os processo n„o finalizados de um determinado fluxo
+	 * Retorna os processo n√£o finalizados de um determinado fluxo
 	 */
 	public List<ProcessoEpa> getProcessosNaoFinalizados(Fluxo fluxo) {
 		return processoEpaManager.listNotEnded(fluxo);

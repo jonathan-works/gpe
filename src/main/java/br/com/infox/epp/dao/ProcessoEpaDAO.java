@@ -102,10 +102,10 @@ public class ProcessoEpaDAO extends GenericDAO {
 	
 	
 	/**
-	 * Quando um processo necessita de partes, n„o È permitido inativar todas
+	 * Quando um processo necessita de partes, n√£o √© permitido inativar todas
 	 * as partes do processo de uma vez.
-	 * Esse mÈtodo retorna falso (n„o h· permiss„o de inativar) se o processo
-	 * possuir uma ˙nica parte ativa no momento.
+	 * Esse m√©todo retorna falso (n√£o h√° permiss√£o de inativar) se o processo
+	 * possuir uma √∫nica parte ativa no momento.
 	 * */
 	public Boolean podeInativarPartes(ProcessoEpa processoEpa){
 		String hql = "select count(*) from ParteProcesso partes where partes.processo = :processoEpa and partes.ativo = true";

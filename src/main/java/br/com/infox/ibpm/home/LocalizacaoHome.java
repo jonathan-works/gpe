@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.ibpm.home;
@@ -117,8 +117,8 @@ public class LocalizacaoHome
 	
 	private void verificaListas(){
 		/*
-		 * Verifica se o pai atual e o pai selecionado s„o diferentes de nulo e
-		 * se os dois s„o diferentes um do outro e remove o registro da lista 
+		 * Verifica se o pai atual e o pai selecionado s√£o diferentes de nulo e
+		 * se os dois s√£o diferentes um do outro e remove o registro da lista 
 		 * do pai atual e insere na lista do pai selecionado.
 		 */
 		if ((getInstance().getLocalizacaoPai() != null) && 
@@ -130,15 +130,15 @@ public class LocalizacaoHome
 			localizacaoPai.getLocalizacaoList();
 		}
 		/*
-		 * Se o pai atual n„o for nulo e o pai selecionado for, o registro È
+		 * Se o pai atual n√£o for nulo e o pai selecionado for, o registro √©
 		 * excluido da lista do pai atual.
 		 */
 		if ((getInstance().getLocalizacaoPai() != null) && (localizacaoPai == null)){
 			getInstance().getLocalizacaoPai().getLocalizacaoList().remove(getInstance());
 		}
 		/*
-		 * Se o pai atual for nulo e o pai selecionado n„o for, o registro È 
-		 * adicionado ‡ lista do pai atual.
+		 * Se o pai atual for nulo e o pai selecionado n√£o for, o registro √© 
+		 * adicionado √† lista do pai atual.
 		 */
 		if ((getInstance().getLocalizacaoPai() == null) && (localizacaoPai != null)) {
 			localizacaoPai.getLocalizacaoList().add(getInstance());
@@ -151,7 +151,7 @@ public class LocalizacaoHome
 		verificaListas();
 		/*
 		 * Se o registro estiver como inativo na hora do update, todos os seus
-		 * filhos ser„o inativados
+		 * filhos ser√£o inativados
 		 */
 		if (!getInstance().getAtivo()) {
 			inactiveRecursive(getInstance());
@@ -194,7 +194,7 @@ public class LocalizacaoHome
 			getInstance().setEndereco(null);
 			if (getEnderecoHome().checkEndereco()) {
 				FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-						"Cep obrigatÛrio");
+						"Cep obrigat√≥rio");
 				return false;
 			}
 		}
@@ -207,8 +207,8 @@ public class LocalizacaoHome
 	}
 	
 	/**
-	 * Verifica se a localizaÁ„o est· vinculada a algum ItemTIpoDocumento. Se
-	 * n„o estiver, realiza a inativaÁ„o em cascata
+	 * Verifica se a localiza√ß√£o est√° vinculada a algum ItemTIpoDocumento. Se
+	 * n√£o estiver, realiza a inativa√ß√£o em cascata
 	 */
 	public String inactiveRecursive(Localizacao localizacao) {
 		if (localizacao.getItemTipoDocumentoList().size() <= 0) {
@@ -221,7 +221,7 @@ public class LocalizacaoHome
 			return ret;
 		}
 		FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-				"Registro est· em uso n„o poder· ser excluido!");
+				"Registro est√° em uso n√£o poder√° ser excluido!");
 		return "False";
 	}
 
@@ -273,8 +273,8 @@ public class LocalizacaoHome
 	}
 	
 	/**
-	 * Grava o registro atual e seta o localizacaoPai do prÛximo com o valor
-	 * da localizaÁ„o do ˙ltimo registro inserido.
+	 * Grava o registro atual e seta o localizacaoPai do pr√≥ximo com o valor
+	 * da localiza√ß√£o do √∫ltimo registro inserido.
 	 */
 	public String persistAndNext() {
 		String outcome = null;

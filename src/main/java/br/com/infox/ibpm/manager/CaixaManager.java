@@ -29,7 +29,7 @@ public class CaixaManager extends GenericManager {
 	/**
 	 * Adiciona o processo em uma caixa
 	 * @param caixaList - Lista da caixas nas quais o processo pode ser inserido
-	 * @param processo - Processo em Movimentação
+	 * @param processo - Processo em MovimentaÃ§Ã£o
 	 */
 	public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo){
 		Caixa caixa = escolherCaixa(caixaList);

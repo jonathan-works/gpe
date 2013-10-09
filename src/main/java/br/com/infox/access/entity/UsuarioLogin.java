@@ -71,7 +71,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	private Boolean ldap;
 	private Boolean bloqueio;
 	private Boolean provisorio;
-	//Data de previs„o para expirar o usu·rio provisÛrio
+	//Data de previs√£o para expirar o usu√°rio provis√≥rio
 	private Date dataExpiracao;
 	private Boolean temContaTwitter;
 
@@ -151,7 +151,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	@Transient
 	public boolean checkCertChain(String certChain) {
 		if (certChain == null) {
-			throw new IllegalArgumentException("O par‚metro n„o deve ser nulo");
+			throw new IllegalArgumentException("O par√¢metro n√£o deve ser nulo");
 		} 
 		return StringUtil.replaceQuebraLinha(certChain).equals(
 				StringUtil.replaceQuebraLinha(this.certChain));

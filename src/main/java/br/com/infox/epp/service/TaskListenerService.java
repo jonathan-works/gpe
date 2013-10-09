@@ -79,7 +79,7 @@ public class TaskListenerService extends AbstractAction {
 	public void onEndProcess(ExecutionContext context) {
 		Processo processo = JbpmUtil.getProcesso();
 		if (processo == null) {
-			throw new AplicationException("Erro ao criar o processo. Verifique a configuração das raias na definição do fluxo.");
+			throw new AplicationException("Erro ao criar o processo. Verifique a configuraÃ§Ã£o das raias na definiÃ§Ã£o do fluxo.");
 		}
 		processo.setDataFim(new Date());
 		processoEpaTarefaManager.update(processo);

@@ -26,7 +26,7 @@ public class TipoProcessoDocumentoManager extends GenericManager {
 	
 	/**
 	 * Se o tipoProcessoDocumento for nulo (caso o componente utilizado seja
-	 * o editor sem assinatura digital, o tipoProcessoDOcumento ser· setado
+	 * o editor sem assinatura digital, o tipoProcessoDOcumento ser√° setado
 	 * automaticamente com um valor aleatorio
 	 **/
 	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){

@@ -37,12 +37,12 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FileUtil;
 
 /**
- * Componente com escopo de aplicação responsavel pelo teste de validade dos
+ * Componente com escopo de aplicaÃ§Ã£o responsavel pelo teste de validade dos
  * certificados confrontando a corrente de certificados com a lista das
  * certificadoras que o ICP-Brasil fornece:
  * http://www.iti.gov.br/twiki/bin/view/Certificacao/RepoZipCert. Os arquivos
- * ficam descompctados em uma pasta no servidor e quando a aplicação sobe os
- * arquivos são lidos e os certificados são carregados em uma lista.
+ * ficam descompctados em uma pasta no servidor e quando a aplicaÃ§Ã£o sobe os
+ * arquivos sÃ£o lidos e os certificados sÃ£o carregados em uma lista.
  * 
  * @author Rodrigo Menezes - rodrigo@infox.com.br
  * 
@@ -129,7 +129,7 @@ public class CertificadosCaCheckManager {
 		X509Certificate certificate = certChain[0];
 		boolean valid = true;
 
-		// primeiro valida se cada elemento da cadeia está validado pelo proximo
+		// primeiro valida se cada elemento da cadeia estÃ¡ validado pelo proximo
 		if (certChain.length > 1) {
 			for (int i = 1; i < certChain.length; i++) {
 				X509Certificate trustedCert = certChain[i];
@@ -143,7 +143,7 @@ public class CertificadosCaCheckManager {
 		}
 
 		if (!valid) {
-			String msg = "A validade da cadeia não pode ser verificada.";
+			String msg = "A validade da cadeia nÃ£o pode ser verificada.";
 			LOG.info(msg + mt.getTime());
 			throw new CertificateException(msg);
 		}
@@ -152,7 +152,7 @@ public class CertificadosCaCheckManager {
 
 		// valida se algum elemento da cadeia foi assinado pela lista das
 		// certificadoras da certSign
-		// se foi então o certificado é valido, pois a cadeia foi devidamente
+		// se foi entÃ£o o certificado Ã© valido, pois a cadeia foi devidamente
 		// testada.
 		for (int i = 0; i < certChain.length; i++) {
 			X509Certificate cert = certChain[i];
@@ -166,7 +166,7 @@ public class CertificadosCaCheckManager {
 			}
 		}
 
-		String msg = "A validade do certificado não pode ser verificada junto ao ICP-Brasil.";
+		String msg = "A validade do certificado nÃ£o pode ser verificada junto ao ICP-Brasil.";
 		LOG.info(msg + mt.getTime());
 		throw new CertificateException(msg);
 	}

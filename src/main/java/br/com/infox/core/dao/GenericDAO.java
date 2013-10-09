@@ -46,7 +46,7 @@ public class GenericDAO implements Serializable {
 	}
 	
 	/**
-	 * Verifica se o entityManager contém o objeto
+	 * Verifica se o entityManager contÃ©m o objeto
 	 * informado.
 	 * @param o objeto a ser verificado.
 	 * @return true se contiver.
@@ -56,7 +56,7 @@ public class GenericDAO implements Serializable {
 	}
 	
 	/**
-	 * Obtém todos os registros da entidade informada.
+	 * ObtÃ©m todos os registros da entidade informada.
 	 * @param <E>
 	 * @param clazz entidade
 	 * @return lista de todos os registros da entidade

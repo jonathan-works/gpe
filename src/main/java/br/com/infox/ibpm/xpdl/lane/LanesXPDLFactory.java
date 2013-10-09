@@ -19,7 +19,7 @@ public final class LanesXPDLFactory implements Serializable {
 		List<Element> poolsElement = XmlUtil.getChildren(root, "Pools");
 		List<Element> poolsList = XmlUtil.getChildren(poolsElement.get(0), "Pool");
 		if(poolsList.size() > 2) {
-			throw new IllegalNumberPoolsXPDLException("O sistema n„o permite mais de uma piscina na definiÁ„o dos fluxos.");
+			throw new IllegalNumberPoolsXPDLException("O sistema n√£o permite mais de uma piscina na defini√ß√£o dos fluxos.");
 		}
 		
 		Element poll = poolsList.get(1);

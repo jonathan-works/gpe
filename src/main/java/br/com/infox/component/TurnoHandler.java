@@ -11,7 +11,7 @@ import br.com.infox.epp.type.DiaSemanaEnum;
 import br.com.infox.util.DateUtil;
 
 /**
- * Classe que gerencia o componenete de criaÁ„o de turnos.
+ * Classe que gerencia o componenete de cria√ß√£o de turnos.
  * 
  * @author tassio
  *
@@ -75,7 +75,7 @@ public class TurnoHandler {
 	}
 	
 	/**
-	 * Retorna uma lista de hor·rios contendo a informaÁ„o se eles est„o 
+	 * Retorna uma lista de hor√°rios contendo a informa√ß√£o se eles est√£o 
 	 * dentro de algum turno selecionado.
 	 * 
 	 * @param diaSemana 
@@ -91,17 +91,17 @@ public class TurnoHandler {
 	}
 	
 	/**
-	 * Retorna uma lista de todos os hor·rios gerados das 00:00 atÈ 23:59
+	 * Retorna uma lista de todos os hor√°rios gerados das 00:00 at√© 23:59
 	 * com o passo igual ao intervalo informado no construtor da classe
 	 * 
-	 * @return lista de hor·rios
+	 * @return lista de hor√°rios
 	 */
 	public final List<Time> getHorarios() {
 		return horarios;
 	}
 	
 	/**
-	 * Retorna um set com todos os turnos selecionados pelo usu·rio
+	 * Retorna um set com todos os turnos selecionados pelo usu√°rio
 	 * 
 	 * @return
 	 */
@@ -114,7 +114,7 @@ public class TurnoHandler {
 	}
 	
 	/**
-	 * Retorna um set com os turnos selecionados pelo usu·rio em um determinado
+	 * Retorna um set com os turnos selecionados pelo usu√°rio em um determinado
 	 * dia da semana
 	 * 
 	 * @return
