@@ -7,153 +7,145 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf">
+	 xmlns:wi="http://www.itx.com.br/jsf"
+>
 	
-	
-		#{processoDocumentoHome.setModelo(false)}
-		<ui:param
-		 name="reRenderSaveForm"
-		 value="#{reRenderSave}" />
-
-	<s:div style="clear: both">
-		
-
-		<wi:inputText
-			 id="#{f.id}inputProcessoDocumento"
-			 value="#{processoDocumentoHome.instance.processoDocumento}"
-			 disabled="false"
-			 required="true"
-			 label="#{messages['processo.anexarDocumentoDescricao']}">
-		</wi:inputText>
-
-	
-	</s:div>
-	<s:div id="divTipoDocumento">
-		
-
-		<wi:selectOneMenuEntity
-			 id="#{f.id}tipoProcessoDocumento"
-			 label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-			 value="#{processoDocumentoHome.instance.tipoProcessoDocumento}"
-			 items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
-			 required="true"
-			 noSelectionLabel="Selecione...">
-			
-
-		</wi:selectOneMenuEntity>
-
-	
-	</s:div>
-
+	<wi:inputText
+		id="#{f.id}inputProcessoDocumento"
+		value="#{processoDocumentoHome.instance.processoDocumento}"
+		disabled="false"
+		required="true"
+		label="#{messages['processo.anexarDocumentoDescricao']}"
+	>
+	</wi:inputText>
+	<wi:selectOneMenuEntity
+		id="#{f.id}tipoProcessoDocumento"
+		label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+		value="#{processoDocumentoHome.instance.tipoProcessoDocumento}"
+		items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+		required="true"
+		noSelectionLabel="Selecione..."
+	>
+		<a:ajax
+			render="signatureDiv"
+			execute="@this"
+			limitRender="true"
+			event="change"
+		>
+		</a:ajax>
+	</wi:selectOneMenuEntity>
 	<wi:selectBooleanCheckbox
-		 id="documentoSigiloso"
-		 inNewLine="true"
-		 value="#{processoDocumentoHome.instance.documentoSigiloso}"
-		 label="#{messages['processoDocumento.documentoSigiloso']}" />
-	<s:div id="tipoDocumentoDiv">
-		<wi:fileUploadBox
-			 id="uploadArquivo"
-			 rendered="#{!processoDocumentoHome.modelo}"
-			 label="Arquivo"
-			 onuploadcomplete="clearSign();">
-		</wi:fileUploadBox>
-		<s:div
-			 id="usarModeloDiv"
-			 rendered="#{processoDocumentoHome.modelo}">
-			<wi:selectOneMenuEntity
-				 id="modeloDocumentoCombo"
-				 label="#{messages['modeloDocumento.modeloDocumento']}"
-				 value="#{processoDocumentoHome.modeloDocumentoCombo}"
-				 items="#{modeloDocumentoHome.getModeloDocumentoByGrupoAndTipo()}"
-				 noSelectionLabel="Selecione...">
-				
-
-				<a:ajax
-					 render="modeloDocumento"
-					 event="change"
-					 listener="#{processoDocumentoHome.processarModelo()}"
-					 execute="@this"
-					 onsubmit="showLoading()"
-					 oncomplete="hideLoading()" />
-
-			
-			</wi:selectOneMenuEntity>
-
-			<wi:editor
-				 id="modeloDocumento"
-				 label="Modelo"
-				 value="#{processoDocumentoBinHome.instance.modeloDocumento}"
-				 requiredField="false"
-				 required="false"
-				 showVariables="false"
-				 onchange="clearSign()">
-			</wi:editor>
-
-			<wi:imageUpload
-				 style="width: 25%; right:5px; position:absolute;"
-				 imageBean="#{imageFileUpload}" />
-
-			<h:inputHidden
-				 id="certChain"
-				 value="#{processoDocumentoBinHome.certChain}" />
-			<h:inputHidden
-				 id="signature"
-				 value="#{processoDocumentoBinHome.signature}" />
-
-			<a:jsFunction
-				 name="submitForm"
-				 action="#{processoDocumentoHome.persist()}"
-				 render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, divTipoDocumento, divBotao" />
-
-			<s:decorate
-				 id="#{id}DecorationCertificado"
-				 template="/WEB-INF/xhtml/components/templates/edit.xhtml">
-				
-
-				<ui:param
-					 name="inNewLine"
-					 value="true" />
-				<ui:param
-					 name="showLock"
-					 value="false" />
-
-			
-			</s:decorate>
-
-
-		
-		</s:div>
-
+		id="documentoSigiloso"
+		inNewLine="true"
+		value="#{processoDocumentoHome.instance.documentoSigiloso}"
+		label="#{messages['processoDocumento.documentoSigiloso']}"
+	/>
 	
-	</s:div>
-
-	<script>
-		function useBase64() {
-			return '#{!processoDocumentoHome.modelo}';
-		}
-		function getData() {
-			var data;
-			var escapeId = namespace.infox.escapeId;
-			if (useBase64() == 'true') {
-				var id = escapeId("#{form.formId}Form:#{id}:uploadArquivoDecoration:uploadArquivo");
-				data = $(id).files[0]
-						.getAsDataURL();
-				if (data != '') {
-					data = data.split('base64,')[1];
+	<s:div id="documentoDiv">
+		<s:div
+			id="fileUploadDiv"
+			rendered="#{!processoDocumentoHome.modelo}"
+		>
+			<wi:fileUploadBox
+				id="uploadArquivo"
+				label="Arquivo"
+				onuploadcomplete="uploadComplete();"
+			>
+			</wi:fileUploadBox>
+			
+		</s:div>
+		<s:div
+			id="editorDiv"
+			rendered="#{processoDocumentoHome.modelo}"
+		>
+			<wi:editor
+				id="modeloDocumento"
+				label="Modelo"
+				value="#{processoDocumentoBinHome.instance.modeloDocumento}"
+				requiredField="false"
+				required="false"
+			>
+			</wi:editor>
+			<wi:imageUpload
+				imageBean="#{imageFileUpload}" />
+		</s:div>
+		<script type="text/javascript">
+		//<![CDATA[
+	    	namespace("infox.signature.anexar",function (Anexar) {
+	    		var appletDiv = #{rich:jQuery("appletDiv")};
+				var signatureInpt = #{rich:jQuery("signature")};
+				var certChainInpt = #{rich:jQuery("certChain")};
+	    		
+	    		Anexar.useBase64 = function useBase64() {
+	    			return "#{processoDocumentoHome.modelo}";
+	    		};
+				Anexar.getData = function getData() {
+					return #{processoDocumentoHome.modelo} ? infox.editor.modeloDocumento.instance.getData() : "#{fileHome.getMD5()}";
+				};
+				Anexar.addSignature = function addSignature() {
+					infox.showLoading();
+					submitForm();
+				};
+				Anexar.isSigned = function isSigned() {
+					return ((signatureInpt.val().trim() != "") && (certChainInpt.val().trim() != "")) 
+				};
+				Anexar.postSign = function postSign() {
+					infox.hideLoading();
+					if (this.isSigned()) {
+						appletDiv.addClass("hidden");
+					}
+				};
+				try {
+					infox.editor.modeloDocumento.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
+						signatureInpt.val("");
+						certChainInpt.val("");
+						appletDiv.removeClass("hidden");
+					});
+				} catch(e){
+					console.log("fileUpload")
 				}
-			} else {
-				var editorId = escapeId("#{form.formId}Form:#{id}:modeloDocumentoDecoration:modeloDocumentoTextArea");
-				data = tinyMCE.editors[editorId]
-						.getContent();
-			}
-			return data;
-		}
-		function clearSign() {
-			var escapeId = namespace.infox.escapeId;
-			$(escapeId("#{form.formId}Form:modelo:signature")).val("");
-			$(escapeId("#{form.formId}Form:modelo:certChain")).val("");
-		}
-	</script>
-
+			});
+		//]]>
+		</script>
+		
+	</s:div>
+	
+	<s:div id="signatureDiv">
+		<h:inputHidden
+			id="certChain"
+			value="#{processoDocumentoBinHome.certChain}"
+		/>
+		<h:inputHidden
+			id="signature"
+			value="#{processoDocumentoBinHome.signature}"
+		/>
+	</s:div>
+	
+	<s:div id="appletDiv" styleClass="applet-div">
+		<wi:appletAssinatura
+			id="anexarDocumento"
+			urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
+			formId="taskInstanceForm"
+			certificationChainField="#{certChain}"
+			signatureField="#{signature}"
+			getDataFunction=""
+			useBase64Function=""
+			functionPreSign=""
+			functionPosSign=""
+			debug="false"
+			loginMode="false"
+			useProviderDll="false"
+		>
+		</wi:appletAssinatura>
+	</s:div>
+	<a:jsFunction
+		name="uploadComplete"
+		render="signatureDiv, appletDiv" 
+	/>
+	<a:jsFunction
+		name="submitForm"
+		action="#{processoDocumentoHome.persist()}"
+		render="#{empty reRenderSave ? 'tipoDocumentoDiv' : reRenderSave}, documentoDiv, buttonDiv"
+	/>
 
 </ui:composition>
