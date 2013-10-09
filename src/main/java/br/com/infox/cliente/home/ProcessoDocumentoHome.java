@@ -45,6 +45,7 @@ public class ProcessoDocumentoHome
 	
 	@Override
 	public void newInstance() {
+	    setModelo(false);
 		setModeloDocumentoCombo(null);
 		super.newInstance();
 	}
