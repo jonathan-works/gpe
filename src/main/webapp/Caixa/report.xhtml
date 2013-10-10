@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
+
+	<wi:report
+         bean="#{caixaReport}"
+         dataModel="#{caixaHome.searchTree2GridList.list}"
+         treeMode="true"
+         home="#{caixaHome}" />
+	
+</ui:composition>

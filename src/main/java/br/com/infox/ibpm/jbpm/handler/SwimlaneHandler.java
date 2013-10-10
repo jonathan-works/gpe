@@ -28,6 +28,8 @@ import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.access.entity.Papel;
 import br.com.infox.epp.manager.PapelManager;
+import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
+import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.itx.util.ComponentUtil;
@@ -91,6 +93,10 @@ public class SwimlaneHandler implements Serializable {
 		u.setContabilizar(contabilizar);
 		getLocalPapelList().add(u);
 		buildExpression();
+		LocalizacaoEstruturaTreeHandler localizacaoEstruturaTreeHandler = ComponentUtil.getComponent("localizacaoEstruturaTree");
+		PapelTreeHandler papelTreeHandler = ComponentUtil.getComponent("papelTree");
+		localizacaoEstruturaTreeHandler.clearTree();
+		papelTreeHandler.clearTree();
 	}
 
 	public List<Papel> getPapelList() {

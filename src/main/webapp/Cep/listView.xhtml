@@ -151,7 +151,7 @@
 			<s:div id="municipioSuggestDiv" styleClass="decoration-div">
                 <wi:suggest id="municipio" 
 	                suggestProvider="#{municipioSuggest}"
-	                disabled="#{empty cepList.estado}"
+	                disabled="#{empty cepHome.estado}"
 	                required="true"
 	                value="#{cepHome.instance.municipio}"
 	                label="#{messages['cep.municipio']}" />
