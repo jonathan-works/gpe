@@ -565,3 +565,7 @@ form {
 #javax_faces_developmentstage_messages {
 	display:none;
 }
+
+.img-upl-div {
+	display:inline-block;
+}
