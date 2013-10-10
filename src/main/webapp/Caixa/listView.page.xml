@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.org/schema/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
+      login-required="true"
+>
+	<restrict>#{security.checkPage()}</restrict>
+	<description>Caixa: #{caixaHome.instance}</description>
+	
+	<begin-conversation join="true"/>
+	<param name="nomeCaixa.order" value="#{caixaGrid.order}"/>
+	<param name="id" value="#{caixaHome.caixaIdCaixa}"/>
+
+	<!-- Parametros para RESTFull -->
+	<param name="tab" value="#{caixaHome.tab}"/>
+	<param name="goBackUrl" value="#{caixaHome.goBackUrl}"/>
+	<param name="goBackId" value="#{caixaHome.goBackId}"/>
+	<param name="goBackTab" value="#{caixaHome.goBackTab}"/>			
+
+	<!-- Parametros para a ordem de grids -->
+	<param name="caixa.order" value="#{caixaGrid.order}"/>		
+ 
+</page>
