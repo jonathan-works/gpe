@@ -6,12 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Anotação para definir qual campo representa a lista de filhos da entidade 
+ * AnotaÃ§Ã£o para definir qual campo representa a lista de filhos da entidade 
  * @author Infox
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
 public @interface ChildList {
-	//Anotação para definir qual campo representa a lista de filhos da entidade 
+	//AnotaÃ§Ã£o para definir qual campo representa a lista de filhos da entidade 
 }

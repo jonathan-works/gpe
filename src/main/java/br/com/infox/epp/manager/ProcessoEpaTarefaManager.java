@@ -67,7 +67,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	 * Verifica se existe algum turno da localizacao da tarefa em que no dia informado
 	 * @param pt 
 	 * @param horario 
-	 * @return turno da localizaÁ„o da tarefa
+	 * @return turno da localiza√ß√£o da tarefa
 	 */
 	public boolean contemTurnoTarefaDia(ProcessoEpaTarefa pt, Date data) {
 		Calendar horarioCalendar = Calendar.getInstance();
@@ -146,10 +146,10 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	}
 	
 	/**
-	 * Pesquisa o turno da localizacao da tarefa em que o hor·rio informado se encontra
+	 * Pesquisa o turno da localizacao da tarefa em que o hor√°rio informado se encontra
 	 * @param pt 
 	 * @param horario 
-	 * @return turno da localizaÁ„o da tarefa
+	 * @return turno da localiza√ß√£o da tarefa
 	 */
 	private LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date data) {
 		Calendar calendar = Calendar.getInstance();
@@ -166,7 +166,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	
 	/**
 	 * Verifica as possibilidades para os intervalos do turno de 
-	 * uma determinada localizaÁ„o, para ent„o calcular a diferenÁa 
+	 * uma determinada localiza√ß√£o, para ent√£o calcular a diferen√ßa 
 	 * de horas que deve ser acrescentada ao tempo gasto de uma 
 	 * tarefa.
 	 * @return minutos gastos dentro do intervalo informado

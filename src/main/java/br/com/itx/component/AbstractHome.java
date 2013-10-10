@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.itx.component;
@@ -62,7 +62,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 
     private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
 
-	private static final String MSG_REMOVE_ERROR = "N„o foi possÌvel excluir.";
+	private static final String MSG_REMOVE_ERROR = "N√£o foi poss√≠vel excluir.";
 
 	private static final String MSG_REGISTRO_CADASTRADO = "#{messages['constraintViolation.registroCadastrado']}";
 	private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
@@ -113,7 +113,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	/**
-	 * Lista dos campos que n„o devem ser limpados ao realizar inclus„o no formulario
+	 * Lista dos campos que n√£o devem ser limpados ao realizar inclus√£o no formulario
 	 */
 	private List<String> lockedFields = new ArrayList<String>();
 	
@@ -207,7 +207,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			ret = super.remove();
 			raiseEventHome("afterRemove");
 		} catch (AssertionFailure af) {
-			/*Bug do Hibernate, esperamos a vers„o 3.5*/
+			/*Bug do Hibernate, esperamos a vers√£o 3.5*/
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, getRemoveError());
@@ -263,7 +263,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             LOG.error(getPersistLogMessage(), e);
 		} 
 		if (!PERSISTED.equals(ret)) {
-			 // Caso ocorra algum erro, È criada uma copia do instance sem o Id e os List
+			 // Caso ocorra algum erro, √© criada uma copia do instance sem o Id e os List
 			try {
 				Transaction.instance().rollback();
 				setInstance((T) EntityUtil.cloneEntity(getInstance(), false));
@@ -282,7 +282,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 
 	/**
-	 * Caso o instance n„o seja null, possua Id n„o esteja managed, È dado um merge.
+	 * Caso o instance n√£o seja null, possua Id n√£o esteja managed, √© dado um merge.
 	 */
 	@Override
 	public boolean isManaged() {
@@ -356,7 +356,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}	
 	
 	/**
-	 * MÈtodo chamado antes de persistir ou atualizar a entidade
+	 * M√©todo chamado antes de persistir ou atualizar a entidade
 	 * @return true se a entidade pode ser persistida ou atualizada
 	 */
 	protected boolean beforePersistOrUpdate() {
@@ -364,8 +364,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	/**
-	 * MÈtodo chamado depois de persistir ou atualizar a entidade
-	 * @param ret È o retorno da operaÁ„o de persistÍncia
+	 * M√©todo chamado depois de persistir ou atualizar a entidade
+	 * @param ret √© o retorno da opera√ß√£o de persist√™ncia
 	 */
 	protected String afterPersistOrUpdate(String ret) {
 		if (PERSISTED.equals(ret)){
@@ -383,8 +383,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	/**
 	 * Busca o componente definido por name, se nao achar, cria
 	 * 
-	 * @param name È o nome do componente
-	 * @return retorna o componente j· no tipo esperado
+	 * @param name √© o nome do componente
+	 * @return retorna o componente j√° no tipo esperado
 	 */
 	public <C> C getComponent(String name) {
 		return (C) Component.getInstance(name);
@@ -393,9 +393,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	/**
 	 * Busca o componente definido por name, se nao achar, cria
 	 * 
-	 * @param name È o nome do componente
-	 * @param scopeType È o escopo em que o componente se encontra
-	 * @return retorna o componente j· no tipo esperado
+	 * @param name √© o nome do componente
+	 * @param scopeType √© o escopo em que o componente se encontra
+	 * @return retorna o componente j√° no tipo esperado
 	 */
 	public <C> C getComponent(String name, ScopeType scopeType) {
 		return (C) Component.getInstance(name, scopeType);
@@ -404,9 +404,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	/**
 	 * Busca o componente definido por name
 	 * 
-	 * @param name È o nome do componente
-	 * @param create se true, cria o componente, sen„o retorna null
-	 * @return retorna o componente j· no tipo esperado
+	 * @param name √© o nome do componente
+	 * @param create se true, cria o componente, sen√£o retorna null
+	 * @return retorna o componente j√° no tipo esperado
 	 */
 	public <C> C getComponent(String name, boolean create) {
 		return (C) Component.getInstance(name, create);
@@ -480,7 +480,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	/**
-	 * Verifica se o registro est· na lista para controlar o Ìcone do cadeado.
+	 * Verifica se o registro est√° na lista para controlar o √≠cone do cadeado.
 	 * @param idField - Nome do atributo da Entity referente ao campo
 	 * @param homeRef - Home da Entity do atributo informado
 	 */
@@ -494,7 +494,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	/**
-	 * Limpa todos os campos que n„o foram marcados.
+	 * Limpa todos os campos que n√£o foram marcados.
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 * @throws InvocationTargetException 
@@ -514,7 +514,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 	
 	/**
-	 * Retorna a lista dos campos que n„o devem ser limpados.
+	 * Retorna a lista dos campos que n√£o devem ser limpados.
 	 * @return
 	 */
 	public List<String> getLockedFields() {
@@ -522,8 +522,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	}
 
 	/**
-	 * Seta a lista dos campos que n„o devem ser limpados.
-	 * @param lockedFields - Lista dos campos que n„o devem ser limpados
+	 * Seta a lista dos campos que n√£o devem ser limpados.
+	 * @param lockedFields - Lista dos campos que n√£o devem ser limpados
 	 */
 	public void setLockedFields(List<String> lockedFields) {
 		this.lockedFields = lockedFields;
@@ -544,7 +544,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		List<T> beanList = getBeanList().list(TAMANHO_XLS_PADRAO);
 		try {
 			if (beanList == null || beanList.isEmpty()) {
-				FacesMessages.instance().add(Severity.INFO, "N„o h· dados para exportar!");
+				FacesMessages.instance().add(Severity.INFO, "N√£o h√° dados para exportar!");
 			} else {
 				exportarXLS(getTemplate(), beanList);
 			}

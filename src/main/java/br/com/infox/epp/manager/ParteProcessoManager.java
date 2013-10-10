@@ -53,7 +53,7 @@ public class ParteProcessoManager extends GenericManager {
 				EntityUtil.getEntityManager().flush();
 			}
 			if (processoEpa.getPartes().contains(p)) {
-			    FacesMessages.instance().add(Severity.ERROR, "Parte j· cadastrada no processo");
+			    FacesMessages.instance().add(Severity.ERROR, "Parte j√° cadastrada no processo");
 			}
 			else {
 			    persist(new ParteProcesso(processoEpa, p));
@@ -70,7 +70,7 @@ public class ParteProcessoManager extends GenericManager {
 				EntityUtil.getEntityManager().flush();
 			}
 			if (processoEpa.getPartes().contains(p)) {
-			    FacesMessages.instance().add(Severity.ERROR, "Parte j· cadastrada no processo");
+			    FacesMessages.instance().add(Severity.ERROR, "Parte j√° cadastrada no processo");
 			}
 			else {
 			    persist(new ParteProcesso(processoEpa, p));
@@ -83,7 +83,7 @@ public class ParteProcessoManager extends GenericManager {
 	
 	public HistoricoParteProcesso restaurarParteProcesso(ParteProcesso parteProcessoAtual, HistoricoParteProcesso versaoAnterior, String motivoRestauracao) throws ValidationException {
 		if (!parteProcessoAtual.getIdParteProcesso().equals(versaoAnterior.getParteModificada().getIdParteProcesso())) {
-			throw new ValidationException("RestauraÁ„o inv·lida: HistÛrico passado n„o pertence ao HistÛrico da Parte de Processo instanciada");
+			throw new ValidationException("Restaura√ß√£o inv√°lida: Hist√≥rico passado n√£o pertence ao Hist√≥rico da Parte de Processo instanciada");
 		}
 		
 		HistoricoParteProcesso novoHistorico = new HistoricoParteProcesso(parteProcessoAtual, motivoRestauracao);

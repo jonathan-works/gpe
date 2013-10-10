@@ -33,7 +33,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 		} catch (PersistenceException cve){
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-					"Parte j· cadastrada no Processo!");
+					"Parte j√° cadastrada no Processo!");
 		}
 	}
 	

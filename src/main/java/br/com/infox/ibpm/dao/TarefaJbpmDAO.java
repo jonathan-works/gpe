@@ -13,7 +13,7 @@ public class TarefaJbpmDAO extends GenericDAO {
 	public static final String NAME = "tarefaJbpmDAO";
 	
 	/**
-	 * Insere para cada tarefa na tabela de tb_tarefa todos os ids que esse j· possuiu.
+	 * Insere para cada tarefa na tabela de tb_tarefa todos os ids que esse j√° possuiu.
 	 */
 	public void inserirVersoesTarefas() {
 		String hql = "insert into public.tb_tarefa_jbpm (id_tarefa, id_jbpm_task) " +

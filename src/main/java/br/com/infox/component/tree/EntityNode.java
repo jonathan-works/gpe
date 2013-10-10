@@ -2,17 +2,17 @@
 
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.component.tree;
@@ -40,13 +40,13 @@ public class EntityNode<E> implements Serializable {
 	
 	private List<EntityNode<E>> rootNodes;
 	private List<EntityNode<E>> nodes;
-	//Variavel para adiÁ„o da selectBooleanCheckBox 
+	//Variavel para adi√ß√£o da selectBooleanCheckBox 
 	private Boolean selected = false;
 	private EntityNode<E> parent;
  
 	/**
 	 * @param queryChildren
-	 *            query que retorna os nÛs filhos da entidade selecionada
+	 *            query que retorna os n√≥s filhos da entidade selecionada
 	 */
 	public EntityNode(String queryChildren) {
 		this.queryChildrenList = new String[] {queryChildren};
@@ -63,9 +63,9 @@ public class EntityNode<E> implements Serializable {
 	}
 
 	/**
-	 * Busca os nÛs filhos. Dispara um evento entityNodesPostGetNodes
+	 * Busca os n√≥s filhos. Dispara um evento entityNodesPostGetNodes
 	 * 
-	 * @return lista de nÛs filhos da entidade passada no construtor
+	 * @return lista de n√≥s filhos da entidade passada no construtor
 	 */
 	public List<EntityNode<E>> getNodes() {
 		if (nodes == null) {
@@ -109,7 +109,7 @@ public class EntityNode<E> implements Serializable {
 	
 	/**
 	 * 
-	 * @return a entidade representada pelo nÛ
+	 * @return a entidade representada pelo n√≥
 	 */
 	public E getEntity() {
 		return entity;
@@ -118,8 +118,8 @@ public class EntityNode<E> implements Serializable {
 	/**
 	 * 
 	 * @param queryRoots
-	 *            query que retorna os nÛs do primeiro nÌvel
-	 * @return lista dos nÛs do primeiro nÌvel
+	 *            query que retorna os n√≥s do primeiro n√≠vel
+	 * @return lista dos n√≥s do primeiro n√≠vel
 	 */
 	public List<EntityNode<E>> getRoots(Query queryRoots) {
 		if (rootNodes == null) {
@@ -164,7 +164,7 @@ public class EntityNode<E> implements Serializable {
 
 	/**
 	 * Metodo que adiciona a entidade que deve ser ignorada na
-	 * composiÁ„o da tree
+	 * composi√ß√£o da tree
 	 * @param ignore
 	 */
 	public void setIgnore(E ignore) {

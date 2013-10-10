@@ -1,16 +1,16 @@
 /*
  * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
- * Tecnologia da Informação Ltda.
+ * Tecnologia da InformaÃ§Ã£o Ltda.
  * 
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo sob
  * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
- * Software Foundation; versão 2 da Licença. Este programa é distribuído na
- * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
- * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
- * ESPECÍFICA.
+ * Software Foundation; versÃ£o 2 da LicenÃ§a. Este programa Ã© distribuÃ­do na
+ * expectativa de que seja Ãºtil, porÃ©m, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia implÃ­cita de COMERCIABILIDADE OU ADEQUAÃ‡ÃƒO A UMA FINALIDADE
+ * ESPECÃFICA.
  * 
- * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
- * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
+ * Consulte a GNU GPL para mais detalhes. VocÃª deve ter recebido uma cÃ³pia da
+ * GNU GPL junto com este programa; se nÃ£o, veja em http://www.gnu.org/licenses/
  */
 package br.com.itx.util;
 
@@ -24,7 +24,7 @@ public final class StringUtil {
     private StringUtil() {
     }
 
-    private static final String FOREIGN_CHARS = "áÁéÉíÍóÓúÚàÀèÈìÌòÒùÙâÂêÊîÎôÔûÛäÄëËïÏöÖüÜãÃõÕçÇñÑ";
+    private static final String FOREIGN_CHARS = "Ã¡ÃÃ©Ã‰Ã­ÃÃ³Ã“ÃºÃšÃ Ã€Ã¨ÃˆÃ¬ÃŒÃ²Ã’Ã¹Ã™Ã¢Ã‚ÃªÃŠÃ®ÃÃ´Ã”Ã»Ã›Ã¤Ã„Ã«Ã‹Ã¯ÃÃ¶Ã–Ã¼ÃœÃ£ÃƒÃµÃ•Ã§Ã‡Ã±Ã‘";
 
     private static final String US_CHARS = "aAeEiIoOuUaAeEiIoOuUaAeEiIoOuUaAeEiIoOuUaAoOcCnN";
 
@@ -119,7 +119,7 @@ public final class StringUtil {
     }
 
     /**
-     * Elimina acentuação do texto
+     * Elimina acentuaÃ§Ã£o do texto
      * 
      * @param text
      * @return o texto sem os caracteres acentuados

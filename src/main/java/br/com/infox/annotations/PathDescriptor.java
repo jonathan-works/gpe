@@ -6,13 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Anotação para definir qual campo representa o valor que 
- * será usado para popular o caminho completo da entidade 
+ * AnotaÃ§Ã£o para definir qual campo representa o valor que 
+ * serÃ¡ usado para popular o caminho completo da entidade 
  * @author Infox
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
 public @interface PathDescriptor {
-	//Definição das anotações utilizada pelo framework infox
+	//DefiniÃ§Ã£o das anotaÃ§Ãµes utilizada pelo framework infox
 }

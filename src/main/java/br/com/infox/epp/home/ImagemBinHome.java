@@ -58,7 +58,7 @@ public class ImagemBinHome extends AbstractHome<ImagemBin> {
 		Integer tamanho = instance.getTamanho();
 		if(tamanho != null && tamanho > TAMANHO_MAXIMO_IMAGEM){
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-					"A imagem deve ter o tamanho m·ximo de 1.5MB!");
+					"A imagem deve ter o tamanho m√°ximo de 1.5MB!");
 			return false;
 		}
 		return true;

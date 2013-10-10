@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
  */
 package br.com.infox.component.tree;
@@ -112,8 +112,8 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 	}
 
 	/**
-	 * Lista de queries que ir„o gerar os nÛs filhos Caso haja mais de uma
-	 * query, deve-se sobrescrever esse mÈtodo e retornar null no mÈtodo
+	 * Lista de queries que ir√£o gerar os n√≥s filhos Caso haja mais de uma
+	 * query, deve-se sobrescrever esse m√©todo e retornar null no m√©todo
 	 * getQueryChildren()
 	 * 
 	 * @return
@@ -218,7 +218,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 	}
 
 	/**
-	 * Tratamento para que a string n„o fique maior que o tamanho do campo
+	 * Tratamento para que a string n√£o fique maior que o tamanho do campo
 	 * 
 	 * @param selected
 	 * @return
@@ -237,7 +237,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 	}
 
 	/**
-	 * MÈtodo que retorna a lista dos itens selecionados.
+	 * M√©todo que retorna a lista dos itens selecionados.
 	 * 
 	 * @return - Lista dos itens selecionados.
 	 */
@@ -258,10 +258,10 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 	}
 
 	/**
-	 * Insere o nÛ selecionado pela checkBox na lista dos nÛs selecionados.
+	 * Insere o n√≥ selecionado pela checkBox na lista dos n√≥s selecionados.
 	 * 
 	 * @param node
-	 *            - NÛ selecionado pelo usu·rio
+	 *            - N√≥ selecionado pelo usu√°rio
 	 */
 	public void setSelectedNode(EntityNode<E> node) {
 		if (getSelected() == null || getSelected().toString() == null) {

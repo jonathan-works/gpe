@@ -19,8 +19,8 @@ public class PapelList extends EntityList<Papel> {
 	
 	/*
 	 * Papel e Recurso fazem parte da mesma entidade, 
-	 * a diferença consiste em que o identificador dos 
-	 * recursos começa com '/'
+	 * a diferenÃ§a consiste em que o identificador dos 
+	 * recursos comeÃ§a com '/'
 	 * */
 	public static final String DEFAULT_EJBQL = "select o from Papel o where identificador not like '/%'";
 	public static final String DEFAULT_ORDER = "o.nome";

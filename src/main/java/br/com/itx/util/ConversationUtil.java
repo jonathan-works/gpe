@@ -9,7 +9,7 @@ public class ConversationUtil {
 	public static final String NAME = "conversationUtil";
 
 	/**
-	 * Finaliza a conversação
+	 * Finaliza a conversaÃ§Ã£o
 	 * @param toUrl
 	 * @return
 	 */

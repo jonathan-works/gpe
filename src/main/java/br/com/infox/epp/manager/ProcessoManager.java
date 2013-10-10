@@ -79,7 +79,7 @@ public class ProcessoManager extends GenericManager {
 	/**
 	 * Retorna, se houver, o novo valor do ModeloDocumento. Se nao houver, retorna o valor o valor
 	 * inicial inalterado
-	 * @param value - valor da vari·vel modeloDocumento no contexto jBPM
+	 * @param value - valor da vari√°vel modeloDocumento no contexto jBPM
 	 * */
 	public Object getAlteracaoModeloDocumento(ProcessoDocumentoBin processoDocumentoBinAtual, Object value) {
 		if(processoDocumentoBinAtual.getModeloDocumento() != null) {
@@ -131,8 +131,8 @@ public class ProcessoManager extends GenericManager {
             	bp.startTask();
             	result = true;
             } catch (IllegalStateException e) {
-                // Caso j· exista deve-se ignorar este trecho, outras illegalstate devem ser averiguadas
-                // Ideal para processos j· iniciados seria chamar o mÈtodo resumeTask
+                // Caso j√° exista deve-se ignorar este trecho, outras illegalstate devem ser averiguadas
+                // Ideal para processos j√° iniciados seria chamar o m√©todo resumeTask
                 LOG.warn(".iniciaTask()", e);
             }
         }
@@ -166,10 +166,10 @@ public class ProcessoManager extends GenericManager {
     }
 	
 	/**
-	 * Armazena o usu·rio que executou a tarefa. O jBPM mantem apenas os usu·rios das tarefas em execuÁ„o, 
-	 * apagando o usu·rio sempre que a tarefa È finalizada (ver tabela jbpm_taskinstance, campo actorid_)
-	 * PorÈm surgiu a necessidade de armazenar os usu·rios das tarefas j· finalizas para exibir no 
-	 * histÛrico de MovimentaÁ„o do Processo
+	 * Armazena o usu√°rio que executou a tarefa. O jBPM mantem apenas os usu√°rios das tarefas em execu√ß√£o, 
+	 * apagando o usu√°rio sempre que a tarefa √© finalizada (ver tabela jbpm_taskinstance, campo actorid_)
+	 * Por√©m surgiu a necessidade de armazenar os usu√°rios das tarefas j√° finalizas para exibir no 
+	 * hist√≥rico de Movimenta√ß√£o do Processo
 	 * @param idTaskInstance
 	 * @param actorId				 
 	 * */
@@ -193,7 +193,7 @@ public class ProcessoManager extends GenericManager {
 	}
 	
 	/*
-	 * Atualmente a regra para escolher a caixa È simplesmente pegar a primeira
+	 * Atualmente a regra para escolher a caixa √© simplesmente pegar a primeira
 	 * */
 	private Caixa escolherCaixaParaAlocarProcesso(List<Caixa> caixaList){
 		return caixaList.get(0);		

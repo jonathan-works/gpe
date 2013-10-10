@@ -21,7 +21,7 @@ public class CeriticadosCaCheckManagerTeste {
 			certificado = new Certificado(certChain);
 			dadosCertificado = DadosCertificado.parse(certificado);
 			CertificadosCaCheckManager.instance().verificaCertificado(certChain);
-			FacesMessages.instance().add(Severity.INFO, "Certificado v·lido: " + certificado.getCn());
+			FacesMessages.instance().add(Severity.INFO, "Certificado v√°lido: " + certificado.getCn());
 		} catch (Exception e) {
 			FacesMessages.instance().add(Severity.ERROR, "Erro ao validar: " + e.getMessage());
 			e.printStackTrace();

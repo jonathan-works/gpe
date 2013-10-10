@@ -3,7 +3,7 @@ package br.com.infox.util;
 public enum PostgreSQLErrorCode {
 	
 	/*
-	 * Códigos de erro da Classe 23 do postgresql
+	 * CÃ³digos de erro da Classe 23 do postgresql
 	 * http://www.postgresql.org/docs/9.1/static/errcodes-appendix.html
 	 * */
 	

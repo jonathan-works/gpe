@@ -43,7 +43,7 @@ public final class ActivityXPDLFactory {
 		} else if (isSystemNode(element)) {
 			activity = new SystemActivityXPDL(element, name);
 		} else {
-			throw new ActivityNotAllowedXPDLException("Tipo de nÛ n„o permitido no sistema. Nome do nÛ: '" + XmlUtil.getAttributeValue(element, "Name") + "'.");
+			throw new ActivityNotAllowedXPDLException("Tipo de n√≥ n√£o permitido no sistema. Nome do n√≥: '" + XmlUtil.getAttributeValue(element, "Name") + "'.");
 		}
 		return activity;
 	}
@@ -100,7 +100,7 @@ public final class ActivityXPDLFactory {
 	}
 	
 	/**
-	 * MÈtodo respons·vel por identificar se o element È um subprocesso (ProcessState)
+	 * M√©todo respons√°vel por identificar se o element √© um subprocesso (ProcessState)
 	 * @param element
 	 * @return
 	 */

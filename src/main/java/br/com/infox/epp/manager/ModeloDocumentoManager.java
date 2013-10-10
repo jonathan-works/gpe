@@ -68,13 +68,13 @@ public class ModeloDocumentoManager extends GenericManager{
 	}
 	
 	/**
-	 * Realiza convers„o de Modelo de Documento, para Documento final
+	 * Realiza convers√£o de Modelo de Documento, para Documento final
 	 * 
-	 * Este mÈtodo busca linha a linha pelos nomes das vari·veis
+	 * Este m√©todo busca linha a linha pelos nomes das vari√°veis
 	 * do sistema para substitui-las por seus respectivos valores 
 	 * 
-	 * @param modeloDocumento	Modelo de Documento n„o nulo a ser usado na tarefa
-	 * @return					Documento contendo valores armazenados nas vari·veis inseridas no modelo
+	 * @param modeloDocumento	Modelo de Documento n√£o nulo a ser usado na tarefa
+	 * @return					Documento contendo valores armazenados nas vari√°veis inseridas no modelo
 	 */
 	public String evaluateModeloDocumento(ModeloDocumento modeloDocumento) {
 		if (modeloDocumento == null) {
@@ -121,10 +121,10 @@ public class ModeloDocumentoManager extends GenericManager{
 	}
 	
 	/**
-	 * Recupera vari·veis atreladas a um tipo de documento.
+	 * Recupera vari√°veis atreladas a um tipo de documento.
 	 * 
-	 * @param tipo Tipo do Documento a que as vari·veis s„o atribuÌdas
-	 * @return Mapa de Vari·veis em que o Nome È a chave de busca e os valores s„o os resultados
+	 * @param tipo Tipo do Documento a que as vari√°veis s√£o atribu√≠das
+	 * @return Mapa de Vari√°veis em que o Nome √© a chave de busca e os valores s√£o os resultados
 	 */
 	private Map<String, String> getVariaveis(TipoModeloDocumento tipo)	{
 		List<Variavel> list = new ArrayList<Variavel>();

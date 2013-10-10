@@ -32,7 +32,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	
 	/**
 	 * Lista todos os registros filtrando por uma natureza.
-	 * @param natureza que se desejar filtrar a seleção.
+	 * @param natureza que se desejar filtrar a seleÃ§Ã£o.
 	 * @return lista de todos os registros referente a <code>natureza</code>
 	 * informada.
 	 */

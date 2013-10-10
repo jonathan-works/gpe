@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da InformaÃƒÂ§ÃƒÂ£o Ltda.
 
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+ Este programa ÃƒÂ© software livre; vocÃƒÂª pode redistribuÃƒÂ­-lo e/ou modificÃƒÂ¡-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+ Free Software Foundation; versÃƒÂ£o 2 da LicenÃƒÂ§a.
+ Este programa ÃƒÂ© distribuÃƒÂ­do na expectativa de que seja ÃƒÂºtil, porÃƒÂ©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia implÃƒÂ­cita de COMERCIABILIDADE OU 
+ ADEQUAÃƒÂ‡ÃƒÂƒO A UMA FINALIDADE ESPECÃƒÂFICA.
  
  Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+ VocÃƒÂª deve ter recebido uma cÃƒÂ³pia da GNU GPL junto com este programa; se nÃƒÂ£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.validator;
@@ -33,6 +33,6 @@ public class EmailValidator implements Validator {
 	@Override
 	public void validate(FacesContext context, UIComponent component, Object value) {
 	    //TODO implementar, o antigo dava erro
-		throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_FATAL, "Validador de email não implementado", null));
+		throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_FATAL, "Validador de email nÃ£o implementado", null));
 	}
 }

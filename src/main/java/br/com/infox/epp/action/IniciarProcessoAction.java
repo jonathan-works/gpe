@@ -102,7 +102,7 @@ public class IniciarProcessoAction {
 			itemList.add(new ItemBean(ca.getItem()));
 		}
 		if (itemList.isEmpty()){
-			FacesMessages.instance().add(Severity.ERROR, "N„o h· itens cadastrados para a categoria escolhida");
+			FacesMessages.instance().add(Severity.ERROR, "N√£o h√° itens cadastrados para a categoria escolhida");
 		} else { 
 			setRenderedByItem(true);
 		}
@@ -145,7 +145,7 @@ public class IniciarProcessoAction {
 				EntityUtil.getEntityManager().flush();
 			}
 			if (pessoaFisicaList.contains(p)) {
-				FacesMessages.instance().add(Severity.ERROR, "Parte j· cadastrada no processo");
+				FacesMessages.instance().add(Severity.ERROR, "Parte j√° cadastrada no processo");
 			}
 			else {
 				pessoaFisicaList.add(p);
@@ -162,7 +162,7 @@ public class IniciarProcessoAction {
 				EntityUtil.getEntityManager().flush();
 			}
 			if (pessoaJuridicaList.contains(p)) {
-				FacesMessages.instance().add(Severity.ERROR, "Parte j· cadastrada no processo");
+				FacesMessages.instance().add(Severity.ERROR, "Parte j√° cadastrada no processo");
 			}
 			else {
 				pessoaJuridicaList.add(p);

@@ -1,16 +1,16 @@
 /*
   IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+  Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
  
-  Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+  Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
   sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; vers„o 2 da LicenÁa.
-  Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
-  ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+  Free Software Foundation; vers√£o 2 da Licen√ßa.
+  Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+  ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
   
   Consulte a GNU GPL para mais detalhes.
-  VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+  Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
   veja em http://www.gnu.org/licenses/  
 */
 
@@ -49,11 +49,11 @@ public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
 	}
 	
 	/**
-	 * Grava o arquivo bin·rio na base de arquivos Bin com o respctivo Id 
+	 * Grava o arquivo bin√°rio na base de arquivos Bin com o respctivo Id 
 	 * da tabela ProcessoDocumentoBin.
 	 * @param idDocumentoBin Id da Tabela
 	 * @param file Arquivo do tipo byte[]
-	 * @return True caso n„o aconteÁa nenhum erro.
+	 * @return True caso n√£o aconte√ßa nenhum erro.
 	 */
 	public boolean setData(int idDocumentoBin, byte[] file) {
 		DocumentoBin instance = getInstance();

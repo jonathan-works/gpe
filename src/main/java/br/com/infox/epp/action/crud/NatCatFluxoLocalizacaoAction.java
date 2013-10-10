@@ -61,13 +61,13 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 			FacesMessages.instance().add("Registro incluso com sucesso!");
 		} catch (EntityExistsException e) {
 			LOG.info(LOG_MESSAGE_PERSIST, e);
-			FacesMessages.instance().add(Severity.INFO, "Registro já Cadastrado!");
+			FacesMessages.instance().add(Severity.INFO, "Registro jÃ¡ Cadastrado!");
 		} catch (IllegalArgumentException e) {
 			LOG.error(LOG_MESSAGE_PERSIST, e);
-			FacesMessages.instance().add(Severity.ERROR, "Falha de consistência!");
+			FacesMessages.instance().add(Severity.ERROR, "Falha de consistÃªncia!");
 		} catch (TransactionRequiredException e) {
 			LOG.error(LOG_MESSAGE_PERSIST, e);
-			FacesMessages.instance().add(Severity.ERROR, "Falha de transação!");
+			FacesMessages.instance().add(Severity.ERROR, "Falha de transaÃ§Ã£o!");
 		} catch (Exception e) {
 			LOG.error(LOG_MESSAGE_PERSIST, e);
 		} finally {

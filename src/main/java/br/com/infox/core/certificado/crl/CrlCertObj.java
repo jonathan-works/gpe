@@ -119,8 +119,8 @@ public class CrlCertObj {
 	}
 	
 	public boolean isExpirado() {
-		//Precisa prevenir pois o metodo de validaÁ„o pode ser chamada logo apois o objeto ter sido criadoe neste momento 
-		//o arquivo do crl n„o foi baixado ainda e o campo vai estar null.
+		//Precisa prevenir pois o metodo de valida√ß√£o pode ser chamada logo apois o objeto ter sido criadoe neste momento 
+		//o arquivo do crl n√£o foi baixado ainda e o campo vai estar null.
 		return x509crl != null && (new Date()).after(x509crl.getNextUpdate());
 	}
 	
@@ -141,7 +141,7 @@ public class CrlCertObj {
 				return url;
 			}
 		}
-		throw new CrlCheckException("N„o foi possivÈl se conectar com nenhuma das" +
+		throw new CrlCheckException("N√£o foi possiv√©l se conectar com nenhuma das" +
 				" crls listads pelo certificado: " + sb.toString());
 	}
 	

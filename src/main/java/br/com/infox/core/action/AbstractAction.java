@@ -26,17 +26,17 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 /**
- * Classe abstrata que possui algumas implementaÁıes comuns aos beans, 
- * como chamada aos serviÁos de persistencia (j· com tratamento para as 
+ * Classe abstrata que possui algumas implementa√ß√µes comuns aos beans, 
+ * como chamada aos servi√ßos de persistencia (j√° com tratamento para as 
  * mensagens de erro), para inserir, buscar, remover e atualizar dados
- * atravÈs do entityManager.
+ * atrav√©s do entityManager.
  * @author Daniel
  *
  */
 public abstract class AbstractAction {
 
 	/**
-	 * Tipos de retornos dos mÈtodos de persistÍncia e alteraÁ„o dos
+	 * Tipos de retornos dos m√©todos de persist√™ncia e altera√ß√£o dos
 	 * dados.
 	 */
 	public static final String PERSISTED = "persisted";
@@ -47,9 +47,9 @@ public abstract class AbstractAction {
 	private GenericManager genericManager;
 	
     /**
-	 * Mensagem default para um registro j· cadastrado.
+	 * Mensagem default para um registro j√° cadastrado.
 	 */
-	protected static final String MSG_REGISTRO_CADASTRADO = "Registro j· cadastrado!";
+	protected static final String MSG_REGISTRO_CADASTRADO = "Registro j√° cadastrado!";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
 
@@ -62,9 +62,9 @@ public abstract class AbstractAction {
 	}
 	
 	/**
-	 * MÈtodo que realiza persist ou update, dependendo do parametro 
-	 * informado. Foi criado para n„o replicar o cÛdigo com os tratamentos
-	 * de exceÁıes, que È o mesmo para as duas aÁıes.
+	 * M√©todo que realiza persist ou update, dependendo do parametro 
+	 * informado. Foi criado para n√£o replicar o c√≥digo com os tratamentos
+	 * de exce√ß√µes, que √© o mesmo para as duas a√ß√µes.
 	 * @param isPersist true se deve ser persistida a instancia.
 	 * @return
 	 */
@@ -80,8 +80,8 @@ public abstract class AbstractAction {
 				ret = UPDATED;
 			}
 		} catch (AssertionFailure e) {
-			/* Esperamos a vers„o 3.5 para resolver o bug do AssertionFailure onde 
-			 * o hibernate consegue persistir com sucesso, mas lanÁa um erro. =[ */
+			/* Esperamos a vers√£o 3.5 para resolver o bug do AssertionFailure onde 
+			 * o hibernate consegue persistir com sucesso, mas lan√ßa um erro. =[ */
 			LOG.warn(msg+" (" + getObjectClassName(o) + "): " + e.getMessage());
 			Events.instance().raiseEvent("afterPersist");
 			ret = PERSISTED;
@@ -97,7 +97,7 @@ public abstract class AbstractAction {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
 				instance().add(StatusMessage.Severity.ERROR,
-						"Registro j· cadastrado!");
+						"Registro j√° cadastrado!");
 				LOG.warn(msg+" (" + getObjectClassName(o) + ")", cause);					
 			} else {
 				instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " +
@@ -109,7 +109,7 @@ public abstract class AbstractAction {
 	}
 	
 	/**
-	 * Invoca o serviÁo de persistÍncia para a vari·vel instance.
+	 * Invoca o servi√ßo de persist√™ncia para a vari√°vel instance.
 	 * @return "persisted" se inserido com sucesso.
 	 */
 	protected String persist(Object o) {
@@ -117,7 +117,7 @@ public abstract class AbstractAction {
 	}
 	
 	/**
-	 * Invoca o serviÁo de persistÍncia para a vari·vel instance.
+	 * Invoca o servi√ßo de persist√™ncia para a vari√°vel instance.
 	 * @return "updated" se alterado com sucesso.
 	 */
 	protected String update(Object o) {
@@ -125,9 +125,9 @@ public abstract class AbstractAction {
 	}
 	
 	/**
-	 * MÈtodo sobrecarregado quando for necess·rio excluir uma 
-	 * entidade j· gerÍnci·vel.
-	 * @param obj entidade j· gerÍnciada pelo Hibernate.
+	 * M√©todo sobrecarregado quando for necess√°rio excluir uma 
+	 * entidade j√° ger√™nci√°vel.
+	 * @param obj entidade j√° ger√™nciada pelo Hibernate.
 	 * @return "removed" se removido com sucesso.
 	 */
 	public String remove(Object obj) {
@@ -136,15 +136,15 @@ public abstract class AbstractAction {
 			genericManager.remove(obj);
 			ret = REMOVED;
 		} catch (AssertionFailure af) {
-			/* Esperamos a vers„o 3.5 para resolver o bug do AssertionFailure onde 
-			 * o hibernate consegue persistir com sucesso, mas lanÁa um erro. =[ */
+			/* Esperamos a vers√£o 3.5 para resolver o bug do AssertionFailure onde 
+			 * o hibernate consegue persistir com sucesso, mas lan√ßa um erro. =[ */
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
-			fm.add(StatusMessage.Severity.ERROR, "N„o foi possÌvel excluir.");
+			fm.add(StatusMessage.Severity.ERROR, "N√£o foi poss√≠vel excluir.");
 			LOG.error(".remove()", e);
 		} catch (Exception e) {
 			FacesMessages fm = FacesMessages.instance();
-			fm.add(StatusMessage.Severity.ERROR, "N„o foi possÌvel excluir.");
+			fm.add(StatusMessage.Severity.ERROR, "N√£o foi poss√≠vel excluir.");
 			LOG.error(".remove()", e);
 		}
 		return ret;
@@ -176,13 +176,13 @@ public abstract class AbstractAction {
 						"campo existe.");
 			}
 		} else {
-			instance().add(StatusMessage.Severity.INFO, "Objecto informado n„o È uma entidade.");
+			instance().add(StatusMessage.Severity.INFO, "Objecto informado n√£o √© uma entidade.");
 		}
 		return ret;
 	}
 	
 	/**
-	 * Inativa todos os registros contidos na ·rvore abaixo do 
+	 * Inativa todos os registros contidos na √°rvore abaixo do 
 	 * parametro informado.
 	 * @param o Registro que deseja inativar.
 	 */

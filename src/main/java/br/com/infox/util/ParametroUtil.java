@@ -75,7 +75,7 @@ public class ParametroUtil {
 	public static String getFromContext(String nomeParametro, boolean validar) {
 		String value = (String) Contexts.getApplicationContext().get(nomeParametro);
 		if (validar && value == null) {
-			String erroMsg = "Par‚metro n„o encontrado: " + nomeParametro;
+			String erroMsg = "Par√¢metro n√£o encontrado: " + nomeParametro;
 			LOG.error(erroMsg);
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, erroMsg);
 		}

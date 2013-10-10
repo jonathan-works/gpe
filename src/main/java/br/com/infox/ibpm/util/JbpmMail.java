@@ -26,7 +26,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 	private static final LogProvider LOG = Logging.getLogProvider(JbpmMail.class);
 	
 	/**
-	 * Método separa conteúdo de saída de um Map e interpreta seus atributos com base
+	 * MÃ©todo separa conteÃºdo de saÃ­da de um Map e interpreta seus atributos com base
 	 * em suas chaves String e atribui a valores referentes ao envio de mensagens
 	 * pre-definidas no sistema.
 	 */

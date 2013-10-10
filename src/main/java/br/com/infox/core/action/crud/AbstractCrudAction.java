@@ -4,15 +4,15 @@ import br.com.infox.core.action.AbstractAction;
 import br.com.itx.util.EntityUtil;
 
 /**
- * … um abstractAction, porÈm possui os mÈtodos implementados de Crudable
+ * √â um abstractAction, por√©m possui os m√©todos implementados de Crudable
  * possibilitando o controle de abas e gerenciamento de instancias para
- * as p·ginas de cadastros b·sicos.
+ * as p√°ginas de cadastros b√°sicos.
  * @author Daniel
  *
  * CRUD = Create, Retrieve, Update, Delete.
  *
  * @param <T> Entity principal, onde devem ser realizadas as 
- * alteraÁıes.
+ * altera√ß√µes.
  */
 public abstract class AbstractCrudAction<T> extends AbstractAction 
 											implements Crudable<T> {
@@ -21,7 +21,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	private Object id;
 	
 	/**
-	 * Vari·vel que ser· passada como parametro nas aÁıes executadas
+	 * Vari√°vel que ser√° passada como parametro nas a√ß√µes executadas
 	 * por esse Bean.
 	 */
 	private T instance;
@@ -40,20 +40,20 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	}
 	
 	/**
-	 * Devem ser escritas aqui as aÁıes que ser„o executadas antes da
-	 * inserÁ„o ou atualizaÁ„o dos dados. 
+	 * Devem ser escritas aqui as a√ß√µes que ser√£o executadas antes da
+	 * inser√ß√£o ou atualiza√ß√£o dos dados. 
 	 */
 	protected boolean beforeSave() {
 		return true;
 	}
 	
 	/**
-	 * Devem ser escritas aqui as aÁıes que ser„o executadas depois da
-	 * inserÁ„o ou atualizaÁ„o dos dados. 
+	 * Devem ser escritas aqui as a√ß√µes que ser√£o executadas depois da
+	 * inser√ß√£o ou atualiza√ß√£o dos dados. 
 	 */
 	protected void afterSave() {
-		//Caso exista alguma aÁ„o a ser executada depois da atualizaÁ„o, 
-		//ent„o ela deve ser implementada aqui.
+		//Caso exista alguma a√ß√£o a ser executada depois da atualiza√ß√£o, 
+		//ent√£o ela deve ser implementada aqui.
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	}
 	
 	/**
-	 * Indica se a instancia È gerenciavel ou n„o (j· est· no banco).
+	 * Indica se a instancia √© gerenciavel ou n√£o (j√° est√° no banco).
 	 * @return true se for gerenciavel.
 	 */
 	@Override
@@ -92,9 +92,9 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	}
 
 	/**
-	 * Registra ou altera a inst‚ncia atual.
+	 * Registra ou altera a inst√¢ncia atual.
 	 * @return "persisted" ou "updated" se obtiver sucesso. Null caso 
-	 * ocorra alguma falha na execuÁ„o ou na validaÁ„o.
+	 * ocorra alguma falha na execu√ß√£o ou na valida√ß√£o.
 	 */
 	@Override
 	public String save() {
@@ -109,9 +109,9 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	}
 	
 	/**
-	 * Wrapper para o mÈtodo persist(), pois È necessario definir que
-	 * a instancia ser· managed = true a partir de agora.
-	 * @return "persisted" se obtiver sucesso na inserÁ„o.
+	 * Wrapper para o m√©todo persist(), pois √© necessario definir que
+	 * a instancia ser√° managed = true a partir de agora.
+	 * @return "persisted" se obtiver sucesso na inser√ß√£o.
 	 */
 	protected String persist() {
 		return super.persist(instance);
@@ -122,7 +122,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	}
 	
 	/**
-	 * Cria um novo objeto do tipo parametrizado para a vari·vel
+	 * Cria um novo objeto do tipo parametrizado para a vari√°vel
 	 * instance.
 	 */
 	@SuppressWarnings("unchecked")
@@ -133,8 +133,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	}
 
 	/**
-	 * Wrapper para o mÈtodo remove(), pois È necessario chamar o
-	 * mÈtodo newInstance() para limpar a instancia atual.
+	 * Wrapper para o m√©todo remove(), pois √© necessario chamar o
+	 * m√©todo newInstance() para limpar a instancia atual.
 	 * @return "removed" se removido com sucesso.
 	 */
 	public String remove() {
@@ -142,7 +142,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	}
 	
 	/**
-	 * Ao mudar para a aba de pesquisa È criada uma nova instancia.
+	 * Ao mudar para a aba de pesquisa √© criada uma nova instancia.
 	 */
 	public void onClickSearchTab() {
 		if(isManaged()) {
@@ -152,11 +152,11 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	}
 	
 	/**
-	 * AÁ„o executada ao entrar na aba de formul·rio.
+	 * A√ß√£o executada ao entrar na aba de formul√°rio.
 	 */
 	public void onClickFormTab() {
-		//Caso haja alguma aÁ„o a ser executada assim que a navegaÁ„o for para a aba de formul·rio,
-		//ent„o deve ser implementada aqui.
+		//Caso haja alguma a√ß√£o a ser executada assim que a navega√ß√£o for para a aba de formul√°rio,
+		//ent√£o deve ser implementada aqui.
 	}
 	
 }

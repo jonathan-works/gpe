@@ -30,7 +30,7 @@ public final class VerificaCertificado {
 				instance.verificaCertificado(x509Certificates);
 			}
 		} catch (Exception e) {
-			throw new CertificadoException("Erro ao v·lidar certificado: " + e.getMessage(), e);
+			throw new CertificadoException("Erro ao v√°lidar certificado: " + e.getMessage(), e);
 		} 
 	}	
 	
@@ -46,7 +46,7 @@ public final class VerificaCertificado {
 				LOG.warn("Erro ao verificar Crl: " + e.getMessage());
 			}
 		} catch (Exception e) {
-			throw new CertificadoException("Erro ao v·lidar certificado: " + e.getMessage(), e);
+			throw new CertificadoException("Erro ao v√°lidar certificado: " + e.getMessage(), e);
 		} 
 	}		
 	

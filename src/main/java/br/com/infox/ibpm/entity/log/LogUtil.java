@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.ibpm.entity.log;
@@ -59,7 +59,7 @@ public final class LogUtil {
 	}
 
 	/**
-	 * Checa se a classe È um array de bytes.
+	 * Checa se a classe √© um array de bytes.
 	 * @param type
 	 * @return
 	 */
@@ -69,7 +69,7 @@ public final class LogUtil {
 	}	
 
 	/**
-	 * Checa se um atributo de um objeto È um array de bytes.
+	 * Checa se um atributo de um objeto √© um array de bytes.
 	 * @param entidade
 	 * @param nomeAtributo
 	 * @return
@@ -86,7 +86,7 @@ public final class LogUtil {
 	}		
 
 	/**
-	 * Checa se o atributo de um objeto È uma coleÁ„o.
+	 * Checa se o atributo de um objeto √© uma cole√ß√£o.
 	 * @param entidade
 	 * @param nomeAtributo
 	 * @return
@@ -104,7 +104,7 @@ public final class LogUtil {
 	}		
 	
 	/**
-	 * Testa se o atributo de um objeto È considerado de tamanho pequeno para o armazenamento no log.
+	 * Testa se o atributo de um objeto √© considerado de tamanho pequeno para o armazenamento no log.
 	 * @param entidade
 	 * @param nomeAtributo
 	 * @return
@@ -128,7 +128,7 @@ public final class LogUtil {
 	}	
 	
 	/**
-	 * Testa se a entidade possui a anotaÁ„o @Ignore, caso possua n„o ser· logada
+	 * Testa se a entidade possui a anota√ß√£o @Ignore, caso possua n√£o ser√° logada
 	 * @param entidade
 	 * @return
 	 */
@@ -154,7 +154,7 @@ public final class LogUtil {
 	public static String getIpRequest() throws LogException {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			throw new LogException("N„o foi possÌvel obter os dados da requisiÁ„o");
+			throw new LogException("N√£o foi poss√≠vel obter os dados da requisi√ß√£o");
 		}
 		return request.getRemoteAddr();		
 	}
@@ -162,7 +162,7 @@ public final class LogUtil {
 	public static String getUrlRequest() throws LogException {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			throw new LogException("N„o foi possÌvel obter os dados da requisiÁ„o");
+			throw new LogException("N√£o foi poss√≠vel obter os dados da requisi√ß√£o");
 		}
 		return getRequest().getRequestURL().toString();
 	}	
@@ -275,7 +275,7 @@ public final class LogUtil {
 			entityLog.setIp(getIpRequest());
 			entityLog.setUrlRequisicao(getUrlRequest());
 		} catch (LogException e) {
-			//Se a requisiÁ„o for executada por temporizador, n„o h· requisiÁ„o ent„o n„o se consegue obter o ip
+			//Se a requisi√ß√£o for executada por temporizador, n√£o h√° requisi√ß√£o ent√£o n√£o se consegue obter o ip
 			entityLog.setIp("localhost");
 		}
 		Class<? extends Object> clazz = EntityUtil.getEntityClass(component);
@@ -287,7 +287,7 @@ public final class LogUtil {
 	
 	public static void removeEntity(Object entity) {
 		if (!EntityUtil.isEntity(entity)) {
-			throw new IllegalArgumentException("O objeto n„o È uma entidade");
+			throw new IllegalArgumentException("O objeto n√£o √© uma entidade");
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("delete from ").append(entity.getClass().getName());

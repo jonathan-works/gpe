@@ -2,17 +2,17 @@
 
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.ibpm.home;
@@ -71,7 +71,7 @@ public class Authenticator {
 	private String certChain;
 	private String certChainStringLog;
 	
-	//Variaveis de sess„o
+	//Variaveis de sess√£o
 	public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
 	public static final String USUARIO_LOGADO = "usuarioLogado";
 	public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
@@ -154,7 +154,7 @@ public class Authenticator {
 
 	private void validaCadastroDeUsuario(String id, UsuarioLogin usuario) throws LoginException {
 		if (usuario == null) {
-			throw new LoginException("O usu·rio '" + id + "' n„o est· corretamente cadastrado no sistema.");
+			throw new LoginException("O usu√°rio '" + id + "' n√£o est√° corretamente cadastrado no sistema.");
 		}
 	}
 
@@ -175,7 +175,7 @@ public class Authenticator {
 			throw new LoginException("Senha alterada com sucesso.");
 		}
 		
-		throw new LoginException("Nova senha n„o confere com a confirmaÁ„o!");		
+		throw new LoginException("Nova senha n√£o confere com a confirma√ß√£o!");		
 	}
 	
 	public void login(){
@@ -186,10 +186,10 @@ public class Authenticator {
 		String login = credentials.getUsername();
 		UsuarioLogin user = home.checkUserByLogin(login);
 		if(user == null) {
-			FacesMessages.instance().add(Severity.ERROR, "Login inv·lido.");
+			FacesMessages.instance().add(Severity.ERROR, "Login inv√°lido.");
 			return;
 		}
-		//AutenticaÁ„o via LDAP
+		//Autentica√ß√£o via LDAP
 		if(user.getLdap() && ("sim".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()) ||
 							  "yes".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()))) {
 			LdapContext ldap = LdapUtil.autentiqueUsuarioAD(login, credentials.getPassword());
@@ -201,7 +201,7 @@ public class Authenticator {
 				Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
 			}
 			else {
-				FacesMessages.instance().add(Severity.ERROR, "Senha inv·lido.");
+				FacesMessages.instance().add(Severity.ERROR, "Senha inv√°lido.");
 				return;
 			}
 		}
@@ -212,9 +212,9 @@ public class Authenticator {
 	public void loginFailed(Object obj) throws LoginException {
 		UsuarioLogin usuario = getAuthenticatorService().getUsuarioByLogin(Identity.instance().getCredentials().getUsername());
 		if (usuario != null && !usuario.getAtivo()) {
-			throw new LoginException("Este usu·rio n„o est· ativo.");
+			throw new LoginException("Este usu√°rio n√£o est√° ativo.");
 		}
-		throw new LoginException("Usu·rio ou senha inv·lidos.");
+		throw new LoginException("Usu√°rio ou senha inv√°lidos.");
 	}
 	
 	@Observer(Identity.EVENT_LOGGED_OUT)
@@ -266,7 +266,7 @@ public class Authenticator {
 	
 	/**
 	 * Ao encerrar uma sessao, limpa os processos que o servidor estava trabalhando
-	 * Obs.: usando session do hibernate pq o EM da erro de transaÁ„o
+	 * Obs.: usando session do hibernate pq o EM da erro de transa√ß√£o
 	 */
 	@Observer("org.jboss.seam.preDestroyContext.SESSION")
 	public void anulaActorId() {
@@ -277,7 +277,7 @@ public class Authenticator {
 	}
 
 	/**
-	 * Ao ligar a aplicaÁ„o, limpa todos os actorIds dos processos
+	 * Ao ligar a aplica√ß√£o, limpa todos os actorIds dos processos
 	 */
 	@Observer("org.jboss.seam.postInitialization")
 	public void anulaTodosActorId() {
@@ -290,13 +290,13 @@ public class Authenticator {
 			setLocalizacaoAtual(usuarioLocalizacao);
 			return true;
 		} 
-		throw new LoginException("O usu·rio " + usuario + " n„o possui LocalizaÁ„o");
+		throw new LoginException("O usu√°rio " + usuario + " n√£o possui Localiza√ß√£o");
 	}
 	
 	/**
-	 * Muda a localizaÁ„o do usu·rio logado, removendo todos os roles
-	 * da localizaÁ„o anterior (se hover) e atribuindo os roles
-	 * da nova localizaÁ„o, recursivamente.
+	 * Muda a localiza√ß√£o do usu√°rio logado, removendo todos os roles
+	 * da localiza√ß√£o anterior (se hover) e atribuindo os roles
+	 * da nova localiza√ß√£o, recursivamente.
 	 * 
 	 * @param usuarioLocalizacao
 	 */
@@ -341,7 +341,7 @@ public class Authenticator {
 	}
 	
 	/**
-	 * @return a UsuarioLocalizacao atual do usu·rio logado
+	 * @return a UsuarioLocalizacao atual do usu√°rio logado
 	 */
     public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
         UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(
@@ -360,8 +360,8 @@ public class Authenticator {
     }
 	
 	/**
-	 * Atalho para a localizaÁ„o atual
-	 * @return localizaÁ„o atual do usu·rio logado
+	 * Atalho para a localiza√ß√£o atual
+	 * @return localiza√ß√£o atual do usu√°rio logado
 	 */
 	public static Localizacao getLocalizacaoAtual() {
 		UsuarioLocalizacao usuarioLocalizacaoAtual = getUsuarioLocalizacaoAtual();
@@ -381,7 +381,7 @@ public class Authenticator {
 
 	/**
 	 * Atalho para o usuario logado
-	 * @return usu·rio logado
+	 * @return usu√°rio logado
 	 */
 	public static UsuarioLogin getUsuarioLogado() {
 		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");

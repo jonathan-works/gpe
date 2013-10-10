@@ -33,7 +33,7 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	public static final String NAME = "localizacaoTurnoDAO";
 	
 	/**
-	 * Busca a LocalizacaoTurno da localizaÁ„o do processo em que o hor·rio passado se
+	 * Busca a LocalizacaoTurno da localiza√ß√£o do processo em que o hor√°rio passado se
 	 * encaixa 
 	 * @param pt
 	 * @param horario
@@ -55,7 +55,7 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	}
 	
 	/**
-	 * Busca a LocalizacaoTurno da localizaÁ„o do processo em que o dia passado se
+	 * Busca a LocalizacaoTurno da localiza√ß√£o do processo em que o dia passado se
 	 * encaixa 
 	 * @param pt
 	 * @return
@@ -75,7 +75,7 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 
 	/**
 	 * Lista todos os registros filtrando por uma natureza.
-	 * @param natureza que se desejar filtrar a seleÁ„o.
+	 * @param natureza que se desejar filtrar a sele√ß√£o.
 	 * @return lista de todos os registros referente a <code>natureza</code>
 	 * informada.
 	 */

@@ -1,16 +1,16 @@
 /*
  IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da InformaÁ„o Ltda.
+ Copyright (c) 1986-2009 Infox Tecnologia da Informa√ß√£o Ltda.
 
- Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo 
+ Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo 
  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; vers„o 2 da LicenÁa.
- Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
- ADEQUA«√O A UMA FINALIDADE ESPECÕFICA.
+ Free Software Foundation; vers√£o 2 da Licen√ßa.
+ Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+ NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA.
  
  Consulte a GNU GPL para mais detalhes.
- VocÍ deve ter recebido uma cÛpia da GNU GPL junto com este programa; se n„o, 
+ Voc√™ deve ter recebido uma c√≥pia da GNU GPL junto com este programa; se n√£o, 
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.itx.util;
@@ -144,13 +144,13 @@ public final class EntityUtil implements Serializable {
 	
 	/**
 	 * Metodo que recebe uma entidade e devolve o PropertyDescriptor do campo id
-	 * procurando pela anotaÁ„o @id
+	 * procurando pela anota√ß√£o @id
 	 * @param objId Entidade
 	 * @return
 	 */
 	public static PropertyDescriptor getId(Object objId) {
 		if (!EntityUtil.isEntity(objId)) {
-			throw new IllegalArgumentException("O objeto n„o È uma entidade: " + 
+			throw new IllegalArgumentException("O objeto n√£o √© uma entidade: " + 
 					objId.getClass().getName());
 		}				
 		Class<?> cl = objId.getClass();
@@ -163,7 +163,7 @@ public final class EntityUtil implements Serializable {
 	
 	/**
 	 * Metodo que recebe um Class e devolve o PropertyDescriptor do campo id
-	 * procurando pela anotaÁıes @id e @EmbeddedId
+	 * procurando pela anota√ß√µes @id e @EmbeddedId
 	 * @param objId Entidade
 	 * @return
 	 */	
@@ -179,7 +179,7 @@ public final class EntityUtil implements Serializable {
 	}
 	
 	/**
-	 * Testa de o objeto possui a anotaÁ„o @Entity
+	 * Testa de o objeto possui a anota√ß√£o @Entity
 	 * @param obj
 	 * @return
 	 */
@@ -189,7 +189,7 @@ public final class EntityUtil implements Serializable {
 	}
 	
 	/**
-	 * Testa de a classe possui a anotaÁ„o @Entity
+	 * Testa de a classe possui a anota√ß√£o @Entity
 	 * @param obj
 	 * @return
 	 */
@@ -207,14 +207,14 @@ public final class EntityUtil implements Serializable {
 	}	
 	
 	/**
-	 * Metodo que recebe um objeto de uma entidade e pega por reflex„o o objeto com o id 
+	 * Metodo que recebe um objeto de uma entidade e pega por reflex√£o o objeto com o id 
 	 * desta entidade.
 	 * @param entidade
 	 * @return
 	 */
 	public static Object getEntityIdObject(Object entidade) {
 		if (!EntityUtil.isEntity(entidade)) {
-			throw new IllegalArgumentException("O objeto n„o È uma entidade: " + 
+			throw new IllegalArgumentException("O objeto n√£o √© uma entidade: " + 
 					entidade.getClass().getName());
 		}		
 		Class<? extends Object> cl = entidade.getClass();
@@ -228,7 +228,7 @@ public final class EntityUtil implements Serializable {
 				    LOG.error(".getEntityIdObject()", e);
 				} 
 			} else {
-				LOG.error("N„o foi encontrado um PropertyDescriptor para o " +
+				LOG.error("N√£o foi encontrado um PropertyDescriptor para o " +
 						"Id da entidade " + entidade.getClass().getName());
 			}
 		} 	
@@ -315,9 +315,9 @@ public final class EntityUtil implements Serializable {
 	/**
 	 * Metodo que recebe uma entidade e seta null no atributo que corresponde ao id. Caso
 	 * o tipo deste campo seja primitivo coloca o numero 0.
-	 * Isto È utilizado porque o hibernate aloca um Id para a entidade antecipadamente e
-	 * com isso caso ocorra um erro, como de violaÁ„o de contraint, a entidade fica com um
-	 * id inv·lido e ocorre um erro ao persiti essa entidade. 
+	 * Isto √© utilizado porque o hibernate aloca um Id para a entidade antecipadamente e
+	 * com isso caso ocorra um erro, como de viola√ß√£o de contraint, a entidade fica com um
+	 * id inv√°lido e ocorre um erro ao persiti essa entidade. 
 	 * @param entidade
 	 * @throws InvocationTargetException 
 	 * @throws IllegalArgumentException 
@@ -332,10 +332,10 @@ public final class EntityUtil implements Serializable {
 	
 	/**
 	 * Metodo que cria um novo ArrayList para os atributos List de relacionamento 
-	 * da entidade. Esto È feito pois em caso de um erro na persistencia, os
+	 * da entidade. Esto √© feito pois em caso de um erro na persistencia, os
 	 * List ficam com referencia para a Entidade que deveria ter sido persistida 
-	 * (O hibernate gera um id pra estidade antes de inserir e em uma execeÁ„o, os
-	 * list (PersistentBags) apontam para este id que n„o existe.
+	 * (O hibernate gera um id pra estidade antes de inserir e em uma exece√ß√£o, os
+	 * list (PersistentBags) apontam para este id que n√£o existe.
 	 * @param entidade
 	 * @throws InvocationTargetException 
 	 * @throws IllegalArgumentException 
@@ -357,7 +357,7 @@ public final class EntityUtil implements Serializable {
 	 * Metodo que devolve todos os PropertyDescriptor de uma entidade
 	 * que contenham determinada Annotation. O metodo faz um teste se a classe
 	 * foi criada por proxy, caso sim pega a classe pai, para buscar pelas 
-	 * anotaÁıes
+	 * anota√ß√µes
 	 * @param entidade
 	 * @param annotationClass
 	 * @return
@@ -441,9 +441,9 @@ public final class EntityUtil implements Serializable {
 	}
 
 	/**
-	 * Retorna o entityManager do JPA para quando n„o for possÌvel acessar o 
+	 * Retorna o entityManager do JPA para quando n√£o for poss√≠vel acessar o 
 	 * do Seam.
-	 * @param persistenceUnitJndiName Nome do Unit que ser· criado o entityManager pelo Factory
+	 * @param persistenceUnitJndiName Nome do Unit que ser√° criado o entityManager pelo Factory
 	 * @return EntityManager
 	 */
 	public static EntityManager createEntityManagerFactory(String persistenceUnitJndiName) {
@@ -464,7 +464,7 @@ public final class EntityUtil implements Serializable {
         							(java.lang.reflect.ParameterizedType) type;
             entityClass = (Class<E>) paramType.getActualTypeArguments()[0];
         } else {
-            throw new IllegalArgumentException("N„o foi possivel pegar a Entidade por reflex„o");
+            throw new IllegalArgumentException("N√£o foi possivel pegar a Entidade por reflex√£o");
         }
         return entityClass;
     }
@@ -508,8 +508,8 @@ public final class EntityUtil implements Serializable {
 	
 	/**
 	 * @author Victor Pasqualino
-	 * MÈtodo genÈrico para buscar no banco um objeto da classe passada como par‚metro com o id informado
-	 * sem, no entanto fazer, a pesquisa no cache de sess„o.
+	 * M√©todo gen√©rico para buscar no banco um objeto da classe passada como par√¢metro com o id informado
+	 * sem, no entanto fazer, a pesquisa no cache de sess√£o.
 	 * */
 	@SuppressWarnings("unchecked")
 	public static <E> E buscaEntidadeForaDoCacheDeSessao(Class<E> clazz, Object id) {
@@ -526,8 +526,8 @@ public final class EntityUtil implements Serializable {
 	
 	/**
 	 * @author Victor Pasqualino
-	 * MÈtodo genÈrico para buscar no banco um objeto do mesmo tipo e com o mesmo Id 
-	 * daquele que foi passado como par‚metro
+	 * M√©todo gen√©rico para buscar no banco um objeto do mesmo tipo e com o mesmo Id 
+	 * daquele que foi passado como par√¢metro
 	 * */
 	@SuppressWarnings("unchecked")
 	public static <E> E buscaEntidadeForaDoCacheDeSessao(Object object) {

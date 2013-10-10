@@ -23,7 +23,7 @@ import org.jboss.seam.web.AbstractFilter;
 @Scope(ScopeType.APPLICATION)
 @Filter
 /**
- * Corrigir codificação da URL ao usar o Firefox > 11 e Richfaces 3
+ * Corrigir codificaÃ§Ã£o da URL ao usar o Firefox > 11 e Richfaces 3
  * https://community.jboss.org/thread/197045?start=15&tstart=0
  * @author gabriel
  *

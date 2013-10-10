@@ -17,18 +17,18 @@ import br.com.itx.component.MeasureTime;
 import br.com.itx.util.ComponentUtil;
 
 /**
- * Classe que controla a validaÁ„o dos certificados juntos as listas de revogaÁ„o 
- * fornecidas por suas autoridades certificadoras (o prÛprio certificado possui o link http para o download do arquivo crl).
- * O componente possui um map para fazer cache, assim depois que um certificado È testado, a lista de revogaÁ„o da autoridade que o emitiu
- * fica neste map, de modo que o prÛxima verificaÁ„o de certificado da mesma autoridade seja muito mais r·pida, 
- * pois n„o ser· necess·rio donwload.
+ * Classe que controla a valida√ß√£o dos certificados juntos as listas de revoga√ß√£o 
+ * fornecidas por suas autoridades certificadoras (o pr√≥prio certificado possui o link http para o download do arquivo crl).
+ * O componente possui um map para fazer cache, assim depois que um certificado √© testado, a lista de revoga√ß√£o da autoridade que o emitiu
+ * fica neste map, de modo que o pr√≥xima verifica√ß√£o de certificado da mesma autoridade seja muito mais r√°pida, 
+ * pois n√£o ser√° necess√°rio donwload.
  * 
- * Como cada lista de revogaÁ„o possui uma validade, uma thread verifica de tempos em tempos e atualiza as listas que estiverem expiradas.
+ * Como cada lista de revoga√ß√£o possui uma validade, uma thread verifica de tempos em tempos e atualiza as listas que estiverem expiradas.
  * 
- * Como a verificaÁ„o pode demorar muito por causa do donwload o mÈtodo aguarda um pouco pela resposta de verificaÁ„o e
- * caso ultrapasse um tempo definido, È retornado warning de timeout, mas a Thread de verificaÁ„o continua em background e aciona um listner
- * depois de finalizada a operaÁ„o. 
- * Depois da verificaÁ„o um listner È executado e caso o certificado esteja na lista de revogados a sess„o do usu·rio È finalizada.
+ * Como a verifica√ß√£o pode demorar muito por causa do donwload o m√©todo aguarda um pouco pela resposta de verifica√ß√£o e
+ * caso ultrapasse um tempo definido, √© retornado warning de timeout, mas a Thread de verifica√ß√£o continua em background e aciona um listner
+ * depois de finalizada a opera√ß√£o. 
+ * Depois da verifica√ß√£o um listner √© executado e caso o certificado esteja na lista de revogados a sess√£o do usu√°rio √© finalizada.
  * 
  * @author Rodrigo Menezes
  *
@@ -52,9 +52,9 @@ public class CrlCheckControler {
 	
 	/**
 	 * Metodo privado que a partir do certificado retorna o CrlCertObj de sua autoridade do map.
-	 * Caso n„o exista um CrlCertObj de sua autoridade, ele È criado e adicionado no map.
+	 * Caso n√£o exista um CrlCertObj de sua autoridade, ele √© criado e adicionado no map.
 	 * 
-	 * Metodo È sincronizado para evitar a criaÁ„o de 2 CrlCertObj equivalentes.
+	 * Metodo √© sincronizado para evitar a cria√ß√£o de 2 CrlCertObj equivalentes.
 	 * @param certificado
 	 * @return
 	 */
@@ -71,8 +71,8 @@ public class CrlCheckControler {
 	}
 	
 	/**
-	 * Metodo que verifica se um certificado È valido. Ele inicia a verificaÁ„o em outra Thread e espera
-	 * um tempo pela resposta, caso n„o venha nesse tempo a thread segue em background e no final da operaÁ„o executa o
+	 * Metodo que verifica se um certificado √© valido. Ele inicia a verifica√ß√£o em outra Thread e espera
+	 * um tempo pela resposta, caso n√£o venha nesse tempo a thread segue em background e no final da opera√ß√£o executa o
 	 * actionListner que foi passado.
 	 * @param certificado
 	 * @param actionListner
@@ -117,7 +117,7 @@ public class CrlCheckControler {
 	}
 	
 	/**
-	 * Metodo que inicia a Thread que È respons·vel iniciar a atualizaÁ„o das listas de revogaÁ„o que estiverem expiradas.
+	 * Metodo que inicia a Thread que √© respons√°vel iniciar a atualiza√ß√£o das listas de revoga√ß√£o que estiverem expiradas.
 	 */
 	@Observer({"org.jboss.seam.postInitialization","org.jboss.seam.postReInitialization"})
 	public void removeInvalidos() {

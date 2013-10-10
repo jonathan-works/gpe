@@ -25,7 +25,7 @@ public class AplicationException extends RuntimeException {
 	
 	public static String createMessage(String action, String method, String className, String project) {
 		FacesMessages.instance().clearGlobalMessages();
-		return MessageFormat.format("Erro ao {0}.\nMétodo: {1}.\nClasse: {2}.\nProjeto: {3}", 
+		return MessageFormat.format("Erro ao {0}.\nMÃ©todo: {1}.\nClasse: {2}.\nProjeto: {3}", 
 				  			 action, method, className, project);
 	}
 	

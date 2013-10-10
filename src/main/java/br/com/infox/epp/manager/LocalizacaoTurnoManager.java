@@ -32,7 +32,7 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	private LocalizacaoTurnoDAO localizacaoTurnoDAO;
 	
 	/**
-	 * Lista todos os turnos da localização
+	 * Lista todos os turnos da localizaÃ§Ã£o
 	 * @param localizacao
 	 * @return lista de turnos
 	 */
@@ -41,7 +41,7 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	}
 	
 	/**
-	 * Calcula o tempo útil total dos turnos, em minutos 
+	 * Calcula o tempo Ãºtil total dos turnos, em minutos 
 	 * @param localizacaoTurnoList
 	 * @return
 	 */
@@ -61,12 +61,12 @@ public class LocalizacaoTurnoManager extends GenericManager {
 
 	/**
 	 * Verifica as possibilidades para os intervalos do turno de 
-	 * uma determinada localização, para então calcular a diferença 
+	 * uma determinada localizaÃ§Ã£o, para entÃ£o calcular a diferenÃ§a 
 	 * de horas que deve ser acrescentada ao tempo gasto de uma 
 	 * tarefa.
 	 * @param fireTime - Hora de disparo da trigger
 	 * @param pt - ProcessoEpaTarefa a ser verificado o tempo gasto
-	 * @param lt - LocalizacaoTurno da tarefa em verificação.
+	 * @param lt - LocalizacaoTurno da tarefa em verificaÃ§Ã£o.
 	 * @return minutos gastos dentro do turno informado
 	 */
 	public int calcularMinutosGastos(Date fireTime, Date lastFire, LocalizacaoTurno lt) {

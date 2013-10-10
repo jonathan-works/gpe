@@ -16,8 +16,8 @@ import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
 import br.com.infox.ibpm.entity.Localizacao;
 
 /**
- * Classe com as regras de negócio para persistencia, 
- * vinculação e alteração dos dados na entidade
+ * Classe com as regras de negÃ³cio para persistencia, 
+ * vinculaÃ§Ã£o e alteraÃ§Ã£o dos dados na entidade
  * NatCatFluxoLocalizacao.
  * @author Daniel
  *
@@ -36,7 +36,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	
 	/**
 	 * Persiste o registro e para cada localizacao filha a localizacao contida
-	 * no parametro <code>natCatFluxoLocalizacao</code> também é inseirdo um 
+	 * no parametro <code>natCatFluxoLocalizacao</code> tambÃ©m Ã© inseirdo um 
 	 * registro com o mesmo registro de naturezaCategoriaFluxo.
 	 * @param natCatFluxoLocalizacao
 	 */
@@ -46,7 +46,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	}
 
 	/**
-	 * Método recursivo para inserir todas as localizações filhas.
+	 * MÃ©todo recursivo para inserir todas as localizaÃ§Ãµes filhas.
 	 * @param localizacao
 	 * @param natCatFluxoLocalizacao
 	 */
@@ -69,9 +69,9 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	}
 	
 	/**
-	 * Salva as alterações feitas e replica quando necessário para 
-	 * os filhos, também corrigi a árvore hierarquica quando é modificado
-	 * apenas a localização ou a NaturezaCategoriaFluxo de um registro
+	 * Salva as alteraÃ§Ãµes feitas e replica quando necessÃ¡rio para 
+	 * os filhos, tambÃ©m corrigi a Ã¡rvore hierarquica quando Ã© modificado
+	 * apenas a localizaÃ§Ã£o ou a NaturezaCategoriaFluxo de um registro
 	 * onde a heranca = true.
 	 * @param natCatFluxoLocalizacao
 	 */
@@ -98,8 +98,8 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 		 */
 		} else {
 			/*
-			 * Verifica se foi modificado o valor da localização, se sim
-			 * é necessário modificar toda a árvore, do antigo para o novo.
+			 * Verifica se foi modificado o valor da localizaÃ§Ã£o, se sim
+			 * Ã© necessÃ¡rio modificar toda a Ã¡rvore, do antigo para o novo.
 			 */
 			if(dataBaseOldObject.getLocalizacao().getIdLocalizacao() !=
 			   natCatFluxoLocalizacao.getLocalizacao().getIdLocalizacao()){
@@ -107,8 +107,8 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 				update(natCatFluxoLocalizacao);
 				persistChildren(natCatFluxoLocalizacao.getLocalizacao(), natCatFluxoLocalizacao);
 			/*
-			 * Verifica se foi modificada a relação com NaturezaCategoriaFluxo
-			 * caso sim, será necessário atualizar toda a árvore.
+			 * Verifica se foi modificada a relaÃ§Ã£o com NaturezaCategoriaFluxo
+			 * caso sim, serÃ¡ necessÃ¡rio atualizar toda a Ã¡rvore.
 			 */
 			} else if(dataBaseOldObject.getNaturezaCategoriaFluxo().getIdNaturezaCategoriaFluxo() !=
 					  natCatFluxoLocalizacao.getNaturezaCategoriaFluxo().getIdNaturezaCategoriaFluxo()) {
@@ -121,7 +121,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	
 	/**
 	 * Atualiza todas as NaturezaCategoriaFluxo contidas na heranca.
-	 * @param localizacao para buscar a árvore
+	 * @param localizacao para buscar a Ã¡rvore
 	 * @param oldNCF naturezaCategoriaFluxo antiga
 	 * @param newNCF naturezaCategoriaFluxo nova a ser atualizada.
 	 */
@@ -139,7 +139,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	}
 	
 	/**
-	 * Remove todas as vinculações das localizações filhas da 
+	 * Remove todas as vinculaÃ§Ãµes das localizaÃ§Ãµes filhas da 
 	 * naturezaCategoriaFluxo vinculada.
 	 * @param localizacao
 	 * @param ncfl

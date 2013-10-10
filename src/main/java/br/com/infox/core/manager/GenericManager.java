@@ -13,9 +13,9 @@ import br.com.infox.core.dao.GenericDAO;
 
 /**
  * Classe que acessa o GenericDAO e disponibiliza
- * os métodos úteis nele contidos, afim de não ser 
- * necessária a criação de um manager ou service
- * toda vez que for preciso utilizar algum método
+ * os mÃ©todos Ãºteis nele contidos, afim de nÃ£o ser 
+ * necessÃ¡ria a criaÃ§Ã£o de um manager ou service
+ * toda vez que for preciso utilizar algum mÃ©todo
  * da classe GenericDAO.
  * 
  * @author Daniel

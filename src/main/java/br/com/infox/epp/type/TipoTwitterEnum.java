@@ -2,7 +2,7 @@ package br.com.infox.epp.type;
 
 public enum TipoTwitterEnum {
 
-	U("Usu·rio"), L("LocalizaÁ„o"), S("Usu·rio do Sistema");
+	U("Usu√°rio"), L("Localiza√ß√£o"), S("Usu√°rio do Sistema");
 	
 	private String label;
 	

@@ -12,7 +12,7 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 /**
- * Classe que busca os usu·rios cadastrados para receberem email
+ * Classe que busca os usu√°rios cadastrados para receberem email
  * @author luiz
  *
  */
