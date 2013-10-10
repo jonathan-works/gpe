@@ -22,7 +22,7 @@
 	<ui:define name="baseBody">
 		<h:outputScript library="js/components" name="Modal.js" />
 		<script type="text/javascript">
-			namespace(["infox.Modal"],function(Modal) {
+			invoke(["infox.Modal"],function(Modal) {
 				$("#btnTrocar").click( function (){
 					var isHidden = $(".novaSenha").toggleClass("visible").is(':hidden');
 					$("#btnTrocar").val(isHidden ? "#{messages['login.trocarSenhaBtn']}" :"#{messages['login.naoTrocarSenhaBtn']}");

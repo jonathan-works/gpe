@@ -48,8 +48,8 @@
                  value="#{util.splitAsList(valueList) }" />
 			<ui:insert />
 			<script>
-				namespace(["infox.escapeId"],function(escapeId) {
-					var id = escapeId(#{empty value} ? (#{not empty f.id} ?
+				invoke(["infox.escapeId"],function(EscapeId) {
+					var id = EscapeId(#{empty value} ? (#{not empty f.id} ?
 												"##{rich:clientId(id)}:#{f.id}:#{empty boxChecked ? 0 : boxChecked}" :
 												"##{rich:clientId(id)}:#{empty boxChecked ? 0 : boxChecked}") :	"");
 					$(id).attr({checked:true});

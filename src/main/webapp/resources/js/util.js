@@ -51,29 +51,29 @@ namespace("infox",{
 		ctx.drawImage(img,0,0);
 		return canvas.toDataURL();
 	}
-});
-
-namespace("infox",function(util) {
-	window.showLoading = util.showLoading;
-	window.hideLoading = util.hideLoading;
-	window.refreshOpener = util.refreshOpener;
-	window.openPopUp = util.openPopUp;
-	window.infox = util;
-	
-	if (!$.fn.clearForm) {
-		$.fn.clearForm = function() {
-			return this.each(function() {
-				var type = this.type; 
-				var tag = this.tagName.toLowerCase();
-				if (tag == 'form')
-					return $(':input',this).clearForm();
-				if (type == 'text' || type == 'password' || tag == 'textarea')
-					this.value = '';
-				else if (type == 'checkbox' || type == 'radio')
-					this.checked = false;
-				else if (tag == 'select')
-					this.selectedIndex = 0;
-			});
-		};	
+}, {
+	callback:function (Infox) {
+		window.showLoading = Infox.showLoading;
+		window.hideLoading = Infox.hideLoading;
+		window.refreshOpener = Infox.refreshOpener;
+		window.openPopUp = Infox.openPopUp;
+		window.infox = Infox;
+		
+		if (!$.fn.clearForm) {
+			$.fn.clearForm = function() {
+				return this.each(function() {
+					var type = this.type; 
+					var tag = this.tagName.toLowerCase();
+					if (tag == 'form')
+						return $(':input',this).clearForm();
+					if (type == 'text' || type == 'password' || tag == 'textarea')
+						this.value = '';
+					else if (type == 'checkbox' || type == 'radio')
+						this.checked = false;
+					else if (tag == 'select')
+						this.selectedIndex = 0;
+				});
+			};	
+		}
 	}
 });

@@ -14,12 +14,12 @@
 		 id="#{id}"
 		 value="#{value}" />
 		
-		<script>
-			namespace(["infox.escapeId"],function(escapeId) {
-				var id=escapeId("##{form.formId}Form:#{f.id}:#{f.id}");
-				$(id).val("#{empty props.value ? value : props.value}");
+		<h:outputScript>
+			invoke(["infox.escapeId"],function(EscapeId) {
+				$(EscapeId("##{form.formId}Form:#{f.id}:#{f.id}"))
+					.val("#{empty props.value ? value : props.value}");
 			});			
-		</script>
+		</h:outputScript>
 		
 	
 </ui:composition>
