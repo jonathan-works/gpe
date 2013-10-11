@@ -40,8 +40,8 @@
      -->
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
     <ui:param name="value" value="#{wi:get(value,0)}" />
-    <script>
-	   	namespace("infox.DefaultGauge",function(DefaultGauge) {
+    <script type="text/javascript">
+	   	invoke(["infox.DefaultGauge"],function(DefaultGauge) {
 	   		DefaultGauge({
 	    	    id:"#{id}DefaultGauge",
 	    	    containerId:"#{id}DefaultGaugeContainer",
@@ -50,11 +50,11 @@
 	    	    min:#{wi:get(min,0)},
 	    	    max:#{wi:get(max,100)},
 	    	    value:#{value},
-	    	    hideValues:#{wi:get(hideValues,'false')},
+	    	    hideValues:#{wi:get(hideValues,false)},
 	    	    tickInterval:#{wi:get(tickInterval, max/4)},
 	    	    width:#{wi:get(width, radius*4)},
 	    	    height:#{wi:get(height, radius*4)},
-	    	    draggable:#{wi:get(draggable, 'false')},
+	    	    draggable:#{wi:get(draggable, false)},
 	    	    baseUrl:"#{util.getContextPath()}/resources/js/dojo/"
 	    	});
 	   	});
@@ -64,10 +64,12 @@
         <div id="#{id}DefaultGauge" class="gauge"></div>
         <s:div id="gaugeAjaxDiv#{id}">
 	        <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
-	        <script>
-	        try {
-	        	namespace.infox.DefaultGauge.instance["#{id}DefaultGauge"].updateValue(#{value});
-			} catch(e) {}
+	        <script type="text/javascript">
+	        	invoke(["infox.DefaultGauge.instance.#{id}DefaultGauge"],function(Gauge) {
+		        	try {
+		        		Gauge.updateValue(#{value});
+		        	} catch(e) {}	        		
+	        	});
 			</script>
 		</s:div>
     </div>
