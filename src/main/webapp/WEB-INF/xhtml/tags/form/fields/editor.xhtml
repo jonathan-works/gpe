@@ -80,7 +80,7 @@
 				},
 				insertImage:function(path) {
 					var img = document.createElement("img");
-					img.src = namespace.infox.imageSrcToBase64(path);
+					img.src = infox.imageSrcToBase64(path);
 					var container = document.createElement("div");
 					container.appendChild(img);
 					this.insertHtml(container.innerHTML);
