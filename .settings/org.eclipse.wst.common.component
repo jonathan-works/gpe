@@ -7,7 +7,7 @@
         <dependent-module archiveName="taskpage-0.0.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/taskpage/taskpage">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="componentes-1.0.9.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/componentes/componentes">
+        <dependent-module archiveName="componentes-1.0.9.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/componentes/componentes">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="epp"/>
