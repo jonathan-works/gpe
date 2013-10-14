@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.entity;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +15,11 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
 import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
@@ -36,6 +38,7 @@ public class Caixa implements java.io.Serializable {
 	private String dsCaixa;
 	private Tarefa tarefa;
 	private Tarefa tarefaAnterior;
+	private String nomeCaixaIndexavel;
 	private List<Processo> processoList = new ArrayList<Processo>(0);
 	
 	public Caixa() {
@@ -102,6 +105,15 @@ public class Caixa implements java.io.Serializable {
 	public void setProcessoList(List<Processo> processoList) {
 		this.processoList = processoList;
 	}
+
+	@Column(name = "nm_caixa_idx", length = 100, nullable = false)
+	public String getNomeCaixaIndexavel() {
+		return nomeCaixaIndexavel;
+	}
+	
+	public void setNomeCaixaIndexavel(String nomeCaixaIndexavel) {
+		this.nomeCaixaIndexavel = nomeCaixaIndexavel;
+	}
 	
 	@Override
 	public String toString() {
@@ -132,5 +144,13 @@ public class Caixa implements java.io.Serializable {
 		int result = 1;
 		result = prime * result + getIdCaixa();
 		return result;
+	}
+	
+	@PreUpdate
+	@PrePersist
+	public void normalize() {
+		String normalized = Normalizer.normalize(getNomeCaixa(), Normalizer.Form.NFD)
+				.replaceAll("[^\\p{ASCII}]", "").toLowerCase();
+		setNomeCaixaIndexavel(normalized);
 	}
 }
