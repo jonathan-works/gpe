@@ -16,10 +16,9 @@ public class ClassificacaoDocumentoDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "classificacaoDocumentoDAO";
 	
-	@SuppressWarnings("unchecked")
 	public List<ProcessoDocumento> getProcessoDocumentoByTask(TaskInstance task) {
 		return (List<ProcessoDocumento>) entityManager.createQuery(
-				"select o from ProcessoDocumento o where idJbpmTask = :id")
+				"select o from ProcessoDocumento o where idJbpmTask = :id", ProcessoDocumento.class)
 				.setParameter("id", task.getId())
 				.getResultList();
 	}

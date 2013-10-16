@@ -9,44 +9,45 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<h:form rendered="#{wi:get(mostrarMenu, identity.loggedIn and !usuarioLogado.provisorio)}">
-		<h:graphicImage
-			styleClass="palette-img-inpt"
-			url="#{a4jSkin.imgIconPalette}"
-			onclick="#{rich:component(id.concat('-skinPanel'))}.show()" />
-		<h:commandButton
-			styleClass="palette-img-inpt"
-			action="#{skinZoom.setTmNormal()}"
-			image="#{a4jSkin.imgIconZoomNormal}" />
-		<h:commandButton
-			styleClass="palette-img-inpt" 
-			action="#{skinZoom.setTmMedio()}"
-			image="#{a4jSkin.imgIconZoomMedio}" />
-		<h:commandButton
-			styleClass="palette-img-inpt" 
-			action="#{skinZoom.setTmGrande()}"
-			image="#{a4jSkin.imgIconZoomGrande}" />
-	</h:form>
-
+	<div style="display: inline-block">
+		<h:form rendered="#{wi:get(mostrarMenu, identity.loggedIn and !usuarioLogado.provisorio)}">
+			<h:graphicImage
+				styleClass="palette-img-inpt"
+				url="#{a4jSkin.imgIconPalette}"
+				onclick="#{rich:component(id.concat('-skinPanel'))}.show()" />
+			<h:commandButton
+				styleClass="palette-img-inpt"
+				action="#{skinZoom.setTmNormal()}"
+				image="#{a4jSkin.imgIconZoomNormal}" />
+			<h:commandButton
+				styleClass="palette-img-inpt" 
+				action="#{skinZoom.setTmMedio()}"
+				image="#{a4jSkin.imgIconZoomMedio}" />
+			<h:commandButton
+				styleClass="palette-img-inpt" 
+				action="#{skinZoom.setTmGrande()}"
+				image="#{a4jSkin.imgIconZoomGrande}" />
+		</h:form>
+	</div>
+	
 	<rich:popupPanel id="#{id}-skinPanel" height="100">
 		<f:facet name="header">Esquema de cores da aplicação</f:facet>
 		<f:facet name="controls">
 			<h:panelGroup>
 				<h:graphicImage value="/img/closeMP.gif"
 					onclick="#{rich:component(id.concat('-skinPanel'))}.hide()" />
-			</h:panelGroup>
-		</f:facet>
-		<s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml">
-			<ui:define name="label">
-				<h:outputText value="Escolha o esquema:" styleClass="label" />
-			</ui:define>
-			<h:form>
-				<h:selectOneMenu value="#{wiSkin.skin}" styleClass="PaletteMenu"
-					onchange="this.form.submit()">
-					<f:selectItems value="#{wiSkin.skinList}" />
-				</h:selectOneMenu>
-			</h:form>
-		</s:decorate>
-	</rich:popupPanel>
-
+				</h:panelGroup>
+			</f:facet>
+			<s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="Escolha o esquema:" styleClass="label" />
+				</ui:define>
+				<h:form>
+					<h:selectOneMenu value="#{wiSkin.skin}" styleClass="PaletteMenu"
+						onchange="this.form.submit()">
+						<f:selectItems value="#{wiSkin.skinList}" />
+					</h:selectOneMenu>
+				</h:form>
+			</s:decorate>
+		</rich:popupPanel>
 </ui:composition>
