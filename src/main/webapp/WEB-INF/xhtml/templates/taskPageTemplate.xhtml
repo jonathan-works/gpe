@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
@@ -21,7 +21,7 @@
                  >
 				<wi:dataForm
                      formId="taskPageForm"
-                     formTitle="#{wi:get(formTitle, 'Formulário')}">
+                     formTitle="#{wi:get(formTitle, 'FormulÃ¡rio')}">
 					<ui:insert
                          name="taskPageForm" />
 					<ui:define
@@ -34,7 +34,7 @@
                                  rendered="#{wi:get(renderedTransition, true)}">
 								<h:outputText
                                      
-                                     value="Próxima ação:" />
+                                     value="PrÃ³xima aÃ§Ã£o:" />
 						        <ui:insert
                                      name="transitionButtons">
 										<ui:include

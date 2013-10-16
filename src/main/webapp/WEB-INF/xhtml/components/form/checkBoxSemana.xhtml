@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
 	 xmlns="http://www.w3.org/1999/xhtml"
@@ -16,8 +16,8 @@
 		 value="#{props.direction.toUpperCase() == 'V' ? 'page' : 'line'}Direction" />
 
         <!--
-            É necessário colocar uma lista de String no (Entity) porque  
-            o Checkbox irá retornar uma lista de String com os valores 
+            Ã‰ necessÃ¡rio colocar uma lista de String no (Entity) porque  
+            o Checkbox irÃ¡ retornar uma lista de String com os valores 
             que forem preenchido.
             
             Exemplo:
@@ -60,7 +60,7 @@
 			 value="#{value}"
 			 styleClass="checkbox">
 			
-				<f:selectItems value="#{util.splitAsList('SEG:Segunda,TER:Terça,QUA:Quarta,QUI:Quinta,SEX:Sexta,SAB:Sábado,DOM:Domingo')}" />
+				<f:selectItems value="#{util.splitAsList('SEG:Segunda,TER:TerÃ§a,QUA:Quarta,QUI:Quinta,SEX:Sexta,SAB:SÃ¡bado,DOM:Domingo')}" />
 				
 			
 		</h:selectManyCheckbox>

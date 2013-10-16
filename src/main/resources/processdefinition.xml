@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 
 <process-definition xmlns="urn:jbpm.org:jpdl-3.2" name="Ordem de Compra">
@@ -8,41 +8,41 @@
         <assignment pooled-actors="#{localizacaoAssignment.getPooledActors('1193:1')}" actor-id="#{actor.id}"/>
     </swimlane>  
     <!-- START-STATE -->
-    <start-state name="Início">
+    <start-state name="InÃ­cio">
         <task name="Tarefa inicial" swimlane="solicitante"/>
-        <transition to="Solicitação" name="Solicitação"/>
+        <transition to="SolicitaÃ§Ã£o" name="SolicitaÃ§Ã£o"/>
     </start-state>  
     <!-- NODES -->
-    <task-node end-tasks="true" name="Solicitação">
-        <task name="Solicitação" swimlane="solicitante"/>
-        <transition to="Aprovação" name="Aprovação"/>
+    <task-node end-tasks="true" name="SolicitaÃ§Ã£o">
+        <task name="SolicitaÃ§Ã£o" swimlane="solicitante"/>
+        <transition to="AprovaÃ§Ã£o" name="AprovaÃ§Ã£o"/>
     </task-node>
-    <task-node end-tasks="true" name="Aprovação">
-        <task name="Aprovação" swimlane="solicitante"></task>
-        <transition to="Notificação" name="Notificação">
+    <task-node end-tasks="true" name="AprovaÃ§Ã£o">
+        <task name="AprovaÃ§Ã£o" swimlane="solicitante"></task>
+        <transition to="NotificaÃ§Ã£o" name="NotificaÃ§Ã£o">
         </transition>
         <transition to="Compra" name="Compra"/>
-        <timer name="Notificar" duedate="1 minute" transition="Notificação"/>
+        <timer name="Notificar" duedate="1 minute" transition="NotificaÃ§Ã£o"/>
     </task-node>
-    <mail-node name="Notificação" to="luizaugusto.ruiz@gmail.com">
+    <mail-node name="NotificaÃ§Ã£o" to="luizaugusto.ruiz@gmail.com">
         <subject>Assunto</subject>
         <text>Texto do email</text>
-        <transition to="Aguardando Aprovação" name="Aguardando Aprovação"/>
+        <transition to="Aguardando AprovaÃ§Ã£o" name="Aguardando AprovaÃ§Ã£o"/>
     </mail-node>
-    <task-node end-tasks="true" name="Aguardando Aprovação">
-        <task name="Aguardando Aprovação" swimlane="solicitante"/>
+    <task-node end-tasks="true" name="Aguardando AprovaÃ§Ã£o">
+        <task name="Aguardando AprovaÃ§Ã£o" swimlane="solicitante"/>
         <transition to="Compra" name="Compra"/>
-        <transition to="Reprovação" name="Reprovação"/>
+        <transition to="ReprovaÃ§Ã£o" name="ReprovaÃ§Ã£o"/>
     </task-node>
     <task-node end-tasks="true" name="Compra">
         <task name="Compra" swimlane="solicitante"/>
-        <transition to="Término" name="Término"/>
+        <transition to="TÃ©rmino" name="TÃ©rmino"/>
     </task-node>
-    <task-node end-tasks="true" name="Reprovação">
-        <task name="Reprovação" swimlane="solicitante"/>
-        <transition to="Término" name="Término"/>
+    <task-node end-tasks="true" name="ReprovaÃ§Ã£o">
+        <task name="ReprovaÃ§Ã£o" swimlane="solicitante"/>
+        <transition to="TÃ©rmino" name="TÃ©rmino"/>
     </task-node>
-    <end-state name="Término"/>  
+    <end-state name="TÃ©rmino"/>  
     <!-- PROCESS-EVENTS -->
     <event type="node-enter">
         <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
