@@ -4,7 +4,9 @@
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:rich="http://richfaces.org/rich"
      xmlns:wi="http://www.itx.com.br/jsf"
-     template="/WEB-INF/xhtml/templates/template-sample.xhtml">
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:infox="http://www.infox.com.br/jsf"
+     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
                        
 	<ui:define
          name="title">#{messages['caixa.titlePage']}</ui:define>
@@ -18,49 +20,53 @@
 		
 	<ui:define
          name="body">
-		<rich:tabPanel
-             switchType="ajax"
-             headerSpacing="2"
-             activeItem="#{caixaHome.tab}">
-			<rich:tab
-                 id="form"
-                 rendered="#{(caixaHome.managed or (canEdit and (hideTabForm != true)))}"
-                 header="#{canEdit ? 'Formulário' : 'Detalhes'}"
-                 immediate="true"
-                 status=":status"
-                 disabled="#{disabledForm}"
-                 action="#{caixaHome.onClickFormTab}">
+		<infox:tabPanel
+			id="defaultTabPanel"
+			switchType="ajax"
+			activeTab="#{caixaHome.tab}">
+			<h:form>
+				<infox:tabHeaders />
+			</h:form>
+			<infox:tab
+				id="form"
+				name="search"
+				rendered="#{(caixaHome.managed or (canEdit and (hideTabForm != true)))}"
+				immediate="true"
+				status=":status"
+				title="#{canEdit ? 'Formulário' : 'Detalhes'}"
+				action="#{caixaHome.onClickFormTab}"
+			>
 				<wi:dataForm
-                     formId="caixaForm"
-                     formTitle="#{messages['form.title']}">
-						<wi:inputText
-                         id="tarefa"
-                         label="Tarefa"
-                         value="#{caixaHome.instance.tarefa}"
-                         required="true"
-                         disabled="true" />
-						<wi:inputText
-                         id="nomeCaixa"
-                         label="#{messages['caixa.nomeCaixa']}"
-                         value="#{caixaHome.instance.nomeCaixa}"
-                         length="100" />
-						<wi:inputTextarea
-                         id="dsCaixa"
-                         label="#{messages['caixa.dsCaixa']}"
-                         value="#{caixaHome.instance.dsCaixa}" />						
-
-						<wi:selectOneMenu
-                         id="idTaskAnterior"
-                         label="Tarefa Anterior"
-                         value="#{caixaHome.idTarefaAnterior}"
-                         valueItems="#{caixaHome.getPreviousTasks(caixaHome.instance.tarefa.idTarefa)}" />
-					 <ui:define
-                         name="buttons">
-						<wi:commandButtonUpdate />
-					</ui:define>
-				</wi:dataForm>		
-			</rich:tab>
-		</rich:tabPanel>
+	                     formId="caixaForm"
+	                     formTitle="#{messages['form.title']}">
+							<wi:inputText
+	                         id="tarefa"
+	                         label="Tarefa"
+	                         value="#{caixaHome.instance.tarefa}"
+	                         required="true"
+	                         disabled="true" />
+							<wi:inputText
+	                         id="nomeCaixa"
+	                         label="#{messages['caixa.nomeCaixa']}"
+	                         value="#{caixaHome.instance.nomeCaixa}"
+	                         length="100" />
+							<wi:inputTextarea
+	                         id="dsCaixa"
+	                         label="#{messages['caixa.dsCaixa']}"
+	                         value="#{caixaHome.instance.dsCaixa}" />						
+	
+							<wi:selectOneMenu
+	                         id="idTaskAnterior"
+	                         label="Tarefa Anterior"
+	                         value="#{caixaHome.instance.idNodeAnterior}"
+	                         valueItems="#{caixaHome.getPreviousTasks(caixaHome.instance.tarefa.idTarefa)}" />
+						 <ui:define
+	                         name="buttons">
+							<wi:commandButtonUpdate />
+						</ui:define>
+					</wi:dataForm>
+			</infox:tab>
+		</infox:tabPanel>
 	</ui:define>
 
 </ui:composition>
