@@ -64,9 +64,7 @@ public class CaixaEventHandler {
 		if (destino != null) {
 			caixa = new Caixa();
 			caixa.setTarefa(destino);
-			final Tarefa origem = JbpmUtil.getTarefa(transicao.getFrom().getName(), 
-		 			transicao.getFrom().getProcessDefinition().getName());
-			caixa.setTarefaAnterior(origem);
+			caixa.setIdNodeAnterior(Long.valueOf(transicao.getFrom().getId()).intValue());
 		}
 		return caixa;
 	}
