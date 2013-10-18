@@ -239,6 +239,72 @@
 		
 		</infox:tab>
 	
+		<infox:tab id="natCatFluxoLoc"
+			name="natCatFluxoLoc"
+			rendered="#{home.managed}"
+			title="#{messages['localizacao.localizacao']}">
+			<s:div id="natCatFluxoLocDiv">
+				<div>
+					<wi:dataForm
+						formId="natCatFluxoLocForm"
+						formTitle="#{messages['form.title']}: #{fluxoHome.instance}">
+						<wi:selectOneMenuEntity
+							id="naturezaCategoriaFluxo"
+							value="#{natCatFluxoLocalizacaoAction.instance.naturezaCategoriaFluxo}"
+							required="true"
+							label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
+							noSelectionLabel="Selecione um registro..."
+							items="#{natCatFluxoLocalizacaoAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoHome.instance)}"/>
+						<wi:tree 
+							id="localizacao"
+							assignTo="natCatFluxoLocalizacaoAction.instance.localizacao"
+							label="#{messages['localizacao.localizacao']}"
+							required="true"
+							tree="#{natCatFluxoLocalizacaoAction.localizacaoTreeHandler}" />
+							<ui:define 
+								name="buttons">
+								<wi:commandButton 
+									id="saveButton"
+									action="natCatFluxoLocalizacaoAction.persist"
+									reRender="natCatFluxoLocDiv"
+									value="Incluir"	/>
+							</ui:define>
+						</wi:dataForm>
+					</div>
+					<s:div id="dtable">
+						<wi:dataTable values="#{natCatFluxoLocalizacaoList.list(15)}"
+									  bean="#{natCatFluxoLocalizacaoList}"
+									  tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}"
+									  id="natCatFluxoLocalizacaoList"
+									  rowId="#{row.idNatCatFluxoLocalizacao}"
+									  actionInactive="natCatFluxoLocalizacaoAction.inactive">
+							<ui:define name="searchForm" />
+				            <ui:define name="headerToolBar"/>
+							<ui:define name="toolBar">
+								<wi:toolBarRemove
+									actionRemove="natCatFluxoLocalizacaoAction.remove(row)"
+									reRender="natCatFluxoLocDiv"/>
+							</ui:define>
+							<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"
+												 columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
+												 columnWidth="25%"
+												 value="#{row.naturezaCategoriaFluxo.natureza}"/>
+							<wi:columnOutputText columnId="naturezaCategoriaFluxo.categoria"
+												 columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+												 columnWidth="20%"
+												 value="#{row.naturezaCategoriaFluxo.categoria}"/>
+							<wi:columnOutputText columnId="naturezaCategoriaFluxo.fluxo"
+												 columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+												 columnWidth="20%"
+												 value="#{row.naturezaCategoriaFluxo.fluxo}"/>
+							<wi:columnOutputText columnId="localizacao"
+												 columnHeader="#{messages['localizacao.localizacao']}"
+												 columnWidth="20%"
+												 value="#{row.localizacao}"/>
+						</wi:dataTable>
+					</s:div>
+				</s:div>
+		</infox:tab>
 	</ui:define>
 
 

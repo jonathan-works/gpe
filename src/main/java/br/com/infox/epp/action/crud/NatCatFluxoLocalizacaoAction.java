@@ -1,24 +1,23 @@
 package br.com.infox.epp.action.crud;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.EntityExistsException;
-import javax.persistence.TransactionRequiredException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.NatCatFluxoLocalizacao;
+import br.com.infox.epp.entity.Natureza;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
+import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.component.AbstractHome;
+import br.com.itx.util.EntityUtil;
 
 /**
  * 
@@ -28,18 +27,24 @@ import br.com.itx.component.AbstractHome;
 @Name(NatCatFluxoLocalizacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocalizacao> {
-	private static final String	LOG_MESSAGE_PERSIST	= "NatCatFluxoLocalizacaoAction.persist()";
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(NatCatFluxoLocalizacaoAction.class);
 
 	public static final String NAME = "natCatFluxoLocalizacaoAction";
 
 	@In
 	private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
-	private LocalizacaoTreeHandler localizacaoTreeHandler = new LocalizacaoTreeHandler();
+	
+	@In(value = LocalizacaoTreeHandler.NAME, create = true)
+	private LocalizacaoTreeHandler localizacaoTreeHandler;
+	
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
+	private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList;
 	private List<NatCatFluxoLocalizacao> natCatFluxolocalizacaoList;
+	private List<Natureza> naturezaList;
+	private List<Categoria> categoriaList;
+	private List<Fluxo> fluxoList;
 	private boolean updateList = true;
+	private NatCatFluxoLocalizacao oldInstance;
 	
 	@Override
 	public void newInstance() {
@@ -49,32 +54,44 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 	
 	@Override
 	public String persist() {
-		String result = null;
-		try {
-			getInstance().setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
-			if(getInstance().getHeranca()) {
-				natCatFluxoLocalizacaoManager.persistWithChildren(getInstance());
-			} else {
-				natCatFluxoLocalizacaoManager.persist(getInstance());
-			}
-			result = PERSISTED;
-			FacesMessages.instance().add("Registro incluso com sucesso!");
-		} catch (EntityExistsException e) {
-			LOG.info(LOG_MESSAGE_PERSIST, e);
-			FacesMessages.instance().add(Severity.INFO, "Registro já Cadastrado!");
-		} catch (IllegalArgumentException e) {
-			LOG.error(LOG_MESSAGE_PERSIST, e);
-			FacesMessages.instance().add(Severity.ERROR, "Falha de consistência!");
-		} catch (TransactionRequiredException e) {
-			LOG.error(LOG_MESSAGE_PERSIST, e);
-			FacesMessages.instance().add(Severity.ERROR, "Falha de transação!");
-		} catch (Exception e) {
-			LOG.error(LOG_MESSAGE_PERSIST, e);
-		} finally {
-			localizacaoTreeHandler.clearTree();
-			newInstance();
-		}
+	    String result = save();
+	    newInstance();
 		return result;
+	}
+	
+	public String save() {
+		Boolean heranca = getInstance().getHeranca();
+		String save = null;
+		if(isManaged()) {
+			natCatFluxoLocalizacaoManager.saveWithChidren(getInstance(), oldInstance);
+			save = UPDATED;
+			FacesMessages.instance().add("Registro alterado com sucesso!");
+		} else {
+			if (heranca) {
+				natCatFluxoLocalizacaoManager.persistWithChildren(getInstance());
+				save = PERSISTED;
+			} else {
+				save = super.persist();
+			}
+			if (PERSISTED.equals(save)) {
+				FacesMessages.instance().add("Registro incluído com sucesso!");
+			}
+		}
+		return save;
+	}
+	
+	@Override
+	public void setId(Object id) {
+		super.setId(id);
+		NatCatFluxoLocalizacao tempInstance = getInstance();
+		if(oldInstance == null || oldInstance.getIdNatCatFluxoLocalizacao() != 
+									tempInstance.getIdNatCatFluxoLocalizacao()) {
+			oldInstance = new NatCatFluxoLocalizacao();
+			oldInstance.setIdNatCatFluxoLocalizacao(tempInstance.getIdNatCatFluxoLocalizacao());
+			oldInstance.setHeranca(tempInstance.getHeranca());
+			oldInstance.setNaturezaCategoriaFluxo(tempInstance.getNaturezaCategoriaFluxo());
+			oldInstance.setLocalizacao(tempInstance.getLocalizacao());
+		}
 	}
 	
 	@Override
@@ -82,6 +99,37 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 		final String result = super.remove(obj);
 		newInstance();
 		return result;
+	}
+	
+	public List<NaturezaCategoriaFluxo> getActivedNaturezaCategoriaFluxoList() {
+		List <NaturezaCategoriaFluxo> ativos = new ArrayList<NaturezaCategoriaFluxo>();
+		for (NaturezaCategoriaFluxo ncf : naturezaCategoriaFluxoList){
+			if (ncf.isAtivo()){
+				ativos.add(ncf);
+			}
+		}
+		return ativos;
+	}
+	
+	public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(Fluxo fluxo) {
+	    String hql = "select ncf from NaturezaCategoriaFluxo ncf " +
+	    		"inner join ncf.natureza n " +
+	    		"inner join ncf.categoria c " +
+	    		"where n.ativo=true " +
+	    		"and c.ativo=true " +
+	    		"and ncf.fluxo=:fluxo";
+	    return EntityUtil.getEntityManager().createQuery(hql, NaturezaCategoriaFluxo.class)
+	            .setParameter("fluxo", fluxo)
+	            .getResultList();
+	}
+	
+	@Override
+	public void create() {
+		super.create();
+		naturezaCategoriaFluxoList = EntityUtil.getEntityList(NaturezaCategoriaFluxo.class);
+		naturezaList = EntityUtil.getEntityList(Natureza.class);
+		categoriaList = EntityUtil.getEntityList(Categoria.class);
+		fluxoList = EntityUtil.getEntityList(Fluxo.class);
 	}
 	
 	public void setLocalizacaoTreeHandler(LocalizacaoTreeHandler localizacaoTreeHandler) {
@@ -119,4 +167,35 @@ public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocali
 		this.natCatFluxolocalizacaoList = natCatFluxolocalizacaoList;
 	}
 
+	public void setNaturezaCategoriaFluxoList(List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
+		this.naturezaCategoriaFluxoList = naturezaCategoriaFluxoList;
+	}
+
+	public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
+		return naturezaCategoriaFluxoList;
+	}
+	
+	public void setNaturezaList(List<Natureza> naturezaList) {
+		this.naturezaList = naturezaList;
+	}
+
+	public List<Natureza> getNaturezaList() {
+		return naturezaList;
+	}
+
+	public void setCategoriaList(List<Categoria> categoriaList) {
+		this.categoriaList = categoriaList;
+	}
+
+	public List<Categoria> getCategoriaList() {
+		return categoriaList;
+	}
+
+	public void setFluxoList(List<Fluxo> fluxoList) {
+		this.fluxoList = fluxoList;
+	}
+
+	public List<Fluxo> getFluxoList() {
+		return fluxoList;
+	}
 }
