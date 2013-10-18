@@ -121,10 +121,10 @@
 				</f:facet>
 				<h:form id="modalForm">
 					<wi:inputText id="nomeCaixa" label="Nome da caixa"
-						value="#{caixaHome.nomeNovaCaixa}" />
+						value="#{caixaHome.instance.nomeCaixa}" />
 					<a:commandButton value="Incluir" styleClass="buttons"
 						action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
-						oncomplete="Richfaces.hideTopModalPanel()"
+						oncomplete="#{rich:component('novaCaixaPanel')}.hide()"
 						render="tarefasDiv,painelProcessos" />
 					<wi:messages formId="modalForm"></wi:messages>
 				</h:form>
