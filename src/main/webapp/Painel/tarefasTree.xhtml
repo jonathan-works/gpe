@@ -38,7 +38,7 @@
 						rendered="#{painelUsuarioHome.selected.type == 'Caixa' and s:hasRole('/pages/Caixa/listView.seam')}"
 						onclick="confirm('Confirma?')"
 						render="tarefasDiv"
-						action="#{caixaHome.removeCaixa(painelUsuarioHome.selected.idCaixa)}" />
+						action="#{caixaHome.remove(painelUsuarioHome.selected.idCaixa)}" />
 				</rich:contextMenu>
 			</s:div>
 			<rich:tree
