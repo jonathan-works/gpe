@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
-import org.hibernate.Query;
-import org.hibernate.Session;
+import javax.persistence.Query;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Tarefa;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(TarefaDAO.NAME)
@@ -22,28 +21,23 @@ public class TarefaDAO extends GenericDAO {
 	public static final String NAME = "tarefaDAO";
 
 	@SuppressWarnings("unchecked")
-	public List<SelectItem> getPreviousTasks(Tarefa tarefa) {
-		List<SelectItem> previousTasksItems = new ArrayList<SelectItem>();
-		Session session = JbpmUtil.getJbpmSession();
-		Tarefa t = entityManager.find(Tarefa.class, tarefa.getIdTarefa());
+	public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT taskFrom.id_, taskFrom.name_ ")
-		   .append("FROM public.jbpm_transition transFrom ")
-		   .append("join public.jbpm_node nodeFrom on transFrom.from_ = nodeFrom.id_ ")
-		   .append("join public.jbpm_node nodeTo on transFrom.to_ = nodeTo.id_ ")
-		   .append("join jbpm_task taskFrom on taskFrom.tasknode_ = nodeFrom.id_ ")
-		   .append("join jbpm_task taskTo on taskTo.tasknode_ = nodeTo.id_ ")
-		   .append("where taskTo.id_ = :idTask order by 2");
-		Query query = session.createSQLQuery(sql.toString());
-		query.setParameter("idTask", t.getLastIdJbpmTask());
+		sql.append("select max(nodeFrom.id_), nodeFrom.name_ ")
+		    .append("from jbpm_transition t ")
+		    .append("inner join jbpm_node nodeFrom ON (nodeFrom.id_=t.from_) ")
+		    .append("inner join jbpm_task taskTo ON (taskTo.tasknode_=t.to_) ")
+		    .append("inner join tb_tarefa_jbpm tjTo ON (tjTo.id_jbpm_task=taskTo.id_) ")
+		    .append("where tjTo.id_tarefa=:idTarefa ")
+		    .append("group by nodeFrom.name_");
+		Query query = entityManager.createNativeQuery(sql.toString())
+		            .setParameter("idTarefa", tarefa.getIdTarefa());
+		
+		List<SelectItem> previousTasksItems = new ArrayList<SelectItem>();
 		previousTasksItems.add(new SelectItem(null,"Selecione a Tarefa Anterior"));
-		String arg = "select t from Tarefa t where t.tarefa = :tarefa and t.fluxo = :fluxo";
-		javax.persistence.Query q = entityManager.createQuery(arg);
-		for(Object[] obj : (List<Object[]>) query.list()) {
-			q.setParameter("tarefa", obj[1].toString());
-			q.setParameter("fluxo", tarefa.getFluxo());
-			Tarefa tarefaAnterior = EntityUtil.getSingleResult(q);
-			previousTasksItems.add(new SelectItem(tarefaAnterior.getIdTarefa(), tarefaAnterior.getTarefa()));
+
+		for(Object[] obj : (List<Object[]>) query.getResultList()) {
+			previousTasksItems.add(new SelectItem(obj[0], obj[1].toString()));
 		}
 		return previousTasksItems;
 	}
