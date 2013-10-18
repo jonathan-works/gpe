@@ -89,6 +89,10 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 		return (TarefasTreeHandler) Component.getInstance(TarefasTreeHandler.NAME);
 	}
 	
+	public static void clearActiveTree() {
+	    ((TarefasTreeHandler)Component.getInstance(TarefasTreeHandler.NAME)).clearTree();
+	}
+	
 	@Override
 	protected TarefasEntityNode<Map<String,Object>> createNode() {
 		return new TarefasEntityNode<Map<String,Object>>(getQueryChildrenList(), getQueryCaixasList());
