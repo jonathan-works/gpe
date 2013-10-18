@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
 	 xmlns="http://www.w3.org/1999/xhtml"
@@ -12,17 +12,17 @@
 
 <!--
   IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+  Copyright (c) 1986-2009 Infox Tecnologia da InformaÃ§Ã£o Ltda.
  
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo 
   sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  Free Software Foundation; versÃ£o 2 da LicenÃ§a.
+  Este programa Ã© distribuÃ­do na expectativa de que seja Ãºtil, porÃ©m, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implÃ­cita de COMERCIABILIDADE OU 
+  ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA.
   
   Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  VocÃª deve ter recebido uma cÃ³pia da GNU GPL junto com este programa; se nÃ£o, 
   veja em http://www.gnu.org/licenses/  
 -->
 <rich:panel
@@ -39,7 +39,7 @@
 			<h:graphicImage
 					 url="/img/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif"
 					  />
-			<h:outputText value="Transições que #{type == 'from' ? 'chegam ao' : 'saem do'} nó" />
+			<h:outputText value="TransiÃ§Ãµes que #{type == 'from' ? 'chegam ao' : 'saem do'} nÃ³" />
 		
 			</h:panelGrid>
 	
@@ -69,7 +69,7 @@
 						 limitRender="true">
 						
 					<h:graphicImage
-							 title="Adicionar transição"
+							 title="Adicionar transiÃ§Ã£o"
 							 
 							 url="/img/add.gif" />
 				
@@ -81,13 +81,13 @@
                 <div>
 						
 					<h:graphicImage
-							 title="Definir condição"
+							 title="Definir condiÃ§Ã£o"
 							 rendered="#{empty transition.transition.condition}"
 							 
 							 url="/img/help_dis.gif"
 							 styleClass="opacityHover">
 							
-                        <!-- começa aqui -->
+                        <!-- comeÃ§a aqui -->
 						<a:ajax
 								 event="click"
 								 listener="#{transitionFitter.setCurrentTransition(transition.transition)}"
@@ -97,7 +97,7 @@
 					
 						</h:graphicImage>
 					<h:graphicImage
-							 title="Editar condição"
+							 title="Editar condiÃ§Ã£o"
 							 rendered="#{!empty transition.transition.condition and            transition.transition.condition != '#{true}'}"
 							 styleClass="opacityHover"
 							 
@@ -112,7 +112,7 @@
 					
 						</h:graphicImage>
 					<h:graphicImage
-							 title="Excluir transição"
+							 title="Excluir transiÃ§Ã£o"
 							 
 							 url="/img/remove.png"
 							 styleClass="opacityHover">
@@ -138,7 +138,7 @@
 				 
 				 rendered="#{type=='from'}">
 				
-			<f:facet name="header">Nó Origem</f:facet>
+			<f:facet name="header">NÃ³ Origem</f:facet>
 			<h:selectOneMenu
 					 id="from"
 					 valueChangeListener="#{nodeFitter.transitionChangeListener}"
@@ -168,7 +168,7 @@
 				 
 				 rendered="#{type=='to'}">
 				
-			<f:facet name="header">Nó Destino</f:facet>
+			<f:facet name="header">NÃ³ Destino</f:facet>
 			<h:selectOneMenu
 					 id="to"
 					 
@@ -214,7 +214,7 @@
 				</h:inputText>
 			<a:commandLink
 					 render="nodesDiv"
-					 title="Ir para o nó"
+					 title="Ir para o nÃ³"
 					 execute="@this"
 					 
 					 action="#{nodeFitter.setCurrentNode(transition, type)}"

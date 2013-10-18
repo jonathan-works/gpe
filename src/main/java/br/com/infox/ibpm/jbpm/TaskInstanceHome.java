@@ -127,7 +127,7 @@ public class TaskInstanceHome implements Serializable {
                         }
                         if ((id != null) && (!assinado) && var.isWritable()) {
                             ProcessoHome.instance().carregarDadosFluxo(id);
-                            instance.put(name, variable);
+                            instance.put(getFieldName(name), variable);
                         }
                     }
                     if (modelo != null) {
@@ -137,14 +137,7 @@ public class TaskInstanceHome implements Serializable {
                             modeloDocumento = EntityUtil.getEntityManager()
                                     .find(ModeloDocumento.class,
                                             Integer.parseInt(s));
-                            variable = ModeloDocumentoAction.instance()
-                                    .getConteudo(modeloDocumento);
-                            if (variable != null) {
-                                ProcessoHome
-                                        .instance()
-                                        .getProcessoDocumentoBin()
-                                        .setModeloDocumento(variable.toString());
-                            }
+                            setModeloDocumento(modeloDocumento);
                         }
                     }
                     if (!isEditor) {
@@ -152,7 +145,7 @@ public class TaskInstanceHome implements Serializable {
                                 && (variable.getClass().equals(Float.class))) {
                             variable = String.format("%.2f", variable);
                         }
-                        instance.put(name, variable);
+                        instance.put(getFieldName(name), variable);
                     }
 
                     if ("form".equals(type)) {
@@ -298,7 +291,7 @@ public class TaskInstanceHome implements Serializable {
                 Object idObject = EntityUtil.getEntityIdObject(entity);
                 home.setId(idObject);
                 if (varName != null) {
-                    instance.put(varName, idObject);
+                    instance.put(getFieldName(varName), idObject);
                 }
                 update();
             }
@@ -529,8 +522,7 @@ public class TaskInstanceHome implements Serializable {
 
     public void setModeloDocumento(ModeloDocumento modelo) {
         this.modeloDocumento = modelo;
-        instance.put(variavelDocumento, ModeloDocumentoAction.instance()
-                .getConteudo(modelo));
+        instance.put(getFieldName(variavelDocumento), ModeloDocumentoAction.instance().getConteudo(modelo));
     }
 
     public String getHomeName() {
@@ -549,4 +541,7 @@ public class TaskInstanceHome implements Serializable {
         return (TaskInstanceHome) Component.getInstance(TaskInstanceHome.NAME);
     }
 
+    private String getFieldName(String name) {
+    	return name + "-" + taskInstance.getId();
+    }
 }

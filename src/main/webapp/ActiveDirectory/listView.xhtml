@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+  Copyright (c) 1986-2009 Infox Tecnologia da InformaÃ§Ã£o Ltda.
  
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo 
   sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  Free Software Foundation; versÃ£o 2 da LicenÃ§a.
+  Este programa Ã© distribuÃ­do na expectativa de que seja Ãºtil, porÃ©m, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implÃ­cita de COMERCIABILIDADE OU 
+  ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA.
   
   Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  VocÃª deve ter recebido uma cÃ³pia da GNU GPL junto com este programa; se nÃ£o, 
   veja em http://www.gnu.org/licenses/  
 --><ui:composition
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -53,22 +53,22 @@
 
 				<wi:outputText
 					 id="domain"
-					 value="#{empty action.getLDAPDomain() ?'Domínio não informado':action.getLDAPDomain()}"
+					 value="#{empty action.getLDAPDomain() ?'DomÃ­nio nÃ£o informado':action.getLDAPDomain()}"
 					 label="#{messages['activeDirectory.domain']}" />
 
 				<wi:outputText
 					 id="host"
-					 value="#{(action.getLDAPHost() == null)?'Host não informado':action.getLDAPHost()}"
+					 value="#{(action.getLDAPHost() == null)?'Host nÃ£o informado':action.getLDAPHost()}"
 					 label="#{messages['activeDirectory.host']}" />
 
 				<wi:outputText
 					 id="login"
-					 value="#{(action.getLDAPLogin() == null)?'Login não informada':action.getLDAPLogin()}"
+					 value="#{(action.getLDAPLogin() == null)?'Login nÃ£o informada':action.getLDAPLogin()}"
 					 label="#{messages['activeDirectory.login']}" />
 
 				<wi:outputText
 					 id="authentication"
-					 value="#{(action.getLDAPAuthentication() == null)?'Autenticação não informada':action.getLDAPAuthentication()}"
+					 value="#{(action.getLDAPAuthentication() == null)?'AutenticaÃ§Ã£o nÃ£o informada':action.getLDAPAuthentication()}"
 					 label="#{messages['activeDirectory.authentication']}" />
 
 			
@@ -131,7 +131,7 @@
 				<wi:columnOutputText
 					 columnId="ldap"
 					 columnHeader="#{messages['activeDirectory.ldap']}"
-					 value="#{( row.ldap != null ) ? ( row.ldap ? 'Sim' : 'Não' ) : 'Não'}" />
+					 value="#{( row.ldap != null ) ? ( row.ldap ? 'Sim' : 'NÃ£o' ) : 'NÃ£o'}" />
 					============#{row.ldap}=========
 			
 			</wi:dataTable>
@@ -346,7 +346,7 @@
 				<wi:columnOutputText
 					 columnId="correspondenciaId"
 					 columnHeader="#{messages['endereco.correspondencia']}"
-					 value="#{row.correspondencia ? 'Sim' : 'Não'}" />
+					 value="#{row.correspondencia ? 'Sim' : 'NÃ£o'}" />
 			
 			</wi:dataTable>
 

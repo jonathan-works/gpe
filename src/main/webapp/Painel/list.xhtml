@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id: list.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
@@ -11,7 +11,7 @@
 	xmlns:infox="http://www.infox.com.br/jsf"
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-	<ui:param name="pageTitle" value="Painel do Usuário" />
+	<ui:param name="pageTitle" value="Painel do UsuÃ¡rio" />
 	<ui:define name="title">#{pageTitle}</ui:define>
 
 	<ui:define name="body">
@@ -57,7 +57,7 @@
 								<wi:inputText id="numeroProcesso"
 									label="#{messages['consultaProcesso.numeroProcesso']}"
 									value="#{home.instance.numeroProcesso}" />
-								<wi:inputDataPeriodo id="periodo" label="Período"
+								<wi:inputDataPeriodo id="periodo" label="PerÃ­odo"
 									valueDateFrom="#{home.instance.dataInicio}"
 									valueDateTo="#{home.instance.dataFim}" />
 								<wi:selectOneMenuEntity id="natureza"

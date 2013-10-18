@@ -41,6 +41,7 @@ import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.manager.ClassificacaoDocumentoManager;
+import br.com.itx.util.EntityUtil;
 
 
 @Name(ProcessoHandler.NAME)
@@ -105,6 +106,21 @@ public class ProcessoHandler implements Serializable {
 			}
 		}
 		return taskDocumentList ;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public List<ProcessoDocumento> getAnexosPublicos(TaskInstance task) {
+	    List<ProcessoDocumento> anexoList;
+        final String hql = "select o " +
+                "from ProcessoDocumento o " +
+                "inner join o.tipoProcessoDocumento tpd " +
+                "where o.idJbpmTask = :id " +
+                "and (tpd.visibilidade='A' " +
+                "or tpd.visibilidade='E')";
+        anexoList = EntityUtil.createQuery(hql)
+                .setParameter("id", task.getId())
+                .getResultList();
+        return anexoList ;
 	}
 	
 	public List<ProcessoDocumento> getAnexos(TaskInstance task) {

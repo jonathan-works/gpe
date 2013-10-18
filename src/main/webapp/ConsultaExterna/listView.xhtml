@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.org/schema/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:wi="http://www.itx.com.br/jsf"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:infox="http://www.infox.com.br/jsf"
+                template="/WEB-INF/xhtml/templates/minimal.xhtml">
+                       
+    <ui:define name="title">#{messages['consultaExterna.titlePage']}</ui:define>
+    <ui:param name="showMenu" value="false"/>
+    <ui:define name="body">
+    
+    <infox:tabPanel switchType="ajax" 
+                    activeTab="#{consultaExternaAction.tab}">
+                       
+            <h:form><infox:tabHeaders /></h:form>
+                              
+            <infox:tab id="searchNumeroProcesso"
+            		  name="searchNumeroProcesso"
+                      title="#{messages['consultaProcesso.porNumeroProcesso']}"
+                      status=":status"
+                      action="#{processoHome.setId(null)}">
+                <wi:dataTable values="#{consultaProcessoExterno.list(15)}"
+                              bean="#{consultaProcessoExterno}"
+                              tableTitle="#{messages['consultaExterna.titleGrid']}"
+                              id="consultaProcessoExterno"
+                              rowId="#{row.idProcesso}"
+                              showGrid="#{consultaProcessoExterno.exibirTable}">
+                              
+                    <ui:define name="headerToolBar"/>          
+                    
+                    <ui:define name="searchForm">
+                        <wi:searchForm formId="pesquisarProcessoEpaForm"
+                                       formTitle="#{messages['searchForm.title']}"
+                                       clearAction="consultaProcessoExterno.esconderTable()"
+                                       searchAction="consultaProcessoExterno.exibirTable()">
+                            <wi:inputText id="numeroProcesso"
+                                            label="#{messages['processoEpp.numeroProcesso']}"
+                                            value="#{consultaProcessoExterno.entity.numeroProcesso}"
+                                            minlength="1"
+                                            maxlength="15"
+                                            required="true"/>
+                        </wi:searchForm>
+                    </ui:define>
+                    
+                    <ui:define name="toolBar">
+                        <wi:toolBar url="#{a4jSkin.imgIconView}" 
+                                    title="Selecionar">
+                            <f:param name="id" value="#{rowId}" />
+                            <f:param name="idJbpm" value="#{row.idJbpm}" />
+                            <f:param name="tab" value="processoExternoView" />
+                        </wi:toolBar>
+                    </ui:define>
+                    
+                    <wi:columnOutputText columnId="numeroProcesso"
+                                         columnHeader="#{messages['processo.numeroProcesso']}"
+                                         value="#{row.numeroProcesso}"
+                                         hideOrder="true" />
+                    <wi:columnOutputText columnId="usuarioCadastro"
+                                         columnHeader="#{messages['processo.usuarioCadastroProcesso']}"
+                                         value="#{row.usuarioCadastroProcesso}"
+                                         hideOrder="true" />
+                    <wi:columnDateTime columnId="dataInicioProcesso" 
+                                       columnHeader="#{messages['processo.dataInicio']}"
+                                       value="#{row.dataInicio}"
+                                       hideOrder="true"/>
+                    <wi:columnDateTime columnId="dataFimProcesso" 
+                                       columnHeader="#{messages['processo.dataFim']}"
+                                       value="#{row.dataFim}"
+                                       hideOrder="true" />
+                    <wi:columnOutputText columnId="naturezaCategoriaFluxo"
+                                         columnHeader="#{messages['processo.naturezaCategoriaFluxo']}"
+                                         value="#{row.naturezaCategoriaFluxo}"
+                                         hideOrder="true" />
+                </wi:dataTable>
+            </infox:tab>
+            
+            <infox:tab id="searchParteProcesso"
+            		  name="searchParteProcesso"
+                      title="#{messages['consultaProcesso.porParteProcesso']}" 
+                      status=":status"
+                      action="#{processoHome.setId(null)}">
+                  <wi:dataTable values="#{consultaProcessoExternoPorPartes.list(15)}"
+                              bean="#{consultaProcessoExternoPorPartes}"
+                              tableTitle="#{messages['consultaExternaPorPartes.titleGrid']}"
+                              id="consultaProcessoExternoPorPartes"
+                              rowId="#{row.idProcesso}"
+                              showGrid="#{consultaProcessoExternoPorPartes.exibirTable}">
+                              
+                    <ui:define name="headerToolBar"/>
+                    
+                    <ui:define name="searchForm">
+                        <wi:searchForm formId="pesquisarProcessoEpaPorPartesForm"
+                                       formTitle="#{messages['searchForm.title']}"
+                                       clearAction="consultaProcessoExternoPorPartes.esconderTable()"
+                                       searchAction="consultaProcessoExternoPorPartes.exibirTable()">
+                            <wi:inputText id="nomeParte"
+                                            label="#{messages['processoEpp.nome']}"
+                                            value="#{consultaProcessoExternoPorPartes.nomePartes}"
+                                            minlength="1"
+                                            maxlength="15"
+                                            required="true"/>
+                        </wi:searchForm>
+                    </ui:define>
+                    
+                    <ui:define name="toolBar">
+                        <wi:toolBar url="#{a4jSkin.imgIconView}" 
+                                    title="Selecionar">
+                            <f:param name="id" value="#{rowId}" />
+                            <f:param name="idJbpm" value="#{row.idJbpm}" />
+                            <f:param name="tab" value="processoExternoView" />
+                        </wi:toolBar>
+                    </ui:define>
+                    
+                    <wi:columnOutputText columnId="numeroProcesso"
+                                         columnHeader="#{messages['processo.numeroProcesso']}"
+                                         value="#{row.numeroProcesso}"
+                                         hideOrder="true" />
+                    <wi:columnOutputText columnId="usuarioCadastro"
+                                         columnHeader="#{messages['processo.usuarioCadastroProcesso']}"
+                                         value="#{row.usuarioCadastroProcesso}"
+                                         hideOrder="true" />
+                    <wi:columnDateTime columnId="dataInicioProcesso" 
+                                       columnHeader="#{messages['processo.dataInicio']}"
+                                       value="#{row.dataInicio}"
+                                       hideOrder="true"/>
+                    <wi:columnDateTime columnId="dataFimProcesso" 
+                                       columnHeader="#{messages['processo.dataFim']}"
+                                       value="#{row.dataFim}"
+                                       hideOrder="true" />
+                    <wi:columnOutputText columnId="naturezaCategoriaFluxo"
+                                         columnHeader="#{messages['processo.naturezaCategoriaFluxo']}"
+                                         value="#{row.naturezaCategoriaFluxo}"
+                                         hideOrder="true" />
+                </wi:dataTable>
+            </infox:tab>
+            
+            <infox:tab id="processoExternoView" 
+            		  name="processoExternoView"
+                      title="#{messages['consultaProcesso.view']}" 
+                      status=":status"
+                      rendered="#{not empty processoHome.id}">
+            
+                <h:messages globalOnly="true" 
+                            styleClass="message"
+                            id="globalMessages" />
+            
+            	<h:form id="processoView">
+            		<rich:collapsiblePanel switchType="client" expanded="true">
+            			<h:panelGrid columns="2" width="100%" columnClasses="viewColumn">
+            				<wi:outputText id="dataInicio" label="Data de Início" 
+            					value="#{processoHome.instance.dataInicio}">
+            					<f:convertDateTime pattern="dd/MM/yyyy kk:mm"/>
+            				</wi:outputText>
+            				<wi:outputText id="usuarioCadastroProcesso" label="Usuário Cadastro Processo" 
+            					value="#{processoHome.instance.usuarioCadastroProcesso.nome}"/>
+            			</h:panelGrid>
+            		</rich:collapsiblePanel>
+            	</h:form>
+            
+                <infox:tabPanel switchType="ajax">
+                    
+                    <infox:tab id="form"
+                    		  name="form"
+                              title="#{messages['acaoProcesso.menuText']}" 
+                              immediate="true"
+                              status=":status">
+            
+                        <rich:dataTable value="#{processoHandler.taskInstanceList}"
+										rowKeyVar="key" 
+										var="task">
+							<rich:column styleClass="defaultCell">
+								<f:facet name="header">Tarefa</f:facet>
+								<h:outputText value="#{task.name}" />
+							</rich:column>
+							
+							<rich:column style="text-align: center" 
+										 styleClass="defaultCell">
+								<f:facet name="header">Término</f:facet>
+								<h:outputText value="#{task.end}">
+									<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+								</h:outputText>
+							</rich:column>
+							<rich:column
+								style="text-align:center"
+								styleClass="defaultCell">
+								<f:facet name="header">Documentos</f:facet>
+								<rich:dataTable value="#{processoHandler.getAnexosPublicos(task)}"
+										rowKeyVar="key" 
+										var="doc">
+										<rich:column>
+											<s:link
+												view="/Painel/documentoHTML.seam"
+												onclick="openPopUp('PopUpDocumentoBin', '')"
+												rendered="#{! empty doc.processoDocumentoBin.modeloDocumento}"
+												target="PopUpDocumentoBin">
+												<s:conversationPropagation type="none"/>
+												<f:param name="idBin" value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}" />
+												<f:param name="idProcessoDoc" value="#{doc.idProcessoDocumento}" />
+												<h:graphicImage 
+													title="Visualizar"
+													url="/img/view.gif"
+												/>
+											</s:link>
+											
+											<s:link target="idPdf#{row}" 
+													rendered="#{empty doc.processoDocumentoBin.modeloDocumento}"
+													action="#{processoDocumentoBinHome.setDownloadInstance()}"
+													onclick="openPopUp('idPdf#{row}', 'about:blank');">
+												<h:graphicImage value="/img/pdf.gif"
+																title="#{doc.processoDocumentoBin.nomeArquivo} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />
+												<f:param value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}" name="idBin" />
+											</s:link>
+										</rich:column>
+								</rich:dataTable>
+							</rich:column>
+						</rich:dataTable>
+                    </infox:tab>
+            
+                </infox:tabPanel>
+                
+            </infox:tab>
+        </infox:tabPanel>
+    </ui:define>
+
+</ui:composition>

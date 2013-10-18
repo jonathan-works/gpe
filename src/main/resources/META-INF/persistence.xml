@@ -12,8 +12,7 @@
       <provider>org.hibernate.ejb.HibernatePersistence</provider>
       <jta-data-source>java:jboss/datasources/EPADataSource</jta-data-source>
       <properties>
-			<property name="hibernate.dialect"
-				value="org.hibernate.dialect.PostgreSQLDialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="false" />
 			<property name="hibernate.default_schema" value="public" />
@@ -25,23 +24,17 @@
 			<property name="hibernate.ejb.event.post-update" value="br.com.infox.listener.LogEventListener" />
 			<property name="hibernate.ejb.event.post-delete" value="br.com.infox.listener.LogEventListener" />
 	        <property name="hibernate.id.new_generator_mappings" value="false"/>
-			<property name="hibernate.ejb.event.pre-insert" 
-                      value="br.com.infox.listener.RecursiveEventListener"/>
-            <property name="hibernate.ejb.event.pre-update" 
-                      value="br.com.infox.listener.RecursiveEventListener"/>
+			<property name="hibernate.ejb.event.pre-insert" value="br.com.infox.listener.RecursiveEventListener"/>
+            <property name="hibernate.ejb.event.pre-update" value="br.com.infox.listener.RecursiveEventListener"/>
                       
-			<property name="hibernate.search.default.directory_provider"
-				value="filesystem" />
+			<property name="hibernate.search.default.directory_provider" value="filesystem" />
 			<property name="hibernate.search.lucene_version" value="LUCENE_36"/>
-<!--			<property name="hibernate.hbm2ddl.auto" value="create"/>-->
  
-			<property name="jboss.entity.manager.factory.jndi.name" 
-				value="java:jboss/EPAPersistenceUnit"/> 
+			<property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/EPAPersistenceUnit"/> 
       </properties>
    </persistence-unit>
    
-   <persistence-unit name="EPABinPersistenceUnit"
-		transaction-type="JTA">
+   <persistence-unit name="EPABinPersistenceUnit" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:jboss/datasources/EPADataSourceBin</jta-data-source>
 		<properties>
@@ -53,13 +46,10 @@
 
 			<property name="hibernate.default_batch_fetch_size" value="16" />
 
-			<property name="hibernate.search.default.directory_provider"
-				value="filesystem" />
+			<property name="hibernate.search.default.directory_provider" value="filesystem" />
 			<property name="hibernate.search.lucene_version" value="LUCENE_36"/>
-			<!--			<property name="hibernate.hbm2ddl.auto" value="create"/>-->
 
-			<property name="jboss.entity.manager.factory.jndi.name"
-				value="java:jboss/EPABinPersistenceUnit" />
+			<property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/EPABinPersistenceUnit" />
 		</properties>
 	</persistence-unit>
    

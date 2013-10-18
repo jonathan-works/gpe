@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.entity;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +15,11 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
@@ -83,7 +86,7 @@ public class Caixa implements java.io.Serializable {
 		this.tarefa = tarefa;
 	}
 	
-	@Column(name="nm_caixa_idx", length=LengthConstants.NOME_PADRAO)
+	@Column(name="nm_caixa_idx", length=LengthConstants.NOME_PADRAO, nullable=false)
     @Size(max=LengthConstants.NOME_PADRAO)
 	public String getNomeIndice() {
         return nomeIndice;
@@ -140,5 +143,13 @@ public class Caixa implements java.io.Serializable {
 		int result = 1;
 		result = prime * result + getIdCaixa();
 		return result;
+	}
+	
+	@PreUpdate
+	@PrePersist
+	public void normalize() {
+		String normalized = Normalizer.normalize(getNomeCaixa(), Normalizer.Form.NFD)
+				.replaceAll("[^\\p{ASCII}]", "").toLowerCase();
+		setNomeIndice(normalized);
 	}
 }

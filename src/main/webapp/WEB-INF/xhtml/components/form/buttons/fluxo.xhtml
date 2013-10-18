@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
 	 xmlns="http://www.w3.org/1999/xhtml"
@@ -25,7 +25,7 @@
 			<wi:commandButton
 				id="definicao"
 				action="#{processBuilder.load(fluxoHome.instance)}"
-				value="Definição"
+				value="DefiniÃ§Ã£o"
 				rendered="#{fluxoHome.managed}"
 				oncomplete="openPopUp('processDefinition', '#{util.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);"
 			>			

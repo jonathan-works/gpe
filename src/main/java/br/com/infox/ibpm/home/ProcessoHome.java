@@ -41,6 +41,7 @@ import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.component.AbstractHome;
@@ -141,10 +142,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
 		ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 		setIdProcessoDocumento(idDoc);
-		Integer result = inserirProcessoDocumentoFluxo(value, label, assinado);
-		if (processoDocumento != null && result == ERRO_AO_VERIFICAR_CERTIFICADO) {
+		Integer result = idDoc;
+		if (processoDocumento != null) {
 			atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
-			result = idDoc;
+		} else {
+			result = inserirProcessoDocumentoFluxo(value, label, assinado);
 		}
 		avisarRegistroFoiGravadoComSucesso();
 		return result;
@@ -164,34 +166,21 @@ public class ProcessoHome extends AbstractHome<Processo> {
 			ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
 			ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
 			String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
-			atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento);
+			UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioLocalizacaoAtual();
+			processoDocumento.setPapel(usuarioLocalizacao.getPapel());
+			processoDocumento.setLocalizacao(usuarioLocalizacao.getLocalizacao());
+			atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento, usuarioLocalizacao.getUsuario());
 			inicializarTipoProcessoDocumento();
 			gravarAlteracoes(processoDocumento, processoDocumentoBin);
 		}
 	}
 
 	private String getDescricaoModeloDocumentoFluxoByValue(Object value, String modeloDocumentoFluxo) {
-	    String modeloDocumento = getValueOfModeloDocumento(value, modeloDocumentoFluxo);
-		if (!Strings.isEmpty(modeloDocumentoFluxo) && !modeloDocumento.equals(modeloDocumentoFluxo)){
-			modeloDocumento = modeloDocumentoFluxo;
+		if (value == null) {
+			value = modeloDocumentoFluxo != null ? modeloDocumentoFluxo : "";
 		}
-		if (Strings.isEmpty(modeloDocumento)){
-			modeloDocumento = " ";
-		}
-		return modeloDocumento;
+		return value.toString();
 	}
-
-    private String getValueOfModeloDocumento(Object value, String modeloDocumentoFluxo) {
-        String modeloDocumento;
-        if (value != null){
-		    modeloDocumento = String.valueOf(value);
-		} else if (modeloDocumentoFluxo != null) {
-		    modeloDocumento = modeloDocumentoFluxo;
-		} else {
-		    modeloDocumento = "";
-		}
-        return modeloDocumento;
-    }
 
 	private void gravarAlteracoes(ProcessoDocumento processoDocumento, ProcessoDocumentoBin processoDocumentoBin) {
 		processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
@@ -201,10 +190,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		getEntityManager().flush();
 	}
 
-	private void atualizarProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin, String modeloDocumento) {
+	private void atualizarProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin, String modeloDocumento, UsuarioLogin assinante) {
 		processoDocumentoBin.setModeloDocumento(modeloDocumento);
 		processoDocumentoBin.setCertChain(certChain);
 		processoDocumentoBin.setSignature(signature);
+		processoDocumentoBin.setUsuarioUltimoAssinar(assinante.getNome());
 	}
 
 	/**

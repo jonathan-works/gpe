@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns="http://www.w3.org/1999/xhtml"
@@ -21,7 +21,7 @@
 		 name="home"
 		 value="#{papelHome}" />
 
-    <ui:define name="title">Cadastro de Papéis</ui:define>
+    <ui:define name="title">Cadastro de PapÃ©is</ui:define>
 
     <ui:define name="searchGrid">
 		
@@ -83,7 +83,7 @@
         <infox:tab
              id="tabPapeis"
              status=":status"
-             title="Visão Hierárquica"
+             title="VisÃ£o HierÃ¡rquica"
              name="tabPapeis"
              rendered="#{home.managed}">
             
@@ -101,10 +101,10 @@
             <span >
                  <h:outputText
                      rendered="#{rolesTree.invertida}"
-                     value="Estrutura dos papéis que cedem permissões " />
+                     value="Estrutura dos papÃ©is que cedem permissÃµes " />
                 <h:outputText
                      rendered="#{!rolesTree.invertida}"
-                     value="Estrutura dos papéis que recebem permissões " />
+                     value="Estrutura dos papÃ©is que recebem permissÃµes " />
             
             </span>
             <rich:tree

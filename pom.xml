@@ -99,7 +99,7 @@
 			<groupId>br.com.infox.epp</groupId>
 			<artifactId>taskpage</artifactId>
 			<type>jar</type>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.2-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -263,7 +263,7 @@
 		<dependency>
 			<groupId>br.com.infox</groupId>
 			<artifactId>componentes</artifactId>
-			<version>1.0.9</version>
+			<version>1.0.9.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

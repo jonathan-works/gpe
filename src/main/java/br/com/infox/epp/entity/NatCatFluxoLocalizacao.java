@@ -38,7 +38,7 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 	private int idNatCatFluxoLocalizacao;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;	
 	private Localizacao localizacao;
-	private Boolean heranca;
+	private boolean heranca = false;
 	
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_nat_cat_fluxo_localizacao")
 	@Id
@@ -73,13 +73,12 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 		this.localizacao = localizacao;
 	}
 
-	public void setHeranca(Boolean heranca) {
+	public void setHeranca(boolean heranca) {
 		this.heranca = heranca;
 	}
 	
 	@Column(name="in_heranca", nullable=false)
-	@NotNull
-	public Boolean getHeranca() {
+	public boolean getHeranca() {
 		return heranca;
 	}
 	

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
 	 xmlns="http://www.w3.org/1999/xhtml"
@@ -45,7 +45,7 @@
 			<infox:tabHeaders />
 			<infox:tab
 				 status=":status"
-				 title="Papéis">
+				 title="PapÃ©is">
 				
 				<a:region>
 					
@@ -55,7 +55,7 @@
 						 itemValues="#{papelHome.getPapeisDisponiveis(true)}"
 						 itemLabel="#{papelHome.getNome(var)}"
 						 sourceCaption=""
-						 targetCaption="Papéis dos quais recebe permissões:" />
+						 targetCaption="PapÃ©is dos quais recebe permissÃµes:" />
 				
 				</a:region>
 			
@@ -68,7 +68,7 @@
 					
 					<wi:pickList
 						 id="herdeiros"
-						 targetCaption="Papéis para os quais cede permissões:"
+						 targetCaption="PapÃ©is para os quais cede permissÃµes:"
 						 value="#{papelHome.membros}"
 						 itemValues="#{papelHome.getPapeisDisponiveis(false)}"
 						 itemLabel="#{papelHome.getNome(var)}" />
@@ -84,7 +84,7 @@
 					
 					<wi:pickList
 						 id="recurso"
-						 targetCaption="Recursos do sistema aos quais tem permissão:"
+						 targetCaption="Recursos do sistema aos quais tem permissÃ£o:"
 						 value="#{papelHome.recursos}"
 						 itemValues="#{papelHome.recursosDisponiveis}"
 						 itemLabel="#{papelHome.getNome(var)}" />

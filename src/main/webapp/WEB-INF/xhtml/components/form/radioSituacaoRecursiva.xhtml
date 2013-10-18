@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
 	 xmlns:ui="http://java.sun.com/jsf/facelets"
 	 xmlns="http://www.w3.org/1999/xhtml"
@@ -16,7 +16,7 @@
 		 value="#{empty inativo ? props.inativo : inativo}" />
 	    
 	    <wi:selectOneRadio
-		 onchange="if(this.value == 'false') alert('Ao inativar este registro os seus filhos também serão inativados.');"
+		 onchange="if(this.value == 'false') alert('Ao inativar este registro os seus filhos tambÃ©m serÃ£o inativados.');"
 		 valueList="true:Ativo,false:Inativo"
 		 boxChecked="#{inativo ? 1 : 0}">
 	    </wi:selectOneRadio>
