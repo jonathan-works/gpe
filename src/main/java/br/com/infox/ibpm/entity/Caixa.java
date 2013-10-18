@@ -16,14 +16,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.Size;
 
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity
-@Table(name = Caixa.TABLE_NAME, schema="public", uniqueConstraints = @UniqueConstraint(columnNames = {"nm_caixa", "id_tarefa"}))
+@Table(name = Caixa.TABLE_NAME, schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
 public class Caixa implements java.io.Serializable {
 
@@ -34,8 +33,9 @@ public class Caixa implements java.io.Serializable {
 	private int idCaixa;
 	private String nomeCaixa;
 	private String dsCaixa;
+	private String nomeIndice;
 	private Tarefa tarefa;
-	private Tarefa tarefaAnterior;
+	private Integer idNodeAnterior;
 	private List<Processo> processoList = new ArrayList<Processo>(0);
 	
 	public Caixa() {
@@ -82,18 +82,26 @@ public class Caixa implements java.io.Serializable {
 	public void setTarefa(Tarefa tarefa) {
 		this.tarefa = tarefa;
 	}
+	
+	@Column(name="nm_caixa_idx", length=LengthConstants.NOME_PADRAO)
+    @Size(max=LengthConstants.NOME_PADRAO)
+	public String getNomeIndice() {
+        return nomeIndice;
+    }
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_tarefa_anterior")
-	public Tarefa getTarefaAnterior() {
-		return tarefaAnterior;
-	}
+    public void setNomeIndice(String nomeIndice) {
+        this.nomeIndice = nomeIndice;
+    }
 
-	public void setTarefaAnterior(Tarefa tarefaAnterior) {
-		this.tarefaAnterior = tarefaAnterior;
-	}
+    @Column(name="id_node_anterior")
+	public Integer getIdNodeAnterior() {
+        return idNodeAnterior;
+    }
+    public void setIdNodeAnterior(Integer idNodeAnterior) {
+        this.idNodeAnterior = idNodeAnterior;
+    }
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "caixa")
 	public List<Processo> getProcessoList() {
 		return processoList;
