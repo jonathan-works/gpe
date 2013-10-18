@@ -10,13 +10,10 @@
 	
 	<begin-conversation join="true"/>
 	<param name="nomeCaixa.order" value="#{caixaGrid.order}"/>
-	<param name="id" value="#{caixaHome.caixaIdCaixa}"/>
+	<param name="id" value="#{caixaHome.id}" converterId="integerConverter" />
 
 	<!-- Parametros para RESTFull -->
 	<param name="tab" value="#{caixaHome.tab}"/>
-	<param name="goBackUrl" value="#{caixaHome.goBackUrl}"/>
-	<param name="goBackId" value="#{caixaHome.goBackId}"/>
-	<param name="goBackTab" value="#{caixaHome.goBackTab}"/>			
 
 	<!-- Parametros para a ordem de grids -->
 	<param name="caixa.order" value="#{caixaGrid.order}"/>		
