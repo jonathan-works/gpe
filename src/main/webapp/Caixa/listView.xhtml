@@ -30,10 +30,10 @@
 			<infox:tab
 				id="form"
 				name="search"
-				rendered="#{(caixaHome.managed or (canEdit and (hideTabForm != true)))}"
+				rendered="#{caixaHome.managed}"
 				immediate="true"
 				status=":status"
-				title="#{canEdit ? 'Formul�rio' : 'Detalhes'}"
+				title="Formulário"
 				action="#{caixaHome.onClickFormTab}"
 			>
 				<wi:dataForm
@@ -59,10 +59,16 @@
 	                         id="idTaskAnterior"
 	                         label="Tarefa Anterior"
 	                         value="#{caixaHome.instance.idNodeAnterior}"
-	                         valueItems="#{caixaHome.getPreviousTasks(caixaHome.instance.tarefa.idTarefa)}" />
+	                         valueItems="#{caixaHome.getPreviousNodes(caixaHome.instance.tarefa.idTarefa)}" />
 						 <ui:define
 	                         name="buttons">
 							<wi:commandButtonUpdate />
+							<wi:commandButton
+         						id="voltarBtn"
+						         value="Voltar"
+						         disabled="#{disabled}"
+						         oncomplete="location.href='#{util.getContextPath()}/Painel/list.seam'">
+							</wi:commandButton>
 						</ui:define>
 					</wi:dataForm>
 			</infox:tab>
