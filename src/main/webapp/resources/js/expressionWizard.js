@@ -67,7 +67,7 @@
 
 	function InputNumber(args) {
 		var $number = ".";
-		var $message = args.message || "Insira um valor numÈrico";
+		var $message = args.message || "Insira um valor num√©rico";
 		while (true) {
 			$number = window.prompt($message, "0");
 			$number = $number.replace(".", "").replace(",", ".");
@@ -75,7 +75,7 @@
 			if ((!isNaN($number)) && (isFinite($number))) {
 				break;
 			}
-			$message = args.errorMessage || "Insira um valor numÈrico v·lido!!!";
+			$message = args.errorMessage || "Insira um valor num√©rico v√°lido!!!";
 		}
 		return $number;
 	}
@@ -83,13 +83,13 @@
 	function AritOperSelect(args) {
 		args.label = args.label || {};
 		args.options = [
-			{value:"", label:args.label.null || "Escolha uma operaÁ„o aritmÈtica."},
+			{value:"", label:args.label.null || "Escolha uma opera√ß√£o aritm√©tica."},
 			{value:"+", label:args.label.plus || "Soma"},
-			{value:"-", label:args.label.minus || "SubtraÁ„o"},
-			{value:"*", label:args.label.mult || "MultiplicaÁ„o"},
-			{value:"/", label:args.label.div || "Divis„o"},
+			{value:"-", label:args.label.minus || "Subtra√ß√£o"},
+			{value:"*", label:args.label.mult || "Multiplica√ß√£o"},
+			{value:"/", label:args.label.div || "Divis√£o"},
 			{value:"",label:""},
-			{value:"num", label:args.label.number || "Valor NumÈrico"}
+			{value:"num", label:args.label.number || "Valor Num√©rico"}
 		];
 		return Select(args);
 	}
@@ -97,8 +97,8 @@
 	function ConclusionSelect(args) {
 		args.label = args.label || {};
 		args.options = [
-		      {value:"", label:args.label.null || "Selecione uma conclus„o"},
-		      {value:"if", label:args.label.condition || "Nova condiÁ„o"}
+		      {value:"", label:args.label.null || "Selecione uma conclus√£o"},
+		      {value:"if", label:args.label.condition || "Nova condi√ß√£o"}
 		];
 		return Select(args);
 	}
@@ -106,12 +106,12 @@
 	function BooleanSelect(args) {
 		args.label = args.label || {};
 		args.options = [
-			{value:"", label:args.label.null || "Escolha uma operaÁ„o lÛgica."},
+			{value:"", label:args.label.null || "Escolha uma opera√ß√£o l√≥gica."},
 			{value:"true", label:args.label.true || "Verdadeiro"},
 			{value:"false", label:args.label.false || "Falso"},
-			{value:"||", label:args.label.or || "DisjunÁ„o"},
-			{value:"&&", label:args.label.and || "ConjunÁ„o"},
-			{value:"not", label:args.label.not || "NegaÁ„o"},
+			{value:"||", label:args.label.or || "Disjun√ß√£o"},
+			{value:"&&", label:args.label.and || "Conjun√ß√£o"},
+			{value:"not", label:args.label.not || "Nega√ß√£o"},
 			{value:"", label:""},
 			{value:"==", label:args.label.equals || "Igual a"},
 			{value:"!=", label:args.label.notEqual || "Diferente de"},
@@ -307,7 +307,7 @@
 				var $imageMsg = $messages.image || {};
 				return Image({
 					src:$imageSrc,
-					title:$imageMsg.title || "Wizard de Expressıes",
+					title:$imageMsg.title || "Wizard de Express√µes",
 					style:{
 						cursor:"pointer"
 					},
