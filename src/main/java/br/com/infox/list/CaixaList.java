@@ -20,12 +20,12 @@ public class CaixaList extends EntityList<Caixa> {
 	private static final String DEFAULT_EJBQL = "select o from Caixa o";
 	private static final String DEFAULT_ORDER = "o.dsCaixa";
 	
-	private static final String R1 = "o.idNodeAnterior = #{caixaList.entity.idNodeAnterior} OR o.idNodeAnterior is null";
+	private static final String R1 = "o.idNodeAnterior=#{caixaList.entity.idNodeAnterior} OR o.idNodeAnterior is null";
 
 	@Override
 	protected void addSearchFields() {
 		addSearchField("tarefa", SearchCriteria.IGUAL);
-		addSearchField("tarefaAnterior", SearchCriteria.IGUAL, R1);
+		addSearchField("idNodeAnterior", SearchCriteria.IGUAL, R1);
 	}
 
 	@Override
