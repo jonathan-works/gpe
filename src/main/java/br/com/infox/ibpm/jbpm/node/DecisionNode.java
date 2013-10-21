@@ -91,10 +91,9 @@ public class DecisionNode extends Node {
 		if (leavingTransitionList == null)	{
 			leavingTransitionList = new ArrayList<String>();
 			for (Object transition : leavingTransitions) {
-				leavingTransitionList.add("\""+((Transition) transition).getName()+"\"");
+				leavingTransitionList.add("\"'"+((Transition) transition).getName()+"'\"");
 			}
 		}
-		
 		return leavingTransitionList;
 	}
 	
