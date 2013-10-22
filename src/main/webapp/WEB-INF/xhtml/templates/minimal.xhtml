@@ -32,15 +32,20 @@
 		<ui:include
              src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 	
-		<s:div styleClass="clean-pageBody"
-               id="pageBody">
-               <wi:messages
+		<s:div
+			styleClass="clean-pageBody"
+            id="pageBody"
+		>
+				<wi:messages
 					showDialogMessage="#{showDialogMessage}"
-					timeCloseMSG="#{timeCloseMSG}" />	
+					timeCloseMSG="#{timeCloseMSG}"
+				/>	
 				<wi:quadro>
-				   <h:graphicImage url="#{a4jSkin.imgLogoTopo}" /> <br
-                         		   clear="none" />
-				   <ui:insert name="body" />
+					<h:graphicImage
+						styleClass="banner-logo"
+						url="#{a4jSkin.imgLogoTopo}" 
+					/>
+					<ui:insert name="body" />
 				</wi:quadro>
 		</s:div>
 	</h:body>
