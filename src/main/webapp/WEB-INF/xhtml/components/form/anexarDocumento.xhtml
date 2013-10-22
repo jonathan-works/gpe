@@ -71,7 +71,7 @@
 		</s:div>
 		<script type="text/javascript">
 		//<![CDATA[
-	    	namespace("infox.signature.anexar",function (Anexar) {
+	    	invoke(["infox.signature.anexar","infox.editor","infox"],function (Anexar, Editor,Infox) {
 	    		var appletDiv = #{rich:jQuery("appletDiv")};
 				var signatureInpt = #{rich:jQuery("signature")};
 				var certChainInpt = #{rich:jQuery("certChain")};
@@ -80,23 +80,23 @@
 	    			return "#{processoDocumentoHome.modelo}";
 	    		};
 				Anexar.getData = function getData() {
-					return #{processoDocumentoHome.modelo} ? infox.editor.modeloDocumento.instance.getData() : "#{fileHome.getMD5()}";
+					return #{processoDocumentoHome.modelo} ? Editor.modeloDocumento.instance.getData() : "#{fileHome.getMD5()}";
 				};
 				Anexar.addSignature = function addSignature() {
-					infox.showLoading();
+					Infox.showLoading();
 					submitForm();
 				};
 				Anexar.isSigned = function isSigned() {
 					return ((signatureInpt.val().trim() != "") && (certChainInpt.val().trim() != "")) 
 				};
 				Anexar.postSign = function postSign() {
-					infox.hideLoading();
+					Infox.hideLoading();
 					if (this.isSigned()) {
 						appletDiv.addClass("hidden");
 					}
 				};
 				try {
-					infox.editor.modeloDocumento.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
+					Editor.modeloDocumento.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
 						signatureInpt.val("");
 						certChainInpt.val("");
 						appletDiv.removeClass("hidden");

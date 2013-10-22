@@ -85,7 +85,7 @@
 	</s:div>
 		<script type="text/javascript">
 			//<![CDATA[
-			namespace("infox.editor.#{id}Editor",function (Editor) {
+			invoke(["infox.editor.#{id}Editor"],function (Editor) {
 				var appletDiv = #{rich:jQuery("appletDiv")};
 				var signatureInpt = #{rich:jQuery(id.concat("signature"))};
 				var certChainInpt = #{rich:jQuery(id.concat("certChain"))};
