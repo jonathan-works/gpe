@@ -41,28 +41,21 @@
 						return "#{pd.processoDocumentoBin.md5Documento}";		
 					},
 					hasSignature:function hasSignature() {
-						return $("#{rich:clientId('signature')}").value != ''
+						return #{rich:jQuery("signature")}.val() != ''
 					},
 					postValidate:function postValidate() {
-						if (this.hasSignature()) {
-							$('divApplet').hide();
-							submitForm();
-						} else {
-							$('divApplet').show();
-						}
-						Richfaces.hideModalPanel('mp_formValidar');
 						try {
+							submitForm();
 							opener.location.reload();
-							close();
 						}catch(e){
 						}
 					}
 			};
 		</script>
 		
-		<rich:panel>	
+		<rich:panel>
 	        <f:facet name="header">Informações: </f:facet>
-	        <wi:view 
+	        <f:view 
 	        	form="#{processoDocumentoView}" 
 	        	columns="1" title="Documento"
 	        	opened="false"/>
@@ -85,38 +78,27 @@
 					>
 					</wi:appletAssinatura>
 		        </div>
-				<a:form id="formValidar">
-					<h:inputHidden id="certChain" 
-						value="#{processoDocumentoBinHome.certChain}" 
-						required="true"/>					
-					<h:inputHidden id="signature" 
-						value="#{processoDocumentoBinHome.signature}" 
-						required="true"/> 
+				<h:form id="formValidar">
+					<script>
+						if (#{not empty pd.processoDocumentoBin.signature and not empty pd.processoDocumentoBin.certChain}) {
+							close();
+						}
+					</script>
+					<h:inputHidden id="certChain"
+						value="#{processoDocumentoBinHome.certChain}"/>
+					<h:inputHidden id="signature"
+						value="#{processoDocumentoBinHome.signature}"/>
 				
-		            <a:jsFunction 
-		            	name="submitForm" 
+		            <a:jsFunction
+		            	name="submitForm"
 		            	action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
-		            	reRender="pageBody"/>
-				</a:form>
-	
-			<rich:modalPanel id="mp_formValidar" height="100" width="250"
-							 resizeable="false">
-				<f:facet name="header">
-					<h:outputText value="Aguarde a assinatura do documento." />
-				</f:facet>
-				<div style="text-align: center; padding-top: 30px">
-					<h:graphicImage url="/img/ajax-loader.gif" />
-				</div>
-			</rich:modalPanel>
-	</s:div>	
+		            	execute="@form"
+		            	oncomplete="opener.location.reload()"
+		            	render="formValidar"/>
+				</h:form>
+			</s:div>	
 		</rich:panel>
 	</s:div>
 	</ui:define>
 	
 </ui:composition>
-
-
-
-
-
-
