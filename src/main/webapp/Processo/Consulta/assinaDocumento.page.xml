@@ -6,10 +6,8 @@
 	  login-required="true"
 >
 
-	<begin-conversation join="true" flush-mode="manual" />
-	
-	<param name="idProcessoDocumento" value="#{processoDocumentoHome.processoDocumentoIdProcessoDocumento}" />
-	<action if="#{!processoDocumentoBinHome.managed}" execute="#{processoDocumentoBinHome.newInstance()}"/>
-	<action execute="#{processoDocumentoBinHome.setId(processoDocumentoHome.instance.processoDocumentoBin.idProcessoDocumentoBin)}"/>
+	<begin-conversation join="true" />
+	<param name="id" value="#{processoDocumentoHome.id}" 
+		   converterId="integerConverter"/>
 
 </page>
