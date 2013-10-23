@@ -1,13 +1,17 @@
 package br.com.infox.ibpm.dao;
 
+import java.util.HashMap;
 import java.util.List;
+
+import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import javax.persistence.Query;
 
+import br.com.infox.access.entity.Papel;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
+import br.com.infox.ibpm.query.TipoProcessoDocumentoQuery;
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
 
 @Name(TipoProcessoDocumentoDAO.NAME)
@@ -38,6 +42,22 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 		Query q = entityManager.createQuery(sql);
 		q.setMaxResults(1);
 		return (TipoProcessoDocumento) q.getSingleResult();	
+	}
+	
+	@SuppressWarnings("unchecked")
+    public boolean isAssinaturaObrigatoria(TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
+	    HashMap<String,Object> params = new HashMap<String,Object>(0);
+	    params.put(TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_PARAM, tipoProcessoDocumento);
+	    params.put(TipoProcessoDocumentoQuery.PAPEL_PARAM, papel);
+	    
+        List<Boolean> list = getNamedQuery(TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA, params)
+                .setMaxResults(1)
+                .getResultList();
+        Boolean result = false;
+        if (list != null && list.size() > 0) {
+            result = list.get(0);
+        }
+        return result;
 	}
 
 }
