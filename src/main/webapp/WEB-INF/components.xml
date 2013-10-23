@@ -28,7 +28,6 @@
 	<document:document-store use-extensions="true" />
 
 	<web:hot-deploy-filter url-pattern="*.seam" />
-	<web:multipart-filter disabled="true"/>
 
 	<core:manager
 		concurrent-request-timeout="2000"
