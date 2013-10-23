@@ -49,6 +49,7 @@
 	                         id="nomeCaixa"
 	                         label="#{messages['caixa.nomeCaixa']}"
 	                         value="#{caixaHome.instance.nomeCaixa}"
+	                         required="true"
 	                         length="100" />
 							<wi:inputTextarea
 	                         id="dsCaixa"
@@ -56,8 +57,8 @@
 	                         value="#{caixaHome.instance.dsCaixa}" />						
 	
 							<wi:selectOneMenu
-	                         id="idTaskAnterior"
-	                         label="Tarefa Anterior"
+	                         id="idNodeAnterior"
+	                         label="Nó Anterior"
 	                         value="#{caixaHome.instance.idNodeAnterior}"
 	                         valueItems="#{caixaHome.getPreviousNodes(caixaHome.instance.tarefa.idTarefa)}" />
 						 <ui:define
@@ -67,7 +68,7 @@
          						id="voltarBtn"
 						         value="Voltar"
 						         disabled="#{disabled}"
-						         oncomplete="location.href='#{util.getContextPath()}/Painel/list.seam'">
+						         onclick="location.href='#{util.getContextPath()}/Painel/list.seam'">
 							</wi:commandButton>
 						</ui:define>
 					</wi:dataForm>

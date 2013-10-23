@@ -16,6 +16,7 @@ import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.manager.CaixaManager;
 import br.com.infox.ibpm.manager.TarefaManager;
+import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -67,6 +68,20 @@ public class CaixaHome extends AbstractHome<Caixa> {
 	    return super.afterPersistOrUpdate(ret);
 	}
 	
+	@Override
+	public String update() {
+		String ret = super.update();
+		try {
+			if (PostgreSQLErrorCode.valueOf(ret) == PostgreSQLErrorCode.UNIQUE_VIOLATION) {
+		    	FacesMessages.instance().clear();
+		    	FacesMessages.instance().add(Severity.ERROR, "Já existe uma caixa na mesma tarefa com o nó anterior especificado.");
+		    }
+		} catch (IllegalArgumentException e) {
+			// Retorno do update não pertence ao enum, nada a fazer
+		}
+		return ret;
+	}
+	
 	public static CaixaHome instance() {
 		return ComponentUtil.getComponent(NAME);
 	}
@@ -83,13 +98,10 @@ public class CaixaHome extends AbstractHome<Caixa> {
         return ret;
     }
     
-    public void remove(int idCaixa) {
-        instance = EntityUtil.find(Caixa.class, idCaixa);
-        remove();
-        if(instance == null){
-            FacesMessages.instance().add(Severity.ERROR, "Por favor, selecione a caixa que deseja excluir!");
-        }
-        TarefasTreeHandler.clearActiveTree();
+    @Override
+    public String remove() {
+    	String ret = super.remove();
+    	TarefasTreeHandler.clearActiveTree();
+    	return ret;
     }
-    
 }
