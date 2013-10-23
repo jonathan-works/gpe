@@ -174,7 +174,8 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.tipoProcessoDocumentoObservacao = tipoProcessoDocumentoObservacao;
 	}
 
-	@Transient
+	@Column(name = "tp_numeracao")
+    @Enumerated(EnumType.STRING)
 	public TipoNumeracaoEnum getTipoNumeracao() {
 		return tipoNumeracao;
 	}
