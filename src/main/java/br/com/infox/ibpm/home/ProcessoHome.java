@@ -31,6 +31,8 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.core.certificado.Certificado;
+import br.com.infox.core.certificado.CertificadoException;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
@@ -461,17 +463,21 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return String.valueOf(idProcesso);
 	}
 	
-	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) {
+	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws CertificadoException {
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
-			limparAssinatura();
-			throw new AplicationException("O cadastro do usuário não está assinado.");
+		    final Certificado certificado = new Certificado(certChainBase64Encoded);
+		    final String cpfCertificado = certificado.getCn().split(":")[1];
+		    if (usuarioLogado.getCpf().replace(".", "").equals(cpfCertificado)) {
+		        usuarioLogado.setCertChain(certChainBase64Encoded);
+		    } else {
+    			limparAssinatura();
+    			throw new AplicationException("O cadastro do usuário não está assinado.");
+		    }
 		}
 		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
 			limparAssinatura();
 			throw new AplicationException("O certificado não é o mesmo do cadastro do usuario");
 		}
-		//TODO usar o VerificaCertificado que hoje sim está no PJE2, tem de migrar o que nao é do PJE2 pro core.
-		//TODO esperando Tássio verificar (21 de março de 2013)
 	}
 
 	public Boolean getPodeInativarParteProcesso() {

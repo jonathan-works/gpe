@@ -7,15 +7,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.ibpm.query.TipoProcessoDocumentoQuery;
 
 @Entity
 @Table(name = "tb_tipo_processo_documento_papel", schema="public")
+@NamedQueries(value={
+    @NamedQuery(
+            name=TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA,
+            query=TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA_QUERY
+    )
+})
 public class TipoProcessoDocumentoPapel implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 

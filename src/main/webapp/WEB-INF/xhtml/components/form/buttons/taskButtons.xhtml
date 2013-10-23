@@ -43,7 +43,7 @@
 			rendered="#{!empty form.fields and processoHome.managed}"
 			onmouseup="showLoading()"
 			oncomplete="#{oncomplete};hideLoading()"
-			render="#{reRenderSave}"
+			render="#{reRenderSave},DialogMessage"
 			value="Gravar"
 			styleClass="buttons"
 			action="#{taskInstanceHome.update(home)}" />
@@ -88,7 +88,7 @@
 				onmouseup="showLoading()"
 				styleClass="buttons"
 				oncomplete="verifyFields();"
-				render=":script,#{reRenderSave}" />
+				render=":script,#{reRenderSave},DialogMessage" />
 		</c:if>
 		<c:if test="#{taskInstanceHome.transitions.size le 3}">
 			<a:repeat
@@ -98,10 +98,9 @@
 					status="none"
 					onmouseup="showLoading()"
 					oncomplete="verifyFields();"
-					render=":script,#{reRenderSave}"
+					render="DialogMessage,:script,#{reRenderSave}"
 					value="#{transition.name}"
-					styleClass="buttons buttons"
-					
+					styleClass="buttons"
 					action="#{taskInstanceHome.end(transition.name)}">
 				</a:commandButton>
 			</a:repeat>

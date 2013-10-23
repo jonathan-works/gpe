@@ -80,7 +80,7 @@
 				},
 				insertImage:function(path) {
 					var img = document.createElement("img");
-					img.src = namespace.infox.imageSrcToBase64(path);
+					img.src = infox.imageSrcToBase64(path);
 					var container = document.createElement("div");
 					container.appendChild(img);
 					this.insertHtml(container.innerHTML);
@@ -115,6 +115,7 @@
 				tabSpaces:4,
 				on:{
 					configLoaded:function(evt) {
+						
 						var editor = evt.editor;
 						var config = editor.config;
 						var tags = [
@@ -126,6 +127,11 @@
 								},
 							</a:repeat>
 						];
+						//<![CDATA[
+						if (tags.length < 1) {
+							return;
+						}
+						//]]>
 						editor.ui.addRichCombo('variables.cmb', {
 							label : "Variáveis",
 							title : "Variáveis",

@@ -45,10 +45,10 @@
 	</s:decorate>
 		
 		<script>
-			namespace(["infox.escapeId"],function(escapeId) {
+			invoke(["infox.escapeId"],function(EscapeId) {
 				if ('#{value}' == '') {
-					var id= escapeId("##{formId}:#{f.id}:#{f.id}Decoration:#{f.id}:#{empty boxChecked ? 0 : boxChecked}");
-					$(id).attr({checked:true});			
+					$(EscapeId("##{formId}:#{f.id}:#{f.id}Decoration:#{f.id}:#{empty boxChecked ? 0 : boxChecked}"))
+					.attr({checked:true});			
 				}
 			});
 		</script>

@@ -196,10 +196,6 @@
 					
 					</c:if>
 
-
-					<wi:messages
-						 showDialogMessage="#{showDialogMessage}"
-						 timeCloseMSG="#{timeCloseMSG}" />
 				
 				</s:div>
 			
@@ -209,8 +205,8 @@
 		<s:fragment rendered="#{!empty focus}">
 			
 			<script type="text/javascript">
-				namespace(["infox.escapeId"],function(escapeId) {
-					var id = escapeId("#{formId}:#{focus}:#{focus}Decoration:#{focus}");
+				invoke(["infox.escapeId"],function(EscapeId) {
+					var id = EscapeId("#{formId}:#{focus}:#{focus}Decoration:#{focus}");
 					$(id).focus();
 				});
 			</script>

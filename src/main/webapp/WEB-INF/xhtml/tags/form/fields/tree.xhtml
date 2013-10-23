@@ -70,9 +70,9 @@
 				</h:inputHidden>
 				<script>
 				//<![CDATA[
-				    namespace(["infox.escapeId"],function(escapeId) {
+				    invoke(["infox.escapeId"],function(EscapeId) {
 						if (#{empty tree.selected} && #{required}) {
-							var id = escapeId("##{rich:clientId(id.concat('Hidden'))}"); 
+							var id = EscapeId("##{rich:clientId(id.concat('Hidden'))}"); 
 							$(id).val(-1);
 						}
 				    });

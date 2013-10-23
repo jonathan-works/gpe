@@ -2,6 +2,7 @@ namespace("infox.Messages",function Messages(args) {
 	var timeout = args.timeout || 1;
 	var existsMessages = args.existsMessages || false;
 	var existsGlobalMessages = args.existsGlobalMessages || false;
+	var timer = timer || false;
 	var Messages = Messages || {
 		showDialog:$_showDialog,
 		hideDialog:$_hideDialog,
@@ -13,6 +14,8 @@ namespace("infox.Messages",function Messages(args) {
 	}
 	
 	function $_hideDialog() {
+		clearTimeout(timer);
+		timer=false;
 		$(".d-msg").addClass("hidden");
 	}
 	
@@ -23,7 +26,7 @@ namespace("infox.Messages",function Messages(args) {
 				&& $(".d-msg-c").text().trim()!== "") {
 			$_showDialog();
 			if ($('.rf-msgs-err').html() == null) {
-				setTimeout($_hideDialog, timeout);
+				timer = setTimeout($_hideDialog, timeout);
 			}
 		}
 	}

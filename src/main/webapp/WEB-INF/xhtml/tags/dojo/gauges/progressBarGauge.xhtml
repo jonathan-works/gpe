@@ -26,8 +26,8 @@
     
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
 
-    <script>
-    namespace("infox.ProgressBarGauge",function(ProgressBarGauge) {
+    <script type="text/javascript">
+    invoke(["infox.ProgressBarGauge"],function(ProgressBarGauge) {
     	ProgressBarGauge({
     	    id:"#{id}Gauge",
     	    containerId:"#{id}GaugeContainer",
