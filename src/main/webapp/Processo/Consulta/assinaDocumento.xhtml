@@ -1,196 +1,122 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-    <!--
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:rich="http://richfaces.org/rich"
+				xmlns:a="http://richfaces.org/a4j"
+				xmlns:wi= "http://www.itx.com.br/jsf"
+				template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+<!--
   IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da InformaÃ§Ã£o Ltda.
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
-  Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
   sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versÃ£o 2 da LicenÃ§a.
-  Este programa Ã© distribuÃ­do na expectativa de que seja Ãºtil, porÃ©m, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implÃ­cita de COMERCIABILIDADE OU 
-  ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA.
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
   
   Consulte a GNU GPL para mais detalhes.
-  VocÃª deve ter recebido uma cÃ³pia da GNU GPL junto com este programa; se nÃ£o, 
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->
-    <ui:define name="baseBody">
-        <div class="pageBody">
-            <ui:param
-                name="home"
-                value="#{processoDocumentoHome}" />
-            <ui:param
-                name="pd"
-                value="#{home.instance}" />
-            <ui:param
-                name="isBinario"
-                value="#{pd.processoDocumentoBin.isBinario()}" />
-
-
-
-            <script xml:space="preserve">
-		  function close() {
-			  window.close();
-		  }
-		  function useBase64() {
-			  return '#{isBinario}';
-		  }
-		  function getData() {
-			     return '';			     
-		  }	
-		  function checkValidacao() {
-			  if ($('formValidar:signature').value != '') {
-				  $('divApplet').style.display='none';
-				  submitForm();
-			  } else {
-				  $('divApplet').style.display='block';
-			  }
-			  Richfaces.hideModalPanel('mp_formValidar');
-		  }	
-		  function actionDepoisValidar() {
-			  try {
-				  window.opener.location = '#{param.urlOpenner}';
-			  } catch (e) {
-			  }
-		  }
+-->   
+	<ui:define name="baseBody"> 
+	<s:div id="pageBody" styleClass="pageBody">
+		<ui:param name="home" value="#{processoDocumentoHome}" />
+		<ui:param name="pd" value="#{home.instance}" />
+		<ui:param name="isBinario" value="#{pd.processoDocumentoBin.isBinario()}" />
+		
+		<script>
+			var documento= {
+					useBase64:function useBase64() {
+						return 'true';
+					},
+					getData:function getData() {
+						return "#{pd.processoDocumentoBin.md5Documento}";		
+					},
+					hasSignature:function hasSignature() {
+						return $("#{rich:clientId('signature')}").value != ''
+					},
+					postValidate:function postValidate() {
+						if (this.hasSignature()) {
+							$('divApplet').hide();
+							submitForm();
+						} else {
+							$('divApplet').show();
+						}
+						Richfaces.hideModalPanel('mp_formValidar');
+						try {
+							opener.location.reload();
+							close();
+						}catch(e){
+						}
+					}
+			};
 		</script>
-
-            <rich:panel>
-                <f:facet name="header">InformaÃ§Ãµes: </f:facet>
-                <h:form>
-                    <wi:dataTable
-                        values="#{assinaturaList.list(15)}"
-                        bean="#{assinaturaList}"
-                        tableTitle="#{messages['assinaturas.titleGrid']}"
-                        id="assinaturas"
-                        rowId="#{row.idProcessoDocumento}">
-                        <ui:define name="searchForm" />
-                        <ui:define name="headerToolBar"/>
-                        <ui:define name="toolBar"/>
-                        <wi:columnOutputText
-                            columnId="processoDocumentoBin.usuario"
-                            columnHeader="#{messages['assinaturas.usuario']}"
-                            value="#{row.processoDocumentoBin.usuario}" />
-                        <wi:columnOutputText
-                            columnId="processoDocumentoBin.dataInclusao"
-                            columnHeader="#{messages['assinaturas.dataInclusao']}"
-                            value="#{row.processoDocumentoBin.dataInclusao}" />
-                    </wi:dataTable>
-                </h:form>
-
-                <s:div
-                    rendered="#{processoDocumentoHome.liberaCertificacao()}"
-                    id="certificadoDigitalDiv">
-                    <div id="divApplet">
-                        <applet
-                            width="140"
-                            height="25"
-                            id="certificacao"
-                            code="SmartCardSignerApplet"
-                            archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
-                            <param
-                                name="formId"
-                                value="formValidar"
-                                valuetype="data" />
-                            <param
-                                name="signButtonCaption"
-                                value="Assinar Digitalmente"
-                                valuetype="data" />
-                            <param
-                                name="certificationChainField"
-                                value="formValidar:certChain"
-                                valuetype="data" />
-                            <param
-                                name="signatureField"
-                                value="formValidar:signature"
-                                valuetype="data" />
-                            <param
-                                name="urlDownload"
-                                value="#{util.urlProject}/certificado/"
-                                valuetype="data" />
-                            <param
-                                name="getDataFunction"
-                                value="$('dados').value"
-                                valuetype="data" />
-                            <param
-                                name="useBase64Function"
-                                value="useBase64()"
-                                valuetype="data" />
-                            <param
-                                name="functionPreSign"
-                                value="Richfaces.showModalPanel('mp_formValidar')"
-                                valuetype="data" />
-                            <param
-                                name="functionPosSign"
-                                value="checkValidacao()"
-                                valuetype="data" />
-                            <param
-                                name="urlDownloadFile"
-                                value="#{util.urlProject}/downloadProcessoDocumento.seam?id=#{pd.idProcessoDocumento}&amp;codIni=#{processoDocumentoHome.getCodData(pd)}&amp;md5=#{pd.processoDocumentoBin.md5Documento}"
-                                valuetype="data" />
-                            <param
-                                name="debug"
-                                value="true"
-                                valuetype="data" />
-                            <param
-                                name="dataAtual"
-                                value="#{currentDatetime}"
-                                valuetype="data" />
-                            <param
-                                name="caListDownloadFile"
-                                value="#{util.urlProject}/downloadCaList.seam"
-                                valuetype="data" />
-                        </applet>
-                    </div>
-                    <h:form id="formValidar">
-                        <h:inputHidden
-                            id="certChain"
-                            value="#{processoDocumentoBinHome.certChain}"
-                            required="true" />
-                        <h:inputHidden
-                            id="signature"
-                            value="#{processoDocumentoBinHome.signature}"
-                            required="true" />
-
-                        <a:jsFunction
-                            name="submitForm"
-                            action="#{processoDocumentoBinHome.assinarDocumento()}"
-                            oncomplete="actionDepoisValidar();" />
-
-                    </h:form>
-
-                    <rich:messages
-                        id="msg"
-                        infoClass="formMessage" />
-
-                    <rich:popupPanel
-                        id="mp_formValidar"
-                        height="100"
-                        width="250"
-                        resizeable="false">
-                        <f:facet name="header">
-                            <h:outputText
-                                value="Aguarde a assinatura do documento." />
-                        </f:facet>
-                        <div
-                            style="text-align: center; padding-top: 30px">
-                            <h:graphicImage url="/img/ajax-loader.gif" />
-                        </div>
-                    </rich:popupPanel>
-                </s:div>
-            </rich:panel>
-        </div>
-    </ui:define>
-
+		
+		<rich:panel>	
+	        <f:facet name="header">Informações: </f:facet>
+	        <wi:view 
+	        	form="#{processoDocumentoView}" 
+	        	columns="1" title="Documento"
+	        	opened="false"/>
+	        
+	        <s:div rendered="#{processoDocumentoHome.liberaCertificacao()}" id="certificadoDigitalDiv">	        
+		        <div id="divApplet">
+			        <wi:appletAssinatura
+						id="certificacao"
+						urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
+						formId="formValidar"
+						certificationChainField="#{rich:clientId('certChain')}"
+						signatureField="#{rich:clientId('signature')}"
+						getDataFunction="documento.getData()"
+						useBase64Function="documento.useBase64()"
+						functionPreSign="showLoading()"
+						functionPosSign="hideLoading();documento.postValidate();"
+						debug="false"
+						loginMode="false"
+						useProviderDll="false"
+					>
+					</wi:appletAssinatura>
+		        </div>
+				<a:form id="formValidar">
+					<h:inputHidden id="certChain" 
+						value="#{processoDocumentoBinHome.certChain}" 
+						required="true"/>					
+					<h:inputHidden id="signature" 
+						value="#{processoDocumentoBinHome.signature}" 
+						required="true"/> 
+				
+		            <a:jsFunction 
+		            	name="submitForm" 
+		            	action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
+		            	reRender="pageBody"/>
+				</a:form>
+	
+			<rich:modalPanel id="mp_formValidar" height="100" width="250"
+							 resizeable="false">
+				<f:facet name="header">
+					<h:outputText value="Aguarde a assinatura do documento." />
+				</f:facet>
+				<div style="text-align: center; padding-top: 30px">
+					<h:graphicImage url="/img/ajax-loader.gif" />
+				</div>
+			</rich:modalPanel>
+	</s:div>	
+		</rich:panel>
+	</s:div>
+	</ui:define>
+	
 </ui:composition>
+
+
+
+
+
+
