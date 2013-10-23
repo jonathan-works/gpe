@@ -569,3 +569,9 @@ form {
 .img-upl-div {
 	display:inline-block;
 }
+
+/* Workaround para o bug RF-12332 do Richfaces. Ver https://issues.jboss.org/browse/RF-12332 */
+div.rf-trn {
+	overflow: visible;
+}
+/* Fim do workaround RF-12332 */

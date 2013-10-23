@@ -26,6 +26,9 @@ import java.util.Map;
 
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
+import javax.sql.rowset.spi.TransactionalWriter;
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
@@ -333,7 +336,15 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				LOG.error(msg, e);
 			}
 		}  
-		LOG.info(msg + sw.getTime());		
+		LOG.info(msg + sw.getTime());
+		try {
+			if (!Transaction.instance().isActive() && Transaction.instance().isMarkedRollback()) {
+				Transaction.instance().rollback();
+				Transaction.instance().begin();
+			}
+		} catch (SystemException | SecurityException | NotSupportedException e) {
+			e.printStackTrace();
+		}
 		String name = getEntityClass().getName() + "." + "afterUpdate";
 		super.raiseEvent(name, getInstance(), oldEntity);
 		if (ret != null) {
