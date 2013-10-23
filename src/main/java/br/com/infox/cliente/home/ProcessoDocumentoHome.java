@@ -15,15 +15,22 @@
 */
 package br.com.infox.cliente.home;
 
+import java.util.List;
+
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
+import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.home.AbstractProcessoDocumentoHome;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoHome;
+import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
+import br.com.infox.ibpm.type.TipoNumeracaoEnum;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ProcessoDocumentoHome.NAME)
-@BypassInterceptors
 public class ProcessoDocumentoHome
 	extends AbstractProcessoDocumentoHome<ProcessoDocumento> 
 	implements IProcessoDocumentoHome{
@@ -31,6 +38,8 @@ public class ProcessoDocumentoHome
 	public static final String NAME = "processoDocumentoHome";
 
 	private static final long serialVersionUID = 1L;
+		
+	@In private ProcessoDocumentoManager processoDocumentoManager;
 
 	public static IProcessoDocumentoHome instance() {
 		return ComponentUtil.getComponent(NAME);
@@ -38,6 +47,7 @@ public class ProcessoDocumentoHome
 	
 	@Override
 	public String persist() {
+	    instance.setNumeroDocumento(getNextNumeracao(instance.getTipoProcessoDocumento(), instance.getProcesso()));
 		String ret = super.persist();
 		newInstance();
 		return ret;
@@ -53,4 +63,18 @@ public class ProcessoDocumentoHome
 	public boolean liberaCertificacao(){
 		return true;
 	}
+	
+	private Integer getNextNumeracao(TipoProcessoDocumento tipoProcessoDoc, Processo processo) {
+        Integer result = null;
+        if (tipoProcessoDoc.getNumera() 
+                && tipoProcessoDoc.getTipoNumeracao().equals(TipoNumeracaoEnum.S)) {
+            final List<Integer> list = processoDocumentoManager.getNextSequencial(processo);
+            if (list == null || list.size() == 0 || list.get(0)==null) {
+                result = 1;
+            } else {
+                result = list.get(0)+1;
+            }
+        }
+        return result;
+    }
 }

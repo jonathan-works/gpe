@@ -1,151 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf"
->
-	
-	<wi:inputText
-		id="#{f.id}inputProcessoDocumento"
-		value="#{processoDocumentoHome.instance.processoDocumento}"
-		disabled="false"
-		required="true"
-		label="#{messages['processo.anexarDocumentoDescricao']}"
-	>
-	</wi:inputText>
-	<wi:selectOneMenuEntity
-		id="#{f.id}tipoProcessoDocumento"
-		label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-		value="#{processoDocumentoHome.instance.tipoProcessoDocumento}"
-		items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
-		required="true"
-		noSelectionLabel="Selecione..."
-	>
-		<a:ajax
-			render="signatureDiv"
-			execute="@this"
-			limitRender="true"
-			event="change"
-		>
-		</a:ajax>
-	</wi:selectOneMenuEntity>
-	<wi:selectBooleanCheckbox
-		id="documentoSigiloso"
-		inNewLine="true"
-		value="#{processoDocumentoHome.instance.documentoSigiloso}"
-		label="#{messages['processoDocumento.documentoSigiloso']}"
-	/>
-	
-	<s:div id="documentoDiv">
-		<s:div
-			id="fileUploadDiv"
-			rendered="#{!processoDocumentoHome.modelo}"
-		>
-			<wi:fileUploadBox
-				id="uploadArquivo"
-				label="Arquivo"
-				onuploadcomplete="uploadComplete();"
-			>
-			</wi:fileUploadBox>
-			
-		</s:div>
-		<s:div
-			id="editorDiv"
-			rendered="#{processoDocumentoHome.modelo}"
-		>
-			<wi:editor
-				id="modeloDocumento"
-				label="Modelo"
-				value="#{processoDocumentoBinHome.instance.modeloDocumento}"
-				requiredField="false"
-				required="false"
-			>
-			</wi:editor>
-			<wi:imageUpload
-				imageBean="#{imageFileUpload}" />
-		</s:div>
-		<script type="text/javascript">
-		//<![CDATA[
-	    	invoke(["infox.signature.anexar","infox.editor","infox"],function (Anexar, Editor,Infox) {
-	    		var appletDiv = #{rich:jQuery("appletDiv")};
-				var signatureInpt = #{rich:jQuery("signature")};
-				var certChainInpt = #{rich:jQuery("certChain")};
-	    		
-	    		Anexar.useBase64 = function useBase64() {
-	    			return "#{processoDocumentoHome.modelo}";
-	    		};
-				Anexar.getData = function getData() {
-					return #{processoDocumentoHome.modelo} ? Editor.modeloDocumento.instance.getData() : "#{fileHome.getMD5()}";
-				};
-				Anexar.addSignature = function addSignature() {
-					Infox.showLoading();
-					submitForm();
-				};
-				Anexar.isSigned = function isSigned() {
-					return ((signatureInpt.val().trim() != "") && (certChainInpt.val().trim() != "")) 
-				};
-				Anexar.postSign = function postSign() {
-					Infox.hideLoading();
-					if (this.isSigned()) {
-						appletDiv.addClass("hidden");
-					}
-				};
-				try {
-					Editor.modeloDocumento.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
-						signatureInpt.val("");
-						certChainInpt.val("");
-						appletDiv.removeClass("hidden");
-					});
-				} catch(e){
-					console.log("fileUpload")
-				}
-			});
-		//]]>
-		</script>
-		
-	</s:div>
-	
-	<s:div id="signatureDiv">
-		<h:inputHidden
-			id="certChain"
-			value="#{processoDocumentoBinHome.certChain}"
-		/>
-		<h:inputHidden
-			id="signature"
-			value="#{processoDocumentoBinHome.signature}"
-		/>
-	</s:div>
-	
-	<s:div id="appletDiv" styleClass="applet-div">
-		<wi:appletAssinatura
-			id="anexarDocumento"
-			urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
-			formId="taskInstanceForm"
-			certificationChainField="#{certChain}"
-			signatureField="#{signature}"
-			getDataFunction=""
-			useBase64Function=""
-			functionPreSign=""
-			functionPosSign=""
-			debug="false"
-			loginMode="false"
-			useProviderDll="false"
-		>
-		</wi:appletAssinatura>
-	</s:div>
-	<a:jsFunction
-		name="uploadComplete"
-		render="signatureDiv, appletDiv" 
-	/>
-	<a:jsFunction
-		name="submitForm"
-		action="#{processoDocumentoHome.persist()}"
-		render="#{empty reRenderSave ? 'tipoDocumentoDiv' : reRenderSave}, documentoDiv, buttonDiv"
-	/>
 
-</ui:composition>
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich">
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--> 
+    <ui:param name="home" value="#{processoDocumentoHome}"/>
+
+    #{home.setModelo(false)}
+    <ui:param name="reRenderSaveForm" value="#{reRenderSave}" />
+    
+    <s:div style="clear: both">
+        <wi:inputText
+            id="#{f.id}inputProcessoDocumento" 
+            value="#{processoDocumentoHome.instance.processoDocumento}" 
+            disabled="false"
+            required="true"
+            label="#{messages['processo.anexarDocumentoDescricao']}">
+        </wi:inputText> 
+    </s:div>
+    <s:div id="divTipoDocumento">
+        <wi:selectOneMenuEntity 
+            id="#{f.id}tipoProcessoDocumento"
+            label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+            value="#{home.instance.tipoProcessoDocumento}"
+            items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(false)}" 
+            required="true"
+            noSelectionLabel="Selecione...">
+            <a:ajax event="change"
+                       action="#{processoDocumentoHome.onSelectProcessoDocumento()}"
+                       execute="@this"
+                       render="tipoDocumentoDiv"/>
+        </wi:selectOneMenuEntity>
+    </s:div>
+    
+    <wi:selectBooleanCheckbox id="documentoSigiloso"
+                              inNewLine="true"
+                              value="#{processoDocumentoHome.instance.documentoSigiloso}"
+                              label="#{messages['processoDocumento.documentoSigiloso']}"/>
+
+    <s:div id="tipoDocumentoDiv">
+        <div style="display:inline-block">
+            <wi:fileUpload id="uploadArquivo"
+                rendered="#{!home.modelo}"
+                label="Arquivo">
+            </wi:fileUpload>
+            
+            <s:div id="usarModeloDiv" rendered="#{home.modelo}">
+            
+                <wi:selectOneMenuEntity id="modeloDocumentoCombo"
+                    label="#{messages['modeloDocumento.modeloDocumento']}"
+                    value="#{processoDocumentoHome.modeloDocumentoCombo}"
+                    items="#{modeloDocumentoPeticaoItems}"
+                    noSelectionLabel="Selecione...">
+                    <a:ajax 
+                        render="modeloDocumento"
+                        event="change"
+                        action="#{processoDocumentoHome.processarModelo()}"
+                        execute="@this"
+                        onsubmit="showLoading()"
+                        oncomplete="hideLoading()" />
+                </wi:selectOneMenuEntity>
+                
+                <wi:editor id="modeloDocumento" 
+                    label="Modelo"
+                    value="#{processoDocumentoBinHome.instance.modeloDocumento}"
+                    requiredField="false"
+                    required="false"
+                    showVariables="false"
+                    onchange="clearSign()">
+                </wi:editor>
+                
+                <wi:imageUpload style=""
+                                imageBean="#{imageFileUpload}" />                   
+                
+            </s:div>
+        </div>
+    </s:div>
+            
+</ui:composition>   

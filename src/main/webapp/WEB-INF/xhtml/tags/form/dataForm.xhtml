@@ -25,7 +25,7 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<h:form id="#{formId}">
+	<h:form id="#{formId}" enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}" acceptcharset="UTF-8">
 		<a:region rendered="#{wi:get(rendered, true)}">
 			<ui:param
 				name="panelWidth"
