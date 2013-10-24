@@ -16,7 +16,6 @@
 package br.com.infox.ibpm.home;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -27,12 +26,12 @@ import br.com.itx.util.EntityUtil;
 
 
 
-@Name("itemTipoDocumentoHome")
-@BypassInterceptors
+@Name(ItemTipoDocumentoHome.NAME)
 public class ItemTipoDocumentoHome
 		extends AbstractItemTipoDocumentoHome<ItemTipoDocumento> {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "itemTipoDocumentoHome";
 	
 	public void set(ItemTipoDocumento itemTipoDocumento) {
 		instance = itemTipoDocumento;
