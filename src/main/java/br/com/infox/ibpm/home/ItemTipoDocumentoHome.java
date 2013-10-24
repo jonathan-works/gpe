@@ -22,13 +22,12 @@ import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.ItemTipoDocumento;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
-
-
 
 @Name(ItemTipoDocumentoHome.NAME)
 public class ItemTipoDocumentoHome
-		extends AbstractItemTipoDocumentoHome<ItemTipoDocumento> {
+		extends AbstractHome<ItemTipoDocumento> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "itemTipoDocumentoHome";
@@ -75,4 +74,18 @@ public class ItemTipoDocumentoHome
         newInstance();
         return "removido";
     }
+	
+	public void setItemTipoDocumentoIdItemTipoDocumento(Integer id) {
+        setId(id);
+    }
+
+    public Integer getItemTipoDocumentoIdItemTipoDocumento() {
+        return (Integer) getId();
+    }
+
+    @Override
+    protected ItemTipoDocumento createInstance() {
+        return new ItemTipoDocumento();
+    }
+    
 }
