@@ -17,7 +17,9 @@ package br.com.infox.ibpm.home;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -26,17 +28,19 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.manager.FluxoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.xpdl.IllegalXPDLException;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.HibernateUtil;
 
  
 @Name(FluxoHome.NAME)
 public class FluxoHome 
-		extends AbstractFluxoHome<Fluxo>{
+		extends AbstractHome<Fluxo>{
     private static final LogProvider LOG = Logging.getLogProvider(FluxoHome.class);
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "fluxoHome";
@@ -49,14 +53,22 @@ public class FluxoHome
 	
 	@Override
 	public String persist() {
-		String ret = null;
 		try{
-			ret = super.persist();
+		    String persistMessage = super.persist();
+	        UsuarioLogin usuarioPublicacao = getInstance().getUsuarioPublicacao();
+	        if (usuarioPublicacao != null) {
+	            List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
+	                    .getFluxoList();
+	            if (!usuarioPublicacaoList.contains(instance)) {
+	                getEntityManager().refresh(usuarioPublicacao);
+	            }
+	        }
+	        return persistMessage;
 		}
 		catch (Exception e) {
 			LOG.error(e.getMessage());
 		} 
-		return ret;	
+		return null;	
 	}
 
 	public String persistAs() {
@@ -131,5 +143,44 @@ public class FluxoHome
 		result.append(FluxoHome.NAME).append(".update()");
 		return result.toString();
 	}
+    
+//------ Vindo do antigo AbstractFluxoHome
+    
+    public void setFluxoIdFluxo(Integer id) {
+        setId(id);
+    }
+
+    public Integer getFluxoIdFluxo() {
+        return (Integer) getId();
+    }
+
+    @Override
+    protected Fluxo createInstance() {
+        Fluxo fluxo = new Fluxo();
+        UsuarioHome usuarioHome = (UsuarioHome) Component.getInstance(
+                UsuarioHome.NAME, false);
+        if (usuarioHome != null) {
+            fluxo.setUsuarioPublicacao(usuarioHome.getDefinedInstance());
+        }
+        return fluxo;
+    }
+
+    @Override
+    public String remove() {
+        UsuarioHome usuarioHome = (UsuarioHome) Component.getInstance(
+                UsuarioHome.NAME, false);
+        if (usuarioHome != null) {
+            usuarioHome.getInstance().getFluxoList().remove(instance);
+        }
+        return super.remove();
+    }
+
+    @Override
+    public String remove(Fluxo obj) {
+        setInstance(obj);
+        String ret = super.remove();
+        newInstance();
+        return ret;
+    }
     
 }
