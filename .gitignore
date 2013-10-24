@@ -2,3 +2,7 @@
 /uml
 *.orig
 *~
+/.project
+/.settings
+/.classpath
+/.externalToolBuilders
