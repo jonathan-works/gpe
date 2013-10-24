@@ -60,7 +60,7 @@ public class ItemTipoDocumentoHome
 		ItemTipoDocumento itd = getInstance();
 		getEntityManager().merge(itd);
 		EntityUtil.flush();
-		String msg = "persisted";
+		String msg = PERSISTED;
 		instance.setGrupoModeloDocumento(null);
 		newInstance();
 		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro inserido com sucesso.");
