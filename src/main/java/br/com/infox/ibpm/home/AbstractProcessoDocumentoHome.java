@@ -30,6 +30,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
+
+import br.com.infox.cliente.home.ProcessoDocumentoHome;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
