@@ -179,7 +179,7 @@ public class TaskInstanceHome implements Serializable {
 
     // Método que será chamado pelo botão "Assinar Digitalmente"
     public void assinarDocumento() {
-        assinar = Boolean.TRUE;;
+        assinar = Boolean.TRUE;
         this.update();
     }
 
