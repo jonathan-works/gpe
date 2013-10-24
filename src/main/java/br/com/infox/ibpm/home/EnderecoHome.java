@@ -15,7 +15,9 @@
 package br.com.infox.ibpm.home;
 
 import java.util.Date;
+import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
@@ -26,11 +28,13 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.dao.CepDAO;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Endereco;
+import br.com.infox.ibpm.entity.Localizacao;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(EnderecoHome.NAME)
 @Install(precedence = Install.FRAMEWORK)
-public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
+public class EnderecoHome extends AbstractHome<Endereco> {
 
     private static final long serialVersionUID = 1L;
 
@@ -115,7 +119,7 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
 
     @Override
     protected Endereco createInstance() {
-        setInstance(super.createInstance());
+        setInstance(createEndereco());
         getInstance().setCep(new Cep());
         return instance;
     }
@@ -133,6 +137,9 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
         }
         if (checkCep()) {
             persist = super.persist();
+            if (persist != null) {
+                newInstance();
+            }
         }
         return persist;
     }
@@ -160,4 +167,56 @@ public class EnderecoHome extends AbstractEnderecoHome<Endereco> {
         searchCep = null;
         super.newInstance();
     }
+    
+    //Vindo do antigo AbstractEnderecoHome
+    
+    public void setEnderecoIdEndereco(Integer id) {
+        setId(id);
+    }
+
+    public Integer getEnderecoIdEndereco() {
+        return (Integer) getId();
+    }
+
+    protected Endereco createEndereco() {
+        Endereco endereco = new Endereco();
+        UsuarioHome usuarioHome = (UsuarioHome) Component.getInstance(
+                "usuarioHome", false);
+        if (usuarioHome != null) {
+            endereco.setUsuario(usuarioHome.getDefinedInstance());
+        }
+        CepHome cepHome = (CepHome) Component.getInstance("cepHome", false);
+        if (cepHome != null) {
+            endereco.setCep(cepHome.getDefinedInstance());
+        }
+        return endereco;
+    }
+
+    @Override
+    public String remove() {
+        UsuarioHome usuario = (UsuarioHome) Component.getInstance(
+                "usuarioHome", false);
+        if (usuario != null) {
+            usuario.getInstance().getEnderecoList().remove(instance);
+        }
+        CepHome cep = (CepHome) Component.getInstance("cepHome", false);
+        if (cep != null) {
+            cep.getInstance().getEnderecoList().remove(instance);
+        }
+        return super.remove();
+    }
+
+    @Override
+    public String remove(Endereco obj) {
+        setInstance(obj);
+        String ret = super.remove();
+        newInstance();
+        return ret;
+    }
+
+    public List<Localizacao> getLocalizacaoList() {
+        return getInstance() == null ? null : getInstance()
+                .getLocalizacaoList();
+    }
+
 }
