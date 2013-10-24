@@ -26,9 +26,6 @@ import java.util.Map;
 
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
-import javax.sql.rowset.spi.TransactionalWriter;
-import javax.transaction.NotSupportedException;
-import javax.transaction.SystemException;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
@@ -45,7 +42,6 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.action.list.EntityList;
@@ -209,13 +205,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		try {
 			ret = super.remove();
 			raiseEventHome("afterRemove");
-		} catch (AssertionFailure af) {
-			/*Bug do Hibernate, esperamos a versão 3.5*/
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, getRemoveError());
 			LOG.error(".remove()", e);
 		}
+		Util.rollbackTransactionIfNeeded();
 		return ret;
 	}
 
@@ -266,9 +261,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             LOG.error(getPersistLogMessage(), e);
 		} 
 		if (!PERSISTED.equals(ret)) {
+			Util.rollbackTransactionIfNeeded();
 			 // Caso ocorra algum erro, é criada uma copia do instance sem o Id e os List
 			try {
-				Transaction.instance().rollback();
 				setInstance((T) EntityUtil.cloneEntity(getInstance(), false));
 			} catch (Exception e) {
 				LOG.warn(getPersistLogMessage() + Strings.toString(getInstance()), e);
@@ -337,14 +332,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			}
 		}  
 		LOG.info(msg + sw.getTime());
-		try {
-			if (!Transaction.instance().isActive() && Transaction.instance().isMarkedRollback()) {
-				Transaction.instance().rollback();
-				Transaction.instance().begin();
-			}
-		} catch (SystemException | SecurityException | NotSupportedException e) {
-			e.printStackTrace();
-		}
+		Util.rollbackTransactionIfNeeded();
 		String name = getEntityClass().getName() + "." + "afterUpdate";
 		super.raiseEvent(name, getInstance(), oldEntity);
 		if (ret != null) {
