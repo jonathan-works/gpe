@@ -15,12 +15,12 @@ import br.com.itx.util.EntityUtil;
  * @author Daniel
  *
  */
-@Name(DocumentoFisicoAction.NAME)
+@Name(DocumentoFisicoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class DocumentoFisicoAction extends AbstractHome<DocumentoFisico> {
+public class DocumentoFisicoHome extends AbstractHome<DocumentoFisico> {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "documentoFisicoAction";
+	public static final String NAME = "documentoFisicoHome";
 	
 	private List<DocumentoFisico> documentoFisicoList; 
 	
