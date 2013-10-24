@@ -479,6 +479,21 @@ public class Util implements Serializable {
 		}
 	}
 	
+	public static void rollbackTransactionIfNeeded() {
+		try {
+			org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
+			if(ut != null && ut.isMarkedRollback()) {
+				ut.rollback();
+			}
+		} catch (Exception e) {
+			throw new AplicationException(AplicationException.
+					createMessage("rollback da transação", 
+								  "rollbackTransaction()", 
+								  "Util", 
+								  "ePP"), e);
+		}
+	}
+	
 	/**
 	 * Cria um method expression para a string informada no parametro.
 	 * @param methodName Método a ser chamado

@@ -20,6 +20,7 @@
 	 xmlns:h="http://java.sun.com/jsf/html"
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:f="http://java.sun.com/jsf/core"
 	 xmlns:wi="http://www.itx.com.br/jsf"
 	 xmlns:infox="http://www.infox.com.br/jsf" 
 	 template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
@@ -68,9 +69,40 @@
 						 id="processoDocumentoList"
 						 rowId="#{row.idProcessoDocumento}">
 						
-                        <ui:define name="toolBar" />
+                        <ui:define name="toolBar">
+	                        <s:link
+								 target="idJan#{row.idProcessoDocumento}"
+								 rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
+								 view="/Processo/Consulta/validaDocumento.xhtml"
+								 onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');">
+								
+								<h:graphicImage
+									 title="Validar Assinatura Digital"
+									 alt="Validar Assinatura Digital"
+									 url="/img/lock.png" />
+								<f:param
+									 value="#{row.idProcessoDocumento}"
+									 name="idProcessoDocumento" />
+							
+							</s:link> 
+							<s:link
+								 target="idJan#{row.idProcessoDocumento}"
+								 rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
+								 view="/Processo/Consulta/assinaDocumento.xhtml"
+								 onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');">
+								
+								<h:graphicImage
+									 title="Assinar Documento"
+									 alt="Assinar Documento"
+									 url="/img/lock_unlock.png" />
+								<f:param
+									 value="#{row.idProcessoDocumento}"
+									 name="id" />
+							
+							</s:link>
+                        </ui:define>
                         <ui:define name="headerToolBar" />
-                        <wi:columnOutputText
+                        <wi:columnOutputText 
 							 columnId="usuarioInclusao"
 							 columnHeader="Usuário"
 							 value="#{row.usuarioInclusao}" />
@@ -81,11 +113,7 @@
                         <wi:columnOutputText
 							 columnId="processoDocumento"
 							 columnHeader="Processo Documento"
-							 value="#{row.processoDocumento.equals('null') ? '-':row.processoDocumento}" />
-                        <wi:columnOutputText
-							 columnId="processoDocumentoBin"
-							 columnHeader="Processo Documento Bin"
-							 value="#{row.processoDocumentoBin}" />
+							 value="#{row.processoDocumento}" />
                         <wi:columnOutputText
 							 columnId="processoDocumentoBin.sizeFormatado"
 							 columnHeader="Tamanho: "

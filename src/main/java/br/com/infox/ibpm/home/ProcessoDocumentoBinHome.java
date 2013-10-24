@@ -16,14 +16,19 @@
 
 package br.com.infox.ibpm.home;
 
-import org.jboss.seam.annotations.Install;
+import java.util.Date;
+
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+
+import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoBinHome;
 import br.com.itx.util.ComponentUtil;
 
-@Install(precedence=Install.FRAMEWORK)
 @Name(ProcessoDocumentoBinHome.NAME)
+@Scope(ScopeType.CONVERSATION)
 public class ProcessoDocumentoBinHome 
 		extends AbstractProcessoDocumentoBinHome<ProcessoDocumentoBin> 
 		implements IProcessoDocumentoBinHome {
@@ -43,12 +48,10 @@ public class ProcessoDocumentoBinHome
 	}
 
 	public void setCertChain(String certChain) {
-		getInstance().setCertChain(certChain);
 		this.certChain = certChain;
 	}
 	
 	public void setSignature(String signature) {
-		getInstance().setSignature(signature);
 		this.signature = signature;
 	}
 	
@@ -56,4 +59,27 @@ public class ProcessoDocumentoBinHome
 		return certChain;
 	}
 
+	private boolean isValidSignature() {
+	    if (signature == null) {
+	        return false;
+	    }
+	    if (certChain == null) {
+	        return false;
+	    }
+	    return !"".equals(signature.trim()) && !"".equals(certChain.trim());
+	}
+	
+	public void assinarDocumento(final ProcessoDocumento processoDocumento) {
+	    if (isValidSignature()) {
+	        setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
+            processoDocumento.setLocalizacao(Authenticator.getLocalizacaoAtual());
+            processoDocumento.setPapel(Authenticator.getPapelAtual());
+            instance.setUsuarioUltimoAssinar(Authenticator.getUsuarioLogado().getNome());
+            instance.setSignature(signature);
+            instance.setCertChain(certChain);
+            instance.setDataInclusao(new Date());
+            update();
+	    }
+	}
+	
 }
