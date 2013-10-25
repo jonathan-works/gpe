@@ -156,7 +156,7 @@
 							 id="usuarioAlteracao"
 							 label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
 							 value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
-							 items="#{historicoModeloDocumentoAction.usuarioAlteracaoList}"
+							 items="#{historicoModeloDocumentoHome.usuarioAlteracaoList}"
 							 showLabelTodos="true" />
 						<wi:inputDate
 							 id="dataAlteracao"
@@ -191,7 +191,7 @@
 					
 					<wi:toolBarPopUp
 						 target="restaurar.seam?cid=#{conversation.id}"
-						 action="#{historicoModeloDocumentoAction.setSelecionado(row)}" />
+						 action="#{historicoModeloDocumentoHome.setSelecionado(row)}" />
 				
 				</ui:define>
 									 

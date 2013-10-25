@@ -16,12 +16,12 @@ import br.com.infox.ibpm.home.ModeloDocumentoHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
-@Name(HistoricoModeloDocumentoAction.NAME)
+@Name(HistoricoModeloDocumentoHome.NAME)
 @BypassInterceptors
 @Scope(ScopeType.CONVERSATION)
-public class HistoricoModeloDocumentoAction extends AbstractHome<HistoricoModeloDocumento> {
+public class HistoricoModeloDocumentoHome extends AbstractHome<HistoricoModeloDocumento> {
 
-	public static final String NAME = "historicoModeloDocumentoAction";
+	public static final String NAME = "historicoModeloDocumentoHome";
 	private static final long serialVersionUID = 1L;
 
     private List<ModeloDocumento> modeloDocumentoList;
