@@ -31,6 +31,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.internal.SessionImpl;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -259,8 +260,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             instance().add(StatusMessage.Severity.ERROR,
                     "Erro ao gravar: " + e.getMessage(), e);
             LOG.error(getPersistLogMessage(), e);
-		} 
+		}
 		if (!PERSISTED.equals(ret)) {
+			SessionImpl session = EntityUtil.getEntityManager().unwrap(SessionImpl.class);
+			session.getTransactionCoordinator().getJdbcCoordinator().abortBatch();
 			Util.rollbackTransactionIfNeeded();
 			 // Caso ocorra algum erro, é criada uma copia do instance sem o Id e os List
 			try {
