@@ -13,7 +13,9 @@
     template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
     <ui:define name="title">#{messages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
+    
     <ui:define name="head">
+    
         <h:outputStylesheet name="processDefinition.css" library="stylesheet" />
         
         <h:outputScript name="jbpmGraph.js" library="js" />
@@ -26,20 +28,16 @@
     
         <ui:param name="def" value="#{processBuilder.instance}" />
         
-        <h:form id="form">
-        
-	        <infox:tabPanel
-	            switchType="ajax"
-	            activeTab="#{processBuilder.tab}">
-	            
-	            <infox:tabHeaders />
-	            
-	            <infox:tab  name="propriedadesTab"
-	                id="propriedadesTab"
-	                title="#{messages['processBuilder.properties']}">
-	                
-	                <rich:panel header="#{messages['processBuilder.info']}">
-	                
+        <infox:tabPanel switchType="ajax" activeTab="#{processBuilder.tab}">
+            
+            <h:form><infox:tabHeaders /></h:form>
+            
+            <infox:tab name="propriedadesTab" id="propriedadesTab" title="#{messages['processBuilder.properties']}">
+                
+                <rich:panel header="#{messages['processBuilder.info']}">
+                
+                	<h:form>
+                	
 	                    <wi:inputText id="codFluxo"
 	                        label="#{messages['fluxo.codFluxo']}"
 	                        value="#{processBuilder.id}"
@@ -56,60 +54,62 @@
 	                        
 	                    <wi:inputTextarea id="description"
 	                        value="#{def.description}"
-	                        label="#{messages['processBuilder.description']}" />
+	                        label="#{messages['processBuilder.description']}">
 	                        
-	                </rich:panel>
-	                
-	                <h:form>
-	                
-	                    <rich:panel styleClass="SwimlanePanel"
-	                        header="#{messages['processBuilder.swimlanes']}"
-	                        rendered="#{processBuilder.exists}">
+	                        <a:ajax event="change" execute="@this" />
 	                        
-	                        <ui:include src="swimlanes.xhtml" />
+	                    </wi:inputTextarea>
 	                        
-	                    </rich:panel>
-	                    
-	                </h:form>
-	                
-	            </infox:tab>
-	            
-	            <infox:tab name="nodesTab"
-	                id="nodesTab"
-	                rendered="#{processBuilder.exists}"
-	                title="#{messages['processBuilder.nodes']}">
-	                
-	                <ui:include src="nodes.xhtml" />
-	                
-	            </infox:tab>
-	            
-	            <infox:tab name="xmlTab"
-	                id="xmlTab"
-	                rendered="#{processBuilder.exists}"
-	                title="XML">
-	                
-	                <ui:include src="xmlEdit.xhtml" />
-	                
-	            </infox:tab>
-	            
-	            <infox:tab name="graphTab"
-	                id="graphTab"
-	                title="#{messages['processBuilder.graph']}"
-	                action="#{processBuilder.getPaintedGraph()}">
-	                
-	                <ui:include src="graph.xhtml" />
-	                
-	            </infox:tab>
-	            
-	        </infox:tabPanel>
+	            	</h:form>
+                        
+                </rich:panel>
+                
+                <rich:panel styleClass="SwimlanePanel"
+                    header="#{messages['processBuilder.swimlanes']}"
+                    rendered="#{processBuilder.exists}">
+                    
+                    <ui:include src="swimlanes.xhtml" />
+                    
+                </rich:panel>
+                    
+            </infox:tab>
+            
+            <infox:tab name="nodesTab"
+                id="nodesTab"
+                rendered="#{processBuilder.exists}"
+                title="#{messages['processBuilder.nodes']}">
+                <!-- Terminar aqui -->
+                <ui:include src="nodes.xhtml" />
+                
+            </infox:tab>
+            
+            <infox:tab name="xmlTab"
+                id="xmlTab"
+                rendered="#{processBuilder.exists}"
+                title="XML">
+                
+                <ui:include src="xmlEdit.xhtml" />
+                
+            </infox:tab>
+            
+            <infox:tab name="graphTab"
+                id="graphTab"
+                title="#{messages['processBuilder.graph']}"
+                action="#{processBuilder.getPaintedGraph()}">
+                
+                <ui:include src="graph.xhtml" />
+                
+            </infox:tab>
+            
+        </infox:tabPanel>
 	        
+	    <h:form>
 	        <h:commandButton id="gravar"
 	            action="#{processBuilder.update}"
 	            value="#{messages['processBuilder.saveBtn']}"
 	            rendered="#{processBuilder.exists}" />
 	            
 	        <h:commandButton id="publicar"
-	            render="form"
 	            action="#{processBuilder.deploy}"
 	            value="#{messages['processBuilder.deployBtn']}"
 	            rendered="#{processBuilder.exists}" />
