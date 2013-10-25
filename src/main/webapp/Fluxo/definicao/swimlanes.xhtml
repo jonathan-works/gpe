@@ -8,155 +8,194 @@
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
--->
+
 	<s:div styleClass="Swimlane">
+	
 		<ui:decorate template="dataTable.xhtml">
+		
 			<ui:param name="values" value="#{swimlaneFitter.swimlanes}" />
-			<ui:param name="id" value="swimlanesTable" />
 			
+			<ui:param name="id" value="swimlanesTable" />
+
 			<ui:define name="headerToolBar">
+			
 				<h:form>
-					<a:commandLink	action="#{swimlaneFitter.addSwimlane()}"
-							 	  	execute="@this"
-							 		render="swimlanesDiv"
-							 		limitRender="true">
+				
+					<a:commandLink action="#{swimlaneFitter.addSwimlane}"
+							 	   execute="@this"
+							 	   render="swimlanesForm"
+							 	   limitRender="true">
+							 		
 						<h:graphicImage title="#{messages['processBuilder.addSwimlane']}"
 								 		url="/img/add.gif" />
+								 		
 					</a:commandLink>
+					
 				</h:form>
+				
 			</ui:define>
 			
 			<ui:define name="toolBar">
+			
 				<h:form>
-				<h:graphicImage	title="#{messages['processBuilder.removeSwimlane']}"
-						 		url="/img/remove.png"
-						 		styleClass="opacityHover pointer">
-					<a:ajax	event="click"
-							listener="#{swimlaneFitter.removeSwimlane(row)}"
-							execute="@this"
-							onbeforesubmit="confirm('#{messages['processBuilder.confirm']}')"
-							render="swimlanesDiv"
-							limitRender="true" />
-				</h:graphicImage>
+				
+					<h:graphicImage	title="#{messages['processBuilder.removeSwimlane']}"
+							 		url="/img/remove.png"
+							 		styleClass="opacityHover pointer">
+							 		
+						<a:ajax	event="click"
+								listener="#{swimlaneFitter.removeSwimlane(row)}"
+								execute="@this"
+								onbeforesubmit="return confirm('#{messages['processBuilder.confirm']}')"
+								render="swimlanesForm"
+								limitRender="true" />
+					</h:graphicImage>
+					
 				</h:form>
+				
 			</ui:define>
 			
 			<ui:define name="columns">
+			
 				<rich:column>
+				
 					<h:form>
-						<f:facet name="header">#{messages['processBuilder.swimlanes']} #{inForm}</f:facet>
+					
+						<f:facet name="header">#{messages['processBuilder.swimlanes']}</f:facet>
+						
 						<ui:param name="current" value="#{row == swimlaneFitter.currentSwimlane}" />
+						
 						<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
-						<a:commandLink	action="#{swimlaneFitter.setCurrentSwimlane(row)}"
+						
+						<a:commandLink action="#{swimlaneFitter.setCurrentSwimlane(row)}"
 								 		execute="@this"
-								 		render="swimlanesDiv"
+								 		render="swimlanesForm"
 								 		limitRender="true">
-							<h:outputText	value="#{row.swimlane.name}"
-									 	 />
+								 		
+							<h:outputText value="#{row.swimlane.name}" />
+							
 						</a:commandLink>
+						
 					</h:form>
+					
 				</rich:column>
+			
 			</ui:define>
+							
 		</ui:decorate>
 	</s:div>
 	
-	<s:div
-		id="swimlanesDiv"
-		rendered="#{!empty swimlaneFitter.currentSwimlane}">
-		
-		<wi:inputText
-			id="swimlaneName"
-			label="#{messages['processBuilder.swimlane.name']}"
-		 	value="#{swimlaneFitter.currentSwimlane.name}">
-		</wi:inputText>
+	<h:form id="swimlanesForm">
 	
-		<ui:decorate template="dataTable.xhtml">
-			<ui:param name="values" value="#{swimlaneFitter.currentSwimlane.localPapelList}" />
-			<ui:param name="id" value="localPapeis" />
-			<ui:param name="styleClass" value="PerfilSwimlane" />
+		<s:div rendered="#{!empty swimlaneFitter.currentSwimlane}">
+		
+			<wi:inputText id="swimlaneName"
+				label="#{messages['processBuilder.swimlane.name']}"
+			 	value="#{swimlaneFitter.currentSwimlane.name}" />
+		
+			<ui:decorate template="dataTable.xhtml">
 			
-			<ui:define name="toolBar">
-				<h:graphicImage
-					title="#{messages['processBuilder.swimlane.removeLocalPapel']}"
-					url="/img/remove.png">
-					<a:ajax
-						 event="click"
-						 listener="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
-						 execute="@this"
-						 onbeforesubmit="if(!confirm('#{messages['processBuilder.confirm']}')) return false;"
-						 render="swimlanesDiv"
-						 limitRender="true" />
-				</h:graphicImage>
-			</ui:define>
+				<ui:param name="values" value="#{swimlaneFitter.currentSwimlane.localPapelList}" />
+				
+				<ui:param name="id" value="localPapeis" />
+				
+				<ui:param name="styleClass" value="PerfilSwimlane" />
+				
+				<ui:define name="toolBar">
+				
+					<h:graphicImage title="#{messages['processBuilder.swimlane.removeLocalPapel']}" url="/img/remove.png">
+						
+						<a:ajax event="click"
+							 listener="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
+							 execute="@this"
+							 onbeforesubmit="return confirm('#{messages['processBuilder.confirm']}')"
+							 render="swimlanesForm"
+							 limitRender="true" />
+							 
+					</h:graphicImage>
+					
+				</ui:define>
+				
+				<ui:define name="columns">
+				
+					<rich:column>
+					
+						<f:facet name="header">#{messages['localizacao.localizacao']}</f:facet>
+						
+						<h:outputText value="#{row.localizacao}" />
+						
+					</rich:column>
+					
+					<rich:column>
+					
+						<f:facet name="header">#{messages['papel.papel']}</f:facet>
+						
+						<h:outputText value="#{row.papel}" />
+						
+					</rich:column>
+					
+					<rich:column styleClass="PerfilContabilizar">
+					
+						<f:facet styleClass="PerfilContabilizar" name="header">#{messages['processBuilder.contabilizar']}</f:facet>
+						
+						<h:outputText value="#{row.contabilizar ? messages['processBuilder.contabilizar.true'] : messages['processBuilder.contabilizar.false']}" />
+							
+					</rich:column>
+					
+					<f:facet name="footer">
+					
+						<rich:columnGroup>
+						
+							<rich:column>
+							
+								<h:graphicImage title="#{messages['processBuilder.swimlane.addLocalPapel']}"
+									styleClass="pointer"
+									id="novoLocPapel"
+									url="/img/add.gif">
+									
+									<a:ajax event="click"
+										listener="#{swimlaneFitter.currentSwimlane.addLocalPapel()}"
+										execute="@this, swimlaneName, localPapeis"
+										render="swimlanesForm"
+										limitRender="true" />
+										
+								</h:graphicImage>
+								
+							</rich:column>
+							
+							<rich:column>
+							
+								<wi:tree tree="#{localizacaoEstruturaTree}"
+									id="localizacao"
+									assignTo="swimlaneFitter.currentSwimlane.localizacao"
+									folderSelectable="false" />
+									
+							</rich:column>
+							
+							<rich:column>
+							
+								<wi:tree tree="#{papelTree}"
+									id="papelTree"
+									assignTo="swimlaneFitter.currentSwimlane.papel"
+									folderSelectable="true" />
+									
+							</rich:column>
+							
+							<rich:column>
+							
+								<wi:selectBooleanCheckbox id="contabilizar"	value="#{swimlaneFitter.currentSwimlane.contabilizar}" />
+								
+							</rich:column>
+							
+						</rich:columnGroup>
+						
+					</f:facet>
+					
+				</ui:define>
+				
+			</ui:decorate>
+		</s:div>
 			
-			<ui:define name="columns">
-				<rich:column>
-					<f:facet name="header">#{messages['localizacao.localizacao']}</f:facet>
-					<h:outputText value="#{row.localizacao}" />
-				</rich:column>
-				<rich:column>
-					<f:facet name="header">#{messages['papel.papel']}</f:facet>
-					<h:outputText value="#{row.papel}" />
-				</rich:column>
-				<rich:column styleClass="PerfilContabilizar">
-					<f:facet styleClass="PerfilContabilizar" name="header">#{messages['processBuilder.contabilizar']}</f:facet>
-					<h:outputText
-						value="#{row.contabilizar ? messages['processBuilder.contabilizar.true'] : messages['processBuilder.contabilizar.false']}" />
-				</rich:column>
-				<f:facet name="footer">
-					<rich:columnGroup>
-						<rich:column>
-							<h:graphicImage
-								title="#{messages['processBuilder.swimlane.addLocalPapel']}"
-								styleClass="pointer"
-								id="novoLocPapel"
-								url="/img/add.gif">
-								<a:ajax
-									event="click"
-									listener="#{swimlaneFitter.currentSwimlane.addLocalPapel()}"
-									execute="swimlaneName, localPapeis"
-									render="swimlanesDiv"
-									limitRender="true" />
-							</h:graphicImage>
-						</rich:column>
-						<rich:column>
-							<wi:tree
-								tree="#{localizacaoEstruturaTree}"
-								id="localizacao"
-								assignTo="swimlaneFitter.currentSwimlane.localizacao"
-								folderSelectable="false" />
-						</rich:column>
-						<rich:column>
-							<wi:tree
-								tree="#{papelTree}"
-								id="papelTree"
-								assignTo="swimlaneFitter.currentSwimlane.papel"
-								folderSelectable="true" />
-						</rich:column>
-						<rich:column>
-							<wi:selectBooleanCheckbox
-								id="contabilizar"
-								value="#{swimlaneFitter.currentSwimlane.contabilizar}">
-							</wi:selectBooleanCheckbox>
-						</rich:column>
-					</rich:columnGroup>
-				</f:facet>
-			</ui:define>
-		</ui:decorate>	
-	</s:div>
+	</h:form>
 
 </ui:composition>
