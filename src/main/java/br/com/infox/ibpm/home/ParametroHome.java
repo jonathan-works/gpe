@@ -24,10 +24,11 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.entity.log.LogUtil;
 import br.com.infox.util.ParametroUtil;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
 @Name(ParametroHome.NAME)
-public class ParametroHome extends AbstractParametroHome<Parametro> {
+public class ParametroHome extends AbstractHome<Parametro> {
 
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(ParametroHome.class);
@@ -65,11 +66,20 @@ public class ParametroHome extends AbstractParametroHome<Parametro> {
 	public String remove(Parametro obj) {
 		obj.setAtivo(Boolean.FALSE);
 		getInstance().setDataAtualizacao(new Date());
-		return super.remove(obj);
+		setInstance(obj);
+        String ret = super.update();
+        newInstance();
+        return ret;
 	}
 
 	public static UsuarioLogin getUsuarioSistema() {
 		int idUsuarioSistema = Integer.parseInt(ParametroUtil.getParametro(ID_USUARIO_SISTEMA));
 		return EntityUtil.getEntityManager().find(UsuarioLogin.class, idUsuarioSistema);
 	}
+	
+	@Override
+    protected Parametro createInstance() {
+        return new Parametro();
+    }
+
 }
