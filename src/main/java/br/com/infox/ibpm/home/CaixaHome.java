@@ -93,15 +93,39 @@ public class CaixaHome extends AbstractHome<Caixa> {
     
     @Override
     public String remove(Caixa obj) {
-        String ret = super.remove(obj);
+        setInstance(obj);
+        remove();
         newInstance();
-        return ret;
+        return remove(obj);
     }
     
     @Override
     public String remove() {
+        caixaManager.removeCaixaByIdCaixa(instance.getIdCaixa());
     	String ret = super.remove();
     	TarefasTreeHandler.clearActiveTree();
     	return ret;
+    }
+    
+    public void setCaixaIdCaixa(Integer id) {
+        setId(id);
+    }
+
+    public Integer getCaixaIdCaixa() {
+        return (Integer) getId();
+    }
+    
+    public void removeCaixa(int idCaixa) {
+        if(idCaixa == 0) {
+            return;
+        }
+        instance = EntityUtil.find(Caixa.class, idCaixa);
+        if(instance != null){
+            remove();
+        }else{
+            FacesMessages.instance().add(Severity.ERROR, "Por favor, selecione a caixa que deseja excluir!");
+        }
+        TarefasTreeHandler tree = ComponentUtil.getComponent("tarefasTree");
+        tree.clearTree();   
     }
 }
