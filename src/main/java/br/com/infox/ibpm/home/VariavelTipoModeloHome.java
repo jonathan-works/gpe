@@ -12,10 +12,11 @@ import br.com.infox.ibpm.entity.VariavelTipoModelo;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
-@Name("variavelTipoModeloHome")
+@Name(VariavelTipoModeloHome.NAME)
 public class VariavelTipoModeloHome extends AbstractHome<VariavelTipoModelo> {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "variavelTipoModeloHome";
 	
 	public void addVariavelTipoModelo(Variavel obj) {
 		if (getInstance() != null) {
