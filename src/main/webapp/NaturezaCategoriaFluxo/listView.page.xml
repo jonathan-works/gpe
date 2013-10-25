@@ -7,8 +7,8 @@
 	  
 	<begin-conversation join="true" />
 
-	<param name="id" value="#{naturezaCategoriaFluxoAction.id}"
+	<param name="id" value="#{naturezaCategoriaFluxoHome.id}"
 		   converterId="integerConverter" />
-	<param name="tab" value="#{naturezaCategoriaFluxoAction.tab}" />
+	<param name="tab" value="#{naturezaCategoriaFluxoHome.tab}" />
 	
 </page>

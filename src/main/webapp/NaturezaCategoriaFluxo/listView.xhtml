@@ -30,7 +30,7 @@
          name="title">#{messages['naturezaCategoriaFluxo.titlePage']}</ui:define>
 	<ui:param
          name="home"
-         value="#{naturezaCategoriaFluxoAction}" />
+         value="#{naturezaCategoriaFluxoHome}" />
 	<ui:define
          name="searchGrid">
 	    <wi:dataTable
@@ -92,23 +92,23 @@
 			<wi:selectOneMenuEntity
 				id="naturezas"
 				label="#{messages['naturezaCategoriaFluxo.natureza']}"
-				value="#{naturezaCategoriaFluxoAction.instance.natureza}"
+				value="#{naturezaCategoriaFluxoHome.instance.natureza}"
 				required="true"
-				items="#{naturezaCategoriaFluxoAction.naturezaList}"
+				items="#{naturezaCategoriaFluxoHome.naturezaList}"
 				noSelectionLabel="Selecione..."/>
 			<wi:selectOneMenuEntity
 				id="categorias"
 				label="#{messages['naturezaCategoriaFluxo.categoria']}"
-				value="#{naturezaCategoriaFluxoAction.instance.categoria}"
+				value="#{naturezaCategoriaFluxoHome.instance.categoria}"
 				required="true"
-				items="#{naturezaCategoriaFluxoAction.categoriaList}"
+				items="#{naturezaCategoriaFluxoHome.categoriaList}"
 				noSelectionLabel="Selecione..."/>
 			<wi:selectOneMenuEntity
 				id="fluxo"
 				label="#{messages['naturezaCategoriaFluxo.fluxo']}"
-				value="#{naturezaCategoriaFluxoAction.instance.fluxo}"
+				value="#{naturezaCategoriaFluxoHome.instance.fluxo}"
 				required="true"
-				items="#{naturezaCategoriaFluxoAction.fluxoList}"
+				items="#{naturezaCategoriaFluxoHome.fluxoList}"
 				noSelectionLabel="Selecione..."/>
 		</wi:dataForm>
 	</ui:define>
@@ -116,7 +116,7 @@
 	<ui:define name="tabs">
 		<infox:tab
             id="localizacaoTab"
-            rendered="#{naturezaCategoriaFluxoAction.isManaged()}"
+            rendered="#{naturezaCategoriaFluxoHome.isManaged()}"
             action="#{natCatFluxoLocalizacaoHome.setNaturezaCategoriaFluxo(home.instance)}"
             title="#{messages['naturezaCategoriaFluxo.localizacao']}"
             name="localizacaoTab">

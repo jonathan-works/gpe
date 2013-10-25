@@ -20,12 +20,12 @@ import br.com.itx.util.EntityUtil;
  * @author Erik Liberal
  *
  */
-@Name(NaturezaCategoriaFluxoAction.NAME)
+@Name(NaturezaCategoriaFluxoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class NaturezaCategoriaFluxoAction extends AbstractHome<NaturezaCategoriaFluxo> {
+public class NaturezaCategoriaFluxoHome extends AbstractHome<NaturezaCategoriaFluxo> {
 	private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "naturezaCategoriaFluxoAction";
+	public static final String NAME = "naturezaCategoriaFluxoHome";
 
 	private List<Natureza> naturezaList;
 	private List<Categoria> categoriaList;
