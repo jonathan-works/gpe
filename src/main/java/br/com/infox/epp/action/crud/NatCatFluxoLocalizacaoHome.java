@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.NatCatFluxoLocalizacao;
@@ -60,23 +61,17 @@ public class NatCatFluxoLocalizacaoHome extends AbstractHome<NatCatFluxoLocaliza
 	}
 	
 	public String save() {
-		Boolean heranca = getInstance().getHeranca();
+		NatCatFluxoLocalizacao instanceToSave = getInstance();
+		instanceToSave.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
 		String save = null;
-		if(isManaged()) {
-			natCatFluxoLocalizacaoManager.saveWithChidren(getInstance(), oldInstance);
-			save = UPDATED;
-			FacesMessages.instance().add("Registro alterado com sucesso!");
+		if (instanceToSave.getHeranca()) {
+			natCatFluxoLocalizacaoManager.persistWithChildren(instanceToSave);
+			save = PERSISTED;
+			FacesMessages.instance().addFromResourceBundleOrDefault( StatusMessage.Severity.INFO, getCreatedMessageKey(), getCreatedMessage().getExpressionString() );
 		} else {
-			if (heranca) {
-				natCatFluxoLocalizacaoManager.persistWithChildren(getInstance());
-				save = PERSISTED;
-			} else {
-				save = super.persist();
-			}
-			if (PERSISTED.equals(save)) {
-				FacesMessages.instance().add("Registro incluído com sucesso!");
-			}
+			save = super.persist();
 		}
+		updateList=true;
 		return save;
 	}
 	
