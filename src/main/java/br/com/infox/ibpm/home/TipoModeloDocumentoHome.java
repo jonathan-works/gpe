@@ -17,6 +17,7 @@ package br.com.infox.ibpm.home;
 
 import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -30,12 +31,13 @@ import br.com.infox.epp.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.manager.TipoModeloDocumentoManager;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(TipoModeloDocumentoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class TipoModeloDocumentoHome 
-		extends	AbstractTipoModeloDocumentoHome<TipoModeloDocumento> {
+		extends	AbstractHome<TipoModeloDocumento> {
 	
 	private static final long serialVersionUID = 1L;
 	private static final String TEMPLATE = "/TipoModeloDocumento/tipoModeloDocumentoTemplate.xls";
@@ -98,5 +100,66 @@ public class TipoModeloDocumentoHome
 	public List<ModeloDocumento> getListaDeModeloDocumento(){
 		return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(instance.getGrupoModeloDocumento(), instance);
 	}
+	
+	public void setTipoModeloDocumentoIdTipoModeloDocumento(Integer id) {
+        setId(id);
+    }
+
+    public Integer getTipoModeloDocumentoIdTipoModeloDocumento() {
+        return (Integer) getId();
+    }
+
+    @Override
+    protected TipoModeloDocumento createInstance() {
+        TipoModeloDocumento tipoModeloDocumento = new TipoModeloDocumento();
+        GrupoModeloDocumentoHome grupoModeloDocumentoHome = (GrupoModeloDocumentoHome) Component
+                .getInstance("grupoModeloDocumentoHome", false);
+        if (grupoModeloDocumentoHome != null) {
+            tipoModeloDocumento
+                    .setGrupoModeloDocumento(grupoModeloDocumentoHome
+                            .getDefinedInstance());
+        }
+        return tipoModeloDocumento;
+    }
+
+    @Override
+    public String remove() {
+        GrupoModeloDocumentoHome grupoModeloDocumento = (GrupoModeloDocumentoHome) Component
+                .getInstance("grupoModeloDocumentoHome", false);
+        if (grupoModeloDocumento != null) {
+            grupoModeloDocumento.getInstance().getTipoModeloDocumentoList()
+                    .remove(instance);
+        }
+        return super.remove();
+    }
+
+    @Override
+    public String remove(TipoModeloDocumento obj) {
+        setInstance(obj);
+        getInstance().setAtivo(Boolean.FALSE);
+        String ret = super.update();
+        newInstance();
+        return ret;
+    }
+
+    @Override
+    public String persist() {
+        String action = super.persist();
+        if (getInstance().getGrupoModeloDocumento() != null) {
+            List<TipoModeloDocumento> grupoModeloDocumentoList = getInstance()
+                    .getGrupoModeloDocumento().getTipoModeloDocumentoList();
+            if (!grupoModeloDocumentoList.contains(instance)) {
+                getEntityManager().refresh(
+                        getInstance().getGrupoModeloDocumento());
+            }
+        }
+        return action;
+    }
+
+    public List<ModeloDocumento> getModeloDocumentoList() {
+        return getInstance() == null ? null : getInstance()
+                .getModeloDocumentoList();
+    }
+
 	
 }
