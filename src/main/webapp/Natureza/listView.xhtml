@@ -29,7 +29,7 @@
 	
 	<ui:param
 		 name="home"
-		 value="#{naturezaAction}" />
+		 value="#{naturezaHome}" />
 	
 	<ui:define name="searchGrid">
 		
@@ -39,7 +39,7 @@
 			 tableTitle="#{messages['natureza.titleGrid']}"
 			 id="naturezaList"
 			 rowId="#{row.idNatureza}"
-			 actionInactive="naturezaAction.inactive">
+			 actionInactive="naturezaHome.inactive">
 			
 			<ui:define name="searchForm">
 				
@@ -66,7 +66,7 @@
 			<ui:define name="toolBar">
 				
 				<wi:toolBarEdit id="naturezaListEditToolbar" />
-				<wi:toolBarInactive actionInactive="naturezaAction.inactive(row)" />
+				<wi:toolBarInactive actionInactive="naturezaHome.inactive(row)" />
 			
 			</ui:define>
 			<wi:columnOutputText
@@ -96,17 +96,17 @@
 			
 			<wi:inputText
 				 id="natureza"
-				 value="#{naturezaAction.instance.natureza}"
+				 value="#{naturezaHome.instance.natureza}"
 				 required="true"
 				 label="#{messages['natureza.natureza']}" />
             <wi:selectBooleanRadio
 				 id="hasPartes"
 				 label="#{messages['natureza.hasPartes']}"
-				 value="#{naturezaAction.instance.hasPartes}" />
+				 value="#{naturezaHome.instance.hasPartes}" />
 			<wi:selectSituacaoRadio
 				 id="ativo"
 				 label="#{messages['field.situacao']}"
-				 value="#{naturezaAction.instance.ativo}" />
+				 value="#{naturezaHome.instance.ativo}" />
 		
 		</wi:dataForm>
 	
