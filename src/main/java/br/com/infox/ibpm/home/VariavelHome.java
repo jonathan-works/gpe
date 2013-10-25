@@ -20,10 +20,11 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.Variavel;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(VariavelHome.NAME)
-public class VariavelHome extends AbstractVariavelHome<Variavel> {
+public class VariavelHome extends AbstractHome<Variavel> {
 
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(VariavelHome.class);
@@ -50,4 +51,25 @@ public class VariavelHome extends AbstractVariavelHome<Variavel> {
 	public static VariavelHome instance() {
 		return ComponentUtil.getComponent(VariavelHome.NAME);
 	}
+	
+    public void setVariavelIdVariavel(Integer id) {
+        setId(id);
+    }
+
+    public Integer getVariavelIdVariavel() {
+        return (Integer) getId();
+    }
+
+    @Override
+    protected Variavel createInstance() {
+        return new Variavel();
+    }
+
+    @Override
+    public String remove(Variavel obj) {
+        setInstance(obj);
+        String ret = super.remove();
+        newInstance();
+        return ret;
+    }
 }

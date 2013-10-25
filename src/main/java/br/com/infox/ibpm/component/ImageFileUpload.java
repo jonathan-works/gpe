@@ -13,34 +13,18 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.ibpm.component;
 
-import br.com.infox.ibpm.entity.Variavel;
-import br.com.itx.component.AbstractHome;
+import org.jboss.seam.annotations.Name;
 
-
-public abstract class AbstractVariavelHome<T> extends AbstractHome<Variavel> {
-
-	private static final long serialVersionUID = 1L;
-
-	public void setVariavelIdVariavel(Integer id) {
-		setId(id);
-	}
-
-	public Integer getVariavelIdVariavel() {
-		return (Integer) getId();
-	}
+@Name(ImageFileUpload.NAME)
+public class ImageFileUpload extends AbstractImageFileUploader {
+	public static final String NAME = "imageFileUpload";
+    public static final String IMAGE_RELATIVE_PATH = "/img/imageFile/";
 
 	@Override
-	protected Variavel createInstance() {
-		return new Variavel();
+	public String getImagesRelativePath() {
+		return ImageFileUpload.IMAGE_RELATIVE_PATH;
 	}
-
-	@Override
-	public String remove(Variavel obj) {
-		setInstance(obj);
-		String ret = super.remove();
-		newInstance();
-		return ret;
-	}
+	
 }
