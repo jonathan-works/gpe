@@ -272,7 +272,7 @@ public class VariableAccessHandler implements Serializable {
 		return modeloDocumentoList;
 	}
 	
-	// TODO: Esse entityList est· bizarro, È a causa dos 2 warnings abaixo
+	// TODO: Esse entityList est√° bizarro, √© a causa dos 2 warnings abaixo
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addModelo(ModeloDocumento modelo) {
 		if (modeloDocumentoList == null) {
