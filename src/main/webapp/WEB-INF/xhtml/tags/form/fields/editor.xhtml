@@ -26,9 +26,6 @@
 	xmlns:wi="http://www.itx.com.br/jsf">
 
 	<ui:param
-		name="varsList"
-		value="#{showVariables ? 'epaInsert,|,' : '' }" />
-	<ui:param
 		name="template"
 		value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
 
@@ -127,11 +124,9 @@
 								},
 							</a:repeat>
 						];
-						//<![CDATA[
-						if (tags.length < 1) {
+						if (tags.length &lt; 1) {
 							return;
 						}
-						//]]>
 						editor.ui.addRichCombo('variables.cmb', {
 							label : "Variáveis",
 							title : "Variáveis",
