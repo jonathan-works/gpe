@@ -15,17 +15,20 @@
  */
 package br.com.infox.ibpm.home;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
+import br.com.infox.ibpm.entity.ItemTipoDocumento;
+import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.list.GrupoModeloDocumentoList;
+import br.com.itx.component.AbstractHome;
 
 @Name(GrupoModeloDocumentoHome.NAME)
-@BypassInterceptors
 public class GrupoModeloDocumentoHome extends
-		AbstractGrupoModeloDocumentoHome<GrupoModeloDocumento> {
+		AbstractHome<GrupoModeloDocumento> {
 
 	private static final long serialVersionUID = 1L;
 	private static final String TEMPLATE = "/GrupoModeloDocumento/grupoModeloDocumentoTemplate.xls";
@@ -47,4 +50,29 @@ public class GrupoModeloDocumentoHome extends
 	public EntityList<GrupoModeloDocumento> getBeanList() {
 		return GrupoModeloDocumentoList.instance();
 	}
+	
+    @Override
+    protected GrupoModeloDocumento createInstance() {
+        return new GrupoModeloDocumento();
+    }
+
+    @Override
+    public String remove(GrupoModeloDocumento obj) {
+        setInstance(obj);
+        getInstance().setAtivo(Boolean.FALSE);
+        String ret = super.update();
+        newInstance();
+        return ret;
+    }
+
+    public List<ItemTipoDocumento> getItemTipoDocumentoList() {
+        return getInstance() == null ? null : getInstance()
+                .getItemTipoDocumentoList();
+    }
+
+    public List<TipoModeloDocumento> getTipoModeloDocumentoList() {
+        return getInstance() == null ? null : getInstance()
+                .getTipoModeloDocumentoList();
+    }
+
 }

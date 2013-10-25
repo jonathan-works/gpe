@@ -19,8 +19,8 @@ import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.Crypto;
 
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractImageFileHome implements FileUploadListener {
-	public static final LogProvider LOG = Logging.getLogProvider(AbstractImageFileHome.class);
+public abstract class AbstractImageFileUploader implements FileUploadListener {
+	public static final LogProvider LOG = Logging.getLogProvider(AbstractImageFileUploader.class);
 		
 	private String fileName;
 	private Integer fileSize;

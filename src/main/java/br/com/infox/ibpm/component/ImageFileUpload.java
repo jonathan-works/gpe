@@ -13,27 +13,18 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.ibpm.component;
 
-import br.com.infox.ibpm.entity.Parametro;
-import br.com.itx.component.AbstractHome;
+import org.jboss.seam.annotations.Name;
 
-
-public abstract class AbstractParametroHome<T>
-		extends	AbstractHome<Parametro> {
-
-	private static final long serialVersionUID = 1L;
+@Name(ImageFileUpload.NAME)
+public class ImageFileUpload extends AbstractImageFileUploader {
+	public static final String NAME = "imageFileUpload";
+    public static final String IMAGE_RELATIVE_PATH = "/img/imageFile/";
 
 	@Override
-	protected Parametro createInstance() {
-		return new Parametro();
+	public String getImagesRelativePath() {
+		return ImageFileUpload.IMAGE_RELATIVE_PATH;
 	}
-
-	@Override
-	public String remove(Parametro obj) {
-		setInstance(obj);
-		String ret = super.update();
-		newInstance();
-		return ret;
-	}
+	
 }

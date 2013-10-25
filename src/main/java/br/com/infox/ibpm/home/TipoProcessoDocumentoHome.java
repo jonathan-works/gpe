@@ -24,18 +24,20 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.manager.TipoProcessoDocumentoManager;
+import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
 import br.com.infox.ibpm.type.TipoNumeracaoEnum;
 import br.com.infox.ibpm.type.VisibilidadeEnum;
 import br.com.infox.list.TipoProcessoDocumentoList;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 
 @Name(TipoProcessoDocumentoHome.NAME)
 public class TipoProcessoDocumentoHome
 		extends
-			AbstractTipoProcessoDocumentoHome<TipoProcessoDocumento> {
+			AbstractHome<TipoProcessoDocumento> {
 
 	
 	public static final String NAME = "tipoProcessoDocumentoHome";
@@ -81,7 +83,11 @@ public class TipoProcessoDocumentoHome
 	@Override
 	public String remove(TipoProcessoDocumento obj) {
 		obj.setAtivo(Boolean.FALSE);
-		return super.remove(obj);
+		setInstance(obj);
+        obj.setAtivo(Boolean.FALSE);
+        String ret = super.update();
+        newInstance();
+        return ret;
 	}
 	
 	public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
@@ -99,5 +105,23 @@ public class TipoProcessoDocumentoHome
 	public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo){
 		return tipoProcessoDocumentoManager.getTipoProcessoDocumentoInterno(isModelo);
 	}
+	
+	public void setTipoProcessoDocumentoIdTipoProcessoDocumento(Integer id) {
+        setId(id);
+    }
+
+    public Integer getTipoProcessoDocumentoIdTipoProcessoDocumento() {
+        return (Integer) getId();
+    }
+
+    @Override
+    protected TipoProcessoDocumento createInstance() {
+        return new TipoProcessoDocumento();
+    }
+
+    public List<ProcessoDocumento> getProcessoDocumentoList() {
+        return getInstance() == null ? null : getInstance()
+                .getProcessoDocumentoList();
+    }
 	
 }

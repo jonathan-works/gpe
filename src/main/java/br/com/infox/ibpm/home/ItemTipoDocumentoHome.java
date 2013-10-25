@@ -16,23 +16,21 @@
 package br.com.infox.ibpm.home;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.ItemTipoDocumento;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
-
-
-@Name("itemTipoDocumentoHome")
-@BypassInterceptors
+@Name(ItemTipoDocumentoHome.NAME)
 public class ItemTipoDocumentoHome
-		extends AbstractItemTipoDocumentoHome<ItemTipoDocumento> {
+		extends AbstractHome<ItemTipoDocumento> {
 
 	private static final long serialVersionUID = 1L;
+	public static final String NAME = "itemTipoDocumentoHome";
 	
 	public void set(ItemTipoDocumento itemTipoDocumento) {
 		instance = itemTipoDocumento;
@@ -62,7 +60,7 @@ public class ItemTipoDocumentoHome
 		ItemTipoDocumento itd = getInstance();
 		getEntityManager().merge(itd);
 		EntityUtil.flush();
-		String msg = "persisted";
+		String msg = PERSISTED;
 		instance.setGrupoModeloDocumento(null);
 		newInstance();
 		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro inserido com sucesso.");
@@ -76,4 +74,18 @@ public class ItemTipoDocumentoHome
         newInstance();
         return "removido";
     }
+	
+	public void setItemTipoDocumentoIdItemTipoDocumento(Integer id) {
+        setId(id);
+    }
+
+    public Integer getItemTipoDocumentoIdItemTipoDocumento() {
+        return (Integer) getId();
+    }
+
+    @Override
+    protected ItemTipoDocumento createInstance() {
+        return new ItemTipoDocumento();
+    }
+    
 }

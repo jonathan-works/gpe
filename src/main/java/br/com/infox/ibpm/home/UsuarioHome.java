@@ -36,18 +36,24 @@ import br.com.infox.command.EMailData;
 import br.com.infox.command.SendmailCommand;
 import br.com.infox.epp.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
+import br.com.infox.ibpm.entity.Endereco;
+import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.PessoaFisica;
+import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
 import br.com.infox.util.ParametroUtil;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioHome.NAME)
-public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
+public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 
 	private static final int PASSWORD_LENGTH = 8;
     public static final String AFTER_SET_USUARIO_LOCALIZACAO_ATUAL_EVENT = "br.com.infox.ibpm.home.UsuarioHome.afterSetLocalizacaoAtual";
@@ -107,7 +113,7 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 
 	@Override
 	protected UsuarioLogin createInstance() {
-		UsuarioLogin usuario = super.createInstance();
+		UsuarioLogin usuario = new UsuarioLogin();
 		usuario.setAtivo(true);
 		usuario.setLdap(false);
 		return usuario;
@@ -432,5 +438,61 @@ public class UsuarioHome extends AbstractUsuarioHome<UsuarioLogin> {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public void setUsuarioIdUsuario(Integer id) {
+        setId(id);
+    }
+
+    public Integer getUsuarioIdUsuario() {
+        return (Integer) getId();
+    }
+
+    @Override
+    public String remove(UsuarioLogin obj) {
+        setInstance(obj);
+        String ret = super.remove();
+        newInstance();
+        return ret;
+    }
+
+    public List<Fluxo> getFluxoList() {
+        return getInstance() == null ? null : getInstance().getFluxoList();
+    }
+
+    public List<Endereco> getEnderecoList() {
+        return getInstance() == null ? null : getInstance().getEnderecoList();
+    }
+
+    public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
+        return getInstance() == null ? null : getInstance()
+                .getUsuarioLocalizacaoList();
+    }
+
+    public List<BloqueioUsuario> getBloqueioUsuarioList() {
+        return getInstance() == null ? null : getInstance()
+                .getBloqueioUsuarioList();
+    }
+
+    public List<ProcessoDocumentoBin> getProcessoDocumentoBinList() {
+        return getInstance() == null ? null : getInstance()
+                .getProcessoDocumentoBinList();
+    }
+
+    public List<Processo> getProcessoListForIdUsuarioCadastroProcesso() {
+        return getInstance() == null ? null : getInstance()
+                .getProcessoListForIdUsuarioCadastroProcesso();
+    }
+    
+
+    public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioInclusao() {
+        return getInstance() == null ? null : getInstance()
+                .getProcessoDocumentoListForIdUsuarioInclusao();
+    }
+
+
+    public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioExclusao() {
+        return getInstance() == null ? null : getInstance()
+                .getProcessoDocumentoListForIdUsuarioExclusao();
+    }
 	
 }

@@ -18,6 +18,8 @@ package br.com.infox.ibpm.home;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -36,11 +38,12 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.ibpm.manager.VariavelManager;
 import br.com.infox.list.ModeloDocumentoList;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ModeloDocumentoHome.NAME)
 @Scope(ScopeType.PAGE)
-public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocumento> {
+public class ModeloDocumentoHome extends AbstractHome<ModeloDocumento> {
 
 	private static final long serialVersionUID = 1L;
 	private static final String TEMPLATE = "/ModeloDocumento/modeloDocumentoTemplate.xls";
@@ -146,5 +149,51 @@ public class ModeloDocumentoHome extends AbstractModeloDocumentoHome<ModeloDocum
 	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(){
 		return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(grupoModeloDocumento, tipoModeloDocumento);
 	}
+	
+	@Override
+    protected ModeloDocumento createInstance() {
+        ModeloDocumento modeloDocumento = new ModeloDocumento();
+        TipoModeloDocumentoHome tipoModeloDocumentoHome = (TipoModeloDocumentoHome) Component
+                .getInstance("tipoModeloDocumentoHome", false);
+        if (tipoModeloDocumentoHome != null) {
+            modeloDocumento.setTipoModeloDocumento(tipoModeloDocumentoHome
+                    .getDefinedInstance());
+        }
+        return modeloDocumento;
+    }
+
+    @Override
+    public String remove() {
+        TipoModeloDocumentoHome tipoModeloDocumento = (TipoModeloDocumentoHome) Component
+                .getInstance("tipoModeloDocumentoHome", false);
+        if (tipoModeloDocumento != null) {
+            tipoModeloDocumento.getInstance().getModeloDocumentoList().remove(
+                    instance);
+        }
+        return super.remove();
+    }
+
+    @Override
+    public String remove(ModeloDocumento obj) {
+        setInstance(obj);
+        String ret = super.remove();
+        newInstance();
+        return ret;
+    }
+
+    @Override
+    public String persist() {
+        String action = super.persist();
+        if (getInstance().getTipoModeloDocumento() != null) {
+            List<ModeloDocumento> tipoModeloDocumentoList = getInstance()
+                    .getTipoModeloDocumento().getModeloDocumentoList();
+            if (!tipoModeloDocumentoList.contains(instance)) {
+                getEntityManager().refresh(
+                        getInstance().getTipoModeloDocumento());
+            }
+        }
+        return action;
+    }
+
 	
 }

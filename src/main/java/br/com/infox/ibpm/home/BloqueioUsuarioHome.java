@@ -15,17 +15,70 @@
 */
 package br.com.infox.ibpm.home;
 
+import java.util.List;
+
+import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
+import br.com.itx.component.AbstractHome;
 
 
 @Name(BloqueioUsuarioHome.NAME)
-public class BloqueioUsuarioHome
-		extends
-			AbstractBloqueioUsuarioHome<BloqueioUsuario> {
+public class BloqueioUsuarioHome extends AbstractHome<BloqueioUsuario> {
 
 	public static final String NAME = "bloqueioUsuarioHome";
 	
 	private static final long serialVersionUID = 1L;
+	
+    public void setBloqueioUsuarioIdBloqueioUsuario(Integer id) {
+        setId(id);
+    }
+
+    public Integer getBloqueioUsuarioIdBloqueioUsuario() {
+        return (Integer) getId();
+    }
+
+    @Override
+    protected BloqueioUsuario createInstance() {
+        BloqueioUsuario bloqueioUsuario = new BloqueioUsuario();
+        UsuarioHome usuarioHome = (UsuarioHome) Component.getInstance(
+                "usuarioHome", false);
+        if (usuarioHome != null) {
+            bloqueioUsuario.setUsuario(usuarioHome.getDefinedInstance());
+        }
+        return bloqueioUsuario;
+    }
+
+    @Override
+    public String remove() {
+        UsuarioHome usuario = (UsuarioHome) Component.getInstance(
+                "usuarioHome", false);
+        if (usuario != null) {
+            usuario.getInstance().getBloqueioUsuarioList().remove(instance);
+        }
+        return super.remove();
+    }
+
+    @Override
+    public String remove(BloqueioUsuario obj) {
+        setInstance(obj);
+        String ret = super.remove();
+        newInstance();
+        return ret;
+    }
+
+    @Override
+    public String persist() {
+        String action = super.persist();
+        if (getInstance().getUsuario() != null) {
+            List<BloqueioUsuario> usuarioList = getInstance().getUsuario()
+                    .getBloqueioUsuarioList();
+            if (!usuarioList.contains(instance)) {
+                getEntityManager().refresh(getInstance().getUsuario());
+            }
+        }
+        newInstance();
+        return action;
+    }
 
 }

@@ -8,9 +8,10 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.epp.manager.PapelManager;
 import br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel;
+import br.com.itx.component.AbstractHome;
 
 @Name(TipoProcessoDocumentoPapelHome.NAME)
-public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocumentoPapelHome<TipoProcessoDocumentoPapel> {
+public class TipoProcessoDocumentoPapelHome extends AbstractHome<TipoProcessoDocumentoPapel> {
 	
 	public static final String NAME = "tipoProcessoDocumentoPapelHome";
 	private static final long serialVersionUID = 1L;
@@ -41,4 +42,20 @@ public class TipoProcessoDocumentoPapelHome extends AbstractTipoProcessoDocument
 	public List<Papel> papelItems() {
 		return papelManager.getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumentoHome.instance().getInstance());
 	}
+	
+	public void setTipoProcessoDocumentoPessoaIdTipoProcessoDocumentoPapel(Integer id) {
+        setId(id);
+    }
+    
+    public Integer getTipoProcessoDocumentoPessoaIdTipoProcessoDocumentoPapel() {
+        return (Integer) getId();
+    }
+    
+    @Override
+    public String remove(TipoProcessoDocumentoPapel obj) {
+        setInstance(obj);
+        String ret = super.remove();
+        newInstance();
+        return ret;
+    }
 }
