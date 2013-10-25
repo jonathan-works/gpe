@@ -25,124 +25,101 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <f:subview id="nodes">
+    <s:div id="nodes">
 
         <s:div id="divNodesGeral">
 
             <s:div id="nodesDiv" >
 
-                <s:div >
+                <s:div>
+                
                     <ui:decorate template="dataTable.xhtml">
+                    
                         <ui:param name="values" value="#{nodeFitter.nodes}" />
+                        
                         <ui:param name="styleClass" value="tabelaVariaveis" />
+                        
                         <ui:param name="id" value="nodesTable" />
+                        
                         <ui:param name="style" value="width:100%" />
+                        
                         <ui:define name="headerToolBar">
-                            <a:commandLink
-                                action="#{nodeFitter.setCurrentNode(null)}"
-                                render="nodesDiv"
-                                limitRender="true">
+                        
+                        	<h:form>
+                        	
+                            	<a:commandLink action="#{nodeFitter.setCurrentNode(null)}" render="nodesDiv" limitRender="true">
 
-                                <h:graphicImage
-                                    title="Adicionar nó"
-                                    
-                                    url="/img/add.gif" />
+                                	<h:graphicImage title="Adicionar nó" url="/img/add.gif" />
 
-                            </a:commandLink>
+                       	     	</a:commandLink>
+                       	     	
+                       	    </h:form>
 
                         </ui:define>
+                        
                         <ui:define name="toolBar">
 
-                            <s:div >
+                            <h:form>
 
-                                <h:graphicImage
-                                    title="Excluir nó"
-                                    
-                                    url="/img/remove.png"
-                                    styleClass="opacityHover">
+                                <h:graphicImage title="Excluir nó" url="/img/remove.png" styleClass="opacityHover">
 
-                                    <a:ajax
-                                        event="click"
-                                        listener="#{nodeFitter.removeNode(row)}"
+                                    <a:ajax event="click"
+                                    	listener="#{nodeFitter.removeNode(row)}"
                                         onbeforesubmit="if(!confirm('Confirma?')) return false;"
                                         execute="@this"
                                         render="nodesDiv"
                                         limitRender="true" />
 
                                 </h:graphicImage>
-                                <h:graphicImage
-                                    title="Subir na ordem"
-                                    
-                                    rendered="#{key != 0}"
-                                    url="/img/jbpm/up.gif"
-                                    styleClass="opacityHover">
+                                
+                                <h:graphicImage title="Subir na ordem" rendered="#{key != 0}" url="/img/jbpm/up.gif" styleClass="opacityHover">
 
-                                    <a:ajax
-                                        event="click"
-                                        listener="#{nodeFitter.moveUp(row)}"
-                                        execute="@this"
-                                        render="nodesTable"
-                                        limitRender="true" />
+                                    <a:ajax event="click" listener="#{nodeFitter.moveUp(row)}" execute="@this" render="nodesTable" limitRender="true" />
 
                                 </h:graphicImage>
-                                <h:graphicImage
-                                    title="Descer na ordem"
-                                    
+                                
+                                <h:graphicImage title="Descer na ordem"
                                     rendered="#{key lt nodeFitter.nodes.size - 1}"
                                     url="/img/jbpm/down.gif"
                                     styleClass="opacityHover">
 
-                                    <a:ajax
-                                        event="click"
-                                        listener="#{nodeFitter.moveDown(row)}"
-                                        execute="@this"
-                                        render="nodesTable"
-                                        limitRender="true" />
+                                    <a:ajax event="click" listener="#{nodeFitter.moveDown(row)}" execute="@this" render="nodesTable" limitRender="true" />
 
                                 </h:graphicImage>
 
-                            </s:div>
+                            </h:form>
 
                         </ui:define>
+                        
                         <ui:define name="columns">
 
                             <rich:column>
 
                                 <f:facet name="header">Nós</f:facet>
-                                <ui:param
-                                    name="current"
-                                    value="#{row == nodeFitter.currentNode}" />
-                                <ui:param
-                                    name="styleNodeName"
-                                    value="#{current ? 'font-weight:bold' : ''}" />
-                                <a:commandLink
-                                    action="#{nodeFitter.setCurrentNode(row)}"
-                                    
-                                    render="divNodesGeral"
-                                    execute="@this"
-                                    limitRender="true">
-
-                                    <a:outputPanel>
-
-                                        <h:panelGrid
-                                            columns="2"
-                                            cellspacing="0"
-                                            cellpadding="0">
-
-                                            <h:graphicImage
-                                                url="/img/jbpm/#{nodeFitter.getIcon(row)}.gif"
-                                                title="#{row.nodeType}"
-                                                 />
-                                            <h:outputText
-                                                value="#{row.name}"
-                                                
-                                                title="#{nodeFitter.getMessage(row)}" />
-
-                                        </h:panelGrid>
-
-                                    </a:outputPanel>
-
-                                </a:commandLink>
+                                
+                                <ui:param name="current" value="#{row == nodeFitter.currentNode}" />
+                                
+                                <ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
+                                
+                                <h:form>
+                                
+	                                <a:commandLink action="#{nodeFitter.setCurrentNode(row)}" render="divNodesGeral" execute="@this" limitRender="true">
+	
+	                                    <a:outputPanel>
+	
+	                                        <h:panelGrid columns="2" cellspacing="0" cellpadding="0">
+	
+	                                            <h:graphicImage url="/img/jbpm/#{nodeFitter.getIcon(row)}.gif" title="#{row.nodeType}" />
+	                                            
+	                                            <h:outputText value="#{row.name}" title="#{nodeFitter.getMessage(row)}" />
+	
+	                                        </h:panelGrid>
+	
+	                                    </a:outputPanel>
+	
+	                                </a:commandLink>
+	                                
+	                            </h:form>
 
                             </rich:column>
 
@@ -152,85 +129,67 @@
 
                 </s:div>
 
-                <s:div
-                    id="nodeDiv"
-                    >
+                <s:div id="nodeDiv">
 
-                    <rich:panel
-                        bodyClass="panel"
-                        
-                        rendered="#{!empty nodeFitter.currentNode}">
+                    <rich:panel bodyClass="panel" rendered="#{!empty nodeFitter.currentNode}">
 
                         <f:facet name="header">
 
-                            <h:panelGrid
-                                columns="2"
-                                cellpadding="0"
-                                cellspacing="0">
+                            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
 
-                                <h:graphicImage
-                                    url="/img/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif"
-                                    title="#{nodeFitter.currentNode.nodeType}"
-                                     />
-                                <rich:inplaceInput
-                                    
-                                    value="#{nodeFitter.nodeName}"
-                                    inputWidth="150px"
-                                    title="Clique para alterar o nome do nó"
-                                    oninputkeyup="this.value = this.value.replace('/','_')">
-
-                                    <a:ajax
-                                        event="change"
-                                        execute="@this"
-                                        render="nodesTable" />
-
-                                </rich:inplaceInput>
+                                <h:graphicImage url="/img/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif" title="#{nodeFitter.currentNode.nodeType}" />
+                                
+                                <h:form>
+                                
+	                                <rich:inplaceInput value="#{nodeFitter.nodeName}"
+	                                    inputWidth="150px"
+	                                    title="Clique para alterar o nome do nó"
+	                                    oninputkeyup="this.value = this.value.replace('/','_')">
+	
+	                                    <a:ajax event="change" execute="@this" render="nodesTable" />
+	
+	                                </rich:inplaceInput>
+	                                
+	                            </h:form>
 
                             </h:panelGrid>
 
                         </f:facet>
 
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
+                        <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
 
                             <ui:include src="transition.xhtml">
 
-                                <ui:param
-                                    name="type"
-                                    value="from" />
+                                <ui:param name="type" value="from" />
 
                             </ui:include>
 
                         </s:fragment>
 
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}">
+                        <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}">
 
                             <ui:include src="transition.xhtml">
 
-                                <ui:param
-                                    name="type"
-                                    value="to" />
+                                <ui:param name="type" value="to" />
 
                             </ui:include>
 
                         </s:fragment>
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
+                        
+                        <s:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
 
                             <ui:include src="tasks.xhtml" />
 
                         </s:fragment>
 
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
+                        <s:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
 
                             <ui:include src="timers.xhtml" />
 
                         </s:fragment>
 
                         <s:div rendered="#{! empty nodeFitter.nodeForm}">
-
+							<!-- Parei aqui -->
                             <ui:include
                                 src="forms/#{nodeFitter.nodeForm}.xhtml" />
 
@@ -454,6 +413,6 @@
             </div>
 
         </wi:modalPanel>
-    </f:subview>   
+    </s:div>   
 
 </ui:composition>
