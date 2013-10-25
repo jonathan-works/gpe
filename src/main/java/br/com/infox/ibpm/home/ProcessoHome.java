@@ -31,6 +31,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.cliente.home.ProcessoDocumentoHome;
 import br.com.infox.core.certificado.Certificado;
 import br.com.infox.core.certificado.CertificadoException;
 import br.com.infox.epp.manager.ProcessoEpaManager;

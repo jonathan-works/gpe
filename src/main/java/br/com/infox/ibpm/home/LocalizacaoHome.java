@@ -17,6 +17,7 @@ package br.com.infox.ibpm.home;
 
 import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -33,15 +34,18 @@ import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Endereco;
 import br.com.infox.ibpm.entity.Estado;
+import br.com.infox.ibpm.entity.ItemTipoDocumento;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.Municipio;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.manager.LocalizacaoManager;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 
 @Name(LocalizacaoHome.NAME)
 public class LocalizacaoHome
-		extends AbstractLocalizacaoHome<Localizacao>{
+		extends AbstractHome<Localizacao>{
 
 	public static final String NAME = "localizacaoHome";
 	private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoHome.class);
@@ -91,7 +95,7 @@ public class LocalizacaoHome
 	
 	@Override
 	protected Localizacao createInstance() {
-		instance = super.createInstance();
+		instance = createLocalizacaoComEndereco();
 		instance.setLocalizacaoPai(new Localizacao());
 		if (instance.getEndereco() == null){
 		    instance.setEndereco(new Endereco());
@@ -104,7 +108,13 @@ public class LocalizacaoHome
 	public String persist() {
 		String ret = null;
 		try{
-			ret = super.persist();
+		    ret = super.persist();
+            if (ret != null && getInstance().getLocalizacaoPai() != null){
+                List<Localizacao> localizacaoPaiList = getInstance().getLocalizacaoPai().getLocalizacaoList();
+                if (!localizacaoPaiList.contains(instance)){
+                    getEntityManager().refresh(getInstance().getLocalizacaoPai());
+                }
+            }
 			if (ret != null) {
 				limparTrees();
 			}
@@ -362,5 +372,65 @@ public class LocalizacaoHome
 	    getEnderecoHome().newInstance();
 	    super.onClickSearchTab();
 	}
+	
+	//Vindo do antigo AbstractLocalizacaoHome
+	
+	   public void setLocalizacaoIdLocalizacao(Integer id) {
+	        setId(id);
+	    }
+
+	    public Integer getLocalizacaoIdLocalizacao() {
+	        return (Integer) getId();
+	    }
+
+	    protected Localizacao createLocalizacaoComEndereco() {
+	        Localizacao localizacao = new Localizacao();
+	        EnderecoHome enderecoHome = (EnderecoHome) Component.getInstance(
+	                "enderecoHome", false);
+	        if (enderecoHome != null) {
+	            localizacao.setEndereco(enderecoHome.getDefinedInstance());
+	        }
+	        LocalizacaoHome localizacaoHome = (LocalizacaoHome) Component.getInstance("localizacaoHome", false);
+	        if (localizacaoHome != null){
+	            localizacao.setLocalizacaoPai(localizacaoHome.getDefinedInstance());
+	        }
+	        return localizacao;
+	    }
+
+	    @Override
+	    public String remove() {
+	        EnderecoHome endereco = (EnderecoHome) Component.getInstance(
+	                "enderecoHome", false);
+	        if (endereco != null) {
+	            endereco.getInstance().getLocalizacaoList().remove(instance);
+	        }
+	        LocalizacaoHome localizacao = (LocalizacaoHome) Component.getInstance("localizacaoHome", false);
+	        if (localizacao != null){
+	            localizacao.getInstance().getLocalizacaoList().remove(instance);
+	        }
+	        return super.remove();
+	    }
+
+	    @Override
+	    public String remove(Localizacao obj) {
+	        setInstance(obj);
+	        String ret = super.remove();
+	        newInstance();
+	        return ret;
+	    }
+
+	    public List<ItemTipoDocumento> getItemTipoDocumentoList() {
+	        return getInstance() == null ? null : getInstance()
+	                .getItemTipoDocumentoList();
+	    }
+	    
+	    public List<Localizacao> getLocalizacaoList(){
+	        return getInstance() == null ? null : getInstance().getLocalizacaoList();
+	    }
+	    
+	    public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
+	        return getInstance() == null ? null : getInstance()
+	                .getUsuarioLocalizacaoList();
+	    }
 
 }

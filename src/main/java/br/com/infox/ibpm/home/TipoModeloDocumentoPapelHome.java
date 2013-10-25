@@ -24,11 +24,12 @@ import br.com.infox.access.entity.Papel;
 import br.com.infox.epp.manager.PapelManager;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
+import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 
 @Name(TipoModeloDocumentoPapelHome.NAME)
-public class TipoModeloDocumentoPapelHome extends AbstractTipoModeloDocumentoPapelHome<TipoModeloDocumentoPapel> {
+public class TipoModeloDocumentoPapelHome extends AbstractHome<TipoModeloDocumentoPapel> {
 
 	public static final String NAME = "tipoModeloDocumentoPapelHome";
 	private static final long serialVersionUID = 1L;
@@ -69,5 +70,13 @@ public class TipoModeloDocumentoPapelHome extends AbstractTipoModeloDocumentoPap
 	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumentoAtual(){
 		return papelManager.getPapeisNaoAssociadosATipoModeloDocumento(instance.getTipoModeloDocumento());
 	}
+	
+	public void setTipoModeloDocumentoPapelIdTipoModeloDocumentoPapel(Integer id) {
+        setId(id);
+    }
+
+    public Integer getTipoModeloDocumentoPapelIdTipoModeloDocumentoPapel() {
+        return (Integer) getId();
+    }
 	
 }
