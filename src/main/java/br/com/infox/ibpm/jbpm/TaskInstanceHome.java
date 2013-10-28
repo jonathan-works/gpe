@@ -124,13 +124,11 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void retrieveVariable(VariableAccess var) {
-        String type = var.getMappedName().split(":")[0];
-        String name = var.getMappedName().split(":")[1];
+        TaskVariable taskVariable = new TaskVariable(var);
         Object variable = JbpmUtil.instance().getConteudo(var,
                 taskInstance);
         Boolean assinado = Boolean.FALSE;
-        Boolean isEditor = JbpmUtil.isTypeEditor(type);
-        if (isEditor) {
+        if (taskVariable.isEditor()) {
             Integer id = (Integer) taskInstance.getVariable(var
                     .getMappedName());
             if (id != null) {
@@ -142,7 +140,7 @@ public class TaskInstanceHome implements Serializable {
                 instance.put(getFieldName(name), variable);
             }
         } else {
-            if (("numberMoney".equals(type)) && (variable != null)
+            if (taskVariable.isMonetario() && (variable != null)
                     && (variable.getClass().equals(Float.class))) {
                 variable = String.format("%.2f", variable);
             }
@@ -162,7 +160,7 @@ public class TaskInstanceHome implements Serializable {
             }
         }
 
-        if ("form".equals(type)) {
+        if (taskVariable.isForm()) {
             varName = name;
             if (null != variable) {
                 AbstractHome<?> home = ComponentUtil
