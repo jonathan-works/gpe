@@ -47,5 +47,9 @@ final class TaskVariable {
     public void setVariable(Object variable) {
         this.variable = variable;
     }
+    
+    public boolean hasVariable(){
+        return variable != null;
+    }
 
 }
