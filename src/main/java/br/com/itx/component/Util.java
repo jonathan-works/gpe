@@ -34,7 +34,9 @@ import java.util.Map.Entry;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
+
 import org.hibernate.LazyInitializationException;
+import org.hibernate.internal.SessionImpl;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -60,6 +62,7 @@ import br.com.itx.component.grid.SearchField;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
+import br.com.itx.util.EntityUtil;
 import br.com.itx.util.FacesUtil;
 
 @Scope(ScopeType.APPLICATION)
@@ -483,6 +486,9 @@ public class Util implements Serializable {
 		try {
 			org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
 			if(ut != null && ut.isMarkedRollback()) {
+				SessionImpl session = EntityUtil.getEntityManager().unwrap(SessionImpl.class);
+				// Aborta o batch JDBC, possivelmente relacionado ao bug HHH-7689. Ver https://hibernate.atlassian.net/browse/HHH-7689
+				session.getTransactionCoordinator().getJdbcCoordinator().abortBatch();
 				ut.rollback();
 			}
 		} catch (Exception e) {
