@@ -156,9 +156,7 @@ public class TaskInstanceHome implements Serializable {
 
         if (taskVariable.isForm()) {
             varName = taskVariable.getName();
-            if (taskVariable.hasVariable()) {
-                taskVariable.setVariablesHome();
-            }
+            taskVariable.retrieveHomes();
         }
     }
     
