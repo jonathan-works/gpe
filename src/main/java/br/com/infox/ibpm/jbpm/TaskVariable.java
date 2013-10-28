@@ -23,5 +23,9 @@ final class TaskVariable {
     public boolean isEditor(){
         return type.startsWith("textEditCombo") || type.equals("textEditSignature");
     }
+    
+    public boolean isForm(){
+        return "form".equals(type);
+    }
 
 }
