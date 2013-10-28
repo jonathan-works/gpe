@@ -63,5 +63,9 @@ final class TaskVariable {
         AbstractHome<?> home = ComponentUtil.getComponent(getName() + "Home");
         home.setId(getVariable());
     }
+    
+    public VariablePair getVariablePair(){
+        return new VariablePair(name, variable);
+    }
 
 }
