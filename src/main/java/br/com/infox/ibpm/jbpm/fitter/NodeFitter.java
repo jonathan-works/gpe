@@ -146,20 +146,18 @@ public class NodeFitter extends Fitter implements Serializable {
 		for (Node n : nodes) {
 			List<Transition> transitions = n.getLeavingTransitions();
 			if (transitions != null) {
-				for (Iterator<Transition> i = transitions.iterator(); i
-						.hasNext();) {
+				for (Iterator<Transition> i = transitions.iterator(); i.hasNext();) {
 					Transition t = i.next();
-					if (t.getTo().equals(node)) {
+					if (node.equals(t.getTo())) {
 						i.remove();
 					}
 				}
 			}
 			Set<Transition> transitionSet = n.getArrivingTransitions();
 			if (transitionSet != null) {
-				for (Iterator<Transition> i = transitionSet.iterator(); i
-						.hasNext();) {
+				for (Iterator<Transition> i = transitionSet.iterator(); i.hasNext();) {
 					Transition t = i.next();
-					if (t.getFrom().equals(node)) {
+					if (node.equals(t.getFrom())) {
 						i.remove();
 					}
 				}
