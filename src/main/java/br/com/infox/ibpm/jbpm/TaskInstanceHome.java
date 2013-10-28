@@ -541,7 +541,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public String getHomeName() {
-        return "taskInstanceHome";
+        return NAME;
     }
 
     public String getName() {
