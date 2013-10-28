@@ -7,6 +7,7 @@ final class TaskVariable {
     private VariableAccess var;
     private String name;
     private String type;
+    private Object variable;
     
     public TaskVariable (VariableAccess var){
         this.var = var;
@@ -35,7 +36,16 @@ final class TaskVariable {
     }
     
     public boolean isMonetario(){
-        return "numberMoney".equals(type);
+        return "numberMoney".equals(type) && (variable != null)
+                && (variable.getClass().equals(Float.class));
+    }
+
+    public Object getVariable() {
+        return variable;
+    }
+
+    public void setVariable(Object variable) {
+        this.variable = variable;
     }
 
 }
