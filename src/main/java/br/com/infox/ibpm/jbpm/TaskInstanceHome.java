@@ -161,9 +161,7 @@ public class TaskInstanceHome implements Serializable {
         if (taskVariable.isForm()) {
             varName = taskVariable.getName();
             if (taskVariable.hasVariable()) {
-                AbstractHome<?> home = ComponentUtil
-                        .getComponent(taskVariable.getName() + "Home");
-                home.setId(taskVariable.getVariable());
+                taskVariable.setVariablesHome();
             }
         }
     }
