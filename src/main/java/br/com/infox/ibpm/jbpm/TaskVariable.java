@@ -64,4 +64,10 @@ final class TaskVariable {
         home.setId(getVariable());
     }
     
+    public void retrieveHomes(){
+        if (hasVariable()){
+            setVariablesHome();
+        }
+    }
+    
 }
