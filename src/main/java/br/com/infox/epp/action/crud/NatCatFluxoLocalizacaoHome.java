@@ -25,12 +25,12 @@ import br.com.itx.util.EntityUtil;
  * @author Daniel
  *
  */
-@Name(NatCatFluxoLocalizacaoAction.NAME)
+@Name(NatCatFluxoLocalizacaoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class NatCatFluxoLocalizacaoAction extends AbstractHome<NatCatFluxoLocalizacao> {
+public class NatCatFluxoLocalizacaoHome extends AbstractHome<NatCatFluxoLocalizacao> {
 	private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "natCatFluxoLocalizacaoAction";
+	public static final String NAME = "natCatFluxoLocalizacaoHome";
 
 	@In
 	private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;

@@ -252,22 +252,22 @@
 						formTitle="#{messages['form.title']}: #{fluxoHome.instance}">
 						<wi:selectOneMenuEntity
 							id="naturezaCategoriaFluxo"
-							value="#{natCatFluxoLocalizacaoAction.instance.naturezaCategoriaFluxo}"
+							value="#{natCatFluxoLocalizacaoHome.instance.naturezaCategoriaFluxo}"
 							required="true"
 							label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
 							noSelectionLabel="Selecione um registro..."
-							items="#{natCatFluxoLocalizacaoAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoHome.instance)}"/>
+							items="#{natCatFluxoLocalizacaoHome.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoHome.instance)}"/>
 						<wi:tree 
 							id="localizacao"
-							assignTo="natCatFluxoLocalizacaoAction.instance.localizacao"
+							assignTo="natCatFluxoLocalizacaoHome.instance.localizacao"
 							label="#{messages['localizacao.localizacao']}"
 							required="true"
-							tree="#{natCatFluxoLocalizacaoAction.localizacaoTreeHandler}" />
+							tree="#{natCatFluxoLocalizacaoHome.localizacaoTreeHandler}" />
 							<ui:define 
 								name="buttons">
 								<wi:commandButton 
 									id="saveButton"
-									action="natCatFluxoLocalizacaoAction.persist"
+									action="natCatFluxoLocalizacaoHome.persist"
 									reRender="natCatFluxoLocDiv"
 									value="Incluir"	/>
 							</ui:define>
@@ -279,12 +279,12 @@
 									  tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}"
 									  id="natCatFluxoLocalizacaoList"
 									  rowId="#{row.idNatCatFluxoLocalizacao}"
-									  actionInactive="natCatFluxoLocalizacaoAction.inactive">
+									  actionInactive="natCatFluxoLocalizacaoHome.inactive">
 							<ui:define name="searchForm" />
 				            <ui:define name="headerToolBar"/>
 							<ui:define name="toolBar">
 								<wi:toolBarRemove
-									actionRemove="natCatFluxoLocalizacaoAction.remove(row)"
+									actionRemove="natCatFluxoLocalizacaoHome.remove(row)"
 									reRender="natCatFluxoLocDiv"/>
 							</ui:define>
 							<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"

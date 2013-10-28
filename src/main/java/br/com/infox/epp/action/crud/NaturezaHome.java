@@ -14,15 +14,15 @@ import br.com.itx.component.AbstractHome;
  * @author Daniel
  *
  */
-@Name(NaturezaAction.NAME)
+@Name(NaturezaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class NaturezaAction extends AbstractHome<Natureza> {
+public class NaturezaHome extends AbstractHome<Natureza> {
 
 	private static final long serialVersionUID = 1L;
 	private static final String TEMPLATE = "/Natureza/NaturezaTemplate.xls";
 	private static final String DOWNLOAD_XLS_NAME = "Naturezas.xls";
 	
-	public static final String NAME = "naturezaAction";
+	public static final String NAME = "naturezaHome";
 	
 	@Override
 	public String getTemplate() {

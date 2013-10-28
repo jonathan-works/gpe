@@ -30,7 +30,7 @@
          name="title">#{messages['naturezaCategoriaFluxo.titlePage']}</ui:define>
 	<ui:param
          name="home"
-         value="#{naturezaCategoriaFluxoAction}" />
+         value="#{naturezaCategoriaFluxoHome}" />
 	<ui:define
          name="searchGrid">
 	    <wi:dataTable
@@ -92,23 +92,23 @@
 			<wi:selectOneMenuEntity
 				id="naturezas"
 				label="#{messages['naturezaCategoriaFluxo.natureza']}"
-				value="#{naturezaCategoriaFluxoAction.instance.natureza}"
+				value="#{naturezaCategoriaFluxoHome.instance.natureza}"
 				required="true"
-				items="#{naturezaCategoriaFluxoAction.naturezaList}"
+				items="#{naturezaCategoriaFluxoHome.naturezaList}"
 				noSelectionLabel="Selecione..."/>
 			<wi:selectOneMenuEntity
 				id="categorias"
 				label="#{messages['naturezaCategoriaFluxo.categoria']}"
-				value="#{naturezaCategoriaFluxoAction.instance.categoria}"
+				value="#{naturezaCategoriaFluxoHome.instance.categoria}"
 				required="true"
-				items="#{naturezaCategoriaFluxoAction.categoriaList}"
+				items="#{naturezaCategoriaFluxoHome.categoriaList}"
 				noSelectionLabel="Selecione..."/>
 			<wi:selectOneMenuEntity
 				id="fluxo"
 				label="#{messages['naturezaCategoriaFluxo.fluxo']}"
-				value="#{naturezaCategoriaFluxoAction.instance.fluxo}"
+				value="#{naturezaCategoriaFluxoHome.instance.fluxo}"
 				required="true"
-				items="#{naturezaCategoriaFluxoAction.fluxoList}"
+				items="#{naturezaCategoriaFluxoHome.fluxoList}"
 				noSelectionLabel="Selecione..."/>
 		</wi:dataForm>
 	</ui:define>
@@ -116,8 +116,8 @@
 	<ui:define name="tabs">
 		<infox:tab
             id="localizacaoTab"
-            rendered="#{naturezaCategoriaFluxoAction.isManaged()}"
-            action="#{natCatFluxoLocalizacaoAction.setNaturezaCategoriaFluxo(home.instance)}"
+            rendered="#{naturezaCategoriaFluxoHome.isManaged()}"
+            action="#{natCatFluxoLocalizacaoHome.setNaturezaCategoriaFluxo(home.instance)}"
             title="#{messages['naturezaCategoriaFluxo.localizacao']}"
             name="localizacaoTab">
             <s:div id="localizacaoFormDiv">
@@ -127,26 +127,26 @@
 					<ui:define name="buttons">
 						<wi:commandButton
 	                            id="saveButton"
-	                            action="natCatFluxoLocalizacaoAction.persist"
+	                            action="natCatFluxoLocalizacaoHome.persist"
 	                            reRender="localizacaoFormDiv, localizacaoDtDiv"
 	                            value="Incluir" />
 					</ui:define>
 					<wi:tree
 						id="localizacao"
-						assignTo="natCatFluxoLocalizacaoAction.instance.localizacao"
+						assignTo="natCatFluxoLocalizacaoHome.instance.localizacao"
 						label="#{messages['localizacao.localizacao']}"
 						required="true"
-						tree="#{natCatFluxoLocalizacaoAction.localizacaoTreeHandler}" />
+						tree="#{natCatFluxoLocalizacaoHome.localizacaoTreeHandler}" />
 					<wi:selectBooleanCheckbox
 						id="heranca"
 						label="#{messages['natCatFluxoLocalizacao.heranca']}"
-						value="#{natCatFluxoLocalizacaoAction.instance.heranca}" />
+						value="#{natCatFluxoLocalizacaoHome.instance.heranca}" />
 				</wi:dataForm>
 			</s:div>
 			<s:div id="localizacaoDtDiv">
 				<wi:dataTable
 					id="natCatFluxoLocalizacaoList"
-					values="#{natCatFluxoLocalizacaoAction.getNatCatFluxolocalizacaoList()}"
+					values="#{natCatFluxoLocalizacaoHome.getNatCatFluxolocalizacaoList()}"
 					var="row"
 					tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}">
 					<ui:define name="searchForm">
@@ -155,7 +155,7 @@
 					</ui:define>
 					<ui:define name="toolBar">
 						<wi:toolBarRemove
-							actionRemove="natCatFluxoLocalizacaoAction.remove(row)" 
+							actionRemove="natCatFluxoLocalizacaoHome.remove(row)" 
 							reRender="localizacaoFormDiv, localizacaoDtDiv"/>
 					</ui:define>
 					<wi:columnOutputText
