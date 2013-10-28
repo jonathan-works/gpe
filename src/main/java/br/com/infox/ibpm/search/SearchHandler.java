@@ -53,7 +53,6 @@ import br.com.itx.util.EntityUtil;
 
 @Name("search")
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
 public class SearchHandler implements Serializable {
 
 	private static final String NUMERO_PROCESSO_PATTERN = "^\\d{7}-\\d{2}\\.\\d{4}\\.\\d\\.\\d{2}\\.\\d{4}";
