@@ -23,7 +23,7 @@
 				
 					<a:commandLink action="#{swimlaneFitter.addSwimlane}"
 							 	   execute="@this"
-							 	   render="swimlanesForm"
+							 	   render="swimlanesForm, swimlanesTable"
 							 	   limitRender="true">
 							 		
 						<h:graphicImage title="#{messages['processBuilder.addSwimlane']}"
@@ -47,8 +47,9 @@
 								listener="#{swimlaneFitter.removeSwimlane(row)}"
 								execute="@this"
 								onbeforesubmit="return confirm('#{messages['processBuilder.confirm']}')"
-								render="swimlanesForm"
+								render="swimlanesForm, swimlanesTable"
 								limitRender="true" />
+								
 					</h:graphicImage>
 					
 				</h:form>
@@ -68,9 +69,9 @@
 						<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
 						
 						<a:commandLink action="#{swimlaneFitter.setCurrentSwimlane(row)}"
-								 		execute="@this"
-								 		render="swimlanesForm"
-								 		limitRender="true">
+								 	   execute="@this"
+								 	   render="swimlanesForm,"
+								 	   limitRender="true">
 								 		
 							<h:outputText value="#{row.swimlane.name}" />
 							
@@ -91,7 +92,11 @@
 		
 			<wi:inputText id="swimlaneName"
 				label="#{messages['processBuilder.swimlane.name']}"
-			 	value="#{swimlaneFitter.currentSwimlane.name}" />
+			 	value="#{swimlaneFitter.currentSwimlane.name}">
+			 	
+			 	<a:ajax event="change" execute="@this" limitRender="true" />
+			 	
+			</wi:inputText>
 		
 			<ui:decorate template="dataTable.xhtml">
 			
