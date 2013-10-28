@@ -136,13 +136,13 @@ public class TaskInstanceHome implements Serializable {
             }
             if ((id != null) && (!assinado) && var.isWritable()) {
                 ProcessoHome.instance().carregarDadosFluxo(id);
-                instance.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
+                putVariable(taskVariable);
             }
         } else {
             if (taskVariable.isMonetario()) {
                 taskVariable.setVariable(String.format("%.2f", taskVariable.getVariable()));
             }
-            instance.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
+            putVariable(taskVariable);
         }
 
         String modelo = (String) ProcessInstance.instance()
@@ -166,8 +166,8 @@ public class TaskInstanceHome implements Serializable {
         }
     }
     
-    private void putVariable(VariablePair variablePair){
-        instance.put(getFieldName(variablePair.name), variablePair.variable);
+    private void putVariable(TaskVariable taskVariable){
+        instance.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
     }
 
     public Map<String, Object> getInstance() {
