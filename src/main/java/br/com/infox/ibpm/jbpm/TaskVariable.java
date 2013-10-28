@@ -2,6 +2,9 @@ package br.com.infox.ibpm.jbpm;
 
 import org.jbpm.context.def.VariableAccess;
 
+import br.com.itx.component.AbstractHome;
+import br.com.itx.util.ComponentUtil;
+
 final class TaskVariable {
     
     private VariableAccess var;
@@ -50,6 +53,11 @@ final class TaskVariable {
     
     public boolean hasVariable(){
         return variable != null;
+    }
+    
+    public void setVariablesHome(){
+        AbstractHome<?> home = ComponentUtil.getComponent(getName() + "Home");
+        home.setId(getVariable());
     }
 
 }
