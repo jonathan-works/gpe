@@ -165,6 +165,10 @@ public class TaskInstanceHome implements Serializable {
             }
         }
     }
+    
+    private void putVariable(VariablePair variablePair){
+        instance.put(getFieldName(variablePair.name), variablePair.variable);
+    }
 
     public Map<String, Object> getInstance() {
         createInstance();
