@@ -42,6 +42,10 @@ final class TaskVariable {
         return "numberMoney".equals(type) && (variable != null)
                 && (variable.getClass().equals(Float.class));
     }
+    
+    public void formatVariableMonetaria(){
+        variable = String.format("%.2f", variable);
+    }
 
     public Object getVariable() {
         return variable;
