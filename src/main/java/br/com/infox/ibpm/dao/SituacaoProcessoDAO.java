@@ -7,8 +7,11 @@ import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Events;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
+import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(SituacaoProcessoDAO.NAME)
@@ -45,5 +48,18 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		}
 		return "";
 	}
+	
+	@SuppressWarnings("rawtypes")
+    public boolean canOpenTask(long currentTaskId) {
+        JbpmUtil.getJbpmSession().flush();
+        Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
+        List resultList = EntityUtil
+                .getEntityManager()
+                .createQuery(
+                        "select o.idTaskInstance from SituacaoProcesso o "
+                                + "where o.idTaskInstance = :ti")
+                .setParameter("ti", currentTaskId).getResultList();
+        return resultList.size() > 0;
+    }
 
 }

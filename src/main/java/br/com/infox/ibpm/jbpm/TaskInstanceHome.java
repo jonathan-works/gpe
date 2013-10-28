@@ -39,7 +39,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -55,12 +54,12 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.bpm.action.TaskPageAction;
-import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
+import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.ibpm.search.Reindexer;
 import br.com.infox.ibpm.search.SearchHandler;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
@@ -99,6 +98,7 @@ public class TaskInstanceHome implements Serializable {
     private TaskInstance currentTaskInstance;
     @In
     private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
+    @In private SituacaoProcessoManager situacaoProcessoManager;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 
     @SuppressWarnings("unchecked")
@@ -305,7 +305,7 @@ public class TaskInstanceHome implements Serializable {
             currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         }
         if (currentTaskInstance != null) {
-            if (canOpenTask(currentTaskInstance.getId())) {
+            if (situacaoProcessoManager.canOpenTask(currentTaskInstance.getId())) {
                 return;
             }
             FacesMessages.instance().clear();
@@ -373,7 +373,7 @@ public class TaskInstanceHome implements Serializable {
                 //Util.setToEventContext("canClosePanel", true);
                 canClosePanelVal.setValue(true);
                 canClosePanel = true;
-            } else if (canOpenTask(this.currentTaskInstance.getId())) {
+            } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance.getId())) {
                 setTaskId(currentTaskInstance.getId());
             } else {
 //                Util.setToEventContext("canClosePanel", true);
@@ -430,25 +430,6 @@ public class TaskInstanceHome implements Serializable {
     
     public void removeUsuario() {
         removeUsuario(BusinessProcess.instance().getTaskId());
-    }
-
-    /**
-     * Verifica se a tarefa destino da transição apareceria no painel do usuario
-     * 
-     * @param currentTaskId
-     * @return
-     */
-    @SuppressWarnings("rawtypes")
-    private boolean canOpenTask(long currentTaskId) {
-        JbpmUtil.getJbpmSession().flush();
-        Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
-        List resultList = EntityUtil
-                .getEntityManager()
-                .createQuery(
-                        "select o.idTaskInstance from SituacaoProcesso o "
-                                + "where o.idTaskInstance = :ti")
-                .setParameter("ti", currentTaskId).getResultList();
-        return resultList.size() > 0;
     }
 
     public void start(long taskId) {
