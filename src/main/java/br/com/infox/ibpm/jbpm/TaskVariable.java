@@ -19,5 +19,9 @@ final class TaskVariable {
     public String getType() {
         return type;
     }
+    
+    public boolean isEditor(){
+        return type.startsWith("textEditCombo") || type.equals("textEditSignature");
+    }
 
 }
