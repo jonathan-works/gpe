@@ -64,8 +64,4 @@ final class TaskVariable {
         home.setId(getVariable());
     }
     
-    public VariablePair getVariablePair(){
-        return new VariablePair(name, variable);
-    }
-
 }
