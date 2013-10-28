@@ -125,8 +125,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void retrieveVariable(VariableAccess var) {
         TaskVariable taskVariable = new TaskVariable(var);
-        Object variable = JbpmUtil.instance().getConteudo(var,
-                taskInstance);
+        taskVariable.setVariable(JbpmUtil.instance().getConteudo(var, taskInstance));
         Boolean assinado = Boolean.FALSE;
         if (taskVariable.isEditor()) {
             Integer id = (Integer) taskInstance.getVariable(var
@@ -137,21 +136,20 @@ public class TaskInstanceHome implements Serializable {
             }
             if ((id != null) && (!assinado) && var.isWritable()) {
                 ProcessoHome.instance().carregarDadosFluxo(id);
-                instance.put(getFieldName(name), variable);
+                instance.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
             }
         } else {
-            if (taskVariable.isMonetario() && (variable != null)
-                    && (variable.getClass().equals(Float.class))) {
-                variable = String.format("%.2f", variable);
+            if (taskVariable.isMonetario()) {
+                taskVariable.setVariable(String.format("%.2f", taskVariable.getVariable()));
             }
-            instance.put(getFieldName(name), variable);
+            instance.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
         }
 
         String modelo = (String) ProcessInstance.instance()
-                .getContextInstance().getVariable(name + "Modelo");
+                .getContextInstance().getVariable(taskVariable.getName() + "Modelo");
         if (modelo != null) {
-            variavelDocumento = name;
-            if (variable == null) {
+            variavelDocumento = taskVariable.getName();
+            if (!taskVariable.hasVariable()) {
                 String s = modelo.split(",")[0].trim();
                 modeloDocumento = EntityUtil.getEntityManager()
                         .find(ModeloDocumento.class,
@@ -161,11 +159,11 @@ public class TaskInstanceHome implements Serializable {
         }
 
         if (taskVariable.isForm()) {
-            varName = name;
-            if (null != variable) {
+            varName = taskVariable.getName();
+            if (taskVariable.hasVariable()) {
                 AbstractHome<?> home = ComponentUtil
-                        .getComponent(name + "Home");
-                home.setId(variable);
+                        .getComponent(taskVariable.getName() + "Home");
+                home.setId(taskVariable.getVariable());
             }
         }
     }
