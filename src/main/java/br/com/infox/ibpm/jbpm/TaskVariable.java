@@ -4,10 +4,12 @@ import org.jbpm.context.def.VariableAccess;
 
 final class TaskVariable {
     
+    private VariableAccess var;
     private String name;
     private String type;
     
     public TaskVariable (VariableAccess var){
+        this.var = var;
         this.type = var.getMappedName().split(":")[0];
         this.name = var.getMappedName().split(":")[1];
     }
@@ -26,6 +28,10 @@ final class TaskVariable {
     
     public boolean isForm(){
         return "form".equals(type);
+    }
+    
+    public boolean isWritable(){
+        return var.isWritable();
     }
 
 }
