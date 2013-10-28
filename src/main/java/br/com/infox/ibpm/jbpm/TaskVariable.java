@@ -33,5 +33,9 @@ final class TaskVariable {
     public boolean isWritable(){
         return var.isWritable();
     }
+    
+    public boolean isMonetario(){
+        return "numberMoney".equals(type);
+    }
 
 }
