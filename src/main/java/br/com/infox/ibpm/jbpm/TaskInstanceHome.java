@@ -126,15 +126,11 @@ public class TaskInstanceHome implements Serializable {
     private void retrieveVariable(VariableAccess var) {
         TaskVariable taskVariable = new TaskVariable(var);
         taskVariable.setVariable(JbpmUtil.instance().getConteudo(var, taskInstance));
-        Boolean assinado = Boolean.FALSE;
         if (taskVariable.isEditor()) {
             Integer id = (Integer) taskInstance.getVariable(var
                     .getMappedName());
-            if (id != null) {
-                AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
-                assinado = documentoService.isDocumentoAssinado(id);
-            }
-            if ((id != null) && (!assinado) && var.isWritable()) {
+            AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
+            if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && var.isWritable()) {
                 ProcessoHome.instance().carregarDadosFluxo(id);
                 putVariable(taskVariable);
             }
