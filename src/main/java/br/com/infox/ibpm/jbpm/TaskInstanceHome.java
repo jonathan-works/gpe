@@ -96,8 +96,7 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinar = Boolean.FALSE;
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
-    @In
-    private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
+    @In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In private SituacaoProcessoManager situacaoProcessoManager;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 
@@ -106,11 +105,9 @@ public class TaskInstanceHome implements Serializable {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (instance == null && taskInstance != null) {
             instance = new HashMap<String, Object>();
-            TaskController taskController = taskInstance.getTask()
-                    .getTaskController();
+            TaskController taskController = taskInstance.getTask().getTaskController();
             if (taskController != null) {
-                List<VariableAccess> list = taskController
-                        .getVariableAccesses();
+                List<VariableAccess> list = taskController.getVariableAccesses();
                 for (VariableAccess var : list) {
                     retrieveVariable(var);
                 }
@@ -131,7 +128,11 @@ public class TaskInstanceHome implements Serializable {
         } else {
             evaluateWhenMonetario(taskVariable);
         }
+        evaluateWhenModelo(taskVariable);
+        evaluateWhenForm(taskVariable);
+    }
 
+    private void evaluateWhenModelo(TaskVariable taskVariable) {
         String modelo = (String) ProcessInstance.instance()
                 .getContextInstance().getVariable(taskVariable.getName() + "Modelo");
         if (modelo != null) {
@@ -144,8 +145,6 @@ public class TaskInstanceHome implements Serializable {
                 setModeloDocumento(modeloDocumento);
             }
         }
-
-        evaluateWhenForm(taskVariable);
     }
 
     private void evaluateWhenDocumentoAssinado(TaskVariable taskVariable) {
