@@ -210,4 +210,8 @@ public class ProcessoManager extends GenericManager {
 	public void atualizarProcessos(){
 		processoDAO.atualizarProcessos();
 	}
+	
+	public boolean checkAccess(int idProcesso, String login){
+	    return !processoDAO.findProcessosByIdProcessoAndActorId(idProcesso, login).isEmpty();
+	}
 }
