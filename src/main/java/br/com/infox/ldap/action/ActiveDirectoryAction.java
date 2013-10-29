@@ -146,11 +146,6 @@ public class ActiveDirectoryAction implements Serializable{
 		home.remove(end);
 	}
 	
-	public void removeUsuarioLocalizacao(UsuarioLocalizacao usu) {
-//		UsuarioLocalizacaoHome home = UsuarioLocalizacaoHome.instance();
-//		home.remove(usu);
-	}
-	
 	public List<UsuarioLogin> listarUsuariosAD() {
 		NamingEnumeration<SearchResult> results = LdapUtil.pesquisarUsuariosLDAP();
 		List<UsuarioLogin> usuarios = new ArrayList<UsuarioLogin>();
