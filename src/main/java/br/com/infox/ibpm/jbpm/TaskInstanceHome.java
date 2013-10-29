@@ -108,8 +108,8 @@ public class TaskInstanceHome implements Serializable {
             TaskController taskController = taskInstance.getTask().getTaskController();
             if (taskController != null) {
                 List<VariableAccess> list = taskController.getVariableAccesses();
-                for (VariableAccess var : list) {
-                    retrieveVariable(var);
+                for (VariableAccess variableAccess : list) {
+                    retrieveVariable(variableAccess);
                 }
                 // Atualizar as transições possiveis. Isso é preciso, pois as
                 // condições das transições são avaliadas antes
@@ -120,9 +120,9 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    private void retrieveVariable(VariableAccess var) {
-        TaskVariable taskVariable = new TaskVariable(var);
-        taskVariable.setVariable(JbpmUtil.instance().getConteudo(var, taskInstance));
+    private void retrieveVariable(VariableAccess variableAccess) {
+        TaskVariable taskVariable = new TaskVariable(variableAccess);
+        taskVariable.setVariable(JbpmUtil.instance().getConteudo(variableAccess, taskInstance));
         if (taskVariable.isEditor()) {
             evaluateWhenDocumentoAssinado(taskVariable);
         } else {
