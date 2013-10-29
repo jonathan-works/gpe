@@ -36,6 +36,8 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.util.constants.WarningConstants;
+
 /**
  * Classe genérica para acesso ao container do myfaces.
  */
@@ -136,7 +138,7 @@ public final class FacesUtil {
 	/**
      * Clona um objeto.
      */    
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <T extends Object> T cloneBean(T obj) {
     	Object resp = null;
 	    try {
