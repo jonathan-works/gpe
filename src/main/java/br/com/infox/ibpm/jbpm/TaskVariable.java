@@ -25,6 +25,10 @@ final class TaskVariable {
     public String getName() {
         return name;
     }
+    
+    public String getMappedName(){
+        return var.getMappedName();
+    }
 
     public String getType() {
         return type;

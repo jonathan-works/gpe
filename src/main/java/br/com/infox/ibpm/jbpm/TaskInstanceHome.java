@@ -149,7 +149,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void evaluateWhenDocumentoAssinado(TaskVariable taskVariable) {
-        Integer id = (Integer) taskInstance.getVariable(taskVariable.getVar().getMappedName());
+        Integer id = (Integer) taskInstance.getVariable(taskVariable.getMappedName());
         AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
         if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && taskVariable.isWritable()) {
             ProcessoHome.instance().carregarDadosFluxo(id);
