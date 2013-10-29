@@ -377,13 +377,11 @@ public class TaskInstanceHome implements Serializable {
             EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
             boolean canClosePanel = false;
             if (this.currentTaskInstance == null) {
-                //Util.setToEventContext("canClosePanel", true);
                 canClosePanelVal.setValue(true);
                 canClosePanel = true;
             } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance.getId())) {
                 setTaskId(currentTaskInstance.getId());
             } else {
-//                Util.setToEventContext("canClosePanel", true);
                 canClosePanelVal.setValue(true);
                 canClosePanel = true;
             }
