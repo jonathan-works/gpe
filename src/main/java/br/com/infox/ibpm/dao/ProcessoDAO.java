@@ -11,6 +11,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -66,7 +67,7 @@ public class ProcessoDAO extends GenericDAO {
         				.executeUpdate();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
     public List<Processo> findProcessosByIdProcessoAndActorId(int idProcesso, String login){
 	    StringBuilder sb = new StringBuilder();
         sb.append("select o from Processo o where ");

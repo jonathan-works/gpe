@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.type.TipoNumeracaoEnum;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoDocumentoDAO.NAME)
@@ -19,7 +20,7 @@ public class ProcessoDocumentoDAO extends GenericDAO {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
     public List<Integer> getNextSequencial(Processo processo) {
         final String hql = "select max(pd.numeroDocumento) " +
                 "from ProcessoDocumento pd " +

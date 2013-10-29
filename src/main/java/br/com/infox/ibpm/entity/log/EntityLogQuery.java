@@ -23,6 +23,7 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 
@@ -30,7 +31,7 @@ import br.com.itx.util.EntityUtil;
 @BypassInterceptors
 public class EntityLogQuery {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<EntityLog> getResultList(Class<?> classEntidade, Object id) {
 		EntityManager manager = EntityUtil.getEntityManager();
 		List<EntityLog> list = null;

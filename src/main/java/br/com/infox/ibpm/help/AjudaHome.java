@@ -46,6 +46,7 @@ import br.com.infox.ibpm.entity.help.HistoricoAjuda;
 import br.com.infox.ibpm.entity.help.Pagina;
 import br.com.infox.ibpm.manager.help.AjudaManager;
 import br.com.infox.ibpm.manager.help.PaginaManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
@@ -53,7 +54,7 @@ import br.com.itx.util.HibernateUtil;
 
 @Name("ajudaHome")
 @Scope(ScopeType.CONVERSATION)
-@SuppressWarnings("unchecked")
+@SuppressWarnings(WarningConstants.UNCHECKED)
 public class AjudaHome extends AbstractHome<Ajuda>  {
 
 	private static final String	RAWTYPES	= "rawtypes";

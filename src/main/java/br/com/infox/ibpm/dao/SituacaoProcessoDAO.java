@@ -12,6 +12,7 @@ import org.jboss.seam.core.Events;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(SituacaoProcessoDAO.NAME)
@@ -26,7 +27,7 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		return (Long) entityManager.createQuery(hql).setParameter("ti", taskId).getSingleResult();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected){
 		StringBuilder sb = new StringBuilder();
 		sb.append("select s.idProcesso from SituacaoProcesso s ");
