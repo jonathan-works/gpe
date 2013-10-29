@@ -22,12 +22,13 @@ import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.list.ConsultaProcessoEpaList;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(PainelUsuarioHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-@SuppressWarnings("unchecked")
+@SuppressWarnings(WarningConstants.UNCHECKED)
 public class PainelUsuarioHome implements Serializable {
 	private static final long serialVersionUID = 1L;
 
