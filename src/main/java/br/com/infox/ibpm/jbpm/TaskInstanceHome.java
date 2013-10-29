@@ -76,6 +76,8 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.CONVERSATION)
 public class TaskInstanceHome implements Serializable {
 
+    private static final String ASSINATURA_OBRIGATORIA = "A assinatura é obrigatória para esta classificação de documento";
+
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
 
@@ -363,7 +365,7 @@ public class TaskInstanceHome implements Serializable {
                 FacesMessages messages = FacesMessages.instance();
                 messages.clearGlobalMessages();
                 messages.clear();
-                messages.add(Severity.ERROR,"A assinatura é obrigatória para esta classificação de documento");
+                messages.add(Severity.ERROR, ASSINATURA_OBRIGATORIA);
                 return null;
             }
             
