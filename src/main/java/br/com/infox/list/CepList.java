@@ -59,7 +59,11 @@ public class CepList extends EntityList<Cep> {
 	public Estado getEstado() {
 		return estado;
 	}
-
+    @Override
+    public void newInstance() {
+        estado = null;
+        super.newInstance();
+    }
 	public static CepList instance() {
 		return (CepList) Component.getInstance(NAME);
 	}
