@@ -127,17 +127,9 @@ public class TaskInstanceHome implements Serializable {
         TaskVariable taskVariable = new TaskVariable(var);
         taskVariable.setVariable(JbpmUtil.instance().getConteudo(var, taskInstance));
         if (taskVariable.isEditor()) {
-            Integer id = (Integer) taskInstance.getVariable(var.getMappedName());
-            AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
-            if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && var.isWritable()) {
-                ProcessoHome.instance().carregarDadosFluxo(id);
-                putVariable(taskVariable);
-            }
+            evaluateWhenDocumentoAssinado(taskVariable);
         } else {
-            if (taskVariable.isMonetario()) {
-                taskVariable.setVariable(String.format("%.2f", taskVariable.getVariable()));
-            }
-            putVariable(taskVariable);
+            evaluateWhenMonetario(taskVariable);
         }
 
         String modelo = (String) ProcessInstance.instance()
@@ -154,6 +146,22 @@ public class TaskInstanceHome implements Serializable {
         }
 
         evaluateWhenForm(taskVariable);
+    }
+
+    private void evaluateWhenDocumentoAssinado(TaskVariable taskVariable) {
+        Integer id = (Integer) taskInstance.getVariable(taskVariable.getVar().getMappedName());
+        AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
+        if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && taskVariable.isWritable()) {
+            ProcessoHome.instance().carregarDadosFluxo(id);
+            putVariable(taskVariable);
+        }
+    }
+
+    private void evaluateWhenMonetario(TaskVariable taskVariable) {
+        if (taskVariable.isMonetario()) {
+            taskVariable.setVariable(String.format("%.2f", taskVariable.getVariable()));
+        }
+        putVariable(taskVariable);
     }
 
     private void evaluateWhenForm(TaskVariable taskVariable) {
