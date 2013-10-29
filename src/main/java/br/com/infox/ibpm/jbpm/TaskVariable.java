@@ -17,10 +17,6 @@ final class TaskVariable {
         this.type = var.getMappedName().split(":")[0];
         this.name = var.getMappedName().split(":")[1];
     }
-    
-    public VariableAccess getVar() {
-        return var;
-    }
 
     public String getName() {
         return name;
