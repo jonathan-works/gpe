@@ -34,7 +34,7 @@ public class PessoaFisicaHome extends AbstractHome<PessoaFisica> {
 		return DOWNLOAD_XLS_NAME;
 	}
 	
-	@Observer("evtCarregarPessoaFisica")
+	@Observer(PessoaFisica.EVENT_LOAD)
 	public void setPessoaFisica(PessoaFisica pessoa){
 		setInstance(pessoa);
 	}
