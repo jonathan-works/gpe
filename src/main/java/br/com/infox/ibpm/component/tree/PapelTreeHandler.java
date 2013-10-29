@@ -35,17 +35,10 @@ public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
 
 	@Override
 	protected String getQueryRoots() {
-		Papel papel = getPapelAtual();
-		StringBuilder sb = new StringBuilder();	
-		sb.append("select grupo from Papel p ");
-		sb.append("right join p.grupos grupo where grupo.identificador ");
-		sb.append("not like '/%' and p is null ");
-		if (papel != null) {
-			sb.append(" and grupo.idPapel = ");
-			sb.append(papel.getIdPapel()).append(" ");
-		} 
-		sb.append("order by grupo.nome");
-		return sb.toString();
+		String hql = "select grupo from Papel p " +
+	            "right join p.grupos grupo where grupo.identificador " +
+	            "not like '/%' and p is null order by grupo.nome";
+		return hql;
 	}
 	
 	protected Papel getPapelAtual() {
@@ -59,11 +52,7 @@ public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
 
 	@Override
 	public List<EntityNode<Papel>> getRoots() {
-		List<EntityNode<Papel>> nodes = new ArrayList<EntityNode<Papel>>();
-		String[] hql = new String[]{getQueryChildren()};
-		EntityNode<Papel> node = new EntityNode<Papel>(null, getPapelAtual(), hql);
-		nodes.add(node);
-		return nodes;
+		return super.getRoots();
 	}
 	
 	@Override
