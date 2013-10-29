@@ -54,6 +54,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.bpm.action.TaskPageAction;
+import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
@@ -103,6 +104,7 @@ public class TaskInstanceHome implements Serializable {
     @In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In private SituacaoProcessoManager situacaoProcessoManager;
     @In private ProcessoManager processoManager;
+    @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
@@ -415,24 +417,16 @@ public class TaskInstanceHome implements Serializable {
         }
     }
     
-    @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
-        final String hql = "select new map(pet.taskInstance as idTaskInstance) " +
-                    		"from ProcessoEpaTarefa pet " +
-                    		"where pet.tarefa.idTarefa=:idTarefa " +
-                    		"and pet.processoEpa.idProcesso=:idProcesso";
-        final Query query = EntityUtil.createQuery(hql)
-                            .setParameter("idProcesso",idProcesso)
-                            .setParameter("idTarefa", idTarefa);
         try {
-            final Map<String,Object> result = (Map<String, Object>) query.getSingleResult();
+            final Map<String,Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
             removeUsuario((Long)result.get("idTaskInstance"));
         } catch (NoResultException e) {
-            LOG.error("Sem resultado", e);
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
-            LOG.error("Mais de um resultado", e);
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - Mais de um resultado", e);
         } catch (IllegalStateException e) {
-            LOG.error("Estado ilegal", e);
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
         } finally {
             Util.rollbackTransactionIfNeeded();
         }
