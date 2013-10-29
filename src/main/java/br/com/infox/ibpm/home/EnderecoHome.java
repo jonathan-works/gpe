@@ -44,8 +44,9 @@ public class EnderecoHome extends AbstractHome<Endereco> {
     @In private CepDAO cepDAO;
 
     public String getSearchCep() {
-        if ((searchCep == null || "_____-___".equals(searchCep)) && instance.getCep() != null)
+        if ((searchCep == null || "_____-___".equals(searchCep)) && instance.getCep() != null) {
             searchCep = instance.getCep().getNumeroCep();
+        }
         return searchCep;
     }
 
