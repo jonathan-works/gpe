@@ -76,6 +76,10 @@ public class TaskFitter extends Fitter implements Serializable {
 			tn.getTasks().remove(t.getTask());
 			getProcessBuilder().getTaskNodeMap().remove(currentNode);
 		}
+		
+		if (currentTask != null && currentTask.equals(t)) {
+			clear();
+		}
 	}
 	
 	public void updatePrazoTask() {
