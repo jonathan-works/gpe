@@ -57,14 +57,13 @@ import br.com.itx.util.HibernateUtil;
 @SuppressWarnings(WarningConstants.UNCHECKED)
 public class AjudaHome extends AbstractHome<Ajuda>  {
 
-	private static final String	RAWTYPES	= "rawtypes";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(AjudaHome.class);
 	
 	private String viewId;
 	private Pagina pagina;
 	private String textoPesquisa;
-	@SuppressWarnings(RAWTYPES)
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	private List resultado;
 	private Ajuda anterior;
 	
@@ -83,7 +82,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		return instance;
 	}
 	
-	@SuppressWarnings(RAWTYPES)
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	public List getResultadoPesquisa() throws ParseException {
 		if (getTextoPesquisa() == null) {
 			return null;
@@ -240,7 +239,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		return texto;
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	@Override
 	public ValueExpression getCreatedMessage() {
 		return createValueExpression("Alteração concluída.");

@@ -50,7 +50,7 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		return "";
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings(WarningConstants.RAWTYPES)
     public boolean canOpenTask(long currentTaskId) {
         JbpmUtil.getJbpmSession().flush();
         Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);

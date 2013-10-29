@@ -484,7 +484,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 * @param idField - Nome do atributo da Entity referente ao campo
 	 * @param homeRef - Home da Entity do atributo informado
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	public void toggleFields(String idField, AbstractHome homeRef){
 		if(homeRef.getLockedFields().contains(idField)) {
 			homeRef.getLockedFields().remove(idField);

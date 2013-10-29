@@ -94,7 +94,7 @@ public class ValidaDocumento {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", WarningConstants.UNCHECKED })
+	@SuppressWarnings({ WarningConstants.RAWTYPES, WarningConstants.UNCHECKED })
 	private void processReceivedCertificationChain()
 	throws ValidaDocumentoException {
 		String certChainBase64Encoded = removeBR(certificado);

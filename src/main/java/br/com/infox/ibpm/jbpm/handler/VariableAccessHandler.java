@@ -274,7 +274,7 @@ public class VariableAccessHandler implements Serializable {
 	}
 	
 	// TODO: Esse entityList está bizarro, é a causa dos 2 warnings abaixo
-	@SuppressWarnings({ WarningConstants.UNCHECKED, "rawtypes" })
+	@SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
 	public void addModelo(ModeloDocumento modelo) {
 		if (modeloDocumentoList == null) {
 			modeloDocumentoList = new ArrayList<ModeloDocumento>();

@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 
 import org.jboss.seam.core.Expressions;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 
@@ -55,7 +56,7 @@ public class PainelHome {
 		return em.createQuery(query).getResultList().size();
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	public List getList() {
 		EntityManager em = EntityUtil.getEntityManager();
 		return em.createQuery(valores.get(acao).get("query")).getResultList();

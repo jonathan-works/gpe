@@ -50,7 +50,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 		return map;
 	}
 	
-	@SuppressWarnings({ WarningConstants.UNCHECKED, "rawtypes" })
+	@SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
 	private void initRemetentes() {
 		List recip = new ArrayList(getRecipients());
 				

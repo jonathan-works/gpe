@@ -34,7 +34,7 @@ public class TypeFitter extends Fitter implements Serializable{
 	private List<String> typeList;
 	private Properties types;
 	
-	@SuppressWarnings({ "rawtypes", WarningConstants.UNCHECKED })
+	@SuppressWarnings({ WarningConstants.RAWTYPES, WarningConstants.UNCHECKED })
 	public List getTypeList() {
 		if (typeList == null) {
 			String path = FacesUtil.getServletContext(null).getRealPath(
