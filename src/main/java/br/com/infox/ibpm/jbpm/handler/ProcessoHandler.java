@@ -41,6 +41,7 @@ import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.manager.ClassificacaoDocumentoManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 
@@ -61,7 +62,7 @@ public class ProcessoHandler implements Serializable {
 	@In private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	@In private ProcessoEpaManager processoEpaManager;
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<TaskInstance> getTaskInstanceList() {
 		if (taskInstanceList == null) {
 			Collection<TaskInstance> taskInstances = 
@@ -108,7 +109,7 @@ public class ProcessoHandler implements Serializable {
 		return taskDocumentList ;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
     public List<ProcessoDocumento> getAnexosPublicos(TaskInstance task) {
 	    List<ProcessoDocumento> anexoList;
         final String hql = "select o " +

@@ -19,6 +19,7 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
+import br.com.infox.util.constants.WarningConstants;
 
 @Name(TransitionFitter.NAME)
 @AutoCreate
@@ -68,7 +69,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void checkTransitions() {
 		List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
 		clear();
@@ -152,7 +153,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return newNodeTransition;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<TransitionHandler> getArrivingTransitions() {
 		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		if (arrivingTransitions == null && currentNode != null && currentNode.getArrivingTransitions() != null) {
@@ -161,7 +162,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return arrivingTransitions;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<TransitionHandler> getLeavingTransitions() {
 		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		if (leavingTransitions == null && currentNode != null && currentNode.getLeavingTransitions() != null) {
@@ -170,7 +171,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return leavingTransitions;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<TransitionHandler> getTransitions() {
 		List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
 		if (transitionList == null) {
@@ -212,7 +213,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<SelectItem> getTransitionsItems(List<Node> nodes) {
 		if (transitionsItems == null) {
 			transitionsItems = new ArrayList<SelectItem>();

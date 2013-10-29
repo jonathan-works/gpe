@@ -40,6 +40,7 @@ import br.com.infox.epp.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.VariavelTipoModelo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
@@ -273,7 +274,7 @@ public class VariableAccessHandler implements Serializable {
 	}
 	
 	// TODO: Esse entityList está bizarro, é a causa dos 2 warnings abaixo
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ WarningConstants.UNCHECKED, "rawtypes" })
 	public void addModelo(ModeloDocumento modelo) {
 		if (modeloDocumentoList == null) {
 			modeloDocumentoList = new ArrayList<ModeloDocumento>();
@@ -308,7 +309,7 @@ public class VariableAccessHandler implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static List<VariableAccessHandler> getList(Task task) {
 		List<VariableAccessHandler> ret = new ArrayList<VariableAccessHandler>();
 		if (task.getTaskController() == null) {
