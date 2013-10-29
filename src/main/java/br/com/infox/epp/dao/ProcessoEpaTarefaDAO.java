@@ -96,7 +96,6 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
         final Query query = EntityUtil.createQuery(hql)
                             .setParameter("idProcesso",idProcesso)
                             .setParameter("idTarefa", idTarefa);
-            final Map<String,Object> result = (Map<String, Object>) query.getSingleResult();
-            return result;
+        return (Map<String, Object>) query.getSingleResult();
     }
 }
