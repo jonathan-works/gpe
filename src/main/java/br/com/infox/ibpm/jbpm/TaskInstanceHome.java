@@ -54,6 +54,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.bpm.action.TaskPageAction;
+import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.home.Authenticator;
@@ -98,6 +99,7 @@ public class TaskInstanceHome implements Serializable {
     private TaskInstance currentTaskInstance;
     @In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In private SituacaoProcessoManager situacaoProcessoManager;
+    @In private ProcessoManager processoManager;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 
     @SuppressWarnings("unchecked")
@@ -267,19 +269,14 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private Boolean checkAccess() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("select o from Processo o where ");
-        sb.append("o.idProcesso = :id ");
-        sb.append("and o.actorId like :login");
-        Query q = EntityUtil.createQuery(sb.toString());
-        q.setParameter("id", ProcessoHome.instance().getInstance()
-                .getIdProcesso());
-        q.setParameter("login", Authenticator.getUsuarioLogado().getLogin());
-        if (q.getResultList().isEmpty()) {
+        int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
+        String login = Authenticator.getUsuarioLogado().getLogin();
+        if (processoManager.checkAccess(idProcesso, login)){
+            return Boolean.TRUE;
+        } else {
             FacesMessages.instance().clear();
             throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
         }
-        return Boolean.TRUE;
     }
 
     public void update(Object homeObject) {
