@@ -33,7 +33,6 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.log.LogProvider;
