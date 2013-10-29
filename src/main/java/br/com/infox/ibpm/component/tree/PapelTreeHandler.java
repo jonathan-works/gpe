@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.component.tree;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
