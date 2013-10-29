@@ -433,6 +433,8 @@ public class TaskInstanceHome implements Serializable {
             LOG.error("Mais de um resultado", e);
         } catch (IllegalStateException e) {
             LOG.error("Estado ilegal", e);
+        } finally {
+            Util.rollbackTransactionIfNeeded();
         }
     }
     
