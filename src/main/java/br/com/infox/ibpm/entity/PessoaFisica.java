@@ -14,7 +14,7 @@ import br.com.infox.util.constants.LengthConstants;
 @Table(schema="public", name=PessoaFisica.TABLE_NAME)
 @PrimaryKeyJoinColumn(name="id_pessoa_fisica", columnDefinition = "integer")
 public class PessoaFisica extends Pessoa{
-
+    public static final String EVENT_LOAD = "evtCarregarPessoaFisica";
 	public static final String TABLE_NAME = "tb_pessoa_fisica";
 	private static final long serialVersionUID = 1L;
 	
