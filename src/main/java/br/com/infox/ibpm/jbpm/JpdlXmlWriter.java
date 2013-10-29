@@ -54,6 +54,7 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.ibpm.jbpm.node.DecisionNode;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ReflectionsUtil;
 
 
@@ -123,7 +124,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private Document createDomTree(ProcessDefinition processDefinition) {
 		Document document = DocumentHelper.createDocument();
 		Element root = null;
@@ -180,7 +181,7 @@ public class JpdlXmlWriter {
 		e.addCDATA(text);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void writeSwimlanes(Element root,ProcessDefinition processDefinition) {
 		Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
 		for (Entry<String, Swimlane> e : swimlanes.entrySet()) {
@@ -224,7 +225,7 @@ public class JpdlXmlWriter {
 		return newElement;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void writeNodes(Element parentElement, List<org.jbpm.graph.def.Node> nodes) {
 		Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
 		while (iter.hasNext()) {
@@ -254,7 +255,7 @@ public class JpdlXmlWriter {
 		}
 	}
     
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ WarningConstants.UNCHECKED, "rawtypes" })
 	private void writeProcessState(ProcessState node, Element nodeElement) {
 		Element subProcess = addElement(nodeElement, "sub-process");
 		subProcess.addAttribute(ELEMENT_NAME, ReflectionsUtil.getStringValue(node, "subProcessName"));
@@ -280,7 +281,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void writeController(TaskController taskController, Element taskElement) {
 		if (taskController != null) {
 			Element controller = addElement(taskElement, "controller");
@@ -345,7 +346,7 @@ public class JpdlXmlWriter {
 		writeEvents(element, node);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void writeTransitions(Element element, org.jbpm.graph.def.Node node) {
 		if (node.getLeavingTransitionsMap() != null) {
 			Iterator<Transition> iter = node.getLeavingTransitionsList().iterator();
@@ -356,7 +357,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void writeTransition(Element transitionElement,
 			Transition transition) {
 		if (transition.getTo() != null) {
@@ -375,7 +376,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void writeEvents(Element element, GraphElement graphElement) {
 		if (graphElement.hasEvents()) {
 			Iterator<Event> iter = graphElement.getEvents().values().iterator();
@@ -386,7 +387,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void writeEvent(Element eventElement, Event event) {
 		boolean valid = false;
 		eventElement.addAttribute("type", event.getEventType());

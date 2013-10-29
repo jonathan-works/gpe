@@ -17,6 +17,7 @@ import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.MailResolver;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.infox.util.TwitterUtil;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -49,7 +50,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 		return map;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ WarningConstants.UNCHECKED, "rawtypes" })
 	private void initRemetentes() {
 		List recip = new ArrayList(getRecipients());
 				

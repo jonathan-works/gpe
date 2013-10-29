@@ -19,7 +19,9 @@ import java.util.LinkedHashMap;
 
 import org.jboss.seam.core.Expressions;
 
-@SuppressWarnings("unchecked")
+import br.com.infox.util.constants.WarningConstants;
+
+@SuppressWarnings(WarningConstants.UNCHECKED)
 public class PropertyMap<K,V> extends LinkedHashMap<K,V> {
 	
 	private static final long serialVersionUID = 1L;

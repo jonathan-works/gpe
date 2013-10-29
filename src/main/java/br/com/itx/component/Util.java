@@ -57,6 +57,7 @@ import org.jboss.seam.util.Strings;
 import org.jboss.seam.web.Parameters;
 import org.richfaces.context.ExtendedPartialViewContext;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.component.grid.SearchField;
 import br.com.itx.exception.AplicationException;
@@ -325,7 +326,7 @@ public class Util implements Serializable {
      * @param expression - Expressão a ser criada.
      * @return Expressão criada.
      */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public <C> C eval(String expression) {
 		if (expression == null || expression.trim().length() == 0) {
 			return null;

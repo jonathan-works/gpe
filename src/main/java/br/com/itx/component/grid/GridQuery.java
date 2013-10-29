@@ -33,6 +33,7 @@ import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.query.EntityQuery;
 
 @Scope(ScopeType.CONVERSATION)
@@ -259,7 +260,7 @@ public class GridQuery<T> extends EntityQuery<T> {
 		return home;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public EntityHome<T> getHome() {
 		return (EntityHome<T>) Component.getInstance(getHomeName(), true);
 	}

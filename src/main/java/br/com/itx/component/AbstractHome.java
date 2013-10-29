@@ -47,6 +47,7 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.infox.util.PostgreSQLExceptionManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.exception.ExcelExportException;
@@ -54,7 +55,7 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ExcelExportUtil;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings(WarningConstants.UNCHECKED)
 public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	private static final int TAMANHO_XLS_PADRAO = 10000;
