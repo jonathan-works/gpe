@@ -457,14 +457,11 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public List<Transition> getTransitions() {
-        if (taskId == null) {
-            setTaskId(org.jboss.seam.bpm.TaskInstance.instance().getId());
-        }
-        List<Transition> list = new ArrayList<Transition>();
-        if (availableTransitions != null && availableTransitions.size() == 0
-                && taskInstance != null) {
+        validateTaskId();
+        if (hasAvailableTransitions()) {
             updateTransitions();
         }
+        List<Transition> list = new ArrayList<Transition>();
         if (availableTransitions == null) {
             return list;
         }
@@ -478,6 +475,17 @@ public class TaskInstanceHome implements Serializable {
             }
         }
         return list;
+    }
+
+    private boolean hasAvailableTransitions() {
+        return availableTransitions != null && availableTransitions.size() == 0
+                && taskInstance != null;
+    }
+
+    private void validateTaskId() {
+        if (taskId == null) {
+            setTaskId(org.jboss.seam.bpm.TaskInstance.instance().getId());
+        }
     }
 
     public static boolean hasOcculTransition(Transition transition) {
