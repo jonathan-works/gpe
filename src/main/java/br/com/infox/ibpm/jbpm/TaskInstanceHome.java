@@ -28,7 +28,6 @@ import javax.faces.component.EditableValueHolder;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -312,7 +311,7 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    public void canDoOperation() {
+    private void canDoOperation() {
         if (currentTaskInstance == null) {
             currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         }
@@ -407,7 +406,6 @@ public class TaskInstanceHome implements Serializable {
     public void removeUsuario(final Long idTaskInstance) {
         try {
             UsuarioTaskInstance uti = EntityUtil.find(UsuarioTaskInstance.class, idTaskInstance);
-            
             if (uti!= null) {
                 EntityUtil.getEntityManager().remove(uti);
                 EntityUtil.getEntityManager().flush();
