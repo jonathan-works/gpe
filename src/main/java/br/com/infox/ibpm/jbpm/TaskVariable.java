@@ -7,15 +7,15 @@ import br.com.itx.util.ComponentUtil;
 
 final class TaskVariable {
     
-    private VariableAccess var;
+    private VariableAccess variableAccess;
     private String name;
     private String type;
     private Object variable;
     
-    public TaskVariable (VariableAccess var){
-        this.var = var;
-        this.type = var.getMappedName().split(":")[0];
-        this.name = var.getMappedName().split(":")[1];
+    public TaskVariable (VariableAccess variableAccess){
+        this.variableAccess = variableAccess;
+        this.type = variableAccess.getMappedName().split(":")[0];
+        this.name = variableAccess.getMappedName().split(":")[1];
     }
 
     public String getName() {
@@ -23,7 +23,7 @@ final class TaskVariable {
     }
     
     public String getMappedName(){
-        return var.getMappedName();
+        return variableAccess.getMappedName();
     }
 
     public String getType() {
@@ -39,7 +39,7 @@ final class TaskVariable {
     }
     
     public boolean isWritable(){
-        return var.isWritable();
+        return variableAccess.isWritable();
     }
     
     public boolean isMonetario(){
