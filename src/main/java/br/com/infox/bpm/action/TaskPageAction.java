@@ -14,6 +14,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.manager.FluxoManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.exception.AplicationException;
 
 /**
@@ -63,7 +64,7 @@ public class TaskPageAction implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private List<VariableAccess> getVariableAccesses() {
 		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		if (taskInstance != null) {

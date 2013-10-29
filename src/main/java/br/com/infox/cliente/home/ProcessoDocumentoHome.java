@@ -45,6 +45,7 @@ import br.com.infox.ibpm.home.api.IProcessoDocumentoBinHome;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoHome;
 import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.type.TipoNumeracaoEnum;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.FileHome;
 import br.com.itx.component.Util;
@@ -193,7 +194,7 @@ public class ProcessoDocumentoHome
         if (ret != null) {
             setIdDocumentoRerender(instance.getIdProcessoDocumento());
             if (isModelo) {
-                @SuppressWarnings("unchecked")
+                @SuppressWarnings(WarningConstants.UNCHECKED)
                 List<Integer> lista = (List<Integer>) Contexts.getSessionContext().get(PETICAO_INSERIDA);
                 if (lista == null) {
                     lista = new ArrayList<Integer>();

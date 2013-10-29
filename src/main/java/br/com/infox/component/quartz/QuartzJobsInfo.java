@@ -35,6 +35,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -210,7 +211,7 @@ public class QuartzJobsInfo implements Serializable {
 		EntityUtil.createQuery(hql).executeUpdate();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Map<String, Object>> getMapParametroTriggers()
 			throws SchedulerException {
 		List<String> triggersNames = getTriggersNames();

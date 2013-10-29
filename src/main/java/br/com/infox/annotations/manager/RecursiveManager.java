@@ -15,6 +15,7 @@ import br.com.infox.annotations.HierarchicalPath;
 import br.com.infox.annotations.Parent;
 import br.com.infox.annotations.PathDescriptor;
 import br.com.infox.annotations.Recursive;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.exception.RecursiveException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
@@ -78,7 +79,7 @@ public final class RecursiveManager {
 	 * modifica todos os fullPaths de seus dependentes na árvore.
 	 * @param object Registro que se deseja atualizar
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private static void refactorFieldPath(Object object) {
 		try {
 			setFullPath(object);
@@ -171,7 +172,7 @@ public final class RecursiveManager {
 		return currentFullPath == null || "".equals(currentFullPath);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private static <E> List<E> getEntityListNullHierarchicalPath(Class<E> clazz) {
 		String annotationField = getFieldHierarchicalPath(clazz);
 		String template = "select o from {0} o where o.{1} is null or o.{1} = ''''";
@@ -187,7 +188,7 @@ public final class RecursiveManager {
 	 * Método para inativar recursivamente todos os filhos do objeto passado
 	 * @param obj raiz da sub-árvore que será inativada
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static void inactiveRecursive(Object obj) {
 		if (isRecursive(obj)) {
 			ComponentUtil.setValue(obj, "ativo", Boolean.FALSE);
