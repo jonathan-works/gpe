@@ -74,7 +74,6 @@ public class EnderecoHome extends AbstractHome<Endereco> {
     
     public void loadEnderecoByCep(){
         if (searchCep != null){
-//            Cep cep = (Cep) EntityUtil.createQuery("select o from Cep o where o.numeroCep =:searchCep").setParameter("searchCep", searchCep).setMaxResults(1).getSingleResult();
             setEndereco(cepDAO.findCep(searchCep));
         }
     }
