@@ -40,15 +40,18 @@
 			 name="sourceListWidth"
 			 value="400" />
 		<infox:tabPanel
+			 id="painelEdit"
 			 switchType="ajax"
-			 rendered="#{papelHome.managed}">
+			 rendered="#{papelHome.managed}"
+			 activeTab="#{papelHome.activeInnerTab}">
 			<infox:tabHeaders />
 			<infox:tab
+				 id="papeisTab"
+				 name="papeisTab"
 				 status=":status"
 				 title="Papéis">
 				
 				<a:region>
-					
 					<wi:pickList
 						 id="papel"
 						 value="#{papelHome.papeis}"
@@ -62,6 +65,8 @@
 			</infox:tab>
 			<infox:tab
 				 status=":status"
+				 id="herdeirosTab"
+				 name="herdeirosTab"
 				 title="Herdeiros">
 				
 				<a:region>
@@ -77,11 +82,13 @@
 			
 			</infox:tab>
 			<infox:tab
+				id="recursosTab"
+				name="recursosTab"
 				 status=":status"
 				 title="Recursos">
 				
 				<a:region>
-					
+					#{rich:clientId('recurso')}
 					<wi:pickList
 						 id="recurso"
 						 targetCaption="Recursos do sistema aos quais tem permissão:"
