@@ -50,11 +50,6 @@ public class ItemTipoDocumentoHome
 	}
 	
 	@Override
-	public void newInstance() {
-		super.newInstance();
-	}
-	
-	@Override
 	public String persist() {
 		getInstance().setLocalizacao(LocalizacaoHome.instance().getInstance());
 		ItemTipoDocumento itd = getInstance();

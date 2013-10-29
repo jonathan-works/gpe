@@ -50,11 +50,6 @@ public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
 	}
 
 	@Override
-	public List<EntityNode<Papel>> getRoots() {
-		return super.getRoots();
-	}
-	
-	@Override
 	protected String getEventSelected() {
 		return PAPEL_TREE_EVENT;
 	}

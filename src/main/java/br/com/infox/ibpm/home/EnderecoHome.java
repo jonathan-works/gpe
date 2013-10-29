@@ -113,11 +113,6 @@ public class EnderecoHome extends AbstractHome<Endereco> {
     }
 
     @Override
-    public void setId(Object id) {
-        super.setId(id);
-    }
-
-    @Override
     protected Endereco createInstance() {
         setInstance(createEndereco());
         getInstance().setCep(new Cep());

@@ -211,11 +211,6 @@ public class LocalizacaoHome
 		return true;
 	}
 	
-	@Override
-	protected String afterPersistOrUpdate(String ret) {
-	    return super.afterPersistOrUpdate(ret);
-	}
-	
 	/**
 	 * Verifica se a localização está vinculada a algum ItemTIpoDocumento. Se
 	 * não estiver, realiza a inativação em cascata
