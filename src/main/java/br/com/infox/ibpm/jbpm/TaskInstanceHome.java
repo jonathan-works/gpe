@@ -65,6 +65,7 @@ import br.com.infox.ibpm.search.Reindexer;
 import br.com.infox.ibpm.search.SearchHandler;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.infox.search.Indexer;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.exception.AplicationException;
@@ -121,7 +122,7 @@ public class TaskInstanceHome implements Serializable {
             }
         }
     }
-
+    
     private void retrieveVariable(VariableAccess variableAccess) {
         TaskVariable taskVariable = new TaskVariable(variableAccess);
         taskVariable.setVariable(JbpmUtil.instance().getConteudo(variableAccess, taskInstance));
@@ -412,7 +413,7 @@ public class TaskInstanceHome implements Serializable {
         }
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         final String hql = "select new map(pet.taskInstance as idTaskInstance) " +
                     		"from ProcessoEpaTarefa pet " +
