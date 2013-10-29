@@ -103,7 +103,7 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoManager processoManager;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (instance == null && taskInstance != null) {
@@ -222,7 +222,7 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
     private void updateVariables(TaskController taskController) {
         List<VariableAccess> list = taskController
                 .getVariableAccesses();
@@ -488,7 +488,7 @@ public class TaskInstanceHome implements Serializable {
         return OCCULT_TRANSITION.equals(transition.getCondition());
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void updateTransitions() {
         availableTransitions = taskInstance.getAvailableTransitions();
         leavingTransitions = taskInstance.getTask().getTaskNode()
