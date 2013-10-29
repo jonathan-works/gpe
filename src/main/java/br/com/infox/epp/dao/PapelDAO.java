@@ -12,6 +12,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(PapelDAO.NAME)
@@ -21,7 +22,7 @@ public class PapelDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "papelDAO";
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
 		String hql = "select o from Papel o where identificador not like '/%' and o.idPapel not in ("
 				+ "select p.papel.idPapel from TipoModeloDocumentoPapel p "
@@ -30,7 +31,7 @@ public class PapelDAO extends GenericDAO {
 				tipoModeloDocumento).getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento){
 		String hql = "select o from Papel o where identificador not like '/%' and o not in " +
 						"(select p.papel from TipoProcessoDocumentoPapel p " +
@@ -46,13 +47,13 @@ public class PapelDAO extends GenericDAO {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Papel> getPapeisByListaDeIdentificadores(List<String> identificadores){
 		String hql = "select p from Papel p where identificador in (:list)";
 		return (List<Papel>) entityManager.createQuery(hql).setParameter("list", identificadores).getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao){
 		String hql = "select distinct l.papel from UsuarioLocalizacao l where l.localizacao = :loc ";
 		return (List<Papel>) entityManager.createQuery(hql).setParameter("loc", localizacao).getResultList();
