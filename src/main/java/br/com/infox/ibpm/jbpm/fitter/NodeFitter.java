@@ -261,8 +261,7 @@ public class NodeFitter extends Fitter implements Serializable {
 				nodesItems = new ArrayList<SelectItem>();
 				nodesItems.add(new SelectItem(null, "Selecione uma tarefa..."));
 				for (Node node : list) {
-					nodesItems.add(new SelectItem(node.toString(), node
-							.getName()));
+					nodesItems.add(new SelectItem(node.toString(), node.getName()));
 				}
 			}
 		}
@@ -291,7 +290,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 	
 	public String getNewNodeAfter() {
-		return null;
+		return this.newNodeAfter == null ? null : this.newNodeAfter.toString();
 	}
 
 	public void setNodeName(String nodeName) {
