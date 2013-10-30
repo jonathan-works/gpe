@@ -223,46 +223,36 @@ public class TaskInstanceHome implements Serializable {
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
     private void updateVariables(TaskController taskController) {
-        List<VariableAccess> list = taskController
-                .getVariableAccesses();
-        for (VariableAccess var : list) {
+        List<VariableAccess> list = taskController.getVariableAccesses();
+        for (VariableAccess variableAccess : list) {
 
-            String type = var.getMappedName().split(":")[0];
-            String name = var.getMappedName().split(":")[1];
-            Object value = getValueFromInstanceMap(name);
+            TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess);
+            variableResolver.setValue(getValueFromInstanceMap(variableResolver.getName()));
 
-            if ("numberMoney".equals(type) && value != null) {
-                String val = String.valueOf(value);
-                try {
-                    value = Float.parseFloat(val);
-                } catch (NumberFormatException e) {
-                    value = Float.parseFloat(val.replace(".", "")
-                            .replace(",", "."));
-                }
-            }
+            variableResolver.resolveWhenMonetario();
 
-            if (var.isWritable()) {
-                if (JbpmUtil.isTypeEditor(type)) {
+            if (variableAccess.isWritable()) {
+                if (JbpmUtil.isTypeEditor(variableResolver.getType())) {
                     Integer idDoc = null;
-                    if (taskInstance.getVariable(var.getMappedName()) != null) {
-                        idDoc = (Integer) taskInstance.getVariable(var
+                    if (taskInstance.getVariable(variableAccess.getMappedName()) != null) {
+                        idDoc = (Integer) taskInstance.getVariable(variableAccess
                                 .getMappedName());
                     }
                     String label = JbpmUtil.instance().getMessages()
-                            .get(name);
+                            .get(variableResolver.getName());
                     Integer valueInt = ProcessoHome.instance()
-                            .salvarProcessoDocumentoFluxo(value, idDoc,
+                            .salvarProcessoDocumentoFluxo(variableResolver.getValue(), idDoc,
                                     assinar, label);
                     if (valueInt != 0) {
-                        value = valueInt;
+                        variableResolver.setValue(valueInt);
                         Contexts.getBusinessProcessContext().set(
-                                var.getMappedName(), value);
+                                variableAccess.getMappedName(), variableResolver.getValue());
                     }
                     assinado = assinado || assinar;
                     assinar = Boolean.FALSE;
                 } else {
                     Contexts.getBusinessProcessContext().set(
-                            var.getMappedName(), value);
+                            variableAccess.getMappedName(), variableResolver.getValue());
                 }
             }
         }
