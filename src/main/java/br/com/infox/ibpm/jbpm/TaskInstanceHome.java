@@ -117,11 +117,7 @@ public class TaskInstanceHome implements Serializable {
                 for (VariableAccess variableAccess : list) {
                     retrieveVariable(variableAccess);
                 }
-                // Atualizar as transições possiveis. Isso é preciso, pois as
-                // condições das transições são avaliadas antes
-                // deste metodo ser executado.
-                updateTransitions();
-
+                updateTransitions(); // Atualizar as transições possiveis. Isso é preciso, pois as condições das transições são avaliadas antes deste metodo ser executado.
             }
         }
     }
@@ -353,12 +349,7 @@ public class TaskInstanceHome implements Serializable {
     
     public String end(String transition) {
         if (checkAccess()) {
-            TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
-            if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
-                FacesMessages.instance().clear();
-                throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
-            }
-            
+            checkCurrentTask();
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
             boolean isObrigatorio = tipoProcessoDocumentoDAO.isAssinaturaObrigatoria(processoHome.getTipoProcessoDocumento(), Authenticator.getPapelAtual());
             
@@ -401,6 +392,14 @@ public class TaskInstanceHome implements Serializable {
             }
         }
         return null;
+    }
+
+    private void checkCurrentTask() {
+        TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
+        if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
+            FacesMessages.instance().clear();
+            throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
+        }
     }
 
     public void removeUsuario(final Long idTaskInstance) {
