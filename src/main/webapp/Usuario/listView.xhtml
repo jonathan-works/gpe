@@ -278,17 +278,18 @@
 								 tree="#{localizacaoEstruturaTree}"
 								 icon="/img/nivelTree.gif"
 								 iconLeaf="/img/file.gif"
-								 label="#{messages['usuarioLocalizacao.localizacao']}" />
+								 label="#{messages['usuarioLocalizacao.localizacao']}"
+								 required="true" />
                             <wi:tree
 								 id="papel"
 								 assignTo="usuarioLocalizacaoAction.instance.papel"
 								 tree="#{papelTree}"
 								 icon="/img/nivelTree.gif"
 								 iconLeaf="/img/file.gif"
-								 label="#{messages['usuarioLocalizacao.papel']}" />
+								 label="#{messages['usuarioLocalizacao.papel']}"
+								 required="true" />
                             <wi:selectBooleanRadio
 								 id="responsavelLocalizacao"
-								 required="true"
 								 value="#{usuarioLocalizacaoAction.instance.responsavelLocalizacao}"
 								 label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}" />
                             <ui:define name="buttons">
@@ -297,22 +298,7 @@
 									 id="saveButton"
 									 action="usuarioLocalizacaoAction.persist"
 									 reRender="localizacaoUsuario"
-									 rendered="#{not home.managed}"
 									 value="Incluir" />
-                            
-                            	<wi:commandButton
-									 id="updateButton"
-									 action="usuarioLocalizacaoAction.update"
-									 reRender="localizacaoUsuario"
-									 rendered="#{home.managed}"
-									 value="Gravar" />
-									 
-								<wi:commandButton
-									 id="newButton"
-									 action="usuarioLocalizacaoAction.newInstance"
-									 reRender="localizacaoUsuario"
-									 rendered="#{home.managed}"
-									 value="Novo" />
 							</ui:define>
                         
 						</wi:dataForm>
@@ -329,12 +315,15 @@
 						
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
-							
-                            <wi:toolBarSelectRemove
-								 home="#{usuarioLocalizacaoAction}"
-								 reRender="localizacaoUsuario"
-								 removeAction="usuarioLocalizacaoAction.remove(row)" />
-                        
+							<wi:toolBar
+					         action="usuarioLocalizacaoAction.remove(row)"
+					         rendered="true"
+					         limitToList="true"
+					         status=":status"
+					         render="localizacaoUsuario, localizacaoUsuarioFormMessages"
+					         onclick="confirm('Deseja excluir este registro?')"
+					         url="/img/remove.png"
+					         title="Excluir registro" />
 						</ui:define>
                         <wi:columnOutputText
 							 columnId="localizacao"
