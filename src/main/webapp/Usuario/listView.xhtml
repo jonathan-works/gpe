@@ -281,7 +281,7 @@
 								 label="#{messages['usuarioLocalizacao.localizacao']}"
 								 required="true" />
                             <wi:tree
-								 id="papel"
+								 id="papel"	
 								 assignTo="usuarioLocalizacaoAction.instance.papel"
 								 tree="#{papelTree}"
 								 icon="/img/nivelTree.gif"
@@ -361,6 +361,7 @@
 						 rowId="#{row.idBloqueioUsuario}">
 						
                         <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar" />
                         <ui:define name="searchForm">
 							
                             <wi:searchForm
