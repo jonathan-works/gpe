@@ -311,16 +311,6 @@
 
 			<h:form id="transitionConditionForm">
 
-	            <a:commandLink id="#{type}Link"
-	                render=":actionTemplate"
-	                action="#{actionTemplateHandler.setCurrentActionTemplate(transitionFitter.getCurrentTransition().condition)}"
-	                limitRender="true"
-	                oncomplete="#{rich:component(':actionTemplatePanel')}.show()">
-	
-	                <h:graphicImage url="/img/jbpm/wizard.gif" title="Assistente para expressão"/>
-	
-	            </a:commandLink>
-	            
 	            <div>
 	
 	                <wi:inputTextarea id="conditionInput"
