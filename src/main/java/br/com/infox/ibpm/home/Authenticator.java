@@ -172,10 +172,10 @@ public class Authenticator {
 			}.run();
 			usuario.setProvisorio(false);
 			EntityUtil.flush();
-			throw new LoginException("Senha alterada com sucesso.");
+			FacesMessages.instance().add("Senha alterada com sucesso.");
+		} else {
+		    throw new LoginException("Nova senha não confere com a confirmação!");
 		}
-		
-		throw new LoginException("Nova senha não confere com a confirmação!");		
 	}
 	
 	public void login(){
