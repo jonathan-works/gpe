@@ -33,7 +33,13 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.CONVERSATION)
 public class PapelHome extends AbstractHome<Papel> {
 	
-	public static final String NAME = "papelHome";
+	private static final String RECURSOS_TAB_ID = "recursosTab";
+
+    private static final String PAPEIS_TAB_ID = "papeisTab";
+
+    private static final String MEMBROS_TAB_ID = "herdeirosTab";
+
+    public static final String NAME = "papelHome";
 
 	private static final long serialVersionUID = 1L;
 	
@@ -50,6 +56,9 @@ public class PapelHome extends AbstractHome<Papel> {
 	private List<String> papeis;
 
 	private List<String> recursos;
+	
+	private String activeInnerTab;
+	private boolean acceptChange=false;
 	
 	@In private PapelManager papelManager;
 	
@@ -110,7 +119,10 @@ public class PapelHome extends AbstractHome<Papel> {
 	}
 	
 	public void setMembros(List<String> membros){
-		this.membros = membros;
+	    if (acceptChange || MEMBROS_TAB_ID.equals(activeInnerTab)) {
+	        acceptChange=false;
+	        this.membros = membros;
+	    }
 	}
 	
 	private RoleAction getRoleaction() {
@@ -158,7 +170,10 @@ public class PapelHome extends AbstractHome<Papel> {
 	}
 
 	public void setPapeis(List<String> papeis) {
-		this.papeis = papeis;
+	    if (acceptChange || PAPEIS_TAB_ID.equals(activeInnerTab)) {
+	        acceptChange=false;
+	        this.papeis = papeis;
+	    }
 	}
 	
 	/**
@@ -214,10 +229,22 @@ public class PapelHome extends AbstractHome<Papel> {
 	}
 	
 	public void setRecursos(List<String> recursos) {
-		this.recursos = recursos;
+	    if (acceptChange || RECURSOS_TAB_ID.equals(activeInnerTab)) {
+	        acceptChange=false;
+	        this.recursos = recursos;
+	    }
 	}
 
-	public List<String> getRecursosDisponiveis() {
+	public String getActiveInnerTab() {
+        return activeInnerTab;
+    }
+
+    public void setActiveInnerTab(String activeInnerTab) {
+        this.acceptChange = true;
+        this.activeInnerTab = activeInnerTab;
+    }
+
+    public List<String> getRecursosDisponiveis() {
 		if (recursosDisponiveis == null) {
 			recursosDisponiveis = getRoleaction().getAssignableRoles();
 			removePapeisImplicitos(recursosDisponiveis, getPapeis());

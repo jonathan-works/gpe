@@ -22,7 +22,7 @@ public class PessoaManager extends GenericManager {
 	
 	public void carregaPessoa(String tipoPessoa, String codigo){
 		if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
-			Events.instance().raiseEvent("evtCarregarPessoaFisica", pessoaFisicaDAO.searchByCpf(codigo));
+			Events.instance().raiseEvent(PessoaFisica.EVENT_LOAD, pessoaFisicaDAO.searchByCpf(codigo));
 		} else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")){
 			Events.instance().raiseEvent("evtCarregarPessoaJuridica", pessoaJuridicaDAO.searchByCnpj(codigo));
 		} else {
