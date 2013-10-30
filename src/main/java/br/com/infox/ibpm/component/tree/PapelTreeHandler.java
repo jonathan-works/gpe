@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.component.tree;
 
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
