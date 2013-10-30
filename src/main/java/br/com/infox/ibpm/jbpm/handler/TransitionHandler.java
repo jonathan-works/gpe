@@ -28,6 +28,7 @@ import org.jbpm.graph.def.Transition;
 
 import br.com.infox.ibpm.jbpm.converter.NodeConverter;
 import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
+import br.com.infox.util.constants.WarningConstants;
 
 public class TransitionHandler implements Serializable {
 
@@ -134,7 +135,7 @@ public class TransitionHandler implements Serializable {
 		return showTransitionButton;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public boolean isInDecisionNode() {
 		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
 		Node currentNode = nodeFitter.getCurrentNode();
