@@ -8,7 +8,7 @@ package br.com.infox.epp.query;
  */
 public interface LocalizacaoTurnoQuery {
 
-	public static final String AND = " and ";
+	static final String AND = " and ";
     String QUERY_PARAM_LOCALIZACAO = "localizacao";
 	String QUERY_PARAM_HORA_INICIO = "horaInicio";
 	String QUERY_PARAM_HORA_FIM = "horaFim";
