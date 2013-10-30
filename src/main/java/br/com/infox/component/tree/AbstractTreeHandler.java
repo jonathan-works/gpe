@@ -35,6 +35,7 @@ import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 import org.richfaces.function.RichFunction;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Scope(ScopeType.CONVERSATION)
@@ -129,7 +130,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public E getSelected() {
 		if (expression == null) {
 			return selected;
@@ -154,7 +155,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
 	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
 		// Considerando single selection

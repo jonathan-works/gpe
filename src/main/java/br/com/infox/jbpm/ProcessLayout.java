@@ -19,6 +19,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.jbpm.layout.JbpmLayout;
+import br.com.infox.util.constants.WarningConstants;
 
 @Name(ProcessLayout.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -39,7 +40,7 @@ public class ProcessLayout implements Serializable {
 		return layout;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private Map<Node, TaskInstance> getTaskMap() {
 		Map<Node, TaskInstance> map = null;
 		if (idProcessInstance != null) {

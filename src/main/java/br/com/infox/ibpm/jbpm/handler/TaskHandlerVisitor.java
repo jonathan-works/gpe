@@ -27,6 +27,8 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
+import br.com.infox.util.constants.WarningConstants;
+
 
 public class TaskHandlerVisitor {
 
@@ -49,12 +51,12 @@ public class TaskHandlerVisitor {
 		return variableList;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void visit(Node n) {
 		addVariables(n.getArrivingTransitions());
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void visit(Task t) {
 		visitedTasks.add(t);
 		Node n = (Node) t.getParent();
@@ -63,7 +65,7 @@ public class TaskHandlerVisitor {
 		addVariables(transitions);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void addVariables(Set<Transition> transitions) {
 		if (transitions == null) {
 			return;
@@ -87,7 +89,7 @@ public class TaskHandlerVisitor {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void addTaskNodeVariables(TaskNode tn) {
 		boolean filtered = types != null && types.size() > 0;
 		for (Object o : tn.getTasks()) {

@@ -47,6 +47,7 @@ import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
 import br.com.infox.search.Indexer;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 
@@ -208,7 +209,7 @@ public class SearchHandler implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static String getConteudo(TaskInstance ti) {
 		StringBuilder sb = new StringBuilder();
 		TaskController taskController = ti.getTask().getTaskController();

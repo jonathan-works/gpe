@@ -44,8 +44,9 @@ public class EnderecoHome extends AbstractHome<Endereco> {
     @In private CepDAO cepDAO;
 
     public String getSearchCep() {
-        if ((searchCep == null || "_____-___".equals(searchCep)) && instance.getCep() != null)
+        if ((searchCep == null || "_____-___".equals(searchCep)) && instance.getCep() != null) {
             searchCep = instance.getCep().getNumeroCep();
+        }
         return searchCep;
     }
 
@@ -74,7 +75,6 @@ public class EnderecoHome extends AbstractHome<Endereco> {
     
     public void loadEnderecoByCep(){
         if (searchCep != null){
-//            Cep cep = (Cep) EntityUtil.createQuery("select o from Cep o where o.numeroCep =:searchCep").setParameter("searchCep", searchCep).setMaxResults(1).getSingleResult();
             setEndereco(cepDAO.findCep(searchCep));
         }
     }
@@ -110,11 +110,6 @@ public class EnderecoHome extends AbstractHome<Endereco> {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void setId(Object id) {
-        super.setId(id);
     }
 
     @Override

@@ -43,6 +43,8 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Naming;
 import org.jboss.seam.util.Reflections;
 
+import br.com.infox.util.constants.WarningConstants;
+
 public final class EntityUtil implements Serializable {
 		
 	public static final String ENTITY_MANAGER_NAME = "entityManager";
@@ -259,7 +261,7 @@ public final class EntityUtil implements Serializable {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <E> E cloneEntity(E origem, boolean copyLists) throws 
 				InstantiationException, IllegalAccessException {
 		Class<?> cl = getEntityClass(origem);
@@ -381,7 +383,7 @@ public final class EntityUtil implements Serializable {
 	 * @param query
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <T> T getSingleResult(Query query) {
 		query.setMaxResults(1);
 		List<?> list = query.getResultList();
@@ -418,7 +420,7 @@ public final class EntityUtil implements Serializable {
 	 * @param clazz
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <E> List<E> getEntityList(Class<E> clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o from ").append(clazz.getName()).append(" o");
@@ -455,7 +457,7 @@ public final class EntityUtil implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;
 		java.lang.reflect.Type type = clazz.getGenericSuperclass();
@@ -511,7 +513,7 @@ public final class EntityUtil implements Serializable {
 	 * Método genérico para buscar no banco um objeto da classe passada como parâmetro com o id informado
 	 * sem, no entanto fazer, a pesquisa no cache de sessão.
 	 * */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <E> E buscaEntidadeForaDoCacheDeSessao(Class<E> clazz, Object id) {
 		if ( id == null ){
 			return null;
@@ -529,7 +531,7 @@ public final class EntityUtil implements Serializable {
 	 * Método genérico para buscar no banco um objeto do mesmo tipo e com o mesmo Id 
 	 * daquele que foi passado como parâmetro
 	 * */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <E> E buscaEntidadeForaDoCacheDeSessao(Object object) {
 		if ( object != null ){
 			StringBuilder sb = new StringBuilder();

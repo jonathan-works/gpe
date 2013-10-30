@@ -8,7 +8,8 @@ package br.com.infox.epp.query;
  */
 public interface LocalizacaoTurnoQuery {
 
-	String QUERY_PARAM_LOCALIZACAO = "localizacao";
+	public static final String AND = " and ";
+    String QUERY_PARAM_LOCALIZACAO = "localizacao";
 	String QUERY_PARAM_HORA_INICIO = "horaInicio";
 	String QUERY_PARAM_HORA_FIM = "horaFim";
 	String QUERY_PARAM_DIA = "dia";
@@ -27,7 +28,7 @@ public interface LocalizacaoTurnoQuery {
 	String LIST_BY_HORA_INICIO_FIM_QUERY = 
 		"select o from LocalizacaoTurno o where o.localizacao = :"+QUERY_PARAM_LOCALIZACAO
 		+" and ((o.horaInicio >= :"+
-		QUERY_PARAM_HORA_INICIO+" and " +
+		QUERY_PARAM_HORA_INICIO+AND +
 		"o.horaInicio <= :"+QUERY_PARAM_HORA_FIM+") or (o.horaFim >= :"+
 		QUERY_PARAM_HORA_INICIO+" and o.horaFim < :"+QUERY_PARAM_HORA_FIM+"))";
 	
@@ -35,7 +36,7 @@ public interface LocalizacaoTurnoQuery {
 	String COUNT_BY_HORA_INICIO_FIM_QUERY = 
 		"select count(o) from LocalizacaoTurno o where o.localizacao = :"+QUERY_PARAM_LOCALIZACAO
 		+" and ((o.horaInicio >= :"+
-		QUERY_PARAM_HORA_INICIO+" and " +
+		QUERY_PARAM_HORA_INICIO+AND +
 		"o.horaInicio <= :"+QUERY_PARAM_HORA_FIM+") or (o.horaFim >= :"+
 		QUERY_PARAM_HORA_INICIO+" and o.horaFim < :"+QUERY_PARAM_HORA_FIM+"))";
 	
@@ -44,28 +45,28 @@ public interface LocalizacaoTurnoQuery {
 			"select lt from LocalizacaoTurno lt " +
 			"where (:" +QUERY_PARAM_HORA_INICIO+ " between lt.horaInicio and lt.horaFim or " +
 			"		:" +QUERY_PARAM_HORA_FIM+ " between lt.horaInicio and lt.horaFim) and" +
-			"	lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + " and " +
+			"	lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + AND +
 			"   not exists(from CalendarioEventos cal " +
 			"			   where cal.localizacao = lt.localizacao and " +
-			"					 cal.dia = :" + QUERY_PARAM_DIA + " and " +
-			"					 cal.mes = :" + QUERY_PARAM_MES + " and " +
+			"					 cal.dia = :" + QUERY_PARAM_DIA + AND +
+			"					 cal.mes = :" + QUERY_PARAM_MES + AND +
 			"					 (cal.ano is null or cal.ano = :" + QUERY_PARAM_ANO + ")) and " +
 			"   exists (select 1 from ProcessoLocalizacaoIbpm pli where " +
-			" 	 			   pli.processo.idProcesso = :"+QUERY_PARAM_IDPROCESSO+" and " +
+			" 	 			   pli.processo.idProcesso = :"+QUERY_PARAM_IDPROCESSO+AND +
 			"				   pli.localizacao = lt.localizacao and	" +
 			"	 			   pli.contabilizar = true)";
 	
 	String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA = "localizacaoTurnoByTarefaDia";
 	String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY = 
 			"select count(lt) from LocalizacaoTurno lt " +
-			"where lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + " and " +
+			"where lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA + AND +
 			"   not exists(select o from CalendarioEventos o " +
 			"			   where o.localizacao = lt.localizacao and " +
-			"					 o.dia = :" + QUERY_PARAM_DIA + " and " +
-			"					 o.mes = :" + QUERY_PARAM_MES + " and " +
+			"					 o.dia = :" + QUERY_PARAM_DIA + AND +
+			"					 o.mes = :" + QUERY_PARAM_MES + AND +
 			"					 (o.ano is null or o.ano = :" + QUERY_PARAM_ANO + ")) and " +
 			"   exists (select o from ProcessoLocalizacaoIbpm o where " +
-			" 	 			   o.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+" and " +
+			" 	 			   o.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+AND +
 			"				   o.localizacao = lt.localizacao and	" +
 			"	 			   o.contabilizar = true)";
 	

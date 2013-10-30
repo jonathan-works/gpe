@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.ibpm.entity.ContaTwitter;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -38,14 +39,14 @@ public class MailResolver {
 		return ComponentUtil.getComponent(NAME);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<ContaTwitter> listaContasTwitter(int idGrupoEmail) {
 		return EntityUtil.getEntityManager().createQuery(QUERY_TWITTER+QUERY_CONDITION)
 				.setParameter("idGrupoEmail", idGrupoEmail)
 				.getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<String> resolve(int idGrupoEmail) {		
 		return EntityUtil.getEntityManager().createQuery(QUERY+QUERY_CONDITION)
 				.setParameter("idGrupoEmail", idGrupoEmail)

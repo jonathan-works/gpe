@@ -53,6 +53,7 @@ import br.com.infox.ibpm.service.AuthenticatorService;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ldap.util.LdapUtil;
 import br.com.infox.util.ParametroUtil;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -335,7 +336,7 @@ public class Authenticator {
 
 	
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static List<Localizacao> getLocalizacoesFilhasAtuais() {
 		return (List<Localizacao>) Contexts.getSessionContext().get(LOCALIZACOES_FILHAS_ATUAIS);
 	}
@@ -426,7 +427,7 @@ public class Authenticator {
 		CertificadoLog.executeLog(msg);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoListItems() {
 		List<UsuarioLocalizacao> list = (List<UsuarioLocalizacao>) 
 			Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_LIST);

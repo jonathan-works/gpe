@@ -77,7 +77,7 @@ public class LocalizacaoHome
 	}
 	
 	public static LocalizacaoHome instance() {
-		return ComponentUtil.getComponent("localizacaoHome");
+		return ComponentUtil.getComponent(NAME);
 	}
 	
 	private void limparTrees(){
@@ -209,11 +209,6 @@ public class LocalizacaoHome
 			}
 		}
 		return true;
-	}
-	
-	@Override
-	protected String afterPersistOrUpdate(String ret) {
-	    return super.afterPersistOrUpdate(ret);
 	}
 	
 	/**
@@ -390,7 +385,7 @@ public class LocalizacaoHome
 	        if (enderecoHome != null) {
 	            localizacao.setEndereco(enderecoHome.getDefinedInstance());
 	        }
-	        LocalizacaoHome localizacaoHome = (LocalizacaoHome) Component.getInstance("localizacaoHome", false);
+	        LocalizacaoHome localizacaoHome = (LocalizacaoHome) Component.getInstance(NAME, false);
 	        if (localizacaoHome != null){
 	            localizacao.setLocalizacaoPai(localizacaoHome.getDefinedInstance());
 	        }
@@ -404,7 +399,7 @@ public class LocalizacaoHome
 	        if (endereco != null) {
 	            endereco.getInstance().getLocalizacaoList().remove(instance);
 	        }
-	        LocalizacaoHome localizacao = (LocalizacaoHome) Component.getInstance("localizacaoHome", false);
+	        LocalizacaoHome localizacao = (LocalizacaoHome) Component.getInstance(NAME, false);
 	        if (localizacao != null){
 	            localizacao.getInstance().getLocalizacaoList().remove(instance);
 	        }

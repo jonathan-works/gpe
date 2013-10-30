@@ -26,5 +26,9 @@ public class SituacaoProcessoManager extends GenericManager {
 	public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
 		return situacaoProcessoDAO.getProcessosAbertosByIdTarefa(idTarefa, selected);
 	}
+	
+	public boolean canOpenTask(long currentTaskId) {
+	    return situacaoProcessoDAO.canOpenTask(currentTaskId);
+	}
 
 }

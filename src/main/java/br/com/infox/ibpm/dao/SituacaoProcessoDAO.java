@@ -7,8 +7,12 @@ import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Events;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
+import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(SituacaoProcessoDAO.NAME)
@@ -23,7 +27,7 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		return (Long) entityManager.createQuery(hql).setParameter("ti", taskId).getSingleResult();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected){
 		StringBuilder sb = new StringBuilder();
 		sb.append("select s.idProcesso from SituacaoProcesso s ");
@@ -45,5 +49,18 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		}
 		return "";
 	}
+	
+	@SuppressWarnings(WarningConstants.RAWTYPES)
+    public boolean canOpenTask(long currentTaskId) {
+        JbpmUtil.getJbpmSession().flush();
+        Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
+        List resultList = EntityUtil
+                .getEntityManager()
+                .createQuery(
+                        "select o.idTaskInstance from SituacaoProcesso o "
+                                + "where o.idTaskInstance = :ti")
+                .setParameter("ti", currentTaskId).getResultList();
+        return resultList.size() > 0;
+    }
 
 }

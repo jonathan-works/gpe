@@ -37,6 +37,7 @@ import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.jbpm.node.MailNode;
 import br.com.infox.jbpm.manager.JbpmNodeManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.infox.util.constants.jbpm.NodeTypeConstants;
 
 @Name(NodeFitter.NAME)
@@ -63,7 +64,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	
 	@In private JbpmNodeManager jbpmNodeManager;
 		
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void addNewNode() {
 		Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
 		ProcessDefinition processo = getProcessBuilder().getInstance();
@@ -135,7 +136,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		oldNodeTransition = NodeConverter.getAsObject((String) e.getOldValue());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void removeNode(Node node) {
 		nodes.remove(node);
 		getProcessBuilder().getInstance().removeNode(node);
@@ -224,7 +225,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		return oldNodeTransition;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Factory("processNodes")
 	public List<Node> getNodes() {
 		if (nodes == null) {
@@ -253,7 +254,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		return nodeList;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<SelectItem> getNodesItems() {
 		if (nodesItems == null) {
 			List<Node> list = getProcessBuilder().getInstance().getNodes();

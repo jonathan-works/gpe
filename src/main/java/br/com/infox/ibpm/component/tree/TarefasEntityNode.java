@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import org.jboss.seam.core.Events;
 
 import br.com.infox.component.tree.EntityNode;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
@@ -35,7 +36,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		this.queryCaixas = queryCaixas;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<EntityNode<E>> getCaixas() {
 		if (caixas == null) {
 			caixas = new ArrayList<EntityNode<E>>();
@@ -60,7 +61,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		return caixas;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<TarefasEntityNode<E>> getRootsFluxos(Query queryRoots) {
 		if (rootNodes == null) {
 			rootNodes = new ArrayList<TarefasEntityNode<E>>();
@@ -76,7 +77,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		return rootNodes;
 	}	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<TarefasEntityNode<E>> getNodesTarefas() {
 		if (nodes == null) {
 			nodes = new ArrayList<TarefasEntityNode<E>>();
@@ -106,7 +107,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		return new TarefasEntityNode<Map<String,Object>>(null, n, getQueryChildren(), queryCaixas);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
 	protected List<Map<String,Object>> getChildrenList(String hql, Map<String,Object> entity) {
 		Query query = EntityUtil.createQuery(hql);
@@ -114,7 +115,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 				.getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	protected List<Map<String,Object>> getCaixasList(Query query, Map<String,Object> entity) {
 		return query.setParameter("taskId", entity.get("idTarefa"))
 				.getResultList();

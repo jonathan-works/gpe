@@ -57,6 +57,7 @@ import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
 import br.com.infox.ibpm.jbpm.fitter.TransitionFitter;
 import br.com.infox.ibpm.jbpm.fitter.TypeFitter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessBuilder.NAME)
@@ -309,7 +310,7 @@ public class ProcessBuilder implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public BigInteger getIdProcessDefinition() {
 		String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
 		Query param = JbpmUtil.getJbpmSession().createSQLQuery(query)

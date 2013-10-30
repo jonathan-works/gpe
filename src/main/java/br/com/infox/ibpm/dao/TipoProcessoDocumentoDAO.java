@@ -13,6 +13,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.query.TipoProcessoDocumentoQuery;
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
+import br.com.infox.util.constants.WarningConstants;
 
 @Name(TipoProcessoDocumentoDAO.NAME)
 @AutoCreate
@@ -21,7 +22,7 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoProcessoDocumentoDAO";
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo){
 		String restricaoDeTipo = "'";
 		if (isModelo){
@@ -44,7 +45,7 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 		return (TipoProcessoDocumento) q.getSingleResult();	
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
     public boolean isAssinaturaObrigatoria(TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
 	    HashMap<String,Object> params = new HashMap<String,Object>(0);
 	    params.put(TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_PARAM, tipoProcessoDocumento);
