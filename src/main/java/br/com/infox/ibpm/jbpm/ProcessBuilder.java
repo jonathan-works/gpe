@@ -22,7 +22,10 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
 
 import org.hibernate.Query;
 import org.jboss.seam.ScopeType;
@@ -41,8 +44,10 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
+import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
+import br.com.infox.component.JsfComponentTreeValidator;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.home.FluxoHome;
 import br.com.infox.ibpm.jbpm.fitter.EventFitter;
@@ -58,6 +63,8 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.CONVERSATION)
 public class ProcessBuilder implements Serializable {
 
+	private static final String PROCESS_DEFINITION_BUTTONS_FORM_ID = ":processDefinitionButtonsForm";
+	private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
 
@@ -71,6 +78,7 @@ public class ProcessBuilder implements Serializable {
 	@In private NodeFitter nodeFitter;
 	@In private TypeFitter typeFitter;
 	@In	private ProcessBuilderGraph processBuilderGraph;
+	@In private JsfComponentTreeValidator jsfComponentTreeValidator;
 
 	private String id;
 	private ProcessDefinition instance;
@@ -151,6 +159,23 @@ public class ProcessBuilder implements Serializable {
 				stringReader));
 		return jpdlReader.readProcessDefinition();
 	}
+	
+	public void validateJsfTree(ActionEvent event) {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
+		UIComponent buttonsForm = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_BUTTONS_FORM_ID);
+		ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(facesContext);
+		
+		if (jsfComponentTreeValidator.hasInvalidComponent(processDefinitionTabPanel)) {
+			FacesMessages.instance().clearGlobalMessages();
+			FacesMessages.instance().add("O form possui componentes inválidos, favor corrigí-los.");
+			context.getRenderIds().add(buttonsForm.getClientId(facesContext));
+			throw new AbortProcessingException("O form de definição do processo possui ao menos um componente inválido");
+		} else {
+			context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
+			context.getRenderIds().add(buttonsForm.getClientId(facesContext));
+		}
+	}
 
 	public void update() {
 		exists = true;
@@ -175,7 +200,7 @@ public class ProcessBuilder implements Serializable {
 		}
 		processBuilderGraph.clear();
 	}
-
+	
 	public void updateFluxo(String cdFluxo) {
 		String xmlDef = JpdlXmlWriter.toString(instance);
 		FluxoHome fluxoHome = FluxoHome.instance();

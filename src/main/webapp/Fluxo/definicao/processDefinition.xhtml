@@ -28,7 +28,7 @@
     
         <ui:param name="def" value="#{processBuilder.instance}" />
         
-        <infox:tabPanel switchType="ajax" activeTab="#{processBuilder.tab}">
+        <infox:tabPanel switchType="ajax" activeTab="#{processBuilder.tab}" id="processDefinition">
             
             <h:form><infox:tabHeaders /></h:form>
             
@@ -78,7 +78,7 @@
                 id="nodesTab"
                 rendered="#{processBuilder.exists}"
                 title="#{messages['processBuilder.nodes']}">
-                <!-- Terminar aqui -->
+                
                 <ui:include src="nodes.xhtml" />
                 
             </infox:tab>
@@ -103,27 +103,34 @@
             
         </infox:tabPanel>
 	        
-	    <h:form>
-	        <h:commandButton id="gravar"
+	    <h:form id="processDefinitionButtonsForm">
+	    
+	        <a:commandButton id="gravar"
+	        	actionListener="#{processBuilder.validateJsfTree}"
 	            action="#{processBuilder.update}"
 	            value="#{messages['processBuilder.saveBtn']}"
-	            rendered="#{processBuilder.exists}" />
+	            rendered="#{processBuilder.exists}"/>
 	            
-	        <h:commandButton id="publicar"
+	        <a:commandButton id="publicar"
+	        	actionListener="#{processBuilder.validateJsfTree}"
 	            action="#{processBuilder.deploy}"
 	            value="#{messages['processBuilder.deployBtn']}"
 	            rendered="#{processBuilder.exists}" />
 	            
-	        <h:commandButton id="novoProcesso"
+	        <a:commandButton id="novoProcesso"
+	        	actionListener="#{processBuilder.validateJsfTree}"
 	            action="#{processBuilder.update}"
 	            value="#{messages['processBuilder.saveBtn']}"
 	            rendered="#{!processBuilder.exists}" />
 	            
-	        <h:commandButton id="new"
+	        <a:commandButton id="new"
 	            action="#{processBuilder.clearDefinition}"
 	            value="#{messages['processBuilder.newBtn']}"
+	            render=":processDefinition, @form"
 	            onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;"
 	            rendered="#{processBuilder.exists}" />
+	            
+	    	<wi:messages />
 	            
         </h:form>
         
