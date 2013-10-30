@@ -4,7 +4,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.PessoaFisica;
@@ -12,7 +11,6 @@ import br.com.infox.list.PessoaFisicaList;
 import br.com.itx.component.AbstractHome;
 
 @Name(PessoaFisicaHome.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class PessoaFisicaHome extends AbstractHome<PessoaFisica> {
 	private static final long serialVersionUID = 1L;
@@ -36,7 +34,7 @@ public class PessoaFisicaHome extends AbstractHome<PessoaFisica> {
 		return DOWNLOAD_XLS_NAME;
 	}
 	
-	@Observer("evtCarregarPessoaFisica")
+	@Observer(PessoaFisica.EVENT_LOAD)
 	public void setPessoaFisica(PessoaFisica pessoa){
 		setInstance(pessoa);
 	}
