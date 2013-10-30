@@ -16,7 +16,9 @@
 		
 			<wi:inputText id="taskName" value="#{taskFitter.taskName}" widthDiv="230px" label="Nome">
 				
-				<a:ajax event="change" render="tasksTable" limitRender="true" execute="@this" />
+				<a:ajax event="change" render="nodesDiv" limitRender="true" execute="@this" listener="#{nodeFitter.currentNode.setName(taskFitter.taskName)}" />
+				
+				<f:validator validatorId="taskNameValidator" />
 			
 			</wi:inputText>
 			 

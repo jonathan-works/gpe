@@ -9,98 +9,20 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-    <rich:panel bodyClass="panel">
+    <rich:panel bodyClass="panel" id="tasksPanel">
+    
+    	<f:facet name="header">
+    		
+    		<h:outputText value="Tarefa: #{taskFitter.tasks.get(0).task.name}" />
+    		
+    	</f:facet>
         
-        <s:div id="tasksDiv">
-
-            <ui:decorate template="dataTable.xhtml">
-				
-                <ui:param name="values" value="#{taskFitter.tasks}" />
-                
-                <ui:param name="styleClass" value="tabelaVariaveis" />
-                
-                <ui:param name="id" value="tasksTable" />
-                
-                <ui:param name="style" value="width:100%" />
-                
-                <ui:define name="headerToolBar">
-					
-					<h:form>
-					
-	                    <a:commandLink action="#{taskFitter.addTask()}"
-							 execute="@this"
-							 immediate="true"
-							 render="tasksDiv,taskDiv"
-							 limitRender="true">
-							
-	                        <h:graphicImage url="/img/add.gif" title="Nova tarefa" />
-	                    
-						</a:commandLink>
-						
-					</h:form>
-                
-				</ui:define>
-				
-                <ui:define name="toolBar">
-					
-					<h:form>
-					
-	                    <h:graphicImage title="Excluir tarefa" url="/img/remove.png">
-							
-	                        <a:ajax event="click"
-								 listener="#{taskFitter.removeTask(row)}"
-								 onbeforesubmit="if(!confirm('Confirma?')) return false;"
-								 execute="@this"
-								 render="tasksDiv"
-								 limitRender="true" />
-	                    
-						</h:graphicImage>
-					
-					</h:form>
-                
-				</ui:define>
-				
-                <ui:define name="columns">
-					
-                    <rich:column>
-						
-                        <f:facet name="header">Tarefas</f:facet>
-                        
-                        <ui:param name="current" value="#{row == taskFitter.currentTask}" />
-                        
-                        <ui:param name="styleTaskName" value="#{current ? 'font-weight:bold' : ''}" />
-                        
-                        <h:form>
-							
-                            <a:commandLink action="#{taskFitter.setCurrentTask(row)}"
-								 execute="@this"
-								 render="tasksDiv,taskDiv"
-								 limitRender="true">
-								
-                                <h:outputText value="#{row.task.name}" />
-                            
-							</a:commandLink>
-							
-                        </h:form>
-                    
-					</rich:column>
-                
-				</ui:define>
-            
-			</ui:decorate>
+        <ui:include src="task.xhtml">
+	
+    	    <ui:param name="t" value="#{taskFitter.currentTask}" />
         
-		</s:div>
-
-        <s:fragment rendered="#{!empty taskFitter.currentTask}">
-			
-            <ui:include src="task.xhtml">
-				
-                <ui:param name="t" value="#{taskFitter.currentTask}" />
-            
-			</ui:include>
-        
-		</s:fragment>
-		
+		</ui:include>
+     
 	</rich:panel>
 
 </ui:composition>
