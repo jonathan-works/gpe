@@ -58,7 +58,7 @@
 					<h:form>
 					
 						<h:graphicImage title="Definir condição"
-								 rendered="#{empty transition.transition.condition}"
+								 rendered="#{empty transition.transition.condition and transition.inDecisionNode}"
 								 url="/img/help_dis.gif"
 								 styleClass="opacityHover">
 								
@@ -72,7 +72,7 @@
 						</h:graphicImage>
 						
 						<h:graphicImage title="Editar condição"
-								 rendered="#{!empty transition.transition.condition and transition.transition.condition != '#{true}'}"
+								 rendered="#{!empty transition.transition.condition and transition.transition.condition != '#{true}' and transition.inDecisionNode}}"
 								 styleClass="opacityHover"
 								 url="/img/help.gif">
 								

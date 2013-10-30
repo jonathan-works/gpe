@@ -19,10 +19,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import org.jboss.seam.Component;
+import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 
 import br.com.infox.ibpm.jbpm.converter.NodeConverter;
+import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
 
 public class TransitionHandler implements Serializable {
 
@@ -128,5 +133,18 @@ public class TransitionHandler implements Serializable {
 	public boolean getShowTransitionButton() {
 		return showTransitionButton;
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public boolean isInDecisionNode() {
+		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+		Node currentNode = nodeFitter.getCurrentNode();
+		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Decision)) {
+			Set<Transition> arrivingTransitions = currentNode.getArrivingTransitions();
+			List<Transition> leavingTransitions = currentNode.getLeavingTransitions();
+			if ((arrivingTransitions != null && arrivingTransitions.contains(transition)) || (leavingTransitions != null && leavingTransitions.contains(transition))) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
