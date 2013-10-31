@@ -70,7 +70,7 @@ import br.com.infox.search.Indexer;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -268,7 +268,7 @@ public class TaskInstanceHome implements Serializable {
             return Boolean.TRUE;
         } else {
             FacesMessages.instance().clear();
-            throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
+            throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
         }
     }
 
@@ -309,7 +309,7 @@ public class TaskInstanceHome implements Serializable {
                 return;
             }
             FacesMessages.instance().clear();
-            throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
+            throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
         }
     }
 
@@ -334,7 +334,7 @@ public class TaskInstanceHome implements Serializable {
         } catch (Exception ex) {
             String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
             LOG.warn(action, ex);
-            throw new AplicationException(AplicationException.createMessage(
+            throw new ApplicationException(ApplicationException.createMessage(
                     action + ex.getLocalizedMessage(),
                     "setCurrentTaskInstance()", "TaskInstanceHome", "BPM"));
         }
@@ -413,7 +413,7 @@ public class TaskInstanceHome implements Serializable {
         TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
         if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
             FacesMessages.instance().clear();
-            throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
+            throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
         }
     }
 

@@ -60,7 +60,7 @@ import org.richfaces.context.ExtendedPartialViewContext;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.component.grid.SearchField;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -458,7 +458,7 @@ public class Util implements Serializable {
 		}
 		} catch (Exception e) {
 			LOG.error(".beginTransaction()", e);
-			throw new AplicationException(AplicationException.
+			throw new ApplicationException(ApplicationException.
 					createMessage("iniciar transação", 
 								  "beginTransaction()", 
 								  "RegistraEventoAction", 
@@ -475,7 +475,7 @@ public class Util implements Serializable {
 			}
 		} catch (Exception e) {
 		    LOG.error(".commitTransction()", e);
-			throw new AplicationException(AplicationException.
+			throw new ApplicationException(ApplicationException.
 					createMessage("iniciar transação", 
 								  "beginTransaction()", 
 								  "RegistraEventoAction", 
@@ -493,7 +493,7 @@ public class Util implements Serializable {
 				ut.rollback();
 			}
 		} catch (Exception e) {
-			throw new AplicationException(AplicationException.
+			throw new ApplicationException(ApplicationException.
 					createMessage("rollback da transação", 
 								  "rollbackTransaction()", 
 								  "Util", 

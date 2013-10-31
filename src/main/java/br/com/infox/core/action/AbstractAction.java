@@ -21,7 +21,7 @@ import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.manager.RecursiveManager;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.util.constants.WarningConstants;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -92,8 +92,8 @@ public abstract class AbstractAction {
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
 			LOG.error(msg+" ("+ getObjectClassName(o) + ")", e);	
-		} catch (AplicationException e){
-			throw new AplicationException("Erro: " + e.getMessage());
+		} catch (ApplicationException e){
+			throw new ApplicationException("Erro: " + e.getMessage());
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
