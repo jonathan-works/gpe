@@ -490,24 +490,29 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public List<Transition> getTransitions() {
+        validateAndUpdateTransitions();
+        return getAvailableTransitionsFromDefinicaoDoFluxo();
+    }
+
+    private List<Transition> getAvailableTransitionsFromDefinicaoDoFluxo() {
+        List<Transition> list = new ArrayList<Transition>();
+        if (availableTransitions != null) {
+            for (Transition transition : leavingTransitions) {
+                // POG temporario devido a falha no JBPM de avaliar as
+                // avaliablesTransitions
+                if (availableTransitions.contains(transition) && !hasOcculTransition(transition)) {
+                    list.add(transition);
+                }
+            }
+        }
+        return list;
+    }
+
+    private void validateAndUpdateTransitions() {
         validateTaskId();
         if (hasAvailableTransitions()) {
             updateTransitions();
         }
-        List<Transition> list = new ArrayList<Transition>();
-        if (availableTransitions == null) {
-            return list;
-        }
-        // pega da definicao para garantir a mesma ordem do XML
-        for (Transition transition : leavingTransitions) {
-            // POG temporario devido a falha no JBPM de avaliar as
-            // avaliablesTransitions
-            if (availableTransitions.contains(transition)
-                    && !hasOcculTransition(transition)) {
-                list.add(transition);
-            }
-        }
-        return list;
     }
 
     private boolean hasAvailableTransitions() {
