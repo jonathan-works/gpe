@@ -46,7 +46,8 @@
 
                             <h:form>
 
-                                <h:graphicImage title="Excluir nó" url="/img/remove.png" styleClass="opacityHover">
+                                <h:graphicImage title="Excluir nó" url="/img/remove.png" styleClass="opacityHover" 
+                                	rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}">
 
                                     <a:ajax event="click"
                                     	listener="#{nodeFitter.removeNode(row)}"
@@ -207,18 +208,26 @@
                     
                     <rich:panel header="Novo nó" rendered="#{empty nodeFitter.currentNode}">
 
-                        <rich:dataTable id="nodeTypes" value="#{nodeFitter.nodeTypes}" var="node">
+                        <rich:dataTable id="nodeTypes" value="#{nodeFitter.nodeTypes}" var="node" >
 
                             <f:facet name="header"><h:outputText value="Tipo de nó" /></f:facet>
                             
-                            <rich:column><h:graphicImage url="/img/jbpm/${node[0]}.gif" /></rich:column>
+                            <rich:column filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
                             
-                            <rich:column><h:outputText value="#{node[1]}" /></rich:column>
+                            	<h:graphicImage url="/img/jbpm/${node[0]}.gif" />
                             
-                            <rich:column>
+                            </rich:column>
+                            
+                            <rich:column filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
+                            
+                            	<h:outputText value="#{node[1]}" />
+                            	
+                            </rich:column>
+                            
+                            <rich:column filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
 
 								<h:form>
-
+									
 	                                <h:graphicImage url="/img/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
 	
 	                                    <a:ajax event="click"
