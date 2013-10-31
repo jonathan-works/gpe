@@ -19,8 +19,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -38,6 +40,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
@@ -161,23 +164,67 @@ public class ProcessBuilder implements Serializable {
 		return jpdlReader.readProcessDefinition();
 	}
 	
-	public void validateJsfTree(ActionEvent event) {
+	public void prepareUpdate(ActionEvent event) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
 		UIComponent buttonsForm = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_BUTTONS_FORM_ID);
 		ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(facesContext);
 		
-		if (jsfComponentTreeValidator.hasInvalidComponent(processDefinitionTabPanel)) {
+		try {
+			validateJsfTree();
+			validateJbpmGraph();
+		} catch (IllegalStateException e) {
 			FacesMessages.instance().clearGlobalMessages();
-			FacesMessages.instance().add("O form possui componentes inválidos, favor corrigí-los.");
+			FacesMessages.instance().add(e.getMessage());
 			context.getRenderIds().add(buttonsForm.getClientId(facesContext));
-			throw new AbortProcessingException("O form de definição do processo possui ao menos um componente inválido");
-		} else {
-			context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
-			context.getRenderIds().add(buttonsForm.getClientId(facesContext));
+			throw new AbortProcessingException(e);
 		}
+		
+		context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
+		context.getRenderIds().add(buttonsForm.getClientId(facesContext));
 	}
 
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	private void validateJbpmGraph() {
+		List<Node> nodes = getInstance().getNodes();
+		for (Node node : nodes) {
+			if (!node.getNodeType().equals(NodeType.EndState) && (node.getLeavingTransitions() == null || node.getLeavingTransitions().isEmpty())) {
+				throw new IllegalStateException("Existe algum nó na definição que não possui transição de saída.");
+			}
+		}
+		
+		Node start = getInstance().getStartState();
+		Set<Node> visitedNodes = new HashSet<>();
+		if (!findPathToEndState(start, visitedNodes, false)) {
+			throw new IllegalStateException("Fluxo mal-definido, não há como alcançar o nó de término.");
+		}
+	}
+	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	private boolean findPathToEndState(Node node, Set<Node> visitedNodes, boolean hasFoundEndState) {
+		if (node.getNodeType().equals(NodeType.EndState)) {
+			return true;
+		}
+		
+		if (!visitedNodes.contains(node)) {
+			visitedNodes.add(node);
+		
+			List<Transition> transitions = node.getLeavingTransitions();
+			for (Transition t : transitions) {
+				hasFoundEndState = findPathToEndState(t.getTo(), visitedNodes, hasFoundEndState);
+			}
+		}
+		return hasFoundEndState;
+	}
+
+	private void validateJsfTree() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
+		if (jsfComponentTreeValidator.hasInvalidComponent(processDefinitionTabPanel)) {
+			throw new IllegalStateException("O formulário possui campos inválidos, favor corrigí-los.");
+		}
+	}
+	
 	public void update() {
 		exists = true;
 		FluxoHome fluxoHome = FluxoHome.instance();

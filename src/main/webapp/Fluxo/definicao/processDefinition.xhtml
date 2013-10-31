@@ -106,19 +106,19 @@
 	    <h:form id="processDefinitionButtonsForm">
 	    
 	        <a:commandButton id="gravar"
-	        	actionListener="#{processBuilder.validateJsfTree}"
+	        	actionListener="#{processBuilder.prepareUpdate}"
 	            action="#{processBuilder.update}"
 	            value="#{messages['processBuilder.saveBtn']}"
 	            rendered="#{processBuilder.exists}"/>
 	            
 	        <a:commandButton id="publicar"
-	        	actionListener="#{processBuilder.validateJsfTree}"
+	        	actionListener="#{processBuilder.prepareUpdate}"
 	            action="#{processBuilder.deploy}"
 	            value="#{messages['processBuilder.deployBtn']}"
 	            rendered="#{processBuilder.exists}" />
 	            
 	        <a:commandButton id="novoProcesso"
-	        	actionListener="#{processBuilder.validateJsfTree}"
+	        	actionListener="#{processBuilder.prepareUpdate}"
 	            action="#{processBuilder.update}"
 	            value="#{messages['processBuilder.saveBtn']}"
 	            rendered="#{!processBuilder.exists}" />
