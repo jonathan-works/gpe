@@ -125,6 +125,16 @@ public class TransitionFitter extends Fitter implements Serializable {
 		checkTransitions();
 	}
 	
+	public TransitionHandler connectNodes(Node from, Node to) {
+		Transition transition = new Transition(to.getName());
+		transition.setFrom(from);
+		transition.setTo(to);
+		from.addLeavingTransition(transition);
+		to.addArrivingTransition(transition);
+		clearArrivingAndLeavingTransitions();
+		return new TransitionHandler(transition);
+	}
+	
 	public boolean canAddLeavingTransition() {
 		if (getLeavingTransitions() == null || getLeavingTransitions().isEmpty()) {
 			return true;
