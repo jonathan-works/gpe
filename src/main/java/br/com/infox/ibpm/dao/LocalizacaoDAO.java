@@ -17,7 +17,7 @@ public class LocalizacaoDAO extends GenericDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Localizacao> getLocalizacoesEstrutura(){
-		String hql = "select o from Localizacao where o.estrutura = true order by o.localizacao";
+		String hql = "select o from Localizacao o where o.estrutura = true order by o.localizacao";
 		return entityManager.createQuery(hql).getResultList();
 	}
 
