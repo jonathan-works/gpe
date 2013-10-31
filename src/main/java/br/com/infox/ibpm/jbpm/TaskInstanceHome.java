@@ -57,9 +57,11 @@ import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
+import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.ibpm.search.Reindexer;
 import br.com.infox.ibpm.search.SearchHandler;
@@ -104,6 +106,7 @@ public class TaskInstanceHome implements Serializable {
     @In private SituacaoProcessoManager situacaoProcessoManager;
     @In private ProcessoManager processoManager;
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
+    @In private ProcessoDocumentoManager processoDocumentoManager;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
@@ -536,5 +539,22 @@ public class TaskInstanceHome implements Serializable {
 
     private String getFieldName(String name) {
     	return name + "-" + taskInstance.getId();
+    }
+    
+    //Vindo do JbpmUtil
+    private Object getConteudo(TaskVariable taskVariable){
+        Object variable = taskInstance.getVariable(taskVariable.getMappedName());
+        if (taskVariable.isEditor()){
+            Integer idProcessoDocumento = (Integer) variable;
+            if (idProcessoDocumento != null){
+                Object modeloDocumento = processoDocumentoManager.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
+                if (modeloDocumento != null) {
+                    variable = modeloDocumento;
+                } else {
+                    LOG.warn("ProcessoDocumento não encontrado: " + idProcessoDocumento);
+                }
+            }
+        }
+        return variable;
     }
 }
