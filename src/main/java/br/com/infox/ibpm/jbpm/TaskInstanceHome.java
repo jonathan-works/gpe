@@ -144,8 +144,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void evaluateWhenModelo(TaskVariable taskVariable) {
-        String modelo = (String) ProcessInstance.instance()
-                .getContextInstance().getVariable(taskVariable.getName() + "Modelo");
+        String modelo = getModeloFromProcessInstance(taskVariable.getName());
         if (modelo != null) {
             variavelDocumento = taskVariable.getName();
             if (!taskVariable.hasVariable()) {
@@ -156,6 +155,10 @@ public class TaskInstanceHome implements Serializable {
                 setModeloDocumento(modeloDocumento);
             }
         }
+    }
+
+    private String getModeloFromProcessInstance(String variableName) {
+        return (String) ProcessInstance.instance().getContextInstance().getVariable(variableName + "Modelo");
     }
 
     private void evaluateWhenDocumentoAssinado(TaskVariable taskVariable) {
