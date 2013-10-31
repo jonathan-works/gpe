@@ -350,24 +350,28 @@ public class TaskInstanceHome implements Serializable {
             }
             limparEstado(processoHome);
             finalizarTaskDoJbpm(transition);
-            EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
-            boolean canClosePanel = false;
-            if (this.currentTaskInstance == null) {
-                canClosePanelVal.setValue(true);
-                canClosePanel = true;
-            } 
-            EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent("taskCompleted");
-            taskCompleted.setValue(true);
-            if (!canClosePanel) {
-                Redirect red = Redirect.instance();
-                red.setViewId("/Processo/movimentar.seam");
-                red.setParameter("idProcesso", processoHome.getInstance().getIdProcesso());
-                BusinessProcess.instance().getProcessId();
-                red.setConversationPropagationEnabled(false);
-                red.execute();
-            }
+            atualizarPaginaDeMovimentacao(processoHome);
         }
         return null;
+    }
+
+    private void atualizarPaginaDeMovimentacao(ProcessoHome processoHome) {
+        EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
+        boolean canClosePanel = false;
+        if (this.currentTaskInstance == null) {
+            canClosePanelVal.setValue(true);
+            canClosePanel = true;
+        } 
+        EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent("taskCompleted");
+        taskCompleted.setValue(true);
+        if (!canClosePanel) {
+            Redirect red = Redirect.instance();
+            red.setViewId("/Processo/movimentar.seam");
+            red.setParameter("idProcesso", processoHome.getInstance().getIdProcesso());
+            BusinessProcess.instance().getProcessId();
+            red.setConversationPropagationEnabled(false);
+            red.execute();
+        }
     }
 
     private void finalizarTaskDoJbpm(String transition) {
