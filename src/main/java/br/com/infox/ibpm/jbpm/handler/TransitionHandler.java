@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.jboss.seam.Component;
 import org.jbpm.graph.def.Node;
@@ -140,12 +139,36 @@ public class TransitionHandler implements Serializable {
 		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
 		Node currentNode = nodeFitter.getCurrentNode();
 		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Decision)) {
-			Set<Transition> arrivingTransitions = currentNode.getArrivingTransitions();
-			List<Transition> leavingTransitions = currentNode.getLeavingTransitions();
-			if ((arrivingTransitions != null && arrivingTransitions.contains(transition)) || (leavingTransitions != null && leavingTransitions.contains(transition))) {
-				return true;
-			}
+			return isInNode(currentNode.getLeavingTransitions());
 		}
 		return false;
+	}
+	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	public boolean isInForkNode() {
+		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+		Node currentNode = nodeFitter.getCurrentNode();
+		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Fork)) {
+			return isInNode(currentNode.getLeavingTransitions());
+		}
+		return false;
+	}
+	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	public boolean isInJoinNode() {
+		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+		Node currentNode = nodeFitter.getCurrentNode();
+		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Join)) {
+			return isInNode(currentNode.getArrivingTransitions());
+		}
+		return false;
+	}
+	
+	public boolean canDefineCondition() {
+		return isInForkNode() || isInJoinNode();
+	}
+	
+	private boolean isInNode(Collection<Transition> transitions) {
+		return transitions != null && transitions.contains(this.transition);
 	}
 }
