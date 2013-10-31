@@ -345,7 +345,7 @@ public class TaskInstanceHome implements Serializable {
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
             boolean isObrigatorio = tipoProcessoDocumentoDAO.isAssinaturaObrigatoria(processoHome.getTipoProcessoDocumento(), Authenticator.getPapelAtual());
             
-            if (isObrigatorio && !(isObrigatorio && assinado)) {
+            if (isObrigatorio && !assinado) {
                 FacesMessages messages = FacesMessages.instance();
                 messages.clearGlobalMessages();
                 messages.clear();
