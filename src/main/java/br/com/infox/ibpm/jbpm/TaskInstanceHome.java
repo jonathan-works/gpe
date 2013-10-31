@@ -211,9 +211,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
 	public void update() {
-        modeloDocumento = null;
-        taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-
+        prepareForUpdate();
         if (possuiTask()) {
             TaskController taskController = taskInstance.getTask().getTaskController();
             if (taskController != null) {
@@ -221,12 +219,21 @@ public class TaskInstanceHome implements Serializable {
             	if (!taskPageAction.getHasTaskPage()) {
 	                updateVariables(taskController);
             	}
-                Contexts.getBusinessProcessContext().flush();
-                Util.setToEventContext(UPDATED_VAR_NAME, true);
-                updateIndex();
-                updateTransitions();
+                completeUpdate();
             }
         }
+    }
+	
+    private void prepareForUpdate() {
+        modeloDocumento = null;
+        taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+    }
+
+    private void completeUpdate() {
+        Contexts.getBusinessProcessContext().flush();
+        Util.setToEventContext(UPDATED_VAR_NAME, true);
+        updateIndex();
+        updateTransitions();
     }
 
     private boolean possuiTask() {
