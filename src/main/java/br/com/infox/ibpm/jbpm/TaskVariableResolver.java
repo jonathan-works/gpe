@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.jbpm;
 
 import org.jbpm.context.def.VariableAccess;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 final class TaskVariableResolver {
     
@@ -8,11 +9,13 @@ final class TaskVariableResolver {
     private String name;
     private String type;
     private Object value;
+    private TaskInstance taskInstance;
     
-    public TaskVariableResolver(VariableAccess variableAccess) {
+    public TaskVariableResolver(VariableAccess variableAccess, TaskInstance taskInstance) {
         this.variableAccess = variableAccess;
         this.type = variableAccess.getMappedName().split(":")[0];
         this.name = variableAccess.getMappedName().split(":")[1];
+        this.taskInstance = taskInstance;
     }
 
     public Object getValue() {

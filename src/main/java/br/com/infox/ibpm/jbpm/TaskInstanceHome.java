@@ -250,7 +250,7 @@ public class TaskInstanceHome implements Serializable {
         List<VariableAccess> list = taskController.getVariableAccesses();
         for (VariableAccess variableAccess : list) {
 
-            TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess);
+            TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess, taskInstance);
             variableResolver.setValue(getValueFromInstanceMap(variableResolver.getName()));
 
             variableResolver.resolveWhenMonetario();
