@@ -78,17 +78,18 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.CONVERSATION)
 public class TaskInstanceHome implements Serializable {
 
+    private static final String MOVIMENTAR_PATH = "/Processo/movimentar.seam";
+    private static final String CAN_CLOSE_PANEL = "canClosePanel";
+    private static final String TASK_COMPLETED = "taskCompleted";
     private static final String ASSINATURA_OBRIGATORIA = "A assinatura é obrigatória para esta classificação de documento";
-
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
-
-    private static final LogProvider LOG = Logging
-            .getLogProvider(TaskInstanceHome.class);
+    private static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
+    private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "taskInstanceHome";
-
     private static final String OCCULT_TRANSITION = "#{true}";
+
+    public static final String NAME = "taskInstanceHome";
 
     private TaskInstance taskInstance;
     private Map<String, Object> instance;
@@ -107,7 +108,7 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoManager processoManager;
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     @In private ProcessoDocumentoManager processoDocumentoManager;
-    public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
+    
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void createInstance() {
@@ -356,11 +357,11 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarPaginaDeMovimentacao(ProcessoHome processoHome) {
-        EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent("taskCompleted");
+        EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent(TASK_COMPLETED);
         taskCompleted.setValue(true);
         if (!canClosePanel()) {
             Redirect red = Redirect.instance();
-            red.setViewId("/Processo/movimentar.seam");
+            red.setViewId(MOVIMENTAR_PATH);
             red.setParameter("idProcesso", processoHome.getInstance().getIdProcesso());
             BusinessProcess.instance().getProcessId();
             red.setConversationPropagationEnabled(false);
@@ -369,7 +370,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private boolean canClosePanel() {
-        EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
+        EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent(CAN_CLOSE_PANEL);
         boolean canClosePanel = false;
         if (this.currentTaskInstance == null) {
             canClosePanelVal.setValue(true);
