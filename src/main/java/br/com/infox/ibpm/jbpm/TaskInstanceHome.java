@@ -57,7 +57,6 @@ import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
-import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
@@ -127,7 +126,8 @@ public class TaskInstanceHome implements Serializable {
     
     private void retrieveVariable(VariableAccess variableAccess) {
         TaskVariable taskVariable = new TaskVariable(variableAccess);
-        taskVariable.setVariable(JbpmUtil.instance().getConteudo(variableAccess, taskInstance));
+//        taskVariable.setVariable(JbpmUtil.instance().getConteudo(variableAccess, taskInstance));
+        taskVariable.setVariable(getConteudo(taskVariable));
         if (taskVariable.isEditor()) {
             evaluateWhenDocumentoAssinado(taskVariable);
         } else {
