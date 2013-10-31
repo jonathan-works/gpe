@@ -86,10 +86,11 @@
 						
 						</h:graphicImage>
 						
-						<h:graphicImage title="Excluir transição" url="/img/remove.png" styleClass="opacityHover" rendered="#{type eq 'to'}">
+						<h:graphicImage title="Excluir transição" url="/img/remove.png" styleClass="opacityHover"
+							rendered="#{type eq 'to' and transitionFitter.canAddLeavingTransition()}">
 								
 							<a:ajax event="click"
-									listener="#{transitionFitter.removeTransition(transition)}"
+									listener="#{transitionFitter.removeTransition(transition, type)}"
 									execute="@this"
 									onbeforesubmit="if(!confirm('Confirma?')) return false;"
 									render="transition#{type}Table,nodesDiv"
