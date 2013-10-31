@@ -4,6 +4,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.component.TurnoBean;
 import br.com.infox.component.TurnoHandler;
@@ -68,5 +69,6 @@ public class LocalizacaoTurnoAction {
 			
 			localizacaoTurnoManager.persist(localizacaoTurno);
 		}
+		FacesMessages.instance().add("#{messages['entity_updated']}");
 	}
 }
