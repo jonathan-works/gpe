@@ -148,17 +148,18 @@ public class TaskInstanceHome implements Serializable {
         if (modelo != null) {
             variavelDocumento = taskVariable.getName();
             if (!taskVariable.hasVariable()) {
-                String s = modelo.split(",")[0].trim();
-                modeloDocumento = EntityUtil.getEntityManager()
-                        .find(ModeloDocumento.class,
-                                Integer.parseInt(s));
-                setModeloDocumento(modeloDocumento);
+                setModeloDocumento(getModeloDocumentoFromModelo(modelo));
             }
         }
     }
 
     private String getModeloFromProcessInstance(String variableName) {
         return (String) ProcessInstance.instance().getContextInstance().getVariable(variableName + "Modelo");
+    }
+    
+    private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
+        String s = modelo.split(",")[0].trim();
+        return EntityUtil.getEntityManager().find(ModeloDocumento.class, Integer.parseInt(s));
     }
 
     private void evaluateWhenDocumentoAssinado(TaskVariable taskVariable) {
