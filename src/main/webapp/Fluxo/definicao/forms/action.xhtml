@@ -15,12 +15,12 @@
              render="actionTemplate"
              onclick="idTextarea='form:nodes:nodeEventeventSubView:nodeEventAction:nodeEventActionExpressionDecoration:nodeEventActionExpression'"
              action="#{event.setTemplate()}"
-             limitRender="true">
+             limitRender="true"
+             rendered="false"
+             oncomplete="#{rich:component('actionTemplatePanel')}.show()">
              
 		<h:graphicImage url="/img/jbpm/wizard.gif" title="Assistente para expressão" />
 		
-        <rich:componentControl target="actionTemplatePanel" operation="show" event="complete" />
-        
 	</a:commandLink>
 	
 	<wi:inputTextarea id="#{id}ActionExpression" value="#{event.currentAction.actionExpression}" label="Expressão">
