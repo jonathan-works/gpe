@@ -256,11 +256,10 @@ public class TaskInstanceHome implements Serializable {
             variableResolver.resolveWhenMonetario();
 
             if (variableAccess.isWritable()) {
-                if (JbpmUtil.isTypeEditor(variableResolver.getType())) {
+                if (variableResolver.isEditor()) {
                     Integer idDoc = null;
                     if (taskInstance.getVariable(variableAccess.getMappedName()) != null) {
-                        idDoc = (Integer) taskInstance.getVariable(variableAccess
-                                .getMappedName());
+                        idDoc = (Integer) taskInstance.getVariable(variableAccess.getMappedName());
                     }
                     String label = JbpmUtil.instance().getMessages()
                             .get(variableResolver.getName());

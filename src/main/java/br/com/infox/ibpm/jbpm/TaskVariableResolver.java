@@ -42,5 +42,9 @@ final class TaskVariableResolver {
             }
         }
     }
+    
+    public boolean isEditor(){
+        return type.startsWith("textEditCombo") || type.equals("textEditSignature");
+    }
 
 }
