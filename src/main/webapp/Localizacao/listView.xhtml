@@ -207,9 +207,12 @@
 			 name="localizacaoTurnoTab">
 			<h:form>
 	            <wi:turnoCalendar handler="#{localizacaoTurnoAction.turnoHandler}" />
-				
+				<wi:messages formId="turnoCalendar"></wi:messages>
 	            <a:commandButton
 					 action="#{localizacaoTurnoAction.gravarTurnos()}"
+					 render="turnoCalendarDialogMessage"
+					 limitRender="true"
+					 execute="@form"
 					 value="Gravar" />
 			 </h:form>
         
