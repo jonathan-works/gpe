@@ -41,6 +41,7 @@ import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.JpdlXmlReader;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 
@@ -62,7 +63,7 @@ public class ProcessDeployVerifier {
 	public static final String NAME = "processDeployVerifier";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessDeployVerifier.class);	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Create
 	public void init() {
 		long time = new Date().getTime();

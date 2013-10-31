@@ -29,6 +29,7 @@ import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.UsuarioLocalizacaoComparator;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(AuthenticatorService.NAME)
@@ -124,7 +125,7 @@ public class AuthenticatorService extends GenericManager {
 		return usuarioLoginManager.getUsuarioLoginByLogin(login);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void removeRolesAntigas() {
 		Set<String> roleSet = (Set<String>) Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
 		if (roleSet != null) {

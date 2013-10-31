@@ -11,6 +11,7 @@ import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.SwimlaneHandler;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 
 @Name(SwimlaneFitter.NAME)
@@ -32,7 +33,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 		swimlanes.add(currentSwimlane);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void removeSwimlane(SwimlaneHandler s) {
 		swimlanes.remove(s);
 		currentSwimlane = null;
@@ -56,7 +57,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 		return swimlanes;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<String> getSwimlaneList() {
 		Map<String, Swimlane> swimlaneList = pb.getInstance().getTaskMgmtDefinition()
 				.getSwimlanes();

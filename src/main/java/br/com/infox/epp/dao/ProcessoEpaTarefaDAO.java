@@ -10,12 +10,13 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.query.ProcessoEpaTarefaQuery;
 import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.util.constants.WarningConstants;
+import br.com.itx.util.EntityUtil;
 
 /**
  * Classe DAO para a entidade ProcessoEpaTarefa
@@ -29,7 +30,6 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 
 	private static final long serialVersionUID = 4132828408460655332L;
 	public static final String NAME = "processoEpaTarefaDAO";
-	
 	/**
 	 * Lista todos os registros filtrando por uma natureza.
 	 * @param natureza que se desejar filtrar a seleção.
@@ -55,7 +55,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return getNamedResultList(ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
@@ -66,7 +66,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return q.getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Object[]> listForaPrazoTarefa(Categoria c) {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
@@ -77,7 +77,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return q.getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Object[]> listTarefaPertoLimite() {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
@@ -87,4 +87,15 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return q.getResultList();
 	}
 	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+    public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(final Integer idProcesso, final Integer idTarefa) {
+        final String hql = "select new map(pet.taskInstance as idTaskInstance) " +
+                            "from ProcessoEpaTarefa pet " +
+                            "where pet.tarefa.idTarefa=:idTarefa " +
+                            "and pet.processoEpa.idProcesso=:idProcesso";
+        final Query query = EntityUtil.createQuery(hql)
+                            .setParameter("idProcesso",idProcesso)
+                            .setParameter("idTarefa", idTarefa);
+        return (Map<String, Object>) query.getSingleResult();
+    }
 }

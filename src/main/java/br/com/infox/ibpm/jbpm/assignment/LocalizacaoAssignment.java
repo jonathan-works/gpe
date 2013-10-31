@@ -33,6 +33,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Util;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.ComponentUtil;
@@ -53,7 +54,7 @@ public class LocalizacaoAssignment implements Serializable {
 	private org.jbpm.taskmgmt.exe.TaskInstance currentTaskInstance;
 	
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public Set<String> getPooledActors(String... localPapel) {
 		boolean opened = Util.beginTransaction();
 		addLocalizacaoPapel(localPapel);

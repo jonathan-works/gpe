@@ -6,14 +6,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.manager.FluxoManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.exception.AplicationException;
 
 /**
@@ -33,8 +32,6 @@ public class TaskPageAction implements Serializable {
 	public static final String TASK_PAGE_COMPONENT_PATH = "/taskpages/";
 	private static final String TASK_PAGE_SUFFIX = ".xhtml";
 	private boolean hasTaskPage = false;
-	
-	@In private FluxoManager fluxoManager;
 	
 	/**
 	 * Verifica se a tarefa atual está utilizando uma variável taskPage.
@@ -63,7 +60,7 @@ public class TaskPageAction implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private List<VariableAccess> getVariableAccesses() {
 		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		if (taskInstance != null) {

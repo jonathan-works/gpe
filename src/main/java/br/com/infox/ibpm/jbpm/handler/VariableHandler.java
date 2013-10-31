@@ -33,6 +33,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 
 
@@ -52,7 +53,7 @@ public class VariableHandler implements Serializable {
 		return getVariables(taskId, true);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private List<Variavel> getVariables(long taskId, boolean readOnly) {
 		List<Variavel> ret = new ArrayList<Variavel>();
 		TaskInstance taskInstance = ManagedJbpmContext.instance()

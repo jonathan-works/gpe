@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.entity.ImagemBin;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.FileUtil;
 
 @Name(ImagemBinDAO.NAME)
@@ -20,7 +21,7 @@ public class ImagemBinDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "imagemBinDAO";
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<ImagemBin> getTodasAsImagens(){
 		String hql = "select o from ImagemBin o";
 		return (List<ImagemBin>) entityManager.createQuery(hql).getResultList();

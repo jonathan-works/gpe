@@ -17,11 +17,6 @@ public class BamHome extends AbstractHome<ProcessoEpaTarefa> {
     public static final String NAME = "bamHome";
     
     @Override
-    public void setInstance(ProcessoEpaTarefa instance) {
-        super.setInstance(instance);
-    }
-
-    @Override
     public void onClickSearchTab() {
         super.onClickSearchTab();
         ProcessoEpaTarefaList instance = ComponentUtil.getComponent(ProcessoEpaTarefaList.NAME);

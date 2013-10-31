@@ -8,6 +8,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -24,7 +25,7 @@ public final class TimerUtil {
 	 * @param nome - Nome do parametro
 	 * @return Valor do parametro
 	 */
-	@SuppressWarnings("unchecked")	
+	@SuppressWarnings(WarningConstants.UNCHECKED)	
 	public static String getParametro(String nome) {
 		String valor = ComponentUtil.getComponent(nome, ScopeType.APPLICATION);
 		if (valor == null) {

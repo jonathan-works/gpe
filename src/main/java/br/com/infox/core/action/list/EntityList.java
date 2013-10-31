@@ -19,6 +19,7 @@ import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
@@ -191,7 +192,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * 
 	 * @param restriction - String da restriction com ou sem expressões
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	public final void setRestrictions() {
 		List<ValueExpression> valueExpressionList = new ArrayList<ValueExpression>();
 		for(SearchField s: searchFieldMap.values()) {
@@ -216,7 +217,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void newInstance() {
 		try {
 			setEntity((E) EntityUtil.newInstance(getClass()));
@@ -237,7 +238,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * 
 	 * @return a entidade informado genericamente
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public E getEntity() {
 		if (entity == null) {
 			entity = (E) Contexts.getConversationContext().get(getEntityComponentName());

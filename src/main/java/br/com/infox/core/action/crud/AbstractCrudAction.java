@@ -1,6 +1,7 @@
 package br.com.infox.core.action.crud;
 
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 /**
@@ -66,7 +67,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 		this.tab = tab;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
 	public void setId(Object id) {
 		if(id != null) {
@@ -125,7 +126,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 * Cria um novo objeto do tipo parametrizado para a variável
 	 * instance.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
 	public void newInstance() {
 		instance = (T) EntityUtil.newInstance(getClass());

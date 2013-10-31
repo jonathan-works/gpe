@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.component.tree;
 
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -49,11 +47,6 @@ public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
 		return null;
 	}
 
-	@Override
-	public List<EntityNode<Papel>> getRoots() {
-		return super.getRoots();
-	}
-	
 	@Override
 	protected String getEventSelected() {
 		return PAPEL_TREE_EVENT;

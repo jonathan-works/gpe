@@ -38,6 +38,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import br.com.infox.search.Indexer;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
 
@@ -48,7 +49,7 @@ public class Reindexer {
 	
 	private static final LogProvider LOG = Logging.getLogProvider(Reindexer.class);
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void execute() {
 		MeasureTime mt = new MeasureTime().start();
 		LOG.warn("----------- Criando indices de documentos das tarefas -------------");

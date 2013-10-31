@@ -9,6 +9,7 @@ import br.com.infox.epp.query.ModeloDocumentoQuery;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.infox.util.constants.WarningConstants;
 
 /**
  * Classe DAO para a entidade ModeloDocumento
@@ -35,7 +36,7 @@ public class ModeloDocumentoDAO extends GenericDAO {
 				.setParameter("titulo", titulo).getSingleResult();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(GrupoModeloDocumento grupo, TipoModeloDocumento tipo){
 		String hql = "select distinct o from ModeloDocumento o where " +
 				"o.tipoModeloDocumento.grupoModeloDocumento = :grupo and " +
@@ -46,7 +47,7 @@ public class ModeloDocumentoDAO extends GenericDAO {
 				.setParameter("tipo", tipo).getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<ModeloDocumento> getModelosDocumentoInListaModelos(String listaModelos){
 		String hql = "select o from ModeloDocumento o " +
 						"where o.idModeloDocumento in (" +

@@ -23,6 +23,7 @@ import java.util.List;
 import org.jboss.seam.util.Base64;
 
 import br.com.infox.core.certificado.util.DigitalSignatureUtils;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ArrayUtil;
 
 /**
@@ -93,7 +94,7 @@ public class ValidaDocumento {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ WarningConstants.RAWTYPES, WarningConstants.UNCHECKED })
 	private void processReceivedCertificationChain()
 	throws ValidaDocumentoException {
 		String certChainBase64Encoded = removeBR(certificado);

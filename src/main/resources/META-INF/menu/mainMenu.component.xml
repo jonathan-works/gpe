@@ -30,7 +30,6 @@
 			<value>menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>		
 			<value>menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
 			<value>menu.contAcesso/usuario.menuText:/Usuario/listView.seam</value>
-<!-- 			<value>menu.contAcesso/activeDirectory.menuText:/ActiveDirectory/listView.seam</value> -->
 			<value>menu.contAcesso/localizacao.menuText:/Localizacao/listView.seam</value>			
 			
 			<value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>

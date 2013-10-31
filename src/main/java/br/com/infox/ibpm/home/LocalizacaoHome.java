@@ -17,9 +17,9 @@ package br.com.infox.ibpm.home;
 
 import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
@@ -48,17 +48,16 @@ public class LocalizacaoHome
 	@Override
 	public void newInstance() {
 		getInstance().setAtivo(Boolean.TRUE);
-		limparTrees();
-		Contexts.removeFromAllContexts("cepSuggest");	
+		limparTrees();	
 		super.newInstance();
 	}
 	
 	public static LocalizacaoHome instance() {
-		return ComponentUtil.getComponent("localizacaoHome");
+		return ComponentUtil.getComponent(LocalizacaoHome.NAME);
 	}
 	
 	private void limparTrees(){
-		LocalizacaoTreeHandler ret = getComponent("localizacaoTree");
+		final LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
 		ret.clearTree();
 	}
 	
@@ -91,12 +90,7 @@ public class LocalizacaoHome
 			instance.setLocalizacaoPai(null);
 		}
 		return true;
-	}
-	
-	@Override
-	protected String afterPersistOrUpdate(String ret) {
-	    return super.afterPersistOrUpdate(ret);
-	}
+	}	
 	
 	/**
 	 * Verifica se a localização está vinculada a algum ItemTIpoDocumento. Se

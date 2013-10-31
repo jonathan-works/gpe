@@ -20,6 +20,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.manager.RecursiveManager;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.exception.AplicationException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
@@ -186,7 +187,7 @@ public abstract class AbstractAction {
 	 * parametro informado.
 	 * @param o Registro que deseja inativar.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	protected void inactiveRecursive(Object o) {
 		ComponentUtil.setValue(o, "ativo", false);
 		if(!RecursiveManager.isRecursive(o)) {
