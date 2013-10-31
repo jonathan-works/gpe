@@ -126,7 +126,6 @@ public class TaskInstanceHome implements Serializable {
     
     private void retrieveVariable(VariableAccess variableAccess) {
         TaskVariable taskVariable = new TaskVariable(variableAccess);
-//        taskVariable.setVariable(JbpmUtil.instance().getConteudo(variableAccess, taskInstance));
         taskVariable.setVariable(getConteudo(taskVariable));
         if (taskVariable.isEditor()) {
             evaluateWhenDocumentoAssinado(taskVariable);
@@ -541,7 +540,6 @@ public class TaskInstanceHome implements Serializable {
     	return name + "-" + taskInstance.getId();
     }
     
-    //Vindo do JbpmUtil
     private Object getConteudo(TaskVariable taskVariable){
         Object variable = taskInstance.getVariable(taskVariable.getMappedName());
         if (taskVariable.isEditor()){
