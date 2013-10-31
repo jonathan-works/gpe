@@ -93,7 +93,7 @@ public class TaskInstanceHome implements Serializable {
     public static final String NAME = "taskInstanceHome";
 
     private TaskInstance taskInstance;
-    private Map<String, Object> instance;
+    private Map<String, Object> mapaDeVariaveis;
     private String variavelDocumento;
     private Long taskId;
     private List<Transition> availableTransitions;
@@ -104,6 +104,7 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinar = Boolean.FALSE;
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
+    
     @In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In private SituacaoProcessoManager situacaoProcessoManager;
     @In private ProcessoManager processoManager;
@@ -113,8 +114,8 @@ public class TaskInstanceHome implements Serializable {
 
 	public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        if (instance == null && taskInstance != null) {
-            instance = new HashMap<String, Object>();
+        if (mapaDeVariaveis == null && taskInstance != null) {
+            mapaDeVariaveis = new HashMap<String, Object>();
             retrieveVariables();
         }
     }
@@ -186,12 +187,12 @@ public class TaskInstanceHome implements Serializable {
     }
     
     private void putVariable(TaskVariable taskVariable){
-        instance.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
+        mapaDeVariaveis.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
     }
 
     public Map<String, Object> getInstance() {
         createInstance();
-        return instance;
+        return mapaDeVariaveis;
     }
 
     // Método que será chamado pelo botão "Assinar Digitalmente"
@@ -201,10 +202,10 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private Object getValueFromInstanceMap(String key) {
-        if (instance == null) {
+        if (mapaDeVariaveis == null) {
             return null;
         }
-        Set<Entry<String, Object>> entrySet = instance.entrySet();
+        Set<Entry<String, Object>> entrySet = mapaDeVariaveis.entrySet();
         for (Entry<String, Object> entry : entrySet) {
             if (entry.getKey().split("-")[0].equals(key)
                     && entry.getValue() != null) {
@@ -313,7 +314,7 @@ public class TaskInstanceHome implements Serializable {
                 Object idObject = EntityUtil.getEntityIdObject(entity);
                 home.setId(idObject);
                 if (varName != null) {
-                    instance.put(getFieldName(varName), idObject);
+                    mapaDeVariaveis.put(getFieldName(varName), idObject);
                 }
                 update();
             }
@@ -553,7 +554,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public void clear() {
-        this.instance = null;
+        this.mapaDeVariaveis = null;
         this.taskInstance = null;
     }
 
@@ -564,7 +565,7 @@ public class TaskInstanceHome implements Serializable {
 
     public void setModeloDocumento(ModeloDocumento modelo) {
         this.modeloDocumento = modelo;
-        instance.put(getFieldName(variavelDocumento), ModeloDocumentoAction.instance().getConteudo(modelo));
+        mapaDeVariaveis.put(getFieldName(variavelDocumento), ModeloDocumentoAction.instance().getConteudo(modelo));
     }
 
     public String getHomeName() {
