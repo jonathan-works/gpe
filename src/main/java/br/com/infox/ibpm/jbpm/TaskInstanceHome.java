@@ -549,7 +549,7 @@ public class TaskInstanceHome implements Serializable {
             if (idProcessoDocumento != null){
                 Object modeloDocumento = processoDocumentoManager.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
                 if (modeloDocumento != null) {
-                    variable = modeloDocumento;
+                    return modeloDocumento;
                 } else {
                     LOG.warn("ProcessoDocumento não encontrado: " + idProcessoDocumento);
                 }
