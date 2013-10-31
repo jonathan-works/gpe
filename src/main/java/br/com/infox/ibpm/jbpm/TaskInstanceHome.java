@@ -111,19 +111,23 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoDocumentoManager processoDocumentoManager;
     
 
-    @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (instance == null && taskInstance != null) {
             instance = new HashMap<String, Object>();
-            TaskController taskController = taskInstance.getTask().getTaskController();
-            if (taskController != null) {
-                List<VariableAccess> list = taskController.getVariableAccesses();
-                for (VariableAccess variableAccess : list) {
-                    retrieveVariable(variableAccess);
-                }
-                updateTransitions(); // Atualizar as transições possiveis. Isso é preciso, pois as condições das transições são avaliadas antes deste metodo ser executado.
+            retrieveVariables();
+        }
+    }
+	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+    private void retrieveVariables() {
+        TaskController taskController = taskInstance.getTask().getTaskController();
+        if (taskController != null) {
+            List<VariableAccess> list = taskController.getVariableAccesses();
+            for (VariableAccess variableAccess : list) {
+                retrieveVariable(variableAccess);
             }
+            updateTransitions(); // Atualizar as transições possiveis. Isso é preciso, pois as condições das transições são avaliadas antes deste metodo ser executado.
         }
     }
     
@@ -210,9 +214,8 @@ public class TaskInstanceHome implements Serializable {
         modeloDocumento = null;
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 
-        if ((taskInstance != null) && (taskInstance.getTask() != null)) {
-            TaskController taskController = taskInstance.getTask()
-                    .getTaskController();
+        if (possuiTask()) {
+            TaskController taskController = taskInstance.getTask().getTaskController();
             if (taskController != null) {
             	TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
             	if (!taskPageAction.getHasTaskPage()) {
@@ -224,6 +227,10 @@ public class TaskInstanceHome implements Serializable {
                 updateTransitions();
             }
         }
+    }
+
+    private boolean possuiTask() {
+        return (taskInstance != null) && (taskInstance.getTask() != null);
     }
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
