@@ -57,6 +57,7 @@ import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
@@ -343,9 +344,7 @@ public class TaskInstanceHome implements Serializable {
         if (checkAccess()) {
             checkCurrentTask();
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
-            boolean isObrigatorio = tipoProcessoDocumentoDAO.isAssinaturaObrigatoria(processoHome.getTipoProcessoDocumento(), Authenticator.getPapelAtual());
-            
-            if (isObrigatorio && !assinado) {
+            if (faltaAssinatura(processoHome.getTipoProcessoDocumento())) {
                 FacesMessages messages = FacesMessages.instance();
                 messages.clearGlobalMessages();
                 messages.clear();
@@ -384,6 +383,11 @@ public class TaskInstanceHome implements Serializable {
             }
         }
         return null;
+    }
+    
+    private boolean faltaAssinatura(TipoProcessoDocumento tipoProcessoDocumento){
+        boolean isObrigatorio = tipoProcessoDocumentoDAO.isAssinaturaObrigatoria(tipoProcessoDocumento, Authenticator.getPapelAtual());
+        return isObrigatorio && !assinado;
     }
 
     private void checkCurrentTask() {
