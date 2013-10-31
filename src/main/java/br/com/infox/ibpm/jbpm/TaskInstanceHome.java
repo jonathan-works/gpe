@@ -345,10 +345,7 @@ public class TaskInstanceHome implements Serializable {
             checkCurrentTask();
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
             if (faltaAssinatura(processoHome.getTipoProcessoDocumento())) {
-                FacesMessages messages = FacesMessages.instance();
-                messages.clearGlobalMessages();
-                messages.clear();
-                messages.add(Severity.ERROR, ASSINATURA_OBRIGATORIA);
+                acusarFaltaDeAssinatura();
                 return null;
             }
             
@@ -383,6 +380,13 @@ public class TaskInstanceHome implements Serializable {
             }
         }
         return null;
+    }
+
+    private void acusarFaltaDeAssinatura() {
+        FacesMessages messages = FacesMessages.instance();
+        messages.clearGlobalMessages();
+        messages.clear();
+        messages.add(Severity.ERROR, ASSINATURA_OBRIGATORIA);
     }
     
     private boolean faltaAssinatura(TipoProcessoDocumento tipoProcessoDocumento){
