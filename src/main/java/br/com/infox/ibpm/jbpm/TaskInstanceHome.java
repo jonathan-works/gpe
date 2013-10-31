@@ -348,15 +348,8 @@ public class TaskInstanceHome implements Serializable {
                 acusarFaltaDeAssinatura();
                 return null;
             }
-            
-            this.currentTaskInstance = null;
-            processoHome.setIdProcessoDocumento(null);
-            update();
-            try {
-                BusinessProcess.instance().endTask(transition);
-            } catch (JbpmException e) {
-                LOG.error(".end()", e);
-            }
+            limparEstado(processoHome);
+            finalizarTaskDoJbpm(transition);
             EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
             boolean canClosePanel = false;
             if (this.currentTaskInstance == null) {
@@ -380,6 +373,20 @@ public class TaskInstanceHome implements Serializable {
             }
         }
         return null;
+    }
+
+    private void finalizarTaskDoJbpm(String transition) {
+        try {
+            BusinessProcess.instance().endTask(transition);
+        } catch (JbpmException e) {
+            LOG.error(".end()", e);
+        }
+    }
+
+    private void limparEstado(ProcessoHome processoHome) {
+        this.currentTaskInstance = null;
+        processoHome.setIdProcessoDocumento(null);
+        update();
     }
 
     private void acusarFaltaDeAssinatura() {
