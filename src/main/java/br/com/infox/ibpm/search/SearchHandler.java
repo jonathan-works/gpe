@@ -47,6 +47,7 @@ import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
 import br.com.infox.search.Indexer;
+import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
@@ -305,7 +306,7 @@ public class SearchHandler implements Serializable {
 		} else if("sim_nao".equals(type)) {
 			texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
 		} else if ("numberMoney".equalsIgnoreCase(type)){
-            texto = String.format("%.2f", value);
+            texto = String.format(FloatFormatConstants._2F, value);
         } else {
 			texto = value.toString();
 		}

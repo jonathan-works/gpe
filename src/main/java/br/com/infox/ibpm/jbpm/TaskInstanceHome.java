@@ -67,6 +67,7 @@ import br.com.infox.ibpm.search.Reindexer;
 import br.com.infox.ibpm.search.SearchHandler;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.infox.search.Indexer;
+import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
@@ -164,7 +165,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void evaluateWhenMonetario(TaskVariable taskVariable) {
         if (taskVariable.isMonetario()) {
-            taskVariable.setVariable(String.format("%.2f", taskVariable.getVariable()));
+            taskVariable.setVariable(String.format(FloatFormatConstants._2F, taskVariable.getVariable()));
         }
         putVariable(taskVariable);
     }

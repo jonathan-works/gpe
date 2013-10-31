@@ -2,6 +2,7 @@ package br.com.infox.ibpm.jbpm;
 
 import org.jbpm.context.def.VariableAccess;
 
+import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
@@ -48,7 +49,7 @@ final class TaskVariable {
     }
     
     public void formatVariableMonetaria(){
-        variable = String.format("%.2f", variable);
+        variable = String.format(FloatFormatConstants._2F, variable);
     }
 
     public Object getVariable() {

@@ -31,6 +31,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
+import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Form;
 import br.com.itx.component.FormField;
@@ -110,7 +111,7 @@ public class TaskInstanceView implements Serializable{
 						}
 					} else if ("numberMoney".equalsIgnoreCase(type)){
 						ff.setType(type);
-						ff.setValue(String.format("%.2f", value));
+						ff.setValue(String.format(FloatFormatConstants._2F, value));
 					} else {
 						ff.setType(type);
 						ff.setValue(value);
