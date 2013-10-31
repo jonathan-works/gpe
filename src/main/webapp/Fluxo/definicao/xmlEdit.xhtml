@@ -9,12 +9,8 @@
 
 	<h:form>
 
-		<wi:inputTextarea id="xmlTextArea" styleClass="pd-xml textarea" value="#{processBuilder.xml}">
+		<wi:inputTextarea id="xmlTextArea" styleClass="pd-xml textarea" value="#{processBuilder.xml}" readonly="true" />
 	         
-			<a:ajax event="change" execute="@this" render="pageBody" limitRender="true"/>
-	    
-		</wi:inputTextarea>
-		
 	</h:form>
 		
 </ui:composition>
