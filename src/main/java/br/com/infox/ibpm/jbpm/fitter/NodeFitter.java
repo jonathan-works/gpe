@@ -26,6 +26,8 @@ import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
+import org.jbpm.graph.node.Fork;
+import org.jbpm.graph.node.Join;
 import org.jbpm.graph.node.NodeTypes;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
@@ -116,6 +118,14 @@ public class NodeFitter extends Fitter implements Serializable {
 				node.addLeavingTransition(t);
 				newNodeTransition.setName(node.getName());
 				node.addArrivingTransition(oldT);
+				
+				if (oldT.getFrom().getNodeType().equals(NodeType.Fork) && to.getNodeType().equals(NodeType.Join)) {
+					getProcessBuilder().getTransitionFitter().connectNodes(oldT.getFrom(), to);
+				}
+			}
+			
+			if (nodeType.equals(Fork.class)) {
+				handleForkNode(node);
 			}
 			
 			newNodeName = null;
@@ -132,6 +142,21 @@ public class NodeFitter extends Fitter implements Serializable {
 		}
 	}
 	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	private void handleForkNode(Node fork) {
+		try {
+			Node join = Join.class.newInstance();
+			join.setName(fork.getName() + " (Junção)");
+			ProcessDefinition processo = getProcessBuilder().getInstance();
+			processo.addNode(join);
+			List<Node> nodes = processo.getNodes();
+			processo.reorderNode(nodes.indexOf(join), nodes.indexOf(fork) + 1);
+			getProcessBuilder().getTransitionFitter().connectNodes(fork, join);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public void transitionChangeListener(ValueChangeEvent e) {
 		oldNodeTransition = NodeConverter.getAsObject((String) e.getOldValue());
 	}
