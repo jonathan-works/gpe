@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Tarefa;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(TarefaDAO.NAME)
@@ -20,7 +21,7 @@ public class TarefaDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tarefaDAO";
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("select max(nodeFrom.id_), nodeFrom.name_ ")

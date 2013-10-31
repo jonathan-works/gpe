@@ -33,6 +33,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Form;
 import br.com.itx.component.FormField;
 import br.com.itx.component.Template;
@@ -69,7 +70,7 @@ public class TaskInstanceForm implements Serializable{
 
 	private TaskInstance taskInstance;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Unwrap
 	public Form getTaskForm() {
 		getTaskInstance();

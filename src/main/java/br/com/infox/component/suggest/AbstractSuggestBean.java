@@ -30,6 +30,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.componentes.suggest.SuggestItem;
 import br.com.infox.componentes.suggest.SuggestProvider;
+import br.com.infox.util.constants.WarningConstants;
 
 @Scope(ScopeType.STATELESS)
 public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Serializable {
@@ -45,7 +46,7 @@ public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Seri
     @In
     protected EntityManager entityManager;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
     @Override
     public List<SuggestItem> getSuggestions(String typed) {
         StopWatch sw = new StopWatch();

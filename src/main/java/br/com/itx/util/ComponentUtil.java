@@ -38,6 +38,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 
 public final class ComponentUtil {
@@ -227,7 +228,7 @@ public final class ComponentUtil {
 	 * @param componentName Nome do componte
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <C> C getComponent(String componentName) {
 		return (C) Component.getInstance(componentName);
 	}	
@@ -241,7 +242,7 @@ public final class ComponentUtil {
 	 * @param scopeType O Escopo do componente
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <C> C getComponent(String componentName, ScopeType scopeType) {
 		return (C) Component.getInstance(componentName, scopeType);
 	}		
@@ -270,7 +271,7 @@ public final class ComponentUtil {
 	 * @param componentName Nome do componte
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <C> C getComponent(String componentName, boolean create) {
 		return (C) Component.getInstance(componentName, create);
 	}		

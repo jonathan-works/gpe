@@ -23,6 +23,7 @@ import java.util.List;
 import org.jboss.seam.util.Base64;
 
 import br.com.infox.core.certificado.CertificadoException;
+import br.com.infox.util.constants.WarningConstants;
 
 /**
  * Utility class for digital signatures and certificates verification.
@@ -74,8 +75,6 @@ import br.com.infox.core.certificado.CertificadoException;
  */
 public final class DigitalSignatureUtils {
 
-    private static final String	UNCHECKED	= "unchecked";
-	private static final String	RAWTYPES	= "rawtypes";
 	private static final String X509_CERTIFICATE_TYPE = "X.509";
     private static final String CERT_CHAIN_ENCODING = "PkiPath";
     private static final String DIGITAL_SIGNATURE_ALGORITHM_NAME = "SHA1withRSA";
@@ -140,7 +139,7 @@ public final class DigitalSignatureUtils {
         return certPath;
     }
     
-	@SuppressWarnings({ UNCHECKED, RAWTYPES })
+	@SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
 	public static X509Certificate[] loadCertFromBase64String(String certChainBase64Encoded) throws CertificadoException {
 		CertPath mCertPath;
 		try {
@@ -263,7 +262,7 @@ public final class DigitalSignatureUtils {
      * Removes the last certificate from given certification chain.
      * @return given cert chain without the last certificate in it.
      */
-    @SuppressWarnings({ UNCHECKED, RAWTYPES })
+    @SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
 	private static CertPath removeLastCertFromCertChain(CertPath aCertChain)
     throws CertificateException {
         List certs = aCertChain.getCertificates();
@@ -288,7 +287,7 @@ public final class DigitalSignatureUtils {
      * @return Base64-encoded ASN.1 DER representation of given X.509 certification
      * chain.
      */
-    @SuppressWarnings({ UNCHECKED, RAWTYPES })
+    @SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
 	public static String encodeX509CertChainToBase64(Certificate[] aCertificationChain)
     			throws CertificateException {
         List certList = Arrays.asList(aCertificationChain);

@@ -28,6 +28,7 @@ import br.com.infox.epp.query.HistoricoModeloDocumentoQuery;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.list.HistoricoModeloDocumentoList;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
@@ -92,7 +93,7 @@ public class HistoricoModeloDocumentoHome extends AbstractHome<HistoricoModeloDo
         modeloHome.update();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
     @Override
     public void create() {
         super.create();

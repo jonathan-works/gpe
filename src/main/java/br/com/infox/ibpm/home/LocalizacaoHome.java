@@ -54,7 +54,7 @@ public class LocalizacaoHome
 	}
 	
 	public static LocalizacaoHome instance() {
-		return ComponentUtil.getComponent("localizacaoHome");
+		return ComponentUtil.getComponent(NAME);
 	}
 	
 	private void limparTrees(){
@@ -91,11 +91,6 @@ public class LocalizacaoHome
 			instance.setLocalizacaoPai(null);
 		}
 		return true;
-	}
-	
-	@Override
-	protected String afterPersistOrUpdate(String ret) {
-	    return super.afterPersistOrUpdate(ret);
 	}
 	
 	/**

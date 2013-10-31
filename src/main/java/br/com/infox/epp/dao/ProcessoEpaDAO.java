@@ -27,6 +27,7 @@ import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -117,7 +118,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 		return (Item) entityManager.createQuery(query).setParameter("idProcesso", idProcesso).getSingleResult();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
     public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
 		Query q = entityManager.createQuery(ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY)
 				.setParameter("idProcesso", processoEpa.getIdProcesso());

@@ -27,6 +27,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.exception.AplicationException;
 
 
@@ -35,7 +36,7 @@ import br.com.itx.exception.AplicationException;
 @Scope(ScopeType.APPLICATION)
 public class SubprocessActionHandler {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Observer(Event.EVENTTYPE_SUBPROCESS_CREATED)
 	public void copyVariablesToSubprocess() {
 		try {
@@ -52,7 +53,7 @@ public class SubprocessActionHandler {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Observer(Event.EVENTTYPE_SUBPROCESS_END)
 	public void copyVariablesFromSubprocess() {
 		try {

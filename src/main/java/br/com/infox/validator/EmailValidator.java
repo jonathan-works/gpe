@@ -28,9 +28,9 @@ import javax.faces.validator.ValidatorException;
 @FacesValidator("emailValidator")
 public class EmailValidator implements Validator {
 
-	private static String ATOM = "[a-z0-9!#$%&'*+/=?^_`{|}~-]";
-	private static String DOMAIN = "(" + ATOM + "+(\\." + ATOM + "+)*";
-	private static String IP_DOMAIN = "\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\]";
+	private static final String ATOM = "[a-z0-9!#$%&'*+/=?^_`{|}~-]";
+	private static final String DOMAIN = "(" + ATOM + "+(\\." + ATOM + "+)*";
+	private static final String IP_DOMAIN = "\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\]";
 
 	private java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
 			"^" + ATOM + "+(\\." + ATOM + "+)*@"

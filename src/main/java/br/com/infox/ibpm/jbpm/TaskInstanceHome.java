@@ -28,7 +28,6 @@ import javax.faces.component.EditableValueHolder;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -39,7 +38,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -55,16 +53,19 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.bpm.action.TaskPageAction;
-import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
+import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
+import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.ibpm.search.Reindexer;
 import br.com.infox.ibpm.search.SearchHandler;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.infox.search.Indexer;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.exception.AplicationException;
@@ -74,6 +75,8 @@ import br.com.itx.util.EntityUtil;
 @Name(TaskInstanceHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class TaskInstanceHome implements Serializable {
+
+    private static final String ASSINATURA_OBRIGATORIA = "A assinatura é obrigatória para esta classificação de documento";
 
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
@@ -97,63 +100,46 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinar = Boolean.FALSE;
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
-    @In
-    private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
+    @In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
+    @In private SituacaoProcessoManager situacaoProcessoManager;
+    @In private ProcessoManager processoManager;
+    @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (instance == null && taskInstance != null) {
             instance = new HashMap<String, Object>();
-            TaskController taskController = taskInstance.getTask()
-                    .getTaskController();
+            TaskController taskController = taskInstance.getTask().getTaskController();
             if (taskController != null) {
-                List<VariableAccess> list = taskController
-                        .getVariableAccesses();
-                for (VariableAccess var : list) {
-                    retrieveVariable(var);
+                List<VariableAccess> list = taskController.getVariableAccesses();
+                for (VariableAccess variableAccess : list) {
+                    retrieveVariable(variableAccess);
                 }
-                // Atualizar as transições possiveis. Isso é preciso, pois as
-                // condições das transições são avaliadas antes
-                // deste metodo ser executado.
-                updateTransitions();
-
+                updateTransitions(); // Atualizar as transições possiveis. Isso é preciso, pois as condições das transições são avaliadas antes deste metodo ser executado.
             }
         }
     }
-
-    private void retrieveVariable(VariableAccess var) {
-        String type = var.getMappedName().split(":")[0];
-        String name = var.getMappedName().split(":")[1];
-        Object variable = JbpmUtil.instance().getConteudo(var,
-                taskInstance);
-        Boolean assinado = Boolean.FALSE;
-        Boolean isEditor = JbpmUtil.isTypeEditor(type);
-        if (isEditor) {
-            Integer id = (Integer) taskInstance.getVariable(var
-                    .getMappedName());
-            if (id != null) {
-                AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
-                assinado = documentoService.isDocumentoAssinado(id);
-            }
-            if ((id != null) && (!assinado) && var.isWritable()) {
-                ProcessoHome.instance().carregarDadosFluxo(id);
-                instance.put(getFieldName(name), variable);
-            }
+    
+    private void retrieveVariable(VariableAccess variableAccess) {
+        TaskVariable taskVariable = new TaskVariable(variableAccess);
+        taskVariable.setVariable(JbpmUtil.instance().getConteudo(variableAccess, taskInstance));
+        if (taskVariable.isEditor()) {
+            evaluateWhenDocumentoAssinado(taskVariable);
         } else {
-            if (("numberMoney".equals(type)) && (variable != null)
-                    && (variable.getClass().equals(Float.class))) {
-                variable = String.format("%.2f", variable);
-            }
-            instance.put(getFieldName(name), variable);
+            evaluateWhenMonetario(taskVariable);
         }
+        evaluateWhenModelo(taskVariable);
+        evaluateWhenForm(taskVariable);
+    }
 
+    private void evaluateWhenModelo(TaskVariable taskVariable) {
         String modelo = (String) ProcessInstance.instance()
-                .getContextInstance().getVariable(name + "Modelo");
+                .getContextInstance().getVariable(taskVariable.getName() + "Modelo");
         if (modelo != null) {
-            variavelDocumento = name;
-            if (variable == null) {
+            variavelDocumento = taskVariable.getName();
+            if (!taskVariable.hasVariable()) {
                 String s = modelo.split(",")[0].trim();
                 modeloDocumento = EntityUtil.getEntityManager()
                         .find(ModeloDocumento.class,
@@ -161,15 +147,33 @@ public class TaskInstanceHome implements Serializable {
                 setModeloDocumento(modeloDocumento);
             }
         }
+    }
 
-        if ("form".equals(type)) {
-            varName = name;
-            if (null != variable) {
-                AbstractHome<?> home = ComponentUtil
-                        .getComponent(name + "Home");
-                home.setId(variable);
-            }
+    private void evaluateWhenDocumentoAssinado(TaskVariable taskVariable) {
+        Integer id = (Integer) taskInstance.getVariable(taskVariable.getMappedName());
+        AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
+        if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && taskVariable.isWritable()) {
+            ProcessoHome.instance().carregarDadosFluxo(id);
+            putVariable(taskVariable);
         }
+    }
+
+    private void evaluateWhenMonetario(TaskVariable taskVariable) {
+        if (taskVariable.isMonetario()) {
+            taskVariable.setVariable(String.format("%.2f", taskVariable.getVariable()));
+        }
+        putVariable(taskVariable);
+    }
+
+    private void evaluateWhenForm(TaskVariable taskVariable) {
+        if (taskVariable.isForm()) {
+            varName = taskVariable.getName();
+            taskVariable.retrieveHomes();
+        }
+    }
+    
+    private void putVariable(TaskVariable taskVariable){
+        instance.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
     }
 
     public Map<String, Object> getInstance() {
@@ -217,7 +221,7 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
     private void updateVariables(TaskController taskController) {
         List<VariableAccess> list = taskController
                 .getVariableAccesses();
@@ -265,19 +269,14 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private Boolean checkAccess() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("select o from Processo o where ");
-        sb.append("o.idProcesso = :id ");
-        sb.append("and o.actorId like :login");
-        Query q = EntityUtil.createQuery(sb.toString());
-        q.setParameter("id", ProcessoHome.instance().getInstance()
-                .getIdProcesso());
-        q.setParameter("login", Authenticator.getUsuarioLogado().getLogin());
-        if (q.getResultList().isEmpty()) {
+        int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
+        String login = Authenticator.getUsuarioLogado().getLogin();
+        if (processoManager.checkAccess(idProcesso, login)){
+            return Boolean.TRUE;
+        } else {
             FacesMessages.instance().clear();
             throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
         }
-        return Boolean.TRUE;
     }
 
     public void update(Object homeObject) {
@@ -308,12 +307,12 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    public void canDoOperation() {
+    private void canDoOperation() {
         if (currentTaskInstance == null) {
             currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         }
         if (currentTaskInstance != null) {
-            if (canOpenTask(currentTaskInstance.getId())) {
+            if (situacaoProcessoManager.canOpenTask(currentTaskInstance.getId())) {
                 return;
             }
             FacesMessages.instance().clear();
@@ -350,12 +349,7 @@ public class TaskInstanceHome implements Serializable {
     
     public String end(String transition) {
         if (checkAccess()) {
-            TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
-            if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
-                FacesMessages.instance().clear();
-                throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
-            }
-            
+            checkCurrentTask();
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
             boolean isObrigatorio = tipoProcessoDocumentoDAO.isAssinaturaObrigatoria(processoHome.getTipoProcessoDocumento(), Authenticator.getPapelAtual());
             
@@ -363,7 +357,7 @@ public class TaskInstanceHome implements Serializable {
                 FacesMessages messages = FacesMessages.instance();
                 messages.clearGlobalMessages();
                 messages.clear();
-                messages.add(Severity.ERROR,"A assinatura é obrigatória para esta classificação de documento");
+                messages.add(Severity.ERROR, ASSINATURA_OBRIGATORIA);
                 return null;
             }
             
@@ -378,13 +372,11 @@ public class TaskInstanceHome implements Serializable {
             EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
             boolean canClosePanel = false;
             if (this.currentTaskInstance == null) {
-                //Util.setToEventContext("canClosePanel", true);
                 canClosePanelVal.setValue(true);
                 canClosePanel = true;
-            } else if (canOpenTask(this.currentTaskInstance.getId())) {
+            } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance.getId())) {
                 setTaskId(currentTaskInstance.getId());
             } else {
-//                Util.setToEventContext("canClosePanel", true);
                 canClosePanelVal.setValue(true);
                 canClosePanel = true;
             }
@@ -402,10 +394,17 @@ public class TaskInstanceHome implements Serializable {
         return null;
     }
 
+    private void checkCurrentTask() {
+        TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
+        if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
+            FacesMessages.instance().clear();
+            throw new AplicationException(MSG_USUARIO_SEM_ACESSO);
+        }
+    }
+
     public void removeUsuario(final Long idTaskInstance) {
         try {
             UsuarioTaskInstance uti = EntityUtil.find(UsuarioTaskInstance.class, idTaskInstance);
-            
             if (uti!= null) {
                 EntityUtil.getEntityManager().remove(uti);
                 EntityUtil.getEntityManager().flush();
@@ -415,48 +414,23 @@ public class TaskInstanceHome implements Serializable {
         }
     }
     
-    @SuppressWarnings("unchecked")
 	public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
-        final String hql = "select new map(pet.taskInstance as idTaskInstance) " +
-                    		"from ProcessoEpaTarefa pet " +
-                    		"where pet.tarefa.idTarefa=:idTarefa " +
-                    		"and pet.processoEpa.idProcesso=:idProcesso";
-        final Query query = EntityUtil.createQuery(hql)
-                            .setParameter("idProcesso",idProcesso)
-                            .setParameter("idTarefa", idTarefa);
         try {
-            final Map<String,Object> result = (Map<String, Object>) query.getSingleResult();
+            final Map<String,Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
             removeUsuario((Long)result.get("idTaskInstance"));
         } catch (NoResultException e) {
-            LOG.error("Sem resultado", e);
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
-            LOG.error("Mais de um resultado", e);
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - Mais de um resultado", e);
         } catch (IllegalStateException e) {
-            LOG.error("Estado ilegal", e);
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
+        } finally {
+            Util.rollbackTransactionIfNeeded();
         }
     }
     
     public void removeUsuario() {
         removeUsuario(BusinessProcess.instance().getTaskId());
-    }
-
-    /**
-     * Verifica se a tarefa destino da transição apareceria no painel do usuario
-     * 
-     * @param currentTaskId
-     * @return
-     */
-    @SuppressWarnings("rawtypes")
-    private boolean canOpenTask(long currentTaskId) {
-        JbpmUtil.getJbpmSession().flush();
-        Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
-        List resultList = EntityUtil
-                .getEntityManager()
-                .createQuery(
-                        "select o.idTaskInstance from SituacaoProcesso o "
-                                + "where o.idTaskInstance = :ti")
-                .setParameter("ti", currentTaskId).getResultList();
-        return resultList.size() > 0;
     }
 
     public void start(long taskId) {
@@ -482,14 +456,11 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public List<Transition> getTransitions() {
-        if (taskId == null) {
-            setTaskId(org.jboss.seam.bpm.TaskInstance.instance().getId());
-        }
-        List<Transition> list = new ArrayList<Transition>();
-        if (availableTransitions != null && availableTransitions.size() == 0
-                && taskInstance != null) {
+        validateTaskId();
+        if (hasAvailableTransitions()) {
             updateTransitions();
         }
+        List<Transition> list = new ArrayList<Transition>();
         if (availableTransitions == null) {
             return list;
         }
@@ -505,11 +476,22 @@ public class TaskInstanceHome implements Serializable {
         return list;
     }
 
+    private boolean hasAvailableTransitions() {
+        return availableTransitions != null && availableTransitions.size() == 0
+                && taskInstance != null;
+    }
+
+    private void validateTaskId() {
+        if (taskId == null) {
+            setTaskId(org.jboss.seam.bpm.TaskInstance.instance().getId());
+        }
+    }
+
     public static boolean hasOcculTransition(Transition transition) {
         return OCCULT_TRANSITION.equals(transition.getCondition());
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void updateTransitions() {
         availableTransitions = taskInstance.getAvailableTransitions();
         leavingTransitions = taskInstance.getTask().getTaskNode()
@@ -547,7 +529,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public String getHomeName() {
-        return "taskInstanceHome";
+        return NAME;
     }
 
     public String getName() {

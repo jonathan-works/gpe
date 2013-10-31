@@ -44,7 +44,6 @@ public class CategoriaItemManager extends GenericManager{
 	}
 	
 	public List<CategoriaItem> createCategoriaItemList(Categoria categoria, Set<Item> itens){
-//	    Set<Item> folhas = getFolhas(pai);
 	    List<CategoriaItem> categoriaItemList = new ArrayList<CategoriaItem>();
         if (itens != null) {
             for (Item item : itens) {

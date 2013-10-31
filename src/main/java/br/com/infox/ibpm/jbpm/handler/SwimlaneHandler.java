@@ -32,6 +32,7 @@ import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
@@ -64,7 +65,7 @@ public class SwimlaneHandler implements Serializable {
 		return swimlane.getName();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void setName(String name) {
 		Map<String, Swimlane> swimlanes = swimlane.getTaskMgmtDefinition().getSwimlanes();
 		swimlanes.remove(swimlane.getName());
@@ -155,7 +156,7 @@ public class SwimlaneHandler implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static List<SwimlaneHandler> createList(ProcessDefinition instance) {
 		List<SwimlaneHandler> ret = new ArrayList<SwimlaneHandler>();
 		Map<String, Swimlane> swimlanes = instance.getTaskMgmtDefinition().getSwimlanes();

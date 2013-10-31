@@ -30,6 +30,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 
@@ -54,7 +55,7 @@ public class CarregarParametrosAplicacao {
 		LOG.info(".init(): " + sw.getTime());
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private List<Parametro> getParametroAtivoList() {
 		String hql = "select o from Parametro o where o.ativo = true";
 		return EntityUtil.createQuery(hql).getResultList();

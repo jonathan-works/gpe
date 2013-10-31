@@ -16,6 +16,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.util.constants.WarningConstants;
+
 /**
  * DAO generico para consultas, persistencia
  * entre outros.
@@ -61,21 +63,21 @@ public class GenericDAO implements Serializable {
 	 * @param clazz entidade
 	 * @return lista de todos os registros da entidade
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public <T> List<T> findAll(Class<T> clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o from ").append(clazz.getName()).append(" o");
 		return (List<T>) entityManager.createQuery(sb.toString()).getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	protected <T> List<T> getNamedResultList(String namedQuery,
 			Map<String, Object> parameters) {
 		Query q = getNamedQuery(namedQuery, parameters);
 		return (List<T>) q.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	protected <T> T getNamedSingleResult(String namedQuery,
 			Map<String, Object> parameters) {
 		Query q = getNamedQuery(namedQuery, parameters);

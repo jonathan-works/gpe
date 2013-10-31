@@ -2,6 +2,8 @@ package br.com.infox.ibpm.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -9,6 +11,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -62,6 +65,18 @@ public class ProcessoDAO extends GenericDAO {
         entityManager.createNativeQuery(sql)
         				.setParameter("processo", processo.getIdProcesso())
         				.executeUpdate();
+	}
+	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+    public List<Processo> findProcessosByIdProcessoAndActorId(int idProcesso, String login){
+	    StringBuilder sb = new StringBuilder();
+        sb.append("select o from Processo o where ");
+        sb.append("o.idProcesso = :id ");
+        sb.append("and o.actorId like :login");
+        Query q = EntityUtil.createQuery(sb.toString());
+        q.setParameter("id", idProcesso);
+        q.setParameter("login", login);
+        return q.getResultList();
 	}
 	
 	public void atualizarProcessos(){

@@ -29,6 +29,7 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import br.com.infox.bpm.action.TaskPageAction;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.util.constants.WarningConstants;
 
 
 public class TaskHandler implements Serializable {
@@ -125,7 +126,7 @@ public class TaskHandler implements Serializable {
 		return ret;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public Task update() {
 		if (task.getTaskController() != null) {
 			List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
@@ -137,7 +138,7 @@ public class TaskHandler implements Serializable {
 		return task;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void newVar() {
 		if(!checkNullVariables()) {
 			VariableAccess v = new VariableAccess("", "read,write", "null:");

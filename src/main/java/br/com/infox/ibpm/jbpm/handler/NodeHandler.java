@@ -29,6 +29,7 @@ import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ReflectionsUtil;
 
 
@@ -70,7 +71,7 @@ public class NodeHandler implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void loadTimers(Node node) {
 		Event enter = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
 		if (enter != null) {
@@ -140,7 +141,7 @@ public class NodeHandler implements Serializable {
 		node.addEvent(event);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<String> getSupportedEventTypes() {
 		List<String> list = new ArrayList<String>();
 		List<String> nodeEvents = Arrays.asList(new Node().getSupportedEventTypes());

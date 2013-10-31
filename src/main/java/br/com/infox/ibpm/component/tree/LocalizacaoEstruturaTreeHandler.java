@@ -28,6 +28,7 @@ import br.com.infox.component.tree.EntityNode;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -72,7 +73,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 		return new LocalizacaoNode(getQueryChildrenList());
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
 	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
 		// Considerando single selection

@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -93,7 +94,7 @@ public class EntityNode<E> implements Serializable {
 		return ArrayUtil.copyOf(queryChildrenList);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	protected List<E> getChildrenList(String hql, E entity) {
 		Query query = EntityUtil.createQuery(hql);
 		return (List<E>) query.setParameter(PARENT_NODE, entity).getResultList();
@@ -124,7 +125,7 @@ public class EntityNode<E> implements Serializable {
 	public List<EntityNode<E>> getRoots(Query queryRoots) {
 		if (rootNodes == null) {
 			rootNodes = new ArrayList<EntityNode<E>>();
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings(WarningConstants.UNCHECKED)
 			List<E> roots = (List<E>) queryRoots.getResultList();
 			for (E e : roots) {
 				if (!e.equals(ignore)) {

@@ -46,6 +46,7 @@ import br.com.infox.ibpm.entity.help.HistoricoAjuda;
 import br.com.infox.ibpm.entity.help.Pagina;
 import br.com.infox.ibpm.manager.help.AjudaManager;
 import br.com.infox.ibpm.manager.help.PaginaManager;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
@@ -53,17 +54,16 @@ import br.com.itx.util.HibernateUtil;
 
 @Name("ajudaHome")
 @Scope(ScopeType.CONVERSATION)
-@SuppressWarnings("unchecked")
+@SuppressWarnings(WarningConstants.UNCHECKED)
 public class AjudaHome extends AbstractHome<Ajuda>  {
 
-	private static final String	RAWTYPES	= "rawtypes";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(AjudaHome.class);
 	
 	private String viewId;
 	private Pagina pagina;
 	private String textoPesquisa;
-	@SuppressWarnings(RAWTYPES)
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	private List resultado;
 	private Ajuda anterior;
 	
@@ -82,7 +82,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		return instance;
 	}
 	
-	@SuppressWarnings(RAWTYPES)
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	public List getResultadoPesquisa() throws ParseException {
 		if (getTextoPesquisa() == null) {
 			return null;
@@ -239,7 +239,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		return texto;
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings(WarningConstants.RAWTYPES)
 	@Override
 	public ValueExpression getCreatedMessage() {
 		return createValueExpression("Alteração concluída.");

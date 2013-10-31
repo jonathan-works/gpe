@@ -34,6 +34,7 @@ import br.com.infox.ibpm.entity.ListaEmail;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TwitterTemplate;
 import br.com.infox.ibpm.home.ListaEmailHome;
+import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 
@@ -62,7 +63,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		super.read(element, jpdlReader);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
 	public void write(Element nodeElement) {
 		if (action != null) {
@@ -197,7 +198,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		createAction();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<ListaEmail> getListaEmail() {
 		if (listaEmail == null && to != null) {
 			String result = to.substring(1, to.length()-1);

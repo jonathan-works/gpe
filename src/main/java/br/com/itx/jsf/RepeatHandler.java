@@ -26,6 +26,8 @@ import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
 
+import br.com.infox.util.constants.WarningConstants;
+
 public final class RepeatHandler extends TagHandler {
 
     private final TagAttribute value;
@@ -37,7 +39,7 @@ public final class RepeatHandler extends TagHandler {
         this.var = this.getAttribute("var");
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void apply(FaceletContext ctx, UIComponent parent)
             throws IOException {
                 

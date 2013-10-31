@@ -3,6 +3,7 @@ package br.com.infox.epp.manager;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -61,6 +62,10 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	
 	public List<Object[]> listTarefaPertoLimite() {
 		return processoEpaTarefaDAO.listTarefaPertoLimite();
+	}
+	
+	public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(final Integer idProcesso, final Integer idTarefa) {
+	    return processoEpaTarefaDAO.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
 	}
 	
 	/**
