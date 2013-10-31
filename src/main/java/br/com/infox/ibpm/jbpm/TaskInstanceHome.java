@@ -200,7 +200,7 @@ public class TaskInstanceHome implements Serializable {
         this.update();
     }
 
-    public Object getValueFromInstanceMap(String key) {
+    private Object getValueFromInstanceMap(String key) {
         if (instance == null) {
             return null;
         }
