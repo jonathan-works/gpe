@@ -40,12 +40,13 @@
 				
 					<a:commandLink action="#{transitionFitter.addTransition(type)}"
 							 execute="@this"
+							 rendered="#{type.equals('to') and transitionFitter.canAddLeavingTransition()}"
 							 render="transition#{type}Table,nodesDiv"
 							 limitRender="true">
 							
 						<h:graphicImage title="Adicionar transição" url="/img/add.gif" />
 					
-						</a:commandLink>
+					</a:commandLink>
 						
 				</h:form>
 			
@@ -58,7 +59,7 @@
 					<h:form>
 					
 						<h:graphicImage title="Definir condição"
-								 rendered="#{empty transition.transition.condition and transition.inDecisionNode}"
+								 rendered="#{empty transition.transition.condition and transition.canDefineCondition()}"
 								 url="/img/help_dis.gif"
 								 styleClass="opacityHover">
 								
@@ -72,7 +73,7 @@
 						</h:graphicImage>
 						
 						<h:graphicImage title="Editar condição"
-								 rendered="#{!empty transition.transition.condition and transition.transition.condition != '#{true}' and transition.inDecisionNode}}"
+								 rendered="#{!empty transition.transition.condition and transition.transition.condition != '#{true}' and transition.canDefineCondition()}}"
 								 styleClass="opacityHover"
 								 url="/img/help.gif">
 								
@@ -85,10 +86,10 @@
 						
 						</h:graphicImage>
 						
-						<h:graphicImage title="Excluir transição" url="/img/remove.png" styleClass="opacityHover">
+						<h:graphicImage title="Excluir transição" url="/img/remove.png" styleClass="opacityHover" rendered="#{type eq 'to'}">
 								
 							<a:ajax event="click"
-									listener="#{transitionFitter.removeTransition(transition, type)}"
+									listener="#{transitionFitter.removeTransition(transition)}"
 									execute="@this"
 									onbeforesubmit="if(!confirm('Confirma?')) return false;"
 									render="transition#{type}Table,nodesDiv"
