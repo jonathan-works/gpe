@@ -14,6 +14,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
@@ -122,6 +123,17 @@ public class TransitionFitter extends Fitter implements Serializable {
 		currentNode.removeArrivingTransition(t);
 		currentNode.removeLeavingTransition(t);
 		checkTransitions();
+	}
+	
+	public boolean canAddLeavingTransition() {
+		if (getLeavingTransitions() == null || getLeavingTransitions().isEmpty()) {
+			return true;
+		}
+		
+		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
+		NodeType nodeType = currentNode.getNodeType();
+		
+		return nodeType.equals(NodeType.Decision) || nodeType.equals(NodeType.Fork);
 	}
 	
 	public void setCurrentTransition(Transition currentTransition) {
