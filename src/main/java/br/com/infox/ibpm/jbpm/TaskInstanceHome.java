@@ -356,15 +356,9 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarPaginaDeMovimentacao(ProcessoHome processoHome) {
-        EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
-        boolean canClosePanel = false;
-        if (this.currentTaskInstance == null) {
-            canClosePanelVal.setValue(true);
-            canClosePanel = true;
-        } 
         EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent("taskCompleted");
         taskCompleted.setValue(true);
-        if (!canClosePanel) {
+        if (!canClosePanel()) {
             Redirect red = Redirect.instance();
             red.setViewId("/Processo/movimentar.seam");
             red.setParameter("idProcesso", processoHome.getInstance().getIdProcesso());
@@ -372,6 +366,16 @@ public class TaskInstanceHome implements Serializable {
             red.setConversationPropagationEnabled(false);
             red.execute();
         }
+    }
+
+    private boolean canClosePanel() {
+        EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent("canClosePanel");
+        boolean canClosePanel = false;
+        if (this.currentTaskInstance == null) {
+            canClosePanelVal.setValue(true);
+            canClosePanel = true;
+        }
+        return canClosePanel;
     }
 
     private void finalizarTaskDoJbpm(String transition) {
