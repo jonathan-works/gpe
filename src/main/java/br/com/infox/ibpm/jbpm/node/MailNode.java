@@ -21,15 +21,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.Query;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.jboss.seam.core.Expressions;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+import org.jbpm.JbpmContext;
 import org.jbpm.graph.action.ActionTypes;
 import org.jbpm.graph.def.Action;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
+import org.jbpm.persistence.db.DbPersistenceService;
+
 import br.com.infox.ibpm.entity.ListaEmail;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TwitterTemplate;
@@ -41,6 +48,8 @@ import br.com.itx.util.EntityUtil;
 public class MailNode extends org.jbpm.graph.node.MailNode {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(MailNode.class);
+	
 	private String subject;
 	private String to;
 	private String actors;
@@ -52,6 +61,17 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	private List<ListaEmail> listaEmail;
 	private ListaEmail currentListaEmail = new ListaEmail();
 
+	@Override
+	public void raiseException(Throwable exception, ExecutionContext executionContext) {
+		JbpmContext jbpmContext = executionContext.getJbpmContext();
+		DbPersistenceService persistenceService = (DbPersistenceService) jbpmContext.getServices().getPersistenceService();
+		persistenceService.endTransaction();
+		persistenceService.beginTransaction();
+		super.raiseException(exception, executionContext);
+		persistenceService.endTransaction();
+		LOG.warn(MessageFormat.format("Erro ao enviar email (nó {0})", getName()), exception);
+	}
+	
 	@Override
 	public void read(Element element, JpdlXmlReader jpdlReader) {
 		template = element.attributeValue("template");
