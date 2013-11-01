@@ -10,7 +10,10 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.faces.RedirectException;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -114,8 +117,13 @@ public class IniciarProcessoAction {
 		renderedByItem = hasSelectedItem();
 		if (!necessitaPartes()) {
 			iniciarProcesso();
-		}
-		else{
+			if (Authenticator.instance().isUsuarioExterno()) {
+                Redirect.instance().setViewId("/Processo/movimentar.seam");
+                Redirect.instance().setParameter("cid", Conversation.instance().getId());
+                Redirect.instance().setParameter("idProcesso", getProcessoEpa().getIdProcesso());
+                Redirect.instance().execute();
+            }
+		} else{
 			renderizarCadastroPartes = true;
 			renderedByItem = false;
 		}
