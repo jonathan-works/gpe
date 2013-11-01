@@ -9,131 +9,20 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-
-    <!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
--->
-    <rich:panel
-		 bodyClass="panel"
-		 >
-		
-
-        <s:div
-			 id="tasksDiv"
-			 >
-			
-
-            <ui:decorate template="dataTable.xhtml">
-				
-                <ui:param
-					 name="values"
-					 value="#{taskFitter.tasks}" />
-                <ui:param
-					 name="styleClass"
-					 value="tabelaVariaveis" />
-                <ui:param
-					 name="id"
-					 value="tasksTable" />
-                <ui:param
-					 name="style"
-					 value="width:100%" />
-                <ui:define name="headerToolBar">
-					
-                    <a:commandLink
-						 action="#{taskFitter.addTask()}"
-						 execute="@this"
-						 immediate="true"
-						 render="tasksDiv,taskDiv"
-						 limitRender="true">
-						
-                        <h:graphicImage
-							 url="/img/add.gif"
-							 title="Nova tarefa"
-							  />
-                    
-					</a:commandLink>
-                
-				</ui:define>
-                <ui:define name="toolBar">
-					
-                    <h:graphicImage
-						 title="Excluir tarefa"
-						 
-						 url="/img/remove.png">
-						
-                        <a:ajax
-							 event="click"
-							 listener="#{taskFitter.removeTask(row)}"
-							 onbeforesubmit="if(!confirm('Confirma?')) return false;"
-							 execute="@this"
-							 render="tasksDiv"
-							 limitRender="true" />
-                    
-					</h:graphicImage>
-                
-				</ui:define>
-                <ui:define name="columns">
-					
-                    <rich:column>
-						
-                        <f:facet name="header">Tarefas</f:facet>
-                        <ui:param
-							 name="current"
-							 value="#{row == taskFitter.currentTask}" />
-                        <ui:param
-							 name="styleTaskName"
-							 value="#{current ? 'font-weight:bold' : ''}" />
-                        <s:div >
-							
-                            <a:commandLink
-								 action="#{taskFitter.setCurrentTask(row)}"
-								 execute="@this"
-								 render="tasksDiv,taskDiv"
-								 limitRender="true">
-								
-                                <h:outputText
-									 value="#{row.task.name}"
-									  />
-                            
-							</a:commandLink>
-                        
-						</s:div>
-                    
-					</rich:column>
-                
-				</ui:define>
-            
-			</ui:decorate>
-
-        
-		</s:div>
-
-        <s:fragment rendered="#{!empty taskFitter.currentTask}">
-			
-            <ui:include src="task.xhtml">
-				
-                <ui:param
-					 name="t"
-					 value="#{taskFitter.currentTask}" />
-            
-			</ui:include>
-        
-		</s:fragment>
-
+    <rich:panel bodyClass="panel" id="tasksPanel">
     
+    	<f:facet name="header">
+    		
+    		<h:outputText value="Tarefa: #{taskFitter.tasks.get(0).task.name}" />
+    		
+    	</f:facet>
+        
+        <ui:include src="task.xhtml">
+	
+    	    <ui:param name="t" value="#{taskFitter.currentTask}" />
+        
+		</ui:include>
+     
 	</rich:panel>
-
 
 </ui:composition>

@@ -9,7 +9,7 @@ public interface NodeTypeConstants {
     String FORK = "Fork";
     String JOIN = "Join";
     String PROCESS_STATE = "ProcessState";
-    String NODE = "Sistema";
+    String NODE = "Node";
     String END_STATE = "EndState";
 
 }

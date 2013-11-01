@@ -6,54 +6,36 @@
      xmlns:h="http://java.sun.com/jsf/html"
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib">
-	<!--
-	  IBPM - Ferramenta de produtividade Java
-	  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-	 
-	  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-	  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-	  Free Software Foundation; versão 2 da Licença.
-	  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-	  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-	  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-	  
-	  Consulte a GNU GPL para mais detalhes.
-	  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-	  veja em http://www.gnu.org/licenses/  
-	-->
+
+	<s:div id="modeloDocumentoDiv">
 	
-	<s:div
-         id="modeloDocumentoDiv">
-		<rich:panel
-             header="Selecione o assistente:"
-             >
+		<rich:panel header="Selecione o assistente:">
+		
 			<h:form>
-				<rich:dataTable
-                     var="t"
-                     
-                     value="#{actionTemplateHandler.publicTemplateList}">
-					<rich:column
-                         >
-						<h:graphicImage
-                             url="/img/jbpm/action.gif" />
+			
+				<rich:dataTable var="t" value="#{actionTemplateHandler.publicTemplateList}">
+				
+					<rich:column>
+					
+						<h:graphicImage url="/img/jbpm/action.gif" />
+						
 					</rich:column>
-					<rich:column
-                         >
-						<a:commandLink
-                             value="#{t.label}"
-                             
+					
+					<rich:column>
+					
+						<a:commandLink value="#{t.label}"     
                              action="#{actionTemplateHandler.setCurrentTemplate(t)}"
                              render="actionTemplatePanel"
-                             limitRender="true">
-							<rich:componentControl
-                                 target="actionTemplatePanel"
-                                 operation="show"
-                                 event="oncomplete" />
-						</a:commandLink>
+                             limitRender="true"/>
+						
 					</rich:column>
+					
 				</rich:dataTable>
+				
 			</h:form>
+			
 		</rich:panel>
+		
 	</s:div>
 
 </ui:composition>

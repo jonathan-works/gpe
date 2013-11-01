@@ -109,7 +109,9 @@
 				 id="codFluxo"
 				 value="#{fluxoHome.instance.codFluxo}"
 				 required="true"
-				 label="#{messages['fluxo.codFluxo']}" />
+				 label="#{messages['fluxo.codFluxo']}">
+				 <f:validator validatorId="jsfComponentIdValidator" />
+			</wi:inputText>
 			<wi:inputText
 				 id="descricaoFluxo"
 				 label="#{messages['fluxo.descricao']}"
