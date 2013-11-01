@@ -249,20 +249,21 @@ public class TaskInstanceHome implements Serializable {
     private void updateVariables(TaskController taskController) {
         List<VariableAccess> list = taskController.getVariableAccesses();
         for (VariableAccess variableAccess : list) {
+            updateVariable(variableAccess);
+        }
+    }
 
-            TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess, taskInstance);
-            variableResolver.setValue(getValueFromInstanceMap(variableResolver.getName()));
-
-            variableResolver.resolveWhenMonetario();
-
-            if (variableAccess.isWritable()) {
-                if (variableResolver.isEditor()) {
-                    variableResolver.resolveWhenEditor(assinar);
-                    assinado = assinado || assinar;
-                    assinar = Boolean.FALSE;
-                } else {
-                    variableResolver.atribuirValorDaVariavelNoContexto();
-                }
+    private void updateVariable(VariableAccess variableAccess) {
+        TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess, taskInstance);
+        variableResolver.setValue(getValueFromInstanceMap(variableResolver.getName()));
+        variableResolver.resolveWhenMonetario();
+        if (variableAccess.isWritable()) {
+            if (variableResolver.isEditor()) {
+                variableResolver.resolveWhenEditor(assinar);
+                assinado = assinado || assinar;
+                assinar = Boolean.FALSE;
+            } else {
+                variableResolver.atribuirValorDaVariavelNoContexto();
             }
         }
     }
