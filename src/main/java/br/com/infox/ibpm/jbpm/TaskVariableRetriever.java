@@ -10,7 +10,7 @@ import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
-final class TaskVariable {
+final class TaskVariableRetriever {
     
     private VariableAccess variableAccess;
     private String name;
@@ -18,9 +18,9 @@ final class TaskVariable {
     private Object variable;
     private TaskInstance taskInstance;
     
-    private static final LogProvider LOG = Logging.getLogProvider(TaskVariable.class);
+    private static final LogProvider LOG = Logging.getLogProvider(TaskVariableRetriever.class);
     
-    public TaskVariable (VariableAccess variableAccess, TaskInstance taskInstance){
+    public TaskVariableRetriever (VariableAccess variableAccess, TaskInstance taskInstance){
         this.variableAccess = variableAccess;
         this.type = variableAccess.getMappedName().split(":")[0];
         this.name = variableAccess.getMappedName().split(":")[1];

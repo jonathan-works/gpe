@@ -131,18 +131,18 @@ public class TaskInstanceHome implements Serializable {
     }
     
     private void retrieveVariable(VariableAccess variableAccess) {
-        TaskVariable taskVariable = new TaskVariable(variableAccess, taskInstance);
-        taskVariable.searchAndAssignConteudoToVariable();
-        if (taskVariable.isEditor()) {
-            evaluateWhenDocumentoAssinado(taskVariable);
+        TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
+        variableRetriever.searchAndAssignConteudoToVariable();
+        if (variableRetriever.isEditor()) {
+            evaluateWhenDocumentoAssinado(variableRetriever);
         } else {
-            evaluateWhenMonetario(taskVariable);
+            evaluateWhenMonetario(variableRetriever);
         }
-        evaluateWhenModelo(taskVariable);
-        evaluateWhenForm(taskVariable);
+        evaluateWhenModelo(variableRetriever);
+        evaluateWhenForm(variableRetriever);
     }
 
-    private void evaluateWhenModelo(TaskVariable taskVariable) {
+    private void evaluateWhenModelo(TaskVariableRetriever taskVariable) {
         String modelo = getModeloFromProcessInstance(taskVariable.getName());
         if (modelo != null) {
             variavelDocumento = taskVariable.getName();
@@ -161,7 +161,7 @@ public class TaskInstanceHome implements Serializable {
         return EntityUtil.getEntityManager().find(ModeloDocumento.class, Integer.parseInt(s));
     }
 
-    private void evaluateWhenDocumentoAssinado(TaskVariable taskVariable) {
+    private void evaluateWhenDocumentoAssinado(TaskVariableRetriever taskVariable) {
         Integer id = (Integer) taskInstance.getVariable(taskVariable.getMappedName());
         AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
         if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && taskVariable.isWritable()) {
@@ -170,21 +170,21 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    private void evaluateWhenMonetario(TaskVariable taskVariable) {
+    private void evaluateWhenMonetario(TaskVariableRetriever taskVariable) {
         if (taskVariable.isMonetario()) {
             taskVariable.setVariable(String.format(FloatFormatConstants._2F, taskVariable.getVariable()));
         }
         putVariable(taskVariable);
     }
 
-    private void evaluateWhenForm(TaskVariable taskVariable) {
+    private void evaluateWhenForm(TaskVariableRetriever taskVariable) {
         if (taskVariable.isForm()) {
             varName = taskVariable.getName();
             taskVariable.retrieveHomes();
         }
     }
     
-    private void putVariable(TaskVariable taskVariable){
+    private void putVariable(TaskVariableRetriever taskVariable){
         mapaDeVariaveis.put(getFieldName(taskVariable.getName()), taskVariable.getVariable());
     }
 
