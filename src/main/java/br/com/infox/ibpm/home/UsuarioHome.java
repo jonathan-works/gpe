@@ -172,7 +172,7 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 	
 	@Override
 	protected String afterPersistOrUpdate(String ret) {
-		if (instance.getSenha() == null) {
+		if (instance.getSenha() == null || ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(instance.getLogin())) {
 			password = instance.getSenha();
 			gerarNovaSenha();
 		}
@@ -301,8 +301,12 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 	}
 
 	public void gerarNovaSenha(String parametro) {
-		password = RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH);
-		getInstance().setSenha(password);
+	    if (ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(login)) {
+	        password = "";
+	    } else {
+    		password = RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH);
+	    }
+	    getInstance().setSenha(password);
 		new RunAsOperation(true) {
 			@Override
 			public void execute() {
