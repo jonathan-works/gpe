@@ -1,7 +1,10 @@
 package br.com.infox.ibpm.jbpm;
 
+import org.jboss.seam.contexts.Contexts;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+
+import br.com.infox.ibpm.home.ProcessoHome;
 
 final class TaskVariableResolver {
     
@@ -46,19 +49,36 @@ final class TaskVariableResolver {
         }
     }
     
+    public void resolveWhenEditor(boolean assinar){
+        Integer valueInt = salvarProcessoDocumento(assinar);
+        if (valueInt != 0) {
+            this.value = valueInt;
+            atribuirValorDaVariavelNoContexto();
+        }
+    }
+    
     public boolean isEditor(){
         return type.startsWith("textEditCombo") || type.equals("textEditSignature");
     }
     
-    public String getLabel() {
+    private String getLabel() {
         return JbpmUtil.instance().getMessages().get(name);
     }
     
-    public Integer getIdDocumento(){
+    private Integer getIdDocumento(){
         if (taskInstance.getVariable(variableAccess.getMappedName()) != null) {
             return (Integer) taskInstance.getVariable(variableAccess.getMappedName());
         } else {
             return null;
         }
+    }
+    
+    private Integer salvarProcessoDocumento(boolean assinar){
+        return ProcessoHome.instance()
+        .salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinar, getLabel());
+    }
+    
+    public void atribuirValorDaVariavelNoContexto(){
+        Contexts.getBusinessProcessContext().set(variableAccess.getMappedName(), value);
     }
 }

@@ -257,21 +257,11 @@ public class TaskInstanceHome implements Serializable {
 
             if (variableAccess.isWritable()) {
                 if (variableResolver.isEditor()) {
-                    Integer idDoc = variableResolver.getIdDocumento();
-                    String label = variableResolver.getLabel();
-                    Integer valueInt = ProcessoHome.instance()
-                            .salvarProcessoDocumentoFluxo(variableResolver.getValue(), idDoc,
-                                    assinar, label);
-                    if (valueInt != 0) {
-                        variableResolver.setValue(valueInt);
-                        Contexts.getBusinessProcessContext().set(
-                                variableAccess.getMappedName(), variableResolver.getValue());
-                    }
+                    variableResolver.resolveWhenEditor(assinar);
                     assinado = assinado || assinar;
                     assinar = Boolean.FALSE;
                 } else {
-                    Contexts.getBusinessProcessContext().set(
-                            variableAccess.getMappedName(), variableResolver.getValue());
+                    variableResolver.atribuirValorDaVariavelNoContexto();
                 }
             }
         }
