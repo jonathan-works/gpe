@@ -34,7 +34,7 @@ public class UsuarioLoginDAO extends GenericDAO {
 	
 	public UsuarioLogin getUsuarioLoginByEmail(String email){
 		String hql = "select o from UsuarioLogin o where o.email = :email";
-		Query query = EntityUtil.createQuery(hql).setParameter("login", email);
+		Query query = EntityUtil.createQuery(hql).setParameter("email", email);
 		return EntityUtil.getSingleResult(query);
 	}
 	

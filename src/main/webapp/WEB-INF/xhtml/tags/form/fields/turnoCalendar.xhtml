@@ -24,28 +24,23 @@
 	xmlns:wi="http://www.itx.com.br/jsf">
 
 	<h:outputScript library="js" name="turnoCalendar.js" />
-	<script>
-	// <![CDATA[
-	    var turnoCalendar = new TurnoCalendar();
-	    
-		function markBeginOrEnd(row, col) {
-			if (!turnoCalendar.isBeginMarked()) {
-				if (turnoCalendar.isSelected(row, col)) {
-					turnoCalendar.removeInterval(row, col);
-				} else {
-					turnoCalendar.markBegin(row, col);
-				}
-			} else {
-				turnoCalendar.markEnd(row, col);
-			}
-		}
-		
-		function markInterval(row, col) {
-			if (turnoCalendar.isBeginMarked()) {
-				turnoCalendar.markInterval(row, col);
-			}
-		}
-	// ]]>
+	<script type="text/javascript">
+	    invoke(["infox.TurnoCalendar"], function(TurnoCalendar) {
+	    	turnoCalendar = TurnoCalendar();
+	    	
+    		$(".turno.calendar.rf-dt-c").click(function markBegnEnd(ev) {
+    			var target = $(ev.target);
+    			var row = Number.parseInt(target.attr("rowStatus"));
+    			var col = Number.parseInt(target.attr("colStatus"));
+    			turnoCalendar.toggleMark(row,col);
+    		}).mouseenter(function markInterval(ev){
+    			var target = $(ev.target);
+    			var row = target.attr("rowStatus");
+    			var col = target.attr("colStatus");
+	    		turnoCalendar.moveIntervalMark(row,col);
+    		});
+    		
+    	});
 	</script>
 
 	<table class="rf-dt">
@@ -69,9 +64,9 @@
 					<ui:param name="selected"
 						value="#{handler.getHorarioBean(dia, horario).selected}" />
 					<td id="td_#{rowStatus.index}_#{colStatus.index}"
-						onclick="markBeginOrEnd(#{rowStatus.index}, #{colStatus.index})"
 						class="turno calendar rf-dt-c #{selected ? 'fixed-selected': ''}"
-						onmouseover="markInterval(#{rowStatus.index}, #{colStatus.index});">
+						rowStatus="#{rowStatus.index}"
+						colStatus="#{colStatus.index}">
 
 						<h:selectBooleanCheckbox
 							id="check_#{rowStatus.index}_#{colStatus.index}"

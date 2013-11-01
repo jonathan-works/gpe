@@ -1,11 +1,16 @@
 package br.com.infox.ibpm.action;
 
+
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
+import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.list.UsuarioLocalizacaoList;
@@ -34,6 +39,14 @@ public class UsuarioLocalizacaoAction {
 		this.instance = instance;
 	}
 	
+	@SuppressWarnings("rawtypes")
+    private void limparArvores() {
+        AbstractTreeHandler tree = (LocalizacaoEstruturaTreeHandler) Component.getInstance(LocalizacaoEstruturaTreeHandler.class);
+        tree.clearTree();
+        tree = (PapelTreeHandler) Component.getInstance(PapelTreeHandler.class);
+        tree.clearTree();
+	}
+	
 	public void newInstance() {
 		this.instance = new UsuarioLocalizacao();
 		this.instance.setResponsavelLocalizacao(false);
@@ -41,27 +54,17 @@ public class UsuarioLocalizacaoAction {
 			this.instance.setUsuario(usuarioHome.getInstance());
 			usuarioLocalizacaoList.getEntity().setUsuario(this.instance.getUsuario());
 		}
+		limparArvores();
 	}
 	
 	public void persist() {
-		genericManager.persist(instance);
-	}
-	
-	public void remove() {
-		genericManager.remove(instance);
-		newInstance();
+        genericManager.persist(instance);
+        newInstance();
 	}
 	
 	public void remove(UsuarioLocalizacao usuarioLocalizacao) {
 		setInstance(usuarioLocalizacao);
-		remove();
-	}
-	
-	public boolean isManaged() {
-		return instance != null && instance.getIdUsuarioLocalizacao() != 0 && genericManager.contains(instance); 
-	}
-	
-	public void update() {
-		genericManager.update(instance);
+		genericManager.remove(instance);
+		newInstance();
 	}
 }

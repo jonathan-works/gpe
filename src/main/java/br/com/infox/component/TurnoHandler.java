@@ -150,7 +150,9 @@ public class TurnoHandler {
 		int i = 0;
 		do {
 			horarioBean = horarioBeanList.get(i);
-			if (horarioBean.getHora().after(horaInicio) || horarioBean.getHora().equals(horaInicio)) {
+			if (horarioBean.getHora().equals(horaInicio) 
+			        || (horarioBean.getHora().after(horaInicio) 
+			                && (horarioBean.getHora().before(horaFim)))) {
 				horarioBean.setSelected(true);
 			}
 			i++;

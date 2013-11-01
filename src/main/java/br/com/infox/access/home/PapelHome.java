@@ -16,6 +16,7 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.security.Role;
 import org.jboss.seam.security.RunAsOperation;
@@ -338,6 +339,12 @@ public class PapelHome extends AbstractHome<Papel> {
 			}
 		}.run();
 		RolesMap.instance().clear();
+		FacesMessages messages = FacesMessages.instance();
+		if ("success".equals(ret.toString())) {
+		    messages.add("#{messages['entity_updated']}");
+		} else {
+		    messages.add("#{messages['constraintViolation.registroCadastrado']}");
+		}
 		return ret.toString();
 	}
 	
