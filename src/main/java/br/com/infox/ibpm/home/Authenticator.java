@@ -448,9 +448,9 @@ public class Authenticator {
 	}
 	
 	public static void loginUsuarioExterno() {
-        Identity identity = Identity.instance();
+	    Identity identity = Identity.instance();
         Credentials credentials = identity.getCredentials();
-        credentials.setUsername(ParametroUtil.getLoginUsuarioExterno());
+        credentials.setUsername(ParametroUtil.LOGIN_USUARIO_EXTERNO);
         credentials.setPassword("");
         identity.quietLogin();
         identity.login();
