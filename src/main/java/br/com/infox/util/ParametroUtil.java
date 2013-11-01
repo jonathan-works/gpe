@@ -48,6 +48,10 @@ public class ParametroUtil {
 		return retorno;
 	}
 	
+	public static String getLoginUsuarioExterno() {
+        return "usuarioexterno";
+    }
+	
 	public static String getLDAPAuthentication() {
 		String retorno = null;
 		try {

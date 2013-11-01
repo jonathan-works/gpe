@@ -17,6 +17,7 @@ package br.com.infox.ibpm.jbpm;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +106,8 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoManager processoManager;
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     public static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
-
+    private URL urlRetornoAcessoExterno;
+    
     @SuppressWarnings(WarningConstants.UNCHECKED)
 	public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
@@ -382,11 +384,17 @@ public class TaskInstanceHome implements Serializable {
             }
             EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent("taskCompleted");
             taskCompleted.setValue(true);
+            Authenticator authenticator = ComponentUtil.getComponent("authenticator");
             if (!canClosePanel) {
                 Redirect red = Redirect.instance();
                 red.setViewId("/Processo/movimentar.seam");
                 red.setParameter("idProcesso", processoHome.getInstance().getIdProcesso());
                 BusinessProcess.instance().getProcessId();
+                red.setConversationPropagationEnabled(false);
+                red.execute();
+            } else if (authenticator.isUsuarioExterno()){
+                Redirect red = Redirect.instance();
+                red.setViewId("/AcessoExterno/externo.seam?urlRetorno=" + urlRetornoAcessoExterno.toString());
                 red.setConversationPropagationEnabled(false);
                 red.execute();
             }
@@ -546,5 +554,9 @@ public class TaskInstanceHome implements Serializable {
 
     private String getFieldName(String name) {
     	return name + "-" + taskInstance.getId();
+    }
+    
+    public void setUrlRetornoAcessoExterno(URL urlRetornoAcessoExterno) {
+        this.urlRetornoAcessoExterno = urlRetornoAcessoExterno;
     }
 }
