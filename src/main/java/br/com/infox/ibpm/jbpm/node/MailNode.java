@@ -276,6 +276,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		Expressions.instance().createMethodExpression("#{estruturaTree.clearTree}").invoke(new Object[0]);
 		Expressions.instance().createMethodExpression("#{localizacaoTree.clearTree}").invoke(new Object[0]);
 		Expressions.instance().createMethodExpression("#{papelTree.clearTree}").invoke(new Object[0]);
+		createAction();
 	}
 	
 	@Override
