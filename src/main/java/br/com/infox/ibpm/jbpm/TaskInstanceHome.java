@@ -131,8 +131,8 @@ public class TaskInstanceHome implements Serializable {
     }
     
     private void retrieveVariable(VariableAccess variableAccess) {
-        TaskVariable taskVariable = new TaskVariable(variableAccess);
-        taskVariable.setVariable(getConteudo(taskVariable));
+        TaskVariable taskVariable = new TaskVariable(variableAccess, taskInstance);
+        taskVariable.searchAndAssignConteudoToVariable();
         if (taskVariable.isEditor()) {
             evaluateWhenDocumentoAssinado(taskVariable);
         } else {
@@ -558,19 +558,4 @@ public class TaskInstanceHome implements Serializable {
     	return name + "-" + taskInstance.getId();
     }
     
-    private Object getConteudo(TaskVariable taskVariable){
-        Object variable = taskInstance.getVariable(taskVariable.getMappedName());
-        if (taskVariable.isEditor()){
-            Integer idProcessoDocumento = (Integer) variable;
-            if (idProcessoDocumento != null){
-                Object modeloDocumento = processoDocumentoManager.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
-                if (modeloDocumento != null) {
-                    return modeloDocumento;
-                } else {
-                    LOG.warn("ProcessoDocumento não encontrado: " + idProcessoDocumento);
-                }
-            }
-        }
-        return variable;
-    }
 }
