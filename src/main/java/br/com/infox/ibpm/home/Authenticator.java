@@ -446,4 +446,20 @@ public class Authenticator {
 	private static AuthenticatorService getAuthenticatorService(){
 		return ComponentUtil.getComponent(AuthenticatorService.NAME);
 	}
+	
+	public static void loginUsuarioExterno() {
+        Identity identity = Identity.instance();
+        Credentials credentials = identity.getCredentials();
+        credentials.setUsername(ParametroUtil.getLoginUsuarioExterno());
+        credentials.setPassword("");
+        identity.quietLogin();
+        identity.login();
+    }
+	
+	public boolean isUsuarioExterno() {
+        if (Identity.instance().isLoggedIn()) {
+            return getUsuarioLogado().getLogin().equals(ParametroUtil.getLoginUsuarioExterno());
+        }
+        return false;
+    }
 }
