@@ -49,5 +49,16 @@ final class TaskVariableResolver {
     public boolean isEditor(){
         return type.startsWith("textEditCombo") || type.equals("textEditSignature");
     }
-
+    
+    public String getLabel() {
+        return JbpmUtil.instance().getMessages().get(name);
+    }
+    
+    public Integer getIdDocumento(){
+        if (taskInstance.getVariable(variableAccess.getMappedName()) != null) {
+            return (Integer) taskInstance.getVariable(variableAccess.getMappedName());
+        } else {
+            return null;
+        }
+    }
 }

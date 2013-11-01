@@ -257,12 +257,8 @@ public class TaskInstanceHome implements Serializable {
 
             if (variableAccess.isWritable()) {
                 if (variableResolver.isEditor()) {
-                    Integer idDoc = null;
-                    if (taskInstance.getVariable(variableAccess.getMappedName()) != null) {
-                        idDoc = (Integer) taskInstance.getVariable(variableAccess.getMappedName());
-                    }
-                    String label = JbpmUtil.instance().getMessages()
-                            .get(variableResolver.getName());
+                    Integer idDoc = variableResolver.getIdDocumento();
+                    String label = variableResolver.getLabel();
                     Integer valueInt = ProcessoHome.instance()
                             .salvarProcessoDocumentoFluxo(variableResolver.getValue(), idDoc,
                                     assinar, label);
