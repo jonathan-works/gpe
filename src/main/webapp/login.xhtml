@@ -39,11 +39,11 @@
 			<div class="corpoInferior" />
 			<ui:param name="useCertLogin"  value="#{(loginComCertificado or producao) and false}" />
 			<div id="seletorSkinLogin" class="seletorSkinsLogin" >
-				<s:link
-                    style="background-color:#FFF;display:inline-block"
-                    styleClass="buttons dr-tbpnl-tb-inact"
-                    view="/ConsultaExterna/listView.seam"
-                    value="Consulta Externa"/>
+				<h:commandButton
+					id="consultaExterna"
+					value="Consulta Externa" 
+					class="input_button"
+					onclick="location.href='#{util.getContextPath()}/ConsultaExterna/listView.seam'" />
 				<ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
 					<ui:param name="id" value="login" />
 				    <ui:param name="mostrarMenu" value="true" />
