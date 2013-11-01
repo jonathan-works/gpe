@@ -6,15 +6,13 @@ import java.util.Map;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Parametro;
 
 @Name(ParametroList.NAME)
-@BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class ParametroList extends EntityList<Parametro> {
 	
 	public static final String NAME = "parametroList";
