@@ -1,5 +1,9 @@
 package br.com.infox.ibpm.jbpm;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import org.jboss.seam.contexts.Contexts;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -80,5 +84,23 @@ final class TaskVariableResolver {
     
     public void atribuirValorDaVariavelNoContexto(){
         Contexts.getBusinessProcessContext().set(variableAccess.getMappedName(), value);
+    }
+    
+    private Object getValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis) {
+        if (mapaDeVariaveis == null) {
+            return null;
+        }
+        Set<Entry<String, Object>> entrySet = mapaDeVariaveis.entrySet();
+        for (Entry<String, Object> entry : entrySet) {
+            if (entry.getKey().split("-")[0].equals(name)
+                    && entry.getValue() != null) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+    
+    public void assignValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis){
+        value = getValueFromMapaDeVariaveis(mapaDeVariaveis);
     }
 }

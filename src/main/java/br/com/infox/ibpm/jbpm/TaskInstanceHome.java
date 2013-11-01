@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.faces.component.EditableValueHolder;
 import javax.faces.model.SelectItem;
@@ -201,20 +199,6 @@ public class TaskInstanceHome implements Serializable {
         this.update();
     }
 
-    private Object getValueFromInstanceMap(String key) {
-        if (mapaDeVariaveis == null) {
-            return null;
-        }
-        Set<Entry<String, Object>> entrySet = mapaDeVariaveis.entrySet();
-        for (Entry<String, Object> entry : entrySet) {
-            if (entry.getKey().split("-")[0].equals(key)
-                    && entry.getValue() != null) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
-
 	public void update() {
         prepareForUpdate();
         if (possuiTask()) {
@@ -255,7 +239,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void updateVariable(VariableAccess variableAccess) {
         TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess, taskInstance);
-        variableResolver.setValue(getValueFromInstanceMap(variableResolver.getName()));
+        variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
         variableResolver.resolveWhenMonetario();
         if (variableAccess.isWritable()) {
             if (variableResolver.isEditor()) {
