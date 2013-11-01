@@ -65,6 +65,9 @@
 	vertical-align: top;
 	margin: 0 5px 5px 0;
 }
+.clean-pageBody {
+	height:calc(100% - 2px);
+}
 .pageBody {
 	height:calc(100% - 108px);
 	position:relative;
@@ -573,5 +576,8 @@ form {
 /* Workaround para o bug RF-12332 do Richfaces. Ver https://issues.jboss.org/browse/RF-12332 */
 div.rf-trn {
 	overflow: visible;
+}
+.banner-logo {
+	height:85px;
 }
 /* Fim do workaround RF-12332 */
