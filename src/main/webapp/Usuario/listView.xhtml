@@ -162,98 +162,6 @@
     <ui:define name="tabs">
 		
         <infox:tab
-			 status=":status"
-			 id="endereco2"
-			 rendered="#{home.isManaged()}"
-			 action="#{enderecoHome.newInstance()}"
-			 title="#{messages['endereco.titlePage']}"
-			 name="endereco2">
-			
-            <s:div>
-				
-                <wi:ajaxDiv id="divGridEnd">
-					
-                    <s:div id="enderecoCadastroForm">
-						
-                        <wi:dataForm
-							 formId="enderecoForm"
-							 formTitle="#{messages['form.title']}">
-							
-                            <wi:inputCep
-								 id="cep"
-								 label="CEP"
-								 value="#{enderecoHome.instance.cep}">
-                            </wi:inputCep>
-                            <wi:inputText
-								 id="nomeEstado"
-								 label="#{messages['endereco.nomeEstado']}"
-								 value="#{enderecoHome.instance.nomeEstado}" />
-                            <wi:inputText
-								 id="nomeBairro"
-								 label="#{messages['endereco.nomeBairro']}"
-								 value="#{enderecoHome.instance.nomeBairro}">
-                            </wi:inputText>
-                            <wi:inputText
-								 id="nomeLogradouro"
-								 label="#{messages['endereco.nomeLogradouro']}"
-								 value="#{enderecoHome.instance.nomeLogradouro}">
-                            </wi:inputText>
-                            <wi:inputText
-								 id="nomeNumero"
-								 label="#{messages['endereco.numeroEndereco']}"
-								 value="#{enderecoHome.instance.numeroEndereco}">
-                            </wi:inputText>
-                            <wi:inputText
-								 id="nomeComplemento"
-								 label="#{messages['endereco.complemento']}"
-								 value="#{enderecoHome.instance.complemento}">
-                            </wi:inputText>
-                            <wi:selectBooleanCheckbox
-								 id="ativo"
-								 label="#{messages['endereco.correspondencia']}"
-								 value="#{enderecoHome.instance.correspondencia}" />
-                            <ui:define name="buttons">
-								
-                                <wi:commandButton
-									 id="saveButton"
-									 action="enderecoHome.persist"
-									 reRender="listEnderecos"
-									 value="Incluir" />
-                            
-							</ui:define>
-                        
-						</wi:dataForm>
-                    
-					</s:div>
-                    <s:div id="listEnderecos">
-						
-                        <wi:dataTable
-							 values="#{enderecoList.list(15)}"
-							 bean="#{enderecoList}"
-							 tableTitle="#{messages['endereco.titlePage']} - #{(usuarioHome.instance)}"
-							 id="enderecoList"
-							 rowId="#{row.idEndereco}">
-							
-                            <ui:define name="headerToolBar" />
-                            <wi:columnOutputText
-								 columnId="nomeLogradouro"
-								 columnHeader="#{messages['endereco.nomeLogradouro']}"
-								 value="#{row.nomeLogradouro}" />
-                            <wi:columnOutputText
-								 columnId="nomeBairro"
-								 columnHeader="#{messages['endereco.nomeBairro']}"
-								 value="#{row.nomeBairro}" />
-                        
-						</wi:dataTable>
-                    
-					</s:div>
-                
-				</wi:ajaxDiv>
-            
-			</s:div>
-        
-		</infox:tab>
-        <infox:tab
 			 id="localizacaoUsuario"
 			 status=":status"
 			 rendered="#{home.managed}"
@@ -278,17 +186,18 @@
 								 tree="#{localizacaoEstruturaTree}"
 								 icon="/img/nivelTree.gif"
 								 iconLeaf="/img/file.gif"
-								 label="#{messages['usuarioLocalizacao.localizacao']}" />
+								 label="#{messages['usuarioLocalizacao.localizacao']}"
+								 required="true" />
                             <wi:tree
-								 id="papel"
+								 id="papel"	
 								 assignTo="usuarioLocalizacaoAction.instance.papel"
 								 tree="#{papelTree}"
 								 icon="/img/nivelTree.gif"
 								 iconLeaf="/img/file.gif"
-								 label="#{messages['usuarioLocalizacao.papel']}" />
+								 label="#{messages['usuarioLocalizacao.papel']}"
+								 required="true" />
                             <wi:selectBooleanRadio
 								 id="responsavelLocalizacao"
-								 required="true"
 								 value="#{usuarioLocalizacaoAction.instance.responsavelLocalizacao}"
 								 label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}" />
                             <ui:define name="buttons">
@@ -297,22 +206,7 @@
 									 id="saveButton"
 									 action="usuarioLocalizacaoAction.persist"
 									 reRender="localizacaoUsuario"
-									 rendered="#{not home.managed}"
 									 value="Incluir" />
-                            
-                            	<wi:commandButton
-									 id="updateButton"
-									 action="usuarioLocalizacaoAction.update"
-									 reRender="localizacaoUsuario"
-									 rendered="#{home.managed}"
-									 value="Gravar" />
-									 
-								<wi:commandButton
-									 id="newButton"
-									 action="usuarioLocalizacaoAction.newInstance"
-									 reRender="localizacaoUsuario"
-									 rendered="#{home.managed}"
-									 value="Novo" />
 							</ui:define>
                         
 						</wi:dataForm>
@@ -329,12 +223,15 @@
 						
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
-							
-                            <wi:toolBarSelectRemove
-								 home="#{usuarioLocalizacaoAction}"
-								 reRender="localizacaoUsuario"
-								 removeAction="usuarioLocalizacaoAction.remove(row)" />
-                        
+							<wi:toolBar
+					         action="usuarioLocalizacaoAction.remove(row)"
+					         rendered="true"
+					         limitToList="true"
+					         status=":status"
+					         render="localizacaoUsuario, localizacaoUsuarioFormMessages"
+					         onclick="confirm('Deseja excluir este registro?')"
+					         url="/img/remove.png"
+					         title="Excluir registro" />
 						</ui:define>
                         <wi:columnOutputText
 							 columnId="localizacao"
@@ -372,6 +269,7 @@
 						 rowId="#{row.idBloqueioUsuario}">
 						
                         <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar" />
                         <ui:define name="searchForm">
 							
                             <wi:searchForm

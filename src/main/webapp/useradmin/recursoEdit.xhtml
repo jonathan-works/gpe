@@ -34,10 +34,15 @@
 			/>
 	
 		<infox:tabPanel
+			id="painelEdit"
 			switchType="ajax"
-			rendered="#{papelHome.managed}">
+			rendered="#{papelHome.managed}"
+			activeTab="#{papelHome.activeInnerTab}"
+			>
 			<infox:tabHeaders />
 			<infox:tab
+				id="herdeirosTab"
+				name="herdeirosTab"
 				status=":status"
 				title="Papéis que acessam">
 	

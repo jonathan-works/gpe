@@ -1,7 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
+<!--
+  IBPM - Ferramenta de produtividade Java
+  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
+ 
+  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
+  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
+  Free Software Foundation; versão 2 da Licença.
+  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
+  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
+  
+  Consulte a GNU GPL para mais detalhes.
+  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
+  veja em http://www.gnu.org/licenses/  
+--><ui:composition
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns:wi="http://www.itx.com.br/jsf">
 
+	<ui:param
+         name="title"
+         value="Localizações Físicas" />
+
+	<wi:dataReport
+         title="#{messages['parametro.reportTitle']}"
+         columns="7"
+         widths="4 4 4 4 4 2 1"
+         headerText="#{parametroList.criteria}">
+				   
+		<wi:reportColumnHeader
+			title="#{messages['parametro.nomeVariavel']}" />				
+		<wi:reportColumnHeader
+            title="#{messages['parametro.descricaoVariavel']}" />	
+		<wi:reportColumnHeader
+            title="#{messages['parametro.valorVariavel']}" />
+		<wi:reportColumnHeader
+            title="#{messages['parametro.dataAtualizacao']}" />	
+		<wi:reportColumnHeader
+            title="#{messages['parametro.usuarioModificacao']}" />
+        <wi:reportColumnHeader
+            title="#{messages['parametro.sistema']}" />	
+		<wi:reportColumnHeader
+            title="#{messages['field.situacao']}" />
+				
+		<ui:repeat
+             var="row"
+             value="#{parametroList.list()}">
+             
+			<wi:reportColumn value="#{row.nomeVariavel}" />
+			<wi:reportColumn value="#{row.descricaoVariavel}" />
+			<wi:reportColumn value="#{row.valorVariavel}" />
+			<wi:reportColumnDate value="#{row.dataAtualizacao}" />
+			<wi:reportColumn value="#{row.usuarioModificacao}" />
+			<wi:reportColumnBoolean value="#{row.sistema}" />
+            <wi:reportColumnSituacao
+                 value="#{row.ativo}"
+                 columnAlign="center" />
+		</ui:repeat>
+
+	</wi:dataReport>
 	
 </ui:composition>

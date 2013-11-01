@@ -6,5 +6,15 @@
 
 	<begin-conversation join="true"/>
 
-
+	<param name="order" value="#{parametroList.order}" />
+	<param name="restrictionLogicOperator" value="#{parametroList.restrictionLogicOperator}" />
+	<param name="ativo" value="#{parametroList.entity.ativo}" />
+	<param name="nomeVariavel" value="#{parametroList.entity.nomeVariavel}" />
+	<param name="descricaoVariavel" value="#{parametroList.entity.descricaoVariavel}" />
+	<param name="valorVariavel" value="#{parametroList.entity.valorVariavel}" />
+	<param name="dataAtualizacao" value="#{parametroList.entity.dataAtualizacao}" />
+	<param name="sistema" value="#{parametroList.entity.sistema}" />
+	<param name="usuarioModificacao" value="#{parametroList.entity.usuarioModificacao}" />
+	<param name="esquemaTabelaId" value="#{parametroList.entity.esquemaTabelaId}" />
+	
 </page>

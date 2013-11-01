@@ -66,21 +66,24 @@
 						 label="#{messages['localizacao.estrutura']}" />
                 
 				</wi:searchForm>
-            
 			</ui:define>
+            <ui:define name="headerToolBar" />
             <wi:columnOutputTextIdent
-				 columnId="localizacao"
-				 columnHeader="#{messages['localizacao.localizacao']}"
-				 value="#{row.localizacao}"
-				 fullPath="#{row.caminhoCompleto}" />
+            	hideOrder="true"
+				columnId="localizacao"
+				columnHeader="#{messages['localizacao.localizacao']}"
+				value="#{row.localizacao}"
+				fullPath="#{row.caminhoCompleto}" />
             <wi:columnBoolean
-				 columnId="estrutura"
-				 columnHeader="#{messages['localizacao.estrutura']}"
-				 value="#{row.estrutura}" />
+            	hideOrder="true"
+				columnId="estrutura"
+				columnHeader="#{messages['localizacao.estrutura']}"
+				value="#{row.estrutura}" />
             <wi:columnSituacao
-				 columnId="ativo"
-				 columnHeader="#{messages['field.situacao']}"
-				 value="#{row.ativo}" />
+            	hideOrder="true"
+				columnId="ativo"
+				columnHeader="#{messages['field.situacao']}"
+				value="#{row.ativo}" />
         
 		</wi:dataTable>
     
@@ -101,13 +104,7 @@
 				 id="estrutura"
 				 required="true"
 				 label="#{messages['localizacao.estrutura']}"
-				 value="#{localizacaoHome.instance.estrutura}">
-                 <a:ajax
-                    event="click"
-                    execute="@this"
-                    render="localizacaoForm"
-                    limitRender="true"/>
-			</wi:selectBooleanRadio>
+				 value="#{localizacaoHome.instance.estrutura}" />
             <wi:tree
 				 id="localizacaoPai"
 				 assignTo="localizacaoHome.instance.localizacaoPai"
@@ -115,56 +112,13 @@
 				 icon="/img/nivelTree.gif"
 				 iconLeaf="/img/file.gif"
 				 label="#{messages['localizacao.localizacaoPai']}" />
-            <s:div 
-            	id="endereco"
-            	styleClass="decoration-div"
-             	rendered="#{localizacaoHome.instance.estrutura==false}">
-	            <wi:inputCep
-					 id="numeroCep"
-					 value="#{enderecoHome.searchCep}"
-					 label="#{messages['cep.numeroCep']}"
-					 required="true" >
-	                 <a:ajax
-	                    event="blur"
-	                    listener="#{enderecoHome.loadEnderecoByCep(enderecoHome.searchCep)}"
-	                    execute="@this"
-	                    render="estado municipio nomeLogradouro nomeBairro"
-	                    limitRender="true"/>
-	            </wi:inputCep>
-	            <wi:inputText
-					 id="estado"
-					 label="#{messages['cep.municipio.estado']}"
-					 value="#{enderecoHome.instance.nomeEstado}"
-					 readonly="true"/>
-	            <wi:inputText
-	                 id="municipio"
-	                 label="#{messages['cep.municipio']}"
-	                 value="#{enderecoHome.instance.nomeCidade}"
-					 readonly="true"/>
-	            <wi:inputText
-					 id="nomeLogradouro"
-					 label="#{messages['cep.nomeLogradouro']}"
-					 value="#{enderecoHome.instance.nomeLogradouro}"
-					 readonly="true" />
-	            <wi:inputText
-					 id="numero"
-					 label="#{messages['endereco.numeroEndereco']}"
-					 value="#{enderecoHome.instance.numeroEndereco}"
-					 required="true" />
-	            <wi:inputText
-					 id="complemento"
-					 label="#{messages['endereco.complemento']}"
-					 value="#{enderecoHome.instance.complemento}" />
-	            <wi:inputText
-					 id="nomeBairro"
-					 label="#{messages['cep.nomeBairro']}"
-					 value="#{enderecoHome.instance.nomeBairro}"
-					 readonly="true" />
-	            <wi:selectBooleanRadio
-	                id="publico"
-	                label="#{messages['endereco.correspondencia']}"
-	                value="#{enderecoHome.instance.correspondencia}" />
-            </s:div>
+			<wi:selectOneMenuEntity
+				id="estruturaFilho"
+				value="#{localizacaoHome.instance.estruturaFilho}"
+				label="#{messages['localizacao.estruturaFilho']}"
+				items="#{localizacaoHome.getLocalizacoesEstrutura()}"
+				noSelectionLabel="Selecione..."
+			/>
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{messages['field.situacao']}"
@@ -205,7 +159,7 @@
 				 tableTitle="Grupo Documento"
 				 rowId="#{row.idItemTipoDocumento}">
 				
-
+				<ui:define name="headerToolBar" />
                 <ui:define name="toolBar">
 					
                     <div >
@@ -253,9 +207,12 @@
 			 name="localizacaoTurnoTab">
 			<h:form>
 	            <wi:turnoCalendar handler="#{localizacaoTurnoAction.turnoHandler}" />
-				
+				<wi:messages formId="turnoCalendar"></wi:messages>
 	            <a:commandButton
 					 action="#{localizacaoTurnoAction.gravarTurnos()}"
+					 render="turnoCalendarDialogMessage"
+					 limitRender="true"
+					 execute="@form"
 					 value="Gravar" />
 			 </h:form>
         
