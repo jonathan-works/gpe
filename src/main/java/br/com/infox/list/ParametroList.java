@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Parametro;
+import br.com.itx.util.ComponentUtil;
 
 @Name(ParametroList.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -18,6 +19,9 @@ public class ParametroList extends EntityList<Parametro> {
 	public static final String NAME = "parametroList";
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final String TEMPLATE = "/Parametro/ParametroTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Parametros.xls";
 	
 	private static final String DEFAULT_EJBQL = "select o from Parametro o left " +
 			"join o.usuarioModificacao u";
@@ -55,5 +59,24 @@ public class ParametroList extends EntityList<Parametro> {
 		map.put("ativo", "o.ativo");
 		return map;
 	}
+	
+	public static ParametroList instance() {
+        return ComponentUtil.getComponent(ParametroList.NAME);
+    }
+	
+	@Override
+    public EntityList<Parametro> getBeanList() {
+        return ParametroList.instance();
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
 	
 }
