@@ -11,7 +11,6 @@ import org.hibernate.AssertionFailure;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.annotations.In;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
@@ -36,10 +35,6 @@ import br.com.itx.util.EntityUtil;
  */
 public abstract class AbstractAction {
 
-	/**
-	 * Tipos de retornos dos métodos de persistência e alteração dos
-	 * dados.
-	 */
 	public static final String PERSISTED = "persisted";
 	public static final String UPDATED = "updated";
 	public static final String REMOVED = "removed";
@@ -47,9 +42,6 @@ public abstract class AbstractAction {
 	@In
 	private GenericManager genericManager;
 	
-    /**
-	 * Mensagem default para um registro já cadastrado.
-	 */
 	protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
@@ -80,12 +72,6 @@ public abstract class AbstractAction {
 				genericManager.update(o);
 				ret = UPDATED;
 			}
-		} catch (AssertionFailure e) {
-			/* Esperamos a versão 3.5 para resolver o bug do AssertionFailure onde 
-			 * o hibernate consegue persistir com sucesso, mas lança um erro. =[ */
-			LOG.warn(msg+" (" + getObjectClassName(o) + "): " + e.getMessage());
-			Events.instance().raiseEvent("afterPersist");
-			ret = PERSISTED;
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
 			LOG.error(msg+" (" + getObjectClassName(o) + ")", e);			
