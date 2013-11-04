@@ -35,7 +35,7 @@ import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Util;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 
 @Name(LocalizacaoAssignment.NAME)
@@ -94,7 +94,7 @@ public class LocalizacaoAssignment implements Serializable {
 		if ( localizacaoPapel[0] == null) { 
 			String action = "inserir Localização. Não existe Localização com o id = " + s.split(":")[0];
 			LOG.warn(action);
-			throw new AplicationException(AplicationException.
+			throw new ApplicationException(ApplicationException.
 					createMessage(action,
 								  "getPooledActors()", 
 							      "LocalizacaoAssignment", 
@@ -165,7 +165,7 @@ public class LocalizacaoAssignment implements Serializable {
 		    LOG.error(".onTaskCreate", ex);
 			String action = "inserir processo localização: ";
 			LOG.warn(action, ex);
-			throw new AplicationException(AplicationException.
+			throw new ApplicationException(ApplicationException.
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "onTaskCreate()", 
 								  "LocalizacaoAssignment", 

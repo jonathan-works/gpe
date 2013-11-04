@@ -49,7 +49,7 @@ import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -472,12 +472,12 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		        usuarioLogado.setCertChain(certChainBase64Encoded);
 		    } else {
     			limparAssinatura();
-    			throw new AplicationException("O cadastro do usuário não está assinado.");
+    			throw new ApplicationException("O cadastro do usuário não está assinado.");
 		    }
 		}
 		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
 			limparAssinatura();
-			throw new AplicationException("O certificado não é o mesmo do cadastro do usuario");
+			throw new ApplicationException("O certificado não é o mesmo do cadastro do usuario");
 		}
 	}
 

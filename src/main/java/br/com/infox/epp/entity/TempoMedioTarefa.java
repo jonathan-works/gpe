@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.util.constants.FloatFormatConstants;
 
 @Entity
 @Table(name=TempoMedioTarefa.TABLE_NAME, schema="public")
@@ -87,7 +88,7 @@ public class TempoMedioTarefa implements Serializable {
 	    } else if (PrazoEnum.H.equals(tipoPrazo)) {
 	        resultTempo = resultTempo / MINUTES_OF_HOUR;
 	    }
-	    return String.format("%.2f %s", resultTempo, tipoPrazo == null ? "":tipoPrazo.getLabel());
+	    return String.format(FloatFormatConstants._2F_S, resultTempo, tipoPrazo == null ? "":tipoPrazo.getLabel());
 	}
 	
 	@Column(name="tp_prazo")

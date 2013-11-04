@@ -1,25 +1,24 @@
 package br.com.itx.exception;
 import java.text.MessageFormat;
 
-import org.jboss.seam.annotations.ApplicationException;
 import org.jboss.seam.annotations.exception.Redirect;
 import org.jboss.seam.faces.FacesMessages;
 
 @Redirect(viewId="/error.seam")
-@ApplicationException(rollback=true, end=true)
-public class AplicationException extends RuntimeException {
+@org.jboss.seam.annotations.ApplicationException(rollback=true, end=true)
+public class ApplicationException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public AplicationException() {
+	public ApplicationException() {
 		super();
 	}
 	
-	public AplicationException(String cause) {
+	public ApplicationException(String cause) {
 		super(cause);
 	}
 	
-	public AplicationException(String message, Throwable cause) {
+	public ApplicationException(String message, Throwable cause) {
 		super(message, cause);
 	}
 	

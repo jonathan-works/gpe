@@ -22,5 +22,9 @@ public class ProcessoDocumentoManager extends GenericManager {
     public List<Integer> getNextSequencial(Processo processo) {
         return processoDocumentoDAO.getNextSequencial(processo);
     }
+    
+    public Object getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
+        return processoDocumentoDAO.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
+    }
 
 }

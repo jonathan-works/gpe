@@ -22,7 +22,7 @@ import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.manager.ProcessoLocalizacaoIbpmManager;
 import br.com.infox.ibpm.manager.TarefaJbpmManager;
 import br.com.infox.ibpm.manager.TarefaManager;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 
 @Name(JbpmEventsHandler.NAME)
@@ -55,7 +55,7 @@ public class JbpmEventsHandler implements Serializable {
 	private void throwErroAoTentarRemoverProcessoLocalizacao(Exception e) {
 		String action = "Remover o processo da localizacao: ";
 		LOG.warn(action, e);
-		throw new AplicationException(AplicationException.createMessage(
+		throw new ApplicationException(ApplicationException.createMessage(
 		        action + e.getLocalizedMessage(),
 		        "removerProcessoLocalizacao()", JBPM_EVENTS_HANDLER, BPM));
 	}
@@ -78,7 +78,7 @@ public class JbpmEventsHandler implements Serializable {
 	private void throwErroAoLimparVariaveisDoPainel(Exception e) {
 		String action = "Limpar as variáveis do painel para atualização: ";
 		LOG.error(action, e);
-		throw new AplicationException(AplicationException.createMessage(
+		throw new ApplicationException(ApplicationException.createMessage(
 		        action + e.getLocalizedMessage(), "refreshPainel()",
 		        JBPM_EVENTS_HANDLER, BPM));
 	}
@@ -103,7 +103,7 @@ public class JbpmEventsHandler implements Serializable {
 	private static void throwErroAoRealizarAtualizacaoAutomatica(Exception e) {
 		String action = "Realizar atualização automáticas após publicação do fluxo: ";
 		LOG.error(action, e);
-		throw new AplicationException(AplicationException.createMessage(
+		throw new ApplicationException(ApplicationException.createMessage(
 		        action + e.getLocalizedMessage(), "updatePostDeploy()",
 		        JBPM_EVENTS_HANDLER, BPM));
 	}
@@ -127,7 +127,7 @@ public class JbpmEventsHandler implements Serializable {
 	private void throwErroAoTentarRemoverDaCaixa(Exception e) {
 		String action = "Remover o processo da caixa: ";
 		LOG.warn(action, e);
-		throw new AplicationException(AplicationException.createMessage(
+		throw new ApplicationException(ApplicationException.createMessage(
 		        action + e.getLocalizedMessage(), "removeCaixaProcesso()",
 		        JBPM_EVENTS_HANDLER, BPM));
 	}

@@ -28,7 +28,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
 import br.com.infox.util.constants.WarningConstants;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 
 
 @Name("subprocessActionHandler")
@@ -45,7 +45,7 @@ public class SubprocessActionHandler {
 			Map<String, Object> variables = TaskInstance.instance().getVariables();
 			subProcessInstance.getContextInstance().addVariables(variables);
 		} catch (Exception ex) {
-			throw new AplicationException(AplicationException.
+			throw new ApplicationException(ApplicationException.
 					createMessage("copiar variaveis para o subprocesso", 
 								  "copyVariablesToSubprocess()", 
 								  "SubprocessoActionHandler", 
@@ -62,7 +62,7 @@ public class SubprocessActionHandler {
 			Map<String, Object> variables = subProcessInstance.getContextInstance().getVariables();
 			org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance().addVariables(variables);
 		} catch (Exception ex) {
-			throw new AplicationException(AplicationException.
+			throw new ApplicationException(ApplicationException.
 					createMessage("copiar as variaveis do subprocesso", 
 								  "copyVariablesFromSubprocess()", 
 								  "SubprocessoActionHandler", 

@@ -21,7 +21,7 @@ import java.util.List;
 import org.jboss.seam.util.Strings;
 
 import br.com.itx.component.grid.GridQuery;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.ComponentUtil;
 
@@ -208,7 +208,7 @@ public class SearchTree2GridList <E> {
 				ident.append("    ");
 			}
 			if (pai == pai.getParent()) {
-				throw new AplicationException("A tree esta em loop");
+				throw new ApplicationException("A tree esta em loop");
 			}
 			pai = pai.getParent();
 		}

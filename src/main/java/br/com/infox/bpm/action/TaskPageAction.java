@@ -13,7 +13,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.util.constants.WarningConstants;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 
 /**
  * Classe responsável por incluir a página referente a variavel
@@ -56,7 +56,7 @@ public class TaskPageAction implements Serializable {
 			}
 		}
 		if (taskPagePath == null && hasTaskPage) {
-			throw new AplicationException("TaskPageAction não encontrada: " + taskPagePath);
+			throw new ApplicationException("TaskPageAction não encontrada: " + taskPagePath);
 		}
 	}
 	

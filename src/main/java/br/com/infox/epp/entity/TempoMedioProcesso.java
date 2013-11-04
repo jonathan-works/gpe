@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
@@ -66,7 +67,7 @@ public class TempoMedioProcesso implements Serializable {
 		if (this.tempoMedio == null) {
 			return "0";
 		}
-		return String.format("%.2f", this.tempoMedio);
+		return String.format(FloatFormatConstants._2F, this.tempoMedio);
 	}
 	
     @Override
