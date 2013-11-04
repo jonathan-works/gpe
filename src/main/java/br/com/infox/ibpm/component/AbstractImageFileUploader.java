@@ -15,6 +15,8 @@ import org.richfaces.model.UploadedFile;
 
 import br.com.infox.epp.entity.ImagemBin;
 import br.com.infox.epp.manager.ImagemBinManager;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.Crypto;
 
@@ -30,18 +32,19 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
     private ImagemBinManager imagemBinManager;
     
     public abstract String getImagesRelativePath();
-	
-	public String getImagesDir() {
-	    return imagemBinManager.getImagesDir(getImagesRelativePath());
-	}
-	
-	public String getImagesPath() {
-		return imagemBinManager.getImagesPath(getImagesRelativePath());
-	}
-	
-	public String getImagePath() {
-		return getImagesPath();
-	}	
+    
+    public String[] getImagesDir() {
+        return imagemBinManager.getImagesDir(getImagesRelativePath());
+    }
+    
+    public String[] getImagesPath() {
+        return imagemBinManager.getImagesPath(getImagesRelativePath());
+    }
+    
+    public String getImagePath() {
+        String[] imagesPath = getImagesPath();
+        return imagesPath[imagesPath.length - 1];
+    }	
 	
 	public String getFileName() {
 		return fileName;
