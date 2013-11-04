@@ -27,9 +27,9 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 
 @org.jboss.seam.annotations.faces.Validator
-@Name("idValidator")
+@Name("jsfComponentIdValidator")
 @BypassInterceptors
-public class IdValidator implements Validator {
+public class JsfComponentIdValidator implements Validator {
 
 	public void validate(FacesContext fc, UIComponent ui, Object obj) {
 		String id = (String) obj;
@@ -37,7 +37,7 @@ public class IdValidator implements Validator {
 		try {
 			test.setId(id);
 		} catch (IllegalArgumentException e) {
-			throw new ValidatorException(new FacesMessage("Identificador inválido"));
+			throw new ValidatorException(new FacesMessage("Identificador inválido. Deve iniciar com uma letra, e deve conter apenas letras, números, hífens ou underscores."));
 		}
 	}
 

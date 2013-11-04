@@ -20,9 +20,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.jboss.seam.Component;
+import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 
 import br.com.infox.ibpm.jbpm.converter.NodeConverter;
+import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
+import br.com.infox.util.constants.WarningConstants;
 
 public class TransitionHandler implements Serializable {
 
@@ -128,5 +133,42 @@ public class TransitionHandler implements Serializable {
 	public boolean getShowTransitionButton() {
 		return showTransitionButton;
 	}
+
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	public boolean isInDecisionNode() {
+		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+		Node currentNode = nodeFitter.getCurrentNode();
+		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Decision)) {
+			return isInNode(currentNode.getLeavingTransitions());
+		}
+		return false;
+	}
 	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	public boolean isInForkNode() {
+		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+		Node currentNode = nodeFitter.getCurrentNode();
+		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Fork)) {
+			return isInNode(currentNode.getLeavingTransitions());
+		}
+		return false;
+	}
+	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	public boolean isInJoinNode() {
+		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+		Node currentNode = nodeFitter.getCurrentNode();
+		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Join)) {
+			return isInNode(currentNode.getArrivingTransitions());
+		}
+		return false;
+	}
+	
+	public boolean canDefineCondition() {
+		return isInForkNode() || isInJoinNode();
+	}
+	
+	private boolean isInNode(Collection<Transition> transitions) {
+		return transitions != null && transitions.contains(this.transition);
+	}
 }

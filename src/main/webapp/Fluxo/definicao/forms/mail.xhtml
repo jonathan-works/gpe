@@ -9,44 +9,21 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
--->
 	<s:div id="mailDiv">
 		
 		<ui:decorate template="../dataTable.xhtml">
 			
-			<ui:param
-				 name="values"
-				 value="#{nodeFitter.currentNode.listaEmail}" />
-			<ui:param
-				 name="id"
-				 value="listaEmail" />
-			<ui:param
-				name="styleClass"
-				value="dt-destinatarios" />
+			<ui:param name="values" value="#{nodeFitter.currentNode.listaEmail}" />
+			
+			<ui:param name="id" value="listaEmail" />
+			
+			<ui:param name="styleClass" value="dt-destinatarios" />
  
 			<ui:define name="toolBar">
 				
-				<h:graphicImage
-					 title="Excluir destinatário"					 
-					 url="/img/remove.png">
+				<h:graphicImage title="Excluir destinatário" url="/img/remove.png">
 					
-					<a:ajax
-						 event="click"
+					<a:ajax event="click"
 						 listener="#{nodeFitter.currentNode.removeListaEmail(row)}"
 						 onbeforesubmit="if(!confirm('Confirma?')) return false;"
 						 execute="@this"
@@ -54,81 +31,84 @@
 						 limitRender="true" />
 				
 				</h:graphicImage>
-			
+					
 			</ui:define>
+			
 			<ui:define name="columns">
 				 
-				<rich:column >
+				<rich:column>
 					
 					<f:facet name="header">Estrutura</f:facet>
+					
 					<h:outputText value="#{row.estrutura}" />
 				
 				</rich:column>
-				<rich:column >
+				
+				<rich:column>
 					
 					<f:facet name="header">Localização</f:facet>
+					
 					<h:outputText value="#{row.localizacao}" />
 				
 				</rich:column>
-				<rich:column >
+				
+				<rich:column>
 					
 					<f:facet name="header">Papel</f:facet>
-					<h:outputText value="#{row.papel}" />
+					
+				<h:outputText value="#{row.papel}" />
 				
 				</rich:column>
 				
 				<f:facet name="footer">
 					
-				 <rich:columnGroup>
+					<rich:columnGroup>
 						
-				 	<rich:column>
+					 	<rich:column>
 							
-						<h:graphicImage
-								 title="Adicionar destinatários"
-								 id="novoLocPapel"
-								 url="/img/add.gif">
-								
-							<a:ajax
-									 event="click"
-									 listener="#{nodeFitter.currentNode.addNewEmail()}"
-									 execute="@this"
-									 render="mailDiv"
-									 limitRender="true" />
-						
+							<h:graphicImage title="Adicionar destinatários" id="novoLocPapel" url="/img/add.gif">
+									
+								<a:ajax event="click"
+										listener="#{nodeFitter.currentNode.addNewEmail()}"
+										execute="@this"
+										render="mailDiv, :processDefinitionButtonsForm:processDefinitionButtonsFormDialogMessage"
+										limitRender="true" />
+							
 							</h:graphicImage>
-				 	
+									
 						</rich:column>
-					<rich:column >
-							
-						<wi:tree
-								 tree="#{estruturaTree}"
-								 id="estruturaTree"
-								 assignTo="nodeFitter.currentNode.currentListaEmail.estrutura"
-								 folderSelectable="true" />
-					
+						
+						<rich:column>
+								
+							<wi:tree tree="#{estruturaTree}"
+									 id="estruturaTree"
+									 assignTo="nodeFitter.currentNode.currentListaEmail.estrutura"
+									 folderSelectable="true" />
+										 
 						</rich:column>
-					<rich:column >
-							
-						<wi:tree
-								 tree="#{localizacaoTree}"
-								 id="localizacao"
-								 assignTo="nodeFitter.currentNode.currentListaEmail.localizacao"
-								 folderSelectable="true" />
-					
-						</rich:column> 
-					<rich:column >
-							
-						<wi:tree
-								 tree="#{papelTree}"
+						
+						<rich:column>
+								
+							<wi:tree tree="#{localizacaoTree}"
+									 id="localizacao"
+									 assignTo="nodeFitter.currentNode.currentListaEmail.localizacao"
+									 folderSelectable="true" />
+										 
+						</rich:column>
+						 
+						<rich:column>
+								
+							<wi:tree tree="#{papelTree}"
 								 id="papelTree"
 								 assignTo="nodeFitter.currentNode.currentListaEmail.papel"
 								 folderSelectable="true" />
-					
+						
 						</rich:column>
 				
 					</rich:columnGroup>
 				
 				</f:facet>
+				
 				<f:facet name="header">
 					
 					<h:outputText value="Destinatários" />
@@ -138,52 +118,47 @@
 			</ui:define>
 		
 		</ui:decorate>
-		<wi:selectBooleanCheckbox
-			 id="usaTwitter"
+		
+		<wi:selectBooleanCheckbox id="usaTwitter"
 			 value="#{nodeFitter.currentNode.usaTwitter}"
 			 label="#{messages['processBuilder.usaTwitter']}">
 			
-			<a:ajax
-				 event="change"
+			<a:ajax event="change"
 				 render="mailDiv"
 				 execute="@this"
 				 limitRender="true" />
 		
 		</wi:selectBooleanCheckbox>
-		<ui:param
-			 name="isExpression"
-			 value="#{nodeFitter.currentNode.to != null and nodeFitter.currentNode.to.startsWith('{')}" />
-		<s:div
-			 id="twitterDiv"
-			 rendered="#{nodeFitter.currentNode.usaTwitter}"
-			 width="50%"
-			 >
 			
-			<wi:selectOneMenuEntity
-				 id="modeloTwitter"
-				 label="Modelo Twitter.."
-				 value="#{nodeFitter.currentNode.modeloTwitter}"
-				 items="#{twitterTemplateList.list()}"
-				 showLabelTodos="true">
+		<ui:param name="isExpression" value="#{nodeFitter.currentNode.to != null and nodeFitter.currentNode.to.startsWith('{')}" />
+
+		<s:div id="twitterDiv">
+			 
+			<s:div rendered="#{nodeFitter.currentNode.usaTwitter}" width="50%">
+				 
+				<wi:selectOneMenuEntity id="modeloTwitter"
+					 label="Modelo Twitter.."
+					 value="#{nodeFitter.currentNode.modeloTwitter}"
+					 items="#{twitterTemplateList.list()}"
+					 showLabelTodos="true">
+					
+					<a:ajax event="change"
+						 execute="@this"
+						 render="twitterDiv"
+						 limitRender="true" />
 				
-				<a:ajax
-					 event="change"
-					 execute="@this"
-					 render="twitterDiv"
-					 limitRender="true" />
+				</wi:selectOneMenuEntity>
+				
+				<wi:inputTextarea id="editorModeloTwitter"
+					 readonly="true"
+					 value="#{nodeFitter.currentNode.modeloTwitter.mensagem}" />
 			
-			</wi:selectOneMenuEntity>
-			<wi:inputTextarea
-				 id="editorModeloTwitter"
-				 readonly="true"
-				 value="#{nodeFitter.currentNode.modeloTwitter.mensagem}">
-			</wi:inputTextarea>
-		
+			</s:div>
+			
 		</s:div>
-		<s:div
-			 id="modeloDocDiv"
-			 >
 			
+		<s:div id="modeloDocDiv">
+		
 			<wi:selectOneMenuEntity
 				 id="modeloDocumento"
 				 label="#{messages['processBuilder.tituloModeloDocumento']}"
@@ -205,55 +180,35 @@
 				 rendered="#{!isExpression}"
 				 value="#{nodeFitter.currentNode.to}">
 				
-				<a:ajax
-					 event="change"
-					 execute="@this"
-					 limitRender="true" />
+				<a:ajax event="change" execute="@this" limitRender="true" />
 			
 			</wi:inputText>
 		
-			<wi:inputText
-				 id="toExpession"
+			<wi:inputText id="toExpession"
 				 label="Para"
 				 rendered="#{isExpression}"
 				 disabled="true"
 				 readonly="true"
-				 value="[Gerado pela tabela acima...]">
-			</wi:inputText>
+				 value="[Gerado pela tabela acima...]" />
 		
-			<wi:inputText
-				 id="subject"
-				 label="Assunto"
-				 value="#{nodeFitter.currentNode.subject}">
+			<wi:inputText id="subject" label="Assunto" value="#{nodeFitter.currentNode.subject}">
 				
-				<a:ajax
-					 event="change"
-					 execute="@this"
-					 limitRender="true" />
+				<a:ajax event="change" execute="@this" limitRender="true" />
 			
 			</wi:inputText>
+			
 			<s:div id="editorModeloDocumentoDiv">
 				
-				<wi:editor
-					 id="editorModeloDocumento"
+				<wi:editor id="editorModeloDocumento"
 					 rendered="#{nodeFitter.currentNode.modeloDocumento != null}"
 					 value="#{nodeFitter.currentNode.modeloDocumento.modeloDocumento}"
 					 label="#{messages['processBuilder.modeloDocumento']}"
-					 readonly="true">
-					
-					<a:ajax
-						 event="change"
-						 execute="@this"
-						 limitRender="true" />
-				
-				</wi:editor>
+					 readonly="true" />
 			
 			</s:div>
-		
+				
 		</s:div>
 	
-	
 	</s:div>
-
 
 </ui:composition>

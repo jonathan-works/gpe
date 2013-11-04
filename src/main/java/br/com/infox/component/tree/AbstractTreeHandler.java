@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -33,38 +34,25 @@ import org.jboss.seam.log.Logging;
 import org.richfaces.component.UICollapsiblePanel;
 import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
-import org.richfaces.function.RichFunction;
 
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
-@Scope(ScopeType.CONVERSATION)
-public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
-		Serializable {
+@Scope(ScopeType.PAGE)
+public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable {
 
 	private static final int LIMITE_VISUALIZACAO = 25;
-
-    private static final LogProvider LOG = Logging
-			.getLogProvider(AbstractTreeHandler.class);
-
+    private static final LogProvider LOG = Logging.getLogProvider(AbstractTreeHandler.class);
 	private static final long serialVersionUID = 1L;
 
 	private E selected;
-
 	private List<EntityNode<E>> rootList;
-
 	private String treeId;
-
     private String iconFolder;
-
 	private String iconLeaf;
-
 	private boolean folderSelectable = true;
-
 	private String expression;
-
-	private List<EntityNode<E>> selectedNodesList = new ArrayList<EntityNode<E>>(
-			0);
+	private List<EntityNode<E>> selectedNodesList = new ArrayList<EntityNode<E>>(0);
 
 	@Override
 	public void clearTree() {
@@ -73,21 +61,13 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		selected = null;
 		clearUITree();
 		if (expression != null) {
-			Expressions.instance().createValueExpression(expression)
-					.setValue(null);
+			Expressions.instance().createValueExpression(expression).setValue(null);
 		}
 	}
 
 	private void clearUITree() {
 		if (treeId != null) {
-			javax.faces.component.UIComponent comp = RichFunction
-					.findComponent(treeId);
-
-			if (!comp.getClass().equals(UITree.class)) {
-			    return;
-			}
-
-			UITree tree = (UITree) comp;
+			UITree tree = (UITree) FacesContext.getCurrentInstance().getViewRoot().findComponent(treeId);
 			tree.setRowKey(null);
 			tree.setSelection(null);
 			closeParentPanel(tree);
@@ -150,8 +130,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		if (expression == null) {
 			this.selected = selected;
 		} else {
-			Expressions.instance().createValueExpression(expression)
-					.setValue(selected);
+			Expressions.instance().createValueExpression(expression).setValue(selected);
 		}
 	}
 
@@ -161,7 +140,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		// Considerando single selection
 		Object selectionKey = new ArrayList<Object>(ev.getNewSelection()).get(0);
 		UITree tree = (UITree) ev.getSource();
-		treeId = tree.getId();
+		treeId = ":" + tree.getClientId();
 
 		Object key = tree.getRowKey();
 		tree.setRowKey(selectionKey);
@@ -169,6 +148,10 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		tree.setRowKey(key);
 		setSelected(en.getEntity());
 		closeParentPanel(tree);
+		raiseEvents(en);
+	}
+	
+	protected void raiseEvents(EntityNode<E> en) {
 		Events.instance().raiseEvent(getEventSelected(), getSelected());
 	}
 

@@ -8,6 +8,7 @@
 	>
 
 	<begin-conversation join="true" />
+	<restrict>#{security.checkPage()}</restrict>
 
 	<param name="id" value="#{bamHome.id}" converterId="integerConverter" />
 	<param name="tab" value="#{bamHome.tab}" />

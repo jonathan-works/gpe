@@ -43,6 +43,7 @@
     <ui:param
 		 name="checkPermission"
 		 value="#{processoHome.checarVisibilidade()}" />
+	<ui:param name="isUsuarioExterno" value="#{authenticator.usuarioExterno ? 'true':'false'}" />
 	<ui:define name="head">
 		<h:outputStylesheet
 	        library="styleSkinInfox"
@@ -60,7 +61,7 @@
 		        			opener.atualizaPainelFluxo();
 			        	} catch(e) {}
 			        	if($('#canClosePanel').val()!='') {
-			        		window.close();
+			        		close();
 			        	} else {
 			        		location = location.href;
 			        	}
@@ -84,7 +85,7 @@
 				 switchType="ajax"
 				 rendered="#{checkPermission}"
 				 activeTab="#{home.tab}">
-				<h:form><infox:tabHeaders /></h:form>
+				<h:form rendered="#{!isUsuarioExterno}"><infox:tabHeaders /></h:form>
 
                 <infox:tab
 					 id="tabFluxo"

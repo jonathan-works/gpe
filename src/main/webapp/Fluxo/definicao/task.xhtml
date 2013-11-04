@@ -9,290 +9,237 @@
 	 xmlns:rich="http://richfaces.org/rich"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
-	
 
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
--->
-
-	<s:div
-		 id="taskDiv"
-		 >
+	<s:div id="taskDiv">
 		
-		<wi:inputText
-			 id="taskName"
-			 value="#{taskFitter.taskName}"
-			 widthDiv="230px"
+		<h:form>
+		
+			<wi:inputText id="taskName" value="#{taskFitter.taskName}" widthDiv="230px" label="Nome">
+				
+				<a:ajax event="change" render="nodesDiv" limitRender="true" execute="@this" listener="#{nodeFitter.currentNode.setName(taskFitter.taskName)}" />
+				
+				<f:validator validatorId="taskNameValidator" />
+			
+			</wi:inputText>
 			 
-			 label="Nome">
+			<wi:selectOneMenu id="swimlaneTask"
+				items="#{swimlaneFitter.swimlaneList}"
+				label="Atribuir a"
+				widthDiv="230px"
+				noSelectionLabel="Selecione..."
+				value="#{t.swimlaneName}">
+				
+				<a:ajax event="change" execute="@this" limitRender="true" /> 
 			
-			<a:ajax
-				 event="change"
-				 render="tasksTable"
-				 limitRender="true"
-				 execute="@this" />
-		
-		</wi:inputText>
-		 
-		<wi:selectOneMenu
-			 id="swimlaneTask"
-			 items="#{swimlaneFitter.swimlaneList}"
-			 label="Atribuir a"
-			 
-			 widthDiv="230px"
-			 noSelectionLabel="Selecione..."
-			 value="#{t.swimlaneName}">
+			</wi:selectOneMenu>
 			
-			<a:ajax
-				 event="change"
-				 execute="@this"
-				 limitRender="true" /> 
-		
-		</wi:selectOneMenu>
-		
-		<wi:inputNumber
-			 id="prazo"
-			 label="Prazo para Término"
-			 value="#{taskFitter.prazo}">
+			<wi:inputNumber id="prazo" label="Prazo para Término" value="#{taskFitter.prazo}">
+				
+				<a:ajax event="change" execute="@this" limitRender="true" /> 
 			
-			<a:ajax
-				 event="change"
-				 execute="@this"
-				 limitRender="true" /> 
-		
-		</wi:inputNumber>
+			</wi:inputNumber>
+				
+			<wi:selectOneMenuEnum id="tipoPrazo"
+				 label="Unidade"
+				 value="#{taskFitter.tipoPrazo}"
+				 items="#{taskFitter.tipoPrazoList}"
+				 noSelectionLabel="Selecione um registro...">
+				
+				<a:ajax event="change" execute="@this" limitRender="true" /> 
 			
-		<wi:selectOneMenuEnum
-			 id="tipoPrazo"
-			 label="Unidade"
-			 value="#{taskFitter.tipoPrazo}"
-			 items="#{taskFitter.tipoPrazoList}"
-			 noSelectionLabel="Selecione um registro...">
+			</wi:selectOneMenuEnum>
 			
-			<a:ajax
-				 event="change"
-				 execute="@this"
-				 limitRender="true" /> 
-		
-		</wi:selectOneMenuEnum>
+		</h:form>
 	
 	</s:div>	
 
-<a:region>
-		
-	<rich:dataTable
-			 value="#{t.variables}"
+	<rich:dataTable value="#{t.variables}"
 			 id="varTable"
 			 onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
 			 onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
 			 styleClass="tabelaVariaveis"
-			 
 			 var="var">
 			
-		<rich:column
-				 
-				 styleClass="dr-table-subheader rich-table-subheader">
-				
+		<rich:column styleClass="dr-table-subheader rich-table-subheader">
+		
 			<f:facet name="header">
-					
-				<s:div
-						 id="addVarDiv"
-						 rendered="#{not t.hasTaskPage()}">
+				
+				<h:form>	
 						
-					<a:commandLink
-							 action="#{t.newVar()}"
-							 execute="@this"
-							 render="varTable"
-							 limitRender="true">
+					<s:div id="addVarDiv" rendered="#{not t.hasTaskPage()}">
 							
-						<h:graphicImage
-								 title="Adicionar variável"
-								 
-								 url="/img/add.gif" />
+						<a:commandLink action="#{t.newVar()}"
+								 execute="@this"
+								 render="varTable"
+								 limitRender="true">
+								
+							<h:graphicImage title="Adicionar variável" url="/img/add.gif" />
+						
+						</a:commandLink>
+					
+					</s:div>
+					
+				</h:form>
+				
+			</f:facet>
+			
+			<div>
+				
+				<h:form>
+					
+					<a:commandLink action="#{t.removeVar(var)}"
+							 execute="@this"
+							 onclick="if(!confirm('Confirma?')) return false;"
+							 render="varTable"
+							 limitRender="true"
+							 styleClass="opacityHover">
+							
+						<h:graphicImage title="Excluir variável" url="/img/remove.png" />
+					
+					</a:commandLink>
+					
+					<a:commandLink execute="@this"
+							 render="actionTemplate"
+							 limitRender="true"
+							 status=":status"
+							 action="#{taskFitter.currentTask.setCurrentVariable(var)}"
+							 styleClass="opacityHover"
+	                         oncomplete="#{rich:component('actionTemplatePanel')}.show()">
+	                         						
+						<h:graphicImage title="Adicionar modelo de documento" rendered="#{empty var.modeloList}" url="/img/newfile.gif" />
+						
+						<h:graphicImage title="#{var.modeloDocumentoList.toString()}" 
+								 rendered="#{!empty var.modeloList}"
+								 status=":status"
+								 url="/img/file.gif" />
 					
 						</a:commandLink>
-				
-					</s:div>
-			
-				</f:facet>
-			<div >
-					
-				<a:commandLink
-						 action="#{t.removeVar(var)}"
-						 execute="@this"
-						 onclick="if(!confirm('Confirma?')) return false;"
-						 render="varTable"
-						 limitRender="true"
-						 styleClass="opacityHover">
 						
-					<h:graphicImage
-							 title="Excluir variável"
-							 
-							 url="/img/remove.png" />
+				</h:form>
 				
-					</a:commandLink>
-				<a:commandLink
-						 execute="@this"
-						 render="actionTemplate"
-						 limitRender="true"
-						 status=":status"
-						 action="#{taskFitter.currentTask.setCurrentVariable(var)}"
-						 styleClass="opacityHover"
-                         oncomplete="#{rich:component('actionTemplatePanel')}.show()">						
-					<h:graphicImage
-							 title="Adicionar modelo de documento"
-							 
-							 rendered="#{empty var.modeloList}"
-							 url="/img/newfile.gif" />
-					<h:graphicImage
-							 title="#{var.modeloDocumentoList.toString()}"
-							 
-							 rendered="#{!empty var.modeloList}"
-							 status=":status"
-							 url="/img/file.gif" />
-				
-					</a:commandLink>
+			</div>
+					
+		</rich:column>
 			
-				</div>
-		
-			</rich:column>
 		<rich:column>
 				
 			<f:facet name="header">Variável</f:facet>
-			<s:div
-					 id="varDiv"
-					 >
-					
-				<h:inputText
-						 rendered="#{!empty var.name or empty t.previousVariables}"
-						 value="#{var.name}"
-						 >
-						
-					<a:ajax
-							 execute="@this"
-							 event="change"
-							 render="varDiv, varLabel"
-							 limitRender="true" />
-				
-					</h:inputText>
-				<rich:autocomplete
-						 value="#{var.name}"
-						 
-						 rendered="#{empty var.name and !empty t.previousVariables}"
-						 selectFirst="false"
-						 autocompleteList="#{t.previousVariables}">
-						
-                    <a:ajax
-							 status=":status"
-							 listener="#{var.copyVariable()}"
-							 event="blur"
-							 render="varDiv,writable,type,varLabel"
-							 limitRender="true" />
-					<a:ajax
-							 status=":status"
-							 listener="#{var.copyVariable()}"
-							 event="selectitem"
-							 render="varDiv,writable,type,varLabel"
-							 limitRender="true" />
-				
-					</rich:autocomplete>
 			
+			<h:form>
+			
+				<s:div id="varDiv">
+					
+					<h:inputText rendered="#{!empty var.name or empty t.previousVariables}" value="#{var.name}">
+							
+						<a:ajax execute="@this"
+								event="change"
+								render="varDiv, varLabel"
+								limitRender="true" />
+					
+						</h:inputText>
+						
+					<rich:autocomplete value="#{var.name}"			 
+							 rendered="#{empty var.name and !empty t.previousVariables}"
+							 selectFirst="false"
+							 autocompleteList="#{t.previousVariables}">
+							
+	                    <a:ajax status=":status"
+								listener="#{var.copyVariable()}"
+								event="blur"
+								render="varDiv,writable,type,varLabel"
+								limitRender="true" />
+								 
+						<a:ajax status=":status"
+								listener="#{var.copyVariable()}"
+								event="selectitem"
+								render="varDiv,writable,type,varLabel"
+								limitRender="true" />
+					
+					</rich:autocomplete>
+				
 				</s:div>
+					
+			</h:form>
 		
-			</rich:column>
+		</rich:column>
+		
 		<rich:column>
 				
 			<f:facet name="header">Label</f:facet>
-			<s:div
-					 id="varLabel"
-					 >
-					
-				<h:inputText
-						 value="#{var.label}"
-						 >
-						
-					<a:ajax
-							 execute="@this"
-							 limitRender="true"
-							 event="change" />
-				
-					</h:inputText>
 			
+			<h:form>
+			
+				<s:div id="varLabel">
+						
+					<h:inputText value="#{var.label}">
+												
+						<a:ajax execute="@this" limitRender="true" event="change" />
+					
+					</h:inputText>
+				
 				</s:div>
+					
+			</h:form>
 		
-			</rich:column>
-		<rich:column >
+		</rich:column>
+		
+		<rich:column>
 				
 			<f:facet name="header">Escrita</f:facet>
-			<h:selectBooleanCheckbox
-					 id="writable"
-					 styleClass="checkbox"
-					 value="#{var.writable}">
-					
-				<a:ajax
-						 execute="@this"
-						 limitRender="true"
-						 event="change"
-						 render="readable,writable" /> 
 			
+			<h:form>
+			
+				<h:selectBooleanCheckbox id="writable" styleClass="checkbox" value="#{var.writable}">
+						
+					<a:ajax execute="@this" limitRender="true" event="change" render="readable,writable" /> 
+				
 				</h:selectBooleanCheckbox>
+					
+			</h:form>
 		
-			</rich:column>
-		<rich:column >
+		</rich:column>
+		
+		<rich:column>
 				
 			<f:facet name="header">Obrig.</f:facet>
-			<h:selectBooleanCheckbox
-					 id="required"
-					 styleClass="checkbox"
-					 value="#{var.required}">
-					
-				<a:ajax
-						 execute="@this"
-						 limitRender="true"
-						 event="change"
-						 render="readable,writable" /> 
 			
+			<h:form>
+			
+				<h:selectBooleanCheckbox id="required" styleClass="checkbox" value="#{var.required}">
+									
+					<a:ajax execute="@this" limitRender="true" event="change" render="readable,writable" /> 
+				
 				</h:selectBooleanCheckbox>
+
+			</h:form>
+			
+		</rich:column>
 		
-			</rich:column>
-		<rich:column >
+		<rich:column>
 				
 			<f:facet name="header">Tipo</f:facet>
-			<wi:selectOneMenu
-					 id="type"
-					 value="#{var.type}"
-					 items="#{typeFitter.typeList}"
-					 optionLabel="#{typeFitter.getTypeLabel(v)}"
-					 widthDiv="100%"
-					 >
-					
-				<a:ajax
-						 event="change"
-						 execute="true"
-						 status=":status"
-						 listener="#{t.clearHasTaskPage()}"
-						 render="addVarDiv"
-						 limitRender="true" />
 			
+			<h:form>
+			
+				<wi:selectOneMenu id="type"
+						 value="#{var.type}"
+						 items="#{typeFitter.typeList}"
+						 optionLabel="#{typeFitter.getTypeLabel(v)}"
+						 widthDiv="100%">
+						
+					<a:ajax event="change"
+							execute="true"
+							status=":status"
+							listener="#{t.clearHasTaskPage()}"
+							render="addVarDiv"
+							limitRender="true" />
+				
 				</wi:selectOneMenu>
+					
+			</h:form>
 		
-			</rich:column>
+		</rich:column>
 	
-		</rich:dataTable>		
-
-	</a:region>
-
+	</rich:dataTable>		
 
 </ui:composition>

@@ -6,7 +6,8 @@
 	  login-required="true">
 	  
 	
-	<begin-conversation join="true" />
+	<restrict>#{security.checkPage()}</restrict>
+	<begin-conversation join="true"/>
 
 	<param name="id" value="#{twitterTemplateHome.id}"
 		   converterId="integerConverter" />

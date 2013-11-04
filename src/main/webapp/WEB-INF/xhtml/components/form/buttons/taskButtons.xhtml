@@ -40,20 +40,20 @@
 		<a:commandButton
 			id="update"
 			status="none"
-			rendered="#{!empty form.fields and processoHome.managed}"
+			rendered="#{!empty form.fields and processoHome.managed and !isUsuarioExterno}"
 			onmouseup="showLoading()"
 			oncomplete="#{oncomplete};hideLoading()"
 			render="#{reRenderSave},DialogMessage"
 			value="Gravar"
 			styleClass="buttons"
 			action="#{taskInstanceHome.update(home)}" />
-
+		
 		<!-- Implementar -->
 		<a:commandButton
 			id="unlock"
 			execute="@this"
 			status="none"
-			rendered="#{processoHome.managed}"
+			rendered="#{processoHome.managed and !isUsuarioExterno}"
 			onmouseup="showLoading()"
 			oncomplete="#{oncomplete};hideLoading()"
 			render="#{reRenderSave}"
@@ -63,7 +63,7 @@
 
 		<a:commandButton
 			id="persist"
-			rendered="#{!empty form.fields and !processoHome.managed}"
+			rendered="#{!empty form.fields and !processoHome.managed and !isUsuarioExterno}"
 			status="none"
 			onmouseup="showLoading()"
 			oncomplete="hideLoading()"
@@ -73,11 +73,9 @@
 			action="#{taskInstanceHome.persist(home)}" />
 
 		<h:outputText
-			
 			value="Próxima ação:" />
 		<c:if test="#{taskInstanceHome.transitions.size gt 3}">
 			<h:selectOneMenu
-				
 				value="#{taskInstanceHome.name}">
 				<f:selectItems value="#{taskInstanceHome.transtionsSelectItems}" />
 			</h:selectOneMenu>

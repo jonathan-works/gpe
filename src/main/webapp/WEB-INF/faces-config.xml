@@ -14,10 +14,4 @@
       </locale-config>
    </application>
    
-<!-- 
-   	<lifecycle>
-		<phase-listener>br.com.itx.wiacs.runtime.AccessPhaseListener</phase-listener>
-	</lifecycle>
- -->
-   
 </faces-config>

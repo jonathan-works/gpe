@@ -25,7 +25,8 @@ import br.com.itx.util.ComponentUtil;
 @Startup(depends = CarregarParametrosAplicacao.NAME)
 public class ParametroUtil {
 
-	public static final String NAME = "parametroUtil";
+	public static final String LOGIN_USUARIO_EXTERNO = "usuarioexterno";
+    public static final String NAME = "parametroUtil";
 	public static final LogProvider LOG = Logging.getLogProvider(ParametroUtil.class);
 	
 	public static String getLDAPDomain() {
@@ -49,7 +50,7 @@ public class ParametroUtil {
 	}
 	
 	public static String getLoginUsuarioExterno() {
-        return "usuarioexterno";
+        return LOGIN_USUARIO_EXTERNO;
     }
 	
 	public static String getLDAPAuthentication() {

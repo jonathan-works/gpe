@@ -23,9 +23,12 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
+import org.jbpm.graph.def.ExceptionHandler;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
+import org.jbpm.graph.node.Fork;
+import org.jbpm.graph.node.Join;
 import org.jbpm.graph.node.NodeTypes;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
@@ -116,6 +119,16 @@ public class NodeFitter extends Fitter implements Serializable {
 				node.addLeavingTransition(t);
 				newNodeTransition.setName(node.getName());
 				node.addArrivingTransition(oldT);
+				
+				if (oldT.getFrom().getNodeType().equals(NodeType.Fork) && to.getNodeType().equals(NodeType.Join)) {
+					getProcessBuilder().getTransitionFitter().connectNodes(oldT.getFrom(), to);
+				}
+			}
+			
+			if (nodeType.equals(Fork.class)) {
+				handleForkNode(node);
+			} else if (nodeType.equals(MailNode.class)) {
+				handleMailNode(node);
 			}
 			
 			newNodeName = null;
@@ -132,6 +145,27 @@ public class NodeFitter extends Fitter implements Serializable {
 		}
 	}
 	
+	private void handleMailNode(Node node) {
+		ExceptionHandler exceptionHandler = new ExceptionHandler();
+		exceptionHandler.setExceptionClassName(Throwable.class.getCanonicalName());
+		node.addExceptionHandler(exceptionHandler);
+	}
+
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	private void handleForkNode(Node fork) {
+		try {
+			Node join = Join.class.newInstance();
+			join.setName(fork.getName() + " (Junção)");
+			ProcessDefinition processo = getProcessBuilder().getInstance();
+			processo.addNode(join);
+			List<Node> nodes = processo.getNodes();
+			processo.reorderNode(nodes.indexOf(join), nodes.indexOf(fork) + 1);
+			getProcessBuilder().getTransitionFitter().connectNodes(fork, join);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public void transitionChangeListener(ValueChangeEvent e) {
 		oldNodeTransition = NodeConverter.getAsObject((String) e.getOldValue());
 	}
@@ -147,20 +181,18 @@ public class NodeFitter extends Fitter implements Serializable {
 		for (Node n : nodes) {
 			List<Transition> transitions = n.getLeavingTransitions();
 			if (transitions != null) {
-				for (Iterator<Transition> i = transitions.iterator(); i
-						.hasNext();) {
+				for (Iterator<Transition> i = transitions.iterator(); i.hasNext();) {
 					Transition t = i.next();
-					if (t.getTo().equals(node)) {
+					if (node.equals(t.getTo())) {
 						i.remove();
 					}
 				}
 			}
 			Set<Transition> transitionSet = n.getArrivingTransitions();
 			if (transitionSet != null) {
-				for (Iterator<Transition> i = transitionSet.iterator(); i
-						.hasNext();) {
+				for (Iterator<Transition> i = transitionSet.iterator(); i.hasNext();) {
 					Transition t = i.next();
-					if (t.getFrom().equals(node)) {
+					if (node.equals(t.getFrom())) {
 						i.remove();
 					}
 				}
@@ -264,8 +296,7 @@ public class NodeFitter extends Fitter implements Serializable {
 				nodesItems = new ArrayList<SelectItem>();
 				nodesItems.add(new SelectItem(null, "Selecione uma tarefa..."));
 				for (Node node : list) {
-					nodesItems.add(new SelectItem(node.toString(), node
-							.getName()));
+					nodesItems.add(new SelectItem(node.toString(), node.getName()));
 				}
 			}
 		}
@@ -294,7 +325,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 	
 	public String getNewNodeAfter() {
-		return null;
+		return this.newNodeAfter == null ? null : this.newNodeAfter.toString();
 	}
 
 	public void setNodeName(String nodeName) {
