@@ -239,6 +239,7 @@ public class TaskInstanceHome implements Serializable {
             return Boolean.TRUE;
         } else {
             acusarUsuarioSemAcesso();
+            return Boolean.FALSE;
         }
     }
 
