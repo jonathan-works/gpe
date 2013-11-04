@@ -49,7 +49,7 @@ import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.infox.util.PostgreSQLExceptionManager;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.grid.GridQuery;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 import br.com.itx.exception.ExcelExportException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -248,8 +248,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, getNonUniqueObjectExceptionMessage());
 			LOG.error(getPersistLogMessage(), e);	
-		} catch (AplicationException e){
-			throw new AplicationException("Erro: " + e.getMessage(), e);
+		} catch (ApplicationException e){
+			throw new ApplicationException("Erro: " + e.getMessage(), e);
 		} catch (javax.persistence.PersistenceException e) {
             LOG.error(msg, e);
             PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);

@@ -101,32 +101,6 @@
 				</infox:tab>
 
                 <infox:tab
-					 id="tabSaida"
-					 name="tabSaida"
-					 rendered="#{processoHome.managed}"
-					 status=":status"
-					 title="Saída">
-					
-                    <c:if test="#{empty taskPageAction.taskPagePath}">
-						<ui:decorate
-							id="frameDecorate"
-							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-							<ui:define name="title">Saída</ui:define>
-                            <wi:form
-								 canEdit="false"
-								 formTitle="#{taskInstance.name}"
-								 home="#{taskInstanceForm.home}"
-								 reRenderSave="taskInstanceDiv"
-								 form="#{taskInstaceForm}" />
-							<div class="blocker"></div>
-	                        
-						</ui:decorate>
-                    
-					</c:if>
-                
-				</infox:tab>
-
-                <infox:tab
 					 id="tabAnexos"
 					 name="tabAnexos"
 					 rendered="#{processoHome.managed}"

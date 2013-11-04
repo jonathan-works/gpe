@@ -18,7 +18,7 @@ import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.itx.exception.AplicationException;
+import br.com.itx.exception.ApplicationException;
 
 @Name(TaskListenerService.NAME)
 public class TaskListenerService extends AbstractAction {
@@ -79,7 +79,7 @@ public class TaskListenerService extends AbstractAction {
 	public void onEndProcess(ExecutionContext context) {
 		Processo processo = JbpmUtil.getProcesso();
 		if (processo == null) {
-			throw new AplicationException("Erro ao criar o processo. Verifique a configuração das raias na definição do fluxo.");
+			throw new ApplicationException("Erro ao criar o processo. Verifique a configuração das raias na definição do fluxo.");
 		}
 		processo.setDataFim(new Date());
 		processoEpaTarefaManager.update(processo);
