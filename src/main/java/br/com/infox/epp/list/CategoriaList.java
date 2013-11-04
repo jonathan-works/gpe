@@ -22,6 +22,9 @@ public class CategoriaList extends EntityList<Categoria> {
 
 	private static final long serialVersionUID = 1L;
 	
+	public static final String TEMPLATE = "/Categoria/CategoriaTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Categoria.xls";
+	
 	private static final String DEFAULT_EJBQL = "select o from Categoria o";
 	private static final String DEFAULT_ORDER = "categoria";
 	 
@@ -51,5 +54,20 @@ public class CategoriaList extends EntityList<Categoria> {
 	public static CategoriaList instance(){
 		return ComponentUtil.getComponent(CategoriaList.NAME);
 	}
+	
+	@Override
+    public EntityList<Categoria> getBeanList() {
+        return CategoriaList.instance();
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
 	
 }
