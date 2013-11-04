@@ -4,6 +4,7 @@
 	  xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd">
 
 	<begin-conversation join="true" />
+	<restrict>#{security.checkPage()}</restrict>
 	
 	<param name="order" value="#{naturezaList.order}" />
 	<param name="restrictionLogicOperator" value="#{naturezaList.restrictionLogicOperator}" />
