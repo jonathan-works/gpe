@@ -5,8 +5,6 @@ import java.util.Map;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epp.action.crud.CalendarioEventosHome;
@@ -14,13 +12,15 @@ import br.com.infox.epp.entity.CalendarioEventos;
 import br.com.itx.util.ComponentUtil;
 
 @Name(CalendarioEventosList.NAME)
-@BypassInterceptors
 @Scope(ScopeType.CONVERSATION)
 public class CalendarioEventosList extends EntityList<CalendarioEventos> {
 	
 	public static final String NAME = "calendarioEventosList";
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final String TEMPLATE = "/CalendarioEventos/CalendarioEvTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "CalendarioEventos.xls";
 	
 	private static final String DEFAULT_EJBQL = "select o from CalendarioEventos o";
 	private static final String DEFAULT_ORDER = "descricaoEvento";
@@ -59,5 +59,21 @@ public class CalendarioEventosList extends EntityList<CalendarioEventos> {
 	    CalendarioEventosHome home = ComponentUtil.getComponent(CalendarioEventosHome.NAME);
 	    home.getLocalizacaoTreeHandler().clearTree();
 	}
+	
+	@Override
+    public EntityList<CalendarioEventos> getBeanList() {
+        return CalendarioEventosList.instance();
+    }
+
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }   
+    
 	
 }

@@ -6,24 +6,17 @@ import java.util.Date;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.entity.CalendarioEventos;
-import br.com.infox.epp.list.CalendarioEventosList;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.itx.component.AbstractHome;
 
 @Name(CalendarioEventosHome.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class CalendarioEventosHome extends AbstractHome<CalendarioEventos>{
 
 	public static final String NAME = "calendarioEventosHome";
 	private static final long serialVersionUID = 1L;
 	
-	private static final String TEMPLATE = "/CalendarioEventos/CalendarioEvTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "CalendarioEventos.xls";
 	private LocalizacaoTreeHandler localizacaoTreeHandler = new LocalizacaoTreeHandler();
 	
 	public LocalizacaoTreeHandler getLocalizacaoTreeHandler() {
@@ -83,19 +76,4 @@ public class CalendarioEventosHome extends AbstractHome<CalendarioEventos>{
 		}
 	}
 
-	@Override
-	public EntityList<CalendarioEventos> getBeanList() {
-		return CalendarioEventosList.instance();
-	}
-
-	@Override
-	public String getTemplate() {
-		return TEMPLATE;
-	}
-
-	@Override
-	public String getDownloadXlsName() {
-		return DOWNLOAD_XLS_NAME;
-	}	
-	
 }
