@@ -238,8 +238,7 @@ public class TaskInstanceHome implements Serializable {
         if (processoManager.checkAccess(idProcesso, login)){
             return Boolean.TRUE;
         } else {
-            FacesMessages.instance().clear();
-            throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
+            acusarUsuarioSemAcesso();
         }
     }
 
@@ -273,12 +272,20 @@ public class TaskInstanceHome implements Serializable {
 
     private void canDoOperation() {
         if (getCurrentTaskInstance() != null) {
-            if (situacaoProcessoManager.canOpenTask(currentTaskInstance.getId())) {
+            if (canOpenTask()) {
                 return;
             }
-            FacesMessages.instance().clear();
-            throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
+            acusarUsuarioSemAcesso();
         }
+    }
+
+    private void acusarUsuarioSemAcesso() {
+        FacesMessages.instance().clear();
+        throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
+    }
+
+    private boolean canOpenTask() {
+        return situacaoProcessoManager.canOpenTask(currentTaskInstance.getId());
     }
 
     private TaskInstance getCurrentTaskInstance() {
@@ -404,8 +411,7 @@ public class TaskInstanceHome implements Serializable {
     private void checkCurrentTask() {
         TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
         if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
-            FacesMessages.instance().clear();
-            throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
+            acusarUsuarioSemAcesso();
         }
     }
 
