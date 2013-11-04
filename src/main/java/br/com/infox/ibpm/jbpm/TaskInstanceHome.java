@@ -350,20 +350,32 @@ public class TaskInstanceHome implements Serializable {
     private void atualizarPaginaDeMovimentacao(ProcessoHome processoHome) {
         EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent(TASK_COMPLETED);
         taskCompleted.setValue(true);
-        Authenticator authenticator = ComponentUtil.getComponent("authenticator");
         if (!canClosePanel()) {
-            Redirect red = Redirect.instance();
-            red.setViewId(MOVIMENTAR_PATH);
-            red.setParameter("idProcesso", processoHome.getInstance().getIdProcesso());
-            BusinessProcess.instance().getProcessId();
-            red.setConversationPropagationEnabled(false);
-            red.execute();
-        } else if (authenticator.isUsuarioExterno()){
-            Redirect red = Redirect.instance();
-            red.setViewId("/AcessoExterno/externo.seam?urlRetorno=" + urlRetornoAcessoExterno.toString());
-            red.setConversationPropagationEnabled(false);
-            red.execute();
+            redirectToMovimentar(processoHome);
+        } else if (isUsuarioExterno()){
+            redirectToAcessoExterno();
         }
+    }
+    
+    private boolean isUsuarioExterno(){
+        Authenticator authenticator = ComponentUtil.getComponent("authenticator");
+        return authenticator.isUsuarioExterno();
+    }
+
+    private void redirectToAcessoExterno() {
+        Redirect red = Redirect.instance();
+        red.setViewId("/AcessoExterno/externo.seam?urlRetorno=" + urlRetornoAcessoExterno.toString());
+        red.setConversationPropagationEnabled(false);
+        red.execute();
+    }
+
+    private void redirectToMovimentar(ProcessoHome processoHome) {
+        Redirect red = Redirect.instance();
+        red.setViewId(MOVIMENTAR_PATH);
+        red.setParameter("idProcesso", processoHome.getInstance().getIdProcesso());
+        BusinessProcess.instance().getProcessId();
+        red.setConversationPropagationEnabled(false);
+        red.execute();
     }
 
     private boolean canClosePanel() {
