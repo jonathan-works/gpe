@@ -19,11 +19,9 @@ import java.util.List;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.ItemTipoDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
-import br.com.infox.list.GrupoModeloDocumentoList;
 import br.com.itx.component.AbstractHome;
 
 @Name(GrupoModeloDocumentoHome.NAME)
@@ -31,26 +29,9 @@ public class GrupoModeloDocumentoHome extends
 		AbstractHome<GrupoModeloDocumento> {
 
 	private static final long serialVersionUID = 1L;
-	private static final String TEMPLATE = "/GrupoModeloDocumento/grupoModeloDocumentoTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "GruposModeloDocumento.xls";
 
 	public static final String NAME = "grupoModeloDocumentoHome";
 
-	@Override
-	public String getDownloadXlsName() {
-		return DOWNLOAD_XLS_NAME;
-	}
-
-	@Override
-	public String getTemplate() {
-		return TEMPLATE;
-	}
-
-	@Override
-	public EntityList<GrupoModeloDocumento> getBeanList() {
-		return GrupoModeloDocumentoList.instance();
-	}
-	
     @Override
     protected GrupoModeloDocumento createInstance() {
         return new GrupoModeloDocumento();
