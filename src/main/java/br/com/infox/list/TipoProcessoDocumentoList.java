@@ -19,6 +19,9 @@ public class TipoProcessoDocumentoList extends
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoProcessoDocumentoList";
 	
+	private static final String TEMPLATE = "/ClassificacaoDocumento/tipoProcessoDocumentoTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "ClassificacaoDocumento.xls";
+    
 	private static final String DEFAULT_EJBQL = "select o from TipoProcessoDocumento o";
 	private static final String DEFAULT_ORDER = "tipoProcessoDocumento";
 	
@@ -49,5 +52,20 @@ public class TipoProcessoDocumentoList extends
 	public static TipoProcessoDocumentoList instance(){
 		return ComponentUtil.getComponent(TipoProcessoDocumentoList.NAME);
 	}
+	
+	@Override
+    public EntityList<TipoProcessoDocumento> getBeanList() {
+        return TipoProcessoDocumentoList.instance();
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
 
 }
