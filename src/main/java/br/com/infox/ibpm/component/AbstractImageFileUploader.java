@@ -30,18 +30,19 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
     private ImagemBinManager imagemBinManager;
     
     public abstract String getImagesRelativePath();
-	
-	public String getImagesDir() {
-	    return imagemBinManager.getImagesDir(getImagesRelativePath());
-	}
-	
-	public String getImagesPath() {
-		return imagemBinManager.getImagesPath(getImagesRelativePath());
-	}
-	
-	public String getImagePath() {
-		return getImagesPath();
-	}	
+    
+    public String[] getImagesDir() {
+        return imagemBinManager.getImagesDir(getImagesRelativePath());
+    }
+    
+    public String[] getImagesPath() {
+        return imagemBinManager.getImagesPath(getImagesRelativePath());
+    }
+    
+    public String getImagePath() {
+        String[] imagesPath = getImagesPath();
+        return imagesPath[imagesPath.length - 1];
+    }	
 	
 	public String getFileName() {
 		return fileName;

@@ -34,6 +34,7 @@ public class ImagemBin implements Serializable {
 	private byte[] imagem;
 	private Date dataInclusao;
 	private Integer tamanho;
+	private String filePath;
 	
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_imagem_bin")
 	@Id
@@ -111,4 +112,13 @@ public class ImagemBin implements Serializable {
 	public void setImagem(byte[] imagem) {
 		this.imagem = Arrays.copyOf(imagem, imagem.length);
 	}
+	
+	@Column(name = "ds_file_path", length=LengthConstants.DESCRICAO_GRANDE)
+    public String getFilePath() {
+        return filePath;
+    }
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }	
+	
 }

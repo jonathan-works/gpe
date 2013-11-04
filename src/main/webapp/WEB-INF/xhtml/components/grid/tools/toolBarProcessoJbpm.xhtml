@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: toolBarProcessoJbpm.xhtml 704 2010-08-12 23:21:10Z jplacerda $ -->
 <ui:composition
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns="http://www.w3.org/1999/xhtml"
@@ -9,82 +8,69 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 
-	<div >
-			<ui:param
-				name="idProcesso"
-				value="#{row.idProcesso}" />
-			<ui:param
-				name="tarefaId"
-				value="#{painelUsuarioHome.tarefaId}" />
-			<ui:param
-				name="owner"
-				value="#{userHandler.getActorIdTarefaAtual(idProcesso)}" />
+	<h:form>
+	
+		<ui:param name="idProcesso" value="#{row.idProcesso}" />
+		
+		<ui:param name="tarefaId" value="#{painelUsuarioHome.tarefaId}" />
+		
+		<ui:param name="owner" value="#{userHandler.getActorIdTarefaAtual(idProcesso)}" />
 
-			<a:outputPanel>
-				<h:graphicImage
-					url="/img/annotate.gif"
-					title="Mover para caixa" />
+		<a:outputPanel>
 
-			</a:outputPanel>
+			<rich:dragSource type="task#{tarefaId}" dragValue="#{row}"/>
 
+			<h:graphicImage	url="/img/annotate.gif" title="Mover para caixa" />
+			
+		</a:outputPanel>
 
-			<a:commandLink
-				execute="@this"
-				rendered="true"
-				target="#{idProcesso}popUpFluxo"
-				onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-				<f:param
-					name="idProcesso"
-					value="#{idProcesso}" />
-				<f:param
-					name="tarefaId"
-					value="#{tarefaId}" />
-				<h:graphicImage url="/img/view.gif" />
-			</a:commandLink>
-			<a:commandLink
-				execute="@this"
-				rendered="#{empty owner}"
-				target="#{idProcesso}popUpFluxo"
+		<a:commandLink execute="@this" target="#{idProcesso}popUpFluxo"
+			onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+			
+			<f:param name="idProcesso" value="#{idProcesso}" />
+			
+			<f:param name="tarefaId" value="#{tarefaId}" />
+			
+			<h:graphicImage url="/img/view.gif" />
+			
+		</a:commandLink>
+		
+		<a:commandLink execute="@this" rendered="#{empty owner}" target="#{idProcesso}popUpFluxo"
 				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-				<f:param
-					name="idProcesso"
-					value="#{idProcesso}" />
-				<f:param
-					name="tarefaId"
-					value="#{tarefaId}" />
+				
+				<f:param name="idProcesso" value="#{idProcesso}" />
+				
+				<f:param name="tarefaId" value="#{tarefaId}" />
+				
 				<h:graphicImage url="/img/edit.gif" />
-			</a:commandLink>
-			<a:commandLink
-				execute="@this"
-				rendered="#{owner == authenticator.getUsuarioLogado().getNome()}"
+				
+		</a:commandLink>
+			
+		<a:commandLink execute="@this" rendered="#{owner == authenticator.getUsuarioLogado().getNome()}"
 				target="#{idProcesso}popUpFluxo"
 				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-				<f:param
-					name="idProcesso"
-					value="#{idProcesso}" />
-				<f:param
-					name="tarefaId"
-					value="#{tarefaId}" />
-            <a:outputPanel>
+				
+				<f:param name="idProcesso" value="#{idProcesso}" />
+				
+				<f:param name="tarefaId" value="#{tarefaId}" />
+				
 				<h:graphicImage url="/img/task.gif" />
-            </a:outputPanel>
-			</a:commandLink>
-            <a:outputPanel>
-        		<h:graphicImage
-        			url="/img/role.gif"
-        			rendered="#{(owner != authenticator.getUsuarioLogado().getNome() and ! empty owner and !jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}"
-        			title="Processo bloqueado pelo servidor #{owner}" />
-                <a:commandLink 
-                	action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}"
-                    execute="@this"
-                    render="painelProcessos"
-                    onclick="if (!confirm('Liberar tarefa?')) return false;"
-                    limitRender="true"
-                    rendered="#{(owner != authenticator.getUsuarioLogado().getNome() and ! empty owner and jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}">
-        			<h:graphicImage
-	        			url="/img/role.gif"
-	        			title="Liberar tarefa bloqueada pelo servidor #{owner}" />
-                </a:commandLink>
-            </a:outputPanel>
-	</div>
+				
+		</a:commandLink>
+			
+    	<h:graphicImage url="/img/role.gif"
+      		rendered="#{(owner != authenticator.getUsuarioLogado().getNome() and ! empty owner and !jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}"
+      		title="Processo bloqueado pelo servidor #{owner}" />
+      			
+		<a:commandLink action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}" execute="@this"
+		    render="painelProcessos" onclick="if (!confirm('Liberar tarefa?')) return false;"
+			limitRender="true"
+		    rendered="#{(owner != authenticator.getUsuarioLogado().getNome() and ! empty owner and jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}">
+		    
+			<h:graphicImage url="/img/role.gif" title="Liberar tarefa bloqueada pelo servidor #{owner}" />
+			
+		</a:commandLink>
+			
+	</h:form>
+	
 </ui:composition>
