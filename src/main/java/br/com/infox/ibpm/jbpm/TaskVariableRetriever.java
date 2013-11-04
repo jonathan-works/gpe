@@ -5,7 +5,9 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
+import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
@@ -83,6 +85,33 @@ final class TaskVariableRetriever extends TaskVariable {
     
     public void searchAndAssignConteudoToVariable(){
         variable = getConteudo();
+    }
+    
+    public TaskVariableRetriever evaluateWhenDocumentoAssinado() {
+        Integer id = (Integer) taskInstance.getVariable(getMappedName());
+        AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
+        if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && isWritable()) {
+            ProcessoHome.instance().carregarDadosFluxo(id);
+            return this;
+        }
+        else return null;
+    }
+    
+    public TaskVariableRetriever evaluateWhenMonetario() {
+        if (isMonetario()) {
+            setVariable(String.format(FloatFormatConstants._2F, getVariable()));
+            return this;
+        }
+        return null;
+    }
+    
+    public TaskVariableRetriever evaluateWhenForm() {
+        if (isForm()) {
+//            varName = variableRetriever.getName();
+            retrieveHomes();
+            return this;
+        }
+        return null;
     }
     
 }

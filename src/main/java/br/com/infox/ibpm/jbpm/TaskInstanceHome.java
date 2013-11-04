@@ -64,9 +64,7 @@ import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.ibpm.search.Reindexer;
 import br.com.infox.ibpm.search.SearchHandler;
-import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.infox.search.Indexer;
-import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
@@ -135,12 +133,14 @@ public class TaskInstanceHome implements Serializable {
         TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
         variableRetriever.searchAndAssignConteudoToVariable();
         if (variableRetriever.isEditor()) {
-            evaluateWhenDocumentoAssinado(variableRetriever);
+            putVariable(variableRetriever.evaluateWhenDocumentoAssinado());
         } else {
-            evaluateWhenMonetario(variableRetriever);
+            putVariable(variableRetriever.evaluateWhenMonetario());
         }
         evaluateWhenModelo(variableRetriever);
-        evaluateWhenForm(variableRetriever);
+        if (variableRetriever.evaluateWhenForm() != null) {
+            varName = variableRetriever.getName();
+        }
     }
 
     private void evaluateWhenModelo(TaskVariableRetriever variableRetriever) {
@@ -162,31 +162,10 @@ public class TaskInstanceHome implements Serializable {
         return EntityUtil.getEntityManager().find(ModeloDocumento.class, Integer.parseInt(s));
     }
 
-    private void evaluateWhenDocumentoAssinado(TaskVariableRetriever variableRetriever) {
-        Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
-        AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
-        if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && variableRetriever.isWritable()) {
-            ProcessoHome.instance().carregarDadosFluxo(id);
-            putVariable(variableRetriever);
-        }
-    }
-
-    private void evaluateWhenMonetario(TaskVariableRetriever variableRetriever) {
-        if (variableRetriever.isMonetario()) {
-            variableRetriever.setVariable(String.format(FloatFormatConstants._2F, variableRetriever.getVariable()));
-        }
-        putVariable(variableRetriever);
-    }
-
-    private void evaluateWhenForm(TaskVariableRetriever variableRetriever) {
-        if (variableRetriever.isForm()) {
-            varName = variableRetriever.getName();
-            variableRetriever.retrieveHomes();
-        }
-    }
-    
     private void putVariable(TaskVariableRetriever variableRetriever){
-        mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
+        if (variableRetriever != null) {
+            mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
+        }
     }
 
     public Map<String, Object> getInstance() {
