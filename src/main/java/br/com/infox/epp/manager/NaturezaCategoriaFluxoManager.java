@@ -10,8 +10,10 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.NaturezaCategoriaFluxoDAO;
+import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.Natureza;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
+import br.com.infox.ibpm.entity.Fluxo;
 
 @Name(NaturezaCategoriaFluxoManager.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -28,5 +30,8 @@ public class NaturezaCategoriaFluxoManager extends GenericManager {
 	public List<NaturezaCategoriaFluxo> listByNatureza(Natureza natureza) {
 		return naturezaCategoriaFluxoDAO.listByNatureza(natureza);
 	}
-	
+
+    public NaturezaCategoriaFluxo getByRelationship(Natureza natureza, Categoria categoria, Fluxo fluxo) {
+        return naturezaCategoriaFluxoDAO.getByRelationship(natureza, categoria, fluxo);
+    }	
 }
