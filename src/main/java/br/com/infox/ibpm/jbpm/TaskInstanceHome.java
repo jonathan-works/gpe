@@ -183,8 +183,8 @@ public class TaskInstanceHome implements Serializable {
         prepareForUpdate();
         if (possuiTask()) {
             TaskController taskController = taskInstance.getTask().getTaskController();
+            TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
             if (taskController != null) {
-            	TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
             	if (!taskPageAction.getHasTaskPage()) {
 	                updateVariables(taskController);
             	}
