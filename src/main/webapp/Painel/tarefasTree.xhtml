@@ -67,6 +67,12 @@
                                     
                                 </rich:contextMenu>
                                 
+                                <rich:dropTarget acceptedTypes="task#{node.entity.idTarefa}" 
+                                	dropListener="#{painelUsuarioHome.processoCaixa}" 
+                                	dropValue="#{node.entity.idCaixa}"
+                                	render="painelProcessos, tarefasDiv"
+                                	limitRender="true" />
+                                
                             </rich:treeNode>
                             
                         </rich:treeModelAdaptor>
