@@ -125,7 +125,8 @@ public class TaskInstanceHome implements Serializable {
             for (VariableAccess variableAccess : list) {
                 retrieveVariable(variableAccess);
             }
-            updateTransitions(); // Atualizar as transições possiveis. Isso é preciso, pois as condições das transições são avaliadas antes deste metodo ser executado.
+            // Atualizar as transições possiveis. Isso é preciso, pois as condições das transições são avaliadas antes deste metodo ser executado.
+            updateTransitions(); 
         }
     }
     
