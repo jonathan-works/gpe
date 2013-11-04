@@ -10,19 +10,12 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.home.ProcessoHome;
 
-final class TaskVariableResolver {
+final class TaskVariableResolver extends TaskVariable {
     
-    private VariableAccess variableAccess;
-    private String name;
-    private String type;
     private Object value;
-    private TaskInstance taskInstance;
     
     public TaskVariableResolver(VariableAccess variableAccess, TaskInstance taskInstance) {
-        this.variableAccess = variableAccess;
-        this.type = variableAccess.getMappedName().split(":")[0];
-        this.name = variableAccess.getMappedName().split(":")[1];
-        this.taskInstance = taskInstance;
+        super(variableAccess, taskInstance);
     }
 
     public Object getValue() {
@@ -33,14 +26,6 @@ final class TaskVariableResolver {
         this.value = value;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-    
     public void resolveWhenMonetario(){
         if ("numberMoney".equals(type) && value != null) {
             String val = String.valueOf(value);

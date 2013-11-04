@@ -10,33 +10,14 @@ import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
-final class TaskVariableRetriever {
+final class TaskVariableRetriever extends TaskVariable {
     
-    private VariableAccess variableAccess;
-    private String name;
-    private String type;
     private Object variable;
-    private TaskInstance taskInstance;
     
     private static final LogProvider LOG = Logging.getLogProvider(TaskVariableRetriever.class);
     
     public TaskVariableRetriever (VariableAccess variableAccess, TaskInstance taskInstance){
-        this.variableAccess = variableAccess;
-        this.type = variableAccess.getMappedName().split(":")[0];
-        this.name = variableAccess.getMappedName().split(":")[1];
-        this.taskInstance = taskInstance;
-    }
-
-    public String getName() {
-        return name;
-    }
-    
-    public String getMappedName(){
-        return variableAccess.getMappedName();
-    }
-
-    public String getType() {
-        return type;
+        super(variableAccess, taskInstance);
     }
     
     public boolean isEditor(){
