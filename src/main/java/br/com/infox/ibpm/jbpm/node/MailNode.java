@@ -26,7 +26,8 @@ import javax.persistence.Query;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.jboss.seam.core.Expressions;
+import org.jboss.seam.Component;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.JbpmContext;
@@ -37,6 +38,10 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.persistence.db.DbPersistenceService;
 
+import br.com.infox.component.tree.TreeHandler;
+import br.com.infox.ibpm.component.tree.EstruturaTreeHandler;
+import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
+import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.ibpm.entity.ListaEmail;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TwitterTemplate;
@@ -251,6 +256,12 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	}
 
 	public void addNewEmail() {
+		if (currentListaEmail == null || (currentListaEmail.getEstrutura() == null && currentListaEmail.getLocalizacao() == null && currentListaEmail.getPapel() == null)) {
+			FacesMessages.instance().clearGlobalMessages();
+			FacesMessages.instance().add("Pelo menos um dos campos de destinatário é obrigatório");
+			return;
+		}
+		
 		if (idGrupo == 0) {
 			String q = "select max(o.idGrupoEmail) from ListaEmail o";
 			Query query = EntityUtil.getEntityManager().createQuery(q);
@@ -273,9 +284,13 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		if (to == null || "".equals(to)) {
 			to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
 		}
-		Expressions.instance().createMethodExpression("#{estruturaTree.clearTree}").invoke(new Object[0]);
-		Expressions.instance().createMethodExpression("#{localizacaoTree.clearTree}").invoke(new Object[0]);
-		Expressions.instance().createMethodExpression("#{papelTree.clearTree}").invoke(new Object[0]);
+		
+		TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
+		treeHandler.clearTree();
+		treeHandler = (TreeHandler<?>) Component.getInstance(LocalizacaoTreeHandler.NAME);
+		treeHandler.clearTree();
+		treeHandler = (TreeHandler<?>) Component.getInstance(PapelTreeHandler.class);
+		treeHandler.clearTree();
 		createAction();
 	}
 	

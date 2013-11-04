@@ -56,7 +56,7 @@
 					
 					<f:facet name="header">Papel</f:facet>
 					
-					<h:outputText value="#{row.papel}" />
+				<h:outputText value="#{row.papel}" />
 				
 				</rich:column>
 				
@@ -71,7 +71,7 @@
 								<a:ajax event="click"
 										listener="#{nodeFitter.currentNode.addNewEmail()}"
 										execute="@this"
-										render="mailDiv"
+										render="mailDiv, :processDefinitionButtonsForm:processDefinitionButtonsFormDialogMessage"
 										limitRender="true" />
 							
 							</h:graphicImage>
