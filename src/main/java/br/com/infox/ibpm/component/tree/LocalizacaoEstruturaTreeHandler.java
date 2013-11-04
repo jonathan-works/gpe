@@ -15,20 +15,15 @@
 */
 package br.com.infox.ibpm.component.tree;
 
-import java.util.ArrayList;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
-import org.richfaces.component.UITree;
-import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -73,20 +68,8 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 		return new LocalizacaoNode(getQueryChildrenList());
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
-	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
-		// Considerando single selection
-		Object selectionKey = new ArrayList<Object>(ev.getNewSelection()).get(0);
-		UITree tree = (UITree) ev.getSource();
-		setTreeId(tree.getId());
-
-		Object key = tree.getRowKey();
-		tree.setRowKey(selectionKey);
-		EntityNode<Localizacao> en = (EntityNode<Localizacao>) tree.getRowData();
-		tree.setRowKey(key);
-		setSelected(en.getEntity());
-		closeParentPanel(tree);
+	protected void raiseEvents(EntityNode<Localizacao> en) {
 		Events.instance().raiseEvent("evtSelectLocalizacaoEstrutura", getSelected(), getEstrutura(en));
 	}
 	
