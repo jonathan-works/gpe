@@ -34,7 +34,6 @@ import org.jboss.seam.log.Logging;
 import org.richfaces.component.UICollapsiblePanel;
 import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
-import org.richfaces.function.RichFunction;
 
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
