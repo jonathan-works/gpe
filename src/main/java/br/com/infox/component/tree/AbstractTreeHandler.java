@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -38,7 +39,7 @@ import org.richfaces.function.RichFunction;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.PAGE)
 public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		Serializable {
 
@@ -80,14 +81,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 
 	private void clearUITree() {
 		if (treeId != null) {
-			javax.faces.component.UIComponent comp = RichFunction
-					.findComponent(treeId);
-
-			if (!comp.getClass().equals(UITree.class)) {
-			    return;
-			}
-
-			UITree tree = (UITree) comp;
+			UITree tree = (UITree) FacesContext.getCurrentInstance().getViewRoot().findComponent(treeId);
 			tree.setRowKey(null);
 			tree.setSelection(null);
 			closeParentPanel(tree);
@@ -161,7 +155,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>,
 		// Considerando single selection
 		Object selectionKey = new ArrayList<Object>(ev.getNewSelection()).get(0);
 		UITree tree = (UITree) ev.getSource();
-		treeId = tree.getId();
+		treeId = ":" + tree.getClientId();
 
 		Object key = tree.getRowKey();
 		tree.setRowKey(selectionKey);
