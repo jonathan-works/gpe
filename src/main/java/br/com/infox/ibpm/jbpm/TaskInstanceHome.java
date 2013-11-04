@@ -272,16 +272,20 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void canDoOperation() {
-        if (currentTaskInstance == null) {
-            currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        }
-        if (currentTaskInstance != null) {
+        if (getCurrentTaskInstance() != null) {
             if (situacaoProcessoManager.canOpenTask(currentTaskInstance.getId())) {
                 return;
             }
             FacesMessages.instance().clear();
             throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
         }
+    }
+
+    private TaskInstance getCurrentTaskInstance() {
+        if (currentTaskInstance == null) {
+            currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        }
+        return currentTaskInstance;
     }
 
     public void updateIndex() {
