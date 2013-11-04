@@ -16,6 +16,8 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ImagemBinDAO;
 import br.com.infox.epp.entity.ImagemBin;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.ImageUtil;
 
 @Name(ImagemBinManager.NAME)
@@ -31,16 +33,29 @@ public class ImagemBinManager extends GenericManager {
 	private ImageUtil imageUtil;
 
     public void persistImageBin(ImagemBin imagemBin, String imagesRelativePath) throws IOException {
-        String imagesDir = getImagesDir(imagesRelativePath);
-    	imagemBinDAO.persistImageBin(imagemBin,new File(imagesDir, imagemBin.getNomeArquivo()));
+        String[] imagesDir = getImagesDir(imagesRelativePath);
+        imagemBin.setFilePath(imagesDir[imagesDir.length-1]);
+    	imagemBinDAO.persistImageBin(imagemBin,new File(imagemBin.getFilePath(), imagemBin.getNomeArquivo()));
     }
 
-    public String getImagesDir(String imagesRelativePath) {
-        return imageUtil.getRealPath() + imagesRelativePath;
+    private String[] getImagesDir(final String path,
+            final UsuarioLocalizacao usrLoc) {
+        if (usrLoc != null && usrLoc.getLocalizacao()!= null) {
+            String idEstrutura = "";
+            if (usrLoc.getEstrutura() != null) {
+                idEstrutura = String.valueOf(usrLoc.getEstrutura().getIdLocalizacao());
+            }
+            return new String[]{path, MessageFormat.format("{0}l{1}e{2}", path,usrLoc.getLocalizacao().getIdLocalizacao(),idEstrutura)};
+        }
+        return new String[] {path};
+    }
+    
+    public String[] getImagesDir(String imagesRelativePath) {
+        return getImagesDir(imageUtil.getRealPath()+imagesRelativePath, Authenticator.getUsuarioLocalizacaoAtual());
     }
 
-    public String getImagesPath(String imagesRelativePath) {
-        return imageUtil.getContextPath() + imagesRelativePath;
+    public String[] getImagesPath(String imagesRelativePath) {
+        return getImagesDir(imageUtil.getContextPath()+imagesRelativePath, Authenticator.getUsuarioLocalizacaoAtual());
     }
 
     private void createDir(String imagesDir) {
@@ -70,41 +85,43 @@ public class ImagemBinManager extends GenericManager {
         LOG.info(MessageFormat.format("Arquivo instanciado com sucesso: {0}{1}", fileDestino.getAbsolutePath(),fileDestino.getName()));
     }
     
-    public List<String> getImages(String imagesRelativePath) {
-        String imagesDir = getImagesDir(imagesRelativePath);
-        createDir(imagesDir);
-    	
-    	List<String> files = new ArrayList<String>();
-        
-    	File dir = new File(imagesDir);
-        if (!dir.canRead()) {
-            return null;
-        }
-        String[] filesImg = dir.list(new FilenameFilter() {
+    public List<String> getImages(String imagensRelativePath) {
+        String[] imagensDir = getImagesDir(imagensRelativePath);
+        List<String> files = new ArrayList<String>();
+        for (int i=0;i<imagensDir.length;i++) {
+            createDir(imagensDir[i]);
             
-            @Override
-            public boolean accept(File dir, String name) {
-                return (name.endsWith(".jpg") ||
-                        name.endsWith(".png") ||
-                        name.endsWith(".gif"));
+            File dir = new File(imagensDir[i]);
+            if (!dir.canRead()) {
+                return null;
             }
-            
-        });
-        String imagesPath = getImagesPath(imagesRelativePath);
-        for (int j = 0; j < filesImg.length; j++) {
-            filesImg[j] = imagesPath + "/" + filesImg[j];
-            files.add(filesImg[j]);
+            String[] filesImg = dir.list(new FilenameFilter() {
+                
+                @Override
+                public boolean accept(File dir, String name) {
+                    return (name.endsWith(".jpg") ||
+                            name.endsWith(".png") ||
+                            name.endsWith(".gif"));
+                }
+                
+            });
+            String[] imagensPath = getImagesPath(imagensRelativePath);
+            for (int j = 0; j < filesImg.length; j++) {
+                filesImg[j] = imagensPath[i] + "/" + filesImg[j];
+                files.add(filesImg[j]);
+            }
         }
     
     	return files;
     }
 
-    public void createImageFiles(String relativeFilePath) {
-        List<ImagemBin> list = imagemBinDAO.getTodasAsImagens();
+    public void createImageFiles() {
+        final List<ImagemBin> list = imagemBinDAO.getTodasAsImagens();
         
         for (ImagemBin imagemBin : list) {
-            String imagesDir = getImagesDir(relativeFilePath);
-            File fileDestino = new File(imagesDir, imagemBin.getNomeArquivo());
+            String imagemDir = imageUtil.getRealPath()+imagemBin.getFilePath();
+            createDir(imagemDir);
+            File fileDestino = new File(imagemDir, imagemBin.getNomeArquivo());
             
             if (fileDestino.exists()) {
                 continue;
@@ -112,8 +129,9 @@ public class ImagemBinManager extends GenericManager {
             try {
                 saveFile(imagemBin.getImagem(), fileDestino);
             } catch (IOException e) {
-                LOG.warn(MessageFormat.format("Erro ao adicionar arquivo: {0}{1}", fileDestino.getAbsolutePath(),fileDestino.getName()));
+                LOG.warn(MessageFormat.format("Erro ao adicionar arquivo: {0} {1}", fileDestino.getAbsolutePath(),fileDestino.getName()));
             }
+        
         }
     }
 	
