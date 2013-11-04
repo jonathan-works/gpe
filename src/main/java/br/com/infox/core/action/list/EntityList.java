@@ -14,13 +14,18 @@ import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.ValueExpression;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.framework.EntityQuery;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.util.constants.WarningConstants;
+import br.com.itx.component.Util;
+import br.com.itx.exception.ExcelExportException;
 import br.com.itx.util.EntityUtil;
+import br.com.itx.util.ExcelExportUtil;
 import br.com.itx.util.ReflectionsUtil;
 
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
@@ -42,6 +47,8 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	private E entity;
 
 	private String orderedColumn;
+	
+	private static final int TAMANHO_XLS_PADRAO = 10000;
 	
 	public EntityList () {
 		addSearchFields();
@@ -300,5 +307,38 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	protected void setSearchFieldMap(Map<String, SearchField> searchFieldMap) {
 		this.searchFieldMap = searchFieldMap;
 	}
+	
+	public String getTemplate(){
+        return null;
+    }
+    public String getDownloadXlsName(){
+        return null;
+    }
+    
+    public EntityList<E> getBeanList() {
+        return null;
+    }
+	
+	public void exportarXLS() {
+        List<E> beanList = getBeanList().list(TAMANHO_XLS_PADRAO);
+        try {
+            if (beanList == null || beanList.isEmpty()) {
+                FacesMessages.instance().add(Severity.INFO, "Não há dados para exportar!");
+            } else {
+                exportarXLS(getTemplate(), beanList);
+            }
+        } catch (ExcelExportException e) {
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao exportar arquivo." + e.getMessage());
+        }   
+    }
+    
+    private void exportarXLS (String template, List<E> beanList) throws ExcelExportException {
+        String urlTemplate = new Util().getContextRealPath() + template;
+        Map<String, Object> map = new HashMap<String, Object>();
+        StringBuilder className = new StringBuilder(getEntityName());
+        className = className.replace(0, 1, className.substring(0, 1).toLowerCase());
+        map.put(className.toString(), beanList);
+        ExcelExportUtil.downloadXLS(urlTemplate, map, getDownloadXlsName());
+    }
 	
 }
