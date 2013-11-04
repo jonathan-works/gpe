@@ -307,7 +307,7 @@ public class Authenticator {
 		getAuthenticatorService().logDaBuscaDasRoles(usuarioLocalizacao);
 		getAuthenticatorService().addRolesAtuais(roleSet);
 		setVariaveisDoContexto(usuarioLocalizacao, roleSet);
-		if (!getUsuarioLogado().getProvisorio()) {
+		if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
 			redirectToPainelDoUsuario();
 		}	
 	}
