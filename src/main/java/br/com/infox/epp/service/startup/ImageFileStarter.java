@@ -10,8 +10,6 @@ import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.epp.manager.ImagemBinManager;
-import br.com.infox.ibpm.component.HelpFileUpload;
-import br.com.infox.ibpm.component.ImageFileUpload;
 
 @Name(ImageFileStarter.NAME)
 @Scope(ScopeType.APPLICATION)
@@ -28,8 +26,7 @@ public class ImageFileStarter {
     @Create
     @Transactional
     public void init() {
-        imagemBinManager.createImageFiles(ImageFileUpload.IMAGE_RELATIVE_PATH);
-        imagemBinManager.createImageFiles(HelpFileUpload.HELP_IMAGE_RELATIVE_PATH);
+        imagemBinManager.createImageFiles();
     }
 
 }
