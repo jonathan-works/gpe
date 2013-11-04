@@ -15,8 +15,6 @@ import org.richfaces.model.UploadedFile;
 
 import br.com.infox.epp.entity.ImagemBin;
 import br.com.infox.epp.manager.ImagemBinManager;
-import br.com.infox.ibpm.entity.UsuarioLocalizacao;
-import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.Crypto;
 
