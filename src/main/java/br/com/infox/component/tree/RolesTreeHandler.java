@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.access.entity.Papel;
 
 @Name("rolesTree")
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.PAGE)
 @BypassInterceptors
 public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 

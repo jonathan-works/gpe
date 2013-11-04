@@ -12,7 +12,7 @@ import br.com.infox.component.tree.EntityNode;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 
 @Name("papelTree")
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.PAGE)
 @BypassInterceptors
 public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
 
