@@ -27,7 +27,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.manager.TipoModeloDocumentoPapelManager;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;

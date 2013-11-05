@@ -26,7 +26,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.manager.TipoModeloDocumentoManager;
 import br.com.itx.component.AbstractHome;
