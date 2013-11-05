@@ -14,8 +14,8 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
+import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacaoQuery;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.query.NatCatFluxoLocalizacaoQuery;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Name(NatCatFluxoLocalizacaoDAO.NAME)
