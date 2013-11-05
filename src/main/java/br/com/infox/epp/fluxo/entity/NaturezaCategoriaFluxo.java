@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.entity.ProcessoEpa;
-import br.com.infox.epp.query.NaturezaCategoriaFluxoQuery;
+import br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.util.HibernateUtil;
 

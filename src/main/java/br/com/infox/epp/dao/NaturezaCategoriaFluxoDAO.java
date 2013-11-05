@@ -15,7 +15,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.query.NaturezaCategoriaFluxoQuery;
+import br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.util.EntityUtil;
 
