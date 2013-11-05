@@ -32,7 +32,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.query.ModeloDocumentoQuery;
+import br.com.infox.epp.documento.query.ModeloDocumentoQuery;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.util.constants.LengthConstants;
 /**
