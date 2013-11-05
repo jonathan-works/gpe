@@ -24,29 +24,4 @@ public class CategoriaHome extends AbstractHome<Categoria> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "categoriaHome";
 	
-	@In private ItemManager itemManager;
-	@In private CategoriaItemManager categoriaItemManager;
-	
-	private Item itemASerAdicionado;
-	
-	public void removeCategoriaItem(CategoriaItem categoriaItem){
-	    
-	    instance.getCategoriaItemList().remove(categoriaItem);
-	    getEntityManager().remove(categoriaItem);
-	    super.update();
-	}
-	
-	public void addCategoriaItem(Item item){
-	    instance.getCategoriaItemList().addAll(categoriaItemManager.createCategoriaItemList(instance, itemManager.getFolhas(item)));
-	    super.update();
-	}
-
-    public Item getItemASerAdicionado() {
-        return itemASerAdicionado;
-    }
-
-    public void setItemASerAdicionado(Item itemASerAdicionado) {
-        this.itemASerAdicionado = itemASerAdicionado;
-    }
-	
 }
