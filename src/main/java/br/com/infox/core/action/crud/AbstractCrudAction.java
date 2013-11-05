@@ -1,5 +1,7 @@
 package br.com.infox.core.action.crud;
 
+import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
@@ -159,5 +161,14 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 		//Caso haja alguma ação a ser executada assim que a navegação for para a aba de formulário,
 		//então deve ser implementada aqui.
 	}
+	
+	public String getHomeName() {
+        String name = null;
+        Name nameAnnotation = this.getClass().getAnnotation(Name.class);
+        if (nameAnnotation != null) {
+            name = nameAnnotation.value();
+        }
+        return name ;
+    }
 	
 }
