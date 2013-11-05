@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.dao.NaturezaCategoriaFluxoDAO;
+import br.com.infox.epp.fluxo.dao.NaturezaCategoriaFluxoDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
