@@ -12,7 +12,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.epp.query.FluxoQuery;
+import br.com.infox.epp.fluxo.query.FluxoQuery;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.util.EntityUtil;
 

@@ -1,4 +1,4 @@
-package br.com.infox.epp.query;
+package br.com.infox.epp.fluxo.query;
 
 /**
  * Interface com as queries da entidade Fluxo
