@@ -12,12 +12,11 @@
 	xmlns:wi="http://www.itx.com.br/jsf">
 	<ui:param
 		name="selectable"
-		value="#{wi:get(selectable, true)}" />
+		value="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}" />
 	<h:form id="papeisUsuarioForm" styleClass="painelUsuario">
 		<c:if test="#{selectable}">
 			<wi:selectOneMenuEntity
 				value="#{authenticator.localizacaoAtualCombo}"
-				rendered="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}"
 				id="usuarioLocalizacao"
 				template="/WEB-INF/xhtml/components/templates/display.xhtml"
 				onchange="this.form.submit()"
@@ -28,11 +27,9 @@
 			</wi:selectOneMenuEntity>
 		</c:if>
 		<c:if test="#{not selectable}">
-			<h:outputLabel value="#{authenticator.localizacaoAtualCombo}" />
+			<h:outputText styleClass="painelUsuario-label" value="#{usuarioLogado}" />
+			<h:outputText value="#{authenticator.localizacaoAtualCombo}" />
 		</c:if>
-		<h:outputText
-			value="#{authenticator.usuarioLocalizacaoListItems[0]}"
-			rendered="#{identity.loggedIn and authenticator.usuarioLocalizacaoListItems.size() == 1}" />
 	</h:form>
 
 </ui:composition>
