@@ -13,7 +13,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.entity.NaturezaLocalizacao;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
@@ -30,8 +29,6 @@ public class Natureza implements java.io.Serializable {
 	private Boolean hasPartes;
 	private Boolean ativo;
 	
-	private List<NaturezaLocalizacao> naturezaLocalizacaoList = 
-		new ArrayList<NaturezaLocalizacao>(0);
 	private List<NaturezaCategoriaFluxo> natCatFluxoList = 
 		new ArrayList<NaturezaCategoriaFluxo>(0);
 	
@@ -84,15 +81,7 @@ public class Natureza implements java.io.Serializable {
 	public String toString() {
 		return natureza;
 	}
-	
-	public void setNaturezaLocalizacaoList(List<NaturezaLocalizacao> naturezaLocalizacaoList) {
-		this.naturezaLocalizacaoList = naturezaLocalizacaoList;
-	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "natureza")	
-	public List<NaturezaLocalizacao> getNaturezaLocalizacaoList() {
-		return naturezaLocalizacaoList;
-	}
     @Override
     public int hashCode() {
         final int prime = 31;
