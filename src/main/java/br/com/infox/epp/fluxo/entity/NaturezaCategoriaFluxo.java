@@ -21,7 +21,6 @@ import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery;
 import br.com.infox.ibpm.entity.Fluxo;
