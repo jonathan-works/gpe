@@ -22,14 +22,12 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.manager.TipoProcessoDocumentoManager;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.type.TipoDocumentoEnum;
 import br.com.infox.ibpm.type.TipoNumeracaoEnum;
 import br.com.infox.ibpm.type.VisibilidadeEnum;
-import br.com.infox.list.TipoProcessoDocumentoList;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
@@ -44,26 +42,8 @@ public class TipoProcessoDocumentoHome
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(TipoProcessoDocumentoHome.class);
 	
-	private static final String TEMPLATE = "/ClassificacaoDocumento/tipoProcessoDocumentoTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "ClassificacaoDocumento.xls";
-	
 	@In private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
 
-	@Override
-	public EntityList<TipoProcessoDocumento> getBeanList() {
-		return TipoProcessoDocumentoList.instance();
-	}
-	
-	@Override
-	public String getTemplate() {
-		return TEMPLATE;
-	}
-	
-	@Override
-	public String getDownloadXlsName() {
-		return DOWNLOAD_XLS_NAME;
-	}
-	
 	public static TipoProcessoDocumentoHome instance() {
 		return ComponentUtil.getComponent("tipoProcessoDocumentoHome");
 	}

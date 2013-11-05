@@ -17,35 +17,16 @@ package br.com.infox.ibpm.home;
 
 import org.jboss.seam.annotations.Name;
 import br.com.infox.annotations.manager.RecursiveManager;
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.component.tree.ItemTreeHandler;
 import br.com.infox.ibpm.entity.Item;
-import br.com.infox.list.ItemList;
 import br.com.itx.component.AbstractHome;
 
 @Name(ItemHome.NAME)
 public class ItemHome extends AbstractHome<Item> {
 	private static final long serialVersionUID = 1L;
-	private static final String TEMPLATE = "/Item/itemTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "Items.xls";
 	
 	public static final String NAME = "itemHome";
 	
-	@Override
-	public EntityList<Item> getBeanList() {
-		return ItemList.instance();
-	}
-	
-	@Override
-	public String getTemplate() {
-		return TEMPLATE;
-	}
-	
-	@Override
-	public String getDownloadXlsName() {
-		return DOWNLOAD_XLS_NAME;
-	}
-
 	public void limparTrees() {
 		ItemTreeHandler ith = getComponent(ItemTreeHandler.NAME);
 		ith.clearTree();

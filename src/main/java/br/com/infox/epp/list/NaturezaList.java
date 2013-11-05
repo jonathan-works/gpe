@@ -22,6 +22,9 @@ public class NaturezaList extends EntityList<Natureza> {
 
 	private static final long serialVersionUID = 1L;
 	
+	private static final String TEMPLATE = "/Natureza/NaturezaTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Naturezas.xls";
+	
 	private static final String DEFAULT_EJBQL = "select o from Natureza o";
 	private static final String DEFAULT_ORDER = "natureza";
 
@@ -52,5 +55,20 @@ public class NaturezaList extends EntityList<Natureza> {
 	protected String getDefaultOrder() {
 		return DEFAULT_ORDER;
 	}
+	
+	@Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
+    
+    @Override
+    public EntityList<Natureza> getBeanList() {
+        return NaturezaList.instance();
+    }
 	
 }

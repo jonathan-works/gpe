@@ -19,6 +19,9 @@ import br.com.itx.util.ComponentUtil;
 public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
 	public static final String NAME = "tipoModeloDocumentoList";
 	private static final long serialVersionUID = 1L;
+	
+	private static final String TEMPLATE = "/TipoModeloDocumento/tipoModeloDocumentoTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "TiposModeloDocumento.xls";
 
 	private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o";
 	private static final String DEFAULT_ORDER = "grupoModeloDocumento";
@@ -49,5 +52,20 @@ public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
 	}
+	
+	@Override
+    public EntityList<TipoModeloDocumento> getBeanList() {
+        return TipoModeloDocumentoList.instance();
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
 
 }

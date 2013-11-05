@@ -5,21 +5,22 @@ import java.util.Map;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.Cbo;
 import br.com.itx.util.ComponentUtil;
 
 @Name(CboList.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class CboList extends EntityList<Cbo> {
 
 	public static final String NAME = "cboList";
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final String TEMPLATE = "/CBO/CboTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Cbo.xls";
+
 	
 	private static final String DEFAULT_EJBQL = "select o from Cbo o";
 	private static final String DEFAULT_ORDER = "codCbo";
@@ -51,4 +52,18 @@ public class CboList extends EntityList<Cbo> {
 		return ComponentUtil.getComponent(CboList.NAME);
 	}
 	
+	@Override
+    public EntityList<Cbo> getBeanList() {
+        return CboList.instance();
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
 }
