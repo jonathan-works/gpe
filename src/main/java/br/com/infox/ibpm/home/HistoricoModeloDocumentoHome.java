@@ -24,6 +24,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.home.ModeloDocumentoHome;
 import br.com.infox.epp.query.HistoricoModeloDocumentoQuery;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.util.constants.WarningConstants;

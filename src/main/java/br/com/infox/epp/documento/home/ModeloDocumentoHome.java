@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.documento.home;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +35,8 @@ import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Variavel;
+import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.home.TipoModeloDocumentoHome;
 import br.com.infox.ibpm.manager.VariavelManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
