@@ -22,9 +22,9 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.home.FluxoHome;
 import br.com.infox.ibpm.bean.PrazoTask;
 import br.com.infox.ibpm.entity.Tarefa;
-import br.com.infox.ibpm.home.FluxoHome;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.type.PrazoEnum;

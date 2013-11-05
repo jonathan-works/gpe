@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.fluxo.home;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,6 +31,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 import br.com.itx.component.AbstractHome;
