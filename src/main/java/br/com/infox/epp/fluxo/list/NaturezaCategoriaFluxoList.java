@@ -1,4 +1,4 @@
-package br.com.infox.epp.list;
+package br.com.infox.epp.fluxo.list;
 
 import java.util.List;
 import java.util.Map;
