@@ -19,8 +19,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="br.com.infox.epp.entity.NaturezaCategoriaFluxo" project="epp" 
-    file="/epp/src/main/java/br/com/infox/epp/entity/NaturezaCategoriaFluxo.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/fluxo/entity/NaturezaCategoriaFluxo.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1442" y="1154"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

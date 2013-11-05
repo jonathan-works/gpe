@@ -19,7 +19,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.query.CategoriaQuery;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;

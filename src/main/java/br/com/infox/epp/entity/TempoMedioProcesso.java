@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.itx.util.HibernateUtil;
 
