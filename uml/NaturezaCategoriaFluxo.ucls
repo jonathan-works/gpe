@@ -57,8 +57,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="br.com.infox.ibpm.entity.Fluxo" project="epp" 
-    file="/epp/src/main/java/br/com/infox/ibpm/entity/Fluxo.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="7" language="java" name="br.com.infox.epp.fluxo.entity.Fluxo" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/fluxo/entity/Fluxo.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1878" y="1026"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

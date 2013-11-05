@@ -51,7 +51,7 @@ import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
 import br.com.infox.component.JsfComponentTreeValidator;
-import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.ibpm.home.FluxoHome;
 import br.com.infox.ibpm.jbpm.fitter.EventFitter;
 import br.com.infox.ibpm.jbpm.fitter.NodeFitter;

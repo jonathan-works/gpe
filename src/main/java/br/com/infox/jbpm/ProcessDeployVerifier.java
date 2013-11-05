@@ -37,7 +37,7 @@ import org.jbpm.db.GraphSession;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.xml.sax.InputSource;
 
-import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.JpdlXmlReader;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;

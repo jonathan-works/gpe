@@ -19,10 +19,10 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.entity.ProcessoEpa;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.query.ProcessoEpaQuery;
 import br.com.infox.epp.type.TipoPessoaEnum;
-import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;

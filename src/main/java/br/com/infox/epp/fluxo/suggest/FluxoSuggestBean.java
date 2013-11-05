@@ -18,7 +18,7 @@ package br.com.infox.epp.fluxo.suggest;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.component.suggest.AbstractSuggestBean;
-import br.com.infox.ibpm.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 
 
 @Name(FluxoSuggestBean.NAME)

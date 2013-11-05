@@ -17,11 +17,11 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
-import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.itx.util.EntityUtil;

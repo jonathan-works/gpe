@@ -11,12 +11,12 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
-import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 

@@ -13,8 +13,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
-import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.FluxoPapel;
 import br.com.infox.ibpm.home.FluxoHome;
 import br.com.infox.ibpm.manager.FluxoPapelManager;

@@ -9,8 +9,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.ibpm.dao.FluxoPapelDAO;
-import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.FluxoPapel;
 
 @Name(FluxoPapelManager.NAME)
