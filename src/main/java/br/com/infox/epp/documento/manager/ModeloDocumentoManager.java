@@ -15,8 +15,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
+import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.ibpm.dao.VariavelDAO;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
