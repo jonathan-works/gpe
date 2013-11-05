@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.epp.entity.Natureza;
+import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.itx.util.ComponentUtil;
 
 @Name(NaturezaList.NAME)

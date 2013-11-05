@@ -8,9 +8,9 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.epp.entity.Natureza;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;

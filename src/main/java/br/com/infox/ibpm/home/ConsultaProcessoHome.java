@@ -15,8 +15,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.ibpm.bean.ConsultaProcesso;
 import br.com.itx.util.EntityUtil;
 

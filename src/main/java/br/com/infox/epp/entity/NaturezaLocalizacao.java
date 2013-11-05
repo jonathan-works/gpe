@@ -17,6 +17,7 @@ import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.query.NaturezaLocalizacaoQuery;
 import br.com.infox.ibpm.entity.Localizacao;
 
