@@ -172,12 +172,13 @@ public abstract class AbstractAction {
 	 * Inativa todos os registros contidos na árvore abaixo do 
 	 * parametro informado.
 	 * @param o Registro que deseja inativar.
+	 * @return 
 	 */
 	@SuppressWarnings(WarningConstants.UNCHECKED)
-	protected void inactiveRecursive(Object o) {
+	protected String inactiveRecursive(Object o) {
 		ComponentUtil.setValue(o, "ativo", false);
 		if(!RecursiveManager.isRecursive(o)) {
-			return;
+			return null;
 		}
 		List<Object> childList = (List<Object>) AnnotationUtil.
 											getValue(o, ChildList.class);
@@ -186,6 +187,7 @@ public abstract class AbstractAction {
 				inactiveRecursive(child);
 			}
 		}
+		return UPDATED;
 	}
 	
 	/**
