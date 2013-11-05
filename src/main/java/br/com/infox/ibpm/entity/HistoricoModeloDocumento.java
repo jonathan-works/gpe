@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity

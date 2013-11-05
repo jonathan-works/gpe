@@ -11,7 +11,7 @@ import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.ibpm.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
 
 @Name(AssociativeModeloDocumentoList.NAME)
