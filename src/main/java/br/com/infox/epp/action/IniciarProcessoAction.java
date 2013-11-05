@@ -19,9 +19,9 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.bean.ItemBean;
-import br.com.infox.epp.entity.CategoriaItem;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.entity.ProcessoEpa;
+import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.service.IniciarProcessoService;
 import br.com.infox.epp.type.SituacaoPrazoEnum;

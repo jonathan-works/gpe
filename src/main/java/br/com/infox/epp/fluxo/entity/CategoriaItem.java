@@ -1,4 +1,4 @@
-package br.com.infox.epp.entity;
+package br.com.infox.epp.fluxo.entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -16,7 +16,6 @@ import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.query.CategoriaItemQuery;
 import br.com.infox.ibpm.entity.Item;
 
