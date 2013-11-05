@@ -10,8 +10,8 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.CategoriaItemDAO;
 import br.com.infox.epp.entity.CategoriaItem;
+import br.com.infox.epp.fluxo.crud.CategoriaCrudAction;
 import br.com.infox.epp.fluxo.entity.Categoria;
-import br.com.infox.epp.fluxo.home.CategoriaHome;
 import br.com.infox.ibpm.entity.Item;
 import br.com.itx.util.ComponentUtil;
 
@@ -36,11 +36,6 @@ public class CategoriaItemManager extends GenericManager{
 	
 	public boolean containsCategoriaItem(CategoriaItem categoriaItem)  {
 	    return categoriaItemDAO.countByCategoriaItem(categoriaItem.getCategoria(), categoriaItem.getItem()) > 0;
-	}
-	
-	public Categoria getCategoriaAtual() {
-	    CategoriaHome categoriaHome = ComponentUtil.getComponent(CategoriaHome.NAME);
-	    return categoriaHome.getInstance();
 	}
 	
 	public List<CategoriaItem> createCategoriaItemList(Categoria categoria, Set<Item> itens){
