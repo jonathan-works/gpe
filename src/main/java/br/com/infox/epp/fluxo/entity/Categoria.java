@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.entity.CategoriaItem;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.query.CategoriaQuery;
+import br.com.infox.epp.fluxo.query.CategoriaQuery;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 

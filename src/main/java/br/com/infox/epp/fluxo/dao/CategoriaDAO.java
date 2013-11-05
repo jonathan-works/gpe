@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.epp.query.CategoriaQuery;
+import br.com.infox.epp.fluxo.query.CategoriaQuery;
 
 /**
  * Classe DAO para a entidade Categoria
