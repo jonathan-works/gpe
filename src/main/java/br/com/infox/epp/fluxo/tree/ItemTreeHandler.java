@@ -19,8 +19,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.epp.fluxo.entity.Item;
-import br.com.itx.util.ComponentUtil;
-
 
 @Name(ItemTreeHandler.NAME)
 public class ItemTreeHandler extends AbstractTreeHandler<Item> {
@@ -41,10 +39,5 @@ public class ItemTreeHandler extends AbstractTreeHandler<Item> {
 		+ EntityNode.PARENT_NODE;
 	}
 
-	@Override
-	protected Item getEntityToIgnore() {
-		return ComponentUtil.getInstance("itemHome");
-	}
-		
 }
 
