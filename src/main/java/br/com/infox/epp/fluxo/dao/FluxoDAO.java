@@ -1,4 +1,4 @@
-package br.com.infox.epp.dao;
+package br.com.infox.epp.fluxo.dao;
 
 import java.util.HashMap;
 import java.util.List;
