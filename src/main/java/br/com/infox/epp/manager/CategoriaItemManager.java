@@ -10,10 +10,8 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.CategoriaItemDAO;
 import br.com.infox.epp.entity.CategoriaItem;
-import br.com.infox.epp.fluxo.crud.CategoriaCrudAction;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.ibpm.entity.Item;
-import br.com.itx.util.ComponentUtil;
 
 @Name(CategoriaItemManager.NAME)
 @AutoCreate
