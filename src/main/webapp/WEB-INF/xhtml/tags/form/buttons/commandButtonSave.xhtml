@@ -20,8 +20,8 @@
 
 	<wi:commandButton
          id="saveButton"
-         action="#{saveAction}"
+         action="#{empty saveAction ? home.homeName.concat('.save()') : saveAction}"
          reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
-         value="#{home.managed ? 'Gravar' : 'Incluir'}" />
+         value="#{home.managed ? 'Gravar2' : 'Incluir2'}" />
 	
 </ui:composition>
