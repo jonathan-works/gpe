@@ -148,10 +148,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 * Ao mudar para a aba de pesquisa é criada uma nova instancia.
 	 */
 	public void onClickSearchTab() {
-		if(isManaged()) {
-			instance = null;
-			id = null;
-		}
+		newInstance();
 	}
 	
 	/**
