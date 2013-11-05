@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.query.CategoriaItemQuery;
+import br.com.infox.epp.fluxo.query.CategoriaItemQuery;
 import br.com.infox.ibpm.entity.Item;
 
 @Entity
