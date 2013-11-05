@@ -1,5 +1,6 @@
 package br.com.infox.util;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,18 +29,25 @@ import twitter4j.conf.ConfigurationBuilder;
  *
  */
 public final class TwitterUtil {
-	
-	private static TwitterUtil instance = init();
+
+    private static final String DEFAULT_MESSAGE_FORMAT = "@{0} {1}";
+    private static final String OAUTH_CONSUMER_SECRET = "oauthConsumerSecret";
+    private static final String OAUTH_CONSUMER_KEY = "oauthConsumerKey";
+    private static final LogProvider LOG = Logging.getLogProvider(TwitterUtil.class);
+	private static TwitterUtil instance;
 	private TwitterFactory factory;
 	private Twitter aplicacao;
-	private static final LogProvider LOG = Logging.getLogProvider(TwitterUtil.class);
 		
 	private TwitterUtil() {
-		ConfigurationBuilder builder = new ConfigurationBuilder();
-		builder.setOAuthConsumerKey(ParametroUtil.getParametro("oauthConsumerKey"));
-		builder.setOAuthConsumerSecret(ParametroUtil.getParametro("oauthConsumerSecret"));
-		factory = new TwitterFactory(builder.build());
 	}
+
+    private void config() {
+        ConfigurationBuilder builder = new ConfigurationBuilder();
+		builder.setOAuthConsumerKey(ParametroUtil.getParametro(OAUTH_CONSUMER_KEY));
+		builder.setOAuthConsumerSecret(ParametroUtil.getParametro(OAUTH_CONSUMER_SECRET));
+		factory = new TwitterFactory(builder.build());
+    }
+	
 /*	
        =================================== Métodos que utilizam com o twitter da aplicação =======================================
 */	
@@ -82,7 +90,7 @@ public final class TwitterUtil {
 	 * @throws TwitterException Quando não for possível conectar ao Twitter ou a String resultante da postagem possuir mais de 140 caracteres
 	 */
 	public Status sendMessage(ContaTwitter receiver, String message) throws TwitterException {
-		String newMessage = "@" + receiver.getScreenName() + " " + message;
+		String newMessage = MessageFormat.format(DEFAULT_MESSAGE_FORMAT, receiver.getScreenName(), message);
 		return aplicacao.updateStatus(newMessage);
 	}
 	
@@ -96,8 +104,7 @@ public final class TwitterUtil {
 	public List<Status> sendMessage(List<ContaTwitter> receivers, String message) throws TwitterException {
 		List<Status> statusList = new ArrayList<Status>();
 		for (ContaTwitter receiver : receivers){
-			String newMessage = "@" + receiver.getScreenName() + " " + message;
-			statusList.add(aplicacao.updateStatus(newMessage));
+			statusList.add(sendMessage(receiver, message));
 		}
 		return statusList;
 	}
@@ -212,7 +219,7 @@ public final class TwitterUtil {
 	 * @throws TwitterException Quando não for possível conectar ao Twitter ou a String resultante da postagem possuir mais de 140 caracteres
 	 */
 	public Status sendMessage(ContaTwitter sender, String receiverScreenName, String message) throws TwitterException{
-		String newMessage = "@" + receiverScreenName + " " + message;
+		String newMessage = MessageFormat.format(DEFAULT_MESSAGE_FORMAT, receiverScreenName, message);
 		return createTwitter(sender).updateStatus(newMessage);
 	}
 	
@@ -225,7 +232,7 @@ public final class TwitterUtil {
 	 * @throws TwitterException Quando não for possível conectar ao Twitter ou a String resultante da postagem possuir mais de 140 caracteres
 	 */
 	public Status sendMessage(ContaTwitter sender, ContaTwitter receiver, String message) throws TwitterException{
-		String newMessage = "@" + receiver.getScreenName() + " " + message;
+		String newMessage = MessageFormat.format(DEFAULT_MESSAGE_FORMAT, receiver.getScreenName(), message);
 		return createTwitter(sender).updateStatus(newMessage);
 	}
 	
@@ -241,7 +248,7 @@ public final class TwitterUtil {
 		List<Status> statusList = new ArrayList<Status>();
 		Twitter twitter = createTwitter(sender);
 		for (ContaTwitter receiver : receivers){
-			String newMessage = "@" + receiver.getScreenName() + " " + message;
+			String newMessage = MessageFormat.format(DEFAULT_MESSAGE_FORMAT, receiver.getScreenName(), message);
 			statusList.add(twitter.updateStatus(newMessage));
 		}
 		return statusList;
@@ -323,6 +330,9 @@ public final class TwitterUtil {
 //  ======================================== Getters ==============================================
 	
 	public static TwitterUtil getInstance() {
+	    if (instance == null) {
+	        instance = init();
+	    }
 		return instance;
 	}
 	
@@ -369,7 +379,7 @@ public final class TwitterUtil {
 */	
 	
 	public static void restart(){
-		instance = init();
+		instance.config();
 	}
 
 /*	
@@ -401,6 +411,7 @@ public final class TwitterUtil {
 		TwitterUtil result = null;
 		try {
 			result = new TwitterUtil();
+			result.config();
 			result.loadApplicationTwitter();
 		} catch (IllegalArgumentException | NullPointerException | NoResultException e) {
 		    LOG.error(".init()", e);
