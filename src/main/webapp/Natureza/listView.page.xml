@@ -8,8 +8,8 @@
 	<begin-conversation join="true" />
 	<restrict>#{security.checkPage()}</restrict>
 
-	<param name="id" value="#{naturezaHome.id}"
+	<param name="id" value="#{naturezaCrudAction.id}"
 		   converterId="integerConverter" />
-	<param name="tab" value="#{naturezaHome.tab}" />
+	<param name="tab" value="#{naturezaCrudAction.tab}" />
 	
 </page>
