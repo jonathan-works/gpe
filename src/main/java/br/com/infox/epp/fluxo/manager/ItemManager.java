@@ -1,4 +1,4 @@
-package br.com.infox.epp.manager;
+package br.com.infox.epp.fluxo.manager;
 
 import java.util.HashSet;
 import java.util.Set;
