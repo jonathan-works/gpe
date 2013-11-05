@@ -1,4 +1,4 @@
-package br.com.infox.epp.bean;
+package br.com.infox.epp.fluxo.bean;
 
 import br.com.infox.epp.fluxo.entity.Item;
 
