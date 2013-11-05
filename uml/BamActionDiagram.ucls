@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="br.com.infox.epp.manager.FluxoManager" project="epp" 
-    file="/epp/src/main/java/br/com/infox/epp/manager/FluxoManager.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="br.com.infox.epp.fluxo.manager.FluxoManager" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/fluxo/manager/FluxoManager.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="151" width="268" x="375" y="282"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
