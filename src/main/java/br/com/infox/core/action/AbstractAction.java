@@ -13,12 +13,15 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.annotations.ChildList;
 import br.com.infox.annotations.manager.RecursiveManager;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.util.PostgreSQLErrorCode;
+import br.com.infox.util.PostgreSQLExceptionManager;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.AnnotationUtil;
@@ -41,6 +44,9 @@ public abstract class AbstractAction {
 	
 	@In
 	private GenericManager genericManager;
+	
+	@In
+    private PostgreSQLExceptionManager postgreSQLExceptionManager;
 	
 	protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
@@ -80,7 +86,13 @@ public abstract class AbstractAction {
 			LOG.error(msg+" ("+ getObjectClassName(o) + ")", e);	
 		} catch (ApplicationException e){
 			throw new ApplicationException("Erro: " + e.getMessage());
-		} catch (Exception e) {
+		} catch (javax.persistence.PersistenceException e) {
+            LOG.error(msg, e);
+            PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);
+            if (errorCode != null) {
+                ret = tratarErrosDePersistencia(errorCode.toString());
+            }
+        }catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
 				instance().add(StatusMessage.Severity.ERROR,
@@ -201,6 +213,18 @@ public abstract class AbstractAction {
 	
 	protected GenericManager getGenericManager() {
         return genericManager;
+    }
+	
+	private String tratarErrosDePersistencia(String ret){
+        String message = null;
+        if (PostgreSQLErrorCode.UNIQUE_VIOLATION.toString().equals(ret)){
+            message = MSG_REGISTRO_CADASTRADO;
+        }
+        if (message != null) {
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add(Severity.ERROR, message);
+        }
+        return ret;
     }
 	
 }
