@@ -16,9 +16,9 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.epp.bean.ItemBean;
-import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.Natureza;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Item;

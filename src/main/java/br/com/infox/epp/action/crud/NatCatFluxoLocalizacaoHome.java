@@ -10,10 +10,10 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
-import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.entity.Natureza;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.entity.Fluxo;
