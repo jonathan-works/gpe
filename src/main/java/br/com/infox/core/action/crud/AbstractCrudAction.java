@@ -91,7 +91,19 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	 */
 	@Override
 	public boolean isManaged() {
+	    mergeWhenNeeded();
 		return instance != null && contains(instance);
+	}
+	
+	private void mergeWhenNeeded() {
+        if (getInstance() != null && isIdDefined() && !contains(instance)) {
+            setInstance(EntityUtil.getEntityManager().merge(getInstance()));
+        }
+    }
+	
+	private boolean isIdDefined()
+	{
+	    return getId()!=null && !"".equals( getId() );
 	}
 
 	/**
