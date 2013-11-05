@@ -1,15 +1,10 @@
 package br.com.infox.epp.fluxo.home;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.epp.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Categoria;
-import br.com.infox.epp.manager.CategoriaItemManager;
-import br.com.infox.epp.manager.ItemManager;
-import br.com.infox.ibpm.entity.Item;
 import br.com.itx.component.AbstractHome;
 
 /**
