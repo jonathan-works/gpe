@@ -18,7 +18,7 @@ package br.com.infox.ibpm.component.tree;
 import org.jboss.seam.annotations.Name;
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
-import br.com.infox.ibpm.entity.Item;
+import br.com.infox.epp.fluxo.entity.Item;
 import br.com.itx.util.ComponentUtil;
 
 

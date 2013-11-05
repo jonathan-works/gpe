@@ -11,7 +11,7 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.dao.CategoriaItemDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
-import br.com.infox.ibpm.entity.Item;
+import br.com.infox.epp.fluxo.entity.Item;
 
 @Name(CategoriaItemManager.NAME)
 @AutoCreate

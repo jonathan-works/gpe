@@ -1,6 +1,6 @@
 package br.com.infox.epp.bean;
 
-import br.com.infox.ibpm.entity.Item;
+import br.com.infox.epp.fluxo.entity.Item;
 
 public class ItemBean {
 

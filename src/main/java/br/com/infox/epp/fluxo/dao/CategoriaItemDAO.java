@@ -12,8 +12,8 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
+import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.query.CategoriaItemQuery;
-import br.com.infox.ibpm.entity.Item;
 
 @Name(CategoriaItemDAO.NAME)
 @Scope(ScopeType.CONVERSATION)
