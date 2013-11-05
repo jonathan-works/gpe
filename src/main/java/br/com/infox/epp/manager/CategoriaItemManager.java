@@ -11,8 +11,8 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.CategoriaItemDAO;
 import br.com.infox.epp.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.home.CategoriaHome;
 import br.com.infox.ibpm.entity.Item;
-import br.com.infox.ibpm.home.CategoriaHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(CategoriaItemManager.NAME)

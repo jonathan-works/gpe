@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.fluxo.home;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
