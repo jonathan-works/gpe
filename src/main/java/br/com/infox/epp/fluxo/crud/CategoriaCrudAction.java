@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
-import br.com.infox.epp.manager.CategoriaItemManager;
+import br.com.infox.epp.fluxo.manager.CategoriaItemManager;
 import br.com.infox.epp.manager.ItemManager;
 import br.com.infox.ibpm.component.tree.ItemTreeHandler;
 import br.com.infox.ibpm.entity.Item;
