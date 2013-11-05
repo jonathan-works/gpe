@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.component.tree;
+package br.com.infox.epp.fluxo.tree;
 
 import org.jboss.seam.annotations.Name;
 import br.com.infox.component.tree.AbstractTreeHandler;

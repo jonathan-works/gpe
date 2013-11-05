@@ -18,7 +18,7 @@ package br.com.infox.ibpm.home;
 import org.jboss.seam.annotations.Name;
 import br.com.infox.annotations.manager.RecursiveManager;
 import br.com.infox.epp.fluxo.entity.Item;
-import br.com.infox.ibpm.component.tree.ItemTreeHandler;
+import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 import br.com.itx.component.AbstractHome;
 
 @Name(ItemHome.NAME)
