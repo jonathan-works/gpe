@@ -37,24 +37,12 @@ public class NaturezaCategoriaFluxoCrudAction extends AbstractCrudAction<Naturez
         return naturezaList;
     }
 
-    public void setNaturezaList(List<Natureza> naturezaList) {
-        this.naturezaList = naturezaList;
-    }
-
     public List<Categoria> getCategoriaList() {
         return categoriaList;
-    }
-
-    public void setCategoriaList(List<Categoria> categoriaList) {
-        this.categoriaList = categoriaList;
     }
 
     public List<Fluxo> getFluxoList() {
         return fluxoList;
     }
 
-    public void setFluxoList(List<Fluxo> fluxoList) {
-        this.fluxoList = fluxoList;
-    }
-    
 }
