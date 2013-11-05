@@ -1,4 +1,4 @@
-package br.com.infox.epp.query;
+package br.com.infox.epp.documento.query;
 
 public interface HistoricoModeloDocumentoQuery {
 	
