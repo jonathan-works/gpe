@@ -28,18 +28,22 @@ import twitter4j.conf.ConfigurationBuilder;
  *
  */
 public final class TwitterUtil {
-	
-	private static TwitterUtil instance = init();
+
+    private static final LogProvider LOG = Logging.getLogProvider(TwitterUtil.class);
+	private static TwitterUtil instance;
 	private TwitterFactory factory;
 	private Twitter aplicacao;
-	private static final LogProvider LOG = Logging.getLogProvider(TwitterUtil.class);
 		
 	private TwitterUtil() {
-		ConfigurationBuilder builder = new ConfigurationBuilder();
+	}
+
+    private void config() {
+        ConfigurationBuilder builder = new ConfigurationBuilder();
 		builder.setOAuthConsumerKey(ParametroUtil.getParametro("oauthConsumerKey"));
 		builder.setOAuthConsumerSecret(ParametroUtil.getParametro("oauthConsumerSecret"));
 		factory = new TwitterFactory(builder.build());
-	}
+    }
+	
 /*	
        =================================== Métodos que utilizam com o twitter da aplicação =======================================
 */	
@@ -323,6 +327,9 @@ public final class TwitterUtil {
 //  ======================================== Getters ==============================================
 	
 	public static TwitterUtil getInstance() {
+	    if (instance == null) {
+	        instance = init();
+	    }
 		return instance;
 	}
 	
@@ -369,7 +376,7 @@ public final class TwitterUtil {
 */	
 	
 	public static void restart(){
-		instance = init();
+		instance.config();
 	}
 
 /*	
@@ -401,6 +408,7 @@ public final class TwitterUtil {
 		TwitterUtil result = null;
 		try {
 			result = new TwitterUtil();
+			result.config();
 			result.loadApplicationTwitter();
 		} catch (IllegalArgumentException | NullPointerException | NoResultException e) {
 		    LOG.error(".init()", e);
