@@ -20,7 +20,7 @@ import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.manager.NaturezaCategoriaFluxoManager;
+import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
