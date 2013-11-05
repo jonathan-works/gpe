@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.documento.home;
 
 import java.util.List;
 
@@ -24,7 +24,6 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.home.ModeloDocumentoHome;
 import br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.util.constants.WarningConstants;
