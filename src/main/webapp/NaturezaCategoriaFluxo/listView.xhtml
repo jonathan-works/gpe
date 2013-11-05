@@ -30,7 +30,7 @@
          name="title">#{messages['naturezaCategoriaFluxo.titlePage']}</ui:define>
 	<ui:param
          name="home"
-         value="#{naturezaCategoriaFluxoHome}" />
+         value="#{naturezaCategoriaFluxoCrudAction}" />
 	<ui:define
          name="searchGrid">
 	    <wi:dataTable
@@ -92,23 +92,23 @@
 			<wi:selectOneMenuEntity
 				id="naturezas"
 				label="#{messages['naturezaCategoriaFluxo.natureza']}"
-				value="#{naturezaCategoriaFluxoHome.instance.natureza}"
+				value="#{naturezaCategoriaFluxoCrudAction.instance.natureza}"
 				required="true"
-				items="#{naturezaCategoriaFluxoHome.naturezaList}"
+				items="#{naturezaCategoriaFluxoCrudAction.naturezaList}"
 				noSelectionLabel="Selecione..."/>
 			<wi:selectOneMenuEntity
 				id="categorias"
 				label="#{messages['naturezaCategoriaFluxo.categoria']}"
-				value="#{naturezaCategoriaFluxoHome.instance.categoria}"
+				value="#{naturezaCategoriaFluxoCrudAction.instance.categoria}"
 				required="true"
-				items="#{naturezaCategoriaFluxoHome.categoriaList}"
+				items="#{naturezaCategoriaFluxoCrudAction.categoriaList}"
 				noSelectionLabel="Selecione..."/>
 			<wi:selectOneMenuEntity
 				id="fluxo"
 				label="#{messages['naturezaCategoriaFluxo.fluxo']}"
-				value="#{naturezaCategoriaFluxoHome.instance.fluxo}"
+				value="#{naturezaCategoriaFluxoCrudAction.instance.fluxo}"
 				required="true"
-				items="#{naturezaCategoriaFluxoHome.fluxoList}"
+				items="#{naturezaCategoriaFluxoCrudAction.fluxoList}"
 				noSelectionLabel="Selecione..."/>
 		</wi:dataForm>
 	</ui:define>
@@ -116,8 +116,8 @@
 	<ui:define name="tabs">
 		<infox:tab
             id="localizacaoTab"
-            rendered="#{naturezaCategoriaFluxoHome.isManaged()}"
-            action="#{natCatFluxoLocalizacaoHome.setNaturezaCategoriaFluxo(home.instance)}"
+            rendered="#{naturezaCategoriaFluxoCrudAction.isManaged()}"
+            action="#{natCatFluxoLocalizacaoHome.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoCrudAction.instance)}"
             title="#{messages['naturezaCategoriaFluxo.localizacao']}"
             name="localizacaoTab">
             <s:div id="localizacaoFormDiv">
