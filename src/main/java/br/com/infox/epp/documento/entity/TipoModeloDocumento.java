@@ -36,7 +36,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.ibpm.entity.GrupoModeloDocumento;
 import br.com.infox.ibpm.entity.VariavelTipoModelo;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;

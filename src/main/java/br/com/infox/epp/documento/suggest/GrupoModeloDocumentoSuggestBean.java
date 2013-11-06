@@ -19,7 +19,7 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.component.suggest.AbstractSuggestBean;
-import br.com.infox.ibpm.entity.GrupoModeloDocumento;
+import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 
 
 @Name(GrupoModeloDocumentoSuggestBean.NAME)
