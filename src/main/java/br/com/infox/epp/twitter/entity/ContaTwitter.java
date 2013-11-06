@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.twitter.entity;
 
 import java.io.Serializable;
 
@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 import twitter4j.auth.AccessToken;
 
 import br.com.infox.epp.type.TipoTwitterEnum;
+import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.infox.access.entity.UsuarioLogin;
 
