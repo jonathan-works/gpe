@@ -1,6 +1,7 @@
 package br.com.infox.core.action.crud;
 
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.util.constants.WarningConstants;
@@ -22,6 +23,9 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	
 	private String tab;
 	private Object id;
+	
+    private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
+    private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
 	
 	/**
 	 * Variável que será passada como parametro nas ações executadas
@@ -50,14 +54,19 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 		return true;
 	}
 	
-	/**
-	 * Devem ser escritas aqui as ações que serão executadas depois da
-	 * inserção ou atualização dos dados. 
-	 */
 	protected void afterSave() {
-		//Caso exista alguma ação a ser executada depois da atualização, 
-		//então ela deve ser implementada aqui.
+	    
 	}
+	
+    private void afterSave(String ret) {
+        if (PERSISTED.equals(ret)){
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add(MSG_REGISTRO_CRIADO);
+        } else if (UPDATED.equals(ret)){
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add(MSG_REGISTRO_ALTERADO);
+        }
+    }
 	
 	@Override
 	public String getTab() {
@@ -118,7 +127,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 			ret = isManaged() ? update() : persist();
 		}
 		if(ret != null) {
-			afterSave();
+		    afterSave();
+			afterSave(ret);
 		}
 		return ret;
 	}
