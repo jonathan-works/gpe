@@ -10,9 +10,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.documento.query.DocumentoFisicoQuery;
 import br.com.infox.ibpm.entity.DocumentoFisico;
 import br.com.infox.ibpm.entity.Processo;
-import br.com.infox.ibpm.query.DocumentoFisicoQuery;
 
 @Name(DocumentoFisicoDAO.NAME)
 @Scope(ScopeType.CONVERSATION)
