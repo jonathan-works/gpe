@@ -14,6 +14,7 @@ public class LocalizacaoFisicaCrudAction extends AbstractCrudAction<LocalizacaoF
         return inactiveRecursive(localizacaoFisica);
     }
     
+    @Override
     protected boolean beforeSave() {
         if (getInstance().getLocalizacaoFisicaPai() != null && !getInstance().getLocalizacaoFisicaPai().getAtivo()){
             getInstance().setAtivo(false);
