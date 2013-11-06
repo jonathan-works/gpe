@@ -11,8 +11,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="br.com.infox.ibpm.manager.DocumentoFisicoManager" project="epp" 
-    file="/epp/src/main/java/br/com/infox/ibpm/manager/DocumentoFisicoManager.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="br.com.infox.epp.documento.manager.DocumentoFisicoManager" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/documento/manager/DocumentoFisicoManager.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="133" width="266" x="41" y="426"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      

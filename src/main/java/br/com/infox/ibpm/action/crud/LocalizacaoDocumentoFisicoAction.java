@@ -13,11 +13,11 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 import br.com.infox.ibpm.entity.DocumentoFisico;
 import br.com.infox.ibpm.entity.LocalizacaoFisica;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.home.ProcessoHome;
-import br.com.infox.ibpm.manager.DocumentoFisicoManager;
 import br.com.infox.list.LocalizacaoFisicaList;
 
 @Name(LocalizacaoDocumentoFisicoAction.NAME)
