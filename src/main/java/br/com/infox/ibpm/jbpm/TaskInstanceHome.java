@@ -197,6 +197,7 @@ public class TaskInstanceHome implements Serializable {
     private void prepareForUpdate() {
         modeloDocumento = null;
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        ProcessoHome.instance().update();
     }
 
     private void completeUpdate() {

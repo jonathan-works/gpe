@@ -16,7 +16,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.query.ProcessoEpaQuery;
@@ -24,6 +23,7 @@ import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Item;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.ParteProcesso;
+import br.com.infox.ibpm.entity.PrioridadeProcesso;
 import br.com.infox.ibpm.entity.Processo;
 
 @Entity
@@ -47,6 +47,7 @@ public class ProcessoEpa extends Processo {
 	private Item itemDoProcesso;
 	private SituacaoPrazoEnum situacaoPrazo;
 	private Boolean contabilizar = Boolean.TRUE;
+	private PrioridadeProcesso prioridadeProcesso;
 	
 	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
 	private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
@@ -129,6 +130,16 @@ public class ProcessoEpa extends Processo {
 	public void setContabilizar(Boolean contabilizar) {
 		this.contabilizar = contabilizar;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "id_prioridade_processo", nullable = true)
+	public PrioridadeProcesso getPrioridadeProcesso() {
+		return prioridadeProcesso;
+	}
+	
+	public void setPrioridadeProcesso(PrioridadeProcesso prioridadeProcesso) {
+		this.prioridadeProcesso = prioridadeProcesso;
+	}
 
 	public boolean hasPartes(){
 		return naturezaCategoriaFluxo.getNatureza().getHasPartes();
@@ -142,6 +153,4 @@ public class ProcessoEpa extends Processo {
 	public void setPartes(List<ParteProcesso> partes) {
 		this.partes = partes;
 	}
-	
-	
 }
