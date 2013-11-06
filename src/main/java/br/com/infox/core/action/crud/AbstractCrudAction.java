@@ -1,6 +1,8 @@
 package br.com.infox.core.action.crud;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.AbstractAction;
@@ -18,6 +20,7 @@ import br.com.itx.util.EntityUtil;
  * @param <T> Entity principal, onde devem ser realizadas as 
  * alterações.
  */
+@Scope(ScopeType.PAGE)
 public abstract class AbstractCrudAction<T> extends AbstractAction 
 											implements Crudable<T> {
 	
