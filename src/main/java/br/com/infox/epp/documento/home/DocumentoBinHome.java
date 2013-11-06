@@ -14,7 +14,7 @@
   veja em http://www.gnu.org/licenses/  
 */
 
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.documento.home;
 
 import javax.persistence.EntityManager;
 
