@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.documento.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +12,6 @@ import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.epp.documento.entity.Variavel;
 
 @Entity
 @Table(name = "tb_variavel_tipo_modelo", schema="public")
