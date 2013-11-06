@@ -208,20 +208,20 @@
 
                 <ui:param
 					 name="action"
-					 value="#{localizacaoDocumentoFisicoAction}" />
+					 value="#{localizacaoDocumentoFisicoCrudAction}" />
                 <infox:tab
 					 id="documentoFisicoTab"
 					 name="documentoFisicoTab"
 					 rendered="#{home.isManaged()}"
 					 title="#{messages['documentoFisico.titleTab']}"
-                     action="#{localizacaoDocumentoFisicoAction.init()}">
+                     action="#{localizacaoDocumentoFisicoCrudAction.init()}">
 	                    <wi:dataForm
 							 formId="documentoFisicoForm"
 							 formTitle="#{messages['form.title']}">
 							
 	                        <wi:tree
 								 id="localizacaoFisica"
-								 assignTo="localizacaoDocumentoFisicoAction.instance.localizacaoFisica"
+								 assignTo="localizacaoDocumentoFisicoCrudAction.instance.localizacaoFisica"
 								 tree="#{localizacaoFisicaTree}"
 								 label="#{messages['documentoFisico.localizacaoFisica']}"
 								 required="true"
@@ -237,7 +237,7 @@
 								
 	                            <wi:commandButton
 									 id="saveDocumentoFisicoButton"
-									 action="localizacaoDocumentoFisicoAction.save"
+									 action="localizacaoDocumentoFisicoCrudAction.save"
 									 reRender="documentoFisicoForm, documentoFisicoDiv"
 									 value="Incluir" />
 	                        
@@ -247,7 +247,7 @@
 	                    <s:div id="documentoFisicoDiv">
 							<wi:dataTable
 								id="documentoFisicoTable2"
-								values="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+								values="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
 								var="row"
 								rows="10"
 								searchFormStyleClass="hidden">
@@ -255,14 +255,14 @@
 									<wi:toolBarRemove
 										id="toolBarInactivate"
 										reRender="documentoFisicoDiv"
-										actionRemove="localizacaoDocumentoFisicoAction.inactive(row)"
+										actionRemove="localizacaoDocumentoFisicoCrudAction.inactive(row)"
 										/>
 								</ui:define>
 								<ui:define name="headerToolBar">
 									<wi:toolBarRemove
 										id="headerInactivate"
 										reRender="documentoFisicoDiv"
-										actionRemove="localizacaoDocumentoFisicoAction.inactiveAll()"
+										actionRemove="localizacaoDocumentoFisicoCrudAction.inactiveAll()"
 										title="Inativar todos os Registros" />
 								</ui:define>
 								<wi:columnOutputText
