@@ -20,8 +20,8 @@ import java.util.List;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
+import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.ibpm.entity.ItemTipoDocumento;
 import br.com.itx.component.AbstractHome;
 
 @Name(GrupoModeloDocumentoHome.NAME)

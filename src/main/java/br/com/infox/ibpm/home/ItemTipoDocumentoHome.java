@@ -20,8 +20,8 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
+import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
-import br.com.infox.ibpm.entity.ItemTipoDocumento;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
