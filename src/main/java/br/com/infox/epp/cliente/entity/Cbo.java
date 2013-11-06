@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.cliente.entity;
 
 import java.io.Serializable;
 

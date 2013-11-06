@@ -3,7 +3,8 @@ package br.com.infox.ibpm.home;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.ibpm.entity.Cbo;
+
+import br.com.infox.epp.cliente.entity.Cbo;
 import br.com.itx.component.AbstractHome;
 
 @Name(CboHome.NAME)
