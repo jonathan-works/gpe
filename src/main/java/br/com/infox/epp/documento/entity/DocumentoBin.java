@@ -14,7 +14,7 @@
  veja em http://www.gnu.org/licenses/   
 */
 
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.documento.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

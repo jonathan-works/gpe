@@ -25,7 +25,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.ibpm.entity.DocumentoBin;
+import br.com.infox.epp.documento.entity.DocumentoBin;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
