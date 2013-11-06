@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
+import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.constants.WarningConstants;
 

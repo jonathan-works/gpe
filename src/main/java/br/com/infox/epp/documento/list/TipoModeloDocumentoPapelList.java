@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
+import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 
 @Name(TipoModeloDocumentoPapelList.NAME)
 @Scope(ScopeType.PAGE)

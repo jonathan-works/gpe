@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.documento.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +11,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.com.infox.access.entity.Papel;
-import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 
 @Entity
 @Table(name = TipoModeloDocumentoPapel.TABLE_NAME, schema="public")
