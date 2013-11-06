@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.documento.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +15,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.Papel;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery;
 
 @Entity
