@@ -27,7 +27,7 @@
                       
 	<ui:define name="title">#{messages['twitterTemplate.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{twitterTemplateHome}" />
+	<ui:param name="home" value="#{tweetTemplateCrudAction}" />
 	
 	<ui:define name="searchGrid">   
 	    <wi:dataTable values="#{twitterTemplateList.list(15)}"
@@ -68,18 +68,18 @@
 		<wi:dataForm formId="twitterTemplateForm"
 					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="titulo"
-						 value="#{twitterTemplateHome.instance.titulo}"
+						 value="#{tweetTemplateCrudAction.instance.titulo}"
 						 required="true"
 						 label="#{messages['twitterTemplate.titulo']}"
 						 maxlength="123"/>
 			<wi:inputText id="mensagem"
 						  label="#{messages['twitterTemplate.mensagem']}"
 						  required="true"
-						  value="#{twitterTemplateHome.instance.mensagem}"
+						  value="#{tweetTemplateCrudAction.instance.mensagem}"
 						  maxlength="123" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['field.situacao']}"
-								    value="#{twitterTemplateHome.instance.ativo}" />
+								    value="#{tweetTemplateCrudAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 
