@@ -36,7 +36,6 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.ParamDef;
-import org.hibernate.annotations.Type;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -149,7 +148,6 @@ public class Cep implements java.io.Serializable {
 	}
 
 	@Column(name = "in_ativo", nullable = false)
-	@Type(type="br.com.itx.type.SNType")
 	@NotNull
 	public Boolean getAtivo() {
 		return this.ativo;

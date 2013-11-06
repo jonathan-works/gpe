@@ -4,10 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.Type;
-
 import br.com.infox.util.constants.LengthConstants;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -51,7 +50,7 @@ public class Cbo implements Serializable {
 	}
 	
 	@Column(name="in_ativo", nullable=false)
-	@Type(type="br.com.itx.type.SNType")
+	@NotNull
 	public Boolean getAtivo() {
 		return this.ativo;
 	}
