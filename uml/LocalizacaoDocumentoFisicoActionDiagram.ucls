@@ -21,8 +21,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="br.com.infox.ibpm.dao.DocumentoFisicoDAO" project="epp" 
-    file="/epp/src/main/java/br/com/infox/ibpm/dao/DocumentoFisicoDAO.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="br.com.infox.epp.documento.dao.DocumentoFisicoDAO" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/documento/dao/DocumentoFisicoDAO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="133" width="266" x="41" y="599"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
