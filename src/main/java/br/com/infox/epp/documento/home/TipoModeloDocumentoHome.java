@@ -29,7 +29,6 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
-import br.com.infox.ibpm.home.GrupoModeloDocumentoHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
