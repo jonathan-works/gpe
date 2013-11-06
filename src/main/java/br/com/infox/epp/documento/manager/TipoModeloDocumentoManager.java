@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.manager;
+package br.com.infox.epp.documento.manager;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
