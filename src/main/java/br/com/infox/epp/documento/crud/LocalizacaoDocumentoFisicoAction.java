@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.action.crud;
+package br.com.infox.epp.documento.crud;
 
 import java.io.Serializable;
 import java.util.Iterator;
