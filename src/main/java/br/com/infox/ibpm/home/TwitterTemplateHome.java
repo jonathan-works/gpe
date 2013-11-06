@@ -2,7 +2,7 @@ package br.com.infox.ibpm.home;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.ibpm.entity.TwitterTemplate;
+import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
