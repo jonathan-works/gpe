@@ -1,4 +1,4 @@
-package br.com.infox.epp.list;
+package br.com.infox.epp.documento.list;
 
 import java.util.Map;
 
