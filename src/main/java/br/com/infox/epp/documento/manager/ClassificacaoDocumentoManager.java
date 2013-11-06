@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.manager;
+package br.com.infox.epp.documento.manager;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.dao.ClassificacaoDocumentoDAO;
+import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 
 @Name(ClassificacaoDocumentoManager.NAME)

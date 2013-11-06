@@ -35,12 +35,12 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
-import br.com.infox.ibpm.manager.ClassificacaoDocumentoManager;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
