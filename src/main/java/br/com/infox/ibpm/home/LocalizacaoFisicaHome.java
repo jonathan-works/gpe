@@ -4,8 +4,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import br.com.infox.annotations.manager.RecursiveManager;
+import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.ibpm.component.tree.LocalizacaoFisicaTreeHandler;
-import br.com.infox.ibpm.entity.LocalizacaoFisica;
 import br.com.itx.component.AbstractHome;
 
 @Name(LocalizacaoFisicaHome.NAME)

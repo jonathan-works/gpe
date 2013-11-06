@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.documento.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

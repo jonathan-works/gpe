@@ -3,7 +3,7 @@ package br.com.infox.ibpm.component.tree;
 import org.jboss.seam.annotations.Name;
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
-import br.com.infox.ibpm.entity.LocalizacaoFisica;
+import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.itx.util.ComponentUtil;
 
 @Name(LocalizacaoFisicaTreeHandler.NAME)
