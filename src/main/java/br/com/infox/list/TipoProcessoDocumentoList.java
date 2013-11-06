@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.ibpm.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.itx.util.ComponentUtil;
 
 @Name(TipoProcessoDocumentoList.NAME)

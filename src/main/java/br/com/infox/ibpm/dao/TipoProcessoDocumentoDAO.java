@@ -10,8 +10,8 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.access.entity.Papel;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
-import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.query.TipoProcessoDocumentoQuery;
 import br.com.infox.util.constants.WarningConstants;
 

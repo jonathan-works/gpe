@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.documento.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +37,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.util.constants.LengthConstants;
 
 /**

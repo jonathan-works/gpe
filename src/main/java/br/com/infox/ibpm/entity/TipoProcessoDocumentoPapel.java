@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.query.TipoProcessoDocumentoQuery;
 
 @Entity
