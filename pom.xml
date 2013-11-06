@@ -12,7 +12,7 @@
 			<dependency>
 				<groupId>org.jboss.seam</groupId>
 				<artifactId>bom</artifactId>
-				<version>${seam.version}</version>
+				<version>2.3.2-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -41,7 +41,7 @@
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam</artifactId>
 			<scope>compile</scope>
-			<version>${seam.version}</version><!--$NO-MVN-MAN-VER$ -->
+			<version>2.3.2-SNAPSHOT</version><!--$NO-MVN-MAN-VER$-->
 			<type>jar</type>
 			<exclusions>
 				<exclusion>
@@ -87,12 +87,14 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<type>jar</type>
+			<version>4.2.7.SP1.infox</version><!--$NO-MVN-MAN-VER$-->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<type>jar</type>
+			<version>4.2.7.SP1.infox</version><!--$NO-MVN-MAN-VER$-->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -118,6 +120,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-infinispan</artifactId>
+			<version>4.2.7.SP1.infox</version><!--$NO-MVN-MAN-VER$-->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -242,13 +245,13 @@
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-impl</artifactId>
 			<scope>provided</scope>
-			<version>2.1.19</version><!--$NO-MVN-MAN-VER$ -->
+			<version>2.1.26</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
 			<scope>provided</scope>
-			<version>2.1.19</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.1.26</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
@@ -339,21 +342,8 @@
 		</plugins>
 	</build>
 	<properties>
-		<seam.version>2.3.2-SNAPSHOT</seam.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
-		<hibernate.show_sql>true</hibernate.show_sql>
-		<hibernate.format_sql>true</hibernate.format_sql>
-		<hiberante.transaction_manager_lookup_class>org.hibernate.transaction.JBossTransactionManagerLookup</hiberante.transaction_manager_lookup_class>
 		<hibernate.search.index_base>./indices/</hibernate.search.index_base>
-		<hibernate.default_schema>client</hibernate.default_schema>
-		<email.hostname>hostname</email.hostname>
-		<email.port>25</email.port>
-		<email.ssl>false</email.ssl>
-		<email.tls>false</email.tls>
-		<email.user>usuario</email.user>
-		<email.password>senha</email.password>
-		<producao>false</producao>
 		<maven.build.timestamp.format>dd/MM/yyyy - HH:mm</maven.build.timestamp.format>
 		<buildNumber>${maven.build.timestamp}</buildNumber>
 	</properties>
