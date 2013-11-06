@@ -8,8 +8,8 @@
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true" />
 
-	<param name="id" value="#{cboHome.id}"
+	<param name="id" value="#{cboCrudAction.id}"
 		   converterId="integerConverter" />
-	<param name="tab" value="#{cboHome.tab}" />
+	<param name="tab" value="#{cboCrudAction.tab}" />
 		   
 </page>
