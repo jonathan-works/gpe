@@ -20,14 +20,14 @@ import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.home.ProcessoHome;
 
-@Name(LocalizacaoDocumentoFisicoAction.NAME)
+@Name(LocalizacaoDocumentoFisicoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class LocalizacaoDocumentoFisicoAction extends
+public class LocalizacaoDocumentoFisicoCrudAction extends
 		AbstractCrudAction<DocumentoFisico> implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoDocumentoFisicoAction.class);
+	private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoDocumentoFisicoCrudAction.class);
 
-	public static final String NAME = "localizacaoDocumentoFisicoAction";
+	public static final String NAME = "localizacaoDocumentoFisicoCrudAction";
 
 	private List<LocalizacaoFisica> localizacaoFisicaList;
 	private List<DocumentoFisico> documentoFisicoList;
