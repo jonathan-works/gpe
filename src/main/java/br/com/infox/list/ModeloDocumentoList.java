@@ -18,6 +18,9 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 	public static final String NAME = "modeloDocumentoList";
 	private static final long serialVersionUID = 1L;
 	
+	private static final String TEMPLATE = "/ModeloDocumento/modeloDocumentoTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "ModelosDocumento.xls";
+	
 	private static final String DEFAULT_EJBQL = "select o from ModeloDocumento o";
     private static final String DEFAULT_ORDER = "tituloModeloDocumento";
     private static final String R1 = "exists (from TipoModeloDocumentoPapel tmdp"
@@ -46,4 +49,19 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 	protected String getDefaultOrder() {
 		return DEFAULT_ORDER;
 	}
+	
+	@Override
+    public EntityList<ModeloDocumento> getBeanList() {
+        return ModeloDocumentoList.instance();
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
 }

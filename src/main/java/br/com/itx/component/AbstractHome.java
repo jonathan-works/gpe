@@ -20,10 +20,7 @@ import static org.jboss.seam.faces.FacesMessages.instance;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
 
@@ -44,23 +41,18 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.infox.util.PostgreSQLExceptionManager;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.ApplicationException;
-import br.com.itx.exception.ExcelExportException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
-import br.com.itx.util.ExcelExportUtil;
 
 @SuppressWarnings(WarningConstants.UNCHECKED)
 public abstract class AbstractHome<T> extends EntityHome<T> {
 	
-	private static final int TAMANHO_XLS_PADRAO = 10000;
-
-    private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
+	private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
 
 	private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
 
@@ -527,39 +519,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 */
 	public void setLockedFields(List<String> lockedFields) {
 		this.lockedFields = lockedFields;
-	}
-	
-	public String getTemplate(){
-		return null;
-	}
-	public String getDownloadXlsName(){
-		return null;
-	}
-	
-	public EntityList<T> getBeanList() {
-		return null;
-	}
-	
-	public void exportarXLS() {
-		List<T> beanList = getBeanList().list(TAMANHO_XLS_PADRAO);
-		try {
-			if (beanList == null || beanList.isEmpty()) {
-				FacesMessages.instance().add(Severity.INFO, "Não há dados para exportar!");
-			} else {
-				exportarXLS(getTemplate(), beanList);
-			}
-		} catch (ExcelExportException e) {
-			FacesMessages.instance().add(Severity.ERROR, "Erro ao exportar arquivo." + e.getMessage());
-		}	
-	}
-	
-	private void exportarXLS (String template, List<T> beanList) throws ExcelExportException {
-		String urlTemplate = new Util().getContextRealPath() + template;
-		Map<String, Object> map = new HashMap<String, Object>();
-		StringBuilder className = new StringBuilder(getEntityClass().getSimpleName());
-		className = className.replace(0, 1, className.substring(0, 1).toLowerCase());
-		map.put(className.toString(), beanList);
-		ExcelExportUtil.downloadXLS(urlTemplate, map, getDownloadXlsName());
 	}
 	
 	private String tratarErrosDePersistencia(String ret){

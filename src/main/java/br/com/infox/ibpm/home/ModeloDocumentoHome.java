@@ -26,7 +26,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.manager.ModeloDocumentoManager;
 import br.com.infox.epp.manager.TipoModeloDocumentoPapelManager;
 import br.com.infox.ibpm.entity.GrupoModeloDocumento;
@@ -37,7 +36,6 @@ import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.ibpm.manager.VariavelManager;
-import br.com.infox.list.ModeloDocumentoList;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
@@ -46,8 +44,6 @@ import br.com.itx.util.ComponentUtil;
 public class ModeloDocumentoHome extends AbstractHome<ModeloDocumento> {
 
 	private static final long serialVersionUID = 1L;
-	private static final String TEMPLATE = "/ModeloDocumento/modeloDocumentoTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "ModelosDocumento.xls";
 	public static final String NAME = "modeloDocumentoHome";
 	
 	private GrupoModeloDocumento grupoModeloDocumento;
@@ -56,21 +52,6 @@ public class ModeloDocumentoHome extends AbstractHome<ModeloDocumento> {
 	@In private TipoModeloDocumentoPapelManager tipoModeloDocumentoPapelManager;
 	@In private ModeloDocumentoManager modeloDocumentoManager;
 	@In private VariavelManager variavelManager;
-	
-	@Override
-	public EntityList<ModeloDocumento> getBeanList() {
-		return ModeloDocumentoList.instance();
-	}
-	
-	@Override
-	public String getTemplate() {
-		return TEMPLATE;
-	}
-	
-	@Override
-	public String getDownloadXlsName() {
-		return DOWNLOAD_XLS_NAME;
-	}
 	
 	@Override
 	public void setId(final Object id) {

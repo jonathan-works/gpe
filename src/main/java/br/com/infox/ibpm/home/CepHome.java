@@ -20,37 +20,18 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Estado;
-import br.com.infox.list.CepList;
 import br.com.itx.component.AbstractHome;
 
 @Name(CepHome.NAME)
 @Scope(ScopeType.PAGE)
 public class CepHome extends AbstractHome<Cep> {
 	private static final long serialVersionUID = 1L;
-	private static final String TEMPLATE = "/CEP/CepTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "CEP.xls";
 	
 	public static final String NAME = "cepHome";
 	
 	private Estado estado = null;
-	
-	@Override
-	public EntityList<Cep> getBeanList() {
-		return CepList.instance();
-	}
-	
-	@Override
-	public String getTemplate() {
-		return TEMPLATE;
-	}
-	
-	@Override
-	public String getDownloadXlsName() {
-		return DOWNLOAD_XLS_NAME;
-	}
 	
 	public Estado getEstado() {
 		return estado;

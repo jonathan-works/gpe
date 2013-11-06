@@ -23,11 +23,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.query.HistoricoModeloDocumentoQuery;
 import br.com.infox.ibpm.entity.HistoricoModeloDocumento;
 import br.com.infox.ibpm.entity.ModeloDocumento;
-import br.com.infox.list.HistoricoModeloDocumentoList;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
@@ -37,28 +35,11 @@ import br.com.itx.util.EntityUtil;
 public class HistoricoModeloDocumentoHome extends AbstractHome<HistoricoModeloDocumento> {
 
     private static final long serialVersionUID = 1L;
-    private static final String TEMPLATE = "/ModeloDocumento/historicoModeloDocumentoTemplate.xls";
-    private static final String DOWNLOAD_XLS_NAME = "historicosModelosDocumento.xls";
     public static final String NAME = "historicoModeloDocumentoHome";
     
     private List<ModeloDocumento> modeloDocumentoList;
     private List<UsuarioLogin> usuarioAlteracaoList;
     private HistoricoModeloDocumento selecionado;
-    
-	@Override
-	public String getTemplate(){
-        return HistoricoModeloDocumentoHome.TEMPLATE;
-    }
-	
-	@Override
-    public String getDownloadXlsName(){
-        return HistoricoModeloDocumentoHome.DOWNLOAD_XLS_NAME;
-    }
-	
-    @Override
-    public EntityList<HistoricoModeloDocumento> getBeanList() {
-        return HistoricoModeloDocumentoList.instance();
-    }
     
     public HistoricoModeloDocumento getSelecionado() {
         return selecionado;

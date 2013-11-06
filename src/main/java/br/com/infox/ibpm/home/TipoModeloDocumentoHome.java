@@ -25,8 +25,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.core.action.list.EntityList;
-import br.com.infox.epp.list.TipoModeloDocumentoList;
 import br.com.infox.epp.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.entity.ModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumento;
@@ -40,8 +38,6 @@ public class TipoModeloDocumentoHome
 		extends	AbstractHome<TipoModeloDocumento> {
 	
 	private static final long serialVersionUID = 1L;
-	private static final String TEMPLATE = "/TipoModeloDocumento/tipoModeloDocumentoTemplate.xls";
-	private static final String DOWNLOAD_XLS_NAME = "TiposModeloDocumento.xls";
 	
 	public static final String NAME = "tipoModeloDocumentoHome";
 	
@@ -52,20 +48,6 @@ public class TipoModeloDocumentoHome
 		return ComponentUtil.getComponent(NAME);
 	}
 	
-	@Override
-	public EntityList<TipoModeloDocumento> getBeanList() {
-		return TipoModeloDocumentoList.instance();
-	}
-	
-	@Override
-	public String getTemplate() {
-		return TEMPLATE;
-	}
-	
-	@Override
-	public String getDownloadXlsName() {
-		return DOWNLOAD_XLS_NAME;
-	}
 	
 	@Override
 	protected boolean beforePersistOrUpdate() {

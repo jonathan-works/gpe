@@ -1,20 +1,26 @@
 package br.com.infox.access;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
-import org.jboss.seam.security.management.JpaIdentityStore;
 import org.richfaces.event.DropEvent;
 
-import br.com.infox.access.entity.Papel;
+import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
 
 /**
@@ -52,6 +58,13 @@ public class Menu implements Serializable {
     public void setItems(List<String> items) {
         dropMenus = new ArrayList<MenuItem>();
         boolean ok = true;
+        
+        try {
+        	discoverAndCreateRolesIfNeeded();
+        } catch (IOException e) {
+        	LOG.error("Não foi possível descobrir e criar os recursos", e);
+        }
+        
         for (String key : items) {
             try {
                 String[] split = key.split(":");
@@ -61,9 +74,6 @@ public class Menu implements Serializable {
                     url = split[1];
                 }
                 String pageRole = SecurityUtil.PAGES_PREFIX + url;
-                if (!pagesChecked && Identity.instance().isLoggedIn()) {
-                    checkPage(pageRole, key);
-                }
                 if (Identity.instance().hasRole(pageRole)) {
                     buildItem(key, url);
                 }
@@ -76,43 +86,14 @@ public class Menu implements Serializable {
         pagesChecked = ok;
     }
 
-    /**
-     * Verifica se existe o role para a página, se não existir registra o role e
-     * atribui permissão ao role admin
-     * 
-     * @param pageRole
-     */
-    private void checkPage(final String pageRole, String name) {
-        if (!IdentityManager.instance().roleExists(pageRole)) {
-            new RunAsOperation(true) {
-                @Override
-                public void execute() {
-                    IdentityManager.instance().createRole(pageRole);
-                    EntityUtil.getEntityManager().flush();
-                }
-            }.run();
-            JpaIdentityStore store = (JpaIdentityStore) IdentityManager.instance().getRoleIdentityStore();
-            Papel role = (Papel) store.lookupRole(pageRole);
-            String[] parts = name.split("/");
-            StringBuilder sb = new StringBuilder();
-            for (String s : parts) {
-                if (!sb.toString().isEmpty()) {
-                    sb.append("/");
-                }
-                sb.append(Messages.instance().get(s));
-            }
-            role.setNome("Página " + sb.toString());
-            new RunAsOperation(true) {
-                @Override
-                public void execute() {
-                    IdentityManager.instance().addRoleToGroup("admin", pageRole);
-                }
-            }.run();
-            if (Identity.instance().hasRole("admin")) {
-                Identity.instance().addRole(pageRole);
-            }
+    private void discoverAndCreateRolesIfNeeded() throws IOException {
+    	if (pagesChecked || !Identity.instance().isLoggedIn()) {
+        	return;
         }
-    }
+    	
+    	RoleCreator roleCreator = new RoleCreator();
+    	Files.walkFileTree(new File(new Util().getContextRealPath()).toPath(), roleCreator);
+	}
 
     protected void buildItem(String key, String url) {
         String formatedKey = getFormatedKey(key);
@@ -164,4 +145,69 @@ public class Menu implements Serializable {
         Contexts.removeFromAllContexts("mainMenu");
     }
 
+    private static class RoleCreator extends SimpleFileVisitor<Path> {
+    	private static final String PAGE_XML_EXTENSION = ".page.xml";
+    	private static final String XHTML_EXTENSION = ".xhtml";
+    	private static final String SEAM_EXTENSION = ".seam";
+    	private static final String ADMIN_GROUP = "admin";
+    	private static final String ADMIN_ROLE = "admin";
+    	
+    	@Override
+    	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+    		if (!isPageXml(file)) {
+    			return FileVisitResult.CONTINUE;
+    		}
+    		
+    		Path xhtmlFile;
+    		try {
+    			xhtmlFile = file.resolveSibling(file.getFileName().toString().replace(PAGE_XML_EXTENSION, XHTML_EXTENSION));
+    		} catch (InvalidPathException e) {
+    			return FileVisitResult.CONTINUE;
+    		}
+    		
+    		Path war = new File(new Util().getContextRealPath()).toPath();
+    		
+    		String relativeXhtmlFile = xhtmlFile.toString().replace(war.toString(), "").replace(XHTML_EXTENSION, SEAM_EXTENSION);
+    		
+    		createRoleIfNeeded(SecurityUtil.PAGES_PREFIX + relativeXhtmlFile);
+    		
+    		return FileVisitResult.CONTINUE;
+    	}
+
+		private boolean isPageXml(Path file) {
+			return file.getFileName().toString().endsWith(PAGE_XML_EXTENSION);
+		}
+		
+	    private void createRoleIfNeeded(final String pageRole) {
+	        if (IdentityManager.instance().roleExists(pageRole)) {
+	        	return;
+	        }
+	        
+            new RunAsOperation(true) {
+                @Override
+                public void execute() {
+                    IdentityManager.instance().createRole(pageRole);
+                    EntityUtil.getEntityManager().flush();
+                }
+            }.run();
+            
+            addToGroup(pageRole, ADMIN_GROUP);
+            addToLoggedUserIfAdmin(pageRole);
+	    }
+
+		private void addToLoggedUserIfAdmin(final String pageRole) {
+			if (Identity.instance().hasRole(ADMIN_ROLE)) {
+                Identity.instance().addRole(pageRole);
+            }
+		}
+
+		private void addToGroup(final String pageRole, final String group) {
+			new RunAsOperation(true) {
+                @Override
+                public void execute() {
+                    IdentityManager.instance().addRoleToGroup(group, pageRole);
+                }
+            }.run();
+		}
+    }
 }
