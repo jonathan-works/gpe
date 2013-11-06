@@ -1,6 +1,8 @@
 package br.com.infox.test.component;
 
 import java.sql.Time;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -38,13 +40,17 @@ public class TurnoHandlerTest {
 		handler.addIntervalo(DiaSemanaEnum.SEG, begin10, end12);
 		
 		Time first = handler.getHorarios().get(0);
-		Time last = handler.getHorarios().get(handler.getHorarios().size() - 1);
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(first);
+		calendar.add(Calendar.HOUR_OF_DAY, 24);
+		Time last = new Time(calendar.getTimeInMillis());
 		handler.addIntervalo(DiaSemanaEnum.QUA, first, last);
 		
 		Assert.assertEquals(2, handler.getTurnosSelecionados().size());
 		Assert.assertTrue(handler.getHorarioBeanList(DiaSemanaEnum.SEG).get(11).getSelected());
+		Assert.assertFalse(handler.getHorarioBeanList(DiaSemanaEnum.SEG).get(12).getSelected());
 		for (HorarioBean bean: handler.getHorarioBeanList(DiaSemanaEnum.QUA)) {
-			Assert.assertTrue(bean.getSelected());
+		    Assert.assertTrue(bean.getSelected());
 		}
 	}
 	
