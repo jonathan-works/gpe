@@ -1,4 +1,4 @@
-package br.com.infox.epp.list.associative;
+package br.com.infox.epp.documento.list.associative;
 
 import java.util.Map;
 
