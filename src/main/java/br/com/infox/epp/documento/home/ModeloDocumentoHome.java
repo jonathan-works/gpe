@@ -34,9 +34,9 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoPapelManager;
+import br.com.infox.epp.documento.manager.VariavelManager;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.home.Authenticator;
-import br.com.infox.ibpm.manager.VariavelManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
