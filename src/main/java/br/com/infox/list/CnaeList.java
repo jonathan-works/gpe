@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.ibpm.entity.Cnae;
+import br.com.infox.epp.cliente.entity.Cnae;
 import br.com.itx.util.ComponentUtil;
 
 @Name(CnaeList.NAME)
