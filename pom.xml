@@ -342,21 +342,8 @@
 		</plugins>
 	</build>
 	<properties>
-		<seam.version>2.3.2-SNAPSHOT</seam.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
-		<hibernate.show_sql>true</hibernate.show_sql>
-		<hibernate.format_sql>true</hibernate.format_sql>
-		<hiberante.transaction_manager_lookup_class>org.hibernate.transaction.JBossTransactionManagerLookup</hiberante.transaction_manager_lookup_class>
 		<hibernate.search.index_base>./indices/</hibernate.search.index_base>
-		<hibernate.default_schema>client</hibernate.default_schema>
-		<email.hostname>hostname</email.hostname>
-		<email.port>25</email.port>
-		<email.ssl>false</email.ssl>
-		<email.tls>false</email.tls>
-		<email.user>usuario</email.user>
-		<email.password>senha</email.password>
-		<producao>false</producao>
 		<maven.build.timestamp.format>dd/MM/yyyy - HH:mm</maven.build.timestamp.format>
 		<buildNumber>${maven.build.timestamp}</buildNumber>
 	</properties>
