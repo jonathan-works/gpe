@@ -12,6 +12,8 @@ import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+
 @Entity
 @Table(name = "tb_variavel_tipo_modelo", schema="public")
 public class VariavelTipoModelo implements java.io.Serializable{

@@ -21,8 +21,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.manager.PapelManager;
-import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;

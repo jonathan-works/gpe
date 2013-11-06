@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.ibpm.entity.VariavelTipoModelo;
 import br.com.itx.component.AbstractHome;

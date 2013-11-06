@@ -19,7 +19,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.component.suggest.AbstractSuggestBean;
-import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 
 @Name(TipoModeloDocumentoSuggestBean.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -11,6 +11,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 
 @Entity
 @Table(name = TipoModeloDocumentoPapel.TABLE_NAME, schema="public")

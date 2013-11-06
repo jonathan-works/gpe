@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.documento.entity;
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
 import java.util.ArrayList;
@@ -36,7 +36,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.ibpm.entity.GrupoModeloDocumento;
+import br.com.infox.ibpm.entity.VariavelTipoModelo;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 

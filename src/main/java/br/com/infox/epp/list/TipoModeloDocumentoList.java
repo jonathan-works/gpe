@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.ibpm.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.itx.util.ComponentUtil;
 
 

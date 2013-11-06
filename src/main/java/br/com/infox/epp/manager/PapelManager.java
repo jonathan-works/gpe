@@ -10,8 +10,8 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.PapelDAO;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.entity.TipoModeloDocumento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 
 @Name(PapelManager.NAME)
