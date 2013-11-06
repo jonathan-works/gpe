@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.type;
+package br.com.infox.epp.documento.type;
 
 public enum TipoNumeracaoEnum {
 	S("Sequencial"), J("Classe Java");
