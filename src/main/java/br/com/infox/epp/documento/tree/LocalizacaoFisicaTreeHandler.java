@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.component.tree;
+package br.com.infox.epp.documento.tree;
 
 import org.jboss.seam.annotations.Name;
 import br.com.infox.component.tree.AbstractTreeHandler;
