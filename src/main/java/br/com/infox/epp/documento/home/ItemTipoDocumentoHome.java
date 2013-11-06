@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.documento.home;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -22,6 +22,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
+import br.com.infox.ibpm.home.LocalizacaoHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
