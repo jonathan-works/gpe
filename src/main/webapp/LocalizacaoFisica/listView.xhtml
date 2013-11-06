@@ -28,7 +28,7 @@
 	
 	<ui:param
          name="home"
-         value="#{localizacaoFisicaHome}" />
+         value="#{localizacaoFisicaCrudAction}" />
 	
 	<ui:define
          name="searchGrid">
@@ -87,10 +87,10 @@
                  id="descricao"
                  required="true"
                  label="#{messages['localizacaoFisica.descricao']}"
-                 value="#{localizacaoFisicaHome.instance.descricao}" />
+                 value="#{localizacaoFisicaCrudAction.instance.descricao}" />
 		  	<wi:tree
                  id="localizacaoFisicaPai"
-                 assignTo="localizacaoFisicaHome.instance.localizacaoFisicaPai"
+                 assignTo="localizacaoFisicaCrudAction.instance.localizacaoFisicaPai"
                  tree="#{localizacaoFisicaTree}"
                  icon="/img/nivelTree.gif"
                  iconLeaf="/img/file.gif"
@@ -98,7 +98,7 @@
 			<wi:selectSituacaoRadio
                  id="ativo"
                  label="#{messages['field.situacao']}"
-                 value="#{localizacaoFisicaHome.instance.ativo}" />
+                 value="#{localizacaoFisicaCrudAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

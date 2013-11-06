@@ -8,8 +8,8 @@
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true" />
 
-	<param name="id" value="#{localizacaoFisicaHome.id}"
+	<param name="id" value="#{localizacaoFisicaCrudAction.id}"
 		   converterId="integerConverter" />
-	<param name="tab" value="#{localizacaoFisicaHome.tab}" />
+	<param name="tab" value="#{localizacaoFisicaCrudAction.tab}" />
 		   
 </page>
