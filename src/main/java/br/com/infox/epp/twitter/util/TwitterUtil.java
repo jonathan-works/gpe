@@ -1,4 +1,4 @@
-package br.com.infox.util;
+package br.com.infox.epp.twitter.util;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
