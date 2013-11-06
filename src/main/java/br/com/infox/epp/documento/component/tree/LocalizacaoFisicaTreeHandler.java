@@ -4,7 +4,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
-import br.com.itx.util.ComponentUtil;
 
 @Name(LocalizacaoFisicaTreeHandler.NAME)
 public class LocalizacaoFisicaTreeHandler extends AbstractTreeHandler<LocalizacaoFisica> {
@@ -25,9 +24,4 @@ public class LocalizacaoFisicaTreeHandler extends AbstractTreeHandler<Localizaca
 				+ EntityNode.PARENT_NODE;
 	}
 
-	@Override
-	protected LocalizacaoFisica getEntityToIgnore() {
-		return ComponentUtil.getInstance("localizacaoFisicaHome");
-	}
-	
 }
