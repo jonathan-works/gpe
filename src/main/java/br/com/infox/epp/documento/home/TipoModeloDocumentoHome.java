@@ -13,7 +13,7 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.documento.home;
 
 import java.util.List;
 
@@ -29,6 +29,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
+import br.com.infox.ibpm.home.GrupoModeloDocumentoHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 

@@ -36,7 +36,6 @@ import br.com.infox.ibpm.entity.TipoModeloDocumentoPapel;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.entity.Variavel;
 import br.com.infox.ibpm.home.Authenticator;
-import br.com.infox.ibpm.home.TipoModeloDocumentoHome;
 import br.com.infox.ibpm.manager.VariavelManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
