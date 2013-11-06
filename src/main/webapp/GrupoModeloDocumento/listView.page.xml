@@ -6,11 +6,11 @@
 	  login-required="true"
 >
 	<restrict>#{security.checkPage()}</restrict>
-	<description>GrupoModeloDocumento: #{grupoModeloDocumentoHome.instance}</description>
+	<description>GrupoModeloDocumento: #{grupoModeloDocumentoCrudAtion.instance}</description>
 	
 	<begin-conversation join="true"/>
 	
-	<param name="id" value="#{grupoModeloDocumentoHome.id}" converterId="integerConverter"/>
-	<param name="tab" value="#{grupoModeloDocumentoHome.tab}"/>
+	<param name="id" value="#{grupoModeloDocumentoCrudAtion.id}" converterId="integerConverter"/>
+	<param name="tab" value="#{grupoModeloDocumentoCrudAtion.tab}"/>
  
 </page>
