@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.documento.home;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
-import br.com.infox.epp.documento.home.TipoProcessoDocumentoHome;
 import br.com.infox.epp.manager.PapelManager;
 import br.com.itx.component.AbstractHome;
 
