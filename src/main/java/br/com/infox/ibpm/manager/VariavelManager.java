@@ -8,8 +8,8 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.ibpm.dao.VariavelDAO;
-import br.com.infox.ibpm.entity.Variavel;
 
 @Name(VariavelManager.NAME)
 @AutoCreate
