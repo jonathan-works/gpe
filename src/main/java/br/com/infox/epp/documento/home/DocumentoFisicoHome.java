@@ -1,4 +1,4 @@
-package br.com.infox.epp.action.crud;
+package br.com.infox.epp.documento.home;
 
 import java.util.List;
 
