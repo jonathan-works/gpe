@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.twitter.home;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -19,6 +19,8 @@ import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 import br.com.infox.epp.twitter.util.TwitterUtil;
 import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.home.LocalizacaoHome;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.util.ParametroUtil;
 import br.com.itx.component.AbstractHome;
