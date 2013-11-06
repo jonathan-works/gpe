@@ -1,4 +1,4 @@
-package br.com.infox.epp.type;
+package br.com.infox.epp.twitter.type;
 
 public enum TipoTwitterEnum {
 
