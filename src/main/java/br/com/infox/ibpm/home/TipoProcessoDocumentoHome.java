@@ -22,10 +22,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.manager.TipoProcessoDocumentoManager;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.TipoProcessoDocumento;
-import br.com.infox.ibpm.type.TipoDocumentoEnum;
 import br.com.infox.ibpm.type.TipoNumeracaoEnum;
 import br.com.infox.ibpm.type.VisibilidadeEnum;
 import br.com.itx.component.AbstractHome;
