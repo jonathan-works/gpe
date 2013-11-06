@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.documento.home;
 
 import java.util.List;
 
@@ -9,8 +9,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
-import br.com.infox.epp.documento.home.TipoModeloDocumentoHome;
-import br.com.infox.epp.documento.home.VariavelHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
