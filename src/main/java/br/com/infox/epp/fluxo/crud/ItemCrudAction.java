@@ -17,6 +17,13 @@ public class ItemCrudAction extends AbstractCrudAction<Item> {
         return inactiveRecursive(item);
     }
     
+    protected boolean beforeSave() {
+        if (getInstance().getItemPai() != null && !getInstance().getItemPai().getAtivo()){
+            getInstance().setAtivo(false);
+        }
+        return true;
+    }
+    
     @Override
     public String save() {
         if (!getInstance().getAtivo()){
