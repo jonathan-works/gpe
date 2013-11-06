@@ -38,7 +38,7 @@ import org.jbpm.taskmgmt.def.Task;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
-import br.com.infox.epp.list.associated.AssociatedTipoModeloVariavelList;
+import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
