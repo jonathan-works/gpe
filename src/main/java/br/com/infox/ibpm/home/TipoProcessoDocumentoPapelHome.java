@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.documento.home.TipoProcessoDocumentoHome;
 import br.com.infox.epp.manager.PapelManager;
 import br.com.infox.ibpm.entity.TipoProcessoDocumentoPapel;
 import br.com.itx.component.AbstractHome;
