@@ -21,9 +21,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.ibpm.entity.Parametro;
 import br.com.infox.ibpm.entity.log.LogUtil;
-import br.com.infox.util.ParametroUtil;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 

@@ -19,7 +19,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.util.ParametroUtil;
+import br.com.infox.epp.system.util.ParametroUtil;
 
 public final class LdapUtil {
 

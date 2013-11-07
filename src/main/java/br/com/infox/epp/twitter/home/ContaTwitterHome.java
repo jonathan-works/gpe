@@ -15,6 +15,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 import br.com.infox.epp.twitter.util.TwitterUtil;
@@ -22,7 +23,6 @@ import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.LocalizacaoHome;
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.util.ParametroUtil;
 import br.com.itx.component.AbstractHome;
 
 @Name(ContaTwitterHome.NAME)

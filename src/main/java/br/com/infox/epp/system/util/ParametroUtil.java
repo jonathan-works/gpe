@@ -1,4 +1,4 @@
- package br.com.infox.util;
+ package br.com.infox.epp.system.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
