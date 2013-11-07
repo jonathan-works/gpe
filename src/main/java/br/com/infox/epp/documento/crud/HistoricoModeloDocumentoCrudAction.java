@@ -15,7 +15,7 @@ import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(HistoricoModeloDocumentoCrudAction.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<HistoricoModeloDocumento> {
 
     public static final String NAME = "historicoModeloDocumentoCrudAction";

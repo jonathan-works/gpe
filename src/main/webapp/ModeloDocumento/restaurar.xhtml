@@ -31,25 +31,25 @@
 	
 	<ui:define name="body">
 		<rich:panel bodyClass="panel" 
-					rendered="#{historicoModeloDocumentoHome.selecionado != null}"
+					rendered="#{historicoModeloDocumentoCrudAction.selecionado != null}"
 					>
 			<h:form>
 				<wi:inputText id="#{rowId}Titulo" 
 							  label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
-							  value="#{historicoModeloDocumentoHome.selecionado.tituloModeloDocumento}"
+							  value="#{historicoModeloDocumentoCrudAction.selecionado.tituloModeloDocumento}"
 							  readonly="true"/>
 
 				<wi:inputText id="#{rowId}Situacao"
 							  label="#{messages['field.situacao']}"
-							  value="#{historicoModeloDocumentoHome.selecionado.ativo ? 'Ativo' : 'Inativo'}"
+							  value="#{historicoModeloDocumentoCrudAction.selecionado.ativo ? 'Ativo' : 'Inativo'}"
 							  readonly="true"/>
 				<s:div id="editorROModeloDocumento" >
 					<wi:editor id="#{rowId}ModeloDocumento"	 
-							   value="#{historicoModeloDocumentoHome.selecionado.descricaoModeloDocumento}"
+							   value="#{historicoModeloDocumentoCrudAction.selecionado.descricaoModeloDocumento}"
 							   label="#{messages['historicoModeloDocumento.modeloDocumento']}"
 							   readonly="true"/>
 				</s:div>
-				<wi:commandButton action="historicoModeloDocumentoHome.restaurarSelecionado"
+				<wi:commandButton action="modeloDocumentoCrudAction.restaurar(historicoModeloDocumentoCrudAction.selecionado)"
 				  value="Restaurar"
 				  id="restaurarHistoricoSelecionado"
 				  oncomplete="window.close()"/>

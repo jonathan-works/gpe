@@ -6,11 +6,13 @@
 	  login-required="true"
 >
 	<restrict>#{security.checkPage()}</restrict>
-	<description>ModeloDocumento: #{modeloDocumentoHome.instance}</description>
+	<description>ModeloDocumento: #{modeloDocumentoCrudAction.instance}</description>
 	
 	<begin-conversation join="true"/>
 	
-	<param name="id" value="#{modeloDocumentoHome.id}" converterId="integerConverter"/>
-	<param name="tab" value="#{modeloDocumentoHome.tab}"/>
+	<param name="id" value="#{modeloDocumentoCrudAction.id}" converterId="integerConverter"/>
+	<param name="tab" value="#{modeloDocumentoCrudAction.tab}"/>
+    <action execute="#{historicoModeloDocumentoCrudAction.setModeloDocumento(modeloDocumentoCrudAction.instance)}" if="#{modeloDocumentoCrudAction.tab eq 'historicoModeloDocumento'}"/>
+    <action execute="#{historicoModeloDocumentoList.entity.setModeloDocumento(modeloDocumentoCrudAction.instance)}" if="#{modeloDocumentoCrudAction.tab eq 'historicoModeloDocumento'}"/>
  
 </page>
