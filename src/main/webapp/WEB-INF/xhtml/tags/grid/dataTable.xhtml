@@ -62,9 +62,9 @@
 									name="home"
 									value="#{wi:get(home, '')}" />
 								<wi:toolBarReport
-									rendered="#{parametroHome.getParametroOrFalse('exportarPDF')}" />
+									rendered="#{parametroUtil.getParametroOrFalse('exportarPDF')}" />
 								<wi:toolBarReportExcel
-									rendered="#{parametroHome.getParametroOrFalse('exportarXLS') and not empty bean.template}"
+									rendered="#{parametroUtil.getParametroOrFalse('exportarXLS') and not empty bean.template}"
 									action="#{bean.exportarXLS()}" />
 							</ui:insert>
 						</s:div>
