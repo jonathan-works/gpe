@@ -3,6 +3,7 @@ package br.com.infox.ibpm.jbpm.fitter;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,9 +22,9 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jbpm.graph.def.ExceptionHandler;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
-import org.jbpm.graph.def.ExceptionHandler;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
@@ -170,6 +171,24 @@ public class NodeFitter extends Fitter implements Serializable {
 		oldNodeTransition = NodeConverter.getAsObject((String) e.getOldValue());
 	}
 
+	private void removeTransition(Transition transition) {
+	    Node to = transition.getTo();
+	    if (to != null) {
+	        to.removeArrivingTransition(transition);
+	    }
+	    Node from = transition.getFrom();
+	    if (from != null) {
+	        from.removeLeavingTransition(transition);
+	    }
+	}
+	
+	private void removeTransitions(Collection<Transition> transitions) {
+	    while(transitions.size()>0) {
+            Transition t = transitions.iterator().next();
+            removeTransition(t);
+        }
+	}
+	
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public void removeNode(Node node) {
 		nodes.remove(node);
@@ -178,27 +197,14 @@ public class NodeFitter extends Fitter implements Serializable {
 			currentNode = null;
 		}
 		nodeMessageMap.clear();
-		for (Node n : nodes) {
-			List<Transition> transitions = n.getLeavingTransitions();
-			if (transitions != null) {
-				for (Iterator<Transition> i = transitions.iterator(); i.hasNext();) {
-					Transition t = i.next();
-					if (node.equals(t.getTo())) {
-						i.remove();
-					}
-				}
-			}
-			Set<Transition> transitionSet = n.getArrivingTransitions();
-			if (transitionSet != null) {
-				for (Iterator<Transition> i = transitionSet.iterator(); i.hasNext();) {
-					Transition t = i.next();
-					if (node.equals(t.getFrom())) {
-						i.remove();
-					}
-				}
-			}
+		List<Transition> transitions = node.getLeavingTransitions();
+		if (transitions != null) {
+		    removeTransitions(transitions);
 		}
-		getProcessBuilder().getTransitionFitter().checkTransitions();
+		Set<Transition> transitionSet = node.getArrivingTransitions();
+		if (transitionSet != null) {
+		    removeTransitions(transitionSet);
+		}
 	}
 	
 	public void moveUp(Node node) {
@@ -263,13 +269,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	@Factory("processNodes")
 	public List<Node> getNodes() {
 		if (nodes == null) {
-			nodes = new ArrayList<Node>();
-			List<Node> list = getProcessBuilder().getInstance().getNodes();
-			if (list != null) {
-				for (Node node : list) {
-					nodes.add(node);
-				}
-			}
+			nodes = getProcessBuilder().getInstance().getNodes();
 		}
 		return nodes;
 	}
