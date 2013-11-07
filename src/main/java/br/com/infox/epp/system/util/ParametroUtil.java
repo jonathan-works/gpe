@@ -15,7 +15,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.ibpm.manager.ParametroManager;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.ibpm.util.CarregarParametrosAplicacao;
 import br.com.itx.util.ComponentUtil;
 

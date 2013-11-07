@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.manager;
+package br.com.infox.epp.system.manager;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
