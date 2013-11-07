@@ -1,8 +1,11 @@
 package br.com.infox.epp.documento.crud;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
@@ -12,6 +15,10 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
+import br.com.infox.epp.documento.entity.Variavel;
+import br.com.infox.epp.documento.manager.TipoModeloDocumentoPapelManager;
+import br.com.infox.epp.documento.manager.VariavelManager;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -25,6 +32,9 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
     private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoCrudAction.class);
     
     private ModeloDocumento modeloDocumentoAnterior;
+    
+    @In private VariavelManager variavelManager;
+    @In private TipoModeloDocumentoPapelManager tipoModeloDocumentoPapelManager;
     
     @Override
     public void newInstance() {
@@ -91,6 +101,17 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
         getInstance().setModeloDocumento(historicoModeloDocumento.getDescricaoModeloDocumento());
         getInstance().setTipoModeloDocumento(historicoModeloDocumento.getModeloDocumento().getTipoModeloDocumento());
         getInstance().setTituloModeloDocumento(historicoModeloDocumento.getTituloModeloDocumento());
+    }
+    
+    public List<Variavel> getVariaveis() {
+        if (getInstance().getTipoModeloDocumento() != null) {
+            return variavelManager.getVariaveisByTipoModeloDocumento(getInstance().getTipoModeloDocumento());
+        }
+        return new ArrayList<Variavel>();
+    }
+    
+    public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos() {
+        return tipoModeloDocumentoPapelManager.getTiposModeloDocumentoPermitidos();
     }
 
 }

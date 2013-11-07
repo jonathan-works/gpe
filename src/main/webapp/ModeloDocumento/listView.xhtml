@@ -52,7 +52,7 @@
 						 id="tipoModeloDocumento"
 						 label="#{messages['modeloDocumento.tipoModeloDocumento']}"
 						 value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
-						 items="#{modeloDocumentoHome.tiposModeloDocumentoPermitidos}"
+						 items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
 						 showLabelTodos="true" />
 					<wi:selectSituacaoOneMenu
 						 id="situacao"
@@ -89,7 +89,7 @@
 				 id="tipoModeloDocumento"
 				 label="#{messages['modeloDocumento.tipoModeloDocumento']}"
 				 value="#{modeloDocumentoCrudAction.instance.tipoModeloDocumento}"
-				 items="#{modeloDocumentoHome.tiposModeloDocumentoPermitidos}"
+				 items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
 				 required="true"
 				 showLabelSelecione="true" />
 			<wi:inputText

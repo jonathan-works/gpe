@@ -44,7 +44,7 @@
 					var result = {
 						label:"Variáveis",
 						list:[
-							<a:repeat value="#{modeloDocumentoHome.variaveis}"
+							<a:repeat value="#{modeloDocumentoCrudAction.variaveis}"
 								var="v">
 								{
 									label:"#{v.variavel}",
@@ -116,7 +116,7 @@
 						var editor = evt.editor;
 						var config = editor.config;
 						var tags = [
-							<a:repeat value="#{modeloDocumentoHome.variaveis}"
+							<a:repeat value="#{modeloDocumentoCrudAction.variaveis}"
 								var="v">
 								{
 									label:"#{v.variavel}",
