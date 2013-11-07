@@ -29,7 +29,7 @@
              id="tipoProcessoDocumento"
              label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
              value="#{props.tipoProcessoDocumentoRO}"
-             items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+             items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
              required="true"
              disabled="#{readonly ? true : false}"
              noSelectionLabel="Selecione...">
