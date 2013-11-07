@@ -29,6 +29,8 @@
 
 	<web:hot-deploy-filter url-pattern="*.seam" />
 
+	<web:multipart-filter disabled="true"></web:multipart-filter>
+
 	<core:manager
 		concurrent-request-timeout="2000"
 		conversation-timeout="300000"
