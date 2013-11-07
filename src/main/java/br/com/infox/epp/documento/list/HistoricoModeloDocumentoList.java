@@ -23,11 +23,10 @@ public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocu
 	
 	private static final String DEFAULT_EJBQL = "select o from HistoricoModeloDocumento o";
 	private static final String DEFAULT_ORDER = "dataAlteracao DESC";
-	private static final String R1 = "modeloDocumento = #{modeloDocumentoHome.instance}";
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("modeloDocumento", SearchCriteria.IGUAL, R1);
+		addSearchField("modeloDocumento", SearchCriteria.IGUAL);
 		addSearchField("usuarioAlteracao", SearchCriteria.IGUAL);
 		addSearchField("dataAlteracao", SearchCriteria.DATA_IGUAL);
 		addSearchField("tituloModeloDocumento", SearchCriteria.CONTENDO);
