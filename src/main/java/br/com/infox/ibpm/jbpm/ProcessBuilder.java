@@ -30,7 +30,9 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 
 import org.hibernate.Query;
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -60,11 +62,14 @@ import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
 import br.com.infox.ibpm.jbpm.fitter.TransitionFitter;
 import br.com.infox.ibpm.jbpm.fitter.TypeFitter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
+import br.com.infox.ibpm.xpdl.FluxoXPDL;
+import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class ProcessBuilder implements Serializable {
 
 	private static final String PROCESS_DEFINITION_BUTTONS_FORM_ID = ":processDefinitionButtonsForm";
@@ -291,7 +296,11 @@ public class ProcessBuilder implements Serializable {
 	}
 
 	public static ProcessBuilder instance() {
-		return (ProcessBuilder) Contexts.getConversationContext().get(NAME);
+	    ProcessBuilder returnInstance ;
+	    if ((returnInstance=(ProcessBuilder) Contexts.getConversationContext().get(NAME)) == null) {
+	        returnInstance = (ProcessBuilder) Component.getInstance(ProcessBuilder.class);
+	    }
+		return returnInstance;
 	}
 
 	/**
@@ -432,4 +441,15 @@ public class ProcessBuilder implements Serializable {
 	public ProcessBuilderGraph getProcessBuilderGraph() {
 		return processBuilderGraph;
 	}
+	
+	public void importarXPDL(byte[] bytes, String cdFluxo) {
+        try {
+            final FluxoXPDL fluxoXPDL = FluxoXPDL.createInstance(bytes);
+            final String xml = fluxoXPDL.toJPDL(cdFluxo);
+            setXml(xml); 
+            updateFluxo(cdFluxo);
+        } catch (IllegalXPDLException e) {
+            LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage());
+        }
+    }
 }

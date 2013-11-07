@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(schema="public", name=PrioridadeProcesso.TABLE_NAME)
-public class PrioridadeProcesso implements Serializable {
+public class PrioridadeProcesso implements Serializable, Comparable<PrioridadeProcesso> {
 	
 	public static final String TABLE_NAME = "tb_prioridade_processo";
 	private static final long serialVersionUID = 1L;
@@ -51,4 +51,21 @@ public class PrioridadeProcesso implements Serializable {
 		this.ativo = ativo;
 	}
 	
+	@Override  
+  	public String toString() {  
+		return descricaoPrioridade;  
+  	}  
+	
+	@Override
+	public int compareTo(PrioridadeProcesso o) {
+		if (this.peso != null && o != null && o.peso != null) {
+			return this.peso.compareTo(o.peso);
+		} else if (this.peso != null) { // Este peso é maior que nulo
+			return 1;
+		} else if (o != null) { // Este peso é nulo e é menor que um peso não-nulo
+			return -1;
+		} else { // Dois pesos nulos são iguais
+			return 0;
+		}
+	}
 }
