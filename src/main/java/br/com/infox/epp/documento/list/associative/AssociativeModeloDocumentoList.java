@@ -24,14 +24,11 @@ public class AssociativeModeloDocumentoList extends EntityList<ModeloDocumento> 
 	private static final String DEFAULT_EJBQL = "select o from ModeloDocumento o";
 	private static final String DEFAULT_ORDER = "tituloModeloDocumento";
 
-	private static final String R1 = "tipoModeloDocumento.grupoModeloDocumento = #{modeloDocumentoHome.grupoModeloDocumento}";
-
 	@In(required=false)
 	private TaskFitter taskFitter;
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("tipoModeloDocumento.grupoModeloDocumento", SearchCriteria.IGUAL, R1);
 		addSearchField("tituloModeloDocumento", SearchCriteria.CONTENDO);
 		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
 		addSearchField("ativo", SearchCriteria.IGUAL);
