@@ -24,7 +24,7 @@
          name="title">#{messages['parametro.titlePage']}</ui:define>
 	<ui:param
          name="home"
-         value="#{parametroHome}" />
+         value="#{parametroCrudAction}" />
 
 	<ui:define
          name="searchGrid">
@@ -87,32 +87,32 @@
 			<wi:inputText
                  id="nomeVariavel"
                  label="#{messages['parametro.nomeVariavel']}"
-                 value="#{parametroHome.instance.nomeVariavel}"
+                 value="#{parametroCrudAction.instance.nomeVariavel}"
                  required="true" />
 			<wi:inputText
                  id="descricaoVariavel"
                  label="#{messages['parametro.descricaoVariavel']}"
-                 value="#{parametroHome.instance.descricaoVariavel}"
+                 value="#{parametroCrudAction.instance.descricaoVariavel}"
                  required="true" />
 			<wi:inputText
                  id="valorVariavel"
                  label="#{messages['parametro.valorVariavel']}"
-                 value="#{parametroHome.instance.valorVariavel}"
+                 value="#{parametroCrudAction.instance.valorVariavel}"
                  required="true" />
 			<wi:selectBooleanRadio
                  id="sistema"
                  label="#{messages['parametro.sistema']}"
-                 value="#{parametroHome.instance.sistema}"
+                 value="#{parametroCrudAction.instance.sistema}"
                  required="true" />
 			<wi:inputText
                  id="esquemaTabelaId"
                  label="#{messages['parametro.esquemaTabelaId']}"
-                 value="#{parametroHome.instance.esquemaTabelaId}" />
+                 value="#{parametroCrudAction.instance.esquemaTabelaId}" />
 									
 			<wi:selectSituacaoRadio
                  id="idParametro"
                  label="#{messages['field.situacao']}"
-                 value="#{parametroHome.instance.ativo}"
+                 value="#{parametroCrudAction.instance.ativo}"
                  required="true" />
 		</wi:dataForm>
 	</ui:define>	
