@@ -18,7 +18,7 @@ import org.quartz.SchedulerException;
 
 import br.com.infox.component.quartz.QuartzConstant;
 import br.com.infox.epp.processor.TarefaTimerProcessor;
-import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.timer.TimerUtil;
 import br.com.itx.util.EntityUtil;
 

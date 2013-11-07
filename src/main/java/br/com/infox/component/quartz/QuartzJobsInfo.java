@@ -34,7 +34,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
-import br.com.infox.ibpm.entity.Parametro;
+import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
