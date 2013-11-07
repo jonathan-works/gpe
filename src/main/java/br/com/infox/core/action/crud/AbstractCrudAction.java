@@ -20,7 +20,7 @@ import br.com.itx.util.EntityUtil;
  * @param <T> Entity principal, onde devem ser realizadas as 
  * alterações.
  */
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public abstract class AbstractCrudAction<T> extends AbstractAction 
 											implements Crudable<T> {
 	
