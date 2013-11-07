@@ -16,30 +16,20 @@
 
 	<ui:define
          name="body">
-
-		<ui:param
-             name="action"
-             value="#{importarXPDLAction}" />
-		<ui:param
-             name="home"
-             value="#{fileHome}" />
-		<ui:param
-             name="fluxo"
-             value="#{fluxoHome}" />
 		
 		<h:form
              id="uploadXPDL">
 		
 		<a:jsFunction
                  name="chamarMetodo"
-                 action="#{action.importarXPDL(home.getData(), fluxo.instance.fluxo)}" />
+                 action="#{processBuilder.importarXPDL(fileHome.getData(), fluxoHome.instance.fluxo)}" />
 					  
 			<wi:fileUploadBox
                  id="uploadArquivo"
                  label="Arquivo XPDL"
                  tipMessage="Somente arquivos XPDL"
                  acceptedTypes="xpdl"
-                 onuploadcomplete="chamarMetodo();window.close();"
+                 onuploadcomplete="chamarMetodo();close();"
                  onchange="clearSign();">
 			</wi:fileUploadBox>
 		</h:form>
