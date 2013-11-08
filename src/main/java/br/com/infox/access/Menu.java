@@ -169,7 +169,7 @@ public class Menu implements Serializable {
     		
     		String relativeXhtmlFile = xhtmlFile.toString().replace(war.toString(), "").replace(XHTML_EXTENSION, SEAM_EXTENSION);
     		
-    		createRoleIfNeeded(SecurityUtil.PAGES_PREFIX + relativeXhtmlFile);
+    		createRoleIfNeeded(SecurityUtil.PAGES_PREFIX + relativeXhtmlFile.replace("\\", "/"));
     		
     		return FileVisitResult.CONTINUE;
     	}
