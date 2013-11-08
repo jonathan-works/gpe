@@ -24,9 +24,10 @@
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
 	<s:div
+        id="#{id}TipoProcDocDiv"
          >
 		<wi:selectOneMenuEntity
-             id="tipoProcessoDocumento"
+             id="#{id}TipoProcDoc"
              label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
              value="#{props.tipoProcessoDocumentoRO}"
              items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
@@ -36,7 +37,7 @@
 		</wi:selectOneMenuEntity>
 	
 		<s:div
-             id="editorTextEditComboDiv">
+             id="#{id}EditorDiv">
 			<wi:editor
                  id="#{id}Editor"
                  value="#{props.modeloDocumentoRO}" />

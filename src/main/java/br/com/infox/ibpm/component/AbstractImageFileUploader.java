@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -91,8 +92,13 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
         instance.setExtensao(getFileType());
         instance.setMd5Imagem(getMD5());
         instance.setDataInclusao(new Date());
+        instance.setFilePath(getImagePath());
 		try {
-            imagemBinManager.persistImageBin(instance,getImagesRelativePath());
+            imagemBinManager.persistImageBin(instance);
+            String[] imagesDir = getImagesDir();
+            File directory = new File(imagesDir[imagesDir.length-1]);
+            directory.mkdirs();
+            imagemBinManager.saveFile(this.data, new File(directory, fileName));
         } catch (IOException e) {
             LOG.error("Falha ao gravar no sistema de arquivos.",e);
         }

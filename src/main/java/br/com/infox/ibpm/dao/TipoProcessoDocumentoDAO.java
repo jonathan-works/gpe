@@ -38,11 +38,17 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 	}
 	
 	//Retorna um TipoProcessoDocumento ~aleatório
+	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
 		String sql = "select o from TipoProcessoDocumento o ";
 		Query q = entityManager.createQuery(sql);
 		q.setMaxResults(1);
-		return (TipoProcessoDocumento) q.getSingleResult();	
+		List<TipoProcessoDocumento> resultList = q.getResultList();
+		TipoProcessoDocumento result = null;
+		if (resultList.size()>0) {
+		    result = resultList.get(0);
+		}
+		return result;	
 	}
 	
 	@SuppressWarnings(WarningConstants.UNCHECKED)

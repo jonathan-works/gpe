@@ -32,10 +32,8 @@ public class ImagemBinManager extends GenericManager {
 	@In 
 	private ImageUtil imageUtil;
 
-    public void persistImageBin(ImagemBin imagemBin, String imagesRelativePath) throws IOException {
-        String[] imagesDir = getImagesDir(imagesRelativePath);
-        imagemBin.setFilePath(imagesDir[imagesDir.length-1]);
-    	imagemBinDAO.persistImageBin(imagemBin,new File(imagemBin.getFilePath(), imagemBin.getNomeArquivo()));
+    public void persistImageBin(ImagemBin imagemBin) {
+    	imagemBinDAO.persistImageBin(imagemBin);
     }
 
     private String[] getImagesDir(final String path,
@@ -51,11 +49,11 @@ public class ImagemBinManager extends GenericManager {
     }
     
     public String[] getImagesDir(String imagesRelativePath) {
-        return getImagesDir(imageUtil.getRealPath()+imagesRelativePath, Authenticator.getUsuarioLocalizacaoAtual());
+        return getImagesDir(imageUtil.getRealPath(imagesRelativePath), Authenticator.getUsuarioLocalizacaoAtual());
     }
 
     public String[] getImagesPath(String imagesRelativePath) {
-        return getImagesDir(imageUtil.getContextPath()+imagesRelativePath, Authenticator.getUsuarioLocalizacaoAtual());
+        return getImagesDir(imagesRelativePath, Authenticator.getUsuarioLocalizacaoAtual());
     }
 
     private void createDir(String imagesDir) {
@@ -105,7 +103,7 @@ public class ImagemBinManager extends GenericManager {
                 }
                 
             });
-            String[] imagensPath = getImagesPath(imagensRelativePath);
+            String[] imagensPath = getImagesPath(imageUtil.getContextPath(imagensRelativePath));
             for (int j = 0; j < filesImg.length; j++) {
                 filesImg[j] = imagensPath[i] + "/" + filesImg[j];
                 files.add(filesImg[j]);
