@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.component.tree;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
@@ -24,6 +25,7 @@ import br.com.itx.util.ComponentUtil;
 
 
 @Name(LocalizacaoTreeHandler.NAME)
+@AutoCreate
 public class LocalizacaoTreeHandler extends AbstractTreeHandler<Localizacao> {
 
 	private static final long serialVersionUID = 1L;
