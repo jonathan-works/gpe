@@ -6,7 +6,8 @@ import java.util.Date;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.epp.entity.CalendarioEventos;
+
+import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.itx.component.AbstractHome;
 
