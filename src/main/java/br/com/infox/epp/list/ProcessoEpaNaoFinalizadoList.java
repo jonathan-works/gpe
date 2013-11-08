@@ -61,7 +61,10 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 	
 	@Override
 	public void newInstance() {
-	    fluxo = getFluxoList().get(0);
+		List<Fluxo> fluxos = getFluxoList();
+		if (!fluxos.isEmpty()) { 
+			fluxo = fluxos.get(0);
+		}
 	    super.newInstance();
 	    getEntity().setSituacaoPrazo(SituacaoPrazoEnum.PAT);
 	}
