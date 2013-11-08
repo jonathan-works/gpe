@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.Papel;
-import br.com.infox.ibpm.query.FluxoPapelQuery;
+import br.com.infox.epp.fluxo.query.FluxoPapelQuery;
 
 @Entity
 @Table(name=FluxoPapel.TABLE_NAME, schema="public",

@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.query;
+package br.com.infox.epp.fluxo.query;
 
 public interface FluxoPapelQuery {
 
