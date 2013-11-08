@@ -8,7 +8,9 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.itx.util.ComponentUtil;
 
 @Name(NatCatFluxoLocalizacaoList.NAME)
@@ -24,6 +26,12 @@ public class NatCatFluxoLocalizacaoList extends EntityList<NatCatFluxoLocalizaca
 	
 	public static final NatCatFluxoLocalizacaoList instance() {
 		return ComponentUtil.getComponent(NAME);
+	}
+	
+	public void setFluxo(Fluxo fluxo){
+	    newInstance();
+	    getEntity().setNaturezaCategoriaFluxo(new NaturezaCategoriaFluxo());
+	    getEntity().getNaturezaCategoriaFluxo().setFluxo(fluxo);
 	}
 	
 	@Override

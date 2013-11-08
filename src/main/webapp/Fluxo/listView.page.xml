@@ -12,5 +12,8 @@
 	<param name="id" value="#{fluxoHome.id}"
            converterId="integerConverter" />
 	<param name="tab" value="#{fluxoHome.tab}"/>
+    
+    <action execute="#{natCatFluxoLocalizacaoList.setFluxo(fluxoHome.instance)}" 
+            if="#{fluxoHome.tab eq 'natCatFluxoLoc'}"/>
 	
 </page>
