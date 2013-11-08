@@ -252,22 +252,22 @@
 						formTitle="#{messages['form.title']}: #{fluxoHome.instance}">
 						<wi:selectOneMenuEntity
 							id="naturezaCategoriaFluxo"
-							value="#{natCatFluxoLocalizacaoHome.naturezaCategoriaFluxo}"
+							value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
 							required="true"
 							label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
 							noSelectionLabel="Selecione um registro..."
-							items="#{natCatFluxoLocalizacaoHome.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoHome.instance)}"/>
+							items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoHome.instance)}"/>
 						<wi:tree 
 							id="localizacao"
-							assignTo="natCatFluxoLocalizacaoHome.instance.localizacao"
+							assignTo="fluxoLocalizacaoCrudAction.instance.localizacao"
 							label="#{messages['localizacao.localizacao']}"
 							required="true"
-							tree="#{natCatFluxoLocalizacaoHome.localizacaoTreeHandler}" />
+							tree="#{localizacaoTree}" />
 							<ui:define 
 								name="buttons">
 								<wi:commandButton 
 									id="saveButton"
-									action="natCatFluxoLocalizacaoHome.persist"
+									action="fluxoLocalizacaoCrudAction.save"
 									reRender="natCatFluxoLocDiv"
 									value="Incluir"	/>
 							</ui:define>
@@ -279,12 +279,12 @@
 									  tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}"
 									  id="natCatFluxoLocalizacaoList"
 									  rowId="#{row.idNatCatFluxoLocalizacao}"
-									  actionInactive="natCatFluxoLocalizacaoHome.inactive">
+									  actionInactive="fluxoLocalizacaoCrudAction.inactive">
 							<ui:define name="searchForm" />
 				            <ui:define name="headerToolBar"/>
 							<ui:define name="toolBar">
 								<wi:toolBarRemove
-									actionRemove="natCatFluxoLocalizacaoHome.remove(row)"
+									actionRemove="fluxoLocalizacaoCrudAction.remove(row)"
 									reRender="natCatFluxoLocDiv"/>
 							</ui:define>
 							<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"
