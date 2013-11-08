@@ -22,7 +22,6 @@ public class NatCatFluxoLocalizacaoList extends EntityList<NatCatFluxoLocalizaca
 	
 	private static final String DEFAULT_EJBQL = "select o from NatCatFluxoLocalizacao o";
 	private static final String DEFAULT_ORDER = "naturezaCategoriaFluxo.natureza";
-	private static final String R1 = "o.naturezaCategoriaFluxo.fluxo = #{fluxoHome.instance}";
 	
 	public static final NatCatFluxoLocalizacaoList instance() {
 		return ComponentUtil.getComponent(NAME);
@@ -32,16 +31,10 @@ public class NatCatFluxoLocalizacaoList extends EntityList<NatCatFluxoLocalizaca
 	protected void addSearchFields() {
 		addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL);
 		addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL);
-		addSearchField("naturezaCategoriaFluxo.fluxo", SearchCriteria.IGUAL, R1);
+		addSearchField("naturezaCategoriaFluxo.fluxo", SearchCriteria.IGUAL);
 		addSearchField("localizacao", SearchCriteria.IGUAL);
 	}
 
-	@Override
-	public void newInstance() {
-		super.newInstance();
-		getEntity().setNaturezaCategoriaFluxo(new NaturezaCategoriaFluxo());
-	}
-	
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
