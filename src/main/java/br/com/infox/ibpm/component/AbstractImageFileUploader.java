@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.component;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +40,7 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
     }
     
     public String getImagePath() {
-        String[] imagesPath = getImagesPath();
+        String[] imagesPath = imagemBinManager.getDBPath(getImagesRelativePath());
         return imagesPath[imagesPath.length - 1];
     }	
 	
@@ -85,7 +84,17 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
 		this.fileName = ui.getName();
 		this.fileSize = Long.valueOf(ui.getSize()).intValue();
 		
-		ImagemBin instance = new ImagemBin();
+		final ImagemBin instance = createImageInstance();
+		try {
+            imagemBinManager.persistImageBin(instance);
+            imagemBinManager.saveFile(instance, getImagesRelativePath());
+        } catch (IOException e) {
+            LOG.error("Falha ao gravar no sistema de arquivos.",e);
+        }
+	}
+
+    private ImagemBin createImageInstance() {
+        final ImagemBin instance = new ImagemBin();
         instance.setImagem(this.data);
         instance.setNomeArquivo(this.fileName);
         instance.setTamanho(this.fileSize);
@@ -93,16 +102,8 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
         instance.setMd5Imagem(getMD5());
         instance.setDataInclusao(new Date());
         instance.setFilePath(getImagePath());
-		try {
-            imagemBinManager.persistImageBin(instance);
-            String[] imagesDir = getImagesDir();
-            File directory = new File(imagesDir[imagesDir.length-1]);
-            directory.mkdirs();
-            imagemBinManager.saveFile(this.data, new File(directory, fileName));
-        } catch (IOException e) {
-            LOG.error("Falha ao gravar no sistema de arquivos.",e);
-        }
-	}
+        return instance;
+    }
 
     public List<String> getImages() {
 		return imagemBinManager.getImages(getImagesRelativePath());
