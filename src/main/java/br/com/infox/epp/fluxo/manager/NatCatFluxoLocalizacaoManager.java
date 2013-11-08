@@ -41,7 +41,6 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * @param natCatFluxoLocalizacao
 	 */
 	public void persistWithChildren(NatCatFluxoLocalizacao natCatFluxoLocalizacao) {
-		persist(natCatFluxoLocalizacao);
 		persistChildren(natCatFluxoLocalizacao.getLocalizacao(), natCatFluxoLocalizacao);
 	}
 
