@@ -27,9 +27,8 @@ public class ImagemBinDAO extends GenericDAO {
 		return (List<ImagemBin>) entityManager.createQuery(hql).getResultList();
 	}
 
-    public void persistImageBin(ImagemBin imagemBin, File fileDestino) throws IOException {
+    public void persistImageBin(ImagemBin imagemBin) {
         persist(imagemBin);
-        saveFile(imagemBin.getImagem(), fileDestino);
     }
     
     /**
