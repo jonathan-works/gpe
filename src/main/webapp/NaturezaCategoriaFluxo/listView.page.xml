@@ -11,5 +11,9 @@
 	<param name="id" value="#{naturezaCategoriaFluxoCrudAction.id}"
 		   converterId="integerConverter" />
 	<param name="tab" value="#{naturezaCategoriaFluxoCrudAction.tab}" />
+    <action execute="#{natCatFluxoLocalizacaoCrudAction.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoCrudAction.instance)}" 
+            if="#{naturezaCategoriaFluxoCrudAction.tab eq 'localizacaoTab'}"/>
+    <action execute="#{natCatFluxoLocalizacaoList.entity.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoCrudAction.instance)}" 
+            if="#{naturezaCategoriaFluxoCrudAction.tab eq 'localizacaoTab'}"/>
 	
 </page>

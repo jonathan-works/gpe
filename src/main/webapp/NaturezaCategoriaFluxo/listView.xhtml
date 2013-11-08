@@ -117,7 +117,6 @@
 		<infox:tab
             id="localizacaoTab"
             rendered="#{naturezaCategoriaFluxoCrudAction.isManaged()}"
-            action="#{natCatFluxoLocalizacaoHome.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoCrudAction.instance)}"
             title="#{messages['naturezaCategoriaFluxo.localizacao']}"
             name="localizacaoTab">
             <s:div id="localizacaoFormDiv">
@@ -127,27 +126,28 @@
 					<ui:define name="buttons">
 						<wi:commandButton
 	                            id="saveButton"
-	                            action="natCatFluxoLocalizacaoHome.persist"
+	                            action="natCatFluxoLocalizacaoCrudAction.save"
 	                            reRender="localizacaoFormDiv, localizacaoDtDiv"
 	                            value="Incluir" />
 					</ui:define>
 					<wi:tree
 						id="localizacao"
-						assignTo="natCatFluxoLocalizacaoHome.instance.localizacao"
+						assignTo="natCatFluxoLocalizacaoCrudAction.instance.localizacao"
 						label="#{messages['localizacao.localizacao']}"
 						required="true"
-						tree="#{natCatFluxoLocalizacaoHome.localizacaoTreeHandler}" />
+						tree="#{localizacaoTree}" />
 					<wi:selectBooleanCheckbox
 						id="heranca"
 						label="#{messages['natCatFluxoLocalizacao.heranca']}"
-						value="#{natCatFluxoLocalizacaoHome.instance.heranca}" />
+						value="#{natCatFluxoLocalizacaoCrudAction.instance.heranca}" />
 				</wi:dataForm>
 			</s:div>
 			<s:div id="localizacaoDtDiv">
 				<wi:dataTable
 					id="natCatFluxoLocalizacaoList"
-					values="#{natCatFluxoLocalizacaoHome.getNatCatFluxolocalizacaoList()}"
-					var="row"
+					values="#{natCatFluxoLocalizacaoList.list(15)}"
+                    bean="#{naturezaCategoriaFluxoList}"
+					rowId="#{row.idNatCatFluxoLocalizacao}"
 					tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}">
 					<ui:define name="searchForm">
 					</ui:define>
@@ -155,7 +155,7 @@
 					</ui:define>
 					<ui:define name="toolBar">
 						<wi:toolBarRemove
-							actionRemove="natCatFluxoLocalizacaoHome.remove(row)" 
+							actionRemove="natCatFluxoLocalizacaoCrudAction.remove(row)" 
 							reRender="localizacaoFormDiv, localizacaoDtDiv"/>
 					</ui:define>
 					<wi:columnOutputText
