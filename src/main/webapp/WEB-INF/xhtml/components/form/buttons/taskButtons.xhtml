@@ -104,12 +104,14 @@
 			</a:repeat>
 		</c:if>
 		
-		<h:outputText value="Prioridade:" style="font-size: 13px; margin-left: 40px;"/>
-		<h:selectOneMenu value="#{processoHome.instance.prioridadeProcesso}">
-			<s:selectItems value="#{prioridadeProcessoList.list()}" var="p" label="#{p.descricaoPrioridade}" 
-				noSelectionLabel="Selecione..."/>
-			<s:convertEntity/>
-		</h:selectOneMenu>
+		<ui:fragment rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao()}">
+			<h:outputText value="Prioridade:" style="font-size: 13px; margin-left: 40px;"/>
+			<h:selectOneMenu value="#{processoHome.instance.prioridadeProcesso}">
+				<s:selectItems value="#{prioridadeProcessoList.list()}" var="p" label="#{p.descricaoPrioridade}" 
+					noSelectionLabel="Selecione..."/>
+				<s:convertEntity/>
+			</h:selectOneMenu>
+		</ui:fragment>
 	</s:div>
 
 </ui:composition>
