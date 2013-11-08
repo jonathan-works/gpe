@@ -27,7 +27,7 @@
                       
 	<ui:define name="title">#{messages['calendarioEventos.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{calendarioEventosHome}" />
+	<ui:param name="home" value="#{calendarioEventosCrudAction}" />
 	<ui:param name="list" value="#{calendarioEventosList}" />
 	
 	<ui:define name="searchGrid">   
@@ -42,7 +42,7 @@
 					<wi:tree id="localizacao"
 							 label="#{messages['calendarioEventos.localizacao']}"
 							 assignTo="calendarioEventosList.entity.localizacao"
-							 tree="#{home.localizacaoTreeHandler}" />
+							 tree="#{localizacaoTree}" />
 					<wi:inputText id="descricaoEvento"
 								  label="#{messages['calendarioEventos.descricaoEvento']}"
 								  value="#{list.entity.descricaoEvento}"
@@ -75,7 +75,7 @@
 				<wi:toolBarEdit  />
 				<wi:toolBar
 					id="#{row.id}Remove"
-			        action="calendarioEventosHome.remove(row)"
+			        action="calendarioEventosCrudAction.remove(row)"
 			        rendered="true"
 			        limitToList="true"
 			        status=":status"
@@ -103,8 +103,8 @@
 					 formTitle="#{messages['form.title']}">
 			<wi:tree id="localizacao"
 					 label="#{messages['calendarioEventos.localizacao']}"
-					 assignTo="calendarioEventosHome.instance.localizacao"
-					 tree="#{home.localizacaoTreeHandler}"
+					 assignTo="calendarioEventosCrudAction.instance.localizacao"
+					 tree="#{localizacaoTree}"
 					 required="true" />
 			<wi:inputText id="descricaoEvento"
 						  label="#{messages['calendarioEventos.descricaoEvento']}"
