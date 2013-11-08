@@ -23,6 +23,7 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.infox.util.PostgreSQLExceptionManager;
 import br.com.infox.util.constants.WarningConstants;
+import br.com.itx.component.Util;
 import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
@@ -103,6 +104,9 @@ public abstract class AbstractAction {
 						e.getMessage(), e);
 				LOG.error(msg+" (" + getObjectClassName(o) + ")", e);
 			}
+		}
+		if (!PERSISTED.equals(ret)) {
+		    Util.rollbackTransactionIfNeeded();
 		}
 		return ret;
 	}
