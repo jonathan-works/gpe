@@ -53,5 +53,17 @@ public class NaturezaCategoriaFluxoDAO extends GenericDAO {
                 .setParameter(NaturezaCategoriaFluxoQuery.QUERY_PARAM_CATEGORIA, categoria)
                 .setParameter(NaturezaCategoriaFluxoQuery.QUERY_PARAM_FLUXO, fluxo);
         return EntityUtil.getSingleResult(query);
-    }	
+    }
+    
+    public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(Fluxo fluxo) {
+        String hql = "select ncf from NaturezaCategoriaFluxo ncf " +
+                "inner join ncf.natureza n " +
+                "inner join ncf.categoria c " +
+                "where n.ativo=true " +
+                "and c.ativo=true " +
+                "and ncf.fluxo=:fluxo";
+        return EntityUtil.getEntityManager().createQuery(hql, NaturezaCategoriaFluxo.class)
+                .setParameter("fluxo", fluxo)
+                .getResultList();
+    }
 }

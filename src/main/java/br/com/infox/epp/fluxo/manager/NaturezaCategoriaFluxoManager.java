@@ -33,5 +33,9 @@ public class NaturezaCategoriaFluxoManager extends GenericManager {
 
     public NaturezaCategoriaFluxo getByRelationship(Natureza natureza, Categoria categoria, Fluxo fluxo) {
         return naturezaCategoriaFluxoDAO.getByRelationship(natureza, categoria, fluxo);
-    }	
+    }
+    
+    public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(Fluxo fluxo){
+        return naturezaCategoriaFluxoDAO.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
+    }
 }
