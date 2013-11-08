@@ -153,6 +153,26 @@
 			<wi:columnOutputText columnId="tarefa"
 								 columnHeader="Tarefa"
 								 value="#{row.tarefa.tarefa}" />
+								
+			<wi:columnOutputText columnId="numeroProcesso"
+				columnHeader="#{messages['processo.numeroProcesso']}"
+				value="#{row.processoEpa.numeroProcesso}" />
+			
+			<wi:columnDateTime columnId="dataInicio"
+				columnHeader="#{messages['processo.dataInicio']}"
+				value="#{row.processoEpa.dataInicio}" />
+				
+			<wi:columnOutputText columnId="naturezaCategoriaItem"
+				columnHeader="#{messages['processoEpa.naturezaCategoriaItem']}"
+				value="#{processoEpaTarefaList.getNaturezaCategoriaItem(row)}" />
+				
+			<wi:columnOutputText columnId="prioridadeProcesso"
+				columnHeader="#{messages['processo.prioridadeProcessoList']}"
+				value="#{row.processoEpa.prioridadeProcesso}" />
+				
+			<wi:columnOutputText columnId="tempoDesdeInicio"
+				columnHeader="#{messages['processoEpa.tempoDesdeInicioDias']}"
+				value="#{processoEpaTarefaList.getDiasDesdeInicioProcesso(row)}" /> 
 								 
 			<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
 			<rich:column styleClass="defaultCell">
