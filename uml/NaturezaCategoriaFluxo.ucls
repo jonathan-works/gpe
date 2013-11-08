@@ -75,8 +75,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="br.com.infox.ibpm.entity.FluxoPapel" project="epp" 
-    file="/epp/src/main/java/br/com/infox/ibpm/entity/FluxoPapel.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" language="java" name="br.com.infox.epp.fluxo.entity.FluxoPapel" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/fluxo/entity/FluxoPapel.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2196" y="583"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

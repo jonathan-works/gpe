@@ -38,7 +38,6 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.query.FluxoQuery;
-import br.com.infox.ibpm.entity.FluxoPapel;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 

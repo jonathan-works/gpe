@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.fluxo.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +16,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.Papel;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.ibpm.query.FluxoPapelQuery;
 
 @Entity

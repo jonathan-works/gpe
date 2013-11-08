@@ -11,7 +11,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.ibpm.entity.FluxoPapel;
+import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.ibpm.query.FluxoPapelQuery;
 
 @Name(FluxoPapelDAO.NAME)
