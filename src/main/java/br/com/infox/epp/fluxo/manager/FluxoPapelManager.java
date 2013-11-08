@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.manager;
+package br.com.infox.epp.fluxo.manager;
 
 import java.io.Serializable;
 import java.util.List;

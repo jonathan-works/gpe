@@ -16,8 +16,8 @@ import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.home.FluxoHome;
+import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
-import br.com.infox.ibpm.manager.FluxoPapelManager;
 
 @Name(FluxoPapelAction.NAME)
 @Scope(ScopeType.CONVERSATION)
