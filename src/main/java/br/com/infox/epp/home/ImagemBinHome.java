@@ -8,7 +8,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.epp.entity.ImagemBin;
+import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 

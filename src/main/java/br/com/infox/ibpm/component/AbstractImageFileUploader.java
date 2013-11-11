@@ -13,7 +13,7 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
-import br.com.infox.epp.entity.ImagemBin;
+import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.epp.manager.ImagemBinManager;
 import br.com.itx.util.ArrayUtil;
 import br.com.itx.util.Crypto;
