@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.dao;
+package br.com.infox.epp.processo.documento.dao;
 
 import java.util.List;
 
