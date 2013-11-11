@@ -60,7 +60,6 @@ import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
-import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.ibpm.search.Reindexer;
 import br.com.infox.ibpm.search.SearchHandler;
@@ -106,7 +105,6 @@ public class TaskInstanceHome implements Serializable {
     @In private SituacaoProcessoManager situacaoProcessoManager;
     @In private ProcessoManager processoManager;
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
-    @In private ProcessoDocumentoManager processoDocumentoManager;
     private URL urlRetornoAcessoExterno;
     
 	public void createInstance() {
