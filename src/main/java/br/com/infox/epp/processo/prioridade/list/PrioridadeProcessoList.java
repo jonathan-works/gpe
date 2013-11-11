@@ -1,4 +1,4 @@
-package br.com.infox.list;
+package br.com.infox.epp.processo.prioridade.list;
 
 import java.util.Map;
 
