@@ -16,7 +16,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.util.constants.LengthConstants;
 

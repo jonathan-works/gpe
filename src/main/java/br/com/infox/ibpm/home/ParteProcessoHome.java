@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.manager.ParteProcessoManager;
-import br.com.infox.ibpm.entity.ParteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.itx.component.AbstractHome;
 
 @Name(ParteProcessoHome.NAME)

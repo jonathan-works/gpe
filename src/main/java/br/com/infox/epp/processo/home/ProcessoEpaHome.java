@@ -11,7 +11,7 @@ import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.epp.manager.ParteProcessoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.ibpm.entity.ParteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.itx.component.AbstractHome;

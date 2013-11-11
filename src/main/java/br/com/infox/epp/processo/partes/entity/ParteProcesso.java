@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.processo.partes.entity;
 
 import java.io.Serializable;
 
@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.ibpm.entity.Pessoa;
 
 @Entity
 @Table(name=ParteProcesso.TABLE_NAME, schema="public")
