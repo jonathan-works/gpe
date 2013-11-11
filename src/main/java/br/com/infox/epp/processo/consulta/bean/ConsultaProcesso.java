@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.bean;
+package br.com.infox.epp.processo.consulta.bean;
 
 import java.io.Serializable;
 import java.util.Date;
