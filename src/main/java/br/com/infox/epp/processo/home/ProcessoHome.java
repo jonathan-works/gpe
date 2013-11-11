@@ -31,13 +31,13 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.cliente.home.ProcessoDocumentoHome;
 import br.com.infox.core.certificado.Certificado;
 import br.com.infox.core.certificado.CertificadoException;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.processo.documento.home.ProcessoDocumentoHome;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
