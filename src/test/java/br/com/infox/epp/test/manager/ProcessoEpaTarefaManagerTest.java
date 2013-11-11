@@ -10,7 +10,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.processo.manager.ProcessoEpaTarefaManager;
 
 public class ProcessoEpaTarefaManagerTest {
 

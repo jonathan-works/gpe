@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.manager.CategoriaManager;
-import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.processo.manager.ProcessoEpaTarefaManager;
 import br.com.infox.util.DateUtil;
 
 @Name(value=DashBoardAction.NAME)

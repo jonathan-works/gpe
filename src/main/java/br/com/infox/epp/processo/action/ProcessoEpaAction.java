@@ -6,8 +6,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.manager.ProcessoEpaTarefaManager;
 
 @Name(ProcessoEpaAction.NAME)
 @Scope(ScopeType.CONVERSATION)

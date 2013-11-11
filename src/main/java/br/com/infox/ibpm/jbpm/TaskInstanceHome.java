@@ -56,7 +56,7 @@ import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.processo.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
