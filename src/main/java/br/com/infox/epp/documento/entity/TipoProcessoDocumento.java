@@ -37,7 +37,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
-import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.util.constants.LengthConstants;
 
 /**

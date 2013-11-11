@@ -9,7 +9,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
-import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
 @Name(ClassificacaoDocumentoManager.NAME)
 @AutoCreate

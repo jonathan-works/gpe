@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
 @Name(AssinaturaList.NAME)
 @Scope(ScopeType.PAGE)

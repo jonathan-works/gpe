@@ -16,7 +16,7 @@
 
 package br.com.infox.ibpm.home.api;
 
-import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
 public interface IProcessoDocumentoHome {
 	

@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
 @Name(ClassificacaoDocumentoDAO.NAME)
 @AutoCreate

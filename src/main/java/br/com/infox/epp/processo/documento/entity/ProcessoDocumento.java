@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.processo.documento.entity;
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
 import java.util.Date;
@@ -38,8 +38,8 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.access.entity.Papel;
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.util.constants.LengthConstants;
 
 /**
