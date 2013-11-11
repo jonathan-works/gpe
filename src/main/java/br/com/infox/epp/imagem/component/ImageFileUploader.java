@@ -19,14 +19,14 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.ibpm.component.AbstractImageFileUploader;
 
-@Name(ImageFileUpload.NAME)
-public class ImageFileUpload extends AbstractImageFileUploader {
-	public static final String NAME = "imageFileUpload";
+@Name(ImageFileUploader.NAME)
+public class ImageFileUploader extends AbstractImageFileUploader {
+	public static final String NAME = "imageFileUploader";
     public static final String IMAGE_RELATIVE_PATH = "/img/imageFile/";
 
 	@Override
 	public String getImagesRelativePath() {
-		return ImageFileUpload.IMAGE_RELATIVE_PATH;
+		return ImageFileUploader.IMAGE_RELATIVE_PATH;
 	}
 	
 }
