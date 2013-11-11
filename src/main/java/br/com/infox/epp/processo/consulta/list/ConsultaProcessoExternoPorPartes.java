@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.bean.externo;
+package br.com.infox.epp.processo.consulta.list;
 
 import java.util.Map;
 
