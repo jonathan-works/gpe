@@ -3,7 +3,7 @@ package br.com.infox.ibpm.home;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.ibpm.entity.ListaEmail;
+import br.com.infox.epp.mail.entity.ListaEmail;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 

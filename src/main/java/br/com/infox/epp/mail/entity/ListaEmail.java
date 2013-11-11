@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.mail.entity;
 
 import java.text.MessageFormat;
 
@@ -28,6 +28,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.ibpm.entity.Localizacao;
 
 @Entity
 @Table(name = ListaEmail.TABLE_NAME, schema="public")
