@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.action;
+package br.com.infox.epp.processo.action;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
