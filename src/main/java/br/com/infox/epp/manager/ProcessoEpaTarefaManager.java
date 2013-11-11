@@ -113,7 +113,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 			int porcentagem = 0;
 			int tempoGasto = (int)(processoEpaTarefa.getTempoGasto()+incrementoTempoGasto);
 			if(prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
-				porcentagem = (tempoGasto*PORCENTAGEM_MAXIMA)/prazo;
+				porcentagem = (tempoGasto*PORCENTAGEM_MAXIMA)/(prazo* 60);
 			}
             
             ProcessoEpa processoEpa = processoEpaTarefa.getProcessoEpa();
@@ -139,6 +139,9 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	private float getIncrementoTempoGasto(Date horaDisparo, ProcessoEpaTarefa processoEpaTarefa) {
 		PrazoEnum tipoPrazo = processoEpaTarefa.getTarefa().getTipoPrazo();
 		float result = 0;
+		if (tipoPrazo == null) {
+			return 0;
+		}
 		switch (tipoPrazo) {
 		case H:
 			result = calcularTempoGastoHoras(horaDisparo, processoEpaTarefa);
@@ -210,7 +213,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 			}
 			ultimaAtualizacao = disparoAtual;
 		}
-		return result/MINUTES_OF_HOUR;
+		return result;
 	}
 	
 	private int calcularTempoGastoDias(Date dataDisparo, ProcessoEpaTarefa processoEpaTarefa) {
