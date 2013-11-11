@@ -5,8 +5,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.ajuda.dao.AjudaDAO;
 import br.com.infox.epp.ajuda.entity.Ajuda;
-import br.com.infox.ibpm.dao.help.AjudaDAO;
 
 @Name(AjudaManager.NAME)
 @AutoCreate
