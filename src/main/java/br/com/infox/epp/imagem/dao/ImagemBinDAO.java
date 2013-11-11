@@ -1,4 +1,4 @@
-package br.com.infox.epp.dao;
+package br.com.infox.epp.imagem.dao;
 
 import java.io.File;
 import java.io.FileOutputStream;

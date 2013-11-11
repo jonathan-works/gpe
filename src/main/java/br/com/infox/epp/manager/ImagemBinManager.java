@@ -14,7 +14,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.dao.ImagemBinDAO;
+import br.com.infox.epp.imagem.dao.ImagemBinDAO;
 import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.epp.imagem.util.ImageUtil;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
