@@ -6,14 +6,14 @@
 	  login-required="true"
 >
 	<restrict>#{security.checkPage()}</restrict>
-	<description>Fluxo: #{fluxoHome.instance}</description>
+	<description>Fluxo: #{fluxoCrudAction.instance}</description>
 	 
 	<begin-conversation join="true" flush-mode="manual"/>
-	<param name="id" value="#{fluxoHome.id}"
+	<param name="id" value="#{fluxoCrudAction.id}"
            converterId="integerConverter" />
-	<param name="tab" value="#{fluxoHome.tab}"/>
+	<param name="tab" value="#{fluxoCrudAction.tab}"/>
     
-    <action execute="#{natCatFluxoLocalizacaoList.setFluxo(fluxoHome.instance)}" 
-            if="#{fluxoHome.tab eq 'natCatFluxoLoc'}"/>
+    <action execute="#{natCatFluxoLocalizacaoList.setFluxo(fluxoCrudAction.instance)}" 
+            if="#{fluxoCrudAction.tab eq 'natCatFluxoLoc'}"/>
 	
 </page>
