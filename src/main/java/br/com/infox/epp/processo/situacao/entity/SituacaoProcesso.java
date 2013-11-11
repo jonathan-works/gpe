@@ -15,7 +15,7 @@ import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
 
-import br.com.infox.ibpm.entity.filters.SituacaoProcessoFilter;
+import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 
 @Entity
 @Table(name = SituacaoProcesso.TABLE_NAME, schema="public")

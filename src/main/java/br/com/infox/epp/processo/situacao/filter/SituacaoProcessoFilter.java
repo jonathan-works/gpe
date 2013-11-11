@@ -1,6 +1,6 @@
 /* $Id: SituacaoProcessoFilter.java 704 2010-08-12 23:21:10Z jplacerda $ */
 
-package br.com.infox.ibpm.entity.filters;
+package br.com.infox.epp.processo.situacao.filter;
 
 import br.com.infox.cliente.entity.filters.Filter;
 
