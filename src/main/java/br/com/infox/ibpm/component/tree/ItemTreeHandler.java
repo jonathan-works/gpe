@@ -16,9 +16,11 @@
 package br.com.infox.ibpm.component.tree;
 
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.ibpm.entity.Item;
+import br.com.infox.ibpm.home.ItemHome;
 import br.com.itx.util.ComponentUtil;
 
 
@@ -43,7 +45,7 @@ public class ItemTreeHandler extends AbstractTreeHandler<Item> {
 
 	@Override
 	protected Item getEntityToIgnore() {
-		return ComponentUtil.getInstance("itemHome");
+		return ComponentUtil.getInstance(ItemHome.NAME);
 	}
 		
 }
