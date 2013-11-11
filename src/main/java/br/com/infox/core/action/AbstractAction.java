@@ -106,7 +106,7 @@ public abstract class AbstractAction {
 				LOG.error(msg+" (" + getObjectClassName(o) + ")", e);
 			}
 		}
-		if (!PERSISTED.equals(ret) || !UPDATED.equals(ret)) {
+		if (!(PERSISTED.equals(ret) || UPDATED.equals(ret))) {
 		    Util.rollbackTransactionIfNeeded();
 		}
 		return ret;
