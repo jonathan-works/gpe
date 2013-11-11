@@ -238,7 +238,7 @@ public class Authenticator {
 	
 	private static List<Localizacao> getLocalizacoesFilhas(Localizacao loc, List<Localizacao> list) {
 		list.add(loc);
-		if (loc.getEstruturaFilho() != null) {
+		if (loc.getEstruturaFilho() != null && !list.contains(loc.getEstruturaFilho())) {
 			getLocalizacoesFilhas(loc.getEstruturaFilho(), list);
 		}
 		for (Localizacao locFilho : loc.getLocalizacaoList()) {
