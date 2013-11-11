@@ -18,11 +18,11 @@ package br.com.infox.ibpm.component;
 import org.jboss.seam.annotations.Name;
 import br.com.itx.util.ComponentUtil;
 
-@Name(HelpFileUpload.NAME)
-public class HelpFileUpload extends AbstractImageFileUploader {
-	public static final String NAME = "helpFileUpload";
+@Name(HelpFileUploader.NAME)
+public class HelpFileUploader extends AbstractImageFileUploader {
+	public static final String NAME = "helpFileUploader";
 
-	public static final HelpFileUpload instance() {
+	public static final HelpFileUploader instance() {
 		return ComponentUtil.getComponent(NAME);
 	}
 
@@ -30,7 +30,7 @@ public class HelpFileUpload extends AbstractImageFileUploader {
 	
 	@Override
 	public String getImagesRelativePath() {
-		return HelpFileUpload.HELP_IMAGE_RELATIVE_PATH;
+		return HelpFileUploader.HELP_IMAGE_RELATIVE_PATH;
 	}
 	
 }
