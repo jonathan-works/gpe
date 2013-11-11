@@ -14,7 +14,7 @@
   veja em http://www.gnu.org/licenses/  
 */
 
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.processo.documento.home;
 
 import java.util.Date;
 import java.util.List;
@@ -36,6 +36,8 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
+import br.com.infox.ibpm.home.Authenticator;
+import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoBinHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.FileHome;
