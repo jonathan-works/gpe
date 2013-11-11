@@ -1,6 +1,6 @@
 /* $Id: SituacaoProcesso.java 704 2010-08-12 23:21:10Z jplacerda $ */
 
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.processo.situacao.entity;
 
 import java.text.MessageFormat;
 
