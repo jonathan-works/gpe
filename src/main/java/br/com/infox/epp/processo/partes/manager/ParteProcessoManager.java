@@ -1,4 +1,4 @@
-package br.com.infox.epp.manager;
+package br.com.infox.epp.processo.partes.manager;
 
 import javax.xml.bind.ValidationException;
 
