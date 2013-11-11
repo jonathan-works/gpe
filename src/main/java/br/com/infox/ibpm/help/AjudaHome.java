@@ -46,6 +46,7 @@ import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
+import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;

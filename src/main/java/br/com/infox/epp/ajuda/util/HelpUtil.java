@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.help;
+package br.com.infox.epp.ajuda.util;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -35,6 +35,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import br.com.infox.ibpm.help.Entities;
 
 
 public final class HelpUtil {

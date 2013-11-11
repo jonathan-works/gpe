@@ -41,8 +41,8 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.ibpm.entity.Processo;
-import br.com.infox.ibpm.help.HelpUtil;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
