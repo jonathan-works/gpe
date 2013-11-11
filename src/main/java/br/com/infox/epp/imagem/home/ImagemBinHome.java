@@ -1,4 +1,4 @@
-package br.com.infox.epp.home;
+package br.com.infox.epp.imagem.home;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
