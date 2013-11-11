@@ -1,4 +1,4 @@
-package br.com.infox.epp.entity;
+package br.com.infox.epp.processo.estatistica.entity;
 
 import java.io.Serializable;
 import java.text.MessageFormat;

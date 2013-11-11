@@ -5,8 +5,8 @@ import java.util.List;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.epp.entity.TempoMedioProcesso;
 import br.com.infox.epp.entity.TempoMedioTarefa;
+import br.com.infox.epp.processo.estatistica.entity.TempoMedioProcesso;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
