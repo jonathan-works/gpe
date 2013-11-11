@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import br.com.infox.epp.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
 @Table(name=ParteProcesso.TABLE_NAME, schema="public")

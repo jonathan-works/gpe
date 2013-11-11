@@ -10,10 +10,10 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 /**
  * Classe Action para o BAM

@@ -13,9 +13,9 @@ import org.joda.time.LocalDate;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
-import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Pessoa;

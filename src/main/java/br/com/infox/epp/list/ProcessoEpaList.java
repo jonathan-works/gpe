@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.epp.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.infox.access.entity.UsuarioLogin;
 

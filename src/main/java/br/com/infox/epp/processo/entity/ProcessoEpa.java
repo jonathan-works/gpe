@@ -1,4 +1,4 @@
-package br.com.infox.epp.entity;
+package br.com.infox.epp.processo.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.query.ProcessoEpaQuery;
