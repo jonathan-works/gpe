@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.ibpm.entity.help.Ajuda;
+import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.itx.util.EntityUtil;
 
 @Name(AjudaDAO.NAME)

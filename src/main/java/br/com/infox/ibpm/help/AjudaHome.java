@@ -41,7 +41,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.entity.help.Ajuda;
+import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.ibpm.entity.help.HistoricoAjuda;
 import br.com.infox.ibpm.entity.help.Pagina;
 import br.com.infox.ibpm.manager.help.AjudaManager;
