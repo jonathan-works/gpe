@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.mail.home;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
