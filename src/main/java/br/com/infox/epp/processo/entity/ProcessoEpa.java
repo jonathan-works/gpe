@@ -21,10 +21,10 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
+import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.query.ProcessoEpaQuery;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.entity.PrioridadeProcesso;
 
 @Entity
 @Table(name=ProcessoEpa.TABLE_NAME, schema="public")

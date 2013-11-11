@@ -5,7 +5,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.ibpm.entity.PrioridadeProcesso;
+import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.itx.component.AbstractHome;
 
 @Name(PrioridadeProcessoHome.NAME)
