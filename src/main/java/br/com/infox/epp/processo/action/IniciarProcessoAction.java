@@ -1,4 +1,4 @@
-package br.com.infox.epp.action;
+package br.com.infox.epp.processo.action;
 
 import java.util.ArrayList;
 import java.util.Date;
