@@ -16,9 +16,9 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ImagemBinDAO;
 import br.com.infox.epp.imagem.entity.ImagemBin;
+import br.com.infox.epp.imagem.util.ImageUtil;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
-import br.com.infox.util.ImageUtil;
 
 @Name(ImagemBinManager.NAME)
 @AutoCreate

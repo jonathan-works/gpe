@@ -1,4 +1,4 @@
-package br.com.infox.util;
+package br.com.infox.epp.imagem.util;
 
 import javax.faces.context.FacesContext;
 
