@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.jbpm.handler;
+package br.com.infox.epp.processo.handler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
+import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
