@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity.help;
+package br.com.infox.epp.ajuda.entity;
 
 import java.util.Date;
 
@@ -34,7 +34,6 @@ import org.hibernate.search.annotations.Analyzer;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.epp.ajuda.entity.Pagina;
 
 @Entity
 @Table(name = "tb_historico_ajuda", schema="public")
