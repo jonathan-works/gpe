@@ -134,6 +134,7 @@ public abstract class AbstractAction {
 	 * @param obj entidade já gerênciada pelo Hibernate.
 	 * @return "removed" se removido com sucesso.
 	 */
+	@Transactional
 	public String remove(Object obj) {
 		String ret = null;
 		try {
@@ -156,6 +157,7 @@ public abstract class AbstractAction {
 	 * @param o objeto da entidade que se deseja invativar o registro.
 	 * @return "updated" se inativado com sucesso.
 	 */
+	@Transactional
 	public String inactive(Object o) {
 		if(o == null) {
 			return null;
@@ -188,6 +190,7 @@ public abstract class AbstractAction {
 	 * @param o Registro que deseja inativar.
 	 * @return 
 	 */
+	@Transactional
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	protected String inactiveRecursive(Object o) {
 		ComponentUtil.setValue(o, "ativo", false);
