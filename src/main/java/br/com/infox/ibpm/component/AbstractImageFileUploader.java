@@ -40,7 +40,7 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
     }
     
     public String getImagePath() {
-        String[] imagesPath = getImagesPath();
+        String[] imagesPath = imagemBinManager.getDBPath(getImagesRelativePath());
         return imagesPath[imagesPath.length - 1];
     }	
 	
@@ -84,19 +84,26 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
 		this.fileName = ui.getName();
 		this.fileSize = Long.valueOf(ui.getSize()).intValue();
 		
-		ImagemBin instance = new ImagemBin();
+		final ImagemBin instance = createImageInstance();
+		try {
+            imagemBinManager.persistImageBin(instance);
+            imagemBinManager.saveFile(instance, getImagesRelativePath());
+        } catch (IOException e) {
+            LOG.error("Falha ao gravar no sistema de arquivos.",e);
+        }
+	}
+
+    private ImagemBin createImageInstance() {
+        final ImagemBin instance = new ImagemBin();
         instance.setImagem(this.data);
         instance.setNomeArquivo(this.fileName);
         instance.setTamanho(this.fileSize);
         instance.setExtensao(getFileType());
         instance.setMd5Imagem(getMD5());
         instance.setDataInclusao(new Date());
-		try {
-            imagemBinManager.persistImageBin(instance,getImagesRelativePath());
-        } catch (IOException e) {
-            LOG.error("Falha ao gravar no sistema de arquivos.",e);
-        }
-	}
+        instance.setFilePath(getImagePath());
+        return instance;
+    }
 
     public List<String> getImages() {
 		return imagemBinManager.getImages(getImagesRelativePath());

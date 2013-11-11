@@ -25,15 +25,17 @@
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
 		
-	<wi:selectOneMenuEntity
-		 label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
-		 value="#{processoHome.tipoProcessoDocumento}"
-		 items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
-		 required="true"
-		 disabled="#{readonly ? true : false}"
-		 noSelectionLabel="Selecione...">
-		
-	</wi:selectOneMenuEntity>
+	<s:div id="#{f.id}TipoDocDiv">
+		<wi:selectOneMenuEntity
+			id="#{f.id}TipoDoc"
+			 label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+			 value="#{processoHome.tipoProcessoDocumento}"
+			 items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+			 required="true"
+			 disabled="#{readonly ? true : false}"
+			 noSelectionLabel="Selecione...">
+		</wi:selectOneMenuEntity>
+	</s:div>
 
 	<s:div id="#{f.id}EditorDiv">
 		

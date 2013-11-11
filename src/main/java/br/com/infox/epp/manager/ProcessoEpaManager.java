@@ -3,12 +3,13 @@ package br.com.infox.epp.manager;
 import java.util.List;
 import java.util.Map;
 
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
@@ -107,5 +108,11 @@ public class ProcessoEpaManager extends GenericManager {
 	
 	public List<PessoaJuridica> getPessoaJuridicaList(){
 		return processoEpaDAO.getPessoaJuridicaList();
+	}
+	
+	public int getDiasDesdeInicioProcesso(ProcessoEpa processoEpa) {
+		LocalDate dataInicio = LocalDate.fromDateFields(processoEpaDAO.getDataInicioPrimeiraTarefa(processoEpa));
+		LocalDate now = LocalDate.now();
+		return Days.daysBetween(dataInicio, now).getDays();
 	}
 }

@@ -197,7 +197,6 @@ public class TaskInstanceHome implements Serializable {
     private void prepareForUpdate() {
         modeloDocumento = null;
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        ProcessoHome.instance().update();
     }
 
     private void completeUpdate() {
@@ -205,6 +204,10 @@ public class TaskInstanceHome implements Serializable {
         Util.setToEventContext(UPDATED_VAR_NAME, true);
         updateIndex();
         updateTransitions();
+        // Necessário para gravar a prioridade do processo ao clicar no botão Gravar
+        // Não pode usar ProcessoHome.instance().update() porque por algum motivo dá um NullPointerException
+        // ao finalizar a tarefa, algo relacionado às mensagens do Seam
+        EntityUtil.flush();
     }
 
     private boolean possuiTask() {

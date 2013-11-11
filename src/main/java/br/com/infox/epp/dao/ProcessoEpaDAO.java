@@ -1,10 +1,10 @@
 package br.com.infox.epp.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -129,5 +129,10 @@ public class ProcessoEpaDAO extends GenericDAO {
 		    LOG.info(".getTempoGasto()", e);
 		}
 		return result;
+	}
+	
+	public Date getDataInicioPrimeiraTarefa(ProcessoEpa processoEpa) {
+		return EntityUtil.getSingleResult(EntityUtil.createQuery(ProcessoEpaQuery.QUERY_DATA_INICIO_PRIMEIRA_TAREFA)
+				.setParameter(ProcessoEpaQuery.QUERY_PARAM_PROCESSO_EPA, processoEpa));
 	}
 }
