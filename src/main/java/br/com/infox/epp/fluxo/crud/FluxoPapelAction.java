@@ -15,7 +15,6 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
-import br.com.infox.epp.fluxo.home.FluxoHome;
 import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 
@@ -68,9 +67,8 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 		FacesMessages.instance().add("Registros removidos com sucesso!");
 	}
 		
-	public void init() {
-		FluxoHome fluxoHome = FluxoHome.instance();
-		fluxo = fluxoHome.getInstance();
+	public void init(Fluxo fluxo) {
+		this.fluxo = fluxo;
 		listByNatureza();
 	}
 
