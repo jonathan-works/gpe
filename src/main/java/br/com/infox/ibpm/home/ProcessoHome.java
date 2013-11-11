@@ -39,7 +39,7 @@ import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.manager.ProcessoEpaManager;
-import br.com.infox.epp.manager.ProcessoManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.infox.ibpm.entity.Processo;

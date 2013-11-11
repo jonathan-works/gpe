@@ -11,7 +11,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 
-import br.com.infox.epp.manager.ProcessoManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;

@@ -16,7 +16,7 @@ import org.jboss.seam.core.Events;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.manager.ProcessoManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.jbpm.assignment.LocalizacaoAssignment;
 import br.com.infox.util.constants.WarningConstants;

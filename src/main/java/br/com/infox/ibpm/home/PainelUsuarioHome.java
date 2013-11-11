@@ -16,7 +16,7 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
-import br.com.infox.epp.manager.ProcessoManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Processo;

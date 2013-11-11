@@ -1,4 +1,4 @@
-package br.com.infox.epp.manager;
+package br.com.infox.epp.processo.manager;
 
 import java.util.Date;
 import java.util.List;
