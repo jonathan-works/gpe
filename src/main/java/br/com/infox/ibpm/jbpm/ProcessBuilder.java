@@ -53,8 +53,8 @@ import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
 import br.com.infox.component.JsfComponentTreeValidator;
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.home.FluxoHome;
 import br.com.infox.ibpm.jbpm.fitter.EventFitter;
 import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
 import br.com.infox.ibpm.jbpm.fitter.SwimlaneFitter;
@@ -65,7 +65,6 @@ import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.xpdl.FluxoXPDL;
 import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 import br.com.infox.util.constants.WarningConstants;
-import br.com.itx.util.EntityUtil;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -88,6 +87,7 @@ public class ProcessBuilder implements Serializable {
 	@In private TypeFitter typeFitter;
 	@In	private ProcessBuilderGraph processBuilderGraph;
 	@In private JsfComponentTreeValidator jsfComponentTreeValidator;
+	@In private GenericManager genericManager;
 
 	private String id;
 	private ProcessDefinition instance;
@@ -97,6 +97,8 @@ public class ProcessBuilder implements Serializable {
 	private String xml;
 	private String tab;
 	private boolean needToPublic;
+	
+	private Fluxo fluxo;
 
 	public void newInstance() {
 		instance = null;
@@ -140,6 +142,7 @@ public class ProcessBuilder implements Serializable {
 	}
 	
 	public void load(Fluxo fluxo) {
+	    this.fluxo = fluxo;
 		String newId = fluxo.getCodFluxo();
 		this.id = null;
 		setId(newId);
@@ -232,11 +235,10 @@ public class ProcessBuilder implements Serializable {
 	
 	public void update() {
 		exists = true;
-		FluxoHome fluxoHome = FluxoHome.instance();
-		if (fluxoHome != null && fluxoHome.isManaged()) {
+		if (fluxo != null) {
 			String xmlDef = JpdlXmlWriter.toString(instance);
 
-			String xmlFluxo = fluxoHome.getInstance().getXml();
+			String xmlFluxo = fluxo.getXml();
 
 			if (xmlFluxo == null || !xmlFluxo.equals(xmlDef)) {
 				// verifica a consistencia do fluxo para evitar salva-lo com
@@ -244,8 +246,8 @@ public class ProcessBuilder implements Serializable {
 				parseInstance(xmlDef);
 				needToPublic = true;
 				modifyNodesAndTasks();
-				fluxoHome.getInstance().setXml(xmlDef);
-				fluxoHome.update();
+				fluxo.setXml(xmlDef);
+				genericManager.update(fluxo);
 			}
 
 			taskFitter.updatePrazoTask();
@@ -256,9 +258,8 @@ public class ProcessBuilder implements Serializable {
 	
 	public void updateFluxo(String cdFluxo) {
 		String xmlDef = JpdlXmlWriter.toString(instance);
-		FluxoHome fluxoHome = FluxoHome.instance();
-		fluxoHome.getInstance().setXml(xmlDef);
-		fluxoHome.update();
+		fluxo.setXml(xmlDef);
+		genericManager.update(fluxo);
 
 		this.id = cdFluxo;
 		this.exists = true;
@@ -287,8 +288,6 @@ public class ProcessBuilder implements Serializable {
 	}
 
 	public void clearDefinition() {
-		FluxoHome fluxoHome = FluxoHome.instance();
-		Fluxo fluxo = fluxoHome.getInstance();
 		fluxo.setXml(null);
 		clear();
 		createInstance();
@@ -301,21 +300,6 @@ public class ProcessBuilder implements Serializable {
 	        returnInstance = (ProcessBuilder) Component.getInstance(ProcessBuilder.class);
 	    }
 		return returnInstance;
-	}
-
-	/**
-	 * Método para migrar fluxos para o novo esquema de eventos
-	 */
-	public void migraFluxos() {
-		List<Fluxo> list = EntityUtil.getEntityList(Fluxo.class);
-		for (Fluxo fluxo : list) {
-			FluxoHome fluxoHome = FluxoHome.instance();
-			fluxoHome.setInstance(fluxo);
-			load(fluxo);
-			instance.getEvents().clear();
-			eventFitter.addEvents();
-			deploy();
-		}
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------
@@ -428,6 +412,10 @@ public class ProcessBuilder implements Serializable {
 
 	public TypeFitter getTypeFitter() {
 		return typeFitter;
+	}
+	
+	public Fluxo getFluxo(){
+	    return this.fluxo;
 	}
 
 	public void getPaintedGraph() {

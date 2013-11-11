@@ -21,8 +21,7 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.home.FluxoHome;
+//import br.com.infox.epp.fluxo.home.FluxoHome;
 import br.com.infox.ibpm.bean.PrazoTask;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
@@ -83,12 +82,11 @@ public class TaskFitter extends Fitter implements Serializable {
 	}
 	
 	public void updatePrazoTask() {
-		Fluxo fluxoInstance = FluxoHome.instance().getInstance();
 		Set<Entry<String, PrazoTask>> entrySet = prazoTaskMap.entrySet();
 		EntityManager entityManager = EntityUtil.getEntityManager();
 		for (Entry<String, PrazoTask> entry : entrySet) {
 			Tarefa t = JbpmUtil.getTarefa(entry.getKey(),
-					fluxoInstance.getFluxo());
+					getFluxo());
 			if (t != null) {
 				PrazoTask prazoTask = entry.getValue();
 				t.setPrazo(prazoTask.getPrazo());
@@ -221,8 +219,7 @@ public class TaskFitter extends Fitter implements Serializable {
 			prazo = prazoTask.getPrazo();
 			tipoPrazo = prazoTask.getTipoPrazo();
 		} else {
-			Tarefa t = JbpmUtil.getTarefa(cNode.getName(), FluxoHome.instance()
-					.getInstance().getFluxo());
+			Tarefa t = JbpmUtil.getTarefa(cNode.getName(), getFluxo());
 			if (t == null) {
 				prazo = null;
 				tipoPrazo = null;
@@ -241,5 +238,9 @@ public class TaskFitter extends Fitter implements Serializable {
 	public void clear() {
 		currentTask = null;
 	}
+	
+	private String getFluxo() {
+	    return getProcessBuilder().getFluxo().getFluxo();
+    }
 
 }
