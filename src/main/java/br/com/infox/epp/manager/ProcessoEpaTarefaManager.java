@@ -16,9 +16,9 @@ import org.jboss.seam.core.Conversation;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.dao.LocalizacaoTurnoDAO;
-import br.com.infox.epp.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epp.entity.LocalizacaoTurno;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.processo.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.type.DiaSemanaEnum;
