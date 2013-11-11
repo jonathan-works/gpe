@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.command;
+package br.com.infox.epp.mail.entity;
 
 import java.util.ArrayList;
 import java.util.List;
