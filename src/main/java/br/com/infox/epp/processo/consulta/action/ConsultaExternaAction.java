@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.bean.externo;
+package br.com.infox.epp.processo.consulta.action;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
