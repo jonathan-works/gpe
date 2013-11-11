@@ -9,7 +9,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epp.entity.ProcessoEpaTarefa;
-import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.itx.util.StringUtil;
 
 
