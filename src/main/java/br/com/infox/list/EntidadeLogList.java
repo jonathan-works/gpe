@@ -14,8 +14,8 @@ import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epp.manager.EntidadeLogManager;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
+import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 import br.com.infox.ibpm.bean.ConsultaEntidadeLog;
-import br.com.infox.type.TipoOperacaoLogEnum;
 import br.com.itx.util.EntityUtil;
 
 @Name(EntidadeLogList.NAME)
