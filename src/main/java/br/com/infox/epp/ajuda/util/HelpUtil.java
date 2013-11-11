@@ -36,7 +36,6 @@ import org.jboss.seam.log.Logging;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import br.com.infox.ibpm.help.Entities;
 
 
 public final class HelpUtil {

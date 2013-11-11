@@ -13,12 +13,12 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.help;
+package br.com.infox.epp.ajuda.util;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Entities {
+final class Entities {
 
     private static final Map<String, String> DECODER = new HashMap<String, String>(300);
     
