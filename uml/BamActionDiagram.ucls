@@ -19,8 +19,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="br.com.infox.epp.manager.ProcessoEpaManager" project="epp" 
-    file="/epp/src/main/java/br/com/infox/epp/manager/ProcessoEpaManager.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="br.com.infox.epp.processo.manager.ProcessoEpaManager" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/processo/manager/ProcessoEpaManager.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="241" width="294" x="41" y="282"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
