@@ -5,8 +5,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
-import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.service.AssinaturaDocumentoService;
 import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.itx.component.AbstractHome;
