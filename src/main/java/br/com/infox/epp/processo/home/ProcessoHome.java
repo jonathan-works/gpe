@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.processo.home;
 
 import java.util.List;
 
@@ -46,6 +46,7 @@ import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;

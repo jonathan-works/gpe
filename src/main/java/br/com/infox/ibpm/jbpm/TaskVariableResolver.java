@@ -8,7 +8,7 @@ import org.jboss.seam.contexts.Contexts;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.ibpm.home.ProcessoHome;
+import br.com.infox.epp.processo.home.ProcessoHome;
 
 final class TaskVariableResolver extends TaskVariable {
     
