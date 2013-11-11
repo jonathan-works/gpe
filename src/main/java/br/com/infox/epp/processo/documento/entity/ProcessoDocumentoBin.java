@@ -14,7 +14,7 @@
  veja em http://www.gnu.org/licenses/   
 */
 
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.processo.documento.entity;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -42,6 +42,7 @@ import javax.validation.constraints.NotNull;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.ArrayUtil;
 
