@@ -430,12 +430,13 @@ public class ProcessBuilder implements Serializable {
 		return processBuilderGraph;
 	}
 	
-	public void importarXPDL(byte[] bytes, String cdFluxo) {
+	public void importarXPDL(byte[] bytes, Fluxo fluxo) {
         try {
+            load(fluxo);
             final FluxoXPDL fluxoXPDL = FluxoXPDL.createInstance(bytes);
-            final String xml = fluxoXPDL.toJPDL(cdFluxo);
+            final String xml = fluxoXPDL.toJPDL(fluxo.getCodFluxo());
             setXml(xml); 
-            updateFluxo(cdFluxo);
+            updateFluxo(fluxo.getCodFluxo());
         } catch (IllegalXPDLException e) {
             LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage());
         }
