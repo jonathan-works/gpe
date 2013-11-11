@@ -32,11 +32,11 @@ import org.jboss.seam.security.management.PasswordHash;
 import org.jboss.seam.util.RandomStringUtils;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.command.SendmailCommand;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.ibpm.entity.BloqueioUsuario;

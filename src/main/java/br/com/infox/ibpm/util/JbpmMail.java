@@ -10,8 +10,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import twitter4j.TwitterException;
-import br.com.infox.command.SendmailCommand;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
+import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.infox.epp.twitter.util.TwitterUtil;
