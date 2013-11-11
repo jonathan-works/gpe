@@ -24,10 +24,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-@Name("logUtil")
+@Name("logResolver")
 @Scope(ScopeType.APPLICATION)
 @BypassInterceptors
-public class LogUtil {
+public class LogResolver {
 
 	private Level level;
 	
