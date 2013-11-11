@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity.log;
+package br.com.infox.epp.system.exception;
 
 public class LogException extends Exception {
 
