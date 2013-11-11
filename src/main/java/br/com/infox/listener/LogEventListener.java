@@ -26,8 +26,8 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.system.action.ExecuteLog;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
-import br.com.infox.ibpm.entity.log.ExecuteLog;
 import br.com.infox.ibpm.entity.log.LogUtil;
 
 

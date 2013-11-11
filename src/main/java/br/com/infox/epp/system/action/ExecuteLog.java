@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity.log;
+package br.com.infox.epp.system.action;
 
 import javax.persistence.EntityManager;
 
@@ -28,6 +28,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
+import br.com.infox.ibpm.entity.log.LogUtil;
 import br.com.itx.util.ArrayUtil;
 
 /**
