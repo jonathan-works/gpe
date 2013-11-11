@@ -53,12 +53,16 @@ import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
-@Name("ajudaHome")
+@Name(AjudaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 @SuppressWarnings(WarningConstants.UNCHECKED)
 public class AjudaHome extends AbstractHome<Ajuda>  {
 
-	private static final long serialVersionUID = 1L;
+	private static final String ALTERACAO_CONCLUIDA = "Alteração concluída.";
+    private static final String INDICES_CRIADOS = "----------- Indices criados -------------";
+    private static final String CRIANDO_INDICES = "----------- Criando indices -------------";
+    public static final String NAME = "ajudaHome";
+    private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(AjudaHome.class);
 	
 	private String viewId;
@@ -108,7 +112,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	}
 
 	public void reindex() {
-		LOG.info("----------- Criando indices -------------");
+		LOG.info(CRIANDO_INDICES);
 		FullTextEntityManager em = (FullTextEntityManager) getEntityManager();
 		Session session = HibernateUtil.getSession();
 		org.hibernate.Query query = session.createQuery("select a from Ajuda a");
@@ -120,11 +124,11 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		    em.index(a);
 		}
 		scroll.close();
-		LOG.info("----------- Indices criados -------------");
+		LOG.info(INDICES_CRIADOS);
 	}
 	
 	public void reindexNoTransaction() {
-		LOG.info("----------- Criando indices -------------");
+		LOG.info(CRIANDO_INDICES);
 		Util.commitTransction();
 		FullTextEntityManager em = (FullTextEntityManager) EntityUtil.getEntityManager();
 		FullTextSession fullTextSession = (FullTextSession) em.getDelegate();
@@ -137,7 +141,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 			fullTextSession.index(a);
 		}
 		scroll.close();
-		LOG.info("----------- Indices criados -------------");		
+		LOG.info(INDICES_CRIADOS);		
 	}
 
 	@Override
@@ -243,7 +247,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	@SuppressWarnings(WarningConstants.RAWTYPES)
 	@Override
 	public ValueExpression getCreatedMessage() {
-		return createValueExpression("Alteração concluída.");
+		return createValueExpression(ALTERACAO_CONCLUIDA);
 	}
 	
 }
