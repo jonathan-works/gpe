@@ -1,4 +1,4 @@
-package br.com.infox.epp.manager;
+package br.com.infox.epp.imagem.manager;
 
 import java.io.File;
 import java.io.FilenameFilter;

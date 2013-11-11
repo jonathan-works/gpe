@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.annotations.Transactional;
 
-import br.com.infox.epp.manager.ImagemBinManager;
+import br.com.infox.epp.imagem.manager.ImagemBinManager;
 
 @Name(ImageFileStarter.NAME)
 @Scope(ScopeType.APPLICATION)
