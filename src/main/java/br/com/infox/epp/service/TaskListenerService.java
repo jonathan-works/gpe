@@ -12,9 +12,9 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.ProcessoEpaTarefa;
 import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;

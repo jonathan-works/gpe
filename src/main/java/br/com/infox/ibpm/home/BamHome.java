@@ -4,8 +4,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.list.ProcessoEpaTarefaList;
+import br.com.infox.epp.processo.entity.ProcessoEpaTarefa;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
