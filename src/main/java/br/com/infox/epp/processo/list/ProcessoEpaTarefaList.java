@@ -1,4 +1,4 @@
-package br.com.infox.epp.list;
+package br.com.infox.epp.processo.list;
 
 import java.util.ArrayList;
 import java.util.List;
