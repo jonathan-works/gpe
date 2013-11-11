@@ -28,7 +28,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.system.action.ExecuteLog;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
-import br.com.infox.ibpm.entity.log.LogUtil;
+import br.com.infox.epp.system.util.LogUtil;
 
 
 public class LogEventListener implements PostUpdateEventListener, 
