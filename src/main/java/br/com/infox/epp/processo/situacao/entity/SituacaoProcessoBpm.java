@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.processo.situacao.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
