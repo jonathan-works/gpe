@@ -1,4 +1,4 @@
-package br.com.infox.epp.manager;
+package br.com.infox.epp.system.manager;
 
 import java.util.List;
 
