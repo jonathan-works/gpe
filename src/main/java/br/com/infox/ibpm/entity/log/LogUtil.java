@@ -44,6 +44,7 @@ import org.jboss.seam.util.Reflections;
 
 import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.epp.system.entity.EntityLog;
+import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.type.TipoOperacaoLogEnum;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.util.EntityUtil;

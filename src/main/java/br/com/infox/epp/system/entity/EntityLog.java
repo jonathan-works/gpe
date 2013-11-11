@@ -38,7 +38,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.entity.log.EntityLogDetail;
 import br.com.infox.ibpm.entity.log.Ignore;
 import br.com.infox.type.TipoOperacaoLogEnum;
 import br.com.infox.util.constants.LengthConstants;

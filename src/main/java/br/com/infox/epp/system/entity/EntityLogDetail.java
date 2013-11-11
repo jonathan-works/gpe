@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity.log;
+package br.com.infox.epp.system.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +28,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.system.entity.EntityLog;
+import br.com.infox.ibpm.entity.log.Ignore;
 import br.com.infox.util.constants.LengthConstants;
 
 /**
