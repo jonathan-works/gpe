@@ -12,7 +12,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.dao.ProcessoEpaDAO;
+import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.HistoricoParteProcesso;

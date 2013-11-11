@@ -1,4 +1,4 @@
-package br.com.infox.epp.dao;
+package br.com.infox.epp.processo.dao;
 
 import java.util.ArrayList;
 import java.util.Date;

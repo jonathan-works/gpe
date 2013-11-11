@@ -37,8 +37,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="br.com.infox.epp.dao.ProcessoEpaDAO" project="epp" 
-    file="/epp/src/main/java/br/com/infox/epp/dao/ProcessoEpaDAO.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="br.com.infox.epp.processo.dao.ProcessoEpaDAO" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/processo/dao/ProcessoEpaDAO.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="241" width="285" x="41" y="563"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
