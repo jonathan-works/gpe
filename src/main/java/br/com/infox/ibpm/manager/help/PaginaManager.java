@@ -5,8 +5,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.ibpm.dao.help.PaginaDAO;
-import br.com.infox.ibpm.entity.help.Pagina;
 
 @Name(PaginaManager.NAME)
 @AutoCreate

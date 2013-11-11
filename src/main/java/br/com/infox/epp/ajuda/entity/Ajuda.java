@@ -39,7 +39,6 @@ import org.hibernate.search.annotations.Store;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.entity.help.Pagina;
 import br.com.infox.ibpm.search.Reindexer;
 
 @Entity

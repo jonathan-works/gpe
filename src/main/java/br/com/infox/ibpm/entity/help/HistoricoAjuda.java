@@ -34,6 +34,7 @@ import org.hibernate.search.annotations.Analyzer;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.ajuda.entity.Pagina;
 
 @Entity
 @Table(name = "tb_historico_ajuda", schema="public")
