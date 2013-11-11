@@ -23,6 +23,7 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 

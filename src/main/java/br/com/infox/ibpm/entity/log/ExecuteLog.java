@@ -25,6 +25,7 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.type.TipoOperacaoLogEnum;
 import br.com.itx.util.ArrayUtil;
 
