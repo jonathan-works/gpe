@@ -7,10 +7,10 @@ import java.util.List;
 import javax.persistence.EntityExistsException;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.hibernate.AssertionFailure;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -68,6 +68,7 @@ public abstract class AbstractAction {
 	 * @param isPersist true se deve ser persistida a instancia.
 	 * @return
 	 */
+	@Transactional
 	private String flushObject(Object o, boolean isPersist) {
 		String ret = null;
 		String msg = isPersist ? "persist()" : "update()";
@@ -105,7 +106,7 @@ public abstract class AbstractAction {
 				LOG.error(msg+" (" + getObjectClassName(o) + ")", e);
 			}
 		}
-		if (!PERSISTED.equals(ret)) {
+		if (!PERSISTED.equals(ret) || !UPDATED.equals(ret)) {
 		    Util.rollbackTransactionIfNeeded();
 		}
 		return ret;
@@ -138,9 +139,6 @@ public abstract class AbstractAction {
 		try {
 			genericManager.remove(obj);
 			ret = REMOVED;
-		} catch (AssertionFailure af) {
-			/* Esperamos a versão 3.5 para resolver o bug do AssertionFailure onde 
-			 * o hibernate consegue persistir com sucesso, mas lança um erro. =[ */
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, "Não foi possível excluir.");
@@ -179,7 +177,7 @@ public abstract class AbstractAction {
 						"campo existe.");
 			}
 		} else {
-			instance().add(StatusMessage.Severity.INFO, "Objecto informado não é uma entidade.");
+			instance().add(StatusMessage.Severity.INFO, "Objeto informado não é uma entidade.");
 		}
 		return ret;
 	}
