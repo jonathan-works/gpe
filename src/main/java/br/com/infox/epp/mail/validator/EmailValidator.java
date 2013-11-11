@@ -13,7 +13,7 @@
  VocÃª deve ter recebido uma cÃ³pia da GNU GPL junto com este programa; se nÃ£o, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.validator;
+package br.com.infox.epp.mail.validator;
 
 import java.util.regex.Matcher;
 
