@@ -7,8 +7,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.dao.ProcessoDocumentoDAO;
-import br.com.infox.ibpm.entity.Processo;
 
 @Name(ProcessoDocumentoManager.NAME)
 @AutoCreate

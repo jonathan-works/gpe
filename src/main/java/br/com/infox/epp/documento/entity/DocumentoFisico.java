@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.documento.query.DocumentoFisicoQuery;
-import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity

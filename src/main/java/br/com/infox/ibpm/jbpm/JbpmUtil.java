@@ -47,9 +47,9 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.entity.JbpmVariavelLabel;
 import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;

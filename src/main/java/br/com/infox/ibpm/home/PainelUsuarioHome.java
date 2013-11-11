@@ -17,11 +17,11 @@ import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoEpaList;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.Caixa;
-import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;

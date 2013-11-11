@@ -31,7 +31,7 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
-import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Util;

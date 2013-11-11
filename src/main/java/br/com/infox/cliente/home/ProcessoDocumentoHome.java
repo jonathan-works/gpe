@@ -37,7 +37,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
-import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.home.Authenticator;

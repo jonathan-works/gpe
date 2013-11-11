@@ -11,7 +11,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.documento.dao.DocumentoFisicoDAO;
 import br.com.infox.epp.documento.entity.DocumentoFisico;
-import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Name(DocumentoFisicoManager.NAME)
 @Scope(ScopeType.CONVERSATION)

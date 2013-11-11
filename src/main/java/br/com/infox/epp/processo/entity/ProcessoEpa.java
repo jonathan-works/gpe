@@ -25,7 +25,6 @@ import br.com.infox.epp.processo.query.ProcessoEpaQuery;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.PrioridadeProcesso;
-import br.com.infox.ibpm.entity.Processo;
 
 @Entity
 @Table(name=ProcessoEpa.TABLE_NAME, schema="public")

@@ -17,7 +17,7 @@ import br.com.infox.epp.documento.entity.DocumentoFisico;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.epp.documento.list.LocalizacaoFisicaList;
 import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
-import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.home.ProcessoHome;
 
 @Name(LocalizacaoDocumentoFisicoCrudAction.NAME)

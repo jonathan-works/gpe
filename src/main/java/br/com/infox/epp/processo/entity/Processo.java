@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.processo.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +46,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.ibpm.entity.Caixa;
+import br.com.infox.ibpm.entity.Estatistica;
+import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity

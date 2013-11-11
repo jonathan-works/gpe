@@ -38,12 +38,12 @@ import org.jboss.seam.annotations.security.management.UserRoles;
 
 import br.com.infox.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Endereco;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.entity.PessoaFisica;
-import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;

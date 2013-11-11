@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.annotation.Ignore;
 import br.com.infox.ibpm.query.ProcessoLocalizacaoIbpmQuery;
 

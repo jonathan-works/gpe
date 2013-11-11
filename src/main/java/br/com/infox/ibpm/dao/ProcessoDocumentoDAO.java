@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
-import br.com.infox.ibpm.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;

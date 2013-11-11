@@ -9,10 +9,10 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParteProcessoManager;
-import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.itx.component.AbstractHome;
 
