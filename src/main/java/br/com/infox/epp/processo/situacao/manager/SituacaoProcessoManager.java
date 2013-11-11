@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.manager;
+package br.com.infox.epp.processo.situacao.manager;
 
 import java.util.List;
 import java.util.Map;
