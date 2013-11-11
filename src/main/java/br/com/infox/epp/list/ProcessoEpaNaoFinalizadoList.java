@@ -1,5 +1,6 @@
 package br.com.infox.epp.list;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -7,13 +8,17 @@ import java.util.Map;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epp.entity.ProcessoEpa;
+import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.itx.util.EntityUtil;
 
@@ -23,25 +28,28 @@ import br.com.itx.util.EntityUtil;
  */
 @Name(ProcessoEpaNaoFinalizadoList.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
+public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> {
 
     private static final long serialVersionUID = 1L;
-	private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o " +
-	                                               "inner join o.naturezaCategoriaFluxo.fluxo f "+
+	private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o " +
+												   "inner join o.processoEpa p " +
+	                                               "inner join p.naturezaCategoriaFluxo.fluxo f "+
 												   "where o.dataFim is null";
-	private static final String DEFAULT_ORDER = "o.idProcesso";
-	private static final String R1 = "o.naturezaCategoriaFluxo.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
+	private static final String DEFAULT_ORDER = "p.idProcesso";
+	private static final String R1 = "p.naturezaCategoriaFluxo.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
     
 	private Fluxo fluxo;
 	private List<Fluxo> fluxoList;
 	private boolean updateFluxoList=true;
 	
-
+	@In
+	private ProcessoEpaManager processoEpaManager;
+	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("naturezaCategoriaFluxo.fluxo", SearchCriteria.IGUAL, R1);
-		addSearchField("situacaoPrazo",SearchCriteria.IGUAL);
+		addSearchField("processoEpa.naturezaCategoriaFluxo.fluxo", SearchCriteria.IGUAL, R1);
+		addSearchField("processoEpa.situacaoPrazo",SearchCriteria.IGUAL);
 	}
 
 	@Override
@@ -66,7 +74,8 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 			fluxo = fluxos.get(0);
 		}
 	    super.newInstance();
-	    getEntity().setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+	    getEntity().setProcessoEpa(new ProcessoEpa());
+	    getEntity().getProcessoEpa().setSituacaoPrazo(SituacaoPrazoEnum.PAT);
 	}
 	
 	public Fluxo getFluxo() {
@@ -101,7 +110,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
 	    		"group by ncf.fluxo";
 	    Query query = EntityUtil.createQuery(hql)
                 .setParameter("fluxo", fluxo)
-                .setParameter("situacao", getEntity().getSituacaoPrazo());
+                .setParameter("situacao", getEntity().getProcessoEpa().getSituacaoPrazo());
 	    return EntityUtil.getSingleResult(query);
 	}
 	
@@ -128,4 +137,14 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpa> {
         this.fluxoList = fluxoList;
     }
 	
+    public String getNaturezaCategoriaItem(ProcessoEpa processoEpa) {
+		NaturezaCategoriaFluxo naturezaCategoriaFluxo = processoEpa.getNaturezaCategoriaFluxo();
+		return MessageFormat.format("{0}/{1}/{2}", naturezaCategoriaFluxo.getNatureza().getNatureza(), 
+				naturezaCategoriaFluxo.getCategoria().getCategoria(), 
+				processoEpa.getItemDoProcesso().getDescricaoItem());
+	}
+	
+	public int getDiasDesdeInicioProcesso(ProcessoEpa processoEpa) {
+		return processoEpaManager.getDiasDesdeInicioProcesso(processoEpa);
+	}
 }

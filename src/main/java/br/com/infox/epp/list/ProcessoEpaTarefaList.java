@@ -1,18 +1,15 @@
 package br.com.infox.epp.list;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.itx.util.StringUtil;
 
 
@@ -32,9 +29,6 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 	private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o";
 	private static final String DEFAULT_ORDER = "o.idProcessoTarefa";
 	
-	@In
-	private ProcessoEpaManager processoEpaManager;
-
 	@Override
 	protected void addSearchFields() {
 		addSearchField("processoEpa", SearchCriteria.IGUAL);
@@ -62,16 +56,5 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 			}
 		}
 		return StringUtil.concatList(classes, ",");
-	}
-	
-	public String getNaturezaCategoriaItem(ProcessoEpaTarefa processoEpaTarefa) {
-		NaturezaCategoriaFluxo naturezaCategoriaFluxo = processoEpaTarefa.getProcessoEpa().getNaturezaCategoriaFluxo();
-		return MessageFormat.format("{0}/{1}/{2}", naturezaCategoriaFluxo.getNatureza().getNatureza(), 
-				naturezaCategoriaFluxo.getCategoria().getCategoria(), 
-				processoEpaTarefa.getProcessoEpa().getItemDoProcesso().getDescricaoItem());
-	}
-	
-	public int getDiasDesdeInicioProcesso(ProcessoEpaTarefa processoEpaTarefa) {
-		return processoEpaManager.getDiasDesdeInicioProcesso(processoEpaTarefa.getProcessoEpa());
 	}
 }

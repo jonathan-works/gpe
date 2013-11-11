@@ -49,7 +49,7 @@
 					  bean="#{processoEpaNaoFinalizadoList}"
 					  tableTitle="#{messages['bam.titleGrid']}"
 					  id="processoEpaNaoFinalizadoList"
-					  rowId="#{row.idProcesso}"
+					  rowId="#{row.idProcessoTarefa}"
 					  toolBarColumnWidth="69px">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisaFluxoForm"
@@ -62,7 +62,7 @@
 			        <wi:selectOneMenuEnum id="tipoDeprocesso"
 								  label="#{messages['bam.tipoAtraso']}"
 								  items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
-								  value="#{processoEpaNaoFinalizadoList.entity.situacaoPrazo}" />
+								  value="#{processoEpaNaoFinalizadoList.entity.processoEpa.situacaoPrazo}" />
 				</wi:searchForm>
 				<dojo:defaultGauge
 					id="processo"
@@ -81,18 +81,18 @@
 				<div class="tbar-div">
 					<h:graphicImage
 						value="/img/balao.png"
-						rendered="#{not (row.situacaoPrazo == 'SAT')}" />
-					<h:form id="#{row.numeroProcesso}Form">
+						rendered="#{not (row.processoEpa.situacaoPrazo == 'SAT')}" />
+					<h:form id="#{row.processoEpa.numeroProcesso}Form">
 	                    <h:selectBooleanCheckbox
-	                    	id="#{row.numeroProcesso}Contab" 
+	                    	id="#{row.processoEpa.numeroProcesso}Contab" 
 					        styleClass="checkbox"
-					        value="#{row.contabilizar}"
+					        value="#{row.processoEpa.contabilizar}"
 							required="false"
 					        disabled="false"
 						>
 							<a:ajax
 								event="change"
-								listener="#{processoEpaAction.alternarContabilizar(row)}"
+								listener="#{processoEpaAction.alternarContabilizar(row.processoEpa)}"
 							    render="processoListPanel gaugeAjaxDivprocesso"
 	                            limitRender="true"
 								status=":status"
@@ -104,21 +104,60 @@
 						</h:selectBooleanCheckbox>
 					</h:form>
 					<wi:toolBarEdit 
-						action="#{processoEpaTarefaList.entity.setProcessoEpa(row)}"/>
+						action="#{processoEpaTarefaList.entity.setProcessoEpa(row.processoEpa)}"/>
 				</div>
 			</ui:define>
+
 			<wi:columnOutputText columnId="numeroProcesso"
-							   columnHeader="#{messages['processo.numeroProcesso']}"
-							   value="#{row.numeroProcesso}" />
-			<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"
-							   columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
-							   value="#{row.naturezaCategoriaFluxo.natureza}" />
+				columnHeader="#{messages['processo.numeroProcesso']}"
+				value="#{row.processoEpa.numeroProcesso}" />
+
 			<wi:columnOutputText columnId="naturezaCategoriaFluxo.fluxo"
-							   columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
-							   value="#{row.naturezaCategoriaFluxo.fluxo}" />
-			<wi:columnOutputText columnId="naturezaCategoriaFluxo.categoria"
-							   columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
-							   value="#{row.naturezaCategoriaFluxo.categoria}" />
+				   columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+				   value="#{row.processoEpa.naturezaCategoriaFluxo.fluxo}" />
+			
+			<wi:columnDateTime columnId="dataInicio"
+				columnHeader="#{messages['processo.dataInicio']}"
+				value="#{row.processoEpa.dataInicio}" />
+				
+			<wi:columnOutputText columnId="naturezaCategoriaItem"
+				columnHeader="#{messages['processoEpa.naturezaCategoriaItem']}"
+				value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processoEpa)}" />
+				
+			<wi:columnOutputText columnId="prioridadeProcesso"
+				columnHeader="#{messages['processo.prioridadeProcessoList']}"
+				value="#{row.processoEpa.prioridadeProcesso}" />
+				
+			<wi:columnDateTime columnId="dataChegadaTarefa"  
+			  	columnHeader="#{messages['processoEpa.dataChegadaTarefa']}"  
+			  	value="#{row.dataInicio}" />  
+				
+			<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
+			<rich:column styleClass="defaultCell">
+				<f:facet name="header">Localização / Usuário</f:facet>
+				<div >
+					<h:graphicImage url="/img/localizacao.gif"
+									rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
+					<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
+				</div>
+				<div >
+					<h:graphicImage url="/img/usuario.gif"
+									rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
+					<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
+				<c:if test="#{empty userHandler.getUsuario(task.actorId)}">
+					<h:outputText value="#{userHandler.getUsuarioByTarefa(task)}" />
+				</c:if>
+				</div>
+			</rich:column>
+			
+			<wi:columnOutputText columnId="tempoGastoTarefa"  
+			  	columnHeader="#{messages['processoEpa.tempoGastoTarefa']}"  
+			  	value="#{row.tempoGastoFormatado}" />  
+			
+			<wi:columnOutputText columnId="tempoDesdeInicio"
+				columnHeader="#{messages['processoEpa.tempoDesdeInicioDias']}"
+				value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processoEpa)}" />
+							   
 		</wi:dataTable>
 	</ui:define>
 	
@@ -153,26 +192,6 @@
 			<wi:columnOutputText columnId="tarefa"
 								 columnHeader="Tarefa"
 								 value="#{row.tarefa.tarefa}" />
-								
-			<wi:columnOutputText columnId="numeroProcesso"
-				columnHeader="#{messages['processo.numeroProcesso']}"
-				value="#{row.processoEpa.numeroProcesso}" />
-			
-			<wi:columnDateTime columnId="dataInicio"
-				columnHeader="#{messages['processo.dataInicio']}"
-				value="#{row.processoEpa.dataInicio}" />
-				
-			<wi:columnOutputText columnId="naturezaCategoriaItem"
-				columnHeader="#{messages['processoEpa.naturezaCategoriaItem']}"
-				value="#{processoEpaTarefaList.getNaturezaCategoriaItem(row)}" />
-				
-			<wi:columnOutputText columnId="prioridadeProcesso"
-				columnHeader="#{messages['processo.prioridadeProcessoList']}"
-				value="#{row.processoEpa.prioridadeProcesso}" />
-				
-			<wi:columnOutputText columnId="tempoDesdeInicio"
-				columnHeader="#{messages['processoEpa.tempoDesdeInicioDias']}"
-				value="#{processoEpaTarefaList.getDiasDesdeInicioProcesso(row)}" /> 
 								 
 			<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
 			<rich:column styleClass="defaultCell">
@@ -217,7 +236,7 @@
 			
 			<wi:columnOutputText columnId="tempoGasto"
 								 columnHeader="Tempo Gasto"
-								 value="#{row.tempoGasto} #{row.tarefa.tipoPrazo.getLabel()}" />
+								 value="#{row.getTempoGastoFormatado()}" />
 								 
 			<wi:columnOutputText columnId="tempoPrevisto"
 								 columnHeader="Tempo Previsto"
