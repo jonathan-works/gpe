@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.processo.home;
 
 import javax.persistence.PersistenceException;
 
