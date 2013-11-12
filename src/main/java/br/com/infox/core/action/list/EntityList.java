@@ -200,7 +200,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * @param restriction - String da restriction com ou sem expressões
 	 */
 	@SuppressWarnings(WarningConstants.RAWTYPES)
-	public final void setRestrictions() {
+	public void setRestrictions() {
 		List<ValueExpression> valueExpressionList = new ArrayList<ValueExpression>();
 		for(SearchField s: searchFieldMap.values()) {
 			valueExpressionList.add(Expressions.instance().createValueExpression(s.getExpression()));			
@@ -276,7 +276,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 			&& "and".equals(getRestrictionLogicOperator()));
 	}
 
-	public final void setOrderedColumn(String order) {
+	public void setOrderedColumn(String order) {
 	    String newOrder = order;
 		if(!newOrder.endsWith("asc") && !newOrder.endsWith("desc")) {
 			newOrder = newOrder.trim().concat(" asc");
