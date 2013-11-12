@@ -135,7 +135,8 @@
                 label="#{messages['tipoProcessoDocumento.visibilidade']}"
                 items="#{home.getVisibilidadeEnumValues()}"
                 value="#{tipoProcessoDocumentoHome.instance.visibilidade}"
-                noSelectionLabel="[Todos]" />
+                required="true"
+                noSelectionLabel="Selecione..." />
             <wi:selectOneRadio
                 id="numera"
                 label="#{messages['tipoProcessoDocumento.numera']}"

@@ -143,7 +143,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 		this.inTipoDocumento = inTipoDocumento;
 	}
 	
-	@Column(name = "tp_visibilidade")
+	@Column(name = "tp_visibilidade", nullable = false)
 	@Enumerated(EnumType.STRING)
 	public VisibilidadeEnum getVisibilidade() {
 		return this.visibilidade;
