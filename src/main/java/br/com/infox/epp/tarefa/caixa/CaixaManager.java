@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.manager;
+package br.com.infox.epp.tarefa.caixa;
 
 import java.util.List;
 
@@ -9,8 +9,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.tarefa.caixa.Caixa;
-import br.com.infox.epp.tarefa.caixa.CaixaDAO;
 
 @Name(CaixaManager.NAME)
 @AutoCreate
