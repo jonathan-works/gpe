@@ -1,7 +1,6 @@
 package br.com.infox.core.dao;
 
 import static br.com.itx.util.EntityUtil.getSingleResult;
-import static org.jboss.seam.faces.FacesMessages.instance;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,8 +20,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -40,8 +37,6 @@ import br.com.itx.component.Util;
 @AutoCreate
 public class GenericDAO implements Serializable {
 
-	private static final String ENTITY_CREATED_MSG = "#{messages['entity_created']}";
-    private static final String ENTITY_UPDATED_MSG = "#{messages['entity_updated']}";
     private static final long serialVersionUID = 2513102779632819212L;
 	private static final LogProvider LOG = Logging.getLogProvider(GenericDAO.class);
 
@@ -120,8 +115,6 @@ public class GenericDAO implements Serializable {
             }
         },object,".persist() (" + object.getClass().getName() + ")");
 	    
-	    conclusionMessage(ENTITY_CREATED_MSG,"Falha ao inserir",result!=null);
-	    
         return result;
 	}
 	
@@ -135,8 +128,6 @@ public class GenericDAO implements Serializable {
                 return res;
             }
         },object,".update() (" + object.getClass().getName() + ")");
-	    
-	    conclusionMessage(ENTITY_UPDATED_MSG,"Falha ao atualizar",result!=null);
 	    
         return result;
 	}
@@ -152,19 +143,7 @@ public class GenericDAO implements Serializable {
             }
         },object,".remove() (" + object.getClass().getName() + ")");
 	    
-	    conclusionMessage(ENTITY_UPDATED_MSG,"Falha ao remover",result!=null);
-	    
 	    return result;
-	}
-	
-	private void conclusionMessage(String successMessage, String errorMessage,boolean successful) {
-	    FacesMessages fm = instance();
-        fm.clear();
-        if (successful) {
-            fm.add(successMessage);
-        } else {
-            fm.add(Severity.ERROR,errorMessage);
-        }
 	}
 	
 	private <T> T processExceptions(DAOActionInterface<T> action,T object,String msg) {
