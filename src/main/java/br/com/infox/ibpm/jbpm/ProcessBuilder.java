@@ -55,6 +55,8 @@ import org.xml.sax.InputSource;
 import br.com.infox.component.JsfComponentTreeValidator;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
+import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.ibpm.jbpm.fitter.EventFitter;
 import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
 import br.com.infox.ibpm.jbpm.fitter.SwimlaneFitter;
@@ -62,8 +64,6 @@ import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
 import br.com.infox.ibpm.jbpm.fitter.TransitionFitter;
 import br.com.infox.ibpm.jbpm.fitter.TypeFitter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
-import br.com.infox.ibpm.xpdl.FluxoXPDL;
-import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 import br.com.infox.util.constants.WarningConstants;
 
 @Name(ProcessBuilder.NAME)

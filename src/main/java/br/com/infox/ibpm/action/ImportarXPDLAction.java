@@ -6,9 +6,9 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
+import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
-import br.com.infox.ibpm.xpdl.FluxoXPDL;
-import br.com.infox.ibpm.xpdl.IllegalXPDLException;
 
 @Name(ImportarXPDLAction.NAME)
 @Scope(ScopeType.CONVERSATION)
