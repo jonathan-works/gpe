@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.tarefa.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,6 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.tarefa.caixa.Caixa;
-import br.com.infox.epp.tarefa.entity.TarefaJbpm;
 import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.util.constants.LengthConstants;
 

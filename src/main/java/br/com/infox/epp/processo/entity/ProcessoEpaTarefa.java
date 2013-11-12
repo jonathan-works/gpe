@@ -21,7 +21,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.query.ProcessoEpaTarefaQuery;
-import br.com.infox.ibpm.entity.Tarefa;
+import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.ibpm.type.PrazoEnum;
 
 @Entity

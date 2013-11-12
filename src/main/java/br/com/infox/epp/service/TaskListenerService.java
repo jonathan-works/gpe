@@ -17,7 +17,7 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.processo.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
-import br.com.infox.ibpm.entity.Tarefa;
+import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.exception.ApplicationException;
 

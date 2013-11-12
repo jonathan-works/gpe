@@ -22,7 +22,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.ibpm.entity.Tarefa;
+import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity

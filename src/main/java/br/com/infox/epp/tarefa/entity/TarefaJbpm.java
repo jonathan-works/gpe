@@ -13,7 +13,6 @@ import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.ibpm.entity.Tarefa;
 
 @Entity
 @Table(name = TarefaJbpm.TABLE_NAME, schema="public", uniqueConstraints={

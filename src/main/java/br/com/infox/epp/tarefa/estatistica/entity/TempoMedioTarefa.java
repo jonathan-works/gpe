@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import br.com.infox.epp.processo.estatistica.entity.TempoMedioProcesso;
-import br.com.infox.ibpm.entity.Tarefa;
+import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.util.constants.FloatFormatConstants;
 
