@@ -203,7 +203,13 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			fm.add(StatusMessage.Severity.ERROR, getRemoveError());
 			LOG.error(".remove()", e);
 		}
-		Util.rollbackTransactionIfNeeded();
+		if ("removed".equals(ret)) {
+		    FacesMessages fm = instance();
+		    fm.clear();
+		    fm.add("#{messages['entity_deleted']}");
+		} else {
+		    Util.rollbackTransactionIfNeeded();
+		}
 		return ret;
 	}
 
