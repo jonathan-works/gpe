@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.query;
+package br.com.infox.epp.processo.localizacao.query;
 
 public interface ProcessoLocalizacaoIbpmQuery {
 
