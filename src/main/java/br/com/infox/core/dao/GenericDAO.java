@@ -7,16 +7,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TransactionRequiredException;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.util.constants.WarningConstants;
+import br.com.itx.component.Util;
 
 /**
  * DAO generico para consultas, persistencia
@@ -29,7 +37,8 @@ import br.com.infox.util.constants.WarningConstants;
 @AutoCreate
 public class GenericDAO implements Serializable {
 
-	private static final long serialVersionUID = 2513102779632819212L;
+    private static final long serialVersionUID = 2513102779632819212L;
+	private static final LogProvider LOG = Logging.getLogProvider(GenericDAO.class);
 
 	public static final String NAME = "genericDAO";
 	
@@ -96,20 +105,67 @@ public class GenericDAO implements Serializable {
 	}
 	
 	public <T> T persist(T object){
-		entityManager.persist(object);
-		entityManager.flush();
-		return object;
+	    final T result = processExceptions(new DAOActionInterface<T>() {
+            @Override
+            @Transactional
+            public T execute(final T obj) {
+                entityManager.persist(obj);
+                entityManager.flush();
+                return obj;
+            }
+        },object,".persist() (" + object.getClass().getName() + ")");
+	    
+        return result;
 	}
 	
 	public <T> T update(T object){
-		entityManager.merge(object);
-		entityManager.flush();
-		return object;
+	    final T result = processExceptions(new DAOActionInterface<T>() {
+            @Override
+            @Transactional
+            public T execute(final T obj) {
+                final T res = entityManager.merge(obj);
+                entityManager.flush();
+                return res;
+            }
+        },object,".update() (" + object.getClass().getName() + ")");
+	    
+        return result;
 	}
 	
-	public <T> T remove(T object){
-		entityManager.remove(object);
-		entityManager.flush();
-		return object;
-	}	
+	public <T> T remove(final T object){
+	    final T result = processExceptions(new DAOActionInterface<T>() {
+            @Override
+            @Transactional
+            public T execute(T obj) {
+                entityManager.remove(obj);
+                entityManager.flush();
+                return obj;
+            }
+        },object,".remove() (" + object.getClass().getName() + ")");
+	    
+	    return result;
+	}
+	
+	private <T> T processExceptions(DAOActionInterface<T> action,T object,String msg) {
+	    StopWatch sw = new StopWatch();
+        sw.start();
+        T ret = null;
+	    try {
+	        ret = action.execute(object);
+	    }catch(IllegalArgumentException e) {
+	        LOG.error(msg,e);
+	    }catch(EntityExistsException e) {
+	        LOG.error(msg,e);
+	    }catch(TransactionRequiredException e) {    
+	        LOG.error(msg,e);
+	    }catch(PersistenceException e) {
+	        LOG.error(msg,e);
+	    }catch(Exception e) {
+	        LOG.error(msg,e);
+	    }
+	    if (ret == null) {
+	        Util.rollbackTransactionIfNeeded();
+	    }
+	    return ret;
+	}
 }

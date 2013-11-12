@@ -1,5 +1,8 @@
 package br.com.infox.ibpm.home;
 
+import java.util.List;
+
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -9,6 +12,7 @@ import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.CategoriaItem;
 import br.com.infox.epp.manager.CategoriaItemManager;
 import br.com.infox.epp.manager.ItemManager;
+import br.com.infox.ibpm.component.tree.ItemTreeHandler;
 import br.com.infox.ibpm.entity.Item;
 import br.com.itx.component.AbstractHome;
 
@@ -30,15 +34,15 @@ public class CategoriaHome extends AbstractHome<Categoria> {
 	private Item itemASerAdicionado;
 	
 	public void removeCategoriaItem(CategoriaItem categoriaItem){
-	    
-	    instance.getCategoriaItemList().remove(categoriaItem);
-	    getEntityManager().remove(categoriaItem);
-	    super.update();
+	    getInstance().getCategoriaItemList().remove(categoriaItem);
+	    categoriaItemManager.remove(categoriaItem);
 	}
 	
 	public void addCategoriaItem(Item item){
-	    instance.getCategoriaItemList().addAll(categoriaItemManager.createCategoriaItemList(instance, itemManager.getFolhas(item)));
-	    super.update();
+	    List<CategoriaItem> list = categoriaItemManager.createCategoriaItemList(instance, itemManager.getFolhas(item));
+	    getInstance().getCategoriaItemList().addAll(list);
+	    ItemTreeHandler tree = (ItemTreeHandler) Component.getInstance(ItemTreeHandler.NAME);
+	    tree.clearTree();
 	}
 
     public Item getItemASerAdicionado() {
