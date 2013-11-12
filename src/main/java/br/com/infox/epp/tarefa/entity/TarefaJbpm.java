@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.tarefa.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +12,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import javax.validation.constraints.NotNull;
+
+import br.com.infox.ibpm.entity.Tarefa;
 
 @Entity
 @Table(name = TarefaJbpm.TABLE_NAME, schema="public", uniqueConstraints={
