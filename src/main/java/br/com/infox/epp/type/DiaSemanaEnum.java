@@ -2,7 +2,9 @@ package br.com.infox.epp.type;
 
 import java.util.Arrays;
 
-public enum DiaSemanaEnum {
+import br.com.infox.type.Displayable;
+
+public enum DiaSemanaEnum implements Displayable {
 	DOM("Domingo"), SEG("Segunda"), TER("Terça"), QUA("Quarta"), 
 	QUI("Quinta"), SEX("Sexta"), SAB("Sábado");
 	
@@ -12,6 +14,7 @@ public enum DiaSemanaEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label;
 	}
@@ -19,6 +22,4 @@ public enum DiaSemanaEnum {
 	public int getNrDiaSemana() {
 		return Arrays.asList(DiaSemanaEnum.values()).indexOf(this);
 	}
-	
-
 }

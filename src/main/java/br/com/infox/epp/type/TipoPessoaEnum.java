@@ -1,6 +1,8 @@
 package br.com.infox.epp.type;
 
-public enum TipoPessoaEnum {
+import br.com.infox.type.Displayable;
+
+public enum TipoPessoaEnum implements Displayable {
 
 	F("Física"), J("Jurídica");
 	
@@ -10,6 +12,7 @@ public enum TipoPessoaEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return this.label;
 	}

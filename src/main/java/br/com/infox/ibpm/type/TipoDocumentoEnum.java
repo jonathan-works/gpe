@@ -15,8 +15,10 @@
 */
 package br.com.infox.ibpm.type;
 
+import br.com.infox.type.Displayable;
 
-public enum TipoDocumentoEnum {
+
+public enum TipoDocumentoEnum implements Displayable {
 
 	P("Texto"), D("Anexo"), T("Todos");
 	
@@ -26,6 +28,7 @@ public enum TipoDocumentoEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return this.label;
 	}

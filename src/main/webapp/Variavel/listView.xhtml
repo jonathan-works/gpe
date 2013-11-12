@@ -150,15 +150,15 @@
 							<wi:searchForm formId="pesquisarTipoModeloDocumentoForm"
 								formTitle="#{messages['searchForm.title']}">
 
+								<wi:inputText id="tipoModeloDocumento"
+									label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+									value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumentoCombo}"
+									maxlength="150" />
 								<wi:suggest
 					                id="grupoModeloDocumento"
 					                suggestProvider="#{grupoModeloDocumentoSuggest}"
 					                value="#{associativeTipoModeloDocumentoList.entity.grupoModeloDocumento}"
 					                label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"/>
-								<wi:inputText id="tipoModeloDocumento"
-									label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
-									value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumentoCombo}"
-									maxlength="150" />
 								<wi:inputText id="abreviacao"
 									label="#{messages['tipoModeloDocumento.abreviacao']}"
 									value="#{associativeTipoModeloDocumentoList.entity.abreviacao}"

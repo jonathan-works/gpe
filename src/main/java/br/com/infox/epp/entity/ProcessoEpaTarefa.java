@@ -1,6 +1,7 @@
 package br.com.infox.epp.entity;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -16,11 +17,12 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.query.ProcessoEpaTarefaQuery;
 import br.com.infox.ibpm.entity.Tarefa;
+import br.com.infox.ibpm.type.PrazoEnum;
 
 @Entity
 @Table(name=ProcessoEpaTarefa.TABLE_NAME, schema="public")
@@ -133,6 +135,27 @@ public class ProcessoEpaTarefa implements Serializable {
 	@NotNull
 	public Integer getTempoGasto() {
 		return tempoGasto;
+	}
+	
+	@Transient
+	public String getTempoGastoFormatado() {
+		PrazoEnum tipoPrazo = tarefa.getTipoPrazo();
+		String result = "";
+		if (tipoPrazo == null) {
+		    result = MessageFormat.format("{0}", tempoGasto);
+		} else {
+    		switch (tipoPrazo) {
+    		case H:
+    		{
+    			result = MessageFormat.format("{0}h {1}m", tempoGasto/60,tempoGasto%60);
+    		}
+    			break;
+    		case D:
+    			result = MessageFormat.format("{0}d", tempoGasto);
+    			break;
+    		}
+		}
+		return result;
 	}
 
 	public void setTempoPrevisto(Integer tempoPrevisto) {
