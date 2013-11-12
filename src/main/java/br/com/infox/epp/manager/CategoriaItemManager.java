@@ -58,15 +58,28 @@ public class CategoriaItemManager extends GenericManager{
                 }
             }
         }
-        FacesMessages fm = instance();
-        fm.clear();
-        if (categoriaItemList.size() > 0) {
-            fm.add("#{messages['entity_created']}");
-        } else {
-            fm.add(Severity.ERROR,"Falha ao inserir");
-        }
+        
+        conclusionMessage("#{messages['entity_created']}","Falha ao inserir",categoriaItemList.size() > 0);
         return categoriaItemList;
 	}
+	
+	@Override
+	public <T> T remove(T o) {
+	    T result = super.remove(o);
+	    
+	    conclusionMessage("#{messages['entity_deleted']}","Falha ao remover",result != null);
+	    return result;
+	}
+    
+    private void conclusionMessage(String successMessage, String errorMessage,boolean successful) {
+        FacesMessages fm = instance();
+        fm.clear();
+        if (successful) {
+            fm.add(successMessage);
+        } else {
+            fm.add(Severity.ERROR,errorMessage);
+        }
+    }
 	
 	/**
 	 * @param categoria Categoria a ser associada ao Item
