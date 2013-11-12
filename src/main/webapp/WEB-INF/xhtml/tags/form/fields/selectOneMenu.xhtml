@@ -41,7 +41,6 @@
 		<h:selectOneMenu
              id="#{id}"
              value="#{value}"
-             
              required="#{required}"
              onchange="#{onchange}"
              readonly="#{readonly}"
@@ -55,10 +54,11 @@
                  test="#{empty valueItems}">
 				<s:selectItems
                      value="#{items}"
-                     var="v"
-                     label="#{empty optionExpression ? (empty optionLabel ? v : optionLabel) : util.getSelectExpressionSelectItem(optionExpression, v)}"
+                     var="item"
+                     label="#{empty optionExpression ? (empty optionLabel ? item : optionLabel) : util.getSelectExpressionSelectItem(optionExpression, item)}"
                      hideNoSelectionLabel="#{hideNoSelectionLabel}"
-                     noSelectionLabel="#{noSelectionLabel}" />
+                     noSelectionLabel="#{noSelectionLabel}"
+                     disabled="#{wi:get(inactiveCond,'')}" />
 			</c:if>
 			<ui:insert />
 		</h:selectOneMenu>
