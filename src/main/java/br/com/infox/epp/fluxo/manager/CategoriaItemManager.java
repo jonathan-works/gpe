@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.manager;
 
+import static org.jboss.seam.faces.FacesMessages.instance;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -7,11 +9,15 @@ import java.util.Set;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
+
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.dao.CategoriaItemDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.itx.component.Util;
 
 @Name(CategoriaItemManager.NAME)
 @AutoCreate
@@ -41,13 +47,51 @@ public class CategoriaItemManager extends GenericManager{
         if (itens != null) {
             for (Item item : itens) {
                 if (item.getAtivo()) {
-                    CategoriaItem ci = new CategoriaItem(categoria, item);
-                    persist(ci);
-                    categoriaItemList.add(ci);
+                    persistCategoriaItem(categoria, item, categoriaItemList);
                 }
             }
         }
+        
+        conclusionMessage("#{messages['entity_created']}","Falha ao inserir",categoriaItemList.size() > 0);
         return categoriaItemList;
 	}
+	
+	@Override
+	public <T> T remove(T o) {
+	    T result = super.remove(o);
+	    
+	    conclusionMessage("#{messages['entity_deleted']}","Falha ao remover",result != null);
+	    return result;
+	}
+    
+    private void conclusionMessage(String successMessage, String errorMessage,boolean successful) {
+        FacesMessages fm = instance();
+        fm.clear();
+        if (successful) {
+            fm.add(successMessage);
+        } else {
+            fm.add(Severity.ERROR,errorMessage);
+        }
+    }
+	
+	/**
+	 * @param categoria Categoria a ser associada ao Item
+	 * @param item Item a ser associado à categoria
+	 * @param categoriaItemList Lista resultante
+	 * 
+	 * Este método deve iniciar a transação antes de persistir e finalizar após persistir
+	 * devido à necessidade de serem inserções atômicas, caso múltiplas entradas fossem
+	 * permitidas em uma única transação e uma destas causasse uma exceção, então
+	 * todas as outras falhariam
+	 */
+    private void persistCategoriaItem(Categoria categoria, Item item,
+            List<CategoriaItem> categoriaItemList) {
+        Util.beginTransaction();
+        CategoriaItem ci = persist(new CategoriaItem(categoria, item));
+        Util.commitTransction();
+        if (ci!=null) {
+            categoriaItemList.add(ci);
+        }
+    }
 	
 }

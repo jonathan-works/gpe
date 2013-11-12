@@ -6,6 +6,8 @@ import java.util.Date;
 
 import org.jboss.seam.international.Messages;
 
+import br.com.infox.type.Displayable;
+
 class FieldCommandImpl implements FieldCommand {
     
     private String entityName;
@@ -18,26 +20,28 @@ class FieldCommandImpl implements FieldCommand {
 
     @Override
     public void execute(SearchField s, Object object) {
+        String attributeLabel = "";
 
-        // Trata os tipos Booleanos
-        String atributeLabel = "";
         if (object instanceof Boolean) {
-            atributeLabel = Messages.instance().get(MessageFormat.format(
-                    "{0}.{1}.{2}", entityName, s.getName(), (Boolean)object));
+        	if (s.getName().equals("ativo")) {
+        		attributeLabel = ((Boolean) object) ? "Ativo" : "Inativo";
+        	} else {
+        		attributeLabel = ((Boolean) object) ? "Sim" : "Não";
+        	}
         } else if (object instanceof Date) {
-            atributeLabel = DateFormat.getDateInstance().format(object);
+            attributeLabel = DateFormat.getDateInstance().format(object);
+        } else if (object instanceof Displayable) {
+    		attributeLabel = ((Displayable) object).getLabel();
         } else {
-            // Caso não for booleano
-            atributeLabel = object.toString();
+        	attributeLabel = object.toString();
         }
-
         
         messageBuilder.append(Messages.instance().get(MessageFormat.format(
                 "{0}.{1}", entityName, s.getName())))
                 .append(" ")
                 .append(s.getCriteria())
                 .append(" '")
-                .append(atributeLabel)
+                .append(attributeLabel)
                 .append("'\n");
     }
 

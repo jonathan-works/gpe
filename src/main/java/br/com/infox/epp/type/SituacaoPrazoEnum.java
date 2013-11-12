@@ -1,6 +1,8 @@
 package br.com.infox.epp.type;
 
-public enum SituacaoPrazoEnum {
+import br.com.infox.type.Displayable;
+
+public enum SituacaoPrazoEnum implements Displayable {
 	
 	PAT("Processo Atrasado"), TAT("Tarefa Atrasada"), SAT("Sem atraso");
 	
@@ -10,6 +12,7 @@ public enum SituacaoPrazoEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label;
 	}

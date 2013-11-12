@@ -1,7 +1,9 @@
 package br.com.infox.epp.documento.type;
 
+import br.com.infox.type.Displayable;
 
-public enum VisibilidadeEnum {
+
+public enum VisibilidadeEnum implements Displayable {
 
 	A("Ambos"), I("Interno"), E("Externo");
 	
@@ -11,6 +13,7 @@ public enum VisibilidadeEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return this.label;
 	}

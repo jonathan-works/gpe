@@ -25,15 +25,18 @@
 		value="#{empty showDialogMessage ? true : showDialogMessage}" />
 	<ui:param name="timeCloseMSG"
 		value="#{empty timeCloseMSG ? '6000' : timeCloseMSG}" />
+	<ui:param name="showMsg" value="#{empty showMsg ? true : showMsg}" />
 
     <h:outputScript
         name="Messages.js"
+        rendered="#{showMsg}"
         library="js/components" />
     <h:outputStylesheet
         library="styleSkinInfox"
+        rendered="#{showMsg}"
         name="messages.css" />
         
-	<s:div id="#{formId}DialogMessage" styleClass="d-msg hidden">
+	<s:div id="#{formId}DialogMessage" styleClass="d-msg hidden" rendered="#{showMsg}">
 		<div class="d-msg-h">
 			<label class="d-msg-h-lbl">Mensagem</label>
 			<h:graphicImage

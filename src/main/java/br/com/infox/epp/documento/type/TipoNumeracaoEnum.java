@@ -1,6 +1,8 @@
 package br.com.infox.epp.documento.type;
 
-public enum TipoNumeracaoEnum {
+import br.com.infox.type.Displayable;
+
+public enum TipoNumeracaoEnum implements Displayable {
 	S("Sequencial"), J("Classe Java");
 	
 	private String label;
@@ -9,6 +11,7 @@ public enum TipoNumeracaoEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return this.label;
 	}

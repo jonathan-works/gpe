@@ -1,6 +1,8 @@
 package br.com.infox.ibpm.type;
 
-public enum PrazoEnum {
+import br.com.infox.type.Displayable;
+
+public enum PrazoEnum implements Displayable {
 
 	H("Hora(s)"), D("Dia(s)");
 	
@@ -10,6 +12,7 @@ public enum PrazoEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return this.label;
 	}
