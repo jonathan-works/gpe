@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.manager;
+package br.com.infox.epp.processo.localizacao.manager;
 
 import java.io.Serializable;
 
