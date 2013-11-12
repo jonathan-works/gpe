@@ -14,7 +14,7 @@
  veja em http://www.gnu.org/licenses/   
 */
 
-package br.com.infox.ibpm.home.api;
+package br.com.infox.epp.processo.documento.api;
 
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
