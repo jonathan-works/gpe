@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
+import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Name(ProcessoLocalizacaoIbpmManager.NAME)

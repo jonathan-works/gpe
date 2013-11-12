@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.dao;
+package br.com.infox.epp.processo.localizacao.dao;
 
 import java.util.HashMap;
 import java.util.Map;
