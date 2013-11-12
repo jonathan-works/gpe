@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.fluxo.home;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ import br.com.itx.component.AbstractHome;
  */
 @Name(CategoriaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Deprecated
 public class CategoriaHome extends AbstractHome<Categoria> {
 
 	private static final long serialVersionUID = 1L;
