@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.dao;
+package br.com.infox.epp.tarefa.dao;
 
 import java.util.ArrayList;
 import java.util.List;

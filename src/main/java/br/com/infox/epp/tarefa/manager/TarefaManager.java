@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.ibpm.dao.TarefaDAO;
+import br.com.infox.epp.tarefa.dao.TarefaDAO;
 import br.com.infox.ibpm.entity.Tarefa;
 
 @Name(TarefaManager.NAME)
