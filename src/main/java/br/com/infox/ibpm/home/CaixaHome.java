@@ -11,11 +11,11 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.entity.Caixa;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
 import br.com.infox.ibpm.manager.CaixaManager;
-import br.com.infox.ibpm.manager.TarefaManager;
 import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;

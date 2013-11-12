@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.manager;
+package br.com.infox.epp.tarefa.manager;
 
 import java.util.List;
 

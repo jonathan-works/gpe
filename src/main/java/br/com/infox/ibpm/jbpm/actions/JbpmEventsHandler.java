@@ -18,10 +18,10 @@ import org.jbpm.graph.exe.ExecutionContext;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.manager.TarefaJbpmManager;
-import br.com.infox.ibpm.manager.TarefaManager;
 import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 
