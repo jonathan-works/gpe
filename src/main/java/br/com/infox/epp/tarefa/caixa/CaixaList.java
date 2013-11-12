@@ -1,4 +1,4 @@
-package br.com.infox.list;
+package br.com.infox.epp.tarefa.caixa;
 
 import java.util.Map;
 
@@ -8,7 +8,6 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.epp.tarefa.caixa.Caixa;
 
 @Name(CaixaList.NAME)
 @Scope(ScopeType.CONVERSATION)

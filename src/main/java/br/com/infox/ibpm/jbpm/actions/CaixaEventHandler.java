@@ -15,9 +15,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.caixa.Caixa;
+import br.com.infox.epp.tarefa.caixa.CaixaList;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.list.CaixaList;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
