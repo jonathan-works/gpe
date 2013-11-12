@@ -1,11 +1,11 @@
 package br.com.infox.list;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.ibpm.entity.LocalizacaoFisica;
@@ -48,9 +48,7 @@ public class LocalizacaoFisicaList extends EntityList<LocalizacaoFisica> {
 	
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("localizacaoFisicaPai", "localizacaoFisicaPai.descricao");
-		return map;
+		return null;
 	}
 	
 	public static final LocalizacaoFisicaList instance() {
