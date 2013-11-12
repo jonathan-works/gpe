@@ -224,7 +224,8 @@
                     tableTitle="#{tipoProcessoDocumentoHome.instance} - #{messages['form.title']}"
                     id="tipoProcessoDocumentoPapelList"
                     rowId="#{row.idTipoProcessoDocumentoPapel}"
-                    listReRender="divAssociarPapel">
+                    listReRender="divAssociarPapel"
+                    showMsg="false">
 
                     <wi:columnOutputText
                         columnId="papel"
@@ -241,6 +242,7 @@
                             action="tipoProcessoDocumentoPapelHome.remove(row)"
                             render="divAssociarPapel"
                             execute="@this"
+                            onclick="return confirm('Deseja remover o registro?');"
                             id="removeButton"/>
                     </ui:define>
 
