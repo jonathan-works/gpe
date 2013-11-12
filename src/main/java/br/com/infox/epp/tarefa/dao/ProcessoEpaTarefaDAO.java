@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.dao;
+package br.com.infox.epp.tarefa.dao;
 
 import java.util.HashMap;
 import java.util.List;
