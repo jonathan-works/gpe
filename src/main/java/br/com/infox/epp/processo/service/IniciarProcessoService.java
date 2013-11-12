@@ -1,4 +1,4 @@
-package br.com.infox.epp.service;
+package br.com.infox.epp.processo.service;
 
 import java.util.Collection;
 import java.util.Date;

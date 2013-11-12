@@ -25,7 +25,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.infox.epp.service.IniciarProcessoService;
+import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.epp.type.TipoPessoaEnum;
 import br.com.infox.ibpm.entity.Localizacao;
