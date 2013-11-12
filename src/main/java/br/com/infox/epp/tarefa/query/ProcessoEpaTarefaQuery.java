@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.query;
+package br.com.infox.epp.tarefa.query;
 
 public interface ProcessoEpaTarefaQuery {
 
