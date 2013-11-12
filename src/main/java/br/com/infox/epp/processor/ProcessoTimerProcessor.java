@@ -14,8 +14,8 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.epp.processo.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.service.startup.ProcessoTimerStarter;
+import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.timer.TimerUtil;
 

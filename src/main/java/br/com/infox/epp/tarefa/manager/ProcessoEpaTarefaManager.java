@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.manager;
+package br.com.infox.epp.tarefa.manager;
 
 import java.util.Calendar;
 import java.util.Date;

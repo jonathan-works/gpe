@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="br.com.infox.epp.processo.manager.ProcessoEpaTarefaManager" project="epp" 
-    file="/epp/src/main/java/br/com/infox/epp/processo/manager/ProcessoEpaTarefaManager.java" binary="false" 
+  <class id="4" language="java" name="br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager" project="epp" 
+    file="/epp/src/main/java/br/com/infox/epp/tarefa/manager/ProcessoEpaTarefaManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="403" width="317" x="349" y="480"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
