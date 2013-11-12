@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.tarefa.caixa;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -10,8 +10,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.epp.tarefa.caixa.Caixa;
-import br.com.infox.epp.tarefa.caixa.CaixaManager;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.entity.Tarefa;
