@@ -24,6 +24,7 @@ import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(VariavelHome.NAME)
+@Deprecated
 public class VariavelHome extends AbstractHome<Variavel> {
 
 	private static final long serialVersionUID = 1L;

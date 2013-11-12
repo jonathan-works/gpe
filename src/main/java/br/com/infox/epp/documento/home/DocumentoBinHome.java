@@ -30,7 +30,7 @@ import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(DocumentoBinHome.NAME)
-@BypassInterceptors
+@Deprecated
 public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
 
 	private static final long serialVersionUID = 1L;

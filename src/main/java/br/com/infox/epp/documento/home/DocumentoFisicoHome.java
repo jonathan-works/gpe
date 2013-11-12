@@ -17,6 +17,7 @@ import br.com.itx.util.EntityUtil;
  */
 @Name(DocumentoFisicoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Deprecated
 public class DocumentoFisicoHome extends AbstractHome<DocumentoFisico> {
 
 	private static final long serialVersionUID = 1L;

@@ -25,6 +25,7 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.itx.component.AbstractHome;
 
 @Name(GrupoModeloDocumentoHome.NAME)
+@Deprecated
 public class GrupoModeloDocumentoHome extends
 		AbstractHome<GrupoModeloDocumento> {
 

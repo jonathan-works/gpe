@@ -27,6 +27,7 @@ import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
 @Name(ItemTipoDocumentoHome.NAME)
+@Deprecated
 public class ItemTipoDocumentoHome
 		extends AbstractHome<ItemTipoDocumento> {
 

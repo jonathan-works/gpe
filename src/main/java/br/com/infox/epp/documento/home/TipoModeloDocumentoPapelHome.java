@@ -29,6 +29,7 @@ import br.com.itx.util.ComponentUtil;
 
 
 @Name(TipoModeloDocumentoPapelHome.NAME)
+@Deprecated
 public class TipoModeloDocumentoPapelHome extends AbstractHome<TipoModeloDocumentoPapel> {
 
 	public static final String NAME = "tipoModeloDocumentoPapelHome";

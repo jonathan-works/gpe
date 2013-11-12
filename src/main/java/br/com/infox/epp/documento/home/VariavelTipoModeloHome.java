@@ -13,6 +13,7 @@ import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
 @Name(VariavelTipoModeloHome.NAME)
+@Deprecated
 public class VariavelTipoModeloHome extends AbstractHome<VariavelTipoModelo> {
 
 	private static final long serialVersionUID = 1L;

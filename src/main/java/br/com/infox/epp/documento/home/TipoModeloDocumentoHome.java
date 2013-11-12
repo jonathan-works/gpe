@@ -34,6 +34,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(TipoModeloDocumentoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Deprecated
 public class TipoModeloDocumentoHome 
 		extends	AbstractHome<TipoModeloDocumento> {
 	
