@@ -92,6 +92,7 @@
 				 value="#{modeloDocumentoHome.instance.tipoModeloDocumento}"
 				 items="#{home.tiposModeloDocumentoPermitidos}"
 				 required="true"
+				 inactiveCond="#{!item.ativo}"
 				 showLabelSelecione="true" />
 			<wi:inputText
 				 id="tituloModeloDocumento"
