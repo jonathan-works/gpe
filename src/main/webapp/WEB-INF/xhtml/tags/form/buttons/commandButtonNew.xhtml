@@ -27,7 +27,7 @@
          action="#{newInstanceAction}"
          rendered="#{wi:get(rendered, home.managed)}"
          reRender="#{empty reRender ? 'pageBody, modalPanelMessages' : reRender}"
-         ajaxSingle="true"
+         execute="@this"
          value="Novo">
 	</wi:commandButton>
 		
