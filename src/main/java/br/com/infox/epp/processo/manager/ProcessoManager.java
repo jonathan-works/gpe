@@ -23,7 +23,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
-import br.com.infox.ibpm.entity.Caixa;
+import br.com.infox.epp.tarefa.caixa.Caixa;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;

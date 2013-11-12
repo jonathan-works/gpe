@@ -9,8 +9,8 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.tarefa.caixa.Caixa;
 import br.com.infox.ibpm.dao.CaixaDAO;
-import br.com.infox.ibpm.entity.Caixa;
 
 @Name(CaixaManager.NAME)
 @AutoCreate

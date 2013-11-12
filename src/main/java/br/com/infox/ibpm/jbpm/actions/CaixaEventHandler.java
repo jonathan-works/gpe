@@ -14,7 +14,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.ibpm.entity.Caixa;
+import br.com.infox.epp.tarefa.caixa.Caixa;
 import br.com.infox.ibpm.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.list.CaixaList;
