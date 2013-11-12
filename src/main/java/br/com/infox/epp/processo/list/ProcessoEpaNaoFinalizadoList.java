@@ -17,8 +17,8 @@ import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.itx.util.EntityUtil;
 

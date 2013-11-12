@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.epp.processo.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.itx.util.StringUtil;
 
 
