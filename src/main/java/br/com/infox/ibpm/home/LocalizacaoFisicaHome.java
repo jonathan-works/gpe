@@ -22,8 +22,8 @@ public class LocalizacaoFisicaHome extends AbstractHome<LocalizacaoFisica>{
 	
 	@Override
 	public void newInstance() {
-		limparTrees();
 		super.newInstance();
+		limparTrees();
 	}
 	
 	@Override
@@ -49,13 +49,4 @@ public class LocalizacaoFisicaHome extends AbstractHome<LocalizacaoFisica>{
 		return super.update();
 	}
 
-	@Override
-	public void setId(Object id) {
-		super.setId(id);
-		if(isManaged()) {
-			((LocalizacaoFisicaTreeHandler)getComponent("localizacaoFisicaTree")).setSelected(getInstance().getLocalizacaoFisicaPai());
-		}
-	}
-	
-	
 }
