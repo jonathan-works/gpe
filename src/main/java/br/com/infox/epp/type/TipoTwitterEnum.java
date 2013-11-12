@@ -1,6 +1,8 @@
 package br.com.infox.epp.type;
 
-public enum TipoTwitterEnum {
+import br.com.infox.type.Displayable;
+
+public enum TipoTwitterEnum implements Displayable {
 
 	U("Usuário"), L("Localização"), S("Usuário do Sistema");
 	
@@ -10,6 +12,7 @@ public enum TipoTwitterEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return this.label;
 	}

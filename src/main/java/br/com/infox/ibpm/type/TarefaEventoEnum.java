@@ -1,7 +1,9 @@
 package br.com.infox.ibpm.type;
 
+import br.com.infox.type.Displayable;
 
-public enum TarefaEventoEnum {
+
+public enum TarefaEventoEnum implements Displayable {
 
 	ET("Entrar Tarefa"), RT("Realizar Tarefa"), ST("Sair Tarefa");
 	
@@ -11,6 +13,7 @@ public enum TarefaEventoEnum {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return this.label;
 	}
