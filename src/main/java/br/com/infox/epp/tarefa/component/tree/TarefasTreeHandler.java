@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.component.tree;
+package br.com.infox.epp.tarefa.component.tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
 import br.com.infox.component.tree.AbstractTreeHandler;
+import br.com.infox.ibpm.component.tree.TarefasEntityNode;
 import br.com.itx.util.EntityUtil;
 
 @Name(TarefasTreeHandler.NAME)

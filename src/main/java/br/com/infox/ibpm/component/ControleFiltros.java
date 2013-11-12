@@ -14,7 +14,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
-import br.com.infox.ibpm.component.tree.TarefasTreeHandler;
+import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.component.MeasureTime;
