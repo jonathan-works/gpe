@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.tarefa.estatistica.home;
 
 import java.util.List;
 
