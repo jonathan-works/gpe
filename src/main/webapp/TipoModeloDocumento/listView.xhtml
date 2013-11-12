@@ -96,6 +96,7 @@
                 id="tipoModeloDocumento"
                 label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
                 value="#{tipoModeloDocumentoHome.instance.tipoModeloDocumento}"
+                maxlength="50"
                 required="true" />
             <wi:inputText
                 id="abreviacao"
@@ -269,7 +270,8 @@
                 tableTitle="#{messages['tipoModeloDocumentoPapel.titleGrid']}"
                 id="tipoModeloDocumentoPapelList"
                 rowId="#{row.idTipoModeloDocumentoPapel}"
-				searchFormStyleClass="hidden">
+				searchFormStyleClass="hidden"
+				showMsg="false">
                 <ui:define name="headerToolBar"/>
                 <ui:define name="toolBar">
                     <wi:toolBarRemove
