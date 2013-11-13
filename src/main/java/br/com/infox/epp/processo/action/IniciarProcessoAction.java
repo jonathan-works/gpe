@@ -26,6 +26,7 @@ import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.home.PessoaFisicaHome;
+import br.com.infox.epp.pessoa.home.PessoaJuridicaHome;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
@@ -34,7 +35,6 @@ import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.Authenticator;
-import br.com.infox.ibpm.home.PessoaJuridicaHome;
 import br.com.infox.ibpm.manager.PessoaManager;
 import br.com.itx.util.EntityUtil;
 
