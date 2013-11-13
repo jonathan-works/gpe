@@ -70,6 +70,19 @@
 			<ui:define
                  name="headerToolBar">
 			</ui:define>
+			<ui:define
+				name="toolBar">
+				<wi:toolBarEdit
+					id="#{id}edit" />
+				<wi:toolBar
+					action="#{home.remove(row)}"
+					limitToList="true"
+					status=":status"
+					render="searchGridRegion,modalPanelMessages"
+					onclick="confirm('Deseja remover este registro?');"
+					url="/img/remove.png"
+					title="Remover registro" />
+			</ui:define>
 			<wi:columnOutputText
                  columnId="natureza"
                  columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
