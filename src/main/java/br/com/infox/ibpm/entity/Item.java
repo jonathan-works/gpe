@@ -30,21 +30,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.annotations.ChildList;
-import br.com.infox.annotations.HierarchicalPath;
-import br.com.infox.annotations.Parent;
-import br.com.infox.annotations.PathDescriptor;
-import br.com.infox.annotations.Recursive;
+import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name = Item.TABLE_NAME, schema="public")
-@Recursive
-public class Item implements java.io.Serializable {
+public class Item implements java.io.Serializable, Recursive<Item> {
 
 	public static final String TABLE_NAME = "tb_item";
 	private static final long serialVersionUID = 1L;
@@ -56,7 +50,7 @@ public class Item implements java.io.Serializable {
 	private Boolean ativo;
 	private String caminhoCompleto;
 	private List<Item> itemList = new ArrayList<Item>(0);
-
+	
 	public Item() {
 	}
 
@@ -74,7 +68,6 @@ public class Item implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_item_pai")
-	@Parent
 	public Item getItemPai() {
 		return this.itemPai;
 	}
@@ -95,7 +88,6 @@ public class Item implements java.io.Serializable {
 	@Column(name = "ds_item", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
-	@PathDescriptor
 	public String getDescricaoItem() {
 		return this.descricaoItem;
 	}
@@ -116,7 +108,6 @@ public class Item implements java.io.Serializable {
 
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "itemPai")
-	@ChildList
 	public List<Item> getItemList() {
 		return this.itemList;
 	}
@@ -126,7 +117,6 @@ public class Item implements java.io.Serializable {
 	}
 
 	@Column(name="ds_caminho_completo", unique=true)
-	@HierarchicalPath
 	public String getCaminhoCompleto() {
 		return caminhoCompleto;
 	}
@@ -180,4 +170,49 @@ public class Item implements java.io.Serializable {
 		result = prime * result + getIdItem();
 		return result;
 	}
+
+    @Override
+    @Transient
+    public Item getParent() {
+        return this.getItemPai();
+    }
+
+    @Override
+    public void setParent(Item parent) {
+        this.setItemPai(parent);
+    }
+
+    @Override
+    @Transient
+    public String getHierarchicalPath() {
+        return this.getCaminhoCompleto();
+    }
+
+    @Override
+    public void setHierarchicalPath(String path) {
+        this.setCaminhoCompleto(path);
+    }
+
+    @Override
+    @Transient
+    public String getPathDescriptor() {
+        return this.getDescricaoItem();
+    }
+
+    @Override
+    public void setPathDescriptor(String pathDescriptor) {
+        this.setDescricaoItem(pathDescriptor);
+    }
+
+    @Override
+    @Transient
+    public List<Item> getChildList() {
+        return this.getItemList();
+    }
+
+    @Override
+    public void setChildList(List<Item> childList) {
+        this.setItemList(childList);
+    }
+
 }
