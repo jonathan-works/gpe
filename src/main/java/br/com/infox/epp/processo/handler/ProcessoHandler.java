@@ -37,9 +37,9 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.util.constants.WarningConstants;

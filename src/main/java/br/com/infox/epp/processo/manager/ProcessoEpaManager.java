@@ -15,12 +15,12 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.Pessoa;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.type.SituacaoPrazoEnum;
-import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.PessoaJuridica;
 
 @Name(ProcessoEpaManager.NAME)

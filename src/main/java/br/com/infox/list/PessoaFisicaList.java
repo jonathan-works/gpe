@@ -5,9 +5,10 @@ import java.util.Map;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.ibpm.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.itx.util.ComponentUtil;
 
 @Name(PessoaFisicaList.NAME)

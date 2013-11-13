@@ -29,8 +29,10 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
+
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
@@ -38,6 +40,7 @@ import org.jboss.seam.annotations.security.management.UserRoles;
 
 import br.com.infox.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
@@ -45,7 +48,6 @@ import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Endereco;
 import br.com.infox.ibpm.entity.Localizacao;
-import br.com.infox.ibpm.entity.PessoaFisica;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.StringUtil;

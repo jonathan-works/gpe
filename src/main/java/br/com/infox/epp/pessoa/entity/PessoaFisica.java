@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.pessoa.entity;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.util.constants.LengthConstants;
 
