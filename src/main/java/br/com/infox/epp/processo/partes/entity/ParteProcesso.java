@@ -13,8 +13,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.ibpm.entity.Pessoa;
 
 @Entity
 @Table(name=ParteProcesso.TABLE_NAME, schema="public")

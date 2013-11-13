@@ -1,10 +1,10 @@
 package br.com.infox.ibpm.entity;
 
 import javax.persistence.*;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.type.TipoPessoaEnum;
 import br.com.infox.util.constants.LengthConstants;
 
