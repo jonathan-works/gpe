@@ -5,7 +5,7 @@ import org.jboss.seam.annotations.*;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.epp.pessoa.entity.Pessoa;
-import br.com.infox.epp.pessoa.entity.type.TipoPessoaEnum;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.itx.component.AbstractHome;
 
 @Name(PessoaHome.NAME)
