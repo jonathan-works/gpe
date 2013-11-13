@@ -1,4 +1,4 @@
-package br.com.infox.epp.type;
+package br.com.infox.epp.pessoa.entity.type;
 
 import br.com.infox.type.Displayable;
 
