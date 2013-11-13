@@ -17,12 +17,10 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.annotations.ChildList;
-import br.com.infox.annotations.manager.RecursiveManager;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.exception.ApplicationException;
-import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -165,7 +163,9 @@ public abstract class AbstractAction {
 		sw.start();
 		if(EntityUtil.isEntity(o)) {
 			try {
-				inactiveRecursive(o);
+			    if (o instanceof Recursive) {
+			        inactiveRecursive((Recursive<?>)o);
+			    }
 				ret = flushObject(o, false);
 				instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
 				LOG.info(".inactive(" + o + ")" + getObjectClassName(o) + 
@@ -188,15 +188,11 @@ public abstract class AbstractAction {
 	 * @param o Registro que deseja inativar.
 	 */
 	@SuppressWarnings(WarningConstants.UNCHECKED)
-	protected void inactiveRecursive(Object o) {
+	protected void inactiveRecursive(Recursive<?> o) {
 		ComponentUtil.setValue(o, "ativo", false);
-		if(!RecursiveManager.isRecursive(o)) {
-			return;
-		}
-		List<Object> childList = (List<Object>) AnnotationUtil.
-											getValue(o, ChildList.class);
+		List<Recursive<?>> childList = (List<Recursive<?>>) o.getChildList();
 		if (childList != null) {
-			for (Object child : childList) {
+			for (Recursive<?> child : childList) {
 				inactiveRecursive(child);
 			}
 		}
