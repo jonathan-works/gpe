@@ -15,13 +15,9 @@
  */
 package br.com.infox.epp.documento.home;
 
-import java.util.List;
-
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
-import br.com.infox.epp.documento.entity.ItemTipoDocumento;
-import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.itx.component.AbstractHome;
 
 @Name(GrupoModeloDocumentoHome.NAME)
@@ -32,29 +28,5 @@ public class GrupoModeloDocumentoHome extends
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "grupoModeloDocumentoHome";
-
-    @Override
-    protected GrupoModeloDocumento createInstance() {
-        return new GrupoModeloDocumento();
-    }
-
-    @Override
-    public String remove(GrupoModeloDocumento obj) {
-        setInstance(obj);
-        getInstance().setAtivo(Boolean.FALSE);
-        String ret = super.update();
-        newInstance();
-        return ret;
-    }
-
-    public List<ItemTipoDocumento> getItemTipoDocumentoList() {
-        return getInstance() == null ? null : getInstance()
-                .getItemTipoDocumentoList();
-    }
-
-    public List<TipoModeloDocumento> getTipoModeloDocumentoList() {
-        return getInstance() == null ? null : getInstance()
-                .getTipoModeloDocumentoList();
-    }
 
 }
