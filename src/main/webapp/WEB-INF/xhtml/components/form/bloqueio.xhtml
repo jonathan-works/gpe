@@ -44,21 +44,22 @@
 
 		<s:div
              id="bloqueioDiv">
-			 <s:div
-                 rendered="#{usuarioHome.instance.bloqueio}">
-				<wi:inputDate
-                     id="#{id}DataBloqueio"
-                     label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
-                     value="#{usuarioHome.novoBloqueio.dataPrevisaoDesbloqueio}"
-                     future="true"
-                     required="true" />
-				<wi:inputText
-                     id="#{id}MotivoBloqueio"
-                     label="#{messages['bloqueioUsuario.motivoBloqueio']}"
-                     value="#{usuarioHome.novoBloqueio.motivoBloqueio}"
-                     required="true"
-                     maxlength="50" />
-			 </s:div>
+			<wi:inputDate
+                    id="#{id}DataBloqueio"
+                    label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+                    value="#{usuarioHome.novoBloqueio.dataPrevisaoDesbloqueio}"
+                    future="true"
+                    rendered="#{usuarioHome.instance.bloqueio}"
+                    showRequired="true"
+                    required="true" />
+			<wi:inputText
+                    id="#{id}MotivoBloqueio"
+                    label="#{messages['bloqueioUsuario.motivoBloqueio']}"
+                    value="#{usuarioHome.novoBloqueio.motivoBloqueio}"
+                    rendered="#{usuarioHome.instance.bloqueio}"
+                    showRequired="true"
+                    required="true"
+                    maxlength="50" />
 			 
 			 <s:div
                  id="ultimoBloqueio"
