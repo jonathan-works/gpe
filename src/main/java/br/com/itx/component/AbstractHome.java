@@ -21,8 +21,10 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
+import javax.persistence.PersistenceException;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
@@ -59,6 +61,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	private static final String MSG_REGISTRO_CADASTRADO = "#{messages['constraintViolation.registroCadastrado']}";
 	private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
 	private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
+	private static final String MSG_FOREIGN_KEY_VIOLATION = "#{messages['constraintViolation.foreignKeyViolation']}";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractHome.class);
 
@@ -67,7 +70,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public static final String PERSISTED = "persisted";
 	public static final String UPDATED = "updated";
 	public static final String CONSTRAINT_VIOLATED = "constraintViolated";
-	
+
 	private String tab = null;
 	private String goBackUrl = null;
 	private String goBackId = null;
@@ -198,17 +201,23 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		try {
 			ret = super.remove();
 			raiseEventHome("afterRemove");
+		} catch (PersistenceException e) {
+			LOG.error(".remove()", e);
+            PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);
+            if (errorCode != null) {
+            	ret = tratarErrosDePersistencia(errorCode.toString());
+            }
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, getRemoveError());
 			LOG.error(".remove()", e);
+		} finally {
+			Util.rollbackTransactionIfNeeded();
 		}
 		if ("removed".equals(ret)) {
 		    FacesMessages fm = instance();
 		    fm.clear();
 		    fm.add("#{messages['entity_deleted']}");
-		} else {
-		    Util.rollbackTransactionIfNeeded();
 		}
 		return ret;
 	}
@@ -531,6 +540,8 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		String message = null;
 		if (PostgreSQLErrorCode.UNIQUE_VIOLATION.toString().equals(ret)){
 			message = MSG_REGISTRO_CADASTRADO;
+		} else if (PostgreSQLErrorCode.FOREIGN_KEY_VIOLATION.toString().equals(ret)) {
+			message = MSG_FOREIGN_KEY_VIOLATION;
 		}
 		if (message != null) {
 			FacesMessages.instance().clear();
