@@ -3,3 +3,4 @@
 *.orig
 *~
 /bin
+/.settings/org.jboss.tools.seam.core.prefs
