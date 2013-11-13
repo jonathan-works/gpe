@@ -127,7 +127,9 @@ public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisi
     public void setHierarchicalPath(String path) {
         this.setHierarchicalPath(path);
     }
+    
     @Override
+    @Transient
     public String getPathDescriptor() {
         return this.getDescricao();
     }
@@ -135,7 +137,9 @@ public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisi
     public void setPathDescriptor(String pathDescriptor) {
         this.setDescricao(pathDescriptor);
     }
+    
     @Override
+    @Transient
     public List<LocalizacaoFisica> getChildList() {
         return this.getLocalizacaoFisicaList();
     }
