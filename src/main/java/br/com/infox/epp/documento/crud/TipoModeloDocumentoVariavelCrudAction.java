@@ -36,11 +36,9 @@ public class TipoModeloDocumentoVariavelCrudAction extends
 	}
 	
 	public void addVariavelTipoModelo(Variavel obj) {
-		if (getInstance() != null) {
-			getInstance().setVariavel(obj);
-			save();
-			FacesMessages.instance().clear();
-		}
+		getInstance().setVariavel(obj);
+		save();
+		FacesMessages.instance().clear();
 	}
 	
 	public void removeVariavelTipoModelo(VariavelTipoModelo obj) {

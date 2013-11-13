@@ -21,13 +21,11 @@ public class AssociatedTipoModeloVariavelList extends
 	private static final String DEFAULT_EJBQL = "select o from VariavelTipoModelo o";
 	private static final String DEFAULT_ORDER = "tipoModeloDocumento";
 
-	private static final String R1 = "o.variavel = #{variavelHome.definedInstance}";
-	
 	@Override
 	protected void addSearchFields() {
 		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
 		addSearchField("tipoModeloDocumento.grupoModeloDocumento", SearchCriteria.IGUAL);
-		addSearchField("variavel", SearchCriteria.IGUAL, R1);
+		addSearchField("variavel", SearchCriteria.IGUAL);
 	}
 
 	@Override

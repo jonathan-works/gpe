@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.entity.Variavel;
 
 @Name(AssociativeTipoModeloDocumentoList.NAME)
 @Scope(ScopeType.PAGE)
@@ -19,8 +20,10 @@ public class AssociativeTipoModeloDocumentoList extends
 	public static final String NAME = "associativeTipoModeloDocumentoList";
 
 	private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o where o not in "
-			+ "(select v.tipoModeloDocumento from VariavelTipoModelo v where v.variavel = #{variavelHome.definedInstance})";
+			+ "(select v.tipoModeloDocumento from VariavelTipoModelo v where v.variavel = #{associativeTipoModeloDocumentoList.variavelToIgnore})";
 	private static final String DEFAULT_ORDER = "tipoModeloDocumento";
+	
+	private Variavel variavelToIgnore;
 	
 	@Override
 	protected void addSearchFields() {
@@ -44,6 +47,14 @@ public class AssociativeTipoModeloDocumentoList extends
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
+	}
+
+	public Variavel getVariavelToIgnore() {
+		return variavelToIgnore;
+	}
+
+	public void setVariavelToIgnore(Variavel variavelToIgnore) {
+		this.variavelToIgnore = variavelToIgnore;
 	}
 
 }

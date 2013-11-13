@@ -28,7 +28,7 @@
 
 	<ui:define name="title"> #{messages['variavel.titlePage']} </ui:define>
 
-	<ui:param name="home" value="#{variavelHome}" />
+	<ui:param name="home" value="#{variavelCrudAction}" />
 
 	<ui:define name="searchGrid">
 
@@ -95,7 +95,9 @@
 	<ui:define name="tabs">
 
 		<infox:tab rendered="#{home.managed}"
-			title="Tipos de Modelo de Documento">
+			title="Tipos de Modelo de Documento"
+			id="tipoModelo"
+			name="tipoModelo">
 
 			<wi:ajaxDiv id="divM2MVar">
 				<s:div styleClass="Associated">
@@ -114,7 +116,7 @@
 							<a:region>
 
 								<a:commandLink limitRender="true" render="divM2MVar"
-									action="#{variavelTipoModeloHome.removeTipoModeloVariavel(row)}"
+									action="#{variavelTipoModeloDocumentoCrudAction.removeTipoModeloVariavel(row)}"
 									rendered="true">
 
 									<h:graphicImage url="/img/grid/copyRight.gif" title="Remover" />
@@ -176,7 +178,7 @@
 							<a:region>
 
 								<a:commandLink limitRender="true" render="divM2MVar"
-									action="#{variavelTipoModeloHome.addTipoModeloVariavel(row)}"
+									action="#{variavelTipoModeloDocumentoCrudAction.addTipoModeloVariavel(row)}"
 									rendered="true">
 
 									<h:graphicImage url="/img/grid/copyLeft.gif" title="Adicionar" />
