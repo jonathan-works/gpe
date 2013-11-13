@@ -24,8 +24,6 @@
 			<property name="hibernate.ejb.event.post-update" value="br.com.infox.listener.LogEventListener" />
 			<property name="hibernate.ejb.event.post-delete" value="br.com.infox.listener.LogEventListener" />
 	        <property name="hibernate.id.new_generator_mappings" value="false"/>
-			<property name="hibernate.ejb.event.pre-insert" value="br.com.infox.listener.RecursiveEventListener"/>
-            <property name="hibernate.ejb.event.pre-update" value="br.com.infox.listener.RecursiveEventListener"/>
                       
 			<property name="hibernate.search.default.directory_provider" value="filesystem" />
 			<property name="hibernate.search.lucene_version" value="LUCENE_36"/>
