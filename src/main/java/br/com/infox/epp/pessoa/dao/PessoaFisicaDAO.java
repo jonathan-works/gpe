@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.dao;
+package br.com.infox.epp.pessoa.dao;
 
 import javax.persistence.Query;
 

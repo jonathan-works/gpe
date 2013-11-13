@@ -6,9 +6,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Events;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.ibpm.dao.PessoaFisicaDAO;
 
 @Name(PessoaManager.NAME)
 @AutoCreate
