@@ -16,7 +16,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.ibpm.entity.PessoaJuridica;
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity

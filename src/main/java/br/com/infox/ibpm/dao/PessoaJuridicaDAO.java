@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.ibpm.entity.PessoaJuridica;
+import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.itx.util.EntityUtil;
 
 @Name(PessoaJuridicaDAO.NAME)

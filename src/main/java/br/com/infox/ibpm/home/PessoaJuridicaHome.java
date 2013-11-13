@@ -4,7 +4,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.ibpm.entity.PessoaJuridica;
+
+import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.itx.component.AbstractHome;
 
 @Name(PessoaJuridicaHome.NAME)
