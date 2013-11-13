@@ -31,15 +31,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.annotations.ChildList;
-import br.com.infox.annotations.HierarchicalPath;
-import br.com.infox.annotations.Parent;
-import br.com.infox.annotations.PathDescriptor;
-import br.com.infox.annotations.Recursive;
+import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.entity.LocalizacaoTurno;
 import br.com.infox.util.constants.LengthConstants;
 
@@ -50,8 +46,7 @@ import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name = Localizacao.TABLE_NAME, schema="public")
-@Recursive
-public class Localizacao implements java.io.Serializable {
+public class Localizacao implements java.io.Serializable, Recursive<Localizacao> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_localizacao";
@@ -100,7 +95,6 @@ public class Localizacao implements java.io.Serializable {
 	@Column(name = "ds_localizacao", nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
 	@Size(max=LengthConstants.NOME_PADRAO)
 	@NotNull
-	@PathDescriptor
 	public String getLocalizacao() {
 		return this.localizacao;
 	}
@@ -121,7 +115,6 @@ public class Localizacao implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_localizacao_pai")
-	@Parent
 	public Localizacao getLocalizacaoPai() {
 		return this.localizacaoPai;
 	}
@@ -155,7 +148,6 @@ public class Localizacao implements java.io.Serializable {
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "localizacaoPai")
 	@OrderBy("localizacao")
-	@ChildList
 	public List<Localizacao> getLocalizacaoList() {
 		return this.localizacaoList;
 	}
@@ -195,7 +187,6 @@ public class Localizacao implements java.io.Serializable {
 	}
 
 	@Column(name="ds_caminho_completo", unique=true)
-	@HierarchicalPath
 	public String getCaminhoCompleto() {
 		return caminhoCompleto;
 	}
@@ -243,4 +234,44 @@ public class Localizacao implements java.io.Serializable {
 	public List<LocalizacaoTurno> getLocalizacaoTurnoList() {
 		return localizacaoTurnoList;
 	}
+
+    @Override
+    @Transient
+    public Localizacao getParent() {
+        return this.getLocalizacaoPai();
+    }
+    @Override
+    public void setParent(Localizacao parent) {
+        this.setLocalizacaoPai(parent);
+    }
+
+    @Override
+    @Transient
+    public String getHierarchicalPath() {
+        return this.getCaminhoCompleto();
+    }
+    @Override
+    public void setHierarchicalPath(String path) {
+        this.setCaminhoCompleto(path);
+    }
+
+    @Override
+    @Transient
+    public String getPathDescriptor() {
+        return this.getLocalizacao();
+    }
+    @Override
+    public void setPathDescriptor(String pathDescriptor) {
+        this.setLocalizacao(pathDescriptor);
+    }
+
+    @Override
+    @Transient
+    public List<Localizacao> getChildList() {
+        return this.getLocalizacaoList();
+    }
+    @Override
+    public void setChildList(List<Localizacao> childList) {
+        this.setLocalizacaoList(childList);
+    }
 }
