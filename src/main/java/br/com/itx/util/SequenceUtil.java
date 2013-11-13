@@ -20,29 +20,30 @@ public class SequenceUtil {
 			"from information_schema.columns WHERE table_schema='public' AND column_default IS NOT NULL";
 	
 	public void fixSequences() throws SQLException, NamingException {
-		Connection con = getConnection();
-		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery(COLUMN_INFORMATION_QUERY);
-		
-		while (rs.next()) {
-			String tableName = rs.getString(1);
-			String columnDefault = rs.getString(2);
-			String columnName = rs.getString(3);
+		try (Connection con = getConnection()){
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(COLUMN_INFORMATION_QUERY);
 			
-			Matcher m = SEQUENCE_PATTERN.matcher(columnDefault);
-			
-			if (m.find()) {
-				String sequence = m.group(1);
-				if (!sequence.startsWith("hibernate_sequence")) {
-					Statement st2 = con.createStatement();
-					st2.executeQuery("SELECT setval('" + sequence + "'::regclass, " + (getMaxValue(tableName, columnName) + 1) + "::bigint)");
-					st2.close();
+			while (rs.next()) {
+				String tableName = rs.getString(1);
+				String columnDefault = rs.getString(2);
+				String columnName = rs.getString(3);
+				
+				Matcher m = SEQUENCE_PATTERN.matcher(columnDefault);
+				
+				if (m.find()) {
+					String sequence = m.group(1);
+					if (!sequence.startsWith("hibernate_sequence")) {
+						Statement st2 = con.createStatement();
+						st2.executeQuery("SELECT setval('" + sequence + "'::regclass, " + (getMaxValue(tableName, columnName) + 1) + "::bigint)");
+						st2.close();
+					}
 				}
 			}
+			rs.close();
+			st.close();
+			con.close();
 		}
-		rs.close();
-		st.close();
-		con.close();
 	}
 	
 	private Connection getConnection() throws NamingException, SQLException {
@@ -53,14 +54,15 @@ public class SequenceUtil {
 	}
 	
 	private long getMaxValue(String tableName, String columnName) throws NamingException, SQLException {
-		Connection con = getConnection();
-		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("select max(" + columnName + ") from " + tableName);
-		rs.next();
-		long value = rs.getLong(1);
-		rs.close();
-		st.close();
-		con.close();
-		return value;
+		try (Connection con = getConnection()){
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("select max(" + columnName + ") from " + tableName);
+			rs.next();
+			long value = rs.getLong(1);
+			rs.close();
+			st.close();
+			con.close();
+			return value;
+		}
 	}
 }
