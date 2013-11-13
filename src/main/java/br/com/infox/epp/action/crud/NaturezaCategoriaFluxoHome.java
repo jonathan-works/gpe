@@ -31,11 +31,6 @@ public class NaturezaCategoriaFluxoHome extends AbstractHome<NaturezaCategoriaFl
 	private List<Categoria> categoriaList;
 	private List<Fluxo> fluxoList;
 	
-	@Override
-	public String inactive(NaturezaCategoriaFluxo instance) {
-		return remove(instance);
-	}
-	
 	@PostConstruct
 	public void init() {
 		naturezaList = EntityUtil.getEntityList(Natureza.class);
