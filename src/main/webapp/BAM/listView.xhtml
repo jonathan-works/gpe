@@ -109,7 +109,7 @@
 			</ui:define>
 
 			<wi:columnOutputText columnId="numeroProcesso"
-				columnHeader="#{messages['processo.numeroProcesso']}"
+				columnHeader="#{messages['processo.menuText']}"
 				value="#{row.processoEpa.numeroProcesso}" />
 
 			<wi:columnOutputText columnId="naturezaCategoriaFluxo.fluxo"
@@ -125,7 +125,7 @@
 				value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processoEpa)}" />
 				
 			<wi:columnOutputText columnId="prioridadeProcesso"
-				columnHeader="#{messages['processo.prioridadeProcessoList']}"
+				columnHeader="Prioridade"
 				value="#{row.processoEpa.prioridadeProcesso}" />
 				
 			<wi:columnDateTime columnId="dataChegadaTarefa"  
@@ -164,7 +164,7 @@
 	<ui:define name="form">
 		<wi:dataTable values="#{processoEpaTarefaList.list(15)}"
 					  bean="#{processoEpaTarefaList}"
-					  tableTitle="Tarefas"
+					  tableTitle="Processo #{processoEpaTarefaList.entity.processoEpa.numeroProcesso} - Tarefas"
 					  showToolbarColumn="false" 
 					  panelWidth="97%"
 					  showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
@@ -214,7 +214,7 @@
 			<ui:param name="prazoEstourado" value="#{row.porcentagem > 100}" />
 			<ui:param name="porc" value="#{prazoEstourado ? '> 100' : row.porcentagem}" />
 			<wi:columnOutputText columnId="porcentagem"
-								 columnHeader="Porcentagem"
+								 columnHeader="%"
 								 value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}" />
 								 
 								 
