@@ -21,12 +21,10 @@ public class TipoModeloDocumentoPapelList extends
 	public static final String DEFAULT_EJBQL = "select o from TipoModeloDocumentoPapel o";
 	public static final String DEFAULT_ORDER = "o.papel.nome";
 	
-	public static final String R1 = "o.tipoModeloDocumento = #{tipoModeloDocumentoHome.instance}";
-	
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL, R1);
+		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
 
 	}
 

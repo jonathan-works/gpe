@@ -15,17 +15,10 @@
 */
 package br.com.infox.epp.documento.home;
 
-import java.util.List;
-
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.access.entity.Papel;
-import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
-import br.com.infox.epp.manager.PapelManager;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.util.ComponentUtil;
 
 
 @Name(TipoModeloDocumentoPapelHome.NAME)
@@ -34,50 +27,5 @@ public class TipoModeloDocumentoPapelHome extends AbstractHome<TipoModeloDocumen
 
 	public static final String NAME = "tipoModeloDocumentoPapelHome";
 	private static final long serialVersionUID = 1L;
-
-	@In private PapelManager papelManager;
-
-	@Override
-	public void newInstance() {
-		TipoModeloDocumento tipoModeloDocumento = TipoModeloDocumentoHome.instance().getInstance();
-		super.newInstance();
-		getInstance().setTipoModeloDocumento(tipoModeloDocumento);
-	}
-
-	public static TipoModeloDocumentoPapelHome instance() {
-		return ComponentUtil.getComponent(NAME);
-	}
-	
-	@Override
-	public String persist() {
-		String msg = super.persist();
-		newInstance();
-		return msg;
-	}
-	
-	@Override
-	public String update() {
-		instance.setTipoModeloDocumento(TipoModeloDocumentoHome.instance().getInstance());
-		return super.update();
-	}
-
-	@Override
-	public String remove(TipoModeloDocumentoPapel obj) {
-		String msg = super.remove(obj);
-		newInstance();
-		return msg;
-	}
-	
-	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumentoAtual(){
-		return papelManager.getPapeisNaoAssociadosATipoModeloDocumento(instance.getTipoModeloDocumento());
-	}
-	
-	public void setTipoModeloDocumentoPapelIdTipoModeloDocumentoPapel(Integer id) {
-        setId(id);
-    }
-
-    public Integer getTipoModeloDocumentoPapelIdTipoModeloDocumentoPapel() {
-        return (Integer) getId();
-    }
 	
 }

@@ -9,19 +9,24 @@
 	<description>TipoModeloDocumento: #{tipoModeloDocumentoHome.instance}</description>
 	
 	<begin-conversation join="true"/>
-	<param name="id" value="#{tipoModeloDocumentoHome.tipoModeloDocumentoIdTipoModeloDocumento}"/>
+	<param name="id" value="#{tipoModeloDocumentoCrudAction.id}" converterId="integerConverter"/>
 
-<!-- Parametros para RESTFull -->
-	<param name="tab" value="#{tipoModeloDocumentoHome.tab}"/>
-	<param name="goBackUrl" value="#{tipoModeloDocumentoHome.goBackUrl}"/>
-	<param name="goBackId" value="#{tipoModeloDocumentoHome.goBackId}"/>
-	<param name="goBackTab" value="#{tipoModeloDocumentoHome.goBackTab}"/>		
-	<param name="grupoModeloDocumento" value="#{grupoModeloDocumentoSearch.idGrupoModeloDocumento}"/>			
-	<param name="tipoModeloDocumento" value="#{tipoModeloDocumentoSearch.tipoModeloDocumento}"/>		
-	<param name="abreviacao" value="#{tipoModeloDocumentoSearch.abreviacao}"/>		
-
-	<action if="#{empty tipoModeloDocumentoHome.tab}" execute="#{tipoModeloDocumentoHome.setTab('search')}"/>
-	<action if="#{param.newInstance == 'true'}" execute="#{variavelHome.newInstance()}"/>
+	<param name="tab" value="#{tipoModeloDocumentoCrudAction.tab}"/>
+	<!-- <action if="#{param.newInstance == 'true'}" execute="#{variavelHome.newInstance()}"/> -->
 	<!-- Parametros para a ordem de grids -->
+	
+	
+	<action execute="#{associatedVariavelTipoModeloList.entity.setTipoModeloDocumento(tipoModeloDocumentoCrudAction.instance)}" 
+            if="#{tipoModeloDocumentoCrudAction.tab eq 'variaveis'}"/>
+    <action execute="#{associativeVariavelList.setTipoModeloToIgnore(tipoModeloDocumentoCrudAction.instance)}" 
+            if="#{tipoModeloDocumentoCrudAction.tab eq 'variaveis'}"/>
+    <action execute="#{tipoModeloDocumentoVariavelCrudAction.setTipoModeloDocumentoAtual(tipoModeloDocumentoCrudAction.instance)}" 
+            if="#{tipoModeloDocumentoCrudAction.tab eq 'variaveis'}"/>
+            
+            
+    <action execute="#{tipoModeloDocumentoPapelCrudAction.setTipoModeloDocumentoAtual(tipoModeloDocumentoCrudAction.instance)}" 
+            if="#{tipoModeloDocumentoCrudAction.tab eq 'papeis'}"/>
+    <action execute="#{tipoModeloDocumentoPapelList.entity.setTipoModeloDocumento(tipoModeloDocumentoCrudAction.instance)}" 
+            if="#{tipoModeloDocumentoCrudAction.tab eq 'papeis'}"/>
  
 </page>
