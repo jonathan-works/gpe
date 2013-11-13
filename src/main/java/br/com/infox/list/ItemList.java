@@ -21,7 +21,7 @@ public class ItemList extends EntityList<Item> {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String TEMPLATE = "/Item/itemTemplate.xls";
-    private static final String DOWNLOAD_XLS_NAME = "Items.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Item.xls";
 	
 	private static final String DEFAULT_EJBQL = "select o from Item o";
 	private static final String DEFAULT_ORDER = "caminhoCompleto";
