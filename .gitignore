@@ -4,3 +4,7 @@
 *~
 /bin
 /.settings/org.jboss.tools.seam.core.prefs
+/.classpath
+/.project
+/.settings/org.eclipse.wst.common.project.facet.core.xml
+/.settings/org.hibernate.eclipse.console.prefs
