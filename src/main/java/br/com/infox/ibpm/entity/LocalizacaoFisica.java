@@ -125,7 +125,7 @@ public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisi
     }
     @Override
     public void setHierarchicalPath(String path) {
-        this.setHierarchicalPath(path);
+        this.setCaminhoCompleto(path);
     }
     
     @Override
