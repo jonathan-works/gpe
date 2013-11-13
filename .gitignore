@@ -3,9 +3,6 @@
 *.orig
 *~
 /bin
-/.settings/org.eclipse.wst.common.project.facet.core.xml
-/.settings/org.eclipse.wst.common.project.facet.core.prefs.xml
-/.settings/org.hibernate.eclipse.console.prefs
-/.settings/org.jboss.tools.seam.core.prefs
+/.settings/*
 /.project
 /.classpath
