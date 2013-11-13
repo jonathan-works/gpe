@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.crud;
 
+import java.util.List;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -34,15 +36,13 @@ public class CategoriaCrudAction extends AbstractCrudAction<Categoria> {
     }
     
     public void addCategoriaItem(){
-        getInstance().getCategoriaItemList().addAll(
-                categoriaItemManager.createCategoriaItemList(
-                        getInstance(), itemManager.getFolhas(itemASerAdicionado)));
-        super.update();
+    	List<CategoriaItem> list = categoriaItemManager.createCategoriaItemList(getInstance(), itemManager.getFolhas(itemASerAdicionado));
+	    getInstance().getCategoriaItemList().addAll(list);
         limparTreeDeItem();
     }
 
     private void limparTreeDeItem() {
-        ItemTreeHandler ite = ComponentUtil.getComponent("itemTree");
+        ItemTreeHandler ite = ComponentUtil.getComponent(ItemTreeHandler.NAME);
         ite.clearTree();
     }
     
