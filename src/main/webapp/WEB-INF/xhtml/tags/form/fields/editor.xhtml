@@ -98,9 +98,10 @@
 			onchange="#{wi:get(onchange, 'void(0);')}">
 			
 			<f:facet name="config">
+				removePlugins: 'elementspath',
 				toolbar_InfoxToolbar:
 				[
-				{ name:'document',items:["Source","-","DocProps","Preview","Print"]},
+				{ name:'document',items:["DocProps","Preview","Print"]},
 				{ name:'clipboard',items:["Cut","Copy","Paste","PasteText","PasteFromWord","-","Undo","Redo"]},
 				{ name:'editing',items:["Find","Replace","-","SelectAll"]},
 				{ name:'basicstyles', items: ['Bold', 'Italic', 'Strike', 'Underline',"Subscript","Superscript","-","RemoveFormat"] },

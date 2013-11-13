@@ -61,6 +61,10 @@
 				 columnHeader="#{messages['papel.identificador']}"
 				 value="#{row.identificador}" />
             <ui:define name="headerToolBar" />
+            <ui:define name="toolBar">
+            	<wi:toolBarEdit id="papelListedit" />
+            	<wi:toolBarRemove />
+            </ui:define>
         
 		</wi:dataTable>
 
