@@ -1,4 +1,4 @@
-package br.com.infox.ldap.util;
+package br.com.infox.epp.access.util;
 
 import java.util.Hashtable;
 import java.util.Map;

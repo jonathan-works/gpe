@@ -53,8 +53,8 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.access.util.LdapUtil;
 import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.infox.ldap.util.LdapUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
