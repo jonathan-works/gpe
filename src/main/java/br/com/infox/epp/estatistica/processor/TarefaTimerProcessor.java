@@ -1,4 +1,4 @@
-package br.com.infox.epp.processor;
+package br.com.infox.epp.estatistica.processor;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;

@@ -17,7 +17,7 @@ import org.jbpm.util.ClassLoaderUtil;
 import org.quartz.SchedulerException;
 
 import br.com.infox.component.quartz.QuartzConstant;
-import br.com.infox.epp.processor.ProcessoTimerProcessor;
+import br.com.infox.epp.estatistica.processor.ProcessoTimerProcessor;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.timer.TimerUtil;
 import br.com.itx.util.EntityUtil;
