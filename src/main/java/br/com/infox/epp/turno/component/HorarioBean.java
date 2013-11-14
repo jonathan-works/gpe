@@ -1,4 +1,4 @@
-package br.com.infox.component;
+package br.com.infox.epp.turno.component;
 
 import java.sql.Time;
 
