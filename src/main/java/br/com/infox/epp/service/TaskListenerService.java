@@ -12,7 +12,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.dao.DAOException;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;

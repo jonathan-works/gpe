@@ -11,9 +11,8 @@ import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
-import br.com.infox.core.dao.DAOException;
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.persistence.PostgreSQLExceptionService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
@@ -36,9 +35,6 @@ public class UsuarioLocalizacaoAction {
 	
 	@In(value = UsuarioLocalizacaoList.NAME, create = true)
 	private UsuarioLocalizacaoList usuarioLocalizacaoList;
-	
-	@In
-	private PostgreSQLExceptionService postgreSQLExceptionService;
 	
 	public UsuarioLocalizacao getInstance() {
 		return instance;
@@ -73,7 +69,7 @@ public class UsuarioLocalizacaoAction {
 		} catch (DAOException e) {
 			LOG.error(".persist()", e);
 			FacesMessages.instance().clear();
-			FacesMessages.instance().add(postgreSQLExceptionService.getMessageForError(e));
+			FacesMessages.instance().add(e.getLocalizedMessage());
 		}
 	}
 	
@@ -85,7 +81,7 @@ public class UsuarioLocalizacaoAction {
 		} catch (DAOException e) {
 			LOG.error(".remove()", e);
 			FacesMessages.instance().clear();
-			FacesMessages.instance().add(postgreSQLExceptionService.getMessageForError(e));
+			FacesMessages.instance().add(e.getLocalizedMessage());
 		}
 	}
 }

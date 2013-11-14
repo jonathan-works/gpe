@@ -34,8 +34,7 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.cliente.home.ProcessoDocumentoHome;
 import br.com.infox.core.certificado.Certificado;
 import br.com.infox.core.certificado.CertificadoException;
-import br.com.infox.core.dao.DAOException;
-import br.com.infox.core.persistence.PostgreSQLExceptionService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
@@ -69,7 +68,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	
 	@In private ProcessoManager processoManager;
 	@In private ProcessoEpaManager processoEpaManager;
-	@In private PostgreSQLExceptionService postgreSQLExceptionService;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -327,7 +325,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 				refreshGrid(gridId);
 			} catch (DAOException e) {
 				LOG.error(".addProcessoConexoForIdProcessoConexo()", e);
-				postgreSQLExceptionService.getMessageForError(e);
+				FacesMessages.instance().clear();
+				FacesMessages.instance().add(e.getLocalizedMessage());
 			}
 		}
 	}
@@ -339,7 +338,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 				refreshGrid(gridId);
 			} catch (DAOException e) {
 				LOG.error(".removeProcessoConexoForIdProcessoConexo()", e);
-				postgreSQLExceptionService.getMessageForError(e);
+				FacesMessages.instance().clear();
+				FacesMessages.instance().add(e.getLocalizedMessage());
 			}
 		}
 	}

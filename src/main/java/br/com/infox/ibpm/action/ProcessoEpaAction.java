@@ -9,8 +9,7 @@ import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.dao.DAOException;
-import br.com.infox.core.persistence.PostgreSQLExceptionService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 
@@ -21,7 +20,6 @@ public class ProcessoEpaAction extends AbstractAction {
 	private static final Log LOG = Logging.getLog(ProcessoEpaAction.class);
 	
 	@In private ProcessoEpaTarefaManager processoEpaTarefaManager;
-	@In private PostgreSQLExceptionService postgreSQLExceptionService;
 	
 	public boolean alternarContabilizar(ProcessoEpa processoEpa) {
 		return AbstractAction.UPDATED.equals(update(processoEpa));
@@ -32,7 +30,7 @@ public class ProcessoEpaAction extends AbstractAction {
 			processoEpaTarefaManager.updateTarefasFinalizadas();
 		} catch (DAOException e) {
 			LOG.error(".atualizarFinalizadas()", e);
-			FacesMessages.instance().add(postgreSQLExceptionService.getMessageForError(e));
+			FacesMessages.instance().add(e.getLocalizedMessage());
 		}
 	}
 	

@@ -8,8 +8,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.dao.DAOException;
-import br.com.infox.core.persistence.PostgreSQLExceptionService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.manager.ParteProcessoManager;
 import br.com.infox.ibpm.entity.ParteProcesso;
 import br.com.itx.component.AbstractHome;
@@ -25,7 +24,6 @@ public class ParteProcessoHome extends AbstractHome<ParteProcesso>{
 	private String motivoModificacao;
 	
 	@In private ParteProcessoManager parteProcessoManager;
-	@In private PostgreSQLExceptionService postgreSQLExceptionService;
 	
 	@Override
     public void newInstance() {
@@ -40,7 +38,7 @@ public class ParteProcessoHome extends AbstractHome<ParteProcesso>{
 			raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
 		} catch (DAOException e) {
 			LOG.error(".alternarAtividadeParteProcesso()", e);
-			FacesMessages.instance().add(postgreSQLExceptionService.getMessageForError(e));
+			FacesMessages.instance().add(e.getLocalizedMessage());
 		}
 	}
 

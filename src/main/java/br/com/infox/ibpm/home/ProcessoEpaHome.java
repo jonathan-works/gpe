@@ -9,8 +9,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.dao.DAOException;
-import br.com.infox.core.persistence.PostgreSQLExceptionService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.manager.ParteProcessoManager;
 import br.com.infox.ibpm.action.ProcessoEpaAction;
@@ -29,7 +28,6 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 	
 	@In private PessoaManager pessoaManager;
 	@In private ParteProcessoManager parteProcessoManager;
-	@In private PostgreSQLExceptionService postgreSQLExceptionService;
 	
 	public void incluirParteProcesso(Processo processo, String tipoPessoa){
 		try {
@@ -38,7 +36,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 		} catch (DAOException e){
 			LOG.error(".incluirParteProcesso()", e);
 			FacesMessages.instance().clear();
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, postgreSQLExceptionService.getMessageForError(e));
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getLocalizedMessage());
 		}
 	}
 	

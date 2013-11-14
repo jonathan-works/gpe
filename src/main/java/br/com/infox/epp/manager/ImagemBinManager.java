@@ -13,8 +13,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.dao.DAOException;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.dao.ImagemBinDAO;
 import br.com.infox.epp.entity.ImagemBin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;

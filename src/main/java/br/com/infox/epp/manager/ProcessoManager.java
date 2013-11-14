@@ -15,8 +15,8 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.core.dao.DAOException;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.ibpm.dao.ProcessoDAO;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;

@@ -18,7 +18,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.core.dao.DAOException;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.bean.ItemBean;
 import br.com.infox.epp.entity.CategoriaItem;
 import br.com.infox.epp.entity.NaturezaCategoriaFluxo;

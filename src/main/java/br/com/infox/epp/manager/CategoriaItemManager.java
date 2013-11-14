@@ -14,8 +14,8 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.dao.DAOException;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.dao.CategoriaItemDAO;
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.CategoriaItem;

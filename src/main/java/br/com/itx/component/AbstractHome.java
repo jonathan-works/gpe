@@ -32,19 +32,17 @@ import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.framework.EntityHome;
 import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.annotations.manager.RecursiveManager;
-import br.com.infox.core.persistence.PostgreSQLExceptionService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.infox.util.constants.WarningConstants;
@@ -75,9 +73,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	private String goBackId = null;
 	private String goBackTab = null;
 	private T oldEntity;
-	
-	@In
-	private PostgreSQLExceptionService postgreSQLExceptionService;
 	
 	public T getOldEntity() {
 		return oldEntity;
@@ -202,10 +197,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			raiseEventHome("afterRemove");
 		} catch (PersistenceException e) {
 			LOG.error(".remove()", e);
-			PostgreSQLErrorCode errorCode = postgreSQLExceptionService.getErrorCode(e);
+			DAOException daoException = new DAOException(e);
+			PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
             if (errorCode != null) {
             	ret = errorCode.toString();
-            	tratarErrosDePersistencia(errorCode);
+            	FacesMessages.instance().clear();
+            	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
@@ -262,10 +259,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			throw new ApplicationException("Erro: " + e.getMessage(), e);
 		} catch (javax.persistence.PersistenceException e) {
             LOG.error(msg, e);
-            PostgreSQLErrorCode errorCode = postgreSQLExceptionService.getErrorCode(e);
+            DAOException daoException = new DAOException(e);
+			PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
             if (errorCode != null) {
             	ret = errorCode.toString();
-            	tratarErrosDePersistencia(errorCode);
+            	FacesMessages.instance().clear();
+            	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
         } catch (Exception e) {
             instance().add(StatusMessage.Severity.ERROR,
@@ -347,10 +346,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			LOG.error(msg, e);	
 		} catch (javax.persistence.PersistenceException e) {
 			LOG.error(msg, e);
-			PostgreSQLErrorCode errorCode = postgreSQLExceptionService.getErrorCode(e);
+			DAOException daoException = new DAOException(e);
+			PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
             if (errorCode != null) {
             	ret = errorCode.toString();
-            	tratarErrosDePersistencia(errorCode);
+            	FacesMessages.instance().clear();
+            	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
             
 		} catch (Exception e) {
@@ -560,13 +561,4 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public void setLockedFields(List<String> lockedFields) {
 		this.lockedFields = lockedFields;
 	}
-	
-	private void tratarErrosDePersistencia(PostgreSQLErrorCode errorCode){
-		String message = postgreSQLExceptionService.getMessageForError(errorCode);
-		if (message != null) {
-			FacesMessages.instance().clear();
-			FacesMessages.instance().add(Severity.ERROR, message);
-		}
-	}
-	
 }

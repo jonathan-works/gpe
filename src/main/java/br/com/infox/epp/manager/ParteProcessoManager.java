@@ -11,8 +11,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.core.dao.DAOException;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.type.TipoPessoaEnum;

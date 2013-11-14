@@ -13,7 +13,7 @@ import org.jboss.seam.log.Logging;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
-import br.com.infox.core.dao.DAOException;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.service.startup.TarefaTimerStarter;
 import br.com.infox.ibpm.type.PrazoEnum;

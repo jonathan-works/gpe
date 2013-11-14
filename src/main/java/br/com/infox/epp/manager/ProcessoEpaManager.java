@@ -11,8 +11,8 @@ import org.jboss.seam.annotations.Scope;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
-import br.com.infox.core.dao.DAOException;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.dao.ProcessoEpaDAO;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.type.SituacaoPrazoEnum;

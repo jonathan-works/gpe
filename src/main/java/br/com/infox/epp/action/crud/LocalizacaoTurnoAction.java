@@ -10,8 +10,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.component.TurnoBean;
 import br.com.infox.component.TurnoHandler;
-import br.com.infox.core.dao.DAOException;
-import br.com.infox.core.persistence.PostgreSQLExceptionService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.entity.LocalizacaoTurno;
 import br.com.infox.epp.manager.LocalizacaoTurnoManager;
 import br.com.infox.ibpm.entity.Localizacao;
@@ -33,9 +32,6 @@ public class LocalizacaoTurnoAction {
 
 	@In
 	private LocalizacaoTurnoManager localizacaoTurnoManager;
-	
-	@In
-	private PostgreSQLExceptionService postgreSQLExceptionService;
 	
 	private Localizacao localizacao;
 	
@@ -80,7 +76,7 @@ public class LocalizacaoTurnoAction {
 				FacesMessages.instance().add("#{messages['entity_updated']}");
 			} catch (DAOException e) {
 				LOG.error(".inserirTurnosSelecionados()", e);
-				FacesMessages.instance().add(postgreSQLExceptionService.getMessageForError(e));
+				FacesMessages.instance().add(e.getLocalizedMessage());
 			}
 		}
 	}
