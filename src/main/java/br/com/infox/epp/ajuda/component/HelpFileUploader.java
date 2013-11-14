@@ -17,11 +17,11 @@ package br.com.infox.epp.ajuda.component;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.uploader.AbstractImageFileUploader;
+import br.com.infox.core.uploader.AbstractUploader;
 import br.com.itx.util.ComponentUtil;
 
 @Name(HelpFileUploader.NAME)
-public class HelpFileUploader extends AbstractImageFileUploader {
+public class HelpFileUploader extends AbstractUploader {
 	public static final String NAME = "helpFileUploader";
 
 	public static final HelpFileUploader instance() {
