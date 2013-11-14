@@ -216,7 +216,7 @@
 									 id="saveButton"
 									 action="usuarioLocalizacaoAction.persist"
 									 reRender="localizacaoUsuario"
-									 value="Incluir" />
+									 value="#{messages['crud.persist']}" />
 							</ui:define>
                         
 						</wi:dataForm>
@@ -239,9 +239,9 @@
 					         limitToList="true"
 					         status=":status"
 					         render="localizacaoUsuario, localizacaoUsuarioFormMessages"
-					         onclick="confirm('Deseja excluir este registro?')"
+					         onclick="confirm(#{messages['crud.confirmRemove']})"
 					         url="/img/remove.png"
-					         title="Excluir registro" />
+					         title="#{messages['crud.remove']}" />
 						</ui:define>
                         <wi:columnOutputText
 							 columnId="localizacao"
