@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.component.tree;
+package br.com.infox.epp.access.component.tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.Query;
 
 import br.com.infox.component.tree.EntityNode;
-import br.com.infox.epp.access.component.tree.LocalizacaoNodeSearch;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.ibpm.home.LocalizacaoHome;
 import br.com.infox.ibpm.home.UsuarioHome;
