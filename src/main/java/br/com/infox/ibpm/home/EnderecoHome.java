@@ -28,8 +28,8 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.endereco.entity.Cep;
+import br.com.infox.epp.endereco.entity.Endereco;
 import br.com.infox.ibpm.dao.CepDAO;
-import br.com.infox.ibpm.entity.Endereco;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
