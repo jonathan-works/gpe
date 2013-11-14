@@ -13,10 +13,10 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
-import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 
 @Name(FluxoPapelAction.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.component.tree;
+package br.com.infox.epp.access.component.tree;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
