@@ -10,8 +10,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import br.com.infox.component.HorarioBean;
-import br.com.infox.component.TurnoHandler;
 import br.com.infox.epp.turno.component.TurnoBean;
+import br.com.infox.epp.turno.component.TurnoHandler;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 public class TurnoHandlerTest {
