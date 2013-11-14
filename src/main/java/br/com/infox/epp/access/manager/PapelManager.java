@@ -1,4 +1,4 @@
-package br.com.infox.epp.manager;
+package br.com.infox.epp.access.manager;
 
 import java.util.ArrayList;
 import java.util.List;

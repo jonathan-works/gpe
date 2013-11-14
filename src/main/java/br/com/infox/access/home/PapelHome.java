@@ -25,7 +25,7 @@ import org.jboss.seam.security.management.action.RoleAction;
 
 import br.com.infox.access.RolesMap;
 import br.com.infox.access.entity.Papel;
-import br.com.infox.epp.manager.PapelManager;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;

@@ -27,7 +27,7 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.access.entity.Papel;
-import br.com.infox.epp.manager.PapelManager;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.ibpm.entity.Localizacao;
