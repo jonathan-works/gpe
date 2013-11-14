@@ -18,8 +18,8 @@ import org.quartz.SchedulerException;
 
 import br.com.infox.component.quartz.QuartzConstant;
 import br.com.infox.epp.estatistica.processor.ProcessoTimerProcessor;
+import br.com.infox.epp.estatistica.timer.TimerUtil;
 import br.com.infox.epp.system.entity.Parametro;
-import br.com.infox.timer.TimerUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoTimerStarter.NAME)

@@ -12,11 +12,12 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.startup.TarefaTimerStarter;
+import br.com.infox.epp.estatistica.timer.TimerUtil;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.type.PrazoEnum;
-import br.com.infox.timer.TimerUtil;
 
 /**
  * Processor que irá incrementar os tempos decorridos para cada tarefa aberta no

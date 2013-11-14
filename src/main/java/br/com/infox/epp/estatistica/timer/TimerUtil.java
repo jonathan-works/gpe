@@ -1,4 +1,4 @@
-package br.com.infox.timer;
+package br.com.infox.epp.estatistica.timer;
 
 import java.util.List;
 
