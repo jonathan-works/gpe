@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.estatistica.home;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
