@@ -20,7 +20,6 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.richfaces.event.DropEvent;
 
-import br.com.infox.access.MenuItem;
 import br.com.infox.epp.access.util.SecurityUtil;
 import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
