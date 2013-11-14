@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.component;
+package br.com.infox.core.uploader;
 
 import java.io.IOException;
 import java.util.Date;

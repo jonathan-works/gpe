@@ -17,7 +17,7 @@ package br.com.infox.epp.ajuda.component;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.ibpm.component.AbstractImageFileUploader;
+import br.com.infox.core.uploader.AbstractImageFileUploader;
 import br.com.itx.util.ComponentUtil;
 
 @Name(HelpFileUploader.NAME)

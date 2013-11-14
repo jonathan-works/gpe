@@ -17,7 +17,7 @@ package br.com.infox.epp.imagem.component;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.ibpm.component.AbstractImageFileUploader;
+import br.com.infox.core.uploader.AbstractImageFileUploader;
 
 @Name(ImageFileUploader.NAME)
 public class ImageFileUploader extends AbstractImageFileUploader {
