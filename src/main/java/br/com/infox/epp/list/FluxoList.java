@@ -24,8 +24,8 @@ public class FluxoList extends EntityList<Fluxo> {
 
     @Override
     protected void addSearchFields() {
-        addSearchField("codFluxo", SearchCriteria.IGUAL);
-        addSearchField("fluxo", SearchCriteria.IGUAL);
+        addSearchField("codFluxo", SearchCriteria.CONTENDO);
+        addSearchField("fluxo", SearchCriteria.CONTENDO);
         addSearchField("dataInicioPublicacao", SearchCriteria.DATA_IGUAL);
         addSearchField("dataFimPublicacao", SearchCriteria.DATA_IGUAL);
         addSearchField("publicado", SearchCriteria.IGUAL);
