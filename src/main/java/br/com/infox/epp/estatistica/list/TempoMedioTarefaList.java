@@ -1,4 +1,4 @@
-package br.com.infox.epp.tarefa.estatistica.list;
+package br.com.infox.epp.estatistica.list;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.epp.tarefa.estatistica.entity.TempoMedioTarefa;
+import br.com.infox.epp.estatistica.entity.TempoMedioTarefa;
 import br.com.itx.util.ComponentUtil;
 
 @Name(TempoMedioTarefaList.NAME)
