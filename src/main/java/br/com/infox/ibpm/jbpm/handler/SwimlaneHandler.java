@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Swimlane;
 
-import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;

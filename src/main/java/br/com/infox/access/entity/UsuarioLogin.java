@@ -39,6 +39,7 @@ import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
 import br.com.infox.access.query.UsuarioLoginQuery;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;

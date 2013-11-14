@@ -27,7 +27,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Entity

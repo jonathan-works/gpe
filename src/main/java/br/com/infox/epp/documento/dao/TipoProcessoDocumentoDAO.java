@@ -8,8 +8,8 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.access.entity.Papel;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;

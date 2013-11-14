@@ -5,7 +5,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.access.entity.Papel;
+import br.com.infox.epp.access.entity.Papel;
 
 @Name("rolesTree")
 @Scope(ScopeType.PAGE)

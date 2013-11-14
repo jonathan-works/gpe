@@ -1,4 +1,4 @@
-package br.com.infox.access.entity;
+package br.com.infox.epp.access.entity;
 
 import java.util.List;
 

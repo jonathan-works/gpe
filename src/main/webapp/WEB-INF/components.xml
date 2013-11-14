@@ -64,7 +64,7 @@
 
 	<security:jpa-identity-store
 		user-class="br.com.infox.access.entity.UsuarioLogin"
-		role-class="br.com.infox.access.entity.Papel" />
+		role-class="br.com.infox.epp.access.entity.Papel" />
 
 	<security:jpa-permission-store
 		user-permission-class="br.com.infox.access.entity.Permissao" />
