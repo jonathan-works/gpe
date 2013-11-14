@@ -40,7 +40,7 @@ import org.hibernate.search.annotations.Store;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.search.Reindexer;
+import br.com.infox.epp.search.Reindexer;
 
 @Entity
 @Table(name = "tb_ajuda", schema="public")
