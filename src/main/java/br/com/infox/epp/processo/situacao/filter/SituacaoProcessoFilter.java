@@ -2,10 +2,11 @@
 
 package br.com.infox.epp.processo.situacao.filter;
 
-import br.com.infox.cliente.entity.filters.Filter;
-
-
-public interface SituacaoProcessoFilter extends Filter {
+public interface SituacaoProcessoFilter {
+	
+	String TYPE_INT = "int";
+	String TYPE_STRING = "string";
+	String TYPE_DATE = "date";
 
 	String FILTER_PAPEL_LOCALIZACAO = "papelLocalizacaoSituacaoProcesso";
 	String CONDITION_PAPEL_LOCALIZACAO = 
