@@ -1,4 +1,4 @@
-package br.com.infox.epp.action.crud;
+package br.com.infox.epp.fluxo.home;
 
 import java.util.ArrayList;
 import java.util.List;
