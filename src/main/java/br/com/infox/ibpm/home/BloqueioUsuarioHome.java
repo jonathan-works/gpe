@@ -19,7 +19,8 @@ import java.util.List;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.ibpm.entity.BloqueioUsuario;
+
+import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.itx.component.AbstractHome;
 
 
