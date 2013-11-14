@@ -42,7 +42,6 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.cliente.entity.filters.CepFilter;
 import br.com.infox.ibpm.entity.Endereco;
-import br.com.infox.ibpm.entity.Municipio;
 import br.com.infox.util.constants.LengthConstants;
 
 /**

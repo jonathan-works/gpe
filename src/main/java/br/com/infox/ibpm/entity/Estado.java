@@ -27,10 +27,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.epp.endereco.entity.Municipio;
 import br.com.infox.util.constants.LengthConstants;
 /**
  * Estado
