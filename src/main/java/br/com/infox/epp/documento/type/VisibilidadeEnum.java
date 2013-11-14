@@ -1,6 +1,6 @@
 package br.com.infox.epp.documento.type;
 
-import br.com.infox.type.Displayable;
+import br.com.infox.core.type.Displayable;
 
 
 public enum VisibilidadeEnum implements Displayable {

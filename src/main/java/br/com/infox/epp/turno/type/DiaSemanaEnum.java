@@ -2,7 +2,7 @@ package br.com.infox.epp.turno.type;
 
 import java.util.Arrays;
 
-import br.com.infox.type.Displayable;
+import br.com.infox.core.type.Displayable;
 
 public enum DiaSemanaEnum implements Displayable {
 	DOM("Domingo"), SEG("Segunda"), TER("Terça"), QUA("Quarta"), 

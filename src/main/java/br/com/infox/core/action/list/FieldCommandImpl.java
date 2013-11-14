@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.jboss.seam.international.Messages;
 
-import br.com.infox.type.Displayable;
+import br.com.infox.core.type.Displayable;
 
 class FieldCommandImpl implements FieldCommand {
     

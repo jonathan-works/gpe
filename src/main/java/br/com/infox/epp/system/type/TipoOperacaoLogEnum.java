@@ -15,7 +15,7 @@
 */
 package br.com.infox.epp.system.type;
 
-import br.com.infox.type.Displayable;
+import br.com.infox.core.type.Displayable;
 
 
 public enum TipoOperacaoLogEnum implements Displayable {
