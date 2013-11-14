@@ -18,13 +18,13 @@
 			 label="Identificador"
 			 value="#{papelHome.instance.identificador}"
 			 required="true"
-			 rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}"
+			 rendered="#{not identityManager.roleExists(papelHome.instance.identificador) or not papelHome.managed}"
 			 id="identificador" />
 
 		<wi:outputText
 			 label="Identificador"
 			 value="#{papelHome.instance.identificador}"
-			 rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
+			 rendered="#{identityManager.roleExists(papelHome.instance.identificador) and papelHome.managed}"
 			 id="identificadorOutput" />
 
 		<wi:inputText

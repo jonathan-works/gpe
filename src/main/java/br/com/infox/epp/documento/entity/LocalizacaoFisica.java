@@ -4,20 +4,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
-import br.com.infox.annotations.ChildList;
-import br.com.infox.annotations.HierarchicalPath;
-import br.com.infox.annotations.Parent;
-import br.com.infox.annotations.PathDescriptor;
-import br.com.infox.annotations.Recursive;
+import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(schema="public", name=LocalizacaoFisica.TABLE_NAME)
-@Recursive
-public class LocalizacaoFisica implements Serializable {
+public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisica> {
 
 	public static final String TABLE_NAME = "tb_localizacao_fisica";
 	private static final long serialVersionUID = 1L;
@@ -42,7 +48,6 @@ public class LocalizacaoFisica implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_localizacao_fisica_pai")
-	@Parent
 	public LocalizacaoFisica getLocalizacaoFisicaPai() {
 		return localizacaoFisicaPai;
 	}
@@ -51,7 +56,6 @@ public class LocalizacaoFisica implements Serializable {
 	}
 	@Column(name="ds_localizacao_fisica", nullable=false, length=LengthConstants.DESCRICAO_PADRAO)
 	@Size(max=LengthConstants.NOME_PADRAO)
-	@PathDescriptor
 	public String getDescricao() {
 		return descricao;
 	}
@@ -60,7 +64,6 @@ public class LocalizacaoFisica implements Serializable {
 	}
 	
 	@Column(name="ds_caminho_completo", unique=true)
-	@HierarchicalPath
 	public String getCaminhoCompleto() {
 		return caminhoCompleto;
 	}
@@ -97,7 +100,6 @@ public class LocalizacaoFisica implements Serializable {
 	
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "localizacaoFisicaPai")
-	@ChildList
 	public List<LocalizacaoFisica> getLocalizacaoFisicaList() {
 		return this.localizacaoFisicaList;
 	}
@@ -105,5 +107,45 @@ public class LocalizacaoFisica implements Serializable {
 	public void setLocalizacaoFisicaList(List<LocalizacaoFisica> localizacaoFisicaList) {
 		this.localizacaoFisicaList = localizacaoFisicaList;
 	}
+    
+	@Override
+	@Transient
+    public LocalizacaoFisica getParent() {
+        return this.getLocalizacaoFisicaPai();
+    }
+    @Override
+    public void setParent(LocalizacaoFisica parent) {
+        this.setLocalizacaoFisicaPai(parent);        
+    }
+    
+    @Override
+    @Transient
+    public String getHierarchicalPath() {
+        return this.getCaminhoCompleto();
+    }
+    @Override
+    public void setHierarchicalPath(String path) {
+        this.setCaminhoCompleto(path);
+    }
+    
+    @Override
+    @Transient
+    public String getPathDescriptor() {
+        return this.getDescricao();
+    }
+    @Override
+    public void setPathDescriptor(String pathDescriptor) {
+        this.setDescricao(pathDescriptor);
+    }
+    
+    @Override
+    @Transient
+    public List<LocalizacaoFisica> getChildList() {
+        return this.getLocalizacaoFisicaList();
+    }
+    @Override
+    public void setChildList(List<LocalizacaoFisica> childList) {
+        this.setLocalizacaoFisicaList(childList);
+    }
 	
 }

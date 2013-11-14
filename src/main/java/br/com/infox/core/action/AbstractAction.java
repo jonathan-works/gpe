@@ -17,15 +17,13 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.annotations.ChildList;
-import br.com.infox.annotations.manager.RecursiveManager;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.util.PostgreSQLErrorCode;
+import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.PostgreSQLExceptionManager;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Util;
 import br.com.itx.exception.ApplicationException;
-import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -167,7 +165,9 @@ public abstract class AbstractAction {
 		sw.start();
 		if(EntityUtil.isEntity(o)) {
 			try {
-				inactiveRecursive(o);
+			    if (o instanceof Recursive) {
+			        inactiveRecursive((Recursive<?>)o);
+			    }
 				ret = flushObject(o, false);
 				instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
 				LOG.info(".inactive(" + o + ")" + getObjectClassName(o) + 
@@ -192,19 +192,14 @@ public abstract class AbstractAction {
 	 */
 	@Transactional
 	@SuppressWarnings(WarningConstants.UNCHECKED)
-	protected String inactiveRecursive(Object o) {
+	protected void inactiveRecursive(Recursive<?> o) {
 		ComponentUtil.setValue(o, "ativo", false);
-		if(!RecursiveManager.isRecursive(o)) {
-			return null;
-		}
-		List<Object> childList = (List<Object>) AnnotationUtil.
-											getValue(o, ChildList.class);
+		List<Recursive<?>> childList = (List<Recursive<?>>) o.getChildList();
 		if (childList != null) {
-			for (Object child : childList) {
+			for (Recursive<?> child : childList) {
 				inactiveRecursive(child);
 			}
 		}
-		return UPDATED;
 	}
 	
 	/**

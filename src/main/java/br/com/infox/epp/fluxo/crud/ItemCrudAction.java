@@ -13,8 +13,8 @@ public class ItemCrudAction extends AbstractCrudAction<Item> {
 
     public static final String NAME = "itemCrudAction";
     
-    public String inactive(Item item) {
-        return inactiveRecursive(item);
+    public void inactive(Item item) {
+        inactiveRecursive(item);
     }
     
     protected boolean beforeSave() {

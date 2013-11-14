@@ -43,6 +43,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.annotations.manager.RecursiveManager;
+import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.infox.util.PostgreSQLExceptionManager;
 import br.com.infox.util.constants.WarningConstants;
@@ -244,6 +246,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		String msg = getPersistLogMessage();
 		try {
 			if (beforePersistOrUpdate()) {
+			    if (getInstance() instanceof Recursive) {
+                    updateRecursivePath();                  
+                }
 				ret = super.persist();
 				updateOldInstance();
 				afterPersistOrUpdate(ret);
@@ -298,6 +303,23 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		return super.isManaged();
 	}		
 
+	private void updateRecursivePath() {
+	    final Recursive<T> curRecursive =(Recursive<T>)getInstance();
+        final Recursive<T> oldRecursive = (Recursive<T>)getOldEntity();
+        if (!isManaged()
+                ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
+                || !curRecursive.getParent().equals(oldRecursive.getParent())) {
+            updateRecursive(curRecursive);
+        }
+	}
+    private void updateRecursive(Recursive<T> recursive) {
+        RecursiveManager.refactor(recursive);
+        final List<T> childList = recursive.getChildList();
+        for(int i=0,l=childList.size();i<l;i++) {
+            updateRecursive((Recursive<T>)childList.get(i));
+        }
+    }
+	
 	/**
 	 * Chama eventos antes e depois de atualizar a entidade
 	 */
@@ -309,6 +331,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		String msg = ".update() (" + getInstanceClassName() + ")";
 		try {
 			if (beforePersistOrUpdate()) {
+			    if (getInstance() instanceof Recursive) {
+			        updateRecursivePath();		            
+		        }
 				ret = super.update();
 				ret = afterPersistOrUpdate(ret);
 			}

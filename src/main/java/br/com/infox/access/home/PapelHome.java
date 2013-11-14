@@ -330,21 +330,29 @@ public class PapelHome extends AbstractHome<Papel> {
 	}
 
 	public String save() {
+		FacesMessages messages = FacesMessages.instance();
+		
+		if (IdentityManager.instance().roleExists(instance.getIdentificador()) && !isManaged()) {
+			messages.add("#{messages['constraintViolation.registroCadastrado']}");
+			return null;
+		}
+
 		final StringBuilder ret = new StringBuilder();
+		
 		new RunAsOperation(true) {
-			
 			@Override
 			public void execute() {
 				ret.append(saveOp());
 			}
 		}.run();
 		RolesMap.instance().clear();
-		FacesMessages messages = FacesMessages.instance();
+		
 		if ("success".equals(ret.toString())) {
 		    messages.add("#{messages['entity_updated']}");
 		} else {
 		    messages.add("#{messages['constraintViolation.registroCadastrado']}");
 		}
+		
 		return ret.toString();
 	}
 	

@@ -10,8 +10,8 @@ public class LocalizacaoFisicaCrudAction extends AbstractCrudAction<LocalizacaoF
     
     public static final String NAME = "localizacaoFisicaCrudAction";
     
-    public String inactive(LocalizacaoFisica localizacaoFisica) {
-        return inactiveRecursive(localizacaoFisica);
+    public void inactive(LocalizacaoFisica localizacaoFisica) {
+        inactiveRecursive(localizacaoFisica);
     }
     
     @Override
