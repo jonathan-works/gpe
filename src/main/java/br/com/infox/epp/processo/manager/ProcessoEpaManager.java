@@ -12,6 +12,7 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -21,7 +22,6 @@ import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.infox.epp.type.SituacaoPrazoEnum;
 
 @Name(ProcessoEpaManager.NAME)
 @Scope(ScopeType.EVENT)
