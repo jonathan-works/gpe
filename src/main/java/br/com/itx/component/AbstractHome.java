@@ -43,7 +43,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.annotations.manager.RecursiveManager;
+import br.com.infox.core.manager.RecursiveManager;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.infox.util.PostgreSQLExceptionManager;

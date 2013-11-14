@@ -1,4 +1,4 @@
-package br.com.infox.annotations.manager;
+package br.com.infox.core.manager;
 
 import java.text.MessageFormat;
 import java.util.List;
