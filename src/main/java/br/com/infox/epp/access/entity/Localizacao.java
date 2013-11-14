@@ -39,7 +39,6 @@ import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.ibpm.entity.Endereco;
-import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.util.constants.LengthConstants;
 
 

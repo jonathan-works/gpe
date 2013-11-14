@@ -47,7 +47,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Endereco;
-import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.StringUtil;
 

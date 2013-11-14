@@ -31,6 +31,7 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.PasswordHash;
 import org.jboss.seam.util.RandomStringUtils;
 
+import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -46,7 +47,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.ibpm.entity.BloqueioUsuario;
 import br.com.infox.ibpm.entity.Endereco;
-import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.manager.UsuarioLoginManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;

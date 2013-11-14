@@ -2,7 +2,7 @@ package br.com.infox.ibpm.home;
 
 import java.util.Comparator;
 
-import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 
 /**
  * Comparator usado para ordenação da Lista de Localizações do usuário interno pelos criterios:

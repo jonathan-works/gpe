@@ -9,7 +9,7 @@ import org.jboss.seam.contexts.Contexts;
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.ibpm.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 
 @Name("papelTree")
 @Scope(ScopeType.PAGE)
