@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.access.home;
 
 import java.util.List;
 
@@ -21,7 +21,6 @@ import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.epp.access.entity.BloqueioUsuario;
-import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.itx.component.AbstractHome;
 
 
