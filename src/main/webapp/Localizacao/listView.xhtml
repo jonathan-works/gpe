@@ -57,14 +57,14 @@
 						 icon="/img/nivelTree.gif"
 						 iconLeaf="/img/file.gif"
 						 label="#{messages['localizacao.localizacaoPai']}" />
-                    <wi:selectSituacaoOneMenu
-						 id="ativo"
-						 label="#{messages['field.situacao']}"
-						 value="#{localizacaoList.entity.ativo}" />
                     <wi:selectBooleanMenu
 						 id="estrutura"
 						 label="#{messages['localizacao.estrutura']}" />
-                
+                	<wi:selectSituacaoOneMenu
+						 id="ativo"
+						 label="#{messages['field.situacao']}"
+						 value="#{localizacaoList.entity.ativo}" />
+                    
 				</wi:searchForm>
 			</ui:define>
             <ui:define name="headerToolBar" />
@@ -74,6 +74,12 @@
 				columnHeader="#{messages['localizacao.localizacao']}"
 				value="#{row.localizacao}"
 				fullPath="#{row.caminhoCompleto}" />
+			<wi:columnOutputText
+				hideOrder="true"
+				columnId="localizacaoPai"
+				columnHeader="#{messages['localizacao.localizacaoPai']}"
+				value="#{row.localizacaoPai}" 
+			/>
             <wi:columnBoolean
             	hideOrder="true"
 				columnId="estrutura"
@@ -122,6 +128,7 @@
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{messages['field.situacao']}"
+                required="true"
                 value="#{localizacaoHome.instance.ativo}" />
         
 		</wi:dataForm>
