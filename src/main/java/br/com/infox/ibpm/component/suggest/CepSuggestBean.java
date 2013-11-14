@@ -20,7 +20,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.component.suggest.AbstractSuggestBean;
-import br.com.infox.ibpm.entity.Cep;
+import br.com.infox.epp.endereco.entity.Cep;
 
 
 @Name(CepSuggestBean.NAME)

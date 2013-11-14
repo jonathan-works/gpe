@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.endereco.entity;
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
 import java.util.ArrayList;
@@ -36,10 +36,13 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.ParamDef;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.cliente.entity.filters.CepFilter;
+import br.com.infox.ibpm.entity.Endereco;
+import br.com.infox.ibpm.entity.Municipio;
 import br.com.infox.util.constants.LengthConstants;
 
 /**
