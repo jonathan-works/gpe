@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.access.home;
 
 import java.util.List;
 
@@ -27,7 +27,6 @@ import br.com.infox.component.tree.EntityNode;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
-import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.itx.component.AbstractHome;

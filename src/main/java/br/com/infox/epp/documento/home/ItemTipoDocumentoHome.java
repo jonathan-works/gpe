@@ -21,8 +21,8 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
+import br.com.infox.epp.access.home.LocalizacaoHome;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
-import br.com.infox.ibpm.home.LocalizacaoHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.EntityUtil;
 
