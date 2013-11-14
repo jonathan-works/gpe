@@ -44,10 +44,10 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.access.RolesMap;
 import br.com.infox.core.certificado.CertificadoLog;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.RolesMap;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.home.UsuarioHome;
