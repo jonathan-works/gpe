@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.infox.epp.turno.component.TurnoBean;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 import br.com.infox.util.DateUtil;
 

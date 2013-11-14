@@ -6,8 +6,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
-import br.com.infox.component.TurnoBean;
 import br.com.infox.component.TurnoHandler;
+import br.com.infox.epp.turno.component.TurnoBean;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.manager.LocalizacaoTurnoManager;
 import br.com.infox.ibpm.entity.Localizacao;
