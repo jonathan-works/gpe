@@ -73,20 +73,6 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 	private BloqueioUsuario novoBloqueio = new BloqueioUsuario();
 	private boolean pessoaFisicaCadastrada = false;
 
-	/*
-	 * Testa se os campos do bloqueio foram preenchidos corretamente 
-	 * Já é feita uma validação no xhtml 
-	 * Essa segunda validação (em código) é realmente necessária?
-	 */
-	private void validarBloqueio() {
-		if (getInstance().getBloqueio() && (novoBloqueio.getDataPrevisaoDesbloqueio() == null || novoBloqueio.getMotivoBloqueio().equals(""))) {
-			getInstance().setBloqueio(false);
-			this.novoBloqueio = new BloqueioUsuario();
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-					"Campo bloqueio preenchido incorretamente");
-		}
-	}
-
 	/**
 	 * Apaga a data de Expiração quando o Usário passa de Provisório para Permanente
 	 * */
@@ -109,6 +95,7 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 		getInstance().setAtivo(true);
 		getInstance().setBloqueio(false);
 		getInstance().setLdap(false);
+		novoBloqueio = new BloqueioUsuario();
 	}
 
 	@Override
@@ -145,14 +132,10 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 	 */
 	@Override
 	public String update() {
-		validarBloqueio();
 		validarPermanencia();
 		UsuarioLogin usuario = getInstance();
 		if (usuario.getLogin() == null) {
 			usuario.setLogin(login);
-		}
-		if (estavaBloqueado()) {
-			desbloquear();
 		}
 		if (getInstance().getBloqueio().equals(Boolean.TRUE)) {
 		    bloquear();
@@ -203,24 +186,13 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 		return resultado;
 	}
 
-	public boolean estavaBloqueado() {
-		if (ultimoBloqueio != null) {
-			return (ultimoBloqueio.getDataDesbloqueio() == null);
-		}
-		return false;
-	}
-
-	public void desbloquear() {
-		ultimoBloqueio.setDataDesbloqueio(new Date());
-		super.update();
-	}
-
 	public void bloquear() {
+	    final UsuarioLogin usuario = getInstance();
 		novoBloqueio.setDataBloqueio(new Date());
-		novoBloqueio.setUsuario(getInstance());
-		getInstance().getBloqueioUsuarioList().add(novoBloqueio);
+		novoBloqueio.setUsuario(usuario);
+		usuario.getBloqueioUsuarioList().add(novoBloqueio);
 		ultimoBloqueio = novoBloqueio;
-		EntityUtil.getEntityManager().persist(ultimoBloqueio);
+		getEntityManager().persist(ultimoBloqueio);
 		novoBloqueio = new BloqueioUsuario();
 	}
 
