@@ -23,7 +23,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.component.suggest.AbstractSuggestBean;
 import br.com.infox.epp.endereco.entity.Estado;
 import br.com.infox.epp.endereco.entity.Municipio;
-import br.com.infox.ibpm.home.CepHome;
+import br.com.infox.epp.endereco.home.CepHome;
 
 
 @Name(MunicipioSuggestBean.NAME)
