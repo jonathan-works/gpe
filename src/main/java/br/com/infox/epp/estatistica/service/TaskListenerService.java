@@ -1,4 +1,4 @@
-package br.com.infox.epp.service;
+package br.com.infox.epp.estatistica.service;
 
 import static br.com.infox.ibpm.jbpm.JbpmUtil.getTarefa;
 
