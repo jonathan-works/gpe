@@ -1,4 +1,4 @@
-package br.com.infox.jsf.validator;
+package br.com.infox.epp.access.validator;
 
 import java.text.MessageFormat;
 
