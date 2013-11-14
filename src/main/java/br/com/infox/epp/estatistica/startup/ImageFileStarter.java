@@ -1,4 +1,4 @@
-package br.com.infox.epp.service.startup;
+package br.com.infox.epp.estatistica.startup;
 
 
 import org.jboss.seam.ScopeType;

@@ -1,4 +1,4 @@
-package br.com.infox.epp.service.startup;
+package br.com.infox.epp.estatistica.startup;
 
 import java.util.Date;
 import java.util.Properties;
@@ -17,27 +17,26 @@ import org.jbpm.util.ClassLoaderUtil;
 import org.quartz.SchedulerException;
 
 import br.com.infox.component.quartz.QuartzConstant;
-import br.com.infox.epp.estatistica.processor.TarefaTimerProcessor;
+import br.com.infox.epp.estatistica.processor.ProcessoTimerProcessor;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.timer.TimerUtil;
 import br.com.itx.util.EntityUtil;
 
-@Name(TarefaTimerStarter.NAME)
+@Name(ProcessoTimerStarter.NAME)
 @Scope(ScopeType.APPLICATION)
 @Startup(depends = QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER)
 @Install(dependencies = { QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER })
-public class TarefaTimerStarter {
+public class ProcessoTimerStarter {
 
-	private static final String DEFAULT_CRON_EXPRESSION = "0 0/30 * * * ?";
-	private static final LogProvider LOG = Logging
-			.getLogProvider(TarefaTimerStarter.class);
-	public static final String NAME = "tarefaTimerStarter";
-
-	public static final String ID_INICIAR_TASK_TIMER_PARAMETER = "idTaskTimerParameter";
+	private static final String DEFAULT_CRON_EXPRESSION = "0 0 0 * * ?";
 	private static final Properties QUARTZ_PROPERTIES = ClassLoaderUtil
 			.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
+	private static final LogProvider LOG = Logging
+			.getLogProvider(ProcessoTimerStarter.class);
+	public static final String NAME = "processoTimerStarter";
+	public static final String ID_INICIAR_PROCESSO_TIMER_PARAMETER = "idProcessoTimerParameter";
 
-	public TarefaTimerStarter() {}
+	public ProcessoTimerStarter() {}
 
 	@Create
 	@Transactional
@@ -50,25 +49,26 @@ public class TarefaTimerStarter {
 		String idIniciarFluxoTimer = null;
 		try {
 			idIniciarFluxoTimer = TimerUtil
-					.getParametro(ID_INICIAR_TASK_TIMER_PARAMETER);
+					.getParametro(ID_INICIAR_PROCESSO_TIMER_PARAMETER);
 		} catch (IllegalArgumentException e) {
-			LOG.error("TarefaTimerStarter.init()", e);
+			LOG.error("ProcessoTimerStarter.init()", e);
 		}
 		if (idIniciarFluxoTimer == null) {
 			Parametro p = new Parametro();
 			p.setAtivo(true);
 			p.setDescricaoVariavel("ID do timer do sistema");
 			p.setDataAtualizacao(new Date());
-			p.setNomeVariavel(ID_INICIAR_TASK_TIMER_PARAMETER);
+			p.setNomeVariavel(ID_INICIAR_PROCESSO_TIMER_PARAMETER);
 			p.setSistema(true);
 
 			String cronExpression = QUARTZ_PROPERTIES.getProperty(
 					QuartzConstant.QUARTZ_CRON_EXPRESSION,
 					DEFAULT_CRON_EXPRESSION);
 
-			TarefaTimerProcessor processor = TarefaTimerProcessor.instance();
+			ProcessoTimerProcessor processor = ProcessoTimerProcessor
+					.instance();
 			QuartzTriggerHandle handle = processor
-					.increaseTaskTimeSpent(cronExpression);
+					.increaseProcessTimeSpent(cronExpression);
 			EntityUtil.getEntityManager().flush();
 			String triggerName = handle.getTrigger().getName();
 			p.setValorVariavel(triggerName);
