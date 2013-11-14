@@ -1,4 +1,4 @@
-package br.com.infox.cliente.entity.filters;
+package br.com.infox.epp.endereco.filter;
 
 public interface CepFilter {
 

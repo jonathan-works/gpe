@@ -40,7 +40,7 @@ import org.hibernate.annotations.ParamDef;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.cliente.entity.filters.CepFilter;
+import br.com.infox.epp.endereco.filter.CepFilter;
 import br.com.infox.util.constants.LengthConstants;
 
 /**
