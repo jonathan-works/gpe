@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado.util;
+package br.com.infox.certificado.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.jboss.seam.util.Base64;
 
-import br.com.infox.core.certificado.CertificadoException;
+import br.com.infox.certificado.CertificadoException;
 import br.com.infox.util.constants.WarningConstants;
 
 /**

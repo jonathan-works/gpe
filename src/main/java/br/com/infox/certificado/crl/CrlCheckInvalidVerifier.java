@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado.crl;
+package br.com.infox.certificado.crl;
 
 import java.util.ArrayList;
 import java.util.List;

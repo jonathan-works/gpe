@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.core.certificado;
+package br.com.infox.certificado;
 
 import java.math.BigInteger;
 
@@ -25,7 +25,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.certificado.ValidaDocumento.ValidaDocumentoException;
+import br.com.infox.certificado.ValidaDocumento.ValidaDocumentoException;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;

@@ -1,12 +1,12 @@
-package br.com.infox.core.certificado.crl.jobs;
+package br.com.infox.certificado.crl.jobs;
 import java.text.MessageFormat;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.certificado.Certificado;
-import br.com.infox.core.certificado.crl.CrlCertObj;
-import br.com.infox.core.certificado.crl.CrlCheckException;
+import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.crl.CrlCertObj;
+import br.com.infox.certificado.crl.CrlCheckException;
 import br.com.itx.component.MeasureTime;
 
 	/**

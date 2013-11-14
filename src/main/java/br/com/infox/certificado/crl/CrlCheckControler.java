@@ -1,18 +1,20 @@
-package br.com.infox.core.certificado.crl;
+package br.com.infox.certificado.crl;
 
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import br.com.infox.core.certificado.Certificado;
-import br.com.infox.core.certificado.crl.jobs.CrlCertTestJob;
-import br.com.infox.core.certificado.crl.jobs.CrlCertTestJobActionListner;
-import br.com.infox.core.certificado.util.ValidatorUtilities;
+
+import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.crl.jobs.CrlCertTestJob;
+import br.com.infox.certificado.crl.jobs.CrlCertTestJobActionListner;
+import br.com.infox.certificado.util.ValidatorUtilities;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.util.ComponentUtil;
 

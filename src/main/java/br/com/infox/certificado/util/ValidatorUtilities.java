@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado.util;
+package br.com.infox.certificado.util;
 
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;

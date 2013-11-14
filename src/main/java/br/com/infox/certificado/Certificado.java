@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado;
+package br.com.infox.certificado;
 
 
 import java.math.BigInteger;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.infox.core.certificado.util.DigitalSignatureUtils;
+import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.itx.util.ArrayUtil;
 
 public class Certificado {

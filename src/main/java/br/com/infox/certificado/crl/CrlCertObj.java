@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado.crl;
+package br.com.infox.certificado.crl;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado;
+package br.com.infox.certificado;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;

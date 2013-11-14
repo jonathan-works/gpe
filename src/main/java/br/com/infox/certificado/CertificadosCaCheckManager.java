@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado;
+package br.com.infox.certificado;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.certificado.util.DigitalSignatureUtils;
+import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FileUtil;

@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado;
+package br.com.infox.certificado;
 
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
@@ -20,7 +20,7 @@ import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DERUTF8String;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
-import br.com.infox.core.certificado.util.DigitalSignatureUtils;
+import br.com.infox.certificado.util.DigitalSignatureUtils;
 
 public final class DadosCertificado {
 

@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado;
+package br.com.infox.certificado;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

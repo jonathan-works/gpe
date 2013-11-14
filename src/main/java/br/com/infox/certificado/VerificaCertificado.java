@@ -1,14 +1,14 @@
-package br.com.infox.core.certificado;
+package br.com.infox.certificado;
 
 import java.security.cert.X509Certificate;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.certificado.crl.CrlCheckControler;
-import br.com.infox.core.certificado.crl.CrlCheckException;
-import br.com.infox.core.certificado.crl.jobs.LoginCrlCertTestJobActionListner;
-import br.com.infox.core.certificado.util.DigitalSignatureUtils;
+import br.com.infox.certificado.crl.CrlCheckControler;
+import br.com.infox.certificado.crl.CrlCheckException;
+import br.com.infox.certificado.crl.jobs.LoginCrlCertTestJobActionListner;
+import br.com.infox.certificado.util.DigitalSignatureUtils;
 
 public final class VerificaCertificado {
     

@@ -1,4 +1,4 @@
-package br.com.infox.core.certificado.crl.jobs;
+package br.com.infox.certificado.crl.jobs;
 
 public interface CrlCertTestJobActionListner {
 	

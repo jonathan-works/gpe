@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.core.certificado;
+package br.com.infox.certificado;
 
 import java.security.GeneralSecurityException;
 import java.security.cert.CertPath;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.jboss.seam.util.Base64;
 
-import br.com.infox.core.certificado.util.DigitalSignatureUtils;
+import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ArrayUtil;
 
