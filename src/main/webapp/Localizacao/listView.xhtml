@@ -173,11 +173,11 @@
 								 status=":status"
 								 render="pageBody"
 								 styleClass="opacityHover"
-								 onclick="if(!confirm('Confirma?')) return false;">
+								 onclick="confirm(\'#{messages['crud.confirmRemove']}\')">
 								
                                 <h:graphicImage
 									 url="/img/remove.png"
-									 title="Remover registro"
+									 title="#{messages['crud.remove']}"
 									  />
                             
 							</a:commandLink>
