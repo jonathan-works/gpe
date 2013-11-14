@@ -27,7 +27,7 @@
                       
 	<ui:define name="title">#{messages['pj.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{pessoaJuridicaHome}" />
+	<ui:param name="home" value="#{pessoaJuridicaCrudAction}" />
 	
 	<ui:define name="searchGrid">   
 	    <wi:dataTable values="#{pessoaJuridicaList.list(15)}"
@@ -80,22 +80,22 @@
 		<wi:dataForm formId="cboForm"
 					 formTitle="#{messages['form.title']}">
 			<wi:inputCnpj id="cnpj"
-						  value="#{pessoaJuridicaHome.instance.cnpj}"
+						  value="#{pessoaJuridicaCrudAction.instance.cnpj}"
 						  required="true"
 						  label="#{messages['pj.cnpj']}"/>
 			<wi:inputText id="nomePessoa"
 						  label="#{messages['pj.nome']}"
 						  required="true"
-						  value="#{pessoaJuridicaHome.instance.nome}"
+						  value="#{pessoaJuridicaCrudAction.instance.nome}"
 						  maxlength="150" />
 			<wi:inputText id="razaoSocial"
 						  label="#{messages['pj.razaoSocial']}"
-						  value="#{pessoaJuridicaHome.instance.razaoSocial}"
+						  value="#{pessoaJuridicaCrudAction.instance.razaoSocial}"
 						  required="true"
 						  maxlength="100" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['field.situacao']}"
-								    value="#{pessoaJuridicaHome.instance.ativo}" />
+								    value="#{pessoaJuridicaCrudAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

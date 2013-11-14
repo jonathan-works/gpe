@@ -29,7 +29,7 @@
 	
 	<ui:param
          name="home"
-         value="#{pessoaFisicaHome}" />
+         value="#{pessoaFisicaCrudAction}" />
 	
 	<ui:define
          name="searchGrid">   
@@ -105,23 +105,23 @@
 			
 			<wi:inputCpf
                  id="cpf"
-                 value="#{pessoaFisicaHome.instance.cpf}"
+                 value="#{pessoaFisicaCrudAction.instance.cpf}"
                  label="#{messages['pessoaFisica.cpf']}"
                  required="true" />
 			<wi:inputText
                  id="nome"
-                 value="#{pessoaFisicaHome.instance.nome}"
+                 value="#{pessoaFisicaCrudAction.instance.nome}"
                  label="#{messages['pessoaFisica.nome']}"
                  required="true" />	 
 			<wi:inputDate
                  id="dataNascimento"
-                 value="#{pessoaFisicaHome.instance.dataNascimento}"
+                 value="#{pessoaFisicaCrudAction.instance.dataNascimento}"
                  label="#{messages['pessoaFisica.dataNascimento']}"
                  required="true" />
 			<wi:inputText
                  id="email"
                  label="#{messages['pessoaFisica.email']}"
-                 value="#{pessoaFisicaHome.instance.email}"
+                 value="#{pessoaFisicaCrudAction.instance.email}"
                  required="true">
 				<f:validator
                      validatorId="emailValidator" />
@@ -129,7 +129,7 @@
 			<wi:selectSituacaoRadio
                  id="ativo"
                  label="#{messages['field.situacao']}"
-                 value="#{pessoaFisicaHome.instance.ativo}" />
+                 value="#{pessoaFisicaCrudAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 
