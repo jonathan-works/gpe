@@ -45,9 +45,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.estatistica.entity.Estatistica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.tarefa.caixa.Caixa;
-import br.com.infox.ibpm.entity.Estatistica;
 import br.com.infox.util.constants.LengthConstants;
 
 @Entity
