@@ -25,6 +25,7 @@ public class BloqueioUsuarioList extends EntityList<BloqueioUsuario> {
 	protected void addSearchFields() {
 		addSearchField("usuario", SearchCriteria.IGUAL, R1);
 		addSearchField("dataBloqueio", SearchCriteria.DATA_IGUAL);
+		addSearchField("dataPrevisaoDesbloqueio",SearchCriteria.DATA_IGUAL);
 		addSearchField("dataDesbloqueio", SearchCriteria.DATA_IGUAL);
 		addSearchField("motivoBloqueio", SearchCriteria.CONTENDO);
 	}
