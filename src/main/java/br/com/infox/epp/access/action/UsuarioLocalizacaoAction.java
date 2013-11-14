@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.action;
+package br.com.infox.epp.access.action;
 
 
 import org.jboss.seam.Component;
