@@ -24,7 +24,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.dao.CepDAO;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Endereco;

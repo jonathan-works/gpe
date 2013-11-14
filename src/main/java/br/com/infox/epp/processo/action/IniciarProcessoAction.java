@@ -17,7 +17,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;

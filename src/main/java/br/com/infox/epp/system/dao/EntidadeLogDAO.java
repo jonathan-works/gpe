@@ -5,8 +5,8 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.util.constants.WarningConstants;
 
 @Name(EntidadeLogDAO.NAME)

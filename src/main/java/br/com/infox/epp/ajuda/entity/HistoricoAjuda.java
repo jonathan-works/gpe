@@ -31,9 +31,10 @@ import javax.persistence.TemporalType;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.hibernate.search.annotations.Analyzer;
+
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name = "tb_historico_ajuda", schema="public")

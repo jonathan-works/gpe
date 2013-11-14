@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name = UsuarioTaskInstance.TABLE_NAME, schema="public")

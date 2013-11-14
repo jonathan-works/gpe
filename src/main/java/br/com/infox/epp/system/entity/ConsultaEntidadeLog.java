@@ -18,7 +18,7 @@ package br.com.infox.epp.system.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 import br.com.infox.util.DateUtil;
 

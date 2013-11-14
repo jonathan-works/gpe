@@ -6,8 +6,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery;

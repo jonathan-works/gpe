@@ -8,9 +8,9 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.access.query.UsuarioLoginQuery;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioLoginDAO.NAME)

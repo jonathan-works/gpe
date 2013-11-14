@@ -31,7 +31,7 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.PasswordHash;
 import org.jboss.seam.util.RandomStringUtils;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;

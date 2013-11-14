@@ -40,7 +40,7 @@ import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 import br.com.infox.epp.ajuda.entity.Pagina;

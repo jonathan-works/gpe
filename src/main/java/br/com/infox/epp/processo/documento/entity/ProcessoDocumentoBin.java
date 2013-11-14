@@ -36,12 +36,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.ArrayUtil;
 

@@ -27,7 +27,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 

@@ -30,9 +30,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.certificado.Certificado;
 import br.com.infox.core.certificado.CertificadoException;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;

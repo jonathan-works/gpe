@@ -22,8 +22,8 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.UsuarioLocalizacaoComparator;

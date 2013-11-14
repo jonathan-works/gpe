@@ -11,7 +11,7 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.security.management.action.UserAction;
 
-import br.com.infox.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 

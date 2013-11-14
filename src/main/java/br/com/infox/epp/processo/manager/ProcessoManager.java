@@ -14,8 +14,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;

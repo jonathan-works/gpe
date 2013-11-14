@@ -63,7 +63,7 @@
 	</event>
 
 	<security:jpa-identity-store
-		user-class="br.com.infox.access.entity.UsuarioLogin"
+		user-class="br.com.infox.epp.access.entity.UsuarioLogin"
 		role-class="br.com.infox.epp.access.entity.Papel" />
 
 	<security:jpa-permission-store
