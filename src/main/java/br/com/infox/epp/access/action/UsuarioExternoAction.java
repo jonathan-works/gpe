@@ -1,4 +1,4 @@
-package br.com.infox.epp.action;
+package br.com.infox.epp.access.action;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
