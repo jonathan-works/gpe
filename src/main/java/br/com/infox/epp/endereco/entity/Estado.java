@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.endereco.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.endereco.entity.Municipio;
 import br.com.infox.util.constants.LengthConstants;
 /**
  * Estado

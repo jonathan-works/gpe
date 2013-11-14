@@ -21,7 +21,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.endereco.entity.Cep;
-import br.com.infox.ibpm.entity.Estado;
+import br.com.infox.epp.endereco.entity.Estado;
 import br.com.itx.component.AbstractHome;
 
 @Name(CepHome.NAME)
