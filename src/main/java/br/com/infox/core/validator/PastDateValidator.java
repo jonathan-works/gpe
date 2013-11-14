@@ -1,4 +1,4 @@
-package br.com.infox.validator;
+package br.com.infox.core.validator;
 
 import java.util.Date;
 
