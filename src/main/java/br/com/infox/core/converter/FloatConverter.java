@@ -13,44 +13,46 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.converter;
+package br.com.infox.core.converter;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
+
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.util.Strings;
 
 
 @org.jboss.seam.annotations.faces.Converter
-@Name("stringConverter")
+@Name("floatConverter")
 @BypassInterceptors
-public class StringConverter implements Converter {
+public class FloatConverter implements Converter {
 	
-	private static char[][] replaceCharTable = {
-			{(char) 8211, '-'},
-			{(char) 45,   '-'},
-			{(char) 8221, '"'},
-			{(char) 8220, '"'},
-			{(char) 28, '"'},
-			{(char) 29, '"'},
-			//referente ao caractere: flecha
-			{(char) 8594, '-'}
-	};
+	private static final NumberFormat FORMATTER = new DecimalFormat("#,##0.00");
 
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-		String saida = value;
-		for (char[] tupla : replaceCharTable) {
-			saida = saida.replace(tupla[0], tupla[1]);
+		if (Strings.isEmpty(value)) {
+			return null;
 		}
-		return Strings.nullIfEmpty(saida.trim());
+		Double valor = null;
+		try {
+			valor = FORMATTER.parse(value).doubleValue();
+		} catch (Exception e) {
+			throw new ConverterException(new FacesMessage("Formato inválido: " + value), e);
+		}
+		return valor;
 	}
 
 	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
-		return value == null ? null : value.toString();
+		return value == null ? null : FORMATTER.format(value);
 	}
 	
 }

@@ -13,10 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.converter;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+package br.com.infox.core.converter;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -30,20 +27,19 @@ import org.jboss.seam.util.Strings;
 
 
 @org.jboss.seam.annotations.faces.Converter
-@Name("floatConverter")
+@Name("longConverter")
 @BypassInterceptors
-public class FloatConverter implements Converter {
+public class LongConverter implements Converter {
 	
-	private static final NumberFormat FORMATTER = new DecimalFormat("#,##0.00");
 
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		if (Strings.isEmpty(value)) {
 			return null;
 		}
-		Double valor = null;
+		Long valor = null;
 		try {
-			valor = FORMATTER.parse(value).doubleValue();
+			valor = Long.parseLong(value);
 		} catch (Exception e) {
 			throw new ConverterException(new FacesMessage("Formato inválido: " + value), e);
 		}
@@ -52,7 +48,7 @@ public class FloatConverter implements Converter {
 
 	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
-		return value == null ? null : FORMATTER.format(value);
+		return value == null ? null : value.toString();
 	}
 	
 }

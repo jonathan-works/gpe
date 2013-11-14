@@ -13,61 +13,44 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.converter;
+package br.com.infox.core.converter;
 
-import java.sql.Time;
-import java.util.Calendar;
-
-import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.util.Strings;
 
 
 @org.jboss.seam.annotations.faces.Converter
-@Name("minutoTimeConverter")
+@Name("stringConverter")
 @BypassInterceptors
-public class MinutoTimeConverter implements Converter {
+public class StringConverter implements Converter {
 	
-	private static final int MINUTOS_HORA = 60;
-	
+	private static char[][] replaceCharTable = {
+			{(char) 8211, '-'},
+			{(char) 45,   '-'},
+			{(char) 8221, '"'},
+			{(char) 8220, '"'},
+			{(char) 28, '"'},
+			{(char) 29, '"'},
+			//referente ao caractere: flecha
+			{(char) 8594, '-'}
+	};
+
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-		if (value == null || value.trim().length() == 0) {
-			return null;
+		String saida = value;
+		for (char[] tupla : replaceCharTable) {
+			saida = saida.replace(tupla[0], tupla[1]);
 		}
-		String msgErro = "Hora inválida";
-		Time horaFinal = null;
-		try {	
-			int hora = Integer.parseInt(value)/MINUTOS_HORA;
-			int minuto = Integer.parseInt(value)%MINUTOS_HORA;
-			Calendar calendar = Calendar.getInstance();
-			calendar.set(Calendar.HOUR_OF_DAY,hora);
-			calendar.set(Calendar.MINUTE, minuto);
-			horaFinal = new Time(calendar.getTimeInMillis());
-			
-		} catch (Exception e) {
-			throw new ConverterException(new FacesMessage(msgErro), e);
-		}
-		return horaFinal;
+		return Strings.nullIfEmpty(saida.trim());
 	}
-	
 
 	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
-		long minutos = 0;
-		if (value instanceof Time) {
-			Time time = (Time) value;
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(time);
-			minutos = (calendar.get(Calendar.HOUR_OF_DAY) * MINUTOS_HORA) + 
-				calendar.get(Calendar.MINUTE);
-		}
-		return Long.toString(minutos);
+		return value == null ? null : value.toString();
 	}
-
+	
 }

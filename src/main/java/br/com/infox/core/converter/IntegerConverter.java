@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.converter;
+package br.com.infox.core.converter;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -27,9 +27,9 @@ import org.jboss.seam.util.Strings;
 
 
 @org.jboss.seam.annotations.faces.Converter
-@Name("longConverter")
+@Name("integerConverter")
 @BypassInterceptors
-public class LongConverter implements Converter {
+public class IntegerConverter implements Converter {
 	
 
 	@Override
@@ -37,9 +37,9 @@ public class LongConverter implements Converter {
 		if (Strings.isEmpty(value)) {
 			return null;
 		}
-		Long valor = null;
+		Integer valor = null;
 		try {
-			valor = Long.parseLong(value);
+			valor = Integer.parseInt(value);
 		} catch (Exception e) {
 			throw new ConverterException(new FacesMessage("Formato inválido: " + value), e);
 		}

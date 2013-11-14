@@ -13,7 +13,10 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.converter;
+package br.com.infox.core.converter;
+
+import java.sql.Time;
+import java.util.Calendar;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -23,32 +26,48 @@ import javax.faces.convert.ConverterException;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.util.Strings;
 
 
 @org.jboss.seam.annotations.faces.Converter
-@Name("integerConverter")
+@Name("minutoTimeConverter")
 @BypassInterceptors
-public class IntegerConverter implements Converter {
+public class MinutoTimeConverter implements Converter {
 	
-
+	private static final int MINUTOS_HORA = 60;
+	
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-		if (Strings.isEmpty(value)) {
+		if (value == null || value.trim().length() == 0) {
 			return null;
 		}
-		Integer valor = null;
-		try {
-			valor = Integer.parseInt(value);
+		String msgErro = "Hora inválida";
+		Time horaFinal = null;
+		try {	
+			int hora = Integer.parseInt(value)/MINUTOS_HORA;
+			int minuto = Integer.parseInt(value)%MINUTOS_HORA;
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.HOUR_OF_DAY,hora);
+			calendar.set(Calendar.MINUTE, minuto);
+			horaFinal = new Time(calendar.getTimeInMillis());
+			
 		} catch (Exception e) {
-			throw new ConverterException(new FacesMessage("Formato inválido: " + value), e);
+			throw new ConverterException(new FacesMessage(msgErro), e);
 		}
-		return valor;
+		return horaFinal;
 	}
+	
 
 	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
-		return value == null ? null : value.toString();
+		long minutos = 0;
+		if (value instanceof Time) {
+			Time time = (Time) value;
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(time);
+			minutos = (calendar.get(Calendar.HOUR_OF_DAY) * MINUTOS_HORA) + 
+				calendar.get(Calendar.MINUTE);
+		}
+		return Long.toString(minutos);
 	}
-	
+
 }

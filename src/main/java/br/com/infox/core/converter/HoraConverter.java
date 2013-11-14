@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.converter;
+package br.com.infox.core.converter;
 
 import java.sql.Time;
 import java.util.Calendar;
