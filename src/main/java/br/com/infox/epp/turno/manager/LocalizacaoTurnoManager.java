@@ -1,4 +1,4 @@
-package br.com.infox.epp.manager;
+package br.com.infox.epp.turno.manager;
 
 import java.util.Calendar;
 import java.util.Date;

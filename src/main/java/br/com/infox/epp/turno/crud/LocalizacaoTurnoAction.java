@@ -8,8 +8,8 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.component.TurnoBean;
 import br.com.infox.component.TurnoHandler;
-import br.com.infox.epp.manager.LocalizacaoTurnoManager;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
+import br.com.infox.epp.turno.manager.LocalizacaoTurnoManager;
 import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.util.DateUtil;
 
