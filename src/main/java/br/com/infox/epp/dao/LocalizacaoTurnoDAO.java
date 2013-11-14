@@ -13,9 +13,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.epp.query.LocalizacaoTurnoQuery;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
+import br.com.infox.epp.turno.query.LocalizacaoTurnoQuery;
 import br.com.infox.epp.type.DiaSemanaEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 

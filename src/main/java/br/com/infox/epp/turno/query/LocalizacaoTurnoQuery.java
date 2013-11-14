@@ -1,4 +1,4 @@
-package br.com.infox.epp.query;
+package br.com.infox.epp.turno.query;
 
 /**
  * Interface com as queries da entidade de 

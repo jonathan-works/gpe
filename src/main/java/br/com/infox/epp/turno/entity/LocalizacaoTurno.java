@@ -16,10 +16,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.query.LocalizacaoTurnoQuery;
+import br.com.infox.epp.turno.query.LocalizacaoTurnoQuery;
 import br.com.infox.epp.type.DiaSemanaEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 
