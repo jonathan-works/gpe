@@ -1,4 +1,4 @@
-package br.com.infox.access;
+package br.com.infox.epp.access.entity;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.richfaces.event.DropEvent;
 
+import br.com.infox.access.MenuItem;
 import br.com.infox.epp.access.util.SecurityUtil;
 import br.com.itx.component.Util;
 import br.com.itx.util.EntityUtil;
