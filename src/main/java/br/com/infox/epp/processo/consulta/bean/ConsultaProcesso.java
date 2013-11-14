@@ -47,7 +47,7 @@ public class ConsultaProcesso implements Serializable {
 	}
 
 	public void setDataFim(Date dataFim) {
-		this.dataFim = br.com.infox.util.DateUtil.getEndOfDay(dataFim);
+		this.dataFim = br.com.infox.core.util.DateUtil.getEndOfDay(dataFim);
 	}
 
 

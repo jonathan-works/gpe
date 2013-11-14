@@ -13,7 +13,9 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Conversation;
+
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -24,7 +26,6 @@ import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 import br.com.infox.ibpm.type.PrazoEnum;
-import br.com.infox.util.DateUtil;
 
 @Name(ProcessoEpaTarefaManager.NAME)
 @Scope(ScopeType.CONVERSATION)

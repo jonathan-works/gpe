@@ -7,13 +7,14 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
+
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.turno.component.TurnoBean;
 import br.com.infox.epp.turno.component.TurnoHandler;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.manager.LocalizacaoTurnoManager;
-import br.com.infox.util.DateUtil;
 
 /**
  * 
