@@ -19,7 +19,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.turno.query.LocalizacaoTurnoQuery;
-import br.com.infox.epp.type.DiaSemanaEnum;
+import br.com.infox.epp.turno.type.DiaSemanaEnum;
 import br.com.infox.ibpm.entity.Localizacao;
 
 @Entity

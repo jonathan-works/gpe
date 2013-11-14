@@ -12,7 +12,7 @@ import org.junit.Test;
 import br.com.infox.component.HorarioBean;
 import br.com.infox.component.TurnoBean;
 import br.com.infox.component.TurnoHandler;
-import br.com.infox.epp.type.DiaSemanaEnum;
+import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 public class TurnoHandlerTest {
 	@Test

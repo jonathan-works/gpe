@@ -1,4 +1,4 @@
-package br.com.infox.epp.type;
+package br.com.infox.epp.turno.type;
 
 import java.util.Arrays;
 

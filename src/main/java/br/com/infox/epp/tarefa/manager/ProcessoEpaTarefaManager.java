@@ -22,7 +22,7 @@ import br.com.infox.epp.tarefa.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
-import br.com.infox.epp.type.DiaSemanaEnum;
+import br.com.infox.epp.turno.type.DiaSemanaEnum;
 import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.util.DateUtil;
 
