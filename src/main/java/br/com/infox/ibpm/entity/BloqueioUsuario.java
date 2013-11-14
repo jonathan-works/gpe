@@ -84,8 +84,7 @@ public class BloqueioUsuario implements java.io.Serializable {
 		this.dataBloqueio = dataBloqueio;
 	}
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_previsao_desbloqueio", nullable = false)
-	@NotNull
+	@Column(name = "dt_previsao_desbloqueio", nullable = true)
 	public Date getDataPrevisaoDesbloqueio() {
 		return this.dataPrevisaoDesbloqueio;
 	}
