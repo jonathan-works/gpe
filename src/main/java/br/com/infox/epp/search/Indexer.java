@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.search;
+package br.com.infox.epp.search;
 
 import java.io.File;
 import java.io.IOException;

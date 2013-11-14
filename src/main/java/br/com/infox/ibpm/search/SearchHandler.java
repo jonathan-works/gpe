@@ -43,10 +43,10 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.search.Indexer;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
-import br.com.infox.search.Indexer;
 import br.com.infox.util.constants.FloatFormatConstants;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
