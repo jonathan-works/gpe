@@ -11,13 +11,13 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery;
 import br.com.infox.ibpm.component.ControleFiltros;
-import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoLocalizacaoIbpmDAO.NAME)

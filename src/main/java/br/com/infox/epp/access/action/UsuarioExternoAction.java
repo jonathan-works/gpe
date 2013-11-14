@@ -15,6 +15,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -23,7 +24,6 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.processo.action.IniciarProcessoAction;
-import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.TaskInstanceHome;
 import br.com.itx.util.EntityUtil;
 

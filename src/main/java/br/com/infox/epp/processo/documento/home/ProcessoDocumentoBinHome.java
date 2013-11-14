@@ -33,12 +33,12 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.api.IProcessoDocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.ibpm.home.Authenticator;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.FileHome;
 import br.com.itx.util.ComponentUtil;

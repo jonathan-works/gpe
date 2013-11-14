@@ -15,6 +15,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
@@ -25,7 +26,6 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.tarefa.caixa.Caixa;
-import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
