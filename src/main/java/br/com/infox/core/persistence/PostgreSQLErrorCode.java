@@ -1,4 +1,4 @@
-package br.com.infox.util;
+package br.com.infox.core.persistence;
 
 public enum PostgreSQLErrorCode {
 	

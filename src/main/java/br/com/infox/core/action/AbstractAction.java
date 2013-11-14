@@ -17,8 +17,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.util.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Util;

@@ -4,8 +4,6 @@ import java.sql.SQLException;
 
 import org.jboss.seam.annotations.ApplicationException;
 
-import br.com.infox.util.PostgreSQLErrorCode;
-
 @ApplicationException(end = false, rollback = false)
 public class DAOException extends Exception {
 	
