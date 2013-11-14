@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.search;
+package br.com.infox.epp.search;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -43,7 +43,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.search.Indexer;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
