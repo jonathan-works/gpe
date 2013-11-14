@@ -9,10 +9,10 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.access.list.UsuarioLocalizacaoList;
-import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 
 @Name(UsuarioLocalizacaoAction.NAME)
