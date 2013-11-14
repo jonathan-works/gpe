@@ -67,7 +67,7 @@
 		role-class="br.com.infox.epp.access.entity.Papel" />
 
 	<security:jpa-permission-store
-		user-permission-class="br.com.infox.access.entity.Permissao" />
+		user-permission-class="br.com.infox.epp.access.entity.Permissao" />
 
 	<security:remember-me
 		enabled="false"
