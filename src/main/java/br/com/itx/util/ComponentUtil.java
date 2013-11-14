@@ -39,7 +39,6 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.itx.component.AbstractHome;
 
 public final class ComponentUtil {
 	
@@ -203,22 +202,6 @@ public final class ComponentUtil {
 		}
 		return returnObj;
 	}	
-
-	/**
-	 * Metodo que recebe o nome de um home e devolve o getInstance() deste home, fazendo 
-	 * o cast. Retorna uma exceção caso o componente não seja encontrado.
-	 * @param <C>
-	 * @param homeName
-	 * @return
-	 */
-	public static <C> C getInstance(String homeName) {
-		AbstractHome<C> home = getComponent(homeName);
-		if (home == null) {
-			throw new IllegalArgumentException("O home '" + homeName + 
-					"' não foi encontrado.");
-		}
-		return home.getInstance();
-	}
 
 	/**
 	 * Metodo que devolve a instancia de um componente usando o 

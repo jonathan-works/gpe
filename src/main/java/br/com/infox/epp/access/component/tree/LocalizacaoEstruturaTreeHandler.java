@@ -23,6 +23,7 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.home.LocalizacaoHome;
 import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -60,7 +61,8 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 
 	@Override
 	protected Localizacao getEntityToIgnore() {
-		return ComponentUtil.getInstance("localizacaoHome");
+		LocalizacaoHome lh = ComponentUtil.getComponent("localizacaoHome");
+		return lh.getInstance();
 	}
 	
 	@Override
