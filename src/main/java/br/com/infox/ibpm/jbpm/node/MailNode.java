@@ -39,12 +39,12 @@ import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.persistence.db.DbPersistenceService;
 
 import br.com.infox.component.tree.TreeHandler;
+import br.com.infox.epp.access.component.tree.EstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.mail.entity.ListaEmail;
 import br.com.infox.epp.mail.home.ListaEmailHome;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
-import br.com.infox.ibpm.component.tree.EstruturaTreeHandler;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
