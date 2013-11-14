@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.dao;
+package br.com.infox.epp.endereco.dao;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
