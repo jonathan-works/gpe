@@ -1,4 +1,4 @@
-package br.com.infox.component.quartz;
+package br.com.infox.quartz;
 
 import java.io.Serializable;
 import java.util.ArrayList;

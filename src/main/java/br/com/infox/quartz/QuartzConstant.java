@@ -1,4 +1,4 @@
-package br.com.infox.component.quartz;
+package br.com.infox.quartz;
 
 public interface QuartzConstant {
 

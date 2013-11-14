@@ -16,10 +16,10 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.util.ClassLoaderUtil;
 import org.quartz.SchedulerException;
 
-import br.com.infox.component.quartz.QuartzConstant;
 import br.com.infox.epp.estatistica.processor.TarefaTimerProcessor;
 import br.com.infox.epp.estatistica.timer.TimerUtil;
 import br.com.infox.epp.system.entity.Parametro;
+import br.com.infox.quartz.QuartzConstant;
 import br.com.itx.util.EntityUtil;
 
 @Name(TarefaTimerStarter.NAME)
