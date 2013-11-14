@@ -31,7 +31,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -41,7 +40,7 @@ import br.com.infox.annotations.Parent;
 import br.com.infox.annotations.PathDescriptor;
 import br.com.infox.annotations.Recursive;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
-import br.com.infox.epp.entity.LocalizacaoTurno;
+import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.util.constants.LengthConstants;
 
 

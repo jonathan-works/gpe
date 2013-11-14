@@ -1,4 +1,4 @@
-package br.com.infox.epp.entity;
+package br.com.infox.epp.turno.entity;
 
 import java.io.Serializable;
 import java.sql.Time;
