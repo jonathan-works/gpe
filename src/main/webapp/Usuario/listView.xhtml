@@ -54,6 +54,16 @@
 						 label="#{messages['usuarioLogin.nome']}"
 						 value="#{usuarioLoginList.entity.nome}"
 						 maxlength="150" />
+					<wi:selectBooleanMenu
+						id="bloqueio"
+						label="#{messages['usuarioLogin.bloqueio']}"
+						value="#{usuarioLoginList.entity.bloqueio}" 
+					/>
+					<wi:selectBooleanMenu
+						id="provisorio"
+						label="#{messages['usuarioLogin.provisorio']}"
+						value="#{usuarioLoginList.entity.provisorio}" 
+					/>
                     <wi:selectSituacaoOneMenu
 						 id="ativo"
 						 label="#{messages['field.situacao']}"
