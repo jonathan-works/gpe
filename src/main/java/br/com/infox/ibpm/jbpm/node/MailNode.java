@@ -38,7 +38,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.persistence.db.DbPersistenceService;
 
-import br.com.infox.component.tree.TreeHandler;
+import br.com.infox.core.tree.TreeHandler;
 import br.com.infox.epp.access.component.tree.EstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;

@@ -4,7 +4,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.component.tree.EntityNode;
+import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.home.LocalizacaoHome;
 import br.com.itx.util.ComponentUtil;

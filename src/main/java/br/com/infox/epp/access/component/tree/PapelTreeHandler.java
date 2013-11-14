@@ -6,8 +6,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 
-import br.com.infox.component.tree.AbstractTreeHandler;
-import br.com.infox.component.tree.EntityNode;
+import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 

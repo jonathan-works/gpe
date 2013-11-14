@@ -8,7 +8,7 @@ import javax.persistence.Query;
 
 import org.jboss.seam.core.Events;
 
-import br.com.infox.component.tree.EntityNode;
+import br.com.infox.core.tree.EntityNode;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 

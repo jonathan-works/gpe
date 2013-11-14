@@ -10,11 +10,10 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.core.persistence.DAOException;
-
+import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.home.UsuarioHome;

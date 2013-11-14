@@ -11,7 +11,8 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
-import br.com.infox.component.tree.AbstractTreeHandler;
+
+import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.itx.util.EntityUtil;
 
 @Name(TarefasTreeHandler.NAME)

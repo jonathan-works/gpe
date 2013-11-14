@@ -1,8 +1,9 @@
 package br.com.infox.epp.documento.component.tree;
 
 import org.jboss.seam.annotations.Name;
-import br.com.infox.component.tree.AbstractTreeHandler;
-import br.com.infox.component.tree.EntityNode;
+
+import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 
 @Name(LocalizacaoFisicaTreeHandler.NAME)
