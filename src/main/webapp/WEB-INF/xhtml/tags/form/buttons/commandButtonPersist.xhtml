@@ -23,7 +23,7 @@
          action="#{empty persistAction ? home.homeName.concat('.persist()') : persistAction}"
          rendered="#{empty rendered ? !home.managed : rendered}"
          reRender="#{empty reRender ? 'pageBody, modalPanelMessages' : reRender}"
-         value="Incluir">
+         value="#{messages['crud.persist']}">
 	</wi:commandButton>
 	
 </ui:composition>

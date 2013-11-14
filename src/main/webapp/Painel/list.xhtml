@@ -125,7 +125,7 @@
 				<h:form id="modalForm">
 					<wi:inputText id="nomeCaixa" label="Nome da caixa"
 						value="#{caixaHome.instance.nomeCaixa}" />
-					<a:commandButton value="Incluir" styleClass="buttons"
+					<a:commandButton value="#{messages['crud.persist']}" styleClass="buttons"
 						action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
 						oncomplete="#{rich:component('novaCaixaPanel')}.hide()"
 						render="tarefasDiv,painelProcessos" />

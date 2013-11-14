@@ -23,7 +23,7 @@
          action="#{wi:get(updateAction, home.homeName.concat('.update()'))}"
          reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
          rendered="#{wi:get(rendered, home.managed)}"
-         value="Gravar">
+         value="#{messages['crud.update']}">
 	</wi:commandButton>
 		
 </ui:composition>

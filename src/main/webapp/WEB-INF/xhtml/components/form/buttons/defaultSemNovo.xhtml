@@ -33,7 +33,7 @@
 			 id="saveH"
 			 eventsQueue="editQueue"
 			 action="#{home.persist()}"
-			 value="Incluir"
+			 value="#{messages['crud.persist']}"
 			 styleClass="buttons"
 			 rendered="#{!home.managed and !isUploadForm and persistSemNewInstance}">
 			</h:commandButton> 
@@ -45,7 +45,7 @@
 			 oncomplete="#{oncomplete}"
 			 render="#{reRenderSave}"
              limitRender="true"
-			 value="Incluir"
+			 value="#{messages['crud.persist']}"
 			 styleClass="buttons"
 			 rendered="#{!home.managed and !isUploadForm and !persistSemNewInstance}">
 			</a:commandButton> 
@@ -53,14 +53,14 @@
 			 id="saveUpload"
 			 eventsQueue="editQueue"
 			 action="#{home.persist()}"
-			 value="Incluir"
+			 value="#{messages['crud.persist']}"
 			 styleClass="buttons"
 			 rendered="#{!home.managed and isUploadForm}">
 			</h:commandButton> 
 			<h:commandButton
 			 id="updateUpload"
 			 eventsQueue="editQueue"
-			 value="Gravar"
+			 value="#{messages['crud.update']}"
 			 styleClass="buttons"
 			 action="#{home.update()}"
 			 rendered="#{home.managed and isUploadForm}">
@@ -72,7 +72,7 @@
 			 oncomplete="#{oncomplete}"
 			 render="#{reRenderSave}"
              limitRender="true"
-			 value="Gravar"
+			 value="#{messages['crud.update']}"
 			 styleClass="buttons"
 			 action="#{home.update()}"
 			 rendered="#{home.managed and !isUploadForm}">

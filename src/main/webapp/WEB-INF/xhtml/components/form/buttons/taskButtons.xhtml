@@ -44,7 +44,7 @@
 			onmouseup="showLoading()"
 			oncomplete="#{oncomplete};hideLoading()"
 			render="#{reRenderSave},DialogMessage"
-			value="Gravar"
+			value="#{messages['crud.update']}"
 			styleClass="buttons"
 			action="#{taskInstanceHome.update(home)}" />
 		
@@ -68,7 +68,7 @@
 			onmouseup="showLoading()"
 			oncomplete="hideLoading()"
 			render="#{reRenderSave}"
-			value="Incluir"
+			value="#{messages['crud.persist']}"
 			styleClass="buttons"
 			action="#{taskInstanceHome.persist(home)}" />
 
