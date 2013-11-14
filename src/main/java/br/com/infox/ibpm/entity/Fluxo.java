@@ -32,7 +32,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -42,7 +42,9 @@ import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
-@Table(name = "tb_fluxo", schema="public")
+@Table(name = "tb_fluxo", schema="public",uniqueConstraints={
+    @UniqueConstraint(columnNames={"ds_fluxo"})
+})
 @NamedQueries(value={
 	@NamedQuery(name=FluxoQuery.LIST_ATIVOS,
 			    query=FluxoQuery.LIST_ATIVOS_QUERY),
