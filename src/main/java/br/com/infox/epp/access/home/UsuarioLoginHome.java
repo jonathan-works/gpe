@@ -1,4 +1,4 @@
-package br.com.infox.access.home;
+package br.com.infox.epp.access.home;
 
 import java.util.Arrays;
 import java.util.List;
