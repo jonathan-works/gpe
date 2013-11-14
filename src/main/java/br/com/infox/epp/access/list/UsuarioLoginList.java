@@ -23,6 +23,8 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
 	@Override
 	protected void addSearchFields() {
 		addSearchField("nome", SearchCriteria.CONTENDO);
+		addSearchField("bloqueio",SearchCriteria.IGUAL);
+		addSearchField("provisorio",SearchCriteria.IGUAL);
 		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 

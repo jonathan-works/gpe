@@ -20,8 +20,6 @@ import java.util.List;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
@@ -48,7 +46,7 @@ public class LocalizacaoHome
 	@Override
 	public void newInstance() {
 		getInstance().setAtivo(Boolean.TRUE);
-		limparTrees();	
+		limparTrees();
 		super.newInstance();
 	}
 	
@@ -64,23 +62,23 @@ public class LocalizacaoHome
 	@Override
 	public String persist() {
 		String ret = super.persist();
-		if (AbstractHome.PERSISTED.equals(ret)) {
+		
+		if (PERSISTED.equals(ret)) {
 			limparTrees();
 		}
-		return ret;	
+		
+		getEntityManager().refresh(instance);
+		return ret;
 	}
 	
 	@Override
 	public String update() {
-		/*
-		 * Se o registro estiver como inativo na hora do update, todos os seus
-		 * filhos serão inativados
-		 */
-		if (!getInstance().getAtivo()) {
-			inactiveRecursive(instance);
-			return AbstractHome.UPDATED;
+	    final Localizacao localizacao = getInstance();
+	    String ret = null;
+		if (localizacao.getAtivo() || inativarFilhos(localizacao)) {
+	        super.update();
 		}
-		return super.update();
+		return ret;
 	}
 	
 	@Override
@@ -96,23 +94,25 @@ public class LocalizacaoHome
 	 * Verifica se a localização está vinculada a algum ItemTIpoDocumento. Se
 	 * não estiver, realiza a inativação em cascata
 	 */
-	public String inactiveRecursive(Localizacao localizacao) {
-	    String ret = null;
-		if (localizacao.getItemTipoDocumentoList().size() <= 0) {
-			ret = inativarFilhos(localizacao);
-		} else {
-		    FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-		            "Registro está em uso não poderá ser excluido!");
-		}
-		return ret;
+	private boolean inativarFilhos(Localizacao localizacao) {
+	    if (localizacao.getItemTipoDocumentoList().size() <= 0) {
+	        localizacao.setAtivo(false);
+	        for (int i = 0, quantidadeFilhos = localizacao.getLocalizacaoList().size(); i < quantidadeFilhos; i++) {
+	            inativarFilhos(localizacao.getLocalizacaoList().get(i));
+	        }
+	        return true;
+	    } else {
+	        return false;
+        }
 	}
-
-	private String inativarFilhos(Localizacao localizacao){
-	    inactive(localizacao);
-		for (int i = 0, quantidadeFilhos = localizacao.getLocalizacaoList().size(); i < quantidadeFilhos; i++) {
-			inativarFilhos(localizacao.getLocalizacaoList().get(i));
-		}
-		return AbstractHome.UPDATED;
+	
+	@Override
+	public String inactive(Localizacao instance) {
+	    String ret = null;
+        if (inativarFilhos(instance)) {
+            ret = super.inactive(instance);
+        }
+	    return ret;
 	}
 	
 	/**

@@ -16,7 +16,7 @@ import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -93,6 +93,9 @@ public class IniciarProcessoAction {
 		} catch(NullPointerException npe) {
 		    LOG.error(".iniciarProcesso()", npe);
 			FacesMessages.instance().add(Severity.ERROR,"Nenhum processo informado.");
+		} catch (DAOException e) {
+			LOG.error(".iniciarProcesso()", e);
+			FacesMessages.instance().add(Severity.ERROR, "Erro ao inserir o processo: %s", e.getMessage());
 		}
 	}
 

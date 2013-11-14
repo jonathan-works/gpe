@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -39,8 +40,9 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * no parametro <code>natCatFluxoLocalizacao</code> também é inseirdo um 
 	 * registro com o mesmo registro de naturezaCategoriaFluxo.
 	 * @param natCatFluxoLocalizacao
+	 * @throws DAOException 
 	 */
-	public void persistWithChildren(NatCatFluxoLocalizacao natCatFluxoLocalizacao) {
+	public void persistWithChildren(NatCatFluxoLocalizacao natCatFluxoLocalizacao) throws DAOException {
 		persistChildren(natCatFluxoLocalizacao.getLocalizacao(), natCatFluxoLocalizacao);
 	}
 
@@ -48,9 +50,10 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * Método recursivo para inserir todas as localizações filhas.
 	 * @param localizacao
 	 * @param natCatFluxoLocalizacao
+	 * @throws DAOException 
 	 */
 	private void persistChildren(Localizacao localizacao, 
-								 NatCatFluxoLocalizacao natCatFluxoLocalizacao) {
+								 NatCatFluxoLocalizacao natCatFluxoLocalizacao) throws DAOException {
 		if(localizacao.getLocalizacaoList() != null && localizacao.getLocalizacaoList().size() > 0) {
 			for(Localizacao l : localizacao.getLocalizacaoList()) {
 				persistChildren(l, natCatFluxoLocalizacao);
@@ -73,8 +76,9 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * apenas a localização ou a NaturezaCategoriaFluxo de um registro
 	 * onde a heranca = true.
 	 * @param natCatFluxoLocalizacao
+	 * @throws DAOException 
 	 */
-	public void saveWithChidren(NatCatFluxoLocalizacao natCatFluxoLocalizacao, NatCatFluxoLocalizacao dataBaseOldObject) {
+	public void saveWithChidren(NatCatFluxoLocalizacao natCatFluxoLocalizacao, NatCatFluxoLocalizacao dataBaseOldObject) throws DAOException {
 		/*
 		 * Verifica se a heranca nunca foi ativada
 		 */
@@ -123,9 +127,10 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 	 * @param localizacao para buscar a árvore
 	 * @param oldNCF naturezaCategoriaFluxo antiga
 	 * @param newNCF naturezaCategoriaFluxo nova a ser atualizada.
+	 * @throws DAOException 
 	 */
 	private void updateChildren(Localizacao localizacao, NaturezaCategoriaFluxo oldNCF, 
-							   NaturezaCategoriaFluxo newNCF) {
+							   NaturezaCategoriaFluxo newNCF) throws DAOException {
 		if(localizacao.getLocalizacaoList() != null && localizacao.getLocalizacaoList().size() > 0) {
 			for(Localizacao l : localizacao.getLocalizacaoList()) {
 				updateChildren(l, oldNCF, newNCF);

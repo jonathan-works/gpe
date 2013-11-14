@@ -2,8 +2,11 @@ package br.com.infox.epp.fluxo.crud;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -17,6 +20,8 @@ public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatF
     
     private NaturezaCategoriaFluxo naturezaCategoriaFluxoCorrente;
     @In private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
+    
+    private static final Log LOG = Logging.getLog(NatCatFluxoLocalizacaoCrudAction.class);
     
     public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo){
         getInstance().setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
@@ -32,7 +37,11 @@ public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatF
     @Override
     public String save() {
         if (getInstance().getHeranca()) {
-            natCatFluxoLocalizacaoManager.persistWithChildren(getInstance());
+        	try {
+				natCatFluxoLocalizacaoManager.persistWithChildren(getInstance());
+			} catch (DAOException e) {
+				LOG.error(null, e);
+			}
         }
         return super.save();
     }

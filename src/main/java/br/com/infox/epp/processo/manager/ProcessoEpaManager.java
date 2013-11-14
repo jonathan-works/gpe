@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -46,12 +46,12 @@ public class ProcessoEpaManager extends GenericManager {
 		return processoEpaDAO.listNotEnded(fluxo);
 	}
 	
-	public void incluirParteProcesso(ProcessoEpa processoEpa, Pessoa pessoa){
+	public void incluirParteProcesso(ProcessoEpa processoEpa, Pessoa pessoa) throws DAOException{
 		processoEpa.getPartes().add(new ParteProcesso(processoEpa, pessoa));
 		update(processoEpa);
 	}
 	
-	public void incluirParteProcesso(ProcessoEpa processoEpa, ParteProcesso parteProcesso){
+	public void incluirParteProcesso(ProcessoEpa processoEpa, ParteProcesso parteProcesso) throws DAOException{
 		processoEpa.getPartes().add(parteProcesso);
 		update(processoEpa);
 	}
@@ -65,7 +65,7 @@ public class ProcessoEpaManager extends GenericManager {
 		return processoEpaDAO.podeInativarPartes(processoEpa);
 	}
 	
-	public void updateTempoGastoProcessoEpa() {
+	public void updateTempoGastoProcessoEpa() throws DAOException {
 		List<ProcessoEpa> listAllNotEnded = listAllNotEnded();
 		for (ProcessoEpa processoEpa : listAllNotEnded) {
 			Map<String, Object> result = processoEpaDAO.getTempoGasto(processoEpa);

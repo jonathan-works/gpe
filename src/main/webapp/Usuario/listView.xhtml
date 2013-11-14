@@ -54,6 +54,16 @@
 						 label="#{messages['usuarioLogin.nome']}"
 						 value="#{usuarioLoginList.entity.nome}"
 						 maxlength="150" />
+					<wi:selectBooleanMenu
+						id="bloqueio"
+						label="#{messages['usuarioLogin.bloqueio']}"
+						value="#{usuarioLoginList.entity.bloqueio}" 
+					/>
+					<wi:selectBooleanMenu
+						id="provisorio"
+						label="#{messages['usuarioLogin.provisorio']}"
+						value="#{usuarioLoginList.entity.provisorio}" 
+					/>
                     <wi:selectSituacaoOneMenu
 						 id="ativo"
 						 label="#{messages['field.situacao']}"
@@ -206,7 +216,7 @@
 									 id="saveButton"
 									 action="usuarioLocalizacaoAction.persist"
 									 reRender="localizacaoUsuario"
-									 value="Incluir" />
+									 value="#{messages['crud.persist']}" />
 							</ui:define>
                         
 						</wi:dataForm>
@@ -229,9 +239,9 @@
 					         limitToList="true"
 					         status=":status"
 					         render="localizacaoUsuario, localizacaoUsuarioFormMessages"
-					         onclick="confirm('Deseja excluir este registro?')"
+					         onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
 					         url="/img/remove.png"
-					         title="Excluir registro" />
+					         title="#{messages['crud.remove']}" />
 						</ui:define>
                         <wi:columnOutputText
 							 columnId="localizacao"
@@ -241,7 +251,11 @@
 							 columnId="papel"
 							 columnHeader="#{messages['usuarioLocalizacao.papel']}"
 							 value="#{row.papel}" />
-                    
+						<wi:columnBoolean 
+							columnId="responsavelLocalizacao"
+							columnHeader="#{messages['usuarioLocalizacao.responsavelLocalizacao']}"
+							value="#{row.responsavelLocalizacao}"
+						/>
 					</wi:dataTable>
 
                 
@@ -266,7 +280,8 @@
 						 bean="#{bloqueioUsuarioList}"
 						 tableTitle="#{messages['bloqueioUsuario.titleGrid']} - #{usuarioHome.instance.nome}"
 						 id="bloqueioUsuarioList"
-						 rowId="#{row.idBloqueioUsuario}">
+						 rowId="#{row.idBloqueioUsuario}"
+						 showToolbarColumn="false">
 						
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar" />
@@ -280,6 +295,10 @@
 									 id="dataBloqueio"
 									 value="#{bloqueioUsuarioList.entity.dataBloqueio}"
 									 label="#{messages['bloqueioUsuario.dataBloqueio']}" />
+								<wi:inputDate
+									 id="dataPrevisaoDesbloqueio"
+									 value="#{bloqueioUsuarioList.entity.dataPrevisaoDesbloqueio}"
+									 label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}" />
                                 <wi:inputText
 									 id="motivoBloqueio"
 									 label="#{messages['bloqueioUsuario.motivoBloqueio']}"

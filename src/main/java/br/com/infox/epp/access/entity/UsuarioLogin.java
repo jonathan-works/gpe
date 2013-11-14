@@ -88,8 +88,6 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 
 
 	public UsuarioLogin() {
-		bloqueio = false;
-		provisorio = false;
 		dataExpiracao = null;
 	}
 

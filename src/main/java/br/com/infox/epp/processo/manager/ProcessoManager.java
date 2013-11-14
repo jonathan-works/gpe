@@ -14,6 +14,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -97,12 +98,12 @@ public class ProcessoManager extends GenericManager {
 		processoAtual.getProcessoConexoListForIdProcesso().remove(processoConexo);
 	}
 	
-	public void addProcessoConexoForIdProcessoConexo(Processo processoAtual, Processo processoConexo){
+	public void addProcessoConexoForIdProcessoConexo(Processo processoAtual, Processo processoConexo) throws DAOException{
 		processoAtual.getProcessoConexoListForIdProcessoConexo().add(processoConexo);
 		update(processoAtual);
 	}
 	
-	public void removeProcessoConexoForIdProcessoConexo(Processo processoAtual, Processo processoConexo){
+	public void removeProcessoConexoForIdProcessoConexo(Processo processoAtual, Processo processoConexo) throws DAOException{
 		processoAtual.getProcessoConexoListForIdProcessoConexo().remove(processoConexo);
 		update(processoAtual);
 	}

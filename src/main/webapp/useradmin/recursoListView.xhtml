@@ -19,7 +19,7 @@
          value="#{papelHome}" />
 
 	<ui:define
-         name="title">Cadastro de Recursos</ui:define>
+         name="title">Recursos</ui:define>
 
     <ui:define
          name="searchGrid">
@@ -55,6 +55,10 @@
                 columnHeader="#{messages['recurso.identificador']}"
                 value="#{row.identificador}" />
             <ui:define name="headerToolBar" />
+             <ui:define name="toolBar">
+            	<wi:toolBarEdit id="recursoListedit" />
+            	<wi:toolBarRemove />
+            </ui:define>
         </wi:dataTable>
     </ui:define>
 

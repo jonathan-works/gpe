@@ -54,6 +54,7 @@ import org.xml.sax.InputSource;
 
 import br.com.infox.component.JsfComponentTreeValidator;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
@@ -247,7 +248,11 @@ public class ProcessBuilder implements Serializable {
 				needToPublic = true;
 				modifyNodesAndTasks();
 				fluxo.setXml(xmlDef);
-				genericManager.update(fluxo);
+				try {
+					genericManager.update(fluxo);
+				} catch (DAOException e) {
+					LOG.error(".update()", e);
+				}
 			}
 
 			taskFitter.updatePrazoTask();
@@ -259,7 +264,11 @@ public class ProcessBuilder implements Serializable {
 	public void updateFluxo(String cdFluxo) {
 		String xmlDef = JpdlXmlWriter.toString(instance);
 		fluxo.setXml(xmlDef);
-		genericManager.update(fluxo);
+		try {
+			genericManager.update(fluxo);
+		} catch (DAOException e) {
+			LOG.error(".updateFluxo()", e);
+		}
 
 		this.id = cdFluxo;
 		this.exists = true;

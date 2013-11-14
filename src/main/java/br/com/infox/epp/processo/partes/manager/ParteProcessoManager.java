@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
@@ -34,14 +34,14 @@ public class ParteProcessoManager extends GenericManager {
 	
 	@In private ProcessoEpaDAO processoEpaDAO; 
 	
-	public void alternarAtividade(ParteProcesso parteProcesso, String motivoModificacao){
+	public void alternarAtividade(ParteProcesso parteProcesso, String motivoModificacao) throws DAOException{
 		HistoricoParteProcesso hpp = new HistoricoParteProcesso(parteProcesso, motivoModificacao);
 		parteProcesso.setAtivo(!parteProcesso.getAtivo());
 		update(parteProcesso);
 		persist(hpp);
 	}
 	
-	public void incluir(Processo processo, String tipoPessoa){
+	public void incluir(Processo processo, String tipoPessoa) throws DAOException{
 		ProcessoEpa processoEpa = processoEpaDAO.getProcessoEpaByProcesso(processo);
 		if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
 			PessoaFisicaHome pf = (PessoaFisicaHome) Component.getInstance("pessoaFisicaHome");
@@ -81,7 +81,7 @@ public class ParteProcessoManager extends GenericManager {
 		}
 	}
 	
-	public HistoricoParteProcesso restaurarParteProcesso(ParteProcesso parteProcessoAtual, HistoricoParteProcesso versaoAnterior, String motivoRestauracao) throws ValidationException {
+	public HistoricoParteProcesso restaurarParteProcesso(ParteProcesso parteProcessoAtual, HistoricoParteProcesso versaoAnterior, String motivoRestauracao) throws ValidationException, DAOException {
 		if (!parteProcessoAtual.getIdParteProcesso().equals(versaoAnterior.getParteModificada().getIdParteProcesso())) {
 			throw new ValidationException("Restauração inválida: Histórico passado não pertence ao Histórico da Parte de Processo instanciada");
 		}

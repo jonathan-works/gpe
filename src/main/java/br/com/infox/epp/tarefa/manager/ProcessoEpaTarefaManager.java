@@ -13,7 +13,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Conversation;
-
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -85,15 +85,16 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	 * uma tarefa caso exista incremento.
 	 * @param fireTime
 	 * @param tipoPrazo
+	 * @throws DAOException 
 	 */
-	public void updateTarefasNaoFinalizadas(Date fireTime, PrazoEnum tipoPrazo) {
+	public void updateTarefasNaoFinalizadas(Date fireTime, PrazoEnum tipoPrazo) throws DAOException {
 		for (ProcessoEpaTarefa pt : getTarefaNotEnded(tipoPrazo)) {
 			updateTempoGasto(fireTime, pt);
 		}
 	}
 	
 	@Begin(nested=true, flushMode=FlushModeType.AUTO)
-	public void updateTarefasFinalizadas() {
+	public void updateTarefasFinalizadas() throws DAOException {
 		for (ProcessoEpaTarefa pt : processoEpaTarefaDAO.getTarefaEnded()) {
 			pt.setUltimoDisparo(pt.getDataInicio());
 			pt.setTempoGasto(0);
@@ -103,7 +104,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		Conversation.instance().end();
 	}
 	
-	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) {
+	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) throws DAOException {
 		if (processoEpaTarefa.getTarefa().getTipoPrazo() == null) {
 			return;
 		}
