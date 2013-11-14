@@ -96,6 +96,7 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 		getInstance().setBloqueio(false);
 		getInstance().setLdap(false);
 		novoBloqueio = new BloqueioUsuario();
+		ultimoBloqueio = null;
 	}
 
 	@Override
