@@ -7,8 +7,8 @@ import javax.persistence.Query;
 
 import br.com.infox.component.tree.EntityNode;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.ibpm.home.LocalizacaoHome;
-import br.com.infox.ibpm.home.UsuarioHome;
 
 public class LocalizacaoNode extends LocalizacaoNodeSearch {
 

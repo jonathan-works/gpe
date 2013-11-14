@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
  */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.access.home;
 
 import java.util.Date;
 import java.util.List;

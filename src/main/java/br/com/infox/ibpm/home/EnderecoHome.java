@@ -26,6 +26,7 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.ibpm.dao.CepDAO;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Endereco;

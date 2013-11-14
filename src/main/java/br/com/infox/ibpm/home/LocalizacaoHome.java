@@ -27,6 +27,7 @@ import br.com.infox.component.tree.EntityNode;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.itx.component.AbstractHome;
