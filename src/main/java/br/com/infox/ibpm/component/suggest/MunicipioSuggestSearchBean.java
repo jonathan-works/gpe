@@ -19,8 +19,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.epp.endereco.list.CepList;
 import br.com.infox.ibpm.entity.Estado;
-import br.com.infox.list.CepList;
 
 
 @Name(MunicipioSuggestSearchBean.NAME)

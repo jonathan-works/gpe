@@ -1,4 +1,4 @@
-package br.com.infox.list;
+package br.com.infox.epp.endereco.list;
 
 import java.util.HashMap;
 import java.util.Map;
