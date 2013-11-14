@@ -29,8 +29,8 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.system.entity.Parametro;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 

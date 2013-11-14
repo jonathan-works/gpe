@@ -17,6 +17,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -27,7 +28,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.query.ProcessoEpaQuery;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 

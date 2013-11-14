@@ -10,6 +10,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import twitter4j.TwitterException;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
@@ -17,7 +18,6 @@ import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.infox.epp.twitter.util.TwitterUtil;
 import br.com.infox.ibpm.jbpm.MailResolver;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

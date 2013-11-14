@@ -38,6 +38,7 @@ import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.endereco.entity.Endereco;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -46,7 +47,6 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
-import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.StringUtil;
 
 @Entity

@@ -52,6 +52,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.bpm.action.TaskPageAction;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
@@ -64,7 +65,6 @@ import br.com.infox.epp.search.Indexer;
 import br.com.infox.epp.search.Reindexer;
 import br.com.infox.epp.search.SearchHandler;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.exception.ApplicationException;

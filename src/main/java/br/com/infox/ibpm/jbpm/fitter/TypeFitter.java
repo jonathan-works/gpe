@@ -17,9 +17,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.bpm.action.TaskPageAction;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableAccessHandler;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.FacesUtil;
 import br.com.itx.util.FileUtil;
 

@@ -17,14 +17,13 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.tarefa.caixa.Caixa;
 import br.com.infox.ibpm.type.PrazoEnum;
-import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name = Tarefa.TABLE_NAME, schema="public")

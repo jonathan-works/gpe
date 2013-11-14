@@ -18,7 +18,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.util.constants.LengthConstants;
+import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = "tb_imagem_bin", schema="public")

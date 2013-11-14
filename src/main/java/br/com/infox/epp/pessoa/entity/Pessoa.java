@@ -15,8 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name=Pessoa.TABLE_NAME, schema="public")

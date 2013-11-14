@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import br.com.infox.util.constants.LengthConstants;
+import br.com.infox.core.constants.LengthConstants;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

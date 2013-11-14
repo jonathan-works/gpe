@@ -16,11 +16,11 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Util;
 import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;

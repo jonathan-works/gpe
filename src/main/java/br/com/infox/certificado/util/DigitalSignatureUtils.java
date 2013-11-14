@@ -23,7 +23,7 @@ import java.util.List;
 import org.jboss.seam.util.Base64;
 
 import br.com.infox.certificado.CertificadoException;
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 
 /**
  * Utility class for digital signatures and certificates verification.

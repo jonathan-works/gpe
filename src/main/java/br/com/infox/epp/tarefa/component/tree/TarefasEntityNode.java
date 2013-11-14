@@ -8,8 +8,8 @@ import javax.persistence.Query;
 
 import org.jboss.seam.core.Events;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {

@@ -15,7 +15,7 @@ import org.jboss.seam.annotations.security.permission.PermissionRole;
 import org.jboss.seam.annotations.security.permission.PermissionTarget;
 import org.jboss.seam.annotations.security.permission.PermissionUser;
 
-import br.com.infox.util.constants.LengthConstants;
+import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = "tb_permissao", schema="public")

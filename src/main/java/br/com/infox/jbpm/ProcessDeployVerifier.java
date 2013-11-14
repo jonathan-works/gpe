@@ -37,11 +37,11 @@ import org.jbpm.db.GraphSession;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.xml.sax.InputSource;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.JpdlXmlReader;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 

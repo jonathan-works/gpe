@@ -6,7 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.util.constants.LengthConstants;
+import br.com.infox.core.constants.LengthConstants;
 
 
 @Entity

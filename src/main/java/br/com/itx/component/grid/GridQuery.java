@@ -33,7 +33,7 @@ import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.component.query.EntityQuery;
 
 @Scope(ScopeType.CONVERSATION)

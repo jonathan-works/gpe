@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 
 import org.jboss.seam.core.Expressions;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 

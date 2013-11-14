@@ -43,7 +43,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Naming;
 import org.jboss.seam.util.Reflections;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 
 public final class EntityUtil implements Serializable {
 		

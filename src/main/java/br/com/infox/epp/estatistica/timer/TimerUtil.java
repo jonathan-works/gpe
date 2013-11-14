@@ -7,8 +7,8 @@ import javax.persistence.EntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.contexts.Contexts;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.system.entity.Parametro;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

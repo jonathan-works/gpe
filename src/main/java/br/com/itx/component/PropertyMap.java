@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 
 import org.jboss.seam.core.Expressions;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 
 @SuppressWarnings(WarningConstants.UNCHECKED)
 public class PropertyMap<K,V> extends LinkedHashMap<K,V> {

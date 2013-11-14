@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 /**

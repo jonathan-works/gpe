@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -23,7 +24,7 @@ import org.jboss.seam.annotations.security.management.RoleConditional;
 import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
 
-import br.com.infox.util.constants.LengthConstants;
+import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = "tb_papel", schema="public", uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))

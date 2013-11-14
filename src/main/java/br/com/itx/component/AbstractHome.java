@@ -41,11 +41,11 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.RecursiveManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;

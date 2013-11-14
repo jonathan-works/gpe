@@ -30,7 +30,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.componentes.suggest.SuggestItem;
 import br.com.infox.componentes.suggest.SuggestProvider;
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 
 @Scope(ScopeType.STATELESS)
 public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Serializable {

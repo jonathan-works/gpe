@@ -15,9 +15,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name=HistoricoParteProcesso.TABLE_NAME, schema="public")

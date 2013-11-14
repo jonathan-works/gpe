@@ -22,6 +22,7 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -29,7 +30,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Name(AuthenticatorService.NAME)

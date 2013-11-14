@@ -35,9 +35,9 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.query.FluxoQuery;
-import br.com.infox.util.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity

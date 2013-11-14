@@ -32,11 +32,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.util.constants.LengthConstants;
+import br.com.infox.core.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 /**

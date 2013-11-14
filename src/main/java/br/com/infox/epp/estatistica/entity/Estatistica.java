@@ -31,10 +31,10 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.util.constants.LengthConstants;
 
 
 @Entity

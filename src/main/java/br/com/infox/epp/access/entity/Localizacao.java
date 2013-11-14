@@ -35,11 +35,11 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.infox.epp.endereco.entity.Endereco;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
-import br.com.infox.util.constants.LengthConstants;
 
 
 /**

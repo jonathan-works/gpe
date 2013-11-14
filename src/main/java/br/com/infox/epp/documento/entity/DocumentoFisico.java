@@ -3,12 +3,11 @@ package br.com.infox.epp.documento.entity;
 import java.io.Serializable;
 
 import javax.persistence.*;
-
 import javax.validation.constraints.Size;
 
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.documento.query.DocumentoFisicoQuery;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(schema="public", name=DocumentoFisico.TABLE_NAME)

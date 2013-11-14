@@ -45,6 +45,7 @@ import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.CertificadoLog;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.RolesMap;
@@ -54,7 +55,6 @@ import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.ldap.util.LdapUtil;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

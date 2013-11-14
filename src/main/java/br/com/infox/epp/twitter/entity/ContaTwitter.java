@@ -6,10 +6,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import twitter4j.auth.AccessToken;
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.twitter.type.TipoTwitterEnum;
-import br.com.infox.util.constants.LengthConstants;
 
 @Entity
 @Table(name=ContaTwitter.NAME, schema="public")

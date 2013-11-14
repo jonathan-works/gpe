@@ -41,13 +41,13 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.constants.FloatFormatConstants;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
-import br.com.infox.util.constants.FloatFormatConstants;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 

@@ -53,6 +53,7 @@ import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
 import br.com.infox.component.JsfComponentTreeValidator;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -65,7 +66,6 @@ import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
 import br.com.infox.ibpm.jbpm.fitter.TransitionFitter;
 import br.com.infox.ibpm.jbpm.fitter.TypeFitter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
-import br.com.infox.util.constants.WarningConstants;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)

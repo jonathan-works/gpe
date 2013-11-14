@@ -25,9 +25,9 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.converter.NodeConverter;
 import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
-import br.com.infox.util.constants.WarningConstants;
 
 public class TransitionHandler implements Serializable {
 

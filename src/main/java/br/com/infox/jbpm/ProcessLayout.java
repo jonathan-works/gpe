@@ -17,9 +17,9 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.jbpm.layout.JbpmLayout;
-import br.com.infox.util.constants.WarningConstants;
 
 @Name(ProcessLayout.NAME)
 @Scope(ScopeType.CONVERSATION)

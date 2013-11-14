@@ -10,8 +10,8 @@ import org.hibernate.AnnotationException;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.Recursive;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.exception.RecursiveException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;

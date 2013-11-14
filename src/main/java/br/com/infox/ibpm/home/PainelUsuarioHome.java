@@ -16,13 +16,13 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoEpaList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.tarefa.caixa.Caixa;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

@@ -14,12 +14,13 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.core.Events;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
+
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.util.constants.WarningConstants;
 
 /**
  * 

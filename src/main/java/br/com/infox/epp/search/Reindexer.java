@@ -37,7 +37,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
 
