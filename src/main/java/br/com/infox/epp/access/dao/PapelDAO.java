@@ -1,4 +1,4 @@
-package br.com.infox.epp.dao;
+package br.com.infox.epp.access.dao;
 
 import java.util.List;
 
