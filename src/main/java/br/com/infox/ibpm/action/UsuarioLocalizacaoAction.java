@@ -10,10 +10,10 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.list.UsuarioLocalizacaoList;
 import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.ibpm.home.UsuarioHome;
-import br.com.infox.list.UsuarioLocalizacaoList;
 
 @Name(UsuarioLocalizacaoAction.NAME)
 @Scope(ScopeType.PAGE)
