@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.dao.DAOException;
 import br.com.infox.core.dao.GenericDAO;
 
 /**
@@ -33,15 +34,15 @@ public class GenericManager implements Serializable {
 	@In
 	private GenericDAO genericDAO;
 	
-	public <T> T persist(T o) {
+	public <T> T persist(T o) throws DAOException {
 		return genericDAO.persist(o);
 	}
 	
-	public <T> T update(T o) {
+	public <T> T update(T o) throws DAOException {
 		return genericDAO.update(o);
 	}
 	
-	public <T> T remove(T o) {
+	public <T> T remove(T o) throws DAOException {
 		return genericDAO.remove(o);
 	}
 	

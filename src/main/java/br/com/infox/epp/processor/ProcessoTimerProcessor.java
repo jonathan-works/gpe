@@ -13,6 +13,7 @@ import org.jboss.seam.log.Logging;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
+import br.com.infox.core.dao.DAOException;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.service.startup.ProcessoTimerStarter;
@@ -66,9 +67,12 @@ public class ProcessoTimerProcessor {
 			LOG.error("ProcessoTimerProcessor.increaseProcessTimeSpent()", e);
 		}
 		if (trigger != null) {
-			processoEpaManager.updateTempoGastoProcessoEpa();
-			processoEpaTarefaManager.updateTarefasNaoFinalizadas(
-					trigger.getPreviousFireTime(), PrazoEnum.D);
+			try {
+				processoEpaManager.updateTempoGastoProcessoEpa();
+				processoEpaTarefaManager.updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), PrazoEnum.D);
+			} catch (DAOException e) {
+				LOG.error(".increaseProcessTimeSpent()", e);
+			}
 		}
 		return null;
 	}

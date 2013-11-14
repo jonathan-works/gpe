@@ -5,9 +5,13 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.component.TurnoBean;
 import br.com.infox.component.TurnoHandler;
+import br.com.infox.core.dao.DAOException;
+import br.com.infox.core.persistence.PostgreSQLExceptionService;
 import br.com.infox.epp.entity.LocalizacaoTurno;
 import br.com.infox.epp.manager.LocalizacaoTurnoManager;
 import br.com.infox.ibpm.entity.Localizacao;
@@ -25,9 +29,13 @@ public class LocalizacaoTurnoAction {
 	private static final int UMA_HORA_EM_MINUTOS = 60;
 
     public static final String NAME = "localizacaoTurnoAction";
+    private static final Log LOG = Logging.getLog(LocalizacaoTurnoAction.class);
 
 	@In
-	private LocalizacaoTurnoManager localizacaoTurnoManager; 
+	private LocalizacaoTurnoManager localizacaoTurnoManager;
+	
+	@In
+	private PostgreSQLExceptionService postgreSQLExceptionService;
 	
 	private Localizacao localizacao;
 	
@@ -67,8 +75,13 @@ public class LocalizacaoTurnoAction {
 			localizacaoTurno.setHoraFim(turno.getHoraFinal());
 			localizacaoTurno.setTempoTurno(DateUtil.calculateMinutesBetweenTimes(turno.getHoraInicial(), turno.getHoraFinal()));
 			
-			localizacaoTurnoManager.persist(localizacaoTurno);
+			try {
+				localizacaoTurnoManager.persist(localizacaoTurno);
+				FacesMessages.instance().add("#{messages['entity_updated']}");
+			} catch (DAOException e) {
+				LOG.error(".inserirTurnosSelecionados()", e);
+				FacesMessages.instance().add(postgreSQLExceptionService.getMessageForError(e));
+			}
 		}
-		FacesMessages.instance().add("#{messages['entity_updated']}");
 	}
 }

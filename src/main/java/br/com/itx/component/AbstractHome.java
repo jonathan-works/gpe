@@ -44,9 +44,9 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.annotations.manager.RecursiveManager;
+import br.com.infox.core.persistence.PostgreSQLExceptionService;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.util.PostgreSQLErrorCode;
-import br.com.infox.util.PostgreSQLExceptionManager;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.ApplicationException;
@@ -57,13 +57,10 @@ import br.com.itx.util.EntityUtil;
 public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
-
 	private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
-
-	private static final String MSG_REGISTRO_CADASTRADO = "#{messages['constraintViolation.registroCadastrado']}";
 	private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
 	private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
-	private static final String MSG_FOREIGN_KEY_VIOLATION = "#{messages['constraintViolation.foreignKeyViolation']}";
+	private static final String MSG_REGISTRO_CADASTRADO = "#{messages['constraintViolation.uniqueViolation']}";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractHome.class);
 
@@ -80,7 +77,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	private T oldEntity;
 	
 	@In
-	private PostgreSQLExceptionManager postgreSQLExceptionManager;
+	private PostgreSQLExceptionService postgreSQLExceptionService;
 	
 	public T getOldEntity() {
 		return oldEntity;
@@ -205,9 +202,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			raiseEventHome("afterRemove");
 		} catch (PersistenceException e) {
 			LOG.error(".remove()", e);
-            PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);
+			PostgreSQLErrorCode errorCode = postgreSQLExceptionService.getErrorCode(e);
             if (errorCode != null) {
-            	ret = tratarErrosDePersistencia(errorCode.toString());
+            	ret = errorCode.toString();
+            	tratarErrosDePersistencia(errorCode);
             }
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
@@ -264,9 +262,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			throw new ApplicationException("Erro: " + e.getMessage(), e);
 		} catch (javax.persistence.PersistenceException e) {
             LOG.error(msg, e);
-            PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);
+            PostgreSQLErrorCode errorCode = postgreSQLExceptionService.getErrorCode(e);
             if (errorCode != null) {
-            	ret = tratarErrosDePersistencia(errorCode.toString());
+            	ret = errorCode.toString();
+            	tratarErrosDePersistencia(errorCode);
             }
         } catch (Exception e) {
             instance().add(StatusMessage.Severity.ERROR,
@@ -348,9 +347,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			LOG.error(msg, e);	
 		} catch (javax.persistence.PersistenceException e) {
 			LOG.error(msg, e);
-		    PostgreSQLErrorCode errorCode = postgreSQLExceptionManager.discoverErrorCode(e);
+			PostgreSQLErrorCode errorCode = postgreSQLExceptionService.getErrorCode(e);
             if (errorCode != null) {
-            	ret = tratarErrosDePersistencia(errorCode.toString());
+            	ret = errorCode.toString();
+            	tratarErrosDePersistencia(errorCode);
             }
             
 		} catch (Exception e) {
@@ -561,18 +561,12 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		this.lockedFields = lockedFields;
 	}
 	
-	private String tratarErrosDePersistencia(String ret){
-		String message = null;
-		if (PostgreSQLErrorCode.UNIQUE_VIOLATION.toString().equals(ret)){
-			message = MSG_REGISTRO_CADASTRADO;
-		} else if (PostgreSQLErrorCode.FOREIGN_KEY_VIOLATION.toString().equals(ret)) {
-			message = MSG_FOREIGN_KEY_VIOLATION;
-		}
+	private void tratarErrosDePersistencia(PostgreSQLErrorCode errorCode){
+		String message = postgreSQLExceptionService.getMessageForError(errorCode);
 		if (message != null) {
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(Severity.ERROR, message);
 		}
-		return ret;
 	}
 	
 }

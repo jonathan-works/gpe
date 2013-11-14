@@ -12,6 +12,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.dao.DAOException;
 import br.com.infox.epp.entity.ProcessoEpa;
 import br.com.infox.epp.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
@@ -65,7 +66,7 @@ public class TaskListenerService extends AbstractAction {
 	}
 
 	@Observer(Event.EVENTTYPE_TASK_END)
-	public void onEndJbpmTask(ExecutionContext context) {
+	public void onEndJbpmTask(ExecutionContext context) throws DAOException {
 		ProcessoEpaTarefa pt = processoEpaTarefaManager.getByTaskInstance
 									(context.getTaskInstance().getId());
 		Date dtFinalizacao = context.getTaskInstance().getEnd();
@@ -76,7 +77,7 @@ public class TaskListenerService extends AbstractAction {
 	}
 	
 	@Observer(Event.EVENTTYPE_PROCESS_END)
-	public void onEndProcess(ExecutionContext context) {
+	public void onEndProcess(ExecutionContext context) throws DAOException {
 		Processo processo = JbpmUtil.getProcesso();
 		if (processo == null) {
 			throw new ApplicationException("Erro ao criar o processo. Verifique a configuração das raias na definição do fluxo.");

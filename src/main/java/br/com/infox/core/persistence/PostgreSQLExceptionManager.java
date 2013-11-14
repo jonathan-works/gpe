@@ -1,4 +1,4 @@
-package br.com.infox.util;
+package br.com.infox.core.persistence;
 
 import java.sql.SQLException;
 
@@ -6,6 +6,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+
+import br.com.infox.util.PostgreSQLErrorCode;
 
 @Name(PostgreSQLExceptionManager.NAME)
 @Scope(ScopeType.EVENT)

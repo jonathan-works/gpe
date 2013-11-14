@@ -9,7 +9,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.dao.DAOException;
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.entity.Natureza;
@@ -31,6 +34,7 @@ public class NatCatFluxoLocalizacaoHome extends AbstractHome<NatCatFluxoLocaliza
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "natCatFluxoLocalizacaoHome";
+	private static final Log LOG = Logging.getLog(NatCatFluxoLocalizacaoHome.class);
 
 	@In
 	private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
@@ -65,9 +69,13 @@ public class NatCatFluxoLocalizacaoHome extends AbstractHome<NatCatFluxoLocaliza
 		instanceToSave.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
 		String save = null;
 		if (instanceToSave.getHeranca()) {
-			natCatFluxoLocalizacaoManager.persistWithChildren(instanceToSave);
-			save = PERSISTED;
-			FacesMessages.instance().addFromResourceBundleOrDefault( StatusMessage.Severity.INFO, getCreatedMessageKey(), getCreatedMessage().getExpressionString() );
+			try {
+				natCatFluxoLocalizacaoManager.persistWithChildren(instanceToSave);
+				save = PERSISTED;
+				FacesMessages.instance().addFromResourceBundleOrDefault( StatusMessage.Severity.INFO, getCreatedMessageKey(), getCreatedMessage().getExpressionString() );
+			} catch (DAOException e) {
+				LOG.error(null, e);
+			}
 		} else {
 			save = super.persist();
 		}
