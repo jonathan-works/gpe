@@ -26,9 +26,9 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.ibpm.manager.BloqueioUsuarioManager;
-import br.com.infox.ibpm.manager.UsuarioLoginManager;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
