@@ -1,4 +1,4 @@
-package br.com.infox.access;
+package br.com.infox.epp.access.util;
 
 import java.text.MessageFormat;
 
