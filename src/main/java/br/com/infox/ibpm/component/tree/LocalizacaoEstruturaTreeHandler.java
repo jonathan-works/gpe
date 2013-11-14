@@ -21,7 +21,7 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.component.tree.EntityNode;
-import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.itx.util.ComponentUtil;

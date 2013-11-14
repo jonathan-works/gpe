@@ -13,11 +13,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery;
 import br.com.infox.epp.system.annotation.Ignore;
-import br.com.infox.ibpm.entity.Localizacao;
 
 @Entity
 @Ignore

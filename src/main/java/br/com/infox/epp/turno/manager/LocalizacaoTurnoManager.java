@@ -13,9 +13,9 @@ import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
-import br.com.infox.ibpm.entity.Localizacao;
 
 @Name(LocalizacaoTurnoManager.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -18,9 +18,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.turno.query.LocalizacaoTurnoQuery;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
-import br.com.infox.ibpm.entity.Localizacao;
 
 @Entity
 @Table(name=LocalizacaoTurno.TABLE_NAME, schema="public")

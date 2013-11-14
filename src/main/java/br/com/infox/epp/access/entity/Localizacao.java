@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.entity;
+package br.com.infox.epp.access.entity;
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
 import java.util.ArrayList;
@@ -38,6 +38,8 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
+import br.com.infox.ibpm.entity.Endereco;
+import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.util.constants.LengthConstants;
 
 

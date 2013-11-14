@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.list.EntityList;
 import br.com.infox.core.action.list.SearchCriteria;
-import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(LocalizacaoList.NAME)
 @Scope(ScopeType.PAGE)

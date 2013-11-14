@@ -27,8 +27,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.ibpm.entity.Localizacao;
 
 @Entity
 @Table(name = ListaEmail.TABLE_NAME, schema="public")

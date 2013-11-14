@@ -24,11 +24,11 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.ibpm.dao.CepDAO;
 import br.com.infox.ibpm.entity.Cep;
 import br.com.infox.ibpm.entity.Endereco;
-import br.com.infox.ibpm.entity.Localizacao;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 

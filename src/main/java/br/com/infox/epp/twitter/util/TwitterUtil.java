@@ -9,11 +9,11 @@ import javax.persistence.NoResultException;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
-import br.com.infox.ibpm.entity.Localizacao;
 import br.com.itx.util.EntityUtil;
 import twitter4j.DirectMessage;
 import twitter4j.Status;

@@ -13,10 +13,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.ibpm.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao;
 
 @Entity
 @Table(name=NatCatFluxoLocalizacao.TABLE_NAME, schema="public",

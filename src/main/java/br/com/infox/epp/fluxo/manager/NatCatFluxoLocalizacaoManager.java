@@ -9,11 +9,11 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.ibpm.entity.Localizacao;
 
 /**
  * Classe com as regras de negócio para persistencia, 

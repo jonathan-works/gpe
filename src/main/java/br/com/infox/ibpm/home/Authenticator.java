@@ -46,10 +46,10 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.access.RolesMap;
 import br.com.infox.core.certificado.CertificadoLog;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.infox.ibpm.entity.Localizacao;
 import br.com.infox.ibpm.home.UsuarioHome;
 import br.com.infox.ibpm.service.AuthenticatorService;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
