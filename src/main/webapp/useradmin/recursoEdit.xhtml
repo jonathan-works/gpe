@@ -16,7 +16,7 @@
 			label="Identificador"
 			value="#{papelHome.instance.identificador}"
 			required="true"
-			rendered="#{not identityManager.roleExists(papelHome.instance.identificador)}">
+			rendered="#{not identityManager.roleExists(papelHome.instance.identificador) or not papelHome.managed}">
 		
 			<f:validator validatorId="papelRecursoIdentificadorValidator" />
 			<f:attribute name="isPapel" value="false" />
@@ -27,7 +27,7 @@
 			id="identificadorOutput"
 			label="Identificador"
 			value="#{papelHome.instance.identificador}"
-			rendered="#{identityManager.roleExists(papelHome.instance.identificador)}"
+			rendered="#{identityManager.roleExists(papelHome.instance.identificador) and papelHome.managed}"
 			/>
 	
 		<wi:inputText
