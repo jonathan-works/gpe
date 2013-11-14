@@ -34,6 +34,7 @@ import br.com.infox.access.entity.UsuarioLogin;
 import br.com.infox.cliente.home.ProcessoDocumentoHome;
 import br.com.infox.core.certificado.Certificado;
 import br.com.infox.core.certificado.CertificadoException;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.manager.ProcessoEpaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.ProcessoLocalizacaoIbpmDAO;
@@ -319,15 +320,27 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	 */
 	public void addProcessoConexoForIdProcessoConexo(Processo processo, String gridId) {
 		if (getInstance() != null){
-			processoManager.addProcessoConexoForIdProcessoConexo(getInstance(), processo);
-			refreshGrid(gridId);
+			try {
+				processoManager.addProcessoConexoForIdProcessoConexo(getInstance(), processo);
+				refreshGrid(gridId);
+			} catch (DAOException e) {
+				LOG.error(".addProcessoConexoForIdProcessoConexo()", e);
+				FacesMessages.instance().clear();
+				FacesMessages.instance().add(e.getLocalizedMessage());
+			}
 		}
 	}
 
 	public void removeProcessoConexoForIdProcessoConexo(Processo processo, String gridId) {
 		if (getInstance() != null){
-			processoManager.removeProcessoConexoForIdProcessoConexo(getInstance(), processo);
-			refreshGrid(gridId);
+			try {
+				processoManager.removeProcessoConexoForIdProcessoConexo(getInstance(), processo);
+				refreshGrid(gridId);
+			} catch (DAOException e) {
+				LOG.error(".removeProcessoConexoForIdProcessoConexo()", e);
+				FacesMessages.instance().clear();
+				FacesMessages.instance().add(e.getLocalizedMessage());
+			}
 		}
 	}
 	

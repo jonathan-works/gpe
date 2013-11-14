@@ -15,6 +15,7 @@ import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.core.Events;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.entity.Fluxo;
 import br.com.infox.ibpm.entity.Processo;
@@ -45,8 +46,9 @@ public class IniciarProcessoService {
 	 * 
 	 * @param processo
 	 * @param fluxo
+	 * @throws DAOException 
 	 */
-	public void iniciarProcesso(Processo processo, Fluxo fluxo) {
+	public void iniciarProcesso(Processo processo, Fluxo fluxo) throws DAOException {
 		processo.setDataInicio(new Date());
 		Long idProcessoJbpm = iniciarProcessoJbpm(processo, fluxo.getFluxo());
 		processo.setIdJbpm(idProcessoJbpm);

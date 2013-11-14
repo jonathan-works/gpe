@@ -21,7 +21,7 @@
 		 name="home"
 		 value="#{papelHome}" />
 
-    <ui:define name="title">Cadastro de Papéis</ui:define>
+    <ui:define name="title">Papéis</ui:define>
 
     <ui:define name="searchGrid">
 		
@@ -91,51 +91,48 @@
              name="tabPapeis"
              rendered="#{home.managed}">
             
-            <a:commandButton
-                 styleClass="buttons"
-                 value="Inverter"
-                 render="hForm"
-                 action="#{rolesTree.inverter()}">
-                
-                <f:param
-                     name="cid"
-                     value="#{conversation.id}" />
-            
-            </a:commandButton>
-            <span >
-                 <h:outputText
-                     rendered="#{rolesTree.invertida}"
-                     value="Estrutura dos papéis que cedem permissões " />
-                <h:outputText
-                     rendered="#{!rolesTree.invertida}"
-                     value="Estrutura dos papéis que recebem permissões " />
-            
-            </span>
-            <rich:tree
-                 data="#{item}"
-                 selectionType="ajax"
-                 render="pageBody"
-                 nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
-                 
-                 var="item">
-                
-                <rich:treeModelRecursiveAdaptor
-                     roots="#{rolesTree.roots}"
-                     nodes="#{item.nodes}">
-                    
-                    <rich:treeNode
-                         iconCollapsed="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
-                         iconExpanded="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
-                         iconLeaf="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif">
-                        
-                        <h:outputText value="#{item.entity}" />
-                    
-                    </rich:treeNode>
-                
-                </rich:treeModelRecursiveAdaptor>
-            
-            </rich:tree>
-        
+            <h:form>
+	            <a:commandButton
+	                 styleClass="buttons"
+	                 value="Inverter"
+	                 render="@form"
+	                 execute="@this"
+	                 action="#{rolesTree.inverter}" />
+	                
+	            <span >
+	                 <h:outputText
+	                     rendered="#{rolesTree.invertida}"
+	                     value="Estrutura dos papéis que cedem permissões " />
+	                <h:outputText
+	                     rendered="#{!rolesTree.invertida}"
+	                     value="Estrutura dos papéis que recebem permissões " />
+	            
+	            </span>
+	            <rich:tree
+	                 data="#{item}"
+	                 selectionType="ajax"
+	                 render="pageBody"
+	                 nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
+	                 
+	                 var="item">
+	                
+	                <rich:treeModelRecursiveAdaptor
+	                     roots="#{rolesTree.roots}"
+	                     nodes="#{item.nodes}">
+	                    
+	                    <rich:treeNode
+	                         iconCollapsed="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
+	                         iconExpanded="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
+	                         iconLeaf="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif">
+	                        
+	                        <h:outputText value="#{item.entity}" />
+	                    
+	                    </rich:treeNode>
+	                
+	                </rich:treeModelRecursiveAdaptor>
+	            
+	            </rich:tree>
+			</h:form>	        
         </infox:tab>
     
 	</ui:define>

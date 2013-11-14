@@ -11,8 +11,11 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.dao.CategoriaItemDAO;
 import br.com.infox.epp.entity.Categoria;
 import br.com.infox.epp.entity.CategoriaItem;
@@ -28,6 +31,7 @@ public class CategoriaItemManager extends GenericManager{
 	private static final long serialVersionUID = -3580636874720809514L;
 
 	public static final String NAME = "categoriaItemManager";
+	private static final Log LOG = Logging.getLog(CategoriaItemManager.class);
 
 	@In
 	private CategoriaItemDAO categoriaItemDAO;
@@ -65,9 +69,15 @@ public class CategoriaItemManager extends GenericManager{
 	
 	@Override
 	public <T> T remove(T o) {
-	    T result = super.remove(o);
-	    
-	    conclusionMessage("#{messages['entity_deleted']}","Falha ao remover",result != null);
+	    T result;
+		try {
+			result = super.remove(o);
+		} catch (DAOException e) {
+			LOG.error(null, e);
+			result = null;
+		}
+		
+		conclusionMessage("#{messages['entity_deleted']}","Falha ao remover", result != null);
 	    return result;
 	}
     
@@ -94,7 +104,13 @@ public class CategoriaItemManager extends GenericManager{
     private void persistCategoriaItem(Categoria categoria, Item item,
             List<CategoriaItem> categoriaItemList) {
         Util.beginTransaction();
-        CategoriaItem ci = persist(new CategoriaItem(categoria, item));
+        CategoriaItem ci;
+		try {
+			ci = persist(new CategoriaItem(categoria, item));
+		} catch (DAOException e) {
+			LOG.error(null, e);
+			ci = null;
+		}
         Util.commitTransction();
         if (ci!=null) {
             categoriaItemList.add(ci);

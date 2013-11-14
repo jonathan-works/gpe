@@ -6,9 +6,13 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.component.tree.AbstractTreeHandler;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.ibpm.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.ibpm.component.tree.PapelTreeHandler;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
@@ -19,6 +23,7 @@ import br.com.infox.list.UsuarioLocalizacaoList;
 @Scope(ScopeType.PAGE)
 public class UsuarioLocalizacaoAction {
 	public static final String NAME = "usuarioLocalizacaoAction";
+	private static final Log LOG = Logging.getLog(UsuarioLocalizacaoAction.class);
 	
 	private UsuarioLocalizacao instance;
 	
@@ -58,13 +63,25 @@ public class UsuarioLocalizacaoAction {
 	}
 	
 	public void persist() {
-        genericManager.persist(instance);
-        newInstance();
+        try {
+			genericManager.persist(instance);
+			newInstance();
+		} catch (DAOException e) {
+			LOG.error(".persist()", e);
+			FacesMessages.instance().clear();
+			FacesMessages.instance().add(e.getLocalizedMessage());
+		}
 	}
 	
 	public void remove(UsuarioLocalizacao usuarioLocalizacao) {
 		setInstance(usuarioLocalizacao);
-		genericManager.remove(instance);
-		newInstance();
+		try {
+			genericManager.remove(instance);
+			newInstance();
+		} catch (DAOException e) {
+			LOG.error(".remove()", e);
+			FacesMessages.instance().clear();
+			FacesMessages.instance().add(e.getLocalizedMessage());
+		}
 	}
 }

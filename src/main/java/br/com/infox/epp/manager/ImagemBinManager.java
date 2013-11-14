@@ -14,6 +14,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.dao.ImagemBinDAO;
 import br.com.infox.epp.entity.ImagemBin;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
@@ -32,7 +33,7 @@ public class ImagemBinManager extends GenericManager {
 	@In 
 	private ImageUtil imageUtil;
 
-    public void persistImageBin(ImagemBin imagemBin) {
+    public void persistImageBin(ImagemBin imagemBin) throws DAOException {
     	imagemBinDAO.persistImageBin(imagemBin);
     }
 

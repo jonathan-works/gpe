@@ -7,11 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import javax.persistence.TransactionRequiredException;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.ScopeType;
@@ -20,9 +17,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Util;
 
@@ -38,7 +34,6 @@ import br.com.itx.component.Util;
 public class GenericDAO implements Serializable {
 
     private static final long serialVersionUID = 2513102779632819212L;
-	private static final LogProvider LOG = Logging.getLogProvider(GenericDAO.class);
 
 	public static final String NAME = "genericDAO";
 	
@@ -104,7 +99,7 @@ public class GenericDAO implements Serializable {
 		return q;
 	}
 	
-	public <T> T persist(T object){
+	public <T> T persist(T object) throws DAOException{
 	    final T result = processExceptions(new DAOActionInterface<T>() {
             @Override
             @Transactional
@@ -118,7 +113,7 @@ public class GenericDAO implements Serializable {
         return result;
 	}
 	
-	public <T> T update(T object){
+	public <T> T update(T object) throws DAOException{
 	    final T result = processExceptions(new DAOActionInterface<T>() {
             @Override
             @Transactional
@@ -132,7 +127,7 @@ public class GenericDAO implements Serializable {
         return result;
 	}
 	
-	public <T> T remove(final T object){
+	public <T> T remove(final T object) throws DAOException{
 	    final T result = processExceptions(new DAOActionInterface<T>() {
             @Override
             @Transactional
@@ -146,26 +141,15 @@ public class GenericDAO implements Serializable {
 	    return result;
 	}
 	
-	private <T> T processExceptions(DAOActionInterface<T> action,T object,String msg) {
+	private <T> T processExceptions(DAOActionInterface<T> action,T object,String msg) throws DAOException {
 	    StopWatch sw = new StopWatch();
         sw.start();
-        T ret = null;
 	    try {
-	        ret = action.execute(object);
-	    }catch(IllegalArgumentException e) {
-	        LOG.error(msg,e);
-	    }catch(EntityExistsException e) {
-	        LOG.error(msg,e);
-	    }catch(TransactionRequiredException e) {    
-	        LOG.error(msg,e);
-	    }catch(PersistenceException e) {
-	        LOG.error(msg,e);
-	    }catch(Exception e) {
-	        LOG.error(msg,e);
+	        return action.execute(object);
+	    } catch (Throwable t) {
+	    	throw new DAOException(t);
+	    } finally {
+	    	Util.rollbackTransactionIfNeeded();
 	    }
-	    if (ret == null) {
-	        Util.rollbackTransactionIfNeeded();
-	    }
-	    return ret;
 	}
 }

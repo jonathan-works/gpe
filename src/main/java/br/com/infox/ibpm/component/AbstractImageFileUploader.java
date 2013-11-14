@@ -13,6 +13,7 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.entity.ImagemBin;
 import br.com.infox.epp.manager.ImagemBinManager;
 import br.com.itx.util.ArrayUtil;
@@ -88,7 +89,7 @@ public abstract class AbstractImageFileUploader implements FileUploadListener {
 		try {
             imagemBinManager.persistImageBin(instance);
             imagemBinManager.saveFile(instance, getImagesRelativePath());
-        } catch (IOException e) {
+        } catch (IOException | DAOException e) {
             LOG.error("Falha ao gravar no sistema de arquivos.",e);
         }
 	}
