@@ -1,4 +1,4 @@
-package br.com.infox.epp.dao;
+package br.com.infox.epp.turno.dao;
 
 import java.sql.Time;
 import java.util.Calendar;

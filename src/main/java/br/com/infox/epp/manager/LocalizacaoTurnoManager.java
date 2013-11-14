@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.dao.LocalizacaoTurnoDAO;
+import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.ibpm.entity.Localizacao;
 
