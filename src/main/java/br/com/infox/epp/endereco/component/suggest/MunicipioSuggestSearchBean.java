@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.component.suggest;
+package br.com.infox.epp.endereco.component.suggest;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -21,6 +21,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.endereco.entity.Estado;
 import br.com.infox.epp.endereco.list.CepList;
+import br.com.infox.ibpm.component.suggest.MunicipioSuggestBean;
 
 
 @Name(MunicipioSuggestSearchBean.NAME)
