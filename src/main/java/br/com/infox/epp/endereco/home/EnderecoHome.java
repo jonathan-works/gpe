@@ -12,7 +12,7 @@
  * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
  * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
  */
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.endereco.home;
 
 import java.util.Date;
 import java.util.List;
@@ -29,7 +29,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.endereco.entity.Cep;
 import br.com.infox.epp.endereco.entity.Endereco;
-import br.com.infox.epp.endereco.home.CepHome;
 import br.com.infox.ibpm.dao.CepDAO;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
