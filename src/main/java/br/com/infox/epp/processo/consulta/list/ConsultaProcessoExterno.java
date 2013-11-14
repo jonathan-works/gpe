@@ -6,8 +6,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.action.list.EntityList;
-import br.com.infox.core.action.list.SearchCriteria;
+import br.com.infox.core.list.EntityList;
+import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Name(ConsultaProcessoExterno.NAME)

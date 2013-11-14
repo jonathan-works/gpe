@@ -6,7 +6,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.*;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.core.action.list.*;
+import br.com.infox.core.list.*;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 
 @Name(PessoaList.NAME)

@@ -1,4 +1,4 @@
-package br.com.infox.core.action.list;
+package br.com.infox.core.list;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.action.list.EntityList;
-import br.com.infox.core.action.list.SearchCriteria;
+import br.com.infox.core.list.EntityList;
+import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.itx.util.StringUtil;
 

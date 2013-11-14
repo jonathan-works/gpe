@@ -2,8 +2,8 @@ package br.com.infox.epp.processo.partes.list;
 
 import java.util.Map;
 
-import br.com.infox.core.action.list.EntityList;
-import br.com.infox.core.action.list.SearchCriteria;
+import br.com.infox.core.list.EntityList;
+import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 
 public class HistoricoParteProcessoList extends EntityList<ParteProcesso> {
