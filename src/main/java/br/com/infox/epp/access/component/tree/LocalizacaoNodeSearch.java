@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.component.tree;
+package br.com.infox.epp.access.component.tree;
 
 import java.util.List;
 
