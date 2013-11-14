@@ -1,4 +1,4 @@
-package br.com.infox.epp.action.crud;
+package br.com.infox.epp.turno.crud;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
