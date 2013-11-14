@@ -6,11 +6,11 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
-import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.itx.util.ComponentUtil;
 
 @Name(FluxoLocalizacaoCrudAction.NAME)

@@ -24,10 +24,10 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.component.tree.EntityNode;
+import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
-import br.com.infox.ibpm.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.ibpm.manager.LocalizacaoManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
