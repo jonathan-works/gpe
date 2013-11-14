@@ -1,4 +1,4 @@
-package br.com.infox.access.query;
+package br.com.infox.epp.access.query;
 
 public interface UsuarioLoginQuery {
 
