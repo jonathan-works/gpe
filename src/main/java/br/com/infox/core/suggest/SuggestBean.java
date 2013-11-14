@@ -12,7 +12,7 @@
  * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
  * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
  */
-package br.com.infox.component.suggest;
+package br.com.infox.core.suggest;
 
 
 public interface SuggestBean {

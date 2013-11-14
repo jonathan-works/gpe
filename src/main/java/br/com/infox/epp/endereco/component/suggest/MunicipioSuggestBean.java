@@ -20,7 +20,7 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.component.suggest.AbstractSuggestBean;
+import br.com.infox.core.suggest.AbstractSuggestBean;
 import br.com.infox.epp.endereco.entity.Estado;
 import br.com.infox.epp.endereco.entity.Municipio;
 import br.com.infox.epp.endereco.home.CepHome;

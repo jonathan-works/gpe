@@ -18,7 +18,7 @@ package br.com.infox.epp.documento.component.suggest;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.component.suggest.AbstractSuggestBean;
+import br.com.infox.core.suggest.AbstractSuggestBean;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 
 
