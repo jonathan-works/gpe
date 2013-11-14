@@ -5,7 +5,7 @@ import java.util.List;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;

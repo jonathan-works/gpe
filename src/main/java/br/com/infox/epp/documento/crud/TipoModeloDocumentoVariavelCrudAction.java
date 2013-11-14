@@ -2,7 +2,8 @@ package br.com.infox.epp.documento.crud;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.core.action.crud.AbstractCrudAction;
+
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;

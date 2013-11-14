@@ -5,7 +5,7 @@ import java.util.List;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;

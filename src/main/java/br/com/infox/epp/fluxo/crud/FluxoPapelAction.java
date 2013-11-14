@@ -12,7 +12,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;

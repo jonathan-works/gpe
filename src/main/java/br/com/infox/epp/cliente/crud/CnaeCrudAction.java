@@ -2,7 +2,7 @@ package br.com.infox.epp.cliente.crud;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.cliente.entity.Cnae;
 
 @Name(CnaeCrudAction.NAME)

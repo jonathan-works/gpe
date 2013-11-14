@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 
 @Name(CalendarioEventosCrudAction.NAME)

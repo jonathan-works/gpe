@@ -1,4 +1,4 @@
-package br.com.infox.core.action.crud;
+package br.com.infox.core.crud;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;

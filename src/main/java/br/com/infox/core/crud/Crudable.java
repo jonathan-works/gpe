@@ -1,4 +1,4 @@
-package br.com.infox.core.action.crud;
+package br.com.infox.core.crud;
 
 /**
  * Interface que deve ser implementada para os Beans que serão

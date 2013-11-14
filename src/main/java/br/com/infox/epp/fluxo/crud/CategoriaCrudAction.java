@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;

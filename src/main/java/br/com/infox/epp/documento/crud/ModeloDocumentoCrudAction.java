@@ -11,7 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.action.crud.AbstractCrudAction;
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
