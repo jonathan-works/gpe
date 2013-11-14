@@ -4,7 +4,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.manager.RecursiveManager;
+import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.epp.documento.component.tree.LocalizacaoFisicaTreeHandler;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.itx.component.AbstractHome;

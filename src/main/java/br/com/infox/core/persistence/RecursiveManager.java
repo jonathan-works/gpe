@@ -1,4 +1,4 @@
-package br.com.infox.core.manager;
+package br.com.infox.core.persistence;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -11,7 +11,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.core.persistence.Recursive;
 import br.com.itx.exception.RecursiveException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
