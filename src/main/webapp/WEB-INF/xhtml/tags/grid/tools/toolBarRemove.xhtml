@@ -27,8 +27,8 @@
          action="#{actionRemove}"
          limitToList="true"
          status=":status"
-         reRender="#{wi:get(reRender, 'searchGridRegion')},modalPanelMessages"
-         onclick="if(!confirm('Deseja remover o registro?')) return false;"
+         reRender="#{wi:get(reRender, 'searchGridRegion')}"
+         onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
          url="/img/remove.png"
          title="#{wi:get(title, 'Remover registro')}">
 		<f:param
