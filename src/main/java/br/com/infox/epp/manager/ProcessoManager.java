@@ -28,6 +28,7 @@ import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.entity.UsuarioLocalizacao;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
+import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
 import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
@@ -43,6 +44,8 @@ public class ProcessoManager extends GenericManager {
 	@In private ProcessoDAO processoDAO;
 	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
+	@In private ProcessoDocumentoManager processoDocumentoManager;
+	@In private ProcessoDocumentoBinManager processoDocumentoBinManager;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
@@ -56,20 +59,11 @@ public class ProcessoManager extends GenericManager {
 		return bin;
 	}
 	
-	public ProcessoDocumento createProcessoDocumento(Processo processo, String label, ProcessoDocumentoBin bin, TipoProcessoDocumento tipoProcessoDocumento) {
-		ProcessoDocumento doc = new ProcessoDocumento();
-		doc.setProcessoDocumentoBin(bin);
-		doc.setAtivo(Boolean.TRUE);
-		doc.setDataInclusao(new Date());
-		doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
-		doc.setProcesso(processo);
-		doc.setProcessoDocumento(label);
-		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
-		EntityUtil.getEntityManager().persist(doc);
-		return doc;
+	public ProcessoDocumento createProcessoDocumento(Processo processo, String label, ProcessoDocumentoBin bin, TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
+		return processoDocumentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);
 	}
-	
-	private String getDescricaoModeloDocumentoByValue(Object value) {
+
+    private String getDescricaoModeloDocumentoByValue(Object value) {
 		String modeloDocumento = String.valueOf(value);
 		if (Strings.isEmpty(modeloDocumento)){
 			modeloDocumento = " ";
