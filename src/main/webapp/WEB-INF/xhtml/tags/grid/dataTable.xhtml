@@ -38,12 +38,6 @@
 			styleClass="dtable-p #{panelStyleClass}"
 			>
 
-			<wi:messages
-				formId="#{id}Messages"
-				rendered="#{empty showMsg ? true : showMsg}"
-				globalOnly="true"
-				timeCloseMSG="5000" />
-
 			<rich:dataTable
 				value="#{values}"
 				id="#{id}"
