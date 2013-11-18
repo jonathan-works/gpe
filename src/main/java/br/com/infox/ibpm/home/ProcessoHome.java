@@ -218,10 +218,15 @@ public class ProcessoHome extends AbstractHome<Processo> {
 			Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
 			ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue, certChain, signature);
 			label = label == null ? "-" : label;
-			ProcessoDocumento doc = processoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
-			getEntityManager().flush();
-	        setIdProcessoDocumento(doc.getIdProcessoDocumento());
-			return doc.getIdProcessoDocumento();
+			ProcessoDocumento doc;
+            try {
+                doc = processoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
+                setIdProcessoDocumento(doc.getIdProcessoDocumento());
+                return doc.getIdProcessoDocumento();
+            } catch (DAOException e) {
+                LOG.error("inserirProcessoDocumentoFluxo",e);
+                return ERRO_AO_VERIFICAR_CERTIFICADO;
+            }
 		} else {
 			return ERRO_AO_VERIFICAR_CERTIFICADO;
 		}
