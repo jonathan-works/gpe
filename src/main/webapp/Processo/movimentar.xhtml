@@ -145,12 +145,12 @@
 					 name="tabAnexar"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 title="Anexar Documento"
+					 title="#{messages['processoDocumento.anexarDocumento']}"
                      action="#{processoDocumentoHome.newInstance()}">
 					
 					<wi:dataForm
 						formId="anexarDocumentosForm"
-						formTitle="#{messages['processoDocumento.anexarDocumento']}"
+						formTitle="#{messages['form.title']}"
                         isUploadForm="true"
 					>
 						
