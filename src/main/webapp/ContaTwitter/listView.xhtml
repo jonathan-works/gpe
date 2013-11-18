@@ -76,7 +76,7 @@
 												  reRender="idTwitterBody"
 												  onclick="window.open('#{home.getAuthorizationURL()}', 'Autorizar Aplicação' ,'');"/>
 								<wi:commandButton id="gravarButton"
-												  value="Gravar"
+												  value="#{messages['crud.update']}"
 												  rendered="#{home.requesting}"
 												  reRender="idTwitterBody"
 												  action="#{home.getAutorizacao('U')}" />

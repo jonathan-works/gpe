@@ -56,6 +56,11 @@
 						 id="descricao"
 						 label="#{messages['fluxo.descricao']}"
 						 value="#{fluxoList.entity.fluxo}" />
+					<wi:inputDataPeriodo
+						 id="dataPublicacao"
+						 label="#{messages['fluxoList.dataPublicacao']}"
+						 valueDateFrom="#{fluxoList.entity.dataInicioPublicacao}"
+						 valueDateTo="#{fluxoList.entity.dataFimPublicacao}"/>
 					<wi:selectBooleanMenu
 						 id="publicado"
 						 label="#{messages['fluxo.publicado']}"
@@ -139,7 +144,9 @@
 				 value="#{fluxoCrudAction.instance.ativo}"/>
 			<ui:define name="buttons">
 				
-				<ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml" />
+				<ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml">
+					<ui:param name="reRenderSave" value="defaultTabPanel fluxoForm"></ui:param>
+				</ui:include>
 			
 			</ui:define>
 		
@@ -175,7 +182,7 @@
 						 id="savePapelButton"
 						 action="fluxoPapelAction.save"
 						 reRender="fluxoPapelForm, fluxoPapelDiv"
-						 value="Incluir" />
+						 value="#{messages['crud.persist']}" />
 				
 				</ui:define>
 			
@@ -260,8 +267,8 @@
 								<wi:commandButton 
 									id="saveButton"
 									action="fluxoLocalizacaoCrudAction.save"
-									reRender="natCatFluxoLocDiv"
-									value="Incluir"	/>
+									reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
+									value="#{messages['crud.persist']}"	/>
 							</ui:define>
 						</wi:dataForm>
 					</div>
@@ -277,7 +284,7 @@
 							<ui:define name="toolBar">
 								<wi:toolBarRemove
 									actionRemove="fluxoLocalizacaoCrudAction.remove(row)"
-									reRender="natCatFluxoLocDiv"/>
+									reRender="natCatFluxoLocDiv pageBodyDialogMessage"/>
 							</ui:define>
 							<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"
 												 columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"

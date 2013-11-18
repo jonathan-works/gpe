@@ -55,6 +55,7 @@ public class NatCatFluxoLocalizacaoHome extends AbstractHome<NatCatFluxoLocaliza
 	public void newInstance() {
 		super.newInstance();
 		updateList = true;
+		naturezaCategoriaFluxo = null;
 	}
 	
 	@Override

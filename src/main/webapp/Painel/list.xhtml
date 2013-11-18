@@ -53,7 +53,7 @@
 							<wi:searchForm
 								opened="false"
 								formId="consultaProcessoForm"
-								formTitle="#{messages['form.title']}">
+								formTitle="#{messages['searchForm.title']}">
 								<wi:inputText id="numeroProcesso"
 									label="#{messages['consultaProcesso.numeroProcesso']}"
 									value="#{home.instance.numeroProcesso}" />
@@ -115,7 +115,7 @@
 				</s:div>
 			</s:div>
 
-			<rich:popupPanel id="novaCaixaPanel" height="110" left="40">
+			<rich:popupPanel id="novaCaixaPanel" height="120" left="40">
 				<f:facet name="header">
 					<h:outputText value="Nova caixa para a tarefa" />
 				</f:facet>
@@ -125,7 +125,7 @@
 				<h:form id="modalForm">
 					<wi:inputText id="nomeCaixa" label="Nome da caixa"
 						value="#{caixaHome.instance.nomeCaixa}" />
-					<a:commandButton value="Incluir" styleClass="buttons"
+					<a:commandButton value="#{messages['crud.persist']}" styleClass="buttons"
 						action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
 						oncomplete="#{rich:component('novaCaixaPanel')}.hide()"
 						render="tarefasDiv,painelProcessos" />

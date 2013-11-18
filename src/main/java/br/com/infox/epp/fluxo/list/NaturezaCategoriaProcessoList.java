@@ -1,5 +1,6 @@
 package br.com.infox.epp.fluxo.list;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -21,7 +22,7 @@ public class NaturezaCategoriaProcessoList extends EntityList<NaturezaCategoriaF
 	private static final String DEFAULT_EJBQL = "select ncf from NatCatFluxoLocalizacao o " +
 												   "inner join o.naturezaCategoriaFluxo ncf " +
 												   "inner join ncf.fluxo.fluxoPapelList papelList";
-	private static final String DEFAULT_ORDER = "ncf.natureza";
+	private static final String DEFAULT_ORDER = "natureza";
 	private static final String R1 = "o.localizacao = #{usuarioLogadoLocalizacaoAtual.getLocalizacao()}";
 	private static final String R2 = "papelList.papel = #{usuarioLogadoLocalizacaoAtual.getPapel()}";
 
@@ -43,7 +44,11 @@ public class NaturezaCategoriaProcessoList extends EntityList<NaturezaCategoriaF
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
+	    final HashMap<String,String> order = new HashMap<>();
+	    order.put("natureza", "ncf.natureza");
+	    order.put("categoria", "ncf.categoria");
+	    order.put("fluxo", "ncf.fluxo");
+		return order;
 	}
 
 }

@@ -1,5 +1,6 @@
 package br.com.infox.epp.fluxo.list;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -26,8 +27,6 @@ public class FluxoList extends EntityList<Fluxo> {
     protected void addSearchFields() {
         addSearchField("codFluxo", SearchCriteria.CONTENDO);
         addSearchField("fluxo", SearchCriteria.CONTENDO);
-        addSearchField("dataInicioPublicacao", SearchCriteria.DATA_IGUAL);
-        addSearchField("dataFimPublicacao", SearchCriteria.DATA_IGUAL);
         addSearchField("publicado", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
     }
@@ -46,9 +45,34 @@ public class FluxoList extends EntityList<Fluxo> {
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
+    
+    @Override
+    public List<Fluxo> getResultList() {
+		setEjbql(getEjbqlRestrictedWithDataPublicacao());
+    	return super.getResultList();
+    }
 
     public static final FluxoList instance() {
         return ComponentUtil.getComponent(FluxoList.NAME);
     }
     
+    private String getEjbqlRestrictedWithDataPublicacao() {
+    	if (getEntity().getDataInicioPublicacao() == null && getEntity().getDataFimPublicacao() == null) {
+    		return getDefaultEjbql();
+    	}
+    	
+    	StringBuilder sb = new StringBuilder(getDefaultEjbql());
+    	sb.append(" where ");
+    	
+    	if (getEntity().getDataInicioPublicacao() != null && getEntity().getDataFimPublicacao() != null) {
+    		sb.append("o.dataInicioPublicacao >= #{fluxoList.entity.dataInicioPublicacao}");
+    		sb.append(" and o.dataFimPublicacao <= #{fluxoList.entity.dataFimPublicacao}");
+    	} else if (getEntity().getDataInicioPublicacao() != null) {
+    		sb.append("o.dataInicioPublicacao >= #{fluxoList.entity.dataInicioPublicacao}");
+    	} else {
+    		sb.append("o.dataFimPublicacao <= #{fluxoList.entity.dataFimPublicacao}");
+    	}
+    	
+    	return sb.toString();
+    }
 }

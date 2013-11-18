@@ -44,7 +44,7 @@
              oncomplete="#{oncomplete}"
              render="#{reRenderSave}, taskButtonsDiv"
              limitRender="true"
-             value="Gravar"
+             value="#{messages['crud.update']}"
              styleClass="buttons"
              action="#{taskInstanceHome.update(home)}" />
 
@@ -55,7 +55,7 @@
              eventsQueue="editQueue"
              render="#{reRenderSave}, taskButtonsDiv"
              limitRender="true"
-             value="Gravar"
+             value="#{messages['crud.update']}"
              styleClass="buttons"
              action="#{taskInstanceHome.persist(home)}" />
            
