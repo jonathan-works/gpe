@@ -26,7 +26,7 @@
          id="newInstanceButton"
          action="#{newInstanceAction}"
          rendered="#{wi:get(rendered, home.managed)}"
-         reRender="#{empty reRender ? 'pageBody, modalPanelMessages' : reRender}"
+         reRender="#{empty reRender ? 'pageBody, pageBodyDialogMessage' : reRender}"
          execute="@this"
          value="Novo">
 	</wi:commandButton>
