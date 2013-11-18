@@ -56,6 +56,11 @@
 						 id="descricao"
 						 label="#{messages['fluxo.descricao']}"
 						 value="#{fluxoList.entity.fluxo}" />
+					<wi:inputDataPeriodo
+						 id="dataPublicacao"
+						 label="#{messages['fluxoList.dataPublicacao']}"
+						 valueDateFrom="#{fluxoList.entity.dataInicioPublicacao}"
+						 valueDateTo="#{fluxoList.entity.dataFimPublicacao}"/>
 					<wi:selectBooleanMenu
 						 id="publicado"
 						 label="#{messages['fluxo.publicado']}"
