@@ -3,6 +3,3 @@
 *.orig
 *~
 /bin
-/.settings/*
-/.project
-/.classpath
