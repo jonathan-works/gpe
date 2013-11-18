@@ -27,11 +27,12 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.access.entity.UsuarioLogin;
-import br.com.infox.epp.manager.FluxoManager;
-import br.com.infox.ibpm.entity.Fluxo;
-import br.com.infox.ibpm.xpdl.FluxoXPDL;
-import br.com.infox.ibpm.xpdl.IllegalXPDLException;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.home.UsuarioHome;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
+import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.HibernateUtil;
