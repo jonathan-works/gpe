@@ -270,7 +270,7 @@
 								<wi:commandButton 
 									id="saveButton"
 									action="natCatFluxoLocalizacaoHome.persist"
-									reRender="natCatFluxoLocDiv"
+									reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
 									value="#{messages['crud.persist']}"	/>
 							</ui:define>
 						</wi:dataForm>
@@ -287,7 +287,7 @@
 							<ui:define name="toolBar">
 								<wi:toolBarRemove
 									actionRemove="natCatFluxoLocalizacaoHome.remove(row)"
-									reRender="natCatFluxoLocDiv"/>
+									reRender="natCatFluxoLocDiv pageBodyDialogMessage"/>
 							</ui:define>
 							<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"
 												 columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
