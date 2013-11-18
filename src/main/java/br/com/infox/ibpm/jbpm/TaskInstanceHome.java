@@ -337,6 +337,7 @@ public class TaskInstanceHome implements Serializable {
                 return null;
             }
             limparEstado(processoHome);
+            update();
             finalizarTaskDoJbpm(transition);
             atualizarPaginaDeMovimentacao(processoHome);
         }
@@ -399,7 +400,6 @@ public class TaskInstanceHome implements Serializable {
     private void limparEstado(ProcessoHome processoHome) {
         this.currentTaskInstance = null;
         processoHome.setIdProcessoDocumento(null);
-        update();
     }
 
     private void acusarFaltaDeAssinatura() {
