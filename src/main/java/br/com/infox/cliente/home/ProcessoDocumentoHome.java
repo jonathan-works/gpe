@@ -34,17 +34,14 @@ import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.ibpm.entity.ModeloDocumento;
-import br.com.infox.ibpm.entity.Processo;
 import br.com.infox.ibpm.entity.ProcessoDocumento;
 import br.com.infox.ibpm.entity.ProcessoDocumentoBin;
-import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.DocumentoBinHome;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoBinHome;
 import br.com.infox.ibpm.home.api.IProcessoDocumentoHome;
 import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
-import br.com.infox.ibpm.type.TipoNumeracaoEnum;
 import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.FileHome;
@@ -81,7 +78,7 @@ public class ProcessoDocumentoHome
 	
 	@Override
 	public String persist() {
-	    instance.setNumeroDocumento(getNextNumeracao(instance.getTipoProcessoDocumento(), instance.getProcesso()));
+	    instance.setNumeroDocumento(processoDocumentoManager.getNextNumeracao(instance.getTipoProcessoDocumento(), instance.getProcesso()));
 		String ret = persistDetalhesDoDocumento();
 		newInstance();
 		return ret;
@@ -99,20 +96,6 @@ public class ProcessoDocumentoHome
 	public boolean liberaCertificacao(){
 		return true;
 	}
-	
-	private Integer getNextNumeracao(TipoProcessoDocumento tipoProcessoDoc, Processo processo) {
-        Integer result = null;
-        if (tipoProcessoDoc.getNumera() 
-                && tipoProcessoDoc.getTipoNumeracao().equals(TipoNumeracaoEnum.S)) {
-            final List<Integer> list = processoDocumentoManager.getNextSequencial(processo);
-            if (list == null || list.size() == 0 || list.get(0)==null) {
-                result = 1;
-            } else {
-                result = list.get(0)+1;
-            }
-        }
-        return result;
-    }
 	
 	//Vindo do AbstractProcessoDocumentoHome
 	
