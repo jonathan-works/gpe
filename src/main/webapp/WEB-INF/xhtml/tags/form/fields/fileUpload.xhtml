@@ -41,17 +41,25 @@
 
 		<ui:define
              name="label">#{label}</ui:define>
-		<s:fileUpload
-             id="#{id}"
-             data="#{fileHome.data}"
-             contentType="#{fileHome.contentType}"
-             fileName="#{fileHome.fileName}"
-             fileSize="#{fileHome.size}"
-             styleClass="buttons"
-             required="#{required}"
-             onchange="#{onchange}"
-             accept="#{accept}"
-             disabled="#{disabled}" />
+        <rich:fileUpload
+				id="#{id}"
+				execute="@this"
+				status=":status"
+				limitRender="true"
+				required="#{wi:get(required, false)}"
+				fileUploadListener="#{fileHome.processFileUpload}"
+				addLabel="#{messages['processoDocumento.addLabel']}"
+				clearAllLabel="#{messages['processoDocumento.clearAllLabel']}"
+				clearLabel="#{messages['processoDocumento.clearLabel']}"
+				uploadLabel="#{messages['processoDocumento.uploadLabel']}"
+				maxFilesQuantity="1"
+				listHeight="50px"
+				immediateUpload="true"
+				noDuplicate="true"
+				render="DialogMessage"
+				acceptedTypes="pdf"
+				>
+			</rich:fileUpload>
 	</s:decorate>
 	
 </ui:composition>
