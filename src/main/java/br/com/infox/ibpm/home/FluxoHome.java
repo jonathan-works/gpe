@@ -15,7 +15,6 @@
 */
 package br.com.infox.ibpm.home;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -78,26 +77,14 @@ public class FluxoHome
 		return persist();
 	}
 	
-	private void verificaPublicacao(){
-		Date data = new Date();
-		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-		String dataHoje = formato.format(data);
-		String dataInicio = formato.format(getInstance().getDataInicioPublicacao());
-		
-		if (dataHoje.equals(dataInicio)){
-			getInstance().setPublicado(Boolean.TRUE);
-		}
-	}
-
 	@Override
 	protected boolean beforePersistOrUpdate() {
 	    Date dataFimPublicacao = getInstance().getDataFimPublicacao();
 		if (isValidaDataFimPublicacao(dataFimPublicacao)){
 			FacesMessages.instance().add(Severity.ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
-			return Boolean.FALSE;
+			return false;
 		}
 		
-		verificaPublicacao();
 		return true;
 	}
 
