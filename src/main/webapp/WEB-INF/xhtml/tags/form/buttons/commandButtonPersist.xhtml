@@ -22,7 +22,7 @@
          id="persistButton"
          action="#{empty persistAction ? home.homeName.concat('.persist()') : persistAction}"
          rendered="#{empty rendered ? !home.managed : rendered}"
-         reRender="#{empty reRender ? 'pageBody, modalPanelMessages' : reRender}"
+         reRender="#{empty reRender ? 'pageBody, pageBodyDialogMessage' : reRender}"
          value="#{messages['crud.persist']}">
 	</wi:commandButton>
 	
