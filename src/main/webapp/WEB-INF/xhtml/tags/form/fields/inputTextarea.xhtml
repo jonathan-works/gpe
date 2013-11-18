@@ -33,6 +33,7 @@
 	<ui:param
          name="maxlength"
          value="#{empty maxlength ? false : maxlength}" />
+    <ui:param name="showCounter" value="#{empty showCounter ? true : showCounter}" />
 
 	<s:decorate
          id="#{id}Decoration"
@@ -53,8 +54,7 @@
              onkeyup="counterTextarea(this,#{maxlength});">
 			<ui:insert />
 		</h:inputTextarea>	
-		<div
-             >(0 / #{maxlength})</div>
+		<s:div rendered="#{showCounter}">(0 / #{maxlength})</s:div>
 	</s:decorate>
 	
 </ui:composition>

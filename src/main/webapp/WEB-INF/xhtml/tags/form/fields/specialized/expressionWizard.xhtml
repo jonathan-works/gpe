@@ -69,7 +69,7 @@
 	<s:div id="#{id}" >
 		<s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
 		<wi:inputTextarea id="#{id}Text" styleClass="expressionInput"
-			label="#{messages['expressionWizard.expressao']}" value="#{value}">
+			label="#{messages['expressionWizard.expressao']}" value="#{value}" showCounter="false">
 			<a:ajax execute="@this" event="change" render="#{id}" limitRender="true"/>
 		</wi:inputTextarea>
 
