@@ -147,7 +147,9 @@
 				 readonly="#{!canEdit}" />
 			<ui:define name="buttons">
 				
-				<ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml" />
+				<ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml">
+					<ui:param name="reRenderSave" value="defaultTabPanel fluxoForm"></ui:param>
+				</ui:include>
 			
 			</ui:define>
 		
