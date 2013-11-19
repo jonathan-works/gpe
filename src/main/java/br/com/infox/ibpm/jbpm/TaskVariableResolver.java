@@ -5,6 +5,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.Messages;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -43,6 +45,9 @@ final class TaskVariableResolver extends TaskVariable {
         if (valueInt != 0) {
             this.value = valueInt;
             atribuirValorDaVariavelNoContexto();
+            if (assinar) {
+                FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
+            }
         }
     }
     
