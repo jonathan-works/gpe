@@ -41,6 +41,10 @@ public class ConsultaProcessoHome implements Serializable {
 		categoriaList = genericManager.findAll(Categoria.class);
 	}
 	
+	public void newInstance() {
+	    instance = new ConsultaProcesso();
+	}
+	
 	public ConsultaProcesso getInstance() {
 		return instance;
 	}
