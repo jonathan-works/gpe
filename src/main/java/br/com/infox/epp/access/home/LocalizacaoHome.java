@@ -32,6 +32,7 @@ import br.com.itx.util.ComponentUtil;
 
 
 @Name(LocalizacaoHome.NAME)
+@Deprecated
 public class LocalizacaoHome
 		extends AbstractHome<Localizacao>{
 

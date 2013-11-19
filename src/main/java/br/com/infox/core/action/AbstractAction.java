@@ -91,7 +91,7 @@ public abstract class AbstractAction {
             	FacesMessages.instance().clear();
             	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
 				instance().add(StatusMessage.Severity.ERROR,

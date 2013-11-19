@@ -37,7 +37,7 @@ public abstract class AbstractRecursiveCrudAction<E> extends
         final Recursive<E> oldRecursive = (Recursive<E>)oldInstance;
         if (!isManaged()
                 ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
-                || (!curRecursive.getParent().equals(oldRecursive.getParent()))) {
+                || (curRecursive.getParent()!=null && !curRecursive.getParent().equals(oldRecursive.getParent()))) {
             updateRecursive(curRecursive);
         }
     }
@@ -65,5 +65,18 @@ public abstract class AbstractRecursiveCrudAction<E> extends
     private void updateOldInstance() {
         updateOldInstance(getInstance());
     }
+    
+    @Override
+    protected String persist() {
+        // TODO Auto-generated method stub
+        String ret = super.persist();
+        if (PERSISTED.equals(ret)) {
+            limparTrees();
+        }
+        
+        return ret;
+    }
+    
+    protected abstract void limparTrees();
 
 }

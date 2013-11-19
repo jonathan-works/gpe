@@ -20,8 +20,8 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.home.LocalizacaoHome;
 import br.com.itx.util.ComponentUtil;
 
 
@@ -53,7 +53,7 @@ public class LocalizacaoTreeHandler extends AbstractTreeHandler<Localizacao> {
 
 	@Override
 	protected Localizacao getEntityToIgnore() {
-		LocalizacaoHome lh = ComponentUtil.getComponent("localizacaoHome");
+		LocalizacaoCrudAction lh = ComponentUtil.getComponent("localizacaoCrudAction");
 		return lh.getInstance();
 	}
 }
