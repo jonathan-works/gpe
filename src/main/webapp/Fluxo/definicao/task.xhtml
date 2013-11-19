@@ -220,11 +220,10 @@
 			<f:facet name="header">Tipo</f:facet>
 			
 			<h:form>
-			
 				<wi:selectOneMenu id="type"
 						 value="#{var.type}"
 						 items="#{typeFitter.typeList}"
-						 optionLabel="#{typeFitter.getTypeLabel(v)}"
+						 optionLabel="#{typeFitter.getTypeLabel(item)}"
 						 widthDiv="100%">
 						
 					<a:ajax event="change"
