@@ -6,6 +6,8 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
+import br.com.itx.util.ComponentUtil;
 
 @Name(ItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -30,6 +32,17 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
             inactiveRecursive(getInstance());
         }
         return super.save();
+    }
+    
+    @Override
+    protected void afterSave() {
+        limparTrees();
+        super.afterSave();
+    }
+    
+    private void limparTrees(){
+        ItemTreeHandler ith = ComponentUtil.getComponent(ItemTreeHandler.NAME);
+        ith.clearTree();
     }
     
 }
