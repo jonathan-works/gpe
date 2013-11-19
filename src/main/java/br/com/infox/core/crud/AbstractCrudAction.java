@@ -84,10 +84,9 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
 	public void setId(Object id) {
-		if(id != null) {
+		if(id != null && !id.equals(this.id)) {
 			this.id = id;
-			instance = (T) find(EntityUtil.getParameterizedTypeClass
-										  (getClass()), this.id);
+			setInstance((T) find(EntityUtil.getParameterizedTypeClass(getClass()), this.id));
 			tab = TAB_FORM;
 		}
 	}
@@ -156,7 +155,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	@Override
 	public void newInstance() {
-		instance = (T) EntityUtil.newInstance(getClass());
+		setInstance((T) EntityUtil.newInstance(getClass()));
 		id = null;
 	}
 
