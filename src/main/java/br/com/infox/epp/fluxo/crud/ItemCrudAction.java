@@ -4,12 +4,12 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.fluxo.entity.Item;
 
 @Name(ItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ItemCrudAction extends AbstractCrudAction<Item> {
+public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
 
     public static final String NAME = "itemCrudAction";
     
@@ -21,7 +21,7 @@ public class ItemCrudAction extends AbstractCrudAction<Item> {
         if (getInstance().getItemPai() != null && !getInstance().getItemPai().getAtivo()){
             getInstance().setAtivo(false);
         }
-        return true;
+        return super.beforeSave();
     }
     
     @Override
