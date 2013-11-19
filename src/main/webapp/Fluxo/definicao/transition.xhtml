@@ -32,7 +32,7 @@
 			 styleClass="tabelaVariaveis"
 			 var="transition">
 			
-		<rich:column styleClass="dr-table-subheader rich-table-subheader">
+		<rich:column styleClass="dr-table-subheader rich-table-subheader" rendered="#{transitionFitter.hasOperationalTransition(type)}">
 				
 			<f:facet name="header">
 			

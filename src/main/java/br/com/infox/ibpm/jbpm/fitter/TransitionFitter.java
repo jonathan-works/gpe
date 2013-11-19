@@ -270,4 +270,16 @@ public class TransitionFitter extends Fitter implements Serializable {
 		arrivingTransitions = null;
 		leavingTransitions = null;
 	}
+	
+	public boolean hasOperationalTransition(String type) {
+		if (!type.equals("to")) {
+			return false;
+		}
+		for (TransitionHandler transitionHandler : getLeavingTransitions()) {
+			if (canAddLeavingTransition() || (!"#{true}".equals(transitionHandler.getTransition().getCondition()) && transitionHandler.canDefineCondition())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
