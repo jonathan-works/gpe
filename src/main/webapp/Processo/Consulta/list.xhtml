@@ -33,135 +33,129 @@
 
     <ui:define name="body">
 		
+		<infox:tabPanel
+			headerSpacing="2"
+			activeTab="#{processoHome.tab}">
+			
+			<h:form><infox:tabHeaders /></h:form>
+			
+			<infox:tab
+				id="form"
+				name="form"
+				immediate="true"
+				status=":status"
+				title="#{messages['acaoProcesso.menuText']}" >
 
-        <h:messages
-			 globalOnly="true"
-			 styleClass="message"
-			 id="globalMessages" />
+                   <ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+               
+			</infox:tab>
 
-            <infox:tabPanel
-				 headerSpacing="2"
-				 activeTab="#{processoHome.tab}">
-				<h:form><infox:tabHeaders /></h:form>
-                <infox:tab
-					 id="form"
-					 name="form"
-					 immediate="true"
-					 status=":status"
-					 title="#{messages['acaoProcesso.menuText']}">
+			<infox:tab
+				id="tabAnexos"
+				name="tabAnexos"
+				immediate="true"
+				status=":status"
+				title="Documentos do Processo">
+				
+				<wi:dataTable
+					values="#{processoDocumentoList.list(15)}"
+					bean="#{processoDocumentoList}"
+					tableTitle="Documentos do Processo"
+					id="processoDocumentoList"
+					rowId="#{row.idProcessoDocumento}">
 					
-
-                    <ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
-                
-				</infox:tab>
-
-                <infox:tab
-					 id="tabAnexos"
-					 name="tabAnexos"
-					 immediate="true"
-					 status=":status"
-					 title="Documentos do Processo">
-					
-                    <wi:dataTable
-						 values="#{processoDocumentoList.list(15)}"
-						 bean="#{processoDocumentoList}"
-						 tableTitle="Documentos do Processo"
-						 id="processoDocumentoList"
-						 rowId="#{row.idProcessoDocumento}">
+					<ui:define name="toolBar">
+                        <s:link
+							target="idJan#{row.idProcessoDocumento}"
+							rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
+							view="/Processo/Consulta/validaDocumento.xhtml"
+							onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+							
+						<h:graphicImage
+							title="Validar Assinatura Digital"
+							alt="Validar Assinatura Digital"
+							url="/img/lock.png" />
+						<f:param
+							value="#{row.idProcessoDocumento}"
+							name="idProcessoDocumento" />
+						</s:link>
 						
-                        <ui:define name="toolBar">
-	                        <s:link
-								 target="idJan#{row.idProcessoDocumento}"
-								 rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
-								 view="/Processo/Consulta/validaDocumento.xhtml"
-								 onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');">
-								
-								<h:graphicImage
-									 title="Validar Assinatura Digital"
-									 alt="Validar Assinatura Digital"
-									 url="/img/lock.png" />
-								<f:param
-									 value="#{row.idProcessoDocumento}"
-									 name="idProcessoDocumento" />
+						<s:link
+							target="idJan#{row.idProcessoDocumento}"
+							rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
+							view="/Processo/Consulta/assinaDocumento.xhtml"
+							onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
 							
-							</s:link> 
-							<s:link
-								 target="idJan#{row.idProcessoDocumento}"
-								 rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
-								 view="/Processo/Consulta/assinaDocumento.xhtml"
-								 onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');">
-								
-								<h:graphicImage
-									 title="Assinar Documento"
-									 alt="Assinar Documento"
-									 url="/img/lock_unlock.png" />
-								<f:param
-									 value="#{row.idProcessoDocumento}"
-									 name="id" />
-							
-							</s:link>
-                        </ui:define>
-                        <ui:define name="headerToolBar" />
-                        <wi:columnOutputText 
-							 columnId="usuarioInclusao"
-							 columnHeader="Usuário"
-							 value="#{row.usuarioInclusao}" />
-                        <wi:columnOutputText
-							 columnId="dataInclusao"
-							 columnHeader="Data"
-							 value="#{row.dataInclusao}" />
-                        <wi:columnOutputText
-							 columnId="processoDocumento"
-							 columnHeader="Processo Documento"
-							 value="#{row.processoDocumento}" />
-                        <wi:columnOutputText
-							 columnId="processoDocumentoBin.sizeFormatado"
-							 columnHeader="Tamanho: "
-							 value="#{row.processoDocumentoBin.sizeFormatado}" />
-                    
-					</wi:dataTable>
-                
-				</infox:tab>
-
-                <infox:tab
-					 id="tabAnexar"
-					 name="tabAnexar"
-					 immediate="true"
-					 status=":status"
-					 title="Anexar Documento"
-                     action="#{processoDocumentoHome.newInstance()}">
-					
-                    <wi:ajaxDiv id="divAnexarDocumentos">
+							<h:graphicImage
+								 title="Assinar Documento"
+								 alt="Assinar Documento"
+								 url="/img/lock_unlock.png" />
+							<f:param
+								 value="#{row.idProcessoDocumento}"
+								 name="id" />
 						
-                        <wi:dataForm
-							 formId="anexarDocumentosForm"
-							 formTitle="#{messages['processoDocumento.anexarDocumento']}">
-							
-                            <ui:include src="/WEB-INF/xhtml/components/form/anexarDocumento.xhtml" />
-                            <ui:include src="/WEB-INF/xhtml/components/form/buttons/anexarDocumentoButtons.xhtml" />
-                            <ui:define name="buttons" />
-                        
-						</wi:dataForm>
-                    
-					</wi:ajaxDiv>
-                
-				</infox:tab>
+						</s:link>
+					</ui:define>
+					<ui:define name="headerToolBar" />
+					<wi:columnOutputText 
+						columnId="usuarioInclusao"
+						columnHeader="Usuário"
+						value="#{row.usuarioInclusao}" />
+					<wi:columnOutputText
+						columnId="dataInclusao"
+						columnHeader="Data"
+						value="#{row.dataInclusao}" />
+					<wi:columnOutputText
+						columnId="processoDocumento"
+						columnHeader="Processo Documento"
+						value="#{row.processoDocumento}" />
+					<wi:columnOutputText
+						columnId="processoDocumentoBin.sizeFormatado"
+						columnHeader="Tamanho: "
+						value="#{row.processoDocumentoBin.sizeFormatado}" />
+                   
+				</wi:dataTable>
+               
+			</infox:tab>
 
-                <infox:tab
-					 id="tabPartesDoProcesso"
-					 name="tabPartesDoProcesso"
-					 immediate="true"
-					 status=":status"
-					 rendered="#{processoHandler.hasPartes()}"
-					 title="#{messages['parteProcesso.partes']}">
-					
-                    <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
-                
-				</infox:tab>
-            
-			</infox:tabPanel>
+			<infox:tab
+				id="tabAnexar"
+				name="tabAnexar"
+				immediate="true"
+				status=":status"
+				title="Anexar Documento"
+				action="#{processoDocumentoHome.newInstance()}">
+				
+				<wi:ajaxDiv id="divAnexarDocumentos">
+									
+					<wi:dataForm
+						formId="anexarDocumentosForm"
+						formTitle="#{messages['processoDocumento.anexarDocumento']}">
+						
+						<ui:include src="/WEB-INF/xhtml/components/form/anexarDocumento.xhtml" />
+						<ui:include src="/WEB-INF/xhtml/components/form/buttons/anexarDocumentoButtons.xhtml" />
+						<ui:define name="buttons" />
+					                  
+					</wi:dataForm>
+							                
+				</wi:ajaxDiv>
+			            
+			</infox:tab>
+
+			<infox:tab
+				id="tabPartesDoProcesso"
+				name="tabPartesDoProcesso"
+				immediate="true"
+				status=":status"
+				rendered="#{processoHandler.hasPartes()}"
+				title="#{messages['parteProcesso.partes']}">
+				
+				<ui:include src="/Processo/parteProcessoGridRO.xhtml" />
+			            
+			</infox:tab>
+           
+		</infox:tabPanel>
         
-    
 	</ui:define>
 
 
