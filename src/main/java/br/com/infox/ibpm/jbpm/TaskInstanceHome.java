@@ -39,6 +39,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -52,6 +53,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.bpm.action.TaskPageAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.manager.ProcessoManager;
 import br.com.infox.ibpm.dao.TipoProcessoDocumentoDAO;
@@ -60,6 +62,7 @@ import br.com.infox.ibpm.entity.TipoProcessoDocumento;
 import br.com.infox.ibpm.home.Authenticator;
 import br.com.infox.ibpm.home.ProcessoHome;
 import br.com.infox.ibpm.jbpm.actions.ModeloDocumentoAction;
+import br.com.infox.ibpm.jbpm.manager.TaskInstanceManager;
 import br.com.infox.ibpm.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.manager.SituacaoProcessoManager;
 import br.com.infox.ibpm.search.Reindexer;
@@ -107,6 +110,7 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoManager processoManager;
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     @In private ProcessoDocumentoManager processoDocumentoManager;
+    @In private TaskInstanceManager taskInstanceManager;
     private URL urlRetornoAcessoExterno;
     
 	public void createInstance() {
@@ -421,35 +425,51 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
+    public void removeUsuario(final TaskInstance taskInstance) {
+        if (taskInstance != null) {
+            try {
+                taskInstanceManager.removeUsuario(taskInstance.getId());
+            } catch (DAOException e) {
+                LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
+            }
+        }
+    }
+    
     public void removeUsuario(final Long idTaskInstance) {
         try {
-            UsuarioTaskInstance uti = EntityUtil.find(UsuarioTaskInstance.class, idTaskInstance);
-            if (uti!= null) {
-                EntityUtil.getEntityManager().remove(uti);
-                EntityUtil.getEntityManager().flush();
-            }
+            taskInstanceManager.removeUsuario(idTaskInstance);
         } catch (Exception e) {
-            LOG.error("TaskInstanceHome.removeUsuario()", e);
+            LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
         }
     }
     
 	public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         try {
             final Map<String,Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
-            removeUsuario((Long)result.get("idTaskInstance"));
+            taskInstanceManager.removeUsuario((Long)result.get("idTaskInstance"));
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Mais de um resultado", e);
         } catch (IllegalStateException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
+        } catch (DAOException e) {
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - ", e);
         } finally {
             Util.rollbackTransactionIfNeeded();
         }
     }
     
     public void removeUsuario() {
-        removeUsuario(BusinessProcess.instance().getTaskId());
+        if (BusinessProcess.instance().hasCurrentTask()) {
+            try {
+                taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
+            } catch (DAOException e) {
+                LOG.error(".removeUsuario() - ", e);
+            }    
+        } else {
+            FacesMessages.instance().add(Messages.instance().get("org.jboss.seam.TaskNotFound"));
+        }
     }
 
     public void start(long taskId) {
