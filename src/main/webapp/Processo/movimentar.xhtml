@@ -175,8 +175,7 @@
 							 tableTitle="#{messages['processo.documentos']} #{home.instance}"
 							 id="processoDocumentoList"
 							 rowId="#{row.idProcessoDocumento}"
-							 searchFormStyleClass="hidden"
-							 showToolbarColumn="false">
+							 searchFormStyleClass="hidden">
 							
                             <ui:define name="headerToolBar" />
                             <wi:columnOutputText
@@ -191,7 +190,38 @@
 								 columnId="processoDocumento"
 								 columnHeader="#{messages['processoDocumentoBin.documento']}"
 								 value="#{row.processoDocumento}" />
-                            <ui:define name="toolBar" />
+                            <ui:define name="toolBar">
+	                            <s:link
+									target="idJan#{row.idProcessoDocumento}"
+									rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
+									view="/Processo/Consulta/validaDocumento.xhtml"
+									onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+									
+								<h:graphicImage
+									title="Validar Assinatura Digital"
+									alt="Validar Assinatura Digital"
+									url="/img/lock.png" />
+								<f:param
+									value="#{row.idProcessoDocumento}"
+									name="idProcessoDocumento" />
+								</s:link>
+								
+								<s:link
+									target="idJan#{row.idProcessoDocumento}"
+									rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
+									view="/Processo/Consulta/assinaDocumento.xhtml"
+									onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+									
+									<h:graphicImage
+										 title="Assinar Documento"
+										 alt="Assinar Documento"
+										 url="/img/lock_unlock.png" />
+									<f:param
+										 value="#{row.idProcessoDocumento}"
+										 name="id" />
+								
+								</s:link>
+                            </ui:define>
                         
 						</wi:dataTable>
                     
