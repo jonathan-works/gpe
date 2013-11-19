@@ -196,14 +196,13 @@
 									rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
 									view="/Processo/Consulta/validaDocumento.xhtml"
 									onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
-									
-								<h:graphicImage
-									title="Validar Assinatura Digital"
-									alt="Validar Assinatura Digital"
-									url="/img/lock.png" />
-								<f:param
-									value="#{row.idProcessoDocumento}"
-									name="idProcessoDocumento" />
+									<h:graphicImage
+										title="#{messages['assinaturas.validar']}"
+										alt="#{messages['assinaturas.validar']}"
+										url="/img/lock.png" />
+									<f:param
+										value="#{row.idProcessoDocumento}"
+										name="idProcessoDocumento" />
 								</s:link>
 								
 								<s:link
@@ -211,10 +210,9 @@
 									rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
 									view="/Processo/Consulta/assinaDocumento.xhtml"
 									onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
-									
 									<h:graphicImage
-										 title="Assinar Documento"
-										 alt="Assinar Documento"
+										 title="#{messages['assinaturas.assinar']}"
+										 alt="#{messages['assinaturas.assinar']}"
 										 url="/img/lock_unlock.png" />
 									<f:param
 										 value="#{row.idProcessoDocumento}"
@@ -232,7 +230,7 @@
 					 name="tabMovimentacoes"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 title="Movimentações do Processo">
+					 title="#{messages['movimentar.movimentacoesProcesso']}">
                     	<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
                 
 				</infox:tab>
