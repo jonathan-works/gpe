@@ -12,26 +12,19 @@ import br.com.itx.util.EntityUtil;
 
 @SuppressWarnings(WarningConstants.UNCHECKED)
 public abstract class AbstractRecursiveCrudAction<E> extends 
-                            AbstractCrudAction<Recursive<E>> {
+                            AbstractCrudAction<E> {
     
     private static final LogProvider LOG = Logging.getLogProvider(AbstractRecursiveCrudAction.class);
     
     private E oldInstance;
     
-    public E getOldInstance() {
-        return oldInstance;
-    }
-    public void setOldEntity(E oldInstance)   {
-        this.oldInstance = oldInstance;
-    }
-    
     @Override
-    public void newInstance() {
-        oldInstance = null;
-        super.newInstance();
+    public void setInstance(E instance) {
+        super.setInstance(instance);
+        updateOldInstance(getInstance());
     }
     
-    private void updateOldInstance(Recursive<E> recursive) {
+    private void updateOldInstance(E recursive) {
         try {
             oldInstance = (E) EntityUtil.cloneObject(recursive, false);
         } catch (Exception e) {
@@ -41,10 +34,10 @@ public abstract class AbstractRecursiveCrudAction<E> extends
     
     private void updateRecursivePath() {
         final Recursive<E> curRecursive =(Recursive<E>)getInstance();
-        final Recursive<E> oldRecursive = (Recursive<E>)getOldInstance();
+        final Recursive<E> oldRecursive = (Recursive<E>)oldInstance;
         if (!isManaged()
                 ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
-                || !curRecursive.getParent().equals(oldRecursive.getParent())) {
+                || (!curRecursive.getParent().equals(oldRecursive.getParent()))) {
             updateRecursive(curRecursive);
         }
     }
