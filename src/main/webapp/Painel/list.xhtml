@@ -17,9 +17,11 @@
 	<ui:define name="body">
 		<a:region>
 			<h:form>
-				<a:jsFunction name="atualizaPainelFluxo"
-					oncomplete="window.location='#{util.contextPath}/Painel/list.seam'"
-					execute="@this" status="status" />
+				<a:jsFunction 
+					name="atualizaPainelFluxo"
+					oncomplete="location='#{util.contextPath}/Painel/list.seam'"
+					execute="@this"
+					status="status" />
 			</h:form>
 			<div class="p-caixas">
 				<infox:tabPanel id="tabPainelUsuario" switchType="ajax"
@@ -54,7 +56,11 @@
 							<wi:searchForm
 								opened="false"
 								formId="consultaProcessoForm"
-								formTitle="#{messages['searchForm.title']}">
+								formTitle="#{messages['searchForm.title']}"
+								searchAction="consultaProcessoHome.instance.setInPesquisa(true)"
+								searchReRender="painelProcessos"
+								clearAction="consultaProcessoHome.newInstance()"
+								clearReRender="painelProcessos">
 								<wi:inputText id="numeroProcesso"
 									label="#{messages['consultaProcesso.numeroProcesso']}"
 									value="#{home.instance.numeroProcesso}" />
@@ -71,16 +77,6 @@
 									value="#{home.instance.categoria}"
 									noSelectionLabel="Selecione um registro..." inNewLine="true"
 									items="#{home.categoriaList}" />
-								<ui:define name="buttons">
-									<a:commandButton id="consulta" status="status"
-										value="Consulta" styleClass="buttons" limitRender="true"
-										execute="@region"
-										action="#{home.instance.setInPesquisa(true)}"
-										render="painelProcessos" />
-									<a:commandButton id="novaConsulta" status="status"
-										value="Nova Consulta" limitRender="true" styleClass="buttons"
-										execute="@this" render="painelProcessos" />
-								</ui:define>
 							</wi:searchForm>
 						</ui:define>
 						<wi:columnOutputText columnId="numeroProcesso"
@@ -130,7 +126,6 @@
 						action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
 						oncomplete="#{rich:component('novaCaixaPanel')}.hide()"
 						render="tarefasDiv,painelProcessos" />
-					<wi:messages formId="modalForm"></wi:messages>
 				</h:form>
 			</rich:popupPanel>
 		</a:region>
