@@ -55,7 +55,7 @@
 			status="none"
 			rendered="#{processoHome.managed and !isUsuarioExterno}"
 			onmouseup="showLoading()"
-			oncomplete="#{oncomplete};hideLoading()"
+			oncomplete="#{oncomplete};hideLoading();close()"
 			render="#{reRenderSave}"
 			value="Liberar Tarefa"
 			styleClass="buttons"
