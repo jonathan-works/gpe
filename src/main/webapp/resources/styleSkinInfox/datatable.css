@@ -26,7 +26,7 @@
 .rf-dt-b > .rf-dt-r:hover {
 	background-color:#AFAFAF;
 }
-.rf-dt {
+.rf-dt-crud {
 	width: 100%;
 	text-align:center;
 }
