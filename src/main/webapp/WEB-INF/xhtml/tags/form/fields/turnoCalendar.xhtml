@@ -30,8 +30,8 @@
 	    	
     		$(".turno.calendar.rf-dt-c").click(function markBegnEnd(ev) {
     			var target = $(ev.target);
-    			var row = Number.parseInt(target.attr("rowStatus"));
-    			var col = Number.parseInt(target.attr("colStatus"));
+    			var row = parseInt(target.attr("rowStatus"));
+    			var col = parseInt(target.attr("colStatus"));
     			turnoCalendar.toggleMark(row,col);
     		}).mouseenter(function markInterval(ev){
     			var target = $(ev.target);
