@@ -52,7 +52,6 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
-import br.com.infox.bpm.action.TaskPageAction;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
