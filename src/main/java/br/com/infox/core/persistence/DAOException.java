@@ -45,6 +45,10 @@ public class DAOException extends Exception {
 	}
 	
 	private void setLocalizedMessage() {
+		if (this.postgreSQLErrorCode == null) {
+			return;
+		}
+		
 		switch (this.postgreSQLErrorCode) {
 		case UNIQUE_VIOLATION:
 			this.localizedMessage = MSG_UNIQUE_VIOLATION;

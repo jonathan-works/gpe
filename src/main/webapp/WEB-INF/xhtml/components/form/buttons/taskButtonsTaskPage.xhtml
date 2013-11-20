@@ -42,7 +42,7 @@
              styleClass="buttons"
              eventsQueue="editQueue"
              oncomplete="verifyFields();"
-             render=":script, #{reRenderEndTask}" 
+             render=":script, #{reRenderEndTask}, :pageBodyDialogMessage" 
              limitRender="true"/>
          </c:if>
          <c:if
@@ -55,7 +55,7 @@
                  status="none"
                  onmouseup="showLoading()"
                  oncomplete="verifyFields()"
-                 render=":script, #{reRenderEndTask}"
+                 render=":script, #{reRenderEndTask}, :pageBodyDialogMessage"
                  limitRender="true"
                  value="#{transition.name}"
                  styleClass="buttons buttons"

@@ -64,7 +64,7 @@ public class NaturezaCategoriaFluxo implements Serializable{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_natureza", nullable=false)
-	@NotNull
+	@NotNull(message = "#{messages['beanValidation.notNull']}")
 	public Natureza getNatureza() {
 		return natureza;
 	}
@@ -79,7 +79,7 @@ public class NaturezaCategoriaFluxo implements Serializable{
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_fluxo", nullable=false)
-	@NotNull
+	@NotNull(message = "#{messages['beanValidation.notNull']}")
 	public Fluxo getFluxo() {
 		return fluxo;
 	}
@@ -90,7 +90,7 @@ public class NaturezaCategoriaFluxo implements Serializable{
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_categoria", nullable=false)
-	@NotNull
+	@NotNull(message = "#{messages['beanValidation.notNull']}")
 	public Categoria getCategoria() {
 		return categoria;
 	}

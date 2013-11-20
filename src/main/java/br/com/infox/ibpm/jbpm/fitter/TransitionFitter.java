@@ -275,7 +275,13 @@ public class TransitionFitter extends Fitter implements Serializable {
 		if (!type.equals("to")) {
 			return false;
 		}
-		for (TransitionHandler transitionHandler : getLeavingTransitions()) {
+		
+		List<TransitionHandler> leavingTransitions = getLeavingTransitions();
+		if (leavingTransitions == null) {
+			return false;
+		}
+		
+		for (TransitionHandler transitionHandler : leavingTransitions) {
 			if (canAddLeavingTransition() || (!"#{true}".equals(transitionHandler.getTransition().getCondition()) && transitionHandler.canDefineCondition())) {
 				return true;
 			}

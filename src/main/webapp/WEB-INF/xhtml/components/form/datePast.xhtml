@@ -44,12 +44,12 @@
              showWeeksBar="#{wi:get(showWeeksBar, false)}"
              inputClass="#{id}maskDate"
              datePattern="#{empty props.pattern ? (empty pattern ? 'dd/MM/yyyy' : pattern) : props.pattern}"
-             oninputblur="validarData(this);               validarDataPassada(this);"
+             oninputblur="validarData(this);validarDataPassada(this);"
              onchanged="validarDataPassada(this);"
              reRender="#{empty props.reRender ? reRender : props.reRender}"
-             
              showApplyButton="#{empty props.showApplyButton ? (empty showApplyButton ? false : showApplyButton) : props.showApplyButton}">
 				<ui:insert />
+				<f:validator validatorId="pastDateValidator" />
 			</rich:calendar>
 		<c:if
              test="#{empty props.enableManualInput ? (empty enableManualInput ? true : enableManualInput) : props.enableManualInput}">
