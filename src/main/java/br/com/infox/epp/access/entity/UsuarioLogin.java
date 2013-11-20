@@ -67,7 +67,7 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	private String login;
 	private String assinatura;
 	private String certChain;
-	private Boolean ldap;
+	private Boolean ldap = false;
 	private Boolean bloqueio;
 	private Boolean provisorio;
 	//Data de previsão para expirar o usuário provisório
@@ -347,6 +347,15 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 		setAtivo(pessoa.getAtivo());
 		setTemContaTwitter(false);
 		return this;
+	}
+	
+	@Transient
+	public BloqueioUsuario getUltimoBloqueio(){
+	    if (!bloqueioUsuarioList.isEmpty()){
+	        return bloqueioUsuarioList.get(bloqueioUsuarioList.size() - 1);
+	    } else {
+	        return null;
+	    }
 	}
 	
 }

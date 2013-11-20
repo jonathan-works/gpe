@@ -24,11 +24,16 @@
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
 
+
+    <s:decorate
+         id="#{f.id}Bloqueio"
+         template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+         rendered="#{usuarioLoginCrudAction.managed}">
 		<ui:param
              name="showLock"
              value="false" />
 		<wi:selectBooleanRadio id="#{id}Bloqueio"
-             value="#{usuarioHome.instance.bloqueio}"
+             value="#{usuarioLoginCrudAction.instance.bloqueio}"
              label="#{messages['usuario.bloqueio']}">
             <a:ajax
                  event="change"
@@ -41,22 +46,22 @@
 			<wi:inputDate
                     id="#{id}DataBloqueio"
                     label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
-                    value="#{usuarioHome.novoBloqueio.dataPrevisaoDesbloqueio}"
+                    value="#{usuarioLoginCrudAction.novoBloqueio.dataPrevisaoDesbloqueio}"
                     future="true"
-                    rendered="#{usuarioHome.instance.bloqueio}"
+                    rendered="#{usuarioLoginCrudAction.instance.bloqueio}"
                     required="false" />
 			<wi:inputText
                     id="#{id}MotivoBloqueio"
                     label="#{messages['bloqueioUsuario.motivoBloqueio']}"
-                    value="#{usuarioHome.novoBloqueio.motivoBloqueio}"
-                    rendered="#{usuarioHome.instance.bloqueio}"
+                    value="#{usuarioLoginCrudAction.novoBloqueio.motivoBloqueio}"
+                    rendered="#{usuarioLoginCrudAction.instance.bloqueio}"
                     required="true"
                     showRequired="true"
                     maxlength="50" />
 		</s:div>
 		<s:div
 			id="ultimoBloqueio"
-			rendered="#{!empty usuarioHome.ultimoBloqueio}">
+			rendered="#{!empty usuarioLoginCrudAction.instance.ultimoBloqueio}">
 			<table>
 				<tr>
 					<th><h:outputText value="Data de bloqueio" /></th>
@@ -67,28 +72,29 @@
 				<tr>
 					<td>
 						<h:outputText
-							value="#{usuarioHome.ultimoBloqueio.dataBloqueio}">
+							value="#{usuarioLoginCrudAction.instance.ultimoBloqueio.dataBloqueio}">
 							<s:convertDateTime />
 						</h:outputText>
 					</td>
 					<td>
 						<h:outputText
-							value="#{usuarioHome.ultimoBloqueio.motivoBloqueio}" />
+							value="#{usuarioLoginCrudAction.instance.ultimoBloqueio.motivoBloqueio}" />
 					</td>
 					<td>
 						<h:outputText
-							value="#{usuarioHome.ultimoBloqueio.dataPrevisaoDesbloqueio}">
+							value="#{usuarioLoginCrudAction.instance.ultimoBloqueio.dataPrevisaoDesbloqueio}">
 							<s:convertDateTime />
 						</h:outputText>
 					</td>
 					<td>
 						<h:outputText
-							value="#{usuarioHome.ultimoBloqueio.dataDesbloqueio}">
+							value="#{usuarioLoginCrudAction.instance.ultimoBloqueio.dataDesbloqueio}">
 							<s:convertDateTime />
 						</h:outputText>
 					</td>
 				</tr>
 			</table>
 		</s:div>
+    </s:decorate>
 			
 </ui:composition>

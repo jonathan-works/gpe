@@ -61,7 +61,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	    
 	}
 	
-    private void afterSave(String ret) {
+    protected void afterSave(String ret) {
         if (PERSISTED.equals(ret)){
             FacesMessages.instance().clear();
             FacesMessages.instance().add(MSG_REGISTRO_CRIADO);

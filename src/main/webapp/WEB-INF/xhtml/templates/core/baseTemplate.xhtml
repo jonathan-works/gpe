@@ -28,9 +28,6 @@
 	<ui:include
          src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 	
-	<ui:param
-         name="canEdit"
-         value="#{empty canEdit ? home.editable : canEdit}" />
 	<h:body
          onbeforeunload="#{onbeforeunload}"
          onload="#{onload}"
