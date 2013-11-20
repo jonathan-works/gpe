@@ -25,6 +25,7 @@ import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
+import javax.validation.ConstraintViolation;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
@@ -266,6 +267,11 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             	FacesMessages.instance().clear();
             	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
+		} catch (javax.validation.ConstraintViolationException e) {
+			FacesMessages.instance().clear();
+			for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+				FacesMessages.instance().add(violation.getPropertyPath() + ": " + violation.getMessage());
+			}
         } catch (Exception e) {
             instance().add(StatusMessage.Severity.ERROR,
                     "Erro ao gravar: " + e.getMessage(), e);
@@ -353,7 +359,11 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             	FacesMessages.instance().clear();
             	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
-            
+		} catch (javax.validation.ConstraintViolationException e) {
+    		FacesMessages.instance().clear();
+    		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+    			FacesMessages.instance().add(violation.getPropertyPath() + ": " + violation.getMessage());
+    		}
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
