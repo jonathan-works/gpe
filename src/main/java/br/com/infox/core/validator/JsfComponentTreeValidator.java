@@ -1,4 +1,4 @@
-package br.com.infox.component;
+package br.com.infox.core.validator;
 
 import java.util.HashSet;
 import java.util.Set;

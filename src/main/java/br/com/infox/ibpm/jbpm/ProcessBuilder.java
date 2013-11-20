@@ -52,10 +52,10 @@ import org.jbpm.taskmgmt.def.Task;
 import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
-import br.com.infox.component.JsfComponentTreeValidator;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.validator.JsfComponentTreeValidator;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
