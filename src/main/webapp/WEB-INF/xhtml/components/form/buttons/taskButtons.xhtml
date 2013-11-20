@@ -43,7 +43,7 @@
 			rendered="#{!empty form.fields and processoHome.managed and !isUsuarioExterno}"
 			onmouseup="showLoading()"
 			oncomplete="#{oncomplete};hideLoading()"
-			render="#{reRenderSave},DialogMessage"
+			render="#{reRenderSave},:pageBodyDialogMessage"
 			value="#{messages['crud.update']}"
 			styleClass="buttons"
 			action="#{taskInstanceHome.update(home)}" />
@@ -86,7 +86,7 @@
 				onmouseup="showLoading()"
 				styleClass="buttons"
 				oncomplete="verifyFields();"
-				render=":script,#{reRenderSave},DialogMessage" />
+				render=":script,#{reRenderSave},:pageBodyDialogMessage" />
 		</c:if>
 		<c:if test="#{taskInstanceHome.transitions.size le 3}">
 			<a:repeat
@@ -96,7 +96,7 @@
 					status="none"
 					onmouseup="showLoading()"
 					oncomplete="verifyFields();"
-					render="DialogMessage,:script,#{reRenderSave}"
+					render=":pageBodyDialogMessage,:script,#{reRenderSave}"
 					value="#{transition.name}"
 					styleClass="buttons"
 					action="#{taskInstanceHome.end(transition.name)}">
