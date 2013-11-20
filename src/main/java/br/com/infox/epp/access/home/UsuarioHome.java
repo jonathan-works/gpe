@@ -160,6 +160,14 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 			password = instance.getSenha();
 			gerarNovaSenha();
 		}
+		if (instance instanceof PessoaFisica){
+		    try {
+                instance = EntityUtil.cloneEntity(instance, false);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+		    instance.loadDataFromPessoaFisica(instance);
+		};
 		return ret;
 	}
 
@@ -179,10 +187,12 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 		if (!pessoaFisicaCadastrada){
 			resultado = super.persist();
 		} else{
+		    PessoaFisica pf = EntityUtil.find(PessoaFisica.class, instance.getIdPessoa());
 			usuarioLoginManager.inserirUsuarioParaPessoaFisicaCadastrada(login, instance);
+			EntityUtil.getEntityManager().detach(pf);
 			instance = usuarioLoginManager.getUsuarioLogin(instance);
-			// TODO: Verificar se funciona com getEntityManager.detach()
 			resultado = "persisted";
+			afterPersistOrUpdate(resultado);
 		}
 		return resultado;
 	}

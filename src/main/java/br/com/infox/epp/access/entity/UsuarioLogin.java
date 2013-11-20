@@ -68,8 +68,8 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	private String assinatura;
 	private String certChain;
 	private Boolean ldap;
-	private Boolean bloqueio;
-	private Boolean provisorio;
+	private Boolean bloqueio = false;
+	private Boolean provisorio = false;
 	//Data de previsão para expirar o usuário provisório
 	private Date dataExpiracao;
 	private Boolean temContaTwitter;
