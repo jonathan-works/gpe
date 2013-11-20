@@ -31,7 +31,7 @@
              name="showLock"
              value="false" />
 		
-		<wi:selectBooleanCheckbox
+		<wi:selectBooleanRadio
              id="#{id}Provisorio"
              value="#{usuarioHome.instance.provisorio}"
              label="#{messages['usuario.provisorio']}">
@@ -39,7 +39,7 @@
                  event="change"
                  execute="@this"
                  render="provisorioDiv" />
-		</wi:selectBooleanCheckbox>
+		</wi:selectBooleanRadio>
 
 		<s:div
              id="provisorioDiv">

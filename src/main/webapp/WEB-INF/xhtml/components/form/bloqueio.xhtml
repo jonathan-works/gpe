@@ -27,16 +27,14 @@
 		<ui:param
              name="showLock"
              value="false" />
-		
-		<wi:selectBooleanCheckbox
-             id="#{id}Bloqueio"
+		<wi:selectBooleanRadio id="#{id}Bloqueio"
              value="#{usuarioHome.instance.bloqueio}"
              label="#{messages['usuario.bloqueio']}">
-			<a:ajax
+            <a:ajax
                  event="change"
                  execute="@this"
                  render="bloqueioDiv" />
-		</wi:selectBooleanCheckbox>
+        </wi:selectBooleanRadio>
 
 		<s:div
              id="bloqueioDiv">
