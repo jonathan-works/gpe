@@ -53,7 +53,7 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_nat_cat_fluxo", nullable=false)
-	@NotNull
+	@NotNull(message = "#{messages['beanValidation.notNull']}")
 	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
 		return naturezaCategoriaFluxo;
 	}
@@ -64,7 +64,7 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_localizacao", nullable=false)
-	@NotNull
+	@NotNull(message = "#{messages['beanValidation.notNull']}")
 	public Localizacao getLocalizacao() {
 		return localizacao;
 	}
