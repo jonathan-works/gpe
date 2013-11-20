@@ -51,6 +51,7 @@ public class TransitionHandler implements Serializable {
 	}
 
 	public void setName(String name) {
+		name = name.trim();
 		if (name != null && !name.equals(transition.getName())) {
 			transition.setName(name);
 		}

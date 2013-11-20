@@ -238,6 +238,9 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 
 	public void setNewNodeName(String newName) {
+		if (newName != null) {
+			newName = newName.trim();
+		}
 		this.newNodeName = newName;
 	}
 
@@ -466,5 +469,12 @@ public class NodeFitter extends Fitter implements Serializable {
 		currentNode = null;
 		nodes = null;
 		nodesItems = null;
+	}
+	
+	public void setCurrentNodeName(String name) {
+		if (name != null) {
+			name = name.trim();
+		}
+		getCurrentNode().setName(name);
 	}
 }

@@ -367,7 +367,7 @@ public class VariableAccessHandler implements Serializable {
 
 	public String getLabel() {
 		if (!"".equals(name)) {
-			this.label = VariableHandler.getLabel(name);
+			setLabel(VariableHandler.getLabel(name));
 		}
 		return this.label;
 	}

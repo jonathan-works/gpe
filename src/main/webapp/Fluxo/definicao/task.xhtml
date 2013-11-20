@@ -16,7 +16,7 @@
 		
 			<wi:inputText id="taskName" value="#{taskFitter.taskName}" widthDiv="230px" label="Nome">
 				
-				<a:ajax event="change" render="nodesDiv" limitRender="true" execute="@this" listener="#{nodeFitter.currentNode.setName(taskFitter.taskName)}" />
+				<a:ajax event="change" render="nodesDiv" limitRender="true" execute="@this" listener="#{nodeFitter.setCurrentNodeName(taskFitter.taskName)}" />
 				
 				<f:validator validatorId="taskNameValidator" />
 			
@@ -173,7 +173,7 @@
 						
 					<h:inputText value="#{var.label}">
 												
-						<a:ajax execute="@this" limitRender="true" event="change" />
+						<a:ajax execute="@this" limitRender="true" event="change" render="varLabel"/>
 					
 					</h:inputText>
 				
