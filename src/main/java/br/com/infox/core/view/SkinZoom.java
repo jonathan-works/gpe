@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.jsf;
+package br.com.infox.core.view;
 
 import java.util.Arrays;
 
@@ -78,7 +78,7 @@ public class SkinZoom extends Selector
 
 	@Override
 	protected String getCookieName() {
-		return "br.com.infox.jsf";
+		return "br.com.infox.core.view";
 	}
 }
 
