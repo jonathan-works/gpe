@@ -77,14 +77,14 @@
 				 columnId="nome"
 				 columnHeader="#{messages['usuarioLogin.nome']}"
 				 value="#{row.nome}" />
-            <wi:columnOutputText
+            <wi:columnBoolean
 				 columnId="bloqueio"
 				 columnHeader="#{messages['usuarioLogin.bloqueio']}"
-				 value="#{row.bloqueio ? 'Sim' : 'Não'}" />
-            <wi:columnOutputText
+				 value="#{row.bloqueio}" />
+            <wi:columnBoolean
 				 columnId="provisorio"
 				 columnHeader="#{messages['usuarioLogin.provisorio']}"
-				 value="#{row.provisorio  ? 'Sim' : 'Não'}" />
+				 value="#{row.provisorio}" />
             <wi:columnSituacao
 				 columnId="ativo"
 				 columnHeader="#{messages['field.situacao']}"
