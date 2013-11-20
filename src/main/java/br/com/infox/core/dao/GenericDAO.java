@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -108,7 +107,7 @@ public class GenericDAO implements Serializable {
                 entityManager.flush();
                 return obj;
             }
-        },object,".persist() (" + object.getClass().getName() + ")");
+        },object);
 	    
         return result;
 	}
@@ -122,7 +121,7 @@ public class GenericDAO implements Serializable {
                 entityManager.flush();
                 return res;
             }
-        },object,".update() (" + object.getClass().getName() + ")");
+        },object);
 	    
         return result;
 	}
@@ -136,14 +135,12 @@ public class GenericDAO implements Serializable {
                 entityManager.flush();
                 return obj;
             }
-        },object,".remove() (" + object.getClass().getName() + ")");
+        },object);
 	    
 	    return result;
 	}
 	
-	private <T> T processExceptions(DAOActionInterface<T> action,T object,String msg) throws DAOException {
-	    StopWatch sw = new StopWatch();
-        sw.start();
+	private <T> T processExceptions(DAOActionInterface<T> action,T object) throws DAOException {
 	    try {
 	        return action.execute(object);
 	    } catch (Throwable t) {

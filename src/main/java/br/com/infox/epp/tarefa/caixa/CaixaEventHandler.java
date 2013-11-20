@@ -1,5 +1,6 @@
 package br.com.infox.epp.tarefa.caixa;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -50,9 +51,13 @@ public class CaixaEventHandler {
 
 	private List<Caixa> getCaixaResultList(final ExecutionContext context) {
 		final Caixa cf = getCaixa(context.getTransition());
-		final CaixaList caixaList = ComponentUtil.getComponent(CaixaList.NAME);
-		caixaList.setEntity(cf);
-		return caixaList.getResultList();
+		final List<Caixa> result = new ArrayList<>(0);
+		if (cf != null) {
+		    final CaixaList caixaList = ComponentUtil.getComponent(CaixaList.NAME);
+		    caixaList.setEntity(cf);
+		    result.addAll(caixaList.getResultList());
+		}
+		return result;
 	}
 
 	private Caixa getCaixa(final Transition transicao) {

@@ -28,12 +28,12 @@
 					<wi:searchForm
 						formId="pesquisarProcessoEpaForm"
 						formTitle="#{messages['searchForm.title']}">
-					<wi:inputText id="numeroProcesso"
+						<wi:inputText id="numeroProcesso"
 									label="#{messages['processoEpa.numeroProcesso']}"
 									value="#{processoEpaList.entity.numeroProcesso}"
 									minlength="1"
 								 	maxlength="15"/>
-				 	        <wi:selectOneMenuEntity	
+				 	    <wi:selectOneMenuEntity	
 							id="usuarioAlteracao"
 							label="#{messages['processo.usuarioCadastroProcesso']}"
 							value="#{processoEpaList.entity.usuarioCadastroProcesso}"
@@ -47,7 +47,7 @@
 							validatePastDateTo="true" />
 					</wi:searchForm>
 				</ui:define>
-
+				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar">
 					<wi:toolBar
 						url="#{a4jSkin.imgIconView}"

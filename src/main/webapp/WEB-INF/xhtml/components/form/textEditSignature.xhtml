@@ -46,7 +46,7 @@
 	<a:jsFunction
 		name="submitForm"
 		action="#{home.assinarDocumento()}"
-		render="signatureDiv"
+		render="signatureDiv DialogMessage"
 		oncomplete="infox.editor['#{id}Editor'].postSign()"
 	/>
 	<s:div id="signatureDiv">
@@ -67,7 +67,7 @@
 			certificationChainField="#{id}certChain"
 			signatureField="#{id}signature"
 			getDataFunction="infox.editor['#{id}Editor'].instance.getData()"
-			useBase64Function="infox.editor['#{id}Editor'].useBase64"
+			useBase64Function="infox.editor['#{id}Editor'].useBase64()"
 			functionPreSign="infox.editor['#{id}Editor'].addSignature()"
 			functionPosSign=""
 			debug="false"
@@ -79,7 +79,7 @@
 		<script type="text/javascript">
 			//<![CDATA[
 			namespace("infox.editor.#{id}Editor",{
-				get useBase64() {
+				useBase64:function useBase64() {
 					return "true";
 				},
 				get isSigned() {

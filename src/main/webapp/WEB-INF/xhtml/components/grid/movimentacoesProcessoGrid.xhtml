@@ -33,14 +33,14 @@
 
         <rich:column styleClass="defaultCell">
 
-            <f:facet name="header">Tarefa</f:facet>
+            <f:facet name="header">#{messages['fluxo.tarefa']}</f:facet>
             <h:outputText value="#{task.name}" />
 
         </rich:column>
 
         <rich:column styleClass="defaultCell">
 
-            <f:facet name="header">Localização / Usuário</f:facet>
+            <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
             <div >
 
                 <h:graphicImage
@@ -55,20 +55,20 @@
 
                 <h:graphicImage
                     url="/img/usuario.gif"
-                    rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
+                    rendered="#{!empty userHandler.getUsuarioByTarefa(task)}" />
                 <h:outputText
                     value="#{userHandler.getUsuarioByTarefa(task)} " />
                     <a:commandLink 
-                        action="#{taskInstanceHome.removeUsuario()}"
+                        action="#{taskInstanceHome.removeUsuario(task)}"
                         execute="@this"
                         render="usuarioTarefaDiv"
-                        onclick="if (!confirm('Liberar tarefa?')) return false;"
+                        onclick="confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\')"
                         limitRender="true"
-                        oncomplete="window.close();"
+                        oncomplete="close()"
                         rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
                         <h:graphicImage
                             url="/img/unlocked.gif"
-                            title="Liberar Tarefa" />
+                            title="'#{messages['movimentar.liberarTarefa']}" />
                     </a:commandLink>
 
             </s:div>
@@ -79,7 +79,7 @@
             
             styleClass="defaultCell">
 
-            <f:facet name="header">Início</f:facet>
+            <f:facet name="header">#{messages['processo.dataInicio']}</f:facet>
             <h:outputText value="#{task.start}">
 
                 <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
@@ -92,7 +92,7 @@
             
             styleClass="defaultCell">
 
-            <f:facet name="header">Término</f:facet>
+            <f:facet name="header">#{messages['processo.dataFim']}</f:facet>
             <h:outputText value="#{task.end}">
 
                 <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
@@ -102,10 +102,9 @@
         </rich:column>
 
         <rich:column
-            
             styleClass="defaultCell">
 
-            <f:facet name="header">Dados</f:facet>
+            <f:facet name="header"></f:facet>
             <s:link
                 target="_blank"
                 rendered="#{processoHandler.taskDocumentList.contains(task)}"

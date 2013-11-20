@@ -187,10 +187,39 @@
 								 columnHeader="#{messages['processoDocumento.dataInclusao']}"
 								 value="#{row.dataInclusao}" />
                             <wi:columnOutputText
-								 columnId="processoDocumentoBin"
+								 columnId="processoDocumento"
 								 columnHeader="#{messages['processoDocumentoBin.documento']}"
-								 value="#{row.processoDocumentoBin}" />
-                            <ui:define name="toolBar" />
+								 value="#{row.processoDocumento}" />
+                            <ui:define name="toolBar">
+	                            <s:link
+									target="idJan#{row.idProcessoDocumento}"
+									rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
+									view="/Processo/Consulta/validaDocumento.xhtml"
+									onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+									<h:graphicImage
+										title="#{messages['assinaturas.validar']}"
+										alt="#{messages['assinaturas.validar']}"
+										url="/img/lock.png" />
+									<f:param
+										value="#{row.idProcessoDocumento}"
+										name="idProcessoDocumento" />
+								</s:link>
+								
+								<s:link
+									target="idJan#{row.idProcessoDocumento}"
+									rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
+									view="/Processo/Consulta/assinaDocumento.xhtml"
+									onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+									<h:graphicImage
+										 title="#{messages['assinaturas.assinar']}"
+										 alt="#{messages['assinaturas.assinar']}"
+										 url="/img/lock_unlock.png" />
+									<f:param
+										 value="#{row.idProcessoDocumento}"
+										 name="id" />
+								
+								</s:link>
+                            </ui:define>
                         
 						</wi:dataTable>
                     
@@ -201,7 +230,7 @@
 					 name="tabMovimentacoes"
 					 rendered="#{processoHome.managed}"
 					 status=":status"
-					 title="Movimentações do Processo">
+					 title="#{messages['movimentar.movimentacoesProcesso']}">
                     	<ui:include src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
                 
 				</infox:tab>

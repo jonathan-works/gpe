@@ -14,8 +14,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -24,6 +24,8 @@ import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.tarefa.caixa.Caixa;
@@ -43,6 +45,8 @@ public class ProcessoManager extends GenericManager {
 	@In private ProcessoDAO processoDAO;
 	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
+	@In private ProcessoDocumentoManager processoDocumentoManager;
+	@In private ProcessoDocumentoBinManager processoDocumentoBinManager;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
@@ -56,20 +60,11 @@ public class ProcessoManager extends GenericManager {
 		return bin;
 	}
 	
-	public ProcessoDocumento createProcessoDocumento(Processo processo, String label, ProcessoDocumentoBin bin, TipoProcessoDocumento tipoProcessoDocumento) {
-		ProcessoDocumento doc = new ProcessoDocumento();
-		doc.setProcessoDocumentoBin(bin);
-		doc.setAtivo(Boolean.TRUE);
-		doc.setDataInclusao(new Date());
-		doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
-		doc.setProcesso(processo);
-		doc.setProcessoDocumento(label);
-		doc.setTipoProcessoDocumento(tipoProcessoDocumento);
-		EntityUtil.getEntityManager().persist(doc);
-		return doc;
+	public ProcessoDocumento createProcessoDocumento(Processo processo, String label, ProcessoDocumentoBin bin, TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
+		return processoDocumentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);
 	}
-	
-	private String getDescricaoModeloDocumentoByValue(Object value) {
+
+    private String getDescricaoModeloDocumentoByValue(Object value) {
 		String modeloDocumento = String.valueOf(value);
 		if (Strings.isEmpty(modeloDocumento)){
 			modeloDocumento = " ";

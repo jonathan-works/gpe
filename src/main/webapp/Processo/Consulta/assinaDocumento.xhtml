@@ -31,7 +31,10 @@
 		<ui:param name="home" value="#{processoDocumentoHome}" />
 		<ui:param name="pd" value="#{home.instance}" />
 		<ui:param name="isBinario" value="#{pd.processoDocumentoBin.isBinario()}" />
-		
+		<wi:messages
+					formId="pageBody"
+					rendered="#{empty showMsg ? true : showMsg}"
+					globalOnly="true"/>
 		<script>
 			var documento= {
 					useBase64:function useBase64() {
@@ -46,7 +49,6 @@
 					postValidate:function postValidate() {
 						try {
 							submitForm();
-							opener.location.reload();
 						}catch(e){
 						}
 					}
@@ -94,9 +96,9 @@
 		            	action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
 		            	execute="@form"
 		            	oncomplete="opener.location.reload()"
-		            	render="formValidar"/>
+		            	render="formValidar pageBodyDialogMessage"/>
 				</h:form>
-			</s:div>	
+			</s:div>
 		</rich:panel>
 	</s:div>
 	</ui:define>

@@ -27,6 +27,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.Messages;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -108,12 +109,13 @@ public class FileHome implements Serializable, FileUploadListener {
 	}
 	
 	@Override
-	public void processFileUpload(FileUploadEvent ue) {
-		UploadedFile ui = ue.getUploadedFile();
+	public void processFileUpload(final FileUploadEvent ue) {
+		final UploadedFile ui = ue.getUploadedFile();
 		this.data = ui.getData();
 		this.fileName = ui.getName();
 		this.size = Long.valueOf(ui.getSize()).intValue();
 		this.contentType = ui.getContentType();
+		FacesMessages.instance().add(Messages.instance().get("processoDocumento.doneLabel"));
 	}
 
 	public void download() {

@@ -3,16 +3,23 @@ namespace("infox",{
 		setTimeout(function(){
 			$(args.selector).css(args.style);
 		},args.delay || 1);
-	},
-	openPopUp:function openPopUp(id, url, width, height) {
+	},openPopUp:function openPopUp(id, url, width, height) {
 		var featPopUp = ["width=",width,
 			             ",height=",height,
 			             ",resizable=YES",
 			             ",scrollbars=YES",
 			             ",status=NO",
 			             ",location=NO"];
-		var popUp = window.open(url, id, featPopUp.join(""));	
+		var popUp = window.open(url || 'about:blank', id, featPopUp.join(""));	
 		popUp.moveTo(0, 0);
+	},abrirPopUp:function abrirPopUp(id, url,args) {
+		var options = (args || {}).options || {};
+		var props = [];
+		for(var it in options) {
+			props.push(it+"="+options[it]);
+		}
+		window.open(url || "about:blank", id || "Janela", props.join(","))
+			.moveTo(0, 0);
 	},showLoading:function showLoading() {
 		RichFaces.$('modalStatus').show();	
 	},hideLoading:function hideLoading() {

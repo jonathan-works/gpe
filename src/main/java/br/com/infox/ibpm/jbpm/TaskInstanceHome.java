@@ -39,6 +39,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -53,6 +54,7 @@ import org.richfaces.function.RichFunction;
 
 import br.com.infox.bpm.action.TaskPageAction;
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
@@ -65,6 +67,7 @@ import br.com.infox.epp.search.Indexer;
 import br.com.infox.epp.search.Reindexer;
 import br.com.infox.epp.search.SearchHandler;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.ibpm.jbpm.manager.TaskInstanceManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.exception.ApplicationException;
@@ -105,6 +108,7 @@ public class TaskInstanceHome implements Serializable {
     @In private SituacaoProcessoManager situacaoProcessoManager;
     @In private ProcessoManager processoManager;
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
+    @In private TaskInstanceManager taskInstanceManager;
     private URL urlRetornoAcessoExterno;
     
 	public void createInstance() {
@@ -335,6 +339,7 @@ public class TaskInstanceHome implements Serializable {
                 return null;
             }
             limparEstado(processoHome);
+            update();
             finalizarTaskDoJbpm(transition);
             atualizarPaginaDeMovimentacao(processoHome);
         }
@@ -397,7 +402,6 @@ public class TaskInstanceHome implements Serializable {
     private void limparEstado(ProcessoHome processoHome) {
         this.currentTaskInstance = null;
         processoHome.setIdProcessoDocumento(null);
-        update();
     }
 
     private void acusarFaltaDeAssinatura() {
@@ -419,35 +423,51 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
+    public void removeUsuario(final TaskInstance taskInstance) {
+        if (taskInstance != null) {
+            try {
+                taskInstanceManager.removeUsuario(taskInstance.getId());
+            } catch (DAOException e) {
+                LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
+            }
+        }
+    }
+    
     public void removeUsuario(final Long idTaskInstance) {
         try {
-            UsuarioTaskInstance uti = EntityUtil.find(UsuarioTaskInstance.class, idTaskInstance);
-            if (uti!= null) {
-                EntityUtil.getEntityManager().remove(uti);
-                EntityUtil.getEntityManager().flush();
-            }
+            taskInstanceManager.removeUsuario(idTaskInstance);
         } catch (Exception e) {
-            LOG.error("TaskInstanceHome.removeUsuario()", e);
+            LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
         }
     }
     
 	public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         try {
             final Map<String,Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
-            removeUsuario((Long)result.get("idTaskInstance"));
+            taskInstanceManager.removeUsuario((Long)result.get("idTaskInstance"));
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Mais de um resultado", e);
         } catch (IllegalStateException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
+        } catch (DAOException e) {
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - ", e);
         } finally {
             Util.rollbackTransactionIfNeeded();
         }
     }
     
     public void removeUsuario() {
-        removeUsuario(BusinessProcess.instance().getTaskId());
+        if (BusinessProcess.instance().hasCurrentTask()) {
+            try {
+                taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
+            } catch (DAOException e) {
+                LOG.error(".removeUsuario() - ", e);
+            }    
+        } else {
+            FacesMessages.instance().add(Messages.instance().get("org.jboss.seam.TaskNotFound"));
+        }
     }
 
     public void start(long taskId) {

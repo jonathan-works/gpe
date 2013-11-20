@@ -6,6 +6,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
     xmlns:a="http://richfaces.org/a4j">
 
     <ui:param name="variavel" value="#{processBuilder.taskFitter.currentTask.currentVariable}" />
@@ -16,16 +17,17 @@
         
             <wi:ajaxDiv id="divM2MVar">
             
-                <s:div id="associated">
-                
-                	<wi:dataTable values="#{variavel.modeloDocumentoList}"
-                        tableTitle="#{messages['associatedModeloDocumentoVariavel.titleGrid']}"
+                <rich:panel header="#{messages['associatedModeloDocumentoVariavel.titleGrid']}" id="associated" 
+                	style="margin-bottom: 20px">
+
+                	<rich:dataTable value="#{variavel.modeloDocumentoList}"
                         id="associatedModeloDocumentoVariavelList"
-                        rowId="#{row.idModeloDocumento}">
-                        
-                        <ui:define name="headerToolBar" />
-                        
-                        <ui:define name="toolBar">
+                        rowId="#{row.idModeloDocumento}"
+                        var="row"
+                        rowKeyVar="key"
+                        styleClass="dtable rf-dt-crud">
+						
+						<rich:column>
                         
                         	<h:form>
                         	
@@ -39,15 +41,23 @@
                                 
                         	</h:form>
                         	
-                        </ui:define>
+                        </rich:column>
                         
-                        <wi:columnOutputText columnId="tituloModeloDocumento"
-                            columnHeader="#{messages['associatedModeloDocumentoVariavel.tituloModeloDocumento']}"
-                            value="#{row}" />
+                        <rich:column id="tituloModeloDocumento">
+                        
+                        	<f:facet name="header">
+                        	
+                        		<h:outputText value="#{messages['associatedModeloDocumentoVariavel.tituloModeloDocumento']}" />
+                        		
+                        	</f:facet>
+                        	
+                        	<h:outputText value="#{row}" />
+                        	
+                        </rich:column>
                             
-                    </wi:dataTable>
+                    </rich:dataTable>
                     
-                </s:div>
+                </rich:panel>
                 
                 <s:div id="associative">
                 

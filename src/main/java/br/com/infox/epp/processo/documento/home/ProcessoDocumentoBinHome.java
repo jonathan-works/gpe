@@ -102,6 +102,7 @@ public class ProcessoDocumentoBinHome
             instance.setCertChain(certChain);
             instance.setDataInclusao(new Date());
             update();
+            FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
 	    }
 	}
 	

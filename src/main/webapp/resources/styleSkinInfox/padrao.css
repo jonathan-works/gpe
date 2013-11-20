@@ -152,7 +152,7 @@ body {
 	padding:2px;
 }
 
-.errors {
+.errors,.tree-inactive {
 	color: red;
 }
 
@@ -584,4 +584,7 @@ div.rf-trn {
 
 .rf-tr {
 	text-align:left;
+}
+.tree-inactive {
+	text-decoration:line-through;
 }
