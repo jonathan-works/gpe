@@ -91,6 +91,14 @@ public abstract class AbstractAction {
             	FacesMessages.instance().clear();
             	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
+        } catch (DAOException daoException) {
+            LOG.error(msg, daoException);
+            PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+            if (errorCode != null) {
+                ret = errorCode.toString();
+                FacesMessages.instance().clear();
+                FacesMessages.instance().add(daoException.getLocalizedMessage());
+            }
         } catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
