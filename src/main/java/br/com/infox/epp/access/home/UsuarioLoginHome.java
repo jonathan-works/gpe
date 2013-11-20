@@ -6,7 +6,6 @@ import java.util.List;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.security.management.action.UserAction;
@@ -17,7 +16,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(UsuarioLoginHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-@BypassInterceptors
+@Deprecated
 public class UsuarioLoginHome extends AbstractHome<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;

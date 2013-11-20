@@ -53,6 +53,7 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioHome.NAME)
+@Deprecated
 public class UsuarioHome extends AbstractHome<UsuarioLogin> {
 
 	private static final int PASSWORD_LENGTH = 8;
