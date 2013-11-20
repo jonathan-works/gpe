@@ -1,5 +1,6 @@
 package br.com.infox.validator;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
@@ -20,13 +21,20 @@ public class FutureDateValidator implements Validator {
 	static final String NAME = "futureDateValidator";
 
     public void validate(FacesContext context, UIComponent component, Object value) {
-		
-		Date date = (Date) value;
-		Date now = new Date();
-		if (date != null && date.before(now)) {
+    	if (value == null) {
+    		return;
+    	}
+    	
+    	Calendar data = Calendar.getInstance();
+    	data.setTime((Date) value);
+    	
+    	Calendar dataAtual = Calendar.getInstance();
+    	dataAtual.set(Calendar.HOUR, 0);
+    	dataAtual.set(Calendar.MINUTE, 0);
+    	dataAtual.set(Calendar.SECOND, 0);
+    	dataAtual.set(Calendar.MILLISECOND, 0);
+    	if (data.equals(dataAtual) || data.before(dataAtual)) {
 			throw new ValidatorException(new FacesMessage(Messages.instance().get("validator.Date.FUTURE")));
 		}
-		
 	}
-
 }
