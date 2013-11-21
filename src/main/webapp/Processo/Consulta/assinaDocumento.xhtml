@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:s="http://jboss.com/products/seam/taglib"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -31,10 +28,6 @@
 		<ui:param name="home" value="#{processoDocumentoHome}" />
 		<ui:param name="pd" value="#{home.instance}" />
 		<ui:param name="isBinario" value="#{pd.processoDocumentoBin.isBinario()}" />
-		<wi:messages
-					formId="pageBody"
-					rendered="#{empty showMsg ? true : showMsg}"
-					globalOnly="true"/>
 		<script>
 			var documento= {
 					useBase64:function useBase64() {
@@ -71,7 +64,6 @@
 						certificationChainField="#{rich:clientId('certChain')}"
 						signatureField="#{rich:clientId('signature')}"
 						getDataFunction="documento.getData()"
-						useBase64Function="documento.useBase64()"
 						functionPreSign="showLoading()"
 						functionPosSign="hideLoading();documento.postValidate();"
 						debug="false"
@@ -82,8 +74,8 @@
 		        </div>
 				<h:form id="formValidar">
 					<script>
-						if (#{not empty pd.processoDocumentoBin.signature and not empty pd.processoDocumentoBin.certChain}) {
-							close();
+						if (!(#{empty pd.processoDocumentoBin.signature or empty pd.processoDocumentoBin.certChain})) {
+							opener.location.reload();
 						}
 					</script>
 					<h:inputHidden id="certChain"
@@ -95,8 +87,7 @@
 		            	name="submitForm"
 		            	action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
 		            	execute="@form"
-		            	oncomplete="opener.location.reload()"
-		            	render="formValidar pageBodyDialogMessage"/>
+		            	render="formValidar"/>
 				</h:form>
 			</s:div>
 		</rich:panel>
