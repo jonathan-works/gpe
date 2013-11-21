@@ -89,7 +89,8 @@ public class ProcessoDocumentoBinHome
 	    return !"".equals(signature.trim()) && !"".equals(certChain.trim());
 	}
 	
-	public void assinarDocumento(final ProcessoDocumento processoDocumento) {
+	public void assinarDocumento(ProcessoDocumento processoDocumento) {
+	    FacesMessages.instance().clear();
 	    if (isValidSignature()) {
 	        setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
             processoDocumento.setLocalizacao(Authenticator.getLocalizacaoAtual());
@@ -98,8 +99,12 @@ public class ProcessoDocumentoBinHome
             instance.setSignature(signature);
             instance.setCertChain(certChain);
             instance.setDataInclusao(new Date());
-            update();
+            processoDocumento.setProcessoDocumentoBin(instance);
+            getEntityManager().merge(processoDocumento);
+            getEntityManager().flush();
             FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
+	    } else {
+            FacesMessages.instance().add(Messages.instance().get("assinatura.falhaAssinatura"));
 	    }
 	}
 	
