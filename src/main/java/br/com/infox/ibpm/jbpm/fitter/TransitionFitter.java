@@ -280,8 +280,8 @@ public class TransitionFitter extends Fitter implements Serializable {
 		}
 		
 		List<TransitionHandler> leavingTransitions = getLeavingTransitions();
-		if (leavingTransitions == null) {
-			return false;
+		if (leavingTransitions == null || leavingTransitions.isEmpty()) {
+			return canAddLeavingTransition();
 		}
 		
 		for (TransitionHandler transitionHandler : leavingTransitions) {
