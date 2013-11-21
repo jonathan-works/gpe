@@ -1,18 +1,22 @@
-package br.com.infox.core.tree;
+package br.com.infox.epp.access.component.tree;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Papel;
 
-@Name("rolesTree")
+@Name(RolesTreeHandler.ROLES_TREE)
 @Scope(ScopeType.PAGE)
 @BypassInterceptors
 public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 
-	private static final String ROLE_TREE_EVENT = "roleTreeHandlerSelected";
+	public static final String ROLES_TREE = "rolesTree";
+
+    private static final String ROLE_TREE_EVENT = "roleTreeHandlerSelected";
 
 	private static final long serialVersionUID = 1L;
 

@@ -11,7 +11,7 @@
 	<begin-conversation join="true"/>
 	<restrict>#{security.checkPage()}</restrict>
 
-	<param name="id" value="#{papelHome.papelId}"/>
-	<param name="tab" value="#{papelHome.tab}"/>
+	<param name="id" value="#{papelCrudAction.papelId}"/>
+	<param name="tab" value="#{papelCrudAction.tab}"/>
 	
 </page>
