@@ -29,6 +29,12 @@ public class ConsultaProcessoExternoPorPartes extends EntityList<ProcessoEpa> {
     private boolean exibirTable = false;
 
     @Override
+    public void newInstance() {
+        nomePartes = "";
+        super.newInstance();
+    }
+    
+    @Override
     protected void addSearchFields() {
         addSearchField("nome", SearchCriteria.CONTENDO, R1);
 
