@@ -157,13 +157,14 @@ public class ProcessBuilder implements Serializable {
 			try {
 				instance = parseInstance(xml);
 				instance.setName(fluxo.getFluxo());
-				processBuilderGraph.clear();
 			} catch (Exception e) {
 			    LOG.error(".load()", e);
 			}
 			exists = true;
 			this.id = newId;
 		}
+		processBuilderGraph.clear();
+		getPaintedGraph();
 	}
 
 	private ProcessDefinition parseInstance(String newXml) {
