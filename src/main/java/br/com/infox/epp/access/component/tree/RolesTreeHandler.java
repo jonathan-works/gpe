@@ -9,12 +9,14 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Papel;
 
-@Name("rolesTree")
+@Name(RolesTreeHandler.ROLES_TREE)
 @Scope(ScopeType.PAGE)
 @BypassInterceptors
 public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 
-	private static final String ROLE_TREE_EVENT = "roleTreeHandlerSelected";
+	public static final String ROLES_TREE = "rolesTree";
+
+    private static final String ROLE_TREE_EVENT = "roleTreeHandlerSelected";
 
 	private static final long serialVersionUID = 1L;
 
