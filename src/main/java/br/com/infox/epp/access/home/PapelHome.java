@@ -32,6 +32,7 @@ import br.com.itx.util.EntityUtil;
 
 @Name(PapelHome.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Deprecated
 public class PapelHome extends AbstractHome<Papel> {
 	
 	private static final String RECURSOS_TAB_ID = "recursosTab";
