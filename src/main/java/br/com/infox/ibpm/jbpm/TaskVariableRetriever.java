@@ -100,9 +100,8 @@ final class TaskVariableRetriever extends TaskVariable {
     public TaskVariableRetriever evaluateWhenMonetario() {
         if (isMonetario()) {
             setVariable(String.format(FloatFormatConstants._2F, getVariable()));
-            return this;
         }
-        return null;
+        return this;
     }
     
     public TaskVariableRetriever evaluateWhenForm() {
