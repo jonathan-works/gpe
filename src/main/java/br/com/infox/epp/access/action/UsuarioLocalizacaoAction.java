@@ -17,8 +17,6 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.home.UsuarioHome;
-import br.com.infox.epp.access.list.UsuarioLocalizacaoList;
 
 @Name(UsuarioLocalizacaoAction.NAME)
 @Scope(ScopeType.PAGE)
@@ -32,12 +30,6 @@ public class UsuarioLocalizacaoAction {
 	private GenericManager genericManager;
 	
 	private UsuarioLogin usuarioGerenciado;
-	
-//	@In
-//	private UsuarioHome usuarioHome;
-	
-	@In(value = UsuarioLocalizacaoList.NAME, create = true)
-	private UsuarioLocalizacaoList usuarioLocalizacaoList;
 	
 	public UsuarioLocalizacao getInstance() {
 		return instance;
@@ -58,10 +50,7 @@ public class UsuarioLocalizacaoAction {
 	public void newInstance() {
 		this.instance = new UsuarioLocalizacao();
 		this.instance.setResponsavelLocalizacao(false);
-//		if (usuarioHome.isManaged()) {
-			this.instance.setUsuario(usuarioGerenciado);
-			usuarioLocalizacaoList.getEntity().setUsuario(this.instance.getUsuario());
-//		}
+		this.instance.setUsuario(usuarioGerenciado);
 		limparArvores();
 	}
 	

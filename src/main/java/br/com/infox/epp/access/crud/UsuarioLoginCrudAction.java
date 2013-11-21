@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.crud;
 
+import java.util.Date;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -9,8 +11,10 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.util.RandomStringUtils;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -34,6 +38,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     @In private UsuarioLoginManager usuarioLoginManager;
     @In private PessoaManager pessoaManager;
     @In private ModeloDocumentoManager modeloDocumentoManager;
+    @In private BloqueioUsuarioManager bloqueioUsuarioManager;
 
     private boolean pessoaFisicaCadastrada;
     private String password;
@@ -58,8 +63,31 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     
     @Override
     protected boolean beforeSave() {
-        // TODO Auto-generated method stub
+        validarPermanencia();
+        if (getInstance().getBloqueio()){
+            bloquear();
+        }
         return super.beforeSave();
+    }
+    
+    private void validarPermanencia() {
+        if (!getInstance().getProvisorio()) {
+            getInstance().setDataExpiracao(null);
+        }
+    }
+    
+    public void bloquear() {
+        final UsuarioLogin usuario = getInstance();
+        novoBloqueio.setDataBloqueio(new Date());
+        novoBloqueio.setUsuario(usuario);
+        usuario.getBloqueioUsuarioList().add(novoBloqueio);
+        try {
+            getGenericManager().persist(novoBloqueio);
+        } catch (DAOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        novoBloqueio = new BloqueioUsuario();
     }
     
     @Override
