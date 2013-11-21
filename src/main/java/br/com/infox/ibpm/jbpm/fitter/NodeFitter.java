@@ -198,12 +198,24 @@ public class NodeFitter extends Fitter implements Serializable {
 		}
 		nodeMessageMap.clear();
 		List<Transition> transitions = node.getLeavingTransitions();
+		Node join = null;
 		if (transitions != null) {
+			if (node.getNodeType().equals(NodeType.Fork)) {
+				for (Transition t : transitions) {
+					if (t.getTo().getNodeType().equals(NodeType.Join)) {
+						join = t.getTo();
+						break;
+					}
+				}
+			}
 		    removeTransitions(transitions);
 		}
 		Set<Transition> transitionSet = node.getArrivingTransitions();
 		if (transitionSet != null) {
 		    removeTransitions(transitionSet);
+		}
+		if (join != null) {
+			removeNode(join);
 		}
 	}
 	
