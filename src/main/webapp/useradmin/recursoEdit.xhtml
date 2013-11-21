@@ -14,9 +14,9 @@
 		<wi:inputText
 			id="identificador"
 			label="Identificador"
-			value="#{papelHome.instance.identificador}"
+			value="#{papelCrudAction.instance.identificador}"
 			required="true"
-			rendered="#{not identityManager.roleExists(papelHome.instance.identificador) or not papelHome.managed}">
+			rendered="#{not identityManager.roleExists(papelCrudAction.instance.identificador) or not papelCrudAction.managed}">
 		
 			<f:validator validatorId="papelRecursoIdentificadorValidator" />
 			<f:attribute name="isPapel" value="false" />
@@ -26,22 +26,22 @@
 		<wi:outputText
 			id="identificadorOutput"
 			label="Identificador"
-			value="#{papelHome.instance.identificador}"
-			rendered="#{identityManager.roleExists(papelHome.instance.identificador) and papelHome.managed}"
+			value="#{papelCrudAction.instance.identificador}"
+			rendered="#{identityManager.roleExists(papelCrudAction.instance.identificador) and papelCrudAction.managed}"
 			/>
 	
 		<wi:inputText
 			id="nome"
 			label="Nome"
-			value="#{papelHome.instance.nome}"
+			value="#{papelCrudAction.instance.nome}"
 			required="true"
 			/>
 	
 		<infox:tabPanel
 			id="painelEdit"
 			switchType="ajax"
-			rendered="#{papelHome.managed}"
-			activeTab="#{papelHome.activeInnerTab}"
+			rendered="#{papelCrudAction.managed}"
+			activeTab="#{papelCrudAction.activeInnerTab}"
 			>
 			<infox:tabHeaders />
 			<infox:tab
@@ -54,9 +54,9 @@
 	
 					<wi:pickList
 						id="herdeiros"
-						value="#{papelHome.membros}"
-						itemValues="#{papelHome.getPapeisDisponiveis(false)}"
-						itemLabel="#{papelHome.getNome(var)}" />
+						value="#{papelCrudAction.membros}"
+						itemValues="#{papelCrudAction.getPapeisDisponiveis(false)}"
+						itemLabel="#{papelCrudAction.getNome(var)}" />
 	
 				</a:region>
 	

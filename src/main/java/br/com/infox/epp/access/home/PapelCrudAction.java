@@ -23,27 +23,23 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.action.RoleAction;
 
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.RolesMap;
 import br.com.infox.epp.access.manager.PapelManager;
-import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(PapelCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class PapelCrudAction extends AbstractHome<Papel> {
+public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	
 	private static final String RECURSOS_TAB_ID = "recursosTab";
-
     private static final String PAPEIS_TAB_ID = "papeisTab";
-
     private static final String MEMBROS_TAB_ID = "herdeirosTab";
 
-    public static final String NAME = "papelHome";
+    public static final String NAME = "papelCrudAction";
 
-	private static final long serialVersionUID = 1L;
-	
 	private Map<Boolean, List<String>> papeisDisponiveis;
 	private Map<String, Papel> papelMap;
 
@@ -53,9 +49,7 @@ public class PapelCrudAction extends AbstractHome<Papel> {
 	private String identificador;
 
 	private List<String> recursosDisponiveis;
-
 	private List<String> papeis;
-
 	private List<String> recursos;
 	
 	private String activeInnerTab;
@@ -138,13 +132,13 @@ public class PapelCrudAction extends AbstractHome<Papel> {
 	}
 	
 	@Override
-	public String inactive(Papel instance) {
-		return remove(instance);
+	public String inactive(Object instance) {
+		return remove((Papel) instance);
 	}
 	
 	@Override
-	public String remove(Papel p) {
-		setInstance(p);
+	public String remove(Object p) {
+		setInstance((Papel) p);
 		String ret = super.remove();
 		newInstance();
 		RolesMap.instance().clear();
@@ -194,7 +188,7 @@ public class PapelCrudAction extends AbstractHome<Papel> {
 			removePapeisImplicitos(assignableRoles, getPapeis());
 			removeRecursos(assignableRoles);
 			if (isManaged() && removeMembros) {
-				removeMembros(instance.getIdentificador(), assignableRoles);
+				removeMembros(getInstance().getIdentificador(), assignableRoles);
 			} else {
 				assignableRoles.removeAll(papeis);
 			}
@@ -332,7 +326,7 @@ public class PapelCrudAction extends AbstractHome<Papel> {
 	public String save() {
 		FacesMessages messages = FacesMessages.instance();
 		
-		if (IdentityManager.instance().roleExists(instance.getIdentificador()) && !isManaged()) {
+		if (IdentityManager.instance().roleExists(getInstance().getIdentificador()) && !isManaged()) {
 			messages.add("#{messages['constraintViolation.uniqueViolation']}");
 			return null;
 		}
@@ -388,9 +382,9 @@ public class PapelCrudAction extends AbstractHome<Papel> {
 				IdentityManager.instance().addRoleToGroup("admin", identificador);
 			}
 		}
-		String nome = instance.getNome();
-		instance = papelManager.getPapelByIdentificador(getRoleaction().getRole());
-		instance.setNome(nome);
+		String nome = getInstance().getNome();
+		setInstance(papelManager.getPapelByIdentificador(getRoleaction().getRole()));
+		getInstance().setNome(nome);
 		EntityUtil.flush();
 		clear();
 		return save;
@@ -408,6 +402,6 @@ public class PapelCrudAction extends AbstractHome<Papel> {
 	}
 	
 	public static PapelCrudAction instance() {
-		return ComponentUtil.getComponent("papelHome");
+		return ComponentUtil.getComponent(NAME);
 	}
 }

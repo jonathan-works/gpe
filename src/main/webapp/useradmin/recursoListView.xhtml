@@ -16,7 +16,7 @@
 
 	<ui:param
          name="home"
-         value="#{papelHome}" />
+         value="#{papelCrudAction}" />
 
 	<ui:define
          name="title">Recursos</ui:define>
@@ -67,8 +67,8 @@
 		<wi:dataForm
 			formId="recursos"
 			formTitle="#{messages['form.title']}"
-			updateAction="papelHome.save()"
-			persistAction="papelHome.save()">
+			updateAction="papelCrudAction.save()"
+			persistAction="papelCrudAction.save()">
 			<ui:include
 	             src="recursoEdit.xhtml">
 	        </ui:include>

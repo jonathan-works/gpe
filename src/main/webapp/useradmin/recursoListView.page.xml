@@ -10,8 +10,8 @@
 	<begin-conversation join="true"/>
 	<restrict>#{security.checkPage()}</restrict>
 
-	<param name="id" value="#{papelHome.papelId}"/>
-	<param name="tab" value="#{papelHome.tab}"/>
-	<action if="#{papelHome.tab == 'search'}" execute="#{papelHome.newInstance()}"/>
+	<param name="id" value="#{papelCrudAction.papelId}"/>
+	<param name="tab" value="#{papelCrudAction.tab}"/>
+	<action if="#{papelCrudAction.tab == 'search'}" execute="#{papelCrudAction.newInstance()}"/>
 	
 </page>
