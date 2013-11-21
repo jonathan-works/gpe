@@ -30,10 +30,9 @@ import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
-@Name(PapelHome.NAME)
+@Name(PapelCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-@Deprecated
-public class PapelHome extends AbstractHome<Papel> {
+public class PapelCrudAction extends AbstractHome<Papel> {
 	
 	private static final String RECURSOS_TAB_ID = "recursosTab";
 
@@ -408,7 +407,7 @@ public class PapelHome extends AbstractHome<Papel> {
 		}
 	}
 	
-	public static PapelHome instance() {
+	public static PapelCrudAction instance() {
 		return ComponentUtil.getComponent("papelHome");
 	}
 }
