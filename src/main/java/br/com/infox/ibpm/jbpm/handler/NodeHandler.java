@@ -270,7 +270,7 @@ public class NodeHandler implements Serializable {
 		if (dueDateValue != null && dueDateUnit != null) {
 			String dueDate = dueDateValue + 
 				(dueDateBusiness ? " business " : " ") +
-				dueDateUnit;
+				dueDateUnit.name().toLowerCase(); // Tem que ser minúsculo por causa dos mapas businessAmounts e calendarFields da classe org.jbpm.calendar.Duration
 			currentTimer.setDueDate(dueDate);
 		}
 	}
