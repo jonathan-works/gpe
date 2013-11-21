@@ -13,6 +13,8 @@
 	
 	<action execute="#{usuarioLocalizacaoAction.setUsuarioGerenciado(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
+    <action execute="#{usuarioLocalizacaoEntityList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
+            if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
             
     <action execute="#{bloqueioUsuarioList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'historicoBloqueioUsuario'}"/>
