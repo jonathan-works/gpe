@@ -10,7 +10,9 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
@@ -49,12 +51,17 @@ public class UsuarioExternoAction {
 	private URL urlRetorno;
 	
 	public void handleUsuarioExterno() {
+	    final boolean wasLoggedIn = Identity.instance().isLoggedIn();
 		Identity.instance().logout();
-		Authenticator.loginUsuarioExterno();
-		taskInstanceHome.setUrlRetornoAcessoExterno(urlRetorno);
-		NaturezaCategoriaFluxo naturezaCategoriaFluxo = naturezaCategoriaFluxoManager.getByRelationship(natureza, categoria, fluxo);
-		iniciarProcessoAction.onSelectNatCatFluxo(naturezaCategoriaFluxo);
-		iniciarProcessoAction.onSelectItem(new ItemBean(item));
+		if (!wasLoggedIn) {
+		    Authenticator.loginUsuarioExterno();
+		    taskInstanceHome.setUrlRetornoAcessoExterno(urlRetorno);
+	        NaturezaCategoriaFluxo naturezaCategoriaFluxo = naturezaCategoriaFluxoManager.getByRelationship(natureza, categoria, fluxo);
+	        iniciarProcessoAction.onSelectNatCatFluxo(naturezaCategoriaFluxo);
+	        iniciarProcessoAction.onSelectItem(new ItemBean(item));
+		} else {
+		    FacesMessages.instance().add(Messages.instance().get("acessoExterno.LoggedIn"));
+		}
 	}
 	
 	public void endAcaoUsuarioExterno() {

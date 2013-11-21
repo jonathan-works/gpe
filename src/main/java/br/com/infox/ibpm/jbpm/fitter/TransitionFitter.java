@@ -141,6 +141,9 @@ public class TransitionFitter extends Fitter implements Serializable {
 		}
 		
 		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
+		if (currentNode == null) {
+			return false;
+		}
 		NodeType nodeType = currentNode.getNodeType();
 		
 		return nodeType.equals(NodeType.Decision) || nodeType.equals(NodeType.Fork);
@@ -277,8 +280,8 @@ public class TransitionFitter extends Fitter implements Serializable {
 		}
 		
 		List<TransitionHandler> leavingTransitions = getLeavingTransitions();
-		if (leavingTransitions == null) {
-			return false;
+		if (leavingTransitions == null || leavingTransitions.isEmpty()) {
+			return canAddLeavingTransition();
 		}
 		
 		for (TransitionHandler transitionHandler : leavingTransitions) {

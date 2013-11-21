@@ -44,6 +44,7 @@
 		 name="checkPermission"
 		 value="#{processoHome.checarVisibilidade()}" />
 	<ui:param name="isUsuarioExterno" value="#{authenticator.usuarioExterno ? 'true':'false'}" />
+	<ui:param name="showMsg" value="#{!isUsuarioExterno}" />
 	<ui:define name="head">
 		<h:outputStylesheet
 	        library="styleSkinInfox"

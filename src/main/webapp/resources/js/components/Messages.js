@@ -6,7 +6,10 @@ namespace("infox.Messages",function Messages(args) {
 	var Messages = Messages || {
 		showDialog:$_showDialog,
 		hideDialog:$_hideDialog,
-		init:$_init
+		init:$_init,
+		get isHidden() {
+			return $(".d-msg.hidden").size()>0; 
+		}
 	};
 	
 	function $_showDialog() {
