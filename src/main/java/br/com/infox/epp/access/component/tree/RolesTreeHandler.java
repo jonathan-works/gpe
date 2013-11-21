@@ -1,10 +1,12 @@
-package br.com.infox.core.tree;
+package br.com.infox.epp.access.component.tree;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
+import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Papel;
 
 @Name("rolesTree")
