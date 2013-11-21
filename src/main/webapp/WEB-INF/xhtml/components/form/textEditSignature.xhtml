@@ -25,6 +25,9 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf"
 >
+	<ui:param name="editorId" value="#{id}Editor" />
+	<ui:param name="idSignature" value="#{id}signature" />
+	<ui:param name="idCertChain" value="#{id}certChain" />
 	
 	<wi:selectOneMenuEntity
 		id="tipoProcessoDocumento"
@@ -38,7 +41,7 @@
 		
 	<s:div id="editorDiv">
 		<wi:editor
-			id="#{id}Editor"
+			id="#{editorId}"
 			value="#{home.instance[f.id]}"
 		/>
 	</s:div>
@@ -46,16 +49,16 @@
 	<a:jsFunction
 		name="submitForm"
 		action="#{home.assinarDocumento()}"
-		render="signatureDiv DialogMessage"
+		render="signatureDiv pageBodyDialogMessage"
 		oncomplete="infox.editor['#{id}Editor'].postSign()"
 	/>
 	<s:div id="signatureDiv">
 		<h:inputHidden
-			id="#{id}certChain"
+			id="#{idCertChain}"
 			value="#{processoHome.certChain}"
 		/>
 		<h:inputHidden
-			id="#{id}signature"
+			id="#{idSignature}"
 			value="#{processoHome.signature}"
 		/>
 	</s:div>
@@ -63,12 +66,12 @@
 		<wi:appletAssinatura
 			id="#{id}"
 			urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
-			formId="taskInstanceForm"
-			certificationChainField="#{id}certChain"
-			signatureField="#{id}signature"
-			getDataFunction="infox.editor['#{id}Editor'].instance.getData()"
-			useBase64Function="infox.editor['#{id}Editor'].useBase64()"
-			functionPreSign="infox.editor['#{id}Editor'].addSignature()"
+			formId="#{rich:clientId('taskInstanceForm')}"
+			certificationChainField="#{rich:clientId(idCertChain)}"
+			signatureField="#{rich:clientId(idSignature)}"
+			getDataFunction="infox.editor['#{editorId}'].instance.getData()"
+			useBase64Function="infox.editor['#{editorId}'].useBase64()"
+			functionPreSign="infox.editor['#{editorId}'].addSignature()"
 			functionPosSign=""
 			debug="false"
 			loginMode="false"
@@ -78,12 +81,13 @@
 	</s:div>
 		<script type="text/javascript">
 			//<![CDATA[
-			namespace("infox.editor.#{id}Editor",{
+			namespace("infox.editor.#{editorId}",{
 				useBase64:function useBase64() {
 					return "true";
 				},
 				get isSigned() {
-					return ((#{rich:jQuery(id.concat("signature"))}.val().trim() != "") && (#{rich:jQuery(id.concat("certChain"))}.val().trim() != "")) 
+					return ((#{rich:jQuery(idSignature)}.val().trim() != "") 
+							&& (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
 				},
 				addSignature:function addSignature() {
 					infox.showLoading();
@@ -96,15 +100,15 @@
 					}
 				},
 				sign:function sign() {
-					#{rich:jQuery(id.concat("signature"))}.val("signature");
-					#{rich:jQuery(id.concat("certChain"))}.val("certChain");
+					#{rich:jQuery(idSignature)}.val("signature");
+					#{rich:jQuery(idCertChain)}.val("certChain");
 					this.addSignature();
 				}
 			},{
 				callback:function callback(Editor) {
 					Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
-						#{rich:jQuery(id.concat("signature"))}.val("");
-						#{rich:jQuery(id.concat("certChain"))}.val("");
+						#{rich:jQuery(idSignature)}.val("");
+						#{rich:jQuery(idCertChain)}.val("");
 						#{rich:jQuery("appletDiv")}.removeClass("hidden");
 					});
 				}
