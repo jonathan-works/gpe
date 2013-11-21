@@ -12,9 +12,6 @@
 	<param name="id" value="#{tipoModeloDocumentoCrudAction.id}" converterId="integerConverter"/>
 
 	<param name="tab" value="#{tipoModeloDocumentoCrudAction.tab}"/>
-	<!-- <action if="#{param.newInstance == 'true'}" execute="#{variavelHome.newInstance()}"/> -->
-	<!-- Parametros para a ordem de grids -->
-	
 	
 	<action execute="#{associatedVariavelTipoModeloList.entity.setTipoModeloDocumento(tipoModeloDocumentoCrudAction.instance)}" 
             if="#{tipoModeloDocumentoCrudAction.tab eq 'variaveis'}"/>
