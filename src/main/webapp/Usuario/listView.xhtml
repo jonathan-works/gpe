@@ -32,7 +32,7 @@
 
     <ui:param
 		 name="home"
-		 value="#{usuarioHome}" />
+		 value="#{usuarioLoginCrudAction}" />
 
     <ui:define name="searchGrid">
 		
@@ -94,12 +94,8 @@
 		</wi:dataTable>
     
 	</ui:define>
-    <ui:define
-		 name="form"
-		 action="#{usuarioHome.newInstance()}">
+    <ui:define name="form" >
 		
-        <c:if test="#{canEdit}">
-			
             <wi:dataForm
 				 formId="usuarioForm"
 				 formTitle="#{messages['form.title']}">
@@ -107,13 +103,13 @@
                 <wi:inputCpf
 					 id="cpf"
 					 label="CPF"
-					 value="#{usuarioHome.instance.cpf}"
-					 assignTo="#{usuarioHome.instance.cpf}"
+					 value="#{usuarioLoginCrudAction.instance.cpf}"
+					 assignTo="#{usuarioLoginCrudAction.instance.cpf}"
 					 required="true">
 					
                     <a:ajax
 						 event="blur"
-						 listener="#{usuarioHome.searchByCpf(usuarioHome.instance.cpf)}"
+						 listener="#{usuarioLoginCrudAction.searchByCpf(usuarioLoginCrudAction.instance.cpf)}"
 						 execute="@this"
 						 render="usuarioForm"
 						 limitRender="true" />
@@ -122,17 +118,17 @@
                 <wi:inputText
 					 id="nomeUsuario"
 					 label="#{messages['usuario.nome']}"
-					 value="#{usuarioHome.instance.nome}"
+					 value="#{usuarioLoginCrudAction.instance.nome}"
 					 required="true" />
                 <wi:inputDate
 					 id="dataNascimento"
-					 value="#{usuarioHome.instance.dataNascimento}"
+					 value="#{usuarioLoginCrudAction.instance.dataNascimento}"
 					 label="#{messages['pessoaFisica.dataNascimento']}"
 					 required="true" />
                 <wi:inputText
 					 id="email"
 					 label="E-mail"
-					 value="#{usuarioHome.instance.email}"
+					 value="#{usuarioLoginCrudAction.instance.email}"
 					 required="true">
 					
                     <f:validator validatorId="emailValidator" />
@@ -141,13 +137,13 @@
                 <wi:inputText
 					 id="login"
 					 label="Login"
-					 value="#{usuarioHome.instance.login}"
+					 value="#{usuarioLoginCrudAction.instance.login}"
 					 required="true"
 					 maxlength="15" />
                 <wi:selectOneRadio
 					 id="ativo"
 					 label="#{messages['field.situacao']}"
-					 value="#{usuarioHome.instance.ativo}"
+					 value="#{usuarioLoginCrudAction.instance.ativo}"
 					 valueList="true:Ativo,false:Inativo" />
                 <ui:include src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
 					
@@ -166,8 +162,6 @@
             
 			</wi:dataForm>
         
-		</c:if>
-    
 	</ui:define>
     <ui:define name="tabs">
 		
@@ -226,7 +220,7 @@
                     <wi:dataTable
                     	 bean="#{usuarioLocalizacaoEntityList}"
 						 values="#{usuarioLocalizacaoEntityList.list(20)}"
-						 tableTitle="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioHome.instance)}"
+						 tableTitle="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioLoginCrudAction.instance)}"
 						 id="usuarioLocalizacaoList"
 						 rowId="#{row.idUsuarioLocalizacao}"
 						 listReRender="divGridLU">
@@ -278,7 +272,7 @@
                     <wi:dataTable
 						 values="#{bloqueioUsuarioList.list(15)}"
 						 bean="#{bloqueioUsuarioList}"
-						 tableTitle="#{messages['bloqueioUsuario.titleGrid']} - #{usuarioHome.instance.nome}"
+						 tableTitle="#{messages['bloqueioUsuario.titleGrid']} - #{usuarioLoginCrudAction.instance.nome}"
 						 id="bloqueioUsuarioList"
 						 rowId="#{row.idBloqueioUsuario}"
 						 showToolbarColumn="false">

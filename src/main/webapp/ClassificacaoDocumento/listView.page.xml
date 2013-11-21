@@ -6,19 +6,19 @@
       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
 	  login-required="true">
 	  
-	<!--  <restrict>#{security.checkPage()}</restrict> --> 
-	<description>TipoProcessoDocumento: #{tipoProcessoDocumentoHome.instance}</description>
+	<restrict>#{security.checkPage()}</restrict> 
+    <description>TipoProcessoDocumento: #{classificacaoDocumentoCrudAction.instance}</description>
 	
 	<begin-conversation join="true"/>
-	<param name="id" value="#{tipoProcessoDocumentoHome.tipoProcessoDocumentoIdTipoProcessoDocumento}"/>
+	<param name="id" value="#{classificacaoDocumentoCrudAction.id}" 
+        converterId="integerConverter"/>
 
-	<!-- Parametros para RESTFull -->
-	<param name="tab" value="#{tipoProcessoDocumentoHome.tab}"/>
-	<param name="goBackUrl" value="#{tipoProcessoDocumentoHome.goBackUrl}"/>
-	<param name="goBackId" value="#{tipoProcessoDocumentoHome.goBackId}"/>
-	<param name="goBackTab" value="#{tipoProcessoDocumentoHome.goBackTab}"/>		
-	<param name="ativo" value="#{tipoProcessoDocumentoSearch.ativo}"/>		
-	<param name="tipoProcessoDocumento" value="#{tipoProcessoDocumentoSearch.tipoProcessoDocumento}"/>		
+	<param name="tab" value="#{classificacaoDocumentoCrudAction.tab}"/>
+    
+    <action execute="#{classificacaoDocumentoPapelCrudAction.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
+            if="#{classificacaoDocumentoCrudAction.tab eq 'associarPapelTab'}"/>
+    <action execute="#{tipoProcessoDocumentoPapelList.entity.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
+            if="#{classificacaoDocumentoCrudAction.tab eq 'associarPapelTab'}"/>
+    
 
-	<action if="#{empty tipoProcessoDocumentoHome.tab}" execute="#{tipoProcessoDocumentoHome.setTab('search')}"/>
 </page>

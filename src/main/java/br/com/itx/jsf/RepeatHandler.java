@@ -26,7 +26,7 @@ import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 
 public final class RepeatHandler extends TagHandler {
 

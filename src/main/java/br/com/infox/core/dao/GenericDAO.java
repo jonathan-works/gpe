@@ -17,8 +17,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.component.Util;
 
 /**

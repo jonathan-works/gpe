@@ -6,18 +6,14 @@
 	  login-required="true"
 >
 	<restrict>#{security.checkPage()}</restrict>
-	<description>Fluxo: #{fluxoHome.instance}</description>
+	<description>Fluxo: #{fluxoCrudAction.instance}</description>
 	 
 	<begin-conversation join="true" flush-mode="manual"/>
-	<param name="id" value="#{fluxoHome.id}"
+	<param name="id" value="#{fluxoCrudAction.id}"
            converterId="integerConverter" />
-<!-- Parametros para RESTFull -->
-	<param name="tab" value="#{fluxoHome.tab}"/>
-	<param name="goBackUrl" value="#{fluxoHome.goBackUrl}"/>
-	<param name="goBackId" value="#{fluxoHome.goBackId}"/>
-	<param name="goBackTab" value="#{fluxoHome.goBackTab}"/>		
-	<param name="fluxo" value="#{fluxoSearch.fluxo}"/>		
-
-	<action if="#{empty fluxoHome.tab}" execute="#{fluxoHome.setTab('search')}"/>
+	<param name="tab" value="#{fluxoCrudAction.tab}"/>
+    
+    <action execute="#{natCatFluxoLocalizacaoList.setFluxo(fluxoCrudAction.instance)}" 
+            if="#{fluxoCrudAction.tab eq 'natCatFluxoLoc'}"/>
 	
 </page>

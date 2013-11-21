@@ -29,7 +29,7 @@
 
 	<ui:param
 		 name="home"
-		 value="#{fluxoHome}" />
+		 value="#{fluxoCrudAction}" />
 
 	<ui:define name="searchGrid">
 		
@@ -102,9 +102,7 @@
 	
 	</ui:define>
 
-	<ui:define
-		 name="form"
-		 action="#{fluxoHome.newInstance()}">
+	<ui:define name="form">
 		
 		<wi:dataForm
 			 formId="fluxoForm"
@@ -112,7 +110,7 @@
 			
 			<wi:inputText
 				 id="codFluxo"
-				 value="#{fluxoHome.instance.codFluxo}"
+				 value="#{fluxoCrudAction.instance.codFluxo}"
 				 required="true"
 				 label="#{messages['fluxo.codFluxo']}">
 				 <f:validator validatorId="jsfComponentIdValidator" />
@@ -121,35 +119,29 @@
 				 id="descricaoFluxo"
 				 label="#{messages['fluxo.descricao']}"
 				 required="true"
-				 value="#{fluxoHome.instance.fluxo}"
-				 readonly="#{!canEdit}" />
+				 value="#{fluxoCrudAction.instance.fluxo}"/>
 			<wi:inputNumber
 				 id="prazoDias"
 				 label="#{messages['fluxo.qtPrazo']}"
 				 required="true"
-				 value="#{fluxoHome.instance.qtPrazo}"
-				 readonly="#{!canEdit}" />
+				 value="#{fluxoCrudAction.instance.qtPrazo}"/>
 			<wi:inputDate
 				 id="dataInicio"
 				 label="#{messages['fluxo.dataInicioPublicacao']}"
 				 required="true"
-				 value="#{fluxoHome.instance.dataInicioPublicacao}"
-				 readonly="#{!canEdit}" />
+				 value="#{fluxoCrudAction.instance.dataInicioPublicacao}"/>
 			<wi:inputDate
 				 id="dataFim"
 				 label="#{messages['fluxo.dataFimPublicacao']}"
-				 value="#{fluxoHome.instance.dataFimPublicacao}"
-				 readonly="#{!canEdit}" />
+				 value="#{fluxoCrudAction.instance.dataFimPublicacao}"/>
 			<wi:selectBooleanRadio
 				 id="publicado"
 				 label="#{messages['fluxo.publicado']}"
-				 value="#{fluxoHome.instance.publicado}"
-				 readonly="#{!canEdit}" />
+				 value="#{fluxoCrudAction.instance.publicado}"/>
 			<wi:selectSituacaoRadio
 				 id="ativo"
 				 label="#{messages['field.situacao']}"
-				 value="#{fluxoHome.instance.ativo}"
-				 readonly="#{!canEdit}" />
+				 value="#{fluxoCrudAction.instance.ativo}"/>
 			<ui:define name="buttons">
 				
 				<ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml">
@@ -170,7 +162,7 @@
 		<infox:tab
 			 id="fluxoPapelTab"
 			 rendered="#{home.isManaged()}"
-			 action="#{action.init()}"
+			 action="#{action.init(fluxoCrudAction.instance)}"
 			 title="#{messages['fluxoPapel.titleTab']}"
 			 name="fluxoPapelTab">
 			
@@ -256,25 +248,25 @@
 				<div>
 					<wi:dataForm
 						formId="natCatFluxoLocForm"
-						formTitle="#{messages['form.title']}: #{fluxoHome.instance}">
+						formTitle="#{messages['form.title']}: #{fluxoCrudAction.instance}">
 						<wi:selectOneMenuEntity
 							id="naturezaCategoriaFluxo"
-							value="#{natCatFluxoLocalizacaoHome.naturezaCategoriaFluxo}"
+							value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
 							required="true"
 							label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
 							noSelectionLabel="Selecione um registro..."
-							items="#{natCatFluxoLocalizacaoHome.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoHome.instance)}"/>
+							items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoCrudAction.instance)}"/>
 						<wi:tree 
 							id="localizacao"
-							assignTo="natCatFluxoLocalizacaoHome.instance.localizacao"
+							assignTo="fluxoLocalizacaoCrudAction.instance.localizacao"
 							label="#{messages['localizacao.localizacao']}"
 							required="true"
-							tree="#{natCatFluxoLocalizacaoHome.localizacaoTreeHandler}" />
+							tree="#{localizacaoTree}" />
 							<ui:define 
 								name="buttons">
 								<wi:commandButton 
 									id="saveButton"
-									action="natCatFluxoLocalizacaoHome.persist"
+									action="fluxoLocalizacaoCrudAction.save"
 									reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
 									value="#{messages['crud.persist']}"	/>
 							</ui:define>
@@ -286,12 +278,12 @@
 									  tableTitle="#{messages['natCatFluxoLocalizacao.titleGrid']}"
 									  id="natCatFluxoLocalizacaoList"
 									  rowId="#{row.idNatCatFluxoLocalizacao}"
-									  actionInactive="natCatFluxoLocalizacaoHome.inactive">
+									  actionInactive="fluxoLocalizacaoCrudAction.inactive">
 							<ui:define name="searchForm" />
 				            <ui:define name="headerToolBar"/>
 							<ui:define name="toolBar">
 								<wi:toolBarRemove
-									actionRemove="natCatFluxoLocalizacaoHome.remove(row)"
+									actionRemove="fluxoLocalizacaoCrudAction.remove(row)"
 									reRender="natCatFluxoLocDiv pageBodyDialogMessage"/>
 							</ui:define>
 							<wi:columnOutputText columnId="naturezaCategoriaFluxo.natureza"

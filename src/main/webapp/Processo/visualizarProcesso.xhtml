@@ -157,13 +157,13 @@
 
                 <ui:param
 					 name="action"
-					 value="#{localizacaoDocumentoFisicoAction}" />
+					 value="#{localizacaoDocumentoFisicoCrudAction}" />
                 <infox:tab
 					 id="documentoFisicoTab"
 					 name="documentoFisicoTab"
 					 rendered="#{home.isManaged()}"
 					 title="#{messages['documentoFisico.titleTab']}"
-                     action="#{localizacaoDocumentoFisicoAction.init()}">
+                     action="#{localizacaoDocumentoFisicoCrudAction.init()}">
 					<ui:decorate
 							id="frameDecorate"
 							template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
@@ -171,7 +171,7 @@
 	                    <s:div id="documentoFisicoDiv">
 							<wi:dataTable
 								id="documentoFisicoTable2"
-								value="#{localizacaoDocumentoFisicoAction.documentoFisicoList}"
+								value="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
 								var="row"
 								rows="10"
 								searchFormStyleClass="hidden"

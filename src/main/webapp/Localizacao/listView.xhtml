@@ -29,7 +29,7 @@
     <ui:define name="title">#{messages['localizacao.titlePage']}</ui:define>
     <ui:param
 		 name="home"
-		 value="#{localizacaoHome}" />
+		 value="#{localizacaoCrudAction}" />
 
     <ui:define name="searchGrid">
 		
@@ -106,31 +106,31 @@
 				 id="localizacao"
 				 required="true"
 				 label="#{messages['localizacao.localizacao']}"
-				 value="#{localizacaoHome.instance.localizacao}" />
+				 value="#{localizacaoCrudAction.instance.localizacao}" />
             <wi:selectBooleanRadio
 				 id="estrutura"
 				 required="true"
 				 label="#{messages['localizacao.estrutura']}"
-				 value="#{localizacaoHome.instance.estrutura}" />
+				 value="#{localizacaoCrudAction.instance.estrutura}" />
             <wi:tree
 				 id="localizacaoPai"
-				 assignTo="localizacaoHome.instance.localizacaoPai"
+				 assignTo="localizacaoCrudAction.instance.localizacaoPai"
 				 tree="#{localizacaoTree}"
 				 icon="/img/nivelTree.gif"
 				 iconLeaf="/img/file.gif"
 				 label="#{messages['localizacao.localizacaoPai']}" />
 			<wi:selectOneMenuEntity
 				id="estruturaFilho"
-				value="#{localizacaoHome.instance.estruturaFilho}"
+				value="#{localizacaoCrudAction.instance.estruturaFilho}"
 				label="#{messages['localizacao.estruturaFilho']}"
-				items="#{localizacaoHome.getLocalizacoesEstrutura()}"
+				items="#{localizacaoCrudAction.getLocalizacoesEstrutura()}"
 				noSelectionLabel="Selecione..."
 			/>
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{messages['field.situacao']}"
                 required="true"
-                value="#{localizacaoHome.instance.ativo}" />
+                value="#{localizacaoCrudAction.instance.ativo}" />
         
 		</wi:dataForm>
     
@@ -141,21 +141,20 @@
         <infox:tab
 			 status=":status"
 			 id="itemTipoDocumento"
-			 action="#{itemTipoDocumentoHome.newInstance()}"
 			 rendered="#{home.managed and !home.instance.estrutura}"
 			 title="#{messages['localizacao.itemTipoDocumentoList']}"
 			 name="itemTipoDocumento">
 			
 
             <wi:dataForm
-				 home="#{itemTipoDocumentoHome}"
+				 home="#{localizacaoTipoModeloDocumentoCrudAction}"
 				 formId="itemTipoDocumentoForm"
-				 formTitle="Adicionar Grupo de Documento à Localização - #{(localizacaoHome.instance)}">
+				 formTitle="Adicionar Grupo de Documento à Localização - #{(localizacaoCrudAction.instance)}">
 				
                 <wi:suggest
                         id="grupoModeloDocumento"
                         suggestProvider="#{grupoModeloDocumentoSuggest}"
-                        value="#{itemTipoDocumentoHome.instance.grupoModeloDocumento}"
+                        value="#{localizacaoTipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
                         label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
                         required="true" />
             
@@ -175,8 +174,7 @@
                         <a:region>
 							
                             <a:commandLink
-								 action="#{itemTipoDocumentoHome.remove(row)}"
-								 rendered="#{wi:get(canEdit,true)}"
+								 action="#{localizacaoTipoModeloDocumentoCrudAction.remove(row)}"
 								 limitRender="true"
 								 status=":status"
 								 render="pageBody"
@@ -209,7 +207,7 @@
         <infox:tab
 			 status=":status"
 			 id="localizacaoTurnoTab"
-			 action="#{localizacaoTurnoAction.newInstance(localizacaoHome.instance)}"
+			 action="#{localizacaoTurnoAction.newInstance(localizacaoCrudAction.instance)}"
 			 rendered="#{home.managed and !home.instance.estrutura}"
 			 title="#{messages['localizacao.localizacaoTurno']}"
 			 name="localizacaoTurnoTab">

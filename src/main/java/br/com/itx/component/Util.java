@@ -57,7 +57,7 @@ import org.jboss.seam.util.Strings;
 import org.jboss.seam.web.Parameters;
 import org.richfaces.context.ExtendedPartialViewContext;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.component.grid.SearchField;
 import br.com.itx.exception.ApplicationException;

@@ -9,7 +9,7 @@
 	
 	<begin-conversation join="true"/>
 	
-	<param name="id" value="#{parametroHome.id}"  converterId="integerConverter"/>
-	<param name="tab" value="#{parametroHome.tab}"/>
+	<param name="id" value="#{parametroCrudAction.id}"  converterId="integerConverter"/>
+	<param name="tab" value="#{parametroCrudAction.tab}"/>
 
 </page>

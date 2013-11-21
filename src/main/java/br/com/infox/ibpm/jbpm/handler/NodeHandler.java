@@ -29,7 +29,7 @@ import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.util.ReflectionsUtil;
 
 
@@ -270,7 +270,7 @@ public class NodeHandler implements Serializable {
 		if (dueDateValue != null && dueDateUnit != null) {
 			String dueDate = dueDateValue + 
 				(dueDateBusiness ? " business " : " ") +
-				dueDateUnit;
+				dueDateUnit.name().toLowerCase(); // Tem que ser minúsculo por causa dos mapas businessAmounts e calendarFields da classe org.jbpm.calendar.Duration
 			currentTimer.setDueDate(dueDate);
 		}
 	}

@@ -42,11 +42,11 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.annotations.manager.RecursiveManager;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
-import br.com.infox.util.PostgreSQLErrorCode;
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.persistence.RecursiveManager;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
@@ -312,7 +312,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         final Recursive<T> oldRecursive = (Recursive<T>)getOldEntity();
         if (!isManaged()
                 ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
-                || !curRecursive.getParent().equals(oldRecursive.getParent())) {
+                || (curRecursive != null && !curRecursive.getParent().equals(oldRecursive.getParent()))) {
             updateRecursive(curRecursive);
         }
 	}

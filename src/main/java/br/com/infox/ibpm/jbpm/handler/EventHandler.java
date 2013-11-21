@@ -25,7 +25,7 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.core.constants.WarningConstants;
 
 
 public class EventHandler implements Serializable {

@@ -43,7 +43,7 @@
             id="#{f.id}tipoProcessoDocumento"
             label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
             value="#{home.instance.tipoProcessoDocumento}"
-            items="#{tipoProcessoDocumentoHome.getTipoProcessoDocumentoInterno(false)}" 
+            items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(false)}" 
             required="true"
             noSelectionLabel="Selecione...">
             <a:ajax event="change"
@@ -91,7 +91,7 @@
                 </wi:editor>
                 
                 <wi:imageUpload style=""
-                                imageBean="#{imageFileUpload}" />                   
+                                imageBean="#{imageFileUploader}" />                   
                 
             </s:div>
         </div>

@@ -35,14 +35,14 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.converter.NodeConverter;
 import br.com.infox.ibpm.jbpm.handler.NodeHandler;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.jbpm.node.MailNode;
+import br.com.infox.jbpm.constants.NodeTypeConstants;
 import br.com.infox.jbpm.manager.JbpmNodeManager;
-import br.com.infox.util.constants.WarningConstants;
-import br.com.infox.util.constants.jbpm.NodeTypeConstants;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -238,6 +238,9 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 
 	public void setNewNodeName(String newName) {
+		if (newName != null) {
+			newName = newName.trim();
+		}
 		this.newNodeName = newName;
 	}
 
@@ -466,5 +469,12 @@ public class NodeFitter extends Fitter implements Serializable {
 		currentNode = null;
 		nodes = null;
 		nodesItems = null;
+	}
+	
+	public void setCurrentNodeName(String name) {
+		if (name != null) {
+			name = name.trim();
+		}
+		getCurrentNode().setName(name);
 	}
 }

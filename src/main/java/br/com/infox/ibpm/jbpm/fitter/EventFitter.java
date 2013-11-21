@@ -12,8 +12,8 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.ProcessDefinition;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.handler.EventHandler;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ReflectionsUtil;
 
 @Name(EventFitter.NAME)

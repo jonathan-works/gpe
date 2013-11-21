@@ -8,8 +8,8 @@
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true" />
 
-	<param name="id" value="#{calendarioEventosHome.id}"
+	<param name="id" value="#{calendarioEventosCrudAction.id}"
 		   converterId="integerConverter" />
-	<param name="tab" value="#{calendarioEventosHome.tab}" />
+	<param name="tab" value="#{calendarioEventosCrudAction.tab}" />
 		   
 </page>

@@ -33,7 +33,7 @@
 	        <h:commandButton
 			 id="saveH"
 			 eventsQueue="editQueue"
-			 action="#{home.persist()}"
+			 action="#{home.save()}"
 			 value="#{messages['crud.persist']}"
 			 styleClass="buttons"
 			 rendered="#{!home.managed and !isUploadForm and persistSemNewInstance}">
@@ -41,7 +41,7 @@
 	          	 
 	        <a:commandButton
 			 id="save"
-			 action="#{home.persist()}"
+			 action="#{home.save()}"
 			 eventsQueue="editQueue"
 			 onclick="showLoading();"
 			 oncomplete="hideLoading();#{oncomplete}"
@@ -55,7 +55,7 @@
 	        <h:commandButton
 			 id="saveUpload"
 			 eventsQueue="editQueue"
-			 action="#{home.persist()}"
+			 action="#{home.save()}"
 			 value="#{messages['crud.persist']}"
 			 styleClass="buttons"
 			 rendered="#{!home.managed and isUploadForm}">
@@ -66,13 +66,13 @@
 			 eventsQueue="editQueue"
 			 value="#{messages['crud.update']}"
 			 styleClass="buttons"
-			 action="#{home.update()}"
+			 action="#{home.save()}"
 			 rendered="#{home.managed and isUploadForm}">
 	        </h:commandButton>
 	
 	        <a:commandButton
 			 id="update"
-			 action="#{home.update()}"
+			 action="#{home.save()}"
 			 eventsQueue="editQueue"
 			 onclick="showLoading();"
 			 oncomplete="hideLoading();#{oncomplete}"
@@ -100,7 +100,6 @@
 				</a:commandButton>
 			
 		</a:region>                        			                      
-            <ui:include src="voltar.xhtml" />
             <ui:insert name="customButtons" />
             
 	    

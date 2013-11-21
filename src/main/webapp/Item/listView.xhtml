@@ -23,7 +23,7 @@
          name="title">#{messages['item.titlePage']}</ui:define>
 	<ui:param
          name="home"
-         value="#{itemHome}" />
+         value="#{itemCrudAction}" />
 
 	<ui:define
          name="searchGrid">
@@ -79,15 +79,15 @@
                  id="codigoItem"
                  required="true"
                  label="#{messages['item.codigoItem']}"
-                 value="#{itemHome.instance.codigoItem}" />
+                 value="#{itemCrudAction.instance.codigoItem}" />
 			<wi:inputText
                  id="descricao"
                  required="true"
                  label="#{messages['item.descricaoItem']}"
-                 value="#{itemHome.instance.descricaoItem}" />
+                 value="#{itemCrudAction.instance.descricaoItem}" />
 		  	<wi:tree
                  id="itemPai"
-                 assignTo="itemHome.instance.itemPai"
+                 assignTo="itemCrudAction.instance.itemPai"
                  tree="#{itemTree}"
                  icon="/img/nivelTree.gif"
                  iconLeaf="/img/file.gif"
@@ -95,7 +95,7 @@
 			<wi:selectSituacaoRadio
                  id="ativo"
                  label="#{messages['field.situacao']}"
-                 value="#{itemHome.instance.ativo}" />
+                 value="#{itemCrudAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 	 

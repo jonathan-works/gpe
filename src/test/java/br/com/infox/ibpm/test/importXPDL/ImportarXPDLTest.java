@@ -8,9 +8,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import br.com.infox.ibpm.xpdl.FluxoXPDL;
-import br.com.infox.ibpm.xpdl.IllegalXPDLException;
-import br.com.infox.ibpm.xpdl.lane.IllegalNumberPoolsXPDLException;
+import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
+import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
+import br.com.infox.epp.fluxo.xpdl.lane.IllegalNumberPoolsXPDLException;
 
 public class ImportarXPDLTest {
 

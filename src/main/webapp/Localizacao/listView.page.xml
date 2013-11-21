@@ -6,18 +6,15 @@
 	  login-required="true"
 >
 	<restrict>#{security.checkPage()}</restrict>
-	<description>Localizacao: #{localizacaoHome.instance}</description>
+	<description>Localizacao: #{localizacaoCrudAction.instance}</description>
 	
 	<begin-conversation join="true" flush-mode="MANUAL"/>
-	<param name="id" value="#{localizacaoHome.localizacaoIdLocalizacao}"/>
+	<param name="id" value="#{localizacaoCrudAction.id}" converterId="integerConverter"/>
 
-<!-- Parametros para RESTFull -->
-	<param name="tab" value="#{localizacaoHome.tab}"/>
-	<param name="goBackUrl" value="#{localizacaoHome.goBackUrl}"/>
-	<param name="goBackId" value="#{localizacaoHome.goBackId}"/>
-	<param name="goBackTab" value="#{localizacaoHome.goBackTab}"/>		
-	<param name="localizacao" value="#{localizacaoSearch.localizacao}"/>		
-	<param name="ativo" value="#{localizacaoSearch.ativo}"/>		
-
-	<action if="#{empty localizacaoHome.tab}" execute="#{localizacaoHome.setTab('search')}"/>
+	<param name="tab" value="#{localizacaoCrudAction.tab}"/>
+	<action execute="#{itemTipoDocumentoList.entity.setLocalizacao(localizacaoCrudAction.instance)}" 
+            if="#{localizacaoCrudAction.tab eq 'itemTipoDocumento'}"/>
+    <action execute="#{localizacaoTipoModeloDocumentoCrudAction.setLocalizacaoAtual(localizacaoCrudAction.instance)}" 
+            if="#{localizacaoCrudAction.tab eq 'itemTipoDocumento'}"/>
+	
 </page>

@@ -8,9 +8,9 @@
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true"/>
 	
-	<description>HistoricoModeloDocumento: #{historicoModeloDocumentoHome.instance}</description>
+	<description>HistoricoModeloDocumento: #{historicoModeloDocumentoCrudAction.instance}</description>
 	
-	<param name="id" value="#{historicoModeloDocumentoHome.id}" converterId="integerConverter"/>
-	<param name="tab" value="#{historicoModeloDocumentoHome.tab}"/>
+	<param name="id" value="#{historicoModeloDocumentoCrudAction.id}" converterId="integerConverter"/>
+	<param name="tab" value="#{historicoModeloDocumentoCrudAction.tab}"/>
  
 </page>

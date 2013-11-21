@@ -30,7 +30,7 @@
 
     <ui:param
         name="home"
-        value="#{tipoModeloDocumentoHome}" />
+        value="#{tipoModeloDocumentoCrudAction}" />
 
     <ui:define name="searchGrid">
 
@@ -89,27 +89,28 @@
             <wi:suggest
                 id="grupoModeloDocumento"
                 suggestProvider="#{grupoModeloDocumentoSuggest}"
-                value="#{tipoModeloDocumentoHome.instance.grupoModeloDocumento}"
+                value="#{tipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
                 label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
                 required="true" />
             <wi:inputText
                 id="tipoModeloDocumento"
                 label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
-                value="#{tipoModeloDocumentoHome.instance.tipoModeloDocumento}"
+                value="#{tipoModeloDocumentoCrudAction.instance.tipoModeloDocumento}"
                 maxlength="50"
                 required="true" />
             <wi:inputText
                 id="abreviacao"
                 label="#{messages['tipoModeloDocumento.abreviacao']}"
-                value="#{tipoModeloDocumentoHome.instance.abreviacao}"
+                value="#{tipoModeloDocumentoCrudAction.instance.abreviacao}"
                 required="true"
                 maxlength="5" />
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{messages['field.situacao']}"
-                value="#{tipoModeloDocumentoHome.instance.ativo}" />
+                value="#{tipoModeloDocumentoCrudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>
+    
     <ui:define name="tabs">
         <infox:tab
             id="modeloDocumento"
@@ -118,9 +119,9 @@
             title="#{messages['tipoModeloDocumento.modeloDocumentoList']}"
             name="modeloDocumento">
             <wi:dataTable
-                values="#{tipoModeloDocumentoHome.listaDeModeloDocumento}"
+                values="#{tipoModeloDocumentoCrudAction.listaDeModeloDocumento}"
                 hideOrder="true"
-                tableTitle="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoHome.instance)}"
+                tableTitle="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoCrudAction.instance)}"
                 id="associativeModeloDocumentoList"
                 rowId="#{row.idModeloDocumento}">
                 <ui:define name="headerToolBar" />
@@ -165,7 +166,7 @@
 				            <a:commandLink
 				                limitRender="true"
 				                render="divM2MVar"
-				                action="#{variavelTipoModeloHome.removeVariavelTipoModelo(row)}"
+				                action="#{tipoModeloDocumentoVariavelCrudAction.removeVariavelTipoModelo(row)}"
 				                rendered="true">
 				                <h:graphicImage
 				                    url="/img/grid/copyRight.gif"
@@ -216,7 +217,7 @@
 				            <a:commandLink
 				                limitRender="true"
 				                render="divM2MVar"
-				                action="#{variavelTipoModeloHome.addVariavelTipoModelo(row)}"
+				                action="#{tipoModeloDocumentoVariavelCrudAction.addVariavelTipoModelo(row)}"
 				                rendered="true">
 				                <h:graphicImage
 				                    url="/img/grid/copyLeft.gif"
@@ -242,7 +243,6 @@
         </infox:tab>
         <infox:tab
             id="papeis"
-            action="#{tipoModeloDocumentoPapelHome.newInstance()}"
             status=":status"
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.papeis']}"
@@ -254,14 +254,14 @@
                 <wi:selectOneMenuEntity
                     id="papel"
                     label="#{messages['tipoModeloDocumento.papel']}"
-                    items="#{tipoModeloDocumentoPapelHome.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}"
-                    value="#{tipoModeloDocumentoPapelHome.instance.papel}"
+                    items="#{tipoModeloDocumentoPapelCrudAction.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}"
+                    value="#{tipoModeloDocumentoPapelCrudAction.instance.papel}"
                     required="true" 
                     showLabel="Selecione..."/>
                 <ui:define name="buttons">
                     <wi:commandButtonPersist
-                        home="#{tipoModeloDocumentoPapelHome}"
-                        persistAction="tipoModeloDocumentoPapelHome.persist()" />
+                        home="#{tipoModeloDocumentoPapelCrudAction}"
+                        persistAction="tipoModeloDocumentoPapelCrudAction.save()" />
                 </ui:define>
             </wi:dataForm>
             <wi:dataTable
@@ -277,7 +277,7 @@
                     <wi:toolBarRemove
                         id="toolBarRemove"
                         reRender="divAssociarPapel"
-                        actionRemove="tipoModeloDocumentoPapelHome.remove(row)" />
+                        actionRemove="tipoModeloDocumentoPapelCrudAction.remove(row)" />
                 </ui:define>
                 <wi:columnOutputText
                     columnId="o.papel.nome"

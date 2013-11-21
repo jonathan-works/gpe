@@ -27,7 +27,7 @@
                       
 	<ui:define name="title">#{messages['cnae.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{cnaeHome}" />
+	<ui:param name="home" value="#{cnaeCrudAction}" />
 	
 	<ui:define name="searchGrid">   
 	    <wi:dataTable values="#{cnaeList.list(15)}"
@@ -73,7 +73,7 @@
 		<wi:dataForm formId="cnaeForm"
 					 formTitle="#{messages['form.title']}">
 			<wi:inputText id="codCnae"
-						 value="#{cnaeHome.instance.codCnae}"
+						 value="#{cnaeCrudAction.instance.codCnae}"
 						 required="true"
 						 styleClass="inputCnae"
 						 label="#{messages['cnae.codCnae']}"
@@ -84,11 +84,11 @@
 			<wi:inputText id="descricaoCnae"
 						  label="#{messages['cnae.descricaoCnae']}"
 						  required="true"
-						  value="#{cnaeHome.instance.descricaoCnae}"
+						  value="#{cnaeCrudAction.instance.descricaoCnae}"
 						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['field.situacao']}"
-								    value="#{cnaeHome.instance.ativo}" />
+								    value="#{cnaeCrudAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

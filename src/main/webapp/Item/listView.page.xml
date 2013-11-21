@@ -7,7 +7,7 @@
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true"/>
 
-	<param name="id" value="#{itemHome.id}" converterId="integerConverter" />
-	<param name="tab" value="#{itemHome.tab}" />
+	<param name="id" value="#{itemCrudAction.id}" converterId="integerConverter" />
+	<param name="tab" value="#{itemCrudAction.tab}" />
 
 </page>

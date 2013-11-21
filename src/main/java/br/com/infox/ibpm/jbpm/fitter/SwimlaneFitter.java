@@ -9,9 +9,9 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.def.Swimlane;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.handler.SwimlaneHandler;
-import br.com.infox.util.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 
 @Name(SwimlaneFitter.NAME)

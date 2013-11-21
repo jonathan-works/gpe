@@ -7,9 +7,17 @@
 	
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true"/>
-	<param name="id" value="#{usuarioHome.id}"
-			converterId="integerConverter" />
+	<param name="id" value="#{usuarioLoginCrudAction.id}" converterId="integerConverter" />
 
-<!-- Parametros para RESTFull -->
-	<param name="tab" value="#{usuarioHome.tab}"/>
+	<param name="tab" value="#{usuarioLoginCrudAction.tab}"/>
+	
+	<action execute="#{usuarioLocalizacaoAction.setUsuarioGerenciado(usuarioLoginCrudAction.instance)}" 
+            if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
+    <action execute="#{usuarioLocalizacaoEntityList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
+            if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
+            
+    <action execute="#{bloqueioUsuarioList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
+            if="#{usuarioLoginCrudAction.tab eq 'historicoBloqueioUsuario'}"/>
+            
+            
 </page>

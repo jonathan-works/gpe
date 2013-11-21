@@ -27,9 +27,9 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
-import br.com.infox.bpm.action.TaskPageAction;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.ProcessBuilder;
-import br.com.infox.util.constants.WarningConstants;
+import br.com.infox.ibpm.jbpm.TaskPageAction;
 
 
 public class TaskHandler implements Serializable {

@@ -27,10 +27,10 @@
 			onclick="configureDragDrop()">
 
 			<rich:fileUpload
-				fileUploadListener="#{imageFileUpload.processFileUpload}"
+				fileUploadListener="#{imageFileUploader.processFileUpload}"
 				id="upload"
 				execute="@this"
-				onupload="uploadHandler(event, '#{imageFileUpload.imagePath}')"
+				onupload="uploadHandler(event, '#{imageFileUploader.imagePath}')"
 				onuploadcomplete="insert()"
 				maxFilesQuantity="10"
 				addLabel="Nova imagem"
@@ -45,7 +45,7 @@
 			</rich:fileUpload>
 			<rich:dataGrid
 				
-				value="#{imageFileUpload.images}"
+				value="#{imageFileUploader.images}"
 				elements="20"
 				columns="4"
 				var="img">

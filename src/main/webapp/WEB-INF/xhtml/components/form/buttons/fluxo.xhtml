@@ -15,18 +15,18 @@
 		<ui:define name="customButtons">
 			<wi:commandButton
 				id="updateButton"
-				action="fluxoHome.persistAs()"
+				action="fluxoCrudAction.criarReplica()"
 				reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
-				rendered="#{fluxoHome.managed}"
+				rendered="#{fluxoCrudAction.managed}"
 				value="Incluir como..."
 			>
 			</wi:commandButton>
 
 			<wi:commandButton
 				id="definicao"
-				action="#{processBuilder.load(fluxoHome.instance)}"
+				action="#{processBuilder.load(fluxoCrudAction.instance)}"
 				value="Definição"
-				rendered="#{fluxoHome.managed}"
+				rendered="#{fluxoCrudAction.managed}"
 				oncomplete="openPopUp('processDefinition', '#{util.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);"
 			>			
 			</wi:commandButton>
@@ -34,7 +34,7 @@
 			<wi:commandButton
 				id="importarXPDL"
 				value="#{messages['importarXPDL.button']}"
-				rendered="#{fluxoHome.managed}"
+				rendered="#{fluxoCrudAction.managed}"
 				onclick="openPopUp('importarXPDL', '#{util.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);"
 			>
 			</wi:commandButton>

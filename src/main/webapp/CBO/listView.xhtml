@@ -27,7 +27,7 @@
                       
 	<ui:define name="title">#{messages['cbo.titlePage']}</ui:define>
 	
-	<ui:param name="home" value="#{cboHome}" />
+	<ui:param name="home" value="#{cboCrudAction}" />
 	
 	<ui:define name="searchGrid">   
 	    <wi:dataTable values="#{cboList.list(15)}"
@@ -69,7 +69,7 @@
 		<wi:dataForm formId="cboForm"
 					 formTitle="#{messages['form.title']}">
 			<wi:inputNumber id="codCbo"
-						 value="#{cboHome.instance.codCbo}"
+						 value="#{cboCrudAction.instance.codCbo}"
 						 required="true"
 						 label="#{messages['cbo.codCbo']}"
 						 minlength="4"
@@ -77,11 +77,11 @@
 			<wi:inputText id="descricaoCbo"
 						  label="#{messages['cbo.descricaoCbo']}"
 						  required="true"
-						  value="#{cboHome.instance.descricaoCbo}"
+						  value="#{cboCrudAction.instance.descricaoCbo}"
 						  maxlength="150" />
 			<wi:selectSituacaoRadio id="ativo"
 								    label="#{messages['field.situacao']}"
-								    value="#{cboHome.instance.ativo}" />
+								    value="#{cboCrudAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

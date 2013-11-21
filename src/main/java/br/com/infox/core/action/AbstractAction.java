@@ -7,19 +7,21 @@ import java.util.List;
 import javax.persistence.EntityExistsException;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.hibernate.AssertionFailure;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.annotations.In;
-import org.jboss.seam.core.Events;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
-import br.com.infox.util.constants.WarningConstants;
+import br.com.itx.component.Util;
 import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -34,10 +36,6 @@ import br.com.itx.util.EntityUtil;
  */
 public abstract class AbstractAction {
 
-	/**
-	 * Tipos de retornos dos métodos de persistência e alteração dos
-	 * dados.
-	 */
 	public static final String PERSISTED = "persisted";
 	public static final String UPDATED = "updated";
 	public static final String REMOVED = "removed";
@@ -45,9 +43,6 @@ public abstract class AbstractAction {
 	@In
 	private GenericManager genericManager;
 	
-    /**
-	 * Mensagem default para um registro já cadastrado.
-	 */
 	protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
@@ -67,6 +62,7 @@ public abstract class AbstractAction {
 	 * @param isPersist true se deve ser persistida a instancia.
 	 * @return
 	 */
+	@Transactional
 	private String flushObject(Object o, boolean isPersist) {
 		String ret = null;
 		String msg = isPersist ? "persist()" : "update()";
@@ -78,12 +74,6 @@ public abstract class AbstractAction {
 				genericManager.update(o);
 				ret = UPDATED;
 			}
-		} catch (AssertionFailure e) {
-			/* Esperamos a versão 3.5 para resolver o bug do AssertionFailure onde 
-			 * o hibernate consegue persistir com sucesso, mas lança um erro. =[ */
-			LOG.warn(msg+" (" + getObjectClassName(o) + "): " + e.getMessage());
-			Events.instance().raiseEvent("afterPersist");
-			ret = PERSISTED;
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
 			LOG.error(msg+" (" + getObjectClassName(o) + ")", e);			
@@ -92,7 +82,24 @@ public abstract class AbstractAction {
 			LOG.error(msg+" ("+ getObjectClassName(o) + ")", e);	
 		} catch (ApplicationException e){
 			throw new ApplicationException("Erro: " + e.getMessage());
-		} catch (Exception e) {
+		} catch (javax.persistence.PersistenceException e) {
+            LOG.error(msg, e);
+            DAOException daoException = new DAOException(e);
+			PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+            if (errorCode != null) {
+            	ret = errorCode.toString();
+            	FacesMessages.instance().clear();
+            	FacesMessages.instance().add(daoException.getLocalizedMessage());
+            }
+        } catch (DAOException daoException) {
+            LOG.error(msg, daoException);
+            PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+            if (errorCode != null) {
+                ret = errorCode.toString();
+                FacesMessages.instance().clear();
+                FacesMessages.instance().add(daoException.getLocalizedMessage());
+            }
+        } catch (Exception e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ConstraintViolationException) {
 				instance().add(StatusMessage.Severity.ERROR,
@@ -103,6 +110,9 @@ public abstract class AbstractAction {
 						e.getMessage(), e);
 				LOG.error(msg+" (" + getObjectClassName(o) + ")", e);
 			}
+		}
+		if (!(PERSISTED.equals(ret) || UPDATED.equals(ret))) {
+		    Util.rollbackTransactionIfNeeded();
 		}
 		return ret;
 	}
@@ -129,14 +139,12 @@ public abstract class AbstractAction {
 	 * @param obj entidade já gerênciada pelo Hibernate.
 	 * @return "removed" se removido com sucesso.
 	 */
+	@Transactional
 	public String remove(Object obj) {
 		String ret = null;
 		try {
 			genericManager.remove(obj);
 			ret = REMOVED;
-		} catch (AssertionFailure af) {
-			/* Esperamos a versão 3.5 para resolver o bug do AssertionFailure onde 
-			 * o hibernate consegue persistir com sucesso, mas lança um erro. =[ */
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
 			fm.add(StatusMessage.Severity.ERROR, "Não foi possível excluir.");
@@ -154,6 +162,7 @@ public abstract class AbstractAction {
 	 * @param o objeto da entidade que se deseja invativar o registro.
 	 * @return "updated" se inativado com sucesso.
 	 */
+	@Transactional
 	public String inactive(Object o) {
 		if(o == null) {
 			return null;
@@ -177,7 +186,7 @@ public abstract class AbstractAction {
 						"campo existe.");
 			}
 		} else {
-			instance().add(StatusMessage.Severity.INFO, "Objecto informado não é uma entidade.");
+			instance().add(StatusMessage.Severity.INFO, "Objeto informado não é uma entidade.");
 		}
 		return ret;
 	}
@@ -186,7 +195,9 @@ public abstract class AbstractAction {
 	 * Inativa todos os registros contidos na árvore abaixo do 
 	 * parametro informado.
 	 * @param o Registro que deseja inativar.
+	 * @return 
 	 */
+	@Transactional
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	protected void inactiveRecursive(Recursive<?> o) {
 		ComponentUtil.setValue(o, "ativo", false);

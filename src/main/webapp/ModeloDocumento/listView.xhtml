@@ -27,7 +27,7 @@
 	<ui:define name="title">#{messages['modeloDocumento.titlePage']}</ui:define>
 	<ui:param
 		 name="home"
-		 value="#{modeloDocumentoHome}" />
+		 value="#{modeloDocumentoCrudAction}" />
 
 	<ui:define name="searchGrid">
 		
@@ -52,7 +52,7 @@
 						 id="tipoModeloDocumento"
 						 label="#{messages['modeloDocumento.tipoModeloDocumento']}"
 						 value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
-						 items="#{home.tiposModeloDocumentoPermitidos}"
+						 items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
 						 showLabelTodos="true" />
 					<wi:selectSituacaoOneMenu
 						 id="situacao"
@@ -89,30 +89,30 @@
 			<wi:selectOneMenuEntity
 				 id="tipoModeloDocumento"
 				 label="#{messages['modeloDocumento.tipoModeloDocumento']}"
-				 value="#{modeloDocumentoHome.instance.tipoModeloDocumento}"
-				 items="#{home.tiposModeloDocumentoPermitidos}"
+				 value="#{modeloDocumentoCrudAction.instance.tipoModeloDocumento}"
+				 items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
 				 required="true"
 				 inactiveCond="#{!item.ativo}"
 				 showLabelSelecione="true" />
 			<wi:inputText
 				 id="tituloModeloDocumento"
 				 label="#{messages['modeloDocumento.tituloModeloDocumento']}"
-				 value="#{modeloDocumentoHome.instance.tituloModeloDocumento}"
+				 value="#{modeloDocumentoCrudAction.instance.tituloModeloDocumento}"
 				 required="true" />
 			<wi:selectSituacaoRadio
 				 id="ativo"
 				 label="#{messages['field.situacao']}"
-				 value="#{modeloDocumentoHome.instance.ativo}" />
+				 value="#{modeloDocumentoCrudAction.instance.ativo}" />
 			<wi:editor
 				 id="modeloDocumento"
 				 label="#{messages['modeloDocumento.modeloDocumento']}"
-				 value="#{modeloDocumentoHome.instance.modeloDocumento}"
+				 value="#{modeloDocumentoCrudAction.instance.modeloDocumento}"
 				 showVariables="true"
 				 required="true" />
 			<a:region>
 				
 				<wi:imageUpload
-					imageBean="#{imageFileUpload}"
+					imageBean="#{imageFileUploader}"
 					editorId="modeloDocumento"
 					/>
 			
@@ -126,7 +126,7 @@
 		
 		<infox:tab
 			 id="historicoModeloDocumento"
-			 rendered="#{modeloDocumentoHome.isManaged()}"
+			 rendered="#{modeloDocumentoCrudAction.isManaged()}"
 			 title="#{messages['historicoModeloDocumento.titleTab']}"
 			 name="historicoModeloDocumento">
 			
@@ -139,7 +139,7 @@
                 <ui:define name="headerToolBar">
 					
                     <wi:toolBarReportExcel
-						 rendered="#{parametroHome.getParametroOrFalse('exportarXLS')}"
+						 rendered="#{systemFacade.exportarXLS()}"
 						 action="#{historicoModeloDocumentoList.exportarXLS()}" />                                      
                 
 				</ui:define>
@@ -158,7 +158,7 @@
 							 id="usuarioAlteracao"
 							 label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
 							 value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
-							 items="#{historicoModeloDocumentoHome.usuarioAlteracaoList}"
+							 items="#{historicoModeloDocumentoCrudAction.usuarioAlteracaoList}"
 							 showLabelTodos="true" />
 						<wi:inputDate
 							 id="dataAlteracao"
@@ -193,7 +193,7 @@
 					
 					<wi:toolBarPopUp
 						 target="restaurar.seam?cid=#{conversation.id}"
-						 action="#{historicoModeloDocumentoHome.setSelecionado(row)}" />
+						 action="#{historicoModeloDocumentoCrudAction.setSelecionado(row)}" />
 				
 				</ui:define>
 									 

@@ -3,3 +3,4 @@
 *.orig
 *~
 /bin
+/src/main/java/br/com/experimentos

@@ -9,8 +9,8 @@
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true"/>
 
-	<param name="id" value="#{twitterTemplateHome.id}"
+	<param name="id" value="#{tweetTemplateCrudAction.id}"
 		   converterId="integerConverter" />
-	<param name="tab" value="#{twitterTemplateHome.tab}" />
+	<param name="tab" value="#{tweetTemplateCrudAction.tab}" />
 		   
 </page>
