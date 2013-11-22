@@ -235,11 +235,7 @@ public class ProcessoDocumentoBinHome
     @Override
     protected ProcessoDocumentoBin createInstance() {
         ProcessoDocumentoBin processoDocumentoBin = new ProcessoDocumentoBin();
-        UsuarioHome usuarioHome = (UsuarioHome) Component.getInstance(
-                "usuarioHome", false);
-        if (usuarioHome != null) {
-            processoDocumentoBin.setUsuario(usuarioHome.getDefinedInstance());
-        }
+        processoDocumentoBin.setUsuario(Authenticator.getUsuarioLogado());
         return processoDocumentoBin;
     }
 
