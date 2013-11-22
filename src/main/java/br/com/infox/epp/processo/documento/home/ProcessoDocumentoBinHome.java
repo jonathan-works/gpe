@@ -19,7 +19,6 @@ package br.com.infox.epp.processo.documento.home;
 import java.util.Date;
 import java.util.List;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -35,7 +34,6 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.api.IProcessoDocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
