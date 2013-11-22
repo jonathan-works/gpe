@@ -28,6 +28,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.derby.iapi.sql.dictionary.DataDescriptorGenerator;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.validation.constraints.Size;
@@ -356,6 +357,10 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	    } else {
 	        return null;
 	    }
+	}
+	
+	public boolean permaneceBloqueado(){
+	    return bloqueio && getUltimoBloqueio().getDataDesbloqueio() != null;
 	}
 	
 }
