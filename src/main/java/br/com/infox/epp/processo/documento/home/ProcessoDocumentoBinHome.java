@@ -34,6 +34,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.api.IProcessoDocumentoBinHome;
@@ -241,12 +242,8 @@ public class ProcessoDocumentoBinHome
 
     @Override
     public String remove() {
-        UsuarioHome usuario = (UsuarioHome) Component.getInstance(
-                "usuarioHome", false);
-        if (usuario != null) {
-            usuario.getInstance().getProcessoDocumentoBinList()
-                    .remove(instance);
-        }
+        UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
+        usuarioLogin.getProcessoDocumentoBinList().remove(instance);
         return super.remove();
     }
 
