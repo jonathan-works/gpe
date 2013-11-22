@@ -18,7 +18,7 @@ public class BloqueioUsuarioList extends EntityList<BloqueioUsuario> {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String DEFAULT_EJBQL = "select o from BloqueioUsuario o";
-	private static final String DEFAULT_ORDER = "dataBloqueio";
+	private static final String DEFAULT_ORDER = "dataBloqueio desc";
 
 	@Override
 	protected void addSearchFields() {

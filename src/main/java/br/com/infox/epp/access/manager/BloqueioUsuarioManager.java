@@ -35,4 +35,8 @@ public class BloqueioUsuarioManager extends GenericManager {
 	public boolean liberarUsuarioBloqueado(UsuarioLogin usuarioLogin){
 		return getDataParaDesbloqueio(usuarioLogin).before(new Date());
 	}
+	
+	public BloqueioUsuario getUltimoBloqueio(UsuarioLogin usuarioLogin){
+	    return bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
+	}
 }

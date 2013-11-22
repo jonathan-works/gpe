@@ -20,8 +20,8 @@ public class BloqueioUsuarioDAO extends GenericDAO {
 	public static final String NAME = "bloqueioUsuarioDAO";
 	
 	public BloqueioUsuario getBloqueioUsuarioMaisRecente(UsuarioLogin usuarioLogin){
-		String hql = "select o from BloqueioUsuario o where o.dataBloqueio = " +
-						"(select max(b.dataBloqueio) from BloqueioUsuario b where b.usuario = :usuario)";
+		String hql = "select o from BloqueioUsuario o where o.idBloqueioUsuario = " +
+						"(select max(b.idBloqueioUsuario) from BloqueioUsuario b where b.usuario = :usuario)";
 		Query query = EntityUtil.createQuery(hql).setParameter("usuario", usuarioLogin);
 		return EntityUtil.getSingleResult(query);
 	}

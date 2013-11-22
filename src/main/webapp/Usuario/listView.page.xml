@@ -15,7 +15,9 @@
             if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
     <action execute="#{usuarioLocalizacaoEntityList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
-            
+    
+    <action execute="#{bloqueioUsuarioCrudAction.setUsuarioAtual(usuarioLoginCrudAction.instance)}" 
+            if="#{usuarioLoginCrudAction.tab eq 'historicoBloqueioUsuario'}"/>        
     <action execute="#{bloqueioUsuarioList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'historicoBloqueioUsuario'}"/>
             

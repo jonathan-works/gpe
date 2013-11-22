@@ -152,14 +152,6 @@
 						 value="usuarioProvisorio" />
                 
 				</ui:include>
-                <ui:include src="/WEB-INF/xhtml/components/form/bloqueio.xhtml">
-					
-                    <ui:param
-						 name="id"
-						 value="bloqueioUsuario" />
-                
-				</ui:include>
-            
 			</wi:dataForm>
         
 	</ui:define>
@@ -264,11 +256,40 @@
 			 rendered="#{home.isManaged()}"
 			 title="#{messages['bloqueioUsuario.historicoBloqueioList']}"
 			 name="historicoBloqueioUsuario">
-			
-            <s:div>
-				
-                <wi:ajaxDiv id="divHistoricoList">
-					
+			 
+		       <wi:dataForm formId="bloqueioUsuarioForm"
+		                    formTitle="#{messages['form.title']}"
+		                    home="#{bloqueioUsuarioCrudAction}">
+		           <wi:selectBooleanRadio id="bloqueio"
+		             value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+		             label="#{messages['usuario.bloqueio']}">
+		              <a:ajax
+		                 event="change"
+		                 execute="@this"
+		                 render="blockDiv" />
+		           </wi:selectBooleanRadio>
+		           <s:div id="blockDiv">
+		           <wi:inputDate
+		                   id="dataDesbloqueio"
+		                   label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+		                   value="#{bloqueioUsuarioCrudAction.instance.dataPrevisaoDesbloqueio}"
+		                   rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+		                   future="true"
+		                   required="false" />
+		           <wi:inputText
+		                   id="motivoBloqueio"
+		                   label="#{messages['bloqueioUsuario.motivoBloqueio']}"
+		                   value="#{bloqueioUsuarioCrudAction.instance.motivoBloqueio}"
+		                   rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+		                   required="true"
+		                   showRequired="true"
+		                   maxlength="50" />
+		           </s:div>
+		           <ui:define name="buttons">
+		              <wi:commandButtonSave />
+		           </ui:define>
+		       </wi:dataForm>
+                    <s:div>
                     <wi:dataTable
 						 values="#{bloqueioUsuarioList.list(15)}"
 						 bean="#{bloqueioUsuarioList}"
@@ -279,34 +300,7 @@
 						
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar" />
-                        <ui:define name="searchForm">
-							
-                            <wi:searchForm
-								 formId="pesquisarBloqueiosForm"
-								 formTitle="#{messages['searchForm.title']}">
-								
-                                <wi:inputDate
-									 id="dataBloqueio"
-									 value="#{bloqueioUsuarioList.entity.dataBloqueio}"
-									 label="#{messages['bloqueioUsuario.dataBloqueio']}" />
-								<wi:inputDate
-									 id="dataPrevisaoDesbloqueio"
-									 value="#{bloqueioUsuarioList.entity.dataPrevisaoDesbloqueio}"
-									 label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}" />
-                                <wi:inputText
-									 id="motivoBloqueio"
-									 label="#{messages['bloqueioUsuario.motivoBloqueio']}"
-									 value="#{bloqueioUsuarioList.entity.motivoBloqueio}"
-									 maxlength="150" />
-                                <wi:inputDate
-									 id="dataDesloqueio"
-									 value="#{bloqueioUsuarioList.entity.dataDesbloqueio}"
-									 label="#{messages['bloqueioUsuario.dataDesbloqueio']}" />
-                            
-							</wi:searchForm>
                         
-						</ui:define>
-
                         <wi:columnDateTime
 							 columnId="dataBloqueio"
 							 columnHeader="#{messages['bloqueioUsuario.dataBloqueio']}"
@@ -323,13 +317,8 @@
 							 columnId="dataDesbloqueio"
 							 columnHeader="#{messages['bloqueioUsuario.dataDesbloqueio']}"
 							 value="#{row.dataDesbloqueio}" />
-                    
 					</wi:dataTable>
-                
-				</wi:ajaxDiv>
-            
 			</s:div>
-        
 		</infox:tab>
     
 	</ui:define>

@@ -2,11 +2,13 @@ package br.com.infox.epp.access.crud;
 
 import java.util.Date;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 
 @Name(BloqueioUsuarioCrudAction.NAME)
 public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario> {
@@ -14,6 +16,8 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     public static final String NAME = "bloqueioUsuarioCrudAction";
     
     private UsuarioLogin usuarioAtual;
+    
+    @In private BloqueioUsuarioManager bloqueioUsuarioManager;
 
     public UsuarioLogin getUsuarioAtual() {
         return usuarioAtual;
@@ -21,7 +25,7 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
 
     public void setUsuarioAtual(UsuarioLogin usuarioAtual) {
         this.usuarioAtual = usuarioAtual;
-        if (usuarioAtual.permaneceBloqueado()){
+        if (existeBloqueioAtivo()){
             setInstance(usuarioAtual.getUltimoBloqueio());
         } else {
             newInstance();
@@ -30,16 +34,29 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     
     @Override
     protected boolean beforeSave() {
-        getInstance().setUsuario(usuarioAtual);
-        getInstance().setDataBloqueio(new Date());
+        if (!usuarioAtual.getBloqueio() && getInstance().getDataBloqueio() != null){
+            getInstance().setDataDesbloqueio(new Date());
+        } else {
+            getInstance().setUsuario(usuarioAtual);
+            getInstance().setDataBloqueio(new Date());
+        }
         return super.beforeSave();
     }
     
     @Override
     public String save() {
-        usuarioAtual.setBloqueio(true);
         update(usuarioAtual);
         return super.save();
+    }
+    
+    private boolean existeBloqueioAtivo(){
+        BloqueioUsuario ultimoBloqueio = bloqueioUsuarioManager.getUltimoBloqueio(usuarioAtual);
+        if (ultimoBloqueio != null){
+            return ultimoBloqueio.getDataDesbloqueio() == null;
+        } else {
+            return false;
+        }
+        
     }
 
 }
