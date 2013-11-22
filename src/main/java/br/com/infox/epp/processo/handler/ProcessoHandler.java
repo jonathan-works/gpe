@@ -31,7 +31,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -42,6 +41,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.ibpm.jbpm.InfoxManagedJbpmContext;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.itx.util.EntityUtil;
 
@@ -70,7 +70,7 @@ public class ProcessoHandler implements Serializable {
 				ProcessInstance.instance().getTaskMgmtInstance().getTaskInstances();
 			taskInstanceList = new ArrayList<TaskInstance>(taskInstances);
 			
-			Session session = ManagedJbpmContext.instance().getSession();		
+			Session session = InfoxManagedJbpmContext.instance().getSession();		
 			List<org.jbpm.graph.exe.ProcessInstance> l = session.getNamedQuery("GraphSession.findSubProcessInstances")
 				.setParameter("processInstance", ProcessInstance.instance())
 				.list();
