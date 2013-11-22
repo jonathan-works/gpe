@@ -6,9 +6,9 @@ import java.util.List;
 import javax.persistence.Query;
 
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.home.LocalizacaoHome;
-import br.com.infox.epp.access.home.UsuarioHome;
 
 public class LocalizacaoNode extends LocalizacaoNodeSearch {
 
@@ -44,7 +44,7 @@ public class LocalizacaoNode extends LocalizacaoNodeSearch {
 	
 	@Override
 	public List<EntityNode<Localizacao>> getRoots(Query queryRoots) {
-		Localizacao estrutura = UsuarioHome.getUsuarioLocalizacaoAtual().getEstrutura();
+		Localizacao estrutura = Authenticator.getUsuarioLocalizacaoAtual().getEstrutura();
 		if (estrutura != null) {
 			List<EntityNode<Localizacao>> nodes = new ArrayList<EntityNode<Localizacao>>();
 			EntityNode<Localizacao> no = new LocalizacaoNode(null, estrutura, getQueryChildren());
