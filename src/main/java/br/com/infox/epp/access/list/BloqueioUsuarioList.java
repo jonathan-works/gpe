@@ -19,7 +19,6 @@ public class BloqueioUsuarioList extends EntityList<BloqueioUsuario> {
 	
 	private static final String DEFAULT_EJBQL = "select o from BloqueioUsuario o";
 	private static final String DEFAULT_ORDER = "dataBloqueio";
-//	private static final String R1 = "o.usuario = #{usuarioHome.instance}";
 
 	@Override
 	protected void addSearchFields() {
