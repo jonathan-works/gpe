@@ -39,15 +39,15 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	 * @param horario
 	 * @return
 	 */
-	public LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date data, DiaSemanaEnum diaSemana) {
+	public LocalizacaoTurno getTurnoTarefa(Integer idProcesso, Date dataAnterior, Date dataAtual, DiaSemanaEnum diaSemana) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_IDPROCESSO, pt.getProcessoEpa().getIdProcesso());
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, new Time(pt.getUltimoDisparo().getTime()));
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM, new Time(data.getTime()));
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_IDPROCESSO, idProcesso);
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, new Time(dataAnterior.getTime()));
+		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM, new Time(dataAtual.getTime()));
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
 		
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(data);
+		calendar.setTime(dataAtual);
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
