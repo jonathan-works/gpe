@@ -1,4 +1,4 @@
-package br.com.infox.epp.access.home;
+package br.com.infox.epp.access.crud;
 
 import java.security.Principal;
 import java.util.ArrayList;
