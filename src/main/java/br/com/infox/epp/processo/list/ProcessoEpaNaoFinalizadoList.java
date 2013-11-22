@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.list;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,16 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 	private static final String R1 = "p.naturezaCategoriaFluxo.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
     
+    private static final HashMap<String,String> CUSTOM_ORDER_MAP;
+    static {
+        CUSTOM_ORDER_MAP = new HashMap<>();
+        CUSTOM_ORDER_MAP.put("fluxo", "ncf.fluxo");
+        CUSTOM_ORDER_MAP.put("prioridadeProcesso", "p.prioridadeProcesso");
+        CUSTOM_ORDER_MAP.put("dataChegadaTarefa", "o.dataInicio");
+        CUSTOM_ORDER_MAP.put("tempoGastoTarefa", "o.tempoGasto");
+        CUSTOM_ORDER_MAP.put("dataInicio", "p.dataInicio");
+    }
+    
 	private Fluxo fluxo;
 	private List<Fluxo> fluxoList;
 	private boolean updateFluxoList=true;
@@ -64,7 +75,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
+		return CUSTOM_ORDER_MAP;
 	}
 	
 	@Override
