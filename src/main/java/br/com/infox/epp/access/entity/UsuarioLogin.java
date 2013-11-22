@@ -28,7 +28,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.apache.derby.iapi.sql.dictionary.DataDescriptorGenerator;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.validation.constraints.Size;
