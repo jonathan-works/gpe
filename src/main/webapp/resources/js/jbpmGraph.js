@@ -8,6 +8,8 @@ function NodeArea(cid) {
 	this.map = $('#nodes');
 	this.nodes = [];
 	this.cid = cid;
+
+	this.map.empty();
 	
 	function createLink(nodeIndex, cid) {
 		return "?tab=nodesTab&cid=" + cid + "&node=" + nodeIndex;

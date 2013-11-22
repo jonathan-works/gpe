@@ -163,8 +163,6 @@ public class ProcessBuilder implements Serializable {
 			exists = true;
 			this.id = newId;
 		}
-		processBuilderGraph.clear();
-		getPaintedGraph();
 	}
 
 	private ProcessDefinition parseInstance(String newXml) {
