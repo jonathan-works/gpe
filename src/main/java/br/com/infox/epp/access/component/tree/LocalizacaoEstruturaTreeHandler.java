@@ -21,12 +21,11 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.home.LocalizacaoHome;
-import br.com.infox.epp.access.home.UsuarioHome;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 
 @Name("localizacaoEstruturaTree")
@@ -40,6 +39,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 	protected String getQueryRoots() {
 		StringBuilder sb = new StringBuilder("select n from Localizacao n ");
 		sb.append("where ");
+		usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
 		Localizacao loc = getUsuarioLocalizacaoAtual().getEstrutura() != null ? 
 				getUsuarioLocalizacaoAtual().getEstrutura() : getUsuarioLocalizacaoAtual().getLocalizacao();
 		sb.append(" n.idLocalizacao = " + loc.getIdLocalizacao());
@@ -92,8 +92,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 
 	public UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
 		if (usuarioLocalizacaoAtual == null) {
-			usuarioLocalizacaoAtual = UsuarioHome.getUsuarioLocalizacaoAtual();
-			usuarioLocalizacaoAtual = EntityUtil.getEntityManager().find(UsuarioLocalizacao.class, usuarioLocalizacaoAtual.getIdUsuarioLocalizacao());
+			usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
 		}
 		return usuarioLocalizacaoAtual;
 	}
