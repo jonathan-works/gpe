@@ -7,6 +7,8 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.itx.util.EntityUtil;
 
 /**
@@ -191,5 +193,13 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
         }
         return name ;
     }
+	
+	protected void onDAOExcecption(DAOException daoException){
+        PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+        if (errorCode != null) {
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add(daoException.getLocalizedMessage());
+        }
+	}
 	
 }
