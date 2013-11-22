@@ -68,8 +68,8 @@ public class ProcessoTimerProcessor {
 		}
 		if (trigger != null) {
 			try {
-				processoEpaManager.updateTempoGastoProcessoEpa();
 				processoEpaTarefaManager.updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), PrazoEnum.D);
+				processoEpaManager.updateTempoGastoProcessoEpa();
 			} catch (DAOException e) {
 				LOG.error(".increaseProcessTimeSpent()", e);
 			}
