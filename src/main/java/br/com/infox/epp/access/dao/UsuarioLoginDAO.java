@@ -74,4 +74,10 @@ public class UsuarioLoginDAO extends GenericDAO {
 		entityManager.createQuery(hql).executeUpdate();
 	}
 	
+	public UsuarioLogin checkUserByLogin(String login) {
+        Query query = entityManager.createNamedQuery(UsuarioLogin.USUARIO_LOGIN_NAME);
+        query.setParameter(UsuarioLogin.PARAM_LOGIN, login);
+        return EntityUtil.getSingleResult(query);
+    }
+	
 }

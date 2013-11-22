@@ -50,5 +50,9 @@ public class UsuarioLoginManager extends GenericManager {
 	public UsuarioLogin getUsuarioLoginByEmail(String email){
 		return usuarioLoginDAO.getUsuarioLoginByEmail(email);
 	}
+	
+	public UsuarioLogin checkUserByLogin(String login) {
+	    return usuarioLoginDAO.checkUserByLogin(login);
+	}
 
 }

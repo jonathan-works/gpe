@@ -51,7 +51,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.RolesMap;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.home.UsuarioHome;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.util.LdapUtil;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -182,11 +182,11 @@ public class Authenticator {
 	
 	public void login(){
 		//verificar se o login existe
-		UsuarioHome home = UsuarioHome.instance();
 		Identity identity = Identity.instance();
 		Credentials credentials = identity.getCredentials();
 		String login = credentials.getUsername();
-		UsuarioLogin user = home.checkUserByLogin(login);
+		UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
+		UsuarioLogin user = usuarioLoginManager.checkUserByLogin(login);
 		if(user == null) {
 			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
 			return;
