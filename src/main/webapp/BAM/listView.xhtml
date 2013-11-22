@@ -144,9 +144,6 @@
 					<h:graphicImage url="/img/usuario.gif"
 									rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
 					<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
-				<c:if test="#{empty userHandler.getUsuario(task.actorId)}">
-					<h:outputText value="#{userHandler.getUsuarioByTarefa(task)}" />
-				</c:if>
 				</div>
 			</rich:column>
 			
