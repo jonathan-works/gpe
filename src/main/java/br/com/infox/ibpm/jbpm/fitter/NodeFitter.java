@@ -369,7 +369,6 @@ public class NodeFitter extends Fitter implements Serializable {
 
 	public void setCurrentNode(Node cNode) {
 		TaskFitter tf = getProcessBuilder().getTaskFitter();
-		Node lastNode = this.currentNode;
 		this.currentNode = cNode;
 		tf.getTasks();
 		tf.clear();
@@ -379,7 +378,6 @@ public class NodeFitter extends Fitter implements Serializable {
 			if (!list.isEmpty()) {
 				tf.setCurrentTask(list.get(0));
 			}
-			tf.setPrazoTasks(lastNode, cNode);
 		}
 		nodeHandler = new NodeHandler(cNode);
 		newNodeType = NodeTypeConstants.TASK;

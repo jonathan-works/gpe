@@ -33,19 +33,20 @@
 			
 			</wi:selectOneMenu>
 			
-			<wi:inputNumber id="prazo" label="Prazo para Término" value="#{taskFitter.prazo}">
+			<wi:inputNumber id="prazo" label="Prazo para Término" value="#{taskFitter.tarefaAtual.prazo}" rendered="#{taskFitter.currentJbpmTaskPersisted}">
 				
-				<a:ajax event="change" execute="@this" limitRender="true" /> 
+				<a:ajax event="change" execute="@this" limitRender="true" listener="#{taskFitter.marcarTarefaAtual()}" /> 
 			
 			</wi:inputNumber>
 				
 			<wi:selectOneMenuEnum id="tipoPrazo"
 				 label="Unidade"
-				 value="#{taskFitter.tipoPrazo}"
+				 value="#{taskFitter.tarefaAtual.tipoPrazo}"
 				 items="#{taskFitter.tipoPrazoList}"
-				 noSelectionLabel="Selecione um registro...">
+				 noSelectionLabel="Selecione um registro..."
+				 rendered="#{taskFitter.currentJbpmTaskPersisted}">
 				
-				<a:ajax event="change" execute="@this" limitRender="true" /> 
+				<a:ajax event="change" execute="@this" limitRender="true" listener="#{taskFitter.marcarTarefaAtual()}" /> 
 			
 			</wi:selectOneMenuEnum>
 			

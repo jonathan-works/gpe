@@ -253,8 +253,7 @@ public class ProcessBuilder implements Serializable {
 					LOG.error(".update()", e);
 				}
 			}
-
-			taskFitter.updatePrazoTask();
+			taskFitter.updateTarefas();
 			FacesMessages.instance().add("Fluxo salvo com sucesso!");
 		}
 		processBuilderGraph.clear();
@@ -286,6 +285,7 @@ public class ProcessBuilder implements Serializable {
 				JbpmUtil.getGraphSession().deployProcessDefinition(instance);
 				JbpmUtil.getJbpmSession().flush();
 				Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
+				taskFitter.checkCurrentTaskPersistenceState();
 				FacesMessages.instance().clear();
 				FacesMessages.instance().add("Fluxo publicado com sucesso!");
 			} catch (Exception e) {
@@ -360,6 +360,9 @@ public class ProcessBuilder implements Serializable {
 
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public BigInteger getIdProcessDefinition() {
+		if (instance == null) {
+			return null;
+		}
 		String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
 		Query param = JbpmUtil.getJbpmSession().createSQLQuery(query)
 				.setParameter("pdName", instance.getName());
