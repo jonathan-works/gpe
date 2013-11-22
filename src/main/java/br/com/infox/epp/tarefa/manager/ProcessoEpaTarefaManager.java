@@ -161,11 +161,11 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	 * @param horario 
 	 * @return turno da localização da tarefa
 	 */
-	private LocalizacaoTurno getTurnoTarefa(ProcessoEpaTarefa pt, Date data) {
+	private LocalizacaoTurno getTurnoTarefa(Integer idProcesso,Date dataAnterior, Date dataAtual) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(data);
+		calendar.setTime(dataAtual);
 		int diaSemana = calendar.get(Calendar.DAY_OF_WEEK);
-		return localizacaoTurnoDAO.getTurnoTarefa(pt, data, DiaSemanaEnum.values()[diaSemana-1]);
+		return localizacaoTurnoDAO.getTurnoTarefa(idProcesso,dataAnterior, dataAtual, DiaSemanaEnum.values()[diaSemana-1]);
 	}
 
 	private int getMinutesOfDay(Date date) {
@@ -209,7 +209,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		Date ultimaAtualizacao = processoEpaTarefa.getUltimoDisparo();
 		while(ultimaAtualizacao.before(dataDisparo))	{
 			Date disparoAtual = getDisparoIncrementado(ultimaAtualizacao, dataDisparo, Calendar.MINUTE, MEIA_HORA);
-			LocalizacaoTurno localizacaoTurno = getTurnoTarefa(processoEpaTarefa, disparoAtual);
+			LocalizacaoTurno localizacaoTurno = getTurnoTarefa(processoEpaTarefa.getProcessoEpa().getIdProcesso(), ultimaAtualizacao, disparoAtual);
 			if (localizacaoTurno != null) {
 				result += calcularMinutosEmIntervalo(ultimaAtualizacao, disparoAtual, localizacaoTurno.getHoraInicio(), localizacaoTurno.getHoraFim());
 			}

@@ -16,6 +16,7 @@ import org.quartz.Trigger;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.startup.TarefaTimerStarter;
 import br.com.infox.epp.estatistica.timer.TimerUtil;
+import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.type.PrazoEnum;
 
@@ -37,7 +38,9 @@ public class TarefaTimerProcessor {
 
 	@In
 	private ProcessoEpaTarefaManager processoEpaTarefaManager;
-
+	@In
+    private ProcessoEpaManager processoEpaManager;
+	
 	public static TarefaTimerProcessor instance() {
 		return (TarefaTimerProcessor) Component.getInstance(NAME);
 	}
@@ -67,6 +70,7 @@ public class TarefaTimerProcessor {
 			try {
 				processoEpaTarefaManager.updateTarefasNaoFinalizadas(
 						trigger.getPreviousFireTime(), PrazoEnum.H);
+				processoEpaManager.updateTempoGastoProcessoEpa();
 			} catch (DAOException e) {
 				LOG.error(".increaseTaskTimeSpent()", e);
 			}
