@@ -143,8 +143,8 @@ public class GenericDAO implements Serializable {
 	private <T> T processExceptions(DAOActionInterface<T> action,T object) throws DAOException {
 	    try {
 	        return action.execute(object);
-	    } catch (Throwable t) {
-	    	throw new DAOException(t);
+	    } catch (Exception e) {
+	    	throw new DAOException(e);
 	    } finally {
 	    	Util.rollbackTransactionIfNeeded();
 	    }
