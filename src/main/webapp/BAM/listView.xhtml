@@ -108,27 +108,36 @@
 				</div>
 			</ui:define>
 
-			<wi:columnOutputText columnId="numeroProcesso"
+			<wi:columnOutputText
+				columnId="numeroProcesso"
 				columnHeader="#{messages['processo.menuText']}"
-				value="#{row.processoEpa.numeroProcesso}" />
+				value="#{row.processoEpa.numeroProcesso}" 
+				hideOrder="true"/>
 
-			<wi:columnOutputText columnId="naturezaCategoriaFluxo.fluxo"
-				   columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
-				   value="#{row.processoEpa.naturezaCategoriaFluxo.fluxo}" />
+			<wi:columnOutputText
+				columnId="fluxo"
+				columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+				value="#{row.processoEpa.naturezaCategoriaFluxo.fluxo}" 
+				hideOrder="true" />
 			
-			<wi:columnDateTime columnId="dataInicio"
+			<wi:columnDateTime
+				columnId="dataInicio"
 				columnHeader="#{messages['processo.dataInicio']}"
 				value="#{row.processoEpa.dataInicio}" />
 				
-			<wi:columnOutputText columnId="naturezaCategoriaItem"
+			<wi:columnOutputText
+				columnId="naturezaCategoriaItem"
 				columnHeader="#{messages['processoEpa.naturezaCategoriaItem']}"
-				value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processoEpa)}" />
+				value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processoEpa)}" 
+				hideOrder="true"/>
 				
-			<wi:columnOutputText columnId="prioridadeProcesso"
+			<wi:columnOutputText
+				columnId="prioridadeProcesso"
 				columnHeader="Prioridade"
 				value="#{row.processoEpa.prioridadeProcesso}" />
 				
-			<wi:columnDateTime columnId="dataChegadaTarefa"  
+			<wi:columnDateTime 
+				columnId="dataChegadaTarefa"  
 			  	columnHeader="#{messages['processoEpa.dataChegadaTarefa']}"  
 			  	value="#{row.dataInicio}" />  
 				
@@ -151,9 +160,11 @@
 			  	columnHeader="#{messages['processoEpa.tempoGastoTarefa']}"  
 			  	value="#{row.tempoGastoFormatado}" />  
 			
-			<wi:columnOutputText columnId="tempoDesdeInicio"
+			<wi:columnOutputText
+				columnId="tempoDesdeInicio"
 				columnHeader="#{messages['processoEpa.tempoDesdeInicioDias']}"
-				value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processoEpa)}" />
+				value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processoEpa)}"
+				hideOrder="true" />
 							   
 		</wi:dataTable>
 	</ui:define>
