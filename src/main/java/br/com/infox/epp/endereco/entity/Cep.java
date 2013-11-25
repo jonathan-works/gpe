@@ -69,8 +69,6 @@ public class Cep implements java.io.Serializable {
 	private String complemento;
 	private Boolean ativo;
 	
-	private List<Endereco> enderecoList = new ArrayList<Endereco>(0);	
-
 	public Cep() {
 	}
 
@@ -138,16 +136,6 @@ public class Cep implements java.io.Serializable {
 		this.complemento = complemento;
 	}
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "cep")
-	public List<Endereco> getEnderecoList() {
-		return this.enderecoList;
-	}
-
-	public void setEnderecoList(List<Endereco> enderecoList) {
-		this.enderecoList = enderecoList;
-	}
-
 	@Column(name = "in_ativo", nullable = false)
 	@NotNull
 	public Boolean getAtivo() {
