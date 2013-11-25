@@ -440,10 +440,6 @@ public class UsuarioHome extends AbstractHome<UsuarioLogin> {
         return getInstance() == null ? null : getInstance().getFluxoList();
     }
 
-    public List<Endereco> getEnderecoList() {
-        return getInstance() == null ? null : getInstance().getEnderecoList();
-    }
-
     public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
         return getInstance() == null ? null : getInstance()
                 .getUsuarioLocalizacaoList();

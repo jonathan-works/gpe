@@ -192,9 +192,6 @@ public class EnderecoHome extends AbstractHome<Endereco> {
     public String remove() {
         UsuarioHome usuario = (UsuarioHome) Component.getInstance(
                 "usuarioHome", false);
-        if (usuario != null) {
-            usuario.getInstance().getEnderecoList().remove(instance);
-        }
         CepHome cep = (CepHome) Component.getInstance("cepHome", false);
         if (cep != null) {
             cep.getInstance().getEnderecoList().remove(instance);

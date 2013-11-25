@@ -40,7 +40,6 @@ import org.jboss.seam.annotations.security.management.UserRoles;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
-import br.com.infox.epp.endereco.entity.Endereco;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
@@ -81,7 +80,6 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
 	private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(0);
 	private List<BloqueioUsuario> bloqueioUsuarioList = new ArrayList<BloqueioUsuario>(0);
-	private List<Endereco> enderecoList = new ArrayList<Endereco>(0);
 	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<ProcessoDocumento>(0);
 	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao = new ArrayList<ProcessoDocumento>(0);
 	private List<EntityLog> entityLogList = new ArrayList<EntityLog>(0);
@@ -270,16 +268,6 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 
 	public void setBloqueioUsuarioList(List<BloqueioUsuario> bloqueioUsuarioList) {
 		this.bloqueioUsuarioList = bloqueioUsuarioList;
-	}
-
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
-	public List<Endereco> getEnderecoList() {
-		return this.enderecoList;
-	}
-
-	public void setEnderecoList(List<Endereco> enderecoList) {
-		this.enderecoList = enderecoList;
 	}
 
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
