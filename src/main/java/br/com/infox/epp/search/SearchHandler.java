@@ -33,6 +33,7 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -44,7 +45,6 @@ import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.ibpm.jbpm.InfoxManagedJbpmContext;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
@@ -163,7 +163,7 @@ public class SearchHandler implements Serializable {
 		String[] fields = new String[]{"conteudo", "texto"};
 		Query query = indexer.getQuery(searchText, fields);
 		List<Document> search = indexer.search(searchText, fields, 200);
-		Session session = InfoxManagedJbpmContext.instance().getSession();
+		Session session = ManagedJbpmContext.instance().getSession();
 		
 		for (Document d : search) {
 			long taskId = Long.parseLong(d.get("id"));

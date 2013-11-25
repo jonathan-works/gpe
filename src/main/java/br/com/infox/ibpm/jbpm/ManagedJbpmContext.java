@@ -32,8 +32,8 @@ import org.jbpm.svc.Services;
 @Name("org.jboss.seam.bpm.jbpmContext")
 @BypassInterceptors
 @Install(precedence=FRAMEWORK, dependencies="org.jboss.seam.bpm.jbpm")
-public class InfoxManagedJbpmContext implements Synchronization {
-	   private static final LogProvider log = Logging.getLogProvider(InfoxManagedJbpmContext.class);
+public class ManagedJbpmContext implements Synchronization {
+	   private static final LogProvider log = Logging.getLogProvider(ManagedJbpmContext.class);
 
 	   private JbpmContext jbpmContext;
 	   private boolean synchronizationRegistered;
@@ -159,6 +159,6 @@ public class InfoxManagedJbpmContext implements Synchronization {
 	      {
 	         throw new IllegalStateException("no active event context");
 	      }
-	      return (JbpmContext) Component.getInstance(InfoxManagedJbpmContext.class, ScopeType.EVENT);
+	      return (JbpmContext) Component.getInstance(ManagedJbpmContext.class, ScopeType.EVENT);
 	   }
 }
