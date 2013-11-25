@@ -9,7 +9,6 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
@@ -66,7 +65,7 @@ public class AccessMailService {
     }
     
     private void enviarEmailModelo(ModeloDocumento modelo, UsuarioLogin usuario) {
-        String conteudo = ModeloDocumentoAction.instance().getConteudo(modelo);
+        String conteudo = modeloDocumentoManager.evaluateModeloDocumento(modelo);
 
         EMailData data = ComponentUtil.getComponent(EMailData.NAME);
         data.setUseHtmlBody(true);
