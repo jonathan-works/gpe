@@ -52,7 +52,7 @@ public class PasswordService {
         }
     }
     
-    private void gerarNovaSenha(final UsuarioLogin usuario, String tipoParametro) {
+    private String gerarNovaSenha(final UsuarioLogin usuario, String tipoParametro) {
         final String password;
         if (ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
             password = "";
@@ -68,6 +68,7 @@ public class PasswordService {
         }.run();
         
         EntityUtil.getEntityManager().flush();
+        return password;
     }
 
 }
