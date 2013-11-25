@@ -6,8 +6,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.faces.FacesMessages;
-
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 
@@ -22,9 +20,7 @@ public class PasswordService {
     public void requisitarNovaSenha(String email, String login) throws LoginException {
         UsuarioLogin usuario;
         if (email.isEmpty() && login.isEmpty()) {
-            FacesMessages.instance().add(
-                    "É preciso informar o login ou o e-mail do usuário");
-            return;
+            throw new LoginException("É preciso informar o login ou o e-mail do usuário");
         } else if (!login.isEmpty()) {
             usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
             recoverUsuario(usuario, "login");
