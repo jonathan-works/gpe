@@ -18,7 +18,6 @@ package br.com.infox.epp.access.home;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Query;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.annotations.In;
