@@ -38,7 +38,6 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
-import br.com.infox.epp.endereco.entity.Endereco;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 
 
@@ -54,7 +53,6 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 	public static final String TABLE_NAME = "tb_localizacao";
 
 	private int idLocalizacao;
-	private Endereco endereco;
 	private String localizacao;
 	private Boolean ativo;
 	private Localizacao localizacaoPai;
@@ -82,16 +80,6 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 
 	public void setIdLocalizacao(int idLocalizacao) {
 		this.idLocalizacao = idLocalizacao;
-	}
-	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_endereco")
-	public Endereco getEndereco() {
-		return this.endereco;
-	}
-
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
 	}
 	
 	@Column(name = "ds_localizacao", nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
