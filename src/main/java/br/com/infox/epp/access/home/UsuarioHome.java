@@ -38,7 +38,6 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
-import br.com.infox.epp.endereco.entity.Endereco;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
