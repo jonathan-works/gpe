@@ -4,12 +4,10 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -22,7 +20,6 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.epp.tarefa.entity.Tarefa;
-import br.com.infox.ibpm.bean.PrazoTask;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.type.PrazoEnum;
@@ -40,9 +37,9 @@ public class TaskFitter extends Fitter implements Serializable {
 	private TaskHandler currentTask;
 	private String taskName;
 	private Map<BigInteger, String> modifiedTasks = new HashMap<BigInteger, String>();
-	private Integer prazo;
-	private PrazoEnum tipoPrazo;
-	private Map<String, PrazoTask> prazoTaskMap = new HashMap<String, PrazoTask>();
+	private Tarefa tarefaAtual;
+	private Set<Tarefa> tarefasModificadas = new HashSet<>();
+	private boolean currentJbpmTaskPersisted;
 	
 	@In private JbpmTaskManager jbpmTaskManager;
 	
@@ -63,7 +60,7 @@ public class TaskFitter extends Fitter implements Serializable {
 					.values().iterator().next());
 			TaskHandler th = new TaskHandler(t);
 			list.add(th);
-			currentTask = th;
+			setCurrentTask(th);
 		}
 	}
 
@@ -79,38 +76,6 @@ public class TaskFitter extends Fitter implements Serializable {
 			clear();
 		}
 	}
-	
-	public void updatePrazoTask() {
-		Set<Entry<String, PrazoTask>> entrySet = prazoTaskMap.entrySet();
-		EntityManager entityManager = EntityUtil.getEntityManager();
-		for (Entry<String, PrazoTask> entry : entrySet) {
-			Tarefa t = JbpmUtil.getTarefa(entry.getKey(),
-					getFluxo());
-			if (t != null) {
-				PrazoTask prazoTask = entry.getValue();
-				t.setPrazo(prazoTask.getPrazo());
-				t.setTipoPrazo(prazoTask.getTipoPrazo());
-				entityManager.merge(t);
-			}
-		}
-		entityManager.flush();
-	}
-	
-	public void setPrazo(Integer prazo) {
-		this.prazo = prazo;
-	}
-
-	public Integer getPrazo() {
-		return prazo;
-	}
-
-	public void setTipoPrazo(PrazoEnum tipoPrazo) {
-		this.tipoPrazo = tipoPrazo;
-	}
-
-	public PrazoEnum getTipoPrazo() {
-		return tipoPrazo;
-	}
 
 	public PrazoEnum[] getTipoPrazoList() {
 		return PrazoEnum.values();
@@ -122,14 +87,22 @@ public class TaskFitter extends Fitter implements Serializable {
 
 	public void setCurrentTask(TaskHandler cTask) {
 		this.currentTask = cTask;
+		this.tarefaAtual = null;
+		checkCurrentTaskPersistenceState();
+	}
+	
+	public Tarefa getTarefaAtual() {
+		if (this.tarefaAtual == null && getCurrentTask() != null && isCurrentJbpmTaskPersisted()) {
+			this.tarefaAtual = JbpmUtil.getTarefa(getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName()).longValue());
+		}
+		return tarefaAtual;
 	}
 	
 	public void setTaskName(String taskName) {
 		if (this.taskName != null && !this.taskName.equals(taskName)) {
 			if (currentTask != null && currentTask.getTask() != null) {
 				currentTask.getTask().setName(taskName);
-				BigInteger idTaskModificada = jbpmTaskManager
-						.findTaskIdByIdProcessDefinitionAndName(getProcessBuilder().getIdProcessDefinition(), this.taskName);
+				BigInteger idTaskModificada = getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName());
 				if (idTaskModificada != null) {
 					modifiedTasks.put(idTaskModificada, taskName);
 				}
@@ -198,48 +171,39 @@ public class TaskFitter extends Fitter implements Serializable {
 		}
 		return taskList;
 	}
-	
-	public void setPrazoTasks(Node lastNode, Node cNode) {
-		if (cNode == null) {
-			prazo = null;
-			tipoPrazo = null;
-			return;
-		}
-
-		PrazoTask prazoTask = new PrazoTask();
-		if (lastNode != null && prazo != null && tipoPrazo != null) {
-			prazoTask.setPrazo(prazo);
-			prazoTask.setTipoPrazo(tipoPrazo);
-			prazoTaskMap.put(lastNode.getName(), prazoTask);
-		}
-
-		prazoTask = prazoTaskMap.get(cNode.getName());
-		if (prazoTask != null) {
-			prazo = prazoTask.getPrazo();
-			tipoPrazo = prazoTask.getTipoPrazo();
-		} else {
-			Tarefa t = JbpmUtil.getTarefa(cNode.getName(), getFluxo());
-			if (t == null) {
-				prazo = null;
-				tipoPrazo = null;
-			} else {
-				prazo = t.getPrazo();
-				tipoPrazo = t.getTipoPrazo();
-				prazoTask = new PrazoTask();
-				prazoTask.setPrazo(prazo);
-				prazoTask.setTipoPrazo(tipoPrazo);
-				prazoTaskMap.put(cNode.getName(), prazoTask);
-			}
-		}
-	}
 
 	@Override
 	public void clear() {
-		currentTask = null;
+		setCurrentTask(null);
+	}
+
+	public void marcarTarefaAtual() {
+		if (!tarefasModificadas.contains(getTarefaAtual())) {
+			tarefasModificadas.add(tarefaAtual);
+		}
 	}
 	
-	private String getFluxo() {
-	    return getProcessBuilder().getFluxo().getFluxo();
-    }
-
+	public void updateTarefas() {
+		for (Tarefa tarefa : tarefasModificadas) {
+			EntityUtil.getEntityManager().merge(tarefa);
+		}
+		EntityUtil.flush();
+	}
+	
+	public boolean isCurrentJbpmTaskPersisted() {
+		return currentJbpmTaskPersisted;
+	}
+	
+	public void checkCurrentTaskPersistenceState() {
+		BigInteger idProcessDefinition = getProcessBuilder().getIdProcessDefinition();
+		String currentTaskName = getTaskName();
+		this.currentJbpmTaskPersisted = getTaskId(idProcessDefinition, currentTaskName) != null;
+	}
+	
+	private BigInteger getTaskId(BigInteger idProcessDefinition, String taskName) {
+		if (idProcessDefinition != null && taskName != null) {
+			return jbpmTaskManager.findTaskIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
+		}
+		return null;
+	}
 }

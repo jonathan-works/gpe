@@ -18,7 +18,7 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FacesUtil;
 
 @Name(ProcessBuilderGraph.NAME)
-@Scope(ScopeType.SESSION)
+@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class ProcessBuilderGraph {
 	
