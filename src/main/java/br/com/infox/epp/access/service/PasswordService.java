@@ -11,9 +11,9 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.util.RandomStringUtils;
 
-import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -26,6 +26,7 @@ public class PasswordService {
     
     private static final int PASSWORD_LENGTH = 8;
     
+    @In private AccessMailService accessMailService;
     @In private UsuarioLoginManager usuarioLoginManager;
     
     public void requisitarNovaSenha(String email, String login) throws LoginException {
@@ -47,7 +48,7 @@ public class PasswordService {
         } else {
 //            setId(usuario.getIdPessoa());
             gerarNovaSenha(usuario, tipoParametro);
-            enviarEmailDeMudancaDeSenha(tipoParametro);
+            accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario);
         }
     }
     
@@ -67,37 +68,6 @@ public class PasswordService {
         }.run();
         
         EntityUtil.getEntityManager().flush();
-        
-//        iniciarRequisicao(tipoParametro);
-    }
-    
-    private void enviarEmailDeMudancaDeSenha(String parametro) {
-        String nomeParam = resolveTipoDeEmail(parametro);
-        String nomeModelo = ParametroUtil.getParametroOrFalse(resolveTipoDeEmail(parametro));
-
-        if (!enviarModeloPorNome(nomeModelo)) {
-            throw new BusinessException("Erro no envio do e-mail. O parâmetro de sistema '"
-                    + nomeParam
-                    + "' não foi definido ou possui um valor inválido");
-        }
-    }
-
-    /**
-     * @param parametro
-     * @return
-     */
-    private String resolveTipoDeEmail(String parametro) {
-        String nomeParam = null;
-        if ("login".equals(parametro)) {
-            nomeParam = "tituloModeloEmailMudancaSenha";
-        } else if ("email".equals(parametro)) {
-            nomeParam = "tituloModeloEmailMudancaSenhaComLogin";
-        }
-        return nomeParam;
-    }
-    
-    private boolean enviarModeloPorNome(String nomeModelo){
-        return true;
     }
 
 }
