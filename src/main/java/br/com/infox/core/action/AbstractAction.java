@@ -174,6 +174,8 @@ public abstract class AbstractAction {
 			try {
 			    if (o instanceof Recursive) {
 			        inactiveRecursive((Recursive<?>)o);
+			    } else {
+			    	ComponentUtil.setValue(o, "ativo", false);
 			    }
 				ret = flushObject(o, false);
 				instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
