@@ -6,6 +6,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 
@@ -30,7 +31,16 @@ public class PasswordService {
         }
     }
     
-    private void recoverUsuario(UsuarioLogin usuario, String tipoParametro){
+    private void recoverUsuario(UsuarioLogin usuario, String tipoParametro) throws LoginException {
+        if (usuario == null) {
+            throw new LoginException("Usuário não encontrado");
+        } else {
+//            setId(usuario.getIdPessoa());
+            gerarNovaSenha(tipoParametro);
+        }
+    }
+    
+    private void gerarNovaSenha(String tipoParametro){
         
     }
 
