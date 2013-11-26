@@ -169,7 +169,7 @@ public class LocalizacaoAssignment implements Serializable {
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "onTaskCreate()", 
 								  "LocalizacaoAssignment", 
-								  "BPM"));
+								  "BPM"), ex);
 		}
 	}
 	
