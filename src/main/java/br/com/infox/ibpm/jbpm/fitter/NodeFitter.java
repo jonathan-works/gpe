@@ -251,9 +251,10 @@ public class NodeFitter extends Fitter implements Serializable {
 
 	public void setNewNodeName(String newName) {
 		if (newName != null) {
-			newName = newName.trim();
+		    this.newNodeName = newName.trim();
+		} else {
+		    this.newNodeName = null;
 		}
-		this.newNodeName = newName;
 	}
 
 	public String getNewNodeType() {
@@ -483,8 +484,9 @@ public class NodeFitter extends Fitter implements Serializable {
 	
 	public void setCurrentNodeName(String name) {
 		if (name != null) {
-			name = name.trim();
+		    getCurrentNode().setName(name.trim());
+		} else {
+		    getCurrentNode().setName(null);
 		}
-		getCurrentNode().setName(name);
 	}
 }
