@@ -72,8 +72,9 @@ import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 @AutoCreate
 public class ProcessBuilder implements Serializable {
 
-	private static final String PROCESS_DEFINITION_BUTTONS_FORM_ID = ":processDefinitionButtonsForm";
 	private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
+	private static final String PROCESS_DEFINITION_MESSAGES_ID = ":pageBodyDialogMessage";
+	
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
 
@@ -175,7 +176,7 @@ public class ProcessBuilder implements Serializable {
 	public void prepareUpdate(ActionEvent event) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
-		UIComponent buttonsForm = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_BUTTONS_FORM_ID);
+		UIComponent messages = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_MESSAGES_ID);
 		ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(facesContext);
 		
 		try {
@@ -184,12 +185,12 @@ public class ProcessBuilder implements Serializable {
 		} catch (IllegalStateException e) {
 			FacesMessages.instance().clearGlobalMessages();
 			FacesMessages.instance().add(e.getMessage());
-			context.getRenderIds().add(buttonsForm.getClientId(facesContext));
+			context.getRenderIds().add(messages.getClientId(facesContext));
 			throw new AbortProcessingException(e);
 		}
 		
 		context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
-		context.getRenderIds().add(buttonsForm.getClientId(facesContext));
+		context.getRenderIds().add(messages.getClientId(facesContext));
 	}
 
 	@SuppressWarnings(WarningConstants.UNCHECKED)
