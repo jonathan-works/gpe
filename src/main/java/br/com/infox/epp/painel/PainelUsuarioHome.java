@@ -1,6 +1,6 @@
 /* $Id: PainelUsuarioHome.java 704 2010-08-12 23:21:10Z jplacerda $ */
 
-package br.com.infox.ibpm.home;
+package br.com.infox.epp.painel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
