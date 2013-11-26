@@ -14,7 +14,7 @@ public class ParametroDAO extends GenericDAO {
 	
 	public Parametro getParametroByNomeVariavel(String nomeVariavel){
 		String hql = "select p from Parametro p where nomeVariavel = :nomeVariavel";
-		return (Parametro) entityManager.createQuery(hql).setParameter("nomeVariavel", nomeVariavel).getSingleResult();
+		return (Parametro) getEntityManager().createQuery(hql).setParameter("nomeVariavel", nomeVariavel).getSingleResult();
 	}
 
 }

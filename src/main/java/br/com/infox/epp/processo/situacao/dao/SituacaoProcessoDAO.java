@@ -24,7 +24,7 @@ public class SituacaoProcessoDAO extends GenericDAO {
 	
 	public Long getQuantidadeTarefasAtivasByTaskId(long taskId){
 		String hql = "select count(o.idTaskInstance) from SituacaoProcesso o where o.idTaskInstance = :ti";
-		return (Long) entityManager.createQuery(hql).setParameter("ti", taskId).getSingleResult();
+		return (Long) getEntityManager().createQuery(hql).setParameter("ti", taskId).getSingleResult();
 	}
 	
 	@SuppressWarnings(WarningConstants.UNCHECKED)

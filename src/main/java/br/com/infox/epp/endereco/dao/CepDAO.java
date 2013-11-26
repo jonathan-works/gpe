@@ -19,7 +19,7 @@ public class CepDAO extends GenericDAO {
     
     public Cep findCep(String numeroCep){
         String hql = "select o from Cep o where o.numeroCep =:searchCep";
-        Query query = entityManager.createQuery(hql).setParameter("searchCep", numeroCep).setMaxResults(1);
+        Query query = getEntityManager().createQuery(hql).setParameter("searchCep", numeroCep).setMaxResults(1);
         try {
             return (Cep) query.getSingleResult();
         } catch (NoResultException | NonUniqueResultException | IllegalArgumentException e)  {

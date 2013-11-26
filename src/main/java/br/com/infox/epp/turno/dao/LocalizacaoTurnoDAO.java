@@ -111,7 +111,7 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	
 	public void removerTurnosAnteriores(Localizacao localizacao){
 		String hql = "delete from LocalizacaoTurno o where o.localizacao = :localizacao";
-		entityManager.createQuery(hql).setParameter("localizacao", localizacao).executeUpdate();
+		getEntityManager().createQuery(hql).setParameter("localizacao", localizacao).executeUpdate();
 	}
 	
 }

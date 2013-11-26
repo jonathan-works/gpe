@@ -19,7 +19,7 @@ public class TipoModeloDocumentoDAO extends GenericDAO {
 	public boolean existeOutroTipoModeloDocumentoComMesmaAbreviacao(TipoModeloDocumento tipoModeloDocumento){
 		String abreviacaoUniqueConstraint = "select count(o) from TipoModeloDocumento o where o.abreviacao = :abreviacao " +
 				"and o.idTipoModeloDocumento != :id";
-		return (((Long) entityManager.createQuery(abreviacaoUniqueConstraint)
+		return (((Long) getEntityManager().createQuery(abreviacaoUniqueConstraint)
 			.setParameter("abreviacao", tipoModeloDocumento.getAbreviacao())
 			.setParameter("id", tipoModeloDocumento.getIdTipoModeloDocumento())
 			.getSingleResult()) > 0);
@@ -28,7 +28,7 @@ public class TipoModeloDocumentoDAO extends GenericDAO {
 	public boolean existeOutroTipoModeloDocumentoComMesmaDescricao(TipoModeloDocumento tipoModeloDocumento){
 		String tipoModeloDocumentoUniqueConstraint = "select count(o) from TipoModeloDocumento o where o.tipoModeloDocumento = :tipoModeloDocumento " +
 				"and o.idTipoModeloDocumento != :id";
-		return (((Long) entityManager.createQuery(tipoModeloDocumentoUniqueConstraint)
+		return (((Long) getEntityManager().createQuery(tipoModeloDocumentoUniqueConstraint)
 			.setParameter("tipoModeloDocumento", tipoModeloDocumento.getTipoModeloDocumento())
 			.setParameter("id", tipoModeloDocumento.getIdTipoModeloDocumento())
 			.getSingleResult()) > 0);

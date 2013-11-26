@@ -29,7 +29,7 @@ public class ProcessoDAO extends GenericDAO {
 	
 	public void apagarActorIdDoProcesso(Processo processo){
 		String hql = "update public.tb_processo set nm_actor_id = null where id_processo = :id";
-        entityManager.createNativeQuery(hql)
+        getEntityManager().createNativeQuery(hql)
                     .setParameter("id", processo.getIdProcesso())
                     .executeUpdate();
 	}
@@ -62,7 +62,7 @@ public class ProcessoDAO extends GenericDAO {
 	public void removerProcessoDaCaixaAtual(Processo processo){
 		String sql = "update public.tb_processo set id_caixa = null where "
                 + "id_processo = :processo";
-        entityManager.createNativeQuery(sql)
+        getEntityManager().createNativeQuery(sql)
         				.setParameter("processo", processo.getIdProcesso())
         				.executeUpdate();
 	}

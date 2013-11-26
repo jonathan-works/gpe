@@ -28,7 +28,7 @@ public class NatCatFluxoLocalizacaoDAO extends GenericDAO {
 	
 	public void deleteByNatCatFluxoAndLocalizacao
 										(NaturezaCategoriaFluxo ncf, Localizacao l) {
-		Query q = entityManager.createQuery(NatCatFluxoLocalizacaoQuery.
+		Query q = getEntityManager().createQuery(NatCatFluxoLocalizacaoQuery.
 											DELETE_BY_NAT_CAT_FLUXO_AND_LOCALIZCAO);
 		q.setParameter(NatCatFluxoLocalizacaoQuery.QUERY_PARAM_NAT_CAT_FLUXO, ncf);
 		q.setParameter(NatCatFluxoLocalizacaoQuery.QUERY_PARAM_LOCALIZACAO, l);

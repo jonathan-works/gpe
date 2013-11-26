@@ -24,7 +24,7 @@ public class TarefaJbpmDAO extends GenericDAO {
 						"where f.ds_fluxo = pd.name_ and not exists " +
 							"(select 1 from public.tb_tarefa_jbpm tj " +
 								"where tj.id_tarefa = t.id_tarefa and tj.id_jbpm_task = jt.id_)";
-		entityManager.createNativeQuery(hql).executeUpdate();
+		getEntityManager().createNativeQuery(hql).executeUpdate();
 	}
 
 }

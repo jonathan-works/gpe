@@ -40,7 +40,7 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 						"where o.processo.idProcesso = :id" +
 						" and o.localizacao = :localizacao" +
 						" and o.papel = :papel";
-		Query query = entityManager.createQuery(hql);
+		Query query = getEntityManager().createQuery(hql);
 		query.setParameter("id", ProcessoHome.instance().getInstance().getIdProcesso());
 		query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
 		query.setParameter("papel", Authenticator.getPapelAtual());
@@ -68,7 +68,7 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 	public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId, Long processId){
         String hql = "delete from ProcessoLocalizacaoIbpm o " +
         		"where o.idProcessInstanceJbpm = :processId and o.idTaskJbpm = :taskId";
-        entityManager.createQuery(hql)
+        getEntityManager().createQuery(hql)
                 .setParameter("processId", processId)
                 .setParameter("taskId", taskId).executeUpdate();
 	}

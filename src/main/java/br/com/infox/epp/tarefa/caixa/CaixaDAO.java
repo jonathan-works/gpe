@@ -16,7 +16,7 @@ public class CaixaDAO extends GenericDAO {
 
 	public void removeCaixaByIdCaixa(int idCaixa) {
 		String hql = "update Processo set caixa = :caixa where caixa.idCaixa = :idCaixa";
-		Query q = entityManager.createQuery(hql).setParameter("caixa", null).setParameter("idCaixa", idCaixa);
+		Query q = getEntityManager().createQuery(hql).setParameter("caixa", null).setParameter("idCaixa", idCaixa);
 		q.executeUpdate();
 	}
 }
