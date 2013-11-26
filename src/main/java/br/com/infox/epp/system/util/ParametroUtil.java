@@ -28,54 +28,10 @@ public class ParametroUtil {
     public static final String NAME = "parametroUtil";
 	public static final LogProvider LOG = Logging.getLogProvider(ParametroUtil.class);
 	
-	public static String getLDAPDomain() {
-		String retorno = null;
-		try {
-			retorno = getParametro("ldap.domain");
-		} catch (IllegalArgumentException e) {
-			LOG.error(".getLDAPDomain()", e);
-		}
-		return retorno;
-	}
-	
-	public static String getLDAPHost() {
-		String retorno = null;
-		try {
-			retorno = getParametro("ldap.host");
-		} catch (IllegalArgumentException e) {
-			LOG.error(".getLDAPHost()", e);
-		}
-		return retorno;
-	}
-	
 	public static String getLoginUsuarioExterno() {
         return LOGIN_USUARIO_EXTERNO;
     }
 	
-	public static String getLDAPAuthentication() {
-		String retorno = null;
-		try {
-			retorno = getParametro("ldap.authentication");
-		} catch (IllegalArgumentException e) {
-			LOG.error(".getLDAPAuthentication()", e);
-		}
-		return retorno;
-	}
-	
-	public static String getLDAPLogin() {
-		String retorno = null;
-		try {
-			retorno = getParametro("ldap.login");
-		} catch (IllegalArgumentException e) {
-			LOG.error(".getLDAPLogin()", e);
-		}
-		return retorno;
-	}
-	
-	public static String getLDAPassword() {
-		return getFromContext("ldap.password", false);
-	}
-
 	public static String getFromContext(String nomeParametro, boolean validar) {
 		String value = (String) Contexts.getApplicationContext().get(nomeParametro);
 		if (validar && value == null) {

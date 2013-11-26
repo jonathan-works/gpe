@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.naming.ldap.LdapContext;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
@@ -31,7 +30,6 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -53,7 +51,6 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
-import br.com.infox.epp.access.util.LdapUtil;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -190,22 +187,6 @@ public class Authenticator {
 		if(user == null) {
 			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
 			return;
-		}
-		//Autenticação via LDAP
-		if(user.getLdap() && ("sim".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()) ||
-							  "yes".equalsIgnoreCase(ParametroUtil.getLDAPAuthentication()))) {
-			LdapContext ldap = LdapUtil.autentiqueUsuarioAD(login, credentials.getPassword());
-			//Autenticado
-			if(ldap != null) {
-				IdentityManager identityManager = IdentityManager.instance();
-				getAuthenticatorService().autenticaManualmenteNoSeamSecurity(user.getLogin(), identityManager);
-				Events.instance().raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
-				Events.instance().raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
-			}
-			else {
-				FacesMessages.instance().add(Severity.ERROR, "Senha inválido.");
-				return;
-			}
 		}
 		identity.login();
 	}
