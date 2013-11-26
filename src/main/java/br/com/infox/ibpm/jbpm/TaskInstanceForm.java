@@ -34,6 +34,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.handler.VariableHandler;
+import br.com.infox.ibpm.jbpm.task.TaskInstanceHome;
 import br.com.itx.component.Form;
 import br.com.itx.component.FormField;
 import br.com.itx.component.Template;

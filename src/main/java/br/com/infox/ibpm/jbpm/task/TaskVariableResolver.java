@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.task;
 
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +11,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.ibpm.jbpm.JbpmUtil;
 
 final class TaskVariableResolver extends TaskVariable {
     

@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.task;
 
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
