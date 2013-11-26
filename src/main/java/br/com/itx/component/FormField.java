@@ -16,17 +16,12 @@
 package br.com.itx.component;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-
-import br.com.itx.component.grid.GridQuery;
-import br.com.itx.component.grid.SearchField;
 
 public class FormField implements Serializable {
 
@@ -190,18 +185,4 @@ public class FormField implements Serializable {
 		this.formHome = formHome;
 	}
 
-	public List<?> suggest(Object typed) {
-		String column = (String) properties.get("optionText");
-		if (column != null) {
-			String gridId = (String) properties.get("source") + "Grid";
-			GridQuery<?> grid = (GridQuery<?>) Component.getInstance(gridId);
-			for (SearchField sf : grid.getSearchFields()) {
-				if (sf.getId().equals(column)) {
-					return sf.suggest(typed);
-				}
-			}
-		}
-		return null;
-	}
-	
 }

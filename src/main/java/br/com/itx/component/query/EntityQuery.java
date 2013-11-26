@@ -26,7 +26,6 @@ import org.jboss.seam.log.Logging;
 
 import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
-import br.com.itx.component.grid.GridQuery;
 
 public class EntityQuery<T> extends org.jboss.seam.framework.EntityQuery<T> {
 	
@@ -87,16 +86,7 @@ public class EntityQuery<T> extends org.jboss.seam.framework.EntityQuery<T> {
 		}
 		List<T> resultListSuper = super.getResultList();
 		mt.stop();
-		if (this instanceof GridQuery) {
-			GridQuery<?> grid = (GridQuery<?>) this;
-			LOG.info("Grid: " + grid.getGridId() + " - " + getEjbql() + " (" +
-					resultListSuper.size() +
-					" registros): " + mt.getTime());					
-		} else {
-			LOG.info("getResultList(): " + getEjbql()  + " (" +
-					resultListSuper.size() +
-					" registros): " + mt.getTime());			
-		}
+		LOG.info("getResultList(): " + getEjbql() + " (" + resultListSuper.size() + " registros): " + mt.getTime());
 		return resultListSuper;
 	}
 	

@@ -19,10 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.jboss.seam.Component;
-
 import br.com.itx.component.grid.GridColumn;
-import br.com.itx.component.grid.GridQuery;
 
 public class Report {
 
@@ -30,8 +27,6 @@ public class Report {
 
 	private String reportId;
 	
-	private String grid;
-
 	private String title;
 	
 	private String widths;
@@ -125,17 +120,6 @@ public class Report {
 			reportCol.setGridId(reportId);
 			this.columns.add(reportCol);
 		}
-	}
-
-	public GridQuery<?> getGrid() {
-		if (grid == null) {
-			grid = reportId + "Grid";
-		}
-		return (GridQuery<?>) Component.getInstance(grid, true);
-	}
-	
-	public void setGrid(String grid) {
-		this.grid = grid;
 	}
 	
 }

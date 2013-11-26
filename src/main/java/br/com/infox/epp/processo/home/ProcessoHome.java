@@ -307,14 +307,12 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	public void addProcessoConexoForIdProcesso(Processo processoConexo, String gridId) {
 		if (getInstance() != null){
 			processoManager.addProcessoConexoForIdProcesso(getInstance(), processoConexo);
-			refreshGrid(gridId);
 		}
 	}
 
 	public void removeProcessoConexoForIdProcesso(Processo processoConexo, String gridId) {
 		if (getInstance() != null){
 			processoManager.removeProcessoConexoForIdProcesso(getInstance(), processoConexo);
-			refreshGrid(gridId);
 		}
 	}
 
@@ -328,7 +326,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		if (getInstance() != null){
 			try {
 				processoManager.addProcessoConexoForIdProcessoConexo(getInstance(), processo);
-				refreshGrid(gridId);
 			} catch (DAOException e) {
 				LOG.error(".addProcessoConexoForIdProcessoConexo()", e);
 				FacesMessages.instance().clear();
@@ -341,7 +338,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		if (getInstance() != null){
 			try {
 				processoManager.removeProcessoConexoForIdProcessoConexo(getInstance(), processo);
-				refreshGrid(gridId);
 			} catch (DAOException e) {
 				LOG.error(".removeProcessoConexoForIdProcessoConexo()", e);
 				FacesMessages.instance().clear();
