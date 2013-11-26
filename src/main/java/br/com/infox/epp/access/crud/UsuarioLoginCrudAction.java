@@ -16,6 +16,7 @@ import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -39,6 +40,8 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     @In private PessoaManager pessoaManager;
     @In private ModeloDocumentoManager modeloDocumentoManager;
     @In private BloqueioUsuarioManager bloqueioUsuarioManager;
+    
+    @In private PasswordService passwordService;
 
     private boolean pessoaFisicaCadastrada;
     private String password;
