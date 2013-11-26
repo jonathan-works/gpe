@@ -37,7 +37,7 @@ public class JsfComponentIdValidator implements Validator {
 		try {
 			test.setId(id);
 		} catch (IllegalArgumentException e) {
-			throw new ValidatorException(new FacesMessage("Identificador inválido. Deve iniciar com uma letra, e deve conter apenas letras, números, hífens ou underscores."));
+			throw new ValidatorException(new FacesMessage("Identificador inválido. Deve iniciar com uma letra, e deve conter apenas letras, números, hífens ou underscores."), e);
 		}
 	}
 
