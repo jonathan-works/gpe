@@ -106,7 +106,15 @@ public class ProcessDeployVerifier {
 	}
 
     private boolean verify(List<String> processNames, Fluxo f) {
-        return f.getAtivo() && f.getPublicado() && f.getXml() != null && !"".equals(f.getXml()) && !processNames.contains(f.getFluxo());
+        return estaDisponivel(f) && possuiXmlValido(f) && (!processNames.contains(f.getFluxo()));
+    }
+
+    private boolean estaDisponivel(Fluxo f) {
+        return f.getAtivo() && f.getPublicado();
+    }
+
+    private boolean possuiXmlValido(Fluxo f) {
+        return f.getXml() != null && !"".equals(f.getXml());
     }
 
 	private ProcessDefinition parseInstance(String xml) {
