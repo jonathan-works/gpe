@@ -33,7 +33,7 @@ import org.jbpm.svc.Services;
 @BypassInterceptors
 @Install(precedence=FRAMEWORK, dependencies="org.jboss.seam.bpm.jbpm")
 public class InfoxManagedJbpmContext implements Synchronization {
-	   private static final LogProvider log = Logging.getLogProvider(InfoxManagedJbpmContext.class);
+	   private static final LogProvider LOG = Logging.getLogProvider(InfoxManagedJbpmContext.class);
 
 	   private JbpmContext jbpmContext;
 	   private boolean synchronizationRegistered;
@@ -43,7 +43,7 @@ public class InfoxManagedJbpmContext implements Synchronization {
 	   {
 	      jbpmContext = Jbpm.instance().getJbpmConfiguration().createJbpmContext();
 	      assertNoTransactionManagement();
-	      log.debug( "created seam managed jBPM context");
+	      LOG.debug( "created seam managed jBPM context");
 	   }
 
 	   private void assertNoTransactionManagement()
@@ -89,7 +89,7 @@ public class InfoxManagedJbpmContext implements Synchronization {
 	   
 	   public void beforeCompletion()
 	   {
-	      log.debug( "flushing seam managed jBPM context" );
+	      LOG.debug( "flushing seam managed jBPM context" );
 	      /*org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
 	      if (processInstance!=null)
 	      {
@@ -103,7 +103,7 @@ public class InfoxManagedJbpmContext implements Synchronization {
 	         Contexts.getBusinessProcessContext().flush();
 	      }
 	      jbpmContext.getSession().flush();
-	      log.debug( "done flushing seam managed jBPM context" );
+	      LOG.debug( "done flushing seam managed jBPM context" );
 	   }
 	   
 	   public void afterCompletion(int status) 
@@ -148,9 +148,9 @@ public class InfoxManagedJbpmContext implements Synchronization {
 
 	   private void closeContext()
 	   {
-	      log.debug( "destroying seam managed jBPM context" );
+	      LOG.debug( "destroying seam managed jBPM context" );
 	      jbpmContext.close();
-	      log.debug( "done destroying seam managed jBPM context" );
+	      LOG.debug( "done destroying seam managed jBPM context" );
 	   }
 	      
 	   public static JbpmContext instance()
