@@ -15,9 +15,9 @@ import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jboss.seam.util.RandomStringUtils;
 
+import br.com.infox.core.exception.ExcelExportException;
 import br.com.itx.component.FileHome;
 import br.com.itx.component.Util;
-import br.com.itx.exception.ExcelExportException;
 
 public class ExcelExportUtil {
 	private XLSTransformer transformer = new XLSTransformer();
