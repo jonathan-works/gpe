@@ -40,7 +40,7 @@ import br.com.infox.ibpm.jbpm.converter.NodeConverter;
 import br.com.infox.ibpm.jbpm.handler.NodeHandler;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
-import br.com.infox.ibpm.jbpm.node.MailNode;
+import br.com.infox.ibpm.jbpm.process.node.MailNode;
 import br.com.infox.jbpm.constants.NodeTypeConstants;
 import br.com.infox.jbpm.manager.JbpmNodeManager;
 
