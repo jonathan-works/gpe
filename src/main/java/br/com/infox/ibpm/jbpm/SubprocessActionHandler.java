@@ -49,7 +49,7 @@ public class SubprocessActionHandler {
 					createMessage("copiar variaveis para o subprocesso", 
 								  "copyVariablesToSubprocess()", 
 								  "SubprocessoActionHandler", 
-								  "BPM"));
+								  "BPM"), ex);
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class SubprocessActionHandler {
 					createMessage("copiar as variaveis do subprocesso", 
 								  "copyVariablesFromSubprocess()", 
 								  "SubprocessoActionHandler", 
-								  "BPM"));
+								  "BPM"), ex);
 		}
 	}
 
