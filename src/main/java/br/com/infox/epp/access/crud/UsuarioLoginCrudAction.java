@@ -6,6 +6,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.util.RandomStringUtils;
@@ -32,6 +34,8 @@ import br.com.itx.util.EntityUtil;
 public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     
     public static final String NAME = "usuarioLoginCrudAction";
+    private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginCrudAction.class);
+    
     private static final int PASSWORD_LENGTH = 8;
     
     private BloqueioUsuario novoBloqueio;
@@ -87,8 +91,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
         try {
             getGenericManager().persist(novoBloqueio);
         } catch (DAOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error(".bloquear()", e);
         }
         novoBloqueio = new BloqueioUsuario();
     }
@@ -118,7 +121,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
             try {
                 setInstance(EntityUtil.cloneEntity(getInstance(), false));
             } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                LOG.error(".afterSave()", e);
             }
             getInstance().loadDataFromPessoaFisica(getInstance());
         };
@@ -129,7 +132,6 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
         gerarNovaSenha("email");
     }
     
-    //TODO refatorar a relação Password / Senha
     public void gerarNovaSenha(String parametro) {
         if (ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(getInstance().getLogin())) {
             getInstance().setSenha("");
