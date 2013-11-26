@@ -22,10 +22,10 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.exception.ExcelExportException;
+import br.com.infox.core.util.ExcelExportUtil;
 import br.com.itx.component.Util;
-import br.com.itx.exception.ExcelExportException;
 import br.com.itx.util.EntityUtil;
-import br.com.itx.util.ExcelExportUtil;
 import br.com.itx.util.ReflectionsUtil;
 
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {

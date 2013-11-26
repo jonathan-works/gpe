@@ -1,4 +1,4 @@
-package br.com.itx.util;
+package br.com.infox.core.util;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,6 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.internal.SessionImpl;
 import org.hibernate.service.jdbc.connections.internal.DatasourceConnectionProviderImpl;
+
+import br.com.itx.util.EntityUtil;
 
 public class SequenceUtil {
 	private static final Pattern SEQUENCE_PATTERN = Pattern.compile("nextval\\('(.*?)'::regclass\\)", Pattern.CASE_INSENSITIVE);

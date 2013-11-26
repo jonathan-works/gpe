@@ -1,4 +1,4 @@
-package br.com.itx.exception;
+package br.com.infox.core.exception;
 import java.text.MessageFormat;
 
 import org.jboss.seam.annotations.exception.Redirect;
