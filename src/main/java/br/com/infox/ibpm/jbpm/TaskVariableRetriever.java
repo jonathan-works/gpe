@@ -94,7 +94,7 @@ final class TaskVariableRetriever extends TaskVariable {
             ProcessoHome.instance().carregarDadosFluxo(id);
             return this;
         }
-        else return null;
+        return null;
     }
     
     public TaskVariableRetriever evaluateWhenMonetario() {
@@ -106,7 +106,6 @@ final class TaskVariableRetriever extends TaskVariable {
     
     public TaskVariableRetriever evaluateWhenForm() {
         if (isForm()) {
-//            varName = variableRetriever.getName();
             retrieveHomes();
             return this;
         }
