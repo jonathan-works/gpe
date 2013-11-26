@@ -50,7 +50,7 @@ public class ParametroUtil {
 		try{
 			return getParametroManager().getParametro(nome).getValorVariavel();
 		} catch (NoResultException noResultException){
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(noResultException);
 		}
 	}
 	
