@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.jbpm.dao.JbpmNodeDAO;
+import br.com.infox.ibpm.jbpm.process.node.dao.JbpmNodeDAO;
 
 @Name(JbpmNodeManager.NAME)
 @AutoCreate
