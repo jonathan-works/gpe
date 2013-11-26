@@ -47,12 +47,12 @@ public class PasswordService {
             throw new LoginException("Usuário não encontrado");
         } else {
 //            setId(usuario.getIdPessoa());
-            gerarNovaSenha(usuario, tipoParametro);
-            accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario);
+            String password = gerarNovaSenha(usuario);
+            accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, password);
         }
     }
     
-    private String gerarNovaSenha(final UsuarioLogin usuario, String tipoParametro) {
+    private String gerarNovaSenha(final UsuarioLogin usuario) {
         final String password;
         if (ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
             password = "";
