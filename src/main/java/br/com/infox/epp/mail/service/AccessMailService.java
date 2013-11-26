@@ -46,7 +46,7 @@ public class AccessMailService {
         return nomeParam;
     }
     
-    public void enviarEmailDeMudancaDeSenha(String parametro, UsuarioLogin usuario, String password) {
+    public void enviarEmailDeMudancaDeSenha(String parametro, UsuarioLogin usuario, String password) throws BusinessException {
         String nomeParametro = resolveTipoDeEmail(parametro);
         ModeloDocumento modelo = findModelo(nomeParametro);
         if (modelo != null) {
@@ -56,7 +56,7 @@ public class AccessMailService {
         }
     }
 
-    private void lancarErroDeParametroInvalido(String nomeParametro) {
+    private void lancarErroDeParametroInvalido(String nomeParametro) throws BusinessException {
         throw new BusinessException("Erro no envio do e-mail. O parâmetro de sistema '"
                 + nomeParametro
                 + "' não foi definido ou possui um valor inválido");

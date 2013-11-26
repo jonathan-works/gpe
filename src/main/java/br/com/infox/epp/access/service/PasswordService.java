@@ -11,6 +11,7 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.util.RandomStringUtils;
 
+import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.mail.service.AccessMailService;
@@ -29,7 +30,7 @@ public class PasswordService {
     @In private AccessMailService accessMailService;
     @In private UsuarioLoginManager usuarioLoginManager;
     
-    public void requisitarNovaSenha(String email, String login) throws LoginException {
+    public void requisitarNovaSenha(String email, String login) throws LoginException, BusinessException {
         UsuarioLogin usuario;
         if (email.isEmpty() && login.isEmpty()) {
             throw new LoginException("É preciso informar o login ou o e-mail do usuário");
@@ -42,7 +43,7 @@ public class PasswordService {
         }
     }
     
-    private void recoverUsuario(UsuarioLogin usuario, String tipoParametro) throws LoginException {
+    private void recoverUsuario(UsuarioLogin usuario, String tipoParametro) throws LoginException, BusinessException {
         if (usuario == null) {
             throw new LoginException("Usuário não encontrado");
         } else {

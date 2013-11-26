@@ -19,7 +19,10 @@ import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
+import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.service.PasswordService;
 
 @Name(PasswordRequester.NAME)
@@ -33,7 +36,11 @@ public class PasswordRequester {
 	private String email;
 
 	public void requisitarNovaSenha() throws LoginException {
-	    passwordService.requisitarNovaSenha(email, login);
+	    try {
+	        passwordService.requisitarNovaSenha(email, login);
+	    } catch (BusinessException be){
+            FacesMessages.instance().add(Severity.INFO, be.getLocalizedMessage());
+        }
 	}
 
 	public String getLogin() {
