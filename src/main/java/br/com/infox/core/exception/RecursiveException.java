@@ -1,4 +1,4 @@
-package br.com.itx.exception;
+package br.com.infox.core.exception;
 
 public class RecursiveException extends RuntimeException {
 
