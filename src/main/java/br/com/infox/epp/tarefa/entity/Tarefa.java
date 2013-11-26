@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.tarefa.caixa.Caixa;
+import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.ibpm.type.PrazoEnum;
 
 @Entity

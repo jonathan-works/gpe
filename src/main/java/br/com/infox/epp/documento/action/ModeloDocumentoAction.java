@@ -28,7 +28,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.jbpm.ActionTemplate;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
 import br.com.itx.component.Util;
 
 @Name(ModeloDocumentoAction.NAME)

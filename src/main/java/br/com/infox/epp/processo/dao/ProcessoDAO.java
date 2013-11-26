@@ -9,8 +9,8 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.tarefa.caixa.Caixa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;

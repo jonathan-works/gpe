@@ -26,7 +26,7 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.processo.action.IniciarProcessoAction;
-import br.com.infox.ibpm.jbpm.TaskInstanceHome;
+import br.com.infox.ibpm.jbpm.task.TaskInstanceHome;
 import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioExternoAction.NAME)

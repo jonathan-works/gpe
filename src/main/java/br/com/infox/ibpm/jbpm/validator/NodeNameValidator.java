@@ -25,7 +25,7 @@ import javax.faces.validator.ValidatorException;
 import org.jboss.seam.Component;
 import org.jbpm.graph.def.Node;
 
-import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.NodeFitter;
 
 @FacesValidator(value = NodeNameValidator.VALIDATOR_ID)
 public class NodeNameValidator implements Validator {

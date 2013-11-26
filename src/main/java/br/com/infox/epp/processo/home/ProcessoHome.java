@@ -49,7 +49,7 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.infox.ibpm.jbpm.TaskInstanceHome;
+import br.com.infox.ibpm.jbpm.task.TaskInstanceHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
