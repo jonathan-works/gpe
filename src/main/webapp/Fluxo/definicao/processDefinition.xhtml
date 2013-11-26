@@ -65,6 +65,12 @@
                         
                 </rich:panel>
                 
+                <rich:panel header="#{messages['processBuilder.variaveisProcesso']}" rendered="#{processBuilder.exists}">
+                	
+                	<ui:include src="variaveisProcesso.xhtml" />
+                	
+                </rich:panel>
+                
                 <rich:panel styleClass="SwimlanePanel"
                     header="#{messages['processBuilder.swimlanes']}"
                     rendered="#{processBuilder.exists}">
