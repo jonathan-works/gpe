@@ -19,29 +19,19 @@ import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.epp.access.entity.UsuarioLogin;
+
 import br.com.infox.epp.access.service.PasswordService;
-import br.com.itx.component.AbstractHome;
 
-@Name(UsuarioHome.NAME)
-@Deprecated
-public class UsuarioHome extends AbstractHome<UsuarioLogin> {
+@Name(PasswordRequester.NAME)
+public class PasswordRequester {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "usuarioHome";
+	public static final String NAME = "passwordRequester";
 	
 	@In private PasswordService passwordService;
 
 	private String login;
 	private String email;
-	/**
-	 * Metodo que gera uma nova senha para usuário. Este metodo faz isso
-	 * buscando na base do wiacs o usuário pelo login e email e retorna uma
-	 * mensagem de erro caso não encontre. A partir do usuário do wiacs é dado
-	 * um setId utilizando a 'identificacao'.
-	 * 
-	 * @throws LoginException
-	 */
+
 	public void requisitarNovaSenha() throws LoginException {
 	    passwordService.requisitarNovaSenha(email, login);
 	}
