@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.jbpm;
+package br.com.infox.ibpm.jbpm.process.deploy;
 
 import java.io.StringReader;
 import java.text.MessageFormat;
