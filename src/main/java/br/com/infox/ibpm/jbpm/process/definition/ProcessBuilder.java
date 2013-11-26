@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
  */
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.process.definition;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -59,13 +59,17 @@ import br.com.infox.core.validator.JsfComponentTreeValidator;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
-import br.com.infox.ibpm.jbpm.fitter.EventFitter;
-import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
-import br.com.infox.ibpm.jbpm.fitter.SwimlaneFitter;
-import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
-import br.com.infox.ibpm.jbpm.fitter.TransitionFitter;
-import br.com.infox.ibpm.jbpm.fitter.TypeFitter;
+import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.jbpm.JpdlXmlReader;
+import br.com.infox.ibpm.jbpm.JpdlXmlWriter;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.EventFitter;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.NodeFitter;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.SwimlaneFitter;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.TaskFitter;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.TransitionFitter;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.TypeFitter;
+import br.com.infox.ibpm.jbpm.process.definition.graphical.ProcessBuilderGraph;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)

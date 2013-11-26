@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.process.definition.graphical;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -13,6 +13,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 
+import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
 import br.com.infox.jbpm.layout.JbpmLayout;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FacesUtil;

@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.fitter;
+package br.com.infox.ibpm.jbpm.process.definition.fitter;
 
 import java.io.Serializable;
 import java.util.ArrayList;

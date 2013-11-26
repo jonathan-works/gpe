@@ -1,10 +1,10 @@
-package br.com.infox.ibpm.jbpm.fitter;
+package br.com.infox.ibpm.jbpm.process.definition.fitter;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
 import br.com.itx.util.ComponentUtil;
 
 @Scope(ScopeType.CONVERSATION)
