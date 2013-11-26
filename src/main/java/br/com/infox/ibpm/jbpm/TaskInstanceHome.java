@@ -325,7 +325,7 @@ public class TaskInstanceHome implements Serializable {
             LOG.warn(action, ex);
             throw new ApplicationException(ApplicationException.createMessage(
                     action + ex.getLocalizedMessage(),
-                    "setCurrentTaskInstance()", "TaskInstanceHome", "BPM"));
+                    "setCurrentTaskInstance()", "TaskInstanceHome", "BPM"), ex);
         }
     }
     
