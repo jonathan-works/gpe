@@ -1,4 +1,4 @@
-package br.com.infox.epp.tarefa.caixa;
+package br.com.infox.epp.painel.caixa;
 
 import javax.persistence.Query;
 

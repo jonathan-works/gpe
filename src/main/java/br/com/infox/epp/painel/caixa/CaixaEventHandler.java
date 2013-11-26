@@ -1,4 +1,4 @@
-package br.com.infox.epp.tarefa.caixa;
+package br.com.infox.epp.painel.caixa;
 
 import java.util.ArrayList;
 import java.util.List;
