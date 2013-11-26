@@ -46,7 +46,6 @@ public class PasswordService {
         if (usuario == null) {
             throw new LoginException("Usuário não encontrado");
         } else {
-//            setId(usuario.getIdPessoa());
             String password = gerarNovaSenha(usuario);
             accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, password);
         }
