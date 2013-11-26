@@ -28,7 +28,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.itx.exception.ApplicationException;
+import br.com.infox.core.exception.ApplicationException;
 
 
 @Name("subprocessActionHandler")

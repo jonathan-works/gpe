@@ -53,6 +53,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.action.ModeloDocumentoAction;
@@ -69,7 +70,6 @@ import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.jbpm.manager.TaskInstanceManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
-import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
