@@ -303,8 +303,8 @@ public class ProcessBuilder implements Serializable {
 	}
 
 	public static ProcessBuilder instance() {
-	    ProcessBuilder returnInstance ;
-	    if ((returnInstance=(ProcessBuilder) Contexts.getConversationContext().get(NAME)) == null) {
+	    ProcessBuilder returnInstance = (ProcessBuilder) Contexts.getConversationContext().get(NAME);
+	    if (returnInstance == null) {
 	        returnInstance = (ProcessBuilder) Component.getInstance(ProcessBuilder.class);
 	    }
 		return returnInstance;
