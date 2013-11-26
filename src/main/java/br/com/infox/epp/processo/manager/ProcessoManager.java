@@ -24,7 +24,6 @@ import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
@@ -46,7 +45,6 @@ public class ProcessoManager extends GenericManager {
 	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	@In private ProcessoDocumentoManager processoDocumentoManager;
-	@In private ProcessoDocumentoBinManager processoDocumentoBinManager;
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
