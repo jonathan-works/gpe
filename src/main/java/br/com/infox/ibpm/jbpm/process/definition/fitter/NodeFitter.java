@@ -41,8 +41,8 @@ import br.com.infox.ibpm.jbpm.handler.NodeHandler;
 import br.com.infox.ibpm.jbpm.handler.TaskHandler;
 import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.jbpm.process.node.MailNode;
+import br.com.infox.ibpm.jbpm.process.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.jbpm.process.node.manager.JbpmNodeManager;
-import br.com.infox.jbpm.constants.NodeTypeConstants;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
