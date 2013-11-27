@@ -38,14 +38,15 @@ import org.jbpm.job.executor.JobExecutor;
  *
  */
 
-@Name("JobExecutorLaucher")
+@Name(JobExecutorLauncher.NAME)
 @Scope(ScopeType.APPLICATION)
 @BypassInterceptors
 @Install(dependencies="org.jboss.seam.bpm.jbpm", precedence=BUILT_IN)
 @Startup(depends="org.jboss.seam.bpm.jbpm")
-public class JobExecutorLaucher {
+public class JobExecutorLauncher {
     
-    private static final LogProvider LOG = Logging.getLogProvider(JobExecutorLaucher.class);
+    static final String NAME = "JobExecutorLauncher";
+    private static final LogProvider LOG = Logging.getLogProvider(JobExecutorLauncher.class);
 
 	@Create
 	public void init() {
