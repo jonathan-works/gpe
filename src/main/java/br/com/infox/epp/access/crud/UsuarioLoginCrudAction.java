@@ -120,7 +120,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
                 LOG.error(".afterSave()", e);
             }
             getInstance().loadDataFromPessoaFisica(getInstance());
-        };
+        }
     }
     
     @Override
