@@ -14,7 +14,7 @@
  veja em http://www.gnu.org/licenses/   
  */
 
-package br.com.infox.ibpm.jbpm.handler;
+package br.com.infox.ibpm.jbpm.variable;
 
 import java.io.Serializable;
 import java.text.DateFormat;

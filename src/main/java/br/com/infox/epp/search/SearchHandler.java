@@ -46,8 +46,8 @@ import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.jbpm.InfoxManagedJbpmContext;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.ibpm.jbpm.handler.VariableHandler;
-import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
+import br.com.infox.ibpm.jbpm.variable.VariableHandler;
+import br.com.infox.ibpm.jbpm.variable.VariableHandler.Variavel;
 import br.com.itx.util.EntityUtil;
 
 
