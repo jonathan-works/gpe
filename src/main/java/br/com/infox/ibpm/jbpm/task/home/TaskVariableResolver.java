@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.task;
+package br.com.infox.ibpm.jbpm.task.home;
 
 import java.util.Map;
 import java.util.Set;
