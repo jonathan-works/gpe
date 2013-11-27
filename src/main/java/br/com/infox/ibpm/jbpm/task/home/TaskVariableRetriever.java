@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.task;
+package br.com.infox.ibpm.jbpm.task.home;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;

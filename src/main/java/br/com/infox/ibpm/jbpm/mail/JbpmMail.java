@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.util;
+package br.com.infox.ibpm.jbpm.mail;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.infox.epp.twitter.util.TwitterUtil;
-import br.com.infox.ibpm.jbpm.MailResolver;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

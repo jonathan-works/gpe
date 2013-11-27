@@ -18,7 +18,7 @@ import br.com.infox.epp.estatistica.startup.TarefaTimerStarter;
 import br.com.infox.epp.estatistica.timer.TimerUtil;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
-import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 /**
  * Processor que irá incrementar os tempos decorridos para cada tarefa aberta no

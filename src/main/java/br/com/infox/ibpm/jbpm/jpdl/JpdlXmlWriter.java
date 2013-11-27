@@ -13,7 +13,7 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
  */
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.jpdl;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -54,7 +54,7 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.process.node.DecisionNode;
+import br.com.infox.ibpm.jbpm.node.DecisionNode;
 import br.com.itx.util.ReflectionsUtil;
 
 

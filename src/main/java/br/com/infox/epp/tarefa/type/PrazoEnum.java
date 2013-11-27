@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.type;
+package br.com.infox.epp.tarefa.type;
 
 import br.com.infox.core.type.Displayable;
 

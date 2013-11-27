@@ -22,10 +22,10 @@ import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.tarefa.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
-import br.com.infox.ibpm.type.PrazoEnum;
 
 @Name(ProcessoEpaTarefaManager.NAME)
 @Scope(ScopeType.CONVERSATION)

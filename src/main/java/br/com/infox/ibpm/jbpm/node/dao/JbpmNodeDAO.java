@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.process.node.dao;
+package br.com.infox.ibpm.jbpm.node.dao;
 
 import java.math.BigInteger;
 import java.util.Map;
