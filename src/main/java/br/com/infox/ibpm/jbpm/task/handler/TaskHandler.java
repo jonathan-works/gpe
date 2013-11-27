@@ -28,7 +28,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.handler.ActionTemplateHandler;
+import br.com.infox.core.handler.ActionTemplateHandler;
 import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.jbpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.jbpm.variable.VariableAccessHandler;
