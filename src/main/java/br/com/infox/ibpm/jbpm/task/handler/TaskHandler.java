@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.jbpm.handler;
+package br.com.infox.ibpm.jbpm.task.handler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +29,8 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.jbpm.TaskPageAction;
+import br.com.infox.ibpm.jbpm.handler.ActionTemplateHandler;
+import br.com.infox.ibpm.jbpm.handler.VariableAccessHandler;
 import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
 
 

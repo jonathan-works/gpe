@@ -21,7 +21,7 @@ import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.ibpm.jbpm.handler.TaskHandler;
+import br.com.infox.ibpm.jbpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.type.PrazoEnum;
 import br.com.infox.jbpm.manager.JbpmTaskManager;
 import br.com.itx.util.EntityUtil;

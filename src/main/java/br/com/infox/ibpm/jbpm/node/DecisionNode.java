@@ -54,7 +54,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
-import br.com.infox.ibpm.jbpm.handler.TaskHandlerVisitor;
+import br.com.infox.ibpm.jbpm.task.handler.TaskHandlerVisitor;
 
 
 /**
