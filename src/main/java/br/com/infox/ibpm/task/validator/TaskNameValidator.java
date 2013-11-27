@@ -35,7 +35,7 @@ public class TaskNameValidator implements Validator {
 	public static final String VALIDATOR_ID = "taskNameValidator";
 	
 	@Override
-	public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+	public void validate(FacesContext context, UIComponent component, Object value) {
 		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
 		TaskFitter taskFitter = (TaskFitter) Component.getInstance(TaskFitter.NAME);
 		
