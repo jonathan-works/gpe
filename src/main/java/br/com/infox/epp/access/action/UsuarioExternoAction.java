@@ -72,7 +72,11 @@ public class UsuarioExternoAction {
 				FacesContext.getCurrentInstance().getExternalContext().redirect("about:blank");
 			}
 		} catch (IOException e) {
-			LOG.error("Erro ao redirecionar para a URL " + urlRetorno.toString(), e);
+		    if (urlRetorno != null) {
+		        LOG.error("Erro ao redirecionar para a URL " + urlRetorno.toString(), e);
+            } else {
+                LOG.error(".endAcaoUsuarioExterno()", e);
+            }
 		}
 		Identity.instance().logout();
 	}
