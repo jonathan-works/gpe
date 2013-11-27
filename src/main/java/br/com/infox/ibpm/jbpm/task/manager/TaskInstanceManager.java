@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.manager;
+package br.com.infox.ibpm.jbpm.task.manager;
 
 
 import org.jboss.seam.annotations.AutoCreate;

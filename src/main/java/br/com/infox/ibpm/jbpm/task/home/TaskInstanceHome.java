@@ -68,7 +68,7 @@ import br.com.infox.epp.search.Reindexer;
 import br.com.infox.epp.search.SearchHandler;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.jbpm.TaskPageAction;
-import br.com.infox.ibpm.jbpm.manager.TaskInstanceManager;
+import br.com.infox.ibpm.jbpm.task.manager.TaskInstanceManager;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
