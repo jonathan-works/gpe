@@ -36,7 +36,7 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.node.MailNode;
+import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.converter.NodeConverter;
 import br.com.infox.ibpm.node.handler.NodeHandler;
@@ -128,7 +128,7 @@ public class NodeFitter extends Fitter implements Serializable {
 			
 			if (nodeType.equals(Fork.class)) {
 				handleForkNode(node);
-			} else if (nodeType.equals(MailNode.class)) {
+			} else if (nodeType.equals(InfoxMailNode.class)) {
 				handleMailNode(node);
 			}
 			
@@ -399,7 +399,7 @@ public class NodeFitter extends Fitter implements Serializable {
     		} else if (NodeType.Node.equals(currentNode.getNodeType())) {
     			if (currentNode instanceof ProcessState) {
     				type = "processState";
-    			} else if (currentNode instanceof MailNode) {
+    			} else if (currentNode instanceof InfoxMailNode) {
     				type ="mail";
     			}
     		}
@@ -445,7 +445,7 @@ public class NodeFitter extends Fitter implements Serializable {
 
 	public String getIcon(Node node) {
 		String icon = node.getNodeType().toString();
-		if (node instanceof MailNode) {
+		if (node instanceof InfoxMailNode) {
 			icon = NodeTypeConstants.MAIL_NODE;
 		}
 		if (node instanceof ProcessState) {

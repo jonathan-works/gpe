@@ -34,6 +34,7 @@ import org.jbpm.JbpmContext;
 import org.jbpm.graph.action.ActionTypes;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.node.MailNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.persistence.db.DbPersistenceService;
@@ -49,11 +50,10 @@ import br.com.infox.epp.mail.home.ListaEmailHome;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.itx.util.EntityUtil;
 
-
-public class MailNode extends org.jbpm.graph.node.MailNode {
+public class InfoxMailNode extends MailNode {
 
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(MailNode.class);
+	private static final LogProvider LOG = Logging.getLogProvider(InfoxMailNode.class);
 	
 	private String subject;
 	private String to;
@@ -132,7 +132,7 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 	/**
 	 * Método que lista atributos em um Map<K,V> e devolve uma saída
 	 * no formato "{Chave1=Valor1, Chave2=Valor2, ..., ChaveN=ValorN}"
-	 * @return String formatada com dados referentes às mensagens MailNode.
+	 * @return String formatada com dados referentes às mensagens InfoxMailNode.
 	 */
 	private String getParametros() {
 		Map<String, String> parametros = new HashMap<String, String>();
@@ -302,10 +302,10 @@ public class MailNode extends org.jbpm.graph.node.MailNode {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof MailNode)) {
+		if (!(obj instanceof InfoxMailNode)) {
 			return false;
 		}
-		MailNode other = (MailNode) obj;
+		InfoxMailNode other = (InfoxMailNode) obj;
 		return getId() == other.getId();
 	}
 

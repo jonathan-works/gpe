@@ -18,5 +18,5 @@
 
 <!-- Customizados -->
   <node-type element="decision" class="br.com.infox.ibpm.node.DecisionNode" />
-  <node-type element="mail-node" class="br.com.infox.ibpm.node.MailNode" />
+  <node-type element="mail-node" class="br.com.infox.ibpm.node.InfoxMailNode" />
 </node-types>
