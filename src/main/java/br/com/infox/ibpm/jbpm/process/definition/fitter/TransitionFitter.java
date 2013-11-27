@@ -20,7 +20,7 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
+import br.com.infox.ibpm.jbpm.transition.TransitionHandler;
 
 @Name(TransitionFitter.NAME)
 @AutoCreate

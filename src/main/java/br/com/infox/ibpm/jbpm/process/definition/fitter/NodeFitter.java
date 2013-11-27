@@ -36,13 +36,13 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.handler.TransitionHandler;
 import br.com.infox.ibpm.jbpm.node.MailNode;
 import br.com.infox.ibpm.jbpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.jbpm.node.converter.NodeConverter;
 import br.com.infox.ibpm.jbpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.jbpm.node.manager.JbpmNodeManager;
 import br.com.infox.ibpm.jbpm.task.handler.TaskHandler;
+import br.com.infox.ibpm.jbpm.transition.TransitionHandler;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
