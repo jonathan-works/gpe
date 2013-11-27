@@ -111,7 +111,7 @@ public class TaskInstanceView implements Serializable{
 						}
 					} else if ("numberMoney".equalsIgnoreCase(type)){
 						ff.setType(type);
-						ff.setValue(String.format(FloatFormatConstants._2F, value));
+						ff.setValue(String.format(FloatFormatConstants.F2, value));
 					} else {
 						ff.setType(type);
 						ff.setValue(value);

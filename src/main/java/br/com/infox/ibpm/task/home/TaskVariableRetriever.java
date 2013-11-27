@@ -40,7 +40,7 @@ final class TaskVariableRetriever extends TaskVariable {
     }
     
     public void formatVariableMonetaria(){
-        variable = String.format(FloatFormatConstants._2F, variable);
+        variable = String.format(FloatFormatConstants.F2, variable);
     }
 
     public Object getVariable() {
@@ -99,7 +99,7 @@ final class TaskVariableRetriever extends TaskVariable {
     
     public TaskVariableRetriever evaluateWhenMonetario() {
         if (isMonetario()) {
-            setVariable(String.format(FloatFormatConstants._2F, getVariable()));
+            setVariable(String.format(FloatFormatConstants.F2, getVariable()));
         }
         return this;
     }

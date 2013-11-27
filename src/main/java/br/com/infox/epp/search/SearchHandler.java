@@ -305,7 +305,7 @@ public class SearchHandler implements Serializable {
 		} else if("sim_nao".equals(type)) {
 			texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
 		} else if ("numberMoney".equalsIgnoreCase(type)){
-            texto = String.format(FloatFormatConstants._2F, value);
+            texto = String.format(FloatFormatConstants.F2, value);
         } else {
 			texto = value.toString();
 		}
