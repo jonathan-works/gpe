@@ -60,11 +60,14 @@ public class PrioridadeProcesso implements Serializable, Comparable<PrioridadePr
 	public int compareTo(PrioridadeProcesso o) {
 		if (this.peso != null && o != null && o.peso != null) {
 			return this.peso.compareTo(o.peso);
-		} else if (this.peso != null) { // Este peso é maior que nulo
+		} else if (this.peso != null) { 
+		 // Este peso é maior que nulo
 			return 1;
-		} else if (o != null) { // Este peso é nulo e é menor que um peso não-nulo
+		} else if (o != null) { 
+		 // Este peso é nulo e é menor que um peso não-nulo
 			return -1;
-		} else { // Dois pesos nulos são iguais
+		} else { 
+		 // Dois pesos nulos são iguais
 			return 0;
 		}
 	}
