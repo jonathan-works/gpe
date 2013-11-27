@@ -79,7 +79,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	private boolean iniciaExterno;
 	private String signature;
 	private String certChain;
-	private String idAgrupamentos;
     private ProcessoDocumento pdFluxo;
 	private Integer idProcessoDocumento;
 	private boolean checkVisibilidade=true;
@@ -443,10 +442,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return certChain;
 	}
 	
-	public String getIdAgrupamentos() {
-		return idAgrupamentos;
-	}
-
 	public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {
 		this.processoDocumentoBin = processoDocumentoBin;
 	}
