@@ -14,7 +14,7 @@ import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
+import br.com.infox.ibpm.jbpm.event.JbpmEventsHandler;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;

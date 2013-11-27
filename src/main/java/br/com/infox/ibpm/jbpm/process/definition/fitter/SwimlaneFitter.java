@@ -10,8 +10,8 @@ import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.handler.SwimlaneHandler;
 import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.swimlane.handler.SwimlaneHandler;
 import br.com.itx.util.ComponentUtil;
 
 @Name(SwimlaneFitter.NAME)

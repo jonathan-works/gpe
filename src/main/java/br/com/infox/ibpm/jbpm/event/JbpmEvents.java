@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.util;
+package br.com.infox.ibpm.jbpm.event;
 
 import org.jboss.seam.core.Events;
 import org.jboss.seam.log.LogProvider;

@@ -45,51 +45,51 @@
     <end-state name="Término"/>  
     <!-- PROCESS-EVENTS -->
     <event type="node-enter">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="superstate-leave">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="subprocess-end">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="node-leave">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="before-signal">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="superstate-enter">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="process-start">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="transition">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="process-end">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="task-end">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="task-start">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="subprocess-created">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="after-signal">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="task-assign">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="task-create">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event>
     <event type="timer">
-        <script>br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)</script>
+        <script>br.com.infox.ibpm.jbpm.event.JbpmEvents.raiseEvent(executionContext)</script>
     </event> 
 </process-definition>

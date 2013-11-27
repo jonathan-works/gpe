@@ -1,4 +1,4 @@
-package br.com.infox.jbpm.manager;
+package br.com.infox.ibpm.jbpm.task.manager;
 
 import java.math.BigInteger;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.jbpm.dao.JbpmTaskDAO;
+import br.com.infox.ibpm.jbpm.task.dao.JbpmTaskDAO;
 
 @Name(JbpmTaskManager.NAME)
 @AutoCreate
