@@ -12,7 +12,7 @@ import org.jboss.seam.annotations.Transactional;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.ibpm.jbpm.process.definition.fitter.TaskFitter;
+import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 
 @Name(AssociativeModeloDocumentoList.NAME)
 @Scope(ScopeType.PAGE)
