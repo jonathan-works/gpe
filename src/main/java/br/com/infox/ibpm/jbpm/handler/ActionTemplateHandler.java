@@ -29,7 +29,7 @@ import org.jboss.seam.core.Events;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.ibpm.jbpm.ActionTemplate;
+import br.com.infox.core.action.ActionTemplate;
 
 
 @Name("actionTemplateHandler")
