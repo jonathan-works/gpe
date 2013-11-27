@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.jbpm;
+package br.com.infox.ibpm.jbpm.application;
 
 import static org.jboss.seam.annotations.Install.BUILT_IN;
 
