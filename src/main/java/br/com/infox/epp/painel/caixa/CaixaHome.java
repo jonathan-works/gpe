@@ -90,14 +90,6 @@ public class CaixaHome extends AbstractHome<Caixa> {
     }
     
     @Override
-    public String remove(Caixa obj) {
-        setInstance(obj);
-        remove();
-        newInstance();
-        return remove(obj);
-    }
-    
-    @Override
     public String remove() {
         caixaManager.removeCaixaByIdCaixa(instance.getIdCaixa());
     	String ret = super.remove();
