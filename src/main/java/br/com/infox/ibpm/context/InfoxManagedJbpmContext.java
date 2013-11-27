@@ -75,7 +75,8 @@ public class InfoxManagedJbpmContext implements Synchronization {
 	      if ( !synchronizationRegistered && !Lifecycle.isDestroying() && transaction.isActive() )
 	      {
 	         jbpmContext.getSession().isOpen();
-	         try //TODO: what we really want here is if (!cmt)
+	         //TODO: what we really want here is if (!cmt)
+	         try 
 	         {
 	            transaction.registerSynchronization(this);
 	         }

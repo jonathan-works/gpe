@@ -33,7 +33,7 @@ public class NodeNameValidator implements Validator {
 	public static final String VALIDATOR_ID = "nodeNameValidator";
 	
 	@Override
-	public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+	public void validate(FacesContext context, UIComponent component, Object value) {
 		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
 		
 		for (Node node : nodeFitter.getNodes()) {
