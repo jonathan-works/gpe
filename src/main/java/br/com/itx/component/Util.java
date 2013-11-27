@@ -59,7 +59,6 @@ import org.richfaces.context.ExtendedPartialViewContext;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
-import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.FacesUtil;
@@ -566,16 +565,6 @@ public class Util implements Serializable {
 	public static void setMessage(Severity severity, String msg) {
 		FacesMessages.instance().add(severity, msg);
 		LOG.warn(msg);
-	}
-	
-	/**
-	 * Retorna o valor do Id da entidade.
-	 * @param object Objeto em que será pesquisada o método que possui a anotação
-	 * @return Valor do Id
-	 * @throws AnnotationException
-	 */
-	public Object getIdValue(Object object) {
-		return AnnotationUtil.getIdValue(object);
 	}
 	
 	/**
