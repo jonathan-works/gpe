@@ -309,6 +309,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	private void updateRecursivePath() {
 	    final Recursive<T> curRecursive =(Recursive<T>)getInstance();
         final Recursive<T> oldRecursive = (Recursive<T>)getOldEntity();
+        //TODO rever esse if
         if (!isManaged()
                 ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
                 || (curRecursive != null && !curRecursive.getParent().equals(oldRecursive.getParent()))) {
