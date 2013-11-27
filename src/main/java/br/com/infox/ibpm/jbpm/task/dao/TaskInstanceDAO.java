@@ -5,7 +5,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.ibpm.jbpm.UsuarioTaskInstance;
+import br.com.infox.ibpm.jbpm.task.entity.UsuarioTaskInstance;
 
 @AutoCreate
 @Name(TaskInstanceDAO.NAME)

@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.task.entity;
 
 import java.io.Serializable;
 
