@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.process.node.constants;
+package br.com.infox.ibpm.jbpm.node.constants;
 
 public interface NodeTypeConstants {
     

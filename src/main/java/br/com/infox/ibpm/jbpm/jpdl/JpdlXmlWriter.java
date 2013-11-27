@@ -54,7 +54,7 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.process.node.DecisionNode;
+import br.com.infox.ibpm.jbpm.node.DecisionNode;
 import br.com.itx.util.ReflectionsUtil;
 
 

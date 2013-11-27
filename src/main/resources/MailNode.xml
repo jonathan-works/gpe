@@ -6,7 +6,7 @@
 
 <hibernate-mapping auto-import="false" default-access="field" >
 
-  <subclass name="br.com.infox.ibpm.jbpm.process.node.MailNode" 
+  <subclass name="br.com.infox.ibpm.jbpm.node.MailNode" 
             discriminator-value="M" 
             extends="org.jbpm.graph.def.Node"/>
 
