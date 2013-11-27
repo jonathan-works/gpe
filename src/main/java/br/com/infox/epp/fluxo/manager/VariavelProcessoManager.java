@@ -24,6 +24,10 @@ public class VariavelProcessoManager extends GenericManager {
 	@In
 	private VariavelProcessoDAO variavelProcessoDAO;
 	
+	public List<VariavelProcesso> listVariaveisProcessoByFluxo(Fluxo fluxo) {
+		return variavelProcessoDAO.listVariaveisProcessoByFluxo(fluxo);
+	}
+	
 	public List<VariavelProcesso> listVariaveisProcessoByFluxo(Fluxo fluxo, int start, int count) {
 		return variavelProcessoDAO.listVariaveisProcessoByFluxo(fluxo, start, count);
 	}
