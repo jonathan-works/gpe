@@ -31,7 +31,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.InfoxManagedJbpmContext;
+import br.com.infox.ibpm.jbpm.context.InfoxManagedJbpmContext;
 import br.com.itx.util.ComponentUtil;
 
 

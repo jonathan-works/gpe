@@ -53,7 +53,7 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.Tarefa;
-import br.com.infox.ibpm.jbpm.InfoxManagedJbpmContext;
+import br.com.infox.ibpm.jbpm.context.InfoxManagedJbpmContext;
 import br.com.infox.ibpm.jbpm.variable.JbpmVariavelLabel;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;

@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.context;
 
 import static org.jboss.seam.annotations.Install.FRAMEWORK;
 
