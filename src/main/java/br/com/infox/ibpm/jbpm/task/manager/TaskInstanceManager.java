@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.ibpm.jbpm.dao.TaskInstanceDAO;
+import br.com.infox.ibpm.jbpm.task.dao.TaskInstanceDAO;
 
 @Name(TaskInstanceManager.NAME)
 @AutoCreate

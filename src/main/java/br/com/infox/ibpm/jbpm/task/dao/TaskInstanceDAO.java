@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.dao;
+package br.com.infox.ibpm.jbpm.task.dao;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
