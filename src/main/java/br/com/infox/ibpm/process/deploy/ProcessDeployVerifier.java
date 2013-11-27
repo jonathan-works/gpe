@@ -39,7 +39,7 @@ import org.xml.sax.InputSource;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.ibpm.jpdl.JpdlXmlReader;
+import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.EntityUtil;
@@ -119,7 +119,7 @@ public class ProcessDeployVerifier {
 
 	private ProcessDefinition parseInstance(String xml) {
 	    StringReader stringReader = new StringReader(xml);
-	    JpdlXmlReader jpdlReader = new JpdlXmlReader(new InputSource(stringReader));
+	    InfoxJpdlXmlReader jpdlReader = new InfoxJpdlXmlReader(new InputSource(stringReader));
 		return jpdlReader.readProcessDefinition();
 	}
 }

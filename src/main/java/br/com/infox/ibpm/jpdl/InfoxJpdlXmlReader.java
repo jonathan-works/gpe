@@ -22,13 +22,14 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.NodeCollection;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.jpdl.JpdlException;
+import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.util.ClassLoaderUtil;
 import org.xml.sax.InputSource;
 
 
-public class JpdlXmlReader extends org.jbpm.jpdl.xml.JpdlXmlReader {
+public class InfoxJpdlXmlReader extends JpdlXmlReader {
 
-	public JpdlXmlReader(String xmlResource) {
+	public InfoxJpdlXmlReader(String xmlResource) {
 		super((InputSource) null);
 	    URL resourceURL = ClassLoaderUtil.getClassLoader().getResource(xmlResource);
 	    if (resourceURL == null) {
@@ -37,7 +38,7 @@ public class JpdlXmlReader extends org.jbpm.jpdl.xml.JpdlXmlReader {
 	    this.inputSource = new InputSource(resourceURL.toString()); 
 	}
 	
-	public JpdlXmlReader(InputSource source) {
+	public InfoxJpdlXmlReader(InputSource source) {
 		super(source);
 	}
 	

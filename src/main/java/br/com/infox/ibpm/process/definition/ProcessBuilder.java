@@ -59,7 +59,7 @@ import br.com.infox.core.validator.JsfComponentTreeValidator;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
-import br.com.infox.ibpm.jpdl.JpdlXmlReader;
+import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.process.definition.fitter.EventFitter;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
@@ -171,7 +171,7 @@ public class ProcessBuilder implements Serializable {
 
 	private ProcessDefinition parseInstance(String newXml) {
 		StringReader stringReader = new StringReader(newXml);
-		JpdlXmlReader jpdlReader = new JpdlXmlReader(new InputSource(
+		InfoxJpdlXmlReader jpdlReader = new InfoxJpdlXmlReader(new InputSource(
 				stringReader));
 		return jpdlReader.readProcessDefinition();
 	}
