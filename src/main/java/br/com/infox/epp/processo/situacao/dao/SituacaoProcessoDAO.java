@@ -12,7 +12,7 @@ import org.jboss.seam.core.Events;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
-import br.com.infox.ibpm.jbpm.util.JbpmUtil;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(SituacaoProcessoDAO.NAME)

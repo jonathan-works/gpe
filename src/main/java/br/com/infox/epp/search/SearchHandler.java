@@ -44,10 +44,10 @@ import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.ibpm.jbpm.context.InfoxManagedJbpmContext;
-import br.com.infox.ibpm.jbpm.util.JbpmUtil;
-import br.com.infox.ibpm.jbpm.variable.VariableHandler;
-import br.com.infox.ibpm.jbpm.variable.Variavel;
+import br.com.infox.ibpm.context.InfoxManagedJbpmContext;
+import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.VariableHandler;
+import br.com.infox.ibpm.variable.Variavel;
 import br.com.itx.util.EntityUtil;
 
 

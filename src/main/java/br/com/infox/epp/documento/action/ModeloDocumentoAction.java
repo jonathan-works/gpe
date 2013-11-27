@@ -27,8 +27,8 @@ import org.jboss.seam.annotations.Startup;
 import br.com.infox.core.action.ActionTemplate;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
-import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
-import br.com.infox.ibpm.jbpm.util.JbpmUtil;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.component.Util;
 
 @Name(ModeloDocumentoAction.NAME)
