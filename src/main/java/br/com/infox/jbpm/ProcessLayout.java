@@ -18,7 +18,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.jbpm.util.JbpmUtil;
 import br.com.infox.jbpm.layout.JbpmLayout;
 
 @Name(ProcessLayout.NAME)

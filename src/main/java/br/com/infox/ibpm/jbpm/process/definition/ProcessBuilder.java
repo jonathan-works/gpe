@@ -59,7 +59,6 @@ import br.com.infox.core.validator.JsfComponentTreeValidator;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.jpdl.JpdlXmlReader;
 import br.com.infox.ibpm.jbpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.jbpm.process.definition.fitter.EventFitter;
@@ -70,6 +69,7 @@ import br.com.infox.ibpm.jbpm.process.definition.fitter.TransitionFitter;
 import br.com.infox.ibpm.jbpm.process.definition.fitter.TypeFitter;
 import br.com.infox.ibpm.jbpm.process.definition.graphical.ProcessBuilderGraph;
 import br.com.infox.ibpm.jbpm.task.handler.TaskHandler;
+import br.com.infox.ibpm.jbpm.util.JbpmUtil;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)

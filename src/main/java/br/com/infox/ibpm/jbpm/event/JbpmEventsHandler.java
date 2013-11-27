@@ -21,8 +21,8 @@ import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmMana
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.manager.TarefaJbpmManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.util.JbpmUtil;
 import br.com.itx.util.ComponentUtil;
 
 @Name(JbpmEventsHandler.NAME)

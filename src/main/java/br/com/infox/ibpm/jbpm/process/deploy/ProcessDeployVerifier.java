@@ -39,9 +39,9 @@ import org.xml.sax.InputSource;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.infox.ibpm.jbpm.jpdl.JpdlXmlReader;
 import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.util.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 
 

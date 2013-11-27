@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.util;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +54,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.ibpm.entity.JbpmVariavelLabel;
+import br.com.infox.ibpm.jbpm.InfoxManagedJbpmContext;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
