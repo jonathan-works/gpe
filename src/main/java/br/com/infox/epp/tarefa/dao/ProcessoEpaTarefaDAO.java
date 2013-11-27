@@ -16,7 +16,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery;
-import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.itx.util.EntityUtil;
 
 /**

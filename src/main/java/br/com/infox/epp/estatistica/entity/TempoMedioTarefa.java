@@ -16,7 +16,7 @@ import javax.persistence.Transient;
 
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.tarefa.entity.Tarefa;
-import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name=TempoMedioTarefa.TABLE_NAME, schema="public")
