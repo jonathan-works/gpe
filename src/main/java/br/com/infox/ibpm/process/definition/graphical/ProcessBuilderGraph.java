@@ -3,6 +3,7 @@ package br.com.infox.ibpm.process.definition.graphical;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -21,9 +22,11 @@ import br.com.itx.util.FacesUtil;
 @Name(ProcessBuilderGraph.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class ProcessBuilderGraph {
+public class ProcessBuilderGraph implements Serializable{
 	
-	public static final String NAME = "processBuilderGraph";
+    private static final long serialVersionUID = 1L;
+    
+    public static final String NAME = "processBuilderGraph";
 	private transient JbpmLayout layout;
 	
 	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
