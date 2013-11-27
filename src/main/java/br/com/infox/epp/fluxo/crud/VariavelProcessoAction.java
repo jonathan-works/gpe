@@ -116,4 +116,16 @@ public class VariavelProcessoAction extends AbstractAction {
     public void setMaxPages(int maxPages) {
 		this.maxPages = maxPages;
 	}
+    
+    public String getNomeAmigavel(VariavelProcesso variavelProcesso) {
+    	return variavelProcessoManager.getNomeAmigavel(variavelProcesso);
+    }
+    
+    public String getNomeAmigavel() {
+    	return getNomeAmigavel(variavelProcesso);
+    }
+    
+    public void setNomeAmigavel(String nomeAmigavel) {
+    	variavelProcessoManager.setNome(variavelProcesso, nomeAmigavel);
+    }
 }

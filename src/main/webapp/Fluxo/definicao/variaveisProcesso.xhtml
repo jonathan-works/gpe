@@ -71,7 +71,7 @@
 							 	   render="variavelProcessoForm"
 							 	   limitRender="true">
 							 		
-						<h:outputText value="#{row.nome}" />
+						<h:outputText value="#{variavelProcessoAction.getNomeAmigavel(row)}" />
 						
 					</a:commandLink>
 					
@@ -105,7 +105,7 @@
 			<wi:inputText id="nomeVariavelProcesso"
 				label="#{messages['variavelProcesso.nome']}"
 				required="true"
-			 	value="#{variavelProcessoAction.variavelProcesso.nome}" />
+			 	value="#{variavelProcessoAction.nomeAmigavel}" />
 			 	
 			<a:commandButton action="#{variavelProcessoAction.save}"
 				render="variavelProcessoForm, variavelProcessoTable, pageBodyDialogMessage, variavelProcessoPaginator"

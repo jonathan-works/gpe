@@ -20,6 +20,7 @@ public class VariavelProcessoManager extends GenericManager {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "variavelProcessoManager";
+	public static final String JBPM_VARIABLE_TYPE = "processo";
 	
 	@In
 	private VariavelProcessoDAO variavelProcessoDAO;
@@ -34,5 +35,20 @@ public class VariavelProcessoManager extends GenericManager {
 	
 	public Long getTotalVariaveisProcessoByFluxo(Fluxo fluxo) {
 		return variavelProcessoDAO.getTotalVariaveisProcessoByFluxo(fluxo);
+	}
+	
+	public String getNomeAmigavel(VariavelProcesso variavelProcesso) {
+		if (variavelProcesso == null || variavelProcesso.getNome() == null) {
+			return null;
+		}
+		String[] nome = variavelProcesso.getNome().split(":");
+		if (nome.length == 1) {
+			return nome[0];
+		}
+		return nome[1];
+	}
+	
+	public void setNome(VariavelProcesso variavelProcesso, String nomeAmigavel) {
+		variavelProcesso.setNome(JBPM_VARIABLE_TYPE + ":" + nomeAmigavel);
 	}
 }
