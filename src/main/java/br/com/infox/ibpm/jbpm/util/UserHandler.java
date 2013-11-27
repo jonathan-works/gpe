@@ -13,7 +13,7 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
  */
-package br.com.infox.ibpm.jbpm.handler;
+package br.com.infox.ibpm.jbpm.util;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -28,7 +28,6 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.ibpm.jbpm.util.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(UserHandler.NAME)
