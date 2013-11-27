@@ -30,7 +30,7 @@ import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.handler.EventHandler;
+import br.com.infox.ibpm.jbpm.event.handler.EventHandler;
 import br.com.itx.util.ReflectionsUtil;
 
 
