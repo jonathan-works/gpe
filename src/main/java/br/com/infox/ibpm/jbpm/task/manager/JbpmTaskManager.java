@@ -1,4 +1,4 @@
-package br.com.infox.jbpm.manager;
+package br.com.infox.ibpm.jbpm.task.manager;
 
 import java.math.BigInteger;
 import java.util.Map;
