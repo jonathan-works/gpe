@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm.actions;
+package br.com.infox.ibpm.jbpm.event;
 
 import java.io.Serializable;
 
