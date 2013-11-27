@@ -1,6 +1,6 @@
 /* $Id: ControleFiltros.java 704 2010-08-12 23:21:10Z jplacerda $ */
 
-package br.com.infox.ibpm.component;
+package br.com.infox.epp.filter;
 
 import java.text.MessageFormat;
 
