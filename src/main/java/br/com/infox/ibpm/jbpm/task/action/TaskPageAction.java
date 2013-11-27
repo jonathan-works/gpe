@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.jbpm;
+package br.com.infox.ibpm.jbpm.task.action;
 
 import java.io.Serializable;
 import java.net.URL;

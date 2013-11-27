@@ -28,10 +28,10 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.jbpm.TaskPageAction;
 import br.com.infox.ibpm.jbpm.handler.ActionTemplateHandler;
 import br.com.infox.ibpm.jbpm.handler.VariableAccessHandler;
 import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.task.action.TaskPageAction;
 
 
 public class TaskHandler implements Serializable {
