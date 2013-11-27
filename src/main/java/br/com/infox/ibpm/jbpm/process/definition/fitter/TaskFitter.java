@@ -77,10 +77,6 @@ public class TaskFitter extends Fitter implements Serializable {
 		}
 	}
 
-	public PrazoEnum[] getTipoPrazoList() {
-		return PrazoEnum.values();
-	}
-	
 	public TaskHandler getCurrentTask() {
 		return currentTask;
 	}
