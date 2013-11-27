@@ -6,7 +6,7 @@
 
 <hibernate-mapping auto-import="false" default-access="field" >
 
-  <subclass name="br.com.infox.ibpm.jbpm.node.DecisionNode" 
+  <subclass name="br.com.infox.ibpm.jbpm.process.node.DecisionNode" 
             discriminator-value="D" 
             extends="org.jbpm.graph.def.Node">
             

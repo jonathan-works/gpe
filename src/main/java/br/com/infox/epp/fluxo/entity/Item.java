@@ -137,10 +137,10 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 	@Transient
 	public List<Item> getListItemAtePai() {
 		List<Item> list = new ArrayList<Item>();
-		Item itemPai = getItemPai();
-		while (itemPai != null) {
-			list.add(itemPai);
-			itemPai = itemPai.getItemPai();
+		Item pai = getItemPai();
+		while (pai != null) {
+			list.add(pai);
+			pai = pai.getItemPai();
 		}
 		return list;
 	}

@@ -26,8 +26,8 @@ import org.jboss.seam.Component;
 import org.jbpm.graph.def.Node;
 import org.jbpm.taskmgmt.def.Task;
 
-import br.com.infox.ibpm.jbpm.fitter.NodeFitter;
-import br.com.infox.ibpm.jbpm.fitter.TaskFitter;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.NodeFitter;
+import br.com.infox.ibpm.jbpm.process.definition.fitter.TaskFitter;
 
 @FacesValidator(value = TaskNameValidator.VALIDATOR_ID)
 public class TaskNameValidator implements Validator {

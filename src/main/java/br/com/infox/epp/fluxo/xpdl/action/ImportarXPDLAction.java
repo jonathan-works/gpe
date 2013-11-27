@@ -8,7 +8,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
-import br.com.infox.ibpm.jbpm.ProcessBuilder;
+import br.com.infox.ibpm.jbpm.process.definition.ProcessBuilder;
 
 @Name(ImportarXPDLAction.NAME)
 @Scope(ScopeType.CONVERSATION)

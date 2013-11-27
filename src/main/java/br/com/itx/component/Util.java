@@ -58,9 +58,9 @@ import org.jboss.seam.web.Parameters;
 import org.richfaces.context.ExtendedPartialViewContext;
 
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.exception.ApplicationException;
 import br.com.itx.component.grid.GridQuery;
 import br.com.itx.component.grid.SearchField;
-import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;

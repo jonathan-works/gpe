@@ -16,7 +16,6 @@ import br.com.infox.core.exception.BusinessException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -34,7 +33,6 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     
     @In private UsuarioLoginManager usuarioLoginManager;
     @In private PessoaManager pessoaManager;
-    @In private BloqueioUsuarioManager bloqueioUsuarioManager;
     
     @In private PasswordService passwordService;
 

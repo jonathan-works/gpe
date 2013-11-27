@@ -66,7 +66,6 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	private String login;
 	private String assinatura;
 	private String certChain;
-	private Boolean ldap = false;
 	private Boolean bloqueio;
 	private Boolean provisorio;
 	//Data de previsão para expirar o usuário provisório
@@ -178,16 +177,6 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 		return result;
 	}
 
-	@Column(name = "in_ldap")
-	@NotNull
-	public Boolean getLdap() {
-		return ldap;
-	}
-
-	public void setLdap(Boolean ldap) {
-		this.ldap = ldap;
-	}
-	
 	@Column(name = "in_bloqueio", nullable = false)
 	@NotNull
 	public Boolean getBloqueio() {

@@ -43,15 +43,14 @@ public class UsuarioLoginDAO extends GenericDAO {
 		sb.append("INSERT INTO ");
 		sb.append(UsuarioLogin.TABLE_NAME);
 		sb.append(" (id_pessoa, ds_login, ds_senha, ds_assinatura_usuario, ds_cert_chain_usuario, " +
-					"in_ldap, in_bloqueio, dt_expiracao_usuario, in_provisorio, in_twitter)");
-		sb.append(" values (:idPessoa, :login, :senha, :assinatura, :cert_chain, :ldap, :bloqueio, null, :provisorio, :twitter)");
+					"in_bloqueio, dt_expiracao_usuario, in_provisorio, in_twitter)");
+		sb.append(" values (:idPessoa, :login, :senha, :assinatura, :cert_chain, :bloqueio, null, :provisorio, :twitter)");
 		Query query = entityManager.createNativeQuery(sb.toString());
 		query.setParameter("idPessoa", usuarioLogin.getIdPessoa())
 				.setParameter("login", login)
 				.setParameter("senha", usuarioLogin.getSenha())
 				.setParameter("assinatura", usuarioLogin.getAssinatura())
 				.setParameter("cert_chain", usuarioLogin.getCertChain())
-				.setParameter("ldap", usuarioLogin.getLdap())
 				.setParameter("bloqueio", usuarioLogin.getBloqueio())
 				.setParameter("provisorio", usuarioLogin.getProvisorio())
 				.setParameter("twitter", usuarioLogin.getTemContaTwitter()).executeUpdate();

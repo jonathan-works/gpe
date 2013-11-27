@@ -32,10 +32,10 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.jbpm.JbpmUtil;
 import br.com.itx.component.Util;
-import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 
 @Name(LocalizacaoAssignment.NAME)
@@ -169,7 +169,7 @@ public class LocalizacaoAssignment implements Serializable {
 					createMessage(action+ex.getLocalizedMessage(), 
 								  "onTaskCreate()", 
 								  "LocalizacaoAssignment", 
-								  "BPM"));
+								  "BPM"), ex);
 		}
 	}
 	
