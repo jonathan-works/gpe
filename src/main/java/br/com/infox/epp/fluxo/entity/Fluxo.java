@@ -196,7 +196,7 @@ public class Fluxo implements java.io.Serializable {
 			return false;
 		}
 		Fluxo other = (Fluxo) HibernateUtil.removeProxy(obj);
-		if (getIdFluxo() != other.getIdFluxo()) {
+		if (!getIdFluxo().equals(other.getIdFluxo())) {
 			return false;
 		}
 		return true;
