@@ -94,7 +94,6 @@
 		<wi:dataForm
 			formId="usuarioForm"
 			formTitle="#{messages['form.title']}">
-
 			<wi:inputCpf
 				id="cpf"
 				label="CPF"
@@ -106,7 +105,7 @@
 					event="blur"
 					listener="#{usuarioLoginCrudAction.searchByCpf(usuarioLoginCrudAction.instance.cpf)}"
 					execute="@this"
-					render="usuarioForm"
+					render="nomeUsuario dataNascimento email login"
 					limitRender="true" />
 
 			</wi:inputCpf>
