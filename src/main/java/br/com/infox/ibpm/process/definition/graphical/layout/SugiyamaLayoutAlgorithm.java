@@ -26,6 +26,8 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.VertexView;
 
+import br.com.infox.core.constants.WarningConstants;
+
 /**
  * Arranges the nodes with the Sugiyama Layout Algorithm.<br>
  *
@@ -37,7 +39,7 @@ import org.jgraph.graph.VertexView;
  * @author Sven Luzar<br>
  * @version 1.0 init
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({WarningConstants.UNCHECKED, WarningConstants.RAWTYPES})
 public class SugiyamaLayoutAlgorithm
 {
 
@@ -172,29 +174,6 @@ public class SugiyamaLayoutAlgorithm
 			}
 		}
 
-//				{
-//					Object edge = itrEdges.next();
-
-					// if the current node is a target node
-					// get the source node and test
-					// the source node for roots
-
-//					if (model.getTarget(edge) == port) {
-//						Object sourcePort = model.getSource(edge);
-//
-//						Object sourceVertex = model.getParent(sourcePort);
-//
-//						CellView sourceVertexView = jgraph.getGraphLayoutCache()
-//								.getMapping(sourceVertex, false);
-//						if (sourceVertexView instanceof VertexView) {
-//							searchRoots(jgraph, (VertexView) sourceVertexView,
-//									roots);
-//							isRoot = false;
-//						}
-//					}
-//				}
-//			}
-			
   }
 
 /** Debugdisplay for the edge crosses indicators on the System out
@@ -515,13 +494,6 @@ public class SugiyamaLayoutAlgorithm
             min_x = cellViewBounds.x;
           if(cellViewBounds.y < min_y)
             min_y = cellViewBounds.y;
-          /*
-          if (cellViewBounds.width > spacing.x)
-            spacing.x = cellViewBounds.width;
-          if (cellViewBounds.height > spacing.y)
-            spacing.y = cellViewBounds.height;
-            */
-
         }
         catch(Exception e)
         {
