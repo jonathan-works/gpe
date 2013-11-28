@@ -19,7 +19,7 @@
 		 title="#{label}">
 		
 
-		<wi:repeat
+		<ui:repeat
 			 value="#{form.getTabFields(rf.id)}"
 			 var="f">
 			
@@ -53,7 +53,7 @@
 
 			<ui:include src="/WEB-INF/xhtml/components/form/#{f.type}.xhtml" />
 		
-		</wi:repeat>
+		</ui:repeat>
 	
 	</infox:tab>
 

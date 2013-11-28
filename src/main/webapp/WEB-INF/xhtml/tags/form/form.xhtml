@@ -61,7 +61,7 @@
 								
 								<infox:tabPanel switchType="client">
 									<infox:tabHeaders />
-									<wi:repeat
+									<ui:repeat
 										 value="#{form.rootFields}"
 										 var="rf">
 										
@@ -108,14 +108,14 @@
 											 id="#{rf.id}"
 											 src="/WEB-INF/xhtml/components/form/#{rf.type}.xhtml" />
 									
-									</wi:repeat>
+									</ui:repeat>
 								
 								</infox:tabPanel>
 							
 							</c:if>
 							<c:if test="#{!form.tabbed}">
 								
-								<wi:repeat
+								<ui:repeat
 									 value="#{form.fields}"
 									 var="f">
 									
@@ -163,7 +163,7 @@
 										 value="#{f.type.startsWith('documentoIdentificacaoHome') ? 'docsIdentificacao/'.concat(util.eval(f.type)) : f.type }" />
 									<ui:include src="/WEB-INF/xhtml/components/form/#{type}.xhtml" />
 								
-								</wi:repeat>
+								</ui:repeat>
 							
 							</c:if>
 							<div >
