@@ -49,21 +49,21 @@
 						label="#{messages['naturezaCategoriaFluxo.natureza']}"
 						value="#{naturezaCategoriaFluxoList.entity.natureza}"
 						items="#{naturezaCategoriaFluxoList.naturezaList}"
-						noSelectionLabel="Selecione...">
+						noSelectionLabel="#{messages['crud.select.select']}">
 					</wi:selectOneMenuEntity>
 					<wi:selectOneMenuEntity
 						id="categoria"
 						label="#{messages['naturezaCategoriaFluxo.categoria']}"
 						value="#{naturezaCategoriaFluxoList.entity.categoria}"
 						items="#{naturezaCategoriaFluxoList.categoriaList}"
-						noSelectionLabel="Selecione...">
+						noSelectionLabel="#{messages['crud.select.select']}">
 					</wi:selectOneMenuEntity>
 					<wi:selectOneMenuEntity
 						id="fluxo"
 						label="#{messages['naturezaCategoriaFluxo.fluxo']}"
 						value="#{naturezaCategoriaFluxoList.entity.fluxo}"
 						items="#{naturezaCategoriaFluxoList.fluxoList}"
-						noSelectionLabel="Selecione...">
+						noSelectionLabel="#{messages['crud.select.select']}">
 					</wi:selectOneMenuEntity>
 				</wi:searchForm>
 			</ui:define>
@@ -78,10 +78,10 @@
 					action="naturezaCategoriaFluxoCrudAction.remove(row)"
 					limitToList="true"
 					status=":status"
-					render="searchGridRegion,modalPanelMessages"
-					onclick="confirm('Deseja remover este registro?');"
+					render="searchGridRegion,pageBodyDialogMessage"
+					onclick="confirm(\'#{messages['crud.confirmRemove']}\');"
 					url="/img/remove.png"
-					title="Remover registro" />
+					title="#{messages['crud.remove']}" />
 			</ui:define>
 			<wi:columnOutputText
                  columnId="natureza"
@@ -108,21 +108,21 @@
 				value="#{naturezaCategoriaFluxoCrudAction.instance.natureza}"
 				required="true"
 				items="#{naturezaCategoriaFluxoCrudAction.naturezaList}"
-				noSelectionLabel="Selecione..."/>
+				noSelectionLabel="#{messages['crud.select.select']}"/>
 			<wi:selectOneMenuEntity
 				id="categorias"
 				label="#{messages['naturezaCategoriaFluxo.categoria']}"
 				value="#{naturezaCategoriaFluxoCrudAction.instance.categoria}"
 				required="true"
 				items="#{naturezaCategoriaFluxoCrudAction.categoriaList}"
-				noSelectionLabel="Selecione..."/>
+				noSelectionLabel="#{messages['crud.select.select']}"/>
 			<wi:selectOneMenuEntity
 				id="fluxo"
 				label="#{messages['naturezaCategoriaFluxo.fluxo']}"
 				value="#{naturezaCategoriaFluxoCrudAction.instance.fluxo}"
 				required="true"
 				items="#{naturezaCategoriaFluxoCrudAction.fluxoList}"
-				noSelectionLabel="Selecione..."/>
+				noSelectionLabel="#{messages['crud.select.select']}"/>
 		</wi:dataForm>
 	</ui:define>
 
