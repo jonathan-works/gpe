@@ -32,7 +32,7 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
-import br.com.itx.util.ArrayUtil;
+import br.com.infox.core.util.ArrayUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.Crypto;
 

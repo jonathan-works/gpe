@@ -20,10 +20,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import javax.validation.constraints.NotNull;
 
-import br.com.itx.util.ArrayUtil;
+import br.com.infox.core.util.ArrayUtil;
 
 /**
  * Esta entidade mapeia a tabela tb_processo_documento_bin da base BIN, 

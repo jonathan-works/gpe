@@ -24,7 +24,7 @@ import org.jboss.seam.util.Base64;
 
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.constants.WarningConstants;
-import br.com.itx.util.ArrayUtil;
+import br.com.infox.core.util.ArrayUtil;
 
 /**
  *
