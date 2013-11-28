@@ -59,7 +59,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public ProcessoEpa getProcessoEpaByProcesso(Processo processo){
-		return entityManager.find(ProcessoEpa.class, processo.getIdProcesso());
+		return getEntityManager().find(ProcessoEpa.class, processo.getIdProcesso());
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){
@@ -115,12 +115,12 @@ public class ProcessoEpaDAO extends GenericDAO {
 	
 	public Item getItemDoProcesso(int idProcesso){
 		String query = "select o.itemDoProcesso from ProcessoEpa o where o.idProcesso =:idProcesso";
-		return (Item) entityManager.createQuery(query).setParameter("idProcesso", idProcesso).getSingleResult();
+		return (Item) getEntityManager().createQuery(query).setParameter("idProcesso", idProcesso).getSingleResult();
 	}
 	
 	@SuppressWarnings(WarningConstants.UNCHECKED)
     public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
-		Query q = entityManager.createQuery(ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY)
+		Query q = getEntityManager().createQuery(ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY)
 				.setParameter("idProcesso", processoEpa.getIdProcesso());
 		Map<String,Object> result = null;
 		try {

@@ -40,7 +40,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 	private static final String R1 = "p.naturezaCategoriaFluxo.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
     
-    private static final HashMap<String,String> CUSTOM_ORDER_MAP;
+    private static final Map<String,String> CUSTOM_ORDER_MAP;
     static {
         CUSTOM_ORDER_MAP = new HashMap<>();
         CUSTOM_ORDER_MAP.put("fluxo", "ncf.fluxo");

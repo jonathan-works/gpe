@@ -33,7 +33,7 @@ public class ModeloDocumentoDAO extends GenericDAO {
 	
 	public ModeloDocumento getModeloDocumentoByTitulo(String titulo){
 		String hql = "select o from ModeloDocumento o where o.tituloModeloDocumento = :titulo";
-		return (ModeloDocumento) entityManager.createQuery(hql)
+		return (ModeloDocumento) getEntityManager().createQuery(hql)
 				.setParameter("titulo", titulo).getSingleResult();
 	}
 	
@@ -43,7 +43,7 @@ public class ModeloDocumentoDAO extends GenericDAO {
 				"o.tipoModeloDocumento.grupoModeloDocumento = :grupo and " +
 				"o.tipoModeloDocumento = :tipo " +
 				"order by o.tituloModeloDocumento";
-		return entityManager.createQuery(hql)
+		return getEntityManager().createQuery(hql)
 				.setParameter("grupo", grupo)
 				.setParameter("tipo", tipo).getResultList();
 	}
@@ -53,7 +53,7 @@ public class ModeloDocumentoDAO extends GenericDAO {
 		String hql = "select o from ModeloDocumento o " +
 						"where o.idModeloDocumento in (" +
 						listaModelos + ") order by modeloDocumento";
-		return (List<ModeloDocumento>) entityManager.createQuery(hql).getResultList();
+		return (List<ModeloDocumento>) getEntityManager().createQuery(hql).getResultList();
 	}
 	
 }

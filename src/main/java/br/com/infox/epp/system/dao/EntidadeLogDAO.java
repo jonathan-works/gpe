@@ -21,13 +21,13 @@ public class EntidadeLogDAO extends GenericDAO {
 		String hql = "select o from UsuarioLogin o " +
 				"where o.entityLogList.size > 0 " +
 				"order by o.idPessoa";
-		return (List<UsuarioLogin>) entityManager.createQuery(hql).getResultList();
+		return (List<UsuarioLogin>) getEntityManager().createQuery(hql).getResultList();
 	}
 	
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<String> getEntidadesQuePodemPossuirLog(){
 		String hql = "select distinct o.nomeEntidade as entidade from EntityLog o order by o.nomeEntidade";
-		return (List<String>) entityManager.createQuery(hql).getResultList();
+		return (List<String>) getEntityManager().createQuery(hql).getResultList();
 	}
 	
 }

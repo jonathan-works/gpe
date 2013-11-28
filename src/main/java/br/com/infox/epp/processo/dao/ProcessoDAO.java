@@ -9,9 +9,9 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.tarefa.caixa.Caixa;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -29,7 +29,7 @@ public class ProcessoDAO extends GenericDAO {
 	
 	public void apagarActorIdDoProcesso(Processo processo){
 		String hql = "update public.tb_processo set nm_actor_id = null where id_processo = :id";
-        entityManager.createNativeQuery(hql)
+        getEntityManager().createNativeQuery(hql)
                     .setParameter("id", processo.getIdProcesso())
                     .executeUpdate();
 	}
@@ -62,7 +62,7 @@ public class ProcessoDAO extends GenericDAO {
 	public void removerProcessoDaCaixaAtual(Processo processo){
 		String sql = "update public.tb_processo set id_caixa = null where "
                 + "id_processo = :processo";
-        entityManager.createNativeQuery(sql)
+        getEntityManager().createNativeQuery(sql)
         				.setParameter("processo", processo.getIdProcesso())
         				.executeUpdate();
 	}

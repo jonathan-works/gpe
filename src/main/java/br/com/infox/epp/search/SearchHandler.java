@@ -44,10 +44,10 @@ import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.ibpm.jbpm.InfoxManagedJbpmContext;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.infox.ibpm.jbpm.handler.VariableHandler;
-import br.com.infox.ibpm.jbpm.handler.VariableHandler.Variavel;
+import br.com.infox.ibpm.context.InfoxManagedJbpmContext;
+import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.VariableHandler;
+import br.com.infox.ibpm.variable.Variavel;
 import br.com.itx.util.EntityUtil;
 
 
@@ -305,7 +305,7 @@ public class SearchHandler implements Serializable {
 		} else if("sim_nao".equals(type)) {
 			texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
 		} else if ("numberMoney".equalsIgnoreCase(type)){
-            texto = String.format(FloatFormatConstants._2F, value);
+            texto = String.format(FloatFormatConstants.F2, value);
         } else {
 			texto = value.toString();
 		}

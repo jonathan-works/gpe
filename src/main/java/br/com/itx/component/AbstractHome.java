@@ -43,12 +43,11 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.persistence.RecursiveManager;
-import br.com.itx.component.grid.GridQuery;
-import br.com.itx.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -310,6 +309,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	private void updateRecursivePath() {
 	    final Recursive<T> curRecursive =(Recursive<T>)getInstance();
         final Recursive<T> oldRecursive = (Recursive<T>)getOldEntity();
+        //TODO rever esse if
         if (!isManaged()
                 ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
                 || (curRecursive != null && !curRecursive.getParent().equals(oldRecursive.getParent()))) {
@@ -478,23 +478,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		ComponentUtil.clearChildren(form);
 		LOG.info(".clearForm() (" + getInstanceClassName() + 
 				"): " + sw.getTime());		
-	}
-	
-	public void refreshGrid(String gridId) {
-		StopWatch sw = new StopWatch();
-		sw.start();
-		GridQuery<?> g = getComponent(gridId, false);
-		if (g != null) {
-			g.refresh();
-		}
-		StringBuilder sb = new StringBuilder();
-		sb.append(".refreshGrid (");
-		sb.append(gridId);
-		sb.append(") ");
-		sb.append(getInstanceClassName());
-		sb.append("): ");
-		sb.append(sw.getTime());
-		LOG.info(sb.toString());			
 	}
 	
 	public String getHomeName() {

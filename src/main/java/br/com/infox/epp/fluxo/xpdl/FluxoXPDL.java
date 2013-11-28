@@ -18,7 +18,7 @@ import br.com.infox.epp.fluxo.xpdl.activities.AssignTaskXPDL;
 import br.com.infox.epp.fluxo.xpdl.lane.LaneXPDL;
 import br.com.infox.epp.fluxo.xpdl.lane.LanesXPDLFactory;
 import br.com.infox.epp.fluxo.xpdl.transition.TransitionsXPDL;
-import br.com.infox.ibpm.jbpm.JpdlXmlWriter;
+import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.itx.util.XmlUtil;
 
 public final class FluxoXPDL implements Serializable {

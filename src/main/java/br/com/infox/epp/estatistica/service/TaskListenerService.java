@@ -1,6 +1,6 @@
 package br.com.infox.epp.estatistica.service;
 
-import static br.com.infox.ibpm.jbpm.JbpmUtil.getTarefa;
+import static br.com.infox.ibpm.util.JbpmUtil.getTarefa;
 
 import java.util.Date;
 
@@ -10,16 +10,17 @@ import org.jboss.seam.annotations.Observer;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
-import br.com.itx.exception.ApplicationException;
+import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(TaskListenerService.NAME)
 public class TaskListenerService extends AbstractAction {

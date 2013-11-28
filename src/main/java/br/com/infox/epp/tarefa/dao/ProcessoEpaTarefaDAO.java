@@ -16,7 +16,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery;
-import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.itx.util.EntityUtil;
 
 /**
@@ -62,7 +62,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
 		 .append("where p.porcentagem > 100 and pt.dataFim is null ")
 		 .append("and c = :categoria");
-		Query q = entityManager.createQuery(s.toString());
+		Query q = getEntityManager().createQuery(s.toString());
 		q.setParameter("categoria", c);
 		return q.getResultList();
 	}
@@ -73,7 +73,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
 		 .append("where pt.porcentagem > 100 and pt.dataFim is null ")
 		 .append("and c = :categoria");
-		Query q = entityManager.createQuery(s.toString());
+		Query q = getEntityManager().createQuery(s.toString());
 		q.setParameter("categoria", c);
 		return q.getResultList();
 	}
@@ -84,7 +84,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
 		 .append("where pt.porcentagem <= 100 and pt.porcentagem >= 70 ")
 		 .append("and pt.dataFim is null");
-		Query q = entityManager.createQuery(s.toString());
+		Query q = getEntityManager().createQuery(s.toString());
 		return q.getResultList();
 	}
 	

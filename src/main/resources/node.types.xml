@@ -17,6 +17,6 @@
   <node-type element="start-page" class="org.jboss.seam.pageflow.Page" />
 
 <!-- Customizados -->
-  <node-type element="decision" class="br.com.infox.ibpm.jbpm.node.DecisionNode" />
-  <node-type element="mail-node" class="br.com.infox.ibpm.jbpm.node.MailNode" />
+  <node-type element="decision" class="br.com.infox.ibpm.node.DecisionNode" />
+  <node-type element="mail-node" class="br.com.infox.ibpm.node.InfoxMailNode" />
 </node-types>

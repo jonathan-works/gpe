@@ -31,7 +31,7 @@ public class TarefaDAO extends GenericDAO {
 		    .append("inner join tb_tarefa_jbpm tjTo ON (tjTo.id_jbpm_task=taskTo.id_) ")
 		    .append("where tjTo.id_tarefa=:idTarefa ")
 		    .append("group by nodeFrom.name_");
-		Query query = entityManager.createNativeQuery(sql.toString())
+		Query query = getEntityManager().createNativeQuery(sql.toString())
 		            .setParameter("idTarefa", tarefa.getIdTarefa());
 		
 		List<SelectItem> previousTasksItems = new ArrayList<SelectItem>();

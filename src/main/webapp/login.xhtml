@@ -181,7 +181,7 @@
 							</h:outputLabel>
 							<h:inputText id="login"
 										 class="input_login"
-										 value="#{usuarioHome.login}" />
+										 value="#{passwordRequester.login}" />
 						</div>
 						<div>
 							<h:outputLabel for="email"
@@ -190,14 +190,14 @@
 							</h:outputLabel>
 							<h:inputText id="email"
 										 class="input_login"
-										 value="#{usuarioHome.email}"/>
+										 value="#{passwordRequester.email}"/>
 						</div>
 					</div>
 					<div class="bg_login_inferior">
 						<h:commandButton id="confirma"
 										 class="input_button"
 										 value="#{messages['login.confirmaTrocaSenhaBtn']}"
-										 action="#{usuarioHome.requisitarNovaSenha()}" /> 
+										 action="#{passwordRequester.requisitarNovaSenha()}" /> 
 					
 						<input class="input_button"
 							   id="btnTrocarSenha2" 

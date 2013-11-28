@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,9 +28,11 @@ import br.com.infox.epp.fluxo.query.FluxoPapelQuery;
 				@NamedQuery(name=FluxoPapelQuery.LIST_BY_FLUXO,
 						    query=FluxoPapelQuery.LIST_BY_FLUXO_QUERY)
 			  })
-public class FluxoPapel {
+public class FluxoPapel implements Serializable{
 
-	public static final String TABLE_NAME = "tb_fluxo_papel";
+    private static final long serialVersionUID = 1L;
+
+    public static final String TABLE_NAME = "tb_fluxo_papel";
 
 	private int idFluxoPapel;
 	private Fluxo fluxo;	

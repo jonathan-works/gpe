@@ -13,7 +13,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.ibpm.jbpm.InfoxManagedJbpmContext;
+import br.com.infox.ibpm.context.InfoxManagedJbpmContext;
 
 /**
  * Classe Action para o BAM

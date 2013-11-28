@@ -3,7 +3,7 @@ package br.com.infox.epp.fluxo.xpdl.activities;
 import org.jbpm.graph.def.Node;
 import org.jdom2.Element;
 
-import br.com.infox.ibpm.jbpm.node.DecisionNode;
+import br.com.infox.ibpm.node.DecisionNode;
 
 public class DecisionActivityXPDL extends ActivityXPDL {
 

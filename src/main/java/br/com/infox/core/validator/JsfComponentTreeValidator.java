@@ -1,5 +1,6 @@
 package br.com.infox.core.validator;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,8 +20,10 @@ import org.jboss.seam.annotations.Scope;
 @Name(JsfComponentTreeValidator.NAME)
 @Scope(ScopeType.STATELESS)
 @AutoCreate
-public class JsfComponentTreeValidator {
-	public static final String NAME = "jsfComponentTreeValidator";
+public class JsfComponentTreeValidator implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "jsfComponentTreeValidator";
 	
 	public boolean hasInvalidComponent(UIComponent root) {
 		if (root == null) {

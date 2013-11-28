@@ -27,7 +27,7 @@ public class PapelDAO extends GenericDAO {
 		String hql = "select o from Papel o where identificador not like '/%' and o.idPapel not in ("
 				+ "select p.papel.idPapel from TipoModeloDocumentoPapel p "
 				+ "where p.tipoModeloDocumento = :tipoModeloDocumento)";
-		return (List<Papel>) entityManager.createQuery(hql).setParameter("tipoModeloDocumento",
+		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("tipoModeloDocumento",
 				tipoModeloDocumento).getResultList();
 	}
 	
@@ -36,13 +36,13 @@ public class PapelDAO extends GenericDAO {
 		String hql = "select o from Papel o where identificador not like '/%' and o not in " +
 						"(select p.papel from TipoProcessoDocumentoPapel p " +
 						"where p.tipoProcessoDocumento = :tipoProcessoDocumento)";
-		return (List<Papel>) entityManager.createQuery(hql).setParameter("tipoProcessoDocumento", 
+		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("tipoProcessoDocumento", 
 				tipoProcessoDocumento).getResultList();
 	}
 	
 	public Papel getPapelByIndentificador(String identificador){
 		String hql = "select o from Papel o where o.identificador = :identificador";
-		Query query = entityManager.createQuery(hql).setParameter("identificador", identificador);
+		Query query = getEntityManager().createQuery(hql).setParameter("identificador", identificador);
 		return EntityUtil.getSingleResult(query);
 	}
 	
@@ -50,13 +50,13 @@ public class PapelDAO extends GenericDAO {
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Papel> getPapeisByListaDeIdentificadores(List<String> identificadores){
 		String hql = "select p from Papel p where identificador in (:list)";
-		return (List<Papel>) entityManager.createQuery(hql).setParameter("list", identificadores).getResultList();
+		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("list", identificadores).getResultList();
 	}
 	
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao){
 		String hql = "select distinct l.papel from UsuarioLocalizacao l where l.localizacao = :loc ";
-		return (List<Papel>) entityManager.createQuery(hql).setParameter("loc", localizacao).getResultList();
+		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("loc", localizacao).getResultList();
 	}
 
 }

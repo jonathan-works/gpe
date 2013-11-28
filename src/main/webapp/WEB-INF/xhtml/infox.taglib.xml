@@ -443,11 +443,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>pdfTable</tag-name>
-		<source>tags/report/pdfTable.xhtml</source>
-	</tag>
-	
-	<tag>
 		<tag-name>dataReport</tag-name>
 		<source>tags/report/dataReport.xhtml</source>
 	</tag>

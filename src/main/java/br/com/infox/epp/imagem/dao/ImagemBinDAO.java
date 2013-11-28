@@ -25,7 +25,7 @@ public class ImagemBinDAO extends GenericDAO {
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<ImagemBin> getTodasAsImagens(){
 		String hql = "select o from ImagemBin o";
-		return (List<ImagemBin>) entityManager.createQuery(hql).getResultList();
+		return (List<ImagemBin>) getEntityManager().createQuery(hql).getResultList();
 	}
 
     public void persistImageBin(ImagemBin imagemBin) throws DAOException {
