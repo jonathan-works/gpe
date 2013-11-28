@@ -57,4 +57,8 @@ public class GenericManager implements Serializable {
 	public boolean contains(Object o) {
 		return genericDAO.contains(o);
 	}
+	
+	public <T> T merge(T o) throws DAOException {
+		return genericDAO.merge(o);
+	}
 }
