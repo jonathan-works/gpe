@@ -275,11 +275,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>repeat</tag-name>
-		<handler-class>br.com.itx.jsf.RepeatHandler</handler-class>
-	</tag>
-	
-	<tag>
 		<tag-name>ajaxDiv</tag-name>
 		<source>tags/generic/ajaxDiv.xhtml</source>
 	</tag>	
