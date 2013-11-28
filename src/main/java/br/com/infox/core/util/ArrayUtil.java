@@ -1,4 +1,4 @@
-package br.com.itx.util;
+package br.com.infox.core.util;
 
 import java.util.Arrays;
 

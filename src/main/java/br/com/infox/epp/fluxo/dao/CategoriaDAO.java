@@ -2,11 +2,8 @@ package br.com.infox.epp.fluxo.dao;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.query.CategoriaQuery;
 
@@ -16,7 +13,6 @@ import br.com.infox.epp.fluxo.query.CategoriaQuery;
  *
  */
 @Name(CategoriaDAO.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class CategoriaDAO extends GenericDAO {
 

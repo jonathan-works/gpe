@@ -24,7 +24,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.itx.util.ArrayUtil;
+import br.com.infox.core.util.ArrayUtil;
 import br.com.itx.util.EntityUtil;
 
 

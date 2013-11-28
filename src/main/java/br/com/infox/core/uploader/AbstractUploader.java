@@ -16,7 +16,7 @@ import org.richfaces.model.UploadedFile;
 import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.epp.imagem.manager.ImagemBinManager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.itx.util.ArrayUtil;
+import br.com.infox.core.util.ArrayUtil;
 import br.com.itx.util.Crypto;
 
 @Scope(ScopeType.CONVERSATION)

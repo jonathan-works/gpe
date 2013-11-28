@@ -3,11 +3,9 @@ package br.com.infox.epp.processo.manager;
 import java.util.Date;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.log.LogProvider;
@@ -33,7 +31,6 @@ import br.com.itx.util.Crypto;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoManager.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 public class ProcessoManager extends GenericManager {
 	

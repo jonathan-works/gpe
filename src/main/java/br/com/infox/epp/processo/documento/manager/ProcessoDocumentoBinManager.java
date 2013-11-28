@@ -1,14 +1,10 @@
 package br.com.infox.epp.processo.documento.manager;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.manager.GenericManager;
 
 @Name(ProcessoDocumentoBinManager.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 public class ProcessoDocumentoBinManager extends GenericManager{
 

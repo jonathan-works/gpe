@@ -3,11 +3,9 @@ package br.com.infox.epp.processo.partes.manager;
 import javax.xml.bind.ValidationException;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import br.com.infox.core.persistence.DAOException;
@@ -25,7 +23,6 @@ import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.itx.util.EntityUtil;
 
 @Name(ParteProcessoManager.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 public class ParteProcessoManager extends GenericManager {
 
