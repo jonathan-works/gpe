@@ -311,13 +311,13 @@
 	
 	<function>
 		<function-name>get</function-name>
-		<function-class>br.com.itx.jsf.JsfFunctions</function-class>
+		<function-class>br.com.infox.core.jsf.JsfFunctions</function-class>
 		<function-signature>java.lang.Object get(java.lang.Object,java.lang.Object)</function-signature>
 	</function>
 		
 	<function>
 		<function-name>splitLength</function-name>
-		<function-class>br.com.itx.jsf.JsfFunctions</function-class>
+		<function-class>br.com.infox.core.jsf.JsfFunctions</function-class>
 		<function-signature>java.lang.Integer splitLength(java.lang.String, java.lang.String)</function-signature>
 	</function>
 	
