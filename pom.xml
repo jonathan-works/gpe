@@ -148,13 +148,6 @@
 			<version>4.3.4.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
-			<groupId>br.com.infox.epp</groupId>
-			<artifactId>jbpmgraph</artifactId>
-			<version>1.0.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-jpdl</artifactId>
 			<scope>compile</scope>
@@ -269,6 +262,13 @@
 			<version>1.0.9.1</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+            <groupId>jgraph</groupId>
+            <artifactId>jgraph</artifactId>
+            <version>5.13.0.0</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
 	</dependencies>
 	<build>
 		<finalName>epp</finalName>
