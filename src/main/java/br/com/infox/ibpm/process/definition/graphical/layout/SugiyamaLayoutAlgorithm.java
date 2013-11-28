@@ -1,7 +1,7 @@
 // This file is part of the Echidna project
 // (C) 2002 Forschungszentrum Informatik (FZI) Karlsruhe
 // Please visit our website at http://echidna.sf.net
-package br.com.infox.jbpm.layout;
+package br.com.infox.ibpm.process.definition.graphical.layout;
 
 import java.awt.Point;
 import java.awt.Rectangle;

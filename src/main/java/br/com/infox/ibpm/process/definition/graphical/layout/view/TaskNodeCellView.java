@@ -1,8 +1,7 @@
-package br.com.infox.jbpm.layout.view;
+package br.com.infox.ibpm.process.definition.graphical.layout.view;
 
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.VertexView;
-
 
 public class TaskNodeCellView extends VertexView {
 

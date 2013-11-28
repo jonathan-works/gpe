@@ -9,7 +9,7 @@
  * installation directory. If you are unable to locate this file please
  * contact JGraph sales for another copy.
  */
-package br.com.infox.jbpm.layout;
+package br.com.infox.ibpm.process.definition.graphical.layout;
 
 import org.jgraph.event.GraphModelEvent;
 import org.jgraph.event.GraphModelListener;

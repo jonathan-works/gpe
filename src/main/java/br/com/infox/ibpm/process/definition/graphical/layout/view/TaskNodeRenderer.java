@@ -1,4 +1,4 @@
-package br.com.infox.jbpm.layout.view;
+package br.com.infox.ibpm.process.definition.graphical.layout.view;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,7 +10,7 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jgraph.graph.VertexRenderer;
 
-import br.com.infox.jbpm.layout.cell.JbpmDefaultCell;
+import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
 
 public class TaskNodeRenderer extends VertexRenderer {
 
@@ -40,7 +40,7 @@ public class TaskNodeRenderer extends VertexRenderer {
 			int y = getHeight() - 18;
 			if (i == -1) {
 				i = 0;
-				name = "<Não Atribuida>";		
+				name = "<Nï¿½o Atribuida>";		
 			} else {
 				if (i >= COLORS.length) {
 					i = i - COLORS.length;

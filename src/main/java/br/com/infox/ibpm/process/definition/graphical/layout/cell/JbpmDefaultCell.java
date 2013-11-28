@@ -1,4 +1,4 @@
-package br.com.infox.jbpm.layout.cell;
+package br.com.infox.ibpm.process.definition.graphical.layout.cell;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.node.EndState;
@@ -25,7 +24,7 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 
 import br.com.infox.ibpm.node.DecisionNode;
-import br.com.infox.jbpm.layout.Util;
+import br.com.infox.ibpm.process.definition.graphical.layout.Util;
 
 public class JbpmDefaultCell extends DefaultGraphCell {
 
@@ -76,8 +75,7 @@ public class JbpmDefaultCell extends DefaultGraphCell {
 		GraphConstants.setBounds(this.getAttributes(), bounds);
 		GraphConstants.setGradientColor(this.getAttributes(), getBgColor());
 		GraphConstants.setBackground(getAttributes(), getBgColor());
-		Icon value = Util.readImageIcon(getIconPath());
-		GraphConstants.setIcon(getAttributes(), value);
+		GraphConstants.setIcon(getAttributes(), Util.readImageIcon(getIconPath()));
 		GraphConstants.setOpaque(this.getAttributes(), true);
 		if (raisedBorder) { 
 			GraphConstants.setBorder(this.getAttributes(), BorderFactory

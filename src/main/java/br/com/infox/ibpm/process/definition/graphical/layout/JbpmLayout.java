@@ -1,4 +1,4 @@
-package br.com.infox.jbpm.layout;
+package br.com.infox.ibpm.process.definition.graphical.layout;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -34,8 +34,8 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 
 import br.com.infox.ibpm.node.DecisionNode;
+import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.jbpm.layout.cell.JbpmDefaultCell;
 
 import com.jgraph.layout.JGraphFacade;
 import com.jgraph.layout.hierarchical.JGraphHierarchicalLayout;

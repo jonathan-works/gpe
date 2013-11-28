@@ -1,4 +1,4 @@
-package br.com.infox.jbpm.layout;
+package br.com.infox.ibpm.process.definition.graphical.layout;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;

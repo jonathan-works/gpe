@@ -1,9 +1,9 @@
-package br.com.infox.jbpm.layout;
+package br.com.infox.ibpm.process.definition.graphical.layout;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.GraphModel;
 
-import br.com.infox.jbpm.layout.view.JbpmCellViewFactory;
+import br.com.infox.ibpm.process.definition.graphical.layout.view.JbpmCellViewFactory;
 
 public class JbpmGraph extends JGraph {
 

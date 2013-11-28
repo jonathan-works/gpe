@@ -1,10 +1,10 @@
-package br.com.infox.jbpm.layout.view;
+package br.com.infox.ibpm.process.definition.graphical.layout.view;
 
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.GraphModel;
 
-import br.com.infox.jbpm.layout.cell.JbpmDefaultCell;
+import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
 
 public class JbpmCellViewFactory extends DefaultCellViewFactory {
 	
