@@ -78,10 +78,10 @@
 					action="naturezaCategoriaFluxoCrudAction.remove(row)"
 					limitToList="true"
 					status=":status"
-					render="searchGridRegion,modalPanelMessages"
-					onclick="confirm('Deseja remover este registro?');"
+					render="searchGridRegion,pageBodyDialogMessage"
+					onclick="confirm(\'#{messages['crud.confirmRemove']}\');"
 					url="/img/remove.png"
-					title="Remover registro" />
+					title="#{messages['crud.remove']}" />
 			</ui:define>
 			<wi:columnOutputText
                  columnId="natureza"
