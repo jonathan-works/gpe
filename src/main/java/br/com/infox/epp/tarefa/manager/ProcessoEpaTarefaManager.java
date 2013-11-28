@@ -5,13 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.FlushModeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Conversation;
 
 import br.com.infox.core.persistence.DAOException;
@@ -28,7 +26,6 @@ import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 @Name(ProcessoEpaTarefaManager.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class ProcessoEpaTarefaManager extends GenericManager {
 
