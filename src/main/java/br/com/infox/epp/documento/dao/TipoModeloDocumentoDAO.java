@@ -1,15 +1,11 @@
 package br.com.infox.epp.documento.dao;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 
 @Name(TipoModeloDocumentoDAO.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 public class TipoModeloDocumentoDAO extends GenericDAO {
 

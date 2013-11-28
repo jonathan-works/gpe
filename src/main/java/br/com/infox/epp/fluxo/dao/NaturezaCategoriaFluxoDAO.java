@@ -6,11 +6,8 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -25,7 +22,6 @@ import br.com.itx.util.EntityUtil;
  *
  */
 @Name(NaturezaCategoriaFluxoDAO.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class NaturezaCategoriaFluxoDAO extends GenericDAO {
 

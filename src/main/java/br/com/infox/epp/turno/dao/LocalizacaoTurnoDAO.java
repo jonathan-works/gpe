@@ -7,11 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
@@ -25,7 +22,6 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
  *
  */
 @Name(LocalizacaoTurnoDAO.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class LocalizacaoTurnoDAO extends GenericDAO {
 
