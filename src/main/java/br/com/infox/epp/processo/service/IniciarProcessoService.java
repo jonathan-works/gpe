@@ -21,8 +21,8 @@ import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.VariavelProcesso;
-import br.com.infox.epp.fluxo.manager.VariavelProcessoManager;
+import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -41,7 +41,7 @@ public class IniciarProcessoService {
 	private ProcessoManager processoManager;
 
 	@In
-	private VariavelProcessoManager variavelProcessoManager;
+	private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 	
 	public static final String ON_CREATE_PROCESS = 
 		"br.com.infox.epp.IniciarProcessoService.ONCREATEPROCESS";
@@ -102,9 +102,9 @@ public class IniciarProcessoService {
     }
 
 	private void createJbpmVariables(Processo processo, ContextInstance contextInstance) {
-		ProcessoEpa processoEpa = variavelProcessoManager.find(ProcessoEpa.class, processo.getIdProcesso());
-		List<VariavelProcesso> variaveis = variavelProcessoManager.listVariaveisProcessoByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
-		for (VariavelProcesso variavelProcesso : variaveis) {
+		ProcessoEpa processoEpa = definicaoVariavelProcessoManager.find(ProcessoEpa.class, processo.getIdProcesso());
+		List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
+		for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
 			contextInstance.setVariable(variavelProcesso.getNome(), null);
 		}
 	}

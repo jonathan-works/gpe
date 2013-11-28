@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+
+	<ui:decorate template="dataTable.xhtml">
+	
+		<ui:param name="values" value="#{definicaoVariavelProcessoAction.listVariaveis(5)}" />
+		
+		<ui:param name="id" value="variavelTable" />
+
+		<ui:define name="headerToolBar">
+		
+			<h:form>
+			
+				<a:commandLink action="#{variavelProcessoAction.adicionarVariavel}"
+						 	   execute="@this"
+						 	   render="variavelTable, variavelForm, pageBodyDialogMessage"
+						 	   limitRender="true">
+						 		
+					<h:graphicImage title="#{messages['definicaoVariavelProcesso.addVariavel']}"
+							 		url="/img/add.gif" />
+							 		
+				</a:commandLink>
+				
+			</h:form>
+			
+		</ui:define>
+		
+		<ui:define name="toolBar">
+		
+			<h:form>
+			
+				<h:graphicImage	title="#{messages['definicaoVariavelProcesso.removeVariavel']}"
+						 		url="/img/remove.png"
+						 		styleClass="opacityHover pointer">
+						 		
+					<a:ajax	event="click"
+							listener="#{definicaoVariavelProcessoAction.remove(row)}"
+							execute="@this"
+							onbeforesubmit="return confirm('#{messages['processBuilder.confirm']}')"
+							render="variavelTable, variavelForm, pageBodyDialogMessage, variavelPaginator"
+							limitRender="true" />
+							
+				</h:graphicImage>
+				
+			</h:form>
+			
+		</ui:define>
+		
+		<ui:define name="columns">
+		
+			<rich:column>
+			
+				<h:form>
+				
+					<f:facet name="header">#{messages['processBuilder.definicaoVariavelProcesso']}</f:facet>
+					
+					<ui:param name="current" value="#{row == definicaoVariavelProcessoAction.instance}" />
+					
+					<ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
+					
+					<a:commandLink action="#{definicaoVariavelProcessoAction.setVariavel(row)}"
+							 	   execute="@this"
+							 	   render="variavelForm"
+							 	   limitRender="true">
+							 		
+						<h:outputText value="#{definicaoVariavelProcessoAction.getNomeAmigavel(row)}" />
+						
+					</a:commandLink>
+					
+				</h:form>
+				
+			</rich:column>
+		
+		</ui:define>
+						
+	</ui:decorate>
+	
+	<h:form>
+	
+		<rich:inputNumberSlider value="#{definicaoVariavelProcessoAction.page}" 
+			minValue="1" 
+			maxValue="#{definicaoVariavelProcessoAction.maxPages}"
+			enableManualInput="false"
+			id="variavelPaginator"
+			rendered="#{definicaoVariavelProcessoAction.maxPages gt 1}">
+			
+			<a:ajax event="change" render="variavelTable, @form" limitRender="true"/>
+			
+		</rich:inputNumberSlider>
+	
+	</h:form>
+	
+	<h:form id="variavelForm">
+	
+		<s:div rendered="#{not empty definicaoVariavelProcessoAction.variavel}">
+		
+			<wi:inputText id="nomeVariavel"
+				label="#{messages['definicaoVariavelProcesso.nome']}"
+				required="true"
+			 	value="#{definicaoVariavelProcessoAction.nomeAmigavel}" />
+			 	
+			<wi:inputText id="labelProcesso"
+				label="#{messages['definicaoVariavelProcesso.label']}"
+				required="true"
+				value="#{definicaoVariavelProcessoAction.variavel.label}"/>
+			 	
+			<a:commandButton action="#{definicaoVariavelProcessoAction.save}"
+				render="variavelForm, variavelTable, pageBodyDialogMessage, variavelPaginator"
+				limitRender="true"
+				value="#{definicaoVariavelProcessoAction.persisted ? 'Alterar' : 'Incluir'}"/>
+			
+		</s:div>
+		
+	</h:form>
+
+</ui:composition>

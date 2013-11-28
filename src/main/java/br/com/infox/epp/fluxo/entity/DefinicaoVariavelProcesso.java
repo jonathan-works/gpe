@@ -19,35 +19,40 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = VariavelProcesso.TABLE_NAME, uniqueConstraints = {
+@Table(name = DefinicaoVariavelProcesso.TABLE_NAME, uniqueConstraints = {
 	@UniqueConstraint(columnNames = {"nm_variavel", "id_fluxo"})
 })
-public class VariavelProcesso implements Serializable {
+public class DefinicaoVariavelProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "tb_variavel_processo";
+	public static final String TABLE_NAME = "tb_definicao_variavel_processo";
 	
 	@Id
-	@SequenceGenerator(name = "VariavelProcessoGenerator", sequenceName = "sq_tb_variavel_processo", initialValue = 1)
-	@GeneratedValue(generator = "VariavelProcessoGenerator", strategy = GenerationType.SEQUENCE)
-	@Column(name = "id_variavel_processo", nullable = false, unique = true)
-	private Long idVariavelProcesso;
+	@SequenceGenerator(name = "DefinicaoVariavelProcessoGenerator", sequenceName = "sq_tb_definicao_variavel_processo")
+	@GeneratedValue(generator = "DefinicaoVariavelProcessoGenerator", strategy = GenerationType.SEQUENCE)
+	@Column(name = "id_definicao_variavel_processo", nullable = false, unique = true)
+	private Long id;
 	
 	@Column(name = "nm_variavel", nullable = false, length = LengthConstants.DESCRICAO_PEQUENA)
 	@Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA, message = "{beanValidation.size}")
 	@NotNull(message = "{beanValidation.notNull}")
 	private String nome;
 	
+	@Column(name = "ds_label", nullable = false, length = LengthConstants.DESCRICAO_ENTIDADE)
+	@Size(min = 1, max = LengthConstants.DESCRICAO_ENTIDADE, message = "{beanValidation.notNull}")
+	@NotNull(message = "{beanValidation.notNull}")
+	private String label;
+	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_fluxo", nullable = false)
 	private Fluxo fluxo;
 	
-	public Long getIdVariavelProcesso() {
-		return idVariavelProcesso;
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdVariavelProcesso(Long idVariavelProcesso) {
-		this.idVariavelProcesso = idVariavelProcesso;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -58,6 +63,14 @@ public class VariavelProcesso implements Serializable {
 		this.nome = nome;
 	}
 
+	public String getLabel() {
+		return label;
+	}
+	
+	public void setLabel(String label) {
+		this.label = label;
+	}
+	
 	public Fluxo getFluxo() {
 		return fluxo;
 	}
@@ -73,8 +86,7 @@ public class VariavelProcesso implements Serializable {
 		result = prime * result + ((fluxo == null) ? 0 : fluxo.hashCode());
 		result = prime
 				* result
-				+ ((idVariavelProcesso == null) ? 0 : idVariavelProcesso
-						.hashCode());
+				+ ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		return result;
 	}
@@ -85,18 +97,18 @@ public class VariavelProcesso implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof VariavelProcesso))
+		if (!(obj instanceof DefinicaoVariavelProcesso))
 			return false;
-		VariavelProcesso other = (VariavelProcesso) obj;
+		DefinicaoVariavelProcesso other = (DefinicaoVariavelProcesso) obj;
 		if (fluxo == null) {
 			if (other.fluxo != null)
 				return false;
 		} else if (!fluxo.equals(other.fluxo))
 			return false;
-		if (idVariavelProcesso == null) {
-			if (other.idVariavelProcesso != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!idVariavelProcesso.equals(other.idVariavelProcesso))
+		} else if (!id.equals(other.id))
 			return false;
 		if (nome == null) {
 			if (other.nome != null)
