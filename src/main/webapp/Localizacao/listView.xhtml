@@ -111,21 +111,31 @@
 				 id="estrutura"
 				 required="true"
 				 label="#{messages['localizacao.estrutura']}"
-				 value="#{localizacaoCrudAction.instance.estrutura}" />
-            <wi:tree
-				 id="localizacaoPai"
-				 assignTo="localizacaoCrudAction.instance.localizacaoPai"
-				 tree="#{localizacaoTree}"
-				 icon="/img/nivelTree.gif"
-				 iconLeaf="/img/file.gif"
-				 label="#{messages['localizacao.localizacaoPai']}" />
-			<wi:selectOneMenuEntity
-				id="estruturaFilho"
-				value="#{localizacaoCrudAction.instance.estruturaFilho}"
-				label="#{messages['localizacao.estruturaFilho']}"
-				items="#{localizacaoCrudAction.getLocalizacoesEstrutura()}"
-				noSelectionLabel="Selecione..."
-			/>
+				 value="#{localizacaoCrudAction.instance.estrutura}">
+				 <a:ajax
+				 	event="change"
+					execute="@this"
+					render="notEstrutura"
+					limitRender="true" />
+			</wi:selectBooleanRadio>
+			<h:panelGroup id="notEstrutura">
+	            <wi:tree
+					 id="localizacaoPai"
+					 assignTo="localizacaoCrudAction.instance.localizacaoPai"
+					 tree="#{localizacaoTree}"
+					 icon="/img/nivelTree.gif"
+					 iconLeaf="/img/file.gif"
+					 rendered="#{!localizacaoCrudAction.instance.estrutura}"
+					 label="#{messages['localizacao.localizacaoPai']}" />
+				<wi:selectOneMenuEntity
+					id="estruturaFilho"
+					value="#{localizacaoCrudAction.instance.estruturaFilho}"
+					label="#{messages['localizacao.estruturaFilho']}"
+					items="#{localizacaoCrudAction.getLocalizacoesEstrutura()}"
+					rendered="#{!localizacaoCrudAction.instance.estrutura}"
+					noSelectionLabel="#{messages['crud.select.select']}"
+				/>
+			</h:panelGroup>
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{messages['field.situacao']}"
