@@ -2,11 +2,9 @@ package br.com.infox.ibpm.process.definition.graphical.layout;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +31,7 @@ import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -71,7 +70,8 @@ public class JbpmLayout {
 		ImageIO.write(Util.toImage(graph), "png", file);
 	}
 
-	private String makeMap() {
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+    private String makeMap() {
 		if (graph == null) {
 			makeGraph();
 		}
@@ -151,7 +151,8 @@ public class JbpmLayout {
 		return map;
 	}
 	
-	private JGraph makeGraph() {
+	@SuppressWarnings(WarningConstants.RAWTYPES)
+    private JGraph makeGraph() {
 		GraphModel model = new DefaultGraphModel();
 		graph = new JbpmGraph(model);
 		// Control-drag should clone selection
@@ -202,7 +203,8 @@ public class JbpmLayout {
 		return graph;
 	}
 
-	private void insertNodes(List<DefaultGraphCell> cellList,
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+    private void insertNodes(List<DefaultGraphCell> cellList,
 			Map<Node, DefaultGraphCell> nodes) {
 		if (taskInstanceMap == null) {
 			for (Object o : processDefinition.getNodes()) {
@@ -277,33 +279,7 @@ public class JbpmLayout {
 		// para mudar o tipo da linha (BEZIER, SPLINE, ORTHOGONAL)
 //		Routing routing = new DefaultEdge.DefaultRouting();
 //		GraphConstants.setRouting(edge.getAttributes(), routing );
-		GraphConstants.setLineStyle(edge.getAttributes(), GraphConstants.STYLE_BEZIER);
+		GraphConstants.setLineStyle(edge.getAttributes(), GraphConstants.STYLE_SPLINE);
 	}
 	
-
-	public static void main(String[] args) throws Exception {
-		
-		String path = "/home/luiz/processdefinition.xml";
-		ProcessDefinition pd = ProcessDefinition.parseXmlInputStream(new FileInputStream(path));
-
-		Map<Node,TaskInstance> taskInstanceMap = new HashMap<Node, TaskInstance>();
-		Map<String, Task> tasks = pd.getTaskMgmtDefinition().getTasks();
-		for (Entry<String, Task> e : tasks.entrySet()) {
-			TaskInstance ti = new TaskInstance(e.getValue().getName());
-			taskInstanceMap.put(e.getValue().getTaskNode(), ti);
-			ti.setCreate(new Date());
-			ti.setStart(new Date());
-			System.out.println(ti);
-			if (taskInstanceMap.size() == 4) {
-				break;
-			}
-			ti.setEnd(new Date());
-		}
-		
-		final JbpmLayout jbpmLayout = new JbpmLayout(pd, taskInstanceMap);
-		jbpmLayout.drawGraph(new File("/home/luiz/processImage.png"));
-		
-	}
-	
-
 }
