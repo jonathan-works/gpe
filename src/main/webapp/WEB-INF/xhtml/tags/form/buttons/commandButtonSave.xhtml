@@ -21,7 +21,7 @@
 	<wi:commandButton
          id="saveButton"
          action="#{empty saveAction ? home.homeName.concat('.save()') : saveAction}"
-         reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
-         value="#{home.managed ? 'Gravar' : 'Incluir'}" />
+         reRender="#{wi:get(reRender, 'pageBody pageBodyDialogMessage')}"
+         value="#{home.managed ? messages['crud.update'] : messages['crud.persist']}" />
 	
 </ui:composition>

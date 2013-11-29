@@ -43,8 +43,9 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     public void newInstance() {
         newBloqueioUsuario();
         super.newInstance();
-        getInstance().setBloqueio(false);
-        getInstance().setProvisorio(false);
+        final UsuarioLogin usuarioLogin = getInstance();
+        usuarioLogin.setBloqueio(false);
+        usuarioLogin.setProvisorio(false);
     }
 
     private void newBloqueioUsuario() {
@@ -67,8 +68,9 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     }
     
     private void validarPermanencia() {
-        if (!getInstance().getProvisorio()) {
-            getInstance().setDataExpiracao(null);
+        final UsuarioLogin usuario = getInstance();
+        if (!usuario.getProvisorio()) {
+            usuario.setDataExpiracao(null);
         }
     }
     
@@ -91,11 +93,12 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
         if (!pessoaFisicaCadastrada){
             resultado = super.save();
         } else{
-            PessoaFisica pf = EntityUtil.find(PessoaFisica.class, getInstance().getIdPessoa());
-            usuarioLoginManager.inserirUsuarioParaPessoaFisicaCadastrada(getInstance());
+            final UsuarioLogin usuario = getInstance();
+            PessoaFisica pf = find(PessoaFisica.class, usuario.getIdPessoa());
+            usuarioLoginManager.inserirUsuarioParaPessoaFisicaCadastrada(usuario);
             EntityUtil.getEntityManager().detach(pf);
-            setInstance(usuarioLoginManager.getUsuarioLogin(getInstance()));
-            resultado = "persisted";
+            setInstance(usuarioLoginManager.getUsuarioLogin(usuario));
+            resultado = PERSISTED;
             afterSave(resultado);
         }
         return resultado;
@@ -104,22 +107,15 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     @Override
     protected void afterSave(String ret) {
         super.afterSave(ret);
-        if (getInstance().getSenha() == null || ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(getInstance().getLogin())) {
+        final UsuarioLogin usuario = getInstance();
+        if (usuario.getSenha() == null || ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
             try {
-                passwordService.requisitarNovaSenha(getInstance().getEmail(), "");
+                passwordService.requisitarNovaSenha(usuario.getEmail(), "");
             } catch (BusinessException be){
                 FacesMessages.instance().add(Severity.INFO, be.getLocalizedMessage());
             } catch (LoginException e) {
                 LOG.error("afterSave()", e);
             }
-        }
-        if (getInstance() instanceof PessoaFisica){
-            try {
-                setInstance(EntityUtil.cloneEntity(getInstance(), false));
-            } catch (InstantiationException | IllegalAccessException e) {
-                LOG.error(".afterSave()", e);
-            }
-            getInstance().loadDataFromPessoaFisica(getInstance());
         }
     }
     
@@ -131,7 +127,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     
     public void searchByCpf(String cpf){
         newInstance();
-        UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioLoginByCpf(cpf);
+        final UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioLoginByCpf(cpf);
         if (usuarioLogin != null){
             setInstance(usuarioLogin);
         } else{

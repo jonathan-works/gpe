@@ -68,10 +68,8 @@ public abstract class AbstractRecursiveCrudAction<E> extends
     
     @Override
     protected String persist() {
-        // TODO Auto-generated method stub
         String ret = super.persist();
         if (PERSISTED.equals(ret)) {
-            limparTrees();
         }
         
         return ret;
