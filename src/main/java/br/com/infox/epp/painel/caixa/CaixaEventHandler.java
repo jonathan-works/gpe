@@ -67,7 +67,7 @@ public class CaixaEventHandler {
 		if (destino != null) {
 			caixa = new Caixa();
 			caixa.setTarefa(destino);
-			caixa.setIdNodeAnterior(Long.valueOf(transicao.getFrom().getId()).intValue());
+			caixa.setIdNodeAnterior(new Long(transicao.getFrom().getId()).intValue());
 		}
 		return caixa;
 	}
