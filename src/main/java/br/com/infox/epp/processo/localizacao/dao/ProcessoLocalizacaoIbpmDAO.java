@@ -5,23 +5,19 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery;
-import br.com.infox.ibpm.component.ControleFiltros;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoLocalizacaoIbpmDAO.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
@@ -40,7 +36,7 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 						"where o.processo.idProcesso = :id" +
 						" and o.localizacao = :localizacao" +
 						" and o.papel = :papel";
-		Query query = entityManager.createQuery(hql);
+		Query query = getEntityManager().createQuery(hql);
 		query.setParameter("id", ProcessoHome.instance().getInstance().getIdProcesso());
 		query.setParameter("localizacao", Authenticator.getLocalizacaoAtual());
 		query.setParameter("papel", Authenticator.getPapelAtual());
@@ -68,7 +64,7 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 	public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId, Long processId){
         String hql = "delete from ProcessoLocalizacaoIbpm o " +
         		"where o.idProcessInstanceJbpm = :processId and o.idTaskJbpm = :taskId";
-        entityManager.createQuery(hql)
+        getEntityManager().createQuery(hql)
                 .setParameter("processId", processId)
                 .setParameter("taskId", taskId).executeUpdate();
 	}

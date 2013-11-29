@@ -49,7 +49,7 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.infox.ibpm.jbpm.task.TaskInstanceHome;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
@@ -79,7 +79,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	private boolean iniciaExterno;
 	private String signature;
 	private String certChain;
-	private String idAgrupamentos;
     private ProcessoDocumento pdFluxo;
 	private Integer idProcessoDocumento;
 	private boolean checkVisibilidade=true;
@@ -307,14 +306,12 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	public void addProcessoConexoForIdProcesso(Processo processoConexo, String gridId) {
 		if (getInstance() != null){
 			processoManager.addProcessoConexoForIdProcesso(getInstance(), processoConexo);
-			refreshGrid(gridId);
 		}
 	}
 
 	public void removeProcessoConexoForIdProcesso(Processo processoConexo, String gridId) {
 		if (getInstance() != null){
 			processoManager.removeProcessoConexoForIdProcesso(getInstance(), processoConexo);
-			refreshGrid(gridId);
 		}
 	}
 
@@ -328,7 +325,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		if (getInstance() != null){
 			try {
 				processoManager.addProcessoConexoForIdProcessoConexo(getInstance(), processo);
-				refreshGrid(gridId);
 			} catch (DAOException e) {
 				LOG.error(".addProcessoConexoForIdProcessoConexo()", e);
 				FacesMessages.instance().clear();
@@ -341,7 +337,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		if (getInstance() != null){
 			try {
 				processoManager.removeProcessoConexoForIdProcessoConexo(getInstance(), processo);
-				refreshGrid(gridId);
 			} catch (DAOException e) {
 				LOG.error(".removeProcessoConexoForIdProcessoConexo()", e);
 				FacesMessages.instance().clear();
@@ -447,10 +442,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return certChain;
 	}
 	
-	public String getIdAgrupamentos() {
-		return idAgrupamentos;
-	}
-
 	public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {
 		this.processoDocumentoBin = processoDocumentoBin;
 	}

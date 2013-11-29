@@ -12,7 +12,7 @@ import org.jboss.seam.core.Events;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(SituacaoProcessoDAO.NAME)
@@ -24,7 +24,7 @@ public class SituacaoProcessoDAO extends GenericDAO {
 	
 	public Long getQuantidadeTarefasAtivasByTaskId(long taskId){
 		String hql = "select count(o.idTaskInstance) from SituacaoProcesso o where o.idTaskInstance = :ti";
-		return (Long) entityManager.createQuery(hql).setParameter("ti", taskId).getSingleResult();
+		return (Long) getEntityManager().createQuery(hql).setParameter("ti", taskId).getSingleResult();
 	}
 	
 	@SuppressWarnings(WarningConstants.UNCHECKED)

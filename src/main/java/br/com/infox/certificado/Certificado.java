@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.infox.certificado.util.DigitalSignatureUtils;
-import br.com.itx.util.ArrayUtil;
+import br.com.infox.core.util.ArrayUtil;
 
 public class Certificado {
 	

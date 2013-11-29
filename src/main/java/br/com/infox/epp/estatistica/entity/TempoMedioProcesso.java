@@ -68,7 +68,7 @@ public class TempoMedioProcesso implements Serializable {
 		if (this.tempoMedio == null) {
 			return "0";
 		}
-		return String.format(FloatFormatConstants._2F, this.tempoMedio);
+		return String.format(FloatFormatConstants.F2, this.tempoMedio);
 	}
 	
     @Override

@@ -6,11 +6,8 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -19,7 +16,6 @@ import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacaoQuery;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 
 @Name(NatCatFluxoLocalizacaoDAO.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 public class NatCatFluxoLocalizacaoDAO extends GenericDAO {
 
@@ -28,7 +24,7 @@ public class NatCatFluxoLocalizacaoDAO extends GenericDAO {
 	
 	public void deleteByNatCatFluxoAndLocalizacao
 										(NaturezaCategoriaFluxo ncf, Localizacao l) {
-		Query q = entityManager.createQuery(NatCatFluxoLocalizacaoQuery.
+		Query q = getEntityManager().createQuery(NatCatFluxoLocalizacaoQuery.
 											DELETE_BY_NAT_CAT_FLUXO_AND_LOCALIZCAO);
 		q.setParameter(NatCatFluxoLocalizacaoQuery.QUERY_PARAM_NAT_CAT_FLUXO, ncf);
 		q.setParameter(NatCatFluxoLocalizacaoQuery.QUERY_PARAM_LOCALIZACAO, l);

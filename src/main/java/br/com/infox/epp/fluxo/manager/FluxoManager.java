@@ -2,12 +2,9 @@ package br.com.infox.epp.fluxo.manager;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -17,7 +14,6 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
  * @author tassio
  */
 @Name(FluxoManager.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class FluxoManager extends GenericManager{
 

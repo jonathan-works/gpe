@@ -14,7 +14,7 @@ import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.jbpm.actions.JbpmEventsHandler;
+import br.com.infox.ibpm.event.JbpmEventsHandler;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -87,14 +87,6 @@ public class CaixaHome extends AbstractHome<Caixa> {
     @Override
     protected Caixa createInstance() {
         return new Caixa();
-    }
-    
-    @Override
-    public String remove(Caixa obj) {
-        setInstance(obj);
-        remove();
-        newInstance();
-        return remove(obj);
     }
     
     @Override

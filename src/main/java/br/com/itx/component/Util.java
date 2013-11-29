@@ -59,9 +59,6 @@ import org.richfaces.context.ExtendedPartialViewContext;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
-import br.com.itx.component.grid.GridQuery;
-import br.com.itx.component.grid.SearchField;
-import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.FacesUtil;
@@ -229,22 +226,6 @@ public class Util implements Serializable {
 			return "";
 		}
 		return text.substring(0,1).toUpperCase() + text.substring(1);
-	}
-	
-	/**
-	 * Busca o componente GridQuery que irá popular uma combo.
-	 * Ao encontrar o grid, os campos de pesquisa são removidos para limpar
-	 * possível consulta anteriormente realizada.
-	 * 
-	 * @param gridId é o id do grid a ser utilizado como origem dos registros
-	 * 
-	 */
-	public Object getComboQuery(String gridId) {
-		GridQuery<?> grid = (GridQuery<?>) Component.getInstance(gridId + "Grid", true);
-		if (grid != null) {
-			grid.setSearchFields(new ArrayList<SearchField>());
-		}
-		return grid;
 	}
 	
 	public String getSelfViewId() {
@@ -584,16 +565,6 @@ public class Util implements Serializable {
 	public static void setMessage(Severity severity, String msg) {
 		FacesMessages.instance().add(severity, msg);
 		LOG.warn(msg);
-	}
-	
-	/**
-	 * Retorna o valor do Id da entidade.
-	 * @param object Objeto em que será pesquisada o método que possui a anotação
-	 * @return Valor do Id
-	 * @throws AnnotationException
-	 */
-	public Object getIdValue(Object object) {
-		return AnnotationUtil.getIdValue(object);
 	}
 	
 	/**

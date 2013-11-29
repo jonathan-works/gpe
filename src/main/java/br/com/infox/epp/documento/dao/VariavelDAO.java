@@ -20,7 +20,7 @@ public class VariavelDAO extends GenericDAO {
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<Variavel> getVariaveisByTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento){
 		String hql = "select o from Variavel o join o.variavelTipoModeloList tipos where tipos.tipoModeloDocumento = :tipo";
-		return (List<Variavel>) entityManager.createQuery(hql).setParameter("tipo", tipoModeloDocumento).getResultList();
+		return (List<Variavel>) getEntityManager().createQuery(hql).setParameter("tipo", tipoModeloDocumento).getResultList();
 	}
 
 }

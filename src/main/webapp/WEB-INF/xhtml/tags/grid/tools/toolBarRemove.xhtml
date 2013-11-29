@@ -22,15 +22,14 @@
 	<ui:param
          name="actionRemove"
          value="#{empty actionRemove ? home.homeName.concat('.remove(row)') : actionRemove}" />
-
 	<wi:toolBar
          action="#{actionRemove}"
          limitToList="true"
          status=":status"
          reRender="#{wi:get(reRender, 'searchGridRegion')}"
-         onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
+         onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
          url="/img/remove.png"
-         title="#{wi:get(title, 'Remover registro')}">
+         title="#{wi:get(title, messages['crud.remove'])}">
 		<f:param
              name="page"
              value="#{bean.page}" />

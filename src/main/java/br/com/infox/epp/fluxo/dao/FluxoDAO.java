@@ -6,11 +6,8 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.query.FluxoQuery;
@@ -22,7 +19,6 @@ import br.com.itx.util.EntityUtil;
  *
  */
 @Name(FluxoDAO.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class FluxoDAO extends GenericDAO {
 
@@ -57,7 +53,7 @@ public class FluxoDAO extends GenericDAO {
 	
 	public Long getQuantidadeDeProcessoAssociadosAFluxo(Fluxo fluxo){
 		String query = "select count(o) from Processo o where o.naturezaCategoriaFluxo.fluxo = :fluxo";
-        return (Long) entityManager.createQuery(query).setParameter("fluxo", fluxo).getSingleResult();
+        return (Long) getEntityManager().createQuery(query).setParameter("fluxo", fluxo).getSingleResult();
 	}
 	
 }

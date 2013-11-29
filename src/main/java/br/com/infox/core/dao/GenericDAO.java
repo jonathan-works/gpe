@@ -37,7 +37,7 @@ public class GenericDAO implements Serializable {
 	public static final String NAME = "genericDAO";
 	
 	@In
-	protected transient EntityManager entityManager;
+	private transient EntityManager entityManager;
 	
 	/**
 	 * Busca o registro na entidade informada.
@@ -160,4 +160,9 @@ public class GenericDAO implements Serializable {
 	    	Util.rollbackTransactionIfNeeded();
 	    }
 	}
+
+    protected EntityManager getEntityManager() {
+        return entityManager;
+    }
+	
 }

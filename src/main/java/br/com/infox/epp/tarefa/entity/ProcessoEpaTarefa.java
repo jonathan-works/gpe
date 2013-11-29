@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery;
-import br.com.infox.ibpm.type.PrazoEnum;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name=ProcessoEpaTarefa.TABLE_NAME, schema="public")

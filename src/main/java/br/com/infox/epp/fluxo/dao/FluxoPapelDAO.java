@@ -4,18 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.query.FluxoPapelQuery;
 
 @Name(FluxoPapelDAO.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class FluxoPapelDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;

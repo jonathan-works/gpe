@@ -27,7 +27,7 @@ public class TipoModeloDocumentoPapelDAO extends GenericDAO {
 				"join tmdp.tipoModeloDocumento t " +
 				"where tmdp.papel = :papel " +
 				"order by t.tipoModeloDocumento";
-		return entityManager.createQuery(hql)
+		return getEntityManager().createQuery(hql)
 			.setParameter("papel", Authenticator.getUsuarioLocalizacaoAtual()
 			.getPapel()).getResultList();
 	}

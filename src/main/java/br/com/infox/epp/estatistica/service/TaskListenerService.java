@@ -1,6 +1,6 @@
 package br.com.infox.epp.estatistica.service;
 
-import static br.com.infox.ibpm.jbpm.JbpmUtil.getTarefa;
+import static br.com.infox.ibpm.util.JbpmUtil.getTarefa;
 
 import java.util.Date;
 
@@ -20,7 +20,7 @@ import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
-import br.com.infox.ibpm.jbpm.JbpmUtil;
+import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(TaskListenerService.NAME)
 public class TaskListenerService extends AbstractAction {

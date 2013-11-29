@@ -42,8 +42,8 @@ import javax.validation.constraints.NotNull;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.itx.util.ArrayUtil;
 
 @Entity
 @Table(name = "tb_processo_documento_bin", schema="public")

@@ -42,7 +42,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.ibpm.jbpm.handler.VariableHandler;
+import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.itx.util.EntityUtil;
 
 

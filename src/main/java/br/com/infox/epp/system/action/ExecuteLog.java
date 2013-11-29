@@ -25,11 +25,11 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 import br.com.infox.epp.system.util.LogUtil;
-import br.com.itx.util.ArrayUtil;
 
 /**
  * 

@@ -31,15 +31,14 @@
          rendered="#{wi:get(rendered,true)}"
          limitRender="true"
 		 execute="#{execute}"
-         onclick="showLoading();#{onclick}"
-         oncomplete="hideLoading();#{oncomplete}"
+         onclick="infox.showLoading();#{onclick}"
+         oncomplete="infox.hideLoading();#{oncomplete}"
          value="#{value}"
          render="#{reRender}"
-         
          disabled="#{disabled}"
          immediate="#{immediate}"
          styleClass="buttons #{wi:get(styleClass, 'buttons')}">
 		<ui:insert />
-	</a:commandButton>	
+	</a:commandButton>
 			   
 </ui:composition>

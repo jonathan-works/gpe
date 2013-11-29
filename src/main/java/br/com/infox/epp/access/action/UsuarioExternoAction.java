@@ -26,7 +26,7 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.processo.action.IniciarProcessoAction;
-import br.com.infox.ibpm.jbpm.task.TaskInstanceHome;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioExternoAction.NAME)
@@ -72,7 +72,11 @@ public class UsuarioExternoAction {
 				FacesContext.getCurrentInstance().getExternalContext().redirect("about:blank");
 			}
 		} catch (IOException e) {
-			LOG.error("Erro ao redirecionar para a URL " + urlRetorno.toString(), e);
+		    if (urlRetorno != null) {
+		        LOG.error("Erro ao redirecionar para a URL " + urlRetorno.toString(), e);
+            } else {
+                LOG.error(".endAcaoUsuarioExterno()", e);
+            }
 		}
 		Identity.instance().logout();
 	}

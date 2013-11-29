@@ -4,11 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
@@ -18,7 +16,6 @@ import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 
 @Name(LocalizacaoTurnoManager.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class LocalizacaoTurnoManager extends GenericManager {
 

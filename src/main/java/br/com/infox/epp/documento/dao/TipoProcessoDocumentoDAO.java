@@ -34,14 +34,14 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 		String hql = "select o from TipoProcessoDocumento o " +
 				"where o.ativo = true and (o.visibilidade = 'I' OR o.visibilidade = 'A') and " +
 				"(o.inTipoDocumento = " + restricaoDeTipo + " OR o.inTipoDocumento = 'T')";
-		return entityManager.createQuery(hql).getResultList();
+		return getEntityManager().createQuery(hql).getResultList();
 	}
 	
 	//Retorna um TipoProcessoDocumento ~aleatório
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
 		String sql = "select o from TipoProcessoDocumento o ";
-		Query q = entityManager.createQuery(sql);
+		Query q = getEntityManager().createQuery(sql);
 		q.setMaxResults(1);
 		List<TipoProcessoDocumento> resultList = q.getResultList();
 		TipoProcessoDocumento result = null;
