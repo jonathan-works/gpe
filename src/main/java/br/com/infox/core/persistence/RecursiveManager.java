@@ -40,21 +40,20 @@ public final class RecursiveManager {
 	 * informado
 	 * @return
 	 */
-	private static String getFullPath(Recursive<?> object, StringBuilder sb) {
+	private static <E extends Recursive<E>> String getFullPath(E object, StringBuilder sb) {
 		if(object != null) {
-		    
-			getFullPath((Recursive<?>)object.getParent(), sb);
+			getFullPath(object.getParent(), sb);
 			sb.append(object.getPathDescriptor());
 			sb.append("|");
 		}
 		return sb.toString();
 	}
 	
-	private static String getFullPath(Recursive<?> object) {
+	private static <E extends Recursive<E>> String getFullPath(E object) {
 		return getFullPath(object, new StringBuilder());
 	}
 
-	public static void refactor(Recursive<?> object) {
+	public static <E extends Recursive<E>> void refactor(E object) {
 		try {
 			if(verifyParent(object)) {
 				throw new RecursiveException(MSG_PARENT_EXCEPTION);
@@ -70,14 +69,13 @@ public final class RecursiveManager {
 	 * modifica todos os fullPaths de seus dependentes na árvore.
 	 * @param object Registro que se deseja atualizar
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
-	private static void refactorFieldPath(Recursive<?> object) {
+	private static <E extends Recursive<E>> void refactorFieldPath(E object) {
 		try {
 			setFullPath(object);
 			
-			List<Recursive<?>> fieldList = (List<Recursive<?>>) object.getChildList();
+			List<E> fieldList = object.getChildList();
 			if (fieldList != null) {
-				for (Recursive<?> o : fieldList) {
+				for (E o : fieldList) {
 					refactorFieldPath(o);
 				}
 			}
@@ -93,7 +91,7 @@ public final class RecursiveManager {
 	 * @throws InvalidTargetObjectTypeException 
 	 * @throws AnnotationException 
 	 */
-	public static void setFullPath(Recursive<?> object) throws InvalidTargetObjectTypeException {
+	public static <E extends Recursive<E>> void setFullPath(E object) throws InvalidTargetObjectTypeException {
 		object.setHierarchicalPath(getFullPath(object));
 	}
 	
@@ -103,7 +101,7 @@ public final class RecursiveManager {
 	 * @throws InvalidTargetObjectTypeException 
 	 * @throws AnnotationException 
 	 */
-	private static boolean verifyParent(Recursive<?> object) {
+	private static <E extends Recursive<E>> boolean verifyParent(E object) {
 		try {
 			Integer id = (Integer) AnnotationUtil.getValue(object, Id.class);
 			return hasParentDuplicity(object, id);
@@ -112,9 +110,8 @@ public final class RecursiveManager {
 		}
 		return false;
 	}
-	
-	private static boolean hasParentDuplicity(Recursive<?> o, Integer checkId) throws InvalidTargetObjectTypeException {
-	    Recursive<?> dad = (Recursive<?>) o.getParent();
+	private static <E extends Recursive<E>> boolean hasParentDuplicity(E o, Integer checkId) throws InvalidTargetObjectTypeException {
+	    E dad = o.getParent();
 		if(dad != null) {
 			Integer id = (Integer) AnnotationUtil.getValue(dad, Id.class);
 			if(id.equals(checkId)) {
@@ -131,9 +128,9 @@ public final class RecursiveManager {
 	 * fullPaths.
 	 * @param clazz Entidade que se deseja atualizar todos os registros.
 	 */
-	public static void populateAllHierarchicalPaths(Class<? extends Recursive<?>> clazz) {
-		List<? extends Recursive<?>> entityList = getEntityListNullHierarchicalPath(clazz);
-		for(Recursive<?> o : entityList){
+	public static <E extends Recursive<E>> void populateAllHierarchicalPaths(Class<E> clazz) {
+		List<E> entityList = getEntityListNullHierarchicalPath(clazz);
+		for(E o : entityList){
 			try {
 				if (isFullPathEnpty(o)) {
 					refactorFieldPath(o);
@@ -145,7 +142,7 @@ public final class RecursiveManager {
 	}
 	
 	
-	public static boolean isFullPathEnpty(Recursive<?> object) {
+	public static <E extends Recursive<E>> boolean isFullPathEnpty(E object) {
 		String currentFullPath = object.getHierarchicalPath();
 		return currentFullPath == null || "".equals(currentFullPath);
 	}
@@ -162,12 +159,11 @@ public final class RecursiveManager {
 	 * Método para inativar recursivamente todos os filhos do objeto passado
 	 * @param obj raiz da sub-árvore que será inativada
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
-	public static void inactiveRecursive(Recursive<?> obj) {
+	public static <E extends Recursive<E>> void inactiveRecursive(E obj) {
 		ComponentUtil.setValue(obj, "ativo", Boolean.FALSE);
 		
-		List<Recursive<?>> childList = (List<Recursive<?>>) obj.getChildList();
-		for (Recursive<?> child: childList) {
+		List<E> childList = obj.getChildList();
+		for (E child: childList) {
 			inactiveRecursive(child);
 		}
 	}
