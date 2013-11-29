@@ -34,13 +34,13 @@ public class DefinicaoVariavelProcessoDAO extends GenericDAO {
 	}
 
 	public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
-		return entityManager.createQuery(DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO_QUERY, Long.class)
+		return getEntityManager().createQuery(DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO_QUERY, Long.class)
 				.setParameter(DefinicaoVariavelProcessoQuery.QUERY_PARAM_FLUXO, fluxo)
 				.getSingleResult();
 	}
 	
 	private TypedQuery<DefinicaoVariavelProcesso> createQueryVariaveisProcessoByFluxo(Fluxo fluxo) {
-		return entityManager.createQuery(DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO_QUERY, DefinicaoVariavelProcesso.class)
+		return getEntityManager().createQuery(DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO_QUERY, DefinicaoVariavelProcesso.class)
 				.setParameter(DefinicaoVariavelProcessoQuery.QUERY_PARAM_FLUXO, fluxo);
 	}
 }
