@@ -11,7 +11,7 @@ import br.com.infox.core.persistence.RecursiveManager;
 import br.com.itx.util.EntityUtil;
 
 @SuppressWarnings(WarningConstants.UNCHECKED)
-public abstract class AbstractRecursiveCrudAction<E> extends 
+public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extends 
                             AbstractCrudAction<E> {
     
     private static final LogProvider LOG = Logging.getLogProvider(AbstractRecursiveCrudAction.class);
@@ -33,8 +33,8 @@ public abstract class AbstractRecursiveCrudAction<E> extends
     }
     
     private void updateRecursivePath() {
-        final Recursive<E> curRecursive =(Recursive<E>)getInstance();
-        final Recursive<E> oldRecursive = (Recursive<E>)oldInstance;
+        final E curRecursive = getInstance();
+        final E oldRecursive = oldInstance;
         if (!isManaged()
                 ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
                 || (curRecursive.getParent()!=null && !curRecursive.getParent().equals(oldRecursive.getParent()))) {
@@ -42,11 +42,11 @@ public abstract class AbstractRecursiveCrudAction<E> extends
         }
     }
     
-    private void updateRecursive(Recursive<E> recursive) {
+    private void updateRecursive(E recursive) {
         RecursiveManager.refactor(recursive);
         final List<E> childList = recursive.getChildList();
         for(int i=0,l=childList.size();i<l;i++) {
-            updateRecursive((Recursive<E>)childList.get(i));
+            updateRecursive(childList.get(i));
         }
     }
     
