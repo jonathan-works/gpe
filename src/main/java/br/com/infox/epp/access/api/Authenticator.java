@@ -42,7 +42,6 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.certificado.CertificadoLog;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -402,12 +401,6 @@ public class Authenticator {
 	public String getCertChainStringLog() {
 		return certChainStringLog;
 	}	
-	
-	public void executeLogCertificadoInvalido() {
-		String msg = "Login utilizado: " + login + " / " + certChainStringLog;
-		LOG.warn(msg);
-		CertificadoLog.executeLog(msg);
-	}
 	
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoListItems() {

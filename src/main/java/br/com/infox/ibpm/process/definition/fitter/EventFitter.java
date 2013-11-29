@@ -34,7 +34,7 @@ public class EventFitter extends Fitter implements Serializable{
 		ProcessDefinition processDefinition = getProcessBuilder().getInstance();
 		String[] supportedEvents = processDefinition.getSupportedEventTypes();
 		for (String e : supportedEvents) {
-			addEvent(processDefinition, e, "br.com.infox.ibpm.util.JbpmEvents.raiseEvent(executionContext)", new Script());
+			addEvent(processDefinition, e, "br.com.infox.ibpm.event.JbpmEvents.raiseEvent(executionContext)", new Script());
 		}
 	}
 
