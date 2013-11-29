@@ -46,8 +46,6 @@ import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
-import br.com.infox.core.persistence.Recursive;
-import br.com.infox.core.persistence.RecursiveManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -241,9 +239,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		String msg = getPersistLogMessage();
 		try {
 			if (beforePersistOrUpdate()) {
-			    if (getInstance() instanceof Recursive) {
-                    updateRecursivePath();                  
-                }
 				ret = super.persist();
 				updateOldInstance();
 				afterPersistOrUpdate(ret);
@@ -306,24 +301,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		return super.isManaged();
 	}		
 
-	private void updateRecursivePath() {
-	    final Recursive<T> curRecursive =(Recursive<T>)getInstance();
-        final Recursive<T> oldRecursive = (Recursive<T>)getOldEntity();
-        //TODO rever esse if
-        if (!isManaged()
-                ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
-                || (curRecursive != null && !curRecursive.getParent().equals(oldRecursive.getParent()))) {
-            updateRecursive(curRecursive);
-        }
-	}
-    private void updateRecursive(Recursive<T> recursive) {
-        RecursiveManager.refactor(recursive);
-        final List<T> childList = recursive.getChildList();
-        for(int i=0,l=childList.size();i<l;i++) {
-            updateRecursive((Recursive<T>)childList.get(i));
-        }
-    }
-	
 	/**
 	 * Chama eventos antes e depois de atualizar a entidade
 	 */
@@ -335,9 +312,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		String msg = ".update() (" + getInstanceClassName() + ")";
 		try {
 			if (beforePersistOrUpdate()) {
-			    if (getInstance() instanceof Recursive) {
-			        updateRecursivePath();		            
-		        }
 				ret = super.update();
 				ret = afterPersistOrUpdate(ret);
 			}
