@@ -41,8 +41,8 @@ public class NodeHandler implements Serializable {
 
 	public enum UnitsEnum {
 		
-		SECOND("Segundo"), MINUTE("Minuto"), HOUR("Hora"), DAY("Dia"),
-		WEEK("Semana"), MONTH("Mes"), YEAR("Ano");
+		second("Segundo"), minute("Minuto"), hour("Hora"), day("Dia"),
+		week("Semana"), month("Mes"), year("Ano");
 		
 		private String label;
 		
@@ -208,7 +208,7 @@ public class NodeHandler implements Serializable {
 			timerName += " " + timerList.size();
 		} 
 		currentTimer.setTimerName(timerName);
-		String dueDate = "1 business HOUR";
+		String dueDate = "1 business hour";
 		currentTimer.setDueDate(dueDate);
 		setDueDate(dueDate);
 		if (node.getLeavingTransitions().size() > 0) {
@@ -278,7 +278,7 @@ public class NodeHandler implements Serializable {
 	}
 
 	public UnitsEnum getDueDateDefaultUnit() {
-		return UnitsEnum.HOUR;
+		return UnitsEnum.hour;
 	}
 	
 	public List<String> getTransitions() {
