@@ -114,9 +114,8 @@
 							
 							</c:if>
 							<c:if test="#{!form.tabbed}">
-								
-								<ui:repeat
-									 value="#{form.fields}"
+								<c:forEach
+									 items="#{form.fields}"
 									 var="f">
 									
 									<ui:param
@@ -161,10 +160,8 @@
 									<ui:param
 										 name="type"
 										 value="#{f.type.startsWith('documentoIdentificacaoHome') ? 'docsIdentificacao/'.concat(util.eval(f.type)) : f.type }" />
-									<ui:include src="/WEB-INF/xhtml/components/form/#{type}.xhtml" />
-								
-								</ui:repeat>
-							
+									<ui:include src="/WEB-INF/xhtml/components/form/#{f.type}.xhtml" />
+								</c:forEach>
 							</c:if>
 							<div >
 								

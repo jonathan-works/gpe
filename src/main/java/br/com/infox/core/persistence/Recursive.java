@@ -2,7 +2,7 @@ package br.com.infox.core.persistence;
 
 import java.util.List;
 
-public interface Recursive<E> {
+public interface Recursive<E extends Recursive<E>> {
     E getParent();
     void setParent(E parent);
     

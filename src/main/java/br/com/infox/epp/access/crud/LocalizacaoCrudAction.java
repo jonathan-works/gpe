@@ -22,13 +22,15 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     public void newInstance() {
         limparTrees();
         super.newInstance();
+        getInstance().setEstrutura(false);
     }
     
     @Override
     protected boolean beforeSave() {
-        if (getInstance().getEstrutura()){
-            getInstance().setEstruturaFilho(null);
-            getInstance().setLocalizacaoPai(null);
+        Localizacao localizacao = getInstance();
+        if (localizacao.getEstrutura()){
+            localizacao.setEstruturaFilho(null);
+            localizacao.setLocalizacaoPai(null);
         }
         return super.beforeSave();
     }
@@ -42,7 +44,8 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     @Override
     protected String update() {
         String ret = null;
-        if (getInstance().getAtivo() || inativarFilhos(getInstance())) {
+        Localizacao localizacao = getInstance();
+        if (localizacao.getAtivo() || inativarFilhos(localizacao)) {
             ret = super.update();
         }
         return ret;
