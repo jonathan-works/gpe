@@ -52,6 +52,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
+import br.com.infox.certificado.CertificadoException;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
@@ -230,9 +231,20 @@ public class TaskInstanceHome implements Serializable {
         variableResolver.resolveWhenMonetario();
         if (variableAccess.isWritable()) {
             if (variableResolver.isEditor()) {
-                variableResolver.resolveWhenEditor(assinar);
-                assinado = assinado || assinar;
-                assinar = Boolean.FALSE;
+                try {
+                    variableResolver.resolveWhenEditor(assinar);
+                    if (assinar) {
+                        FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
+                    }
+                } catch (CertificadoException e) {
+                    LOG.error("Falha na assinatura",e);
+                    if (assinar) {
+                        FacesMessages.instance().add(Messages.instance().get("assinatura.falhaAssinatura"));
+                    }
+                } finally {
+                    assinado = assinado || assinar;
+                    assinar = Boolean.FALSE;
+                }
             } else {
                 variableResolver.atribuirValorDaVariavelNoContexto();
             }

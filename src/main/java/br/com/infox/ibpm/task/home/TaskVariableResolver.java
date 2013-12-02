@@ -10,6 +10,7 @@ import org.jboss.seam.international.Messages;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.certificado.CertificadoException;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 
@@ -41,7 +42,7 @@ final class TaskVariableResolver extends TaskVariable {
         }
     }
     
-    public void resolveWhenEditor(boolean assinar){
+    public void resolveWhenEditor(boolean assinar) throws CertificadoException {
         Integer valueInt = salvarProcessoDocumento(assinar);
         if (valueInt != 0) {
             this.value = valueInt;
@@ -68,7 +69,7 @@ final class TaskVariableResolver extends TaskVariable {
         }
     }
     
-    private Integer salvarProcessoDocumento(boolean assinar){
+    private Integer salvarProcessoDocumento(boolean assinar) throws CertificadoException{
         return ProcessoHome.instance()
         .salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinar, getLabel());
     }

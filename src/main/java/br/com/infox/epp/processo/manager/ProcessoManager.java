@@ -123,7 +123,7 @@ public class ProcessoManager extends GenericManager {
             	result = true;
             } catch (IllegalStateException e) {
                 // Caso já exista deve-se ignorar este trecho, outras illegalstate devem ser averiguadas
-                // Ideal para processos já iniciados seria chamar o método resumeTask
+                // TODO Ideal para processos já iniciados seria chamar o método resumeTask
                 LOG.warn(".iniciaTask()", e);
             }
         }

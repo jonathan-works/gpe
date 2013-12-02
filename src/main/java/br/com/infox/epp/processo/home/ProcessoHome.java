@@ -143,29 +143,25 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: " + getInstance().getNumeroProcesso());
 	}
 		
-	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label){
+	public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado, String label) throws CertificadoException{
 		ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 		setIdProcessoDocumento(idDoc);
 		Integer result = idDoc;
 		if (processoDocumento != null) {
-			atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
+                atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
 		} else {
-			result = inserirProcessoDocumentoFluxo(value, label, assinado);
+            result = inserirProcessoDocumentoFluxo(value, label, assinado);
 		}
-		avisarRegistroFoiGravadoComSucesso();
+		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 		return result;
 	}
 
 	private ProcessoDocumento buscarProcessoDocumento(Integer idDoc) {
 		return EntityUtil.find(ProcessoDocumento.class, idDoc);
 	}
-
-	private void avisarRegistroFoiGravadoComSucesso() {
-		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
-	}
 	
 	//Método para Atualizar o documento do fluxo
-	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado){
+	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado) throws CertificadoException{
 		if (validacaoCertificadoBemSucedida(assinado)) {
 			ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
 			ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
@@ -213,7 +209,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 	
 	//Método para Inserir o documento do fluxo
-	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado){
+	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado) throws CertificadoException{
 		if (validacaoCertificadoBemSucedida(assinado)) {
 			Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
 			ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue, certChain, signature);
@@ -232,20 +228,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		}
 	}
 	
-	private boolean validacaoCertificadoBemSucedida(boolean assinado){
+	private boolean validacaoCertificadoBemSucedida(boolean assinado) throws CertificadoException{
 		if (assinado){
-			try {
-				verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
-			} catch (Exception e1) {
-				avisarErroAoVerificarCertificado(e1);
-				return false;
-			}
+		    verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
 		}
 		return true;
-	}
-
-	private void avisarErroAoVerificarCertificado(Exception e1) {
-		FacesMessages.instance().add(Severity.ERROR, "Erro ao verificar certificado: " + e1.getMessage());
 	}
 
 	public void carregarDadosFluxo(Integer idProcessoDocumento){
@@ -475,13 +462,15 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 	
 	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws CertificadoException {
+	    if (Strings.isEmpty(certChainBase64Encoded)) {
+            throw new ApplicationException("Não foi possível recuperar assinatura, verifique se seu cartão está corretamente configurado");
+	    }
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
 		    final Certificado certificado = new Certificado(certChainBase64Encoded);
 		    final String cpfCertificado = certificado.getCn().split(":")[1];
 		    if (usuarioLogado.getCpf().replace(".", "").equals(cpfCertificado)) {
 		        usuarioLogado.setCertChain(certChainBase64Encoded);
 		    } else {
-    			limparAssinatura();
     			throw new ApplicationException("O cadastro do usuário não está assinado.");
 		    }
 		}

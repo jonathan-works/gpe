@@ -86,8 +86,9 @@
 		            <a:jsFunction
 		            	name="submitForm"
 		            	action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
+		            	oncomplete="close()"
 		            	execute="@form"
-		            	render="formValidar"/>
+		            	render="formValidar, pageBodyDialogMessage"/>
 				</h:form>
 			</s:div>
 		</rich:panel>
