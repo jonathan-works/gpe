@@ -16,79 +16,60 @@
         <rich:panel header="Modelo de documento: #{variavel.name}">
         
             <wi:ajaxDiv id="divM2MVar">
-            
-                <rich:panel header="#{messages['associatedModeloDocumentoVariavel.titleGrid']}" id="associated" 
-                	style="margin-bottom: 20px">
-
-                	<rich:dataTable value="#{variavel.modeloDocumentoList}"
-                        id="associatedModeloDocumentoVariavelList"
-                        rowId="#{row.idModeloDocumento}"
-                        var="row"
-                        rowKeyVar="key"
-                        styleClass="dtable rf-dt-crud">
-						
-						<rich:column>
-                        
-                        	<h:form>
-                        	
-                                <a:commandLink limitRender="true"
-                                    render="divM2MVar, modeloDocumentoDiv"
-                                    action="#{variavel.removeModelo(row)}">
-                                    
-                                    <h:graphicImage url="/img/grid/copyRight.gif" title="Remover" />
-                                    
-                                </a:commandLink>
-                                
-                        	</h:form>
-                        	
-                        </rich:column>
-                        
-                        <rich:column id="tituloModeloDocumento">
-                        
-                        	<f:facet name="header">
-                        	
-                        		<h:outputText value="#{messages['associatedModeloDocumentoVariavel.tituloModeloDocumento']}" />
-                        		
-                        	</f:facet>
-                        	
-                        	<h:outputText value="#{row}" />
-                        	
-                        </rich:column>
-                            
-                    </rich:dataTable>
-                    
-                </rich:panel>
-                
-                <s:div id="associative">
-                
-                    <wi:dataTable values="#{associativeModeloDocumentoList.list(15)}"
-                        bean="#{associativeModeloDocumentoList}"
-                        tableTitle="#{messages['associativeModeloDocumento.titleGrid']}"
-                        id="associativeModeloDocumentoList"
-                        rowId="#{row.idModeloDocumento}">
+	            <div class="picklist-div">
+					<rich:panel
+						header="#{messages['associatedModeloDocumentoVariavel.titleGrid']}"
+						id="associatedModeloDocumentoVariavelListPanel"
+						bodyClass="dtable-p-b"
+						styleClass="dtable-p picklist"
+						>
+						<rich:dataTable
+							value="#{variavel.modeloDocumentoList}"
+							id="associatedModeloDocumentoVariavelList"
+							rowKeyVar="key"
+							styleClass="dtable rf-dt-crud picklist-dt"
+							var="row">
+							
+							<wi:columnOutputText
+						        columnId="tituloModeloDocumento"
+						        columnHeader="#{messages['associatedModeloDocumentoVariavel.tituloModeloDocumento']}"
+						        value="#{row}" />
+						        
+				    		<rich:column
+								styleClass="dt-toolbar-col">
+								<h:form>
+	                                <a:commandLink limitRender="true"
+	                                    render="divM2MVar, modeloDocumentoDiv"
+	                                    action="#{variavel.removeModelo(row)}">
+	                                    <h:graphicImage url="/img/grid/copyRight.gif" title="Remover" />
+	                                </a:commandLink>
+	                        	</h:form>
+							</rich:column>
+							
+						</rich:dataTable>
+					</rich:panel>
+				</div>
+                <div class="picklist-div">
+					<wi:dataTable
+					    values="#{associativeModeloDocumentoList.list(15)}"
+					    bean="#{associativeModeloDocumentoList}"
+					    tableTitle="#{messages['associativeModeloDocumento.titleGrid']}"
+					    id="associativeModeloDocumentoList"
+					    rowId="#{row.idModeloDocumento}"
+					    panelStyleClass="picklist"
+					    styleClass="picklist-dt">
                         
                         <ui:define name="searchForm">
                         
                             <wi:searchForm formId="pesquisarModeloDocumentoForm" formTitle="#{messages['searchForm.title']}">
                                 
-                                <wi:suggest id="tipoModeloDocumento"
-					                suggestProvider="#{tipoModeloDocumentoSuggest}"
-					                value="#{associativeModeloDocumentoList.entity.tipoModeloDocumento}"
-					                label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"/>
-					                
                                 <wi:inputText id="tituloModeloDocumento"
                                     label="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
                                     value="#{associativeModeloDocumentoList.entity.tituloModeloDocumento}"
                                     maxlength="150" />
                                     
-                                <wi:selectSituacaoOneMenu id="ativo"
-                                    label="#{messages['field.situacao']}"
-                                    value="#{associativeModeloDocumentoList.entity.ativo}" />
-                                    
                             </wi:searchForm>
-                            
                         </ui:define>
-                        
                         <ui:define name="headerToolBar" />
                         
                         <ui:define name="toolBar">
@@ -105,17 +86,12 @@
                             
                         </ui:define>
                         
-                        <wi:columnOutputText columnId="tituloModeloDocumento"
+                        <wi:columnOutputText
+                        	columnId="tituloModeloDocumento"
                             columnHeader="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
                             value="#{row}" />
-                            
-                        <wi:columnSituacao columnId="tituloModeloDocumento"
-                            columnHeader="#{messages['field.situacao']}"
-                            value="#{row.ativo}" />
-                            
-                    </wi:dataTable>
-                    
-                </s:div>
+					</wi:dataTable>
+				</div>
                 
             </wi:ajaxDiv>
             
