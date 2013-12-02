@@ -97,6 +97,31 @@
                      action="#{processoHome.limpar()}">
                 
 				</infox:tab>
+				
+				<infox:tab
+					id="tabVariaveisProcesso"
+					name="tabVariaveisProcesso"
+					rendered="#{variavelProcessoAction.possuiVariaveis()}"
+					title="#{messages['variavelProcesso.variaveisProcesso']}">
+					
+					<h:form>
+					
+						<rich:panel>
+						
+							<ui:repeat var="variavel" value="#{variavelProcessoAction.variaveis}">
+							
+								<wi:inputText id="variavel-#{variavel.nome.replace(':', '_')}" label="#{variavel.label}"
+									value="#{variavel.valor}"/>
+							
+							</ui:repeat>
+						
+						</rich:panel>
+					
+						<a:commandButton value="Gravar" action="#{variavelProcessoAction.save}" render="@form, pageBodyDialogMessage" />
+					
+					</h:form>
+					
+				</infox:tab>
 
                 <infox:tab
 					 id="tabEntrada"
