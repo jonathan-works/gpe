@@ -37,6 +37,10 @@ public class DefinicaoVariavelProcessoManager extends GenericManager {
 		return definicaoVariavelProcessoDAO.getTotalVariaveisByFluxo(fluxo);
 	}
 	
+	public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
+		return definicaoVariavelProcessoDAO.getDefinicao(fluxo, nome);
+	}
+	
 	public String getNomeAmigavel(DefinicaoVariavelProcesso variavelProcesso) {
 		if (variavelProcesso == null || variavelProcesso.getNome() == null) {
 			return null;
