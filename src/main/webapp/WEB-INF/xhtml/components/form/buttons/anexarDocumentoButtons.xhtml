@@ -25,16 +25,19 @@
      xmlns:wi="http://www.itx.com.br/jsf">
 	
 	<s:div id="buttonsDiv">
-		<h:commandButton
-	         id="botaoAnexarDocumento"
-	         action="#{processoDocumentoHome.persist()}"
-	         value="#{messages['processo.anexarDocumentoBtn']}"
-	         styleClass="buttons" />
+		<wi:commandButton
+			id="botaoAnexarDocumento"
+			action="processoDocumentoHome.persist()"
+			value="#{messages['processo.anexarDocumentoBtn']}"
+			execute="@form"
+			reRender="@form,pageBodyDialogMessage"
+			styleClass="buttons" >
+		</wi:commandButton>
 	    				 
 	    <a:commandButton
 	         rendered="true"
 	         execute="@this"
-	         render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, documentoDiv, buttonsDiv"
+	         render="#{empty reRenderSaveForm ? 'tipoDocumentoDiv' : reRenderSaveForm}, documentoDiv, buttonsDiv,pageBodyDialogMessage"
 	         action="#{processoDocumentoHome.setModelo(not processoDocumentoHome.modelo)}"
 	         value="#{processoDocumentoHome.modelo ? messages['processo.associarDocumentoBtn'] : messages['processo.redigirDocumentoBtn']}"
 	         styleClass="buttons"
