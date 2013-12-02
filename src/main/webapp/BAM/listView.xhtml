@@ -144,16 +144,16 @@
 			<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
 			<rich:column styleClass="defaultCell">
 				<f:facet name="header">Localização / Usuário</f:facet>
-				<div >
+				<span>
 					<h:graphicImage url="/img/localizacao.gif"
 									rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
 					<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
-				</div>
-				<div >
+				</span>
+				<span>
 					<h:graphicImage url="/img/usuario.gif"
 									rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
 					<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
-				</div>
+				</span>
 			</rich:column>
 			
 			<wi:columnOutputText columnId="tempoGastoTarefa"  
@@ -204,19 +204,16 @@
 			<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
 			<rich:column styleClass="defaultCell">
 				<f:facet name="header">Localização / Usuário</f:facet>
-				<div >
+				<span>
 					<h:graphicImage url="/img/localizacao.gif"
 									rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
 					<h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
-				</div>
-				<div >
+				</span>
+				<span>
 					<h:graphicImage url="/img/usuario.gif"
 									rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
 					<h:outputText value=" #{userHandler.getUsuario(task.actorId)}" />
-				<c:if test="#{empty userHandler.getUsuario(task.actorId)}">
-					<h:outputText value="#{userHandler.getUsuarioByTarefa(task)}" />
-				</c:if>
-				</div>
+				</span>
 			</rich:column>
 			
 			<ui:param name="prazoEstourado" value="#{row.porcentagem > 100}" />
