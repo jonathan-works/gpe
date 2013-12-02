@@ -107,14 +107,16 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     @Override
     protected void afterSave(String ret) {
         super.afterSave(ret);
-        final UsuarioLogin usuario = getInstance();
-        if (usuario.getSenha() == null || ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
-            try {
-                passwordService.requisitarNovaSenha(usuario.getEmail(), "");
-            } catch (BusinessException be){
-                FacesMessages.instance().add(Severity.INFO, be.getLocalizedMessage());
-            } catch (LoginException e) {
-                LOG.error("afterSave()", e);
+        if (PERSISTED.equals(ret) || UPDATED.equals(ret)) {
+            final UsuarioLogin usuario = getInstance();
+            if (usuario.getSenha() == null || ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
+                try {
+                    passwordService.requisitarNovaSenha(usuario.getEmail(), "");
+                } catch (BusinessException be){
+                    FacesMessages.instance().add(Severity.INFO, be.getLocalizedMessage());
+                } catch (LoginException e) {
+                    LOG.error("afterSave()", e);
+                }
             }
         }
     }
