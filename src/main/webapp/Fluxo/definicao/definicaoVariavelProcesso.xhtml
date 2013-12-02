@@ -100,24 +100,28 @@
 	
 	<h:form id="variavelForm">
 	
-		<s:div rendered="#{not empty definicaoVariavelProcessoAction.variavel}">
+		<ui:fragment rendered="#{not empty definicaoVariavelProcessoAction.variavel}">
 		
-			<wi:inputText id="nomeVariavel"
-				label="#{messages['definicaoVariavelProcesso.nome']}"
-				required="true"
-			 	value="#{definicaoVariavelProcessoAction.nomeAmigavel}" />
-			 	
-			<wi:inputText id="labelProcesso"
-				label="#{messages['definicaoVariavelProcesso.label']}"
-				required="true"
-				value="#{definicaoVariavelProcessoAction.variavel.label}"/>
+			<s:div>
+		
+				<wi:inputText id="nomeVariavel"
+					label="#{messages['definicaoVariavelProcesso.nome']}"
+					required="true"
+				 	value="#{definicaoVariavelProcessoAction.nomeAmigavel}" />
+				 	
+				<wi:inputText id="labelProcesso"
+					label="#{messages['definicaoVariavelProcesso.label']}"
+					required="true"
+					value="#{definicaoVariavelProcessoAction.variavel.label}"/>
+					
+			</s:div>
 			 	
 			<a:commandButton action="#{definicaoVariavelProcessoAction.save}"
 				render="variavelForm, variavelTable, pageBodyDialogMessage, variavelPaginator"
 				limitRender="true"
 				value="#{definicaoVariavelProcessoAction.persisted ? 'Alterar' : 'Incluir'}"/>
 			
-		</s:div>
+		</ui:fragment>
 		
 	</h:form>
 
