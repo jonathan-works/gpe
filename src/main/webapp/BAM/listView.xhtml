@@ -28,7 +28,7 @@
 				xmlns:dojo="http://www.itx.com.br/dojo"
 			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
                        
-	<ui:define name="title">BAM</ui:define>
+	<ui:define name="title">#{messages['bam.pageTitle']}</ui:define>
 	
 	<ui:param name="home" value="#{bamHome}" />
 	<ui:param name="showFormTab" value="#{not empty processoEpaTarefaList.entity.processoEpa}" />
@@ -70,7 +70,7 @@
 					width="250"
 					height="200"
 					radius="50"
-					label="Medidor para os processos selecionados"
+					label="#{messages['bam.medidorProcSel']}"
 					draggable="false"
 					indicatorLabel="#{messages['bam.tempoMedio']} (dias)"
 					value="#{processoEpaNaoFinalizadoList.getMediaTempoGasto()}"
@@ -133,17 +133,17 @@
 				
 			<wi:columnOutputText
 				columnId="prioridadeProcesso"
-				columnHeader="Prioridade"
+				columnHeader="#{messages['bam.prioridade']}"
 				value="#{row.processoEpa.prioridadeProcesso}" />
 				
 			<wi:columnDateTime 
-				columnId="dataChegadaTarefa"  
+				columnId="dataChegadaTarefa"
 			  	columnHeader="#{messages['processoEpa.dataChegadaTarefa']}"  
 			  	value="#{row.dataInicio}" />  
 				
 			<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
 			<rich:column styleClass="defaultCell">
-				<f:facet name="header">Localização / Usuário</f:facet>
+				<f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
 				<span>
 					<h:graphicImage url="/img/localizacao.gif"
 									rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
@@ -181,7 +181,7 @@
 			<ui:define name="toolBar"></ui:define>
 			<ui:define name="headerToolBar"></ui:define>
 			<wi:columnOutputText columnId="medidor"
-								 columnHeader="Medidor"
+								 columnHeader="#{messages['bam.medidor']}"
 								 hideOrder="true"
 								 columnWidth="60">
 				<dojo:progressBarGauge id="#{row.idProcessoTarefa}"
@@ -203,7 +203,7 @@
 								 
 			<ui:param name="task" value="#{bamAction.getTaskInstance(row.taskInstance)}"	/>  
 			<rich:column styleClass="defaultCell">
-				<f:facet name="header">Localização / Usuário</f:facet>
+				<f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
 				<span>
 					<h:graphicImage url="/img/localizacao.gif"
 									rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
@@ -225,7 +225,7 @@
 								 
 			<rich:column  
 						 styleClass="defaultCell">
-				<f:facet name="header">Início</f:facet>
+				<f:facet name="header">#{messages['processo.dataInicio']}</f:facet>
 				<h:outputText value="#{row.dataInicio}">
 					<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
 				</h:outputText>
@@ -233,18 +233,18 @@
 			
 			<rich:column  
 						 styleClass="defaultCell">
-				<f:facet name="header">Término</f:facet>
+				<f:facet name="header">#{messages['processo.dataFim']}</f:facet>
 				<h:outputText value="#{row.dataFim}">
 					<s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
 				</h:outputText>
 			</rich:column>
 			
 			<wi:columnOutputText columnId="tempoGasto"
-								 columnHeader="Tempo Gasto"
+								 columnHeader="#{messages['processoEpa.tempoGasto']}"
 								 value="#{row.getTempoGastoFormatado()}" />
 								 
 			<wi:columnOutputText columnId="tempoPrevisto"
-								 columnHeader="Tempo Previsto"
+								 columnHeader="#{messages['temposMedios.prazo']}"
 								 value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}" />
 		</wi:dataTable>
 		<dojo:defaultGauge
