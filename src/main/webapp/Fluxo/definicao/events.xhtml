@@ -74,7 +74,7 @@
 								 widthDiv="150px"
 								 rendered="#{row.event.eventType == 'new-event'}"
 								 items="#{parent.supportedEventTypes}"
-								 optionLabel="#{messages['jbpm.'.concat(v)]}"
+								 optionLabel="#{messages['jbpm.'.concat(item)]}"
 								 value="#{parent.eventType}">
 								
 							<a:ajax execute="@this"
