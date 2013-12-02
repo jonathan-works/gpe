@@ -90,7 +90,7 @@
 					
 					<a:commandLink action="#{t.removeVar(var)}"
 							 execute="@this"
-							 onclick="if(!confirm('Confirma?')) return false;"
+							 onclick="return confirm('Confirma?'));"
 							 render="varTable"
 							 limitRender="true"
 							 styleClass="opacityHover">
