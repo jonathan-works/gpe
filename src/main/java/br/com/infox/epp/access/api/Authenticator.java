@@ -129,6 +129,7 @@ public class Authenticator {
 			}
 			catch (LoginException e) {
 				Identity.instance().unAuthenticate();
+				LOG.error("postAuthenticate()",e);
 				throw e;
 			}
 		}
