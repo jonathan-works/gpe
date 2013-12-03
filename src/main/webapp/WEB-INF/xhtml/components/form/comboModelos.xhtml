@@ -10,42 +10,33 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-	
-	
 		<ui:param
 		 name="modelo"
-		 value="#{f.id}" />
-		
+		 value="#{id}" />
 		<s:decorate
-		 id="#{f.id}Decoration"
-		 template="/WEB-INF/xhtml/components/templates/edit.xhtml">
-		
-		
-			<ui:define name="label">Modelo</ui:define>
-			<h:selectOneMenu
-			 value="#{home.modeloDocumento}"
-			 rendered="#{! readonly}">
+			id="#{id}Decoration"
+			template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+			<ui:define name="label">#{messages['modeloDocumento.modeloDocumento']}</ui:define>
 			
+			<h:selectOneMenu
+				value="#{home.modeloDocumento}"
+				rendered="#{! readonly}">
 			
 				<a:ajax
-				 event="change"
-				 status=":status"
-				 listener="#{processoHome.updateProcessoDocumentoBin()}"
-				 render="taskInstanceDiv"
-				 execute="@this" />
+					event="change"
+					status=":status"
+					listener="#{home.assignModeloDocumento(props.editorId)}"
+					render="#{props.editorId}EditorDiv"
+					execute="@this" />
 				<s:convertEntity />
+				
 				<s:selectItems
-				 var="v"
-				 noSelectionLabel="[Selecione o modelo]"
-				 label="#{v}"
-				 value="#{modeloDocumento.getModeloItems(modelo)}" />
-			
+					var="v"
+					noSelectionLabel="[Selecione o modelo]"
+					label="#{v}"
+					value="#{modeloDocumento.getModeloItems(modelo)}" />
 		
-		</h:selectOneMenu>
-		
-	
-	</s:decorate>
-		
-	
+			</h:selectOneMenu>
+		</s:decorate>
 
 </ui:composition>
