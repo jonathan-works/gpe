@@ -51,35 +51,36 @@ public abstract class AbstractAction {
 		return genericManager.find(c, id);
 	}
 	
-	protected boolean contains(Object o) {
-		return genericManager.contains(o);
+	protected <T> boolean contains(T t) {
+		return genericManager.contains(t);
 	}
 	
 	/**
 	 * Método que realiza persist ou update, dependendo do parametro 
 	 * informado. Foi criado para não replicar o código com os tratamentos
 	 * de exceções, que é o mesmo para as duas ações.
+	 * @param <T>
 	 * @param isPersist true se deve ser persistida a instancia.
 	 * @return
 	 */
 	@Transactional
-	private String flushObject(Object o, boolean isPersist) {
+	private <T> String flushObject(T t, boolean isPersist) {
 		String ret = null;
 		String msg = isPersist ? "persist()" : "update()";
 		try {
 			if(isPersist) {
-				genericManager.persist(o);
+				genericManager.persist(t);
 				ret = PERSISTED;
 			} else {
-				genericManager.update(o);
+				genericManager.update(t);
 				ret = UPDATED;
 			}
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
-			LOG.error(msg+" (" + getObjectClassName(o) + ")", e);			
+			LOG.error(msg+" (" + getObjectClassName(t) + ")", e);			
 		} catch (NonUniqueObjectException e) {
 			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
-			LOG.error(msg+" ("+ getObjectClassName(o) + ")", e);	
+			LOG.error(msg+" ("+ getObjectClassName(t) + ")", e);	
 		} catch (ApplicationException e){
 			throw new ApplicationException("Erro: " + e.getMessage());
 		} catch (javax.persistence.PersistenceException e) {
@@ -104,11 +105,11 @@ public abstract class AbstractAction {
 			if (cause instanceof ConstraintViolationException) {
 				instance().add(StatusMessage.Severity.ERROR,
 						"Registro já cadastrado!");
-				LOG.warn(msg+" (" + getObjectClassName(o) + ")", cause);					
+				LOG.warn(msg+" (" + getObjectClassName(t) + ")", cause);					
 			} else {
 				instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " +
 						e.getMessage(), e);
-				LOG.error(msg+" (" + getObjectClassName(o) + ")", e);
+				LOG.error(msg+" (" + getObjectClassName(t) + ")", e);
 			}
 		}
 		if (!(PERSISTED.equals(ret) || UPDATED.equals(ret))) {
@@ -119,31 +120,34 @@ public abstract class AbstractAction {
 	
 	/**
 	 * Invoca o serviço de persistência para a variável instance.
+	 * @param <T>
 	 * @return "persisted" se inserido com sucesso.
 	 */
-	protected String persist(Object o) {
-		return flushObject(o, true);
+	protected <T> String persist(T t) {
+		return flushObject(t, true);
 	}
 	
 	/**
 	 * Invoca o serviço de persistência para a variável instance.
+	 * @param <T>
 	 * @return "updated" se alterado com sucesso.
 	 */
-	protected String update(Object o) {
-		return flushObject(o, false);		
+	protected <T> String update(T t) {
+		return flushObject(t, false);		
 	}
 	
 	/**
 	 * Método sobrecarregado quando for necessário excluir uma 
 	 * entidade já gerênciável.
-	 * @param obj entidade já gerênciada pelo Hibernate.
+	 * @param <T>
+	 * @param t entidade já gerênciada pelo Hibernate.
 	 * @return "removed" se removido com sucesso.
 	 */
 	@Transactional
-	public String remove(Object obj) {
+	public <T> String remove(T t) {
 		String ret = null;
 		try {
-			genericManager.remove(obj);
+			genericManager.remove(t);
 			ret = REMOVED;
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
@@ -159,32 +163,33 @@ public abstract class AbstractAction {
 
 	/**
 	 * Inativa o registro informado.
-	 * @param o objeto da entidade que se deseja invativar o registro.
+	 * @param <T>
+	 * @param t objeto da entidade que se deseja invativar o registro.
 	 * @return "updated" se inativado com sucesso.
 	 */
 	@Transactional
-	public String inactive(Object o) {
-		if(o == null) {
+	public <T> String inactive(T t) {
+		if(t == null) {
 			return null;
 		}
 		String ret = null;
 		StopWatch sw = new StopWatch();
 		sw.start();
-		if(EntityUtil.isEntity(o)) {
+		if(EntityUtil.isEntity(t)) {
 			try {
-			    if (o instanceof Recursive) {
-			        inactiveRecursive((Recursive<?>)o);
+			    if (t instanceof Recursive) {
+			        inactiveRecursive((Recursive<?>)t);
 			    } else {
-			    	ComponentUtil.setValue(o, "ativo", false);
+			    	ComponentUtil.setValue(t, "ativo", false);
 			    }
-				ret = flushObject(o, false);
+				ret = flushObject(t, false);
 				instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
-				LOG.info(".inactive(" + o + ")" + getObjectClassName(o) + 
+				LOG.info(".inactive(" + t + ")" + getObjectClassName(t) + 
 						"): " + sw.getTime());
 			} catch(Exception e) {
 			    LOG.error(".inactive()", e);
 				instance().add(StatusMessage.Severity.INFO, "Erro ao definir a propriedade " +
-						"ativo na entidade: "+getObjectClassName(o)+". Verifique se esse " +
+						"ativo na entidade: "+getObjectClassName(t)+". Verifique se esse " +
 						"campo existe.");
 			}
 		} else {
@@ -213,11 +218,12 @@ public abstract class AbstractAction {
 	
 	/**
 	 * Obtem o nome da Classe do objeto informado.
-	 * @param o Objeto
+	 * @param <T>
+	 * @param t Objeto
 	 * @return String referente ao nome da classe do objeto.
 	 */
-	private String getObjectClassName(Object o) {
-		return o != null ? o.getClass().getName() : "";
+	private <T> String getObjectClassName(T t) {
+		return t != null ? t.getClass().getName() : "";
 	}
 	
 	protected GenericManager getGenericManager() {
