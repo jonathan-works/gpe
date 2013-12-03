@@ -62,13 +62,13 @@
                         action="#{taskInstanceHome.removeUsuario(task)}"
                         execute="@this"
                         render="usuarioTarefaDiv"
-                        onclick="confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\')"
+                        onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
                         limitRender="true"
                         oncomplete="close()"
                         rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
                         <h:graphicImage
                             url="/img/unlocked.gif"
-                            title="'#{messages['movimentar.liberarTarefa']}" />
+                            title="#{messages['movimentar.liberarTarefa']}" />
                     </a:commandLink>
 
             </s:div>
