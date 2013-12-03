@@ -39,15 +39,7 @@ public class VariavelProcessoService {
 		for (String variableName : jbpmVariables.keySet()) {
 			if (variableName.startsWith(DefinicaoVariavelProcessoManager.JBPM_VARIABLE_TYPE + ":")) {
 				DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processoEpa.getNaturezaCategoriaFluxo().getFluxo(), variableName);
-				
-				VariavelProcesso variavelProcesso = new VariavelProcesso();
-				variavelProcesso.setIdProcessInstance(processoEpa.getIdJbpm());
-				variavelProcesso.setIdToken(processInstance.getRootToken().getId());
-				variavelProcesso.setLabel(definicao.getLabel());
-				variavelProcesso.setNome(definicao.getNome());
-				variavelProcesso.setValor((String) contextInstance.getVariable(variavelProcesso.getNome()));
-				
-				variaveis.add(variavelProcesso);
+				variaveis.add(buildVariavelProcesso(definicao, processInstance));
 			}
 		}
 		
@@ -58,5 +50,21 @@ public class VariavelProcessoService {
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(variavel.getIdProcessInstance());
 		ContextInstance contextInstance = processInstance.getContextInstance();
 		contextInstance.setVariable(variavel.getNome(), variavel.getValor());
+	}
+	
+	public VariavelProcesso getVariavelProcesso(ProcessoEpa processo, String nome) {
+		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
+		DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
+		return buildVariavelProcesso(definicao, processInstance);
+	}
+	
+	private VariavelProcesso buildVariavelProcesso(DefinicaoVariavelProcesso definicao, ProcessInstance processInstance) {
+		VariavelProcesso variavelProcesso = new VariavelProcesso();
+		variavelProcesso.setIdProcessInstance(processInstance.getId());
+		variavelProcesso.setIdToken(processInstance.getRootToken().getId());
+		variavelProcesso.setLabel(definicao.getLabel());
+		variavelProcesso.setNome(definicao.getNome());
+		variavelProcesso.setValor((String) processInstance.getContextInstance().getVariable(variavelProcesso.getNome()));
+		return variavelProcesso;
 	}
 }
