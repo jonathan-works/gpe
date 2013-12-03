@@ -1,26 +1,43 @@
 package br.com.infox.core.jsf;
 
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 
 import org.jboss.seam.core.Expressions;
 import org.richfaces.component.UIColumn;
 import org.richfaces.component.UIDataTable;
-import org.richfaces.function.RichFunction;
 
 import com.sun.faces.facelets.el.ELText;
 
 public final class DatatableDynamicColumnHelper {
 	
-	public static void addDynamicColumn(ColumnModel columnModel, String dataTableId) {
+	public static void addDynamicColumn(ColumnModel columnModel, UIDataTable dataTable) {
+		addDynamicColumn(columnModel, dataTable, dataTable.getChildCount());
+	}
+	
+	public static void addDynamicColumn(ColumnModel columnModel, UIDataTable dataTable, int index) {
+		dataTable.getChildren().add(index, createColumn(columnModel));
+	}
+	
+	public static void addDynamicColumn(ColumnModel columnModel, UIDataTable dataTable, String columnId) {
+		int index = dataTable.getChildCount();
+		for (int i = 0; i < dataTable.getChildCount(); i++) {
+			UIComponent c = dataTable.getChildren().get(i);
+			if (c instanceof UIColumn && c.getId().equals(columnId)) {
+				index = i + 1;
+			}
+		}
+		addDynamicColumn(columnModel, dataTable, index);
+	}
+	
+	private static UIColumn createColumn(ColumnModel columnModel) {
 		UIOutput header = createHeader(columnModel);
 		UIOutput value = createValue(columnModel);
 		
 		UIColumn column = new UIColumn();
 		column.setHeader(header);
 		column.getChildren().add(value);
-		
-		UIDataTable table = (UIDataTable) RichFunction.findComponent(dataTableId);
-		table.getChildren().add(column);
+		return column;
 	}
 	
 	private static UIOutput createValue(ColumnModel columnModel) {

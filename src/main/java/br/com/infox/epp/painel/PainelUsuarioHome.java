@@ -14,7 +14,9 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.Redirect;
+import org.richfaces.component.UIDataTable;
 import org.richfaces.event.DropEvent;
+import org.richfaces.function.RichFunction;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.jsf.DatatableDynamicColumnHelper;
@@ -167,12 +169,13 @@ public class PainelUsuarioHome implements Serializable {
 		if (idsProcesso != null && (idsProcesso.size() > 1 || (idsProcesso.size() == 1 && idsProcesso.get(0) != -1))) {
 			ProcessoEpa processoEpa = EntityUtil.find(ProcessoEpa.class, idsProcesso.get(0));
 
+			UIDataTable dataTable = (UIDataTable) RichFunction.findComponent(CONSULTA_PROCESSO_DATATABLE_ID);
 			List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
 			for (DefinicaoVariavelProcesso definicao : definicoes) {
 				ColumnModel columnModel = new ColumnModel(definicao.getLabel(), 
 						"#{painelUsuarioHome.getVariavelProcesso(row, '" + definicao.getNome() + "').valor}");
 				
-				DatatableDynamicColumnHelper.addDynamicColumn(columnModel, CONSULTA_PROCESSO_DATATABLE_ID);
+				DatatableDynamicColumnHelper.addDynamicColumn(columnModel, dataTable);
 			}
 		}
 	}
