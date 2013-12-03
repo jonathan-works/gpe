@@ -73,8 +73,8 @@
 			signatureField="#{rich:clientId(idSignature)}"
 			getDataFunction="infox.editor['#{editorId}'].instance.getData()"
 			useBase64Function="infox.editor['#{editorId}'].useBase64()"
-			functionPreSign="infox.editor['#{editorId}'].addSignature()"
-			functionPosSign=""
+			functionPreSign="infox.showLoading();"
+			functionPosSign="submitForm()"
 			debug="false"
 			loginMode="false"
 			useProviderDll="false"
@@ -82,6 +82,7 @@
 		</wi:appletAssinatura>
 	</s:div>
 		<script type="text/javascript">
+		//alert("test");
 			//<![CDATA[
 			namespace("infox.editor.#{editorId}",{
 				useBase64:function useBase64() {
