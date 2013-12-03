@@ -31,12 +31,8 @@
 		</s:div>
 	</h:form>
 	<s:div id="buscaDiv">
-		<c:if test="#{home.isPessoaFisica()}">
-			<ui:include src="includePessoaFisica.xhtml" />
-		</c:if>
-		<c:if test="#{home.isPessoaJuridica()}">
-			<ui:include src="includePessoaJuridica.xhtml" />
-		</c:if>
+		<ui:include src="includePessoaFisica.xhtml" />
+		<ui:include src="includePessoaJuridica.xhtml" />
 	</s:div>
 	<s:div id="pessoasListDiv">
 		<h:form>
