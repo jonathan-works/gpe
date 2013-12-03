@@ -9,55 +9,50 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-	<s:div id="includePessoaJuridicaDiv">
+	<wi:dataForm
+		 formId="pessoaJuridicaForm"
+		 formTitle="#{messages['form.title']}"
+		 panelWidth="70%"
+		 rendered="#{home.isPessoaJuridica()}">
 		
-		<h:form id="pessoaJuridicaForm">
+		<wi:inputCnpj
+			 id="cnpj"
+			 value="#{pessoaJuridicaHome.instance.cnpj}"
+			 label="#{messages['pessoaJuridica.cnpj']}"
+			 assignTo="#{pessoaJuridicaHome.instance.cnpj}"
+			 required="true">
 			
-			<wi:dataForm
-				 formId="pessoaJuridicaForm"
-				 formTitle="#{messages['form.title']}"
-				 panelWidth="70%">
-				
-				<wi:inputCnpj
-					 id="cnpj"
-					 value="#{pessoaJuridicaHome.instance.cnpj}"
-					 label="#{messages['pessoaJuridica.cnpj']}"
-					 assignTo="#{pessoaJuridicaHome.instance.cnpj}"
-					 required="true">
-					
-					<a:ajax
-						 event="blur"
-						 listener="#{action.carregaPessoa('J', pessoaJuridicaHome.instance.cnpj)}"
-						 execute="@this"
-						 render="nome, razao"
-						 limitRender="true" />
-				
-				</wi:inputCnpj>
-				<wi:inputText
-					 id="nome"
-					 value="#{pessoaJuridicaHome.instance.nome}"
-					 label="#{messages['pessoaJuridica.nome']}"
-					 required="true" />
-				<wi:inputText
-					 id="razao"
-					 value="#{pessoaJuridicaHome.instance.razaoSocial}"
-					 label="#{messages['pessoaJuridica.razaoSocial']}"
-					 required="true" />
-				<ui:define name="buttons">
-					
-					<wi:commandButton
-						 id="saveButton"
-						 action="#{action.incluir('J')}"
-						 reRender="includePessoaJuridicaDiv, pessoasListDiv, storeDiv"
-						 value="#{messages['crud.persist']}" />
-					<wi:commandButtonNew />
-				
-				</ui:define>
-			
-			</wi:dataForm>
+			<a:ajax
+				 event="blur"
+				 listener="#{action.carregaPessoa('J', pessoaJuridicaHome.instance.cnpj)}"
+				 execute="@this"
+				 render="loadedByCNPJ"
+				 limitRender="true" />
 		
-		</h:form>
+		</wi:inputCnpj>
+		<h:panelGroup id="loadedByCNPJ">
+			<wi:inputText
+				 id="nome"
+				 value="#{pessoaJuridicaHome.instance.nome}"
+				 label="#{messages['pessoaJuridica.nome']}"
+				 required="true" />
+			<wi:inputText
+				 id="razao"
+				 value="#{pessoaJuridicaHome.instance.razaoSocial}"
+				 label="#{messages['pessoaJuridica.razaoSocial']}"
+				 required="true" />
+		</h:panelGroup>
+		<ui:define name="buttons">
+			
+			<wi:commandButton
+				 id="saveButton"
+				 action="#{action.incluir('J')}"
+				 reRender="includePessoaJuridicaDiv, pessoasListDiv, storeDiv"
+				 value="#{messages['crud.persist']}" />
+			<wi:commandButtonNew />
+		
+		</ui:define>
 	
-	</s:div>
-
+	</wi:dataForm>
+	
 </ui:composition>
