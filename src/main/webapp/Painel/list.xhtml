@@ -11,7 +11,7 @@
 	xmlns:infox="http://www.infox.com.br/jsf"
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-	<ui:param name="pageTitle" value="Painel do Usuário" />
+	<ui:param name="pageTitle" value="#{messages['painel.titlePage']}" />
 	<ui:define name="title">#{pageTitle}</ui:define>
 
 	<ui:define name="body">
@@ -31,7 +31,7 @@
 					</h:form>
 					<infox:tab id="caixas" name="caixas" render="painelProcessos"
 						limitRender="true" action="#{tarefasTree.clearTree()}"
-						title="Caixas">
+						title="#{messages['caixa.tab']}">
 						<s:div id="tarefasDiv">
 							<ui:include src="tarefasTree.xhtml" />
 						</s:div>
@@ -70,12 +70,12 @@
 								<wi:selectOneMenuEntity id="natureza"
 									label="#{messages['natureza.titleGrid']}"
 									value="#{home.instance.natureza}"
-									noSelectionLabel="Selecione um registro..."
+									noSelectionLabel="#{messages['crud.select.select']}"
 									items="#{home.naturezaList}" />
 								<wi:selectOneMenuEntity id="categoria"
 									label="#{messages['categoria.titleGrid']}"
 									value="#{home.instance.categoria}"
-									noSelectionLabel="Selecione um registro..." inNewLine="true"
+									noSelectionLabel="#{messages['crud.select.select']}" inNewLine="true"
 									items="#{home.categoriaList}" />
 							</wi:searchForm>
 						</ui:define>
@@ -114,13 +114,13 @@
 
 			<rich:popupPanel id="novaCaixaPanel" height="120" left="40">
 				<f:facet name="header">
-					<h:outputText value="Nova caixa para a tarefa" />
+					<h:outputText value="#{messages['caixa.titleNovaCaixa']}" />
 				</f:facet>
 				<f:facet name="controls">
 					<span onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
 				</f:facet>
 				<h:form id="modalForm">
-					<wi:inputText id="nomeCaixa" label="Nome da caixa"
+					<wi:inputText id="nomeCaixa" label="#{messages['caixa.nomeCaixa']}"
 						value="#{caixaHome.instance.nomeCaixa}" />
 					<a:commandButton value="#{messages['crud.persist']}" styleClass="buttons"
 						action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
