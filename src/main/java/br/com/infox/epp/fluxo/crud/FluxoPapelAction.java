@@ -46,7 +46,7 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 	}
 	
 	@Override
-	public String remove(Object obj) {
+	public String remove(FluxoPapel obj) {
 		String remove = super.remove(obj);
 		if(remove != null) {
 			getFluxoPapelList().remove(obj);

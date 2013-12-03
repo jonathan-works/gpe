@@ -23,7 +23,7 @@ import br.com.itx.util.EntityUtil;
  * alterações.
  */
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractCrudAction<T> extends AbstractAction 
+public abstract class AbstractCrudAction<T> extends AbstractAction<T> 
 											implements Crudable<T> {
 	
 	private String tab;
@@ -88,7 +88,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	public void setId(Object id) {
 		if(id != null && !id.equals(this.id)) {
 			this.id = id;
-			setInstance((T) find(EntityUtil.getParameterizedTypeClass(getClass()), this.id));
+			setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
 			tab = TAB_FORM;
 		}
 	}

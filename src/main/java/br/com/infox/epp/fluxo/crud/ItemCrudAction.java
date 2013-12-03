@@ -15,10 +15,6 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
 
     public static final String NAME = "itemCrudAction";
     
-    public void inactive(Item item) {
-        inactiveRecursive(item);
-    }
-    
     protected boolean beforeSave() {
         if (getInstance().getItemPai() != null && !getInstance().getItemPai().getAtivo()){
             getInstance().setAtivo(false);

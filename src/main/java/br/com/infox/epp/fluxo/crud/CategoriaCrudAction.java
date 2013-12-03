@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -48,7 +49,12 @@ public class CategoriaCrudAction extends AbstractCrudAction<Categoria> {
     
     public void removeCategoriaItem(CategoriaItem categoriaItem){
         getInstance().getCategoriaItemList().remove(categoriaItem);
-        remove(categoriaItem);
+        try {
+			getGenericManager().remove(categoriaItem);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         super.update();
     }
 }

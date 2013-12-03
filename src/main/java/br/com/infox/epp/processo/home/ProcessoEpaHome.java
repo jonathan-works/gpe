@@ -11,7 +11,6 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
-import br.com.infox.epp.processo.action.ProcessoEpaAction;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
@@ -24,7 +23,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoEpaHome";
-	private static final Log LOG = Logging.getLog(ProcessoEpaAction.class);
+	private static final Log LOG = Logging.getLog(ProcessoEpaHome.class);
 	
 	@In private PessoaManager pessoaManager;
 	@In private ParteProcessoManager parteProcessoManager;

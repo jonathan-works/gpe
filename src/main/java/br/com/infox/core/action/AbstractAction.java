@@ -34,7 +34,7 @@ import br.com.itx.util.EntityUtil;
  * @author Daniel
  *
  */
-public abstract class AbstractAction {
+public abstract class AbstractAction <T> {
 
 	public static final String PERSISTED = "persisted";
 	public static final String UPDATED = "updated";
@@ -47,11 +47,11 @@ public abstract class AbstractAction {
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
 
-	protected <T> T find(Class<T> c, Object id) {
+	protected T find(Class<T> c, Object id) {
 		return genericManager.find(c, id);
 	}
 	
-	protected <T> boolean contains(T t) {
+	protected boolean contains(T t) {
 		return genericManager.contains(t);
 	}
 	
@@ -59,12 +59,11 @@ public abstract class AbstractAction {
 	 * Método que realiza persist ou update, dependendo do parametro 
 	 * informado. Foi criado para não replicar o código com os tratamentos
 	 * de exceções, que é o mesmo para as duas ações.
-	 * @param <T>
 	 * @param isPersist true se deve ser persistida a instancia.
 	 * @return
 	 */
 	@Transactional
-	private <T> String flushObject(T t, boolean isPersist) {
+	private String flushObject(T t, boolean isPersist) {
 		String ret = null;
 		String msg = isPersist ? "persist()" : "update()";
 		try {
@@ -120,19 +119,17 @@ public abstract class AbstractAction {
 	
 	/**
 	 * Invoca o serviço de persistência para a variável instance.
-	 * @param <T>
 	 * @return "persisted" se inserido com sucesso.
 	 */
-	protected <T> String persist(T t) {
+	protected String persist(T t) {
 		return flushObject(t, true);
 	}
 	
 	/**
 	 * Invoca o serviço de persistência para a variável instance.
-	 * @param <T>
 	 * @return "updated" se alterado com sucesso.
 	 */
-	protected <T> String update(T t) {
+	protected String update(T t) {
 		return flushObject(t, false);		
 	}
 	
@@ -144,7 +141,7 @@ public abstract class AbstractAction {
 	 * @return "removed" se removido com sucesso.
 	 */
 	@Transactional
-	public <T> String remove(T t) {
+	public String remove(T t) {
 		String ret = null;
 		try {
 			genericManager.remove(t);
@@ -163,12 +160,11 @@ public abstract class AbstractAction {
 
 	/**
 	 * Inativa o registro informado.
-	 * @param <T>
 	 * @param t objeto da entidade que se deseja invativar o registro.
 	 * @return "updated" se inativado com sucesso.
 	 */
 	@Transactional
-	public <T> String inactive(T t) {
+	public String inactive(T t) {
 		if(t == null) {
 			return null;
 		}
@@ -218,11 +214,10 @@ public abstract class AbstractAction {
 	
 	/**
 	 * Obtem o nome da Classe do objeto informado.
-	 * @param <T>
 	 * @param t Objeto
 	 * @return String referente ao nome da classe do objeto.
 	 */
-	private <T> String getObjectClassName(T t) {
+	private String getObjectClassName(T t) {
 		return t != null ? t.getClass().getName() : "";
 	}
 	

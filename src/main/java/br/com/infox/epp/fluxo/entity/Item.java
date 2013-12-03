@@ -49,7 +49,7 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 	private String descricaoItem;
 	private Boolean ativo;
 	private String caminhoCompleto;
-	private List<Item> itemList = new ArrayList<Item>(0);
+	private List<Item> itemList;
 	
 	public Item() {
 	}
@@ -207,7 +207,12 @@ public class Item implements java.io.Serializable, Recursive<Item> {
     @Override
     @Transient
     public List<Item> getChildList() {
-        return this.getItemList();
+    	List<Item> ret = getItemList();
+    	if (ret != null){
+    		return ret;
+    	}
+    	else return new ArrayList<>();
+//        return this.getItemList();
     }
 
     @Override
