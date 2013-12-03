@@ -388,6 +388,8 @@ public class TaskInstanceHome implements Serializable {
         red.setConversationPropagationEnabled(false);
         red.execute();
     }
+    
+    
 
     private boolean canClosePanel() {
         EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent(CAN_CLOSE_PANEL);
@@ -541,6 +543,14 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
+    public void assignModeloDocumento(final String id) {
+        String modelo = "";
+        if ( modeloDocumento != null) {
+            modelo = modeloDocumento.getModeloDocumento();
+        }
+        mapaDeVariaveis.put(id, modelo);
+    }
+    
     public static boolean hasOcculTransition(Transition transition) {
         return OCCULT_TRANSITION.equals(transition.getCondition());
     }
