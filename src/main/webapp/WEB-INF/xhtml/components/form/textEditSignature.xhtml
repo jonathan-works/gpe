@@ -29,20 +29,22 @@
 	<ui:param name="idSignature" value="#{id}signature" />
 	<ui:param name="idCertChain" value="#{id}certChain" />
 	
-	<wi:selectOneMenuEntity
-		id="tipoProcessoDocumento"
-		label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
-		value="#{processoHome.tipoProcessoDocumento}"
-		items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
-		required="true"
-		noSelectionLabel="Selecione..."
-	>
-	</wi:selectOneMenuEntity>
+	<s:div id="#{f.id}TipoDocDiv">
+		<wi:selectOneMenuEntity
+			id="tipoProcessoDocumento"
+			label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+			value="#{processoHome.tipoProcessoDocumento}"
+			items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+			required="true"
+			noSelectionLabel="Selecione..."
+		>
+		</wi:selectOneMenuEntity>
+	</s:div>
 		
-	<s:div id="editorDiv">
+	<s:div id="#{id}EditorDiv">
 		<wi:editor
 			id="#{editorId}"
-			value="#{home.instance[f.id]}"
+			value="#{home.instance[id]}"
 		/>
 	</s:div>
 	
