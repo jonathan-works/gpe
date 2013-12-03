@@ -17,11 +17,18 @@ import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.jsf.DatatableDynamicColumnHelper;
+import br.com.infox.core.jsf.DatatableDynamicColumnHelper.ColumnModel;
+import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoEpaList;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
+import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -32,7 +39,8 @@ import br.com.itx.util.EntityUtil;
 public class PainelUsuarioHome implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "painelUsuarioHome"; 
+	public static final String NAME = "painelUsuarioHome";
+	private static final String CONSULTA_PROCESSO_DATATABLE_ID = ":consultaProcessoEpaList";
 
 	private Map<String, Object> selected;
 	private List<Integer> processoIdList;
@@ -40,11 +48,14 @@ public class PainelUsuarioHome implements Serializable {
 	@In private ConsultaProcessoEpaList consultaProcessoEpaList;
 	@In private ProcessoManager processoManager;
 	@In private SituacaoProcessoManager situacaoProcessoManager;
+	@In private VariavelProcessoService variavelProcessoService;
+	@In private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 	
 	@Observer("selectedTarefasTree")
 	public void onSelected(Object obj){
 		this.selected = (Map<String, Object>) obj;
 		processoIdList = null;
+		updateDatatable();
 	}
 	
 	public Integer getIdCaixa() {
@@ -151,4 +162,22 @@ public class PainelUsuarioHome implements Serializable {
 		}
 	}
 	
+	private void updateDatatable() {
+		List<Integer> idsProcesso = getProcessoIdList();
+		if (idsProcesso != null && (idsProcesso.size() > 1 || (idsProcesso.size() == 1 && idsProcesso.get(0) != -1))) {
+			ProcessoEpa processoEpa = EntityUtil.find(ProcessoEpa.class, idsProcesso.get(0));
+
+			List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
+			for (DefinicaoVariavelProcesso definicao : definicoes) {
+				ColumnModel columnModel = new ColumnModel(definicao.getLabel(), 
+						"#{painelUsuarioHome.getVariavelProcesso(row, '" + definicao.getNome() + "').valor}");
+				
+				DatatableDynamicColumnHelper.addDynamicColumn(columnModel, CONSULTA_PROCESSO_DATATABLE_ID);
+			}
+		}
+	}
+	
+	public VariavelProcesso getVariavelProcesso(ProcessoEpa processo, String nome) {
+		return variavelProcessoService.getVariavelProcesso(processo, nome);
+	}
 }
