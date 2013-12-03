@@ -57,10 +57,10 @@ import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
@@ -110,6 +110,7 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoManager processoManager;
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     @In private TaskInstanceManager taskInstanceManager;
+    @In private ModeloDocumentoManager modeloDocumentoManager;
     private URL urlRetornoAcessoExterno;
     
 	public void createInstance() {
@@ -546,7 +547,7 @@ public class TaskInstanceHome implements Serializable {
     public void assignModeloDocumento(final String id) {
         String modelo = "";
         if ( modeloDocumento != null) {
-            modelo = modeloDocumento.getModeloDocumento();
+            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
         }
         mapaDeVariaveis.put(id, modelo);
     }
@@ -589,7 +590,7 @@ public class TaskInstanceHome implements Serializable {
 
     public void setModeloDocumento(ModeloDocumento modelo) {
         this.modeloDocumento = modelo;
-        mapaDeVariaveis.put(getFieldName(variavelDocumento), ModeloDocumentoAction.instance().getConteudo(modelo));
+        mapaDeVariaveis.put(getFieldName(variavelDocumento), modeloDocumentoManager.evaluateModeloDocumento(modelo));
     }
 
     public String getHomeName() {
