@@ -6,6 +6,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
@@ -20,6 +22,8 @@ import br.com.itx.util.ComponentUtil;
 @Name(CategoriaCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class CategoriaCrudAction extends AbstractCrudAction<Categoria> {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(CategoriaCrudAction.class);
     
     public static final String NAME = "categoriaCrudAction";
     
@@ -52,8 +56,7 @@ public class CategoriaCrudAction extends AbstractCrudAction<Categoria> {
         try {
 			getGenericManager().remove(categoriaItem);
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error(".removeCategoriaItem(categoriaItem)", e);
 		}
         super.update();
     }
