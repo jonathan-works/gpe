@@ -17,6 +17,8 @@ import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellView;
@@ -42,6 +44,8 @@ import br.com.infox.core.constants.WarningConstants;
 @SuppressWarnings({WarningConstants.UNCHECKED, WarningConstants.RAWTYPES})
 public class SugiyamaLayoutAlgorithm
 {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(SugiyamaLayoutAlgorithm.class);
 
   /** Field for debug output
    */
@@ -497,8 +501,7 @@ public class SugiyamaLayoutAlgorithm
         }
         catch(Exception e)
         {
-          System.err.println("---------> ERROR in calculateValues."/*#Frozen*/);
-          e.printStackTrace();
+          LOG.error(".findMinimumAndSpacing(graphCellViews, spacing)", e);
         }
       }
       // if the cell sice is bigger than the userspacing
@@ -508,7 +511,7 @@ public class SugiyamaLayoutAlgorithm
     }
     catch(Exception e)
     {
-      e.printStackTrace();
+    	LOG.error(".findMinimumAndSpacing(graphCellViews, spacing)", e);
     }
     return null;
   }
