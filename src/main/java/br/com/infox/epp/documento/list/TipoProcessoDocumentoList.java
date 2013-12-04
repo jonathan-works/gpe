@@ -52,11 +52,6 @@ public class TipoProcessoDocumentoList extends
 	public static TipoProcessoDocumentoList instance(){
 		return ComponentUtil.getComponent(TipoProcessoDocumentoList.NAME);
 	}
-	
-	@Override
-    public EntityList<TipoProcessoDocumento> getBeanList() {
-        return TipoProcessoDocumentoList.instance();
-    }
     
     @Override
     public String getTemplate() {

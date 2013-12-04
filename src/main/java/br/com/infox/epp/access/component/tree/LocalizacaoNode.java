@@ -8,7 +8,6 @@ import javax.persistence.Query;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.home.LocalizacaoHome;
 
 public class LocalizacaoNode extends LocalizacaoNodeSearch {
 
@@ -25,8 +24,23 @@ public class LocalizacaoNode extends LocalizacaoNodeSearch {
 
 	@Override
 	public boolean canSelect() {
-		return LocalizacaoHome.instance().checkPermissaoLocalizacao(this);
+		return checkPermissaoLocalizacao(this);
 	}
+	
+	private boolean checkPermissaoLocalizacao(final EntityNode<Localizacao> node) {
+        final Localizacao locAtual = Authenticator.getUsuarioLocalizacaoAtual().getLocalizacao();
+        if (node.getEntity().getIdLocalizacao() == locAtual.getIdLocalizacao()) {
+            return true;
+        }
+        EntityNode<Localizacao> nodePai = node.getParent();
+        while (nodePai != null) {
+            if (nodePai.getEntity().getIdLocalizacao() == locAtual.getIdLocalizacao()) {
+                return true;
+            }
+            nodePai = nodePai.getParent();
+        }
+        return false;
+    }
 	
 	@Override
 	protected EntityNode<Localizacao> createChildNode(Localizacao n) {

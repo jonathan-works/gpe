@@ -52,11 +52,6 @@ public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
 	}
-	
-	@Override
-    public EntityList<TipoModeloDocumento> getBeanList() {
-        return TipoModeloDocumentoList.instance();
-    }
     
     @Override
     public String getTemplate() {

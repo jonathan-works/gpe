@@ -49,11 +49,6 @@ public class TwitterTemplateList extends EntityList<TwitterTemplate> {
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
 	}
-	
-	@Override
-    public EntityList<TwitterTemplate> getBeanList() {
-        return TwitterTemplateList.instance();
-    }
     
     @Override
     public String getTemplate() {

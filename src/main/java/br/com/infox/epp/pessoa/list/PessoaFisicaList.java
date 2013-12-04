@@ -51,11 +51,6 @@ public class PessoaFisicaList extends EntityList<PessoaFisica>{
 	public static PessoaFisicaList instance() {
 		return ComponentUtil.getComponent(PessoaFisicaList.NAME);
 	}
-	
-	@Override
-    public EntityList<PessoaFisica> getBeanList() {
-        return PessoaFisicaList.instance();
-    }
     
     @Override
     public String getTemplate() {
