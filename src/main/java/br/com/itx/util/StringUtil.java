@@ -17,9 +17,13 @@ package br.com.itx.util;
 import java.text.ParseException;
 import java.util.List;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 public final class StringUtil {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(StringUtil.class);
 
     private StringUtil() {
     }
@@ -206,6 +210,7 @@ public final class StringUtil {
         try {
             return formatNumericString(cpf, "###.###.###-##");
         } catch (ParseException e) {
+        	LOG.warn(".formartCpf(cpf)", e);
             return null;
         }
     }
@@ -214,6 +219,7 @@ public final class StringUtil {
         try {
             return formatNumericString(cnpj, "##.###.###/####-##");
         } catch (ParseException e) {
+            LOG.warn(".formartCnpj(cnpj)", e);
             return null;
         }
     }
