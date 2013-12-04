@@ -324,6 +324,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
                 exportarXLS(getTemplate(), beanList);
             }
         } catch (ExcelExportException e) {
+        	LOG.error(".exportarXLS()", e);
             FacesMessages.instance().add(Severity.ERROR, "Erro ao exportar arquivo." + e.getMessage());
         }   
     }
