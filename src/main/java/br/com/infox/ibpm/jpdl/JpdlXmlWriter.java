@@ -33,6 +33,8 @@ import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.action.ActionTypes;
@@ -59,6 +61,8 @@ import br.com.itx.util.ReflectionsUtil;
 
 
 public class JpdlXmlWriter {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(JpdlXmlWriter.class);
 
 	private static final String DEFAULT_ENCODING = "ISO-8859-1";
     private static final int DEFAULT_IDENT_SIZE = 4;
@@ -115,6 +119,7 @@ public class JpdlXmlWriter {
 			xmlWriter.flush();
 			writer.flush();
 		} catch (IOException e) {
+			LOG.error(".write(processDefinition)", e);
 			addProblem("couldn't write process definition xml: "
 					+ e.getMessage());
 		}
