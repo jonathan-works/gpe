@@ -26,11 +26,13 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 
 
-@Name("localizacaoEstruturaTree")
+@Name(LocalizacaoEstruturaTreeHandler.NAME)
 @BypassInterceptors
 public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localizacao> {
-
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "localizacaoEstruturaTree";
+    public static final String EVENT_SELECT_LOC_ESTRUTURA = "evtSelectLocalizacaoEstrutura";
+    
 	private UsuarioLocalizacao usuarioLocalizacaoAtual;
 	
 	@Override
@@ -69,7 +71,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 	
 	@Override
 	protected void raiseEvents(EntityNode<Localizacao> en) {
-		Events.instance().raiseEvent("evtSelectLocalizacaoEstrutura", getSelected(), getEstrutura(en));
+		Events.instance().raiseEvent(EVENT_SELECT_LOC_ESTRUTURA, getSelected(), getEstrutura(en));
 	}
 	
 	private Localizacao getEstrutura(EntityNode<Localizacao> en) {
