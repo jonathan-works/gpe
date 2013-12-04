@@ -21,12 +21,16 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.service.PasswordService;
 
 @Name(PasswordRequester.NAME)
 public class PasswordRequester {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(PasswordRequester.class);
 
 	public static final String NAME = "passwordRequester";
 	
@@ -39,6 +43,7 @@ public class PasswordRequester {
 	    try {
 	        passwordService.requisitarNovaSenha(email, login);
 	    } catch (BusinessException be){
+	    	LOG.warn(".requisitarNovaSenha()", be);
             FacesMessages.instance().add(Severity.INFO, be.getLocalizedMessage());
         }
 	}
