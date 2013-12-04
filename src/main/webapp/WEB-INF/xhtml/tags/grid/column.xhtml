@@ -27,7 +27,6 @@
 	<rich:column
          width="#{columnWidth}"
          rendered="#{wi:get(columnRendered,true) and !excludeColumns.matches('.*\\b'.concat(columnId).concat('\\b.*'))}"
-         id="#{columnId}"
          rowspan="#{wi:get(rowspan,1)}"
          colspan="#{wi:get(colspan,1)}">
 		<f:facet
