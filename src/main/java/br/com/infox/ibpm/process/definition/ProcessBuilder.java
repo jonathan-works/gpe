@@ -454,7 +454,7 @@ public class ProcessBuilder implements Serializable {
             setXml(xml); 
             updateFluxo(fluxo.getCodFluxo());
         } catch (IllegalXPDLException e) {
-            LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage());
+            LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage(), e);
         }
     }
 }
