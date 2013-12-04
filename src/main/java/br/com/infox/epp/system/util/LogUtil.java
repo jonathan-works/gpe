@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -242,6 +243,7 @@ public final class LogUtil {
 			LOG.info("getFields(" + component.getClass().getName() + "): " + t.getTime());
 			return map;
 		} catch (Exception e) {
+			LOG.error(".getFields(component)", e);
 			return new HashMap<String, Object>();
 		}
 	}	
@@ -279,6 +281,7 @@ public final class LogUtil {
 			entityLog.setIp(getIpRequest());
 			entityLog.setUrlRequisicao(getUrlRequest());
 		} catch (LogException e) {
+			LOG.error(".createEntityLog(component)", e);
 			//Se a requisição for executada por temporizador, não há requisição então não se consegue obter o ip
 			entityLog.setIp("localhost");
 		}
