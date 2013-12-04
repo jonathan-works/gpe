@@ -94,7 +94,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
             resultado = super.save();
         } else{
             final UsuarioLogin usuario = getInstance();
-            PessoaFisica pf = find(PessoaFisica.class, usuario.getIdPessoa());
+            PessoaFisica pf = getGenericManager().find(PessoaFisica.class, usuario.getIdPessoa());
             usuarioLoginManager.inserirUsuarioParaPessoaFisicaCadastrada(usuario);
             EntityUtil.getEntityManager().detach(pf);
             setInstance(usuarioLoginManager.getUsuarioLogin(usuario));

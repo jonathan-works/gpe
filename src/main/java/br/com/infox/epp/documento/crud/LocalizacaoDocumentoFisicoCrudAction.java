@@ -49,7 +49,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	}
 
 	@Override
-	public String inactive(Object obj) {
+	public String inactive(DocumentoFisico obj) {
 		String inactive = super.inactive(obj);
 		if (inactive != null) {
 			getDocumentoFisicoList().remove(obj);

@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
@@ -45,7 +46,6 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     
     @Override
     public String save() {
-        update(usuarioAtual);
         return super.save();
     }
     

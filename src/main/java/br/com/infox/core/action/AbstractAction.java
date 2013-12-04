@@ -30,7 +30,7 @@ import br.com.itx.util.EntityUtil;
  * @author Daniel
  *
  */
-public abstract class AbstractAction {
+public abstract class AbstractAction <T> {
 
 	public static final String PERSISTED = "persisted";
 	public static final String UPDATED = "updated";
@@ -43,12 +43,12 @@ public abstract class AbstractAction {
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
 
-	protected <T> T find(Class<T> c, Object id) {
+	protected T find(Class<T> c, Object id) {
 		return genericManager.find(c, id);
 	}
 	
-	protected boolean contains(Object o) {
-		return genericManager.contains(o);
+	protected boolean contains(T t) {
+		return genericManager.contains(t);
 	}
 	
 	/**
@@ -59,15 +59,15 @@ public abstract class AbstractAction {
 	 * @return
 	 */
 	@Transactional
-	private String flushObject(Object o, boolean isPersist) {
+	private String flushObject(T t, boolean isPersist) {
 		String ret = null;
 		String msg = isPersist ? "persist()" : "update()";
 		try {
 			if(isPersist) {
-				genericManager.persist(o);
+				genericManager.persist(t);
 				ret = PERSISTED;
 			} else {
-				genericManager.update(o);
+				genericManager.update(t);
 				ret = UPDATED;
 			}
         } catch (DAOException daoException) {
@@ -109,29 +109,30 @@ public abstract class AbstractAction {
 	 * Invoca o serviço de persistência para a variável instance.
 	 * @return "persisted" se inserido com sucesso.
 	 */
-	protected String persist(Object o) {
-		return flushObject(o, true);
+	protected String persist(T t) {
+		return flushObject(t, true);
 	}
 	
 	/**
 	 * Invoca o serviço de persistência para a variável instance.
 	 * @return "updated" se alterado com sucesso.
 	 */
-	protected String update(Object o) {
-		return flushObject(o, false);		
+	protected String update(T t) {
+		return flushObject(t, false);		
 	}
 	
 	/**
 	 * Método sobrecarregado quando for necessário excluir uma 
 	 * entidade já gerênciável.
-	 * @param obj entidade já gerênciada pelo Hibernate.
+	 * @param <T>
+	 * @param t entidade já gerênciada pelo Hibernate.
 	 * @return "removed" se removido com sucesso.
 	 */
 	@Transactional
-	public String remove(Object obj) {
+	public String remove(T t) {
 		String ret = null;
 		try {
-			genericManager.remove(obj);
+			genericManager.remove(t);
 			ret = REMOVED;
 		} catch (RuntimeException e) {
 			FacesMessages fm = FacesMessages.instance();
@@ -147,32 +148,32 @@ public abstract class AbstractAction {
 
 	/**
 	 * Inativa o registro informado.
-	 * @param o objeto da entidade que se deseja invativar o registro.
+	 * @param t objeto da entidade que se deseja invativar o registro.
 	 * @return "updated" se inativado com sucesso.
 	 */
 	@Transactional
-	public String inactive(Object o) {
-		if(o == null) {
+	public String inactive(T t) {
+		if(t == null) {
 			return null;
 		}
 		String ret = null;
 		StopWatch sw = new StopWatch();
 		sw.start();
-		if(EntityUtil.isEntity(o)) {
+		if(EntityUtil.isEntity(t)) {
 			try {
-			    if (o instanceof Recursive) {
-			        inactiveRecursive((Recursive<?>)o);
+			    if (t instanceof Recursive) {
+			        inactiveRecursive((Recursive<?>)t);
 			    } else {
-			    	ComponentUtil.setValue(o, "ativo", false);
+			    	ComponentUtil.setValue(t, "ativo", false);
 			    }
-				ret = flushObject(o, false);
+				ret = flushObject(t, false);
 				FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
-				LOG.info(".inactive(" + o + ")" + getObjectClassName(o) + 
+				LOG.info(".inactive(" + t + ")" + getObjectClassName(t) + 
 						"): " + sw.getTime());
 			} catch(Exception e) {
 			    LOG.error(".inactive()", e);
 				FacesMessages.instance().add(StatusMessage.Severity.INFO, "Erro ao definir a propriedade " +
-						"ativo na entidade: "+getObjectClassName(o)+". Verifique se esse " +
+						"ativo na entidade: "+getObjectClassName(t)+". Verifique se esse " +
 						"campo existe.");
 			}
 		} else {
@@ -201,11 +202,11 @@ public abstract class AbstractAction {
 	
 	/**
 	 * Obtem o nome da Classe do objeto informado.
-	 * @param o Objeto
+	 * @param t Objeto
 	 * @return String referente ao nome da classe do objeto.
 	 */
-	private String getObjectClassName(Object o) {
-		return o != null ? o.getClass().getName() : "";
+	private String getObjectClassName(T t) {
+		return t != null ? t.getClass().getName() : "";
 	}
 	
 	protected GenericManager getGenericManager() {

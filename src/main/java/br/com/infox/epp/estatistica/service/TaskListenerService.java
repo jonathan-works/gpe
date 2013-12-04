@@ -11,8 +11,8 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
@@ -23,7 +23,9 @@ import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(TaskListenerService.NAME)
-public class TaskListenerService extends AbstractAction {
+public class TaskListenerService extends GenericManager {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "taskListenerAction";
 	
@@ -63,7 +65,12 @@ public class TaskListenerService extends AbstractAction {
 			pEpaTarefa.setTempoPrevisto(0);
 		}
 
-		persist(pEpaTarefa);
+		try {
+			persist(pEpaTarefa);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Observer(Event.EVENTTYPE_TASK_END)

@@ -4,7 +4,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
@@ -23,7 +22,7 @@ import br.com.itx.util.EntityUtil;
  * alterações.
  */
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractCrudAction<T> extends AbstractAction 
+public abstract class AbstractCrudAction<T> extends AbstractAction<T> 
 											implements Crudable<T> {
 	
 	private String tab;
@@ -88,7 +87,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	public void setId(Object id) {
 		if(id != null && !id.equals(this.id)) {
 			this.id = id;
-			setInstance((T) find(EntityUtil.getParameterizedTypeClass(getClass()), this.id));
+			setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
 			tab = TAB_FORM;
 		}
 	}
@@ -169,7 +168,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction
 	public String remove() {
 		return super.remove(instance);
 	}
-	
+
 	/**
 	 * Ao mudar para a aba de pesquisa é criada uma nova instancia.
 	 */

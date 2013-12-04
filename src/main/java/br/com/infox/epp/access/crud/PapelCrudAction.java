@@ -132,13 +132,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	}
 	
 	@Override
-	public String inactive(Object instance) {
-		return remove((Papel) instance);
-	}
-	
-	@Override
-	public String remove(Object p) {
-		setInstance((Papel) p);
+	public String remove(Papel p) {
+		setInstance(p);
 		String ret = super.remove();
 		newInstance();
 		RolesMap.instance().clear();

@@ -33,7 +33,7 @@ public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisi
 	private String descricao;
 	private String caminhoCompleto;
 	private Boolean ativo;
-	private List<LocalizacaoFisica> localizacaoFisicaList;
+	private List<LocalizacaoFisica> localizacaoFisicaList = new ArrayList<>(0);
 	
 	@SequenceGenerator(name="generator", sequenceName="sq_tb_localizacao_fisica")
 	@Id

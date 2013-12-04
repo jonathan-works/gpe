@@ -82,9 +82,9 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     }
     
     @Override
-    public String inactive(Object fluxo) {
+    public String inactive(Fluxo fluxo) {
         setInstance((Fluxo) fluxo);
-        if (!fluxoManager.existemProcessosAssociadosAFluxo((Fluxo) fluxo)) {
+        if (!fluxoManager.existemProcessosAssociadosAFluxo(fluxo)) {
             String ret = super.inactive(fluxo);
             newInstance();
             return ret;

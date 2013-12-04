@@ -20,7 +20,7 @@ import br.com.itx.util.EntityUtil;
 
 @Name(DefinicaoVariavelProcessoAction.NAME)
 @Scope(ScopeType.PAGE)
-public class DefinicaoVariavelProcessoAction extends AbstractAction {
+public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVariavelProcesso> {
     
     public static final String NAME = "definicaoVariavelProcessoAction";
     private static final Log LOG = Logging.getLog(DefinicaoVariavelProcessoAction.class);
@@ -76,7 +76,7 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction {
     }
     
     @Override
-    public String remove(Object obj) {
+    public String remove(DefinicaoVariavelProcesso obj) {
     	String ret = super.remove(EntityUtil.getEntityManager().merge(obj));
     	if (AbstractAction.REMOVED.equals(ret)) {
     		this.variaveis = null;

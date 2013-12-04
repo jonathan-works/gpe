@@ -14,7 +14,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 
 @Name(ProcessoEpaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoEpaAction extends AbstractAction {
+public class ProcessoEpaAction extends AbstractAction<ProcessoEpa> {
 	public static final String NAME = "processoEpaAction";
 	private static final Log LOG = Logging.getLog(ProcessoEpaAction.class);
 	

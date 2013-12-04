@@ -12,6 +12,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
@@ -77,7 +78,11 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
             historico.setDataAlteracao(new Date());
             historico.setModeloDocumento(getInstance());
             historico.setUsuarioAlteracao((UsuarioLogin) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
-            persist(historico);
+            try {
+				getGenericManager().persist(historico);
+			} catch (DAOException e) {
+				LOG.error(".gravarHistorico()", e);
+			}
         }
         
     }
