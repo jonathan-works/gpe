@@ -25,7 +25,7 @@ public class ImportarXPDLAction {
 			process.setXml(xml); 
 			process.updateFluxo(cdFluxo);
 		} catch (IllegalXPDLException e) {
-			LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage());
+			LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage(), e);
 		}
 	}
 
