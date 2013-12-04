@@ -18,7 +18,7 @@
                 rendered="#{canEdit}"
                 limitRender="true"
                 status=":status"
-                render="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove}"
+                render="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove},pageBodyDialogMessage"
                 onclick="if(!confirm('Confirma?')) return false;">
 
                 <h:graphicImage
