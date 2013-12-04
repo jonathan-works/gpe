@@ -27,6 +27,8 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
 	private static final String R3 = "o.numeroProcesso = #{consultaProcessoHome.instance.numeroProcesso}";
 	private static final String R4 = "o.naturezaCategoriaFluxo.natureza = #{consultaProcessoHome.instance.natureza}";
 	private static final String R5 = "o.naturezaCategoriaFluxo.categoria = #{consultaProcessoHome.instance.categoria}";
+	private static final String R6 = "cast(o.dataInicio as date) >= #{consultaProcessoHome.instance.dataInicio}";
+	private static final String R7 = "cast(o.dataInicio as date) <= #{consultaProcessoHome.instance.dataFim}";
 
 	@Override
 	protected void addSearchFields() {
@@ -35,6 +37,8 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
 		addSearchField("numeroProcesso", SearchCriteria.IGUAL, R3);
 		addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL, R4);
 		addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL, R5);
+		addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL,R6);
+		addSearchField("dataFim", SearchCriteria.MENOR_IGUAL,R7);
 	}
 
 	@Override

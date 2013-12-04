@@ -133,8 +133,10 @@ public class TaskInstanceForm implements Serializable{
 						ff.setFormId(form.getFormId());
 						ff.setId(name + "Modelo");
 						ff.setLabel("Modelo");
-						ff.setType("comboModelos");	
-						ff.setProperties(getInNewLineMap());
+						ff.setType("comboModelos");
+						Map<String,Object> props = getInNewLineMap();
+						props.put("editorId",var.getVariableName() + "-" + taskInstance.getId());
+						ff.setProperties(props);
 						form.getFields().add(ff);
 					}
 					FormField ff = new FormField();

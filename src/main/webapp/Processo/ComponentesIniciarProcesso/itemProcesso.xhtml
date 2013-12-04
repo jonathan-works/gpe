@@ -26,14 +26,19 @@
 							execute="@this"
 							render="@this"
 							limitRender="true"
-							oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{util.contextPath}/Painel/list.seam';">
+							oncomplete="open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{util.contextPath}/Painel/list.seam';">
 							<h:graphicImage url="/img/start.gif" />
 						</a:commandLink>
 					</c:if>
 					<c:if test="#{action.necessitaPartes()}">
-						<h:commandLink action="#{action.onSelectItem(row)}">
+						<a:commandLink
+							action="#{action.onSelectItem(row)}"
+							execute="@this"
+							render="partesForm"
+							limitRender="true"
+							>
 							<h:graphicImage url="/img/start.gif" />
-						</h:commandLink>
+						</a:commandLink>
 					</c:if>
 				</rich:column>
 				<rich:column >

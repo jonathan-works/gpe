@@ -21,7 +21,7 @@ public class TempoMedioTarefaList extends EntityList<TempoMedioTarefa> {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String TEMPLATE = "/Estatistica/tempoMedioTarefaTemplate.xls";
-    private static final String DOWNLOAD_XLS_NAME = "temposMediosTarefa.xls";
+    private static final String DOWNLOAD_XLS_NAME = "relatorioTemposMedios.xls";
 
 	private static final String DEFAULT_EJBQL = "select o from TempoMedioTarefa o";
 	private static final String DEFAULT_ORDER = "idTarefa";

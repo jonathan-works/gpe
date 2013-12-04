@@ -52,14 +52,15 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
+import br.com.infox.certificado.CertificadoException;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
@@ -109,6 +110,7 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoManager processoManager;
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     @In private TaskInstanceManager taskInstanceManager;
+    @In private ModeloDocumentoManager modeloDocumentoManager;
     private URL urlRetornoAcessoExterno;
     
 	public void createInstance() {
@@ -230,9 +232,20 @@ public class TaskInstanceHome implements Serializable {
         variableResolver.resolveWhenMonetario();
         if (variableAccess.isWritable()) {
             if (variableResolver.isEditor()) {
-                variableResolver.resolveWhenEditor(assinar);
-                assinado = assinado || assinar;
-                assinar = Boolean.FALSE;
+                try {
+                    variableResolver.resolveWhenEditor(assinar);
+                    if (assinar) {
+                        FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
+                    }
+                } catch (CertificadoException e) {
+                    LOG.error("Falha na assinatura",e);
+                    if (assinar) {
+                        FacesMessages.instance().add(Messages.instance().get("assinatura.falhaAssinatura"));
+                    }
+                } finally {
+                    assinado = assinado || assinar;
+                    assinar = Boolean.FALSE;
+                }
             } else {
                 variableResolver.atribuirValorDaVariavelNoContexto();
             }
@@ -376,6 +389,8 @@ public class TaskInstanceHome implements Serializable {
         red.setConversationPropagationEnabled(false);
         red.execute();
     }
+    
+    
 
     private boolean canClosePanel() {
         EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent(CAN_CLOSE_PANEL);
@@ -529,6 +544,14 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
+    public void assignModeloDocumento(final String id) {
+        String modelo = "";
+        if ( modeloDocumento != null) {
+            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
+        }
+        mapaDeVariaveis.put(id, modelo);
+    }
+    
     public static boolean hasOcculTransition(Transition transition) {
         return OCCULT_TRANSITION.equals(transition.getCondition());
     }
@@ -567,7 +590,7 @@ public class TaskInstanceHome implements Serializable {
 
     public void setModeloDocumento(ModeloDocumento modelo) {
         this.modeloDocumento = modelo;
-        mapaDeVariaveis.put(getFieldName(variavelDocumento), ModeloDocumentoAction.instance().getConteudo(modelo));
+        mapaDeVariaveis.put(getFieldName(variavelDocumento), modeloDocumentoManager.evaluateModeloDocumento(modelo));
     }
 
     public String getHomeName() {

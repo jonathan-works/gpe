@@ -133,7 +133,7 @@
 	            action="#{processBuilder.clearDefinition}"
 	            value="#{messages['processBuilder.newBtn']}"
 	            render=":processDefinition, @form"
-	            onclick="if(!confirm('#{messages['processBuilder.confirmNew']}')) return false;"
+	            onclick="return confirm('#{messages['processBuilder.confirmNew']}')"
 	            rendered="#{processBuilder.exists}" />
 	            
         </h:form>
