@@ -163,6 +163,7 @@ public class Menu implements Serializable {
     		try {
     			xhtmlFile = file.resolveSibling(file.getFileName().toString().replace(PAGE_XML_EXTENSION, XHTML_EXTENSION));
     		} catch (InvalidPathException e) {
+    			LOG.warn(".visitFile(file, attrs)", e);
     			return FileVisitResult.CONTINUE;
     		}
     		
