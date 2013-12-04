@@ -58,6 +58,7 @@ public class ParametroUtil {
 		try{
 			return getParametroManager().getParametro(nome).getValorVariavel();
 		} catch (Exception exception){
+			LOG.info(".getParametroOrFalse(nome)", exception);
 			return "false";
 		}
 	}
