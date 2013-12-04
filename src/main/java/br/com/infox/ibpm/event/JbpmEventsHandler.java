@@ -43,21 +43,17 @@ public class JbpmEventsHandler implements Serializable {
         	Long taskId = context.getTask().getId();
             Long processId = context.getProcessInstance().getId();
             getProcessoLocalizacaoIbpmManager().deleteByTaskIdAndProcessId(taskId, processId);
-        } catch (IllegalStateException e) {
-            throwErroAoTentarRemoverProcessoLocalizacao(e);
-        } catch (IllegalArgumentException e) {
-        	 throwErroAoTentarRemoverProcessoLocalizacao(e);
-        } catch (TransactionRequiredException e) {
-        	 throwErroAoTentarRemoverProcessoLocalizacao(e);
+        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException exception) {
+            throwErroAoTentarRemoverProcessoLocalizacao(exception);
         }
     }
 
-	private void throwErroAoTentarRemoverProcessoLocalizacao(Exception e) {
+	private void throwErroAoTentarRemoverProcessoLocalizacao(Exception exception) {
 		String action = "Remover o processo da localizacao: ";
-		LOG.warn(action, e);
+		LOG.warn(action, exception);
 		throw new ApplicationException(ApplicationException.createMessage(
-		        action + e.getLocalizedMessage(),
-		        "removerProcessoLocalizacao()", JBPM_EVENTS_HANDLER, BPM));
+		        action + exception.getLocalizedMessage(),
+		        "removerProcessoLocalizacao()", JBPM_EVENTS_HANDLER, BPM), exception);
 	}
 
 	@Observer(Event.EVENTTYPE_TASK_END)
@@ -66,21 +62,17 @@ public class JbpmEventsHandler implements Serializable {
         context.getTaskInstance().setActorId(null);
         try {
             getProcessoManager().apagarActorIdDoProcesso(JbpmUtil.getProcesso());
-        } catch (IllegalStateException e) {
-            throwErroAoLimparVariaveisDoPainel(e);
-        } catch (IllegalArgumentException e) {
-        	throwErroAoLimparVariaveisDoPainel(e);
-        } catch (TransactionRequiredException e) {
-        	throwErroAoLimparVariaveisDoPainel(e);
+        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException exception) {
+            throwErroAoLimparVariaveisDoPainel(exception);
         }
     }
 
-	private void throwErroAoLimparVariaveisDoPainel(Exception e) {
+	private void throwErroAoLimparVariaveisDoPainel(Exception exception) {
 		String action = "Limpar as variáveis do painel para atualização: ";
-		LOG.error(action, e);
+		LOG.error(action, exception);
 		throw new ApplicationException(ApplicationException.createMessage(
-		        action + e.getLocalizedMessage(), "refreshPainel()",
-		        JBPM_EVENTS_HANDLER, BPM));
+		        action + exception.getLocalizedMessage(), "refreshPainel()",
+		        JBPM_EVENTS_HANDLER, BPM), exception);
 	}
 	
 	/**
@@ -93,19 +85,17 @@ public class JbpmEventsHandler implements Serializable {
             getProcessoManager().atualizarProcessos();
             getTarefaManager().encontrarNovasTarefas();
             getTarefaJbpmManager().inserirVersoesTarefas();
-        } catch (IllegalStateException e) {
-            throwErroAoRealizarAtualizacaoAutomatica(e);
-        } catch (TransactionRequiredException e) {
-        	throwErroAoRealizarAtualizacaoAutomatica(e);
+        } catch (IllegalStateException | TransactionRequiredException exception) {
+            throwErroAoRealizarAtualizacaoAutomatica(exception);
         }
     }
 
-	private static void throwErroAoRealizarAtualizacaoAutomatica(Exception e) {
+	private static void throwErroAoRealizarAtualizacaoAutomatica(Exception exception) {
 		String action = "Realizar atualização automáticas após publicação do fluxo: ";
-		LOG.error(action, e);
+		LOG.error(action, exception);
 		throw new ApplicationException(ApplicationException.createMessage(
-		        action + e.getLocalizedMessage(), "updatePostDeploy()",
-		        JBPM_EVENTS_HANDLER, BPM));
+		        action + exception.getLocalizedMessage(), "updatePostDeploy()",
+		        JBPM_EVENTS_HANDLER, BPM), exception);
 	}
 	
 	/**
@@ -117,19 +107,17 @@ public class JbpmEventsHandler implements Serializable {
         try {
         	Processo processo = JbpmUtil.getProcesso();
             getProcessoManager().removerProcessoDaCaixaAtual(processo);
-        } catch (IllegalStateException ise) {
-            throwErroAoTentarRemoverDaCaixa(ise);
-        } catch (TransactionRequiredException tre) {
-            throwErroAoTentarRemoverDaCaixa(tre);
+        } catch (IllegalStateException | TransactionRequiredException exception) {
+            throwErroAoTentarRemoverDaCaixa(exception);
         }
     }
 
-	private void throwErroAoTentarRemoverDaCaixa(Exception e) {
+	private void throwErroAoTentarRemoverDaCaixa(Exception exception) {
 		String action = "Remover o processo da caixa: ";
-		LOG.warn(action, e);
+		LOG.warn(action, exception);
 		throw new ApplicationException(ApplicationException.createMessage(
-		        action + e.getLocalizedMessage(), "removeCaixaProcesso()",
-		        JBPM_EVENTS_HANDLER, BPM));
+		        action + exception.getLocalizedMessage(), "removeCaixaProcesso()",
+		        JBPM_EVENTS_HANDLER, BPM), exception);
 	}
 	
 	/**
