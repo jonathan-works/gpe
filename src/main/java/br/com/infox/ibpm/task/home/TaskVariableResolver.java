@@ -12,7 +12,7 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.certificado.CertificadoException;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 

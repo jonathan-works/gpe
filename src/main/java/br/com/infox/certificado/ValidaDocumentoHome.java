@@ -27,7 +27,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.certificado.ValidaDocumento.ValidaDocumentoException;
+import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;

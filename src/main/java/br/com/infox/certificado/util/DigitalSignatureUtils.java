@@ -24,7 +24,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 
-import br.com.infox.certificado.CertificadoException;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.constants.WarningConstants;
 
 /**

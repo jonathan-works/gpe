@@ -52,7 +52,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
-import br.com.infox.certificado.CertificadoException;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
