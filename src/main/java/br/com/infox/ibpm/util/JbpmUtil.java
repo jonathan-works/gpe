@@ -29,6 +29,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -53,7 +54,6 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.Tarefa;
-import br.com.infox.ibpm.context.InfoxManagedJbpmContext;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -106,7 +106,7 @@ public class JbpmUtil {
 	 * @return retorna a primeira localização encontrada
 	 */
 	public Localizacao getLocalizacao(long jbpmProcessId) {
-		ProcessInstance pi = InfoxManagedJbpmContext.instance().getProcessInstance(jbpmProcessId);
+		ProcessInstance pi = ManagedJbpmContext.instance().getProcessInstance(jbpmProcessId);
 		Token token = pi.getRootToken();
 		for (Object o : pi.getTaskMgmtInstance().getTaskInstances()) {
 			TaskInstance t = (TaskInstance) o;
@@ -118,7 +118,7 @@ public class JbpmUtil {
 	}
 	
 	public static Session getJbpmSession() {
-		return InfoxManagedJbpmContext.instance().getSession();
+		return ManagedJbpmContext.instance().getSession();
 	}
 	
 	@Factory(value="jbpmMessages", scope=ScopeType.APPLICATION)
@@ -156,7 +156,7 @@ public class JbpmUtil {
 		sb.append("select pd.name ");
 		sb.append("from org.jbpm.graph.def.ProcessDefinition as pd ");
 		sb.append("group by pd.name order by pd.name");
-		Session session = InfoxManagedJbpmContext.instance().getSession();		
+		Session session = ManagedJbpmContext.instance().getSession();		
 		return session.createQuery(sb.toString()).list();
 	}
 	

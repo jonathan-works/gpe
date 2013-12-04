@@ -1,14 +1,12 @@
 package br.com.infox.core.action;
 
-import static org.jboss.seam.faces.FacesMessages.instance;
-
+import java.text.MessageFormat;
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.hibernate.NonUniqueObjectException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
@@ -17,12 +15,10 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
-import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -74,49 +70,41 @@ public abstract class AbstractAction <T> {
 				genericManager.update(t);
 				ret = UPDATED;
 			}
-		} catch (EntityExistsException e) {
-			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
-			LOG.error(msg+" (" + getObjectClassName(t) + ")", e);			
-		} catch (NonUniqueObjectException e) {
-			instance().add(StatusMessage.Severity.ERROR, MSG_REGISTRO_CADASTRADO);
-			LOG.error(msg+" ("+ getObjectClassName(t) + ")", e);	
-		} catch (ApplicationException e){
-			throw new ApplicationException("Erro: " + e.getMessage());
-		} catch (javax.persistence.PersistenceException e) {
-            LOG.error(msg, e);
-            DAOException daoException = new DAOException(e);
-			PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
-            if (errorCode != null) {
-            	ret = errorCode.toString();
-            	FacesMessages.instance().clear();
-            	FacesMessages.instance().add(daoException.getLocalizedMessage());
-            }
         } catch (DAOException daoException) {
-            LOG.error(msg, daoException);
-            PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
-            if (errorCode != null) {
-                ret = errorCode.toString();
-                FacesMessages.instance().clear();
-                FacesMessages.instance().add(daoException.getLocalizedMessage());
-            }
-        } catch (Exception e) {
-			Throwable cause = e.getCause();
-			if (cause instanceof ConstraintViolationException) {
-				instance().add(StatusMessage.Severity.ERROR,
-						"Registro já cadastrado!");
-				LOG.warn(msg+" (" + getObjectClassName(t) + ")", cause);					
-			} else {
-				instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " +
-						e.getMessage(), e);
-				LOG.error(msg+" (" + getObjectClassName(t) + ")", e);
-			}
-		}
-		if (!(PERSISTED.equals(ret) || UPDATED.equals(ret))) {
-		    Util.rollbackTransactionIfNeeded();
-		}
+        	LOG.error(msg, daoException);
+        	ret = handleDAOException(daoException);
+        }
+		
 		return ret;
 	}
 	
+	private String handleBeanViolationException(ConstraintViolationException e) {
+		FacesMessages.instance().clear();
+		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+			String message = MessageFormat.format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());
+			FacesMessages.instance().add(message);
+		}
+		return null;
+	}
+
+	private String handleDAOException(DAOException daoException) {
+		PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+		if (errorCode != null) {
+			String ret = errorCode.toString();
+			FacesMessages.instance().clear();
+			FacesMessages.instance().add(daoException.getLocalizedMessage());
+			return ret;
+		} else {
+			Throwable cause = daoException.getCause();
+			if (cause instanceof ConstraintViolationException) {
+				return handleBeanViolationException((ConstraintViolationException) cause);
+			} else {
+				FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " + cause.getMessage(), cause);
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Invoca o serviço de persistência para a variável instance.
 	 * @return "persisted" se inserido com sucesso.
@@ -179,17 +167,17 @@ public abstract class AbstractAction <T> {
 			    	ComponentUtil.setValue(t, "ativo", false);
 			    }
 				ret = flushObject(t, false);
-				instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
+				FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
 				LOG.info(".inactive(" + t + ")" + getObjectClassName(t) + 
 						"): " + sw.getTime());
 			} catch(Exception e) {
 			    LOG.error(".inactive()", e);
-				instance().add(StatusMessage.Severity.INFO, "Erro ao definir a propriedade " +
+				FacesMessages.instance().add(StatusMessage.Severity.INFO, "Erro ao definir a propriedade " +
 						"ativo na entidade: "+getObjectClassName(t)+". Verifique se esse " +
 						"campo existe.");
 			}
 		} else {
-			instance().add(StatusMessage.Severity.INFO, "Objeto informado não é uma entidade.");
+			FacesMessages.instance().add(StatusMessage.Severity.INFO, "Objeto informado não é uma entidade.");
 		}
 		return ret;
 	}

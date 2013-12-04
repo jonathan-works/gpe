@@ -20,5 +20,6 @@
 	<param name="idProcesso" value="#{processoHome.processoIdProcesso}" />
 	<param name="tarefaId" value="#{processoHome.tarefaId}" />
 	<action execute="#{processoHome.iniciarTarefaProcesso()}" if="#{not util.ajaxRequest}"/>	
+	<action execute="#{variavelProcessoAction.setProcesso(processoHome.instance)}" on-postback="false"/>
  
 </page>

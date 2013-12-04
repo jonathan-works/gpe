@@ -140,6 +140,17 @@ public class GenericDAO implements Serializable {
 	    return result;
 	}
 	
+	public <T> T merge(final T object) throws DAOException {
+		final T result = processExceptions(new DAOActionInterface<T>() {
+			@Override
+			@Transactional
+			public T execute(T obj) {
+				return entityManager.merge(object);
+			}
+		}, object);
+		return result;
+	}
+	
 	private <T> T processExceptions(DAOActionInterface<T> action,T object) throws DAOException {
 	    try {
 	        return action.execute(object);

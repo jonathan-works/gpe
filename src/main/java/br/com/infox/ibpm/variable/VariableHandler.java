@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
@@ -31,7 +32,6 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.context.InfoxManagedJbpmContext;
 import br.com.itx.util.ComponentUtil;
 
 
@@ -54,7 +54,7 @@ public class VariableHandler implements Serializable {
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private List<Variavel> getVariables(long taskId, boolean readOnly) {
 		List<Variavel> ret = new ArrayList<Variavel>();
-		TaskInstance taskInstance = InfoxManagedJbpmContext.instance()
+		TaskInstance taskInstance = ManagedJbpmContext.instance()
 				.getTaskInstanceForUpdate(taskId);
 
 		TaskController taskController = taskInstance.getTask()

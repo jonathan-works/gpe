@@ -65,6 +65,12 @@
                         
                 </rich:panel>
                 
+                <rich:panel header="#{messages['processBuilder.definicaoVariavelProcesso']}" rendered="#{processBuilder.exists}">
+                	
+                	<ui:include src="definicaoVariavelProcesso.xhtml" />
+                	
+                </rich:panel>
+                
                 <rich:panel styleClass="SwimlanePanel"
                     header="#{messages['processBuilder.swimlanes']}"
                     rendered="#{processBuilder.exists}">
@@ -129,8 +135,6 @@
 	            render=":processDefinition, @form"
 	            onclick="return confirm('#{messages['processBuilder.confirmNew']}')"
 	            rendered="#{processBuilder.exists}" />
-	            
-	    	<wi:messages formId="processDefinitionButtonsForm" />
 	            
         </h:form>
         

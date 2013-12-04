@@ -30,6 +30,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -37,7 +38,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.ibpm.context.InfoxManagedJbpmContext;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
 
@@ -52,7 +52,7 @@ public class Reindexer {
 	public void execute() {
 		MeasureTime mt = new MeasureTime().start();
 		LOG.warn("----------- Criando indices de documentos das tarefas -------------");
-		Session session = InfoxManagedJbpmContext.instance().getSession().getSessionFactory().openSession();
+		Session session = ManagedJbpmContext.instance().getSession().getSessionFactory().openSession();
 		Util.commitTransction();
 		session.getTransaction().setTimeout(30 * 60);
 		session.getTransaction().begin();
