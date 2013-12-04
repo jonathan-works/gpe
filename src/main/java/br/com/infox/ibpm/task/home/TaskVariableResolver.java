@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -15,6 +17,8 @@ import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 final class TaskVariableResolver extends TaskVariable {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(TaskVariableResolver.class);
     
     private Object value;
     
@@ -36,6 +40,7 @@ final class TaskVariableResolver extends TaskVariable {
             try {
                 value = Float.parseFloat(val);
             } catch (NumberFormatException e) {
+            	LOG.warn(".resolveWhenMonetario()", e);
                 value = Float.parseFloat(val.replace(".", "")
                         .replace(",", "."));
             }
