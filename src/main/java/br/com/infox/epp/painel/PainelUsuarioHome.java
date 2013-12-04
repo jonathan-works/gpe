@@ -14,14 +14,12 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.Redirect;
-import org.richfaces.component.UIDataTable;
 import org.richfaces.event.DropEvent;
-import org.richfaces.function.RichFunction;
 
+import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.constants.WarningConstants;
-import br.com.infox.core.jsf.DatatableDynamicColumnHelper;
-import br.com.infox.core.jsf.DatatableDynamicColumnHelper.ColumnModel;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoEpaList;
@@ -42,10 +40,11 @@ public class PainelUsuarioHome implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "painelUsuarioHome";
-	private static final String CONSULTA_PROCESSO_DATATABLE_ID = ":consultaProcessoEpaList";
-
+	private static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioHome.getVariavelProcesso(row, '%s').valor}";
+			
 	private Map<String, Object> selected;
 	private List<Integer> processoIdList;
+	private List<DynamicColumnModel> dynamicColumns;
 	
 	@In private ConsultaProcessoEpaList consultaProcessoEpaList;
 	@In private ProcessoManager processoManager;
@@ -57,6 +56,7 @@ public class PainelUsuarioHome implements Serializable {
 	public void onSelected(Object obj){
 		this.selected = (Map<String, Object>) obj;
 		processoIdList = null;
+		dynamicColumns = null;
 		updateDatatable();
 	}
 	
@@ -166,21 +166,28 @@ public class PainelUsuarioHome implements Serializable {
 	
 	private void updateDatatable() {
 		List<Integer> idsProcesso = getProcessoIdList();
+		
 		if (idsProcesso != null && (idsProcesso.size() > 1 || (idsProcesso.size() == 1 && idsProcesso.get(0) != -1))) {
 			ProcessoEpa processoEpa = EntityUtil.find(ProcessoEpa.class, idsProcesso.get(0));
-
-			UIDataTable dataTable = (UIDataTable) RichFunction.findComponent(CONSULTA_PROCESSO_DATATABLE_ID);
-			List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
+			Fluxo fluxo = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+			
+			List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo);
+			this.dynamicColumns = new ArrayList<>();
 			for (DefinicaoVariavelProcesso definicao : definicoes) {
-				ColumnModel columnModel = new ColumnModel(definicao.getLabel(), 
-						"#{painelUsuarioHome.getVariavelProcesso(row, '" + definicao.getNome() + "').valor}");
-				
-				DatatableDynamicColumnHelper.addDynamicColumn(columnModel, dataTable);
+				DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION, definicao.getNome()));
+				this.dynamicColumns.add(columnModel);
 			}
 		}
 	}
 	
 	public VariavelProcesso getVariavelProcesso(ProcessoEpa processo, String nome) {
 		return variavelProcessoService.getVariavelProcesso(processo, nome);
+	}
+	
+	public List<DynamicColumnModel> getDynamicColumns() {
+		if (this.dynamicColumns == null) {
+			updateDatatable();
+		}
+		return this.dynamicColumns;
 	}
 }
