@@ -7,6 +7,8 @@ import java.util.Date;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -24,6 +26,8 @@ import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(TaskListenerService.NAME)
 public class TaskListenerService extends GenericManager {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(TaskListenerService.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -68,8 +72,7 @@ public class TaskListenerService extends GenericManager {
 		try {
 			persist(pEpaTarefa);
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error(".createProcessoEpa(processo, taskInstance)", e);
 		}
 	}
 
