@@ -50,11 +50,6 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
 	protected String getDefaultOrder() {
 		return DEFAULT_ORDER;
 	}
-	
-	@Override
-    public EntityList<ModeloDocumento> getBeanList() {
-        return ModeloDocumentoList.instance();
-    }
     
     @Override
     public String getTemplate() {

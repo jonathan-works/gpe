@@ -52,11 +52,6 @@ public class CboList extends EntityList<Cbo> {
 	public static CboList instance() {
 		return ComponentUtil.getComponent(CboList.NAME);
 	}
-	
-	@Override
-    public EntityList<Cbo> getBeanList() {
-        return CboList.instance();
-    }
     
     @Override
     public String getTemplate() {

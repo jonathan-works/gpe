@@ -10,7 +10,6 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.estatistica.entity.TempoMedioTarefa;
-import br.com.itx.util.ComponentUtil;
 
 @Name(TempoMedioTarefaList.NAME)
 @BypassInterceptors
@@ -45,11 +44,6 @@ public class TempoMedioTarefaList extends EntityList<TempoMedioTarefa> {
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
 	}
-	
-	 @Override
-    public EntityList<TempoMedioTarefa> getBeanList() {
-        return ComponentUtil.getComponent(TempoMedioTarefaList.NAME);
-    }
     
     @Override
     public String getTemplate() {

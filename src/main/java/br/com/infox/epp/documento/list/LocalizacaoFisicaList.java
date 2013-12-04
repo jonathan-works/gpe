@@ -56,11 +56,6 @@ public class LocalizacaoFisicaList extends EntityList<LocalizacaoFisica> {
 	}
 	
 	@Override
-    public EntityList<LocalizacaoFisica> getBeanList() {
-        return LocalizacaoFisicaList.instance();
-    }
-	
-	@Override
     public String getTemplate() {
         return TEMPLATE;
     }

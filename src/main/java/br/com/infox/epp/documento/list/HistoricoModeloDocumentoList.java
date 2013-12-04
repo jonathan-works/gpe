@@ -63,8 +63,4 @@ public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocu
         return DOWNLOAD_XLS_NAME;
     }
     
-    @Override
-    public EntityList<HistoricoModeloDocumento> getBeanList() {
-        return HistoricoModeloDocumentoList.instance();
-    }
 }

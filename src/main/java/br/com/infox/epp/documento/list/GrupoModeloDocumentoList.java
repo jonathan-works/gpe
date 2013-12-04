@@ -55,8 +55,4 @@ public class GrupoModeloDocumentoList extends EntityList<GrupoModeloDocumento> {
         return TEMPLATE;
     }
 
-    @Override
-    public EntityList<GrupoModeloDocumento> getBeanList() {
-        return GrupoModeloDocumentoList.instance();
-    }
 }

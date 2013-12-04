@@ -52,11 +52,6 @@ public class CnaeList extends EntityList<Cnae> {
 	}
 	
     @Override
-    public EntityList<Cnae> getBeanList() {
-        return CnaeList.instance();
-    }
-    
-    @Override
     public String getTemplate() {
         return TEMPLATE;
     }

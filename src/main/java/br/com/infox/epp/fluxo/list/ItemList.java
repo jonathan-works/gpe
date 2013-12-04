@@ -58,11 +58,6 @@ public class ItemList extends EntityList<Item> {
 		return DEFAULT_ORDER;
 	}
 	
-	@Override
-    public EntityList<Item> getBeanList() {
-        return ItemList.instance();
-    }
-    
     @Override
     public String getTemplate() {
         return TEMPLATE;
