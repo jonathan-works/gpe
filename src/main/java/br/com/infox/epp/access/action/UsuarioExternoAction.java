@@ -113,6 +113,7 @@ public class UsuarioExternoAction {
 		try {
 			this.urlRetorno = new URL(urlRetorno);
 		} catch (MalformedURLException e) {
+			LOG.warn(".setUrlRetorno(urlRetorno)", e);
 			Redirect.instance().setViewId("/AcessoExterno/externo.seam");
 			Redirect.instance().execute();
 		}
