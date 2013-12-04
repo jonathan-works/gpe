@@ -156,6 +156,7 @@ public final class ComponentUtil {
 				Field field = declaringClass.getDeclaredField(pd.getName());
 				return field.isAnnotationPresent(annotation);
 			} catch (NoSuchFieldException ex) {
+				LOG.warn("hasAnnotation(pd, annotation)", ex);
 				return false;
 			}
 			
