@@ -190,7 +190,7 @@ public class ProcessBuilder implements Serializable {
 			FacesMessages.instance().clearGlobalMessages();
 			FacesMessages.instance().add(e.getMessage());
 			context.getRenderIds().add(messages.getClientId(facesContext));
-			throw new AbortProcessingException(e);
+			throw new AbortProcessingException("processBuilder.prepareUpdate(event)", e);
 		}
 		
 		context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
