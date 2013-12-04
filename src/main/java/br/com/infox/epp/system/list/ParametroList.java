@@ -63,11 +63,6 @@ public class ParametroList extends EntityList<Parametro> {
 	public static ParametroList instance() {
         return ComponentUtil.getComponent(ParametroList.NAME);
     }
-	
-	@Override
-    public EntityList<Parametro> getBeanList() {
-        return ParametroList.instance();
-    }
     
     @Override
     public String getTemplate() {

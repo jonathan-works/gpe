@@ -55,11 +55,6 @@ public class CategoriaList extends EntityList<Categoria> {
 		return ComponentUtil.getComponent(CategoriaList.NAME);
 	}
 	
-	@Override
-    public EntityList<Categoria> getBeanList() {
-        return CategoriaList.instance();
-    }
-    
     @Override
     public String getTemplate() {
         return TEMPLATE;

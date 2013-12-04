@@ -314,13 +314,9 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     public String getDownloadXlsName(){
         return null;
     }
-    
-    public EntityList<E> getBeanList() {
-        return null;
-    }
 	
 	public void exportarXLS() {
-        List<E> beanList = getBeanList().list(TAMANHO_XLS_PADRAO);
+        List<E> beanList = list(TAMANHO_XLS_PADRAO);
         try {
             if (beanList == null || beanList.isEmpty()) {
                 FacesMessages.instance().add(Severity.INFO, "Não há dados para exportar!");

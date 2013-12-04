@@ -65,10 +65,5 @@ public class NaturezaList extends EntityList<Natureza> {
     public String getDownloadXlsName() {
         return DOWNLOAD_XLS_NAME;
     }
-    
-    @Override
-    public EntityList<Natureza> getBeanList() {
-        return NaturezaList.instance();
-    }
 	
 }

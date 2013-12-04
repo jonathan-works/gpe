@@ -53,11 +53,6 @@ public class CalendarioEventosList extends EntityList<CalendarioEventos> {
 		return ComponentUtil.getComponent(CalendarioEventosList.NAME);
 	}
 	
-	@Override
-    public EntityList<CalendarioEventos> getBeanList() {
-        return CalendarioEventosList.instance();
-    }
-
     @Override
     public String getTemplate() {
         return TEMPLATE;

@@ -24,15 +24,15 @@ import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
-import br.com.infox.epp.access.home.LocalizacaoHome;
-import br.com.itx.util.ComponentUtil;
 
 
-@Name("localizacaoEstruturaTree")
+@Name(LocalizacaoEstruturaTreeHandler.NAME)
 @BypassInterceptors
 public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localizacao> {
-
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "localizacaoEstruturaTree";
+    public static final String EVENT_SELECT_LOC_ESTRUTURA = "evtSelectLocalizacaoEstrutura";
+    
 	private UsuarioLocalizacao usuarioLocalizacaoAtual;
 	
 	@Override
@@ -61,8 +61,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 
 	@Override
 	protected Localizacao getEntityToIgnore() {
-		LocalizacaoHome lh = ComponentUtil.getComponent("localizacaoHome");
-		return lh.getInstance();
+		return getSelected();
 	}
 	
 	@Override
@@ -72,7 +71,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 	
 	@Override
 	protected void raiseEvents(EntityNode<Localizacao> en) {
-		Events.instance().raiseEvent("evtSelectLocalizacaoEstrutura", getSelected(), getEstrutura(en));
+		Events.instance().raiseEvent(EVENT_SELECT_LOC_ESTRUTURA, getSelected(), getEstrutura(en));
 	}
 	
 	private Localizacao getEstrutura(EntityNode<Localizacao> en) {
