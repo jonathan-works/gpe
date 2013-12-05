@@ -15,6 +15,8 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
@@ -135,7 +137,7 @@ public class ProcessoManager extends GenericManager {
     	final String actorId = Actor.instance().getId();
     	iniciaTask(processo, taskInstanceId);
     	if (taskInstanceId != null) {
-        	storeUsuario(taskInstanceId, usrLoc.getUsuario());
+        	storeUsuario(taskInstanceId, usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel());
         	vinculaUsuario(processo, actorId);
     	}
     }
@@ -164,9 +166,9 @@ public class ProcessoManager extends GenericManager {
 	 * @param idTaskInstance
 	 * @param actorId				 
 	 * */
-	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user){
+	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao, final Papel papel){
         if (EntityUtil.getEntityManager().find(UsuarioTaskInstance.class, idTaskInstance) == null){
-            EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user));
+            EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
         }
 	}
 	
