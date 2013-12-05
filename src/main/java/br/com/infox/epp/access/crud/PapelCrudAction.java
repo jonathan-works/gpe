@@ -23,6 +23,7 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.action.RoleAction;
 
+import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.RolesMap;
@@ -137,6 +138,9 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		String ret = super.remove();
 		newInstance();
 		RolesMap.instance().clear();
+		if (AbstractAction.REMOVED.equals(ret)) {
+			FacesMessages.instance().add("#{messages['Papel_deleted']}");
+		}
 		return ret;
 	}
 	
