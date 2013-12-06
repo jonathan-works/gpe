@@ -34,7 +34,10 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
 		@NamedQuery(name=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO,
 					query=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY),
 		@NamedQuery(name=LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA,
-					query=LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY)
+					query=LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY),
+		@NamedQuery(name=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA,
+		            query=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_QUERY)
+		
 })
 public class LocalizacaoTurno implements Serializable {
 
