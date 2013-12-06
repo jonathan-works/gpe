@@ -28,6 +28,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -40,6 +42,8 @@ import br.com.itx.util.Crypto;
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class FileHome implements Serializable, FileUploadListener {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(FileHome.class);
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "fileHome";
@@ -133,6 +137,7 @@ public class FileHome implements Serializable, FileUploadListener {
 			out.flush();
 			facesContext.responseComplete();
 		} catch (IOException ex) {
+			LOG.error(".download()", ex);
 			FacesMessages.instance().add("Erro ao descarregar o arquivo: " + fileName);
 		}
 	}

@@ -134,15 +134,10 @@ public abstract class AbstractAction <T> {
 		try {
 			genericManager.remove(t);
 			ret = REMOVED;
-		} catch (RuntimeException e) {
-			FacesMessages fm = FacesMessages.instance();
-			fm.add(StatusMessage.Severity.ERROR, "Não foi possível excluir.");
-			LOG.error(".remove()", e);
-		} catch (Exception e) {
-			FacesMessages fm = FacesMessages.instance();
-			fm.add(StatusMessage.Severity.ERROR, "Não foi possível excluir.");
-			LOG.error(".remove()", e);
-		}
+		} catch (DAOException daoException) {
+        	LOG.error(".remove()", daoException);
+        	ret = handleDAOException(daoException);
+        }
 		return ret;
 	}
 

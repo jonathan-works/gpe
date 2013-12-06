@@ -71,7 +71,7 @@ public class UserHandler {
                 this.usuarioProcesso = (String) query.getSingleResult();
             } catch (NoResultException e) {
                 this.usuarioProcesso = "";
-                LOG.warn("Não houve resultado. UserHandler.getActorIdTarefaAtual(Integer)");
+                LOG.warn("Não houve resultado. UserHandler.getActorIdTarefaAtual(Integer)", e);
             } catch (NonUniqueResultException e) {
                 LOG.error("Múltiplos resultados. UserHandler.getActorIdTarefaAtual(Integer)", e);
             } catch (IllegalStateException e) {
@@ -93,7 +93,7 @@ public class UserHandler {
                 this.usuarioTarefa = (String) query.getSingleResult();
             } catch (NoResultException e) {
                 this.usuarioTarefa = "";
-                LOG.warn("Não houve resultado. UserHandler.getUsuarioByTarefa(TaskInstance)");
+                LOG.warn("Não houve resultado. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
             } catch (NonUniqueResultException e) {
                 LOG.error("Múltiplos resultados. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
             } catch (IllegalStateException e) {
@@ -113,7 +113,7 @@ public class UserHandler {
             u = (UsuarioLogin) EntityUtil.getEntityManager().createQuery(sql)
                     .setParameter("login", login).getSingleResult();
         } catch (NoResultException e) {
-            LOG.warn("Usuário não encontrado. Login: " + login);
+            LOG.warn("Usuário não encontrado. Login: " + login, e);
         } catch (Exception e) {
             LOG.error("Erro ao buscar usuário. Login: " + login, e);
         }

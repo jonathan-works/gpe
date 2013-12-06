@@ -138,7 +138,7 @@ public class ImagemBinManager extends GenericManager {
             try {
                 saveFile(imagemBin.getImagem(), fileDestino);
             } catch (IOException e) {
-                LOG.warn(MessageFormat.format("Erro ao adicionar arquivo: {0} {1}", fileDestino.getAbsolutePath(),fileDestino.getName()));
+                LOG.warn(MessageFormat.format("Erro ao adicionar arquivo: {0} {1}", fileDestino.getAbsolutePath(),fileDestino.getName()), e);
             }
         
         }

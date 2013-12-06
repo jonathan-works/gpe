@@ -113,9 +113,10 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
                 try {
                     passwordService.requisitarNovaSenha(usuario.getEmail(), "");
                 } catch (BusinessException be){
+                	LOG.warn("afterSave(ret)", be);
                     FacesMessages.instance().add(Severity.INFO, be.getLocalizedMessage());
                 } catch (LoginException e) {
-                    LOG.error("afterSave()", e);
+                    LOG.error("afterSave(ret)", e);
                 }
             }
         }

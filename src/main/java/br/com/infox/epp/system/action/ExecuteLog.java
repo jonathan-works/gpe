@@ -18,7 +18,6 @@ package br.com.infox.epp.system.action;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.hibernate.AssertionFailure;
 import org.hibernate.persister.entity.EntityPersister;
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
@@ -136,9 +135,7 @@ public class ExecuteLog {
                 LOG.error(".execute()", e);
 			} 
 		}
-		try {
-			em.flush();
-		} catch (AssertionFailure e) { /* Bug do hibernate: HHH-2763 */ }
+		em.flush();
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(".execute(): ").append(tipoOperacao.getLabel());

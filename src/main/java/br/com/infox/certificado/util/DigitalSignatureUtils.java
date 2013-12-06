@@ -20,9 +20,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 
-import br.com.infox.certificado.CertificadoException;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.constants.WarningConstants;
 
 /**
@@ -79,7 +81,8 @@ public final class DigitalSignatureUtils {
     private static final String CERT_CHAIN_ENCODING = "PkiPath";
     private static final String DIGITAL_SIGNATURE_ALGORITHM_NAME = "SHA1withRSA";
     private static final String CERT_CHAIN_VALIDATION_ALGORITHM = "PKIX";
-
+    
+    private static final LogProvider LOG = Logging.getLogProvider(DigitalSignatureUtils.class);
     
     private DigitalSignatureUtils() { }
     
@@ -208,6 +211,7 @@ public final class DigitalSignatureUtils {
                 return;
             }
             catch (GeneralSecurityException ex) {
+            	LOG.warn(".verifyCertificate(aCertificate, aTrustedCertificates)", ex);
                 // Certificate is not signed by current trustedCert. Try the next one
             }
         }

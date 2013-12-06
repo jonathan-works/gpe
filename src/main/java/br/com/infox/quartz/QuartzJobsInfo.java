@@ -147,11 +147,15 @@ public class QuartzJobsInfo implements Serializable {
 			component.getClass().getDeclaredMethod(medothName, Date.class,
 					String.class);
 			return true;
-		} catch (Exception e) { /* not found */}
+		} catch (Exception e) {
+			LOG.error(".isMethodValid(component, medothName)", e);
+		}
 		try {
 			component.getClass().getDeclaredMethod(medothName, String.class);
 			return true;
-		} catch (Exception e) { /* not found */}
+		} catch (Exception e) {
+			LOG.error(".isMethodValid(component, medothName)", e);
+		}
 		return false;
 	}
 

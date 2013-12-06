@@ -3,9 +3,13 @@ package br.com.infox.core.persistence;
 import java.sql.SQLException;
 
 import org.jboss.seam.annotations.ApplicationException;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 @ApplicationException(end = false, rollback = false)
 public class DAOException extends Exception {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(DAOException.class);
 	
 	private static final long serialVersionUID = 1L;
 	private static final String MSG_UNIQUE_VIOLATION = "#{messages['constraintViolation.uniqueViolation']}";
@@ -83,6 +87,7 @@ public class DAOException extends Exception {
 					}
 				}
 			} catch (IllegalArgumentException | NullPointerException e) {
+				LOG.warn("discoverErrorCode(throwable)", e);
 				return null;
 			}
 		}

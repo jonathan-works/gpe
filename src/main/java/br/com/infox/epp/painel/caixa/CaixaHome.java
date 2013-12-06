@@ -9,6 +9,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
@@ -22,6 +24,7 @@ import br.com.itx.util.EntityUtil;
 @Name(CaixaHome.NAME)
 public class CaixaHome extends AbstractHome<Caixa> {
     private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(CaixaHome.class);
     
 	public static final String NAME = "caixaHome";
 	public static final String ADD_CAIXA_EVENT = "addCaixaEvent";
@@ -75,6 +78,7 @@ public class CaixaHome extends AbstractHome<Caixa> {
 		    	FacesMessages.instance().add(Severity.ERROR, "Já existe uma caixa na mesma tarefa com o nó anterior especificado.");
 		    }
 		} catch (IllegalArgumentException e) {
+			LOG.warn(".update()", e);
 			// Retorno do update não pertence ao enum, nada a fazer
 		}
 		return ret;

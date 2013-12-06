@@ -87,11 +87,11 @@ public final class XmlUtil {
 					jdom.setFormat(format);
 					jdom.output(doc, writer);
 				} catch (UnsupportedEncodingException err) {
-					// ignorado
+					LOG.warn("writeDocument(file, Document)", err);
 				}
 				fout.close();
 			} catch (Exception ex) {
-			    LOG.error(".writeDocument()", ex);
+			    LOG.error(".writeDocument(file, Document)", ex);
 			}
 		}
 	}

@@ -38,6 +38,7 @@ public final class ReflectionsUtil {
 				f.setAccessible(true);
 				return f;
 			} catch(Exception e) {
+				LOG.warn(".getField(o, fieldName)", e);
 				cl = cl.getSuperclass();
 				exc = e;
 			}

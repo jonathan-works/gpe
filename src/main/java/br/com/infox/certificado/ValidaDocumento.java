@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.jboss.seam.util.Base64;
 
+import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.util.ArrayUtil;
@@ -119,18 +121,6 @@ public class ValidaDocumento {
 		} catch (GeneralSecurityException e) {
 			throw new ValidaDocumentoException("Erro ao verificar a assinatura " +
 					"do documento: " + e.getMessage(), e);
-		}
-	}
-
-	public static class ValidaDocumentoException extends Exception {
-		private static final long serialVersionUID = 1L;
-
-		public ValidaDocumentoException(String message, Throwable cause) {
-			super(message, cause);
-		}
-
-		public ValidaDocumentoException(String message) {
-			super(message);
 		}
 	}
 

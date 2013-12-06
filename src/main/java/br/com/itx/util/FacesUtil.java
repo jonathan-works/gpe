@@ -102,7 +102,7 @@ public final class FacesUtil {
 		try {
 			out = response.getOutputStream();
 		} catch (IOException e) {
-			e.printStackTrace(System.out);
+			LOG.error(".getOutputStream(nocache, mime, name)", e);
 		}
 		return out;
 	}
@@ -117,7 +117,7 @@ public final class FacesUtil {
     			out.close();
     		}
     	} catch (IOException e) { 
-    		e.printStackTrace(System.out);
+    		LOG.error(".closeOutputStream(out)", e);
     	}	
 	}
 	
@@ -155,7 +155,7 @@ public final class FacesUtil {
 	        resp = in.readObject();
 	        in.close();
 	    } catch (Exception e) {
-    		e.printStackTrace(System.out);
+	    	LOG.error(".cloneBean(obj)", e);
 	    }
 	    return (T)resp;
 	}

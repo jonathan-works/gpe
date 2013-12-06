@@ -12,9 +12,13 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jgraph.JGraph;
 
 public class Util {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(Util.class);
 
 	public static RenderedImage toImage(JGraph graph) {
 		Object[] cells = graph.getRoots();
@@ -64,7 +68,7 @@ public class Util {
 				out.write(text);
 				out.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOG.error(".writeText(file, append, text)", e);
 			}
 		}	
 	}

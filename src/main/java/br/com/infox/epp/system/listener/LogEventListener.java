@@ -96,6 +96,7 @@ public class LogEventListener implements PostUpdateEventListener,
 		try {
 			return test == null || test.toString().equalsIgnoreCase("true");
 		} catch (Exception e) {
+			LOG.warn(".isLogEnabled()", e);
 			return true;
 		}
 	}

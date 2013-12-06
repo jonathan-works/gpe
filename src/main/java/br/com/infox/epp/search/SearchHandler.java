@@ -93,7 +93,7 @@ public class SearchHandler implements Serializable {
 		try {
 			prc = Integer.parseInt(searchText);
 		}	catch (NumberFormatException e) {
-			LOG.debug(e.getMessage());
+			LOG.debug(e.getMessage(), e);
 		}
 		return getEntityManager().find(Processo.class, prc);
 	}
@@ -201,10 +201,8 @@ public class SearchHandler implements Serializable {
 		if (!isProcesso)	{
 			try {
 				searchIndexer();
-			} catch (IOException e) {
-				LOG.debug(e.getMessage());
-			} catch (ParseException e) {
-				LOG.debug(e.getMessage());
+			} catch (IOException | ParseException e) {
+				LOG.debug(e.getMessage(), e);
 			}
 		}
 	}
@@ -320,7 +318,7 @@ public class SearchHandler implements Serializable {
 					texto = highlighted;
 				}
 			} catch (ParseException e) {
-				LOG.debug(e.getMessage());
+				LOG.debug(e.getMessage(), e);
 			}
 		}
 		return texto;

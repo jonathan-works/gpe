@@ -23,9 +23,12 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.certificado.ValidaDocumento.ValidaDocumentoException;
+import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
@@ -41,6 +44,8 @@ public class ValidaDocumentoHome {
 	private ProcessoDocumentoBin processoDocumentoBin;
 	private Boolean valido;
 	private Certificado dadosCertificado;
+	
+	private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoHome.class);
 	
 
 	@Deprecated
@@ -85,12 +90,9 @@ public class ValidaDocumentoHome {
 			ValidaDocumento validaDocumento = new ValidaDocumento(data, certChain, signature);
 			setValido(validaDocumento.verificaAssinaturaDocumento());
 			setDadosCertificado(validaDocumento.getDadosCertificado());
-		} catch (ValidaDocumentoException e) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-				e.getMessage());
-		} catch (CertificadoException e) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-					e.getMessage());
+		} catch (ValidaDocumentoException | CertificadoException e) {
+			LOG.error(".validaDocumento(bin, certChain, signature)", e);;
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getMessage());
 		}
 	}	
 	

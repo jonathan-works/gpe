@@ -41,7 +41,7 @@ public class VariableHandler implements Serializable {
 	
 	public static final String NAME = "variableHandler";
 
-	private transient LogProvider log = Logging.getLogProvider(VariableHandler.class);
+	private static final LogProvider LOG = Logging.getLogProvider(VariableHandler.class);
 	
 	public List<Variavel> getVariables(long taskId) {
 		return getVariables(taskId, false);
@@ -73,7 +73,7 @@ public class VariableHandler implements Serializable {
 						ret.add(new Variavel(getLabel(name), value, type));
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
-					log.error("Varivel com Valor inválido: " + Strings.toString(var));
+					LOG.error("Varivel com Valor inválido: " + Strings.toString(var), e);
 				}
 			}
 		}

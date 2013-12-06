@@ -262,6 +262,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
 		} catch (javax.validation.ConstraintViolationException e) {
+			LOG.error(msg, e);
 			FacesMessages.instance().clear();
 			for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
 				FacesMessages.instance().add(violation.getPropertyPath() + ": " + violation.getMessage());
@@ -316,7 +317,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 				ret = afterPersistOrUpdate(ret);
 			}
 		} catch (AssertionFailure e) {
-			LOG.warn(getPersistLogMessage()  + e.getMessage());
+			LOG.warn(getPersistLogMessage()  + e.getMessage(), e);
 			ret = PERSISTED;
 		} catch (EntityExistsException e) {
 			instance().add(StatusMessage.Severity.ERROR, getEntityExistsExceptionMessage());
@@ -334,6 +335,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             	FacesMessages.instance().add(daoException.getLocalizedMessage());
             }
 		} catch (javax.validation.ConstraintViolationException e) {
+			LOG.error(msg, e);
     		FacesMessages.instance().clear();
     		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
     			FacesMessages.instance().add(violation.getPropertyPath() + ": " + violation.getMessage());

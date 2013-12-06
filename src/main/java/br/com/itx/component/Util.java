@@ -365,6 +365,7 @@ public class Util implements Serializable {
 			SimpleDateFormat sf = new SimpleDateFormat(formato);
 			return sf.format(new Date());
 		} catch (Exception e) {
+			LOG.warn(".formatDataAtual(formato)", e);
 			return null;
 		}
 	}	    
@@ -423,6 +424,7 @@ public class Util implements Serializable {
 			try {
 				sb.append(context.get(name));
 			} catch (LazyInitializationException e) {
+				LOG.warn(".getContextsAsString(context, htmlBreak)", e);
 				sb.append("----");
 			}
 			sb.append(htmlBreak ?  "<br />" : '\n');

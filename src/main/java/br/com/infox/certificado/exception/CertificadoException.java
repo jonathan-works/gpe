@@ -1,4 +1,4 @@
-package br.com.infox.certificado;
+package br.com.infox.certificado.exception;
 
 public class CertificadoException extends Exception {
 

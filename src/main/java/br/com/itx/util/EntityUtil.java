@@ -37,7 +37,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Query;
 import javax.persistence.Transient;
 
-import org.hibernate.AssertionFailure;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Naming;
@@ -402,15 +401,11 @@ public final class EntityUtil implements Serializable {
 	}
 
 	public static void flush(){
-		try { 
-			getEntityManager().flush();
-		} catch (AssertionFailure e) { /* bug hibernate */ }
+		getEntityManager().flush();
 	} 
 
 	public static void flush(EntityManager em){
-		try { 
-			em.flush();
-		} catch (AssertionFailure e) { /* bug hibernate */ }
+		em.flush();
 	}
 		
 	/**
