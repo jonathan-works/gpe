@@ -214,7 +214,12 @@ public final class ComponentUtil {
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	public static <C> C getComponent(String componentName) {
 		return (C) Component.getInstance(componentName);
-	}	
+	}
+	
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+	public static <C> C getComponent(Class<C> componentClass) {
+	    return (C) Component.getInstance(componentClass);
+	}
 	
 	/**
 	 * Metodo que devolve a instancia de um componente usando o 
