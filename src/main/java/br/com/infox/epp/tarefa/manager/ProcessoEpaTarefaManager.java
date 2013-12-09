@@ -13,9 +13,9 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Conversation;
 
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
@@ -156,7 +156,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		}
 		switch (tipoPrazo) {
 		case H:
-			result = calcularTempoGastoHoras(horaDisparo, processoEpaTarefa.getProcessoEpa().getIdProcesso(), processoEpaTarefa.getUltimoDisparo());
+			result = calcularTempoGastoHoras(horaDisparo, processoEpaTarefa.getTaskInstance(), processoEpaTarefa.getUltimoDisparo());
 			break;
 		case D:
 			result = calcularTempoGastoDias(horaDisparo, processoEpaTarefa);
@@ -224,7 +224,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	    return (d2.getTime()-d1.getTime())/60000;
 	}
 	
-	private float calcularTempoGastoHoras(final Date dataDisparo, final int idProcesso, final Date ultimoDisparo) {
+	private float calcularTempoGastoHoras(final Date dataDisparo, final long idTaskInstance, final Date ultimoDisparo) {
 	    float result = 0;
 	    
 	    final Calendar ultimaAtualizacao = new GregorianCalendar();
@@ -233,7 +233,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	    ultimaAtualizacao.setTime(ultimoDisparo);
 	    while (ultimaAtualizacao.before(disparoAtual)) {
 	        
-	        final List<LocalizacaoTurno> localizacoes = localizacaoTurnoDAO.getTurnosTarefa(idProcesso, DiaSemanaEnum.values()[ultimaAtualizacao.get(Calendar.DAY_OF_WEEK)-1], ultimaAtualizacao.getTime());
+	        final List<LocalizacaoTurno> localizacoes = localizacaoTurnoDAO.getTurnosTarefa(idTaskInstance, DiaSemanaEnum.values()[ultimaAtualizacao.get(Calendar.DAY_OF_WEEK)-1], ultimaAtualizacao.getTime());
 	        for (int i = 0,l=localizacoes.size(); i < l; i++) {
 	            final Calendar inicioTurno = new GregorianCalendar();
 	            inicioTurno.setTime(localizacoes.get(i).getHoraInicio());
