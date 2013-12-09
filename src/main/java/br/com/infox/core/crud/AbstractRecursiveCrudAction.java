@@ -1,16 +1,17 @@
 package br.com.infox.core.crud;
 
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+
 import java.util.List;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.persistence.RecursiveManager;
 import br.com.itx.util.EntityUtil;
 
-@SuppressWarnings(WarningConstants.UNCHECKED)
+@SuppressWarnings(UNCHECKED)
 public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extends 
                             AbstractCrudAction<E> {
     
@@ -54,28 +55,13 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extend
     @Override
     protected boolean beforeSave() {
         updateRecursivePath();
-        return super.beforeSave();
+        return true;
     }
     
     @Override
-    protected void afterSave() {
-        updateOldInstance();
-        super.afterSave();
-    }
-    
-    private void updateOldInstance() {
+    protected void afterSave(String ret) {
         updateOldInstance(getInstance());
+        super.afterSave(ret);
     }
     
-    @Override
-    protected String persist() {
-        String ret = super.persist();
-        if (PERSISTED.equals(ret)) {
-        }
-        
-        return ret;
-    }
-    
-    protected abstract void limparTrees();
-
 }

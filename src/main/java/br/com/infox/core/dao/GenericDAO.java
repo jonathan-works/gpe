@@ -1,6 +1,6 @@
 package br.com.infox.core.dao;
 
-import static br.com.itx.util.EntityUtil.getSingleResult;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,7 +17,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.itx.component.Util;
 
@@ -66,25 +65,30 @@ public class GenericDAO implements Serializable {
 	 * @param clazz entidade
 	 * @return lista de todos os registros da entidade
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public <T> List<T> findAll(Class<T> clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o from ").append(clazz.getName()).append(" o");
-		return (List<T>) entityManager.createQuery(sb.toString()).getResultList();
+		return entityManager.createQuery(sb.toString()).getResultList();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	protected <T> List<T> getNamedResultList(String namedQuery,
 			Map<String, Object> parameters) {
 		Query q = getNamedQuery(namedQuery, parameters);
-		return (List<T>) q.getResultList();
+		return q.getResultList();
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	protected <T> T getNamedSingleResult(String namedQuery,
 			Map<String, Object> parameters) {
-		Query q = getNamedQuery(namedQuery, parameters);
-		return (T) getSingleResult(q);
+		Query q = getNamedQuery(namedQuery, parameters)
+		        .setMaxResults(1);
+        List<T> list = q.getResultList();
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        return list.get(0);
 	}
 
 	protected Query getNamedQuery(String namedQuery,
@@ -98,67 +102,53 @@ public class GenericDAO implements Serializable {
 		return q;
 	}
 	
+	@Transactional
 	public <T> T persist(T object) throws DAOException{
-	    final T result = processExceptions(new DAOActionInterface<T>() {
-            @Override
-            @Transactional
-            public T execute(final T obj) {
-                entityManager.persist(obj);
-                entityManager.flush();
-                return obj;
-            }
-        },object);
-	    
-        return result;
+	    try {
+	        entityManager.persist(object);
+            entityManager.flush();
+            return object;
+	    } catch (Exception e) {
+	        throw new DAOException(e);
+	    } finally {
+	        Util.rollbackTransactionIfNeeded();
+	    }
 	}
-	
+
+    @Transactional
 	public <T> T update(T object) throws DAOException{
-	    final T result = processExceptions(new DAOActionInterface<T>() {
-            @Override
-            @Transactional
-            public T execute(final T obj) {
-                final T res = entityManager.merge(obj);
-                entityManager.flush();
-                return res;
-            }
-        },object);
-	    
-        return result;
+        try {
+            final T res = entityManager.merge(object);
+            entityManager.flush();
+            return res;
+        } catch (Exception e) {
+            throw new DAOException(e);
+        } finally {
+            Util.rollbackTransactionIfNeeded();
+        }
 	}
 	
+    @Transactional
 	public <T> T remove(final T object) throws DAOException{
-	    final T result = processExceptions(new DAOActionInterface<T>() {
-            @Override
-            @Transactional
-            public T execute(T obj) {
-                entityManager.remove(obj);
-                entityManager.flush();
-                return obj;
-            }
-        },object);
-	    
-	    return result;
+	    try {
+            entityManager.remove(object);
+            entityManager.flush();
+            return object;
+    	} catch (Exception e) {
+            throw new DAOException(e);
+        } finally {
+            Util.rollbackTransactionIfNeeded();
+        }
 	}
 	
 	public <T> T merge(final T object) throws DAOException {
-		final T result = processExceptions(new DAOActionInterface<T>() {
-			@Override
-			@Transactional
-			public T execute(T obj) {
-				return entityManager.merge(object);
-			}
-		}, object);
-		return result;
-	}
-	
-	private <T> T processExceptions(DAOActionInterface<T> action,T object) throws DAOException {
 	    try {
-	        return action.execute(object);
+	        return entityManager.merge(object);
 	    } catch (Exception e) {
-	    	throw new DAOException(e);
-	    } finally {
-	    	Util.rollbackTransactionIfNeeded();
-	    }
+            throw new DAOException(e);
+        } finally {
+            Util.rollbackTransactionIfNeeded();
+        }
 	}
 
     protected EntityManager getEntityManager() {
