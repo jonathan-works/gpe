@@ -42,7 +42,6 @@ public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<Loc
         super.afterSave();
     }
     
-    @Override
     protected void limparTrees(){
         LocalizacaoFisicaTreeHandler lfth = ComponentUtil.getComponent(LocalizacaoFisicaTreeHandler.NAME);
         lfth.clearTree();
