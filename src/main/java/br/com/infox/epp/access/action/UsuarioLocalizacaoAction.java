@@ -1,7 +1,8 @@
 package br.com.infox.epp.access.action;
 
 
-import org.jboss.seam.Component;
+import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -10,13 +11,15 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.dao.DAOActionInterface;
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.itx.util.ComponentUtil;
 
 @Name(UsuarioLocalizacaoAction.NAME)
 @Scope(ScopeType.PAGE)
@@ -39,11 +42,11 @@ public class UsuarioLocalizacaoAction {
 		this.instance = instance;
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings(RAWTYPES)
     private void limparArvores() {
-        AbstractTreeHandler tree = (LocalizacaoEstruturaTreeHandler) Component.getInstance(LocalizacaoEstruturaTreeHandler.class);
+        AbstractTreeHandler tree = ComponentUtil.getComponent(LocalizacaoEstruturaTreeHandler.class);
         tree.clearTree();
-        tree = (PapelTreeHandler) Component.getInstance(PapelTreeHandler.class);
+        tree = ComponentUtil.getComponent(PapelTreeHandler.class);
         tree.clearTree();
 	}
 	
@@ -60,8 +63,9 @@ public class UsuarioLocalizacaoAction {
 			newInstance();
 		} catch (DAOException e) {
 			LOG.error(".persist()", e);
-			FacesMessages.instance().clear();
-			FacesMessages.instance().add(e.getLocalizedMessage());
+			FacesMessages facesMessages = FacesMessages.instance();
+            facesMessages.clear();
+			facesMessages.add(e.getLocalizedMessage());
 		}
 	}
 	
@@ -72,8 +76,9 @@ public class UsuarioLocalizacaoAction {
 			newInstance();
 		} catch (DAOException e) {
 			LOG.error(".remove()", e);
-			FacesMessages.instance().clear();
-			FacesMessages.instance().add(e.getLocalizedMessage());
+			FacesMessages facesMessages = FacesMessages.instance();
+            facesMessages.clear();
+			facesMessages.add(e.getLocalizedMessage());
 		}
 	}
 
@@ -83,5 +88,6 @@ public class UsuarioLocalizacaoAction {
 
     public void setUsuarioGerenciado(UsuarioLogin usuarioGerenciado) {
         this.usuarioGerenciado = usuarioGerenciado;
+        this.instance.setUsuario(usuarioGerenciado);
     }
 }
