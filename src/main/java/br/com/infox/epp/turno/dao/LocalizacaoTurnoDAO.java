@@ -52,9 +52,9 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 		return getNamedSingleResult(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
 	}
 	
-	public List<LocalizacaoTurno> getTurnosTarefa(final Integer idProcesso, final DiaSemanaEnum diaSemana, final Date dataAtual) {
+	public List<LocalizacaoTurno> getTurnosTarefa(final long idTaskInstance, final DiaSemanaEnum diaSemana, final Date dataAtual) {
 	    final Map<String, Object> parameters = new HashMap<String, Object>();
-	    parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_IDPROCESSO, idProcesso);
+	    parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ID_TASK_INSTANCE, idTaskInstance);
 	    parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
 	    
 	    Calendar calendar = new GregorianCalendar();

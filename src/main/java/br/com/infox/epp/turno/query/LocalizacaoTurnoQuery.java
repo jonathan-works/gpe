@@ -65,10 +65,9 @@ public interface LocalizacaoTurnoQuery {
             "                   and cal.dia = :" + QUERY_PARAM_DIA +
             "                   and cal.mes = :" + QUERY_PARAM_MES +
             "                   and (cal.ano is null or cal.ano = :" + QUERY_PARAM_ANO + "))" +
-            "  and exists (select 1 from ProcessoLocalizacaoIbpm pli where " +
-            "                  pli.processo.idProcesso = :"+QUERY_PARAM_IDPROCESSO+
-            "                 and pli.localizacao = lt.localizacao" +
-            "                 and pli.contabilizar = true)" +
+            "  and exists (select 1 from UsuarioTaskInstance uti where " +
+            "                  uti.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+
+            "                 and uti.localizacao = lt.localizacao)" +
             "order by lt.horaInicio";
 	
 	String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA = "localizacaoTurnoByTarefaDia";
