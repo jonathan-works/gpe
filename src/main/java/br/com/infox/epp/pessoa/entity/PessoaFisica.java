@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
@@ -20,7 +19,6 @@ public class PessoaFisica extends Pessoa{
 	
 	private String cpf;
 	private Date dataNascimento;
-	private String email;
 	
 	public PessoaFisica(){
 		setTipoPessoa(TipoPessoaEnum.F);
@@ -41,17 +39,6 @@ public class PessoaFisica extends Pessoa{
 	}
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
-	}
-	
-	@Column(name = "ds_email", length=LengthConstants.DESCRICAO_PADRAO, unique = true, nullable = false)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	@NotNull
-	public String getEmail() {
-		return this.email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 	
 	@Transient

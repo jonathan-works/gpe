@@ -100,16 +100,16 @@ public class AuthenticatorService extends GenericManager {
 	}
 
 	private void throwUsuarioExpirou(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usuário " + usuario.getNome() + " expirou. " 
+		throw new LoginException("O usuário " + usuario.getNomeUsuario() + " expirou. " 
 								+ "Por favor, contate o adminstrador do sistema");
 	}
 
 	private void throwUsuarioInativo(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usuário " + usuario.getNome() + " não está ativo.\n");
+		throw new LoginException("O usuário " + usuario.getNomeUsuario() + " não está ativo.\n");
 	}
 
 	private void throwUsuarioBloqueado(UsuarioLogin usuario) throws LoginException {
-		throw new LoginException("O usuário " + usuario.getNome() + " está bloqueado." 
+		throw new LoginException("O usuário " + usuario.getNomeUsuario() + " está bloqueado." 
 								+ "Por favor, contate o adminstrador do sistema");
 	}
 	

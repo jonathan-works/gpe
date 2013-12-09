@@ -151,7 +151,7 @@ public final class LogUtil {
 	public static UsuarioLogin getUsuarioLogado() {
 		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
 		if (usuario != null){
-			usuario = EntityUtil.getEntityManager().find(UsuarioLogin.class, usuario.getIdPessoa());
+			usuario = EntityUtil.getEntityManager().find(UsuarioLogin.class, usuario.getIdUsuarioLogin());
 		}
 		return usuario;
 	}			

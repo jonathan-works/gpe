@@ -86,7 +86,7 @@ public class AccessMailService {
 
     private String resolverConteudo(ModeloDocumento modelo, UsuarioLogin usuario, String password) {
         String conteudo = modeloDocumentoManager.evaluateModeloDocumento(modelo);
-        conteudo = substitute(conteudo, CAMPO_USUARIO, usuario.getNome());
+        conteudo = substitute(conteudo, CAMPO_USUARIO, usuario.getNomeUsuario());
         conteudo = substitute(conteudo, CAMPO_LOGIN, usuario.getLogin());
         conteudo = substitute(conteudo, CAMPO_SENHA, password);
         return conteudo;

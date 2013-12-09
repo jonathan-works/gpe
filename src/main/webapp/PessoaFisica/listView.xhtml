@@ -118,14 +118,6 @@
                  value="#{pessoaFisicaCrudAction.instance.dataNascimento}"
                  label="#{messages['pessoaFisica.dataNascimento']}"
                  required="true" />
-			<wi:inputText
-                 id="email"
-                 label="#{messages['pessoaFisica.email']}"
-                 value="#{pessoaFisicaCrudAction.instance.email}"
-                 required="true">
-				<f:validator
-                     validatorId="emailValidator" />
-			</wi:inputText>
 			<wi:selectSituacaoRadio
                  id="ativo"
                  label="#{messages['field.situacao']}"

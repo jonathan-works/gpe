@@ -46,7 +46,7 @@ public class UsuarioLoginDAO extends GenericDAO {
 					"in_bloqueio, dt_expiracao_usuario, in_provisorio, in_twitter)");
 		sb.append(" values (:idPessoa, :login, :senha, :assinatura, :cert_chain, :bloqueio, null, :provisorio, :twitter)");
 		Query query = getEntityManager().createNativeQuery(sb.toString());
-		query.setParameter("idPessoa", usuarioLogin.getIdPessoa())
+		query.setParameter("idPessoa", usuarioLogin.getIdUsuarioLogin())
 				.setParameter("login", login)
 				.setParameter("senha", usuarioLogin.getSenha())
 				.setParameter("assinatura", usuarioLogin.getAssinatura())
@@ -58,7 +58,7 @@ public class UsuarioLoginDAO extends GenericDAO {
 	}
 	
 	public UsuarioLogin getUsuarioLogin(UsuarioLogin usuarioLogin){
-		return (UsuarioLogin) getEntityManager().find(UsuarioLogin.class, usuarioLogin.getIdPessoa());
+		return (UsuarioLogin) getEntityManager().find(UsuarioLogin.class, usuarioLogin.getIdUsuarioLogin());
 	}
 	
 	public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance, String actorId) {
@@ -69,7 +69,7 @@ public class UsuarioLoginDAO extends GenericDAO {
 	}
 	
 	public void inativarUsuario(UsuarioLogin usuario) {
-		String hql = "UPDATE UsuarioLogin u SET u.ativo = false WHERE u.idPessoa = " + usuario.getIdPessoa().toString();
+		String hql = "UPDATE UsuarioLogin u SET u.ativo = false WHERE u.idPessoa = " + usuario.getIdUsuarioLogin().toString();
 		getEntityManager().createQuery(hql).executeUpdate();
 	}
 	

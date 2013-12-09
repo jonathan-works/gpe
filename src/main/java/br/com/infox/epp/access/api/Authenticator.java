@@ -368,7 +368,7 @@ public class Authenticator {
 	 */
 	public static UsuarioLogin getUsuarioLogado() {
 		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
-		return EntityUtil.getEntityManager().find(usuario.getClass(), usuario.getIdPessoa());
+		return EntityUtil.getEntityManager().find(usuario.getClass(), usuario.getIdUsuarioLogin());
 	}
 	
 	public void setLogin(String login) {

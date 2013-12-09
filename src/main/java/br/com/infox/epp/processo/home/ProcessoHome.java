@@ -194,7 +194,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		processoDocumentoBin.setModeloDocumento(modeloDocumento);
 		processoDocumentoBin.setCertChain(certChain);
 		processoDocumentoBin.setSignature(signature);
-		processoDocumentoBin.setUsuarioUltimoAssinar(assinante.getNome());
+		processoDocumentoBin.setUsuarioUltimoAssinar(assinante.getNomeUsuario());
 	}
 
 	/**
@@ -468,7 +468,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
 		    final Certificado certificado = new Certificado(certChainBase64Encoded);
 		    final String cpfCertificado = certificado.getCn().split(":")[1];
-		    if (cpfCertificado.equals(usuarioLogado.getCpf().replace(".", "").replace("-", ""))) {
+		    if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf().replace(".", "").replace("-", ""))) {
 		        usuarioLogado.setCertChain(certChainBase64Encoded);
 		    } else {
     			throw new ApplicationException("O cadastro do usuário não está assinado.");

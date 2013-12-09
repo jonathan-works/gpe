@@ -12,16 +12,18 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,7 +35,6 @@ import org.hibernate.annotations.ForeignKey;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
@@ -54,16 +55,17 @@ import br.com.itx.util.StringUtil;
 	@NamedQuery(name=UsuarioLoginQuery.USUARIO_LOGIN_NAME, query=UsuarioLoginQuery.USUARIO_LOGIN_QUERY),
 	@NamedQuery(name=UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE, query=UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY)
 })
-@Inheritance(strategy=InheritanceType.JOINED)
-@BypassInterceptors
-@PrimaryKeyJoinColumn(name="id_pessoa", columnDefinition = "integer")
-public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Serializable {
+public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_usuario_login"; 
 
+	private Integer idUsuarioLogin;
+	private String email;
 	private String senha;
 	private String login;
+	private String nomeUsuario;
+	private Boolean ativo;
 	private String assinatura;
 	private String certChain;
 	private Boolean bloqueio;
@@ -71,6 +73,8 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	//Data de previsão para expirar o usuário provisório
 	private Date dataExpiracao;
 	private Boolean temContaTwitter;
+	
+	private PessoaFisica pessoaFisica;
 
 	private Set<Papel> papelSet = new TreeSet<Papel>();
 	
@@ -83,10 +87,31 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao = new ArrayList<ProcessoDocumento>(0);
 	private List<EntityLog> entityLogList = new ArrayList<EntityLog>(0);
 
-
 	public UsuarioLogin() {
 		dataExpiracao = null;
 	}
+	
+	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_pessoa")
+    @Id
+    @GeneratedValue(generator="generator")
+    @Column(name="id_usuario_login", unique=true, nullable=false)
+    public Integer getIdUsuarioLogin() {
+        return idUsuarioLogin;
+    }
+    public void setIdUsuarioLogin(Integer idUsuarioLogin) {
+        this.idUsuarioLogin = idUsuarioLogin;
+    }
+    
+    @Column(name = "ds_email", length=LengthConstants.DESCRICAO_PADRAO, unique = true, nullable = false)
+    @Size(max=LengthConstants.DESCRICAO_PADRAO)
+    @NotNull
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 	@Column(name = "ds_senha", length=LengthConstants.DESCRICAO_PADRAO)
 	@Size(max=LengthConstants.DESCRICAO_PADRAO)
@@ -111,6 +136,15 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 		this.login = login;
 	}
 	
+	@Column(name="nm_usuario", nullable=false, length=LengthConstants.NOME_ATRIBUTO)
+    @Size(max=LengthConstants.NOME_ATRIBUTO)
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
+    }
+	
 	@Column(name = "ds_assinatura_usuario")
 	public String getAssinatura() {
 		return assinatura;
@@ -129,8 +163,26 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	public void setCertChain(String certChain) {
 		this.certChain = certChain;
 	}
+	
+	@Column(name="in_ativo", nullable=false)
+    public Boolean getAtivo() {
+        return ativo;
+    }
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 
-	@UserRoles
+    @OneToOne
+    @PrimaryKeyJoinColumn
+	public PessoaFisica getPessoaFisica() {
+        return pessoaFisica;
+    }
+
+    public void setPessoaFisica(PessoaFisica pessoaFisica) {
+        this.pessoaFisica = pessoaFisica;
+    }
+
+    @UserRoles
 	@ManyToMany
 	@JoinTable(name = "tb_usuario_papel", schema="public", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_papel"))
 	@ForeignKey(name="tb_usuario_papel_usuario_fk", inverseName = "tb_usuario_papel_papel_fk" )
@@ -159,21 +211,21 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 		if (obj == null) {
 			return false;
 		}
-		if (getIdPessoa() == null) {
+		if (getIdUsuarioLogin() == null) {
 			return false;
 		}
 		if (!(obj instanceof UsuarioLogin)) {
 			return false;
 		}
 		UsuarioLogin other = (UsuarioLogin) obj;
-		return getIdPessoa().equals(other.getIdPessoa());
+		return getIdUsuarioLogin().equals(other.getIdUsuarioLogin());
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getIdPessoa() == null) ? 0 : getIdPessoa().hashCode());
+		result = prime * result + ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin().hashCode());
 		return result;
 	}
 
@@ -315,12 +367,12 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	}
 	
 	public UsuarioLogin loadDataFromPessoaFisica (PessoaFisica pessoa) {
-		setCpf(pessoa.getCpf());
-		setDataNascimento(pessoa.getDataNascimento());
-		setEmail(pessoa.getEmail());
-		setIdPessoa(pessoa.getIdPessoa());
-		setNome(pessoa.getNome());
-		setTipoPessoa(pessoa.getTipoPessoa());
+//		setCpf(pessoa.getCpf());
+//		setDataNascimento(pessoa.getDataNascimento());
+//		setEmail(pessoa.getEmail());
+//		setIdUsuarioLogin(pessoa.getIdPessoa());
+//		setNome(pessoa.getNome());
+//		setTipoPessoa(pessoa.getTipoPessoa());
 		setAtivo(pessoa.getAtivo());
 		setTemContaTwitter(false);
 		return this;
@@ -337,6 +389,11 @@ public class UsuarioLogin extends PessoaFisica implements UsuarioLoginQuery, Ser
 	
 	public boolean permaneceBloqueado(){
 	    return bloqueio && getUltimoBloqueio().getDataDesbloqueio() != null;
+	}
+	
+	@Override
+	public String toString() {
+	    return getNomeUsuario();
 	}
 	
 }

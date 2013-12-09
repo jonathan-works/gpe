@@ -97,7 +97,7 @@ public class ProcessoDocumentoBinHome
 	        setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
             processoDocumento.setLocalizacao(Authenticator.getLocalizacaoAtual());
             processoDocumento.setPapel(Authenticator.getPapelAtual());
-            instance.setUsuarioUltimoAssinar(Authenticator.getUsuarioLogado().getNome());
+            instance.setUsuarioUltimoAssinar(Authenticator.getUsuarioLogado().getNomeUsuario());
             instance.setSignature(signature);
             instance.setCertChain(certChain);
             instance.setDataInclusao(new Date());

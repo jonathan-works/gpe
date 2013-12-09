@@ -34,7 +34,7 @@ public class BloqueioUsuarioDAO extends GenericDAO {
 	private void desbloquearUsuario(UsuarioLogin usuarioLogin){
 		String queryDesbloqueio = "update public.tb_usuario set in_bloqueio=false where id_usuario = :usuario";
 		EntityUtil.getEntityManager().createNativeQuery(queryDesbloqueio)
-			.setParameter("usuario", usuarioLogin.getIdPessoa())
+			.setParameter("usuario", usuarioLogin.getIdUsuarioLogin())
 			.executeUpdate();
 	}
 	
