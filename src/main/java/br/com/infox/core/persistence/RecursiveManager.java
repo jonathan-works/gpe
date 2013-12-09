@@ -132,7 +132,7 @@ public final class RecursiveManager {
 		List<E> entityList = getEntityListNullHierarchicalPath(clazz);
 		for(E o : entityList){
 			try {
-				if (isFullPathEnpty(o)) {
+				if (isFullPathEmpty(o)) {
 					refactorFieldPath(o);
 				}
 			} catch (AnnotationException e) {
@@ -142,7 +142,7 @@ public final class RecursiveManager {
 	}
 	
 	
-	public static <E extends Recursive<E>> boolean isFullPathEnpty(E object) {
+	public static <E extends Recursive<E>> boolean isFullPathEmpty(E object) {
 		String currentFullPath = object.getHierarchicalPath();
 		return currentFullPath == null || "".equals(currentFullPath);
 	}
@@ -159,12 +159,12 @@ public final class RecursiveManager {
 	 * Método para inativar recursivamente todos os filhos do objeto passado
 	 * @param obj raiz da sub-árvore que será inativada
 	 */
-	public static <E extends Recursive<E>> void inactiveRecursive(E obj) {
+	public static <E extends Recursive<E>> void recursiveInactivate(E obj) {
 		ComponentUtil.setValue(obj, "ativo", Boolean.FALSE);
 		
 		List<E> childList = obj.getChildList();
 		for (E child: childList) {
-			inactiveRecursive(child);
+			recursiveInactivate(child);
 		}
 	}
 }
