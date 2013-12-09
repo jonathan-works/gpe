@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page
+	xmlns="http://jboss.org/schema/seam/pages"
+	xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	login-required="true">
+
+	<begin-conversation join="true" />
+	<restrict>#{security.checkPage()}</restrict>
+</page>
