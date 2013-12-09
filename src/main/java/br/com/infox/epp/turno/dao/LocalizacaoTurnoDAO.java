@@ -3,12 +3,14 @@ package br.com.infox.epp.turno.dao;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
@@ -48,6 +50,19 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
 		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
 		return getNamedSingleResult(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
+	}
+	
+	public List<LocalizacaoTurno> getTurnosTarefa(final Integer idProcesso, final DiaSemanaEnum diaSemana, final Date dataAtual) {
+	    final Map<String, Object> parameters = new HashMap<String, Object>();
+	    parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_IDPROCESSO, idProcesso);
+	    parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
+	    
+	    Calendar calendar = new GregorianCalendar();
+	    calendar.setTime(dataAtual);
+        parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
+        parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
+        parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
+	    return getNamedResultList(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA,parameters);
 	}
 	
 	/**

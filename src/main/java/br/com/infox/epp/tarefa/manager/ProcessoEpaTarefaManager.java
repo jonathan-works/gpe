@@ -2,6 +2,7 @@ package br.com.infox.epp.tarefa.manager;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
@@ -102,12 +103,24 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		Conversation.instance().end();
 	}
 	
+	public void forceUpdateTarefasNaoFinalizadas() {
+	    Date fireTime = new Date();
+	    for (ProcessoEpaTarefa pt : getTarefaNotEnded(PrazoEnum.H)) {
+	        pt.setUltimoDisparo(pt.getDataInicio());
+            try {
+                updateTempoGasto(fireTime, pt);
+            } catch (DAOException e) {
+                e.printStackTrace();
+            }
+        }
+	}
+	
 	public void updateTempoGasto(Date fireTime, ProcessoEpaTarefa processoEpaTarefa) throws DAOException {
 		if (processoEpaTarefa.getTarefa().getTipoPrazo() == null) {
 			return;
 		}
-		float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
 		if (processoEpaTarefa.getUltimoDisparo().before(fireTime)) {
+		    float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
 			Integer prazo = processoEpaTarefa.getTarefa().getPrazo();
 			int porcentagem = 0;
 			int tempoGasto = (int)(processoEpaTarefa.getTempoGasto()+incrementoTempoGasto);
@@ -143,7 +156,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		}
 		switch (tipoPrazo) {
 		case H:
-			result = calcularTempoGastoHoras(horaDisparo, processoEpaTarefa);
+			result = calcularTempoGastoHoras(horaDisparo, processoEpaTarefa.getProcessoEpa().getIdProcesso(), processoEpaTarefa.getUltimoDisparo());
 			break;
 		case D:
 			result = calcularTempoGastoDias(horaDisparo, processoEpaTarefa);
@@ -200,6 +213,81 @@ public class ProcessoEpaTarefaManager extends GenericManager {
             return disparoAtual;
         }
 	}
+	
+	private void adjustCalendar(Calendar toGet, Calendar toSet1, Calendar toSet2, int field) {
+	    int value = toGet.get(field);
+	    toSet1.set(field, value);
+	    toSet2.set(field, value);
+	}
+	
+	private float calcularMinutosEmIntervalo(Date d1, Date d2) {
+	    return (d2.getTime()-d1.getTime())/60000;
+	}
+	
+	private float calcularTempoGastoHoras(final Date dataDisparo, final int idProcesso, final Date ultimoDisparo) {
+	    float result = 0;
+	    
+	    final Calendar ultimaAtualizacao = new GregorianCalendar();
+	    final Calendar disparoAtual = new GregorianCalendar();
+	    disparoAtual.setTime(dataDisparo);
+	    ultimaAtualizacao.setTime(ultimoDisparo);
+	    while (ultimaAtualizacao.before(disparoAtual)) {
+	        
+	        final List<LocalizacaoTurno> localizacoes = localizacaoTurnoDAO.getTurnosTarefa(idProcesso, DiaSemanaEnum.values()[ultimaAtualizacao.get(Calendar.DAY_OF_WEEK)-1], ultimaAtualizacao.getTime());
+	        for (int i = 0,l=localizacoes.size(); i < l; i++) {
+	            final Calendar inicioTurno = new GregorianCalendar();
+	            inicioTurno.setTime(localizacoes.get(i).getHoraInicio());
+	            
+	            final Calendar fimTurno = new GregorianCalendar();
+	            fimTurno.setTime(localizacoes.get(i).getHoraFim());
+	            
+	            adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.DAY_OF_MONTH);
+	            adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.MONTH);
+	            adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.YEAR);
+	            
+                result += getIncrementoLocalizacaoTurno(disparoAtual.getTime(), ultimaAtualizacao, localizacoes.get(i), inicioTurno, fimTurno);
+                if (!ultimaAtualizacao.before(disparoAtual)) {
+                    break;
+                }
+            }
+	        if (ultimaAtualizacao.before(disparoAtual)) {
+	            ultimaAtualizacao.set(Calendar.HOUR_OF_DAY, 0);
+	            ultimaAtualizacao.set(Calendar.MINUTE, 0);
+                ultimaAtualizacao.set(Calendar.SECOND, 0);
+                ultimaAtualizacao.set(Calendar.MILLISECOND, 0);
+                ultimaAtualizacao.add(Calendar.DAY_OF_MONTH, 1);
+            } 
+	    }
+	    
+	    return result;
+	}
+
+    private float getIncrementoLocalizacaoTurno(final Date dataDisparo,final Calendar ultimaAtualizacao,
+            final LocalizacaoTurno localizacaoTurno,final Calendar inicioTurno,final Calendar fimTurno) {
+        float result = 0f;
+        if (inicioTurno.after(dataDisparo)) {
+            
+            if (fimTurno.before(dataDisparo)) {
+                result += localizacaoTurno.getTempoTurno();
+                ultimaAtualizacao.setTime(fimTurno.getTime());
+            } else {
+                result += calcularMinutosEmIntervalo(inicioTurno.getTime(), dataDisparo);
+                ultimaAtualizacao.setTime(dataDisparo);
+            }
+            
+        } else {
+            
+            if (fimTurno.before(dataDisparo)) {
+                result += calcularMinutosEmIntervalo(ultimaAtualizacao.getTime(), fimTurno.getTime());
+                ultimaAtualizacao.setTime(fimTurno.getTime());
+            } else {
+                result += calcularMinutosEmIntervalo(ultimaAtualizacao.getTime(), dataDisparo);
+                ultimaAtualizacao.setTime(dataDisparo);
+            }
+            
+        }
+        return result;
+    }
 	
 	private float calcularTempoGastoHoras(Date dataDisparo, ProcessoEpaTarefa processoEpaTarefa) {
 		int result = 0;
