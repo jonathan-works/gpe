@@ -58,10 +58,10 @@ public class UserHandler {
         if (this.idProcesso == null || !this.idProcesso.equals(idProcesso)) {
             try {
                 
-                String sql = "SELECT DISTINCT p.nm_pessoa "
+                String sql = "SELECT DISTINCT ul.nm_usuario "
                         + "FROM tb_usuario_login ul "
-                        + "JOIN tb_pessoa p ON (ul.id_pessoa=p.id_pessoa) "
-                        + "JOIN tb_usuario_taskinstance uti ON (ul.id_pessoa=uti.id_usuario_login) "
+//                        + "JOIN tb_pessoa p ON (ul.id_pessoa=p.id_pessoa) "
+                        + "JOIN tb_usuario_taskinstance uti ON (ul.id_usuario_login=uti.id_usuario_login) "
                         + "JOIN vs_situacao_processo sp ON (uti.id_taskinstance = sp.id_task_instance) "
                         + "WHERE id_processo=:idProcesso";
                 Query query = EntityUtil.getEntityManager()
