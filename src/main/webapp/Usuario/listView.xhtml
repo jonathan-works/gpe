@@ -94,6 +94,33 @@
 		<wi:dataForm
 			formId="usuarioForm"
 			formTitle="#{messages['form.title']}">
+			<a:region>
+                <s:div id="pessoaFisicaRegion">
+                    <wi:inputCpf
+					    id="cpf"
+					    label="CPF"
+					    value="#{usuarioLoginCrudAction.cpf}"
+					    assignTo="#{usuarioLoginCrudAction.cpf}"
+					    required="true">
+					    <a:ajax
+					        event="blur"
+					        listener="#{usuarioLoginCrudAction.searchByCpf(usuarioLoginCrudAction.cpf)}"
+					        execute="@this"
+					        render="pessoaFisicaRegion"
+					        limitRender="true" />
+					</wi:inputCpf>
+					<wi:inputText
+		                 id="nome"
+		                 value="#{usuarioLoginCrudAction.instance.pessoaFisica.nome}"
+		                 label="#{messages['pessoaFisica.nome']}"
+		                 required="true" />  
+		            <wi:inputDate
+		                 id="dataNascimento"
+		                 value="#{usuarioLoginCrudAction.instance.pessoaFisica.dataNascimento}"
+		                 label="#{messages['pessoaFisica.dataNascimento']}"
+		                 required="true" />
+                </s:div>
+            </a:region>
 			<wi:inputText
 				id="nomeUsuario"
 				label="#{messages['usuario.nome']}"
@@ -124,6 +151,7 @@
 				<ui:param name="id" value="usuarioProvisorio" />
 
 			</ui:include>
+            
 		</wi:dataForm>
 
 	</ui:define>

@@ -1,7 +1,5 @@
 package br.com.infox.epp.access.crud;
 
-import java.util.Date;
-
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.annotations.In;
@@ -14,14 +12,13 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.exception.BusinessException;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.entity.BloqueioUsuario;
+import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
 import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioLoginCrudAction.NAME)
 public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
@@ -29,41 +26,29 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     public static final String NAME = "usuarioLoginCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginCrudAction.class);
     
-    private BloqueioUsuario novoBloqueio;
-    
     @In private UsuarioLoginManager usuarioLoginManager;
     @In private PessoaManager pessoaManager;
     
     @In private PasswordService passwordService;
 
-    private boolean pessoaFisicaCadastrada;
     private String password;
     
     @Override
     public void newInstance() {
-        newBloqueioUsuario();
         super.newInstance();
         final UsuarioLogin usuarioLogin = getInstance();
         usuarioLogin.setBloqueio(false);
         usuarioLogin.setProvisorio(false);
     }
 
-    private void newBloqueioUsuario() {
-        novoBloqueio = new BloqueioUsuario();
-    }
-    
     @Override
     public void setId(Object id) {
         super.setId(id);
-        newBloqueioUsuario();
     }
     
     @Override
     protected boolean beforeSave() {
         validarPermanencia();
-        if (getInstance().getBloqueio()){
-            bloquear();
-        }
         return super.beforeSave();
     }
     
@@ -74,32 +59,13 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
         }
     }
     
-    public void bloquear() {
-        final UsuarioLogin usuario = getInstance();
-        novoBloqueio.setDataBloqueio(new Date());
-        novoBloqueio.setUsuario(usuario);
-        usuario.getBloqueioUsuarioList().add(novoBloqueio);
-        try {
-            getGenericManager().persist(novoBloqueio);
-        } catch (DAOException e) {
-            LOG.error(".bloquear()", e);
-        }
-        novoBloqueio = new BloqueioUsuario();
-    }
-    
     @Override
     public String save() {
         String resultado;
-        if (!pessoaFisicaCadastrada){
-            resultado = super.save();
-        } else{
-            final UsuarioLogin usuario = getInstance();
-            PessoaFisica pf = getGenericManager().find(PessoaFisica.class, usuario.getIdUsuarioLogin());
-            usuarioLoginManager.inserirUsuarioParaPessoaFisicaCadastrada(usuario);
-            EntityUtil.getEntityManager().detach(pf);
-            setInstance(usuarioLoginManager.getUsuarioLogin(usuario));
-            resultado = PERSISTED;
-            afterSave(resultado);
+        savePessoa();
+        resultado = super.save();
+        if (resultado.equals(PostgreSQLErrorCode.UNIQUE_VIOLATION.toString())){
+            getInstance().setPessoaFisica(new PessoaFisica());
         }
         return resultado;
     }
@@ -124,40 +90,17 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     
     @Override
     protected void afterSave() {
-        newBloqueioUsuario();
         super.afterSave();
     }
     
     public void searchByCpf(String cpf){
-        newInstance();
-        final UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioLoginByCpf(cpf);
-        if (usuarioLogin != null){
-            setInstance(usuarioLogin);
-        } else{
-            feedFromPessoaFisica(cpf);
+        if (getInstance() == null){
+            newInstance();
         }
-    }
-
-    /**
-     * @param cpf
-     */
-    private void feedFromPessoaFisica(String cpf) {
-        PessoaFisica pessoaFisica = pessoaManager.getPessoaFisicaByCpf(cpf);
-        if (pessoaFisica != null){
-            pessoaFisicaCadastrada = true;
-            setInstance(getInstance().loadDataFromPessoaFisica(pessoaFisica));
+        PessoaFisica pf = pessoaManager.getPessoaFisicaByCpf(cpf);
+        if (pf != null){
+            getInstance().setPessoaFisica(pf);
         }
-        else {
-            pessoaFisicaCadastrada = false;
-        }
-    }
-    
-    public BloqueioUsuario getNovoBloqueio() {
-        return novoBloqueio;
-    }
-
-    public void setNovoBloqueio(BloqueioUsuario novoBloqueio) {
-        this.novoBloqueio = novoBloqueio;
     }
 
     public String getPassword() {
@@ -166,6 +109,33 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCpf() {
+        if (getInstance().getPessoaFisica() != null){
+            return getInstance().getPessoaFisica().getCpf();
+        }
+        return "";
+    }
+
+    public void setCpf(String cpf) {
+        if (getInstance().getPessoaFisica() == null){
+           getInstance().setPessoaFisica(new PessoaFisica()); 
+        }
+        getInstance().getPessoaFisica().setCpf(cpf);
+    }
+    
+    private void savePessoa(){
+        PessoaFisica pessoaAssociada = getInstance().getPessoaFisica();
+        if (pessoaAssociada != null && pessoaAssociada.getIdPessoa() == null) {
+            try {
+                pessoaAssociada.setAtivo(true);
+                getGenericManager().persist(pessoaAssociada);
+                getInstance().setPessoaFisica(pessoaAssociada);
+            } catch (DAOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

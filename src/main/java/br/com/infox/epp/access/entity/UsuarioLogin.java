@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -172,8 +173,8 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
         this.ativo = ativo;
     }
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_pessoa_fisica")
 	public PessoaFisica getPessoaFisica() {
         return pessoaFisica;
     }
@@ -364,18 +365,6 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 
 	public void setTemContaTwitter(Boolean temContaTwitter) {
 		this.temContaTwitter = temContaTwitter;
-	}
-	
-	public UsuarioLogin loadDataFromPessoaFisica (PessoaFisica pessoa) {
-//		setCpf(pessoa.getCpf());
-//		setDataNascimento(pessoa.getDataNascimento());
-//		setEmail(pessoa.getEmail());
-//		setIdUsuarioLogin(pessoa.getIdPessoa());
-//		setNome(pessoa.getNome());
-//		setTipoPessoa(pessoa.getTipoPessoa());
-		setAtivo(pessoa.getAtivo());
-		setTemContaTwitter(false);
-		return this;
 	}
 	
 	@Transient
