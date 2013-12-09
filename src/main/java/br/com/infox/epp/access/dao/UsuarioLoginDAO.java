@@ -69,7 +69,7 @@ public class UsuarioLoginDAO extends GenericDAO {
 	}
 	
 	public void inativarUsuario(UsuarioLogin usuario) {
-		String hql = "UPDATE UsuarioLogin u SET u.ativo = false WHERE u.idPessoa = " + usuario.getIdUsuarioLogin().toString();
+		String hql = "UPDATE UsuarioLogin u SET u.ativo = false WHERE u.idUsuarioLogin = " + usuario.getIdUsuarioLogin().toString();
 		getEntityManager().createQuery(hql).executeUpdate();
 	}
 	

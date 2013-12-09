@@ -20,7 +20,7 @@ public class EntidadeLogDAO extends GenericDAO {
 	public List<UsuarioLogin> getUsuariosQuePossuemRegistrosDeLog(){
 		String hql = "select o from UsuarioLogin o " +
 				"where o.entityLogList.size > 0 " +
-				"order by o.idPessoa";
+				"order by o.idUsuarioLogin";
 		return (List<UsuarioLogin>) getEntityManager().createQuery(hql).getResultList();
 	}
 	
