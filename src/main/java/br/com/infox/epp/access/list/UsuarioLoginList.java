@@ -18,11 +18,11 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
 	public static final String NAME = "usuarioLoginList";
 	
 	private static final String DEFAULT_EJBQL = "select o from UsuarioLogin o";
-	private static final String DEFAULT_ORDER = "nome";
+	private static final String DEFAULT_ORDER = "nomeUsuario";
 
 	@Override
 	protected void addSearchFields() {
-		addSearchField("nome", SearchCriteria.CONTENDO);
+		addSearchField("nomeUsuario", SearchCriteria.CONTENDO);
 		addSearchField("bloqueio",SearchCriteria.IGUAL);
 		addSearchField("provisorio",SearchCriteria.IGUAL);
 		addSearchField("ativo", SearchCriteria.IGUAL);

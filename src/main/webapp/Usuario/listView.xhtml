@@ -38,7 +38,7 @@
 			bean="#{usuarioLoginList}"
 			tableTitle="#{messages['usuario.titleGrid']}"
 			id="usuarioLoginList"
-			rowId="#{row.idPessoa}">
+			rowId="#{row.idUsuarioLogin}">
 
 			<ui:define name="searchForm">
 
@@ -49,7 +49,7 @@
 					<wi:inputText
 						id="nome"
 						label="#{messages['usuarioLogin.nome']}"
-						value="#{usuarioLoginList.entity.nome}"
+						value="#{usuarioLoginList.entity.nomeUsuario}"
 						maxlength="150" />
 					<wi:selectBooleanMenu
 						id="bloqueio"
@@ -71,7 +71,7 @@
 			<wi:columnOutputText
 				columnId="nome"
 				columnHeader="#{messages['usuarioLogin.nome']}"
-				value="#{row.nome}" />
+				value="#{row.nomeUsuario}" />
 			<wi:columnBoolean
 				columnId="bloqueio"
 				columnHeader="#{messages['usuarioLogin.bloqueio']}"
@@ -94,30 +94,10 @@
 		<wi:dataForm
 			formId="usuarioForm"
 			formTitle="#{messages['form.title']}">
-			<wi:inputCpf
-				id="cpf"
-				label="CPF"
-				value="#{usuarioLoginCrudAction.instance.cpf}"
-				assignTo="#{usuarioLoginCrudAction.instance.cpf}"
-				required="true">
-
-				<a:ajax
-					event="blur"
-					listener="#{usuarioLoginCrudAction.searchByCpf(usuarioLoginCrudAction.instance.cpf)}"
-					execute="@this"
-					render="nomeUsuario dataNascimento email login"
-					limitRender="true" />
-
-			</wi:inputCpf>
 			<wi:inputText
 				id="nomeUsuario"
 				label="#{messages['usuario.nome']}"
-				value="#{usuarioLoginCrudAction.instance.nome}"
-				required="true" />
-			<wi:inputDate
-				id="dataNascimento"
-				value="#{usuarioLoginCrudAction.instance.dataNascimento}"
-				label="#{messages['pessoaFisica.dataNascimento']}"
+				value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
 				required="true" />
 			<wi:inputText
 				id="email"
@@ -285,7 +265,7 @@
 				<wi:dataTable
 					values="#{bloqueioUsuarioList.list(15)}"
 					bean="#{bloqueioUsuarioList}"
-					tableTitle="#{messages['bloqueioUsuario.titleGrid']} - #{usuarioLoginCrudAction.instance.nome}"
+					tableTitle="#{messages['bloqueioUsuario.titleGrid']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
 					id="bloqueioUsuarioList"
 					rowId="#{row.idBloqueioUsuario}"
 					showToolbarColumn="false">
