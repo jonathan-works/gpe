@@ -37,7 +37,8 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extend
         final E oldRecursive = oldInstance;
         if (!isManaged()
                 ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
-                || (curRecursive.getParent()!=null && !curRecursive.getParent().equals(oldRecursive.getParent()))) {
+                || (curRecursive.getParent()!=null && !curRecursive.getParent().equals(oldRecursive.getParent()))
+                || (oldRecursive != null && oldRecursive.getParent()!=null && !oldRecursive.getParent().equals(curRecursive.getParent()))) {
             updateRecursive(curRecursive);
         }
     }
