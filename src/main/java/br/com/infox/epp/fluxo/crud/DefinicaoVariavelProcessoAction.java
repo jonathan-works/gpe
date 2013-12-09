@@ -91,14 +91,22 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
     public List<DefinicaoVariavelProcesso> listVariaveis(int maxResults) {
     	if (this.variaveis == null) {
     		int total = definicaoVariavelProcessoManager.getTotalVariaveisByFluxo(fluxo).intValue();
-    		maxPages = total / maxResults;
-    		if (total % maxResults != 0) {
-    			maxPages++;
-    		}
-    		int start = (page - 1) * maxResults;
+    		calcMaxPages(maxResults, total);
+    		int start = calcStart(maxResults);
     		this.variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo, start, maxResults);
     	}
     	return Collections.unmodifiableList(this.variaveis);
+	}
+
+	private int calcStart(int maxResults) {
+		return (page - 1) * maxResults;
+	}
+
+	private void calcMaxPages(int maxResults, int total) {
+		maxPages = total / maxResults;
+		if (total % maxResults != 0) {
+			maxPages++;
+		}
 	}
     
     public DefinicaoVariavelProcesso getVariavel() {

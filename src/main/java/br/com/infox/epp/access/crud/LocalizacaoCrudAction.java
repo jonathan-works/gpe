@@ -35,7 +35,6 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
         return super.beforeSave();
     }
     
-    @Override
     protected void limparTrees(){
         final LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
         ret.clearTree();

@@ -11,7 +11,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.dao.DAOActionInterface;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.tree.AbstractTreeHandler;
@@ -62,10 +61,7 @@ public class UsuarioLocalizacaoAction {
 			genericManager.persist(instance);
 			newInstance();
 		} catch (DAOException e) {
-			LOG.error(".persist()", e);
-			FacesMessages facesMessages = FacesMessages.instance();
-            facesMessages.clear();
-			facesMessages.add(e.getLocalizedMessage());
+            processDAOException(e, ".persist()");
 		}
 	}
 	
@@ -75,12 +71,16 @@ public class UsuarioLocalizacaoAction {
 			genericManager.remove(instance);
 			newInstance();
 		} catch (DAOException e) {
-			LOG.error(".remove()", e);
-			FacesMessages facesMessages = FacesMessages.instance();
-            facesMessages.clear();
-			facesMessages.add(e.getLocalizedMessage());
+            processDAOException(e, ".remove()");
 		}
 	}
+
+    private void processDAOException(DAOException e, String message) {
+        LOG.error(message, e);
+        FacesMessages facesMessages = FacesMessages.instance();
+        facesMessages.clear();
+        facesMessages.add(e.getLocalizedMessage());
+    }
 
     public UsuarioLogin getUsuarioGerenciado() {
         return usuarioGerenciado;

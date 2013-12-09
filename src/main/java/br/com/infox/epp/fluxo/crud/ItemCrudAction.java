@@ -36,7 +36,6 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
         super.afterSave();
     }
     
-    @Override
     protected void limparTrees(){
         ItemTreeHandler ith = ComponentUtil.getComponent(ItemTreeHandler.NAME);
         ith.clearTree();
