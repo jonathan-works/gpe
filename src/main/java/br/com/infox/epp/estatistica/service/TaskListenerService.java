@@ -70,12 +70,14 @@ public class TaskListenerService extends GenericManager {
 		if (pEpaTarefa.getTempoPrevisto() == null) {
 			pEpaTarefa.setTempoPrevisto(0);
 		}
+		pEpaTarefa.setTaskInstance(taskInstance.getId());
 		
 		UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
-		pEpaTarefa.setUsuarioTaskInstance(new UsuarioTaskInstance(taskInstance.getId(), usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel()));
+		UsuarioTaskInstance uti = new UsuarioTaskInstance(taskInstance.getId(), usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel());
 
 		try {
 			persist(pEpaTarefa);
+			persist(uti);
 		} catch (DAOException e) {
 			LOG.error(".createProcessoEpa(processo, taskInstance)", e);
 		}

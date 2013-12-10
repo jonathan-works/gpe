@@ -27,6 +27,9 @@ public class ProdutividadeBean implements Serializable {
 		this.maximoTempoGasto = maximoTempoGasto;
 		this.quantidadeTarefas = quantidadeTarefas;
 	}
+	
+	public ProdutividadeBean() {
+	}
 
 	public Long getQuantidadeTarefas() {
 		return quantidadeTarefas;
