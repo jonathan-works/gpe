@@ -131,7 +131,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 		}
 		switch (tipoPrazo) {
 		case H:
-			result = calcularTempoGastoHoras(horaDisparo, processoEpaTarefa.getTaskInstance(), processoEpaTarefa.getUltimoDisparo());
+			result = calcularTempoGastoMinutos(horaDisparo, processoEpaTarefa.getTaskInstance(), processoEpaTarefa.getUltimoDisparo());
 			break;
 		case D:
 			result = calcularTempoGastoDias(horaDisparo, processoEpaTarefa);
@@ -159,7 +159,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	    toSet2.set(field, value);
 	}
 	
-	private float calcularTempoGastoHoras(final Date dataDisparo, final long idTaskInstance, final Date ultimoDisparo) {
+	private float calcularTempoGastoMinutos(final Date dataDisparo, final long idTaskInstance, final Date ultimoDisparo) {
 	    float result = 0;
 	    
 	    final Calendar ultimaAtualizacao = new GregorianCalendar();
