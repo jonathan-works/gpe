@@ -13,5 +13,9 @@
     		<default-locale>pt_BR</default-locale>
       </locale-config>
    </application>
+   <component>
+    <component-type>org.richfaces.DataTable</component-type>
+    <component-class>br.com.infox.core.jsf.UIDataTableWorkaround</component-class>
+   </component>
    
 </faces-config>
