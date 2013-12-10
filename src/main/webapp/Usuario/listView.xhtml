@@ -94,33 +94,6 @@
 		<wi:dataForm
 			formId="usuarioForm"
 			formTitle="#{messages['form.title']}">
-			<a:region>
-                <s:div id="pessoaFisicaRegion">
-                    <wi:inputCpf
-					    id="cpf"
-					    label="CPF"
-					    value="#{usuarioLoginCrudAction.cpf}"
-					    assignTo="#{usuarioLoginCrudAction.cpf}"
-					    required="true">
-					    <a:ajax
-					        event="blur"
-					        listener="#{usuarioLoginCrudAction.searchByCpf(usuarioLoginCrudAction.cpf)}"
-					        execute="@this"
-					        render="pessoaFisicaRegion"
-					        limitRender="true" />
-					</wi:inputCpf>
-					<wi:inputText
-		                 id="nome"
-		                 value="#{usuarioLoginCrudAction.instance.pessoaFisica.nome}"
-		                 label="#{messages['pessoaFisica.nome']}"
-		                 required="true" />  
-		            <wi:inputDate
-		                 id="dataNascimento"
-		                 value="#{usuarioLoginCrudAction.instance.pessoaFisica.dataNascimento}"
-		                 label="#{messages['pessoaFisica.dataNascimento']}"
-		                 required="true" />
-                </s:div>
-            </a:region>
 			<wi:inputText
 				id="nomeUsuario"
 				label="#{messages['usuario.nome']}"
@@ -151,11 +124,86 @@
 				<ui:param name="id" value="usuarioProvisorio" />
 
 			</ui:include>
-            
 		</wi:dataForm>
 
 	</ui:define>
 	<ui:define name="tabs">
+	
+        <infox:tab
+            id="usuarioPessoaFisica"
+            rendered="#{home.isManaged()}"
+            title="#{messages['usuario.pessoaFisica']}"
+            name="usuarioPessoaFisica"
+            action="#{usuarioPessoaFisicaCrudAction.newInstance()}">
+            <wi:dataForm
+	            formId="usuarioPessoaFisicaForm"
+	            formTitle="#{messages['form.title']}"
+	            home="#{usuarioPessoaFisicaCrudAction}"
+	            rendered="#{empty usuarioLoginCrudAction.instance.pessoaFisica}">
+                <s:div id="pessoaFisicaRegion">
+                    <wi:inputCpf
+                        id="cpf"
+                        label="CPF"
+                        value="#{usuarioPessoaFisicaCrudAction.instance.cpf}"
+                        assignTo="#{usuarioPessoaFisicaCrudAction.instance.cpf}"
+                        required="true">
+                        <a:ajax
+                            event="blur"
+                            listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
+                            execute="@this"
+                            render="pessoaFisicaRegion"
+                            limitRender="true" />
+                    </wi:inputCpf>
+                    <wi:inputText
+                         id="nome"
+                         value="#{usuarioPessoaFisicaCrudAction.instance.nome}"
+                         label="#{messages['pessoaFisica.nome']}"
+                         required="true" />  
+                    <wi:inputDate
+                         id="dataNascimento"
+                         value="#{usuarioPessoaFisicaCrudAction.instance.dataNascimento}"
+                         label="#{messages['pessoaFisica.dataNascimento']}"
+                         required="true" />
+                </s:div>
+                <ui:define name="buttons">
+            
+		            <wi:commandButtonSave home="#{usuarioPessoaFisicaCrudAction}"/>
+		        
+		        </ui:define>
+	        </wi:dataForm>
+	        <wi:dataTable
+	            bean="#{usuarioPessoaFisicaList}"
+	            values="#{usuarioPessoaFisicaList.list(20)}"
+	            tableTitle="#{(usuarioLoginCrudAction.instance)}"
+	            id="usuarioPessoaFisicaList"
+	            rowId="#{row.idPessoa}"
+	            listReRender="divGridLU">
+	
+	            <ui:define name="headerToolBar" />
+	            <ui:define name="toolBar">
+	                <wi:toolBar
+	                    action="usuarioPessoaFisicaCrudAction.remove(row)"
+	                    rendered="true"
+	                    limitToList="true"
+	                    status=":status"
+	                    render="usuarioPessoaFisicaForm, usuarioPessoaFisicaList"
+	                    onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
+	                    url="/img/remove.png" title="#{messages['crud.remove']}" />
+	            </ui:define>
+	            <wi:columnOutputText
+	                columnId="cpf"
+	                columnHeader="#{messages['pessoaFisica.cpf']}"
+	                value="#{row.cpf}" />
+	            <wi:columnOutputText
+	                columnId="nome"
+	                columnHeader="#{messages['pessoaFisica.nome']}"
+	                value="#{row.nome}" />
+	            <wi:columnDateTime
+	                columnId="dataNascimento"
+	                columnHeader="#{messages['pessoaFisica.dataNascimento']}"
+	                value="#{row.dataNascimento}" />
+	        </wi:dataTable>
+        </infox:tab>
 
 		<infox:tab
 			id="localizacaoUsuario"

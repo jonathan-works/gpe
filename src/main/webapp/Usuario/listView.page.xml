@@ -11,6 +11,11 @@
 
 	<param name="tab" value="#{usuarioLoginCrudAction.tab}"/>
 	
+	<action execute="#{usuarioPessoaFisicaCrudAction.setUsuarioAssociado(usuarioLoginCrudAction.instance)}" 
+            if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica'}"/>
+    <action execute="#{usuarioPessoaFisicaList.setUsuario(usuarioLoginCrudAction.instance)}" 
+            if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica'}"/>
+	
 	<action execute="#{usuarioLocalizacaoAction.setUsuarioGerenciado(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
     <action execute="#{usuarioLocalizacaoEntityList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
