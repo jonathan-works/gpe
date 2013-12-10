@@ -67,12 +67,16 @@ public class ProcessoTimerProcessor {
 			LOG.error("ProcessoTimerProcessor.increaseProcessTimeSpent()", e);
 		}
 		if (trigger != null) {
-			try {
-				processoEpaTarefaManager.updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), PrazoEnum.D);
-				processoEpaManager.updateTempoGastoProcessoEpa();
-			} catch (DAOException e) {
-				LOG.error(".increaseProcessTimeSpent()", e);
-			}
+		    try {
+                processoEpaTarefaManager.updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), PrazoEnum.D);
+            } catch (DAOException e) {
+                LOG.error(".increaseProcessTimeSpent()", e);
+            }
+		    try {
+                processoEpaManager.updateTempoGastoProcessoEpa();
+            } catch (DAOException e) {
+                LOG.error(".increaseProcessTimeSpent()", e);
+            }
 		}
 		return null;
 	}

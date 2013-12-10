@@ -70,10 +70,14 @@ public class TarefaTimerProcessor {
 			try {
 				processoEpaTarefaManager.updateTarefasNaoFinalizadas(
 						trigger.getPreviousFireTime(), PrazoEnum.H);
-				processoEpaManager.updateTempoGastoProcessoEpa();
 			} catch (DAOException e) {
 				LOG.error(".increaseTaskTimeSpent()", e);
 			}
+            try {
+                processoEpaManager.updateTempoGastoProcessoEpa();
+            } catch (DAOException e) {
+                LOG.error(".increaseTaskTimeSpent()", e);
+            }
 		}
 		return null;
 	}

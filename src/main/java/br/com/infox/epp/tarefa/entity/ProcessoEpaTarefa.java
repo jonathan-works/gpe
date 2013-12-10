@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,7 +23,6 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
-import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 
 @Entity
 @Table(name=ProcessoEpaTarefa.TABLE_NAME, schema="public")
@@ -52,7 +49,7 @@ public class ProcessoEpaTarefa implements Serializable {
 	private Integer porcentagem;
 	private Integer tempoGasto;
 	private Integer tempoPrevisto;
-	private UsuarioTaskInstance usuarioTaskInstance;
+	private Long taskInstance;
 	
 	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_epa_tarefa")
 	@Id
@@ -110,30 +107,14 @@ public class ProcessoEpaTarefa implements Serializable {
 	}
 
 	public void setTaskInstance(Long taskInstance) {
-		if (usuarioTaskInstance != null) {
-			usuarioTaskInstance.setIdTaskInstance(taskInstance);
-		}
+		this.taskInstance = taskInstance;
 	}
 
-	@Transient
+	@Column(name = "id_task_instance", nullable = false)
 	public Long getTaskInstance() {
-		if (usuarioTaskInstance != null) {
-			return usuarioTaskInstance.getIdTaskInstance();
-		}
-		return null;
+		return this.taskInstance;
 	}
 	
-	@OneToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY, optional = false, orphanRemoval = true)
-	@JoinColumn(name = "id_task_instance", nullable = false)
-	@NotNull
-	public UsuarioTaskInstance getUsuarioTaskInstance() {
-		return usuarioTaskInstance;
-	}
-	
-	public void setUsuarioTaskInstance(UsuarioTaskInstance usuarioTaskInstance) {
-		this.usuarioTaskInstance = usuarioTaskInstance;
-	}
-
 	public void setUltimoDisparo(Date ultimoDisparo) {
 		this.ultimoDisparo = ultimoDisparo;
 	}
