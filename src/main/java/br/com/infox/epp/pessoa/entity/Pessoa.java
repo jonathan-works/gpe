@@ -21,7 +21,7 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 @Entity
 @Table(name=Pessoa.TABLE_NAME, schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
-public class Pessoa implements Serializable {
+public abstract class Pessoa implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_pessoa";
@@ -75,14 +75,8 @@ public class Pessoa implements Serializable {
 	}
 	
 	@Transient
-	public String getCodigo(){
-		if (this instanceof PessoaFisica) {
-			return ((PessoaFisica)this).getCpf();
-		} else if (this instanceof PessoaJuridica) {
-			return ((PessoaJuridica)this).getCnpj();
-		}
-		return "";
-	}
+	public abstract String getCodigo();
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

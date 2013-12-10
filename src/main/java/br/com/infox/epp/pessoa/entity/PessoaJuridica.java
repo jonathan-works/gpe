@@ -71,4 +71,10 @@ public class PessoaJuridica extends Pessoa {
 		}
 		return true;
 	}
+
+    @Override
+    @Transient
+    public String getCodigo() {
+        return getCnpj();
+    }
 }

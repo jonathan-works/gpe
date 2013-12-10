@@ -12,7 +12,7 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 @Entity
 @Table(schema="public", name=PessoaFisica.TABLE_NAME)
 @PrimaryKeyJoinColumn(name="id_pessoa_fisica", columnDefinition = "integer")
-public class PessoaFisica extends Pessoa{
+public class PessoaFisica extends Pessoa {
     public static final String EVENT_LOAD = "evtCarregarPessoaFisica";
 	public static final String TABLE_NAME = "tb_pessoa_fisica";
 	private static final long serialVersionUID = 1L;
@@ -75,5 +75,11 @@ public class PessoaFisica extends Pessoa{
 		}
 		return true;
 	}
+
+    @Override
+    @Transient
+    public String getCodigo() {
+        return getCpf();
+    }
 
 }
