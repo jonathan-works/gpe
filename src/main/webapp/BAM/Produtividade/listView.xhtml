@@ -29,27 +29,27 @@
 			    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
                        
 	<ui:define name="title">#{messages['produtividade.pageTitle']}</ui:define>
-	<ui:param name="showGrid" value="#{not empty produtividadeList.usuario}" />
+	<ui:param name="showGrid" value="#{not empty produtividadeAction.usuario}" />
 	
 	<ui:define name="body">
-		<wi:dataTable values="#{produtividadeList.list(15)}"
-					  bean="#{produtividadeList}"
+		<wi:dataTable values="#{produtividadeAction.list(2)}"
+					  bean="#{produtividadeAction}"
 					  tableTitle="#{messages['produtividade.titleGrid']}"
 					  id="produtividadeList"
 					  hideOrder="true">
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisaFluxoForm"
 							   formTitle="#{messages['searchForm.title']}"
-							   clearAction="produtividadeList.clear">
+							   clearAction="produtividadeAction.clear">
 		                 
 			        <wi:selectOneMenuEntity id="comboFluxo"
-										    value="#{produtividadeList.fluxo}"
+										    value="#{produtividadeAction.fluxo}"
 										    label="#{messages['naturezaCategoriaFluxo.fluxo']}"
-										    items="#{produtividadeList.fluxoList}"
+										    items="#{produtividadeAction.fluxoList}"
 										    noSelectionLabel="Selecione..."/>
 			        <wi:suggest id="suggestUsuario" suggestProvider="#{usuarioSuggestBean}" required="true"
-			        	value="#{produtividadeList.usuario}" label="#{messages['usuario.usuario']}"/>
-			        <wi:inputDataPeriodo id="periodo" valueDateFrom="#{produtividadeList.dataInicio}" valueDateTo="#{produtividadeList.dataFim}" />
+			        	value="#{produtividadeAction.usuario}" label="#{messages['usuario.usuario']}"/>
+			        <wi:inputDataPeriodo id="periodo" valueDateFrom="#{produtividadeAction.dataInicio}" valueDateTo="#{produtividadeAction.dataFim}" />
 				</wi:searchForm>
 			</ui:define>
 			<ui:define name="headerToolBar" />

@@ -8,13 +8,11 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
 @Entity
 @Table(name = UsuarioTaskInstance.TABLE_NAME, schema="public")
@@ -27,7 +25,6 @@ public class UsuarioTaskInstance implements Serializable {
 	private UsuarioLogin usuario;
 	private Localizacao localizacao;
 	private Papel papel;
-	private ProcessoEpaTarefa processoEpaTarefa;
 
 	public UsuarioTaskInstance() {
 	}
@@ -77,14 +74,5 @@ public class UsuarioTaskInstance implements Serializable {
 	
 	public void setLocalizacao(Localizacao localizacao) {
 		this.localizacao = localizacao;
-	}
-	
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "usuarioTaskInstance", orphanRemoval = true)
-	public ProcessoEpaTarefa getProcessoEpaTarefa() {
-		return processoEpaTarefa;
-	}
-	
-	public void setProcessoEpaTarefa(ProcessoEpaTarefa processoEpaTarefa) {
-		this.processoEpaTarefa = processoEpaTarefa;
 	}
 }

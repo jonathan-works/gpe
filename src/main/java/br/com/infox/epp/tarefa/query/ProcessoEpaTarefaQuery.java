@@ -8,7 +8,7 @@ public interface ProcessoEpaTarefaQuery {
 	String GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE = "getProcessoEpaTarefaByTaskInstance";
 	
 	String GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY = 
-		"select o from ProcessoEpaTarefa o where o.usuarioTaskInstance.idTaskInstance = :"+
+		"select o from ProcessoEpaTarefa o where o.taskInstance = :"+
 		QUERY_PARAM_TASKINSTANCE;
 	
 	String TAREFA_NOT_ENDED_BY_TIPO_PRAZO = "listAllProcessoEpaTarefaNotEnded";
