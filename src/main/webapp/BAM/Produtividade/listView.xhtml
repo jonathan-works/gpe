@@ -32,7 +32,7 @@
 	<ui:param name="showGrid" value="#{not empty produtividadeAction.usuario}" />
 	
 	<ui:define name="body">
-		<wi:dataTable values="#{produtividadeAction.list(2)}"
+		<wi:dataTable values="#{produtividadeAction.list(15)}"
 					  bean="#{produtividadeAction}"
 					  tableTitle="#{messages['produtividade.titleGrid']}"
 					  id="produtividadeList"
