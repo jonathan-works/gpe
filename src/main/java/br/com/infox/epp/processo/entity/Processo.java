@@ -61,7 +61,6 @@ public class Processo implements java.io.Serializable {
 
 	private int idProcesso;
 	private UsuarioLogin usuarioCadastroProcesso;
-	private String nomeUsuarioCadastroProcesso;
 	private String numeroProcesso;
 	private String numeroProcessoOrigem;
 	private String complemento;
@@ -271,18 +270,6 @@ public class Processo implements java.io.Serializable {
 			}
 		}
 		return list;
-	}
-	
-	//Adicionado
-	
-	@Column(name = "ds_nome_usuario_cadastro_processo", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	public String getNomeUsuarioCadastroProcesso() {
-		return nomeUsuarioCadastroProcesso;
-	}
-
-	public void setNomeUsuarioCadastroProcesso(String nomeUsuarioCadastroProcesso) {
-		this.nomeUsuarioCadastroProcesso = nomeUsuarioCadastroProcesso;
 	}
 	
 	@Override
