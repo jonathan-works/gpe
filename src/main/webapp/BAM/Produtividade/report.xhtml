@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
+				xmlns:p="http://jboss.com/products/seam/pdf"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:param name="title" value="Produtividade" />
+
+	<wi:dataReport subtitle="Produtividade"
+				   title="#{nomeSistema}"
+				   columns="9"
+				   widths="2 3 3 3 2 2 2 2 2"
+				   headerText="#{produtividadeAction.criteria}">
+				   
+		<wi:reportColumnHeader title="#{messages['usuario.usuario']}" />
+		<wi:reportColumnHeader title="#{messages['produtividade.localizacao']}" />
+		<wi:reportColumnHeader title="#{messages['produtividade.papel']}" />
+		<wi:reportColumnHeader title="#{messages['produtividade.tarefa']}" />
+		<wi:reportColumnHeader title="#{messages['produtividade.quantidade']}" />
+		<wi:reportColumnHeader title="#{messages['produtividade.tempoMedio']}" />
+		<wi:reportColumnHeader title="#{messages['produtividade.tempoPrevisto']}" />
+		<wi:reportColumnHeader title="#{messages['produtividade.tempoMinimo']}" />
+		<wi:reportColumnHeader title="#{messages['produtividade.tempoMaximo']}" />
+				
+		<ui:repeat var="row" value="#{produtividadeAction.list(10000)}">
+			
+			<wi:reportColumn value="#{row.usuario}" />
+			<wi:reportColumn value="#{row.localizacao}" />
+			<wi:reportColumn value="#{row.papel}" />
+			<wi:reportColumn value="#{row.tarefa}" />
+			<wi:reportColumn value="#{row.quantidadeTarefas}" />
+			<wi:reportColumn value="#{row.mediaTempoGasto}">
+				<f:convertNumber maxFractionDigits="2" />
+			</wi:reportColumn>
+			<wi:reportColumn value="#{row.tempoPrevisto}" />
+			<wi:reportColumn value="#{row.minimoTempoGasto}" />
+			<wi:reportColumn value="#{row.maximoTempoGasto}" />
+			
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>

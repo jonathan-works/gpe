@@ -11,7 +11,8 @@ public interface ProdutividadeQuery {
 	
 	String BASE_QUERY = "SELECT pet.nr_tempo_previsto, l.ds_localizacao, p.ds_nome, pes.nm_pessoa, "
 			+ "	t.ds_tarefa, AVG(pet.nr_tempo_gasto) AS media_tempo_gasto, MIN(pet.nr_tempo_gasto) AS min_tempo_gasto,"
-			+ " MAX(pet.nr_tempo_gasto) AS max_tempo_gasto, COUNT(pet.id_processo_epa_tarefa) AS quantidade_tarefas"
+			+ " MAX(pet.nr_tempo_gasto) AS max_tempo_gasto, COUNT(pet.id_processo_epa_tarefa) AS quantidade_tarefas,"
+			+ " t.tp_prazo"
 			+ "	FROM tb_processo_epa_tarefa pet"
 			+ "	INNER JOIN tb_usuario_taskinstance ut ON (ut.id_taskinstance = pet.id_task_instance)"
 			+ "	INNER JOIN tb_papel p ON (p.id_papel = ut.id_papel)"
@@ -38,4 +39,5 @@ public interface ProdutividadeQuery {
 	int INDEX_MINIMO_TEMPO_GASTO = 6;
 	int INDEX_MAXIMO_TEMPO_GASTO = 7;
 	int INDEX_QUANTIDADE_TAREFAS = 8;
+	int INDEX_TIPO_PRAZO_TAREFA = 9;
 }

@@ -32,7 +32,7 @@
 	<ui:param name="showGrid" value="#{not empty produtividadeAction.usuario}" />
 	
 	<ui:define name="body">
-		<wi:dataTable values="#{produtividadeAction.list(2)}"
+		<wi:dataTable values="#{produtividadeAction.list(15)}"
 					  bean="#{produtividadeAction}"
 					  tableTitle="#{messages['produtividade.titleGrid']}"
 					  id="produtividadeList"
@@ -52,7 +52,6 @@
 			        <wi:inputDataPeriodo id="periodo" valueDateFrom="#{produtividadeAction.dataInicio}" valueDateTo="#{produtividadeAction.dataFim}" />
 				</wi:searchForm>
 			</ui:define>
-			<ui:define name="headerToolBar" />
 			<ui:define name="toolBar" />
 							   
 			<wi:columnOutputText columnId="usuario"
@@ -70,16 +69,22 @@
 			<wi:columnOutputText columnId="quantidade"
 				columnHeader="#{messages['produtividade.quantidade']}"
 				value="#{row.quantidadeTarefas}"/>
-				<wi:columnOutputText columnId="tempoMedio"
+			<wi:columnOutputText columnId="tempoMedio"
 				columnHeader="#{messages['produtividade.tempoMedio']}"
-				value="#{row.mediaTempoGasto}"/>
-				<wi:columnOutputText columnId="tempoPrevisto"
+				value="#{row.mediaTempoGasto}">
+				
+				<ui:define name="outputText">
+					<f:convertNumber maxFractionDigits="2" />
+				</ui:define>				
+				
+			</wi:columnOutputText>
+			<wi:columnOutputText columnId="tempoPrevisto"
 				columnHeader="#{messages['produtividade.tempoPrevisto']}"
 				value="#{row.tempoPrevisto}"/>
-				<wi:columnOutputText columnId="tempoMinimo"
+			<wi:columnOutputText columnId="tempoMinimo"
 				columnHeader="#{messages['produtividade.tempoMinimo']}"
 				value="#{row.minimoTempoGasto}"/>
-				<wi:columnOutputText columnId="tempoMaximo"
+			<wi:columnOutputText columnId="tempoMaximo"
 				columnHeader="#{messages['produtividade.tempoMaximo']}"
 				value="#{row.maximoTempoGasto}"/>
 		</wi:dataTable>

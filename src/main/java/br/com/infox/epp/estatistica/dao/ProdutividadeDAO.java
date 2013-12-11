@@ -17,6 +17,7 @@ import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
 import br.com.infox.epp.estatistica.query.ProdutividadeQuery;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
@@ -102,6 +103,13 @@ public class ProdutividadeDAO extends GenericDAO {
 		produtividade.setTarefa((String) o[ProdutividadeQuery.INDEX_TAREFA]);
 		produtividade.setTempoPrevisto((Integer) o[ProdutividadeQuery.INDEX_TEMPO_PREVISTO]);
 		produtividade.setUsuario((String) o[ProdutividadeQuery.INDEX_USUARIO]);
+		Character c = (Character) o[ProdutividadeQuery.INDEX_TIPO_PRAZO_TAREFA];
+		if (c != null) {
+			PrazoEnum tipoPrazo = PrazoEnum.valueOf(c.toString());
+			if (tipoPrazo == PrazoEnum.D) {
+				produtividade.setTempoPrevisto(produtividade.getTempoPrevisto() * 24);
+			}
+		}
 		return produtividade;
 	}
 }
