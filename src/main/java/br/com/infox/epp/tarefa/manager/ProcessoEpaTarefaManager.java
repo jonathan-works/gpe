@@ -180,7 +180,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	            adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.DAY_OF_MONTH);
 	            adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.MONTH);
 	            adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.YEAR);
-	            DateRange range = getIncrementoLocalizacaoTurno(disparoAtual.getTime(), ultimaAtualizacao, localizacaoTurno, inicioTurno, fimTurno); 
+	            DateRange range = getIncrementoLocalizacaoTurno(disparoAtual, ultimaAtualizacao, inicioTurno, fimTurno); 
                 result = result + range.get(DateRange.MINUTES);
                 
                 ultimaAtualizacao.setTime(range.getEnd());
@@ -201,12 +201,10 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 	    return result;
 	}
 	
-    private DateRange getIncrementoLocalizacaoTurno(final Date dataDisparo,final Calendar ultimaAtualizacao,
-            final LocalizacaoTurno localizacaoTurno,final Calendar inicioTurno,final Calendar fimTurno) {
-        final Date beginning = inicioTurno.after(dataDisparo) ? inicioTurno.getTime() : ultimaAtualizacao.getTime(); 
-        final Date end = fimTurno.before(dataDisparo) ? fimTurno.getTime() : dataDisparo;
-        //final float result = calcularMinutosEmIntervalo(beginning, end);
-        //ultimaAtualizacao.setTime(end);
+    private DateRange getIncrementoLocalizacaoTurno(final Calendar dataDisparo,final Calendar ultimaAtualizacao
+            ,final Calendar inicioTurno,final Calendar fimTurno) {
+        final Date beginning = inicioTurno.after(ultimaAtualizacao) ? inicioTurno.getTime() : ultimaAtualizacao.getTime();
+        final Date end = fimTurno.before(dataDisparo) ? fimTurno.getTime() : dataDisparo.getTime();
         return new DateRange(beginning, end);
     }
     

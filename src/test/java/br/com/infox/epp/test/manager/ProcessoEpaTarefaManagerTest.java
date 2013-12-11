@@ -4,12 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.infox.core.util.DateRange;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 
 public class ProcessoEpaTarefaManagerTest {
@@ -39,50 +41,44 @@ public class ProcessoEpaTarefaManagerTest {
 	}
 	
 	@Test
-	public void calcularMinutosEmIntervaloTest() throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(2013, 5, 15, 8, 00);
-		Date inicioTurno = calendar.getTime();
-		calendar.set(2013, 5, 17, 12, 00);
-		Date fimTurno = calendar.getTime();
-		
-		calendar.set(Calendar.HOUR_OF_DAY, 7);
-		calendar.set(Calendar.MINUTE, 45);
-		Date inicio = calendar.getTime();
-		calendar.set(Calendar.HOUR_OF_DAY, 13);
-		calendar.set(Calendar.MINUTE, 00);
-		Date fim = calendar.getTime();
-		Method method =ProcessoEpaTarefaManager.class.getDeclaredMethod("calcularMinutosEmIntervalo", Date.class, Date.class, Date.class, Date.class);
-		method.setAccessible(true);
-
-		Float result = (Float) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
-		Assert.assertEquals(240.0f, result);
-		
-		calendar.set(Calendar.HOUR_OF_DAY, 8);
-		calendar.set(Calendar.MINUTE, 45);
-		inicio = calendar.getTime();
-		calendar.set(Calendar.HOUR_OF_DAY, 13);
-		calendar.set(Calendar.MINUTE, 00);
-		fim = calendar.getTime();
-		result = (Float) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
-		Assert.assertEquals(195.0f, result);
-		
-		calendar.set(Calendar.HOUR_OF_DAY, 7);
-		calendar.set(Calendar.MINUTE, 45);
-		inicio = calendar.getTime();
-		calendar.set(Calendar.HOUR_OF_DAY, 11);
-		calendar.set(Calendar.MINUTE, 00);
-		fim = calendar.getTime();
-		result = (Float) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
-		Assert.assertEquals(180.0f, result);
-		
-		calendar.set(Calendar.HOUR_OF_DAY, 8);
-		calendar.set(Calendar.MINUTE, 45);
-		inicio = calendar.getTime();
-		calendar.set(Calendar.HOUR_OF_DAY, 11);
-		calendar.set(Calendar.MINUTE, 00);
-		fim = calendar.getTime();
-		result = (Float) method.invoke(processoEpaTarefaManager, inicio, fim, inicioTurno, fimTurno);
-		Assert.assertEquals(135.0f, result);
+	public void calcularMinutosEmIntervaloTest() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        Calendar inicioTurno = new GregorianCalendar(2013, 5, 15, 8, 00);
+        Calendar fimTurno = new GregorianCalendar(2013, 5, 15, 12, 00);
+	    {
+            Calendar inicio = new GregorianCalendar(2013, 5, 15, 7, 45);
+    	    Calendar fim = new GregorianCalendar(2013, 5, 15, 13, 00);
+            
+    	    DateRange result = assertIncrementoByLocalizacaoTurno(fim, inicio, inicioTurno, fimTurno);
+    	    Assert.assertEquals(240, result.get(DateRange.MINUTES));
+	    }
+        {
+            Calendar inicio = new GregorianCalendar(2013, 5, 15, 8, 45);
+            Calendar fim = new GregorianCalendar(2013, 5, 15, 13, 00);
+            
+            DateRange result = assertIncrementoByLocalizacaoTurno(fim, inicio, inicioTurno, fimTurno);
+            Assert.assertEquals(195, result.get(DateRange.MINUTES));
+        }
+        {
+            Calendar inicio = new GregorianCalendar(2013, 5, 15, 7, 45);
+            Calendar fim = new GregorianCalendar(2013, 5, 15, 11, 00);
+            
+            DateRange result = assertIncrementoByLocalizacaoTurno(fim, inicio, inicioTurno, fimTurno);
+            Assert.assertEquals(180, result.get(DateRange.MINUTES));
+        }
+        {
+            Calendar inicio = new GregorianCalendar(2013, 5, 15, 8, 45);
+            Calendar fim = new GregorianCalendar(2013, 5, 15, 11, 00);
+            
+            DateRange result = assertIncrementoByLocalizacaoTurno(fim, inicio, inicioTurno, fimTurno);
+            Assert.assertEquals(135, result.get(DateRange.MINUTES));
+        }
 	}
+
+    private DateRange assertIncrementoByLocalizacaoTurno(Calendar fim, Calendar inicio, Calendar inicioTurno,
+            Calendar fimTurno) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        Method method = ProcessoEpaTarefaManager.class.getDeclaredMethod("getIncrementoLocalizacaoTurno", Calendar.class, Calendar.class, Calendar.class, Calendar.class);
+        method.setAccessible(true);
+
+        return (DateRange) method.invoke(processoEpaTarefaManager, fim, inicio, inicioTurno, fimTurno);
+    }
 }
