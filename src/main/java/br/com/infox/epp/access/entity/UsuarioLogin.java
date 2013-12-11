@@ -5,6 +5,7 @@ import static javax.persistence.FetchType.*;
 import static javax.persistence.TemporalType.*;
 
 import static br.com.infox.core.constants.LengthConstants.*;
+import static br.com.infox.core.persistence.ORConstants.*;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
 
 import java.io.Serializable;
@@ -51,7 +52,7 @@ import br.com.infox.epp.system.entity.EntityLog;
 import br.com.itx.util.StringUtil;
 
 @Entity
-@Table(name=UsuarioLogin.TABLE_NAME, schema="public" , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
+@Table(name=UsuarioLogin.TABLE_NAME, schema=PUBLIC , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
 @NamedQueries(value={
 	@NamedQuery(name=USUARIO_LOGIN_NAME, query=USUARIO_LOGIN_QUERY),
 	@NamedQuery(name=USUARIO_BY_LOGIN_TASK_INSTANCE, query=USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY)
@@ -92,9 +93,9 @@ public class UsuarioLogin implements Serializable {
 		dataExpiracao = null;
 	}
 	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_pessoa")
+	@SequenceGenerator(name = GENERATOR, sequenceName = "public.sq_tb_pessoa")
     @Id
-    @GeneratedValue(generator="generator")
+    @GeneratedValue(generator=GENERATOR)
     @Column(name="id_usuario_login", unique=true, nullable=false)
     public Integer getIdUsuarioLogin() {
         return idUsuarioLogin;
@@ -165,7 +166,7 @@ public class UsuarioLogin implements Serializable {
 		this.certChain = certChain;
 	}
 	
-	@Column(name="in_ativo", nullable=false)
+	@Column(name=ATIVO, nullable=false)
     public Boolean getAtivo() {
         return ativo;
     }
