@@ -39,6 +39,7 @@
 			<value>menu.painel/painel.menuText:/Painel/list.seam</value>
 			<value>menu.painel/bam.menuText:/BAM/listView.seam</value>
 			<value>menu.painel/relatorios.menuText/temposMedios.menuText:/Estatistica/listView.seam</value>
+			<value>menu.painel/produtividade.menuText:/BAM/Produtividade/listView.seam</value>
 			
 			<value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
 			<value>menu.processo/processo.consultarMenuText:/Processo/Consulta/listView.seam</value>
