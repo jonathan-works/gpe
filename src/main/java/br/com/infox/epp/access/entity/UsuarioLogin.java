@@ -1,6 +1,11 @@
 package br.com.infox.epp.access.entity;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+import static javax.persistence.TemporalType.*;
+
 import static br.com.infox.core.constants.LengthConstants.*;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,10 +15,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -27,7 +30,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
@@ -40,7 +42,6 @@ import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
-import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
@@ -52,10 +53,10 @@ import br.com.itx.util.StringUtil;
 @Entity
 @Table(name=UsuarioLogin.TABLE_NAME, schema="public" , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
 @NamedQueries(value={
-	@NamedQuery(name=UsuarioLoginQuery.USUARIO_LOGIN_NAME, query=UsuarioLoginQuery.USUARIO_LOGIN_QUERY),
-	@NamedQuery(name=UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE, query=UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY)
+	@NamedQuery(name=USUARIO_LOGIN_NAME, query=USUARIO_LOGIN_QUERY),
+	@NamedQuery(name=USUARIO_BY_LOGIN_TASK_INSTANCE, query=USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY)
 })
-public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
+public class UsuarioLogin implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_usuario_login"; 
@@ -155,7 +156,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 	}
 	
 	@Column(name = "ds_cert_chain_usuario")
-	@Basic(fetch = FetchType.LAZY)
+	@Basic(fetch = LAZY)
 	public String getCertChain() {
 		return certChain;
 	}
@@ -172,7 +173,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
         this.ativo = ativo;
     }
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=LAZY)
     @JoinColumn(name="id_pessoa_fisica")
 	public PessoaFisica getPessoaFisica() {
         return pessoaFisica;
@@ -248,7 +249,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.provisorio = provisorio;
 	}
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	@Column(name = "dt_expiracao_usuario", nullable=true)
 	public Date getDataExpiracao() {
 		return dataExpiracao;
@@ -258,8 +259,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.dataExpiracao = dataExpiracao;
 	}
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuario")
 	public List<ProcessoDocumentoBin> getProcessoDocumentoBinList() {
 		return this.processoDocumentoBinList;
 	}
@@ -269,8 +269,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.processoDocumentoBinList = processoDocumentoBinList;
 	}
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuarioPublicacao")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuarioPublicacao")
 	public List<Fluxo> getFluxoList() {
 		return this.fluxoList;
 	}
@@ -279,8 +278,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.fluxoList = fluxoList;
 	}
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario", orphanRemoval=true)
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuario", orphanRemoval=true)
 	@OrderBy("idUsuarioLocalizacao")
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
 		return this.usuarioLocalizacaoList;
@@ -291,8 +289,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.usuarioLocalizacaoList = usuarioLocalizacaoList;
 	}
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuarioCadastroProcesso")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuarioCadastroProcesso")
 	public List<Processo> getProcessoListForIdUsuarioCadastroProcesso() {
 		return this.processoListForIdUsuarioCadastroProcesso;
 	}
@@ -301,8 +298,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 			List<Processo> processoListForIdUsuarioCadastroProcesso) {
 		this.processoListForIdUsuarioCadastroProcesso = processoListForIdUsuarioCadastroProcesso;
 	}
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuario")
 	public List<BloqueioUsuario> getBloqueioUsuarioList() {
 		return this.bloqueioUsuarioList;
 	}
@@ -311,8 +307,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.bloqueioUsuarioList = bloqueioUsuarioList;
 	}
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuarioInclusao")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuarioInclusao")
 	public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioInclusao() {
 		return this.processoDocumentoListForIdUsuarioInclusao;
 	}
@@ -322,8 +317,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.processoDocumentoListForIdUsuarioInclusao = processoDocumentoListForIdUsuarioInclusao;
 	}
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuarioExclusao")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuarioExclusao")
 	public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioExclusao() {
 		return this.processoDocumentoListForIdUsuarioExclusao;
 	}
@@ -333,8 +327,7 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.processoDocumentoListForIdUsuarioExclusao = processoDocumentoListForIdUsuarioExclusao;
 	}
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "usuario")	
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuario")	
 	public List<EntityLog> getEntityLogList() {
 		return entityLogList;
 	}

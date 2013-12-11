@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +66,7 @@ public class UsuarioLoginDAO extends GenericDAO {
 	public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance, String actorId) {
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(UsuarioLoginQuery.PARAM_LOGIN, actorId);
-		parameters.put(UsuarioLogin.PARAM_ID_TASK_INSTANCE, idTaskInstance);
+		parameters.put(PARAM_ID_TASK_INSTANCE, idTaskInstance);
 		return getNamedSingleResult(UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE, parameters);
 	}
 	
@@ -74,8 +76,8 @@ public class UsuarioLoginDAO extends GenericDAO {
 	}
 	
 	public UsuarioLogin checkUserByLogin(String login) {
-        Query query = getEntityManager().createNamedQuery(UsuarioLogin.USUARIO_LOGIN_NAME);
-        query.setParameter(UsuarioLogin.PARAM_LOGIN, login);
+        Query query = getEntityManager().createNamedQuery(USUARIO_LOGIN_NAME);
+        query.setParameter(PARAM_LOGIN, login);
         return EntityUtil.getSingleResult(query);
     }
 	
