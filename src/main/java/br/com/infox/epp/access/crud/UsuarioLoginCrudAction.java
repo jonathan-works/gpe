@@ -14,6 +14,7 @@ import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 
@@ -54,6 +55,9 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
         if (!usuario.getProvisorio()) {
             usuario.setDataExpiracao(null);
         }
+        if (!usuario.isHumano()){
+            usuario.setPessoaFisica(null);
+        }
     }
     
     @Override
@@ -91,5 +95,9 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
+    public UsuarioEnum[] getTiposDeUsuario(){
+        return UsuarioEnum.values();
+    }
+    
 }

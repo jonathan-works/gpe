@@ -40,25 +40,6 @@ public class UsuarioLoginDAO extends GenericDAO {
 		return EntityUtil.getSingleResult(query);
 	}
 	
-	public void inserirUsuarioParaPessoaFisica(String login, UsuarioLogin usuarioLogin){
-		StringBuilder sb = new StringBuilder();
-		sb.append("INSERT INTO ");
-		sb.append(UsuarioLogin.TABLE_NAME);
-		sb.append(" (id_pessoa, ds_login, ds_senha, ds_assinatura_usuario, ds_cert_chain_usuario, " +
-					"in_bloqueio, dt_expiracao_usuario, in_provisorio, in_twitter)");
-		sb.append(" values (:idPessoa, :login, :senha, :assinatura, :cert_chain, :bloqueio, null, :provisorio, :twitter)");
-		Query query = getEntityManager().createNativeQuery(sb.toString());
-		query.setParameter("idPessoa", usuarioLogin.getIdUsuarioLogin())
-				.setParameter("login", login)
-				.setParameter("senha", usuarioLogin.getSenha())
-				.setParameter("assinatura", usuarioLogin.getAssinatura())
-				.setParameter("cert_chain", usuarioLogin.getCertChain())
-				.setParameter("bloqueio", usuarioLogin.getBloqueio())
-				.setParameter("provisorio", usuarioLogin.getProvisorio())
-				.setParameter("twitter", usuarioLogin.getTemContaTwitter()).executeUpdate();
-		getEntityManager().flush();
-	}
-	
 	public UsuarioLogin getUsuarioLogin(UsuarioLogin usuarioLogin){
 		return (UsuarioLogin) getEntityManager().find(UsuarioLogin.class, usuarioLogin.getIdUsuarioLogin());
 	}

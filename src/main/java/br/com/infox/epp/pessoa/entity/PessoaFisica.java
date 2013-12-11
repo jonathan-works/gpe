@@ -1,5 +1,7 @@
 package br.com.infox.epp.pessoa.entity;
 
+import static javax.persistence.FetchType.LAZY;
+
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -8,6 +10,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
+import br.com.itx.util.StringUtil;
 
 @Entity
 @Table(schema="public", name=PessoaFisica.TABLE_NAME)
@@ -19,6 +22,7 @@ public class PessoaFisica extends Pessoa {
 	
 	private String cpf;
 	private Date dataNascimento;
+    private String certChain;
 	
 	public PessoaFisica(){
 		setTipoPessoa(TipoPessoaEnum.F);
@@ -40,6 +44,16 @@ public class PessoaFisica extends Pessoa {
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
+	
+    @Column(name = "ds_cert_chain")
+    @Basic(fetch = LAZY)
+    public String getCertChain() {
+        return certChain;
+    }
+    
+    public void setCertChain(String certChain) {
+        this.certChain = certChain;
+    }
 	
 	@Transient
 	public String getDataFormatada(){
@@ -80,6 +94,14 @@ public class PessoaFisica extends Pessoa {
     @Transient
     public String getCodigo() {
         return getCpf();
+    }
+    
+    public boolean checkCertChain(String certChain) {
+        if (certChain == null) {
+            throw new IllegalArgumentException("O parâmetro não deve ser nulo");
+        } 
+        return StringUtil.replaceQuebraLinha(certChain).equals(
+                StringUtil.replaceQuebraLinha(this.certChain));
     }
 
 }

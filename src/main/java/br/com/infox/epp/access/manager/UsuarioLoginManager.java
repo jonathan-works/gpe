@@ -19,14 +19,6 @@ public class UsuarioLoginManager extends GenericManager {
 	
 	@In private UsuarioLoginDAO usuarioLoginDAO;
 	
-	public void inserirUsuarioParaPessoaFisicaCadastrada(UsuarioLogin usuarioLogin){
-	    usuarioLoginDAO.inserirUsuarioParaPessoaFisica(usuarioLogin.getLogin(), usuarioLogin);
-	}
-	
-	public void inserirUsuarioParaPessoaFisicaCadastrada(String login, UsuarioLogin usuarioLogin){
-		usuarioLoginDAO.inserirUsuarioParaPessoaFisica(login, usuarioLogin);
-	}
-	
 	public UsuarioLogin getUsuarioLogin(UsuarioLogin usuarioLogin){
 		return usuarioLoginDAO.getUsuarioLogin(usuarioLogin);
 	}

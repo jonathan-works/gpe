@@ -3,7 +3,6 @@ package br.com.infox.epp.access.entity;
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
 import static javax.persistence.TemporalType.*;
-
 import static br.com.infox.core.constants.LengthConstants.*;
 import static br.com.infox.core.persistence.ORConstants.*;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
@@ -15,9 +14,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -43,13 +43,14 @@ import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
+import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
-import br.com.itx.util.StringUtil;
 
 @Entity
 @Table(name=UsuarioLogin.TABLE_NAME, schema=PUBLIC , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
@@ -68,14 +69,13 @@ public class UsuarioLogin implements Serializable {
 	private String login;
 	private String nomeUsuario;
 	private Boolean ativo;
-	private String assinatura;
-	private String certChain;
 	private Boolean bloqueio;
 	private Boolean provisorio;
 	//Data de previsão para expirar o usuário provisório
 	private Date dataExpiracao;
 	private Boolean temContaTwitter;
 	
+	private UsuarioEnum tipoUsuario;
 	private PessoaFisica pessoaFisica;
 
 	private Set<Papel> papelSet = new TreeSet<Papel>();
@@ -146,31 +146,22 @@ public class UsuarioLogin implements Serializable {
         this.nomeUsuario = nomeUsuario;
     }
 	
-	@Column(name = "ds_assinatura_usuario")
-	public String getAssinatura() {
-		return assinatura;
-	}
-	
-	public void setAssinatura(String assinatura) {
-		this.assinatura = assinatura;
-	}
-	
-	@Column(name = "ds_cert_chain_usuario")
-	@Basic(fetch = LAZY)
-	public String getCertChain() {
-		return certChain;
-	}
-	
-	public void setCertChain(String certChain) {
-		this.certChain = certChain;
-	}
-	
 	@Column(name=ATIVO, nullable=false)
     public Boolean getAtivo() {
         return ativo;
     }
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    @Column(name="tp_usuario", length=LengthConstants.FLAG, nullable=false)
+    @Enumerated(EnumType.STRING)
+    public UsuarioEnum getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(UsuarioEnum tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     @ManyToOne(fetch=LAZY)
@@ -195,15 +186,6 @@ public class UsuarioLogin implements Serializable {
 		this.papelSet = papelSet;
 	}
 	
-	@Transient
-	public boolean checkCertChain(String certChain) {
-		if (certChain == null) {
-			throw new IllegalArgumentException("O parâmetro não deve ser nulo");
-		} 
-		return StringUtil.replaceQuebraLinha(certChain).equals(
-				StringUtil.replaceQuebraLinha(this.certChain));
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -341,6 +323,11 @@ public class UsuarioLogin implements Serializable {
 	@Override
 	public String toString() {
 	    return getNomeUsuario();
+	}
+	
+	@Transient
+	public boolean isHumano(){
+	    return tipoUsuario == UsuarioEnum.H;
 	}
 	
 }

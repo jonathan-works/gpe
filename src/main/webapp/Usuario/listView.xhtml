@@ -114,6 +114,14 @@
 				value="#{usuarioLoginCrudAction.instance.login}"
 				required="true"
 				maxlength="15" />
+		    <wi:selectOneMenuEnum
+		          id="tipoUsuario"
+		          label="#{messages['usuario.tipo']}"
+		          items="#{usuarioLoginCrudAction.tiposDeUsuario}"
+		          value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
+		          showLabelSelecione="true"
+		          required="true">
+		    </wi:selectOneMenuEnum>
 			<wi:selectSituacaoRadio
 				id="ativo"
 				label="#{messages['field.situacao']}"
@@ -131,7 +139,7 @@
 	
         <infox:tab
             id="usuarioPessoaFisica"
-            rendered="#{home.isManaged()}"
+            rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
             title="#{messages['usuario.pessoaFisica']}"
             name="usuarioPessoaFisica"
             action="#{usuarioPessoaFisicaCrudAction.newInstance()}">

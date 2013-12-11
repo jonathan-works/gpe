@@ -465,16 +465,16 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	    if (Strings.isEmpty(certChainBase64Encoded)) {
             throw new ApplicationException("Não foi possível recuperar assinatura, verifique se seu cartão está corretamente configurado");
 	    }
-		if (Strings.isEmpty(usuarioLogado.getCertChain())) {
+		if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
 		    final Certificado certificado = new Certificado(certChainBase64Encoded);
 		    final String cpfCertificado = certificado.getCn().split(":")[1];
 		    if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf().replace(".", "").replace("-", ""))) {
-		        usuarioLogado.setCertChain(certChainBase64Encoded);
+		        usuarioLogado.getPessoaFisica().setCertChain(certChainBase64Encoded);
 		    } else {
     			throw new ApplicationException("O cadastro do usuário não está assinado.");
 		    }
 		}
-		if (!usuarioLogado.checkCertChain(certChainBase64Encoded)) {
+		if (!usuarioLogado.getPessoaFisica().checkCertChain(certChainBase64Encoded)) {
 			limparAssinatura();
 			throw new ApplicationException("O certificado não é o mesmo do cadastro do usuario");
 		}
