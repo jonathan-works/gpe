@@ -1,6 +1,7 @@
 package br.com.infox.epp.estatistica.action;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,12 +17,15 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.exception.ExcelExportException;
+import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
 import br.com.infox.epp.estatistica.manager.ProdutividadeManager;
 import br.com.infox.epp.estatistica.query.ProdutividadeQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.itx.component.Util;
 
 @Name(ProdutividadeAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -29,6 +33,7 @@ public class ProdutividadeAction implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "produtividadeAction";
+	private static final String XLS_TEMPLATE = "/BAM/Produtividade/ProdutividadeTemplate.xls";
 	private static final Log LOG = Logging.getLog(ProdutividadeAction.class);
 	
 	@In
@@ -171,6 +176,35 @@ public class ProdutividadeAction implements Serializable {
 		return sb.toString();
 	}
 	
+	public String getTemplate() {
+		return XLS_TEMPLATE;
+	}
+	
+	public void exportarXLS() {
+        List<ProdutividadeBean> beanList = list(10000);
+        try {
+            if (beanList == null || beanList.isEmpty()) {
+                FacesMessages.instance().add(Severity.INFO, "Não há dados para exportar!");
+            } else {
+                exportarXLS(getTemplate(), beanList);
+            }
+        } catch (ExcelExportException e) {
+        	LOG.error(".exportarXLS()", e);
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao exportar arquivo." + e.getMessage());
+        }   
+    }
+    
+    private void exportarXLS(String template, List<ProdutividadeBean> beanList) throws ExcelExportException {
+        String urlTemplate = new Util().getContextRealPath() + template;
+        Map<String, Object> map = new HashMap<String, Object>();
+        StringBuilder className = new StringBuilder(ProdutividadeBean.class.getSimpleName());
+        className = className.replace(0, 1, className.substring(0, 1).toLowerCase());
+        map.put(className.toString(), beanList);
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        map.put("numberFormat", numberFormat);
+        ExcelExportUtil.downloadXLS(urlTemplate, map, "Produtividade.xls");
+    }
 
 	private Map<String, Object> buildParams() {
 		Map<String, Object> params = new HashMap<>();
