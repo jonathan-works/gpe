@@ -56,22 +56,15 @@ public class ProcessoDocumento implements java.io.Serializable {
 	private TipoProcessoDocumento tipoProcessoDocumento;
 	private ProcessoDocumentoBin processoDocumentoBin;
 	private UsuarioLogin usuarioInclusao;
-	private String nomeUsuarioInclusao;
 	private Processo processo;
 	private String processoDocumento;
 	private Date dataInclusao = new Date();
-	private Date dataExclusao;
-	private String motivoExclusao;
 	private Integer numeroDocumento;
 	private Boolean ativo = Boolean.TRUE;
-	private String observacaoProcedimento;
 	private Boolean documentoSigiloso = Boolean.FALSE;
 	private Papel papel;
-	private String nomePapel;
 	private UsuarioLogin usuarioAlteracao;
-	private String nomeUsuarioAlteracao;
 	private Localizacao localizacao;
-	private String nomeLocalizacao;
 	
 	public ProcessoDocumento() {
 	}
@@ -162,24 +155,6 @@ public class ProcessoDocumento implements java.io.Serializable {
 	public void setDataInclusao(Date dataInclusao) {
 		this.dataInclusao = dataInclusao;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_exclusao")
-	public Date getDataExclusao() {
-		return this.dataExclusao;
-	}
-
-	public void setDataExclusao(Date dataExclusao) {
-		this.dataExclusao = dataExclusao;
-	}
-
-	@Column(name = "ds_motivo_exclusao")
-	public String getMotivoExclusao() {
-		return this.motivoExclusao;
-	}
-
-	public void setMotivoExclusao(String motivoExclusao) {
-		this.motivoExclusao = motivoExclusao;
-	}
 
 	@Column(name = "in_ativo", nullable = false)
 	@NotNull
@@ -191,15 +166,6 @@ public class ProcessoDocumento implements java.io.Serializable {
 		this.ativo = ativo;
 	}
 
-	@Column(name = "ds_observacao_procedimento")
-	public String getObservacaoProcedimento() {
-		return this.observacaoProcedimento;
-	}
-
-	public void setObservacaoProcedimento(String observacaoProcedimento) {
-		this.observacaoProcedimento = observacaoProcedimento;
-	}
-	
 	@Column(name = "in_documento_sigiloso", nullable = false)
 	@NotNull
 	
@@ -254,46 +220,6 @@ public class ProcessoDocumento implements java.io.Serializable {
 	
 	public void setLocalizacao(Localizacao localizacao) {
 		this.localizacao = localizacao;
-	}
-
-	@Column(name = "ds_nome_usuario_inclusao", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	public String getNomeUsuarioInclusao() {
-		return nomeUsuarioInclusao;
-	}
-
-	public void setNomeUsuarioInclusao(String nomeUsuarioInclusao) {
-		this.nomeUsuarioInclusao = nomeUsuarioInclusao;
-	}
-
-	@Column(name = "ds_nome_papel", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	public String getNomePapel() {
-		return nomePapel;
-	}
-
-	public void setNomePapel(String nomePapel) {
-		this.nomePapel = nomePapel;
-	}
-
-	@Column(name = "ds_nome_usuario_alteracao", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	public String getNomeUsuarioAlteracao() {
-		return nomeUsuarioAlteracao;
-	}
-
-	public void setNomeUsuarioAlteracao(String nomeUsuarioAlteracao) {
-		this.nomeUsuarioAlteracao = nomeUsuarioAlteracao;
-	}
-
-	@Column(name = "ds_nome_localizacao", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	public String getNomeLocalizacao() {
-		return nomeLocalizacao;
-	}
-
-	public void setNomeLocalizacao(String nomeLocalizacao) {
-		this.nomeLocalizacao = nomeLocalizacao;
 	}
 
 	@Override
