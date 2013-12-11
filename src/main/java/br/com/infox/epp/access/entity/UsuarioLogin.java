@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.entity;
 
+import static br.com.infox.core.constants.LengthConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +40,6 @@ import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -101,8 +102,8 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
         this.idUsuarioLogin = idUsuarioLogin;
     }
     
-    @Column(name = "ds_email", length=LengthConstants.DESCRICAO_PADRAO, unique = true, nullable = false)
-    @Size(max=LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = "ds_email", length=DESCRICAO_PADRAO, unique = true, nullable = false)
+    @Size(max=DESCRICAO_PADRAO)
     @NotNull
     public String getEmail() {
         return this.email;
@@ -112,8 +113,8 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
         this.email = email;
     }
 
-	@Column(name = "ds_senha", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = "ds_senha", length=DESCRICAO_PADRAO)
+	@Size(max=DESCRICAO_PADRAO)
 	@UserPassword(hash = "SHA")
 	public String getSenha() {
 		return this.senha;
@@ -123,8 +124,8 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.senha = senha;
 	}
 
-	@Column(name = "ds_login", unique = true, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = "ds_login", unique = true, nullable = false, length=DESCRICAO_PADRAO)
+	@Size(max=DESCRICAO_PADRAO)
 	@NotNull
 	@UserPrincipal
 	public String getLogin() {
@@ -135,8 +136,8 @@ public class UsuarioLogin implements UsuarioLoginQuery, Serializable {
 		this.login = login;
 	}
 	
-	@Column(name="nm_usuario", nullable=false, length=LengthConstants.NOME_ATRIBUTO)
-    @Size(max=LengthConstants.NOME_ATRIBUTO)
+	@Column(name="nm_usuario", nullable=false, length=NOME_ATRIBUTO)
+    @Size(max=NOME_ATRIBUTO)
     public String getNomeUsuario() {
         return nomeUsuario;
     }
