@@ -336,17 +336,6 @@ public class UsuarioLogin implements Serializable {
 		this.entityLogList = entityLogList;
 	}
 	
-	@Transient
-	public Localizacao[] getLocalizacoes() {
-		Localizacao[] locs = new Localizacao[usuarioLocalizacaoList.size()];
-		int i = 0;
-		for (UsuarioLocalizacao uloc : usuarioLocalizacaoList) {
-			locs[i] = uloc.getLocalizacao();
-			i++;
-		}
-		return locs;
-	}
-
 	@Column(name="in_twitter", nullable=false)
 	public Boolean getTemContaTwitter() {
 		if (temContaTwitter == null) {
