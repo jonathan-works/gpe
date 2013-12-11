@@ -1,6 +1,7 @@
 package br.com.infox.epp.estatistica.action;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,10 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
@@ -24,6 +29,7 @@ public class ProdutividadeAction implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "produtividadeAction";
+	private static final Log LOG = Logging.getLog(ProdutividadeAction.class);
 	
 	@In
 	private ProdutividadeManager produtividadeManager;
@@ -140,6 +146,31 @@ public class ProdutividadeAction implements Serializable {
 		}
 		return this.resultCount;
 	}
+	
+	public String getCriteria() {
+		StringBuilder sb = new StringBuilder("Usuário: ");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append(this.usuario.getNome());
+		if (fluxo != null) {
+			sb.append("\nFluxo: ");
+			sb.append(this.fluxo.getFluxo());
+		}
+		if (dataInicio != null && dataFim != null) {
+			sb.append("\nPeríodo: De ");
+			sb.append(sdf.format(dataInicio));
+			sb.append(" até ");
+			sb.append(sdf.format(dataFim));
+		} else if (dataInicio != null) {
+			sb.append("\nPeríodo: A partir de ");
+			sb.append(sdf.format(dataInicio));
+		} else if (dataFim != null) {
+			sb.append("\nPeríodo: Até ");
+			sb.append(sdf.format(dataFim));
+		}
+		
+		return sb.toString();
+	}
+	
 
 	private Map<String, Object> buildParams() {
 		Map<String, Object> params = new HashMap<>();
