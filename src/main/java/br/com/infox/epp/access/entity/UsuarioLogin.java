@@ -86,7 +86,6 @@ public class UsuarioLogin implements Serializable {
 	private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(0);
 	private List<BloqueioUsuario> bloqueioUsuarioList = new ArrayList<BloqueioUsuario>(0);
 	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<ProcessoDocumento>(0);
-	private List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao = new ArrayList<ProcessoDocumento>(0);
 	private List<EntityLog> entityLogList = new ArrayList<EntityLog>(0);
 
 	public UsuarioLogin() {
@@ -318,16 +317,6 @@ public class UsuarioLogin implements Serializable {
 		this.processoDocumentoListForIdUsuarioInclusao = processoDocumentoListForIdUsuarioInclusao;
 	}
 	
-	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuarioExclusao")
-	public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioExclusao() {
-		return this.processoDocumentoListForIdUsuarioExclusao;
-	}
-
-	public void setProcessoDocumentoListForIdUsuarioExclusao(
-			List<ProcessoDocumento> processoDocumentoListForIdUsuarioExclusao) {
-		this.processoDocumentoListForIdUsuarioExclusao = processoDocumentoListForIdUsuarioExclusao;
-	}
-
 	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "usuario")	
 	public List<EntityLog> getEntityLogList() {
 		return entityLogList;

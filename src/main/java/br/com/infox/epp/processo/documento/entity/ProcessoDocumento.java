@@ -58,8 +58,6 @@ public class ProcessoDocumento implements java.io.Serializable {
 	private UsuarioLogin usuarioInclusao;
 	private String nomeUsuarioInclusao;
 	private Processo processo;
-	private UsuarioLogin usuarioExclusao;
-	private String nomeUsuarioExclusao;
 	private String processoDocumento;
 	private Date dataInclusao = new Date();
 	private Date dataExclusao;
@@ -142,15 +140,6 @@ public class ProcessoDocumento implements java.io.Serializable {
 
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
-	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario_exclusao")
-	public UsuarioLogin getUsuarioExclusao() {
-		return this.usuarioExclusao;
-	}
-
-	public void setUsuarioExclusao(UsuarioLogin usuarioExclusao) {
-		this.usuarioExclusao = usuarioExclusao;
 	}
 
 	@Column(name = "ds_processo_documento", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
@@ -275,16 +264,6 @@ public class ProcessoDocumento implements java.io.Serializable {
 
 	public void setNomeUsuarioInclusao(String nomeUsuarioInclusao) {
 		this.nomeUsuarioInclusao = nomeUsuarioInclusao;
-	}
-
-	@Column(name = "ds_nome_usuario_exclusao", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	public String getNomeUsuarioExclusao() {
-		return nomeUsuarioExclusao;
-	}
-
-	public void setNomeUsuarioExclusao(String nomeUsuarioExclusao) {
-		this.nomeUsuarioExclusao = nomeUsuarioExclusao;
 	}
 
 	@Column(name = "ds_nome_papel", length=LengthConstants.DESCRICAO_PADRAO)
