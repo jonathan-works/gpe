@@ -155,7 +155,7 @@ public class ProdutividadeAction implements Serializable {
 	public String getCriteria() {
 		StringBuilder sb = new StringBuilder("Usuário: ");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		sb.append(this.usuario.getNome());
+		sb.append(this.usuario.getNomeUsuario());
 		if (fluxo != null) {
 			sb.append("\nFluxo: ");
 			sb.append(this.fluxo.getFluxo());
