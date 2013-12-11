@@ -15,18 +15,24 @@
 */
 package br.com.infox.epp.processo.entity;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+import static javax.persistence.InheritanceType.*;
+import static javax.persistence.TemporalType.*;
+
+import static br.com.infox.core.constants.LengthConstants.*;
+import static br.com.infox.core.persistence.ORConstants.*;
+
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -36,7 +42,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
@@ -44,15 +49,14 @@ import javax.validation.constraints.NotNull;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.entity.Estatistica;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
 @Entity
-@Table(name=Processo.TABLE_NAME, schema="public")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Table(name=Processo.TABLE_NAME, schema=PUBLIC)
+@Inheritance(strategy=JOINED)
 public class Processo implements java.io.Serializable {
 
 	public static final String TABLE_NAME = "tb_processo";
@@ -81,9 +85,9 @@ public class Processo implements java.io.Serializable {
 	public Processo() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo")
+	@SequenceGenerator(name = GENERATOR, sequenceName = "public.sq_tb_processo")
 	@Id
-	@GeneratedValue(generator = "generator")
+	@GeneratedValue(generator = GENERATOR)
 	@Column(name = "id_processo", unique = true, nullable = false)
 	public int getIdProcesso() {
 		return this.idProcesso;
@@ -93,7 +97,7 @@ public class Processo implements java.io.Serializable {
 		this.idProcesso = idProcesso;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "id_usuario_cadastro_processo")
 	public UsuarioLogin getUsuarioCadastroProcesso() {
 		return this.usuarioCadastroProcesso;
@@ -103,9 +107,9 @@ public class Processo implements java.io.Serializable {
 		this.usuarioCadastroProcesso = usuarioCadastroProcesso;
 	}
 
-	@Column(name = "nr_processo", nullable = false, length=LengthConstants.NUMERO_PROCESSO)
+	@Column(name = "nr_processo", nullable = false, length=NUMERO_PROCESSO)
 	@NotNull
-	@Size(max=LengthConstants.NUMERO_PROCESSO)
+	@Size(max=NUMERO_PROCESSO)
 	public String getNumeroProcesso() {
 		return this.numeroProcesso;
 	}
@@ -114,8 +118,8 @@ public class Processo implements java.io.Serializable {
 		this.numeroProcesso = numeroProcesso;
 	}
 
-	@Column(name = "nr_processo_origem", length=LengthConstants.NUMERO_PROCESSO)
-	@Size(max=LengthConstants.NUMERO_PROCESSO)
+	@Column(name = "nr_processo_origem", length=NUMERO_PROCESSO)
+	@Size(max=NUMERO_PROCESSO)
 	public String getNumeroProcessoOrigem() {
 		return this.numeroProcessoOrigem;
 	}
@@ -124,8 +128,8 @@ public class Processo implements java.io.Serializable {
 		this.numeroProcessoOrigem = numeroProcessoOrigem;
 	}
 
-	@Column(name = "ds_complemento", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = "ds_complemento", length=DESCRICAO_PADRAO)
+	@Size(max=DESCRICAO_PADRAO)
 	public String getComplemento() {
 		return this.complemento;
 	}
@@ -133,7 +137,7 @@ public class Processo implements java.io.Serializable {
 	public void setComplemento(String complemento) {
 		this.complemento = complemento;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	@Column(name = "dt_inicio", nullable = false)
 	@NotNull
 	public Date getDataInicio() {
@@ -143,7 +147,7 @@ public class Processo implements java.io.Serializable {
 		this.dataInicio = dataInicio;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	@Column(name = "dt_fim")
 	public Date getDataFim() {
 		return dataFim;
@@ -164,8 +168,7 @@ public class Processo implements java.io.Serializable {
 		this.duracao = duracao;
 	}	
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "processo")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "processo")
 	public List<ProcessoDocumento> getProcessoDocumentoList() {
 		return this.processoDocumentoList;
 	}
@@ -175,9 +178,8 @@ public class Processo implements java.io.Serializable {
 		this.processoDocumentoList = processoDocumentoList;
 	}
 	
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY)
-	@JoinTable(name = "tb_processo_conexao", schema = "public", joinColumns = {@JoinColumn(name = "id_processo", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "id_processo_conexo", nullable = false, updatable = false)})
+	@ManyToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY)
+	@JoinTable(name = "tb_processo_conexao", schema = PUBLIC, joinColumns = {@JoinColumn(name = "id_processo", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "id_processo_conexo", nullable = false, updatable = false)})
 	public List<Processo> getProcessoConexoListForIdProcesso() {
 		return processoConexoListForIdProcesso;
 	}
@@ -188,9 +190,8 @@ public class Processo implements java.io.Serializable {
 	}
 	
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY)
-	@JoinTable(name = "tb_processo_conexao", schema = "public", joinColumns = {@JoinColumn(name = "id_processo_conexo", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "id_processo", nullable = false, updatable = false)})
+	@ManyToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY)
+	@JoinTable(name = "tb_processo_conexao", schema = PUBLIC, joinColumns = {@JoinColumn(name = "id_processo_conexo", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "id_processo", nullable = false, updatable = false)})
 	public List<Processo> getProcessoConexoListForIdProcessoConexo() {
 		return processoConexoListForIdProcessoConexo;
 	}
@@ -200,8 +201,7 @@ public class Processo implements java.io.Serializable {
 		this.processoConexoListForIdProcessoConexo = processoConexoListForIdProcessoConexo;
 	}
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "processo")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "processo")
 	@OrderBy("dataInicio")
 	public List<Estatistica> getEstatisticaList() {
 		return estatisticaList;
@@ -247,7 +247,7 @@ public class Processo implements java.io.Serializable {
 		return actorId;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=LAZY)
 	@JoinColumn(name="id_caixa")
 	public Caixa getCaixa() {
 		return caixa;
