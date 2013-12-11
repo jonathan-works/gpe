@@ -349,19 +349,6 @@ public class UsuarioLogin implements Serializable {
 		this.temContaTwitter = temContaTwitter;
 	}
 	
-	@Transient
-	public BloqueioUsuario getUltimoBloqueio(){
-	    if (!bloqueioUsuarioList.isEmpty()){
-	        return bloqueioUsuarioList.get(bloqueioUsuarioList.size() - 1);
-	    } else {
-	        return null;
-	    }
-	}
-	
-	public boolean permaneceBloqueado(){
-	    return bloqueio && getUltimoBloqueio().getDataDesbloqueio() != null;
-	}
-	
 	@Override
 	public String toString() {
 	    return getNomeUsuario();

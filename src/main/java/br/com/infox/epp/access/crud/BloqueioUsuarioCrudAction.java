@@ -26,7 +26,7 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     public void setUsuarioAtual(UsuarioLogin usuarioAtual) {
         this.usuarioAtual = usuarioAtual;
         if (existeBloqueioAtivo()){
-            setInstance(usuarioAtual.getUltimoBloqueio());
+            setInstance(bloqueioUsuarioManager.getUltimoBloqueio(usuarioAtual));
         } else {
             newInstance();
         }
