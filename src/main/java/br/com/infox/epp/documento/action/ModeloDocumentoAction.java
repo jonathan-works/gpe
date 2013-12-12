@@ -15,21 +15,15 @@
  */
 package br.com.infox.epp.documento.action;
 
-import java.util.List;
-
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 
 import br.com.infox.core.action.ActionTemplate;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.itx.component.Util;
 
 @Name(ModeloDocumentoAction.NAME)
 @Scope(ScopeType.SESSION)
@@ -39,15 +33,8 @@ public class ModeloDocumentoAction extends ActionTemplate {
 	public static final String NAME = "modeloDocumento";
 	private static final long serialVersionUID = 1L;
 	
-	@In
-	private ModeloDocumentoManager modeloDocumentoManager;
-	
 	private ModeloDocumento modeloJbpm;
 	
-	public List<ModeloDocumento> getModeloDocumentoList() {
-		return modeloDocumentoManager.getModeloDocumentoList();
-	}
-
 	public ModeloDocumento getModeloJbpm() {
 		return modeloJbpm;
 	}
@@ -102,36 +89,6 @@ public class ModeloDocumentoAction extends ActionTemplate {
 		} else {
 			JbpmUtil.setProcessVariable(variavelModelo, valor + "," + s.toString());
 		}
-	}
-
-	public String getConteudo(int idModeloDocumento)	{
-		return getConteudo(getModeloDocumento(idModeloDocumento));
-	}
-	
-	public ModeloDocumento getModeloDocumento(int idModeloDocumento)	{
-		return modeloDocumentoManager.find(ModeloDocumento.class, idModeloDocumento);
-	}
-
-	public String getConteudo(String tituloModeloDocumento) {
-		return getConteudo(getModeloDocumento(tituloModeloDocumento));		
-	}
-
-	public ModeloDocumento getModeloDocumento(String tituloModeloDocumento)	{
-		return modeloDocumentoManager.getModeloDocumentoByTitulo(tituloModeloDocumento);
-	}
-	
-	
-	public String getConteudo(ModeloDocumento modeloDocumento) {
-		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);	
-	}
-	
-	public List<ModeloDocumento> getModeloItems(String variavel) {
-		String listaModelos = (String) new Util().eval(variavel);
-		return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
-	}
-	
-	public static ModeloDocumentoAction instance()  {
-		return (ModeloDocumentoAction) Component.getInstance(ModeloDocumentoAction.class);
 	}
 
 }
