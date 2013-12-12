@@ -7,7 +7,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
-import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.epp.imagem.manager.ImagemBinManager;
 
@@ -24,7 +23,6 @@ public class ImageFileStarter {
     }
 
     @Create
-    @Transactional
     public void init() {
         imagemBinManager.createImageFiles();
     }
