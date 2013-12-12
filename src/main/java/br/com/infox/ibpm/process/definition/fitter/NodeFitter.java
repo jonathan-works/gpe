@@ -36,6 +36,8 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
 import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.converter.NodeConverter;
@@ -43,6 +45,7 @@ import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.node.manager.JbpmNodeManager;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.transition.TransitionHandler;
+import br.com.itx.util.ComponentUtil;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -152,6 +155,10 @@ public class NodeFitter extends Fitter implements Serializable {
 		node.addExceptionHandler(exceptionHandler);
 	}
 
+	public List<ModeloDocumento> getModeloDocumentoList() {
+        return ((ModeloDocumentoManager)ComponentUtil.getComponent(ModeloDocumentoManager.NAME)).getModeloDocumentoList();
+    }
+	
 	@SuppressWarnings(WarningConstants.UNCHECKED)
 	private void handleForkNode(Node fork) {
 		try {

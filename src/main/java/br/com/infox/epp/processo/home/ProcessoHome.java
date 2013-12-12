@@ -37,10 +37,10 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.home.ProcessoDocumentoHome;
@@ -249,7 +249,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	public void updateProcessoDocumentoBin() {
 		String modelo = "";
 		if(taskInstancePossuiModeloDocumento()) {
-			modelo = ModeloDocumentoAction.instance().getConteudo(modeloDocumento);
+		    ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+			modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
 		}
 		processoDocumentoBin.setModeloDocumento(modelo);
 	}
