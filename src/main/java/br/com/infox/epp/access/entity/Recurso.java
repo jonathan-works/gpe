@@ -1,27 +1,19 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.core.constants.LengthConstants.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "tb_recurso", schema=PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))
@@ -32,8 +24,16 @@ public class Recurso implements java.io.Serializable {
     private int idRecurso;
     private String nome;
     private String identificador;
-
-    private List<Papel> papeis = new ArrayList<>();
+    
+    public Recurso(){
+        
+    }
+    
+    public Recurso(String nome, String identificador){
+        this.nome = nome;
+        this.identificador = identificador;
+        
+    }
 
     @SequenceGenerator(name = GENERATOR, sequenceName = "public.sq_tb_recurso")
     @Id
@@ -68,18 +68,6 @@ public class Recurso implements java.io.Serializable {
         this.identificador = identificador;
     }
     
-    @ManyToMany
-    @JoinTable(name = "tb_acesso", schema=PUBLIC, joinColumns = @JoinColumn(name = "id_recurso"), inverseJoinColumns = @JoinColumn(name = "id_papel"))
-    @ForeignKey(name="tb_acesso_tb_recurso_fk", inverseName = "tb_acesso_tb_papel_fk " )
-    @OrderBy("nome")
-    public List<Papel> getPapeis() {
-        return this.papeis;
-    }
-
-    public void setPapeis(List<Papel> papeis) {
-        this.papeis = papeis;
-    }
-
     @Override
     public String toString() {
         if (this.nome == null) {
