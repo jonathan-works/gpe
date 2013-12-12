@@ -15,7 +15,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.documento.action.ModeloDocumentoAction;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.dao.VariavelDAO;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
@@ -41,7 +40,7 @@ public class ModeloDocumentoManager extends GenericManager{
 	
 	public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento){
 		if(modeloDocumento != null) {
-		    return ModeloDocumentoAction.instance().getConteudo(modeloDocumento);
+		    return evaluateModeloDocumento(modeloDocumento);
 		} else {
 		    return "";
 		}
@@ -137,5 +136,10 @@ public class ModeloDocumentoManager extends GenericManager{
 		}
 		return map;
 	}
+
+    public String getConteudo(int idModeloDocumento)	{
+    	final ModeloDocumento modeloDocumento = find(ModeloDocumento.class, idModeloDocumento);
+        return evaluateModeloDocumento(modeloDocumento);
+    }
 
 }
