@@ -35,7 +35,6 @@ public class Papel implements java.io.Serializable {
 	private int idPapel;
 	private String nome;
 	private String identificador;
-	private boolean condicional;
 
 	private List<Papel> grupos;
 
@@ -87,16 +86,6 @@ public class Papel implements java.io.Serializable {
 
 	public void setGrupos(List<Papel> grupos) {
 		this.grupos = grupos;
-	}
-
-	@RoleConditional
-	@Column(name = "in_condicional")
-	public boolean isCondicional() {
-		return condicional;
-	}
-
-	public void setCondicional(boolean condicional) {
-		this.condicional = condicional;
 	}
 
 	@Override
