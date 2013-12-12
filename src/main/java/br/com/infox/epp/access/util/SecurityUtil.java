@@ -27,13 +27,13 @@ public class SecurityUtil {
 	public boolean checkPage() {
 		HttpServletRequest request = ServletContexts.instance().getRequest();
 		String servletPath = request.getServletPath();
-		boolean hasRole = Identity.instance().hasRole(PAGES_PREFIX + servletPath);
-		if (!hasRole) {
+		boolean hasPermission = Identity.instance().hasPermission(PAGES_PREFIX + servletPath, "access");
+		if (!hasPermission) {
 			LOG.info(MessageFormat.format(
 					"Bloqueado o acesso do perfil ''{0}'' para página ''{1}''.",
 					Contexts.getSessionContext().get("identificadorPapelAtual"), servletPath));
 		}
-		return hasRole;
+		return hasPermission;
 	}
 	
 	public static SecurityUtil instance() {
