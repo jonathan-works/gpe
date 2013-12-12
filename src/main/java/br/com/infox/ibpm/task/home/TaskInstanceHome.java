@@ -544,6 +544,11 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
+    public List<ModeloDocumento> getModeloItems(String variavel) {
+        String listaModelos = (String) new Util().eval(variavel);
+        return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
+    }
+    
     public void assignModeloDocumento(final String id) {
         String modelo = "";
         if ( modeloDocumento != null) {
