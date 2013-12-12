@@ -25,7 +25,7 @@
 					
 					<a:ajax event="click"
 						 listener="#{nodeFitter.currentNode.removeListaEmail(row)}"
-						 onbeforesubmit="if(!confirm('Confirma?')) return false;"
+						 onbeforesubmit="return confirm('Confirma?');"
 						 execute="@this"
 						 render="mailDiv"
 						 limitRender="true" />
@@ -163,7 +163,7 @@
 				 id="modeloDocumento"
 				 label="#{messages['processBuilder.tituloModeloDocumento']}"
 				 value="#{nodeFitter.currentNode.modeloDocumento}"
-				 items="#{modeloDocumento.modeloDocumentoList}"
+				 items="#{nodeFitter.modeloDocumentoList}"
 				 showLabelTodos="true">
 				
 				<a:ajax
