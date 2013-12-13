@@ -45,7 +45,7 @@ public class GenericDAO implements Serializable {
 	 * @param id do registro
 	 * @return objeto encontrado.
 	 */
-	public <T> T find(Class<T> c, Object id) {
+	public <T> T find(final Class<T> c, final Object id) {
 		return entityManager.find(c, id);
 	}
 	
@@ -55,7 +55,7 @@ public class GenericDAO implements Serializable {
 	 * @param o objeto a ser verificado.
 	 * @return true se contiver.
 	 */
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		return entityManager.contains(o);
 	}
 	
@@ -66,22 +66,22 @@ public class GenericDAO implements Serializable {
 	 * @return lista de todos os registros da entidade
 	 */
 	@SuppressWarnings(UNCHECKED)
-	public <T> List<T> findAll(Class<T> clazz) {
-		StringBuilder sb = new StringBuilder();
+	public <T> List<T> findAll(final Class<T> clazz) {
+		final StringBuilder sb = new StringBuilder();
 		sb.append("select o from ").append(clazz.getName()).append(" o");
 		return entityManager.createQuery(sb.toString()).getResultList();
 	}
 	
 	@SuppressWarnings(UNCHECKED)
-	protected <T> List<T> getNamedResultList(String namedQuery,
-			Map<String, Object> parameters) {
+	protected <T> List<T> getNamedResultList(final String namedQuery,
+			final Map<String, Object> parameters) {
 		Query q = getNamedQuery(namedQuery, parameters);
 		return q.getResultList();
 	}
 
 	@SuppressWarnings(UNCHECKED)
-	protected <T> T getNamedSingleResult(String namedQuery,
-			Map<String, Object> parameters) {
+	protected <T> T getNamedSingleResult(final String namedQuery,
+			final Map<String, Object> parameters) {
 		Query q = getNamedQuery(namedQuery, parameters)
 		        .setMaxResults(1);
         List<T> list = q.getResultList();
@@ -91,9 +91,9 @@ public class GenericDAO implements Serializable {
         return list.get(0);
 	}
 
-	protected Query getNamedQuery(String namedQuery,
-			Map<String, Object> parameters) {
-		Query q = entityManager.createNamedQuery(namedQuery);
+	protected Query getNamedQuery(final String namedQuery,
+			final Map<String, Object> parameters) {
+		final Query q = entityManager.createNamedQuery(namedQuery);
 		if(parameters != null) {
 			for (Entry<String, Object> e : parameters.entrySet()) {
 				q.setParameter(e.getKey(), e.getValue());
@@ -103,7 +103,7 @@ public class GenericDAO implements Serializable {
 	}
 	
 	@Transactional
-	public <T> T persist(T object) throws DAOException{
+	public <T> T persist(final T object) throws DAOException{
 	    try {
 	        entityManager.persist(object);
             entityManager.flush();
@@ -116,7 +116,7 @@ public class GenericDAO implements Serializable {
 	}
 
     @Transactional
-	public <T> T update(T object) throws DAOException{
+	public <T> T update(final T object) throws DAOException{
         try {
             final T res = entityManager.merge(object);
             entityManager.flush();
@@ -154,5 +154,30 @@ public class GenericDAO implements Serializable {
     protected EntityManager getEntityManager() {
         return entityManager;
     }
-	
+    
+    protected Query createQuery(final String query, final Map<String,Object> parameters) {
+        final Query q = entityManager.createQuery(query);
+        if(parameters != null) {
+            for (Entry<String, Object> e : parameters.entrySet()) {
+                q.setParameter(e.getKey(), e.getValue());
+            }
+        }
+        return q;
+    }
+ 
+    @SuppressWarnings(UNCHECKED)
+    public <T> List<T> getResultList(final String query, final Map<String,Object> parameters) {
+        return createQuery(query, parameters).getResultList();
+    }
+    
+    @SuppressWarnings(UNCHECKED)
+    public <T> T getSingleResult(final String query, final Map<String,Object> parameters) {
+        final Query q = createQuery(query, parameters).setMaxResults(1);
+        final List<T> list = q.getResultList();
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        return list.get(0);
+    }
+    
 }
