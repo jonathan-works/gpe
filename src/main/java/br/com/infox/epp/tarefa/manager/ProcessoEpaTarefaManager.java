@@ -16,6 +16,8 @@ import br.com.infox.core.util.DateRange;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.tarefa.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
@@ -29,6 +31,7 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
 public class ProcessoEpaTarefaManager extends GenericManager {
 
     private static final int PORCENTAGEM_MAXIMA = 100;
+    private static final int HOURS_OF_DAY = 24;
 
     private static final long serialVersionUID = 7702766272346991620L;
 
@@ -36,6 +39,7 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 
 	@In private ProcessoEpaTarefaDAO processoEpaTarefaDAO;
 	@In private LocalizacaoTurnoDAO localizacaoTurnoDAO;
+	@In private ProcessoEpaDAO processoEpaDAO;
 	
 	public ProcessoEpaTarefa getByTaskInstance(Long taskInstance) {
 		return processoEpaTarefaDAO.getByTaskInstance(taskInstance);
@@ -113,8 +117,31 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 			processoEpaTarefa.setTempoGasto(tempoGasto);
 			processoEpaTarefa.setUltimoDisparo(fireTime);
             update(processoEpaTarefa);
+            updateTempoGasto(processoEpa);
 		}
 	}
+	
+	public void updateTempoGasto(ProcessoEpa processoEpa) throws DAOException {
+        Map<String, Object> result = processoEpaDAO.getTempoGasto(processoEpa);
+        
+        if (result != null) {
+            Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+            Long dias = (Long)result.get("dias");
+            Long tempoGasto = ((Long)result.get("horas"))/HOURS_OF_DAY;
+            if (dias != null) {
+                tempoGasto += dias;
+            }
+            processoEpa.setTempoGasto(tempoGasto.intValue());
+        
+            if(f.getQtPrazo() != null && f.getQtPrazo() != 0) {
+                processoEpa.setPorcentagem((processoEpa.getTempoGasto()*PORCENTAGEM_MAXIMA) / f.getQtPrazo());
+            }
+            if (processoEpa.getPorcentagem() > PORCENTAGEM_MAXIMA) {
+                processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+            }
+            processoEpaDAO.update(processoEpa);
+        }
+    }
 	
 	/**
 	 * Calcula o tempo a incrementar no {@link ProcessoEpaTarefa} de acordo 
