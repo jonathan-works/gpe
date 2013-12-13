@@ -14,13 +14,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.ForeignKey;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.jboss.seam.annotations.security.management.RoleConditional;
+import org.hibernate.annotations.ForeignKey;
 import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
 

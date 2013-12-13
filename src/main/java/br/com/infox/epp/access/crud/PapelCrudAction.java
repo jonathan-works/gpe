@@ -22,6 +22,9 @@ import org.jboss.seam.security.Role;
 import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.action.RoleAction;
+import org.jboss.seam.security.permission.PermissionManager;
+import org.jboss.seam.security.permission.PermissionMapper;
+import org.jboss.seam.security.permission.action.PermissionSearch;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.crud.AbstractCrudAction;
@@ -213,7 +216,10 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	public List<String> getRecursos() {
 		if (recursos == null) {
 			if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
-				recursos = IdentityManager.instance().getRoleGroups(getInstance().getIdentificador());
+			    PermissionSearch ps = new PermissionSearch();
+			    String recurso = ps.getActions(new Role(getInstance().getIdentificador()));
+			    System.out.println(recurso);
+//				recursos = IdentityManager.instance().getRoleGroups(getInstance().getIdentificador());
 				removePapeis(recursos);
 			} else {
 				recursos = new ArrayList<String>();
