@@ -1,16 +1,13 @@
 package br.com.infox.epp.estatistica.timer;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
+import java.util.HashMap;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.contexts.Contexts;
 
-import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 public final class TimerUtil {
     
@@ -25,16 +22,16 @@ public final class TimerUtil {
 	 * @param nome - Nome do parametro
 	 * @return Valor do parametro
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)	
-	public static String getParametro(String nome) {
+	public static String getParametro(final String nome) {
 		String valor = ComponentUtil.getComponent(nome, ScopeType.APPLICATION);
 		if (valor == null) {
-			EntityManager em = EntityUtil.getEntityManager();
-			List<Parametro> resultList = em.createQuery(
-				"select p from Parametro p where " +
-					"nomeVariavel = :nome").setParameter("nome", nome).getResultList();
-			if (!resultList.isEmpty()) {
-				valor = resultList.get(0).getValorVariavel();
+		    final GenericDAO dao = ComponentUtil.getComponent(GenericDAO.NAME);
+			final HashMap<String,Object> params = new HashMap<>();
+			params.put("nome", nome);
+		    final String hql = "select p from Parametro p where nomeVariavel = :nome";
+		    final Parametro result = dao.getSingleResult(hql, params);
+			if (result != null) {
+				valor = result.getValorVariavel();
 				Contexts.getApplicationContext().set(nome, valor);
 			}
 		}
