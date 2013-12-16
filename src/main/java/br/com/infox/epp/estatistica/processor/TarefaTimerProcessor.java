@@ -43,7 +43,6 @@ public class TarefaTimerProcessor extends BamTimerProcessor {
 	@Asynchronous
 	@Transactional
 	public QuartzTriggerHandle increaseTimeSpent(@IntervalCron String cron) {
-	    System.out.println("Iniciou Tarefas");
 		return updateTarefasNaoFinalizadas(PrazoEnum.H);
 	}
 	
