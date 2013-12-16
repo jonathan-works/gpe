@@ -33,20 +33,20 @@ public class RecursoManager extends GenericManager {
         return recursoDAO.getRecursosWithoutPermissoes(permissoes);
     }
     
-    public List<String> getNomeRecursosFromPermissoes(List<Permissao> permissoes){
+    public List<String> getIdentificadorRecursosFromPermissoes(List<Permissao> permissoes){
         List<Recurso> recursos = recursoDAO.getRecursosFromPermissoes(permissoes);
         List<String> nomes = new ArrayList<>();
         for (Recurso recurso : recursos){
-            nomes.add(recurso.getNome());
+            nomes.add(recurso.getIdentificador());
         }
         return nomes;
     }
     
-    public List<String> getNomeRecursosWithoutPermissoes(List<Permissao> permissoes){
+    public List<String> getIdentificadorRecursosWithoutPermissoes(List<Permissao> permissoes){
         List<Recurso> recursos = recursoDAO.getRecursosWithoutPermissoes(permissoes);
         List<String> nomes = new ArrayList<>();
         for (Recurso recurso : recursos){
-            nomes.add(recurso.getNome());
+            nomes.add(recurso.getIdentificador());
         }
         return nomes;
     }
