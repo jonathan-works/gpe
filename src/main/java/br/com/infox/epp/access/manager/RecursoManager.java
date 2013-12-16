@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.manager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -30,6 +31,24 @@ public class RecursoManager extends GenericManager {
     
     public List<Recurso> getRecursosWithoutPermissoes(List<Permissao> permissoes){
         return recursoDAO.getRecursosWithoutPermissoes(permissoes);
+    }
+    
+    public List<String> getNomeRecursosFromPermissoes(List<Permissao> permissoes){
+        List<Recurso> recursos = recursoDAO.getRecursosFromPermissoes(permissoes);
+        List<String> nomes = new ArrayList<>();
+        for (Recurso recurso : recursos){
+            nomes.add(recurso.getNome());
+        }
+        return nomes;
+    }
+    
+    public List<String> getNomeRecursosWithoutPermissoes(List<Permissao> permissoes){
+        List<Recurso> recursos = recursoDAO.getRecursosWithoutPermissoes(permissoes);
+        List<String> nomes = new ArrayList<>();
+        for (Recurso recurso : recursos){
+            nomes.add(recurso.getNome());
+        }
+        return nomes;
     }
 
 }

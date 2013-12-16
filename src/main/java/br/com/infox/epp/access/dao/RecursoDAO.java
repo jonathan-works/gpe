@@ -1,6 +1,7 @@
 package br.com.infox.epp.access.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -27,6 +28,9 @@ public class RecursoDAO extends GenericDAO {
     
     public List<Recurso> getRecursosFromPermissoes(List<Permissao> permissoes){
         List<String> identificadores = getListaIdentificadoresFromPermissoes(permissoes);
+        if (identificadores == null || identificadores.isEmpty()){
+            return Collections.emptyList();
+        }
         String hql = "select distinct o from Recurso o where o.identificador in (:identificadores)";
         return getEntityManager().createQuery(hql, Recurso.class)
                 .setParameter("identificadores", identificadores).getResultList();
@@ -34,6 +38,9 @@ public class RecursoDAO extends GenericDAO {
     
     public List<Recurso> getRecursosWithoutPermissoes(List<Permissao> permissoes){
         List<String> identificadores = getListaIdentificadoresFromPermissoes(permissoes);
+        if (identificadores == null || identificadores.isEmpty()){
+            return Collections.emptyList();
+        }
         String hql = "select distinct o from Recurso o where o.identificador not in (:identificadores)";
         return getEntityManager().createQuery(hql, Recurso.class)
                 .setParameter("identificadores", identificadores).getResultList();
