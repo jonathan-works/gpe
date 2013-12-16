@@ -248,15 +248,13 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 
     public List<String> getRecursosDisponiveis() {
         if (recursosDisponiveis == null) {
+            recursosDisponiveis = new ArrayList<>();
             if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
-                recursosDisponiveis = new ArrayList<>();
                 List<Recurso> listaRecursos = recursoManager.findAll(Recurso.class);
                 for (Recurso recurso : listaRecursos){
                     recursosDisponiveis.add(recurso.getIdentificador());
                 }
-            } else {
-                recursosDisponiveis = new ArrayList<String>();
-            }
+            } 
         }
 		return recursosDisponiveis;
 	}
