@@ -23,14 +23,16 @@ import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.action.RoleAction;
 import org.jboss.seam.security.permission.PermissionManager;
-import org.jboss.seam.security.permission.PermissionMapper;
-import org.jboss.seam.security.permission.action.PermissionSearch;
 
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.Permissao;
+import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.entity.RolesMap;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -46,6 +48,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 
 	private Map<Boolean, List<String>> papeisDisponiveis;
 	private Map<String, Papel> papelMap;
+	private Map<String, Recurso> recursoMap;
 
 	private List<String> membros;
 	private Map<String, Papel> membrosMap;
@@ -60,6 +63,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	private boolean acceptChange=false;
 	
 	@In private PapelManager papelManager;
+	@In private RecursoManager recursoManager;
 	
 	public Integer getPapelId() {
 		return (Integer) getId();
@@ -213,14 +217,12 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		return papeisDisponiveis.get(removeMembros);
 	}
 
-	public List<String> getRecursos() {
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+    public List<String> getRecursos() {
 		if (recursos == null) {
 			if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
-			    PermissionSearch ps = new PermissionSearch();
-			    String recurso = ps.getActions(new Role(getInstance().getIdentificador()));
-			    System.out.println(recurso);
-//				recursos = IdentityManager.instance().getRoleGroups(getInstance().getIdentificador());
-				removePapeis(recursos);
+                List<Permissao> permissoes = (List<Permissao>) PermissionManager.instance().getPermissoesFromRole(new Role(getInstance().getIdentificador()));
+				recursos = recursoManager.getNomeRecursosFromPermissoes(permissoes);
 			} else {
 				recursos = new ArrayList<String>();
 			}
@@ -245,27 +247,17 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
     }
 
     public List<String> getRecursosDisponiveis() {
-		if (recursosDisponiveis == null) {
-			recursosDisponiveis = getRoleaction().getAssignableRoles();
-			removePapeisImplicitos(recursosDisponiveis, getPapeis());
-			removePapeisImplicitos(recursos, getPapeis());
-			removePapeis(recursosDisponiveis);
-			if (papelMap == null) {
-				papelMap = new HashMap<String, Papel>();
-			}
-			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(recursosDisponiveis);
-			for (Papel p : papelList) {
-				papelMap.put(p.getIdentificador(), p);
-			}
-			Collections.sort(recursosDisponiveis, new Comparator<String>(){
-				@Override
-				public int compare(String o1, String o2) {
-					String n1 = papelMap.get(o1).toString();
-					String n2 = papelMap.get(o2).toString();
-					return n1.compareTo(n2);
-				}
-			});
-		}
+        if (recursosDisponiveis == null) {
+            if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
+                recursosDisponiveis = new ArrayList<>();
+                List<Recurso> listaRecursos = recursoManager.findAll(Recurso.class);
+                for (Recurso recurso : listaRecursos){
+                    recursosDisponiveis.add(recurso.getIdentificador());
+                }
+            } else {
+                recursosDisponiveis = new ArrayList<String>();
+            }
+        }
 		return recursosDisponiveis;
 	}
 
@@ -278,15 +270,6 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		}
 	}
 	
-	private void removePapeis(List<String> roles) {
-		for (Iterator<String> iterator = roles.iterator(); iterator.hasNext();) {
-			String papelId = iterator.next();
-			if (!papelId.startsWith("/")) {
-				iterator.remove();
-			}
-		}
-	}
-
 	private void removePapeisImplicitos(List<String> list, List<String> from) {
 		if (from == null) {
 			return;
