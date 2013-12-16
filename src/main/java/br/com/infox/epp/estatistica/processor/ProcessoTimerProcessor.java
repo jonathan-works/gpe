@@ -1,6 +1,5 @@
 package br.com.infox.epp.estatistica.processor;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -8,15 +7,10 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.annotations.async.Asynchronous;
 import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
 
-import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.estatistica.abstracts.BamTimerProcessor;
+import br.com.infox.epp.estatistica.manager.BamTimerManager;
 import br.com.infox.epp.estatistica.startup.ProcessoTimerStarter;
-import br.com.infox.epp.estatistica.timer.TimerUtil;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
@@ -30,21 +24,15 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
  */
 @Name(ProcessoTimerProcessor.NAME)
 @AutoCreate
-public class ProcessoTimerProcessor {
+public class ProcessoTimerProcessor extends BamTimerProcessor {
 
-	private static final LogProvider LOG = Logging
-			.getLogProvider(ProcessoTimerProcessor.class);
 	public static final String NAME = "processoTimerProcessor";
 
 	@In
-	private ProcessoEpaManager processoEpaManager;
-	@In
 	private ProcessoEpaTarefaManager processoEpaTarefaManager;
-
-	public static ProcessoTimerProcessor instance() {
-		return (ProcessoTimerProcessor) Component.getInstance(NAME);
-	}
-
+	@In
+    private BamTimerManager bamTimerManager;
+	
 	/**
 	 * Incrementa o tempo de cada tarefa, verificando seus turnos.
 	 * 
@@ -54,31 +42,23 @@ public class ProcessoTimerProcessor {
 	 */
 	@Asynchronous
 	@Transactional
-	public QuartzTriggerHandle increaseProcessTimeSpent(
-			@IntervalCron String cron) {
-		String idTaskTimer = null;
-		idTaskTimer = TimerUtil
-				.getParametro(ProcessoTimerStarter.ID_INICIAR_PROCESSO_TIMER_PARAMETER);
-		QuartzTriggerHandle handle = new QuartzTriggerHandle(idTaskTimer);
-		Trigger trigger = null;
-		try {
-			trigger = handle.getTrigger();
-		} catch (SchedulerException e) {
-			LOG.error("ProcessoTimerProcessor.increaseProcessTimeSpent()", e);
-		}
-		if (trigger != null) {
-		    try {
-                processoEpaTarefaManager.updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), PrazoEnum.D);
-            } catch (DAOException e) {
-                LOG.error(".increaseProcessTimeSpent()", e);
-            }
-		    try {
-                processoEpaManager.updateTempoGastoProcessoEpa();
-            } catch (DAOException e) {
-                LOG.error(".increaseProcessTimeSpent()", e);
-            }
-		}
-		return null;
+	public QuartzTriggerHandle increaseTimeSpent(@IntervalCron String cron) {
+		return updateTarefasNaoFinalizadas(PrazoEnum.D);
 	}
 
+	@Override
+	protected BamTimerManager getBamTimerManager() {
+	    return bamTimerManager;
+	}
+	
+	@Override
+	protected ProcessoEpaTarefaManager getProcessoEpaTarefamanager() {
+	    return processoEpaTarefaManager;
+	}
+	
+	@Override
+	protected String getParameterName() {
+	    return ProcessoTimerStarter.ID_INICIAR_PROCESSO_TIMER_PARAMETER;
+	}
+	
 }
