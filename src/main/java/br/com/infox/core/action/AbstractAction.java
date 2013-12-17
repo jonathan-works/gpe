@@ -9,13 +9,13 @@ import javax.validation.ConstraintViolationException;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.messages.MessagesHandler;
+import br.com.infox.core.messages.MessagesInterface;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
@@ -38,6 +38,7 @@ public abstract class AbstractAction <T> {
 	
 	@In
 	private GenericManager genericManager;
+	protected MessagesInterface messagesHandler = MessagesHandler.getInstance();
 	
 	protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
@@ -79,10 +80,10 @@ public abstract class AbstractAction <T> {
 	}
 	
 	private String handleBeanViolationException(ConstraintViolationException e) {
-		FacesMessages.instance().clear();
+	    messagesHandler.clearMessages();
 		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-			String message = MessageFormat.format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());
-			FacesMessages.instance().add(message);
+			final String message = MessageFormat.format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());
+			messagesHandler.addMessage(message);
 		}
 		return null;
 	}
@@ -91,15 +92,15 @@ public abstract class AbstractAction <T> {
 		PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
 		if (errorCode != null) {
 			String ret = errorCode.toString();
-			FacesMessages.instance().clear();
-			FacesMessages.instance().add(daoException.getLocalizedMessage());
+			messagesHandler.clearMessages();
+			messagesHandler.addMessage(daoException.getLocalizedMessage());
 			return ret;
 		} else {
 			Throwable cause = daoException.getCause();
 			if (cause instanceof ConstraintViolationException) {
 				return handleBeanViolationException((ConstraintViolationException) cause);
 			} else {
-				FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " + cause.getMessage(), cause);
+			    messagesHandler.addMessage(StatusMessage.Severity.ERROR, "Erro ao gravar: " + cause.getMessage(), cause);
 			}
 		}
 		return null;
@@ -157,24 +158,28 @@ public abstract class AbstractAction <T> {
 		if(EntityUtil.isEntity(t)) {
 			try {
 			    if (t instanceof Recursive) {
-			        inactiveRecursive((Recursive<?>)t);
+                    inactiveRecursive((Recursive<?>) t);
 			    } else {
 			    	ComponentUtil.setValue(t, "ativo", false);
 			    }
 				ret = flushObject(t, false);
-				FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
+				messagesHandler.addMessage(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
 				LOG.info(".inactive(" + t + ")" + getObjectClassName(t) + 
 						"): " + sw.getTime());
 			} catch(Exception e) {
 			    LOG.error(".inactive()", e);
-				FacesMessages.instance().add(StatusMessage.Severity.INFO, "Erro ao definir a propriedade " +
-						"ativo na entidade: "+getObjectClassName(t)+". Verifique se esse " +
-						"campo existe.");
+				messagesHandler.addMessage(StatusMessage.Severity.INFO, "Erro ao definir a propriedade " +
+                        "ativo na entidade: "+getObjectClassName(t)+". Verifique se esse " +
+                        "campo existe.");
 			}
 		} else {
-			FacesMessages.instance().add(StatusMessage.Severity.INFO, "Objeto informado não é uma entidade.");
+		    messagesHandler.addMessage(StatusMessage.Severity.INFO, "Objeto informado não é uma entidade.");
 		}
 		return ret;
+	}
+	
+	protected final void setMessagesInterface(MessagesInterface messages) {
+	    this.messagesHandler = messages;
 	}
 	
 	/**
@@ -184,12 +189,11 @@ public abstract class AbstractAction <T> {
 	 * @return 
 	 */
 	@Transactional
-	@SuppressWarnings(WarningConstants.UNCHECKED)
-	protected void inactiveRecursive(Recursive<?> o) {
+	protected <R extends Recursive<R>> void inactiveRecursive(Recursive<R> o) {
 		ComponentUtil.setValue(o, "ativo", false);
-		List<Recursive<?>> childList = (List<Recursive<?>>) o.getChildList();
+		List<R> childList = o.getChildList();
 		if (childList != null) {
-			for (Recursive<?> child : childList) {
+			for (R child : childList) {
 				inactiveRecursive(child);
 			}
 		}
@@ -204,8 +208,12 @@ public abstract class AbstractAction <T> {
 		return t != null ? t.getClass().getName() : "";
 	}
 	
-	protected GenericManager getGenericManager() {
+	protected final GenericManager getGenericManager() {
         return genericManager;
     }
+	
+	protected final void setGenericManager(final GenericManager genericManager) {
+	    this.genericManager=genericManager;
+	}
 	
 }
