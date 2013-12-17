@@ -83,7 +83,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	public void setId(Object id) {
 		if(id != null && !id.equals(this.id)) {
 			this.id = id;
-			setInstance(find((Class<T>)getClass().getGenericSuperclass(), this.id));
+			setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
 			tab = TAB_FORM;
 		}
 	}
