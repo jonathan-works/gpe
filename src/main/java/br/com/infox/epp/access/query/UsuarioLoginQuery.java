@@ -1,6 +1,19 @@
 package br.com.infox.epp.access.query;
 
 public interface UsuarioLoginQuery {
+    
+    //Entity Mapping
+    String TABLE_USUARIO_LOGIN = "tb_usuario_login";
+    String SEQUENCE_USUARIO = "public.sq_tb_usuario";
+    String ID_USUARIO = "id_usuario_login";
+    String LOGIN = "ds_login";
+    String EMAIL = "ds_email";
+    String SENHA = "ds_senha";
+    String NOME_USUARIO = "nm_usuario";
+    String TIPO_USUARIO = "tp_usuario";
+    String BLOQUEIO = "in_bloqueio";
+    String PROVISORIO = "in_provisorio";
+    String DATA_EXPIRACAO = "dt_expiracao_usuario";
 
 	String PARAM_LOGIN = "login";
 	String PARAM_ID_TASK_INSTANCE = "idTaskInstance";

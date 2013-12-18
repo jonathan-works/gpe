@@ -12,7 +12,6 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioLoginDAO.NAME)
@@ -40,9 +39,9 @@ public class UsuarioLoginDAO extends GenericDAO {
 	
 	public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance, String actorId) {
 		Map<String,Object> parameters = new HashMap<String,Object>();
-		parameters.put(UsuarioLoginQuery.PARAM_LOGIN, actorId);
+		parameters.put(PARAM_LOGIN, actorId);
 		parameters.put(PARAM_ID_TASK_INSTANCE, idTaskInstance);
-		return getNamedSingleResult(UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE, parameters);
+		return getNamedSingleResult(USUARIO_BY_LOGIN_TASK_INSTANCE, parameters);
 	}
 	
 	public void inativarUsuario(UsuarioLogin usuario) {

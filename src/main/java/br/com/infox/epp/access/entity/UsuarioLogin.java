@@ -1,11 +1,31 @@
 package br.com.infox.epp.access.entity;
 
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.*;
-import static javax.persistence.TemporalType.*;
-import static br.com.infox.core.constants.LengthConstants.*;
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.core.constants.LengthConstants.FLAG;
+import static br.com.infox.core.constants.LengthConstants.NOME_ATRIBUTO;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.BLOQUEIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.DATA_EXPIRACAO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.EMAIL;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.ID_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.LOGIN;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.PROVISORIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.SENHA;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.SEQUENCE_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.TABLE_USUARIO_LOGIN;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.TIPO_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_QUERY;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,17 +53,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.ForeignKey;
-
-import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
-
 import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -53,7 +70,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
 
 @Entity
-@Table(name=UsuarioLogin.TABLE_NAME, schema=PUBLIC , uniqueConstraints = @UniqueConstraint(columnNames = "ds_login"))
+@Table(name=TABLE_USUARIO_LOGIN, schema=PUBLIC , uniqueConstraints = @UniqueConstraint(columnNames = LOGIN))
 @NamedQueries(value={
 	@NamedQuery(name=USUARIO_LOGIN_NAME, query=USUARIO_LOGIN_QUERY),
 	@NamedQuery(name=USUARIO_BY_LOGIN_TASK_INSTANCE, query=USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY)
@@ -61,7 +78,6 @@ import br.com.infox.epp.system.entity.EntityLog;
 public class UsuarioLogin implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "tb_usuario_login"; 
 
 	private Integer idUsuarioLogin;
 	private String email;
@@ -92,10 +108,10 @@ public class UsuarioLogin implements Serializable {
 		dataExpiracao = null;
 	}
 	
-	@SequenceGenerator(name = GENERATOR, sequenceName = "public.sq_tb_pessoa")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO)
     @Id
     @GeneratedValue(generator=GENERATOR)
-    @Column(name="id_usuario_login", unique=true, nullable=false)
+    @Column(name=ID_USUARIO, unique=true, nullable=false)
     public Integer getIdUsuarioLogin() {
         return idUsuarioLogin;
     }
@@ -103,7 +119,7 @@ public class UsuarioLogin implements Serializable {
         this.idUsuarioLogin = idUsuarioLogin;
     }
     
-    @Column(name = "ds_email", length=DESCRICAO_PADRAO, unique = true, nullable = false)
+    @Column(name = EMAIL, length=DESCRICAO_PADRAO, unique = true, nullable = false)
     @Size(max=DESCRICAO_PADRAO)
     @NotNull
     public String getEmail() {
@@ -114,7 +130,7 @@ public class UsuarioLogin implements Serializable {
         this.email = email;
     }
 
-	@Column(name = "ds_senha", length=DESCRICAO_PADRAO)
+	@Column(name = SENHA, length=DESCRICAO_PADRAO)
 	@Size(max=DESCRICAO_PADRAO)
 	@UserPassword(hash = "SHA")
 	public String getSenha() {
@@ -125,7 +141,7 @@ public class UsuarioLogin implements Serializable {
 		this.senha = senha;
 	}
 
-	@Column(name = "ds_login", unique = true, nullable = false, length=DESCRICAO_PADRAO)
+	@Column(name = LOGIN, unique = true, nullable = false, length=DESCRICAO_PADRAO)
 	@Size(max=DESCRICAO_PADRAO)
 	@NotNull
 	@UserPrincipal
@@ -137,7 +153,7 @@ public class UsuarioLogin implements Serializable {
 		this.login = login;
 	}
 	
-	@Column(name="nm_usuario", nullable=false, length=NOME_ATRIBUTO)
+	@Column(name=NOME_USUARIO, nullable=false, length=NOME_ATRIBUTO)
     @Size(max=NOME_ATRIBUTO)
     public String getNomeUsuario() {
         return nomeUsuario;
@@ -154,7 +170,7 @@ public class UsuarioLogin implements Serializable {
         this.ativo = ativo;
     }
 
-    @Column(name="tp_usuario", length=LengthConstants.FLAG, nullable=false)
+    @Column(name=TIPO_USUARIO, length=FLAG, nullable=false)
     @Enumerated(EnumType.STRING)
     public UsuarioEnum getTipoUsuario() {
         return tipoUsuario;
@@ -176,7 +192,7 @@ public class UsuarioLogin implements Serializable {
 
     @UserRoles
 	@ManyToMany
-	@JoinTable(name = "tb_usuario_papel", schema="public", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_papel"))
+	@JoinTable(name = "tb_usuario_papel", schema=PUBLIC, joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_papel"))
 	@ForeignKey(name="tb_usuario_papel_usuario_fk", inverseName = "tb_usuario_papel_papel_fk" )
 	public Set<Papel> getPapelSet() {
 		return this.papelSet;
@@ -212,7 +228,7 @@ public class UsuarioLogin implements Serializable {
 		return result;
 	}
 
-	@Column(name = "in_bloqueio", nullable = false)
+	@Column(name = BLOQUEIO, nullable = false)
 	@NotNull
 	public Boolean getBloqueio() {
 		return this.bloqueio;
@@ -222,7 +238,7 @@ public class UsuarioLogin implements Serializable {
 		this.bloqueio = bloqueio;
 	}
 
-	@Column(name = "in_provisorio")
+	@Column(name = PROVISORIO)
 	public Boolean getProvisorio() {
 		return this.provisorio;
 	}
@@ -232,7 +248,7 @@ public class UsuarioLogin implements Serializable {
 	}
 	
 	@Temporal(TIMESTAMP)
-	@Column(name = "dt_expiracao_usuario", nullable=true)
+	@Column(name = DATA_EXPIRACAO, nullable=true)
 	public Date getDataExpiracao() {
 		return dataExpiracao;
 	}
