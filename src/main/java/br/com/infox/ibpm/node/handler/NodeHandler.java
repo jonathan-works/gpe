@@ -185,7 +185,7 @@ public class NodeHandler implements Serializable {
 		if (s.length > 2) {
 			unit = s[2];
 		}
-		dueDateUnit = UnitsEnum.valueOf(unit.toUpperCase());
+		dueDateUnit = UnitsEnum.valueOf(unit);
 	}
 
 	public CreateTimerAction getCurrentTimer() {
