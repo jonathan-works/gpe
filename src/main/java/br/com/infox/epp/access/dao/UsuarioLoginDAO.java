@@ -22,12 +22,6 @@ public class UsuarioLoginDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioLoginDAO";
 	
-	public UsuarioLogin getUsuarioLoginByCpf(String cpf){
-		String hql = "select o from UsuarioLogin o where o.cpf = :cpf";
-		Query query = EntityUtil.createQuery(hql).setParameter("cpf", cpf);
-		return EntityUtil.getSingleResult(query);
-	}
-	
 	public UsuarioLogin getUsuarioLoginByLogin(String login){
 		String hql = "select o from UsuarioLogin o where o.login = :login";
 		Query query = EntityUtil.createQuery(hql).setParameter("login", login);
