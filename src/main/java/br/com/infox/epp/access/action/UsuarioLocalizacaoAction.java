@@ -11,13 +11,13 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLocalizacaoManager;
 import br.com.itx.util.ComponentUtil;
 
 @Name(UsuarioLocalizacaoAction.NAME)
@@ -29,7 +29,7 @@ public class UsuarioLocalizacaoAction {
 	private UsuarioLocalizacao instance;
 	
 	@In
-	private GenericManager genericManager;
+	private UsuarioLocalizacaoManager usuarioLocalizacaoManager;
 	
 	private UsuarioLogin usuarioGerenciado;
 	
@@ -58,7 +58,7 @@ public class UsuarioLocalizacaoAction {
 	
 	public void persist() {
         try {
-			genericManager.persist(instance);
+        	usuarioLocalizacaoManager.persist(instance);
 			newInstance();
 		} catch (DAOException e) {
             processDAOException(e, ".persist()");
@@ -68,7 +68,7 @@ public class UsuarioLocalizacaoAction {
 	public void remove(UsuarioLocalizacao usuarioLocalizacao) {
 		setInstance(usuarioLocalizacao);
 		try {
-			genericManager.remove(instance);
+			usuarioLocalizacaoManager.remove(instance);
 			newInstance();
 		} catch (DAOException e) {
             processDAOException(e, ".remove()");
@@ -79,7 +79,11 @@ public class UsuarioLocalizacaoAction {
         LOG.error(message, e);
         FacesMessages facesMessages = FacesMessages.instance();
         facesMessages.clear();
-        facesMessages.add(e.getLocalizedMessage());
+        if (e.getLocalizedMessage() != null) {
+        	facesMessages.add(e.getLocalizedMessage());
+        } else {
+        	facesMessages.add(e.getMessage());
+        }
     }
 
     public UsuarioLogin getUsuarioGerenciado() {
