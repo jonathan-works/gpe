@@ -5,6 +5,7 @@ import java.util.List;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
@@ -31,6 +32,10 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
         if (localizacao.getEstrutura()){
             localizacao.setEstruturaFilho(null);
             localizacao.setLocalizacaoPai(null);
+        } else if (localizacao.getLocalizacaoPai() != null && localizacao.getLocalizacaoPai().equals(localizacao.getEstruturaFilho())) {
+        	FacesMessages.instance().clear();
+        	FacesMessages.instance().add("#{messages['localizacao.localizacaoPaiIgualEstruturaFilho']}");
+        	return false;
         }
         return super.beforeSave();
     }
