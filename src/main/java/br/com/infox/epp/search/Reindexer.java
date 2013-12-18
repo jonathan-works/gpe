@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.search;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -37,7 +39,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
 
@@ -48,7 +49,7 @@ public class Reindexer {
 	
 	private static final LogProvider LOG = Logging.getLogProvider(Reindexer.class);
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void execute() {
 		MeasureTime mt = new MeasureTime().start();
 		LOG.warn("----------- Criando indices de documentos das tarefas -------------");

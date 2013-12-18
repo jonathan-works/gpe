@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.situacao.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +11,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Events;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -27,7 +28,7 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		return (Long) getEntityManager().createQuery(hql).setParameter("ti", taskId).getSingleResult();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected){
 		StringBuilder sb = new StringBuilder();
 		sb.append("select s.idProcesso from SituacaoProcesso s ");
@@ -50,7 +51,7 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		return "";
 	}
 	
-	@SuppressWarnings(WarningConstants.RAWTYPES)
+	@SuppressWarnings(RAWTYPES)
     public boolean canOpenTask(long currentTaskId) {
         JbpmUtil.getJbpmSession().flush();
         Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);

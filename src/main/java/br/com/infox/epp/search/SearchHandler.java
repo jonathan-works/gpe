@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.search;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,7 +44,6 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.FloatFormatConstants;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -207,7 +208,7 @@ public class SearchHandler implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static String getConteudo(TaskInstance ti) {
 		StringBuilder sb = new StringBuilder();
 		TaskController taskController = ti.getTask().getTaskController();
