@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.List;
 
 import javax.persistence.Query;
@@ -7,7 +9,6 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.entity.Processo;
@@ -67,7 +68,7 @@ public class ProcessoDAO extends GenericDAO {
         				.executeUpdate();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     public List<Processo> findProcessosByIdProcessoAndActorId(int idProcesso, String login){
 	    StringBuilder sb = new StringBuilder();
         sb.append("select o from Processo o where ");

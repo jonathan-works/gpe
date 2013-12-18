@@ -1,5 +1,7 @@
 package br.com.infox.epp.tarefa.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +11,6 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.itx.util.EntityUtil;
@@ -21,7 +22,7 @@ public class TarefaDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tarefaDAO";
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("select max(nodeFrom.id_), nodeFrom.name_ ")

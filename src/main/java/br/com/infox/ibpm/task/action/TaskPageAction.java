@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.task.action;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Collections;
@@ -12,7 +14,6 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 
 /**
@@ -60,7 +61,7 @@ public class TaskPageAction implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private List<VariableAccess> getVariableAccesses() {
 		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		if (taskInstance != null) {

@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.variavel.service;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,6 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
@@ -29,7 +30,7 @@ public class VariavelProcessoService {
 	@In
 	private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<VariavelProcesso> getVariaveis(ProcessoEpa processoEpa) {
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoEpa.getIdJbpm());
 		ContextInstance contextInstance = processInstance.getContextInstance();

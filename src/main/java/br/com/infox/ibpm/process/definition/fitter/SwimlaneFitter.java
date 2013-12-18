@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.def.Swimlane;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
 import br.com.itx.util.ComponentUtil;
@@ -33,7 +34,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 		swimlanes.add(currentSwimlane);
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void removeSwimlane(SwimlaneHandler s) {
 		swimlanes.remove(s);
 		currentSwimlane = null;
@@ -57,7 +58,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 		return swimlanes;
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<String> getSwimlaneList() {
 		Map<String, Swimlane> swimlaneList = pb.getInstance().getTaskMgmtDefinition()
 				.getSwimlanes();

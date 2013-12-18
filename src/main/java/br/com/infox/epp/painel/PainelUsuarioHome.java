@@ -2,6 +2,8 @@
 
 package br.com.infox.epp.painel;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,6 @@ import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.componentes.column.DynamicColumnModel;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
@@ -35,7 +36,7 @@ import br.com.itx.util.EntityUtil;
 
 @Name(PainelUsuarioHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-@SuppressWarnings(WarningConstants.UNCHECKED)
+@SuppressWarnings(UNCHECKED)
 public class PainelUsuarioHome implements Serializable {
 	private static final long serialVersionUID = 1L;
 

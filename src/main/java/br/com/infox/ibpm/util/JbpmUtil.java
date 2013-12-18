@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.util;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,6 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -150,7 +151,7 @@ public class JbpmUtil {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<String> getProcessNames() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select pd.name ");
@@ -160,7 +161,7 @@ public class JbpmUtil {
 		return session.createQuery(sb.toString()).list();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<TaskInstance> getAllTasks() { 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ti from org.jbpm.taskmgmt.exe.TaskInstance ti ");
@@ -172,7 +173,7 @@ public class JbpmUtil {
 				.list();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <T> T getProcessVariable(String name) {
 		ProcessInstance processInstance = org.jboss.seam.bpm.ProcessInstance.instance();
 		if (processInstance != null) {
@@ -254,7 +255,7 @@ public class JbpmUtil {
 		return idProcesso != null ? EntityUtil.find(Processo.class, idProcesso) : null;
 	}		
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static List<Task> getTasksForLocalizacaoAtual() {
 		UsuarioLocalizacao loc = (UsuarioLocalizacao) Contexts.getSessionContext().get(
 				"usuarioLogadoLocalizacaoAtual");
@@ -370,7 +371,7 @@ public class JbpmUtil {
 	 * @param transitionDestino
 	 * @return
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static boolean canTransitTo(TaskInstance taskInstance, String transitionDestino) {
 		List<Transition> availableTransitions = taskInstance.getAvailableTransitions();
 		for (Transition transition : availableTransitions) {
@@ -387,7 +388,7 @@ public class JbpmUtil {
 	 * @param transitionDestino
 	 * @return
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static boolean transitionExists(TaskInstance taskInstance, String transitionDestino) {
 		List<Transition> transitionList = taskInstance.getTask().getTaskNode().getLeavingTransitions();
 		for (Transition transition : transitionList) {

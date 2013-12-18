@@ -17,6 +17,8 @@
 */
 package br.com.infox.epp.access.api;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +44,6 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.RolesMap;
@@ -318,7 +319,7 @@ public class Authenticator {
 
 	
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static List<Localizacao> getLocalizacoesFilhasAtuais() {
 		return (List<Localizacao>) Contexts.getSessionContext().get(LOCALIZACOES_FILHAS_ATUAIS);
 	}
@@ -403,7 +404,7 @@ public class Authenticator {
 		return certChainStringLog;
 	}	
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoListItems() {
 		List<UsuarioLocalizacao> list = (List<UsuarioLocalizacao>) 
 			Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_LIST);

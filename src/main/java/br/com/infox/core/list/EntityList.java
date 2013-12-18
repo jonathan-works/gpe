@@ -1,5 +1,7 @@
 package br.com.infox.core.list;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +23,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.itx.component.Util;
@@ -199,7 +200,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * 
 	 * @param restriction - String da restriction com ou sem expressões
 	 */
-	@SuppressWarnings(WarningConstants.RAWTYPES)
+	@SuppressWarnings(RAWTYPES)
 	public void setRestrictions() {
 		List<ValueExpression> valueExpressionList = new ArrayList<ValueExpression>();
 		for(SearchField s: searchFieldMap.values()) {
@@ -224,7 +225,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void newInstance() {
 		try {
 			setEntity((E) EntityUtil.newInstance(getClass()));
@@ -245,7 +246,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 	 * 
 	 * @return a entidade informado genericamente
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public E getEntity() {
 		if (entity == null) {
 			entity = (E) Contexts.getConversationContext().get(getEntityComponentName());

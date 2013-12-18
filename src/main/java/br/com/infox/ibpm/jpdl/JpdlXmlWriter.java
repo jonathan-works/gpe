@@ -14,6 +14,9 @@
   veja em http://www.gnu.org/licenses/  
  */
 package br.com.infox.ibpm.jpdl;
+
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -55,7 +58,6 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.itx.util.ReflectionsUtil;
 
@@ -129,7 +131,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private Document createDomTree(ProcessDefinition processDefinition) {
 		Document document = DocumentHelper.createDocument();
 		Element root = null;
@@ -186,7 +188,7 @@ public class JpdlXmlWriter {
 		e.addCDATA(text);
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void writeSwimlanes(Element root,ProcessDefinition processDefinition) {
 		Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
 		for (Entry<String, Swimlane> e : swimlanes.entrySet()) {
@@ -230,7 +232,7 @@ public class JpdlXmlWriter {
 		return newElement;
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void writeNodes(Element parentElement, List<org.jbpm.graph.def.Node> nodes) {
 		Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
 		while (iter.hasNext()) {
@@ -260,7 +262,7 @@ public class JpdlXmlWriter {
 		}
 	}
     
-	@SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	private void writeProcessState(ProcessState node, Element nodeElement) {
 		Element subProcess = addElement(nodeElement, "sub-process");
 		subProcess.addAttribute(ELEMENT_NAME, ReflectionsUtil.getStringValue(node, "subProcessName"));
@@ -286,7 +288,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void writeController(TaskController taskController, Element taskElement) {
 		if (taskController != null) {
 			Element controller = addElement(taskElement, "controller");
@@ -351,7 +353,7 @@ public class JpdlXmlWriter {
 		writeEvents(element, node);
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void writeTransitions(Element element, org.jbpm.graph.def.Node node) {
 		if (node.getLeavingTransitionsMap() != null) {
 			Iterator<Transition> iter = node.getLeavingTransitionsList().iterator();
@@ -362,7 +364,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void writeTransition(Element transitionElement,
 			Transition transition) {
 		if (transition.getTo() != null) {
@@ -381,7 +383,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void writeEvents(Element element, GraphElement graphElement) {
 		if (graphElement.hasEvents()) {
 			Iterator<Event> iter = graphElement.getEvents().values().iterator();
@@ -392,7 +394,7 @@ public class JpdlXmlWriter {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void writeEvent(Element eventElement, Event event) {
 		boolean valid = false;
 		eventElement.addAttribute("type", event.getEventType());

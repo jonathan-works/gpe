@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.list;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +10,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -29,7 +30,7 @@ public class ProcessoEpaList extends EntityList<ProcessoEpa> {
 	
 	private List<UsuarioLogin> listaUsuarios;
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void iniciaListaUsuarios()	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("select distinct user from Processo o ");

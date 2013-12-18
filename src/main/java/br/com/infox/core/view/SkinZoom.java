@@ -30,8 +30,7 @@ import br.com.itx.component.Util;
 @Name("skinZoom")
 @Scope(ScopeType.SESSION)
 @BypassInterceptors
-public class SkinZoom extends Selector 
-{	
+public class SkinZoom extends Selector {
 	private static final long serialVersionUID = 1L;
 	private String skinZoom = TAM_NORMAL;	
 	private static final String TAM_NORMAL = "12px";
@@ -39,8 +38,7 @@ public class SkinZoom extends Selector
 	private static final String TAM_GRANDE = "22px";
 	private static final String[] TAMANHOS = {TAM_NORMAL,TAM_MEDIO, TAM_GRANDE}; 
 	
-	public SkinZoom() 
-	{
+	public SkinZoom() {
 		Util util = (Util) Component.getInstance("util");
 		String cookiePath = util.getContextPath();
 		setCookiePath(cookiePath);
@@ -58,20 +56,17 @@ public class SkinZoom extends Selector
 		return skinZoom;
 	}
 	
-	public void setTmNormal()
-	{
+	public void setTmNormal() {
 		setCookieValueIfEnabled(TAM_NORMAL);
 		skinZoom = TAM_NORMAL;	
 	}
 	
-	public void setTmMedio()
-	{
+	public void setTmMedio() {
 		setCookieValueIfEnabled(TAM_MEDIO);
 	    skinZoom = TAM_MEDIO;	
 	}
 	
-	public void setTmGrande()
-	{
+	public void setTmGrande() {
 		setCookieValueIfEnabled(TAM_GRANDE);
 	    skinZoom = TAM_GRANDE;	
 	}
@@ -81,6 +76,3 @@ public class SkinZoom extends Selector
 		return "br.com.infox.core.view";
 	}
 }
-
-
-

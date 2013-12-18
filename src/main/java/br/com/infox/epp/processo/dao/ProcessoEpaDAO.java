@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,7 +17,6 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -115,7 +116,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 		return (Item) getEntityManager().createQuery(query).setParameter("idProcesso", idProcesso).getSingleResult();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
 		Query q = getEntityManager().createQuery(ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY)
 				.setParameter("idProcesso", processoEpa.getIdProcesso());

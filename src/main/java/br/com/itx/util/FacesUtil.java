@@ -15,6 +15,8 @@
 */
 package br.com.itx.util;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,8 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-
-import br.com.infox.core.constants.WarningConstants;
 
 /**
  * Classe genérica para acesso ao container do myfaces.
@@ -138,7 +138,7 @@ public final class FacesUtil {
 	/**
      * Clona um objeto.
      */    
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <T extends Object> T cloneBean(T obj) {
     	Object resp = null;
 	    try {

@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.process.deploy;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -37,7 +39,6 @@ import org.jbpm.db.GraphSession;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.xml.sax.InputSource;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
@@ -63,7 +64,7 @@ public class ProcessDeployVerifier {
 	public static final String NAME = "processDeployVerifier";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessDeployVerifier.class);	
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Create
 	public void init() {
 		long time = new Date().getTime();

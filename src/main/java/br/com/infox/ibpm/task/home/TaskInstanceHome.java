@@ -15,6 +15,8 @@
  */
 package br.com.infox.ibpm.task.home;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
@@ -53,7 +55,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -121,7 +122,7 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     private void retrieveVariables() {
         TaskController taskController = taskInstance.getTask().getTaskController();
         if (taskController != null) {
@@ -218,7 +219,7 @@ public class TaskInstanceHome implements Serializable {
         return (taskInstance != null) && (taskInstance.getTask() != null);
     }
 
-    @SuppressWarnings(WarningConstants.UNCHECKED)
+    @SuppressWarnings(UNCHECKED)
     private void updateVariables(TaskController taskController) {
         List<VariableAccess> list = taskController.getVariableAccesses();
         for (VariableAccess variableAccess : list) {
@@ -561,7 +562,7 @@ public class TaskInstanceHome implements Serializable {
         return OCCULT_TRANSITION.equals(transition.getCondition());
     }
 
-    @SuppressWarnings(WarningConstants.UNCHECKED)
+    @SuppressWarnings(UNCHECKED)
 	public void updateTransitions() {
         availableTransitions = taskInstance.getAvailableTransitions();
         leavingTransitions = taskInstance.getTask().getTaskNode()

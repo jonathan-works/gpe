@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.processo.handler;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +37,6 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -63,7 +64,7 @@ public class ProcessoHandler implements Serializable {
 	@In private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	@In private ProcessoEpaManager processoEpaManager;
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<TaskInstance> getTaskInstanceList() {
 		if (taskInstanceList == null) {
 			Collection<TaskInstance> taskInstances = 
@@ -110,7 +111,7 @@ public class ProcessoHandler implements Serializable {
 		return taskDocumentList ;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     public List<ProcessoDocumento> getAnexosPublicos(TaskInstance task) {
 	    List<ProcessoDocumento> anexoList;
         final String hql = "select o " +

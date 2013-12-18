@@ -1,5 +1,7 @@
 package br.com.infox.core.action;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -14,7 +16,6 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
@@ -184,7 +185,7 @@ public abstract class AbstractAction <T> {
 	 * @return 
 	 */
 	@Transactional
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	protected void inactiveRecursive(Recursive<?> o) {
 		ComponentUtil.setValue(o, "ativo", false);
 		List<Recursive<?>> childList = (List<Recursive<?>>) o.getChildList();
