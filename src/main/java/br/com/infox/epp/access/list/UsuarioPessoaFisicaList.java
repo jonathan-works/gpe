@@ -17,8 +17,7 @@ public class UsuarioPessoaFisicaList extends EntityList<PessoaFisica> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioPessoaFisicaList";
     
-    private static final String DEFAULT_EJBQL = "select p from UsuarioLogin ul inner join ul.pessoaFisica p "
-            + "where ul = #{usuarioPessoaFisicaList.usuario}";
+    private static final String DEFAULT_EJBQL = "select p from UsuarioLogin ul inner join ul.pessoaFisica p";
     private static final String DEFAULT_ORDER = "p.idPessoa";
     
     private UsuarioLogin usuario;
