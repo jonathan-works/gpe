@@ -1,12 +1,13 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_LOGIN;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
 
 import java.util.HashMap;
 import java.util.Map;
