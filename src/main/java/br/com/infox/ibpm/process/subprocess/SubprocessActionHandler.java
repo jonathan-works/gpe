@@ -15,6 +15,8 @@
  */
 package br.com.infox.ibpm.process.subprocess;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -27,7 +29,6 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 
 
@@ -36,7 +37,7 @@ import br.com.infox.core.exception.ApplicationException;
 @Scope(ScopeType.APPLICATION)
 public class SubprocessActionHandler {
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Observer(Event.EVENTTYPE_SUBPROCESS_CREATED)
 	public void copyVariablesToSubprocess() {
 		try {
@@ -53,7 +54,7 @@ public class SubprocessActionHandler {
 		}
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Observer(Event.EVENTTYPE_SUBPROCESS_END)
 	public void copyVariablesFromSubprocess() {
 		try {
