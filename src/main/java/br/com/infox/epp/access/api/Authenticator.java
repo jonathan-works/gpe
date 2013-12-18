@@ -183,8 +183,7 @@ public class Authenticator {
 		Identity identity = Identity.instance();
 		Credentials credentials = identity.getCredentials();
 		String login = credentials.getUsername();
-		UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
-		UsuarioLogin user = usuarioLoginManager.checkUserByLogin(login);
+		UsuarioLogin user = getUsuarioLoginManager().getUsuarioLoginByLogin(login);
 		if(user == null) {
 			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
 			return;
@@ -194,12 +193,17 @@ public class Authenticator {
 	
 	@Observer(Identity.EVENT_LOGIN_FAILED)
 	public void loginFailed(Object obj) throws LoginException {
-		UsuarioLogin usuario = getAuthenticatorService().getUsuarioByLogin(Identity.instance().getCredentials().getUsername());
+		UsuarioLogin usuario = getUsuarioLoginManager().getUsuarioLoginByLogin(Identity.instance().getCredentials().getUsername());
 		if (usuario != null && !usuario.getAtivo()) {
 			throw new LoginException("Este usuário não está ativo.");
 		}
 		throw new LoginException("Usuário ou senha inválidos.");
 	}
+
+    private UsuarioLoginManager getUsuarioLoginManager() {
+        UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
+        return usuarioLoginManager;
+    }
 	
 	@Observer(Identity.EVENT_LOGGED_OUT)
 	public void limparContexto() {

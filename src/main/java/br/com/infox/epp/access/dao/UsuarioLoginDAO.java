@@ -21,20 +21,10 @@ public class UsuarioLoginDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioLoginDAO";
 	
-	public UsuarioLogin getUsuarioLoginByLogin(String login){
-		String hql = "select o from UsuarioLogin o where o.login = :login";
-		Query query = EntityUtil.createQuery(hql).setParameter("login", login);
-		return EntityUtil.getSingleResult(query);
-	}
-	
 	public UsuarioLogin getUsuarioLoginByEmail(String email){
 		String hql = "select o from UsuarioLogin o where o.email = :email";
 		Query query = EntityUtil.createQuery(hql).setParameter("email", email);
 		return EntityUtil.getSingleResult(query);
-	}
-	
-	public UsuarioLogin getUsuarioLogin(UsuarioLogin usuarioLogin){
-		return (UsuarioLogin) getEntityManager().find(UsuarioLogin.class, usuarioLogin.getIdUsuarioLogin());
 	}
 	
 	public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance, String actorId) {
@@ -49,7 +39,7 @@ public class UsuarioLoginDAO extends GenericDAO {
 		getEntityManager().createQuery(hql).executeUpdate();
 	}
 	
-	public UsuarioLogin checkUserByLogin(String login) {
+	public UsuarioLogin getUsuarioLoginByLogin(String login) {
         Query query = getEntityManager().createNamedQuery(USUARIO_LOGIN_NAME);
         query.setParameter(PARAM_LOGIN, login);
         return EntityUtil.getSingleResult(query);
