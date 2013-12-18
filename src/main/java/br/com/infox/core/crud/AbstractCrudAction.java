@@ -1,11 +1,12 @@
 package br.com.infox.core.crud;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.itx.util.EntityUtil;
@@ -82,7 +83,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 		this.tab = tab;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public void setId(Object id) {
 		if(id != null && !id.equals(this.id)) {
@@ -153,7 +154,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	 * Cria um novo objeto do tipo parametrizado para a variável
 	 * instance.
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public void newInstance() {
 		setInstance((T) EntityUtil.newInstance(getClass()));

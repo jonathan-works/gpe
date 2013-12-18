@@ -15,6 +15,8 @@
  */
 package br.com.infox.core.tree;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,6 @@ import org.richfaces.component.UICollapsiblePanel;
 import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.util.EntityUtil;
 
 @Scope(ScopeType.PAGE)
@@ -110,7 +111,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 	}
 
 	@Override
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public E getSelected() {
 		if (expression == null) {
 			return selected;
@@ -134,7 +135,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
 		// Considerando single selection

@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.access.assignment;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
@@ -31,7 +33,6 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -54,7 +55,7 @@ public class LocalizacaoAssignment implements Serializable {
 	private org.jbpm.taskmgmt.exe.TaskInstance currentTaskInstance;
 	
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public Set<String> getPooledActors(String... localPapel) {
 		boolean opened = Util.beginTransaction();
 		addLocalizacaoPapel(localPapel);
