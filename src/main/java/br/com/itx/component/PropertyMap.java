@@ -15,13 +15,13 @@
 */
 package br.com.itx.component;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.LinkedHashMap;
 
 import org.jboss.seam.core.Expressions;
 
-import br.com.infox.core.constants.WarningConstants;
-
-@SuppressWarnings(WarningConstants.UNCHECKED)
+@SuppressWarnings(UNCHECKED)
 public class PropertyMap<K,V> extends LinkedHashMap<K,V> {
 	
 	private static final long serialVersionUID = 1L;

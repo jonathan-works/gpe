@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.task.view;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +34,6 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
@@ -72,7 +73,7 @@ public class TaskInstanceForm implements Serializable{
 
 	private TaskInstance taskInstance;
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Unwrap
 	public Form getTaskForm() {
 		getTaskInstance();

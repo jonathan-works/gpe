@@ -1,11 +1,12 @@
 package br.com.infox.epp.documento.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -37,7 +38,7 @@ public class ModeloDocumentoDAO extends GenericDAO {
 				.setParameter("titulo", titulo).getSingleResult();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(GrupoModeloDocumento grupo, TipoModeloDocumento tipo){
 		String hql = "select distinct o from ModeloDocumento o where " +
 				"o.tipoModeloDocumento.grupoModeloDocumento = :grupo and " +
@@ -48,7 +49,7 @@ public class ModeloDocumentoDAO extends GenericDAO {
 				.setParameter("tipo", tipo).getResultList();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<ModeloDocumento> getModelosDocumentoInListaModelos(String listaModelos){
 		String hql = "select o from ModeloDocumento o " +
 						"where o.idModeloDocumento in (" +

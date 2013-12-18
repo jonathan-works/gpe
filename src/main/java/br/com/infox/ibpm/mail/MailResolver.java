@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.mail;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -7,7 +9,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -39,14 +40,14 @@ public class MailResolver {
 		return ComponentUtil.getComponent(NAME);
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<ContaTwitter> listaContasTwitter(int idGrupoEmail) {
 		return EntityUtil.getEntityManager().createQuery(QUERY_TWITTER+QUERY_CONDITION)
 				.setParameter("idGrupoEmail", idGrupoEmail)
 				.getResultList();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<String> resolve(int idGrupoEmail) {		
 		return EntityUtil.getEntityManager().createQuery(QUERY+QUERY_CONDITION)
 				.setParameter("idGrupoEmail", idGrupoEmail)

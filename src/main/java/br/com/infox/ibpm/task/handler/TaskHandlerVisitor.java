@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.task.handler;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -26,9 +28,6 @@ import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
-
-import br.com.infox.core.constants.WarningConstants;
-
 
 public class TaskHandlerVisitor {
 
@@ -51,12 +50,12 @@ public class TaskHandlerVisitor {
 		return variableList;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void visit(Node n) {
 		addVariables(n.getArrivingTransitions());
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void visit(Task t) {
 		visitedTasks.add(t);
 		Node n = (Node) t.getParent();
@@ -65,7 +64,7 @@ public class TaskHandlerVisitor {
 		addVariables(transitions);
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void addVariables(Set<Transition> transitions) {
 		if (transitions == null) {
 			return;
@@ -89,7 +88,7 @@ public class TaskHandlerVisitor {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void addTaskNodeVariables(TaskNode tn) {
 		boolean filtered = types != null && types.size() > 0;
 		for (Object o : tn.getTasks()) {

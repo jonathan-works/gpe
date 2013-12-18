@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +21,6 @@ import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.transition.TransitionHandler;
 
 @Name(TransitionFitter.NAME)
@@ -70,7 +71,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void checkTransitions() {
 		List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
 		clear();
@@ -178,7 +179,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return newNodeTransition;
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<TransitionHandler> getArrivingTransitions() {
 		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		if (arrivingTransitions == null && currentNode != null && currentNode.getArrivingTransitions() != null) {
@@ -187,7 +188,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return arrivingTransitions;
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<TransitionHandler> getLeavingTransitions() {
 		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		if (leavingTransitions == null && currentNode != null && currentNode.getLeavingTransitions() != null) {
@@ -196,7 +197,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 		return leavingTransitions;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<TransitionHandler> getTransitions() {
 		List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
 		if (transitionList == null) {
@@ -238,7 +239,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	}
 	
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<SelectItem> getTransitionsItems(List<Node> nodes) {
 		if (transitionsItems == null) {
 			transitionsItems = new ArrayList<SelectItem>();

@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.process.definition.graphical.layout;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +33,6 @@ import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -70,7 +71,7 @@ public class JbpmLayout {
 		ImageIO.write(Util.toImage(graph), "png", file);
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     private String makeMap() {
 		if (graph == null) {
 			makeGraph();
@@ -151,7 +152,7 @@ public class JbpmLayout {
 		return map;
 	}
 	
-	@SuppressWarnings(WarningConstants.RAWTYPES)
+	@SuppressWarnings(RAWTYPES)
     private JGraph makeGraph() {
 		GraphModel model = new DefaultGraphModel();
 		graph = new JbpmGraph(model);
@@ -203,7 +204,7 @@ public class JbpmLayout {
 		return graph;
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     private void insertNodes(List<DefaultGraphCell> cellList,
 			Map<Node, DefaultGraphCell> nodes) {
 		if (taskInstanceMap == null) {

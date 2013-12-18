@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.node.InfoxMailNode;
@@ -71,7 +72,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	
 	@In private JbpmNodeManager jbpmNodeManager;
 		
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void addNewNode() {
 		Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
 		ProcessDefinition processo = getProcessBuilder().getInstance();
@@ -159,7 +160,7 @@ public class NodeFitter extends Fitter implements Serializable {
         return ((ModeloDocumentoManager)ComponentUtil.getComponent(ModeloDocumentoManager.NAME)).getModeloDocumentoList();
     }
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void handleForkNode(Node fork) {
 		try {
 			Node join = Join.class.newInstance();
@@ -196,7 +197,7 @@ public class NodeFitter extends Fitter implements Serializable {
         }
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void removeNode(Node node) {
 		nodes.remove(node);
 		getProcessBuilder().getInstance().removeNode(node);
@@ -288,7 +289,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		return oldNodeTransition;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Factory("processNodes")
 	public List<Node> getNodes() {
 		if (nodes == null) {
@@ -311,7 +312,7 @@ public class NodeFitter extends Fitter implements Serializable {
 		return nodeList;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<SelectItem> getNodesItems() {
 		if (nodesItems == null) {
 			List<Node> list = getProcessBuilder().getInstance().getNodes();

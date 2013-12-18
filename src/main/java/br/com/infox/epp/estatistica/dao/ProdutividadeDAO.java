@@ -1,5 +1,7 @@
 package br.com.infox.epp.estatistica.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -13,7 +15,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
 import br.com.infox.epp.estatistica.query.ProdutividadeQuery;
@@ -27,7 +28,7 @@ public class ProdutividadeDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "produtividadeDAO";
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<ProdutividadeBean> listProdutividade(Map<String, Object> params) {
 		String sql = buildSql(params);
 		Query query = setParameters(params, getEntityManager().createNativeQuery(sql));

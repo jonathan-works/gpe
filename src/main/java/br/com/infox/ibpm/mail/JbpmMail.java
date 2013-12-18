@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.mail;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +12,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import twitter4j.TwitterException;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
@@ -49,7 +50,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 		return map;
 	}
 	
-	@SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	private void initRemetentes() {
 		List recip = new ArrayList(getRecipients());
 				

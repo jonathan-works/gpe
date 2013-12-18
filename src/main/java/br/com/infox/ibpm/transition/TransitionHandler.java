@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.transition;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +27,6 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.node.converter.NodeConverter;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
@@ -135,7 +136,7 @@ public class TransitionHandler implements Serializable {
 		return showTransitionButton;
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public boolean isInDecisionNode() {
 		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
 		Node currentNode = nodeFitter.getCurrentNode();
@@ -145,7 +146,7 @@ public class TransitionHandler implements Serializable {
 		return false;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public boolean isInForkNode() {
 		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
 		Node currentNode = nodeFitter.getCurrentNode();
@@ -155,7 +156,7 @@ public class TransitionHandler implements Serializable {
 		return false;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public boolean isInJoinNode() {
 		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
 		Node currentNode = nodeFitter.getCurrentNode();

@@ -1,5 +1,7 @@
 package br.com.infox.quartz;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +36,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -215,7 +216,7 @@ public class QuartzJobsInfo implements Serializable {
 		EntityUtil.createQuery(hql).executeUpdate();
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<Map<String, Object>> getMapParametroTriggers()
 			throws SchedulerException {
 		List<String> triggersNames = getTriggersNames();

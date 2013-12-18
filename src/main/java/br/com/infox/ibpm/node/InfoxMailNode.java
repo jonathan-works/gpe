@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.node;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -39,7 +41,6 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.persistence.db.DbPersistenceService;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.tree.TreeHandler;
 import br.com.infox.epp.access.component.tree.EstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
@@ -88,7 +89,7 @@ public class InfoxMailNode extends MailNode {
 		super.read(element, jpdlReader);
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public void write(Element nodeElement) {
 		if (action != null) {
@@ -223,7 +224,7 @@ public class InfoxMailNode extends MailNode {
 		createAction();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<ListaEmail> getListaEmail() {
 		if (listaEmail == null && to != null) {
 			String result = to.substring(1, to.length()-1);

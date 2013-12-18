@@ -15,6 +15,8 @@
 */
 package br.com.itx.util;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -41,8 +43,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Naming;
 import org.jboss.seam.util.Reflections;
-
-import br.com.infox.core.constants.WarningConstants;
 
 public final class EntityUtil implements Serializable {
 		
@@ -260,7 +260,7 @@ public final class EntityUtil implements Serializable {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <E> E cloneEntity(E origem, boolean copyLists) throws 
 				InstantiationException, IllegalAccessException {
 		Class<?> cl = getEntityClass(origem);
@@ -382,7 +382,7 @@ public final class EntityUtil implements Serializable {
 	 * @param query
 	 * @return
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <T> T getSingleResult(Query query) {
 		query.setMaxResults(1);
 		List<?> list = query.getResultList();
@@ -415,7 +415,7 @@ public final class EntityUtil implements Serializable {
 	 * @param clazz
 	 * @return
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <E> List<E> getEntityList(Class<E> clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o from ").append(clazz.getName()).append(" o");
@@ -452,7 +452,7 @@ public final class EntityUtil implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;
 		java.lang.reflect.Type type = clazz.getGenericSuperclass();
@@ -508,7 +508,7 @@ public final class EntityUtil implements Serializable {
 	 * Método genérico para buscar no banco um objeto da classe passada como parâmetro com o id informado
 	 * sem, no entanto fazer, a pesquisa no cache de sessão.
 	 * */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <E> E buscaEntidadeForaDoCacheDeSessao(Class<E> clazz, Object id) {
 		if ( id == null ){
 			return null;
@@ -526,7 +526,7 @@ public final class EntityUtil implements Serializable {
 	 * Método genérico para buscar no banco um objeto do mesmo tipo e com o mesmo Id 
 	 * daquele que foi passado como parâmetro
 	 * */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <E> E buscaEntidadeForaDoCacheDeSessao(Object object) {
 		if ( object != null ){
 			StringBuilder sb = new StringBuilder();

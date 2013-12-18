@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.system.util;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.List;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -29,7 +31,6 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.itx.util.EntityUtil;
 
@@ -55,7 +56,7 @@ public class CarregarParametrosAplicacao {
 		LOG.info(".init(): " + sw.getTime());
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private List<Parametro> getParametroAtivoList() {
 		String hql = "select o from Parametro o where o.ativo = true";
 		return EntityUtil.createQuery(hql).getResultList();

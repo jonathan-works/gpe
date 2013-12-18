@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.node.handler;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +31,6 @@ import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.event.handler.EventHandler;
 import br.com.itx.util.ReflectionsUtil;
 
@@ -72,7 +73,7 @@ public class NodeHandler implements Serializable {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void loadTimers(Node node) {
 		Event enter = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
 		if (enter != null) {
@@ -142,7 +143,7 @@ public class NodeHandler implements Serializable {
 		node.addEvent(event);
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<String> getSupportedEventTypes() {
 		List<String> list = new ArrayList<String>();
 		List<String> nodeEvents = Arrays.asList(new Node().getSupportedEventTypes());
@@ -185,7 +186,7 @@ public class NodeHandler implements Serializable {
 		if (s.length > 2) {
 			unit = s[2];
 		}
-		dueDateUnit = UnitsEnum.valueOf(unit.toUpperCase());
+		dueDateUnit = UnitsEnum.valueOf(unit);
 	}
 
 	public CreateTimerAction getCurrentTimer() {

@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +14,6 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.ProcessDefinition;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.event.handler.EventHandler;
 import br.com.itx.util.ReflectionsUtil;
 
@@ -90,7 +91,7 @@ public class EventFitter extends Fitter implements Serializable{
 		List<String> list = new ArrayList<String>();
 		String[] eventTypes = getProcessBuilder().getInstance().getSupportedEventTypes();
 		List<String> currentEvents = new ArrayList<String>();
-		@SuppressWarnings(WarningConstants.UNCHECKED)
+		@SuppressWarnings(UNCHECKED)
 		Collection<Event> values = getProcessBuilder().getInstance().getEvents().values();
 		for (Event event : values) {
 			currentEvents.add(event.getEventType());

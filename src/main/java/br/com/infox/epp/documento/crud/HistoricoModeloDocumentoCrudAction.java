@@ -1,12 +1,13 @@
 package br.com.infox.epp.documento.crud;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
@@ -33,7 +34,7 @@ public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<Histo
         this.selecionado = selecionado;
     }
     
-    @SuppressWarnings(WarningConstants.UNCHECKED)
+    @SuppressWarnings(UNCHECKED)
     public void setModeloDocumento(ModeloDocumento modeloDocumento) {
         javax.persistence.Query query = EntityUtil.createQuery(HistoricoModeloDocumentoQuery.LIST_MODELO_QUERY);
         setModeloDocumentoList(query.getResultList());
