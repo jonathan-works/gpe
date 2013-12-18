@@ -20,6 +20,10 @@ public interface UsuarioLoginQuery {
 	String USUARIO_LOGIN_NAME = "usuarioLogadoByLogin";
 	String USUARIO_LOGIN_QUERY = "select u from UsuarioLogin u where login = :" + PARAM_LOGIN;
 	
+	String PARAM_EMAIL = "email";
+	String USUARIO_BY_EMAIL = "usuarioLoginByEmail";
+	String USUARIO_LOGIN_EMAIL_QUERY = "select u from UsuarioLogin u where u.email = :" + PARAM_EMAIL;
+	
 	String USUARIO_BY_LOGIN_TASK_INSTANCE = "usuarioByLoginTaskinstance";
 	String USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY = "select o from UsuarioLogin o"
             + " where o.login = :" + PARAM_LOGIN

@@ -1,6 +1,11 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_EMAIL;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID_TASK_INSTANCE;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_LOGIN;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_EMAIL;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +27,8 @@ public class UsuarioLoginDAO extends GenericDAO {
 	public static final String NAME = "usuarioLoginDAO";
 	
 	public UsuarioLogin getUsuarioLoginByEmail(String email){
-		String hql = "select o from UsuarioLogin o where o.email = :email";
-		Query query = EntityUtil.createQuery(hql).setParameter("email", email);
+	    Query query  = getEntityManager().createNamedQuery(USUARIO_BY_EMAIL);
+	    query.setParameter(PARAM_EMAIL, email);
 		return EntityUtil.getSingleResult(query);
 	}
 	
