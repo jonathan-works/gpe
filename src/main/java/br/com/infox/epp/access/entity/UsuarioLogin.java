@@ -10,6 +10,8 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.BLOQUEIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.DATA_EXPIRACAO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ID_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.LOGIN;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PROVISORIO;
@@ -17,10 +19,12 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.SENHA;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.SEQUENCE_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.TABLE_USUARIO_LOGIN;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.TIPO_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_EMAIL_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_QUERY;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -74,7 +78,8 @@ import br.com.infox.epp.system.entity.EntityLog;
 @NamedQueries(value={
 	@NamedQuery(name=USUARIO_LOGIN_NAME, query=USUARIO_LOGIN_QUERY),
 	@NamedQuery(name=USUARIO_BY_LOGIN_TASK_INSTANCE, query=USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY),
-	@NamedQuery(name=USUARIO_BY_EMAIL, query=USUARIO_LOGIN_EMAIL_QUERY)
+	@NamedQuery(name=USUARIO_BY_EMAIL, query=USUARIO_LOGIN_EMAIL_QUERY),
+	@NamedQuery(name=INATIVAR_USUARIO, query=INATIVAR_USUARIO_QUERY)
 })
 public class UsuarioLogin implements Serializable {
 

@@ -29,4 +29,8 @@ public interface UsuarioLoginQuery {
             + " where o.login = :" + PARAM_LOGIN
             + " and not exists (from UsuarioTaskInstance"
             + " where idTaskInstance = :" +PARAM_ID_TASK_INSTANCE+")";
+	
+	String PARAM_ID = "idUsuarioLogin";
+	String INATIVAR_USUARIO = "inativarUsuario";
+	String INATIVAR_USUARIO_QUERY = "UPDATE UsuarioLogin u SET u.ativo = false WHERE u.idUsuarioLogin = :" + PARAM_ID;
 }
