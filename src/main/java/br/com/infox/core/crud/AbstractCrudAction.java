@@ -2,10 +2,15 @@ package br.com.infox.core.crud;
 
 import static br.com.infox.core.constants.WarningConstants.*;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
@@ -31,6 +36,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	
     private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
     private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
+    private static final LogProvider LOG = Logging.getLogProvider(AbstractCrudAction.class);
 	
 	/**
 	 * Variável que será passada como parametro nas ações executadas
@@ -38,7 +44,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	 */
 	private T instance;
 	
-	@Override
+    @Override
 	public void setInstance(T instance) {
 		this.instance = instance;
 	}
@@ -64,13 +70,6 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	}
 	
     protected void afterSave(String ret) {
-        if (PERSISTED.equals(ret)){
-            FacesMessages.instance().clear();
-            FacesMessages.instance().add(MSG_REGISTRO_CRIADO);
-        } else if (UPDATED.equals(ret)){
-            FacesMessages.instance().clear();
-            FacesMessages.instance().add(MSG_REGISTRO_ALTERADO);
-        }
     }
 	
 	@Override
@@ -105,18 +104,25 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	@Override
 	public boolean isManaged() {
 	    mergeWhenNeeded();
-		return instance != null && contains(instance);
+		final T activeEntity = getInstance();
+        return activeEntity != null && contains(activeEntity);
 	}
 	
 	private void mergeWhenNeeded() {
-        if (getInstance() != null && isIdDefined() && !contains(instance)) {
-            setInstance(EntityUtil.getEntityManager().merge(getInstance()));
+        final T activeEntity = getInstance();
+        if (activeEntity != null && isIdDefined() && !contains(activeEntity)) {
+            try {
+                setInstance(getGenericManager().merge(activeEntity));
+            } catch (DAOException e) {
+                messagesHandler.addMessage(Severity.ERROR, "Merge Entity Error",e);
+            }
         }
     }
 	
 	private boolean isIdDefined()
 	{
-	    return getId()!=null && !"".equals( getId() );
+	    Object currentId = getId();
+        return currentId!=null && !"".equals( currentId );
 	}
 
 	/**
@@ -133,10 +139,24 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 		if(ret != null) {
 		    afterSave();
 			afterSave(ret);
+			
+	        if (PERSISTED.equals(ret)){
+	            
+                try {
+                    setId(EntityUtil.getId(instance).getReadMethod().invoke(instance));
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    LOG.error(".save()",e);
+                }
+	            messagesHandler.clearMessages();
+	            messagesHandler.addMessage(MSG_REGISTRO_CRIADO);
+	        } else if (UPDATED.equals(ret)){
+	            messagesHandler.clearMessages();
+	            messagesHandler.addMessage(MSG_REGISTRO_ALTERADO);
+	        }
 		}
 		return ret;
 	}
-	
+    
 	/**
 	 * Wrapper para o método persist(), pois é necessario definir que
 	 * a instancia será managed = true a partir de agora.
@@ -197,8 +217,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	protected void onDAOExcecption(DAOException daoException){
         PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
         if (errorCode != null) {
-            FacesMessages.instance().clear();
-            FacesMessages.instance().add(daoException.getLocalizedMessage());
+            messagesHandler.clearMessages();
+            messagesHandler.addMessage(daoException.getLocalizedMessage());
         }
 	}
 	

@@ -16,13 +16,11 @@
 
 	<ui:define name="body">
 		<a:region>
-			<h:form>
-				<a:jsFunction 
-					name="atualizaPainelFluxo"
-					oncomplete="location='#{util.contextPath}/Painel/list.seam'"
-					execute="@this"
-					status="status" />
-			</h:form>
+			<script>
+				function atualizaPainelFluxo() {
+					location = '#{util.contextPath}/Painel/list.seam';
+				}
+			</script>
 			<div class="p-caixas">
 				<infox:tabPanel id="tabPainelUsuario" switchType="ajax"
 					status=":status">

@@ -61,4 +61,9 @@ public class GenericManager implements Serializable {
 	public <T> T merge(T o) throws DAOException {
 		return genericDAO.merge(o);
 	}
+	
+	protected final void setGenericDAO(GenericDAO genericDAO) {
+	    this.genericDAO = genericDAO;
+	}
+	
 }
