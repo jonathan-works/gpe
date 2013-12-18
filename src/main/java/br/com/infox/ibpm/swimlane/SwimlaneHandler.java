@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.swimlane;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +28,6 @@ import java.util.StringTokenizer;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Swimlane;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -65,7 +66,7 @@ public class SwimlaneHandler implements Serializable {
 		return swimlane.getName();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void setName(String name) {
 		Map<String, Swimlane> swimlanes = swimlane.getTaskMgmtDefinition().getSwimlanes();
 		swimlanes.remove(swimlane.getName());
@@ -156,7 +157,7 @@ public class SwimlaneHandler implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static List<SwimlaneHandler> createList(ProcessDefinition instance) {
 		List<SwimlaneHandler> ret = new ArrayList<SwimlaneHandler>();
 		Map<String, Swimlane> swimlanes = instance.getTaskMgmtDefinition().getSwimlanes();

@@ -1,5 +1,7 @@
 package br.com.infox.certificado.util;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,7 +27,6 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.constants.WarningConstants;
 
 /**
  * Utility class for digital signatures and certificates verification.
@@ -142,7 +143,7 @@ public final class DigitalSignatureUtils {
         return certPath;
     }
     
-	@SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	public static X509Certificate[] loadCertFromBase64String(String certChainBase64Encoded) throws CertificadoException {
 		CertPath mCertPath;
 		try {
@@ -266,7 +267,7 @@ public final class DigitalSignatureUtils {
      * Removes the last certificate from given certification chain.
      * @return given cert chain without the last certificate in it.
      */
-    @SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
+    @SuppressWarnings({ UNCHECKED, RAWTYPES })
 	private static CertPath removeLastCertFromCertChain(CertPath aCertChain)
     throws CertificateException {
         List certs = aCertChain.getCertificates();
@@ -291,7 +292,7 @@ public final class DigitalSignatureUtils {
      * @return Base64-encoded ASN.1 DER representation of given X.509 certification
      * chain.
      */
-    @SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
+    @SuppressWarnings({ UNCHECKED, RAWTYPES })
 	public static String encodeX509CertChainToBase64(Certificate[] aCertificationChain)
     			throws CertificateException {
         List certList = Arrays.asList(aCertificationChain);

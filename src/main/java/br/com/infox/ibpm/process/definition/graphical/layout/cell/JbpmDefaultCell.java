@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.process.definition.graphical.layout.cell;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -23,7 +25,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.process.definition.graphical.layout.Util;
 
@@ -53,7 +54,7 @@ public class JbpmDefaultCell extends DefaultGraphCell {
 	private String swimlaneName;
 	private int swimlaneIndex;
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     public JbpmDefaultCell(Node node) {
 		super(node.getName());
 		setNode(node);

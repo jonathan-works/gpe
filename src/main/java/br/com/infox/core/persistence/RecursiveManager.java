@@ -1,5 +1,7 @@
 package br.com.infox.core.persistence;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -10,7 +12,6 @@ import org.hibernate.AnnotationException;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.RecursiveException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
@@ -147,7 +148,7 @@ public final class RecursiveManager {
 		return currentFullPath == null || "".equals(currentFullPath);
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private static <E> List<E> getEntityListNullHierarchicalPath(Class<E> clazz) {
 		String annotationField = "hierarchicalPath";
 		String template = "select o from {0} o where o.{1} is null or o.{1} = ''''";

@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.variable;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 import org.jbpm.taskmgmt.def.Task;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
@@ -275,7 +276,7 @@ public class VariableAccessHandler implements Serializable {
 	}
 	
 	// TODO: Esse entityList está bizarro, é a causa dos 2 warnings abaixo
-	@SuppressWarnings({ WarningConstants.UNCHECKED, WarningConstants.RAWTYPES })
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
 	public void addModelo(ModeloDocumento modelo) {
 		if (modeloDocumentoList == null) {
 			modeloDocumentoList = new ArrayList<ModeloDocumento>();
@@ -310,7 +311,7 @@ public class VariableAccessHandler implements Serializable {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static List<VariableAccessHandler> getList(Task task) {
 		List<VariableAccessHandler> ret = new ArrayList<VariableAccessHandler>();
 		if (task.getTaskController() == null) {

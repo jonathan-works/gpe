@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.event.handler;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,6 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.handler.ActionTemplateHandler;
 
 
@@ -79,7 +80,7 @@ public class EventHandler implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static List<EventHandler> createList(GraphElement instance) {
 		if (instance == null) {
 			return null;
@@ -137,7 +138,7 @@ public class EventHandler implements Serializable {
 		actionList = null;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<Action> getActions() {
 		if (actionList == null) {
 			actionList = event.getActions();

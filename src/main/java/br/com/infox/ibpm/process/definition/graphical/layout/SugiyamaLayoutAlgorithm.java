@@ -3,6 +3,8 @@
 // Please visit our website at http://echidna.sf.net
 package br.com.infox.ibpm.process.definition.graphical.layout;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -28,8 +30,6 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.VertexView;
 
-import br.com.infox.core.constants.WarningConstants;
-
 /**
  * Arranges the nodes with the Sugiyama Layout Algorithm.<br>
  *
@@ -41,7 +41,7 @@ import br.com.infox.core.constants.WarningConstants;
  * @author Sven Luzar<br>
  * @version 1.0 init
  */
-@SuppressWarnings({WarningConstants.UNCHECKED, WarningConstants.RAWTYPES})
+@SuppressWarnings({UNCHECKED, RAWTYPES})
 public class SugiyamaLayoutAlgorithm
 {
 	

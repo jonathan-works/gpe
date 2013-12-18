@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +18,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
@@ -34,7 +35,7 @@ public class TypeFitter extends Fitter implements Serializable{
 	private List<String> typeList;
 	private Properties types;
 	
-	@SuppressWarnings({ WarningConstants.RAWTYPES, WarningConstants.UNCHECKED })
+	@SuppressWarnings({ RAWTYPES, UNCHECKED })
 	public List getTypeList() {
 		if (typeList == null) {
 			String path = FacesUtil.getServletContext(null).getRealPath(

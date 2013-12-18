@@ -15,6 +15,8 @@
 */
 package br.com.itx.util;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -37,8 +39,6 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
-
-import br.com.infox.core.constants.WarningConstants;
 
 public final class ComponentUtil {
 	
@@ -212,12 +212,12 @@ public final class ComponentUtil {
 	 * @param componentName Nome do componte
 	 * @return
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <C> C getComponent(String componentName) {
 		return (C) Component.getInstance(componentName);
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <C> C getComponent(Class<C> componentClass) {
 	    return (C) Component.getInstance(componentClass);
 	}
@@ -231,7 +231,7 @@ public final class ComponentUtil {
 	 * @param scopeType O Escopo do componente
 	 * @return
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <C> C getComponent(String componentName, ScopeType scopeType) {
 		return (C) Component.getInstance(componentName, scopeType);
 	}		
@@ -260,7 +260,7 @@ public final class ComponentUtil {
 	 * @param componentName Nome do componte
 	 * @return
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public static <C> C getComponent(String componentName, boolean create) {
 		return (C) Component.getInstance(componentName, create);
 	}		

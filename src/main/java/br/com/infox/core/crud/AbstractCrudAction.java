@@ -1,14 +1,17 @@
 package br.com.infox.core.crud;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.itx.util.EntityUtil;
@@ -33,6 +36,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	
     private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
     private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
+    private static final LogProvider LOG = Logging.getLogProvider(AbstractCrudAction.class);
 	
 	/**
 	 * Variável que será passada como parametro nas ações executadas
@@ -78,7 +82,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 		this.tab = tab;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public void setId(Object id) {
 		if(id != null && !id.equals(this.id)) {
@@ -138,9 +142,10 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 			
 	        if (PERSISTED.equals(ret)){
 	            
-	            try {
+                try {
                     setId(EntityUtil.getId(instance).getReadMethod().invoke(instance));
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    LOG.error(".save()",e);
                 }
 	            messagesHandler.clearMessages();
 	            messagesHandler.addMessage(MSG_REGISTRO_CRIADO);
@@ -169,7 +174,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	 * Cria um novo objeto do tipo parametrizado para a variável
 	 * instance.
 	 */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public void newInstance() {
 		setInstance((T) EntityUtil.newInstance(getClass()));

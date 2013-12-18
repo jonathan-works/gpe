@@ -14,6 +14,8 @@
  */
 package br.com.infox.core.suggest;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,6 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.componentes.suggest.SuggestItem;
 import br.com.infox.componentes.suggest.SuggestProvider;
-import br.com.infox.core.constants.WarningConstants;
 
 @Scope(ScopeType.STATELESS)
 public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Serializable {
@@ -46,7 +47,7 @@ public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Seri
     @In
     protected EntityManager entityManager;
 
-    @SuppressWarnings(WarningConstants.UNCHECKED)
+    @SuppressWarnings(UNCHECKED)
     @Override
     public List<SuggestItem> getSuggestions(String typed) {
         StopWatch sw = new StopWatch();

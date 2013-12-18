@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.ajuda.home;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +42,6 @@ import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
@@ -55,7 +56,7 @@ import br.com.itx.util.HibernateUtil;
 
 @Name(AjudaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-@SuppressWarnings(WarningConstants.UNCHECKED)
+@SuppressWarnings(UNCHECKED)
 public class AjudaHome extends AbstractHome<Ajuda>  {
 
 	private static final String ALTERACAO_CONCLUIDA = "Alteração concluída.";
@@ -68,7 +69,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	private String viewId;
 	private Pagina pagina;
 	private String textoPesquisa;
-	@SuppressWarnings(WarningConstants.RAWTYPES)
+	@SuppressWarnings(RAWTYPES)
 	private List resultado;
 	private Ajuda anterior;
 	
@@ -87,7 +88,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		return instance;
 	}
 	
-	@SuppressWarnings(WarningConstants.RAWTYPES)
+	@SuppressWarnings(RAWTYPES)
 	public List getResultadoPesquisa() throws ParseException {
 		if (getTextoPesquisa() == null) {
 			return null;
@@ -244,7 +245,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		return texto;
 	}
 	
-	@SuppressWarnings(WarningConstants.RAWTYPES)
+	@SuppressWarnings(RAWTYPES)
 	@Override
 	public ValueExpression getCreatedMessage() {
 		return createValueExpression(ALTERACAO_CONCLUIDA);

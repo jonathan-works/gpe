@@ -15,6 +15,8 @@
 */
 package br.com.itx.component;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.File;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -57,7 +59,6 @@ import org.jboss.seam.util.Strings;
 import org.jboss.seam.web.Parameters;
 import org.richfaces.context.ExtendedPartialViewContext;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -307,7 +308,7 @@ public class Util implements Serializable {
      * @param expression - Expressão a ser criada.
      * @return Expressão criada.
      */
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public <C> C eval(String expression) {
 		if (expression == null || expression.trim().length() == 0) {
 			return null;

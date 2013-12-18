@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.service;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +19,6 @@ import org.jboss.seam.core.Events;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -78,7 +79,7 @@ public class IniciarProcessoService {
         processInstance.getContextInstance().setVariable("processo",
                 processo.getIdProcesso());
         createJbpmVariables(processo, processInstance.getContextInstance());
-        @SuppressWarnings(WarningConstants.UNCHECKED)
+        @SuppressWarnings(UNCHECKED)
 		Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance
                 .getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;

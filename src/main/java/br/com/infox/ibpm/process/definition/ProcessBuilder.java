@@ -15,6 +15,8 @@
  */
 package br.com.infox.ibpm.process.definition;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
@@ -52,7 +54,6 @@ import org.jbpm.taskmgmt.def.Task;
 import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.validator.JsfComponentTreeValidator;
@@ -197,7 +198,7 @@ public class ProcessBuilder implements Serializable {
 		context.getRenderIds().add(messages.getClientId(facesContext));
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private void validateJbpmGraph() {
 		List<Node> nodes = getInstance().getNodes();
 		for (Node node : nodes) {
@@ -213,7 +214,7 @@ public class ProcessBuilder implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private boolean findPathToEndState(Node node, Set<Node> visitedNodes, boolean hasFoundEndState) {
 		if (node.getNodeType().equals(NodeType.EndState)) {
 			return true;
@@ -363,7 +364,7 @@ public class ProcessBuilder implements Serializable {
 		}
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public BigInteger getIdProcessDefinition() {
 		if (instance == null) {
 			return null;

@@ -15,6 +15,8 @@
 */
 package br.com.infox.certificado;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.security.GeneralSecurityException;
 import java.security.cert.CertPath;
 import java.security.cert.X509Certificate;
@@ -25,7 +27,6 @@ import org.jboss.seam.util.Base64;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.util.ArrayUtil;
 
 /**
@@ -96,7 +97,7 @@ public class ValidaDocumento {
 		}
 	}
 
-	@SuppressWarnings({ WarningConstants.RAWTYPES, WarningConstants.UNCHECKED })
+	@SuppressWarnings({ RAWTYPES, UNCHECKED })
 	private void processReceivedCertificationChain()
 	throws ValidaDocumentoException {
 		String certChainBase64Encoded = removeBR(certificado);

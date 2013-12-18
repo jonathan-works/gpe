@@ -1,5 +1,7 @@
 package br.com.infox.epp.tarefa.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +10,6 @@ import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
@@ -52,7 +53,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return getNamedResultList(ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
@@ -63,7 +64,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return q.getResultList();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listForaPrazoTarefa(Categoria c) {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
@@ -74,7 +75,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return q.getResultList();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listTarefaPertoLimite() {
 		StringBuilder s = new StringBuilder();
 		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
@@ -84,7 +85,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return q.getResultList();
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(final Integer idProcesso, final Integer idTarefa) {
         final String hql = "select new map(pet.taskInstance as idTaskInstance) " +
                             "from ProcessoEpaTarefa pet " +
