@@ -15,6 +15,8 @@
 */
 package br.com.infox.ibpm.task.handler;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,6 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.handler.ActionTemplateHandler;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.task.action.TaskPageAction;
@@ -128,7 +129,7 @@ public class TaskHandler implements Serializable {
 		return ret;
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public Task update() {
 		if (task.getTaskController() != null) {
 			List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
@@ -140,7 +141,7 @@ public class TaskHandler implements Serializable {
 		return task;
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public void newVar() {
 		if(!checkNullVariables()) {
 			VariableAccess v = new VariableAccess("", "read,write", "null:");

@@ -16,6 +16,7 @@
 package br.com.itx.component;
 
 import static org.jboss.seam.faces.FacesMessages.instance;
+import static br.com.infox.core.constants.WarningConstants.*;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -42,14 +43,13 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
-@SuppressWarnings(WarningConstants.UNCHECKED)
+@SuppressWarnings(UNCHECKED)
 public abstract class AbstractHome<T> extends EntityHome<T> {
 	
 	private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
@@ -486,7 +486,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	 * @param idField - Nome do atributo da Entity referente ao campo
 	 * @param homeRef - Home da Entity do atributo informado
 	 */
-	@SuppressWarnings(WarningConstants.RAWTYPES)
+	@SuppressWarnings(RAWTYPES)
 	public void toggleFields(String idField, AbstractHome homeRef){
 		if(homeRef.getLockedFields().contains(idField)) {
 			homeRef.getLockedFields().remove(idField);

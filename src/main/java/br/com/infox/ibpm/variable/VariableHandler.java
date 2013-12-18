@@ -16,6 +16,8 @@
 
 package br.com.infox.ibpm.variable;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,6 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.itx.util.ComponentUtil;
 
 
@@ -51,7 +52,7 @@ public class VariableHandler implements Serializable {
 		return getVariables(taskId, true);
 	}
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	private List<Variavel> getVariables(long taskId, boolean readOnly) {
 		List<Variavel> ret = new ArrayList<Variavel>();
 		TaskInstance taskInstance = ManagedJbpmContext.instance()
