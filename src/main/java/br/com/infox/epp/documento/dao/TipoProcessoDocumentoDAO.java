@@ -1,5 +1,7 @@
 package br.com.infox.epp.documento.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,7 +10,6 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
@@ -22,7 +23,7 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoProcessoDocumentoDAO";
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo){
 		String restricaoDeTipo = "'";
 		if (isModelo){
@@ -38,7 +39,7 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 	}
 	
 	//Retorna um TipoProcessoDocumento ~aleatório
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
 	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
 		String sql = "select o from TipoProcessoDocumento o ";
 		Query q = getEntityManager().createQuery(sql);
@@ -51,7 +52,7 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 		return result;	
 	}
 	
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     public boolean isAssinaturaObrigatoria(TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
 	    HashMap<String,Object> params = new HashMap<String,Object>(0);
 	    params.put(TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_PARAM, tipoProcessoDocumento);

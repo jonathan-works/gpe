@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.processo.documento.home;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
@@ -177,7 +178,7 @@ public class ProcessoDocumentoHome
         if (ret != null) {
             setIdDocumentoRerender(instance.getIdProcessoDocumento());
             if (isModelo) {
-                @SuppressWarnings(WarningConstants.UNCHECKED)
+                @SuppressWarnings(UNCHECKED)
                 List<Integer> lista = (List<Integer>) Contexts.getSessionContext().get(PETICAO_INSERIDA);
                 if (lista == null) {
                     lista = new ArrayList<Integer>();

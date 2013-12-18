@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.documento.dao;
 
+import static br.com.infox.core.constants.WarningConstants.*;
+
 import java.util.List;
 
 import javax.persistence.Query;
@@ -7,7 +9,6 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
@@ -21,7 +22,7 @@ public class ProcessoDocumentoDAO extends GenericDAO {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
     
-    @SuppressWarnings(WarningConstants.UNCHECKED)
+    @SuppressWarnings(UNCHECKED)
     public List<Integer> getNextSequencial(Processo processo) {
         final String hql = "select max(pd.numeroDocumento) " +
                 "from ProcessoDocumento pd " +
