@@ -200,9 +200,11 @@ public class TaskHandler implements Serializable {
 	
 	public Boolean hasTaskPage() {
 		if(hasTaskPage == null) {
-			for (VariableAccessHandler va : variables) {
-				if(va.getType().equals(TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
-					return true;
+			if (variables != null) {
+				for (VariableAccessHandler va : variables) {
+					if(va.getType().equals(TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
+						return true;
+					}
 				}
 			}
 			hasTaskPage = false;
