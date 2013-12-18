@@ -1,11 +1,12 @@
 package br.com.infox.epp.access.dao;
 
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_EMAIL;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_LOGIN;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +38,9 @@ public class UsuarioLoginDAO extends GenericDAO {
 	}
 	
 	public void inativarUsuario(UsuarioLogin usuario) {
-		String hql = "UPDATE UsuarioLogin u SET u.ativo = false WHERE u.idUsuarioLogin = " + usuario.getIdUsuarioLogin().toString();
-		getEntityManager().createQuery(hql).executeUpdate();
+		Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID, usuario.getIdUsuarioLogin());
+        executeNamedQueryUpdate(INATIVAR_USUARIO, parameters);
 	}
 	
 	public UsuarioLogin getUsuarioLoginByLogin(String login) {
