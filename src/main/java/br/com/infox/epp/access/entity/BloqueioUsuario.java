@@ -26,7 +26,7 @@ import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.ID_BLOQUEIO_USU
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.ID_USUARIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.MOTIVO_BLOQUEIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.SEQUENCE_BLOQUEIO_USUARIO;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.TABLE_BLOQUEIO_USUARIO;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.*;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
@@ -38,6 +38,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -50,7 +52,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = TABLE_BLOQUEIO_USUARIO, schema=PUBLIC)
 @NamedQueries(value={
+    @NamedQuery(name=SAVE_DATA_DESBLOQUEIO, query=SAVE_DATA_DESBLOQUEIO_QUERY),
     @NamedQuery(name=BLOQUEIO_MAIS_RECENTE, query=BLOQUEIO_MAIS_RECENTE_QUERY)
+})
+@NamedNativeQueries(value={
+    @NamedNativeQuery(name=UNDO_BLOQUEIO, query=UNDO_BLOQUEIO_NATIVE_QUERY)
 })
 public class BloqueioUsuario implements java.io.Serializable {
 
