@@ -4,9 +4,11 @@ import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.List;
 
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.exception.RecursiveException;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.persistence.RecursiveManager;
 import br.com.itx.util.EntityUtil;
@@ -54,7 +56,13 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extend
     
     @Override
     protected boolean beforeSave() {
-        updateRecursivePath();
+    	try {
+    		updateRecursivePath();
+    	} catch (RecursiveException e) {
+    		FacesMessages.instance().clear();
+    		FacesMessages.instance().add(e.getMessage());
+    		return false;
+    	}
         return true;
     }
     
