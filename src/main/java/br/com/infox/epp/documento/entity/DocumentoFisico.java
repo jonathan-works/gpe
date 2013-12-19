@@ -1,23 +1,22 @@
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.*;
 import java.io.Serializable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
-import br.com.infox.epp.documento.query.DocumentoFisicoQuery;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
-@Table(schema="public", name=DocumentoFisico.TABLE_NAME)
+@Table(schema=PUBLIC, name=TABLE_DOCUMENTO_FISICO)
 @NamedQueries(value={
-		@NamedQuery(name=DocumentoFisicoQuery.LIST_BY_PROCESSO,
-				    query=DocumentoFisicoQuery.LIST_BY_PROCESSO_QUERY)
-	  })
+    @NamedQuery(name=LIST_BY_PROCESSO, query=LIST_BY_PROCESSO_QUERY)
+})
 public class DocumentoFisico implements Serializable {
 
-	public static final String TABLE_NAME = "tb_documento_fisico";
 	private static final long serialVersionUID = 1L;
 
 	private Integer idDocumentoFisico;
@@ -26,10 +25,10 @@ public class DocumentoFisico implements Serializable {
 	private String descricaoDocumentoFisico;
 	private Boolean ativo=true;
 	
-	@SequenceGenerator(name="generator", sequenceName="sq_tb_documento_fisico")
+	@SequenceGenerator(name=GENERATOR, sequenceName=SEQUENCE_DOCUMENTO_FISICO)
 	@Id
-	@GeneratedValue(generator="generator")
-	@Column(name="id_documento_fisico", unique=true, nullable=false)
+	@GeneratedValue(generator=GENERATOR)
+	@Column(name=ID_DOCUMENTO_FISICO, unique=true, nullable=false)
 	public Integer getIdDocumentoFisico() {
 		return idDocumentoFisico;
 	}
@@ -38,7 +37,7 @@ public class DocumentoFisico implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_localizacao_fisica")
+	@JoinColumn(name = ID_LOCALIZACAO_FISICA)
 	public LocalizacaoFisica getLocalizacaoFisica() {
 		return localizacaoFisica;
 	}
@@ -47,7 +46,7 @@ public class DocumentoFisico implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_processo")
+	@JoinColumn(name = ID_PROCESSO)
 	public Processo getProcesso() {
 		return processo;
 	}
@@ -55,7 +54,7 @@ public class DocumentoFisico implements Serializable {
 		this.processo = processo;
 	}
 	
-	@Column(name="ds_documento_fisico", nullable=false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name=DOCUMENTO_FISICO, nullable=false, length=LengthConstants.DESCRICAO_PADRAO)
 	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	public String getDescricaoDocumentoFisico() {
 		return descricaoDocumentoFisico;
@@ -64,7 +63,7 @@ public class DocumentoFisico implements Serializable {
 		this.descricaoDocumentoFisico = descricaoDocumentoFisico;
 	}
 	
-	@Column(name="in_ativo", nullable=false)
+	@Column(name=ATIVO, nullable=false)
 	public Boolean getAtivo() {
 		return this.ativo;
 	}
