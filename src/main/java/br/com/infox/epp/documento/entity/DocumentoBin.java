@@ -16,6 +16,11 @@
 
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.documento.query.DocumentoBinQuery.DOCUMENTO_BIN;
+import static br.com.infox.epp.documento.query.DocumentoBinQuery.ID_DOCUMENTO_BIN;
+import static br.com.infox.epp.documento.query.DocumentoBinQuery.TABLE_DOCUMENTO_BIN;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -30,7 +35,7 @@ import br.com.infox.core.util.ArrayUtil;
  * @author joaopaulo
  */
 @Entity
-@Table(name = "tb_processo_documento_bin", schema="public")
+@Table(name = TABLE_DOCUMENTO_BIN, schema=PUBLIC)
 public class DocumentoBin implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -39,7 +44,7 @@ public class DocumentoBin implements java.io.Serializable {
 	private byte[] documentoBin;
 
 	@Id
-	@Column(name = "id_processo_documento_bin", unique = true, nullable = false)
+	@Column(name = ID_DOCUMENTO_BIN, unique = true, nullable = false)
 	@NotNull
 	public int getIdDocumentoBin() {
 		return this.idDocumentoBin;
@@ -49,7 +54,7 @@ public class DocumentoBin implements java.io.Serializable {
 		this.idDocumentoBin = idDocumentoBin;
 	}	
 	
-	@Column(name = "ob_processo_documento", nullable = false)
+	@Column(name = DOCUMENTO_BIN, nullable = false)
 	@NotNull
 	public byte[] getDocumentoBin() {
 		return ArrayUtil.copyOf(documentoBin);
