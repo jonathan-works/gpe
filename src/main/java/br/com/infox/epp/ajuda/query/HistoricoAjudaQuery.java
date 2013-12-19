@@ -7,7 +7,7 @@ public interface HistoricoAjudaQuery {
     String ID_HISTORICO_AJUDA = "id_historico_ajuda";
     String DATA_REGISTRO = "dt_registro";
     String TEXTO = "ds_texto";
-    String PAGINA = "id_pagina";
-    String USUARIO = "id_usuario";
+    String ID_PAGINA = "id_pagina";
+    String ID_USUARIO = "id_usuario";
 
 }
