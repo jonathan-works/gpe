@@ -12,11 +12,15 @@ public class MockClassificacaoDocumentoCrud extends ClassificacaoDocumentoCrudAc
     public MockClassificacaoDocumentoCrud() {
         super();
         setGenericManager(new MockGenericManager());
-        setMessagesInterface(MockMessagesHandler.getInstance());
     }
     
     public List<TipoProcessoDocumento> getAll() {
         return getGenericManager().findAll(TipoProcessoDocumento.class);
+    }
+    
+    @Override
+    protected MockMessagesHandler getMessagesHandler() {
+        return MockMessagesHandler.instance();
     }
     
 }

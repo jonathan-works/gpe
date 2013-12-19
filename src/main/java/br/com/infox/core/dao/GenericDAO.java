@@ -102,6 +102,11 @@ public class GenericDAO implements Serializable {
 		return q;
 	}
 	
+	protected void executeNamedQueryUpdate(final String namedQuery,
+            final Map<String, Object> parameters){
+	    getNamedQuery(namedQuery, parameters).executeUpdate();
+	}
+	
 	@Transactional
 	public <T> T persist(final T object) throws DAOException{
 	    try {

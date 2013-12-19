@@ -13,42 +13,42 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.test.core.messages.MockMessagesHandler;
 import br.com.itx.util.EntityUtil;
 
 public class ClassificacaoDocumentoCrudTest {
     private static int id=1;
-    private MockClassificacaoDocumentoCrud classificacaoDocumentoCrudAction;
+    private MockClassificacaoDocumentoCrud mockCrudAction;
 
     @After
     public void afterTest() {
-//        session.close();
-//        sessionFactory.close();
+        MockMessagesHandler.instance().clear();
     }
 
     @Before
     public void beforeTest() {
-        classificacaoDocumentoCrudAction = new MockClassificacaoDocumentoCrud();
+        mockCrudAction = new MockClassificacaoDocumentoCrud();
     }
 
     @Test
     public void testInactivate() {
         int entityId = id++;
         TipoProcessoDocumento entity = createInstance(entityId, "", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        classificacaoDocumentoCrudAction.newInstance();
+        mockCrudAction.newInstance();
         persistEntity(entity);
         
-        Assert.assertTrue(classificacaoDocumentoCrudAction.getInstance().getAtivo());
-        classificacaoDocumentoCrudAction.inactive(classificacaoDocumentoCrudAction.getInstance());
-        Assert.assertFalse(classificacaoDocumentoCrudAction.getInstance().getAtivo());
+        Assert.assertTrue(mockCrudAction.getInstance().getAtivo());
+        mockCrudAction.inactive(mockCrudAction.getInstance());
+        Assert.assertFalse(mockCrudAction.getInstance().getAtivo());
     }
     
     @Test
     public void testMultipleInserts() {
         for (int i = 0; i < 25; i++) {
             persistEntity(createInstance(id++, i+"", i+"", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i+""));
-            classificacaoDocumentoCrudAction.newInstance();
+            mockCrudAction.newInstance();
         }
-        List<TipoProcessoDocumento> list = classificacaoDocumentoCrudAction.getAll();
+        List<TipoProcessoDocumento> list = mockCrudAction.getAll();
         Assert.assertTrue(list.size() >= 25);
     }
 
@@ -56,10 +56,10 @@ public class ClassificacaoDocumentoCrudTest {
     public void testRemove() {
         for (int i = 1; i <= 25; i++) {
             persistEntity(createInstance(id++, i+"", i+"", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i+""));
-            classificacaoDocumentoCrudAction.newInstance();    
+            mockCrudAction.newInstance();    
         }
         
-        final List<TipoProcessoDocumento> list = classificacaoDocumentoCrudAction.getAll();
+        final List<TipoProcessoDocumento> list = mockCrudAction.getAll();
         for (TipoProcessoDocumento tipoProcessoDocumento : list) {
             assertRemoveTrue(tipoProcessoDocumento);
         }
@@ -93,8 +93,8 @@ public class ClassificacaoDocumentoCrudTest {
         persistEntity(entity);
         
         cloneEntity.setIdTipoProcessoDocumento(entity.getIdTipoProcessoDocumento());
-        Assert.assertNotNull(classificacaoDocumentoCrudAction.getId());
-        TipoProcessoDocumento currentInstance = classificacaoDocumentoCrudAction.getInstance();
+        Assert.assertNotNull(mockCrudAction.getId());
+        TipoProcessoDocumento currentInstance = mockCrudAction.getInstance();
         Assert.assertNotNull(currentInstance);
         assertEquals(cloneEntity, currentInstance);
     }
@@ -103,15 +103,15 @@ public class ClassificacaoDocumentoCrudTest {
     public void testUpdate() {
         int entityId = id++;
         TipoProcessoDocumento entity = createInstance(entityId, "", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        classificacaoDocumentoCrudAction.newInstance();
+        mockCrudAction.newInstance();
         persistEntity(entity);
         
-        entity = classificacaoDocumentoCrudAction.getInstance();
+        entity = mockCrudAction.getInstance();
         Assert.assertEquals("", entity.getCodigoDocumento());
         entity.setCodigoDocumento("novoCodigo");
-        classificacaoDocumentoCrudAction.setInstance(entity);
-        classificacaoDocumentoCrudAction.save();
-        entity = classificacaoDocumentoCrudAction.getInstance();
+        mockCrudAction.setInstance(entity);
+        mockCrudAction.save();
+        entity = mockCrudAction.getInstance();
         Assert.assertEquals("novoCodigo", entity.getCodigoDocumento());
     }
 
@@ -137,33 +137,41 @@ public class ClassificacaoDocumentoCrudTest {
     }
     
     private void assertRemoveTrue(TipoProcessoDocumento entity) {
-        int size = classificacaoDocumentoCrudAction.getAll().size();
-        classificacaoDocumentoCrudAction.remove(entity);
-        int afterSize = classificacaoDocumentoCrudAction.getAll().size();
+        int size = mockCrudAction.getAll().size();
+        mockCrudAction.remove(entity);
+        List<TipoProcessoDocumento> list = mockCrudAction.getAll();
+        int afterSize = list.size();
         Assert.assertTrue(afterSize < size);
+        Assert.assertFalse(list.contains(entity));
     }
     
     private void assertRemoveFalse(TipoProcessoDocumento entity) {
-        int size = classificacaoDocumentoCrudAction.getAll().size();
-        classificacaoDocumentoCrudAction.remove(entity);
-        int afterSize = classificacaoDocumentoCrudAction.getAll().size();
+        int size = mockCrudAction.getAll().size();
+        mockCrudAction.remove(entity);
+        List<TipoProcessoDocumento> list = mockCrudAction.getAll();
+        int afterSize = list.size();
         Assert.assertTrue(afterSize == size);
+        Assert.assertTrue(list.contains(entity));
     }
     
     private void assertInsertFalse(TipoProcessoDocumento entity) {
-        int size = classificacaoDocumentoCrudAction.getAll().size();
+        int size = mockCrudAction.getAll().size();
         persistEntity(entity);
-        classificacaoDocumentoCrudAction.newInstance();
-        int afterSize = classificacaoDocumentoCrudAction.getAll().size();
+        mockCrudAction.newInstance();
+        List<TipoProcessoDocumento> list = mockCrudAction.getAll();
+        int afterSize = list.size();
         Assert.assertTrue(size==afterSize);
+        Assert.assertFalse(list.contains(entity));
     }
     
     private void assertInsertTrue(TipoProcessoDocumento entity) {
-        int size = classificacaoDocumentoCrudAction.getAll().size();
+        int size = mockCrudAction.getAll().size();
         persistEntity(entity);
-        classificacaoDocumentoCrudAction.newInstance();
-        int afterSize = classificacaoDocumentoCrudAction.getAll().size();
+        mockCrudAction.newInstance();
+        List<TipoProcessoDocumento> list = mockCrudAction.getAll();
+        int afterSize = list.size();
         Assert.assertTrue(size<afterSize);
+        Assert.assertTrue(list.contains(entity));
     }
 
     private TipoProcessoDocumento createInstance(int idTipoProcessoDocumento,
@@ -203,10 +211,10 @@ public class ClassificacaoDocumentoCrudTest {
     }
 
     private void persistEntity(TipoProcessoDocumento entity) {
-        Assert.assertFalse(classificacaoDocumentoCrudAction.isManaged());
-        classificacaoDocumentoCrudAction.setInstance(entity);
-        classificacaoDocumentoCrudAction.save();
-        Assert.assertTrue(classificacaoDocumentoCrudAction.isManaged());
+        Assert.assertFalse(mockCrudAction.isManaged());
+        mockCrudAction.setInstance(entity);
+        mockCrudAction.save();
+        Assert.assertTrue(mockCrudAction.isManaged());
     }
 
 }

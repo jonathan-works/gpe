@@ -114,14 +114,6 @@ public class AuthenticatorService extends GenericManager {
 								+ "Por favor, contate o adminstrador do sistema");
 	}
 	
-	public UsuarioLogin getUsuarioByCpf(String cpf) throws LoginException {
-		UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByCpf(cpf);
-		if (usuario == null) {
-			throw new LoginException("Não foi possível encontrar um usuário que corresponda a este SmartCard. ");
-		}
-		return usuario;
-	}
-	
 	public UsuarioLogin getUsuarioByLogin(String login){
 		return usuarioLoginManager.getUsuarioLoginByLogin(login);
 	}

@@ -19,10 +19,6 @@ public class UsuarioLoginManager extends GenericManager {
 	
 	@In private UsuarioLoginDAO usuarioLoginDAO;
 	
-	public UsuarioLogin getUsuarioLogin(UsuarioLogin usuarioLogin){
-		return usuarioLoginDAO.getUsuarioLogin(usuarioLogin);
-	}
-	
 	public boolean usuarioExpirou(UsuarioLogin usuarioLogin){
 		return usuarioLogin.getProvisorio() && usuarioLogin.getDataExpiracao().before(new Date());
 	}
@@ -31,20 +27,12 @@ public class UsuarioLoginManager extends GenericManager {
 		usuarioLoginDAO.inativarUsuario(usuario);
 	}
 	
-	public UsuarioLogin getUsuarioLoginByCpf(String cpf){
-		return usuarioLoginDAO.getUsuarioLoginByCpf(cpf);
-	}
-	
-	public UsuarioLogin getUsuarioLoginByLogin(String login){
-		return usuarioLoginDAO.getUsuarioLoginByLogin(login);
-	}
-	
 	public UsuarioLogin getUsuarioLoginByEmail(String email){
 		return usuarioLoginDAO.getUsuarioLoginByEmail(email);
 	}
 	
-	public UsuarioLogin checkUserByLogin(String login) {
-	    return usuarioLoginDAO.checkUserByLogin(login);
+	public UsuarioLogin getUsuarioLoginByLogin(String login) {
+	    return usuarioLoginDAO.getUsuarioLoginByLogin(login);
 	}
 
 }
