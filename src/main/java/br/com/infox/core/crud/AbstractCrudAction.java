@@ -114,7 +114,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
             try {
                 setInstance(getGenericManager().merge(activeEntity));
             } catch (DAOException e) {
-                messagesHandler.addMessage(Severity.ERROR, "Merge Entity Error",e);
+                getMessagesHandler().add(Severity.ERROR, "Merge Entity Error",e);
             }
         }
     }
@@ -147,11 +147,11 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     LOG.error(".save()",e);
                 }
-	            messagesHandler.clearMessages();
-	            messagesHandler.addMessage(MSG_REGISTRO_CRIADO);
+	            getMessagesHandler().clear();
+	            getMessagesHandler().add(MSG_REGISTRO_CRIADO);
 	        } else if (UPDATED.equals(ret)){
-	            messagesHandler.clearMessages();
-	            messagesHandler.addMessage(MSG_REGISTRO_ALTERADO);
+	            getMessagesHandler().clear();
+	            getMessagesHandler().add(MSG_REGISTRO_ALTERADO);
 	        }
 		}
 		return ret;
@@ -217,8 +217,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	protected void onDAOExcecption(DAOException daoException){
         PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
         if (errorCode != null) {
-            messagesHandler.clearMessages();
-            messagesHandler.addMessage(daoException.getLocalizedMessage());
+            getMessagesHandler().clear();
+            getMessagesHandler().add(daoException.getLocalizedMessage());
         }
 	}
 	
