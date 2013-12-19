@@ -15,6 +15,18 @@
 */
 package br.com.infox.epp.ajuda.entity;
 
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL_QUERY;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.DATA_REGISTRO;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.ID_AJUDA;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.PAGINA;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.SEQUENCE_AJUDA;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.TABLE_AJUDA;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.TEXTO;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.USUARIO;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -24,11 +36,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.hibernate.search.annotations.Analyzer;
@@ -37,13 +52,14 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
-import javax.validation.constraints.NotNull;
-
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.search.Reindexer;
 
 @Entity
-@Table(name = "tb_ajuda", schema="public")
+@Table(name = TABLE_AJUDA, schema=PUBLIC)
+@NamedQueries(value={
+    @NamedQuery(name=AJUDA_BY_URL, query=AJUDA_BY_URL_QUERY)
+})
 @Analyzer(impl = BrazilianAnalyzer.class)
 @Indexed
 public class Ajuda implements java.io.Serializable {
@@ -56,10 +72,10 @@ public class Ajuda implements java.io.Serializable {
 	private Pagina pagina;
 	private UsuarioLogin usuario;
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_ajuda")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_AJUDA)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_ajuda", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_AJUDA, unique = true, nullable = false)
 	public Integer getIdAjuda() {
 		return idAjuda;
 	}
@@ -69,7 +85,7 @@ public class Ajuda implements java.io.Serializable {
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_registro", nullable = false, length = 0)
+	@Column(name = DATA_REGISTRO, nullable = false, length = 0)
 	@NotNull
 	public Date getDataRegistro() {
 		return dataRegistro;
@@ -79,7 +95,7 @@ public class Ajuda implements java.io.Serializable {
 		this.dataRegistro = dataRegistro;
 	}
 
-	@Column(name = "ds_texto")
+	@Column(name = TEXTO)
 	public String getTexto() {
 		return texto;
 	}
@@ -89,7 +105,7 @@ public class Ajuda implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_pagina", nullable = false)
+	@JoinColumn(name = PAGINA, nullable = false)
 	@NotNull
 	public Pagina getPagina() {
 		return pagina;
@@ -100,7 +116,7 @@ public class Ajuda implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario", nullable = false)
+	@JoinColumn(name = USUARIO, nullable = false)
 	@NotNull
 	public UsuarioLogin getUsuario() {
 		return usuario;
