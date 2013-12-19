@@ -15,14 +15,16 @@
 */
 package br.com.infox.epp.processo.entity;
 
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.*;
-import static javax.persistence.InheritanceType.*;
-import static javax.persistence.TemporalType.*;
-
-import static br.com.infox.core.constants.LengthConstants.*;
-import static br.com.infox.core.persistence.ORConstants.*;
-
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.core.constants.LengthConstants.NUMERO_PROCESSO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.InheritanceType.JOINED;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,19 +40,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
-
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import javax.validation.constraints.Size;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.estatistica.entity.Estatistica;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
@@ -61,7 +58,6 @@ public class Processo implements java.io.Serializable {
 
 	public static final String TABLE_NAME = "tb_processo";
 	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(Processo.class);
 
 	private int idProcesso;
 	private UsuarioLogin usuarioCadastroProcesso;
@@ -78,7 +74,6 @@ public class Processo implements java.io.Serializable {
 	private List<ProcessoDocumento> processoDocumentoList = new ArrayList<ProcessoDocumento>(0);
 	private List<Processo> processoConexoListForIdProcesso = new ArrayList<Processo>(0);
 	private List<Processo> processoConexoListForIdProcessoConexo = new ArrayList<Processo>(0);
-	private List<Estatistica> estatisticaList = new ArrayList<Estatistica>(0);
 
 	private String actorId;
 
@@ -199,29 +194,6 @@ public class Processo implements java.io.Serializable {
 	public void setProcessoConexoListForIdProcessoConexo(
 			List<Processo> processoConexoListForIdProcessoConexo) {
 		this.processoConexoListForIdProcessoConexo = processoConexoListForIdProcessoConexo;
-	}
-	
-	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = "processo")
-	@OrderBy("dataInicio")
-	public List<Estatistica> getEstatisticaList() {
-		return estatisticaList;
-	}
-	
-	public void setEstatisticaList(List<Estatistica> estatisticaList) {
-		this.estatisticaList = estatisticaList;
-	}
-	
-	@Transient
-	public Estatistica getLastEstatistica() {
-		Estatistica estatistica = null;
-		try {
-			if (estatisticaList.size() > 0) {
-				estatistica = estatisticaList.get(estatisticaList.size() - 1);
-			}
-		} catch (Exception exception) {
-		    LOG.error(".getLastEstatistica()", exception);
-		}
-		return estatistica;
 	}
 	
 	@Override
