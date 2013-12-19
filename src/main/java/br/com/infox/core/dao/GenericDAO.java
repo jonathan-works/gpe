@@ -72,13 +72,21 @@ public class GenericDAO implements Serializable {
 		return entityManager.createQuery(sb.toString()).getResultList();
 	}
 	
+    protected <T> List<T> getNamedResultList(final String namedQuery) {
+        return getNamedResultList(namedQuery, null);
+    }
+	
 	@SuppressWarnings(UNCHECKED)
 	protected <T> List<T> getNamedResultList(final String namedQuery,
 			final Map<String, Object> parameters) {
 		Query q = getNamedQuery(namedQuery, parameters);
 		return q.getResultList();
 	}
-
+	
+	protected <T> T getNamedSingleResult(final String namedQuery){
+	    return getNamedSingleResult(namedQuery, null);
+	}
+	
 	@SuppressWarnings(UNCHECKED)
 	protected <T> T getNamedSingleResult(final String namedQuery,
 			final Map<String, Object> parameters) {
