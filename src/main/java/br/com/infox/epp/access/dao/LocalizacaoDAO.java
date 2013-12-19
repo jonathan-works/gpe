@@ -18,7 +18,7 @@ public class LocalizacaoDAO extends GenericDAO {
 	public static final String NAME = "localizacaoDAO";
 	
 	public List<Localizacao> getLocalizacoesEstrutura(){
-	    return getNamedResultList(LOCALIZACOES_ESTRUTURA, null);
+	    return getNamedResultList(LOCALIZACOES_ESTRUTURA);
 	}
 
 }
