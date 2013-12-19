@@ -1,6 +1,13 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.*;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIO_MAIS_RECENTE;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_BLOQUEIO;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_DATA_DESBLOQUEIO;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_ID_USUARIO;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_USUARIO;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.SAVE_DATA_DESBLOQUEIO;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO_NATIVE_QUERY;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +18,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.itx.util.EntityUtil;
 
 @Name(BloqueioUsuarioDAO.NAME)
 @AutoCreate
@@ -32,20 +38,16 @@ public class BloqueioUsuarioDAO extends GenericDAO {
 	}
 	
 	private void desbloquearUsuario(UsuarioLogin usuarioLogin){
-		String queryDesbloqueio = "update public.tb_usuario set in_bloqueio=false where id_usuario = :usuario";
-		EntityUtil.getEntityManager().createNativeQuery(queryDesbloqueio)
-			.setParameter("usuario", usuarioLogin.getIdUsuarioLogin())
-			.executeUpdate();
+	    Map<String,Object> parameters = new HashMap<String,Object>();
+        parameters.put(PARAM_ID_USUARIO, usuarioLogin.getIdUsuarioLogin());
+        executeNamedQueryUpdate(UNDO_BLOQUEIO_NATIVE_QUERY, parameters);
 	}
 	
 	private void gravarDesbloqueio(BloqueioUsuario bloqueioUsuario){
-		String queryDataDesbloqueio = 
-				"UPDATE BloqueioUsuario b SET b.dataDesbloqueio = :hoje " +
-				"WHERE b.idBloqueioUsuario = :bloqueio";
-		EntityUtil.getEntityManager().createQuery(queryDataDesbloqueio)
-			.setParameter("hoje", new Date())
-			.setParameter("bloqueio", bloqueioUsuario.getIdBloqueioUsuario())
-			.executeUpdate();
+	    Map<String,Object> parameters = new HashMap<String,Object>();
+        parameters.put(PARAM_BLOQUEIO, bloqueioUsuario);
+        parameters.put(PARAM_DATA_DESBLOQUEIO, new Date());
+        executeNamedQueryUpdate(SAVE_DATA_DESBLOQUEIO, parameters);
 	}
 
 }
