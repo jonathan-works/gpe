@@ -1,6 +1,16 @@
 package br.com.infox.epp.access.query;
 
 public interface UsuarioLocalizacaoQuery {
+    
+    String TABLE_USUARIO_LOCALIZACAO = "tb_usuario_localizacao";
+    String SEQUENCE_USUARIO_LOCALIZACAO = "public.sq_tb_usuario_localizacao";
+    String ID_USUARIO_LOCALIZACAO = "id_usuario_localizacao";
+    String USUARIO = "id_usuario";
+    String PAPEL = "id_papel";
+    String LOCALIZACAO = "id_localizacao";
+    String ESTRUTURA = "id_estrutura";
+    String RESPONSAVEL_LOCALIZACAO = "in_responsavel_localizacao";
+    String CONTABILIZAR = "in_contabilizar";
 	
 	String PARAM_PAPEL = "papel";
 	String PARAM_USUARIO = "usuario";
