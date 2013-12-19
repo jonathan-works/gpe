@@ -16,17 +16,37 @@
 package br.com.infox.epp.access.entity;
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.DESCRICAO_LOCALIZACAO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.ID_LOCALIZACAO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.IN_ESTRUTURA;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI_ATTRIBUTE;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.SEQUENCE_LOCALIZACAO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.TABLE_LOCALIZACAO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.LAZY;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
@@ -35,7 +55,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
@@ -46,11 +65,13 @@ import br.com.infox.epp.turno.entity.LocalizacaoTurno;
  */ 
 
 @Entity
-@Table(name = Localizacao.TABLE_NAME, schema="public")
+@Table(name = TABLE_LOCALIZACAO, schema=PUBLIC)
+@NamedQueries(value={
+    @NamedQuery(name=LOCALIZACOES_ESTRUTURA, query=LOCALIZACOES_ESTRUTURA_QUERY)
+})
 public class Localizacao implements java.io.Serializable, Recursive<Localizacao> {
 
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "tb_localizacao";
 
 	private int idLocalizacao;
 	private String localizacao;
@@ -70,10 +91,10 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 	public Localizacao() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_localizacao")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_localizacao", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_LOCALIZACAO, unique = true, nullable = false)
 	public int getIdLocalizacao() {
 		return this.idLocalizacao;
 	}
@@ -82,8 +103,8 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.idLocalizacao = idLocalizacao;
 	}
 	
-	@Column(name = "ds_localizacao", nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
-	@Size(max=LengthConstants.NOME_PADRAO)
+	@Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length=DESCRICAO_PADRAO, unique = true)
+	@Size(max=DESCRICAO_PADRAO)
 	@NotNull
 	public String getLocalizacao() {
 		return this.localizacao;
@@ -93,7 +114,7 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.localizacao = localizacao;
 	}
 	
-	@Column(name = "in_ativo", nullable = false)
+	@Column(name = ATIVO, nullable = false)
 	@NotNull
 	public Boolean getAtivo() {
 		return this.ativo;
@@ -103,8 +124,8 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.ativo = ativo;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_localizacao_pai")
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = LOCALIZACAO_PAI)
 	public Localizacao getLocalizacaoPai() {
 		return this.localizacaoPai;
 	}
@@ -113,8 +134,7 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.localizacaoPai = localizacaoPai;
 	}
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "localizacao")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = LOCALIZACAO_ATTRIBUTE)
 	public List<ItemTipoDocumento> getItemTipoDocumentoList() {
 		return this.itemTipoDocumentoList;
 	}
@@ -124,8 +144,7 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.itemTipoDocumentoList = itemTipoDocumentoList;
 	}
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "localizacao")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = LOCALIZACAO_ATTRIBUTE)
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
 		return this.usuarioLocalizacaoList;
 	}
@@ -135,9 +154,8 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.usuarioLocalizacaoList = usuarioLocalizacaoList;
 	}
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "localizacaoPai")
-	@OrderBy("localizacao")
+	@OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = LAZY, mappedBy = LOCALIZACAO_PAI_ATTRIBUTE)
+	@OrderBy(LOCALIZACAO_ATTRIBUTE)
 	public List<Localizacao> getLocalizacaoList() {
 		return this.localizacaoList;
 	}
@@ -146,9 +164,8 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.localizacaoList = localizacaoList;
 	}
 	
-	@Column(name = "in_estrutura", nullable = false)
+	@Column(name = IN_ESTRUTURA, nullable = false)
 	@NotNull
-		
 	public Boolean getEstrutura() {
 		return estrutura;
 	}
@@ -157,8 +174,8 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.estrutura = estrutura;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_estrutura")	
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = ESTRUTURA)	
 	public Localizacao getEstruturaFilho() {
 		return estruturaFilho;
 	}
@@ -167,7 +184,7 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.estruturaFilho = estruturaFilho;
 	}
 	
-	@Column(name="in_twitter", nullable=false)
+	@Column(name=TWITTER, nullable=false)
 	public Boolean getTemContaTwitter() {
 		return temContaTwitter;
 	}
@@ -176,7 +193,7 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.temContaTwitter = temContaTwitter;
 	}
 
-	@Column(name="ds_caminho_completo", unique=true)
+	@Column(name=CAMINHO_COMPLETO, unique=true)
 	public String getCaminhoCompleto() {
 		return caminhoCompleto;
 	}
@@ -220,7 +237,7 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 		this.localizacaoTurnoList = localizacaoTurnoList;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "localizacao")
+	@OneToMany(fetch = LAZY, mappedBy = LOCALIZACAO_ATTRIBUTE)
 	public List<LocalizacaoTurno> getLocalizacaoTurnoList() {
 		return localizacaoTurnoList;
 	}
