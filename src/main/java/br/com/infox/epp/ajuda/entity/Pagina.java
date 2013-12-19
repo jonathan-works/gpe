@@ -15,21 +15,34 @@
 */
 package br.com.infox.epp.ajuda.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*; 
-import static br.com.infox.epp.ajuda.query.PaginaQuery.*;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.DESCRICAO;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.ID_PAGINA;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.PAGINA_BY_URL;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.PAGINA_BY_URL_QUERY;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.SEQUENCE_PAGINA;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.TABLE_PAGINA;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.URL;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = TABLE_PAGINA, schema=PUBLIC)
+@NamedQueries(value={
+    @NamedQuery(name=PAGINA_BY_URL, query=PAGINA_BY_URL_QUERY)
+})
 public class Pagina implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
