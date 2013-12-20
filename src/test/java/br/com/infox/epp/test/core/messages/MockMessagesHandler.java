@@ -82,13 +82,13 @@ public class MockMessagesHandler extends StatusMessages {
     }
     
     private void dumpGlobalMessages() {
-        for (String statusMessage : messages) {
-            System.out.println(statusMessage);
-        }
+//        for (String statusMessage : messages) {
+//            System.out.println(statusMessage);
+//        }
     }
     
     private void dumpKeyedMessages(String key) {
-        dumpKeyedMessages(this.keyedMessages, key);
+//        dumpKeyedMessages(this.keyedMessages, key);
     }
     
     private void dumpKeyedMessages() {
@@ -100,11 +100,11 @@ public class MockMessagesHandler extends StatusMessages {
 
     private void dumpKeyedMessages(
             final HashMap<String, ArrayList<String>> keyedMessages, String key) {
-        System.out.println("["+key+"]");
-        final ArrayList<String> list = keyedMessages.get(key);
-        for (String statusMessage : list) {
-            System.out.println(statusMessage);
-        }
+//        System.out.println("["+key+"]");
+//        final ArrayList<String> list = keyedMessages.get(key);
+//        for (String statusMessage : list) {
+//            System.out.println(statusMessage);
+//        }
     }
     
     public boolean keyedMessagesContains(String id, String message) {
