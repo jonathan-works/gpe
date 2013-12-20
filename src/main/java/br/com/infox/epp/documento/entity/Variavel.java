@@ -18,6 +18,7 @@ package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.*;
 import static br.com.infox.epp.documento.query.VariavelQuery.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -38,6 +41,9 @@ import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = TABLE_VARIAVEL, schema=PUBLIC)
+@NamedQueries(value={
+    @NamedQuery(name=VARIAVEL_BY_TIPO_MODELO_DOCUMENTO, query=VARIAVEL_BY_TIPO_MODELO_QUERY)
+})
 public class Variavel implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
