@@ -8,7 +8,7 @@ import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
-import br.com.infox.epp.test.crud.AbstractMockCrudAction;
+import br.com.infox.epp.test.crud.MockCrudAction;
 import br.com.infox.epp.test.crud.EntityAction;
 import br.com.infox.epp.test.crud.EntityActionContainer;
 
@@ -17,7 +17,7 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
     private static int id = 1;
 
     @Override
-    protected AbstractMockCrudAction<TipoProcessoDocumento> getMockCrudAction() {
+    protected MockCrudAction<TipoProcessoDocumento> getMockCrudAction() {
         return new MockClassificacaoDocumentoCrud();
     }
 
