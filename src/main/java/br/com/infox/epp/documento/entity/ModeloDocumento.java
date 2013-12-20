@@ -14,7 +14,6 @@
  veja em http://www.gnu.org/licenses/   
 */
 package br.com.infox.epp.documento.entity;
-// Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
@@ -24,10 +23,12 @@ import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.ID_MODELO_DO
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.ID_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.LIST_ATIVOS;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.LIST_ATIVOS_QUERY;
-import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO;
-import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO_QUERY;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_GRUPO_AND_TIPO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_GRUPO_AND_TIPO_QUERY;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_LISTA_IDS;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_LISTA_IDS_QUERY;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO_QUERY;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.SEQUENCE_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.TABLE_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.TITULO_MODELO_DOCUMENTO;
@@ -56,7 +57,8 @@ import br.com.infox.core.constants.LengthConstants;
 @NamedQueries(value={
     @NamedQuery(name=LIST_ATIVOS, query=LIST_ATIVOS_QUERY),
     @NamedQuery(name=MODELO_BY_TITULO, query=MODELO_BY_TITULO_QUERY),
-    @NamedQuery(name=MODELO_BY_GRUPO_AND_TIPO, query=MODELO_BY_GRUPO_AND_TIPO_QUERY)
+    @NamedQuery(name=MODELO_BY_GRUPO_AND_TIPO, query=MODELO_BY_GRUPO_AND_TIPO_QUERY),
+    @NamedQuery(name=MODELO_BY_LISTA_IDS, query=MODELO_BY_LISTA_IDS_QUERY)
 })
 public class ModeloDocumento implements java.io.Serializable {
 
