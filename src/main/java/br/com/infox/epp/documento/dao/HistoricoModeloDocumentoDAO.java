@@ -20,7 +20,7 @@ public class HistoricoModeloDocumentoDAO extends GenericDAO {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "historicoModeloDocumentoDAO";
     
-    public List<ModeloDocumento> listModelosDistintosDeHistoricoModeloDocumento(){
+    public List<ModeloDocumento> listModelosDoHistorico(){
         return getNamedResultList(LIST_MODELO);
     }
     
