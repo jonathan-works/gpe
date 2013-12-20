@@ -13,7 +13,7 @@ import br.com.infox.core.action.AbstractAction;
 import br.com.infox.epp.test.core.messages.MockMessagesHandler;
 
 public abstract class AbstractGenericCrudTest<T> {
-    private AbstractMockCrudAction<T> mockCrudAction;
+    private MockCrudAction<T> mockCrudAction;
 
     private List<T> inactivateList = new ArrayList<>(0);
     private List<T> inactivateListFail = new ArrayList<>(0);
@@ -86,7 +86,7 @@ public abstract class AbstractGenericCrudTest<T> {
         }
         return sb.substring(0, topLength);
     }
-    protected abstract AbstractMockCrudAction<T> getMockCrudAction();
+    protected abstract MockCrudAction<T> getMockCrudAction();
 
     @After
     public void afterTest() {
