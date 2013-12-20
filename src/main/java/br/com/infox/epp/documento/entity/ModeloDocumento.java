@@ -26,8 +26,8 @@ import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.LIST_ATIVOS;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.LIST_ATIVOS_QUERY;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO_QUERY;
-import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_DOCUMENTO_BY_GRUPO_AND_TIPO;
-import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_DOCUMENTO_BY_GRUPO_AND_TIPO_QUERY;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_GRUPO_AND_TIPO;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_GRUPO_AND_TIPO_QUERY;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.SEQUENCE_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.TABLE_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.TITULO_MODELO_DOCUMENTO;
@@ -56,7 +56,7 @@ import br.com.infox.core.constants.LengthConstants;
 @NamedQueries(value={
     @NamedQuery(name=LIST_ATIVOS, query=LIST_ATIVOS_QUERY),
     @NamedQuery(name=MODELO_BY_TITULO, query=MODELO_BY_TITULO_QUERY),
-    @NamedQuery(name=MODELO_DOCUMENTO_BY_GRUPO_AND_TIPO, query=MODELO_DOCUMENTO_BY_GRUPO_AND_TIPO_QUERY)
+    @NamedQuery(name=MODELO_BY_GRUPO_AND_TIPO, query=MODELO_BY_GRUPO_AND_TIPO_QUERY)
 })
 public class ModeloDocumento implements java.io.Serializable {
 
