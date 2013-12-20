@@ -15,10 +15,11 @@ import br.com.infox.epp.test.crud.EntityActionContainer;
 public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<TipoProcessoDocumento> {
 
     private static int id = 1;
+    final private MockClassificacaoDocumentoCrud mockCrudAction = new MockClassificacaoDocumentoCrud();
 
     @Override
     protected MockCrudAction<TipoProcessoDocumento> getMockCrudAction() {
-        return new MockClassificacaoDocumentoCrud();
+        return mockCrudAction;
     }
 
     private TipoProcessoDocumento createInstance(
