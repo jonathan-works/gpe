@@ -133,10 +133,11 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	@Override
 	public String save() {
 		String ret = null;
-		boolean isManaged = isManaged();
+		boolean wasManaged = isManaged();
 		if(beforeSave()) {
-			ret = isManaged ? update() : persist();
+			ret = wasManaged ? update() : persist();
 		}
+		boolean persistFailed = ret == null || (!PERSISTED.equals(ret) && !wasManaged);
 		if(ret != null) {
 		    afterSave();
 			afterSave(ret);
@@ -152,13 +153,14 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	        } else if (UPDATED.equals(ret)){
 	            getMessagesHandler().clear();
 	            getMessagesHandler().add(MSG_REGISTRO_ALTERADO);
-	        } else if (!isManaged) {
-	        	try {
-					setInstance(EntityUtil.cloneEntity(getInstance(), false));
-				} catch (InstantiationException | IllegalAccessException e) {
-					LOG.error(".save()", e);
-				}
 	        }
+		}
+		if (persistFailed) {
+        	try {
+				setInstance(EntityUtil.cloneEntity(getInstance(), false));
+			} catch (InstantiationException | IllegalAccessException e) {
+				LOG.error(".save()", e);
+			}
 		}
 		return ret;
 	}
