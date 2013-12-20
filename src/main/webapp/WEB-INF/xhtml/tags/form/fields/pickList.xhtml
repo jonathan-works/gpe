@@ -24,18 +24,9 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<ui:param
-		name="listsHeight"
-		value="#{wi:get(listsHeight, '300px')}" />
-	<ui:param
-		name="sourceListWidth"
-		value="#{wi:get(sourceListWidth, '350')}" />
-	<ui:param
-		name="sourceListWidth"
-		value="#{sourceListWidth}px" />
-	<ui:param
-		name="targetListWidth"
-		value="#{wi:get(targetListWidth, '350')}" />
+	<ui:param name="listHeight" value="#{wi:get(listsHeight, '300px')}" />
+	<ui:param name="listWidth" value="#{wi:get(listWidth, '350px')}" />
+	
 	<h:outputScript
         name="pickList.js"
         library="js" />
@@ -61,14 +52,13 @@
 			addText="Adicionar"
 			removeAllText="Remover todos"
 			removeText="Remover"
-			listHeight="#{listsHeight}"
+			listHeight="#{listHeight}"
 			moveControlsVerticalAlign="top"
-			sourceListWidth="#{sourceListWidth}"
-			targetListWidth="#{targetListWidth}"
 			switchByClick="true"
 			sourceCaption="#{sourceCaption}"
 			targetCaption="#{targetCaption}"
-			showButtonsLabel="false">
+			showButtonsLabel="false"
+			listWidth="#{listWidth}">
 			<s:selectItems
 				value="#{itemValues}"
 				var="var"
