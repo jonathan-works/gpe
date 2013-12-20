@@ -1,5 +1,16 @@
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.CAMINHO_COMPLETO;
+import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.DESCRICAO_LOCALIZACAO_FISICA;
+import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.ID_LOCALIZACAO_FISICA;
+import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.ID_LOCALIZACAO_FISICA_PAI;
+import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.LOCALIZACAO_FISICA_PAI_ATTRIBUTE;
+import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.SEQUENCE_LOCALIZACAO_FISICA;
+import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.TABLE_LOCALIZACAO_FISICA;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +33,9 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.persistence.Recursive;
 
 @Entity
-@Table(schema="public", name=LocalizacaoFisica.TABLE_NAME)
+@Table(schema=PUBLIC, name=TABLE_LOCALIZACAO_FISICA)
 public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisica> {
 
-	public static final String TABLE_NAME = "tb_localizacao_fisica";
 	private static final long serialVersionUID = 1L;
 
 	private int idLocalizacaoFisica;
@@ -35,10 +45,10 @@ public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisi
 	private Boolean ativo;
 	private List<LocalizacaoFisica> localizacaoFisicaList = new ArrayList<>(0);
 	
-	@SequenceGenerator(name="generator", sequenceName="sq_tb_localizacao_fisica")
+	@SequenceGenerator(name=GENERATOR, sequenceName=SEQUENCE_LOCALIZACAO_FISICA)
 	@Id
-	@GeneratedValue(generator="generator")
-	@Column(name="id_localizacao_fisica", unique=true, nullable=false)
+	@GeneratedValue(generator=GENERATOR)
+	@Column(name=ID_LOCALIZACAO_FISICA, unique=true, nullable=false)
 	public int getIdLocalizacaoFisica() {
 		return idLocalizacaoFisica;
 	}
@@ -47,14 +57,14 @@ public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisi
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_localizacao_fisica_pai")
+	@JoinColumn(name = ID_LOCALIZACAO_FISICA_PAI)
 	public LocalizacaoFisica getLocalizacaoFisicaPai() {
 		return localizacaoFisicaPai;
 	}
 	public void setLocalizacaoFisicaPai(LocalizacaoFisica localizacaoFisicaPai) {
 		this.localizacaoFisicaPai = localizacaoFisicaPai;
 	}
-	@Column(name="ds_localizacao_fisica", nullable=false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name=DESCRICAO_LOCALIZACAO_FISICA, nullable=false, length=LengthConstants.DESCRICAO_PADRAO)
 	@Size(max=LengthConstants.NOME_PADRAO)
 	public String getDescricao() {
 		return descricao;
@@ -63,14 +73,14 @@ public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisi
 		this.descricao = descricao;
 	}
 	
-	@Column(name="ds_caminho_completo", unique=true)
+	@Column(name=CAMINHO_COMPLETO, unique=true)
 	public String getCaminhoCompleto() {
 		return caminhoCompleto;
 	}
 	public void setCaminhoCompleto(String caminhoCompleto) {
 		this.caminhoCompleto = caminhoCompleto;
 	}
-	@Column(name="in_ativo", nullable=false)
+	@Column(name=ATIVO, nullable=false)
 	public Boolean getAtivo() {
 		return this.ativo;
 	}
@@ -99,7 +109,7 @@ public class LocalizacaoFisica implements Serializable,Recursive<LocalizacaoFisi
 	}
 	
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "localizacaoFisicaPai")
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = LOCALIZACAO_FISICA_PAI_ATTRIBUTE)
 	public List<LocalizacaoFisica> getLocalizacaoFisicaList() {
 		return this.localizacaoFisicaList;
 	}
