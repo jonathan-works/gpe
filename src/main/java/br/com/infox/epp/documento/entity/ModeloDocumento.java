@@ -24,6 +24,8 @@ import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.ID_MODELO_DO
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.ID_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.LIST_ATIVOS;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.LIST_ATIVOS_QUERY;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO_QUERY;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.SEQUENCE_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.TABLE_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.TITULO_MODELO_DOCUMENTO;
@@ -51,6 +53,7 @@ import br.com.infox.core.constants.LengthConstants;
 @Inheritance(strategy=InheritanceType.JOINED)
 @NamedQueries(value={
     @NamedQuery(name=LIST_ATIVOS, query=LIST_ATIVOS_QUERY),
+    @NamedQuery(name=MODELO_BY_TITULO, query=MODELO_BY_TITULO_QUERY)
 })
 public class ModeloDocumento implements java.io.Serializable {
 

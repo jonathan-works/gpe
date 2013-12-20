@@ -1,10 +1,5 @@
 package br.com.infox.epp.documento.query;
 
-/**
- * Interface com as queries da entidade ModeloDocumento
- * 
- * @author erikliberal
- */
 public interface ModeloDocumentoQuery {
 
     String TABLE_MODELO_DOCUMENTO = "tb_modelo_documento";
@@ -17,5 +12,10 @@ public interface ModeloDocumentoQuery {
     String LIST_ATIVOS = "listModeloDocumentoAtivo";
     String LIST_ATIVOS_QUERY = "select o from ModeloDocumento o "
             + "where o.ativo = true";
+    
+    String PARAM_TITULO = "titulo";
+    String MODELO_BY_TITULO = "listModeloDocumentoByTitulo";
+    String MODELO_BY_TITULO_QUERY = "select o from ModeloDocumento o "
+                                    + "where o.tituloModeloDocumento = :" + PARAM_TITULO;
 
 }
