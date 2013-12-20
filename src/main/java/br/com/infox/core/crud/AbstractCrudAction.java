@@ -114,7 +114,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
             try {
                 setInstance(getGenericManager().merge(activeEntity));
             } catch (DAOException e) {
-                messagesHandler.addMessage(Severity.ERROR, "Merge Entity Error",e);
+                getMessagesHandler().add(Severity.ERROR, "Merge Entity Error",e);
             }
         }
     }
@@ -133,25 +133,31 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	@Override
 	public String save() {
 		String ret = null;
+		boolean isManaged = isManaged();
 		if(beforeSave()) {
-			ret = isManaged() ? update() : persist();
+			ret = isManaged ? update() : persist();
 		}
 		if(ret != null) {
 		    afterSave();
 			afterSave(ret);
 			
 	        if (PERSISTED.equals(ret)){
-	            
                 try {
                     setId(EntityUtil.getId(instance).getReadMethod().invoke(instance));
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     LOG.error(".save()",e);
                 }
-	            messagesHandler.clearMessages();
-	            messagesHandler.addMessage(MSG_REGISTRO_CRIADO);
+	            getMessagesHandler().clear();
+	            getMessagesHandler().add(MSG_REGISTRO_CRIADO);
 	        } else if (UPDATED.equals(ret)){
-	            messagesHandler.clearMessages();
-	            messagesHandler.addMessage(MSG_REGISTRO_ALTERADO);
+	            getMessagesHandler().clear();
+	            getMessagesHandler().add(MSG_REGISTRO_ALTERADO);
+	        } else if (!isManaged) {
+	        	try {
+					setInstance(EntityUtil.cloneEntity(getInstance(), false));
+				} catch (InstantiationException | IllegalAccessException e) {
+					LOG.error(".save()", e);
+				}
 	        }
 		}
 		return ret;
@@ -217,8 +223,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	protected void onDAOExcecption(DAOException daoException){
         PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
         if (errorCode != null) {
-            messagesHandler.clearMessages();
-            messagesHandler.addMessage(daoException.getLocalizedMessage());
+            getMessagesHandler().clear();
+            getMessagesHandler().add(daoException.getLocalizedMessage());
         }
 	}
 	
