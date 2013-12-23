@@ -74,8 +74,7 @@ public final class ComponentUtil {
 		}
 		if (component instanceof EditableValueHolder) {
 			EditableValueHolder evh = (EditableValueHolder) component;
-			evh.setValid(true);
-			evh.setValue(null);
+			evh.resetValue();
 		}
 		for (UIComponent c : component.getChildren()) {
 			clearChildren(c);
