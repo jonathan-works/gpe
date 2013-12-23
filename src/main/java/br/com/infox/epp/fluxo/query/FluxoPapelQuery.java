@@ -2,10 +2,10 @@ package br.com.infox.epp.fluxo.query;
 
 public interface FluxoPapelQuery {
 
-	String QUERY_PARAM_FLUXO = "fluxo";
-	
-	String LIST_BY_FLUXO = "listFluxoPapelByFluxo";
-	String LIST_BY_FLUXO_QUERY = "select o from FluxoPapel o " +
-								 "where o.fluxo = :"+QUERY_PARAM_FLUXO;
-	
+    String QUERY_PARAM_FLUXO = "fluxo";
+
+    String LIST_BY_FLUXO = "listFluxoPapelByFluxo";
+    String LIST_BY_FLUXO_QUERY = "select o from FluxoPapel o "
+            + "where o.fluxo = :" + QUERY_PARAM_FLUXO;
+
 }

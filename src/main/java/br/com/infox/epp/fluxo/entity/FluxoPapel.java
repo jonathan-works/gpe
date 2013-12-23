@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.fluxo.query.FluxoPapelQuery;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.*;
 
 @Entity
 @Table(name=FluxoPapel.TABLE_NAME, schema="public",
@@ -25,9 +25,8 @@ import br.com.infox.epp.fluxo.query.FluxoPapelQuery;
 			@UniqueConstraint(columnNames={"id_fluxo", "id_papel"})
 	   })
 @NamedQueries(value={
-				@NamedQuery(name=FluxoPapelQuery.LIST_BY_FLUXO,
-						    query=FluxoPapelQuery.LIST_BY_FLUXO_QUERY)
-			  })
+    @NamedQuery(name=LIST_BY_FLUXO, query=LIST_BY_FLUXO_QUERY)
+})
 public class FluxoPapel implements Serializable{
 
     private static final long serialVersionUID = 1L;
