@@ -4,3 +4,4 @@
 *~
 /bin
 /src/main/java/br/com/experimentos
+*.db
