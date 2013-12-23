@@ -10,21 +10,21 @@ public interface DefinicaoVariavelProcessoQuery {
     String LABEL = "ds_label";
     String ID_FLUXO = "id_fluxo";
 
-    String QUERY_PARAM_FLUXO = "fluxo";
-    String QUERY_PARAM_NOME = "nome";
+    String PARAM_FLUXO = "fluxo";
+    String PARAM_NOME = "nome";
 
     String LIST_BY_FLUXO = "listByFluxo";
     String LIST_BY_FLUXO_QUERY = "select o from DefinicaoVariavelProcesso o"
-            + " where o.fluxo = :" + QUERY_PARAM_FLUXO + " order by o.nome";
+            + " where o.fluxo = :" + PARAM_FLUXO + " order by o.nome";
 
     String TOTAL_BY_FLUXO = "totalByFluxo";
     String TOTAL_BY_FLUXO_QUERY = "select count(o) from DefinicaoVariavelProcesso o where o.fluxo = :"
-            + QUERY_PARAM_FLUXO;
+            + PARAM_FLUXO;
 
     String DEFINICAO_BY_FLUXO = "definicaoByFluxo";
     String DEFINICAO_BY_FLUXO_NOME_QUERY = "select o from DefinicaoVariavelProcesso o"
             + " where o.fluxo = :"
-            + QUERY_PARAM_FLUXO
+            + PARAM_FLUXO
             + " and o.nome = :"
-            + QUERY_PARAM_NOME;
+            + PARAM_NOME;
 }
