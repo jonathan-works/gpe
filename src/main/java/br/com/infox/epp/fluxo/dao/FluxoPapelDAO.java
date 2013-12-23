@@ -1,15 +1,18 @@
 package br.com.infox.epp.fluxo.dao;
 
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.LIST_BY_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.PARAM_FLUXO;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
-import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.*;
 
 @Name(FluxoPapelDAO.NAME)
 @AutoCreate

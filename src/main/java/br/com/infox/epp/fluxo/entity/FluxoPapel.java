@@ -1,6 +1,15 @@
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.ID_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.ID_FLUXO_PAPEL;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.ID_PAPEL;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.LIST_BY_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.LIST_BY_FLUXO_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.SEQUENCE_FLUXO_PAPEL;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.TABLE_FLUXO_PAPEL;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -18,7 +27,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Papel;
-import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.*;
 
 @Entity
 @Table(name=TABLE_FLUXO_PAPEL, schema=PUBLIC, uniqueConstraints={
