@@ -1,5 +1,13 @@
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.GENERATOR_DEFINICAO_VARIAVEL_PROCESSO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_DEFINICAO_VARIAVEL_PROCESSO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_FLUXO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LABEL;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.NOME_VARIAVEL;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.SEQUENCE_DEFINICAO_VARIAVEL_PROCESSO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TABLE_DEFINICAO_VARIAVEL_PROCESSO;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -19,32 +27,31 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = DefinicaoVariavelProcesso.TABLE_NAME, uniqueConstraints = {
-	@UniqueConstraint(columnNames = {"nm_variavel", "id_fluxo"})
+@Table(name = TABLE_DEFINICAO_VARIAVEL_PROCESSO, uniqueConstraints = {
+    @UniqueConstraint(columnNames = {NOME_VARIAVEL, ID_FLUXO})
 })
 public class DefinicaoVariavelProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "tb_definicao_variavel_processo";
 	
 	@Id
-	@SequenceGenerator(name = "DefinicaoVariavelProcessoGenerator", sequenceName = "sq_tb_definicao_variavel_processo")
-	@GeneratedValue(generator = "DefinicaoVariavelProcessoGenerator", strategy = GenerationType.SEQUENCE)
-	@Column(name = "id_definicao_variavel_processo", nullable = false, unique = true)
+	@SequenceGenerator(name = GENERATOR_DEFINICAO_VARIAVEL_PROCESSO, sequenceName = SEQUENCE_DEFINICAO_VARIAVEL_PROCESSO)
+	@GeneratedValue(generator = GENERATOR_DEFINICAO_VARIAVEL_PROCESSO, strategy = GenerationType.SEQUENCE)
+	@Column(name = ID_DEFINICAO_VARIAVEL_PROCESSO, nullable = false, unique = true)
 	private Long id;
 	
-	@Column(name = "nm_variavel", nullable = false, length = LengthConstants.DESCRICAO_PEQUENA)
+	@Column(name = NOME_VARIAVEL, nullable = false, length = LengthConstants.DESCRICAO_PEQUENA)
 	@Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA, message = "{beanValidation.size}")
 	@NotNull(message = "{beanValidation.notNull}")
 	private String nome;
 	
-	@Column(name = "ds_label", nullable = false, length = LengthConstants.DESCRICAO_ENTIDADE)
+	@Column(name = LABEL, nullable = false, length = LengthConstants.DESCRICAO_ENTIDADE)
 	@Size(min = 1, max = LengthConstants.DESCRICAO_ENTIDADE, message = "{beanValidation.notNull}")
 	@NotNull(message = "{beanValidation.notNull}")
 	private String label;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_fluxo", nullable = false)
+	@JoinColumn(name = ID_FLUXO, nullable = false)
 	private Fluxo fluxo;
 	
 	public Long getId() {
