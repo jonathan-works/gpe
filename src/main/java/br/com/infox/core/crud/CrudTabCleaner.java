@@ -55,8 +55,7 @@ public class CrudTabCleaner implements TabChangeListener {
 		public VisitResult visit(VisitContext context, UIComponent target) {
 			if (target instanceof EditableValueHolder) {
 				EditableValueHolder valueHolder = (EditableValueHolder) target;
-				valueHolder.setValid(true);
-				valueHolder.setValue(null);
+				valueHolder.resetValue();
 			} else if (target instanceof UIDataTable) {
 				return VisitResult.REJECT;
 			}
