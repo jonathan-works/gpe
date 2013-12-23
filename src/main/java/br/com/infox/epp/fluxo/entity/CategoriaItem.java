@@ -1,6 +1,19 @@
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM_QUERY;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.ID_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.ID_CATEGORIA_ITEM;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.ID_ITEM;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.LIST_BY_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.LIST_BY_CATEGORIA_QUERY;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.SEQUENCE_CATEGORIA_ITEM;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.TABLE_CATEGORIA_ITEM;
+
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,27 +26,19 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.fluxo.query.CategoriaItemQuery;
-
 @Entity
-@Table(name=CategoriaItem.TABLE_NAME, schema="public",
-	   uniqueConstraints={
-			@UniqueConstraint(columnNames={"id_categoria", "id_item"})
-		})
+@Table(name=TABLE_CATEGORIA_ITEM, schema=PUBLIC,
+    uniqueConstraints={@UniqueConstraint(columnNames={ID_CATEGORIA, ID_ITEM})
+})
 @NamedQueries(value={
-        @NamedQuery(name=CategoriaItemQuery.LIST_BY_CATEGORIA,
-                query=CategoriaItemQuery.LIST_BY_CATEGORIA_QUERY),
-        @NamedQuery(name=CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM,
-                        query=CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM_QUERY)
-	})
+    @NamedQuery(name=LIST_BY_CATEGORIA, query=LIST_BY_CATEGORIA_QUERY),
+    @NamedQuery(name=COUNT_BY_CATEGORIA_ITEM, query=COUNT_BY_CATEGORIA_ITEM_QUERY)
+})
 public class CategoriaItem implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	public static final String TABLE_NAME = "tb_categoria_item";
-	
 	private int idCategoriaItem;
 	private Categoria categoria;
 	private Item item;
@@ -47,10 +52,10 @@ public class CategoriaItem implements Serializable{
 	    this.item = item;
 	}
 	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_categoria_item")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA_ITEM)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_categoria_item", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_CATEGORIA_ITEM, unique = true, nullable = false)
 	public int getIdCategoriaItem() {
 		return idCategoriaItem;
 	}
@@ -60,7 +65,7 @@ public class CategoriaItem implements Serializable{
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_item", nullable=false)
+	@JoinColumn(name = ID_ITEM, nullable=false)
 	@NotNull
 	public Item getItem() {
 		return item;
@@ -75,7 +80,7 @@ public class CategoriaItem implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_categoria", nullable=false)
+	@JoinColumn(name = ID_CATEGORIA, nullable=false)
 	public Categoria getCategoria() {
 		return categoria;
 	}
