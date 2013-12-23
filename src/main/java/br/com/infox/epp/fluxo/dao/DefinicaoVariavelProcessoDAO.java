@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.dao;
 
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.*;
+
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -12,7 +14,6 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery;
 
 @Scope(ScopeType.EVENT)
 @AutoCreate
@@ -34,20 +35,20 @@ public class DefinicaoVariavelProcessoDAO extends GenericDAO {
 	}
 
 	public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
-		return getEntityManager().createQuery(DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO_QUERY, Long.class)
-				.setParameter(DefinicaoVariavelProcessoQuery.QUERY_PARAM_FLUXO, fluxo)
+		return getEntityManager().createQuery(TOTAL_BY_FLUXO_QUERY, Long.class)
+				.setParameter(QUERY_PARAM_FLUXO, fluxo)
 				.getSingleResult();
 	}
 	
 	private TypedQuery<DefinicaoVariavelProcesso> createQueryVariaveisProcessoByFluxo(Fluxo fluxo) {
-		return getEntityManager().createQuery(DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO_QUERY, DefinicaoVariavelProcesso.class)
-				.setParameter(DefinicaoVariavelProcessoQuery.QUERY_PARAM_FLUXO, fluxo);
+		return getEntityManager().createQuery(LIST_BY_FLUXO_QUERY, DefinicaoVariavelProcesso.class)
+				.setParameter(QUERY_PARAM_FLUXO, fluxo);
 	}
 
 	public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
-		return getEntityManager().createQuery(DefinicaoVariavelProcessoQuery.DEFINICAO_BY_FLUXO_NOME_QUERY, DefinicaoVariavelProcesso.class)
-				.setParameter(DefinicaoVariavelProcessoQuery.QUERY_PARAM_FLUXO, fluxo)
-				.setParameter(DefinicaoVariavelProcessoQuery.QUERY_PARAM_NOME, nome)
+		return getEntityManager().createQuery(DEFINICAO_BY_FLUXO_NOME_QUERY, DefinicaoVariavelProcesso.class)
+				.setParameter(QUERY_PARAM_FLUXO, fluxo)
+				.setParameter(QUERY_PARAM_NOME, nome)
 				.getSingleResult();
 	}
 }
