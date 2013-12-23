@@ -33,6 +33,9 @@ public interface FluxoQuery {
     String LIST_ATIVOS = "listFluxoAtivo";
     String LIST_ATIVOS_QUERY = "select o from Fluxo o "
             + "where o.ativo = true";
+    
+    String COUNT_PROCESSOS_BY_FLUXO = "countProcessosByFluxo";
+    String COUNT_PROCESSOS_BY_FLUXO_QUERY = "select count(o) from Processo o where o.naturezaCategoriaFluxo.fluxo = :fluxo";
 
     String COUNT_PROCESSOS_ATRASADOS = "countProcessosAtrasadosByFluxo";
     String COUNT_PROCESSOS_ATRASADOS_QUERY = "select count(o) from ProcessoEpa o "

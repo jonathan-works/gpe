@@ -52,6 +52,7 @@ import br.com.itx.util.HibernateUtil;
     @NamedQuery(name=LIST_ATIVOS, query=LIST_ATIVOS_QUERY),
     @NamedQuery(name=COUNT_PROCESSOS_ATRASADOS, query=COUNT_PROCESSOS_ATRASADOS_QUERY),
     @NamedQuery(name=FLUXO_BY_DESCRICACAO, query=FLUXO_BY_DESCRICAO_QUERY),
+    @NamedQuery(name=COUNT_PROCESSOS_BY_FLUXO, query=COUNT_PROCESSOS_BY_FLUXO_QUERY),
     @NamedQuery(name=FLUXO_BY_NOME, query=FLUXO_BY_NOME_QUERY)
 })
 public class Fluxo implements Serializable {
