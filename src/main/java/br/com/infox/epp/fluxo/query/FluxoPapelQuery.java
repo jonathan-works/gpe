@@ -9,10 +9,10 @@ public interface FluxoPapelQuery {
     String ID_PAPEL = "id_papel";
     
 
-    String QUERY_PARAM_FLUXO = "fluxo";
+    String PARAM_FLUXO = "fluxo";
 
     String LIST_BY_FLUXO = "listFluxoPapelByFluxo";
     String LIST_BY_FLUXO_QUERY = "select o from FluxoPapel o "
-            + "where o.fluxo = :" + QUERY_PARAM_FLUXO;
+            + "where o.fluxo = :" + PARAM_FLUXO;
 
 }

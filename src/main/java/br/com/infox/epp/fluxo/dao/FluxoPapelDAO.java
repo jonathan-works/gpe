@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
-import br.com.infox.epp.fluxo.query.FluxoPapelQuery;
+import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.*;
 
 @Name(FluxoPapelDAO.NAME)
 @AutoCreate
@@ -24,10 +24,9 @@ public class FluxoPapelDAO extends GenericDAO {
      * @return
      */
     public List<FluxoPapel> listByFluxo(Fluxo fluxo) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put(FluxoPapelQuery.QUERY_PARAM_FLUXO, fluxo);
-        List<FluxoPapel> resultList = getNamedResultList(FluxoPapelQuery.LIST_BY_FLUXO, map);
-        return resultList;
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(PARAM_FLUXO, fluxo);
+        return getNamedResultList(LIST_BY_FLUXO, parameters);
     }
 
 }
