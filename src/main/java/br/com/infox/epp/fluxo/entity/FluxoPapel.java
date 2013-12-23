@@ -1,5 +1,6 @@
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.core.persistence.ORConstants.*;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -20,10 +21,9 @@ import br.com.infox.epp.access.entity.Papel;
 import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.*;
 
 @Entity
-@Table(name=FluxoPapel.TABLE_NAME, schema="public",
-	   uniqueConstraints={
-			@UniqueConstraint(columnNames={"id_fluxo", "id_papel"})
-	   })
+@Table(name=TABLE_FLUXO_PAPEL, schema=PUBLIC, uniqueConstraints={
+    @UniqueConstraint(columnNames={ID_FLUXO, ID_PAPEL})
+})
 @NamedQueries(value={
     @NamedQuery(name=LIST_BY_FLUXO, query=LIST_BY_FLUXO_QUERY)
 })
@@ -31,16 +31,14 @@ public class FluxoPapel implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
-    public static final String TABLE_NAME = "tb_fluxo_papel";
-
 	private int idFluxoPapel;
 	private Fluxo fluxo;	
 	private Papel papel;
 	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_fluxo_papel")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO_PAPEL)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_fluxo_papel", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_FLUXO_PAPEL, unique = true, nullable = false)
 	public int getIdFluxoPapel() {
 		return idFluxoPapel;
 	}
@@ -50,7 +48,7 @@ public class FluxoPapel implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_fluxo", nullable=false)
+	@JoinColumn(name = ID_FLUXO, nullable=false)
 	@NotNull
 	public Fluxo getFluxo() {
 		return fluxo;
@@ -61,7 +59,7 @@ public class FluxoPapel implements Serializable{
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_papel", nullable=false)
+	@JoinColumn(name = ID_PAPEL, nullable=false)
 	@NotNull
 	public Papel getPapel() {
 		return papel;
