@@ -22,9 +22,13 @@ public interface FluxoQuery {
 
     String PARAM_FLUXO = "fluxo";
     String PARAM_DESCRICAO = "descricao";
+    String PARAM_NOME = "nomeFluxo";
     
-    String FLUXO_BY_NAME = "fluxoByName";
-    String FLUXO_BY_NAME_QUERY = "select o from Fluxo o where o.fluxo like :" + PARAM_DESCRICAO;
+    String FLUXO_BY_DESCRICACAO = "fluxoByDescricao";
+    String FLUXO_BY_DESCRICAO_QUERY = "select o from Fluxo o where o.fluxo like :" + PARAM_DESCRICAO;
+    
+    String FLUXO_BY_NOME = "fluxoByNome";
+    String FLUXO_BY_NOME_QUERY = "select o from Fluxo o where o.fluxo = :" + PARAM_NOME;
 
     String LIST_ATIVOS = "listFluxoAtivo";
     String LIST_ATIVOS_QUERY = "select o from Fluxo o "
