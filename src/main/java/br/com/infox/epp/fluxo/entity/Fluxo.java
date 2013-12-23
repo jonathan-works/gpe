@@ -14,7 +14,31 @@
 */
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.CODIGO_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_BY_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_BY_FLUXO_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.DATA_FIM_PUBLICACAO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.DATA_INICIO_PUBLICACAO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.DESCRICAO_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICACAO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICAO_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.ID_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.ID_USUARIO_PUBLICACAO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.PRAZO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.PUBLICADO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.SEQUENCE_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.TABLE_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.XML_FLUXO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,7 +65,6 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.*;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
