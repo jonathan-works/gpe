@@ -35,7 +35,7 @@ public class FluxoDAO extends GenericDAO {
 	
 	public Long quantidadeProcessosAtrasados(Fluxo fluxo) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(FluxoQuery.FLUXO_PARAM, fluxo);
+		map.put(FluxoQuery.PARAM_FLUXO, fluxo);
 		return getNamedSingleResult(FluxoQuery.COUNT_PROCESSOS_ATRASADOS, map);
 	}
 	

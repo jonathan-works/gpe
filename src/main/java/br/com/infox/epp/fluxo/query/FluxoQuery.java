@@ -20,7 +20,11 @@ public interface FluxoQuery {
     String DATA_FIM_PUBLICACAO = "dt_fim_publicacao";
     String FLUXO_ATTRIBUTE = "fluxo";
 
-    String FLUXO_PARAM = "fluxo";
+    String PARAM_FLUXO = "fluxo";
+    String PARAM_DESCRICAO = "descricao";
+    
+    String FLUXO_BY_NAME = "fluxoByName";
+    String FLUXO_BY_NAME_QUERY = "select o from Fluxo o where o.fluxo like :" + PARAM_DESCRICAO;
 
     String LIST_ATIVOS = "listFluxoAtivo";
     String LIST_ATIVOS_QUERY = "select o from Fluxo o "
@@ -30,6 +34,6 @@ public interface FluxoQuery {
     String COUNT_PROCESSOS_ATRASADOS_QUERY = "select count(o) from ProcessoEpa o "
             + "where o.dataFim is null "
             + "  and o.situacaoPrazo != 'SAT'"
-            + "  and o.naturezaCategoriaFluxo.fluxo = :" + FLUXO_PARAM;
+            + "  and o.naturezaCategoriaFluxo.fluxo = :" + PARAM_FLUXO;
 
 }
