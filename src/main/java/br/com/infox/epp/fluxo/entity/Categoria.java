@@ -1,7 +1,16 @@
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.fluxo.query.CategoriaQuery.*;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.CATEGORIA_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.DESCRICAO_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.ID_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.LIST_PROCESSO_EPP_BY_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.SEQUENCE_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.TABLE_CATEGORIA;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +26,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
