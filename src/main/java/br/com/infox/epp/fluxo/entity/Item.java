@@ -15,8 +15,17 @@
 */
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.epp.fluxo.query.ItemQuery.*;
-import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.ItemQuery.CAMINHO_COMPLETO;
+import static br.com.infox.epp.fluxo.query.ItemQuery.CODIGO_ITEM;
+import static br.com.infox.epp.fluxo.query.ItemQuery.DESCRICAO_ITEM;
+import static br.com.infox.epp.fluxo.query.ItemQuery.ID_ITEM;
+import static br.com.infox.epp.fluxo.query.ItemQuery.ID_ITEM_PAI;
+import static br.com.infox.epp.fluxo.query.ItemQuery.ITEM_PAI_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.ItemQuery.SEQUENCE_ITEM;
+import static br.com.infox.epp.fluxo.query.ItemQuery.TABLE_ITEM;
 
 import java.io.Serializable;
 import java.util.ArrayList;
