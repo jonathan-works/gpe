@@ -8,6 +8,8 @@ import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_VARIAV
 import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.SEQUENCE_VARIAVEL_TIPO_MODELO;
 import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.TABLE_VARIAVEL_TIPO_MODELO;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +24,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = TABLE_VARIAVEL_TIPO_MODELO, schema=PUBLIC)
-public class VariavelTipoModelo implements java.io.Serializable{
+public class VariavelTipoModelo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Integer idVariavelTipoModelo;
