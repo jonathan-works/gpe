@@ -7,6 +7,7 @@ namespace("infox.Messages",function Messages(args) {
 		showDialog:$_showDialog,
 		hideDialog:$_hideDialog,
 		init:$_init,
+		dialog:$_dialog,
 		get isHidden() {
 			return $(".d-msg.hidden").size()>0; 
 		}
@@ -32,6 +33,13 @@ namespace("infox.Messages",function Messages(args) {
 				timer = setTimeout($_hideDialog, timeout);
 			}
 		}
+	}
+	
+	function $_dialog(msg) {
+		clearTimeout(timer);
+		$(".d-msg-c").text(msg);
+		$_showDialog();
+		timer = setTimeout($_hideDialog, timeout);
 	}
 	return Messages;
 });
