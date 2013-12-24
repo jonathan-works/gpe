@@ -10,8 +10,7 @@
 	<begin-conversation join="true"/>
 	<restrict>#{security.checkPage()}</restrict>
 
-	<param name="id" value="#{papelCrudAction.papelId}"/>
-	<param name="tab" value="#{papelCrudAction.tab}"/>
-	<action if="#{papelCrudAction.tab == 'search'}" execute="#{papelCrudAction.newInstance()}"/>
+	<param name="id" value="#{recursoCrudAction.id}" converterId="integerConverter"/>
+	<param name="tab" value="#{recursoCrudAction.tab}"/>
 	
 </page>

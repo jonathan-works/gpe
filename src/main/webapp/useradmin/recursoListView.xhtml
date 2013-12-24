@@ -11,12 +11,8 @@
 	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
 	<ui:param
-         name="canEdit"
-         value="#{s:hasPermission('seam.role', 'update')}" />
-
-	<ui:param
          name="home"
-         value="#{papelCrudAction}" />
+         value="#{recursoCrudAction}" />
 
 	<ui:define
          name="title">Recursos</ui:define>
@@ -29,7 +25,7 @@
             bean="#{recursoList}"
             tableTitle="#{messages['recurso.titleGrid']}"
             id="recursoList"
-            rowId="#{row.idPapel}">
+            rowId="#{row.idRecurso}">
             <ui:define name="searchForm">
                 <wi:searchForm
                     formId="pesquisarRecursoForm"
@@ -67,11 +63,23 @@
 		<wi:dataForm
 			formId="recursos"
 			formTitle="#{messages['form.title']}"
-			updateAction="papelCrudAction.save()"
-			persistAction="papelCrudAction.save()">
-			<ui:include
-	             src="recursoEdit.xhtml">
-	        </ui:include>
+			updateAction="recursoCrudAction.save()"
+			persistAction="recursoCrudAction.save()">
+			<wi:outputText
+	            id="identificador"
+	            label="Identificador"
+	            value="#{recursoCrudAction.instance.identificador}">
+	        
+	        </wi:outputText>
+	    
+	        <wi:inputText
+	            id="nome"
+	            label="Nome"
+	            value="#{recursoCrudAction.instance.nome}"
+	            required="true"/>
+	        <ui:define name="buttons">
+	           <wi:commandButtonSave/>
+            </ui:define>   
         </wi:dataForm>
 	</ui:define>
 

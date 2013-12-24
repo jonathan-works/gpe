@@ -17,13 +17,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.ForeignKey;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.jboss.seam.annotations.security.management.RoleConditional;
+import org.hibernate.annotations.ForeignKey;
 import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
 
@@ -36,7 +33,6 @@ public class Papel implements java.io.Serializable {
 	private int idPapel;
 	private String nome;
 	private String identificador;
-	private boolean condicional;
 
 	private List<Papel> grupos;
 
@@ -88,16 +84,6 @@ public class Papel implements java.io.Serializable {
 
 	public void setGrupos(List<Papel> grupos) {
 		this.grupos = grupos;
-	}
-
-	@RoleConditional
-	@Column(name = "in_condicional")
-	public boolean isCondicional() {
-		return condicional;
-	}
-
-	public void setCondicional(boolean condicional) {
-		this.condicional = condicional;
 	}
 
 	@Override
