@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
