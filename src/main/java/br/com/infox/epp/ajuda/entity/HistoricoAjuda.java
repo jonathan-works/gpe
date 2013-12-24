@@ -15,6 +15,16 @@
 */
 package br.com.infox.epp.ajuda.entity;
 
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.DATA_REGISTRO;
+import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.ID_HISTORICO_AJUDA;
+import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.ID_PAGINA;
+import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.SEQUENCE_HISTORICO_AJUDA;
+import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.TABLE_HISTORICO_AJUDA;
+import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.TEXTO;
+import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.ID_USUARIO;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -28,16 +38,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.hibernate.search.annotations.Analyzer;
 
-import javax.validation.constraints.NotNull;
-
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = "tb_historico_ajuda", schema="public")
+@Table(name = TABLE_HISTORICO_AJUDA, schema=PUBLIC)
 @Analyzer(impl = BrazilianAnalyzer.class)
 public class HistoricoAjuda implements java.io.Serializable {
 
@@ -49,10 +58,10 @@ public class HistoricoAjuda implements java.io.Serializable {
 	private Pagina pagina;
 	private UsuarioLogin usuario;
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_historico_ajuda")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_HISTORICO_AJUDA)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_historico_ajuda", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_HISTORICO_AJUDA, unique = true, nullable = false)
 	public Integer getIdHistoricoAjuda() {
 		return idHistoricoAjuda;
 	}
@@ -62,7 +71,7 @@ public class HistoricoAjuda implements java.io.Serializable {
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_registro", nullable = false, length = 0)
+	@Column(name = DATA_REGISTRO, nullable = false, length = 0)
 	@NotNull
 	public Date getDataRegistro() {
 		return dataRegistro;
@@ -72,7 +81,7 @@ public class HistoricoAjuda implements java.io.Serializable {
 		this.dataRegistro = dataRegistro;
 	}
 
-	@Column(name = "ds_texto")
+	@Column(name = TEXTO)
 	public String getTexto() {
 		return texto;
 	}
@@ -82,7 +91,7 @@ public class HistoricoAjuda implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_pagina", nullable = false)
+	@JoinColumn(name = ID_PAGINA, nullable = false)
 	@NotNull
 	public Pagina getPagina() {
 		return pagina;
@@ -93,7 +102,7 @@ public class HistoricoAjuda implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario", nullable = false)
+	@JoinColumn(name = ID_USUARIO, nullable = false)
 	@NotNull
 	public UsuarioLogin getUsuario() {
 		return usuario;

@@ -1,4 +1,4 @@
-package br.com.infox.epp.access.entity;
+package br.com.infox.epp.access.component.menu;
 
 import java.io.Serializable;
 import java.util.ArrayList;

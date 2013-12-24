@@ -15,6 +15,19 @@
 */
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.ItemQuery.CAMINHO_COMPLETO;
+import static br.com.infox.epp.fluxo.query.ItemQuery.CODIGO_ITEM;
+import static br.com.infox.epp.fluxo.query.ItemQuery.DESCRICAO_ITEM;
+import static br.com.infox.epp.fluxo.query.ItemQuery.ID_ITEM;
+import static br.com.infox.epp.fluxo.query.ItemQuery.ID_ITEM_PAI;
+import static br.com.infox.epp.fluxo.query.ItemQuery.ITEM_PAI_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.ItemQuery.SEQUENCE_ITEM;
+import static br.com.infox.epp.fluxo.query.ItemQuery.TABLE_ITEM;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +50,9 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.persistence.Recursive;
 
 @Entity
-@Table(name = Item.TABLE_NAME, schema="public")
-public class Item implements java.io.Serializable, Recursive<Item> {
+@Table(name = TABLE_ITEM, schema=PUBLIC)
+public class Item implements Serializable, Recursive<Item> {
 
-	public static final String TABLE_NAME = "tb_item";
 	private static final long serialVersionUID = 1L;
 
 	private int idItem;
@@ -54,10 +66,10 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 	public Item() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_item")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_ITEM)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_item", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_ITEM, unique = true, nullable = false)
 	public int getIdItem() {
 		return this.idItem;
 	}
@@ -67,7 +79,7 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_item_pai")
+	@JoinColumn(name = ID_ITEM_PAI)
 	public Item getItemPai() {
 		return this.itemPai;
 	}
@@ -76,7 +88,7 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 		this.itemPai = itemPai;
 	}
 
-	@Column(name = "cd_item", length=LengthConstants.DESCRICAO_PEQUENA)
+	@Column(name = CODIGO_ITEM, length=LengthConstants.DESCRICAO_PEQUENA)
 	public String getCodigoItem() {
 		return this.codigoItem;
 	}
@@ -85,7 +97,7 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 		this.codigoItem = codigoItem;
 	}
 
-	@Column(name = "ds_item", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = DESCRICAO_ITEM, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	public String getDescricaoItem() {
@@ -96,7 +108,7 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 		this.descricaoItem = descricaoItem;
 	}
 
-	@Column(name = "in_ativo", nullable = false)
+	@Column(name = ATIVO, nullable = false)
 	@NotNull
 	public Boolean getAtivo() {
 		return this.ativo;
@@ -107,7 +119,7 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 	}
 
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "itemPai")
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = ITEM_PAI_ATTRIBUTE)
 	public List<Item> getItemList() {
 		return this.itemList;
 	}
@@ -116,7 +128,7 @@ public class Item implements java.io.Serializable, Recursive<Item> {
 		this.itemList = itemList;
 	}
 
-	@Column(name="ds_caminho_completo", unique=true)
+	@Column(name=CAMINHO_COMPLETO, unique=true)
 	public String getCaminhoCompleto() {
 		return caminhoCompleto;
 	}
@@ -212,7 +224,6 @@ public class Item implements java.io.Serializable, Recursive<Item> {
     		return ret;
     	}
     	else return new ArrayList<>();
-//        return this.getItemList();
     }
 
     @Override

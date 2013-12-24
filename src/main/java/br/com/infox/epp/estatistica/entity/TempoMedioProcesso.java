@@ -1,5 +1,7 @@
 package br.com.infox.epp.estatistica.entity;
 
+import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.epp.estatistica.query.TempoMedioProcessoQuery.*;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -17,11 +19,10 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
-@Table(name=TempoMedioProcesso.TABLE_NAME, schema="public")
+@Table(name=VIEW_TEMPO_MEDIO_PROCESSO, schema=PUBLIC)
 public class TempoMedioProcesso implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "vs_tempo_medio_processo";
 
 	private int idNaturezaCategoriaFluxo;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
@@ -29,7 +30,7 @@ public class TempoMedioProcesso implements Serializable {
 	private Integer prazo;
 
 	@Id
-	@Column(name = "id_natureza_categoria_fluxo", nullable=false, insertable=false, updatable=false)
+	@Column(name = ID_NATUREZA_CATEGORIA_FLUXO, nullable=false, insertable=false, updatable=false)
 	public int getIdNaturezaCategoriaFluxo() {
 		return idNaturezaCategoriaFluxo;
 	}
@@ -38,7 +39,7 @@ public class TempoMedioProcesso implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="id_natureza_categoria_fluxo", insertable=false, updatable=false)
+	@JoinColumn(name=ID_NATUREZA_CATEGORIA_FLUXO, insertable=false, updatable=false)
 	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
 		return naturezaCategoriaFluxo;
 	}
@@ -47,7 +48,7 @@ public class TempoMedioProcesso implements Serializable {
 		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
 	}
 	
-	@Column(name="nr_tempo_medio", insertable=false, updatable=false)
+	@Column(name=TEMPO_MEDIO, insertable=false, updatable=false)
 	public Float getTempoMedio() {
 		return this.tempoMedio;
 	}
@@ -55,7 +56,7 @@ public class TempoMedioProcesso implements Serializable {
 		this.tempoMedio = tempoMedio;
 	}
 	
-	@Column(name="qt_prazo", insertable=false, updatable=false)
+	@Column(name=PRAZO, insertable=false, updatable=false)
 	public Integer getPrazo() {
 		return this.prazo;
 	}

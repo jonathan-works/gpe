@@ -1,5 +1,8 @@
 package br.com.infox.epp.access.entity;
 
+import static br.com.infox.core.constants.LengthConstants.*;
+import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.epp.access.query.PapelQuery.*;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -21,10 +24,8 @@ import org.hibernate.annotations.ForeignKey;
 import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
 
-import br.com.infox.core.constants.LengthConstants;
-
 @Entity
-@Table(name = "tb_papel", schema="public", uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))
+@Table(name = TABLE_PAPEL, schema=PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
 public class Papel implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -38,10 +39,10 @@ public class Papel implements java.io.Serializable {
 	public Papel() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_papel")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_papel", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_PAPEL, unique = true, nullable = false)
 	public int getIdPapel() {
 		return this.idPapel;
 	}
@@ -50,8 +51,8 @@ public class Papel implements java.io.Serializable {
 		this.idPapel = idPerfil;
 	}
 
-	@Column(name = "ds_nome", length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = NOME_PAPEL, length=NOME_PADRAO)
+	@Size(max=NOME_PADRAO)
 	public String getNome() {
 		return this.nome;
 	}
@@ -60,8 +61,8 @@ public class Papel implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	@Column(name = "ds_identificador", length = LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = IDENTIFICADOR, length = DESCRICAO_PADRAO)
+	@Size(max=DESCRICAO_PADRAO)
 	@NotNull
 	@RoleName
 	public String getIdentificador() {
@@ -74,7 +75,7 @@ public class Papel implements java.io.Serializable {
 
 	@RoleGroups
 	@ManyToMany
-	@JoinTable(name = "tb_papel_grupo", schema="public", joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "membro_do_grupo"))
+	@JoinTable(name = "tb_papel_grupo", schema=PUBLIC, joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "membro_do_grupo"))
 	@ForeignKey(name="tb_papel_grupo_papel_fk", inverseName = "tb_papel_grupo_membro_fk" )
 	@OrderBy("nome")
 	public List<Papel> getGrupos() {

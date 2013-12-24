@@ -1,6 +1,6 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
 
 import java.util.List;
 
@@ -17,10 +17,8 @@ public class LocalizacaoDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "localizacaoDAO";
 	
-	@SuppressWarnings(UNCHECKED)
 	public List<Localizacao> getLocalizacoesEstrutura(){
-		String hql = "select o from Localizacao o where o.estrutura = true order by o.localizacao";
-		return getEntityManager().createQuery(hql).getResultList();
+	    return getNamedResultList(LOCALIZACOES_ESTRUTURA);
 	}
 
 }

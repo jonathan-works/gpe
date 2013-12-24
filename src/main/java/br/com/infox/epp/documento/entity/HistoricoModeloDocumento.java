@@ -1,5 +1,8 @@
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.*;
+
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -10,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -19,10 +24,12 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = HistoricoModeloDocumento.TABLE_NAME, schema="public")
+@Table(name = TABLE_HISTORICO_MODELO_DOCUMENTO, schema=PUBLIC)
+@NamedQueries(value={
+    @NamedQuery(name=LIST_MODELO, query=LIST_MODELO_QUERY),
+    @NamedQuery(name=LIST_USUARIO, query=LIST_USUARIO_QUERY)
+})
 public class HistoricoModeloDocumento implements java.io.Serializable {
-
-	public static final String TABLE_NAME = "tb_modelo_documento_historico";
 
 	private static final long serialVersionUID = 1L;
 	
@@ -34,20 +41,20 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 	private String descricaoModeloDocumento;
 	private Boolean ativo;
 	
-	@SequenceGenerator(name = "generator", sequenceName = "sq_tb_modelo_documento_historico")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_HISTORICO_MODELO_DOCUMENTO)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_modelo_documento_historico", unique = true, nullable = false)
-	public int getIdistoricoModeloDocumento() {
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_HISTORICO_MODELO_DOCUMENTO, unique = true, nullable = false)
+	public int getIdHistoricoModeloDocumento() {
 		return idHistoricoModeloDocumento;
 	}
 
-	public void setIdistoricoModeloDocumento(int idistoricoModeloDocumento) {
-		this.idHistoricoModeloDocumento = idistoricoModeloDocumento;
+	public void setIdHistoricoModeloDocumento(int idHistoricoModeloDocumento) {
+		this.idHistoricoModeloDocumento = idHistoricoModeloDocumento;
 	}
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_modelo_documento")
+	@JoinColumn(name=ID_MODELO_DOCUMENTO)
 	public ModeloDocumento getModeloDocumento() {
 		return modeloDocumento;
 	}
@@ -56,7 +63,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_usuario_alteracao")
+	@JoinColumn(name=ID_USUARIO_ALTERACAO)
 	public UsuarioLogin getUsuarioAlteracao() {
 		return usuarioAlteracao;
 	}
@@ -64,7 +71,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 		this.usuarioAlteracao = usuarioAlteracao;
 	}
 
-	@Column(name="dt_alteracao", nullable=false)
+	@Column(name=DATA_ALTERACAO, nullable=false)
 	public Date getDataAlteracao() {
 		return dataAlteracao;
 	}
@@ -80,7 +87,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 	    return DateFormat.getDateInstance().format(dataAlteracao);
 	}
 	
-	@Column(name="ds_titulo_modelo_documento", nullable=false, length=LengthConstants.DESCRICAO_TITULO)
+	@Column(name=TITULO_MODELO_DOCUMENTO, nullable=false, length=LengthConstants.DESCRICAO_TITULO)
 	@Size(max=LengthConstants.DESCRICAO_TITULO)
 	public String getTituloModeloDocumento() {
 		return tituloModeloDocumento;
@@ -89,7 +96,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 		this.tituloModeloDocumento = tituloModeloDocumento;
 	}
 
-	@Column(name="ds_modelo_documento", nullable=false)
+	@Column(name=CONTEUDO_MODELO_DOCUMENTO, nullable=false)
 	public String getDescricaoModeloDocumento() {
 		return descricaoModeloDocumento;
 	}
@@ -97,7 +104,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 		this.descricaoModeloDocumento = descricaoModeloDocumento;
 	}
 
-	@Column(name="in_ativo", nullable=false)
+	@Column(name=ATIVO, nullable=false)
 	public Boolean getAtivo() {
 		return ativo;
 	}

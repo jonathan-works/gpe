@@ -1,10 +1,9 @@
 package br.com.infox.epp.documento.crud;
 
-import static br.com.infox.core.constants.WarningConstants.*;
-
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -12,14 +11,15 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery;
-import br.com.itx.util.EntityUtil;
+import br.com.infox.epp.documento.manager.HistoricoModeloDocumentoManager;
 
 @Name(HistoricoModeloDocumentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<HistoricoModeloDocumento> {
 
     public static final String NAME = "historicoModeloDocumentoCrudAction";
+    
+    @In HistoricoModeloDocumentoManager historicoModeloDocumentoManager;
     
     private HistoricoModeloDocumento selecionado;
     
@@ -34,13 +34,9 @@ public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<Histo
         this.selecionado = selecionado;
     }
     
-    @SuppressWarnings(UNCHECKED)
     public void setModeloDocumento(ModeloDocumento modeloDocumento) {
-        javax.persistence.Query query = EntityUtil.createQuery(HistoricoModeloDocumentoQuery.LIST_MODELO_QUERY);
-        setModeloDocumentoList(query.getResultList());
-        query = EntityUtil.createQuery(HistoricoModeloDocumentoQuery.LIST_USUARIO_QUERY);
-        query.setParameter(HistoricoModeloDocumentoQuery.LIST_USUARIO_PARAM_MODELO, modeloDocumento);
-        setUsuarioAlteracaoList(query.getResultList());
+        setModeloDocumentoList(historicoModeloDocumentoManager.listModelosDoHistorico());
+        setUsuarioAlteracaoList(historicoModeloDocumentoManager.listUsuariosQueAlteraramModelo(modeloDocumento));
     }
     
     public List<UsuarioLogin> getUsuarioAlteracaoList() {

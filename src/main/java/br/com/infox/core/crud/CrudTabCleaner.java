@@ -7,12 +7,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIData;
 import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitContext;
 import javax.faces.component.visit.VisitHint;
 import javax.faces.component.visit.VisitResult;
 import javax.faces.context.FacesContext;
+
+import org.richfaces.component.UIDataTable;
 
 import br.com.infox.componentes.tabs.Tab;
 import br.com.infox.componentes.tabs.TabChangeEvent;
@@ -54,9 +55,8 @@ public class CrudTabCleaner implements TabChangeListener {
 		public VisitResult visit(VisitContext context, UIComponent target) {
 			if (target instanceof EditableValueHolder) {
 				EditableValueHolder valueHolder = (EditableValueHolder) target;
-				valueHolder.setValid(true);
-				valueHolder.setValue(null);
-			} else if (target instanceof UIData) {
+				valueHolder.resetValue();
+			} else if (target instanceof UIDataTable) {
 				return VisitResult.REJECT;
 			}
 			return VisitResult.ACCEPT;

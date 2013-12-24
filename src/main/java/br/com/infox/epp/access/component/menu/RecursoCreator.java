@@ -1,4 +1,4 @@
-package br.com.infox.epp.access.entity;
+package br.com.infox.epp.access.component.menu;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,7 @@ import org.jboss.seam.security.permission.PermissionManager;
 import org.jboss.seam.security.permission.PermissionStore;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.access.util.SecurityUtil;
 import br.com.itx.component.Util;

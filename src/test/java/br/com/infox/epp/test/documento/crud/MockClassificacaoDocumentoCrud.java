@@ -5,10 +5,11 @@ import java.util.List;
 import br.com.infox.epp.documento.crud.ClassificacaoDocumentoCrudAction;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.test.core.messages.MockMessagesHandler;
+import br.com.infox.epp.test.crud.MockCrudAction;
 import br.com.infox.epp.test.infra.MockGenericManager;
 
-public class MockClassificacaoDocumentoCrud extends ClassificacaoDocumentoCrudAction {
-
+public class MockClassificacaoDocumentoCrud extends ClassificacaoDocumentoCrudAction implements MockCrudAction<TipoProcessoDocumento> {
+    
     public MockClassificacaoDocumentoCrud() {
         super();
         setGenericManager(new MockGenericManager());
@@ -19,8 +20,7 @@ public class MockClassificacaoDocumentoCrud extends ClassificacaoDocumentoCrudAc
     }
     
     @Override
-    protected MockMessagesHandler getMessagesHandler() {
+    protected final MockMessagesHandler getMessagesHandler() {
         return MockMessagesHandler.instance();
     }
-    
 }
