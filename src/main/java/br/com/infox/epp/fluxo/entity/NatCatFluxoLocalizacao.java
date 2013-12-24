@@ -1,5 +1,6 @@
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.core.persistence.ORConstants.*;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF_QUERY;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF;
@@ -7,7 +8,7 @@ import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.GET_NAT_C
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL_QUERY;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.LIST_BY_NAT_CAT_FLUXO;
-import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.LIST_BY_NAT_CAT_FLUXO_QUERY;
+import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,9 +28,9 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Entity
-@Table(name=NatCatFluxoLocalizacao.TABLE_NAME, schema="public",
+@Table(name=TABLE_NAT_CAT_FLUXO_LOCALIZACAO, schema=PUBLIC,
     uniqueConstraints={
-        @UniqueConstraint(columnNames={"id_nat_cat_fluxo", "id_localizacao"})
+        @UniqueConstraint(columnNames={ID_NAT_CAT_FLUXO, ID_LOCALIZACAO})
 })
 @NamedQueries(value = {
     @NamedQuery(name = GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF, query = GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF_QUERY),
@@ -40,17 +41,15 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String TABLE_NAME = "tb_nat_cat_fluxo_localizacao";
-
 	private int idNatCatFluxoLocalizacao;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;	
 	private Localizacao localizacao;
 	private boolean heranca = false;
 	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_nat_cat_fluxo_localizacao")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAT_CAT_FLUXO_LOCALIZACAO)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_nat_cat_fluxo_localizacao", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_NAT_CAT_FLUXO_LOCALIZACAO, unique = true, nullable = false)
 	public int getIdNatCatFluxoLocalizacao() {
 		return idNatCatFluxoLocalizacao;
 	}
@@ -59,7 +58,7 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_nat_cat_fluxo", nullable=false)
+	@JoinColumn(name = ID_NAT_CAT_FLUXO, nullable=false)
 	@NotNull(message = "#{messages['beanValidation.notNull']}")
 	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
 		return naturezaCategoriaFluxo;
@@ -70,7 +69,7 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_localizacao", nullable=false)
+	@JoinColumn(name = ID_LOCALIZACAO, nullable=false)
 	@NotNull(message = "#{messages['beanValidation.notNull']}")
 	public Localizacao getLocalizacao() {
 		return localizacao;
@@ -84,7 +83,7 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 		this.heranca = heranca;
 	}
 	
-	@Column(name="in_heranca", nullable=false)
+	@Column(name=HERANCA, nullable=false)
 	public boolean getHeranca() {
 		return heranca;
 	}
