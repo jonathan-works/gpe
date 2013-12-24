@@ -13,7 +13,7 @@ public interface NatCatFluxoLocalizacaoQuery {
     String QUERY_PARAM_LOCALIZACAO = "localizacao";
     String QUERY_PARAM_PAPEL = "papel";
 
-    String DELETE_BY_NAT_CAT_FLUXO_AND_LOCALIZCAO = "delete from NatCatFluxoLocalizacao ncfl where "
+    String DELETE_BY_NAT_CAT_FLUXO_AND_LOCALIZACAO = "delete from NatCatFluxoLocalizacao ncfl where "
             + "ncfl.naturezaCategoriaFluxo = :"
             + QUERY_PARAM_NAT_CAT_FLUXO
             + " and ncfl.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
