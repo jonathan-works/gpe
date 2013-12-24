@@ -16,6 +16,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery;
 
 @Entity
 @Table(name=NatCatFluxoLocalizacao.TABLE_NAME, schema="public",

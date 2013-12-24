@@ -1,4 +1,4 @@
-package br.com.infox.epp.fluxo.entity;
+package br.com.infox.epp.fluxo.query;
 
 public interface NatCatFluxoLocalizacaoQuery {
 

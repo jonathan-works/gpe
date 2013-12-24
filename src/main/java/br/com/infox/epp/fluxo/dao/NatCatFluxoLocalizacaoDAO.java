@@ -8,12 +8,13 @@ import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
-import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacaoQuery;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery;
 
 @Name(NatCatFluxoLocalizacaoDAO.NAME)
 @AutoCreate
