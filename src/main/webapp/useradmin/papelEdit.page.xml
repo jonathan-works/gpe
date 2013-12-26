@@ -9,10 +9,4 @@
 
 	<restrict>#{security.checkPage()}</restrict>
 
-   <navigation from-action="#{roleAction.save}">
-      <rule if-outcome="success">
-         <redirect view-id="/useradmin/rolemanager.xhtml"/>
-      </rule>
-   </navigation>
-
 </page>

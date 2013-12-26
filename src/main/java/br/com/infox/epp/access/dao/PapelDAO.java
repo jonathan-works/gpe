@@ -55,6 +55,12 @@ public class PapelDAO extends GenericDAO {
 	}
 	
 	@SuppressWarnings(UNCHECKED)
+	public List<Papel> getPapeisForaDaListaDeIdentificadores(List<String> identificadores){
+        String hql = "select p from Papel p where identificador not in (:list)";
+        return (List<Papel>) getEntityManager().createQuery(hql).setParameter("list", identificadores).getResultList();
+    }
+	
+	@SuppressWarnings(UNCHECKED)
 	public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao){
 		String hql = "select distinct l.papel from UsuarioLocalizacao l where l.localizacao = :loc ";
 		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("loc", localizacao).getResultList();
