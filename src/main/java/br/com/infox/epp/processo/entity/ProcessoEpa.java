@@ -24,17 +24,15 @@ import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
-import br.com.infox.epp.processo.query.ProcessoEpaQuery;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.*;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
 @Entity
 @Table(name=ProcessoEpa.TABLE_NAME, schema="public")
 @PrimaryKeyJoinColumn
 @NamedQueries(value={
-		@NamedQuery(name=ProcessoEpaQuery.LIST_ALL_NOT_ENDED,
-					query=ProcessoEpaQuery.LIST_ALL_NOT_ENDED_QUERY),
-		@NamedQuery(name=ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO,
-					query=ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY)
+    @NamedQuery(name=LIST_ALL_NOT_ENDED, query=LIST_ALL_NOT_ENDED_QUERY),
+    @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY)
 })
 public class ProcessoEpa extends Processo {
 
