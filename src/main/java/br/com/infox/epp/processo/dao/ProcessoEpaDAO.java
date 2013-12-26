@@ -27,7 +27,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.*;
-import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
 /**
@@ -107,11 +106,12 @@ public class ProcessoEpaDAO extends GenericDAO {
         Long count = (Long) getNamedSingleResult(COUNT_PARTES_ATIVAS_DO_PROCESSO, parameters);
         return count != null && count.compareTo(1L) > 0;
     }
-	
-	public Item getItemDoProcesso(int idProcesso){
-		String query = "select o.itemDoProcesso from ProcessoEpa o where o.idProcesso =:idProcesso";
-		return (Item) getEntityManager().createQuery(query).setParameter("idProcesso", idProcesso).getSingleResult();
-	}
+
+    public Item getItemDoProcesso(int idProcesso) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_PROCESSO, idProcesso);
+        return getNamedSingleResult(ITEM_DO_PROCESSO, parameters);
+    }
 	
 	@SuppressWarnings(UNCHECKED)
     public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
