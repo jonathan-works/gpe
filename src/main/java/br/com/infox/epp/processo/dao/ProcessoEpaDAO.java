@@ -26,7 +26,7 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.infox.epp.processo.query.ProcessoEpaQuery;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.*;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -44,13 +44,13 @@ public class ProcessoEpaDAO extends GenericDAO {
 	public static final String NAME = "processoEpaDAO";
 
     public List<ProcessoEpa> listAllNotEnded() {
-        return getNamedResultList(ProcessoEpaQuery.LIST_ALL_NOT_ENDED);
+        return getNamedResultList(LIST_ALL_NOT_ENDED);
     }
 
     public List<ProcessoEpa> listNotEnded(Fluxo fluxo) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ProcessoEpaQuery.PARAM_FLUXO, fluxo);
-        return getNamedResultList(ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO, parameters);
+        parameters.put(PARAM_FLUXO, fluxo);
+        return getNamedResultList(LIST_NOT_ENDED_BY_FLUXO, parameters);
     }
 	
 	public ProcessoEpa getProcessoEpaByProcesso(Processo processo){
@@ -115,7 +115,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	
 	@SuppressWarnings(UNCHECKED)
     public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
-		Query q = getEntityManager().createQuery(ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY)
+		Query q = getEntityManager().createQuery(TEMPO_GASTO_PROCESSO_EPP_QUERY)
 				.setParameter("idProcesso", processoEpa.getIdProcesso());
 		Map<String,Object> result = null;
 		try {
@@ -127,7 +127,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public Date getDataInicioPrimeiraTarefa(ProcessoEpa processoEpa) {
-		return EntityUtil.getSingleResult(EntityUtil.createQuery(ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA_QUERY)
-				.setParameter(ProcessoEpaQuery.QUERY_PARAM_PROCESSO_EPA, processoEpa));
+		return EntityUtil.getSingleResult(EntityUtil.createQuery(DATA_INICIO_PRIMEIRA_TAREFA_QUERY)
+				.setParameter(QUERY_PARAM_PROCESSO_EPA, processoEpa));
 	}
 }
