@@ -64,10 +64,7 @@ public class ProcessoEpaDAO extends GenericDAO {
     }
 	
 	public List<PessoaFisica> getPessoaFisicaList(){
-		Long idJbpm = ProcessInstance.instance().getId();
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca).setParameter("idJbpm", idJbpm);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
+		ProcessoEpa pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
 		List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
 		for (ParteProcesso parte : pe.getPartes()){
 			if (parte.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F)){
@@ -78,10 +75,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public List<PessoaJuridica> getPessoaJuridicaList(){
-		Long idJbpm = ProcessInstance.instance().getId();
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca).setParameter("idJbpm", idJbpm);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
+	    ProcessoEpa pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
 		List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
 		for (ParteProcesso parte : pe.getPartes()){
 			if (parte.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.J)){
@@ -96,9 +90,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public boolean hasPartes(Long idJbpm){
-		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
-		Query query = EntityUtil.createQuery(busca).setParameter("idJbpm",idJbpm);
-		ProcessoEpa pe = EntityUtil.getSingleResult(query);
+	    ProcessoEpa pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
 		return (pe != null) && (pe.hasPartes());
 	}
 	
