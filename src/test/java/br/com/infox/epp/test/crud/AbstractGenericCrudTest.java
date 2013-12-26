@@ -1,77 +1,17 @@
 package br.com.infox.epp.test.crud;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
+import org.jboss.seam.contexts.TestLifecycle;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.mock.JUnitSeamTest;
+import org.jboss.seam.servlet.ServletSessionMap;
 import org.junit.Test;
 
-import br.com.infox.core.action.AbstractAction;
-import br.com.infox.epp.test.core.messages.MockMessagesHandler;
+public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
 
-public abstract class AbstractGenericCrudTest<T> {
-    private MockCrudAction<T> mockCrudAction;
-
-    private List<T> inactivateList = new ArrayList<>(0);
-    private List<T> inactivateListFail = new ArrayList<>(0);
-    private List<T> persistList = new ArrayList<>(0);
-    private List<T> persistFailList = new ArrayList<>(0);
-    private List<T> removeList = new ArrayList<>(0);
-    private List<T> removeFailList = new ArrayList<>(0);
-    private List<EntityActionContainer<T>> updateList = new ArrayList<>(0);
-    private List<EntityActionContainer<T>> updateFailList = new ArrayList<>(0);
-    
-    private final String inactivate() {
-        final T entity = mockCrudAction.getInstance();
-        return mockCrudAction.inactive(entity);
-    }
-    
-    private final String remove(T entity) {
-        return mockCrudAction.remove(entity);
-    }
-    
-    private final String save(T entity) {
-        mockCrudAction.setInstance(entity);
-        return mockCrudAction.save();
-    }
-    
-    protected abstract void initLists();
-    
-    protected final void setInactivateFailList(List<T> entityList) {
-        this.inactivateListFail = entityList;
-    }
-    
-    protected final void setInactivateList(List<T> entityList) {
-        this.inactivateList = entityList;
-    }
-    
-    protected final void setPersistFailList(List<T> entityList) {
-        this.persistFailList = entityList;
-    }
-    
-    protected final void setPersistList(List<T> entityList) {
-        this.persistList = entityList;
-    }
-    
-    protected final void setRemoveFailList(List<T> entityList) {
-        this.removeFailList = entityList;
-    }
-
-    protected final void setRemoveList(List<T> entityList) {
-        this.removeList = entityList;
-    }
-
-    protected final void setUpdateFailList(List<EntityActionContainer<T>> entityContainerList) {
-        this.updateFailList = entityContainerList;
-    }
-    
-    protected final void setUpdateList(List<EntityActionContainer<T>> entityContainerList) {
-        this.updateList = entityContainerList;
-    }
-    
     protected final String fillStr(String string, int topLength) {
         if (string == null || string.length() < 1) {
             string = "-";
@@ -86,109 +26,126 @@ public abstract class AbstractGenericCrudTest<T> {
         }
         return sb.substring(0, topLength);
     }
-    protected abstract MockCrudAction<T> getMockCrudAction();
+    
+    /**
+     * Call a method binding
+     */
+    protected final Object invokeMethod(String methodExpression, Object... args) {
+        return Expressions.instance().createMethodExpression(methodExpression).invoke(args);
+    }
 
-    @After
-    public void afterTest() {
-        MockMessagesHandler.instance().clear();
+    protected final Object invokeMethod(String componentName, String methodName, Object... args) {
+        final String expression = new StringBuilder().append("#{").append(componentName).append(".").append(methodName).append("}").toString();
+        return invokeMethod(expression, args);
     }
 
-    @Before
-    public void beforeTest() {
-        mockCrudAction = getMockCrudAction();
-        initLists();
+    /**
+     * Evaluate (get) a value binding
+     */
+    protected final Object getValue(String valueExpression) {
+        return Expressions.instance().createValueExpression(valueExpression).getValue();
     }
-    
-    @Test
-    public final void testInactivate() {
-        for (T entity : inactivateList) {
-            final String returnSave = save(entity);
-            final boolean wasSaved = AbstractAction.PERSISTED.equals(returnSave);
-            Assert.assertTrue(wasSaved);
-            
-            final String returnInactivate = inactivate();
-            final boolean wasInactivated = AbstractAction.UPDATED.equals(returnInactivate);
-            Assert.assertTrue(wasInactivated);
-            mockCrudAction.newInstance();
-        }
+
+    protected final Object getValue(String componentName, String fieldName) {
+        final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".instance.").append(fieldName).append("}").toString();
+        return Expressions.instance().createValueExpression(valueExpression).getValue();
     }
-    
-    @Test
-    public final void testInactivateFail() {
-        for (T entity : inactivateListFail) {
-            final String returnSave = save(entity);
-            final boolean wasSaved = AbstractAction.PERSISTED.equals(returnSave);
-            Assert.assertTrue(wasSaved);
-            
-            final String returnInactivate = inactivate();
-            final boolean wasInactivated = AbstractAction.UPDATED.equals(returnInactivate);
-            Assert.assertFalse(wasInactivated);
-            mockCrudAction.newInstance();
-        }
+
+    /**
+     * Set a value binding
+     */
+    protected final void setValue(String valueExpression, Object value) {
+        Expressions.instance().createValueExpression(valueExpression).setValue(value);
     }
-    
-    @Test
-    public final void testPersist() {
-        for (T entity : persistList) {
-            Assert.assertTrue(AbstractAction.PERSISTED.equals(save(entity)));
-            mockCrudAction.newInstance();
-        }
+
+    protected final void setValue(String componentName, String fieldName, Object value) {
+        final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".instance.").append(fieldName).append("}").toString();
+        Expressions.instance().createValueExpression(valueExpression).setValue(value);
     }
-    
-    @Test
-    public final void testPersistFail() {
-        for (T entity : this.persistFailList) {
-            Assert.assertFalse(AbstractAction.PERSISTED.equals(save(entity)));
-            mockCrudAction.newInstance();
+
+    protected final void executeTest(Runnable componentTest) {
+        TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+        try {
+            componentTest.run();
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        } finally {
+            TestLifecycle.endTest();
         }
     }
 
-    @Test
-    public final void testRemove() {
-        for (T entity : removeList) {
-            Assert.assertTrue(AbstractAction.PERSISTED.equals(save(entity)));
-            mockCrudAction.newInstance();
-        }
-        
-        for (T entity : mockCrudAction.getAll()) {
-            Assert.assertTrue(AbstractAction.REMOVED.equals(remove(entity)));
-        }
-    }
+    protected abstract List<T> getInactivateSuccessList();
+    protected abstract List<T> getUpdateSuccessList();
+    protected abstract List<T> getPersistSuccessList();
+    protected abstract List<T> getRemoveSuccessList();
+    protected abstract List<T> getInactivateFailList();
+    protected abstract List<T> getUpdateFailList();
+    protected abstract List<T> getPersistFailList();
+    protected abstract List<T> getRemoveFailList();
     
-    @Test
-    public final void testRemoveFail() {
-        for (T entity : removeFailList) {
-            Assert.assertTrue(AbstractAction.PERSISTED.equals(save(entity)));
-            mockCrudAction.newInstance();
-        }
-        for (T entity : mockCrudAction.getAll()) {
-            Assert.assertFalse(AbstractAction.REMOVED.equals(remove(entity)));
-        }
-    }
-    
-    @Test
-    public final void testUpdate() {
-        for (EntityActionContainer<T> entityHolder : updateList) {
-            T entity = entityHolder.getEntity();
-            Assert.assertTrue(AbstractAction.PERSISTED.equals(save(entity)));
+    protected abstract Runnable getInactivateSuccessTest(T entity);
+    protected abstract Runnable getUpdateSuccessTest(T entity);
+    protected abstract Runnable getRemoveSuccessTest(T entity);
+    protected abstract Runnable getPersistSuccessTest(T entity);
+    protected abstract Runnable getInactivateFailTest(T entity);
+    protected abstract Runnable getUpdateFailTest(T entity);
+    protected abstract Runnable getRemoveFailTest(T entity);
+    protected abstract Runnable getPersistFailTest(T entity);
 
-            entity = mockCrudAction.getInstance();
-            entityHolder.run(entity);
-            
-            Assert.assertTrue(AbstractAction.UPDATED.equals(save(entity)));
-        }
-    }    
-    
     @Test
-    public final void testUpdateFail() {
-        for (EntityActionContainer<T> entityHolder : updateFailList) {
-            T entity = entityHolder.getEntity();
-            Assert.assertTrue(AbstractAction.PERSISTED.equals(save(entity)));
-
-            entity = mockCrudAction.getInstance();
-            entityHolder.run(entity);
-            
-            Assert.assertFalse(AbstractAction.UPDATED.equals(save(entity)));
+    public final void initPersistSuccessTest() {
+        for (final T entity : getPersistSuccessList()) {
+            executeTest(getPersistSuccessTest(entity));
         }
     }
+
+    @Test
+    public final void initRemoveSuccessTest() {
+        for (final T entity : getRemoveSuccessList()) {
+            executeTest(getRemoveSuccessTest(entity));
+        }
+    }
+
+    @Test
+    public final void initUpdateSuccessTest() {
+        for (final T entity : getUpdateSuccessList()) {
+            executeTest(getUpdateSuccessTest(entity));
+        }
+    }
+
+    @Test
+    public final void initInactivateSuccessTest() {
+        for (final T entity : getInactivateSuccessList()) {
+            executeTest(getInactivateSuccessTest(entity));
+        }
+    }
+
+    @Test
+    public final void initPersistFailTest() {
+        for (final T entity : getPersistFailList()) {
+            executeTest(getPersistFailTest(entity));
+        }
+    }
+
+    @Test
+    public final void initRemoveFailTest() {
+        for (final T entity : getRemoveFailList()) {
+            executeTest(getRemoveFailTest(entity));
+        }
+    }
+
+    @Test
+    public final void initUpdateFailTest() {
+        for (final T entity : getUpdateFailList()) {
+            executeTest(getUpdateFailTest(entity));
+        }
+    }
+
+    @Test
+    public final void initInactivateFailTest() {
+        for (final T entity : getInactivateFailList()) {
+            executeTest(getInactivateFailTest(entity));
+        }
+    }
+    
 }
