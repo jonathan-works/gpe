@@ -36,7 +36,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_ORIG
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
 import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO_CONEXAO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.*;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -75,6 +75,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Table(name=TABLE_PROCESSO, schema=PUBLIC)
 @Inheritance(strategy=JOINED)
 @NamedNativeQueries(value={
+    @NamedNativeQuery(name=APAGA_ACTOR_ID_DO_PROCESSO, query=APAGA_ACTOR_ID_DO_PROCESSO_QUERY),
     @NamedNativeQuery(name=ANULA_ACTOR_ID, query=ANULA_ACTOR_ID_QUERY)
 })
 public class Processo implements java.io.Serializable {

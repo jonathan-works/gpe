@@ -24,5 +24,10 @@ public interface ProcessoQuery {
     String ANULA_ACTOR_ID_QUERY = "update public.tb_processo set nm_actor_id = null where nm_actor_id = :" 
             + PARAM_ACTOR_ID;
     
+    String PARAM_ID_PROCESSO = "idProcesso";
+    String APAGA_ACTOR_ID_DO_PROCESSO = "apagaActorIdDeProcesso";
+    String APAGA_ACTOR_ID_DO_PROCESSO_QUERY = "update public.tb_processo set nm_actor_id = null where id_processo = :" 
+            + PARAM_ID_PROCESSO;
+    
 
 }
