@@ -36,7 +36,7 @@ public class NaturezaCategoriaFluxoDAO extends GenericDAO {
 	 */
 	public List<NaturezaCategoriaFluxo> listByNatureza(Natureza natureza) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(NaturezaCategoriaFluxoQuery.QUERY_PARAM_NATUREZA, natureza);
+		parameters.put(NaturezaCategoriaFluxoQuery.PARAM_NATUREZA, natureza);
 		List<NaturezaCategoriaFluxo> resultList = getNamedResultList
 								(NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA, 
 								 parameters);
@@ -45,9 +45,9 @@ public class NaturezaCategoriaFluxoDAO extends GenericDAO {
 
     public NaturezaCategoriaFluxo getByRelationship(Natureza natureza, Categoria categoria, Fluxo fluxo) {
         Query query = EntityUtil.createQuery(NaturezaCategoriaFluxoQuery.BY_RELATIONSHIP_QUERY)
-                .setParameter(NaturezaCategoriaFluxoQuery.QUERY_PARAM_NATUREZA, natureza)
-                .setParameter(NaturezaCategoriaFluxoQuery.QUERY_PARAM_CATEGORIA, categoria)
-                .setParameter(NaturezaCategoriaFluxoQuery.QUERY_PARAM_FLUXO, fluxo);
+                .setParameter(NaturezaCategoriaFluxoQuery.PARAM_NATUREZA, natureza)
+                .setParameter(NaturezaCategoriaFluxoQuery.PARAM_CATEGORIA, categoria)
+                .setParameter(NaturezaCategoriaFluxoQuery.PARAM_FLUXO, fluxo);
         return EntityUtil.getSingleResult(query);
     }
     
