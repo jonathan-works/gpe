@@ -1,5 +1,7 @@
 package br.com.infox.epp.painel.caixa;
 
+import static br.com.infox.epp.painel.caixa.CaixaQuery.*;
+import static br.com.infox.core.persistence.ORConstants.*;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +28,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Entity
-@Table(name = Caixa.TABLE_NAME, schema="public")
+@Table(name = TABLE_CAIXA, schema=PUBLIC)
 @Inheritance(strategy=InheritanceType.JOINED)
 public class Caixa implements java.io.Serializable {
-
-	public static final String TABLE_NAME = "tb_caixa";
 
 	private static final long serialVersionUID = 1L;
 	
@@ -46,10 +46,10 @@ public class Caixa implements java.io.Serializable {
 		
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_caixa")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TABLE_CAIXA)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_caixa", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_CAIXA, unique = true, nullable = false)
 	public int getIdCaixa() {
 		return idCaixa;
 	}
@@ -58,7 +58,7 @@ public class Caixa implements java.io.Serializable {
 		this.idCaixa = idCaixa;
 	}
 
-	@Column(name="nm_caixa", length=LengthConstants.NOME_PADRAO)
+	@Column(name=NOME_CAIXA, length=LengthConstants.NOME_PADRAO)
 	@Size(max=LengthConstants.NOME_PADRAO)
 	public String getNomeCaixa() {
 		return nomeCaixa;
@@ -68,7 +68,7 @@ public class Caixa implements java.io.Serializable {
 		this.nomeCaixa = nomeCaixa;
 	}
 
-	@Column(name="ds_caixa")
+	@Column(name=DESCRICAO_CAIXA)
 	public String getDsCaixa() {
 		return dsCaixa;
 	}
@@ -78,7 +78,7 @@ public class Caixa implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_tarefa")
+	@JoinColumn(name=ID_TAREFA)
 	public Tarefa getTarefa() {
 		return tarefa;
 	}
@@ -87,7 +87,7 @@ public class Caixa implements java.io.Serializable {
 		this.tarefa = tarefa;
 	}
 	
-	@Column(name="nm_caixa_idx", length=LengthConstants.NOME_PADRAO, nullable=false)
+	@Column(name=NOME_INDICE, length=LengthConstants.NOME_PADRAO, nullable=false)
     @Size(max=LengthConstants.NOME_PADRAO)
 	public String getNomeIndice() {
         return nomeIndice;
@@ -97,7 +97,7 @@ public class Caixa implements java.io.Serializable {
         this.nomeIndice = nomeIndice;
     }
 
-    @Column(name="id_node_anterior")
+    @Column(name=NODE_ANTERIOR)
 	public Integer getIdNodeAnterior() {
         return idNodeAnterior;
     }
@@ -106,7 +106,7 @@ public class Caixa implements java.io.Serializable {
     }
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "caixa")
+			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = CAIXA_ATTRIBUTE)
 	public List<Processo> getProcessoList() {
 		return processoList;
 	}
