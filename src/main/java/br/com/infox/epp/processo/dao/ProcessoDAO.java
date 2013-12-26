@@ -1,12 +1,15 @@
 package br.com.infox.epp.processo.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
-import static br.com.infox.epp.processo.query.ProcessoQuery.*;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
+import static br.com.infox.epp.processo.query.ProcessoQuery.APAGA_ACTOR_ID_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -68,16 +71,11 @@ public class ProcessoDAO extends GenericDAO {
         executeNamedQueryUpdate(REMOVE_PROCESSO_DA_CAIXA_ATUAL, parameters);
     }
 	
-	@SuppressWarnings(UNCHECKED)
     public List<Processo> findProcessosByIdProcessoAndActorId(int idProcesso, String login){
-	    StringBuilder sb = new StringBuilder();
-        sb.append("select o from Processo o where ");
-        sb.append("o.idProcesso = :id ");
-        sb.append("and o.actorId like :login");
-        Query q = EntityUtil.createQuery(sb.toString());
-        q.setParameter("id", idProcesso);
-        q.setParameter("login", login);
-        return q.getResultList();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_PROCESSO, idProcesso);
+        parameters.put(PARAM_ACTOR_ID, login);
+        return getNamedResultList(LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, parameters);
 	}
 	
 	public void atualizarProcessos(){
