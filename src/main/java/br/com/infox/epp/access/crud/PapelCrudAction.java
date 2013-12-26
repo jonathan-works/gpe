@@ -22,12 +22,18 @@ import org.jboss.seam.security.Role;
 import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.action.RoleAction;
+import org.jboss.seam.security.permission.Permission;
+import org.jboss.seam.security.permission.PermissionManager;
 
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.access.api.RolesMap;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.RolesMap;
+import br.com.infox.epp.access.entity.Permissao;
+import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -43,6 +49,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 
 	private Map<Boolean, List<String>> papeisDisponiveis;
 	private Map<String, Papel> papelMap;
+	private Map<String, Recurso> recursoMap;
 
 	private List<String> membros;
 	private Map<String, Papel> membrosMap;
@@ -57,6 +64,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	private boolean acceptChange=false;
 	
 	@In private PapelManager papelManager;
+	@In private RecursoManager recursoManager;
 	
 	public Integer getPapelId() {
 		return (Integer) getId();
@@ -151,13 +159,18 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		return null;
 	}
 	
+	public String getNomeRecurso(String identificador){
+	    if (recursoMap != null && recursoMap.containsKey(identificador)){
+	        return recursoMap.get(identificador).getNome();
+	    }
+	    return null;
+	}
+	
 	public List<String> getPapeis() {
 		if (papeis == null) {
 			papeis = getRoleaction().getGroups();
 			if (papeis == null) {
 				papeis = new ArrayList<String>();
-			} else {
-				removeRecursos(papeis);
 			}
 		}
 		return papeis;
@@ -210,11 +223,12 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		return papeisDisponiveis.get(removeMembros);
 	}
 
-	public List<String> getRecursos() {
+	@SuppressWarnings(WarningConstants.UNCHECKED)
+    public List<String> getRecursos() {
 		if (recursos == null) {
 			if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
-				recursos = IdentityManager.instance().getRoleGroups(getInstance().getIdentificador());
-				removePapeis(recursos);
+                List<Permissao> permissoes = (List<Permissao>) PermissionManager.instance().getPermissoesFromRole(new Role(getInstance().getIdentificador()));
+				recursos = recursoManager.getIdentificadorRecursosFromPermissoes(permissoes);
 			} else {
 				recursos = new ArrayList<String>();
 			}
@@ -239,27 +253,17 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
     }
 
     public List<String> getRecursosDisponiveis() {
-		if (recursosDisponiveis == null) {
-			recursosDisponiveis = getRoleaction().getAssignableRoles();
-			removePapeisImplicitos(recursosDisponiveis, getPapeis());
-			removePapeisImplicitos(recursos, getPapeis());
-			removePapeis(recursosDisponiveis);
-			if (papelMap == null) {
-				papelMap = new HashMap<String, Papel>();
-			}
-			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(recursosDisponiveis);
-			for (Papel p : papelList) {
-				papelMap.put(p.getIdentificador(), p);
-			}
-			Collections.sort(recursosDisponiveis, new Comparator<String>(){
-				@Override
-				public int compare(String o1, String o2) {
-					String n1 = papelMap.get(o1).toString();
-					String n2 = papelMap.get(o2).toString();
-					return n1.compareTo(n2);
-				}
-			});
-		}
+        if (recursosDisponiveis == null) {
+            recursosDisponiveis = new ArrayList<>();
+            if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
+                List<Recurso> listaRecursos = recursoManager.findAll(Recurso.class);
+                recursoMap = new HashMap<>();
+                for (Recurso recurso : listaRecursos){
+                    recursosDisponiveis.add(recurso.getIdentificador());
+                    recursoMap.put(recurso.getIdentificador(), recurso);
+                }
+            } 
+        }
 		return recursosDisponiveis;
 	}
 
@@ -272,15 +276,6 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		}
 	}
 	
-	private void removePapeis(List<String> roles) {
-		for (Iterator<String> iterator = roles.iterator(); iterator.hasNext();) {
-			String papelId = iterator.next();
-			if (!papelId.startsWith("/")) {
-				iterator.remove();
-			}
-		}
-	}
-
 	private void removePapeisImplicitos(List<String> list, List<String> from) {
 		if (from == null) {
 			return;
@@ -357,7 +352,6 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		identificador = getInstance().getIdentificador();
 		getRoleaction().setRole(identificador);
 		papeis = new ArrayList<String>(getPapeis());
-		papeis.addAll(getRecursos());
 		removePapeisImplicitos(papeis, papeis);
 		getRoleaction().setGroups(papeis);
 		String save = getRoleaction().save();
@@ -384,9 +378,23 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		String nome = getInstance().getNome();
 		setInstance(papelManager.getPapelByIdentificador(getRoleaction().getRole()));
 		getInstance().setNome(nome);
+		updatePermissions();
 		EntityUtil.flush();
 		clear();
 		return save;
+	}
+	
+	private void updatePermissions(){
+	    List<Permission> permissions = new ArrayList<>();
+	    for (String recurso : recursosDisponiveis) {
+	        permissions.add(new Permission(recurso, "access", new Role(getInstance().getIdentificador())));
+	    }
+	    PermissionManager.instance().revokePermissions(permissions);
+	    permissions.clear();
+        for (String recurso : recursos) {
+            permissions.add(new Permission(recurso, "access", new Role(getInstance().getIdentificador())));
+        }
+        PermissionManager.instance().grantPermissions(permissions);
 	}
 	
 	@Observer("roleTreeHandlerSelected")
@@ -403,4 +411,5 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	public static PapelCrudAction instance() {
 		return ComponentUtil.getComponent(NAME);
 	}
+	
 }

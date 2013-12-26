@@ -1,5 +1,15 @@
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoPapelQuery.ID_PAPEL;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoPapelQuery.ID_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoPapelQuery.ID_TIPO_MODELO_DOCUMENTO_PAPEL;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoPapelQuery.SEQUENCE_TIPO_MODELO_DOCUMENTO_PAPEL;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoPapelQuery.TABLE_TIPO_MODELO_DOCUMENTO_PAPEL;
+
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,10 +23,8 @@ import javax.persistence.Table;
 import br.com.infox.epp.access.entity.Papel;
 
 @Entity
-@Table(name = TipoModeloDocumentoPapel.TABLE_NAME, schema="public")
-public class TipoModeloDocumentoPapel implements java.io.Serializable {
-
-	public static final String TABLE_NAME = "tb_tipo_modelo_documento_papel";
+@Table(name = TABLE_TIPO_MODELO_DOCUMENTO_PAPEL, schema=PUBLIC)
+public class TipoModeloDocumentoPapel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -24,10 +32,10 @@ public class TipoModeloDocumentoPapel implements java.io.Serializable {
 	private TipoModeloDocumento tipoModeloDocumento;
 	private Papel papel;
 	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tipo_modelo_documento_papel")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO_PAPEL)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_tipo_modelo_documento_papel", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_TIPO_MODELO_DOCUMENTO_PAPEL, unique = true, nullable = false)
 	public int getIdTipoModeloDocumentoPapel() {
 		return idTipoModeloDocumentoPapel;
 	}
@@ -38,7 +46,7 @@ public class TipoModeloDocumentoPapel implements java.io.Serializable {
 	
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_tipo_modelo_documento", nullable=false)
+	@JoinColumn(name=ID_TIPO_MODELO_DOCUMENTO, nullable=false)
 	public TipoModeloDocumento getTipoModeloDocumento() {
 		return tipoModeloDocumento;
 	}
@@ -48,7 +56,7 @@ public class TipoModeloDocumentoPapel implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_papel", nullable=false)
+	@JoinColumn(name=ID_PAPEL, nullable=false)
 	public Papel getPapel() {
 		return papel;
 	}

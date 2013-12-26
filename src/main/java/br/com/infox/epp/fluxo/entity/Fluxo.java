@@ -14,6 +14,33 @@
 */
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.CODIGO_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_BY_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_BY_FLUXO_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.DATA_FIM_PUBLICACAO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.DATA_INICIO_PUBLICACAO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.DESCRICAO_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICACAO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICAO_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.ID_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.ID_USUARIO_PUBLICACAO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.PRAZO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.PUBLICADO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.SEQUENCE_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.TABLE_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.XML_FLUXO;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,21 +65,20 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.fluxo.query.FluxoQuery;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
-@Table(name = "tb_fluxo", schema="public",uniqueConstraints={
-    @UniqueConstraint(columnNames={"ds_fluxo"})
+@Table(name = TABLE_FLUXO, schema=PUBLIC, uniqueConstraints={
+    @UniqueConstraint(columnNames={DESCRICAO_FLUXO})
 })
 @NamedQueries(value={
-	@NamedQuery(name=FluxoQuery.LIST_ATIVOS,
-			    query=FluxoQuery.LIST_ATIVOS_QUERY),
-	@NamedQuery(name=FluxoQuery.COUNT_PROCESSOS_ATRASADOS,
-			    query=FluxoQuery.COUNT_PROCESSOS_ATRASADOS_QUERY)
-			    
-  })
-public class Fluxo implements java.io.Serializable {
+    @NamedQuery(name=LIST_ATIVOS, query=LIST_ATIVOS_QUERY),
+    @NamedQuery(name=COUNT_PROCESSOS_ATRASADOS, query=COUNT_PROCESSOS_ATRASADOS_QUERY),
+    @NamedQuery(name=FLUXO_BY_DESCRICACAO, query=FLUXO_BY_DESCRICAO_QUERY),
+    @NamedQuery(name=COUNT_PROCESSOS_BY_FLUXO, query=COUNT_PROCESSOS_BY_FLUXO_QUERY),
+    @NamedQuery(name=FLUXO_BY_NOME, query=FLUXO_BY_NOME_QUERY)
+})
+public class Fluxo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -73,10 +99,10 @@ public class Fluxo implements java.io.Serializable {
 	public Fluxo() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_fluxo")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_fluxo", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_FLUXO, unique = true, nullable = false)
 	public Integer getIdFluxo() {
 		return this.idFluxo;
 	}
@@ -86,7 +112,7 @@ public class Fluxo implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario_publicacao")
+	@JoinColumn(name = ID_USUARIO_PUBLICACAO)
 	public UsuarioLogin getUsuarioPublicacao() {
 		return this.usuarioPublicacao;
 	}
@@ -95,7 +121,7 @@ public class Fluxo implements java.io.Serializable {
 		this.usuarioPublicacao = usuarioPublicacao;
 	}
 
-	@Column(name = "cd_fluxo", length=LengthConstants.DESCRICAO_PEQUENA)
+	@Column(name = CODIGO_FLUXO, length=LengthConstants.DESCRICAO_PEQUENA)
 	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
 	public String getCodFluxo() {
 		return this.codFluxo;
@@ -108,7 +134,7 @@ public class Fluxo implements java.io.Serializable {
 	    }
 	}
 
-	@Column(name = "ds_fluxo", nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
+	@Column(name = DESCRICAO_FLUXO, nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
 	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	public String getFluxo() {
@@ -122,7 +148,7 @@ public class Fluxo implements java.io.Serializable {
 		}
 	}
 
-	@Column(name = "ds_xml")
+	@Column(name = XML_FLUXO)
 	public String getXml() {
 		return this.xml;
 	}
@@ -131,7 +157,7 @@ public class Fluxo implements java.io.Serializable {
 		this.xml = xml;
 	}
 
-	@Column(name = "in_ativo", nullable = false)
+	@Column(name = ATIVO, nullable = false)
 	@NotNull
 	
 	public Boolean getAtivo() {
@@ -142,7 +168,7 @@ public class Fluxo implements java.io.Serializable {
 		this.ativo = ativo;
 	}
 	
-	@Column(name = "qt_prazo", nullable=true)
+	@Column(name = PRAZO, nullable=true)
 	public Integer getQtPrazo() {
 		return this.qtPrazo;
 	}
@@ -151,7 +177,7 @@ public class Fluxo implements java.io.Serializable {
 		this.qtPrazo = qtPrazo;
 	}
 
-	@Column(name = "in_publicado", nullable = false)
+	@Column(name = PUBLICADO, nullable = false)
 	@NotNull
 	public Boolean getPublicado() {
 		return this.publicado;
@@ -161,7 +187,7 @@ public class Fluxo implements java.io.Serializable {
 		this.publicado = publicado;
 	}
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_inicio_publicacao")
+	@Column(name = DATA_INICIO_PUBLICACAO)
 	public Date getDataInicioPublicacao() {
 		return this.dataInicioPublicacao;
 	}
@@ -170,7 +196,7 @@ public class Fluxo implements java.io.Serializable {
 		this.dataInicioPublicacao = dataInicioPublicacao;
 	}
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_fim_publicacao")
+	@Column(name = DATA_FIM_PUBLICACAO)
 	public Date getDataFimPublicacao() {
 		return this.dataFimPublicacao;
 	}
@@ -214,7 +240,7 @@ public class Fluxo implements java.io.Serializable {
 		this.fluxoPapelList = fluxoPapelList;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fluxo")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
 	public List<FluxoPapel> getFluxoPapelList() {
 		return fluxoPapelList;
 	}

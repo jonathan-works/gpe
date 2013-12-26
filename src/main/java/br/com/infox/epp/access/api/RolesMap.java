@@ -1,4 +1,4 @@
-package br.com.infox.epp.access.entity;
+package br.com.infox.epp.access.api;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

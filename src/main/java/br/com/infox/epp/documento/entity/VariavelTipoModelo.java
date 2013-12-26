@@ -1,5 +1,15 @@
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_VARIAVEL;
+import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_VARIAVEL_TIPO_MODELO;
+import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.SEQUENCE_VARIAVEL_TIPO_MODELO;
+import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.TABLE_VARIAVEL_TIPO_MODELO;
+
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,23 +19,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import javax.validation.constraints.NotNull;
 
 
 @Entity
-@Table(name = "tb_variavel_tipo_modelo", schema="public")
-public class VariavelTipoModelo implements java.io.Serializable{
+@Table(name = TABLE_VARIAVEL_TIPO_MODELO, schema=PUBLIC)
+public class VariavelTipoModelo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Integer idVariavelTipoModelo;
 	private Variavel variavel;
 	private TipoModeloDocumento tipoModeloDocumento;
 		
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_variavel_tipo_modelo")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL_TIPO_MODELO)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_variavel_tipo_modelo", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_VARIAVEL_TIPO_MODELO, unique = true, nullable = false)
 	public Integer getIdVariavelTipoModelo() {
 		return idVariavelTipoModelo;
 	}
@@ -35,7 +44,7 @@ public class VariavelTipoModelo implements java.io.Serializable{
 	}
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_variavel", nullable = false)
+	@JoinColumn(name = ID_VARIAVEL, nullable = false)
 	@NotNull
 	public Variavel getVariavel() {
 		return variavel;
@@ -46,7 +55,7 @@ public class VariavelTipoModelo implements java.io.Serializable{
 	}
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_tipo_modelo_documento", nullable = false)
+	@JoinColumn(name = ID_TIPO_MODELO_DOCUMENTO, nullable = false)
 	@NotNull
 	public TipoModeloDocumento getTipoModeloDocumento() {
 		return tipoModeloDocumento;

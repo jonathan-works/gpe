@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
-import br.com.infox.epp.access.query.UsuarioLocalizacaoQuery;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.*;
 
 @Name(UsuarioLocalizacaoDAO.NAME)
 @Scope(ScopeType.EVENT)
@@ -21,19 +21,19 @@ public class UsuarioLocalizacaoDAO extends GenericDAO {
 	public static final String NAME = "usuarioLocalizacaoDAO";
 	
 	public boolean existeUsuarioLocalizacao(UsuarioLocalizacao usuarioLocalizacao) {
-		StringBuilder hql = new StringBuilder(UsuarioLocalizacaoQuery.EXISTE_USUARIO_LOCALIZACAO_QUERY);
+		StringBuilder hql = new StringBuilder(EXISTE_USUARIO_LOCALIZACAO_QUERY);
 		if (usuarioLocalizacao.getEstrutura() != null) {
-			hql.append(UsuarioLocalizacaoQuery.ESTRUTURA_CONDITION);
+			hql.append(ESTRUTURA_CONDITION);
 		} else {
-			hql.append(UsuarioLocalizacaoQuery.ESTRUTURA_NULL_CONDITION);
+			hql.append(ESTRUTURA_NULL_CONDITION);
 		}
 		
 		Query query = getEntityManager().createQuery(hql.toString());
-		query.setParameter(UsuarioLocalizacaoQuery.PARAM_USUARIO, usuarioLocalizacao.getUsuario())
-			.setParameter(UsuarioLocalizacaoQuery.PARAM_PAPEL, usuarioLocalizacao.getPapel())
-			.setParameter(UsuarioLocalizacaoQuery.PARAM_LOCALIZACAO, usuarioLocalizacao.getLocalizacao());
+		query.setParameter(PARAM_USUARIO, usuarioLocalizacao.getUsuario())
+			.setParameter(PARAM_PAPEL, usuarioLocalizacao.getPapel())
+			.setParameter(PARAM_LOCALIZACAO, usuarioLocalizacao.getLocalizacao());
 		if (usuarioLocalizacao.getEstrutura() != null) {
-			query.setParameter(UsuarioLocalizacaoQuery.PARAM_ESTRUTURA, usuarioLocalizacao.getEstrutura());
+			query.setParameter(PARAM_ESTRUTURA, usuarioLocalizacao.getEstrutura());
 		}
 		
 		return (Long) query.getSingleResult() > 0;

@@ -15,19 +15,34 @@
 */
 package br.com.infox.epp.ajuda.entity;
 
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.DESCRICAO;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.ID_PAGINA;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.PAGINA_BY_URL;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.PAGINA_BY_URL_QUERY;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.SEQUENCE_PAGINA;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.TABLE_PAGINA;
+import static br.com.infox.epp.ajuda.query.PaginaQuery.URL;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = "tb_pagina", schema="public")
+@Table(name = TABLE_PAGINA, schema=PUBLIC)
+@NamedQueries(value={
+    @NamedQuery(name=PAGINA_BY_URL, query=PAGINA_BY_URL_QUERY)
+})
 public class Pagina implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -39,10 +54,10 @@ public class Pagina implements java.io.Serializable {
 	public Pagina() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_pagina")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAGINA)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_pagina", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_PAGINA, unique = true, nullable = false)
 	public Integer getIdPagina() {
 		return this.idPagina;
 	}
@@ -51,7 +66,7 @@ public class Pagina implements java.io.Serializable {
 		this.idPagina = idPagina;
 	}
 	
-	@Column(name = "ds_descricao", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = DESCRICAO, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	public String getDescricao() {
@@ -62,7 +77,7 @@ public class Pagina implements java.io.Serializable {
 		this.descricao = descricao;
 	}
 	
-	@Column(name = "ds_url", nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = URL, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
 	@Size(max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	public String getUrl() {

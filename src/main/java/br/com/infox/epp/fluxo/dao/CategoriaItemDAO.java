@@ -10,7 +10,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
-import br.com.infox.epp.fluxo.query.CategoriaItemQuery;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.*;
 
 @Name(CategoriaItemDAO.NAME)
 @AutoCreate
@@ -21,21 +21,15 @@ public class CategoriaItemDAO extends GenericDAO {
 
     public List<CategoriaItem> listByCategoria(Categoria categoria) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        
-        parameters.put(CategoriaItemQuery.QUERY_PARAM_CATEGORIA, categoria);
-        
-        return getNamedResultList(CategoriaItemQuery.LIST_BY_CATEGORIA,
-                parameters);
+        parameters.put(QUERY_PARAM_CATEGORIA, categoria);
+        return getNamedResultList(LIST_BY_CATEGORIA, parameters);
     }
 
     public Long countByCategoriaItem(Categoria categoria, Item item) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put(CategoriaItemQuery.QUERY_PARAM_CATEGORIA, categoria);
-        parameters.put(CategoriaItemQuery.QUERY_PARAM_ITEM, item);
-
-        return getNamedSingleResult(CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM,
-                parameters);
+        parameters.put(QUERY_PARAM_CATEGORIA, categoria);
+        parameters.put(QUERY_PARAM_ITEM, item);
+        return getNamedSingleResult(COUNT_BY_CATEGORIA_ITEM, parameters);
     }
 
 }

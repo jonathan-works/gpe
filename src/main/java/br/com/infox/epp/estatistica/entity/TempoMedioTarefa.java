@@ -1,5 +1,7 @@
 package br.com.infox.epp.estatistica.entity;
 
+import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.epp.estatistica.query.TempoMedioTarefaQuery.*;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -19,13 +21,12 @@ import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
-@Table(name=TempoMedioTarefa.TABLE_NAME, schema="public")
+@Table(name=VIEW_TEMPO_MEDIO_TAREFA, schema=PUBLIC)
 public class TempoMedioTarefa implements Serializable {
 	
 	private static final int MINUTES_OF_HOUR = 60;
     private static final int MINUTES_OF_DAY = 1440;
     private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "vs_tempo_medio_tarefa";
 
 	private Integer idTarefa;
 	private Tarefa tarefa;
@@ -36,7 +37,7 @@ public class TempoMedioTarefa implements Serializable {
 	private Integer prazo;
 
 	@Id
-	@Column(name = "id_tarefa", nullable=false, insertable=false, updatable=false)
+	@Column(name = ID_TAREFA, nullable=false, insertable=false, updatable=false)
 	public Integer getIdTarefa() {
 		return idTarefa;
 	}
@@ -45,7 +46,7 @@ public class TempoMedioTarefa implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="id_tarefa", insertable=false, updatable=false)
+	@JoinColumn(name=ID_TAREFA, insertable=false, updatable=false)
 	public Tarefa getTarefa() {
 		return tarefa;
 	}
@@ -55,7 +56,7 @@ public class TempoMedioTarefa implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="id_natureza_categoria_fluxo", insertable=false, updatable=false)
+	@JoinColumn(name=ID_NATUREZA_CATEGORIA_FLUXO, insertable=false, updatable=false)
 	public TempoMedioProcesso getTempoMedioProcesso() {
 		return tempoMedioProcesso;
 	}
@@ -72,7 +73,7 @@ public class TempoMedioTarefa implements Serializable {
 		this.nomeTarefa = nomeTarefa;
 	}
 	
-	@Column(name="nr_tempo_medio", insertable=false, updatable=false)
+	@Column(name=TEMPO_MEDIO, insertable=false, updatable=false)
 	public Float getTempoMedio() {
 		return this.tempoMedio;
 	}
@@ -91,7 +92,7 @@ public class TempoMedioTarefa implements Serializable {
 	    return String.format(FloatFormatConstants.F2_S, resultTempo, tipoPrazo == null ? "":tipoPrazo.getLabel());
 	}
 	
-	@Column(name="tp_prazo")
+	@Column(name=TIPO_PRAZO)
 	@Enumerated(EnumType.STRING)
 	public PrazoEnum getTipoPrazo() {
 		return tipoPrazo;
@@ -100,7 +101,7 @@ public class TempoMedioTarefa implements Serializable {
 		this.tipoPrazo = tipoPrazo;
 	}
 	
-	@Column(name="nr_prazo")
+	@Column(name=PRAZO)
 	public Integer getPrazo() {
 		return prazo;
 	}

@@ -25,7 +25,8 @@
             required="true"/>					
         <h:commandButton
                  action="/Pesquisa/searchResult.xhtml"
-                 image="#{a4jSkin.imgBgButtonPesq}" />
+                 image="#{a4jSkin.imgBgButtonPesq}" 
+                 onclick="if (#{rich:element('searchText')}.value == '') { new infox.Messages({'timeout': 6000}).dialog('#{messages['pesquisa.campoPesquisaVazio']}'); return false; }"/>
 	</h:form>
 
 </ui:composition>

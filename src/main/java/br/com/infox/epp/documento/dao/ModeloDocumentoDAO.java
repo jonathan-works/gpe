@@ -1,8 +1,17 @@
 package br.com.infox.epp.documento.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.LIST_ATIVOS;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_GRUPO_AND_TIPO;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_LISTA_IDS;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.MODELO_BY_TITULO;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.PARAM_GRUPO;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.PARAM_LISTA_IDS;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.PARAM_TIPO;
+import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.PARAM_TITULO;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -11,50 +20,36 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.epp.documento.query.ModeloDocumentoQuery;
 
-/**
- * Classe DAO para a entidade ModeloDocumento
- * @author erikliberal
- *
- */
 @Name(ModeloDocumentoDAO.NAME)
 @AutoCreate
 public class ModeloDocumentoDAO extends GenericDAO {
-	private static final long serialVersionUID = -39703831180567768L;
-	public static final String NAME = "modeloDocumentoDAO";
-	
-	/**
-	 * Retorna todos os Modelos de Documento ativos
-	 * @return lista de modelos de documento ativos
-	 */
-	public List<ModeloDocumento> getModeloDocumentoList() {
-		return getNamedResultList(ModeloDocumentoQuery.LIST_ATIVOS, null);
-	}
-	
-	public ModeloDocumento getModeloDocumentoByTitulo(String titulo){
-		String hql = "select o from ModeloDocumento o where o.tituloModeloDocumento = :titulo";
-		return (ModeloDocumento) getEntityManager().createQuery(hql)
-				.setParameter("titulo", titulo).getSingleResult();
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(GrupoModeloDocumento grupo, TipoModeloDocumento tipo){
-		String hql = "select distinct o from ModeloDocumento o where " +
-				"o.tipoModeloDocumento.grupoModeloDocumento = :grupo and " +
-				"o.tipoModeloDocumento = :tipo " +
-				"order by o.tituloModeloDocumento";
-		return getEntityManager().createQuery(hql)
-				.setParameter("grupo", grupo)
-				.setParameter("tipo", tipo).getResultList();
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<ModeloDocumento> getModelosDocumentoInListaModelos(String listaModelos){
-		String hql = "select o from ModeloDocumento o " +
-						"where o.idModeloDocumento in (" +
-						listaModelos + ") order by modeloDocumento";
-		return (List<ModeloDocumento>) getEntityManager().createQuery(hql).getResultList();
-	}
-	
+    private static final long serialVersionUID = -39703831180567768L;
+    public static final String NAME = "modeloDocumentoDAO";
+
+    public List<ModeloDocumento> getModeloDocumentoList() {
+        return getNamedResultList(LIST_ATIVOS);
+    }
+
+    public ModeloDocumento getModeloDocumentoByTitulo(String titulo) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_TITULO, titulo);
+        return getNamedSingleResult(MODELO_BY_TITULO, parameters);
+    }
+
+    public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(
+            GrupoModeloDocumento grupo, TipoModeloDocumento tipo) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_GRUPO, grupo);
+        parameters.put(PARAM_TIPO, tipo);
+        return getNamedResultList(MODELO_BY_GRUPO_AND_TIPO, parameters);
+    }
+
+    public List<ModeloDocumento> getModelosDocumentoInListaModelos(
+            String listaModelos) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_LISTA_IDS, listaModelos);
+        return getNamedResultList(MODELO_BY_LISTA_IDS, parameters);
+    }
+
 }
