@@ -1,11 +1,13 @@
 package br.com.infox.epp.processo.dao;
 
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_TODOS_OS_ACTOR_IDS_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.APAGA_ACTOR_ID_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.*;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 
 import java.util.HashMap;
 import java.util.List;
