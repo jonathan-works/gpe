@@ -30,12 +30,11 @@ public class ProcessoDAO extends GenericDAO {
         parameters.put(PARAM_ACTOR_ID, actorId);
         executeNamedQueryUpdate(ANULA_ACTOR_ID, parameters);
     }
-	
-	public void apagarActorIdDoProcesso(Processo processo){
-		String hql = "update public.tb_processo set nm_actor_id = null where id_processo = :id";
-        getEntityManager().createNativeQuery(hql)
-                    .setParameter("id", processo.getIdProcesso())
-                    .executeUpdate();
+
+    public void apagarActorIdDoProcesso(Processo processo) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
+        executeNamedQueryUpdate(APAGA_ACTOR_ID_DO_PROCESSO, parameters);
 	}
 	
 	public void anularTodosActorId() {
