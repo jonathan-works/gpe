@@ -37,6 +37,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
     @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY)
 })
 @NamedNativeQueries(value={
+    @NamedNativeQuery(name=DATA_INICIO_PRIMEIRA_TAREFA, query=DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
     @NamedNativeQuery(name=TEMPO_GASTO_PROCESSO_EPP, query=TEMPO_GASTO_PROCESSO_EPP_QUERY)
 })
 public class ProcessoEpa extends Processo {

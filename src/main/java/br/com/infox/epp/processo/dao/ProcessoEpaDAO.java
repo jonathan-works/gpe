@@ -130,7 +130,7 @@ public class ProcessoEpaDAO extends GenericDAO {
 	}
 	
 	public Date getDataInicioPrimeiraTarefa(ProcessoEpa processoEpa) {
-		return EntityUtil.getSingleResult(EntityUtil.createQuery(ProcessoEpaQuery.QUERY_DATA_INICIO_PRIMEIRA_TAREFA)
+		return EntityUtil.getSingleResult(EntityUtil.createQuery(ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA_QUERY)
 				.setParameter(ProcessoEpaQuery.QUERY_PARAM_PROCESSO_EPA, processoEpa));
 	}
 }
