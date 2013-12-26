@@ -101,10 +101,12 @@ public class ProcessoEpaDAO extends GenericDAO {
 	 * Esse método retorna falso (não há permissão de inativar) se o processo
 	 * possuir uma única parte ativa no momento.
 	 * */
-	public Boolean podeInativarPartes(ProcessoEpa processoEpa){
-		String hql = "select count(*) from ParteProcesso partes where partes.processo = :processoEpa and partes.ativo = true";
-		return (Boolean) (((Long) EntityUtil.createQuery(hql).setParameter("processoEpa", processoEpa).getSingleResult()).compareTo(1L) > 0);
-	}
+    public Boolean podeInativarPartes(ProcessoEpa processoEpa) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(QUERY_PARAM_PROCESSO_EPA, processoEpa);
+        Long count = (Long) getNamedSingleResult(COUNT_PARTES_ATIVAS_DO_PROCESSO, parameters);
+        return count != null && count.compareTo(1L) > 0;
+    }
 	
 	public Item getItemDoProcesso(int idProcesso){
 		String query = "select o.itemDoProcesso from ProcessoEpa o where o.idProcesso =:idProcesso";
