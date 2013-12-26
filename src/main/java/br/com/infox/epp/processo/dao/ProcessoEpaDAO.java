@@ -124,8 +124,9 @@ public class ProcessoEpaDAO extends GenericDAO {
 		return result;
 	}
 	
-	public Date getDataInicioPrimeiraTarefa(ProcessoEpa processoEpa) {
-		return EntityUtil.getSingleResult(EntityUtil.createQuery(DATA_INICIO_PRIMEIRA_TAREFA_QUERY)
-				.setParameter(QUERY_PARAM_PROCESSO_EPA, processoEpa));
-	}
+    public Date getDataInicioPrimeiraTarefa(ProcessoEpa processoEpa) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(QUERY_PARAM_PROCESSO_EPA, processoEpa);
+        return getNamedSingleResult(DATA_INICIO_PRIMEIRA_TAREFA, parameters);
+    }
 }
