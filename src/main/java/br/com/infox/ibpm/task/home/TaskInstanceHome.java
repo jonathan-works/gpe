@@ -105,6 +105,7 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinar = Boolean.FALSE;
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
+    private boolean tarefaLiberada = false;
     
     @In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In private SituacaoProcessoManager situacaoProcessoManager;
@@ -478,6 +479,7 @@ public class TaskInstanceHome implements Serializable {
         if (BusinessProcess.instance().hasCurrentTask()) {
             try {
                 taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
+                this.tarefaLiberada = true;
             } catch (DAOException e) {
                 LOG.error(".removeUsuario() - ", e);
             }    
@@ -623,4 +625,7 @@ public class TaskInstanceHome implements Serializable {
         this.urlRetornoAcessoExterno = urlRetornoAcessoExterno;
     }
     
+    public boolean isTarefaLiberada() {
+		return tarefaLiberada;
+	}
 }
