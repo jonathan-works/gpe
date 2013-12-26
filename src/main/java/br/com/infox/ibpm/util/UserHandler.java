@@ -70,7 +70,7 @@ public class UserHandler {
                 this.usuarioProcesso = (String) query.getSingleResult();
             } catch (NoResultException e) {
                 this.usuarioProcesso = "";
-                LOG.warn("Não houve resultado. UserHandler.getActorIdTarefaAtual(Integer)", e);
+                LOG.debug("Não houve resultado. UserHandler.getActorIdTarefaAtual(Integer)", e);
             } catch (NonUniqueResultException e) {
                 LOG.error("Múltiplos resultados. UserHandler.getActorIdTarefaAtual(Integer)", e);
             } catch (IllegalStateException e) {
