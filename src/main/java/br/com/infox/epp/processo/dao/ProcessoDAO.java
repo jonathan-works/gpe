@@ -41,8 +41,7 @@ public class ProcessoDAO extends GenericDAO {
 	}
 	
 	public void anularTodosActorId() {
-		String query = "update public.tb_processo set nm_actor_id = null ";
-		HibernateUtil.getSession().createSQLQuery(query).executeUpdate();
+		HibernateUtil.getSession().createSQLQuery(ANULA_TODOS_OS_ACTOR_IDS_QUERY).executeUpdate();
 	}
 	
 	public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa){
