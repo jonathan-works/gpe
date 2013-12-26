@@ -36,6 +36,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
     @NamedQuery(name=LIST_ALL_NOT_ENDED, query=LIST_ALL_NOT_ENDED_QUERY),
     @NamedQuery(name=PROCESSO_EPA_BY_ID_JBPM, query=PROCESSO_EPA_BY_ID_JBPM_QUERY),
     @NamedQuery(name=COUNT_PARTES_ATIVAS_DO_PROCESSO, query=COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
+    @NamedQuery(name=ITEM_DO_PROCESSO, query=ITEM_DO_PROCESSO_QUERY),
     @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY)
 })
 @NamedNativeQueries(value={

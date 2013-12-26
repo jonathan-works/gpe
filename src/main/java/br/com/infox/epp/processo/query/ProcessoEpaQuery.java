@@ -38,4 +38,9 @@ public interface ProcessoEpaQuery {
     String COUNT_PARTES_ATIVAS_DO_PROCESSO = "countPartesAtivasDoProcesso";
     String COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY = "select count(*) from ParteProcesso partes where partes.processo = :"
             + QUERY_PARAM_PROCESSO_EPA + " and partes.ativo = true";
+    
+    String PARAM_ID_PROCESSO = "idProcesso";
+    String ITEM_DO_PROCESSO = "getItemDoProcessoByIdProcesso";
+    String ITEM_DO_PROCESSO_QUERY = "select o.itemDoProcesso from ProcessoEpa o where o.idProcesso =:" 
+            + PARAM_ID_PROCESSO;
 }
