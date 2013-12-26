@@ -29,5 +29,8 @@ public interface ProcessoQuery {
     String APAGA_ACTOR_ID_DO_PROCESSO_QUERY = "update public.tb_processo set nm_actor_id = null where id_processo = :" 
             + PARAM_ID_PROCESSO;
     
+    String REMOVE_PROCESSO_DA_CAIXA_ATUAL = "removerProcessoDaCaixaAtual";
+    String REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY = "updte public.tb_processo set id_caixa = null where id_processo = :" 
+            + PARAM_ID_PROCESSO;
 
 }
