@@ -30,4 +30,8 @@ public interface ProcessoEpaQuery {
             + "where pt.processoEpa = :" + QUERY_PARAM_PROCESSO_EPA
             + " and pt.dataInicio <= (select min(pt2.dataInicio) from ProcessoEpaTarefa pt2 "
             + "where pt2.processoEpa = pt.processoEpa)";
+    
+    String PARAM_ID_JBPM = "idJbpm";
+    String PROCESSO_EPA_BY_ID_JBPM = "getProcessoEpaByIdJbpm";
+    String PROCESSO_EPA_BY_ID_JBPM_QUERY = "select pe from ProcessoEpa pe where pe.idJbpm = :" + PARAM_ID_JBPM;
 }
