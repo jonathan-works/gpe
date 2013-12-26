@@ -1,5 +1,23 @@
 package br.com.infox.epp.imagem.entity;
 
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_GRANDE;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MD5;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MINIMA;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_NOME_ARQUIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.DATA_INCLUSAO;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.EXTENSAO;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.FILE_PATH;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.ID_IMAGEM_BIN;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.IMAGEM;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.LIST_IMAGENS;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.LIST_IMAGENS_QUERY;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.MD5;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.NOME_ARQUIVO;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.SEQUENCE_IMAGEM_BIN;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.TABLE_IMAGEM_BIN;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -10,6 +28,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,10 +38,11 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.core.constants.LengthConstants;
-
 @Entity
-@Table(name = "tb_imagem_bin", schema="public")
+@Table(name = TABLE_IMAGEM_BIN, schema=PUBLIC)
+@NamedQueries({
+	@NamedQuery(name = LIST_IMAGENS, query = LIST_IMAGENS_QUERY)
+})
 public class ImagemBin implements Serializable {
 	private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
@@ -36,11 +57,10 @@ public class ImagemBin implements Serializable {
 	private Integer tamanho;
 	private String filePath;
 	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_imagem_bin")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_IMAGEM_BIN)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_imagem_bin", unique = true, nullable = false)
-	@NotNull
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_IMAGEM_BIN, unique = true, nullable = false)
 	public Integer getIdImagemBin() {
 		return idImagemBin;
 	}
@@ -48,8 +68,8 @@ public class ImagemBin implements Serializable {
 		this.idImagemBin = idImagemBin;
 	}
 	
-	@Column(name = "ds_extensao", length=LengthConstants.DESCRICAO_MINIMA)
-	@Size(max=LengthConstants.DESCRICAO_MINIMA)
+	@Column(name = EXTENSAO, length=DESCRICAO_MINIMA)
+	@Size(max=DESCRICAO_MINIMA)
 	public String getExtensao() {
 		return extensao;
 	}
@@ -57,8 +77,8 @@ public class ImagemBin implements Serializable {
 		this.extensao = extensao;
 	}
 	
-	@Column(name = "ds_md5_imagem", length=LengthConstants.DESCRICAO_MD5, nullable=false)
-	@Size(max=LengthConstants.DESCRICAO_MD5)
+	@Column(name = MD5, length=DESCRICAO_MD5, nullable=false)
+	@Size(max=DESCRICAO_MD5)
 	@NotNull
 	public String getMd5Imagem() {
 		return md5Imagem;
@@ -67,8 +87,8 @@ public class ImagemBin implements Serializable {
 		this.md5Imagem = md5Imagem;
 	}
 	
-	@Column(name = "nm_arquivo", length=LengthConstants.DESCRICAO_NOME_ARQUIVO)
-	@Size(max=LengthConstants.DESCRICAO_NOME_ARQUIVO)
+	@Column(name = NOME_ARQUIVO, length=DESCRICAO_NOME_ARQUIVO)
+	@Size(max=DESCRICAO_NOME_ARQUIVO)
 	public String getNomeArquivo() {
 		return nomeArquivo;
 	}
@@ -77,7 +97,7 @@ public class ImagemBin implements Serializable {
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_inclusao", nullable = false)
+	@Column(name = DATA_INCLUSAO, nullable = false)
 	@NotNull
 	public Date getDataInclusao() {
 		return dataInclusao;
@@ -104,7 +124,7 @@ public class ImagemBin implements Serializable {
 		return "0 Kb";
 	}
 	
-	@Column(name = "ob_imagem", nullable = false)
+	@Column(name = IMAGEM, nullable = false)
 	@NotNull
 	public byte[] getImagem() {
 		return imagem;
@@ -113,7 +133,7 @@ public class ImagemBin implements Serializable {
 		this.imagem = Arrays.copyOf(imagem, imagem.length);
 	}
 	
-	@Column(name = "ds_file_path", length=LengthConstants.DESCRICAO_GRANDE)
+	@Column(name = FILE_PATH, length=DESCRICAO_GRANDE)
     public String getFilePath() {
         return filePath;
     }
