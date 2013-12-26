@@ -11,5 +11,9 @@ public interface CaixaQuery {
     String NOME_INDICE = "nm_caixa_idx";
     String NODE_ANTERIOR = "id_node_anterior";
     String CAIXA_ATTRIBUTE = "caixa";
+    
+    String PARAM_ID_CAIXA = "idCaixa";
+    String REMOVE_BY_ID = "removeCaixaById";
+    String REMOVE_BY_ID_QUERY = "update Processo set caixa = :caixa where caixa.idCaixa = :" + PARAM_ID_CAIXA;
 
 }

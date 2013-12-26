@@ -2,6 +2,7 @@ package br.com.infox.epp.painel.caixa;
 
 import static br.com.infox.epp.painel.caixa.CaixaQuery.*;
 import static br.com.infox.core.persistence.ORConstants.*;
+
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +13,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -29,7 +30,9 @@ import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Entity
 @Table(name = TABLE_CAIXA, schema=PUBLIC)
-@Inheritance(strategy=InheritanceType.JOINED)
+@NamedQueries(value={
+    @NamedQuery(name=REMOVE_BY_ID, query=REMOVE_BY_ID_QUERY)
+})
 public class Caixa implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
