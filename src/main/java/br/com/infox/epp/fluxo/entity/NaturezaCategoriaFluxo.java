@@ -2,6 +2,8 @@ package br.com.infox.epp.fluxo.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ATIVOS_BY_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ATIVOS_BY_FLUXO_QUERY;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.BY_RELATIONSHIP_QUERY;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ID_CATEGORIA;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ID_FLUXO;
@@ -12,7 +14,7 @@ import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_N
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_RELATIONSHIP;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.SEQUENCE_NATRUEZA_CATEGORIA_FLUXO;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.*;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.TABLE_NATUREZA_CATEGORIA_FLUXO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
