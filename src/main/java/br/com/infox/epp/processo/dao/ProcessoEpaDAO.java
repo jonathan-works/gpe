@@ -57,6 +57,12 @@ public class ProcessoEpaDAO extends GenericDAO {
 		return find(ProcessoEpa.class, processo.getIdProcesso());
 	}
 	
+    private ProcessoEpa getProcessoEpaByIdJbpm(Long idJbpm) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_JBPM, idJbpm);
+        return getNamedSingleResult(PROCESSO_EPA_BY_ID_JBPM, parameters);
+    }
+	
 	public List<PessoaFisica> getPessoaFisicaList(){
 		Long idJbpm = ProcessInstance.instance().getId();
 		String busca = "select pe from ProcessoEpa pe where pe.idJbpm = :idJbpm";
