@@ -19,6 +19,8 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COMPLEMENTO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
@@ -55,6 +57,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -70,6 +74,9 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Entity
 @Table(name=TABLE_PROCESSO, schema=PUBLIC)
 @Inheritance(strategy=JOINED)
+@NamedNativeQueries(value={
+    @NamedNativeQuery(name=ANULA_ACTOR_ID, query=ANULA_ACTOR_ID_QUERY)
+})
 public class Processo implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

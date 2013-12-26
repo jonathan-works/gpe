@@ -19,5 +19,10 @@ public interface ProcessoQuery {
     String ID_CAIXA = "id_caixa";
     String PROCESSO_ATTRIBUTE = "processo";
     
+    String PARAM_ACTOR_ID = "actorId";
+    String ANULA_ACTOR_ID = "anulaActorId";
+    String ANULA_ACTOR_ID_QUERY = "update public.tb_processo set nm_actor_id = null where nm_actor_id = :" 
+            + PARAM_ACTOR_ID;
+    
 
 }
