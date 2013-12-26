@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.mail.entity;
 
+import static br.com.infox.epp.mail.query.ListaEmailQuery.*;
+import static br.com.infox.core.persistence.ORConstants.*;
 import java.text.MessageFormat;
 
 import javax.persistence.Column;
@@ -31,11 +33,9 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 
 @Entity
-@Table(name = ListaEmail.TABLE_NAME, schema="public")
+@Table(name = TABLE_LISTA_EMAIL, schema=PUBLIC)
 public class ListaEmail implements java.io.Serializable {
 
-	public static final String TABLE_NAME = "tb_lista_email";
-	
 	private static final long serialVersionUID = 1L;
 
 	private int idListaEmail;
@@ -47,10 +47,10 @@ public class ListaEmail implements java.io.Serializable {
 	public ListaEmail() {
 	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_lista_email")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LISTA_EMAIL)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_lista_email", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_LISTA_EMAIL, unique = true, nullable = false)
 	public int getIdListaEmail() {
 		return this.idListaEmail;
 	}
@@ -59,7 +59,7 @@ public class ListaEmail implements java.io.Serializable {
 		this.idListaEmail = id;
 	}
 
-	@Column(name = "id_grupo_email", unique = false, nullable = false)
+	@Column(name = ID_GRUPO_EMAIL, unique = false, nullable = false)
 	public int getIdGrupoEmail() {
 		return this.idGrupoEmail;
 	}
@@ -69,7 +69,7 @@ public class ListaEmail implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_localizacao")
+	@JoinColumn(name = ID_LOCALIZACAO)
 	public Localizacao getLocalizacao() {
 		return this.localizacao;
 	}
@@ -79,7 +79,7 @@ public class ListaEmail implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_papel")	
+    @JoinColumn(name = ID_PAPEL)
 	public Papel getPapel() {
 		return papel;
 	}
@@ -89,7 +89,7 @@ public class ListaEmail implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_estrutura")
+    @JoinColumn(name = ID_ESTRUTURA)
 	public Localizacao getEstrutura() {
 		return estrutura;
 	}
