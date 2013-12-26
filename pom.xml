@@ -158,21 +158,7 @@
 			<version>3.2.10.SP3_seam2</version>
 			<scope>compile</scope>
 			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.3.174</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
+		</dependency><dependency>
 			<groupId>org.opensymphony.quartz</groupId>
 			<artifactId>quartz</artifactId>
 			<type>jar</type>
@@ -376,6 +362,58 @@
 				<log.jbpm>INFO</log.jbpm>
 				<log.hibernate.sql>INFO</log.hibernate.sql>
 			</properties>
+			<dependencyManagement>
+				<dependencies>
+				    <dependency>
+			            <groupId>org.jboss.arquillian</groupId>
+			            <artifactId>arquillian-bom</artifactId>
+			            <version>1.1.2.Final</version>
+			            <scope>import</scope>
+			            <type>pom</type>
+			        </dependency>
+				</dependencies>
+			</dependencyManagement>
+			<dependencies>
+				<dependency>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<type>jar</type>
+					<scope>test</scope>
+				</dependency>
+		        <dependency>
+		            <groupId>org.jboss.as</groupId>
+		            <artifactId>jboss-as-arquillian-container-managed</artifactId>
+		            <scope>test</scope>
+		        </dependency>
+		        <dependency>
+		            <groupId>org.jboss.arquillian.protocol</groupId>
+		            <artifactId>arquillian-protocol-servlet</artifactId>
+		            <scope>test</scope>
+		        </dependency>
+				<dependency>
+					<groupId>org.jboss.shrinkwrap.resolver</groupId>
+					<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+					<scope>test</scope>
+				</dependency>
+				<dependency> 
+					<groupId>org.jboss.shrinkwrap.resolver</groupId>
+					<artifactId>shrinkwrap-resolver-depchain</artifactId>
+					<scope>test</scope>
+					<type>pom</type>
+				</dependency>
+				<dependency>
+				    <groupId>org.jboss.arquillian.junit</groupId>
+				    <artifactId>arquillian-junit-container</artifactId>
+				    <scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+					<version>1.3.174</version>
+					<type>jar</type>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
 		</profile>
 	</profiles>
 	<organization>
