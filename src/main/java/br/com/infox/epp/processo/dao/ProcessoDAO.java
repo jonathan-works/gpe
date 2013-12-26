@@ -1,8 +1,10 @@
 package br.com.infox.epp.processo.dao;
 
 import static br.com.infox.core.constants.WarningConstants.*;
-
+import static br.com.infox.epp.processo.query.ProcessoQuery.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -23,10 +25,11 @@ public class ProcessoDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoDAO";
 	
-	public void anulaActorId(String actorId) {
-		String query = "update public.tb_processo set nm_actor_id = null where nm_actor_id = :actorId";
-		HibernateUtil.getSession().createSQLQuery(query).setParameter("actorId", actorId).executeUpdate();
-	}
+    public void anulaActorId(String actorId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ACTOR_ID, actorId);
+        executeNamedQueryUpdate(ANULA_ACTOR_ID, parameters);
+    }
 	
 	public void apagarActorIdDoProcesso(Processo processo){
 		String hql = "update public.tb_processo set nm_actor_id = null where id_processo = :id";
