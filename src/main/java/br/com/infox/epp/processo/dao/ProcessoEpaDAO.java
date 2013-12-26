@@ -43,21 +43,18 @@ public class ProcessoEpaDAO extends GenericDAO {
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoEpaDAO.class);
 	public static final String NAME = "processoEpaDAO";
 
-	public List<ProcessoEpa> listAllNotEnded() {
-		List<ProcessoEpa> resultList = getNamedResultList
-			(ProcessoEpaQuery.LIST_ALL_NOT_ENDED, null);
-		return resultList;
-	}
+    public List<ProcessoEpa> listAllNotEnded() {
+        return getNamedResultList(ProcessoEpaQuery.LIST_ALL_NOT_ENDED);
+    }
 
-	public List<ProcessoEpa> listNotEnded(Fluxo fluxo) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(ProcessoEpaQuery.PARAM_FLUXO, fluxo);
-		return getNamedResultList
-					(ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO, map);
-	}
+    public List<ProcessoEpa> listNotEnded(Fluxo fluxo) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(ProcessoEpaQuery.PARAM_FLUXO, fluxo);
+        return getNamedResultList(ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO, parameters);
+    }
 	
 	public ProcessoEpa getProcessoEpaByProcesso(Processo processo){
-		return getEntityManager().find(ProcessoEpa.class, processo.getIdProcesso());
+		return find(ProcessoEpa.class, processo.getIdProcesso());
 	}
 	
 	public List<PessoaFisica> getPessoaFisicaList(){
