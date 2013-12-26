@@ -34,4 +34,8 @@ public interface ProcessoEpaQuery {
     String PARAM_ID_JBPM = "idJbpm";
     String PROCESSO_EPA_BY_ID_JBPM = "getProcessoEpaByIdJbpm";
     String PROCESSO_EPA_BY_ID_JBPM_QUERY = "select pe from ProcessoEpa pe where pe.idJbpm = :" + PARAM_ID_JBPM;
+    
+    String COUNT_PARTES_ATIVAS_DO_PROCESSO = "countPartesAtivasDoProcesso";
+    String COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY = "select count(*) from ParteProcesso partes where partes.processo = :"
+            + QUERY_PARAM_PROCESSO_EPA + " and partes.ativo = true";
 }
