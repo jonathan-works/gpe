@@ -47,7 +47,7 @@ public interface LengthConstants {
 //Tamanhos de ~Números
     int NUMERO_CPF = 20;
     int NUMERO_RAZAO_SOCIAL = 20;
-    int NUMERO_PROCESSO = 30;
+    int NUMERACAO_PROCESSO = 30;
     
 //Tipos Especiais
     int FLAG = 1;
