@@ -5,3 +5,5 @@
 /bin
 /src/main/java/br/com/experimentos
 *.db
+/br.com.infox.epp.ajuda.entity.Ajuda
+derby.log
