@@ -162,7 +162,6 @@ public class ArquillianSeamTestSetup {
         final File[] files = loadPomFromFile.resolve().withTransitivity().asFile();
 
         for (File file : files) {
-            System.out.println(file.getName());
             if (file.getName().matches("antlr.*.jar")) {
                 continue;
             } else {
