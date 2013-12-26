@@ -18,17 +18,15 @@ public interface NaturezaCategoriaFluxoQuery {
     String LIST_BY_NATUREZA_QUERY = "select o from NaturezaCategoriaFluxo o "
             + "where o.natureza = :" + PARAM_NATUREZA;
 
-    String LIST_CATEGORIA_ATIVO = "listByCategoriaAtiva";
-    String LIST_CATEGORIA_ATIVO_QUERY = "select o from Categoria o"
-            + " where o.ativo = true";
-
-    String LIST_FLUXO_ATIVO = "listByFluxoAtivo";
-    String LIST_FLUXO_ATIVO_QUERY = "select o from Fluxo o"
-            + " where o.ativo = true";
-
     String LIST_BY_RELATIONSHIP = "listByNaturezaCategoriaAndFluxo";
     String BY_RELATIONSHIP_QUERY = "select o from NaturezaCategoriaFluxo o where o.natureza = :"
             + PARAM_NATUREZA
             + " and o.categoria = :"
             + PARAM_CATEGORIA + " and o.fluxo = :" + PARAM_FLUXO;
+    
+    String ATIVOS_BY_FLUXO = "listAtivosByFluxo";
+    String ATIVOS_BY_FLUXO_QUERY = "select ncf from NaturezaCategoriaFluxo ncf "
+            + "inner join ncf.natureza n " + "inner join ncf.categoria c "
+            + "where n.ativo=true " + "and c.ativo=true "
+            + "and ncf.fluxo=:fluxo";
 }
