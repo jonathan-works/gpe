@@ -1,6 +1,17 @@
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ID_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ID_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ID_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ID_NATUREZA_CATEGORIA_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA_QUERY;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.SEQUENCE_NATRUEZA_CATEGORIA_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.TABLE_NATUREZA_CATEGORIA_FLUXO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +30,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-
 import javax.validation.constraints.NotNull;
 
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.*;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.itx.util.HibernateUtil;
 
