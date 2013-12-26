@@ -12,7 +12,7 @@ import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_N
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_RELATIONSHIP;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.SEQUENCE_NATRUEZA_CATEGORIA_FLUXO;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.TABLE_NATUREZA_CATEGORIA_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,6 +43,7 @@ import br.com.itx.util.HibernateUtil;
         @UniqueConstraint(columnNames={ID_NATUREZA, ID_CATEGORIA, ID_FLUXO})
 })
 @NamedQueries(value={
+    @NamedQuery(name=ATIVOS_BY_FLUXO, query=ATIVOS_BY_FLUXO_QUERY),
     @NamedQuery(name=LIST_BY_RELATIONSHIP, query=BY_RELATIONSHIP_QUERY),
     @NamedQuery(name=LIST_BY_NATUREZA, query=LIST_BY_NATUREZA_QUERY)
 })
