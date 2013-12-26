@@ -32,5 +32,9 @@ public interface ProcessoQuery {
     String REMOVE_PROCESSO_DA_CAIXA_ATUAL = "removerProcessoDaCaixaAtual";
     String REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY = "updte public.tb_processo set id_caixa = null where id_processo = :" 
             + PARAM_ID_PROCESSO;
+    
+    String LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID = "listProcessosByIdProcessoAndActorId";
+    String LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY = "select o from Processo o where o.idProcesso = :" 
+            + PARAM_ID_PROCESSO + " and o.actorId like :" + PARAM_ACTOR_ID;
 
 }

@@ -19,23 +19,6 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.COMPLEMENTO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DURACAO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_CAIXA;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO_CONEXO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_USUARIO_CADASTRO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_ORIGEM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
-import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.*;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
@@ -59,6 +42,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -78,6 +63,9 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
     @NamedNativeQuery(name=APAGA_ACTOR_ID_DO_PROCESSO, query=APAGA_ACTOR_ID_DO_PROCESSO_QUERY),
     @NamedNativeQuery(name=REMOVE_PROCESSO_DA_CAIXA_ATUAL, query=REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY),
     @NamedNativeQuery(name=ANULA_ACTOR_ID, query=ANULA_ACTOR_ID_QUERY)
+})
+@NamedQueries(value={
+    @NamedQuery(name=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
 })
 public class Processo implements java.io.Serializable {
 
