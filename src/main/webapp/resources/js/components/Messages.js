@@ -18,6 +18,9 @@ namespace("infox.Messages",function Messages(args) {
 	}
 	
 	function $_hideDialog() {
+		if ($(".d-msg").attr('infox-dialog')) {
+			return;
+		}
 		clearTimeout(timer);
 		timer=false;
 		$(".d-msg").addClass("hidden");
@@ -35,11 +38,31 @@ namespace("infox.Messages",function Messages(args) {
 		}
 	}
 	
-	function $_dialog(msg) {
+	function $_dialog(msg, modal, onhide, enableTimeout) {
 		clearTimeout(timer);
+		$(".d-msg").attr('infox-dialog', true);
+		var modalDiv;
+		if (modal) {
+			modalDiv = $("<div></div>");
+			modalDiv.insertBefore(".d-msg");
+			modalDiv.addClass("d-msg-modal");
+		}
 		$(".d-msg-c").text(msg);
 		$_showDialog();
-		timer = setTimeout($_hideDialog, timeout);
+		var hide = function () {
+			$_hideDialog();
+			if (onhide) {
+				onhide();
+			}
+			if (modalDiv) {
+				modalDiv.remove();
+			}
+		};
+		$(".d-msg-h-close").off('click');
+		$(".d-msg-h-close").click(hide);
+		if (enableTimeout === undefined || enableTimeout) {
+			timer = setTimeout(hide, timeout);
+		}
 	}
 	return Messages;
 });
