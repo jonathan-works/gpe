@@ -63,6 +63,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
     @NamedNativeQuery(name=APAGA_ACTOR_ID_DO_PROCESSO, query=APAGA_ACTOR_ID_DO_PROCESSO_QUERY),
     @NamedNativeQuery(name=REMOVE_PROCESSO_DA_CAIXA_ATUAL, query=REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY),
     @NamedNativeQuery(name=ATUALIZAR_PROCESSOS, query=ATUALIZAR_PROCESSOS_QUERY),
+    @NamedNativeQuery(name=ANULA_TODOS_OS_ACTOR_IDS, query=ANULA_TODOS_OS_ACTOR_IDS_QUERY),
     @NamedNativeQuery(name=ANULA_ACTOR_ID, query=ANULA_ACTOR_ID_QUERY)
 })
 @NamedQueries(value={
