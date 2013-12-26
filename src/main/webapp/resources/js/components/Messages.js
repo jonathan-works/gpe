@@ -51,6 +51,7 @@ namespace("infox.Messages",function Messages(args) {
 		$_showDialog();
 		var hide = function () {
 			$_hideDialog();
+			$(".d-msg").attr('infox-dialog', false);
 			if (onhide) {
 				onhide();
 			}
