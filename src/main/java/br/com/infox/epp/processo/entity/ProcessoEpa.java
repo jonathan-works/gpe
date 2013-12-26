@@ -11,6 +11,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -33,6 +35,9 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 @NamedQueries(value={
     @NamedQuery(name=LIST_ALL_NOT_ENDED, query=LIST_ALL_NOT_ENDED_QUERY),
     @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY)
+})
+@NamedNativeQueries(value={
+    @NamedNativeQuery(name=TEMPO_GASTO_PROCESSO_EPP, query=TEMPO_GASTO_PROCESSO_EPP_QUERY)
 })
 public class ProcessoEpa extends Processo {
 
