@@ -1,7 +1,18 @@
 package br.com.infox.epp.painel.caixa;
 
-import static br.com.infox.epp.painel.caixa.CaixaQuery.*;
-import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.CAIXA_ATTRIBUTE;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.DESCRICAO_CAIXA;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.ID_CAIXA;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.ID_TAREFA;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.NODE_ANTERIOR;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.NOME_CAIXA;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.NOME_INDICE;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.REMOVE_BY_ID;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.REMOVE_BY_ID_QUERY;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.SEQUENCE_TABLE_CAIXA;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.TABLE_CAIXA;
 
 import java.text.Normalizer;
 import java.util.ArrayList;

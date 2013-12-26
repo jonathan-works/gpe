@@ -1,10 +1,10 @@
 package br.com.infox.epp.painel.caixa;
 
-import static br.com.infox.epp.painel.caixa.CaixaQuery.*;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.PARAM_ID_CAIXA;
+import static br.com.infox.epp.painel.caixa.CaixaQuery.REMOVE_BY_ID;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
