@@ -46,6 +46,11 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         return Expressions.instance().createValueExpression(valueExpression).getValue();
     }
 
+    protected final Object getComponentValue(String componentName, String fieldName) {
+        final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".").append(fieldName).append("}").toString();
+        return Expressions.instance().createValueExpression(valueExpression).getValue();
+    }
+    
     protected final Object getValue(String componentName, String fieldName) {
         final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".instance.").append(fieldName).append("}").toString();
         return Expressions.instance().createValueExpression(valueExpression).getValue();
@@ -55,6 +60,11 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
      * Set a value binding
      */
     protected final void setValue(String valueExpression, Object value) {
+        Expressions.instance().createValueExpression(valueExpression).setValue(value);
+    }
+
+    protected final void setComponentValue(String componentName, String fieldName, Object value) {
+        final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".").append(fieldName).append("}").toString();
         Expressions.instance().createValueExpression(valueExpression).setValue(value);
     }
 
@@ -74,77 +84,139 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
     }
 
-    protected abstract List<T> getInactivateSuccessList();
-    protected abstract List<T> getUpdateSuccessList();
     protected abstract List<T> getPersistSuccessList();
-    protected abstract List<T> getRemoveSuccessList();
-    protected abstract List<T> getInactivateFailList();
-    protected abstract List<T> getUpdateFailList();
-    protected abstract List<T> getPersistFailList();
-    protected abstract List<T> getRemoveFailList();
-    
-    protected abstract Runnable getInactivateSuccessTest(T entity);
-    protected abstract Runnable getUpdateSuccessTest(T entity);
-    protected abstract Runnable getRemoveSuccessTest(T entity);
     protected abstract Runnable getPersistSuccessTest(T entity);
-    protected abstract Runnable getInactivateFailTest(T entity);
-    protected abstract Runnable getUpdateFailTest(T entity);
-    protected abstract Runnable getRemoveFailTest(T entity);
+    
+    protected abstract List<T> getPersistFailList();
     protected abstract Runnable getPersistFailTest(T entity);
+    
+    protected abstract List<T> getInactivateSuccessList();
+    protected abstract Runnable getInactivateSuccessTest(T entity);
+    
+    protected abstract List<T> getInactivateFailList();
+    protected abstract Runnable getInactivateFailTest(T entity);
+    
+    protected abstract List<T> getUpdateSuccessList();
+    protected abstract Runnable getUpdateSuccessTest(T entity);
+    
+    protected abstract List<T> getUpdateFailList();
+    protected abstract Runnable getUpdateFailTest(T entity);
+    
+    protected abstract List<T> getRemoveSuccessList();
+    protected abstract Runnable getRemoveSuccessTest(T entity);
+    
+    protected abstract List<T> getRemoveFailList();
+    protected abstract Runnable getRemoveFailTest(T entity);
 
     @Test
     public final void initPersistSuccessTest() {
-        for (final T entity : getPersistSuccessList()) {
-            executeTest(getPersistSuccessTest(entity));
+        final List<T> list = getPersistSuccessList();
+        if (list != null) {
+            for (final T entity : list) {
+                final Runnable runnableTest = getPersistSuccessTest(entity);
+                if (runnableTest == null) {
+                    break;
+                }
+                executeTest(runnableTest);
+            }
         }
     }
 
     @Test
     public final void initRemoveSuccessTest() {
-        for (final T entity : getRemoveSuccessList()) {
-            executeTest(getRemoveSuccessTest(entity));
+        final List<T> list = getRemoveSuccessList();
+        if (list != null) {
+            for (final T entity : list) {
+                final Runnable runnableTest = getRemoveSuccessTest(entity);
+                if (runnableTest == null) {
+                    break;
+                }
+                executeTest(runnableTest);
+            }
         }
     }
 
     @Test
     public final void initUpdateSuccessTest() {
-        for (final T entity : getUpdateSuccessList()) {
-            executeTest(getUpdateSuccessTest(entity));
+        final List<T> list = getUpdateSuccessList();
+        if (list != null) {
+            for (final T entity : list) {
+                final Runnable runnableTest = getUpdateSuccessTest(entity);
+                if (runnableTest == null) {
+                    break;
+                }
+                executeTest(runnableTest);
+            }
         }
     }
 
     @Test
     public final void initInactivateSuccessTest() {
-        for (final T entity : getInactivateSuccessList()) {
-            executeTest(getInactivateSuccessTest(entity));
+        final List<T> list = getInactivateSuccessList();
+        if (list != null) {
+            for (final T entity : list) {
+                final Runnable runnableTest = getInactivateSuccessTest(entity);
+                if (runnableTest == null) {
+                    break;
+                }
+                executeTest(runnableTest);
+            }
         }
     }
 
     @Test
     public final void initPersistFailTest() {
-        for (final T entity : getPersistFailList()) {
-            executeTest(getPersistFailTest(entity));
+        final List<T> list = getPersistFailList();
+        if (list != null) {
+            for (final T entity : list) {
+                final Runnable runnableTest = getPersistFailTest(entity);
+                if (runnableTest == null) {
+                    break;
+                }
+                executeTest(runnableTest);
+            }
         }
     }
 
     @Test
     public final void initRemoveFailTest() {
-        for (final T entity : getRemoveFailList()) {
-            executeTest(getRemoveFailTest(entity));
+        final List<T> list = getRemoveFailList();
+        if (list != null) {
+            for (final T entity : list) {
+                final Runnable runnableTest = getRemoveFailTest(entity);
+                if (runnableTest == null) {
+                    break;
+                }
+                executeTest(runnableTest);
+            }
         }
     }
 
     @Test
     public final void initUpdateFailTest() {
-        for (final T entity : getUpdateFailList()) {
-            executeTest(getUpdateFailTest(entity));
+        final List<T> list = getUpdateFailList();
+        if (list != null) {
+            for (final T entity : list) {
+                final Runnable runnableTest = getUpdateFailTest(entity);
+                if (runnableTest == null) {
+                    break;
+                }
+                executeTest(runnableTest);
+            }
         }
     }
 
     @Test
     public final void initInactivateFailTest() {
-        for (final T entity : getInactivateFailList()) {
-            executeTest(getInactivateFailTest(entity));
+        final List<T> list = getInactivateFailList();
+        if (list != null) {
+            for (final T entity : list) {
+                final Runnable runnableTest = getInactivateFailTest(entity);
+                if (runnableTest == null) {
+                    break;
+                }
+                executeTest(runnableTest);
+            }
         }
     }
     
