@@ -1,5 +1,9 @@
 package br.com.infox.epp.painel.caixa;
 
+import static br.com.infox.epp.painel.caixa.CaixaQuery.*;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -11,12 +15,12 @@ import br.com.infox.core.dao.GenericDAO;
 @AutoCreate
 public class CaixaDAO extends GenericDAO {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "caixaDAO";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "caixaDAO";
 
-	public void removeCaixaByIdCaixa(int idCaixa) {
-		String hql = "update Processo set caixa = :caixa where caixa.idCaixa = :idCaixa";
-		Query q = getEntityManager().createQuery(hql).setParameter("caixa", null).setParameter("idCaixa", idCaixa);
-		q.executeUpdate();
-	}
+    public void removeCaixaByIdCaixa(int idCaixa) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_CAIXA, idCaixa);
+        executeNamedQueryUpdate(REMOVE_BY_ID, parameters);
+    }
 }
