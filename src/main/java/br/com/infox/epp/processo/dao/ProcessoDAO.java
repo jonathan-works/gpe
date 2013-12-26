@@ -62,13 +62,11 @@ public class ProcessoDAO extends GenericDAO {
 		return;
 	}
 	
-	public void removerProcessoDaCaixaAtual(Processo processo){
-		String sql = "update public.tb_processo set id_caixa = null where "
-                + "id_processo = :processo";
-        getEntityManager().createNativeQuery(sql)
-        				.setParameter("processo", processo.getIdProcesso())
-        				.executeUpdate();
-	}
+    public void removerProcessoDaCaixaAtual(Processo processo) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
+        executeNamedQueryUpdate(REMOVE_PROCESSO_DA_CAIXA_ATUAL, parameters);
+    }
 	
 	@SuppressWarnings(UNCHECKED)
     public List<Processo> findProcessosByIdProcessoAndActorId(int idProcesso, String login){
