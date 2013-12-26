@@ -1,5 +1,15 @@
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.DESCRICAO_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.ID_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.NATUREZA_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.OBRIGATORIO_PARTES;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.SEQUENCE_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.TABLE_NATUREZA;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +27,10 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
-@Table(name=Natureza.TABLE_NAME, schema="public")
+@Table(name=TABLE_NATUREZA, schema=PUBLIC)
 public class Natureza implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	public static final String TABLE_NAME = "tb_natureza";
 
 	private int idNatureza;
 	private String natureza;
@@ -32,10 +40,10 @@ public class Natureza implements java.io.Serializable {
 	private List<NaturezaCategoriaFluxo> natCatFluxoList = 
 		new ArrayList<NaturezaCategoriaFluxo>(0);
 	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_natureza")
+	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATUREZA)
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_natureza", unique = true, nullable = false)
+	@GeneratedValue(generator = GENERATOR)
+	@Column(name = ID_NATUREZA, unique = true, nullable = false)
 	public int getIdNatureza() {
 		return idNatureza;
 	}
@@ -43,7 +51,7 @@ public class Natureza implements java.io.Serializable {
 		this.idNatureza = idNatureza;
 	}
 	
-	@Column(name="ds_natureza", length=LengthConstants.DESCRICAO_PEQUENA, nullable=false, unique=true)
+	@Column(name=DESCRICAO_NATUREZA, length=LengthConstants.DESCRICAO_PEQUENA, nullable=false, unique=true)
 	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
 	public String getNatureza() {
 		return natureza;
@@ -53,14 +61,14 @@ public class Natureza implements java.io.Serializable {
 		this.natureza = natureza;
 	}
 	
-	@Column(name="in_partes", nullable=false)
+	@Column(name=OBRIGATORIO_PARTES, nullable=false)
 	public Boolean getHasPartes() {
 		return hasPartes;
 	}
 	public void setHasPartes(Boolean hasPartes) {
 		this.hasPartes = hasPartes;
 	}
-	@Column(name="in_ativo", nullable=false)
+	@Column(name=ATIVO, nullable=false)
 	public Boolean getAtivo() {
 		return ativo;
 	}
@@ -72,7 +80,7 @@ public class Natureza implements java.io.Serializable {
 		this.natCatFluxoList = natCatFluxoList;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "natureza")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = NATUREZA_ATTRIBUTE)
 	public List<NaturezaCategoriaFluxo> getNatCatFluxoList() {
 		return natCatFluxoList;
 	}
