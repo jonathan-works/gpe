@@ -1,5 +1,23 @@
 package br.com.infox.epp.imagem.entity;
 
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_GRANDE;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MD5;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MINIMA;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_NOME_ARQUIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.DATA_INCLUSAO;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.EXTENSAO;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.FILE_PATH;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.ID_IMAGEM_BIN;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.IMAGEM;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.LIST_IMAGENS;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.LIST_IMAGENS_QUERY;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.MD5;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.NOME_ARQUIVO;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.SEQUENCE_IMAGEM_BIN;
+import static br.com.infox.epp.imagem.query.ImagemBinQuery.TABLE_IMAGEM_BIN;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -19,10 +37,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import static br.com.infox.core.constants.LengthConstants.*;
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.imagem.query.ImagemBinQuery.*;
 
 @Entity
 @Table(name = TABLE_IMAGEM_BIN, schema=PUBLIC)
