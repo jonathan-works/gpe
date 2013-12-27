@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.documento.manager;
 
 import java.util.Date;
-import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -47,11 +46,11 @@ public class ProcessoDocumentoManager extends GenericManager {
         Integer result = null;
         if (tipoProcessoDoc.getNumera() 
                 && tipoProcessoDoc.getTipoNumeracao().equals(TipoNumeracaoEnum.S)) {
-            final List<Integer> list = processoDocumentoDAO.getNextSequencial(processo);
-            if (list == null || list.size() == 0 || list.get(0)==null) {
+            Integer next = processoDocumentoDAO.getNextSequencial(processo);
+            if (next == null) {
                 result = 1;
             } else {
-                result = list.get(0)+1;
+                result = next +1;
             }
         }
         return result;
