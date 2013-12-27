@@ -34,24 +34,21 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	 * @return lista de todos os registros referente a <code>natureza</code>
 	 * informada.
 	 */
-	public ProcessoEpaTarefa getByTaskInstance(Long taskInstance) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(QUERY_PARAM_TASKINSTANCE, taskInstance);
-		ProcessoEpaTarefa result = getNamedSingleResult(
-						GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE, 
-						parameters);
-		return result;		
-	}
+    public ProcessoEpaTarefa getByTaskInstance(Long taskInstance) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(QUERY_PARAM_TASKINSTANCE, taskInstance);
+        return getNamedSingleResult(GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE, parameters);
+    }
 
-	public List<ProcessoEpaTarefa> getTarefaEnded() {
-		return getNamedResultList(TAREFA_ENDED, null);
-	}
-	
-	public List<ProcessoEpaTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(QUERY_PARAM_TIPO_PRAZO, tipoPrazo);
-		return getNamedResultList(TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
-	}
+    public List<ProcessoEpaTarefa> getTarefaEnded() {
+        return getNamedResultList(TAREFA_ENDED);
+    }
+
+    public List<ProcessoEpaTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(QUERY_PARAM_TIPO_PRAZO, tipoPrazo);
+        return getNamedResultList(TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
+    }
 	
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {
