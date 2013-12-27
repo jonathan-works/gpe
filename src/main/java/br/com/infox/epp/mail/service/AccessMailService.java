@@ -16,8 +16,8 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
-import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.epp.system.entity.Parametro;
+import br.com.infox.epp.system.manager.ParametroManager;
 
 @Name(AccessMailService.NAME)
 @Scope(ScopeType.EVENT)
@@ -35,6 +35,8 @@ public class AccessMailService {
     public static final String NAME = "accessMailService";
     
     @In private ModeloDocumentoManager modeloDocumentoManager;
+    @In private ParametroManager parametroManager;
+    @In(create=true) private EMailData emailData;
     
     private String resolveTipoDeEmail(String parametro) {
         String nomeParam = null;
@@ -63,23 +65,25 @@ public class AccessMailService {
     }
     
     private ModeloDocumento findModelo(String nomeParametro){
-        String nomeModelo = ParametroUtil.getParametroOrFalse(nomeParametro);
-        if (nomeModelo == null || "false".equals(nomeModelo)) {
-            return null;
+        final Parametro parametro = parametroManager.getParametro(nomeParametro);
+        ModeloDocumento result = null;
+        if (parametro != null) {
+            String nomeModelo = parametro.getValorVariavel();
+            if (nomeModelo != null && !"false".equals(nomeModelo)) {
+                result = modeloDocumentoManager.getModeloDocumentoByTitulo(nomeModelo);
+            }
         }
-        return modeloDocumentoManager.getModeloDocumentoByTitulo(nomeModelo);
+        return result;
     }
     
     private void enviarEmailModelo(ModeloDocumento modelo, UsuarioLogin usuario, String password) {
-        
         String conteudo = resolverConteudo(modelo, usuario, password);
 
-        EMailData data = ComponentUtil.getComponent(EMailData.NAME);
-        data.setUseHtmlBody(true);
-        data.setBody(conteudo);
-        data.getRecipientList().clear();
-        data.getRecipientList().add(usuario);
-        data.setSubject("Senha do Sistema");
+        emailData.setUseHtmlBody(true);
+        emailData.setBody(conteudo);
+        emailData.getRecipientList().clear();
+        emailData.getRecipientList().add(usuario);
+        emailData.setSubject("Senha do Sistema");
         FacesMessages.instance().add("Senha gerada com sucesso.");
         new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
     }
