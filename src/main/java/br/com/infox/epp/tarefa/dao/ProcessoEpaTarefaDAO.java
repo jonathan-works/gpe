@@ -13,7 +13,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
-import br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.itx.util.EntityUtil;
 
@@ -36,27 +36,27 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	 */
 	public ProcessoEpaTarefa getByTaskInstance(Long taskInstance) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(ProcessoEpaTarefaQuery.QUERY_PARAM_TASKINSTANCE, taskInstance);
+		parameters.put(QUERY_PARAM_TASKINSTANCE, taskInstance);
 		ProcessoEpaTarefa result = getNamedSingleResult(
-						ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE, 
+						GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE, 
 						parameters);
 		return result;		
 	}
 
 	public List<ProcessoEpaTarefa> getTarefaEnded() {
-		return getNamedResultList(ProcessoEpaTarefaQuery.TAREFA_ENDED, null);
+		return getNamedResultList(TAREFA_ENDED, null);
 	}
 	
 	public List<ProcessoEpaTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(ProcessoEpaTarefaQuery.QUERY_PARAM_TIPO_PRAZO, tipoPrazo);
-		return getNamedResultList(ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
+		parameters.put(QUERY_PARAM_TIPO_PRAZO, tipoPrazo);
+		return getNamedResultList(TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
 	}
 	
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {
 		StringBuilder s = new StringBuilder();
-		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
+		s.append(QUERY_FORA_FLUXO)
 		 .append("where p.porcentagem > 100 and pt.dataFim is null ")
 		 .append("and c = :categoria");
 		Query q = getEntityManager().createQuery(s.toString());
@@ -67,7 +67,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listForaPrazoTarefa(Categoria c) {
 		StringBuilder s = new StringBuilder();
-		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
+		s.append(QUERY_FORA_FLUXO)
 		 .append("where pt.porcentagem > 100 and pt.dataFim is null ")
 		 .append("and c = :categoria");
 		Query q = getEntityManager().createQuery(s.toString());
@@ -78,7 +78,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listTarefaPertoLimite() {
 		StringBuilder s = new StringBuilder();
-		s.append(ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO)
+		s.append(QUERY_FORA_FLUXO)
 		 .append("where pt.porcentagem <= 100 and pt.porcentagem >= 70 ")
 		 .append("and pt.dataFim is null");
 		Query q = getEntityManager().createQuery(s.toString());
