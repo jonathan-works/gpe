@@ -16,6 +16,7 @@
 package br.com.infox.epp.processo.documento.entity;
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.*;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -27,6 +28,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -47,6 +50,9 @@ import br.com.infox.epp.processo.entity.Processo;
 @Entity
 @Table(name = "tb_processo_documento", schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
+@NamedQueries({
+    @NamedQuery(name=NEXT_SEQUENCIAL, query=NEXT_SEQUENCIAL_QUERY)
+})
 public class ProcessoDocumento implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
