@@ -12,20 +12,14 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.access.type.UsuarioEnum;
-import br.com.infox.epp.pessoa.manager.PessoaManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 
 @Name(UsuarioLoginCrudAction.NAME)
 public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
-    
     public static final String NAME = "usuarioLoginCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginCrudAction.class);
-    
-    @In private UsuarioLoginManager usuarioLoginManager;
-    @In private PessoaManager pessoaManager;
     
     @In private PasswordService passwordService;
 
@@ -40,16 +34,12 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     }
 
     @Override
-    public void setId(Object id) {
-        super.setId(id);
-    }
-    
-    @Override
     protected boolean beforeSave() {
         validarPermanencia();
-        return super.beforeSave();
+        return true;
     }
     
+    //TODO: Não é validação. definir outro nome e local para existir
     private void validarPermanencia() {
         final UsuarioLogin usuario = getInstance();
         if (!usuario.getProvisorio()) {
@@ -61,15 +51,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     }
     
     @Override
-    public String save() {
-        String resultado;
-        resultado = super.save();
-        return resultado;
-    }
-    
-    @Override
     protected void afterSave(String ret) {
-        super.afterSave(ret);
         final UsuarioLogin usuario = getInstance();
         if (usuario.getSenha() == null || ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
             try {
@@ -81,11 +63,6 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
                 LOG.error("afterSave(ret)", e);
             }
         }
-    }
-    
-    @Override
-    protected void afterSave() {
-        super.afterSave();
     }
     
     public String getPassword() {
