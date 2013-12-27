@@ -1,7 +1,5 @@
 package br.com.infox.core.action;
 
-import static br.com.infox.core.constants.WarningConstants.*;
-
 import java.text.MessageFormat;
 import java.util.List;
 
