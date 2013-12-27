@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.dao;
 
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.*;
 import static br.com.infox.core.constants.WarningConstants.*;
 
 import java.util.List;
@@ -24,16 +25,9 @@ public class ProcessoDocumentoDAO extends GenericDAO {
     
     @SuppressWarnings(UNCHECKED)
     public List<Integer> getNextSequencial(Processo processo) {
-        final String hql = "select max(pd.numeroDocumento) " +
-                "from ProcessoDocumento pd " +
-                "inner join pd.tipoProcessoDocumento tpd " +
-                "where pd.processo = :processo " +
-                "and tpd.numera=true and " +
-                "tpd.tipoNumeracao=:tipoNumeracao " +
-                "group by pd.processo";
-         final Query q = EntityUtil.createQuery(hql)
-                .setParameter("processo", processo)
-                .setParameter("tipoNumeracao", TipoNumeracaoEnum.S)
+         final Query q = EntityUtil.createQuery(NEXT_SEQUENCIAL_QUERY)
+                .setParameter(PARAM_PROCESSO, processo)
+                .setParameter(PARAM_TIPO_PROCESSO, TipoNumeracaoEnum.S)
                 .setMaxResults(1);
         
         return q.getResultList();
