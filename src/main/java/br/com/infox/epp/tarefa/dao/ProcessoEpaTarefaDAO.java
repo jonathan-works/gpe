@@ -1,6 +1,15 @@
 package br.com.infox.epp.tarefa.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PARAM_ID_PROCESSO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PARAM_ID_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_PARAM_TASKINSTANCE;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_PARAM_TIPO_PRAZO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,12 +19,11 @@ import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
-import br.com.itx.util.EntityUtil;
 
 /**
  * Classe DAO para a entidade ProcessoEpaTarefa
@@ -82,15 +90,10 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 		return q.getResultList();
 	}
 	
-	@SuppressWarnings(UNCHECKED)
     public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(final Integer idProcesso, final Integer idTarefa) {
-        final String hql = "select new map(pet.taskInstance as idTaskInstance) " +
-                            "from ProcessoEpaTarefa pet " +
-                            "where pet.tarefa.idTarefa=:idTarefa " +
-                            "and pet.processoEpa.idProcesso=:idProcesso";
-        final Query query = EntityUtil.createQuery(hql)
-                            .setParameter("idProcesso",idProcesso)
-                            .setParameter("idTarefa", idTarefa);
-        return (Map<String, Object>) query.getSingleResult();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_PROCESSO, idProcesso);
+        parameters.put(PARAM_ID_TAREFA, idTarefa);
+        return getNamedSingleResult(PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA, parameters);
     }
 }
