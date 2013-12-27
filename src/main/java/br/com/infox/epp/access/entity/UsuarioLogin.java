@@ -349,7 +349,7 @@ public class UsuarioLogin implements Serializable {
 	
 	@Transient
 	public boolean isHumano(){
-	    return tipoUsuario == UsuarioEnum.H;
+	    return UsuarioEnum.H.equals(tipoUsuario);
 	}
 	
 }
