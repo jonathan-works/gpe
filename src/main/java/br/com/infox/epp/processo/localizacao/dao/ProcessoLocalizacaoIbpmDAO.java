@@ -1,5 +1,14 @@
 package br.com.infox.epp.processo.localizacao.dao;
 
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK_INSTANCE;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +16,7 @@ import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -14,7 +24,6 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoHome;
-import br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery;
 import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoLocalizacaoIbpmDAO.NAME)
@@ -25,9 +34,9 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 
 	public Localizacao listByTaskInstance(Long idTaskInstance) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK_INSTANCE, 
+		parameters.put(QUERY_PARAM_ID_TASK_INSTANCE, 
 				idTaskInstance);
-		return getNamedSingleResult(ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE, parameters);
+		return getNamedSingleResult(LIST_BY_TASK_INSTANCE, parameters);
 	}
 	
 	public boolean possuiPermissao() {
@@ -45,20 +54,20 @@ public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
 	
 	public Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo, Long idTarefa) {
         Map<String,Object> parameters = new HashMap<String, Object>();
-        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,processo);
-        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao());
-        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
-        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_ID_TASK, idTarefa.intValue());
-        return getNamedSingleResult(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, parameters);
+        parameters.put(QUERY_PARAM_PROCESSO,processo);
+        parameters.put(QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao());
+        parameters.put(QUERY_PARAM_PAPEL, usrLoc.getPapel());
+        parameters.put(QUERY_PARAM_ID_TASK, idTarefa.intValue());
+        return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, parameters);
     }
 	
 	public Long getTaskInstanceId(UsuarioLocalizacao usrLoc, Processo processo) {
 		Map<String,Object> parameters = new HashMap<String, Object>();
-        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PROCESSO,processo);
-        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao());
-        parameters.put(ProcessoLocalizacaoIbpmQuery.QUERY_PARAM_PAPEL, usrLoc.getPapel());
+        parameters.put(QUERY_PARAM_PROCESSO,processo);
+        parameters.put(QUERY_PARAM_LOCALIZACAO, usrLoc.getLocalizacao());
+        parameters.put(QUERY_PARAM_PAPEL, usrLoc.getPapel());
         
-        return getNamedSingleResult(ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, parameters);
+        return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, parameters);
     }
 	
 	public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId, Long processId){
