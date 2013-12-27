@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.localizacao.dao;
 
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_PROCESS_ID_AND_TASK_ID;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL;
@@ -9,7 +10,9 @@ import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbp
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_ID_TASK_INSTANCE;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_LOCALIZACAO;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_PAPEL;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.*;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_PROCESSO;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_PROCESS_ID;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_TASK_ID;
 
 import java.util.HashMap;
 import java.util.Map;
