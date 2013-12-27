@@ -12,11 +12,11 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.util.RandomStringUtils;
 
 import br.com.infox.core.exception.BusinessException;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(PasswordService.NAME)
 @Scope(ScopeType.EVENT)
@@ -30,29 +30,30 @@ public class PasswordService {
     @In private AccessMailService accessMailService;
     @In private UsuarioLoginManager usuarioLoginManager;
     
-    public void requisitarNovaSenha(String email, String login) throws LoginException, BusinessException {
+    public void requisitarNovaSenha(final String email, final String login) throws LoginException, BusinessException, DAOException {
         UsuarioLogin usuario;
-        if (email.isEmpty() && login.isEmpty()) {
-            throw new LoginException("É preciso informar o login ou o e-mail do usuário");
-        } else if (!login.isEmpty()) {
+        String mode;
+        if (!login.isEmpty()) {
             usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
-            recoverUsuario(usuario, "login");
+            mode = "login";
         } else if (!email.isEmpty()) {
             usuario = usuarioLoginManager.getUsuarioLoginByEmail(email);
-            recoverUsuario(usuario, "email");
+            mode = "email";
+        } else {
+            throw new LoginException("É preciso informar o login ou o e-mail do usuário");
         }
+        recoverUsuario(usuario, mode);
     }
     
-    private void recoverUsuario(UsuarioLogin usuario, String tipoParametro) throws LoginException, BusinessException {
+    private void recoverUsuario(UsuarioLogin usuario, String tipoParametro) throws LoginException, BusinessException, DAOException {
         if (usuario == null) {
             throw new LoginException("Usuário não encontrado");
-        } else {
-            String password = gerarNovaSenha(usuario);
-            accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, password);
         }
+        final String password = gerarNovaSenha(usuario);
+        accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, password);
     }
     
-    private String gerarNovaSenha(final UsuarioLogin usuario) {
+    private String gerarNovaSenha(final UsuarioLogin usuario) throws DAOException {
         final String password;
         if (ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
             password = "";
@@ -66,8 +67,7 @@ public class PasswordService {
                 IdentityManager.instance().changePassword(usuario.getLogin(), password);
             }
         }.run();
-        
-        EntityUtil.getEntityManager().flush();
+        usuarioLoginManager.update(usuario);
         return password;
     }
 
