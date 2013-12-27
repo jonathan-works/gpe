@@ -1,7 +1,10 @@
 package br.com.infox.epp.system.dao;
 
+import java.util.HashMap;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.system.entity.Parametro;
 
@@ -13,8 +16,10 @@ public class ParametroDAO extends GenericDAO {
 	public static final String NAME = "parametroDAO";
 	
 	public Parametro getParametroByNomeVariavel(String nomeVariavel){
-		String hql = "select p from Parametro p where nomeVariavel = :nomeVariavel";
-		return (Parametro) getEntityManager().createQuery(hql).setParameter("nomeVariavel", nomeVariavel).getSingleResult();
+		final String hql = "select p from Parametro p where nomeVariavel = :nomeVariavel";
+		final HashMap<String, Object> parameters = new HashMap<>();
+		parameters.put("nomeVariavel", nomeVariavel);
+		return getSingleResult(hql, parameters);
 	}
 
 }
