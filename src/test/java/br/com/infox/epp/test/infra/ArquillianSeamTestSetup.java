@@ -194,6 +194,7 @@ public class ArquillianSeamTestSetup {
         }
         webArchive.addClasses(getEntities());
         webArchive.addAsResource(EmptyAsset.INSTANCE, "seam.properties");
+        webArchive.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return webArchive;
     }
 
