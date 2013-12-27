@@ -54,17 +54,11 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		return "";
 	}
 	
-	@SuppressWarnings(RAWTYPES)
     public boolean canOpenTask(long currentTaskId) {
         JbpmUtil.getJbpmSession().flush();
         Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
-        List resultList = EntityUtil
-                .getEntityManager()
-                .createQuery(
-                        "select o.idTaskInstance from SituacaoProcesso o "
-                                + "where o.idTaskInstance = :ti")
-                .setParameter("ti", currentTaskId).getResultList();
-        return resultList.size() > 0;
+        Long count = getQuantidadeTarefasAtivasByTaskId(currentTaskId);
+        return count != null && count > 0;
     }
 
 }
