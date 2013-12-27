@@ -21,19 +21,16 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name=ProcessoEpaTarefa.TABLE_NAME, schema="public")
-@NamedQueries(value={
-				@NamedQuery(name=ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE,
-						    query=ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY),
-			    @NamedQuery(name=ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO,
-					    	query=ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY),
-			    @NamedQuery(name=ProcessoEpaTarefaQuery.TAREFA_ENDED,
-			    			query=ProcessoEpaTarefaQuery.TAREFA_ENDED_QUERY)
-			  })
+@NamedQueries({
+    @NamedQuery(name = GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE, query = GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY),
+    @NamedQuery(name = TAREFA_NOT_ENDED_BY_TIPO_PRAZO, query = TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY),
+    @NamedQuery(name = PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA, query=PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY),
+    @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY) })
 public class ProcessoEpaTarefa implements Serializable {
 
 	private static final long serialVersionUID = 1L;
