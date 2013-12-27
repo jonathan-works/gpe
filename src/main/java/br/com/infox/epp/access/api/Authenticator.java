@@ -17,7 +17,7 @@
 */
 package br.com.infox.epp.access.api;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,8 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -51,8 +53,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)
@@ -87,7 +87,7 @@ public class Authenticator {
 	}
 	
 	public static Authenticator instance() {
-		return ComponentUtil.getComponent(NAME);
+		return (Authenticator) Component.getInstance(Authenticator.NAME);
 	}
 	   
 	public void setNewPassword1(String newPassword1){
@@ -131,7 +131,9 @@ public class Authenticator {
 				Identity.instance().unAuthenticate();
 				LOG.error("postAuthenticate()",e);
 				throw e;
-			}
+			} catch (DAOException e) {
+			    LOG.error("postAuthenticate()",e);
+            }
 		}
 	}
 
@@ -161,7 +163,7 @@ public class Authenticator {
 		return newPassword1 != null && !newPassword1.trim().equals("");
 	}
 	
-	private void trocarSenhaUsuario(final UsuarioLogin usuario) throws LoginException {
+	private void trocarSenhaUsuario(final UsuarioLogin usuario) throws LoginException, DAOException {
 		if (newPassword1.equals(newPassword2)){
 			new RunAsOperation(true) {
 				@Override
@@ -170,7 +172,7 @@ public class Authenticator {
 				}
 			}.run();
 			usuario.setProvisorio(false);
-			EntityUtil.flush();
+			getGenericDAO().update(usuario);
 			FacesMessages.instance().add("Senha alterada com sucesso.");
 		} else {
 		    throw new LoginException("Nova senha não confere com a confirmação!");
@@ -200,8 +202,7 @@ public class Authenticator {
 	}
 
     private UsuarioLoginManager getUsuarioLoginManager() {
-        UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
-        return usuarioLoginManager;
+        return (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
     }
 	
 	@Observer(Identity.EVENT_LOGGED_OUT)
@@ -333,7 +334,7 @@ public class Authenticator {
     public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
         UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(
                 USUARIO_LOCALIZACAO_ATUAL);
-        usuarioLocalizacao = EntityUtil.getEntityManager().find(UsuarioLocalizacao.class, 
+        usuarioLocalizacao = getGenericDAO().find(UsuarioLocalizacao.class, 
                 usuarioLocalizacao.getIdUsuarioLocalizacao());
         return usuarioLocalizacao;
     }
@@ -341,9 +342,13 @@ public class Authenticator {
     public static boolean isUsuarioAtualResponsavel() {
         UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(
                 USUARIO_LOCALIZACAO_ATUAL);
-        usuarioLocalizacao = EntityUtil.getEntityManager().find(UsuarioLocalizacao.class, 
+        usuarioLocalizacao = getGenericDAO().find(UsuarioLocalizacao.class, 
                 usuarioLocalizacao.getIdUsuarioLocalizacao());
         return usuarioLocalizacao.getResponsavelLocalizacao();
+    }
+
+    private static GenericDAO getGenericDAO() {
+        return (GenericDAO) Component.getInstance(GenericDAO.NAME);
     }
 	
 	/**
@@ -372,7 +377,7 @@ public class Authenticator {
 	 */
 	public static UsuarioLogin getUsuarioLogado() {
 		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
-		return EntityUtil.getEntityManager().find(usuario.getClass(), usuario.getIdUsuarioLogin());
+		return getGenericDAO().find(usuario.getClass(), usuario.getIdUsuarioLogin());
 	}
 	
 	public void setLogin(String login) {
@@ -424,7 +429,7 @@ public class Authenticator {
 	}
 	
 	private static AuthenticatorService getAuthenticatorService(){
-		return ComponentUtil.getComponent(AuthenticatorService.NAME);
+		return (AuthenticatorService) Component.getInstance(AuthenticatorService.NAME);
 	}
 	
 	public static void loginUsuarioExterno() {
