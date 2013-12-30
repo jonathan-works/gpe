@@ -1,10 +1,15 @@
 package br.com.infox.epp.test.access.crud;
 
+import static br.com.infox.core.action.AbstractAction.PERSISTED;
+import static br.com.infox.core.action.AbstractAction.UPDATED;
+import static br.com.infox.epp.access.crud.UsuarioLoginCrudAction.NAME;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.Assert;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -13,7 +18,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
 
-import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.crud.UsuarioLoginCrudAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
@@ -33,52 +38,26 @@ import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
 public class UsuarioLoginCrudActionTest extends AbstractGenericCrudTest<UsuarioLogin> {
-    private static final String COMPONENT_NAME = UsuarioLoginCrudAction.NAME;
-    private static final String OVER_PROTOCOL = "Servlet 3.0";
 
     @Deployment
-    @OverProtocol(OVER_PROTOCOL)
+    @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
-        final String[] importPackages = {"br.com.infox.core","br.com.itx"};
-        final Class<?>[] classesToImport = {
-            UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
-            UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
-            ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
-            ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-            ParametroManager.class,ParametroDAO.class
-        };
-        final String archiveName = "epp-test.war";
-        final String mockWebXMLPath = "src/test/resources/mock-web.xml";
-        final String mockComponentsXMLPath = "src/test/resources/mock-components.xml";
-        final String mockPersistenceXMLPath = "src/test/resources/mock-persistence.xml";
-        final String pomPath = "pom.xml";
-        final ArquillianSeamTestSetup arquillianTest = new ArquillianSeamTestSetup()
-            .addPackages(importPackages)
-            .addClasses(classesToImport)
-            .setArchiveName(archiveName)
-            .setMockWebXMLPath(mockWebXMLPath)
-            .setMockComponentsXMLPath(mockComponentsXMLPath)
-            .setMockPersistenceXMLPath(mockPersistenceXMLPath)
-            .setPomPath(pomPath)
+        return new ArquillianSeamTestSetup()
+            .addPackages("br.com.infox.core", "br.com.itx")
+            .addClasses(UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
+                UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
+                ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
+                ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
+                ParametroManager.class,ParametroDAO.class)
+            .setArchiveName("epp-test.war")
+            .setMockWebXMLPath("src/test/resources/mock-web.xml")
+            .setMockComponentsXMLPath("src/test/resources/mock-components.xml")
+            .setMockPersistenceXMLPath("src/test/resources/mock-persistence.xml")
+            .setPomPath("pom.xml")
+            .createDeployment()
         ;
-        WebArchive deployment = arquillianTest.createDeployment();
-        //deployment.writeTo(System.out, Formatters.VERBOSE);
-        return deployment;
     }
     
-    @Override
-    protected List<UsuarioLogin> getPersistSuccessList() {
-        final ArrayList<UsuarioLogin> list = new ArrayList<>();
-        
-        UsuarioLogin usuarioLogin = createUsuarioPersistValues("Erik Liberal", "erikliberal@infox.com.br", "erikliberal", UsuarioEnum.H, Boolean.TRUE);
-        list.add(usuarioLogin);
-        for (int i = 0; i < 30; i++) {
-            usuarioLogin = createUsuarioPersistValues(fillStr(""+i, 12), MessageFormat.format("a{0}@infox.com.br", fillStr(""+i, 12)), MessageFormat.format("usuario{0}", fillStr(""+i, 3)));
-        }
-        
-        return list;
-    }
-
     private UsuarioLogin createUsuarioPersistValues(final String nomeUsuario,
             final String email, final String login) {
         final UsuarioLogin usuario = new UsuarioLogin();
@@ -104,159 +83,212 @@ public class UsuarioLoginCrudActionTest extends AbstractGenericCrudTest<UsuarioL
         return usuario;
     }
 
-    private void setPersistData(final UsuarioLogin entity) {
-        setValue(COMPONENT_NAME, "nomeUsuario", entity.getNomeUsuario());
-        setValue(COMPONENT_NAME, "email", entity.getEmail());
-        setValue(COMPONENT_NAME, "login", entity.getLogin());
-        setValue(COMPONENT_NAME, "tipoUsuario", entity.getTipoUsuario());
-        setValue(COMPONENT_NAME, "ativo", entity.getAtivo());
-        setValue(COMPONENT_NAME, "provisorio", entity.getProvisorio());
+    protected void setPersistData(final UsuarioLogin entity) {
+        setValue(NAME, "nomeUsuario", entity.getNomeUsuario());
+        setValue(NAME, "email", entity.getEmail());
+        setValue(NAME, "login", entity.getLogin());
+        setValue(NAME, "tipoUsuario", entity.getTipoUsuario());
+        setValue(NAME, "ativo", entity.getAtivo());
+        setValue(NAME, "provisorio", entity.getProvisorio());
+    }
+    
+    @Override
+    protected List<UsuarioLogin> getPersistSuccessList() {
+        final ArrayList<UsuarioLogin> list = new ArrayList<>();
+        
+        for (int i = 0; i < 30; i++) {
+            list.add(createUsuarioPersistValues("Usuario Login Persist"+i, MessageFormat.format("usr-login-pers{0}@infox.com.br", i), MessageFormat.format("usr-login-pers{0}", i)));
+        }
+        
+        return list;
     }
 
     @Override
     protected Runnable getPersistSuccessTest(final UsuarioLogin entity) {
         return new Runnable() {
+            
             @Override
             public void run() {
-                invokeMethod(COMPONENT_NAME, "newInstance");
+                newInstance();
                 setPersistData(entity);
-                final Object invokeMethodResult = invokeMethod(COMPONENT_NAME, "save");
-                System.out.println("===FLAG "+invokeMethodResult);
-                Assert.assertEquals(AbstractAction.PERSISTED, invokeMethodResult);
+                final Object persistResult = save();
+                assertEquals(PERSISTED, persistResult);
                 
-                Object id = getComponentValue(COMPONENT_NAME, "id");
-                Assert.assertNotNull(id);
-                System.out.println("===FLAG "+id);
-//                invokeMethod(COMPONENT_NAME, "newInstance");
-//
-//                setComponentValue(COMPONENT_NAME, "id", id);
-//                assert getValue(COMPONENT_NAME, "nomeUsuario").equals(entity.getNomeUsuario());
-//                assert getValue(COMPONENT_NAME, "email").equals(entity.getEmail());
-//                assert getValue(COMPONENT_NAME, "login").equals(entity.getLogin());
-//                assert getValue(COMPONENT_NAME, "tipoUsuario").equals(entity.getTipoUsuario());
-//                assert getValue(COMPONENT_NAME, "ativo").equals(entity.getAtivo());
-//                assert getValue(COMPONENT_NAME, "provisorio").equals(entity.getProvisorio());
+                Object id = getId();
+                assertNotNull(id);
+                newInstance();
+                Object nullId = getId();
+                assertNull(nullId);
+                setId(id);
+                
+                assert compareEntity(entity);
             }
         };
     }
 
     @Override
     protected List<UsuarioLogin> getPersistFailList() {
-        // TODO Auto-generated method stub
-        return new ArrayList<UsuarioLogin>();
+        final ArrayList<UsuarioLogin> list = new ArrayList<>();
+        list.add(createUsuarioPersistValues(null, "usr-login-pers-fail1@infox.com.br", "usr-login-pers-fail"));
+        list.add(createUsuarioPersistValues(fillStr("usr-login-pers-fail2@infox.com.br",LengthConstants.NOME_ATRIBUTO+1), "usr-login-pers-fail2@infox.com.br", "usr-login-pers-fail2"));
+        
+        list.add(createUsuarioPersistValues("Usuario Login", null, "usr-login-pers-fail3"));
+        list.add(createUsuarioPersistValues("Usuario Login", fillStr("usr-login-pers-fail4@infox.com.br",LengthConstants.DESCRICAO_PADRAO+1), "usr-login-pers-fail"));
+        
+        list.add(createUsuarioPersistValues("Usuario Login", "usr-login-pers-fail5@infox.com.br", null));
+        list.add(createUsuarioPersistValues("Usuario Login", "usr-login-pers-fail6@infox.com.br", fillStr("usr-login-pers-fail6",LengthConstants.DESCRICAO_PADRAO+1)));
+        return list;
     }
 
     @Override
-    protected Runnable getPersistFailTest(UsuarioLogin entity) {
+    protected Runnable getPersistFailTest(final UsuarioLogin entity) {
         return new Runnable() {
             @Override
             public void run() {
-                // TODO Auto-generated method stub
+                newInstance();
+                setPersistData(entity);
                 
+                assert !PERSISTED.equals(save());
+                Object id = getId();
+                assertNull(id);
             }
         };
     }
 
     @Override
     protected List<UsuarioLogin> getInactivateSuccessList() {
-        // TODO Auto-generated method stub
-        return new ArrayList<UsuarioLogin>();
+        final ArrayList<UsuarioLogin> list = new ArrayList<UsuarioLogin>();
+        for (int i = 0; i < 32; i++) {
+            list.add(createUsuarioPersistValues("Usuario Login Inactive", "usr-login-inac"+i+"@infox.com.br", "usr-login-inac"+i, UsuarioEnum.H, Boolean.TRUE));
+        }
+        return list;
     }
 
     @Override
-    protected Runnable getInactivateSuccessTest(UsuarioLogin entity) {
+    protected Runnable getInactivateSuccessTest(final UsuarioLogin entity) {
         return new Runnable() {
             @Override
             public void run() {
-                // TODO Auto-generated method stub
+                newInstance();
+                setPersistData(entity);
+                assertEquals(PERSISTED, save());
                 
-            }
-        };
-    }
-
-    @Override
-    protected List<UsuarioLogin> getInactivateFailList() {
-        // TODO Auto-generated method stub
-        return new ArrayList<UsuarioLogin>();
-    }
-
-    @Override
-    protected Runnable getInactivateFailTest(UsuarioLogin entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                
+                assertNotNull(getId());
+                assert getValue(NAME, "ativo").equals(Boolean.TRUE);
+                assertEquals(UPDATED, inactive());
+                assert getValue(NAME, "ativo").equals(Boolean.FALSE);
             }
         };
     }
 
     @Override
     protected List<UsuarioLogin> getUpdateSuccessList() {
-        // TODO Auto-generated method stub
-        return new ArrayList<UsuarioLogin>();
+        final ArrayList<UsuarioLogin> list = new ArrayList<UsuarioLogin>();
+        for (int i = 0; i < 30; i++) {
+            list.add(createUsuarioPersistValues("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i)));
+        }
+        return list;
     }
 
     @Override
-    protected Runnable getUpdateSuccessTest(UsuarioLogin entity) {
+    protected Runnable getUpdateSuccessTest(final UsuarioLogin entity) {
         return new Runnable() {
             @Override
             public void run() {
-                // TODO Auto-generated method stub
+                newInstance();
+                setPersistData(entity);
                 
+                assert PERSISTED.equals(save());
+                
+                final Object id = getId();
+                assert id != null;
+                newInstance();
+                assert getId() == null;
+                setId(id);
+                
+                assert compareEntity(entity);
+                final String updatedNomeUsuario = entity.getNomeUsuario()+"(updated)";
+                setValue(NAME, "nomeUsuario", updatedNomeUsuario);
+//                setValue(NAME, "email", "");
+//                setValue(NAME, "login", "");
+//                setValue(NAME, "tipoUsuario", "");
+//                setValue(NAME, "ativo", "");
+//                setValue(NAME, "provisorio", "");
+                assert UPDATED.equals(save());
+                assert updatedNomeUsuario.equals(getValue(NAME,"nomeUsuario"));
             }
         };
     }
 
     @Override
     protected List<UsuarioLogin> getUpdateFailList() {
-        // TODO Auto-generated method stub
-        return new ArrayList<UsuarioLogin>();
+        final ArrayList<UsuarioLogin> list = new ArrayList<UsuarioLogin>();
+        for (int i = 0; i < 30; i++) {
+            list.add(createUsuarioPersistValues("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i)));
+        }
+        return list;
     }
 
     @Override
-    protected Runnable getUpdateFailTest(UsuarioLogin entity) {
+    protected Runnable getUpdateFailTest(final UsuarioLogin entity) {
         return new Runnable() {
             @Override
             public void run() {
-                // TODO Auto-generated method stub
+                newInstance();
+                setPersistData(entity);
                 
+                assert PERSISTED.equals(save());
+                
+                final Object id = getId();
+                assert id != null;
+                newInstance();
+                assert getId() == null;
+                setId(id);
+                
+                assert compareEntity(entity);
+                
+                final String updatedNomeUsuario = fillStr(entity.getNomeUsuario()+"(updated)", LengthConstants.NOME_ATRIBUTO+1);
+                setValue(NAME, "nomeUsuario", updatedNomeUsuario);
+//                setValue(NAME, "email", "");
+//                setValue(NAME, "login", "");
+//                setValue(NAME, "tipoUsuario", "");
+//                setValue(NAME, "ativo", "");
+//                setValue(NAME, "provisorio", "");
+                assert !UPDATED.equals(save());
+                newInstance();
+                assert getId() == null;
+                setId(id);
+                assert entity.getNomeUsuario().equals(getValue(NAME,"nomeUsuario"));
             }
         };
     }
 
-    @Override
-    protected List<UsuarioLogin> getRemoveSuccessList() {
-        // TODO Auto-generated method stub
-        return new ArrayList<UsuarioLogin>();
+    private boolean compareEntity(final UsuarioLogin entity) {
+        return getValue(NAME, "nomeUsuario").equals(entity.getNomeUsuario()) 
+                && getValue(NAME, "email").equals(entity.getEmail())
+                && getValue(NAME, "login").equals(entity.getLogin())
+                && getValue(NAME, "tipoUsuario").equals(entity.getTipoUsuario())
+                && getValue(NAME, "ativo").equals(entity.getAtivo())
+                && getValue(NAME, "provisorio").equals(entity.getProvisorio());
     }
 
-    @Override
-    protected Runnable getRemoveSuccessTest(UsuarioLogin entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                
-            }
-        };
+    private void setId(Object id) {
+        setComponentValue(NAME, "id", id);
     }
 
-    @Override
-    protected List<UsuarioLogin> getRemoveFailList() {
-        // TODO Auto-generated method stub
-        return new ArrayList<UsuarioLogin>();
+    private Object getId() {
+        return getComponentValue(NAME, "id");
     }
 
-    @Override
-    protected Runnable getRemoveFailTest(UsuarioLogin entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                
-            }
-        };
+    private Object save() {
+        return invokeMethod(NAME, "save");
     }
     
+    private Object inactive() {
+        return invokeMethod(NAME, "inactive("+NAME+".instance)");
+    }
+
+    private void newInstance() {
+        invokeMethod(NAME, "newInstance");
+    }
 }
