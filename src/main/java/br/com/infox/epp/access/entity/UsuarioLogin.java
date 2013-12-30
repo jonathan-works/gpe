@@ -161,6 +161,7 @@ public class UsuarioLogin implements Serializable {
 	
 	@Column(name=NOME_USUARIO, nullable=false, length=NOME_ATRIBUTO)
     @Size(max=NOME_ATRIBUTO)
+	@NotNull
     public String getNomeUsuario() {
         return nomeUsuario;
     }
