@@ -11,7 +11,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
 
-import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.documento.crud.ClassificacaoDocumentoCrudAction;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
@@ -38,6 +37,11 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
                 .createDeployment();
     }
 
+    @Override
+    protected String getComponentName() {
+        return NAME;
+    }
+    
     private TipoProcessoDocumento createInstance(final String codigoDocumento,
             final String tipoProcessoDocumento,
             final TipoDocumentoEnum tipoDocumento,
@@ -59,69 +63,70 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
         return instance;
     }
 
-    protected void setPersistData(final TipoProcessoDocumento entity) {
-        setValue(NAME, "codigoDocumento", entity.getCodigoDocumento());
-        setValue(NAME, "tipoProcessoDocumento", entity.getTipoProcessoDocumento());
-        setValue(NAME, "inTipoDocumento", entity.getInTipoDocumento());
-        setValue(NAME, "visibilidade", entity.getVisibilidade());
-        setValue(NAME, "numera", entity.getNumera());
-        setValue(NAME, "tipoNumeracao", entity.getTipoNumeracao());
-        setValue(NAME, "sistema", entity.getSistema());
-        setValue(NAME, "publico", entity.getPublico());
-        setValue(NAME, "ativo", entity.getAtivo());
-        setValue(NAME, "tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
+    protected void initEntity(final TipoProcessoDocumento entity) {
+        setEntityValue("codigoDocumento", entity.getCodigoDocumento());
+        setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
+        setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
+        setEntityValue("visibilidade", entity.getVisibilidade());
+        setEntityValue("numera", entity.getNumera());
+        setEntityValue("tipoNumeracao", entity.getTipoNumeracao());
+        setEntityValue("sistema", entity.getSistema());
+        setEntityValue("publico", entity.getPublico());
+        setEntityValue("ativo", entity.getAtivo());
+        setEntityValue("tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
     }
-
+    
+    private boolean areEquals(final Object obj1, final Object obj2) {
+        return (obj1==obj2) || (obj1 != null && obj1.equals(obj2)) ;
+    }
+    
     @Override
-    protected ArrayList<TipoProcessoDocumento> getUpdateFailList() {
-        final ArrayList<TipoProcessoDocumento> list = new ArrayList<>();
-        final TipoProcessoDocumento entity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        list.add(entity);
+    protected boolean compareEntityValues(TipoProcessoDocumento entity) {
+        return areEquals(getEntityValue("codigoDocumento"),entity.getCodigoDocumento())
+                && areEquals(getEntityValue("tipoProcessoDocumento"),entity.getTipoProcessoDocumento())
+                && areEquals(getEntityValue("inTipoDocumento"),entity.getInTipoDocumento())
+                && areEquals(getEntityValue("visibilidade"),entity.getVisibilidade())
+                && areEquals(getEntityValue("numera"),entity.getNumera())
+                && areEquals(getEntityValue("tipoNumeracao"),entity.getTipoNumeracao())
+                && areEquals(getEntityValue("sistema"),entity.getSistema())
+                && areEquals(getEntityValue("publico"),entity.getPublico())
+                && areEquals(getEntityValue("ativo"),entity.getAtivo())
+                && areEquals(getEntityValue("tipoProcessoDocumentoObservacao"),entity.getTipoProcessoDocumentoObservacao());
+    }
+    
+    @Override
+    protected List<EntityActionContainer<TipoProcessoDocumento>> getUpdateFailList() {
+        final ArrayList<EntityActionContainer<TipoProcessoDocumento>> list = new ArrayList<>();
+        TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
+        list.add(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
+            @Override
+            public void execute() {
+                final Object id = getId();
+                assert id != null;
+                newInstance();
+                initEntity(getEntity());
+                setEntityValue("idTipoProcessoDocumento", ((int) id) + 1);
+            }
+        });
         return list;
     }
 
     @Override
-    protected Runnable getUpdateFailTest(final TipoProcessoDocumento entity) {
-        return new Runnable() {
+    protected ArrayList<EntityActionContainer<TipoProcessoDocumento>> getUpdateSuccessList() {
+        final ArrayList<EntityActionContainer<TipoProcessoDocumento>> list = new ArrayList<>();
+        TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
+        list.add(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
             @Override
-            public void run() {
-                invokeMethod(NAME, "newInstance");
-                setPersistData(entity);
-                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
-                Object id = getValue("#{" + NAME + ".id}");
+            public void execute() {
+                final Object id = getId();
                 assert id != null;
-                invokeMethod(NAME, "newInstance");
-                setPersistData(entity);
-                setValue(NAME, "idTipoProcessoDocumento", ((int) id) + 1);
-                assert !AbstractAction.UPDATED.equals(invokeMethod(NAME, "save"));
+                newInstance();
+                setId(id);
+                
+                setEntityValue("codigoDocumento", fillStr("updateCodigoDocumento", 25));                
             }
-        };
-    }
-
-    @Override
-    protected ArrayList<TipoProcessoDocumento> getUpdateSuccessList() {
-        final ArrayList<TipoProcessoDocumento> list = new ArrayList<>();
-        final TipoProcessoDocumento entity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        list.add(entity);
+        });
         return list;
-    }
-
-    @Override
-    protected Runnable getUpdateSuccessTest(final TipoProcessoDocumento entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                invokeMethod(NAME, "newInstance");
-                setPersistData(entity);
-                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
-                Object id = getValue("#{" + NAME + ".id}");
-                assert id != null;
-                invokeMethod(NAME, "newInstance");
-                setValue("#{" + NAME + ".id}", id);
-                setValue(NAME, "codigoDocumento", fillStr("updateCodigoDocumento", 25));
-                assert AbstractAction.UPDATED.equals(invokeMethod(NAME, "save"));
-            }
-        };
     }
 
     @Override
@@ -132,63 +137,6 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
                     + ""));
         }
         return list;
-    }
-
-    @Override
-    protected Runnable getRemoveSuccessTest(final TipoProcessoDocumento entity) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                invokeMethod(NAME, "newInstance");
-                setPersistData(entity);
-                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
-                assert getValue("#{" + NAME + ".id}") != null;
-                assert AbstractAction.REMOVED.equals(invokeMethod(NAME, "remove"));
-            }
-        };
-    }
-
-    @Override
-    protected Runnable getRemoveFailTest(final TipoProcessoDocumento entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                invokeMethod(NAME, "newInstance");
-                setPersistData(entity);
-                setValue(NAME, "tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
-                assert getValue("#{" + NAME + ".id}") == null;
-                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
-                assert AbstractAction.REMOVED.equals(invokeMethod(NAME, "remove"));
-                assert !AbstractAction.REMOVED.equals(invokeMethod(NAME, "remove"));
-            }
-        };
-    }
-
-    @Override
-    protected Runnable getPersistSuccessTest(final TipoProcessoDocumento entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                invokeMethod(NAME, "newInstance");
-                setPersistData(entity);
-                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
-                assert getValue("#{" + NAME + ".id}") != null;
-            }
-        };
-    }
-
-    @Override
-    protected Runnable getPersistFailTest(final TipoProcessoDocumento entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                invokeMethod(NAME, "newInstance");
-                setPersistData(entity);
-                assert !AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
-                assert getValue("#{" + NAME + ".id}") == null;
-            }
-        };
     }
 
     @Override
@@ -224,38 +172,6 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
             list.add(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i+ ""));
         }
         return list;
-    }
-
-    @Override
-    protected List<TipoProcessoDocumento> getInactivateFailList() {
-        return new ArrayList<TipoProcessoDocumento>(0);
-    }
-
-    @Override
-    protected List<TipoProcessoDocumento> getRemoveFailList() {
-        return new ArrayList<TipoProcessoDocumento>(0);
-    }
-
-    @Override
-    protected Runnable getInactivateSuccessTest(final TipoProcessoDocumento entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                invokeMethod(NAME, "newInstance");
-                setPersistData(entity);
-                
-                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
-                assert getValue("#{" + NAME + ".id}") != null;
-                final Object value = getValue("#{" + NAME + ".instance}");
-                assert value != null;
-                assert AbstractAction.UPDATED.equals(invokeMethod("#{"+NAME+".inactive("+NAME+".instance)}"));
-            }
-        };
-    }
-
-    @Override
-    protected Runnable getInactivateFailTest(final TipoProcessoDocumento entity) {
-        return new Runnable() { @Override public void run() {} };
     }
 
 }
