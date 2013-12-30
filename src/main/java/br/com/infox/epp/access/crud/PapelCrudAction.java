@@ -385,6 +385,9 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	}
 	
 	private void updatePermissions(){
+		if (recursosDisponiveis == null) {
+	    	return;
+	    }
 	    List<Permission> permissions = new ArrayList<>();
 	    for (String recurso : recursosDisponiveis) {
 	        permissions.add(new Permission(recurso, "access", new Role(getInstance().getIdentificador())));
