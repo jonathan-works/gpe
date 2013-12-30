@@ -1,11 +1,6 @@
 package br.com.infox.epp.test.access.crud;
 
-import static br.com.infox.core.action.AbstractAction.PERSISTED;
-import static br.com.infox.core.action.AbstractAction.UPDATED;
 import static br.com.infox.epp.access.crud.UsuarioLoginCrudAction.NAME;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -58,6 +53,11 @@ public class UsuarioLoginCrudActionTest extends AbstractGenericCrudTest<UsuarioL
         ;
     }
     
+    @Override
+    protected String getComponentName() {
+        return NAME;
+    }
+    
     private UsuarioLogin createUsuarioPersistValues(final String nomeUsuario,
             final String email, final String login) {
         final UsuarioLogin usuario = new UsuarioLogin();
@@ -83,13 +83,14 @@ public class UsuarioLoginCrudActionTest extends AbstractGenericCrudTest<UsuarioL
         return usuario;
     }
 
-    protected void setPersistData(final UsuarioLogin entity) {
-        setValue(NAME, "nomeUsuario", entity.getNomeUsuario());
-        setValue(NAME, "email", entity.getEmail());
-        setValue(NAME, "login", entity.getLogin());
-        setValue(NAME, "tipoUsuario", entity.getTipoUsuario());
-        setValue(NAME, "ativo", entity.getAtivo());
-        setValue(NAME, "provisorio", entity.getProvisorio());
+    @Override
+    protected void initEntity(final UsuarioLogin entity) {
+        setEntityValue("nomeUsuario", entity.getNomeUsuario());
+        setEntityValue("email", entity.getEmail());
+        setEntityValue("login", entity.getLogin());
+        setEntityValue("tipoUsuario", entity.getTipoUsuario());
+        setEntityValue("ativo", entity.getAtivo());
+        setEntityValue("provisorio", entity.getProvisorio());
     }
     
     @Override
@@ -101,29 +102,6 @@ public class UsuarioLoginCrudActionTest extends AbstractGenericCrudTest<UsuarioL
         }
         
         return list;
-    }
-
-    @Override
-    protected Runnable getPersistSuccessTest(final UsuarioLogin entity) {
-        return new Runnable() {
-            
-            @Override
-            public void run() {
-                newInstance();
-                setPersistData(entity);
-                final Object persistResult = save();
-                assertEquals(PERSISTED, persistResult);
-                
-                Object id = getId();
-                assertNotNull(id);
-                newInstance();
-                Object nullId = getId();
-                assertNull(nullId);
-                setId(id);
-                
-                assert compareEntity(entity);
-            }
-        };
     }
 
     @Override
@@ -141,21 +119,6 @@ public class UsuarioLoginCrudActionTest extends AbstractGenericCrudTest<UsuarioL
     }
 
     @Override
-    protected Runnable getPersistFailTest(final UsuarioLogin entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                newInstance();
-                setPersistData(entity);
-                
-                assert !PERSISTED.equals(save());
-                Object id = getId();
-                assertNull(id);
-            }
-        };
-    }
-
-    @Override
     protected List<UsuarioLogin> getInactivateSuccessList() {
         final ArrayList<UsuarioLogin> list = new ArrayList<UsuarioLogin>();
         for (int i = 0; i < 32; i++) {
@@ -165,130 +128,46 @@ public class UsuarioLoginCrudActionTest extends AbstractGenericCrudTest<UsuarioL
     }
 
     @Override
-    protected Runnable getInactivateSuccessTest(final UsuarioLogin entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                newInstance();
-                setPersistData(entity);
-                assertEquals(PERSISTED, save());
-                
-                assertNotNull(getId());
-                assert getValue(NAME, "ativo").equals(Boolean.TRUE);
-                assertEquals(UPDATED, inactive());
-                assert getValue(NAME, "ativo").equals(Boolean.FALSE);
-            }
-        };
-    }
-
-    @Override
-    protected List<UsuarioLogin> getUpdateSuccessList() {
-        final ArrayList<UsuarioLogin> list = new ArrayList<UsuarioLogin>();
+    protected List<EntityActionContainer<UsuarioLogin>> getUpdateSuccessList() {
+        final ArrayList<EntityActionContainer<UsuarioLogin>> list = new ArrayList<EntityActionContainer<UsuarioLogin>>();
         for (int i = 0; i < 30; i++) {
-            list.add(createUsuarioPersistValues("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i)));
+            list.add(new EntityActionContainer<UsuarioLogin>(createUsuarioPersistValues("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i))) {
+                @Override
+                public void execute() {
+                    final String updatedNomeUsuario = getEntity().getNomeUsuario()+"(updated)";
+                    setEntityValue("nomeUsuario", updatedNomeUsuario);
+                }
+            });
         }
         return list;
     }
 
     @Override
-    protected Runnable getUpdateSuccessTest(final UsuarioLogin entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                newInstance();
-                setPersistData(entity);
-                
-                assert PERSISTED.equals(save());
-                
-                final Object id = getId();
-                assert id != null;
-                newInstance();
-                assert getId() == null;
-                setId(id);
-                
-                assert compareEntity(entity);
-                final String updatedNomeUsuario = entity.getNomeUsuario()+"(updated)";
-                setValue(NAME, "nomeUsuario", updatedNomeUsuario);
-//                setValue(NAME, "email", "");
-//                setValue(NAME, "login", "");
-//                setValue(NAME, "tipoUsuario", "");
-//                setValue(NAME, "ativo", "");
-//                setValue(NAME, "provisorio", "");
-                assert UPDATED.equals(save());
-                assert updatedNomeUsuario.equals(getValue(NAME,"nomeUsuario"));
-            }
-        };
-    }
-
-    @Override
-    protected List<UsuarioLogin> getUpdateFailList() {
-        final ArrayList<UsuarioLogin> list = new ArrayList<UsuarioLogin>();
+    protected List<EntityActionContainer<UsuarioLogin>> getUpdateFailList() {
+        final ArrayList<EntityActionContainer<UsuarioLogin>> list = new ArrayList<EntityActionContainer<UsuarioLogin>>();
         for (int i = 0; i < 30; i++) {
-            list.add(createUsuarioPersistValues("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i)));
+            list.add(new EntityActionContainer<UsuarioLogin>(createUsuarioPersistValues("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i))) {
+                @Override
+                public void execute() {
+                  final String updatedNomeUsuario = fillStr(getEntity().getNomeUsuario()+"(updated)", LengthConstants.NOME_ATRIBUTO+1);
+                  setEntityValue("nomeUsuario", updatedNomeUsuario);
+                }
+            });
         }
         return list;
     }
 
-    @Override
-    protected Runnable getUpdateFailTest(final UsuarioLogin entity) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                newInstance();
-                setPersistData(entity);
-                
-                assert PERSISTED.equals(save());
-                
-                final Object id = getId();
-                assert id != null;
-                newInstance();
-                assert getId() == null;
-                setId(id);
-                
-                assert compareEntity(entity);
-                
-                final String updatedNomeUsuario = fillStr(entity.getNomeUsuario()+"(updated)", LengthConstants.NOME_ATRIBUTO+1);
-                setValue(NAME, "nomeUsuario", updatedNomeUsuario);
-//                setValue(NAME, "email", "");
-//                setValue(NAME, "login", "");
-//                setValue(NAME, "tipoUsuario", "");
-//                setValue(NAME, "ativo", "");
-//                setValue(NAME, "provisorio", "");
-                assert !UPDATED.equals(save());
-                newInstance();
-                assert getId() == null;
-                setId(id);
-                assert entity.getNomeUsuario().equals(getValue(NAME,"nomeUsuario"));
-            }
-        };
-    }
-
-    private boolean compareEntity(final UsuarioLogin entity) {
-        return getValue(NAME, "nomeUsuario").equals(entity.getNomeUsuario()) 
-                && getValue(NAME, "email").equals(entity.getEmail())
-                && getValue(NAME, "login").equals(entity.getLogin())
-                && getValue(NAME, "tipoUsuario").equals(entity.getTipoUsuario())
-                && getValue(NAME, "ativo").equals(entity.getAtivo())
-                && getValue(NAME, "provisorio").equals(entity.getProvisorio());
-    }
-
-    private void setId(Object id) {
-        setComponentValue(NAME, "id", id);
-    }
-
-    private Object getId() {
-        return getComponentValue(NAME, "id");
-    }
-
-    private Object save() {
-        return invokeMethod(NAME, "save");
+    private boolean areEquals(final Object obj1, final Object obj2) {
+        return (obj1==obj2) || (obj1 != null && obj1.equals(obj2)) ;
     }
     
-    private Object inactive() {
-        return invokeMethod(NAME, "inactive("+NAME+".instance)");
-    }
-
-    private void newInstance() {
-        invokeMethod(NAME, "newInstance");
+    @Override
+    protected boolean compareEntityValues(final UsuarioLogin entity) {
+        return areEquals(getEntityValue("nomeUsuario"), entity.getNomeUsuario())
+                    && areEquals(getEntityValue("email"), entity.getEmail())
+                    && areEquals(getEntityValue("login"), entity.getLogin())
+                    && areEquals(getEntityValue("tipoUsuario"), entity.getTipoUsuario())
+                    && areEquals(getEntityValue("ativo"), entity.getAtivo())
+                    && areEquals(getEntityValue("provisorio"), entity.getProvisorio());
     }
 }
