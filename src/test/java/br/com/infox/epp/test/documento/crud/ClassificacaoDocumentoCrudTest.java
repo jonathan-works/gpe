@@ -1,12 +1,13 @@
 package br.com.infox.epp.test.documento.crud;
 
+import static br.com.infox.epp.documento.crud.ClassificacaoDocumentoCrudAction.NAME;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
 
@@ -22,23 +23,19 @@ import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
 public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<TipoProcessoDocumento> {
-    private static final String OVER_PROTOCOL = "Servlet 3.0";
-    private final String COMPONENT_NAME = ClassificacaoDocumentoCrudAction.NAME;
 
     @Deployment
-    @OverProtocol(OVER_PROTOCOL)
+    @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
-        final String[] importPackages = { "br.com.infox.core", "br.com.itx" };
-        final Class<?>[] classesToImport = { ClassificacaoDocumentoCrudAction.class };
-        final String archiveName = "epp-test.war";
-        final String mockWebXMLPath = "src/test/resources/mock-web.xml";
-        final String mockComponentsXMLPath = "src/test/resources/mock-components.xml";
-        final String mockPersistenceXMLPath = "src/test/resources/mock-persistence.xml";
-        final String pomPath = "pom.xml";
-        final ArquillianSeamTestSetup arquillianTest = new ArquillianSeamTestSetup().addPackages(importPackages).addClasses(classesToImport).setArchiveName(archiveName).setMockWebXMLPath(mockWebXMLPath).setMockComponentsXMLPath(mockComponentsXMLPath).setMockPersistenceXMLPath(mockPersistenceXMLPath).setPomPath(pomPath);
-        final WebArchive deployment = arquillianTest.createDeployment();
-        deployment.writeTo(System.out, Formatters.VERBOSE);
-        return deployment;
+        return new ArquillianSeamTestSetup()
+                .addPackages("br.com.infox.core", "br.com.itx")
+                .addClasses(ClassificacaoDocumentoCrudAction.class)
+                .setArchiveName("epp-test.war")
+                .setMockWebXMLPath("src/test/resources/mock-web.xml")
+                .setMockComponentsXMLPath("src/test/resources/mock-components.xml")
+                .setMockPersistenceXMLPath("src/test/resources/mock-persistence.xml")
+                .setPomPath("pom.xml")
+                .createDeployment();
     }
 
     private TipoProcessoDocumento createInstance(final String codigoDocumento,
@@ -62,17 +59,17 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
         return instance;
     }
 
-    private void setEntityToComponent(final TipoProcessoDocumento entity) {
-        setValue(COMPONENT_NAME, "codigoDocumento", entity.getCodigoDocumento());
-        setValue(COMPONENT_NAME, "tipoProcessoDocumento", entity.getTipoProcessoDocumento());
-        setValue(COMPONENT_NAME, "inTipoDocumento", entity.getInTipoDocumento());
-        setValue(COMPONENT_NAME, "visibilidade", entity.getVisibilidade());
-        setValue(COMPONENT_NAME, "numera", entity.getNumera());
-        setValue(COMPONENT_NAME, "tipoNumeracao", entity.getTipoNumeracao());
-        setValue(COMPONENT_NAME, "sistema", entity.getSistema());
-        setValue(COMPONENT_NAME, "publico", entity.getPublico());
-        setValue(COMPONENT_NAME, "ativo", entity.getAtivo());
-        setValue(COMPONENT_NAME, "tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
+    protected void setPersistData(final TipoProcessoDocumento entity) {
+        setValue(NAME, "codigoDocumento", entity.getCodigoDocumento());
+        setValue(NAME, "tipoProcessoDocumento", entity.getTipoProcessoDocumento());
+        setValue(NAME, "inTipoDocumento", entity.getInTipoDocumento());
+        setValue(NAME, "visibilidade", entity.getVisibilidade());
+        setValue(NAME, "numera", entity.getNumera());
+        setValue(NAME, "tipoNumeracao", entity.getTipoNumeracao());
+        setValue(NAME, "sistema", entity.getSistema());
+        setValue(NAME, "publico", entity.getPublico());
+        setValue(NAME, "ativo", entity.getAtivo());
+        setValue(NAME, "tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
     }
 
     @Override
@@ -88,15 +85,15 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
         return new Runnable() {
             @Override
             public void run() {
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setEntityToComponent(entity);
-                assert AbstractAction.PERSISTED.equals(invokeMethod(COMPONENT_NAME, "save"));
-                Object id = getValue("#{" + COMPONENT_NAME + ".id}");
+                invokeMethod(NAME, "newInstance");
+                setPersistData(entity);
+                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
+                Object id = getValue("#{" + NAME + ".id}");
                 assert id != null;
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setEntityToComponent(entity);
-                setValue(COMPONENT_NAME, "idTipoProcessoDocumento", ((int) id) + 1);
-                assert !AbstractAction.UPDATED.equals(invokeMethod(COMPONENT_NAME, "save"));
+                invokeMethod(NAME, "newInstance");
+                setPersistData(entity);
+                setValue(NAME, "idTipoProcessoDocumento", ((int) id) + 1);
+                assert !AbstractAction.UPDATED.equals(invokeMethod(NAME, "save"));
             }
         };
     }
@@ -114,15 +111,15 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
         return new Runnable() {
             @Override
             public void run() {
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setEntityToComponent(entity);
-                assert AbstractAction.PERSISTED.equals(invokeMethod(COMPONENT_NAME, "save"));
-                Object id = getValue("#{" + COMPONENT_NAME + ".id}");
+                invokeMethod(NAME, "newInstance");
+                setPersistData(entity);
+                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
+                Object id = getValue("#{" + NAME + ".id}");
                 assert id != null;
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setValue("#{" + COMPONENT_NAME + ".id}", id);
-                setValue(COMPONENT_NAME, "codigoDocumento", fillStr("updateCodigoDocumento", 25));
-                assert AbstractAction.UPDATED.equals(invokeMethod(COMPONENT_NAME, "save"));
+                invokeMethod(NAME, "newInstance");
+                setValue("#{" + NAME + ".id}", id);
+                setValue(NAME, "codigoDocumento", fillStr("updateCodigoDocumento", 25));
+                assert AbstractAction.UPDATED.equals(invokeMethod(NAME, "save"));
             }
         };
     }
@@ -143,11 +140,11 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
 
             @Override
             public void run() {
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setEntityToComponent(entity);
-                assert AbstractAction.PERSISTED.equals(invokeMethod(COMPONENT_NAME, "save"));
-                assert getValue("#{" + COMPONENT_NAME + ".id}") != null;
-                assert AbstractAction.REMOVED.equals(invokeMethod(COMPONENT_NAME, "remove"));
+                invokeMethod(NAME, "newInstance");
+                setPersistData(entity);
+                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
+                assert getValue("#{" + NAME + ".id}") != null;
+                assert AbstractAction.REMOVED.equals(invokeMethod(NAME, "remove"));
             }
         };
     }
@@ -157,13 +154,13 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
         return new Runnable() {
             @Override
             public void run() {
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setEntityToComponent(entity);
-                setValue(COMPONENT_NAME, "tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
-                assert getValue("#{" + COMPONENT_NAME + ".id}") == null;
-                assert AbstractAction.PERSISTED.equals(invokeMethod(COMPONENT_NAME, "save"));
-                assert AbstractAction.REMOVED.equals(invokeMethod(COMPONENT_NAME, "remove"));
-                assert !AbstractAction.REMOVED.equals(invokeMethod(COMPONENT_NAME, "remove"));
+                invokeMethod(NAME, "newInstance");
+                setPersistData(entity);
+                setValue(NAME, "tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
+                assert getValue("#{" + NAME + ".id}") == null;
+                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
+                assert AbstractAction.REMOVED.equals(invokeMethod(NAME, "remove"));
+                assert !AbstractAction.REMOVED.equals(invokeMethod(NAME, "remove"));
             }
         };
     }
@@ -173,10 +170,10 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
         return new Runnable() {
             @Override
             public void run() {
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setEntityToComponent(entity);
-                assert AbstractAction.PERSISTED.equals(invokeMethod(COMPONENT_NAME, "save"));
-                assert getValue("#{" + COMPONENT_NAME + ".id}") != null;
+                invokeMethod(NAME, "newInstance");
+                setPersistData(entity);
+                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
+                assert getValue("#{" + NAME + ".id}") != null;
             }
         };
     }
@@ -186,10 +183,10 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
         return new Runnable() {
             @Override
             public void run() {
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setEntityToComponent(entity);
-                assert !AbstractAction.PERSISTED.equals(invokeMethod(COMPONENT_NAME, "save"));
-                assert getValue("#{" + COMPONENT_NAME + ".id}") == null;
+                invokeMethod(NAME, "newInstance");
+                setPersistData(entity);
+                assert !AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
+                assert getValue("#{" + NAME + ".id}") == null;
             }
         };
     }
@@ -244,14 +241,14 @@ public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<Tipo
         return new Runnable() {
             @Override
             public void run() {
-                invokeMethod(COMPONENT_NAME, "newInstance");
-                setEntityToComponent(entity);
+                invokeMethod(NAME, "newInstance");
+                setPersistData(entity);
                 
-                assert AbstractAction.PERSISTED.equals(invokeMethod(COMPONENT_NAME, "save"));
-                assert getValue("#{" + COMPONENT_NAME + ".id}") != null;
-                final Object value = getValue("#{" + COMPONENT_NAME + ".instance}");
+                assert AbstractAction.PERSISTED.equals(invokeMethod(NAME, "save"));
+                assert getValue("#{" + NAME + ".id}") != null;
+                final Object value = getValue("#{" + NAME + ".instance}");
                 assert value != null;
-                assert AbstractAction.UPDATED.equals(invokeMethod("#{"+COMPONENT_NAME+".inactive("+COMPONENT_NAME+".instance)}"));
+                assert AbstractAction.UPDATED.equals(invokeMethod("#{"+NAME+".inactive("+NAME+".instance)}"));
             }
         };
     }
