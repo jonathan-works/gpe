@@ -1,8 +1,16 @@
 package br.com.infox.epp.test.crud;
 
+import static br.com.infox.core.action.AbstractAction.PERSISTED;
+import static br.com.infox.core.action.AbstractAction.REMOVED;
+import static br.com.infox.core.action.AbstractAction.UPDATED;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+
 import java.util.List;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 
 import org.jboss.seam.contexts.TestLifecycle;
 import org.jboss.seam.core.Expressions;
@@ -10,7 +18,10 @@ import org.jboss.seam.mock.JUnitSeamTest;
 import org.jboss.seam.servlet.ServletSessionMap;
 import org.junit.Test;
 
+//import br.com.infox.core.action.AbstractAction;
+
 public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
+    private static final String ATIVO = "ativo";
     protected static final String SERVLET_3_0 = "Servlet 3.0";
     
     protected final String fillStr(String string, final int topLength) {
@@ -88,56 +99,29 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     protected List<T> getPersistSuccessList() {
         return null;
     }
-    protected Runnable getPersistSuccessTest(final T entity) {
-        return null;
-    }
-    
     protected List<T> getPersistFailList() {
         return null;
     }
-    protected Runnable getPersistFailTest(final T entity) {
-        return null;
-    }
-    
     protected List<T> getInactivateSuccessList() {
         return null;
     }
-    protected Runnable getInactivateSuccessTest(final T entity) {
-        return null;
-    }
-    
     protected List<T> getInactivateFailList() {
         return null;
     }
-    protected Runnable getInactivateFailTest(final T entity) {
+    
+    protected List<EntityActionContainer<T>> getUpdateSuccessList() {
         return null;
     }
     
-    protected List<T> getUpdateSuccessList() {
-        return null;
-    }
-    protected Runnable getUpdateSuccessTest(final T entity) {
-        return null;
-    }
-    
-    protected List<T> getUpdateFailList() {
-        return null;
-    }
-    protected Runnable getUpdateFailTest(final T entity) {
+    protected List<EntityActionContainer<T>> getUpdateFailList() {
         return null;
     }
     
     protected List<T> getRemoveSuccessList() {
         return null;
     }
-    protected Runnable getRemoveSuccessTest(final T entity) {
-        return null;
-    }
     
     protected List<T> getRemoveFailList() {
-        return null;
-    }
-    protected Runnable getRemoveFailTest(final T entity) {
         return null;
     }
 
@@ -145,40 +129,56 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     public final void initPersistSuccessTest() {
         final List<T> list = getPersistSuccessList();
         if (list != null) {
-            for (final T entity : list) {
-                final Runnable runnableTest = getPersistSuccessTest(entity);
-                if (runnableTest == null) {
-                    break;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                for (final T entity : list) {
+                        persistSuccessTest(entity);
                 }
-                executeTest(runnableTest);
+            } catch (Exception e) {
+                throw new AssertionFailedError(e.getMessage());
+            } finally {
+                TestLifecycle.endTest();
             }
         }
     }
+
+    protected boolean compareEntityValues(final T entity) {
+        final Object entityInstance = getInstance();
+        return entityInstance == entity || (entityInstance != null && entityInstance.equals(entity));
+    }
+
+    protected abstract void initEntity(T entity);
 
     @Test
     public final void initRemoveSuccessTest() {
         final List<T> list = getRemoveSuccessList();
         if (list != null) {
-            for (final T entity : list) {
-                final Runnable runnableTest = getRemoveSuccessTest(entity);
-                if (runnableTest == null) {
-                    break;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                for (final T entity : list) {
+                        removeSuccessTest(entity);
                 }
-                executeTest(runnableTest);
+            } catch (Exception e) {
+                throw new AssertionFailedError(e.getMessage());
+            } finally {
+                TestLifecycle.endTest();
             }
         }
     }
 
     @Test
     public final void initUpdateSuccessTest() {
-        final List<T> list = getUpdateSuccessList();
+        final List<EntityActionContainer<T>> list = getUpdateSuccessList();
         if (list != null) {
-            for (final T entity : list) {
-                final Runnable runnableTest = getUpdateSuccessTest(entity);
-                if (runnableTest == null) {
-                    break;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                for (final EntityActionContainer<T> entityActionContainer : list) {
+                    updateSuccessTest(entityActionContainer);
                 }
-                executeTest(runnableTest);
+            } catch (Exception e) {
+                throw new AssertionFailedError(e.getMessage());
+            } finally {
+                TestLifecycle.endTest();
             }
         }
     }
@@ -187,12 +187,15 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     public final void initInactivateSuccessTest() {
         final List<T> list = getInactivateSuccessList();
         if (list != null) {
-            for (final T entity : list) {
-                final Runnable runnableTest = getInactivateSuccessTest(entity);
-                if (runnableTest == null) {
-                    break;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                for (final T entity : list) {
+                        this.inactivateSuccessTest(entity);
                 }
-                executeTest(runnableTest);
+            } catch (Exception e) {
+                throw new AssertionFailedError(e.getMessage());
+            } finally {
+                TestLifecycle.endTest();
             }
         }
     }
@@ -201,12 +204,15 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     public final void initPersistFailTest() {
         final List<T> list = getPersistFailList();
         if (list != null) {
-            for (final T entity : list) {
-                final Runnable runnableTest = getPersistFailTest(entity);
-                if (runnableTest == null) {
-                    break;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                for (final T entity : list) {
+                        persistFailTest(entity);
                 }
-                executeTest(runnableTest);
+            } catch (Exception e) {
+                throw new AssertionFailedError(e.getMessage());
+            } finally {
+                TestLifecycle.endTest();
             }
         }
     }
@@ -215,26 +221,32 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     public final void initRemoveFailTest() {
         final List<T> list = getRemoveFailList();
         if (list != null) {
-            for (final T entity : list) {
-                final Runnable runnableTest = getRemoveFailTest(entity);
-                if (runnableTest == null) {
-                    break;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                for (final T entity : list) {
+                        removeFailTest(entity);
                 }
-                executeTest(runnableTest);
+            } catch (Exception e) {
+                throw new AssertionFailedError(e.getMessage());
+            } finally {
+                TestLifecycle.endTest();
             }
         }
     }
 
     @Test
     public final void initUpdateFailTest() {
-        final List<T> list = getUpdateFailList();
+        final List<EntityActionContainer<T>> list = getUpdateFailList();
         if (list != null) {
-            for (final T entity : list) {
-                final Runnable runnableTest = getUpdateFailTest(entity);
-                if (runnableTest == null) {
-                    break;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                for (final EntityActionContainer<T> entityActionContainer : list) {
+                    updateFailTest(entityActionContainer);
                 }
-                executeTest(runnableTest);
+            } catch (Exception e) {
+                throw new AssertionFailedError(e.getMessage());
+            } finally {
+                TestLifecycle.endTest();
             }
         }
     }
@@ -243,14 +255,159 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     public final void initInactivateFailTest() {
         final List<T> list = getInactivateFailList();
         if (list != null) {
-            for (final T entity : list) {
-                final Runnable runnableTest = getInactivateFailTest(entity);
-                if (runnableTest == null) {
-                    break;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                for (final T entity : list) {
+                        inactivateFailTest(entity);
                 }
-                executeTest(runnableTest);
+            } catch (Exception e) {
+                throw new AssertionFailedError(e.getMessage());
+            } finally {
+                TestLifecycle.endTest();
             }
         }
     }
 
+    protected void setEntityValue(final String fieldName, final Object codigoDocumento) {
+        setValue(getComponentName(), fieldName, codigoDocumento);
+    }
+    
+    protected Object getEntityValue(final String fieldName) {
+        return getValue(getComponentName(), fieldName);
+    }
+
+    protected abstract String getComponentName();
+
+    protected void newInstance() {
+        invokeMethod(getComponentName(), "newInstance");
+    }
+    
+    protected Object getInstance() {
+        return getComponentValue(getComponentName(), "instance");
+    }
+    
+    protected Object save() {
+        return invokeMethod(getComponentName(), "save");
+    }
+    
+    protected Object remove() {
+        return invokeMethod(getComponentName(), "remove");
+    }
+    
+    protected Object inactivate() {
+        return invokeMethod("#{"+getComponentName()+".inactive("+getComponentName()+".instance)}");
+    }
+    
+    protected Object getId() {
+        return getComponentValue(getComponentName(), "id");
+    }
+
+    protected void setId(Object value) {
+        setComponentValue(getComponentName(), "id", value);
+    }
+
+    private void persistFailTest(final T entity) {
+        newInstance();
+        initEntity(entity);
+        
+        assert !PERSISTED.equals(save());
+        Object id = getId();
+        assertNull(id);
+    }
+    
+    private void persistSuccessTest(final T entity) {
+        newInstance();
+        initEntity(entity);
+        final Object persistResult = save();
+        assertEquals(PERSISTED, persistResult);
+        
+        Object id = getId();
+        assertNotNull(id);
+        newInstance();
+        Object nullId = getId();
+        assertNull(nullId);
+        setId(id);
+        assert compareEntityValues(entity);
+    }
+
+    private void inactivateSuccessTest(final T entity) {
+        newInstance();
+        initEntity(entity);
+        assert PERSISTED.equals(save());
+        assert getId() != null;
+        assert Boolean.TRUE.equals(getEntityValue(ATIVO));
+        assert UPDATED.equals(inactivate());
+        assert Boolean.FALSE.equals(getEntityValue(ATIVO));
+    }
+    
+    private void inactivateFailTest(final T entity) {
+        newInstance();
+        initEntity(entity);
+        assert PERSISTED.equals(save());
+        assert getId() != null;
+        assert Boolean.TRUE.equals(getEntityValue(ATIVO));
+        assert !UPDATED.equals(inactivate());
+        assert Boolean.TRUE.equals(getEntityValue(ATIVO));
+    }
+    
+    private void removeSuccessTest(final T entity) {
+        newInstance();
+        initEntity(entity);
+        assert PERSISTED.equals(save());
+        assert getId() != null;
+        assert REMOVED.equals(remove());
+    }
+    
+    private void removeFailTest(final T entity) {
+        newInstance();
+        initEntity(entity);
+        assert getId() == null;
+        assert PERSISTED.equals(save());
+        assert REMOVED.equals(remove());
+        assert !REMOVED.equals(remove());
+    }
+    
+    private void updateSuccessTest(final EntityActionContainer<T> entityActionContainer) {
+        newInstance();
+        initEntity(entityActionContainer.getEntity());
+        assert PERSISTED.equals(save());
+        final Object id = getId();
+        assert id != null;
+        entityActionContainer.execute();
+        assert UPDATED.equals(save());
+        newInstance();
+        setId(id);
+        assert !compareEntityValues(entityActionContainer.getEntity());
+    }
+    
+    private void updateFailTest(final EntityActionContainer<T> entityActionContainer) {
+        newInstance();
+        initEntity(entityActionContainer.getEntity());
+        assert PERSISTED.equals(save());
+        final Object id = getId();
+        assert id != null;
+        entityActionContainer.execute();
+        assert !UPDATED.equals(save());
+        newInstance();
+        setId(id);
+        assert compareEntityValues(entityActionContainer.getEntity());
+    }
+    
+    public abstract class EntityActionContainer<E> {
+        private final E entity;
+        
+        public EntityActionContainer(final E entity) {
+            if (entity == null) {
+                throw new NullPointerException("Null entity not allowed for EntityActionContainer");
+            }
+            this.entity = entity;
+        }
+        
+        public abstract void execute();
+
+        public E getEntity() {
+            return entity;
+        }
+        
+    }        
 }
