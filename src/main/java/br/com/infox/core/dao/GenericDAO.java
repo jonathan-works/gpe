@@ -46,6 +46,9 @@ public class GenericDAO implements Serializable {
 	 * @return objeto encontrado.
 	 */
 	public <T> T find(final Class<T> c, final Object id) {
+	    if (id == null) {
+	        return null;
+	    }
 		return entityManager.find(c, id);
 	}
 	

@@ -20,11 +20,11 @@ import javax.security.auth.login.LoginException;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.BusinessException;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.service.PasswordService;
 
 @Name(PasswordRequester.NAME)
@@ -40,11 +40,15 @@ public class PasswordRequester {
 	private String email;
 
 	public void requisitarNovaSenha() throws LoginException {
-	    try {
+	    final FacesMessages facesMessages = FacesMessages.instance();
+        try {
 	        passwordService.requisitarNovaSenha(email, login);
 	    } catch (BusinessException be){
 	    	LOG.warn(".requisitarNovaSenha()", be);
-            FacesMessages.instance().add(Severity.INFO, be.getLocalizedMessage());
+            facesMessages.add(be.getLocalizedMessage());
+        } catch (DAOException e) {
+            LOG.warn(".requisitarNovaSenha()", e);
+            facesMessages.add(e.getLocalizedMessage());
         }
 	}
 
