@@ -11,8 +11,9 @@ import org.jboss.seam.servlet.ServletSessionMap;
 import org.junit.Test;
 
 public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
-
-    protected final String fillStr(String string, int topLength) {
+    protected static final String SERVLET_3_0 = "Servlet 3.0";
+    
+    protected final String fillStr(String string, final int topLength) {
         if (string == null || string.length() < 1) {
             string = "-";
         }
@@ -21,7 +22,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         int length = string.length();
         if (length < topLength) {
             for (int i = 0, l = topLength-length; i < l; i++) {
-                sb.append(" ");
+                sb.append(string.charAt(0));
             }
         }
         return sb.substring(0, topLength);
@@ -30,11 +31,11 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     /**
      * Call a method binding
      */
-    protected final Object invokeMethod(String methodExpression, Object... args) {
+    protected final Object invokeMethod(final String methodExpression, final Object... args) {
         return Expressions.instance().createMethodExpression(methodExpression).invoke(args);
     }
 
-    protected final Object invokeMethod(String componentName, String methodName, Object... args) {
+    protected final Object invokeMethod(final String componentName, final String methodName, Object... args) {
         final String expression = new StringBuilder().append("#{").append(componentName).append(".").append(methodName).append("}").toString();
         return invokeMethod(expression, args);
     }
@@ -42,16 +43,16 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     /**
      * Evaluate (get) a value binding
      */
-    protected final Object getValue(String valueExpression) {
+    protected final Object getValue(final String valueExpression) {
         return Expressions.instance().createValueExpression(valueExpression).getValue();
     }
 
-    protected final Object getComponentValue(String componentName, String fieldName) {
+    protected final Object getComponentValue(final String componentName, final String fieldName) {
         final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".").append(fieldName).append("}").toString();
         return Expressions.instance().createValueExpression(valueExpression).getValue();
     }
     
-    protected final Object getValue(String componentName, String fieldName) {
+    protected final Object getValue(final String componentName, final String fieldName) {
         final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".instance.").append(fieldName).append("}").toString();
         return Expressions.instance().createValueExpression(valueExpression).getValue();
     }
@@ -59,21 +60,21 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     /**
      * Set a value binding
      */
-    protected final void setValue(String valueExpression, Object value) {
+    protected final void setValue(final String valueExpression, final Object value) {
         Expressions.instance().createValueExpression(valueExpression).setValue(value);
     }
 
-    protected final void setComponentValue(String componentName, String fieldName, Object value) {
+    protected final void setComponentValue(final String componentName, final String fieldName, final Object value) {
         final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".").append(fieldName).append("}").toString();
         Expressions.instance().createValueExpression(valueExpression).setValue(value);
     }
 
-    protected final void setValue(String componentName, String fieldName, Object value) {
+    protected final void setValue(final String componentName, final String fieldName, final Object value) {
         final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".instance.").append(fieldName).append("}").toString();
         Expressions.instance().createValueExpression(valueExpression).setValue(value);
     }
 
-    protected final void executeTest(Runnable componentTest) {
+    protected final void executeTest(final Runnable componentTest) {
         TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
         try {
             componentTest.run();
@@ -84,29 +85,61 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
     }
 
-    protected abstract List<T> getPersistSuccessList();
-    protected abstract Runnable getPersistSuccessTest(T entity);
+    protected List<T> getPersistSuccessList() {
+        return null;
+    }
+    protected Runnable getPersistSuccessTest(final T entity) {
+        return null;
+    }
     
-    protected abstract List<T> getPersistFailList();
-    protected abstract Runnable getPersistFailTest(T entity);
+    protected List<T> getPersistFailList() {
+        return null;
+    }
+    protected Runnable getPersistFailTest(final T entity) {
+        return null;
+    }
     
-    protected abstract List<T> getInactivateSuccessList();
-    protected abstract Runnable getInactivateSuccessTest(T entity);
+    protected List<T> getInactivateSuccessList() {
+        return null;
+    }
+    protected Runnable getInactivateSuccessTest(final T entity) {
+        return null;
+    }
     
-    protected abstract List<T> getInactivateFailList();
-    protected abstract Runnable getInactivateFailTest(T entity);
+    protected List<T> getInactivateFailList() {
+        return null;
+    }
+    protected Runnable getInactivateFailTest(final T entity) {
+        return null;
+    }
     
-    protected abstract List<T> getUpdateSuccessList();
-    protected abstract Runnable getUpdateSuccessTest(T entity);
+    protected List<T> getUpdateSuccessList() {
+        return null;
+    }
+    protected Runnable getUpdateSuccessTest(final T entity) {
+        return null;
+    }
     
-    protected abstract List<T> getUpdateFailList();
-    protected abstract Runnable getUpdateFailTest(T entity);
+    protected List<T> getUpdateFailList() {
+        return null;
+    }
+    protected Runnable getUpdateFailTest(final T entity) {
+        return null;
+    }
     
-    protected abstract List<T> getRemoveSuccessList();
-    protected abstract Runnable getRemoveSuccessTest(T entity);
+    protected List<T> getRemoveSuccessList() {
+        return null;
+    }
+    protected Runnable getRemoveSuccessTest(final T entity) {
+        return null;
+    }
     
-    protected abstract List<T> getRemoveFailList();
-    protected abstract Runnable getRemoveFailTest(T entity);
+    protected List<T> getRemoveFailList() {
+        return null;
+    }
+    protected Runnable getRemoveFailTest(final T entity) {
+        return null;
+    }
 
     @Test
     public final void initPersistSuccessTest() {
@@ -219,5 +252,5 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             }
         }
     }
-    
+
 }
