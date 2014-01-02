@@ -1,6 +1,9 @@
 package br.com.infox.epp.tarefa.entity;
 
-import static br.com.infox.epp.tarefa.query.TarefaQuery.*;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS_QUERY;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES_QUERY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +19,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;

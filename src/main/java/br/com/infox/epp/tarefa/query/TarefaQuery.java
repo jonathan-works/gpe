@@ -12,11 +12,12 @@ public interface TarefaQuery {
             + "(select 1 from public.tb_tarefa where ds_tarefa = t.name_ and id_fluxo = f.id_fluxo) "
             + "group by f.id_fluxo, t.name_";
 
+    String PARAM_ID_TAREFA = "idTarefa";
     String PREVIOUS_NODES = "listPreviousNodes";
     String PREVIOUS_NODES_QUERY = "select max(nodeFrom.id_), nodeFrom.name_ from jbpm_transition t "
             + "inner join jbpm_node nodeFrom ON (nodeFrom.id_=t.from_) "
             + "inner join jbpm_task taskTo ON (taskTo.tasknode_=t.to_) "
             + "inner join tb_tarefa_jbpm tjTo ON (tjTo.id_jbpm_task=taskTo.id_) "
-            + "where tjTo.id_tarefa=:idTarefa group by nodeFrom.name_";
+            + "where tjTo.id_tarefa=:" + PARAM_ID_TAREFA + " group by nodeFrom.name_";
 
 }
