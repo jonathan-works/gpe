@@ -18,11 +18,16 @@ public interface ProcessoEpaTarefaQuery {
     String TAREFA_ENDED_QUERY = "select pet from ProcessoEpaTarefa pet "
             + "where not pet.dataFim is null";
 
-    String QUERY_FORA_FLUXO = "select f.fluxo, p, t.tarefa, pt from ProcessoEpaTarefa pt "
+    String BASE_QUERY_FORA_FLUXO = "select f.fluxo, p, t.tarefa, pt from ProcessoEpaTarefa pt "
             + "inner join pt.tarefa t "
             + "inner join pt.processoEpa p "
             + "inner join p.naturezaCategoriaFluxo ncf "
             + "inner join ncf.categoria c " + "inner join ncf.fluxo f ";
+    
+    String PARAM_CATEGORIA = "categoria";
+    String FORA_PRAZO_FLUXO = "listForaPrazoFluxo";
+    String FORA_PRAZO_FLUXO_QUERY = BASE_QUERY_FORA_FLUXO + "where p.porcentagem > 100 "
+            + "and pt.dataFim is null and c = :" + PARAM_CATEGORIA;
     
     String PARAM_ID_TAREFA = "idTarefa";
     String PARAM_ID_PROCESSO = "idProcesso";

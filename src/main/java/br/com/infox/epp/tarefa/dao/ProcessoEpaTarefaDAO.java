@@ -5,7 +5,7 @@ import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.GET_PROCESSO_
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PARAM_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_FORA_FLUXO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.BASE_QUERY_FORA_FLUXO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_PARAM_TASKINSTANCE;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_PARAM_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED;
@@ -61,7 +61,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {
 		StringBuilder s = new StringBuilder();
-		s.append(QUERY_FORA_FLUXO)
+		s.append(BASE_QUERY_FORA_FLUXO)
 		 .append("where p.porcentagem > 100 and pt.dataFim is null ")
 		 .append("and c = :categoria");
 		Query q = getEntityManager().createQuery(s.toString());
@@ -72,7 +72,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listForaPrazoTarefa(Categoria c) {
 		StringBuilder s = new StringBuilder();
-		s.append(QUERY_FORA_FLUXO)
+		s.append(BASE_QUERY_FORA_FLUXO)
 		 .append("where pt.porcentagem > 100 and pt.dataFim is null ")
 		 .append("and c = :categoria");
 		Query q = getEntityManager().createQuery(s.toString());
@@ -83,7 +83,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listTarefaPertoLimite() {
 		StringBuilder s = new StringBuilder();
-		s.append(QUERY_FORA_FLUXO)
+		s.append(BASE_QUERY_FORA_FLUXO)
 		 .append("where pt.porcentagem <= 100 and pt.porcentagem >= 70 ")
 		 .append("and pt.dataFim is null");
 		Query q = getEntityManager().createQuery(s.toString());
