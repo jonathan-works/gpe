@@ -29,14 +29,16 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 @AutoCreate
 public class ProcessoEpaTarefaDAO extends GenericDAO {
 
-	private static final long serialVersionUID = 4132828408460655332L;
-	public static final String NAME = "processoEpaTarefaDAO";
-	/**
-	 * Lista todos os registros filtrando por uma natureza.
-	 * @param natureza que se desejar filtrar a seleção.
-	 * @return lista de todos os registros referente a <code>natureza</code>
-	 * informada.
-	 */
+    private static final long serialVersionUID = 4132828408460655332L;
+    public static final String NAME = "processoEpaTarefaDAO";
+
+    /**
+     * Lista todos os registros filtrando por uma natureza.
+     * 
+     * @param natureza que se desejar filtrar a seleção.
+     * @return lista de todos os registros referente a <code>natureza</code>
+     *         informada.
+     */
     public ProcessoEpaTarefa getByTaskInstance(Long taskInstance) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_TASKINSTANCE, taskInstance);
@@ -52,7 +54,7 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
         parameters.put(QUERY_PARAM_TIPO_PRAZO, tipoPrazo);
         return getNamedResultList(TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
     }
-	
+
     public List<Object[]> listForaPrazoFluxo(Categoria categoria) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_CATEGORIA, categoria);
