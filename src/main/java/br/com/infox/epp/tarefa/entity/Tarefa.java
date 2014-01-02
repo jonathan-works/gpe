@@ -1,5 +1,7 @@
 package br.com.infox.epp.tarefa.entity;
 
+import static br.com.infox.epp.tarefa.query.TarefaQuery.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
@@ -27,6 +31,9 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name = Tarefa.TABLE_NAME, schema="public")
+@NamedNativeQueries({
+    @NamedNativeQuery(name=NOVAS_TAREFAS, query=NOVAS_TAREFAS_QUERY)
+})
 public class Tarefa implements java.io.Serializable {
 
 	public static final String TABLE_NAME = "tb_tarefa";
