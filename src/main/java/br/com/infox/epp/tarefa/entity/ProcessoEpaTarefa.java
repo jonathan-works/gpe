@@ -1,5 +1,20 @@
 package br.com.infox.epp.tarefa.entity;
 
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_FLUXO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_FLUXO_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_TAREFA_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE_QUERY;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -21,7 +36,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity

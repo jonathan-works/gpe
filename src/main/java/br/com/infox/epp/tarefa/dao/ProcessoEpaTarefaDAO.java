@@ -1,21 +1,21 @@
 package br.com.infox.epp.tarefa.dao;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_FLUXO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PARAM_CATEGORIA;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PARAM_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.BASE_QUERY_FORA_FLUXO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_PARAM_TASKINSTANCE;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_PARAM_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
