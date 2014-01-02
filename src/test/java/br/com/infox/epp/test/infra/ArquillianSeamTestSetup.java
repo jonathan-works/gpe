@@ -34,12 +34,13 @@ public class ArquillianSeamTestSetup {
 
     public ArquillianSeamTestSetup() {
         this.packages = new ArrayList<>();
+        addPackages("br.com.infox.core","br.com.itx");
         this.classes = new ArrayList<>();
-        this.archiveName = null;
-        this.mockComponentsXMLPath = null;
-        this.mockPersistenceXMLPath = null;
-        this.mockWebXMLPath = null;
-        this.pomPath = null;
+        this.archiveName = "epp-test.war";
+        this.mockComponentsXMLPath = "src/test/resources/mock-components.xml";
+        this.mockPersistenceXMLPath = "src/test/resources/mock-persistence.xml";
+        this.mockWebXMLPath = "src/test/resources/mock-web.xml";
+        this.pomPath = "pom.xml";
         this.classes.add(AbstractGenericCrudTest.class);
     }
     
