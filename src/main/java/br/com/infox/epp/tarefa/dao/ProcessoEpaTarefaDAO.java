@@ -63,18 +63,13 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
         parameters.put(PARAM_CATEGORIA, categoria);
         return getNamedSingleResult(FORA_PRAZO_FLUXO, parameters);
     }
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<Object[]> listForaPrazoTarefa(Categoria c) {
-		StringBuilder s = new StringBuilder();
-		s.append(BASE_QUERY_FORA_FLUXO)
-		 .append("where pt.porcentagem > 100 and pt.dataFim is null ")
-		 .append("and c = :categoria");
-		Query q = getEntityManager().createQuery(s.toString());
-		q.setParameter("categoria", c);
-		return q.getResultList();
-	}
-	
+
+    public List<Object[]> listForaPrazoTarefa(Categoria categoria) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(PARAM_CATEGORIA, categoria);
+        return getNamedResultList(FORA_PRAZO_TAREFA, parameters);
+    }
+
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listTarefaPertoLimite() {
 		StringBuilder s = new StringBuilder();
