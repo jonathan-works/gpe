@@ -13,10 +13,12 @@
 	<ui:param
          name="home"
          value="#{recursoCrudAction}" />
+         
+    <ui:param name="showFormTab" value="#{home.managed}" />
 
 	<ui:define
          name="title">Recursos</ui:define>
-
+         
     <ui:define
          name="searchGrid">
    
@@ -53,7 +55,6 @@
             <ui:define name="headerToolBar" />
              <ui:define name="toolBar">
             	<wi:toolBarEdit id="recursoListedit" />
-            	<wi:toolBarRemove />
             </ui:define>
         </wi:dataTable>
     </ui:define>

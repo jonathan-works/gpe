@@ -329,6 +329,13 @@
 					<include>**/*.crt</include>
 				</includes>
 			</resource>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>mock-*.xml</exclude>
+				</excludes>
+			</resource>
 		</resources>
 		<testResources>
 			<testResource>
