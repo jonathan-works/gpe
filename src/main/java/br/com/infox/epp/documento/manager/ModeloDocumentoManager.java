@@ -63,7 +63,12 @@ public class ModeloDocumentoManager extends GenericManager{
 	}
 	
 	public List<ModeloDocumento> getModelosDocumentoInListaModelo(String listaModelos){
-		return modeloDocumentoDAO.getModelosDocumentoInListaModelos(listaModelos);
+		String[] tokens = listaModelos.split(",");
+		List<Integer> ids = new ArrayList<>();
+		for (String token : tokens) {
+			ids.add(Integer.valueOf(token));
+		}
+		return modeloDocumentoDAO.getModelosDocumentoInListaModelos(ids);
 	}
 	
 	/**
