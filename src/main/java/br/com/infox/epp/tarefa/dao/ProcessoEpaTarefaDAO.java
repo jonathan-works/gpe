@@ -25,11 +25,6 @@ import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
-/**
- * Classe DAO para a entidade ProcessoEpaTarefa
- * @author Daniel
- *
- */
 @Name(ProcessoEpaTarefaDAO.NAME)
 @AutoCreate
 public class ProcessoEpaTarefaDAO extends GenericDAO {
@@ -70,16 +65,10 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
         return getNamedResultList(FORA_PRAZO_TAREFA, parameters);
     }
 
-	@SuppressWarnings(UNCHECKED)
-	public List<Object[]> listTarefaPertoLimite() {
-		StringBuilder s = new StringBuilder();
-		s.append(BASE_QUERY_FORA_FLUXO)
-		 .append("where pt.porcentagem <= 100 and pt.porcentagem >= 70 ")
-		 .append("and pt.dataFim is null");
-		Query q = getEntityManager().createQuery(s.toString());
-		return q.getResultList();
-	}
-	
+    public List<Object[]> listTarefaPertoLimite() {
+        return getNamedResultList(TAREFA_PROXIMA_LIMITE);
+    }
+
     public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(final Integer idProcesso, final Integer idTarefa) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, idProcesso);
