@@ -9,7 +9,7 @@ import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.BASE_QUERY_FO
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_PARAM_TASKINSTANCE;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.QUERY_PARAM_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,16 +58,11 @@ public class ProcessoEpaTarefaDAO extends GenericDAO {
         return getNamedResultList(TAREFA_NOT_ENDED_BY_TIPO_PRAZO, parameters);
     }
 	
-	@SuppressWarnings(UNCHECKED)
-	public List<Object[]> listForaPrazoFluxo(Categoria c) {
-		StringBuilder s = new StringBuilder();
-		s.append(BASE_QUERY_FORA_FLUXO)
-		 .append("where p.porcentagem > 100 and pt.dataFim is null ")
-		 .append("and c = :categoria");
-		Query q = getEntityManager().createQuery(s.toString());
-		q.setParameter("categoria", c);
-		return q.getResultList();
-	}
+    public List<Object[]> listForaPrazoFluxo(Categoria categoria) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(PARAM_CATEGORIA, categoria);
+        return getNamedSingleResult(FORA_PRAZO_FLUXO, parameters);
+    }
 	
 	@SuppressWarnings(UNCHECKED)
 	public List<Object[]> listForaPrazoTarefa(Categoria c) {
