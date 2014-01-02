@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
@@ -32,6 +34,7 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 @Entity
 @Table(name = Tarefa.TABLE_NAME, schema="public")
 @NamedNativeQueries({
+    @NamedNativeQuery(name=PREVIOUS_NODES, query=PREVIOUS_NODES_QUERY),
     @NamedNativeQuery(name=NOVAS_TAREFAS, query=NOVAS_TAREFAS_QUERY)
 })
 public class Tarefa implements java.io.Serializable {
