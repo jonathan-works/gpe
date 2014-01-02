@@ -19,25 +19,18 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.turno.query.LocalizacaoTurnoQuery;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.*;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 @Entity
 @Table(name=LocalizacaoTurno.TABLE_NAME, schema="public")
-@NamedQueries(value={
-		@NamedQuery(name=LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO,
-					query=LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO_QUERY),
-		@NamedQuery(name=LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM,
-					query=LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM_QUERY),
-		@NamedQuery(name=LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM,
-					query=LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM_QUERY),
-		@NamedQuery(name=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO,
-					query=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY),
-		@NamedQuery(name=LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA,
-					query=LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY),
-		@NamedQuery(name=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA,
-		            query=LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_QUERY)
-		
+@NamedQueries(value = {
+    @NamedQuery(name = LIST_BY_LOCALIZACAO, query = LIST_BY_LOCALIZACAO_QUERY),
+    @NamedQuery(name = LIST_BY_HORA_INICIO_FIM, query = LIST_BY_HORA_INICIO_FIM_QUERY),
+    @NamedQuery(name = COUNT_BY_HORA_INICIO_FIM, query = COUNT_BY_HORA_INICIO_FIM_QUERY),
+    @NamedQuery(name = LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, query = LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY),
+    @NamedQuery(name = COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA, query = COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY),
+    @NamedQuery(name = LOCALIZACAO_TURNO_BY_TAREFA, query = LOCALIZACAO_TURNO_BY_TAREFA_QUERY)
 })
 public class LocalizacaoTurno implements Serializable {
 
