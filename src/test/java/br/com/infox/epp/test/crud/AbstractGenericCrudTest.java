@@ -373,6 +373,10 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         assert PERSISTED.equals(save());
         final Object id = getId();
         assert id != null;
+        
+        newInstance();
+        setId(id);
+        
         entityActionContainer.execute();
         assert UPDATED.equals(save());
         newInstance();
