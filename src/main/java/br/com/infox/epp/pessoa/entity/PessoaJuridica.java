@@ -13,6 +13,7 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 public class PessoaJuridica extends Pessoa {
 
 	public static final String TABLE_NAME = "tb_pessoa_juridica";
+	public static final String EVENT_LOAD = "evtCarregarPessoaJuridica";
 	private static final long serialVersionUID = 1L;
 	
 	private String cnpj;
