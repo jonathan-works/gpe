@@ -19,6 +19,7 @@ public class DAOException extends Exception {
 	
 	private PostgreSQLErrorCode postgreSQLErrorCode;
 	private String localizedMessage;
+	private SQLException sqlException;
 
 	public DAOException() {
 	}
@@ -46,6 +47,10 @@ public class DAOException extends Exception {
 	@Override
 	public String getLocalizedMessage() {
 		return this.localizedMessage;
+	}
+	
+	public SQLException getSqlException() {
+		return sqlException;
 	}
 	
 	private void setLocalizedMessage() {
@@ -78,7 +83,7 @@ public class DAOException extends Exception {
 			current = current.getCause();
 		}
 		if (current != null) {
-			SQLException sqlException = (SQLException) current;
+			this.sqlException = (SQLException) current;
 			String sqlState = sqlException.getSQLState();
 			try {
 				for (PostgreSQLErrorCode code : PostgreSQLErrorCode.values()) {
