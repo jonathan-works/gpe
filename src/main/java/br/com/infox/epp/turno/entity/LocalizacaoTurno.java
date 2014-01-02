@@ -30,6 +30,7 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
     @NamedQuery(name = COUNT_BY_HORA_INICIO_FIM, query = COUNT_BY_HORA_INICIO_FIM_QUERY),
     @NamedQuery(name = LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, query = LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY),
     @NamedQuery(name = COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA, query = COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY),
+    @NamedQuery(name = DELETE_TURNOS_ANTERIORES, query=DELETE_TURNOS_ANTERIORES_QUERY),
     @NamedQuery(name = LOCALIZACAO_TURNO_BY_TAREFA, query = LOCALIZACAO_TURNO_BY_TAREFA_QUERY)
 })
 public class LocalizacaoTurno implements Serializable {
