@@ -33,6 +33,10 @@ public interface ProcessoEpaTarefaQuery {
     String FORA_PRAZO_TAREFA_QUERY = BASE_QUERY_FORA_FLUXO + "where pt.porcentagem > 100 "
             + "and pt.dataFim is null and c = :" + PARAM_CATEGORIA;
     
+    String TAREFA_PROXIMA_LIMITE = "listTarefaPertoLimite";
+    String TAREFA_PROXIMA_LIMITE_QUERY = BASE_QUERY_FORA_FLUXO + "where pt.porcentagem <= 100 "
+            + "and pt.porcentagem >= 70 and pt.dataFim is null";
+    
     String PARAM_ID_TAREFA = "idTarefa";
     String PARAM_ID_PROCESSO = "idProcesso";
     String PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA = "findProcessoEpaTarefaByIdProcessoAndIdTarefa";
