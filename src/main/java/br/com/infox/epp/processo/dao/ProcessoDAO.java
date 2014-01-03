@@ -7,7 +7,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
+import static br.com.infox.epp.processo.query.ProcessoQuery.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,15 +45,15 @@ public class ProcessoDAO extends GenericDAO {
 	public void anularTodosActorId() {
 		HibernateUtil.getSession().createSQLQuery(ANULA_TODOS_OS_ACTOR_IDS_QUERY).executeUpdate();
 	}
-	
-	public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa){
-		String hql = "update Processo set caixa = :caixa where idProcesso in (:idList)";
-		EntityUtil.getEntityManager().createQuery(hql)
-				.setParameter("caixa", caixa)
-				.setParameter("idList", idList)
-				.executeUpdate();
-		EntityUtil.getEntityManager().flush();
-	}
+
+    // TODO esse flush() é realmente necessário?
+    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_LIST_PROCESSO_PARAM, idList);
+        parameters.put(CAIXA_PARAM, idList);
+        executeNamedQueryUpdate(MOVER_PROCESSOS_PARA_CAIXA, parameters);
+        EntityUtil.getEntityManager().flush();
+    }
 	
 	public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
 		EntityUtil.flush();
