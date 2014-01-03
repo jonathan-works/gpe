@@ -49,11 +49,11 @@ public class PapelDAO extends GenericDAO {
         parameters.put(PARAM_LISTA_IDENTIFICADORES, identificadores);
         return getNamedResultList(PAPEIS_BY_IDENTIFICADORES, parameters);
     }
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao){
-		String hql = "select distinct l.papel from UsuarioLocalizacao l where l.localizacao = :loc ";
-		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("loc", localizacao).getResultList();
-	}
+
+    public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_LOCALIZACAO, localizacao);
+        return getNamedResultList(PAPEIS_BY_LOCALIZACAO, parameters);
+    }
 
 }
