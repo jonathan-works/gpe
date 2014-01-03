@@ -347,25 +347,6 @@ public final class EntityUtil implements Serializable {
 		return getSingleResult(query);
 	}
 	
-	
-	/**
-	 * @author Victor Pasqualino
-	 * Método genérico para buscar no banco um objeto da classe passada como parâmetro com o id informado
-	 * sem, no entanto fazer, a pesquisa no cache de sessão.
-	 * */
-	@SuppressWarnings(UNCHECKED)
-	public static <E> E buscaEntidadeForaDoCacheDeSessao(Class<E> clazz, Object id) {
-		if ( id == null ){
-			return null;
-		} else {			
-			StringBuilder sb = new StringBuilder();
-			sb.append("from ").append(clazz.getSimpleName()).append(" where ");
-			sb.append(getIdPropertyDescriptorName(clazz)).append(" = ?1");			 	
-			return (E) getSingleResult(getEntityManager().createQuery(sb.toString()).setParameter(1, id));
-		}
-		
-	}
-	
 	/**
 	 * @author Victor Pasqualino
 	 * Método genérico para buscar no banco um objeto do mesmo tipo e com o mesmo Id 
