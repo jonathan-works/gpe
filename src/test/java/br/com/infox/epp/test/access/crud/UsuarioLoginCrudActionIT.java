@@ -32,23 +32,17 @@ import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class UsuarioLoginCrudActionTest extends AbstractGenericCrudTest<UsuarioLogin> {
+public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLogin> {
 
     @Deployment
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
-            .addPackages("br.com.infox.core", "br.com.itx")
             .addClasses(UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
                 UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
                 ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
                 ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
                 ParametroManager.class,ParametroDAO.class)
-            .setArchiveName("epp-test.war")
-            .setMockWebXMLPath("src/test/resources/mock-web.xml")
-            .setMockComponentsXMLPath("src/test/resources/mock-components.xml")
-            .setMockPersistenceXMLPath("src/test/resources/mock-persistence.xml")
-            .setPomPath("pom.xml")
             .createDeployment()
         ;
     }
