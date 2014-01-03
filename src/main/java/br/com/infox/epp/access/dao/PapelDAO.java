@@ -1,8 +1,11 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.query.PapelQuery.*;
 import static br.com.infox.core.constants.WarningConstants.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -22,16 +25,13 @@ public class PapelDAO extends GenericDAO {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "papelDAO";
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
-		String hql = "select o from Papel o where identificador not like '/%' and o.idPapel not in ("
-				+ "select p.papel.idPapel from TipoModeloDocumentoPapel p "
-				+ "where p.tipoModeloDocumento = :tipoModeloDocumento)";
-		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("tipoModeloDocumento",
-				tipoModeloDocumento).getResultList();
-	}
-	
+
+    public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_TIPO_MODELO_DOCUMENTO, tipoModeloDocumento);
+        return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, parameters);
+    }
+
 	@SuppressWarnings(UNCHECKED)
 	public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento){
 		String hql = "select o from Papel o where identificador not like '/%' and o not in " +
