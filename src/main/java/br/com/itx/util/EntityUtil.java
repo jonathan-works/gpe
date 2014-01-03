@@ -301,12 +301,4 @@ public final class EntityUtil implements Serializable {
 		return null;
 	}
 	
-	public static String getIdPropertyDescriptorName(Class<?> clazz){
-		PropertyDescriptor id = getId(clazz);
-		if ( id == null ){
-			return null;
-		}
-		return id.getName();
-	}
-	
 }
