@@ -34,9 +34,9 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	private String tab;
 	private Object id;
 	
-    private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
-    private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
-    private static final String MSG_REGISTRO_REMOVIDO = "#{messages['entity_deleted']}";
+	protected static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
+    protected static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
+    protected static final String MSG_REGISTRO_REMOVIDO = "#{messages['entity_deleted']}";
     private static final LogProvider LOG = Logging.getLogProvider(AbstractCrudAction.class);
 	
 	/**
