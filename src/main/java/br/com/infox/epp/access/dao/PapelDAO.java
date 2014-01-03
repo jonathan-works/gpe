@@ -1,13 +1,19 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.PapelQuery.*;
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_LISTA_IDENTIFICADORES;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_LOCALIZACAO;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_PROCESSO_DOCUMENTO;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -17,7 +23,6 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.itx.util.EntityUtil;
 
 @Name(PapelDAO.NAME)
 @AutoCreate

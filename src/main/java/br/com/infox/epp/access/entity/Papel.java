@@ -1,8 +1,24 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.core.constants.LengthConstants.*;
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.access.query.PapelQuery.*;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.core.constants.LengthConstants.NOME_PADRAO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.access.query.PapelQuery.IDENTIFICADOR;
+import static br.com.infox.epp.access.query.PapelQuery.ID_PAPEL;
+import static br.com.infox.epp.access.query.PapelQuery.NOME_PAPEL;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.SEQUENCE_PAPEL;
+import static br.com.infox.epp.access.query.PapelQuery.TABLE_PAPEL;
 
 import java.util.List;
 
