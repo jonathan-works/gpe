@@ -228,22 +228,4 @@ public final class LogUtil {
 		return entityLog;
 	}
 	
-	public static void removeEntity(Object entity) {
-		if (!EntityUtil.isEntity(entity)) {
-			throw new IllegalArgumentException("O objeto não é uma entidade");
-		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("delete from ").append(entity.getClass().getName());
-		sb.append(" o where o.").append(EntityUtil.getId(entity).getName());
-		sb.append(" = :id");
-		EntityManager em = EntityUtil.getEntityManager();
-		Query query = em.createQuery(sb.toString());
-		query.setParameter("id", EntityUtil.getEntityIdObject(entity));
-		if (query.executeUpdate() > 0) {
-			EntityLog entityLog = getEntityLog(entity, TipoOperacaoLogEnum.D);
-			em.persist(entityLog);
-		}
-	}
-	
-	
- }
+}
