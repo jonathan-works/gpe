@@ -223,24 +223,6 @@ public final class EntityUtil implements Serializable {
 	}	
 	
 	/**
-	 * Metodo que recebe uma entidade e seta null no atributo que corresponde ao id. Caso
-	 * o tipo deste campo seja primitivo coloca o numero 0.
-	 * Isto é utilizado porque o hibernate aloca um Id para a entidade antecipadamente e
-	 * com isso caso ocorra um erro, como de violação de contraint, a entidade fica com um
-	 * id inválido e ocorre um erro ao persiti essa entidade. 
-	 * @param entidade
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 */
-	public static void setNullOnEntityId(Object entidade) throws IllegalAccessException, InvocationTargetException {
-		PropertyDescriptor pd = EntityUtil.getId(entidade);
-		Method writeMethod = pd.getWriteMethod();
-		Class<?> propertyType = pd.getPropertyType();
-		writeMethod.invoke(entidade, propertyType.isPrimitive() ? 0 : new Object[1]);
-	}
-	
-	/**
 	 * Metodo que cria um novo ArrayList para os atributos List de relacionamento 
 	 * da entidade. Esto é feito pois em caso de um erro na persistencia, os
 	 * List ficam com referencia para a Entidade que deveria ter sido persistida 
