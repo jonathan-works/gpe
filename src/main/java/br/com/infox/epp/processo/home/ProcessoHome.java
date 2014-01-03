@@ -53,7 +53,6 @@ import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -157,13 +156,13 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	private ProcessoDocumento buscarProcessoDocumento(Integer idDoc) {
-		return EntityUtil.find(ProcessoDocumento.class, idDoc);
+		return processoManager.find(ProcessoDocumento.class, idDoc);
 	}
 	
 	//Método para Atualizar o documento do fluxo
 	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado) throws CertificadoException{
 		if (validacaoCertificadoBemSucedida(assinado)) {
-			ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
+			ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 			ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
 			String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
 			UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioLocalizacaoAtual();
@@ -236,7 +235,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 
 	public void carregarDadosFluxo(Integer idProcessoDocumento){
-		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idProcessoDocumento);
+		ProcessoDocumento processoDocumento = buscarProcessoDocumento(idProcessoDocumento);
 		if(processoDocumento != null){
 			setPdFluxo(processoDocumento);
 			processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
@@ -455,7 +454,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 		
 	public String getNumeroProcesso(int idProcesso) {
-		Processo processo = EntityUtil.find(Processo.class, idProcesso);
+		Processo processo = processoManager.find(Processo.class, idProcesso);
 		if (processo != null) {
 			return processo.getNumeroProcesso();
 		}
