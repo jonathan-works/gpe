@@ -15,12 +15,11 @@
 */
 package br.com.itx.util;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -222,28 +221,6 @@ public final class EntityUtil implements Serializable {
 				|| ComponentUtil.hasAnnotation(pd,OneToMany.class));
 	}	
 	
-	/**
-	 * Metodo que devolve todos os PropertyDescriptor de uma entidade
-	 * que contenham determinada Annotation. O metodo faz um teste se a classe
-	 * foi criada por proxy, caso sim pega a classe pai, para buscar pelas 
-	 * anotações
-	 * @param entidade
-	 * @param annotationClass
-	 * @return
-	 */
-	public static List<PropertyDescriptor> getPropertyDescriptors(Object entidade, 
-			Class<? extends Annotation> annotationClass) {
-		List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
-		Class<?> cl = getEntityClass(entidade);
-		PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(cl);
-		for (PropertyDescriptor pd : pds) {
-			if (ComponentUtil.hasAnnotation(pd, annotationClass)) {
-				descriptors.add(pd);
-			}
-		}
-		return descriptors;
-	}		
-
 	/**
 	 * Retorna o primeiro objeto do resultado da query
 	 * 
