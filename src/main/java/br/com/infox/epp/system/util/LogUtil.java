@@ -164,32 +164,6 @@ public final class LogUtil {
 		}
 	}
 	
-	public static String toStringFields(Object component) {
-		try {
-			MeasureTime t = new MeasureTime(true);
-			PropertyDescriptor[] props = Introspector.getBeanInfo(
-					component.getClass()).getPropertyDescriptors();
-			StringBuilder builder = new StringBuilder();
-			for (PropertyDescriptor descriptor : props) {
-				if (!isCollectionClass(descriptor.getPropertyType()) && descriptor.getReadMethod() != null) {
-					Object field = descriptor.getReadMethod().invoke(component);
-					builder.append(descriptor.getName()).append('=');
-					if (field != null && EntityUtil.isEntity(field)) {
-						builder.append(toStringForLog(field));
-					} else {
-						builder.append(field);
-					}
-					builder.append("; ");
-				}
-			}
-			LOG.info("toStringFields(Object component): " + t.getTime());
-			return builder.toString();
-		} catch (Exception e) {
-		    LOG.error(".toStringFields()", e);
-			return "";
-		}
-	}
-	
 	public static Map<String, Object> getFields(Object component) {
 		try {
 			MeasureTime t = new MeasureTime(true);
