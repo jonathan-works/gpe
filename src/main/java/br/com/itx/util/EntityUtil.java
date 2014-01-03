@@ -278,21 +278,6 @@ public final class EntityUtil implements Serializable {
 		return getEntityManager().find(clazz, id);
 	}
 
-	/**
-	 * Retorna o entityManager do JPA para quando não for possível acessar o 
-	 * do Seam.
-	 * @param persistenceUnitJndiName Nome do Unit que será criado o entityManager pelo Factory
-	 * @return EntityManager
-	 */
-	public static EntityManager createEntityManagerFactory(String persistenceUnitJndiName) {
-		try {
-			EntityManagerFactory emf = (EntityManagerFactory) Naming.getInitialContext().lookup(persistenceUnitJndiName);
-			return emf.createEntityManager();
-		} catch (NamingException e) {
-            throw new IllegalArgumentException("EntityManagerFactory not found in JNDI : " + persistenceUnitJndiName, e);
-		}
-	}
-	
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;
