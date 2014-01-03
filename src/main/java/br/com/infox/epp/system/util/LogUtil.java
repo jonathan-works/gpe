@@ -29,9 +29,7 @@ import java.util.Set;
 
 import javax.faces.context.FacesContext;
 import javax.persistence.Column;
-import javax.persistence.EntityManager;
 import javax.persistence.JoinColumn;
-import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.log.LogProvider;
