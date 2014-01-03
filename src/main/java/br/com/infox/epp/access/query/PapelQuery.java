@@ -23,5 +23,9 @@ public interface PapelQuery {
     String PARAM_IDENTIFICADOR = "identificador";
     String PAPEL_BY_IDENTIFICADOR = "findPapelByIdentificador";
     String PAPEL_BY_IDENTIFICADOR_QUERY = "select o from Papel o where o.identificador = :" + PARAM_IDENTIFICADOR;
+    
+    String PARAM_LISTA_IDENTIFICADORES = "identificadores";
+    String PAPEIS_BY_IDENTIFICADORES = "listPapeisByIdentificadores";
+    String PAPEIS_BY_IDENTIFICADORES_QUERY = "select p from Papel p where identificador in (:" + PARAM_LISTA_IDENTIFICADORES + ")";
 
 }
