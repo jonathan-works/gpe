@@ -20,9 +20,9 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -31,8 +31,8 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.itx.util.EntityUtil;
 
 @Name(UserHandler.NAME)
-@BypassInterceptors
 @Scope(ScopeType.EVENT)
+@AutoCreate
 public class UserHandler {
     private static final LogProvider LOG = Logging
             .getLogProvider(UserHandler.class);
