@@ -17,11 +17,9 @@ package br.com.infox.epp.system.util;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,15 +33,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.JoinColumn;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Size;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
 
-import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.system.annotation.Ignore;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
@@ -55,7 +50,6 @@ import br.com.itx.util.EntityUtil;
 
 public final class LogUtil {
 
-	private static final int MAX_SMALL_FIELD_LIMIT = 300;
     private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
 	private static final LogProvider LOG = Logging.getLogProvider(LogUtil.class);
 	
@@ -123,14 +117,6 @@ public final class LogUtil {
 		} 
 		return object1.equals(object2);
 	}
-	
-	public static UsuarioLogin getUsuarioLogado() {
-		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
-		if (usuario != null){
-			usuario = EntityUtil.getEntityManager().find(UsuarioLogin.class, usuario.getIdUsuarioLogin());
-		}
-		return usuario;
-	}			
 	
 	public static String getIpRequest() throws LogException {
 		HttpServletRequest request = getRequest();
@@ -251,7 +237,7 @@ public final class LogUtil {
 	
 	public static EntityLog createEntityLog(Object component) {
 		EntityLog entityLog = new EntityLog();
-		entityLog.setUsuario(getUsuarioLogado());
+		entityLog.setUsuario(Authenticator.getUsuarioLogado());
 		entityLog.setDataLog(new Date());
 		try {
 			entityLog.setIp(getIpRequest());
