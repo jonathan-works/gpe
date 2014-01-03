@@ -20,7 +20,7 @@ public class UsuarioPessoaFisicaList extends EntityList<PessoaFisica> {
     
     private static final String DEFAULT_EJBQL = "select p from UsuarioLogin ul inner join ul.pessoaFisica p ";
     private static final String DEFAULT_ORDER = "p.idPessoa";
-    private static final String R1 = "#{usuarioPessoaFisicaList.usuario}";
+    private static final String R1 = "ul = #{usuarioPessoaFisicaList.usuario}";
     
     private UsuarioLogin usuario;
 

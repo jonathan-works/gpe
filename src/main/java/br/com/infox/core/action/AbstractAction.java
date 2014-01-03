@@ -1,10 +1,10 @@
 package br.com.infox.core.action;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.annotations.In;
@@ -42,6 +42,8 @@ public abstract class AbstractAction <T> {
 	protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
+	
+	private DAOException daoException;
 
 	protected T find(Class<T> c, Object id) {
 		return genericManager.find(c, id);
@@ -78,16 +80,15 @@ public abstract class AbstractAction <T> {
 		return ret;
 	}
 	
+	@SuppressWarnings(UNCHECKED)
 	private String handleBeanViolationException(ConstraintViolationException e) {
 	    getMessagesHandler().clear();
-		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-			final String message = MessageFormat.format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());
-			getMessagesHandler().add(message);
-		}
+	    getMessagesHandler().add((ConstraintViolation<Object>) e.getConstraintViolations());
 		return null;
 	}
 
 	private String handleDAOException(DAOException daoException) {
+		this.daoException = daoException;
 		PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
 		if (errorCode != null) {
 			String ret = errorCode.toString();
@@ -213,6 +214,10 @@ public abstract class AbstractAction <T> {
 	
 	protected final void setGenericManager(final GenericManager genericManager) {
 	    this.genericManager=genericManager;
+	}
+	
+	protected DAOException getDaoException() {
+		return this.daoException;
 	}
 	
 }

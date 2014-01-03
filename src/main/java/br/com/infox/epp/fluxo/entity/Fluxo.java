@@ -69,7 +69,8 @@ import br.com.itx.util.HibernateUtil;
 
 @Entity
 @Table(name = TABLE_FLUXO, schema=PUBLIC, uniqueConstraints={
-    @UniqueConstraint(columnNames={DESCRICAO_FLUXO})
+    @UniqueConstraint(columnNames={DESCRICAO_FLUXO}),
+    @UniqueConstraint(columnNames={CODIGO_FLUXO})
 })
 @NamedQueries(value={
     @NamedQuery(name=LIST_ATIVOS, query=LIST_ATIVOS_QUERY),

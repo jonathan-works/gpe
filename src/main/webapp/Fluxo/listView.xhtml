@@ -117,8 +117,8 @@
 			</wi:inputText>
 			<wi:inputText
 				 id="descricaoFluxo"
-				 label="#{messages['fluxo.descricao']}"
 				 required="true"
+				 label="#{messages['fluxo.descricao']}"
 				 value="#{fluxoCrudAction.instance.fluxo}"/>
 			<wi:inputNumber
 				 id="prazoDias"
@@ -143,10 +143,29 @@
 				 label="#{messages['field.situacao']}"
 				 value="#{fluxoCrudAction.instance.ativo}"/>
 			<ui:define name="buttons">
-				
-				<ui:include src="/WEB-INF/xhtml/components/form/buttons/fluxo.xhtml">
-					<ui:param name="reRenderSave" value="defaultTabPanel fluxoForm"></ui:param>
-				</ui:include>
+			
+			    <wi:commandButtonSave rendered="#{not fluxoCrudAction.replica}" />
+                <wi:commandButtonNew />
+			
+			    <wi:commandButton
+	                id="updateButton"
+	                action="fluxoCrudAction.criarReplica()"
+	                reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
+	                rendered="#{fluxoCrudAction.managed or fluxoCrudAction.replica}"
+	                value="Incluir como..." />
+	
+	            <wi:commandButton
+	                id="definicao"
+	                action="#{processBuilder.load(fluxoCrudAction.instance)}"
+	                value="Definição"
+	                rendered="#{fluxoCrudAction.managed}"
+	                oncomplete="openPopUp('processDefinition', '#{util.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);" />
+	            
+	            <wi:commandButton
+	                id="importarXPDL"
+	                value="#{messages['importarXPDL.button']}"
+	                rendered="#{fluxoCrudAction.managed}"
+	                onclick="openPopUp('importarXPDL', '#{util.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);" />
 			
 			</ui:define>
 		
