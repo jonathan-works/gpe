@@ -46,6 +46,10 @@ public interface ProcessoQuery {
     String MOVER_PROCESSOS_PARA_CAIXA_QUERY = "update Processo set caixa = :" + CAIXA_PARAM + " where idProcesso in (:" 
             + ID_LIST_PROCESSO_PARAM + ")";
     
+    String MOVER_PROCESSO_PARA_CAIXA = "moverProcessoParaCaixa";
+    String MOVER_PROCESSO_PARA_CAIXA_QUERY = "update public.tb_processo set id_caixa = :" + CAIXA_PARAM + 
+            " where id_processo = :" + PARAM_ID_PROCESSO;
+    
     String ATUALIZAR_PROCESSOS = "atualizarProcessos";
     String ATUALIZAR_PROCESSOS_QUERY = "update jbpm_processinstance pi set processdefinition_ = " +
             "(select max(id_) from jbpm_processdefinition pd " +
