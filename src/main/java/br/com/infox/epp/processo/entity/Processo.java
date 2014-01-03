@@ -46,7 +46,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_C
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO_CONEXAO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.*;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -94,7 +94,8 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
     @NamedNativeQuery(name=ANULA_ACTOR_ID, query=ANULA_ACTOR_ID_QUERY)
 })
 @NamedQueries(value={
-    @NamedQuery(name=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY)
+    @NamedQuery(name=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
+    @NamedQuery(name=MOVER_PROCESSOS_PARA_CAIXA, query=MOVER_PROCESSOS_PARA_CAIXA_QUERY)
 })
 public class Processo implements java.io.Serializable {
 

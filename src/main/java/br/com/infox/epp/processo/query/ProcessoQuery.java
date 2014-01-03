@@ -40,6 +40,12 @@ public interface ProcessoQuery {
     String LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY = "select o from Processo o where o.idProcesso = :" 
             + PARAM_ID_PROCESSO + " and o.actorId like :" + PARAM_ACTOR_ID;
     
+    String ID_LIST_PROCESSO_PARAM = "idList";
+    String CAIXA_PARAM = "caixa";
+    String MOVER_PROCESSOS_PARA_CAIXA = "moverProcessosParaCaixa";
+    String MOVER_PROCESSOS_PARA_CAIXA_QUERY = "update Processo set caixa = :" + CAIXA_PARAM + " where idProcesso in (:" 
+            + ID_LIST_PROCESSO_PARAM + ")";
+    
     String ATUALIZAR_PROCESSOS = "atualizarProcessos";
     String ATUALIZAR_PROCESSOS_QUERY = "update jbpm_processinstance pi set processdefinition_ = " +
             "(select max(id_) from jbpm_processdefinition pd " +
