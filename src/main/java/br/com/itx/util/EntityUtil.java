@@ -99,7 +99,7 @@ public final class EntityUtil implements Serializable {
 	}
 	
 	/**
-	 * Testa de a classe possui a anotação @Entity
+	 * Testa se a classe possui a anotação @Entity
 	 * @param obj
 	 * @return
 	 */
