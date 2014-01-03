@@ -249,10 +249,6 @@ public final class EntityUtil implements Serializable {
 		getEntityManager().flush();
 	} 
 
-	public static void flush(EntityManager em){
-		em.flush();
-	}
-		
 	/**
 	 * Devolve um List com todos os elementos de uma determinada entidade.
 	 * Ex: <code>List{@literal <E>} resultList = EntityUtil.getEntityList(Parametro.class)<code>;
