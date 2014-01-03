@@ -32,15 +32,12 @@ public class PapelDAO extends GenericDAO {
         return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, parameters);
     }
 
-	@SuppressWarnings(UNCHECKED)
-	public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento){
-		String hql = "select o from Papel o where identificador not like '/%' and o not in " +
-						"(select p.papel from TipoProcessoDocumentoPapel p " +
-						"where p.tipoProcessoDocumento = :tipoProcessoDocumento)";
-		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("tipoProcessoDocumento", 
-				tipoProcessoDocumento).getResultList();
-	}
-	
+    public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_TIPO_PROCESSO_DOCUMENTO, tipoProcessoDocumento);
+        return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, parameters);
+    }
+
 	public Papel getPapelByIndentificador(String identificador){
 		String hql = "select o from Papel o where o.identificador = :identificador";
 		Query query = getEntityManager().createQuery(hql).setParameter("identificador", identificador);
