@@ -8,6 +8,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.CAIXA_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_LIST_PROCESSO_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA;
+import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
@@ -25,7 +26,6 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoDAO.NAME)
 @AutoCreate
@@ -51,26 +51,20 @@ public class ProcessoDAO extends GenericDAO {
         executeNamedQueryUpdate(ANULA_TODOS_OS_ACTOR_IDS);
     }
 
-    // TODO esse flush() é realmente necessário?
     public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_LIST_PROCESSO_PARAM, idList);
-        parameters.put(CAIXA_PARAM, idList);
+        parameters.put(CAIXA_PARAM, caixa);
         executeNamedQueryUpdate(MOVER_PROCESSOS_PARA_CAIXA, parameters);
-        EntityUtil.getEntityManager().flush();
     }
-	
-	public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
-		EntityUtil.flush();
-		EntityUtil.getEntityManager().createNativeQuery(
-			"update public.tb_processo set id_caixa = :caixa " +
-			"where id_processo = :idProcesso")
-			.setParameter("caixa", caixa.getIdCaixa())
-			.setParameter("idProcesso", processo.getIdProcesso())
-			.executeUpdate();
-		return;
-	}
-	
+
+    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_PROCESSO, processo);
+        parameters.put(CAIXA_PARAM, caixa);
+        executeNamedQueryUpdate(MOVER_PROCESSO_PARA_CAIXA, parameters);
+    }
+
     public void removerProcessoDaCaixaAtual(Processo processo) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
