@@ -71,6 +71,7 @@ import br.com.infox.epp.search.SearchHandler;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
+import br.com.infox.ibpm.util.UserHandler;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
@@ -113,6 +114,7 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     @In private TaskInstanceManager taskInstanceManager;
     @In private ModeloDocumentoManager modeloDocumentoManager;
+    @In private UserHandler userHandler;
     private URL urlRetornoAcessoExterno;
     
 	public void createInstance() {
@@ -462,6 +464,9 @@ public class TaskInstanceHome implements Serializable {
         try {
             final Map<String,Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
             taskInstanceManager.removeUsuario((Long)result.get("idTaskInstance"));
+            userHandler.clear();
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add("Tarefa liberada com sucesso.");
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
