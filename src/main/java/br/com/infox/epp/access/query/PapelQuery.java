@@ -19,5 +19,9 @@ public interface PapelQuery {
     String PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY = "select o from Papel o where o not in " +
             "(select p.papel from TipoProcessoDocumentoPapel p " +
             "where p.tipoProcessoDocumento = :" + PARAM_TIPO_PROCESSO_DOCUMENTO + ")";
+    
+    String PARAM_IDENTIFICADOR = "identificador";
+    String PAPEL_BY_IDENTIFICADOR = "findPapelByIdentificador";
+    String PAPEL_BY_IDENTIFICADOR_QUERY = "select o from Papel o where o.identificador = :" + PARAM_IDENTIFICADOR;
 
 }
