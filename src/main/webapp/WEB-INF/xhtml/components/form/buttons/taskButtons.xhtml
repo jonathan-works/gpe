@@ -30,17 +30,6 @@
 		id="taskButtonsDiv"
 		styleClass="actionButtons"
 		>
-		
-		<script>
-			function showMsg(tarefaLiberada) {
-				if (tarefaLiberada) {
-					new infox.Messages({}).dialog("Tarefa liberada com sucesso", true, function() {
-						window.close();
-					}, false);
-				}
-			}
-		</script>
-		
 		<ui:param
 			name="props"
 			value="#{form.buttons.properties}" />
@@ -64,10 +53,9 @@
 			id="unlock"
 			execute="@this"
 			status="none"
-			data="#{taskInstanceHome.tarefaLiberada}"
 			rendered="#{processoHome.managed and !isUsuarioExterno}"
 			onmouseup="showLoading()"
-			oncomplete="#{oncomplete};hideLoading();opener.atualizaPainelFluxo();showMsg(event.data);"
+			oncomplete="#{oncomplete};hideLoading();close()"
 			render="#{reRenderSave}"
 			value="Liberar Tarefa"
 			styleClass="buttons"

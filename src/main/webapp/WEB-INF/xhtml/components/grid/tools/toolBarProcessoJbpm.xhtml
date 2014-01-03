@@ -63,7 +63,7 @@
       		title="Processo bloqueado pelo servidor #{owner}" />
       			
 		<a:commandLink action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}" execute="@this"
-		    render="painelProcessos" onclick="if (!confirm('Liberar tarefa?')) return false;"
+		    render="painelProcessos, pageBodyDialogMessage" onclick="if (!confirm('Liberar tarefa?')) return false;"
 			limitRender="true"
 		    rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}">
 		    

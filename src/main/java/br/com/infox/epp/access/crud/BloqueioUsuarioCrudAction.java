@@ -18,6 +18,7 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     private UsuarioLogin usuarioAtual;
     
     @In private BloqueioUsuarioManager bloqueioUsuarioManager;
+    private boolean isUsuarioAtualBloqueado = false;
 
     public UsuarioLogin getUsuarioAtual() {
         return usuarioAtual;
@@ -27,7 +28,9 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
         this.usuarioAtual = usuarioAtual;
         if (existeBloqueioAtivo()){
             setInstance(bloqueioUsuarioManager.getUltimoBloqueio(usuarioAtual));
+            this.isUsuarioAtualBloqueado = true;
         } else {
+        	this.isUsuarioAtualBloqueado = false;
             newInstance();
         }
     }
@@ -44,8 +47,14 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     }
     
     @Override
-    public String save() {
-        return super.save();
+    public void newInstance() {
+    	super.newInstance();
+    }
+    
+    @Override
+    protected void afterSave() {
+    	super.afterSave();
+    	this.isUsuarioAtualBloqueado = existeBloqueioAtivo();
     }
     
     private boolean existeBloqueioAtivo(){
@@ -55,7 +64,9 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
         } else {
             return false;
         }
-        
     }
 
+    public boolean isUsuarioAtualBloqueado() {
+		return this.isUsuarioAtualBloqueado;
+	}
 }

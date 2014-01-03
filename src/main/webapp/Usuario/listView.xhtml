@@ -116,7 +116,7 @@
 				maxlength="15" />
 		    <wi:selectOneMenuEnum
 		          id="tipoUsuario"
-		          label="#{messages['usuario.tipo']}"
+		          label="#{messages['usuario.tipoUsuario']}"
 		          items="#{usuarioLoginCrudAction.tiposDeUsuario}"
 		          value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
 		          showLabelSelecione="true"
@@ -323,7 +323,7 @@
 						event="change"
 						execute="@this"
 						limitRender="true"
-						render="blockDiv" />
+						render="blockDiv, buttons" />
 				</wi:selectBooleanRadio>
 				<s:div id="blockDiv">
 					<wi:inputDate
@@ -343,7 +343,9 @@
 						maxlength="50" />
 				</s:div>
 				<ui:define name="buttons">
-					<wi:commandButtonSave />
+				    <s:div id="buttons">
+					   <wi:commandButtonSave rendered="#{bloqueioUsuarioCrudAction.usuarioAtualBloqueado or bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"/>
+					</s:div>
 				</ui:define>
 			</wi:dataForm>
 			<s:div>
