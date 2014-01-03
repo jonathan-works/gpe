@@ -237,9 +237,6 @@ public class TaskInstanceHome implements Serializable {
             if (variableResolver.isEditor()) {
                 try {
                     variableResolver.resolveWhenEditor(assinar);
-                    if (assinar) {
-                        FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
-                    }
                 } catch (CertificadoException e) {
                     LOG.error("Falha na assinatura",e);
                     if (assinar) {
