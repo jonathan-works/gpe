@@ -223,29 +223,6 @@ public final class EntityUtil implements Serializable {
 	}	
 	
 	/**
-	 * Metodo que cria um novo ArrayList para os atributos List de relacionamento 
-	 * da entidade. Esto é feito pois em caso de um erro na persistencia, os
-	 * List ficam com referencia para a Entidade que deveria ter sido persistida 
-	 * (O hibernate gera um id pra estidade antes de inserir e em uma execeção, os
-	 * list (PersistentBags) apontam para este id que não existe.
-	 * @param entidade
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 */
-	public static void clearEntityLists(Object entidade) throws IllegalAccessException, InvocationTargetException {
-		List<PropertyDescriptor> descriptors = getPropertyDescriptors(entidade, OneToMany.class);
-		for (PropertyDescriptor pd : descriptors) {
-			Class<?> type = pd.getPropertyType();
-			type.getGenericSuperclass();
-			if (type.equals(List.class)) {
-				pd.getWriteMethod().invoke(entidade, new ArrayList<Object>(0));
-			}
-		}
-	}
-
-	
-	/**
 	 * Metodo que devolve todos os PropertyDescriptor de uma entidade
 	 * que contenham determinada Annotation. O metodo faz um teste se a classe
 	 * foi criada por proxy, caso sim pega a classe pai, para buscar pelas 
