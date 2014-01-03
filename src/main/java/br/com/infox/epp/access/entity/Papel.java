@@ -3,6 +3,7 @@ package br.com.infox.epp.access.entity;
 import static br.com.infox.core.constants.LengthConstants.*;
 import static br.com.infox.core.persistence.ORConstants.*;
 import static br.com.infox.epp.access.query.PapelQuery.*;
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -26,6 +29,10 @@ import org.jboss.seam.annotations.security.management.RoleName;
 
 @Entity
 @Table(name = TABLE_PAPEL, schema=PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
+@NamedQueries({
+    @NamedQuery(name=PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, 
+            query=PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY)
+})
 public class Papel implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
