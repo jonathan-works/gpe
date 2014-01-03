@@ -13,5 +13,11 @@ public interface PapelQuery {
     String PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY = "select o from Papel o where o.idPapel not in ("
             + "select p.papel.idPapel from TipoModeloDocumentoPapel p "
             + "where p.tipoModeloDocumento = :" + PARAM_TIPO_MODELO_DOCUMENTO + ")";
+    
+    String PARAM_TIPO_PROCESSO_DOCUMENTO = "tipoProcessoDocumento";
+    String PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO = "listPapeisNaoAssociadosATipoProcessoDocumento";
+    String PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY = "select o from Papel o where o not in " +
+            "(select p.papel from TipoProcessoDocumentoPapel p " +
+            "where p.tipoProcessoDocumento = :" + PARAM_TIPO_PROCESSO_DOCUMENTO + ")";
 
 }

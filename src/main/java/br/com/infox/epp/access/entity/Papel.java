@@ -30,6 +30,8 @@ import org.jboss.seam.annotations.security.management.RoleName;
 @Entity
 @Table(name = TABLE_PAPEL, schema=PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
 @NamedQueries({
+    @NamedQuery(name=PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, 
+            query=PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY),
     @NamedQuery(name=PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, 
             query=PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY)
 })
