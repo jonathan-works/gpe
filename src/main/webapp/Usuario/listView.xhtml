@@ -185,7 +185,8 @@
 	            tableTitle="#{(usuarioLoginCrudAction.instance)}"
 	            id="usuarioPessoaFisicaList"
 	            rowId="#{row.idPessoa}"
-	            listReRender="divGridLU">
+	            listReRender="divGridLU"
+	            hideOrder="true">
 	
 	            <ui:define name="headerToolBar" />
 	            <ui:define name="toolBar">
@@ -194,7 +195,7 @@
 	                    rendered="true"
 	                    limitToList="true"
 	                    status=":status"
-	                    render="usuarioPessoaFisicaForm, usuarioPessoaFisicaList"
+	                    render="usuarioPessoaFisicaForm, usuarioPessoaFisicaList, pageBodyDialogMessage"
 	                    onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
 	                    url="/img/remove.png" title="#{messages['crud.remove']}" />
 	            </ui:define>

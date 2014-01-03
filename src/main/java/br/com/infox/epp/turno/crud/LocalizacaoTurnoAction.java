@@ -63,6 +63,7 @@ public class LocalizacaoTurnoAction {
 	}
 
 	private void inserirTurnosSelecionados() {
+		boolean houveErro = false;
 		for (TurnoBean turno: turnoHandler.getTurnosSelecionados()) {
 			LocalizacaoTurno localizacaoTurno = new LocalizacaoTurno();
 			localizacaoTurno.setLocalizacao(localizacao);
@@ -73,11 +74,15 @@ public class LocalizacaoTurnoAction {
 			
 			try {
 				localizacaoTurnoManager.persist(localizacaoTurno);
-				FacesMessages.instance().add("#{messages['entity_updated']}");
 			} catch (DAOException e) {
+				houveErro = true;
 				LOG.error(".inserirTurnosSelecionados()", e);
-				FacesMessages.instance().add(e.getLocalizedMessage());
 			}
+		}
+		if (!houveErro) {
+			FacesMessages.instance().add("#{messages['entity_updated']}");
+		} else {
+			FacesMessages.instance().add("#{messages['localizacaoTurno.erroGravacaoTurno']}");
 		}
 	}
 }
