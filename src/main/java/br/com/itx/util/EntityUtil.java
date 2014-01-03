@@ -301,20 +301,6 @@ public final class EntityUtil implements Serializable {
 		return null;
 	}
 	
-	public static List<Object> getIdsFromList(List<?> listaObj) {
-		List<Object> list = new ArrayList<Object>();
-		if (listaObj == null) {
-			return Collections.emptyList();
-		}
-		for (Object object : listaObj) {
-			Object entityIdObject = getEntityIdObject(object);
-			if (entityIdObject != null) {
-				list.add(entityIdObject);
-			}
-		}
-		return list;
-	}
-	
 	public <E> E getEntidadebyParametro(String nomeEntidade, String nomeParametro, Object valorParametro){
 		StringBuilder sb = new StringBuilder();
 		sb.append("select o from ");
