@@ -89,7 +89,7 @@ public final class EntityUtil implements Serializable {
 	}
 	
 	/**
-	 * Testa de o objeto possui a anotação @Entity
+	 * Testa se o objeto possui a anotação @Entity
 	 * @param obj
 	 * @return
 	 */
