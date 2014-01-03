@@ -7,8 +7,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 
 import java.util.HashMap;
@@ -85,10 +83,4 @@ public class ProcessoDAO extends GenericDAO {
         JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY).executeUpdate();
     }
     
-    public Processo findProcessoByNumeroProcesso(String numeroProcesso){
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_NUMERO_PROCESSO, numeroProcesso);
-        return getNamedSingleResult(PROCESSO_BY_NUMERO_PROCESSO, parameters);
-    }
-
 }

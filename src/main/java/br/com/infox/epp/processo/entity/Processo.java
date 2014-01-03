@@ -42,8 +42,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_ORIGEM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
@@ -96,8 +94,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
     @NamedNativeQuery(name=ANULA_ACTOR_ID, query=ANULA_ACTOR_ID_QUERY)
 })
 @NamedQueries(value={
-    @NamedQuery(name=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
-    @NamedQuery(name=PROCESSO_BY_NUMERO_PROCESSO, query=PROCESSO_BY_NUMERO_PROCESSO_QUERY)
+    @NamedQuery(name=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query=LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY)
 })
 public class Processo implements java.io.Serializable {
 

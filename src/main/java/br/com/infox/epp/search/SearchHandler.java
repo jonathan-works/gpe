@@ -15,7 +15,7 @@
 */
 package br.com.infox.epp.search;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -56,7 +56,6 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.CONVERSATION)
 public class SearchHandler implements Serializable {
 
-	private static final String NUMERO_PROCESSO_PATTERN = "^\\d{7}-\\d{2}\\.\\d{4}\\.\\d\\.\\d{2}\\.\\d{4}";
 	private static final long serialVersionUID = 1L;
 	private String searchText;
 	private List<Map<String,Object>> searchResult;
@@ -65,7 +64,6 @@ public class SearchHandler implements Serializable {
 	private int page;
 	private int maxPageSize = 100;
 	private static final LogProvider LOG = Logging.getLogProvider(SearchHandler.class);
-	
 	
 	public String getSearchText() {
 		return searchText;
@@ -100,18 +98,6 @@ public class SearchHandler implements Serializable {
 	}
 	
 	/**
-	 * Busca o processo pelo seu Numero de Processo
-	 * 
-	 * @return	Processo cujo valor do numeroProcesso seja igual ao texto de busca, ou null
-	 */
-	private Processo searchNrProcesso()	{
-		javax.persistence.Query query = EntityUtil.getEntityManager().createQuery(
-				"select p from Processo p where p.numeroProcesso = :processo")
-				.setParameter("processo", searchText);
-		return EntityUtil.getSingleResult(query); 
-	}
-	
-	/**
 	 * Método realiza busca de processos no sistema
 	 * 
 	 * 		Caso o texto de busca seja número de processo realiza uma busca
@@ -124,15 +110,8 @@ public class SearchHandler implements Serializable {
 	 * @return	TRUE se o resultado for um processo, FALSE do contrário
 	 */
 	public boolean searchProcesso()	{
-		Processo processo = null;
-		boolean hasProcesso = false;
-		if (searchText.matches(NUMERO_PROCESSO_PATTERN)) {
-			processo = searchNrProcesso();
-		} else {
-			processo = searchIdProcesso();
-		}
-		
-		hasProcesso = processo != null;
+		Processo processo = searchIdProcesso();
+		boolean hasProcesso = processo != null;
 		if (hasProcesso) {
 			visualizarProcesso(processo);
 		}
