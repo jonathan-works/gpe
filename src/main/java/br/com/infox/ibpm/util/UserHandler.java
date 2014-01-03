@@ -118,6 +118,13 @@ public class UserHandler {
         }
         return u;
     }
+    
+    public void clear() {
+    	this.idProcesso = null;
+    	this.usuarioProcesso = null;
+    	this.usuarioTarefa = null;
+    	this.taskInstance = null;
+    }
 
     private String getLocalizacao(TaskInstance task) {
         String localizacao = JbpmUtil.instance().getLocalizacao(task)
