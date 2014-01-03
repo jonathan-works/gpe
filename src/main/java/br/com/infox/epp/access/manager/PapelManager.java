@@ -41,11 +41,6 @@ public class PapelManager extends GenericManager {
 		}
 		return papelDAO.getPapeisByListaDeIdentificadores(identificadores);
 	}
-	
-	public List<Papel> getPapeisForaDaListaDeIdentificadores(List<String> identificadores){
-	    return papelDAO.getPapeisForaDaListaDeIdentificadores(identificadores);
-	}
-	
 	public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao){
 		return papelDAO.getPapeisDeUsuarioByLocalizacao(localizacao);
 	}
