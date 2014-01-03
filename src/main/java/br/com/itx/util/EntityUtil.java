@@ -301,19 +301,6 @@ public final class EntityUtil implements Serializable {
 		return null;
 	}
 	
-	public <E> E getEntidadebyParametro(String nomeEntidade, String nomeParametro, Object valorParametro){
-		StringBuilder sb = new StringBuilder();
-		sb.append("select o from ");
-		sb.append(nomeEntidade);
-		sb.append(" o where o.");
-		sb.append(nomeParametro);
-		sb.append(" = :");
-		sb.append(nomeParametro);
-		Query query = getEntityManager().createQuery(sb.toString());
-		query.setParameter(nomeParametro, valorParametro);
-		return getSingleResult(query);
-	}
-	
 	public static String getIdPropertyDescriptorName(Class<?> clazz){
 		PropertyDescriptor id = getId(clazz);
 		if ( id == null ){
