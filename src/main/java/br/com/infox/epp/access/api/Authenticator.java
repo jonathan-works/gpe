@@ -254,7 +254,7 @@ public class Authenticator {
 	
 	/**
 	 * Ao encerrar uma sessao, limpa os processos que o servidor estava trabalhando
-	 * Obs.: usando session do hibernate pq o EM da erro de transação
+	 * 
 	 */
 	@Observer("org.jboss.seam.preDestroyContext.SESSION")
 	public void anulaActorId() {
