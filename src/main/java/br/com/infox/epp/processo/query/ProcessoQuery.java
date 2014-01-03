@@ -68,5 +68,10 @@ public interface ProcessoQuery {
             "(select max(id_) from jbpm_task t where exists" +
             "(select * from jbpm_task where name_ = t.name_ " +
             "and id_ = pl.id_task_jbpm))";
+    
+    String PARAM_NUMERO_PROCESSO = "numeroProcesso";
+    String PROCESSO_BY_NUMERO_PROCESSO = "findProcessoByNumeroProcesso";
+    String PROCESSO_BY_NUMERO_PROCESSO_QUERY = "select p from Processo p where p.numeroProcesso = :" 
+            + PARAM_NUMERO_PROCESSO;
 
 }
