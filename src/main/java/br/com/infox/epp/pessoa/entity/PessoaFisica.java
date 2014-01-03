@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
@@ -13,7 +14,10 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.itx.util.StringUtil;
 
 @Entity
-@Table(schema="public", name=PessoaFisica.TABLE_NAME)
+@Table(schema="public", name=PessoaFisica.TABLE_NAME,
+uniqueConstraints={
+    @UniqueConstraint(columnNames={"nr_cpf"})
+})
 @PrimaryKeyJoinColumn(name="id_pessoa_fisica", columnDefinition = "integer")
 public class PessoaFisica extends Pessoa {
     public static final String EVENT_LOAD = "evtCarregarPessoaFisica";
@@ -28,8 +32,17 @@ public class PessoaFisica extends Pessoa {
 		setTipoPessoa(TipoPessoaEnum.F);
 	}
 	
+	public PessoaFisica(String cpf, String nome, Date dataNascimento, boolean ativo) {
+	    super();
+	    this.cpf = cpf;
+	    this.dataNascimento = dataNascimento;
+	    setNome(nome);
+	    setAtivo(ativo);
+	}
+	
 	@Column(name="nr_cpf", nullable=false, unique=true)
 	@Size(max=LengthConstants.NUMERO_CPF)
+	@NotNull
 	public String getCpf() {
 		return cpf;
 	}
@@ -38,6 +51,7 @@ public class PessoaFisica extends Pessoa {
 	}
 	
 	@Column(name="dt_nascimento", nullable=false)
+	@NotNull
 	public Date getDataNascimento() {
 		return dataNascimento;
 	}
