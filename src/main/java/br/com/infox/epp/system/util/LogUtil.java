@@ -109,30 +109,6 @@ public final class LogUtil {
 	}		
 	
 	/**
-	 * Testa se o atributo de um objeto é considerado de tamanho pequeno para o armazenamento no log.
-	 * @param entidade
-	 * @param nomeAtributo
-	 * @return
-	 * @throws InstantiationException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws Exception
-	 */
-	public static boolean isSmallField(Object entidade, String nomeAtributo) 
-	        throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
-		Class<?> classAtributo = getType(entidade, nomeAtributo);
-		if (String.class.equals(classAtributo)) {
-			PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(
-					entidade.getClass().newInstance(), nomeAtributo);	
-			Size lengthAnnotation = pd.getReadMethod().getAnnotation(Size.class);
-			return lengthAnnotation != null && lengthAnnotation.max() <= MAX_SMALL_FIELD_LIMIT;
-		} else {
-			return !isBinario(classAtributo);
-		}
-	}	
-	
-	/**
 	 * Testa se a entidade possui a anotação @Ignore, caso possua não será logada
 	 * @param entidade
 	 * @return
