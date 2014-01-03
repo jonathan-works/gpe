@@ -82,15 +82,13 @@
 		</wi:appletAssinatura>
 	</s:div>
 		<script type="text/javascript">
-		//alert("test");
-			//<![CDATA[
 			namespace("infox.editor.#{editorId}",{
 				useBase64:function useBase64() {
 					return "true";
 				},
 				get isSigned() {
 					return ((#{rich:jQuery(idSignature)}.val().trim() != "") 
-							&& (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
+							&amp;&amp; (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
 				},
 				addSignature:function addSignature() {
 					infox.showLoading();
@@ -116,7 +114,6 @@
 					});
 				}
 			});
-			//]]>
 		</script>
 
 </ui:composition>

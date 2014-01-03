@@ -52,7 +52,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     @Override
     protected void afterSave(String ret) {
         final UsuarioLogin usuario = getInstance();
-        if (usuario.getSenha() == null || ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
+        if (PERSISTED.equals(ret)) {
             try {
                 passwordService.requisitarNovaSenha(usuario.getEmail(), "");
             } catch (BusinessException be){

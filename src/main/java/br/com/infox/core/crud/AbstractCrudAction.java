@@ -1,6 +1,6 @@
 package br.com.infox.core.crud;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -34,8 +34,9 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	private String tab;
 	private Object id;
 	
-    private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
-    private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
+	protected static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
+    protected static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
+    protected static final String MSG_REGISTRO_REMOVIDO = "#{messages['entity_deleted']}";
     private static final LogProvider LOG = Logging.getLogProvider(AbstractCrudAction.class);
 	
 	/**
@@ -89,6 +90,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 			this.id = id;
 			setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
 			tab = TAB_FORM;
+		} else if (id == null) {
+			this.id = null;
 		}
 	}
 	
@@ -198,6 +201,16 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 		return super.remove(instance);
 	}
 
+	@Override
+	public String remove(T obj) {
+		String ret = super.remove(obj);
+		if (REMOVED.equals(ret)) {
+			getMessagesHandler().clear();
+			getMessagesHandler().add(MSG_REGISTRO_REMOVIDO);
+		}
+		return ret;
+	}
+	
 	/**
 	 * Ao mudar para a aba de pesquisa é criada uma nova instancia.
 	 */

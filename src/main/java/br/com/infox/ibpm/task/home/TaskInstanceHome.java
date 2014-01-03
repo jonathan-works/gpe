@@ -71,6 +71,7 @@ import br.com.infox.epp.search.SearchHandler;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
+import br.com.infox.ibpm.util.UserHandler;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
@@ -105,7 +106,6 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinar = Boolean.FALSE;
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
-    private boolean tarefaLiberada = false;
     
     @In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In private SituacaoProcessoManager situacaoProcessoManager;
@@ -113,6 +113,7 @@ public class TaskInstanceHome implements Serializable {
     @In private ProcessoEpaTarefaManager processoEpaTarefaManager;
     @In private TaskInstanceManager taskInstanceManager;
     @In private ModeloDocumentoManager modeloDocumentoManager;
+    @In private UserHandler userHandler;
     private URL urlRetornoAcessoExterno;
     
 	public void createInstance() {
@@ -236,9 +237,6 @@ public class TaskInstanceHome implements Serializable {
             if (variableResolver.isEditor()) {
                 try {
                     variableResolver.resolveWhenEditor(assinar);
-                    if (assinar) {
-                        FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
-                    }
                 } catch (CertificadoException e) {
                     LOG.error("Falha na assinatura",e);
                     if (assinar) {
@@ -462,6 +460,9 @@ public class TaskInstanceHome implements Serializable {
         try {
             final Map<String,Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
             taskInstanceManager.removeUsuario((Long)result.get("idTaskInstance"));
+            userHandler.clear();
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add("Tarefa liberada com sucesso.");
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
@@ -479,7 +480,6 @@ public class TaskInstanceHome implements Serializable {
         if (BusinessProcess.instance().hasCurrentTask()) {
             try {
                 taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
-                this.tarefaLiberada = true;
             } catch (DAOException e) {
                 LOG.error(".removeUsuario() - ", e);
             }    
@@ -625,7 +625,4 @@ public class TaskInstanceHome implements Serializable {
         this.urlRetornoAcessoExterno = urlRetornoAcessoExterno;
     }
     
-    public boolean isTarefaLiberada() {
-		return tarefaLiberada;
-	}
 }

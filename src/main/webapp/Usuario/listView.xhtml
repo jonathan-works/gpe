@@ -116,7 +116,7 @@
 				maxlength="15" />
 		    <wi:selectOneMenuEnum
 		          id="tipoUsuario"
-		          label="#{messages['usuario.tipo']}"
+		          label="#{messages['usuario.tipoUsuario']}"
 		          items="#{usuarioLoginCrudAction.tiposDeUsuario}"
 		          value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
 		          showLabelSelecione="true"
@@ -185,7 +185,8 @@
 	            tableTitle="#{(usuarioLoginCrudAction.instance)}"
 	            id="usuarioPessoaFisicaList"
 	            rowId="#{row.idPessoa}"
-	            listReRender="divGridLU">
+	            listReRender="divGridLU"
+	            hideOrder="true">
 	
 	            <ui:define name="headerToolBar" />
 	            <ui:define name="toolBar">
@@ -194,7 +195,7 @@
 	                    rendered="true"
 	                    limitToList="true"
 	                    status=":status"
-	                    render="usuarioPessoaFisicaForm, usuarioPessoaFisicaList"
+	                    render="usuarioPessoaFisicaForm, usuarioPessoaFisicaList, pageBodyDialogMessage"
 	                    onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
 	                    url="/img/remove.png" title="#{messages['crud.remove']}" />
 	            </ui:define>
@@ -323,7 +324,7 @@
 						event="change"
 						execute="@this"
 						limitRender="true"
-						render="blockDiv" />
+						render="blockDiv, buttons" />
 				</wi:selectBooleanRadio>
 				<s:div id="blockDiv">
 					<wi:inputDate
@@ -343,7 +344,9 @@
 						maxlength="50" />
 				</s:div>
 				<ui:define name="buttons">
-					<wi:commandButtonSave />
+				    <s:div id="buttons">
+					   <wi:commandButtonSave rendered="#{bloqueioUsuarioCrudAction.usuarioAtualBloqueado or bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"/>
+					</s:div>
 				</ui:define>
 			</wi:dataForm>
 			<s:div>

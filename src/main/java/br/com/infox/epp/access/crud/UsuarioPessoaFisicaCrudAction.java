@@ -88,6 +88,8 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
         try {
             getGenericManager().update(usuarioAssociado);
             newInstance();
+			getMessagesHandler().clear();
+			getMessagesHandler().add(MSG_REGISTRO_REMOVIDO);
             return REMOVED;
         } catch (DAOException e) {
             LOG.error(".remove()", e);
