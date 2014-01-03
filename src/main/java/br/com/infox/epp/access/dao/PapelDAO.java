@@ -38,11 +38,11 @@ public class PapelDAO extends GenericDAO {
         return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, parameters);
     }
 
-	public Papel getPapelByIndentificador(String identificador){
-		String hql = "select o from Papel o where o.identificador = :identificador";
-		Query query = getEntityManager().createQuery(hql).setParameter("identificador", identificador);
-		return EntityUtil.getSingleResult(query);
-	}
+    public Papel getPapelByIndentificador(String identificador) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_IDENTIFICADOR, identificador);
+        return getNamedSingleResult(PAPEL_BY_IDENTIFICADOR, parameters);
+    }
 	
 	
 	@SuppressWarnings(UNCHECKED)
