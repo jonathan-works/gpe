@@ -15,7 +15,7 @@
 */
 package br.com.infox.ibpm.util;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.HashMap;
 import java.util.List;
