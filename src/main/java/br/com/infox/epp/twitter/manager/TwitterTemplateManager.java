@@ -11,11 +11,11 @@ import br.com.infox.epp.twitter.entity.TwitterTemplate;
 public class TwitterTemplateManager extends GenericManager {
 
     private static final long serialVersionUID = 1L;
-    private static final Class<TwitterTemplate> clazz = TwitterTemplate.class;
+    private static final Class<TwitterTemplate> CLASS = TwitterTemplate.class;
     public static final String NAME = "twitterTemplateManager";
     
     public TwitterTemplate find(Integer idTwitterTemplate) {
-        return super.find(clazz, idTwitterTemplate);
+        return super.find(CLASS, idTwitterTemplate);
     }
 
 }
