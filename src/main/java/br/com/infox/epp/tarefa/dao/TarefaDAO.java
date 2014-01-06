@@ -2,7 +2,7 @@ package br.com.infox.epp.tarefa.dao;
 
 import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.PARAM_ID_TAREFA;
-import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +42,12 @@ public class TarefaDAO extends GenericDAO {
      */
     public void encontrarNovasTarefas() {
         executeNamedQueryUpdate(NOVAS_TAREFAS);
+    }
+    
+    public Tarefa getTarefa(long idJbpmTask){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_JBPM_TASK_PARAM, idJbpmTask);
+        return getNamedSingleResult(TAREFA_BY_ID_JBPM_TASK, parameters);
     }
 
 }
