@@ -6,15 +6,16 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.itx.util.EntityUtil;
 
 @Name(AssinaturaDocumentoService.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.EVENT)
 @AutoCreate
-public class AssinaturaDocumentoService {
+public class AssinaturaDocumentoService extends GenericManager{
 	
-	public static final String NAME = "assinaturaDocumentoService";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "assinaturaDocumentoService";
 	
 	public Boolean isDocumentoAssinado(ProcessoDocumento processoDocumento){
 		return !Strings.isEmpty(processoDocumento.getProcessoDocumentoBin().getCertChain()) && 
@@ -22,7 +23,7 @@ public class AssinaturaDocumentoService {
 	}
 	
 	public Boolean isDocumentoAssinado(Integer idDoc){
-		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idDoc);
+		ProcessoDocumento processoDocumento = find(ProcessoDocumento.class, idDoc);
 		return processoDocumento != null && isDocumentoAssinado(processoDocumento);
 	}
 }
