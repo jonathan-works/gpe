@@ -83,17 +83,6 @@ public class TaskListenerService extends GenericManager {
 		}
 	}
 
-	@Observer(Event.EVENTTYPE_TASK_END)
-	public void onEndJbpmTask(ExecutionContext context) throws DAOException {
-		ProcessoEpaTarefa pt = processoEpaTarefaManager.getByTaskInstance
-									(context.getTaskInstance().getId());
-		Date dtFinalizacao = context.getTaskInstance().getEnd();
-		pt.setDataFim(dtFinalizacao);
-		pt.setUltimoDisparo(dtFinalizacao);
-		update(pt);
-		processoEpaTarefaManager.updateTempoGasto(dtFinalizacao, pt);
-	}
-	
 	@Observer(Event.EVENTTYPE_PROCESS_END)
 	public void onEndProcess(ExecutionContext context) throws DAOException {
 		Processo processo = JbpmUtil.getProcesso();
