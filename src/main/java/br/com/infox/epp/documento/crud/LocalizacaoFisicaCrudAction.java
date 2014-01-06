@@ -37,9 +37,9 @@ public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<Loc
     }
     
     @Override
-    protected void afterSave() {
-        limparTrees();
-        super.afterSave();
+    public void newInstance() {
+    	super.newInstance();
+    	limparTrees();
     }
     
     protected void limparTrees(){
