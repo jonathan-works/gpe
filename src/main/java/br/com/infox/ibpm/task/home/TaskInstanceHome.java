@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,7 @@ import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.search.Indexer;
 import br.com.infox.epp.search.Reindexer;
 import br.com.infox.epp.search.SearchHandler;
+import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
@@ -409,12 +411,24 @@ public class TaskInstanceHome implements Serializable {
     private void finalizarTaskDoJbpm(String transition) {
         try {
             BusinessProcess.instance().endTask(transition);
+            atualizarBam();
         } catch (JbpmException e) {
             LOG.error(".end()", e);
         }
     }
 
-    private void limparEstado(ProcessoHome processoHome) {
+    private void atualizarBam() {
+    	ProcessoEpaTarefa pt = processoEpaTarefaManager.getByTaskInstance(taskInstance.getId());
+		Date dtFinalizacao = taskInstance.getEnd();
+		pt.setDataFim(dtFinalizacao);
+		try {
+			processoEpaTarefaManager.updateTempoGasto(dtFinalizacao, pt);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void limparEstado(ProcessoHome processoHome) {
         this.currentTaskInstance = null;
         processoHome.setIdProcessoDocumento(null);
     }
