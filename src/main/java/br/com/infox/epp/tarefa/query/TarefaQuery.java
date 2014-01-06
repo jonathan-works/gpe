@@ -19,5 +19,10 @@ public interface TarefaQuery {
             + "inner join jbpm_task taskTo ON (taskTo.tasknode_=t.to_) "
             + "inner join tb_tarefa_jbpm tjTo ON (tjTo.id_jbpm_task=taskTo.id_) "
             + "where tjTo.id_tarefa=:" + PARAM_ID_TAREFA + " group by nodeFrom.name_";
+    
+    String ID_JBPM_TASK_PARAM = "idJbpmTask";
+    String TAREFA_BY_ID_JBPM_TASK = "tarefaByIdJbpmTask";
+    String TAREFA_BY_ID_JBPM_TASK_QUERY = "select o from Tarefa o inner join o.tarefaJbpmList tJbpm where tJbpm.idJbpmTask = :" 
+            + ID_JBPM_TASK_PARAM;
 
 }
