@@ -3,6 +3,7 @@ package br.com.infox.epp.test.crud;
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
 import static br.com.infox.core.action.AbstractAction.REMOVED;
 import static br.com.infox.core.action.AbstractAction.UPDATED;
+import static java.text.MessageFormat.format;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
@@ -18,9 +19,9 @@ import org.jboss.seam.mock.JUnitSeamTest;
 import org.jboss.seam.servlet.ServletSessionMap;
 import org.junit.Test;
 
-//import br.com.infox.core.action.AbstractAction;
-
 public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
+    private static final String ENT_EXP = "'#{'{0}.instance.{1}'}'";
+    private static final String COMP_EXP = "'#{'{0}.{1}'}'";
     private static final String ATIVO = "ativo";
     protected static final String SERVLET_3_0 = "Servlet 3.0";
     
@@ -29,7 +30,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             string = "-";
         }
         
-        StringBuilder sb = new StringBuilder(string);
+        final StringBuilder sb = new StringBuilder(string);
         int length = string.length();
         if (length < topLength) {
             for (int i = 0, l = topLength-length; i < l; i++) {
@@ -46,11 +47,6 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         return Expressions.instance().createMethodExpression(methodExpression).invoke(args);
     }
 
-    protected final Object invokeMethod(final String componentName, final String methodName, Object... args) {
-        final String expression = new StringBuilder().append("#{").append(componentName).append(".").append(methodName).append("}").toString();
-        return invokeMethod(expression, args);
-    }
-
     /**
      * Evaluate (get) a value binding
      */
@@ -59,12 +55,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     }
 
     protected final Object getComponentValue(final String componentName, final String fieldName) {
-        final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".").append(fieldName).append("}").toString();
-        return Expressions.instance().createValueExpression(valueExpression).getValue();
-    }
-    
-    protected final Object getValue(final String componentName, final String fieldName) {
-        final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".instance.").append(fieldName).append("}").toString();
+        final String valueExpression = format(COMP_EXP, componentName, fieldName);
         return Expressions.instance().createValueExpression(valueExpression).getValue();
     }
 
@@ -76,12 +67,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     }
 
     protected final void setComponentValue(final String componentName, final String fieldName, final Object value) {
-        final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".").append(fieldName).append("}").toString();
-        Expressions.instance().createValueExpression(valueExpression).setValue(value);
-    }
-
-    protected final void setValue(final String componentName, final String fieldName, final Object value) {
-        final String valueExpression = new StringBuilder().append("#{").append(componentName).append(".instance.").append(fieldName).append("}").toString();
+        final String valueExpression = format(COMP_EXP, componentName, fieldName);
         Expressions.instance().createValueExpression(valueExpression).setValue(value);
     }
 
@@ -141,7 +127,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             }
         }
     }
-
+    
     protected boolean compareEntityValues(final T entity) {
         final Object entityInstance = getInstance();
         return entityInstance == entity || (entityInstance != null && entityInstance.equals(entity));
@@ -269,17 +255,17 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     }
 
     protected void setEntityValue(final String fieldName, final Object codigoDocumento) {
-        setValue(getComponentName(), fieldName, codigoDocumento);
+        setValue(format(ENT_EXP, getComponentName(), fieldName), codigoDocumento);
     }
     
     protected Object getEntityValue(final String fieldName) {
-        return getValue(getComponentName(), fieldName);
+        return getValue(format(ENT_EXP, getComponentName(), fieldName));
     }
 
     protected abstract String getComponentName();
 
     protected void newInstance() {
-        invokeMethod(getComponentName(), "newInstance");
+        invokeMethod(format(COMP_EXP,getComponentName(),"newInstance"));
     }
     
     protected Object getInstance() {
@@ -287,15 +273,15 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     }
     
     protected Object save() {
-        return invokeMethod(getComponentName(), "save");
+        return invokeMethod(format(COMP_EXP,getComponentName(), "save"));
     }
     
     protected Object remove() {
-        return invokeMethod(getComponentName(), "remove");
+        return invokeMethod(format(COMP_EXP,getComponentName(), "remove"));
     }
     
     protected Object inactivate() {
-        return invokeMethod("#{"+getComponentName()+".inactive("+getComponentName()+".instance)}");
+        return invokeMethod(format("'#{'{0}.inactive({0}.instance)'}'", getComponentName()));
     }
     
     protected Object getId() {
@@ -306,16 +292,15 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         setComponentValue(getComponentName(), "id", value);
     }
 
-    private void persistFailTest(final T entity) {
+    protected void persistFailTest(final T entity) {
         newInstance();
         initEntity(entity);
-        
         assert !PERSISTED.equals(save());
         Object id = getId();
         assertNull(id);
     }
     
-    private void persistSuccessTest(final T entity) {
+    protected void persistSuccessTest(final T entity) {      
         newInstance();
         initEntity(entity);
         final Object persistResult = save();
@@ -330,7 +315,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         assert compareEntityValues(entity);
     }
 
-    private void inactivateSuccessTest(final T entity) {
+    protected void inactivateSuccessTest(final T entity) {
         newInstance();
         initEntity(entity);
         assert PERSISTED.equals(save());
@@ -339,8 +324,8 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         assert UPDATED.equals(inactivate());
         assert Boolean.FALSE.equals(getEntityValue(ATIVO));
     }
-    
-    private void inactivateFailTest(final T entity) {
+
+    protected void inactivateFailTest(final T entity) {
         newInstance();
         initEntity(entity);
         assert PERSISTED.equals(save());
@@ -350,7 +335,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         assert Boolean.TRUE.equals(getEntityValue(ATIVO));
     }
     
-    private void removeSuccessTest(final T entity) {
+    protected void removeSuccessTest(final T entity) {
         newInstance();
         initEntity(entity);
         assert PERSISTED.equals(save());
@@ -358,21 +343,23 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         assert REMOVED.equals(remove());
     }
     
-    private void removeFailTest(final T entity) {
+    protected void removeFailTest(final T entity) {
         newInstance();
         initEntity(entity);
         assert getId() == null;
         assert PERSISTED.equals(save());
         assert REMOVED.equals(remove());
-        assert !REMOVED.equals(remove());
     }
     
-    private void updateSuccessTest(final EntityActionContainer<T> entityActionContainer) {
+    protected void updateSuccessTest(final EntityActionContainer<T> entityActionContainer) {
         newInstance();
         initEntity(entityActionContainer.getEntity());
         assert PERSISTED.equals(save());
         final Object id = getId();
         assert id != null;
+        
+        newInstance();
+        setId(id);
         entityActionContainer.execute();
         assert UPDATED.equals(save());
         newInstance();
@@ -380,7 +367,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         assert !compareEntityValues(entityActionContainer.getEntity());
     }
     
-    private void updateFailTest(final EntityActionContainer<T> entityActionContainer) {
+    protected void updateFailTest(final EntityActionContainer<T> entityActionContainer) {
         newInstance();
         initEntity(entityActionContainer.getEntity());
         assert PERSISTED.equals(save());

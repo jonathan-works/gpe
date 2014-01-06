@@ -21,7 +21,7 @@ import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class ClassificacaoDocumentoCrudTest extends AbstractGenericCrudTest<TipoProcessoDocumento> {
+public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoProcessoDocumento> {
 
     @Deployment
     @OverProtocol(SERVLET_3_0)

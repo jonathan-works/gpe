@@ -2,7 +2,7 @@ package br.com.infox.epp.access.crud;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -32,14 +32,15 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
 
     public void setUsuarioAssociado(UsuarioLogin usuarioAssociado) {
         this.usuarioAssociado = usuarioAssociado;
-        if (getInstance().getNome() == null && usuarioAssociado.getPessoaFisica() != null){
-            setInstance(usuarioAssociado.getPessoaFisica());
+        final PessoaFisica pessoaFisica = usuarioAssociado.getPessoaFisica();
+        if (getInstance().getNome() == null && pessoaFisica != null){
+            setInstance(pessoaFisica);
         }
     }
     
     public void searchByCpf(String cpf){
         newInstance();
-        PessoaFisica pf = pessoaManager.getPessoaFisicaByCpf(cpf);
+        final PessoaFisica pf = pessoaManager.getPessoaFisicaByCpf(cpf);
         if (pf != null){
             setInstance(pf);
         } else {
@@ -49,10 +50,11 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
     
     @Override
     protected boolean beforeSave() {
-        if (getInstance().getAtivo() == null){
-            getInstance().setAtivo(true);
+        final PessoaFisica entityInstance = getInstance();
+        if (entityInstance.getAtivo() == null){
+            entityInstance.setAtivo(Boolean.TRUE);
         }
-        return super.beforeSave();
+        return Boolean.TRUE;
     }
     
     @Override
@@ -65,8 +67,9 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
                 return ret;
             } catch (DAOException e) {
                 if (e.getPostgreSQLErrorCode() == PostgreSQLErrorCode.UNIQUE_VIOLATION){
-                    FacesMessages.instance().clear();
-                    FacesMessages.instance().add(PESSOA_JA_ASSOCIADA);
+                    final StatusMessages messagesHandler = getMessagesHandler();
+                    messagesHandler.clear();
+                    messagesHandler.add(PESSOA_JA_ASSOCIADA);
                     LOG.debug(".save()", e);
                 } else {
                     LOG.error(".save()", e);

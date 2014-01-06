@@ -13,6 +13,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
@@ -54,6 +55,7 @@ public abstract class Pessoa implements Serializable {
 	
 	@Column(name="nm_pessoa", nullable=false, length=LengthConstants.NOME_ATRIBUTO)
 	@Size(max=LengthConstants.NOME_ATRIBUTO)
+	@NotNull
 	public String getNome() {
 		return nome;
 	}
