@@ -11,9 +11,9 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
-import br.com.itx.util.EntityUtil;
 
 @Name(VariavelProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -25,9 +25,9 @@ public class VariavelProcessoAction implements Serializable {
 	private Boolean possuiVariaveis;
 	private List<VariavelProcesso> variaveis;
 	private ProcessoEpa processoEpa;
-	
-	@In
-	private VariavelProcessoService variavelProcessoService;
+
+    @In private VariavelProcessoService variavelProcessoService;
+    @In private ProcessoEpaManager processoEpaManager;
 	
 	public Boolean possuiVariaveis() {
 		if (this.possuiVariaveis == null) {
@@ -48,7 +48,7 @@ public class VariavelProcessoAction implements Serializable {
 	}
 	
 	public void setProcesso(Processo processo) {
-		this.processoEpa = EntityUtil.find(ProcessoEpa.class, processo.getIdProcesso());
+		this.processoEpa = processoEpaManager.find(ProcessoEpa.class, processo.getIdProcesso());
 	}
 	
 	public void save() {
