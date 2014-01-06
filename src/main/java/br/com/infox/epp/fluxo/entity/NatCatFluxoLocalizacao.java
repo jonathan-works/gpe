@@ -1,14 +1,21 @@
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF_QUERY;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF_QUERY;
+import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.HERANCA;
+import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.ID_LOCALIZACAO;
+import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.ID_NAT_CAT_FLUXO;
+import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.ID_NAT_CAT_FLUXO_LOCALIZACAO;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.LIST_BY_LOCALIZACAO_AND_PAPEL_QUERY;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.LIST_BY_NAT_CAT_FLUXO;
-import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.*;
+import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.LIST_BY_NAT_CAT_FLUXO_QUERY;
+import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.SEQUENCE_NAT_CAT_FLUXO_LOCALIZACAO;
+import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.TABLE_NAT_CAT_FLUXO_LOCALIZACAO;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

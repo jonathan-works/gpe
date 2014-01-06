@@ -15,7 +15,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
-import br.com.infox.epp.turno.query.LocalizacaoTurnoQuery;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.*;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 /**
@@ -39,30 +39,30 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	 */
 	public LocalizacaoTurno getTurnoTarefa(Integer idProcesso, Date dataAnterior, Date dataAtual, DiaSemanaEnum diaSemana) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_IDPROCESSO, idProcesso);
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, new Time(dataAnterior.getTime()));
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM, new Time(dataAtual.getTime()));
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
+		parameters.put(QUERY_PARAM_IDPROCESSO, idProcesso);
+		parameters.put(QUERY_PARAM_HORA_INICIO, new Time(dataAnterior.getTime()));
+		parameters.put(QUERY_PARAM_HORA_FIM, new Time(dataAtual.getTime()));
+		parameters.put(QUERY_PARAM_DIA_SEMANA, diaSemana);
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dataAtual);
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
-		return getNamedSingleResult(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
+		parameters.put(QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
+		parameters.put(QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
+		parameters.put(QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
+		return getNamedSingleResult(LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
 	}
 	
 	public List<LocalizacaoTurno> getTurnosTarefa(final long idTaskInstance, final DiaSemanaEnum diaSemana, final Date dataAtual) {
 	    final Map<String, Object> parameters = new HashMap<String, Object>();
-	    parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ID_TASK_INSTANCE, idTaskInstance);
-	    parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
+	    parameters.put(QUERY_PARAM_ID_TASK_INSTANCE, idTaskInstance);
+	    parameters.put(QUERY_PARAM_DIA_SEMANA, diaSemana);
 	    
 	    Calendar calendar = new GregorianCalendar();
 	    calendar.setTime(dataAtual);
-        parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
-        parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
-        parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
-	    return getNamedResultList(LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA,parameters);
+        parameters.put(QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
+        parameters.put(QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
+        parameters.put(QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
+	    return getNamedResultList(LOCALIZACAO_TURNO_BY_TAREFA,parameters);
 	}
 	
 	/**
@@ -73,15 +73,15 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	 */
 	public Long countTurnoTarefaDia(ProcessoEpaTarefa pt, Date data, DiaSemanaEnum diaSemana) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ID_TASK_INSTANCE, pt.getTaskInstance());
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA, diaSemana);
+		parameters.put(QUERY_PARAM_ID_TASK_INSTANCE, pt.getTaskInstance());
+		parameters.put(QUERY_PARAM_DIA_SEMANA, diaSemana);
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(data);
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
-		return getNamedSingleResult(LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA, parameters);
+		parameters.put(QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
+		parameters.put(QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
+		parameters.put(QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
+		return getNamedSingleResult(COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA, parameters);
 	}
 
 	/**
@@ -92,9 +92,9 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	 */
 	public List<LocalizacaoTurno> listByLocalizacao(Localizacao localizacao) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_LOCALIZACAO, localizacao);
+		parameters.put(QUERY_PARAM_LOCALIZACAO, localizacao);
 		List<LocalizacaoTurno> resultList = getNamedResultList
-								(LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO, 
+								(LIST_BY_LOCALIZACAO, 
 								 parameters);
 		return resultList;		
 	}
@@ -102,27 +102,28 @@ public class LocalizacaoTurnoDAO extends GenericDAO {
 	public List<LocalizacaoTurno> listByHoraInicioFim(Localizacao l, 
 			Time horaInicio, Time horaFim) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_LOCALIZACAO, l);
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, horaInicio);
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM, horaFim);
+		parameters.put(QUERY_PARAM_LOCALIZACAO, l);
+		parameters.put(QUERY_PARAM_HORA_INICIO, horaInicio);
+		parameters.put(QUERY_PARAM_HORA_FIM, horaFim);
 		List<LocalizacaoTurno> resultList = getNamedResultList(
-				LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM, parameters);
+				LIST_BY_HORA_INICIO_FIM, parameters);
 		return resultList;
 	}
 	
 	public Integer countByHoraInicioFim(Localizacao l, 
 			Time horaInicio, Time horaFim) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_LOCALIZACAO, l);
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO, horaInicio);
-		parameters.put(LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM, horaFim);
+		parameters.put(QUERY_PARAM_LOCALIZACAO, l);
+		parameters.put(QUERY_PARAM_HORA_INICIO, horaInicio);
+		parameters.put(QUERY_PARAM_HORA_FIM, horaFim);
 		return getNamedSingleResult(
-				LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM, parameters);
+				COUNT_BY_HORA_INICIO_FIM, parameters);
 	}
 	
-	public void removerTurnosAnteriores(Localizacao localizacao){
-		String hql = "delete from LocalizacaoTurno o where o.localizacao = :localizacao";
-		getEntityManager().createQuery(hql).setParameter("localizacao", localizacao).executeUpdate();
-	}
-	
+    public void removerTurnosAnteriores(Localizacao localizacao) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(QUERY_PARAM_LOCALIZACAO, localizacao);
+        executeNamedQueryUpdate(DELETE_TURNOS_ANTERIORES, parameters);
+    }
+    
 }

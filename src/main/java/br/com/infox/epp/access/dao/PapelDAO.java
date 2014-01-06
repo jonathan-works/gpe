@@ -1,10 +1,19 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_LISTA_IDENTIFICADORES;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_LOCALIZACAO;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_PROCESSO_DOCUMENTO;
 
+import java.util.HashMap;
 import java.util.List;
-
-import javax.persistence.Query;
+import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -14,7 +23,6 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.itx.util.EntityUtil;
 
 @Name(PapelDAO.NAME)
 @AutoCreate
@@ -22,48 +30,35 @@ public class PapelDAO extends GenericDAO {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "papelDAO";
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
-		String hql = "select o from Papel o where identificador not like '/%' and o.idPapel not in ("
-				+ "select p.papel.idPapel from TipoModeloDocumentoPapel p "
-				+ "where p.tipoModeloDocumento = :tipoModeloDocumento)";
-		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("tipoModeloDocumento",
-				tipoModeloDocumento).getResultList();
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento){
-		String hql = "select o from Papel o where identificador not like '/%' and o not in " +
-						"(select p.papel from TipoProcessoDocumentoPapel p " +
-						"where p.tipoProcessoDocumento = :tipoProcessoDocumento)";
-		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("tipoProcessoDocumento", 
-				tipoProcessoDocumento).getResultList();
-	}
-	
-	public Papel getPapelByIndentificador(String identificador){
-		String hql = "select o from Papel o where o.identificador = :identificador";
-		Query query = getEntityManager().createQuery(hql).setParameter("identificador", identificador);
-		return EntityUtil.getSingleResult(query);
-	}
-	
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<Papel> getPapeisByListaDeIdentificadores(List<String> identificadores){
-		String hql = "select p from Papel p where identificador in (:list)";
-		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("list", identificadores).getResultList();
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<Papel> getPapeisForaDaListaDeIdentificadores(List<String> identificadores){
-        String hql = "select p from Papel p where identificador not in (:list)";
-        return (List<Papel>) getEntityManager().createQuery(hql).setParameter("list", identificadores).getResultList();
+
+    public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_TIPO_MODELO_DOCUMENTO, tipoModeloDocumento);
+        return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, parameters);
     }
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao){
-		String hql = "select distinct l.papel from UsuarioLocalizacao l where l.localizacao = :loc ";
-		return (List<Papel>) getEntityManager().createQuery(hql).setParameter("loc", localizacao).getResultList();
-	}
+
+    public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_TIPO_PROCESSO_DOCUMENTO, tipoProcessoDocumento);
+        return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, parameters);
+    }
+
+    public Papel getPapelByIndentificador(String identificador) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_IDENTIFICADOR, identificador);
+        return getNamedSingleResult(PAPEL_BY_IDENTIFICADOR, parameters);
+    }
+
+    public List<Papel> getPapeisByListaDeIdentificadores(List<String> identificadores) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_LISTA_IDENTIFICADORES, identificadores);
+        return getNamedResultList(PAPEIS_BY_IDENTIFICADORES, parameters);
+    }
+
+    public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_LOCALIZACAO, localizacao);
+        return getNamedResultList(PAPEIS_BY_LOCALIZACAO, parameters);
+    }
 
 }

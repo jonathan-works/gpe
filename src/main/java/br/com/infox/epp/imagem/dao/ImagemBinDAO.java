@@ -1,7 +1,5 @@
 package br.com.infox.epp.imagem.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,9 +9,10 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.imagem.entity.ImagemBin;
+import br.com.infox.epp.imagem.query.ImagemBinQuery;
 import br.com.itx.util.FileUtil;
 
 @Name(ImagemBinDAO.NAME)
@@ -23,10 +22,8 @@ public class ImagemBinDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "imagemBinDAO";
 	
-	@SuppressWarnings(UNCHECKED)
-	public List<ImagemBin> getTodasAsImagens(){
-		String hql = "select o from ImagemBin o";
-		return (List<ImagemBin>) getEntityManager().createQuery(hql).getResultList();
+	public List<ImagemBin> getTodasAsImagens() {
+		return getNamedResultList(ImagemBinQuery.LIST_IMAGENS);
 	}
 
     public void persistImageBin(ImagemBin imagemBin) throws DAOException {

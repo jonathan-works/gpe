@@ -1,5 +1,16 @@
 package br.com.infox.epp.processo.localizacao.entity;
 
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.COUNT_PROCESSO_LOC_IBPM_BY_IDP_LOC_AND_PAPEL_QUERY;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_PROCESS_ID_AND_TASK_ID;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_PROCESS_ID_AND_TASK_ID_QUERY;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE_QUERY;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,19 +27,17 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery;
 import br.com.infox.epp.system.annotation.Ignore;
 
 @Entity
 @Ignore
 @Table(name = ProcessoLocalizacaoIbpm.TABLE_NAME, schema = "public")
-@NamedQueries(value={
-		@NamedQuery(name=ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE, 
-				query=ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE_QUERY),
-		@NamedQuery(name=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, 
-				query=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY),
-		@NamedQuery(name=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, 
-				query=ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY)
+@NamedQueries({
+    @NamedQuery(name = LIST_BY_TASK_INSTANCE, query = LIST_BY_TASK_INSTANCE_QUERY),
+    @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, query = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY),
+    @NamedQuery(name=COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, query=COUNT_PROCESSO_LOC_IBPM_BY_IDP_LOC_AND_PAPEL_QUERY),
+    @NamedQuery(name=DELETE_BY_PROCESS_ID_AND_TASK_ID, query=DELETE_BY_PROCESS_ID_AND_TASK_ID_QUERY),
+    @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, query = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY) 
 })
 public class ProcessoLocalizacaoIbpm implements java.io.Serializable {
 

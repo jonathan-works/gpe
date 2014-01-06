@@ -1,5 +1,10 @@
 package br.com.infox.epp.tarefa.entity;
 
+import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS_QUERY;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES_QUERY;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +17,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -27,6 +34,10 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name = Tarefa.TABLE_NAME, schema="public")
+@NamedNativeQueries({
+    @NamedNativeQuery(name=PREVIOUS_NODES, query=PREVIOUS_NODES_QUERY),
+    @NamedNativeQuery(name=NOVAS_TAREFAS, query=NOVAS_TAREFAS_QUERY)
+})
 public class Tarefa implements java.io.Serializable {
 
 	public static final String TABLE_NAME = "tb_tarefa";

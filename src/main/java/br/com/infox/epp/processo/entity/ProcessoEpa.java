@@ -11,6 +11,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -24,17 +26,22 @@ import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
-import br.com.infox.epp.processo.query.ProcessoEpaQuery;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.*;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
 @Entity
 @Table(name=ProcessoEpa.TABLE_NAME, schema="public")
 @PrimaryKeyJoinColumn
 @NamedQueries(value={
-		@NamedQuery(name=ProcessoEpaQuery.LIST_ALL_NOT_ENDED,
-					query=ProcessoEpaQuery.LIST_ALL_NOT_ENDED_QUERY),
-		@NamedQuery(name=ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO,
-					query=ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY)
+    @NamedQuery(name=LIST_ALL_NOT_ENDED, query=LIST_ALL_NOT_ENDED_QUERY),
+    @NamedQuery(name=PROCESSO_EPA_BY_ID_JBPM, query=PROCESSO_EPA_BY_ID_JBPM_QUERY),
+    @NamedQuery(name=COUNT_PARTES_ATIVAS_DO_PROCESSO, query=COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
+    @NamedQuery(name=ITEM_DO_PROCESSO, query=ITEM_DO_PROCESSO_QUERY),
+    @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY)
+})
+@NamedNativeQueries(value={
+    @NamedNativeQuery(name=DATA_INICIO_PRIMEIRA_TAREFA, query=DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
+    @NamedNativeQuery(name=TEMPO_GASTO_PROCESSO_EPP, query=TEMPO_GASTO_PROCESSO_EPP_QUERY)
 })
 public class ProcessoEpa extends Processo {
 

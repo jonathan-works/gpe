@@ -32,7 +32,6 @@ import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(PainelUsuarioHome.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -83,7 +82,7 @@ public class PainelUsuarioHome implements Serializable {
 	}
 
 	public void processoCaixa(DropEvent evt) {
-		Caixa caixa = EntityUtil.find(Caixa.class, evt.getDropValue());
+		Caixa caixa = processoManager.find(Caixa.class, evt.getDropValue());
 		setProcessoCaixa(getProcessoIdList(evt.getDragValue()), caixa);
 		this.processoIdList = null;
 	}
@@ -169,7 +168,7 @@ public class PainelUsuarioHome implements Serializable {
 		List<Integer> idsProcesso = getProcessoIdList();
 		
 		if (idsProcesso != null && (idsProcesso.size() > 1 || (idsProcesso.size() == 1 && idsProcesso.get(0) != -1))) {
-			ProcessoEpa processoEpa = EntityUtil.find(ProcessoEpa.class, idsProcesso.get(0));
+			ProcessoEpa processoEpa = processoManager.find(ProcessoEpa.class, idsProcesso.get(0));
 			Fluxo fluxo = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
 			
 			List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo);

@@ -11,7 +11,6 @@ public interface LengthConstants {
     //Unidade da Federação
     int UF = 2; 
     int CEP = 9;
-    int CNAE = 9;
     int CODIGO_DOCUMENTO = 30;
     
 //Tamanhos das Descrições Usuais
@@ -29,8 +28,6 @@ public interface LengthConstants {
     int DESCRICAO_ENTIDADE = 50;
     int DESCRICAO_TITULO = 60;
     int DESCRICAO_PACOTE = 150;
-    //CBO e CNAE
-    int DESCRICAO_CLASSIFICACAO = 150; 
     int DESCRICAO_NOME_ARQUIVO = 300;
     
 //Tamanhos de Ids
@@ -47,7 +44,7 @@ public interface LengthConstants {
 //Tamanhos de ~Números
     int NUMERO_CPF = 20;
     int NUMERO_RAZAO_SOCIAL = 20;
-    int NUMERO_PROCESSO = 30;
+    int NUMERACAO_PROCESSO = 30;
     
 //Tipos Especiais
     int FLAG = 1;

@@ -1,5 +1,20 @@
 package br.com.infox.epp.tarefa.entity;
 
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_FLUXO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_FLUXO_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.FORA_PRAZO_TAREFA_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE_QUERY;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -21,19 +36,18 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name=ProcessoEpaTarefa.TABLE_NAME, schema="public")
-@NamedQueries(value={
-				@NamedQuery(name=ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE,
-						    query=ProcessoEpaTarefaQuery.GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY),
-			    @NamedQuery(name=ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO,
-					    	query=ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY),
-			    @NamedQuery(name=ProcessoEpaTarefaQuery.TAREFA_ENDED,
-			    			query=ProcessoEpaTarefaQuery.TAREFA_ENDED_QUERY)
-			  })
+@NamedQueries({
+    @NamedQuery(name = GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE, query = GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY),
+    @NamedQuery(name = TAREFA_NOT_ENDED_BY_TIPO_PRAZO, query = TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY),
+    @NamedQuery(name = PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA, query=PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY),
+    @NamedQuery(name = FORA_PRAZO_FLUXO, query=FORA_PRAZO_FLUXO_QUERY),
+    @NamedQuery(name=FORA_PRAZO_TAREFA, query=FORA_PRAZO_TAREFA_QUERY),
+    @NamedQuery(name=TAREFA_PROXIMA_LIMITE, query=TAREFA_PROXIMA_LIMITE_QUERY),
+    @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY) })
 public class ProcessoEpaTarefa implements Serializable {
 
 	private static final long serialVersionUID = 1L;

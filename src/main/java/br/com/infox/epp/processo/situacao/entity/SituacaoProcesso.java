@@ -2,11 +2,15 @@
 
 package br.com.infox.epp.processo.situacao.entity;
 
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.*;
+
 import java.text.MessageFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Filter;
@@ -19,16 +23,15 @@ import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 
 @Entity
 @Table(name = SituacaoProcesso.TABLE_NAME, schema="public")
-
-@FilterDefs(value={
-		@FilterDef(name=SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, parameters={
-				@ParamDef(type=SituacaoProcessoFilter.TYPE_INT, name=SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO),
-				@ParamDef(type=SituacaoProcessoFilter.TYPE_INT, name=SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL)
-		})
+@NamedQueries({
+    @NamedQuery(name=COUNT_TAREFAS_ATIVAS_BY_TASK_ID, query=COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY)
 })
-@Filters(value={
-		@Filter(name=SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, 
-				condition=SituacaoProcessoFilter.CONDITION_PAPEL_LOCALIZACAO)
+@FilterDefs({ 
+    @FilterDef(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, parameters = {
+    @ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO),
+    @ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL) }) })
+@Filters({ 
+    @Filter(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, condition = SituacaoProcessoFilter.CONDITION_PAPEL_LOCALIZACAO) 
 })
 public class SituacaoProcesso implements java.io.Serializable {
 
