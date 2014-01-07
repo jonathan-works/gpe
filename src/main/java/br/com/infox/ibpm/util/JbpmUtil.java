@@ -171,15 +171,17 @@ public class JbpmUtil {
 		return null;
 	}
 	
-	public static void setProcessVariable(String name, Object value) {
-		ContextInstance contextInstance = org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance();
-		contextInstance.setVariable(name, value);
-	}
+    public static void setProcessVariable(String name, Object value) {
+        getConxtextInstance().setVariable(name, value);
+    }
 
-	public static void createProcessVariable(String name, Object value) {
-		ContextInstance contextInstance = org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance();
-		contextInstance.createVariable(name, value);
-	}
+    public static void createProcessVariable(String name, Object value) {
+        getConxtextInstance().createVariable(name, value);
+    }
+
+    private static ContextInstance getConxtextInstance() {
+        return org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance();
+    }
 	
 	/**
 	 * Retorna as tarefas (from / to) de uma transição
