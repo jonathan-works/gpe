@@ -1,11 +1,11 @@
 package br.com.infox.epp.estatistica.abstracts;
 
+import java.util.Date;
+
 import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.manager.BamTimerManager;
@@ -21,22 +21,13 @@ public abstract class BamTimerProcessor {
     protected abstract BamTimerManager getBamTimerManager();
 
     protected final QuartzTriggerHandle updateTarefasNaoFinalizadas(PrazoEnum d) {
-        String idTaskTimer = getBamTimerManager().getParametro(getParameterName());
-        QuartzTriggerHandle handle = new QuartzTriggerHandle(idTaskTimer);
-        
-        Trigger trigger = null;
         try {
-            trigger = handle.getTrigger();
-        } catch (SchedulerException e) {
-            LOG.error(e);
-        }
-        if (trigger != null) {
-            try {
-                getProcessoEpaTarefamanager().updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), d);
-            } catch (DAOException e) {
-                LOG.error(e);
-            }
-        }
+        	Date ultimoDisparo = new Date();
+			getProcessoEpaTarefamanager().updateTarefasNaoFinalizadas(ultimoDisparo, d);
+			getBamTimerManager().updateUltimoDisparo(ultimoDisparo, getParameterName());
+		} catch (DAOException e) {
+			LOG.error(".updateTarefasNaoFinalizadas()", e);
+		}
         return null;
     }
 }

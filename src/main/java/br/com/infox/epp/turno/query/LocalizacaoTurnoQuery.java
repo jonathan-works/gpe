@@ -83,5 +83,8 @@ public interface LocalizacaoTurnoQuery {
 			" 	 			   o.idTaskInstance = :"+QUERY_PARAM_ID_TASK_INSTANCE+AND +
 			"				   o.localizacao = lt.localizacao and	" +
 			"	 			   o.contabilizar = true)";
-	
+
+    String DELETE_TURNOS_ANTERIORES = "deleteTurnosAnteriores";
+    String DELETE_TURNOS_ANTERIORES_QUERY = "delete from LocalizacaoTurno o where o.localizacao = :"
+            + QUERY_PARAM_LOCALIZACAO;
 }

@@ -113,8 +113,11 @@ public class GenericDAO implements Serializable {
 		return q;
 	}
 	
-	protected void executeNamedQueryUpdate(final String namedQuery,
-            final Map<String, Object> parameters){
+	protected void executeNamedQueryUpdate(final String namedQuery){
+        getNamedQuery(namedQuery, null).executeUpdate();
+    }
+	
+	protected void executeNamedQueryUpdate(final String namedQuery, final Map<String, Object> parameters){
 	    getNamedQuery(namedQuery, parameters).executeUpdate();
 	}
 	

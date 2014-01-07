@@ -19,7 +19,6 @@ import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.event.JbpmEventsHandler;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(CaixaHome.NAME)
 public class CaixaHome extends AbstractHome<Caixa> {
@@ -37,7 +36,7 @@ public class CaixaHome extends AbstractHome<Caixa> {
 	}
 	
 	public List<SelectItem> getPreviousNodes(Integer idTarefa) {
-		return tarefaManager.getPreviousNodes(EntityUtil.find(Tarefa.class, idTarefa));
+		return tarefaManager.getPreviousNodes(tarefaManager.find(Tarefa.class, idTarefa));
 	}
 	
     public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
@@ -53,7 +52,7 @@ public class CaixaHome extends AbstractHome<Caixa> {
 	}
 	
 	public void addCaixa(int idTarefa) {
-		instance.setTarefa(EntityUtil.find(Tarefa.class, idTarefa));
+		instance.setTarefa(caixaManager.find(Tarefa.class, idTarefa));
 		instance.setNomeIndice(MessageFormat.format("{0}-{1}", instance.getNomeCaixa(), idTarefa));
 		persist();
 		
@@ -113,7 +112,7 @@ public class CaixaHome extends AbstractHome<Caixa> {
         if(idCaixa == 0) {
             return;
         }
-        instance = EntityUtil.find(Caixa.class, idCaixa);
+        instance = caixaManager.find(Caixa.class, idCaixa);
         if(instance != null){
             remove();
         }else{

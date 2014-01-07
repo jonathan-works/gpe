@@ -1,7 +1,9 @@
 package br.com.infox.epp.processo.situacao.dao;
 
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.*;
 import static br.com.infox.core.constants.WarningConstants.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +25,11 @@ public class SituacaoProcessoDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "situacaoProcessoDAO";
 	
-	public Long getQuantidadeTarefasAtivasByTaskId(long taskId){
-		String hql = "select count(o.idTaskInstance) from SituacaoProcesso o where o.idTaskInstance = :ti";
-		return (Long) getEntityManager().createQuery(hql).setParameter("ti", taskId).getSingleResult();
-	}
+    public Long getQuantidadeTarefasAtivasByTaskId(long taskId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_TASKINSTANCE, taskId);
+        return getNamedSingleResult(COUNT_TAREFAS_ATIVAS_BY_TASK_ID, parameters);
+    }
 	
 	@SuppressWarnings(UNCHECKED)
 	public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected){
@@ -51,17 +54,11 @@ public class SituacaoProcessoDAO extends GenericDAO {
 		return "";
 	}
 	
-	@SuppressWarnings(RAWTYPES)
     public boolean canOpenTask(long currentTaskId) {
         JbpmUtil.getJbpmSession().flush();
         Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
-        List resultList = EntityUtil
-                .getEntityManager()
-                .createQuery(
-                        "select o.idTaskInstance from SituacaoProcesso o "
-                                + "where o.idTaskInstance = :ti")
-                .setParameter("ti", currentTaskId).getResultList();
-        return resultList.size() > 0;
+        Long count = getQuantidadeTarefasAtivasByTaskId(currentTaskId);
+        return count != null && count > 0;
     }
 
 }

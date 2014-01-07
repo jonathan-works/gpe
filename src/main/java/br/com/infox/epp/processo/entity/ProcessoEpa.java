@@ -1,5 +1,20 @@
 package br.com.infox.epp.processo.entity;
 
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,17 +41,19 @@ import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
-import br.com.infox.epp.processo.query.ProcessoEpaQuery;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
 @Entity
 @Table(name=ProcessoEpa.TABLE_NAME, schema="public")
 @PrimaryKeyJoinColumn
 @NamedQueries(value={
-		@NamedQuery(name=ProcessoEpaQuery.LIST_ALL_NOT_ENDED,
-					query=ProcessoEpaQuery.LIST_ALL_NOT_ENDED_QUERY),
-		@NamedQuery(name=ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO,
-					query=ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY)
+    @NamedQuery(name=LIST_ALL_NOT_ENDED, query=LIST_ALL_NOT_ENDED_QUERY),
+    @NamedQuery(name=PROCESSO_EPA_BY_ID_JBPM, query=PROCESSO_EPA_BY_ID_JBPM_QUERY),
+    @NamedQuery(name=COUNT_PARTES_ATIVAS_DO_PROCESSO, query=COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
+    @NamedQuery(name=ITEM_DO_PROCESSO, query=ITEM_DO_PROCESSO_QUERY),
+    @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY),
+    @NamedQuery(name=DATA_INICIO_PRIMEIRA_TAREFA, query=DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
+    @NamedQuery(name=TEMPO_GASTO_PROCESSO_EPP, query=TEMPO_GASTO_PROCESSO_EPP_QUERY)
 })
 public class ProcessoEpa extends Processo {
 

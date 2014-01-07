@@ -36,36 +36,32 @@ public class NatCatFluxoLocalizacaoDAO extends GenericDAO {
         executeNamedQueryUpdate(DELETE_BY_NAT_CAT_FLUXO_AND_LOCALIZACAO, parameters);
     }
 
-    public NatCatFluxoLocalizacao getByNatCatFluxoAndLocalizacao(
-            NaturezaCategoriaFluxo ncf, Localizacao l) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
-        map.put(QUERY_PARAM_LOCALIZACAO, l);
-        return getNamedSingleResult(GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF, map);
+    public NatCatFluxoLocalizacao getByNatCatFluxoAndLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao l) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
+        parameters.put(QUERY_PARAM_LOCALIZACAO, l);
+        return getNamedSingleResult(GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF, parameters);
     }
 
-    public boolean existsNatCatFluxoLocalizacao(NaturezaCategoriaFluxo ncf,
-            Localizacao l) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
-        map.put(QUERY_PARAM_LOCALIZACAO, l);
-        Long resultCount = getNamedSingleResult(COUNT_NCF_LOCALIZACAO_BY_LOC_NCF, map);
+    public boolean existsNatCatFluxoLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao l) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
+        parameters.put(QUERY_PARAM_LOCALIZACAO, l);
+        Long resultCount = getNamedSingleResult(COUNT_NCF_LOCALIZACAO_BY_LOC_NCF, parameters);
         return resultCount != null && resultCount > 0;
     }
 
-    public List<NaturezaCategoriaFluxo> listByLocalizacaoAndPapel(
-            Localizacao l, Papel p) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put(QUERY_PARAM_LOCALIZACAO, l);
-        map.put(QUERY_PARAM_PAPEL, p);
-        return getNamedResultList(LIST_BY_LOCALIZACAO_AND_PAPEL, map);
+    public List<NaturezaCategoriaFluxo> listByLocalizacaoAndPapel(Localizacao l, Papel p) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(QUERY_PARAM_LOCALIZACAO, l);
+        parameters.put(QUERY_PARAM_PAPEL, p);
+        return getNamedResultList(LIST_BY_LOCALIZACAO_AND_PAPEL, parameters);
     }
 
-    public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(
-            NaturezaCategoriaFluxo ncf) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
-        return getNamedResultList(LIST_BY_NAT_CAT_FLUXO, map);
+    public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(NaturezaCategoriaFluxo ncf) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
+        return getNamedResultList(LIST_BY_NAT_CAT_FLUXO, parameters);
     }
 
 }
