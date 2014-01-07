@@ -14,16 +14,20 @@ import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.bean.ItemBean;
+import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -36,7 +40,7 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
-import br.com.itx.util.EntityUtil;
+import br.com.itx.component.AbstractHome;
 
 @Name(IniciarProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -49,8 +53,8 @@ public class IniciarProcessoAction {
 	private IniciarProcessoService iniciarProcessoService;
 	@In
 	private ProcessoEpaManager processoEpaManager;
-	
-	@In private PessoaManager pessoaManager;
+	@In
+	private PessoaManager pessoaManager;
 	
 	private boolean renderedByItem;
 	private boolean renderizarCadastroPartes;
@@ -62,17 +66,11 @@ public class IniciarProcessoAction {
 	private List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
 	
 	public void iniciarProcesso() {
-		try {
-			UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-			Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-			processoEpa = new ProcessoEpa();
-			processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-			processoEpa.setDataInicio(new Date());
-			processoEpa.setNumeroProcesso("");
-			processoEpa.setUsuarioCadastroProcesso(usuarioLogado);
-			processoEpa.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
-			processoEpa.setLocalizacao(localizacao);
-			processoEpa.setItemDoProcesso(itemDoProcesso);
+		final StatusMessages messagesHandler = getMessagesHandler();
+        try {
+			final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+			final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+			processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
 			if (necessitaPartes()){
 				for (Pessoa p : pessoaFisicaList) {
 					processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
@@ -82,123 +80,128 @@ public class IniciarProcessoAction {
 				}
 			}
 			processoEpaManager.persist(processoEpa);
-			
 			iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
-			
-			FacesMessages.instance().add(Severity.INFO, "Processo inserido com sucesso!");
+			messagesHandler.add("Processo inserido com sucesso!");
 		} catch(TypeMismatchException tme) {
-		    LOG.error(".iniciarProcesso()", tme);
-			FacesMessages.instance().add(Severity.ERROR, IniciarProcessoService.
-										 TYPE_MISMATCH_EXCEPTION);
+		    sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);
 		} catch(NullPointerException npe) {
-		    LOG.error(".iniciarProcesso()", npe);
-			FacesMessages.instance().add(Severity.ERROR,"Nenhum processo informado.");
+		    sendIniciarProcessoErrorMessage("Nenhum processo informado.", npe);
 		} catch (DAOException e) {
-			LOG.error(".iniciarProcesso()", e);
-			FacesMessages.instance().add(Severity.ERROR, "Erro ao inserir o processo: %s", e.getMessage());
+            sendIniciarProcessoErrorMessage("Erro ao inserir o processo: "+ e.getMessage(), e);
 		}
 	}
 
-	public void onSelectNatCatFluxo(NaturezaCategoriaFluxo ncf) {
+    private void sendIniciarProcessoErrorMessage(final String message, final Exception exception) {
+        LOG.error(".iniciarProcesso()", exception);
+        getMessagesHandler().add(Severity.ERROR, message);
+    }
+
+	public void onSelectNatCatFluxo(final NaturezaCategoriaFluxo ncf) {
 		naturezaCategoriaFluxo = ncf;
 		itemList = new ArrayList<ItemBean>();
-		for(CategoriaItem ca : naturezaCategoriaFluxo.getCategoria()
-													    .getCategoriaItemList()) {
-			itemList.add(new ItemBean(ca.getItem()));
-		}
-		if (itemList.isEmpty()){
-			FacesMessages.instance().add(Severity.ERROR, "Não há itens cadastrados para a categoria escolhida");
-		} else { 
-			setRenderedByItem(true);
+		final Categoria categoria = naturezaCategoriaFluxo.getCategoria();
+		if (categoria != null) {
+            for(CategoriaItem ca : categoria.getCategoriaItemList()) {
+    			itemList.add(new ItemBean(ca.getItem()));
+    		}
+    		if (itemList.isEmpty()){
+    			getMessagesHandler().add(Severity.ERROR, "Não há itens cadastrados para a categoria escolhida");
+    		} else { 
+    			setRenderedByItem(Boolean.TRUE);
+    		}
 		}
 	}
 	
 	
-	public void onSelectItem(ItemBean bean) {
+	public void onSelectItem(final ItemBean bean) {
 		itemDoProcesso = bean.getItem();
 		renderedByItem = hasSelectedItem();
 		if (!necessitaPartes()) {
 			iniciarProcesso();
 			if (Authenticator.instance().isUsuarioExterno()) {
-                Redirect.instance().setViewId("/Processo/movimentar.seam");
-                Redirect.instance().setParameter("cid", Conversation.instance().getId());
-                Redirect.instance().setParameter("idProcesso", getProcessoEpa().getIdProcesso());
-                Redirect.instance().execute();
+                final Redirect redirect = Redirect.instance();
+                redirect.setViewId("/Processo/movimentar.seam");
+                redirect.setParameter("cid", Conversation.instance().getId());
+                redirect.setParameter("idProcesso", getProcessoEpa().getIdProcesso());
+                redirect.execute();
             }
 		} else{
-			renderizarCadastroPartes = true;
-			renderedByItem = false;
+			renderizarCadastroPartes = Boolean.TRUE;
+			renderedByItem = Boolean.FALSE;
 		}
 	}
 
 	private boolean hasSelectedItem() {
 		for (ItemBean ib : itemList) {
 			if(ib.isChecked()) {
-				return true;
+				return Boolean.TRUE;
 			}
 		}
-		return false;
+		return Boolean.FALSE;
+	}
+	
+	private TipoPessoaEnum convertTipoPessoaEnum(final String tipoPessoa) {
+	    if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
+	        return TipoPessoaEnum.F;
+	    } else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
+	        return TipoPessoaEnum.J;
+	    }
+	    return null;
 	}
 	
 	public void carregaPessoa(String tipoPessoa, String codigo){
-		pessoaManager.carregaPessoa(tipoPessoa, codigo);
+		pessoaManager.carregaPessoa(convertTipoPessoaEnum(tipoPessoa), codigo);
 	}
+	
+	private <P extends Pessoa> void include(final AbstractHome<P> home, final TipoPessoaEnum tipoPessoa, final List<P> list) {
+        final StatusMessages messagesHandler = getMessagesHandler();
+        final P pessoa = home.getInstance();
+        if (pessoa.getAtivo() == null){
+            pessoa.setAtivo(Boolean.TRUE);
+            pessoa.setTipoPessoa(tipoPessoa);
+            try {
+                pessoaManager.persist(pessoa);
+            } catch (DAOException e) {
+                messagesHandler.add(Severity.ERROR, "Falha ao tentar gravar pessoa", e);
+            }
+        }
+        if (list.contains(pessoa)) {
+            messagesHandler.add(Severity.ERROR, "Parte já cadastrada no processo");
+        } else {
+            list.add(pessoa);
+        }
+        home.setInstance(null);
+    }
 	
 	public void incluir(String tipoPessoa){
-		if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
-			PessoaFisicaHome pf = (PessoaFisicaHome) Component.getInstance("pessoaFisicaHome");
-			PessoaFisica p = pf.getInstance();
-			if (p.getAtivo() == null){
-				p.setAtivo(true);
-				p.setTipoPessoa(TipoPessoaEnum.F);
-				EntityUtil.getEntityManager().persist(p);
-				EntityUtil.getEntityManager().flush();
-			}
-			if (pessoaFisicaList.contains(p)) {
-				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			}
-			else {
-				pessoaFisicaList.add(p);
-			}
-			pf.setInstance(null);
-		}
-		else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
-			PessoaJuridicaHome pj = (PessoaJuridicaHome) Component.getInstance("pessoaJuridicaHome");
-			PessoaJuridica p = pj.getInstance();
-			if (p.getAtivo() == null){
-				p.setAtivo(true);
-				p.setTipoPessoa(TipoPessoaEnum.J);
-				EntityUtil.getEntityManager().persist(p);
-				EntityUtil.getEntityManager().flush();
-			}
-			if (pessoaJuridicaList.contains(p)) {
-				FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			}
-			else {
-				pessoaJuridicaList.add(p);
-			}
-			pj.setInstance(null);
-		} else {
-		    return;
+	    final TipoPessoaEnum tipoPessoaEnum = convertTipoPessoaEnum(tipoPessoa);
+		if (TipoPessoaEnum.F.equals(tipoPessoaEnum)) {
+            include((PessoaFisicaHome)Component.getInstance(PessoaFisicaHome.NAME), tipoPessoaEnum, pessoaFisicaList);
+		} else if (TipoPessoaEnum.J.equals(tipoPessoaEnum)) {
+            include((PessoaJuridicaHome) Component.getInstance(PessoaJuridicaHome.NAME), tipoPessoaEnum, pessoaJuridicaList);
 		}
 	}
+
+    private StatusMessages getMessagesHandler() {
+        return FacesMessages.instance();
+    }
 	
-	public void removePessoaFisica(PessoaFisica obj) {
+	public void removePessoaFisica(final PessoaFisica obj) {
 		pessoaFisicaList.remove(obj);
 	}
 	
-	public void removePessoaJuridica(PessoaJuridica obj) {
+	public void removePessoaJuridica(final PessoaJuridica obj) {
 		pessoaJuridicaList.remove(obj);
 	}
 	
 	public boolean isRenderedByItem() {
 		return renderedByItem;
 	}
-	public void setRenderedByItem(boolean renderedByItem) {
+	public void setRenderedByItem(final boolean renderedByItem) {
 		this.renderedByItem = renderedByItem;
 	}
 
-	public void setProcessoEpa(ProcessoEpa processoEpa) {
+	public void setProcessoEpa(final ProcessoEpa processoEpa) {
 		this.processoEpa = processoEpa;
 	}
 	public ProcessoEpa getProcessoEpa() {
@@ -208,17 +211,18 @@ public class IniciarProcessoAction {
 	public List<ItemBean> getItemList() {
 		return itemList;
 	}
-	public void setItemList(List<ItemBean> itemList) {
+	public void setItemList(final List<ItemBean> itemList) {
 		this.itemList = itemList;
 	}
 	
 	public boolean necessitaPartes(){
 		if (naturezaCategoriaFluxo != null) {
-			return naturezaCategoriaFluxo.getNatureza().getHasPartes();
+			final Natureza natureza = naturezaCategoriaFluxo.getNatureza();
+			if (natureza != null) {
+			    return natureza.getHasPartes();
+			}
 		}
-		else {
-		    return false;
-		}
+		return Boolean.FALSE;
 	}
 
 	public boolean isRenderizarCadastroPartes() {
@@ -229,7 +233,7 @@ public class IniciarProcessoAction {
 		return pessoaFisicaList;
 	}
 
-	public void setPessoaFisicaList(List<PessoaFisica> pessoaFisicaList) {
+	public void setPessoaFisicaList(final List<PessoaFisica> pessoaFisicaList) {
 		this.pessoaFisicaList = pessoaFisicaList;
 	}
 
@@ -237,7 +241,7 @@ public class IniciarProcessoAction {
 		return pessoaJuridicaList;
 	}
 
-	public void setPessoaJuridicaList(List<PessoaJuridica> pessoaJuridicaList) {
+	public void setPessoaJuridicaList(final List<PessoaJuridica> pessoaJuridicaList) {
 		this.pessoaJuridicaList = pessoaJuridicaList;
 	}
 }
