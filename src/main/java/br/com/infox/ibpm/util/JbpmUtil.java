@@ -274,25 +274,6 @@ public class JbpmUtil {
 			.list();
 	}
 
-	/**
-	 * 
-	 * @param tarefa Nome da Tarefa
-	 * @param fluxo Nome do Fluxo
-	 * @return Retorna a entidade Tarefa referente a tarefa do fluxo informado.
-	 */
-	public static Tarefa getTarefa(String tarefa, String fluxo) {
-		if(tarefa == null || fluxo == null) {
-			return null;
-		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("select t from Tarefa t where t.tarefa = :tarefa and ")
-		  .append("t.fluxo.fluxo = :fluxo");
-		Query q = EntityUtil.getEntityManager().createQuery(sb.toString());
-		q.setParameter("tarefa", tarefa);
-		q.setParameter("fluxo", fluxo);
-		return (Tarefa) EntityUtil.getSingleResult(q);
-	}
-	
     /**
      * 
      * @param processo
