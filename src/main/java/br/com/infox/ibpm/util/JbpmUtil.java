@@ -158,8 +158,7 @@ public class JbpmUtil {
 		sb.append("select pd.name ");
 		sb.append("from org.jbpm.graph.def.ProcessDefinition as pd ");
 		sb.append("group by pd.name order by pd.name");
-		Session session = ManagedJbpmContext.instance().getSession();		
-		return session.createQuery(sb.toString()).list();
+		return getJbpmSession().createQuery(sb.toString()).list();
 	}
 	
 	@SuppressWarnings(UNCHECKED)
