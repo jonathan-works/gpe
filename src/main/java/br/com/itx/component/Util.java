@@ -196,7 +196,7 @@ public class Util implements Serializable {
 		eventContext.set("homeActionType", type);
 		eventContext.set("home", home);
 		eventContext.set("instance", home.getInstance());
-		if (event == null || event.equals("")) {
+		if (event == null || "".equals(event)) {
 			String exp = "#{home." + type + "}";
 			Expressions e = Expressions.instance();
 			return (String)e.createMethodExpression(exp).invoke();
