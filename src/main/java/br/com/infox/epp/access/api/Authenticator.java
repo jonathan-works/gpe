@@ -39,7 +39,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
-import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
@@ -52,6 +51,7 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.access.service.ChangePasswordOperation;
 import br.com.infox.epp.system.util.ParametroUtil;
 
 @Name(Authenticator.NAME)
@@ -122,8 +122,7 @@ public class Authenticator {
 				getAuthenticatorService().validarUsuario(usuario);
 				if (isTrocarSenha()) {
 					trocarSenhaUsuario(usuario);
-				}
-				else {
+				} else {
 					realizarLoginDoUsuario(usuario);
 				}
 			}
@@ -137,7 +136,7 @@ public class Authenticator {
 		}
 	}
 
-	private void realizarLoginDoUsuario(UsuarioLogin usuario) throws LoginException {
+	private void realizarLoginDoUsuario(final UsuarioLogin usuario) throws LoginException {
 		getAuthenticatorService().setUsuarioLogadoSessao(usuario);
 		obterLocalizacaoAtual(usuario);
 		Actor.instance().setId(usuario.getLogin());
@@ -165,19 +164,18 @@ public class Authenticator {
 	
 	private void trocarSenhaUsuario(final UsuarioLogin usuario) throws LoginException, DAOException {
 		if (newPassword1.equals(newPassword2)){
-			new RunAsOperation(true) {
-				@Override
-				public void execute() {
-					IdentityManager.instance().changePassword(usuario.getLogin(), newPassword1);
-				}
-			}.run();
+		    new ChangePasswordOperation(usuario, newPassword1).run();
 			usuario.setProvisorio(false);
 			getGenericDAO().update(usuario);
-			FacesMessages.instance().add("Senha alterada com sucesso.");
+			getMessagesHandler().add("Senha alterada com sucesso.");
 		} else {
 		    throw new LoginException("Nova senha não confere com a confirmação!");
 		}
 	}
+
+    private FacesMessages getMessagesHandler() {
+        return FacesMessages.instance();
+    }
 	
 	public void login(){
 		//verificar se o login existe
@@ -186,7 +184,7 @@ public class Authenticator {
 		String login = credentials.getUsername();
 		UsuarioLogin user = getUsuarioLoginManager().getUsuarioLoginByLogin(login);
 		if(user == null) {
-			FacesMessages.instance().add(Severity.ERROR, "Login inválido.");
+			getMessagesHandler().add(Severity.ERROR, "Login inválido.");
 			return;
 		}
 		identity.login();
