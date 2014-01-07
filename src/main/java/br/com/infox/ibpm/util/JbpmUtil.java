@@ -209,11 +209,6 @@ public class JbpmUtil {
 		return t;
 	}
 	
-	public String valorProcessoDocumento(Integer idProcDoc){
-		ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, idProcDoc);
-		return processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
-	}
-	
 	public Object getConteudo(VariableAccess var, TaskInstance taskInstance){
 		String type = var.getMappedName().split(":")[0];
 		Object variable = taskInstance.getVariable(var.getMappedName());
