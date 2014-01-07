@@ -55,6 +55,7 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.Tarefa;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -292,29 +293,17 @@ public class JbpmUtil {
 		return (Tarefa) EntityUtil.getSingleResult(q);
 	}
 	
-	/**
-	 * @param idJbpmTask Id da Task do jbpm 
-	 * @return Devolve a Tarefa relacionada com a task do Jbpm
-	 */
-	public static Tarefa getTarefa(long idJbpmTask) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select o from Tarefa o ");
-		sb.append("inner join o.tarefaJbpmList tJbpm ");
-		sb.append("where tJbpm.idJbpmTask = :idJbpmTask");
-		Query query = EntityUtil.createQuery(sb.toString());
-		return EntityUtil.getSingleResult(query.setParameter("idJbpmTask", idJbpmTask));
-	}
-
-	/**
-	 * 
-	 * @param processo 
-	 * @return Retorna a tarefa anterior do processo
-	 */
-	public static Tarefa getTarefaAnterior(Processo processo) {
-		Query query = EntityUtil.createQuery("select o.idPreviousTask from SituacaoProcesso o where o.idProcesso = :idProcesso");
-		Integer idJbpmTaskAnterior = EntityUtil.getSingleResult(query.setParameter("idProcesso", processo.getIdProcesso()));
-		return idJbpmTaskAnterior != null ? getTarefa(idJbpmTaskAnterior.longValue()) : null;
-	}
+    /**
+     * 
+     * @param processo
+     * @return Retorna a tarefa anterior do processo
+     */
+    public static Tarefa getTarefaAnterior(Processo processo) {
+        Query query = EntityUtil.createQuery("select o.idPreviousTask from SituacaoProcesso o where o.idProcesso = :idProcesso");
+        Integer idJbpmTaskAnterior = EntityUtil.getSingleResult(query.setParameter("idProcesso", processo.getIdProcesso()));
+        TarefaManager tarefaManager = ComponentUtil.getComponent(TarefaManager.NAME);
+        return idJbpmTaskAnterior != null ? tarefaManager.getTarefa(idJbpmTaskAnterior.longValue()) : null;
+    }
 	
 	/**
 	 * @param processo
