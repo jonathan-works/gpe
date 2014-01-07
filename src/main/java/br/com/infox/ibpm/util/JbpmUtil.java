@@ -15,6 +15,7 @@
 */
 package br.com.infox.ibpm.util;
 
+import static br.com.infox.ibpm.util.JbpmQueries.*;
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.HashMap;
@@ -32,7 +33,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
@@ -51,7 +51,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.Tarefa;
@@ -152,14 +151,10 @@ public class JbpmUtil {
 		}
 	}
 
-	@SuppressWarnings(UNCHECKED)
-	public List<String> getProcessNames() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select pd.name ");
-		sb.append("from org.jbpm.graph.def.ProcessDefinition as pd ");
-		sb.append("group by pd.name order by pd.name");
-		return getJbpmSession().createQuery(sb.toString()).list();
-	}
+    @SuppressWarnings(UNCHECKED)
+    public List<String> getProcessNames() {
+        return getJbpmSession().createQuery(PROCESS_NAMES_QUERY).list();
+    }
 	
 	@SuppressWarnings(UNCHECKED)
 	public List<TaskInstance> getAllTasks() { 
