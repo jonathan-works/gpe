@@ -155,18 +155,11 @@ public class JbpmUtil {
     public List<String> getProcessNames() {
         return getJbpmSession().createQuery(PROCESS_NAMES_QUERY).list();
     }
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<TaskInstance> getAllTasks() { 
-		StringBuilder sb = new StringBuilder();
-		sb.append("select ti from org.jbpm.taskmgmt.exe.TaskInstance ti ");
-		sb.append("where ti.isSuspended = false ");
-		sb.append("and ti.isOpen = true ");
-		sb.append("order by ti.name");
-		return getJbpmSession().createQuery(
-				sb.toString())
-				.list();
-	}
+
+    @SuppressWarnings(UNCHECKED)
+    public List<TaskInstance> getAllTasks() {
+        return getJbpmSession().createQuery(ALL_TASKS_QUERY).list();
+    }
 	
 	@SuppressWarnings(UNCHECKED)
 	public static <T> T getProcessVariable(String name) {

@@ -4,5 +4,8 @@ interface JbpmQueries {
 
     String PROCESS_NAMES_QUERY = "select pd.name from org.jbpm.graph.def.ProcessDefinition as pd "
             + "group by pd.name order by pd.name";
+    
+    String ALL_TASKS_QUERY = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti "
+            + "where ti.isSuspended = false and ti.isOpen = true order by ti.name";
 
 }
