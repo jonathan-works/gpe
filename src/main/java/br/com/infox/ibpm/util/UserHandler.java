@@ -91,7 +91,7 @@ public class UserHandler {
     }
 
     public UsuarioLogin getUsuario(String login) {
-        if (login == null || login.equals("")) {
+        if (login == null || "".equals(login)) {
             return null;
         }
         UsuarioLogin u = null;
