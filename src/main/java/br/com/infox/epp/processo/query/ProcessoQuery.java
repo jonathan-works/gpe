@@ -33,7 +33,7 @@ public interface ProcessoQuery {
             + PARAM_ID_PROCESSO;
     
     String REMOVE_PROCESSO_DA_CAIXA_ATUAL = "removerProcessoDaCaixaAtual";
-    String REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY = "updte public.tb_processo set id_caixa = null where id_processo = :" 
+    String REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY = "update public.tb_processo set id_caixa = null where id_processo = :" 
             + PARAM_ID_PROCESSO;
     
     String LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID = "listProcessosByIdProcessoAndActorId";
