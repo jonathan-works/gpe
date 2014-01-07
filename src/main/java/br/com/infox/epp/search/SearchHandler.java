@@ -33,6 +33,7 @@ import org.apache.lucene.util.Version;
 import org.hibernate.Session;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.ManagedJbpmContext;
@@ -45,6 +46,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.ajuda.util.HelpUtil;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
@@ -64,6 +66,8 @@ public class SearchHandler implements Serializable {
 	private int page;
 	private int maxPageSize = 100;
 	private static final LogProvider LOG = Logging.getLogProvider(SearchHandler.class);
+	
+	@In private ProcessoDocumentoManager processoDocumentoManager;
 	
 	public String getSearchText() {
 		return searchText;
@@ -279,7 +283,7 @@ public class SearchHandler implements Serializable {
 		String texto = null;
 		String type = v.getType();
 		if (JbpmUtil.isTypeEditor(type)){
-			texto = JbpmUtil.instance().valorProcessoDocumento((Integer) value);
+			texto = processoDocumentoManager.valorProcessoDocumento((Integer) value);
 		} else if("sim_nao".equals(type)) {
 			texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
 		} else if ("numberMoney".equalsIgnoreCase(type)){
