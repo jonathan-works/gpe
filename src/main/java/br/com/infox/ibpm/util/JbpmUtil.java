@@ -256,24 +256,6 @@ public class JbpmUtil {
 		return idProcesso != null ? EntityUtil.find(Processo.class, idProcesso) : null;
 	}		
 
-	@SuppressWarnings(UNCHECKED)
-	public static List<Task> getTasksForLocalizacaoAtual() {
-		UsuarioLocalizacao loc = (UsuarioLocalizacao) Contexts.getSessionContext().get(
-				"usuarioLogadoLocalizacaoAtual");
-		StringBuilder sb = new StringBuilder();
-		sb.append("select t.* from JBPM_TASK t, JBPM_SWIMLANE s ");
-		sb.append("where t.SWIMLANE_=s.ID_ and (t.PROCESSDEFINITION_ in (");
-		sb.append("select max(p.ID_) from JBPM_PROCESSDEFINITION p ");
-		sb.append("group by p.NAME_)) and (s.POOLEDACTORSEXPRESSION_ ");
-		sb.append("like :param");
-		sb.append(") ");
-		String param = "%\\'" + loc.getLocalizacao().getIdLocalizacao() +":%";
-		return JbpmUtil.getJbpmSession().createSQLQuery(sb.toString())
-			.addEntity(Task.class)
-			.setString("param", param)
-			.list();
-	}
-
     /**
      * 
      * @param processo
