@@ -30,15 +30,16 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
         return usuarioAssociado;
     }
 
-    public void setUsuarioAssociado(UsuarioLogin usuarioAssociado) {
+    public void setUsuarioAssociado(final UsuarioLogin usuarioAssociado) {
         this.usuarioAssociado = usuarioAssociado;
         final PessoaFisica pessoaFisica = usuarioAssociado.getPessoaFisica();
-        if (getInstance().getNome() == null && pessoaFisica != null){
+        final PessoaFisica pessoaFisicaAtual = getInstance();
+        if (pessoaFisica != null && pessoaFisicaAtual != null && pessoaFisicaAtual.getNome() == null){
             setInstance(pessoaFisica);
         }
     }
     
-    public void searchByCpf(String cpf){
+    public void searchByCpf(final String cpf){
         newInstance();
         final PessoaFisica pf = pessoaManager.getPessoaFisicaByCpf(cpf);
         if (pf != null){
@@ -51,7 +52,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
     @Override
     protected boolean beforeSave() {
         final PessoaFisica entityInstance = getInstance();
-        if (entityInstance.getAtivo() == null){
+        if (entityInstance != null && entityInstance.getAtivo() == null){
             entityInstance.setAtivo(Boolean.TRUE);
         }
         return Boolean.TRUE;
@@ -59,42 +60,52 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
     
     @Override
     public String save() {
+        //TODO: Duas persistências em um mesmo método. Ao chegar aqui já deve existir um usuario obrigatoriamente
         String ret = super.save();
         if (PERSISTED.equals(ret) || UPDATED.equals(ret)){
             usuarioAssociado.setPessoaFisica(getInstance());
             try {
                 getGenericManager().update(usuarioAssociado);
-                return ret;
             } catch (DAOException e) {
+                final String logMessagePattern = ".save()";
                 if (e.getPostgreSQLErrorCode() == PostgreSQLErrorCode.UNIQUE_VIOLATION){
                     final StatusMessages messagesHandler = getMessagesHandler();
                     messagesHandler.clear();
                     messagesHandler.add(PESSOA_JA_ASSOCIADA);
-                    LOG.debug(".save()", e);
+                    LOG.debug(logMessagePattern, e);
                 } else {
-                    LOG.error(".save()", e);
+                    LOG.error(logMessagePattern, e);
                 }
                 newInstance();
                 usuarioAssociado.setPessoaFisica(null);
-                return null;
+                ret = null;
             }
         }
+        return ret;
+    }
+    
+    @Override
+    public String remove() {
         return null;
     }
     
     @Override
-    public String remove(PessoaFisica t) {
-        usuarioAssociado.setPessoaFisica(null);
-        try {
-            getGenericManager().update(usuarioAssociado);
-            newInstance();
-			getMessagesHandler().clear();
-			getMessagesHandler().add(MSG_REGISTRO_REMOVIDO);
-            return REMOVED;
-        } catch (DAOException e) {
-            LOG.error(".remove()", e);
-            return null;
+    public String remove(final PessoaFisica t) {
+        String ret = null;
+        if (t!= null && usuarioAssociado != null && t.equals(usuarioAssociado.getPessoaFisica())) {
+            usuarioAssociado.setPessoaFisica(null);
+            try {
+                getGenericManager().update(usuarioAssociado);
+                newInstance();
+    			final StatusMessages messages = getMessagesHandler();
+                messages.clear();
+    			messages.add(MSG_REGISTRO_REMOVIDO);
+                ret = REMOVED;
+            } catch (DAOException e) {
+                LOG.error(".remove()", e);
+            }
         }
+        return ret;
     }
 
 }
