@@ -23,7 +23,7 @@ final class TaskVariableRetriever extends TaskVariable {
     }
     
     public boolean isEditor(){
-        return type.startsWith("textEditCombo") || type.equals("textEditSignature");
+        return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
     }
     
     public boolean isForm(){
