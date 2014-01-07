@@ -147,7 +147,6 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
         crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
         user = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
         assert user.getPessoaFisica() != null;
-        System.out.println("==|FLAG");
         assert REMOVED.equals(crudActions.remove(user.getPessoaFisica()));
         
         crudActionsUsuarioLogin.newInstance();
