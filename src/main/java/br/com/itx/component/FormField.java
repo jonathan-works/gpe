@@ -78,7 +78,7 @@ public class FormField implements Serializable {
 	}
 
 	public String getType() {
-	    if (type == null || type.equals("null")) {
+	    if (type == null || "null".equals(type)) {
 	        return "default";
 	    } else {
 	        return type;
