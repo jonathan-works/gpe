@@ -16,6 +16,7 @@ import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCE
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -34,6 +35,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -69,6 +71,23 @@ public class ProcessoEpa extends Processo {
 	
 	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
 	private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
+	
+	public ProcessoEpa() {
+	    super();
+    }
+	
+	public ProcessoEpa(final SituacaoPrazoEnum situacaoPrazo, final Date dataInicio, 
+	        final String numeroProcesso, final UsuarioLogin usuarioLogado, 
+	        final NaturezaCategoriaFluxo naturezaCategoriaFluxo,
+	        final Localizacao localizacao, final Item itemDoProcesso) {
+	    this.setSituacaoPrazo(situacaoPrazo);
+        this.setDataInicio(dataInicio);
+        this.setNumeroProcesso(numeroProcesso);
+        this.setUsuarioCadastroProcesso(usuarioLogado);
+        this.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
+        this.setLocalizacao(localizacao);
+        this.setItemDoProcesso(itemDoProcesso);
+	}
 	
 	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
 		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;

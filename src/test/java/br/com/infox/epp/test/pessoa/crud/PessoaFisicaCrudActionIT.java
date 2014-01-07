@@ -30,13 +30,14 @@ public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisi
         .addClasses(PessoaFisicaCrudAction.class, CpfValidator.class)
         .createDeployment();
     }
-
+    
     @Override
     protected void initEntity(final PessoaFisica entity) {
-        setEntityValue("cpf", entity.getCpf());
-        setEntityValue("nome", entity.getNome());
-        setEntityValue("dataNascimento", entity.getDataNascimento());
-        setEntityValue("ativo", entity.getAtivo());
+        final CrudActions<PessoaFisica> crudActions = getCrudActions();
+        crudActions.setEntityValue("cpf", entity.getCpf());
+        crudActions.setEntityValue("nome", entity.getNome());
+        crudActions.setEntityValue("dataNascimento", entity.getDataNascimento());
+        crudActions.setEntityValue("ativo", entity.getAtivo());
 //        id="cpf"
 //        required="true" />
 //        id="nome"
@@ -45,6 +46,8 @@ public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisi
 //        required="true" />
     }
 
+    
+    
     @Override
     protected String getComponentName() {
         return PessoaFisicaCrudAction.NAME;
@@ -84,28 +87,28 @@ public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisi
     @Override
     protected List<EntityActionContainer<PessoaFisica>> getUpdateSuccessList() {
         final ArrayList<EntityActionContainer<PessoaFisica>> list = new ArrayList<>();
-
+        final CrudActions<PessoaFisica> crudActions = getCrudActions();
         list.add(new EntityActionContainer<PessoaFisica>(new PessoaFisica("1jksdlsk11","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
             public void execute() {
-                setEntityValue("cpf", "000.123.321-32");
-                setEntityValue("nome", "Nova Pessoa");
+                crudActions.setEntityValue("cpf", "000.123.321-32");
+                crudActions.setEntityValue("nome", "Nova Pessoa");
             }
         });
         
         list.add(new EntityActionContainer<PessoaFisica>(new PessoaFisica("1jkjkjkj11","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
             public void execute() {
-                setEntityValue("cpf", "031.123.321-32");
-                setEntityValue("nome", "xxxxxPessoa");
+                crudActions.setEntityValue("cpf", "031.123.321-32");
+                crudActions.setEntityValue("nome", "xxxxxPessoa");
             }
         });
         
         list.add(new EntityActionContainer<PessoaFisica>(new PessoaFisica("1klzdjfbm1","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
             public void execute() {
-                setEntityValue("cpf", "578.123.321-32");
-                setEntityValue("nome", "Novaxxxxxxx");
+                crudActions.setEntityValue("cpf", "578.123.321-32");
+                crudActions.setEntityValue("nome", "Novaxxxxxxx");
             }
         });
         return list;
@@ -114,58 +117,59 @@ public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisi
     @Override
     protected List<EntityActionContainer<PessoaFisica>> getUpdateFailList() {
         final ArrayList<EntityActionContainer<PessoaFisica>> list = new ArrayList<>();
-
+        final CrudActions<PessoaFisica> crudActions = getCrudActions();
         list.add(new EntityActionContainer<PessoaFisica>(new PessoaFisica("9123993111","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
             public void execute() {
-                setEntityValue("cpf", fillStr("000.123.321-322",LengthConstants.NUMERO_CPF+1));
+                crudActions.setEntityValue("cpf", fillStr("000.123.321-322",LengthConstants.NUMERO_CPF+1));
             }
         });
         list.add(new EntityActionContainer<PessoaFisica>(new PessoaFisica("9332asdds1","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
             public void execute() {
-                setEntityValue("cpf", null);
+                crudActions.setEntityValue("cpf", null);
             }
         });
         list.add(new EntityActionContainer<PessoaFisica>(new PessoaFisica("asd1236asw","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
             public void execute() {
-                setEntityValue("nome", null);
+                crudActions.setEntityValue("nome", null);
             }
         });
         list.add(new EntityActionContainer<PessoaFisica>(new PessoaFisica("asdq23ds41","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
             public void execute() {
-                setEntityValue("nome", fillStr("Pessoa",LengthConstants.NOME_ATRIBUTO+1));
+                crudActions.setEntityValue("nome", fillStr("Pessoa",LengthConstants.NOME_ATRIBUTO+1));
             }
         });
         list.add(new EntityActionContainer<PessoaFisica>(new PessoaFisica("sdd00d1000","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
             public void execute() {
-                setEntityValue("dataNascimento", null);
+                crudActions.setEntityValue("dataNascimento", null);
             }
         });
         
         return list;
     }
 
-    protected void updateFailTest(EntityActionContainer<PessoaFisica> entityActionContainer) {
-        newInstance();
+    protected void updateFailTest(final EntityActionContainer<PessoaFisica> entityActionContainer) {
+        final CrudActions<PessoaFisica> crudActions = getCrudActions();
+        crudActions.newInstance();
         PessoaFisica entity = entityActionContainer.getEntity();
         
         initEntity(entity);
-        assert PERSISTED.equals(save());
-        final Object id = getId();
+        assert PERSISTED.equals(crudActions.save());
+        final Integer id = crudActions.getId();
         assert id != null;
         entityActionContainer.execute();
         
-        boolean assertion = !UPDATED.equals(save());
+        boolean assertion = !UPDATED.equals(crudActions.save());
         if (!assertion) {
             System.out.println("==FLAG "+entity.getCpf());    
         }
         assert assertion;
-        newInstance();
-        setId(id);
+        crudActions.newInstance();
+        crudActions.setId(id);
         assert compareEntityValues(entity);
     };
     

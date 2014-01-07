@@ -1,5 +1,7 @@
 package br.com.infox.epp.mail.service;
 
+import static java.text.MessageFormat.format;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,7 +10,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -48,27 +49,22 @@ public class AccessMailService {
         return nomeParam;
     }
     
-    public void enviarEmailDeMudancaDeSenha(String parametro, UsuarioLogin usuario, String password) throws BusinessException {
-        String nomeParametro = resolveTipoDeEmail(parametro);
-        ModeloDocumento modelo = findModelo(nomeParametro);
+    public void enviarEmailDeMudancaDeSenha(final String parametro, final UsuarioLogin usuario, final String password) throws BusinessException {
+        final String nomeParametro = resolveTipoDeEmail(parametro);
+        final ModeloDocumento modelo = findModelo(nomeParametro);
         if (modelo != null) {
             enviarEmailModelo(modelo, usuario, password);
         } else {
-            lancarErroDeParametroInvalido(nomeParametro);
+            final String errorMessage = format("Erro no envio do e-mail. O parâmetro de sistema '{0}' não foi definido ou possui um valor inválido", nomeParametro);
+            throw new BusinessException(errorMessage);
         }
     }
 
-    private void lancarErroDeParametroInvalido(String nomeParametro) throws BusinessException {
-        throw new BusinessException("Erro no envio do e-mail. O parâmetro de sistema '"
-                + nomeParametro
-                + "' não foi definido ou possui um valor inválido");
-    }
-    
     private ModeloDocumento findModelo(String nomeParametro){
         final Parametro parametro = parametroManager.getParametro(nomeParametro);
         ModeloDocumento result = null;
         if (parametro != null) {
-            String nomeModelo = parametro.getValorVariavel();
+            final String nomeModelo = parametro.getValorVariavel();
             if (nomeModelo != null && !"false".equals(nomeModelo)) {
                 result = modeloDocumentoManager.getModeloDocumentoByTitulo(nomeModelo);
             }
@@ -84,7 +80,6 @@ public class AccessMailService {
         emailData.getRecipientList().clear();
         emailData.getRecipientList().add(usuario);
         emailData.setSubject("Senha do Sistema");
-        FacesMessages.instance().add("Senha gerada com sucesso.");
         new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
     }
 

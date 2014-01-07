@@ -5,12 +5,13 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
@@ -34,13 +35,26 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 			raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
 		} catch (DAOException e){
 			LOG.error(".incluirParteProcesso()", e);
-			FacesMessages.instance().clear();
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getLocalizedMessage());
+			final FacesMessages messagesHandler = FacesMessages.instance();
+            messagesHandler.clear();
+			messagesHandler.add(Severity.ERROR, e.getLocalizedMessage());
 		}
 	}
-	
-	public void carregaPessoa(String tipoPessoa, String codigo){
-		pessoaManager.carregaPessoa(tipoPessoa, codigo);
+    
+    private TipoPessoaEnum convertTipoPessoaEnum(final String tipoPessoa) {
+        if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
+            return TipoPessoaEnum.F;
+        } else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
+            return TipoPessoaEnum.J;
+        }
+        return null;
+    }
+    
+	public void carregaPessoa(final String tipoPessoa, final String codigo){
+		final TipoPessoaEnum tipoPessoaEnum = convertTipoPessoaEnum(tipoPessoa);
+		if (tipoPessoaEnum != null) {
+		    pessoaManager.carregaPessoa(tipoPessoaEnum, codigo);
+		}
 	}
 
 }

@@ -13,7 +13,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.access.type.UsuarioEnum;
-import br.com.infox.epp.system.util.ParametroUtil;
 
 @Name(UsuarioLoginCrudAction.NAME)
 public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
@@ -28,14 +27,14 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     public void newInstance() {
         super.newInstance();
         final UsuarioLogin usuarioLogin = getInstance();
-        usuarioLogin.setBloqueio(false);
-        usuarioLogin.setProvisorio(false);
+        usuarioLogin.setBloqueio(Boolean.FALSE);
+        usuarioLogin.setProvisorio(Boolean.FALSE);
     }
 
     @Override
     protected boolean beforeSave() {
         validarPermanencia();
-        return true;
+        return Boolean.TRUE;
     }
     
     //TODO: Não é validação. definir outro nome e local para existir
@@ -53,15 +52,17 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     protected void afterSave(String ret) {
         final UsuarioLogin usuario = getInstance();
         if (PERSISTED.equals(ret)) {
+            final String afterSaveExceptionMsg = "afterSave(ret)";
             try {
-                passwordService.requisitarNovaSenha(usuario.getEmail(), "");
+                passwordService.requisitarNovaSenha(Boolean.FALSE, usuario.getEmail());
+                getMessagesHandler().add("Senha gerada com sucesso.");
             } catch (BusinessException be){
-            	LOG.warn("afterSave(ret)", be);
+            	LOG.warn(afterSaveExceptionMsg, be);
                 getMessagesHandler().add(be.getLocalizedMessage());
             } catch (LoginException e) {
-                LOG.error("afterSave(ret)", e);
+                LOG.error(afterSaveExceptionMsg, e);
             } catch (DAOException e) {
-                LOG.error("afterSave(ret)", e);
+                LOG.error(afterSaveExceptionMsg, e);
             }
         }
     }

@@ -69,5 +69,8 @@ public interface Crudable<T> {
 	T getInstance();
 
 	void setInstance(T instance);
+
+	String remove();
+	String remove(T value);
 	
 }

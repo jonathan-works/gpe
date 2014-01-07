@@ -7,9 +7,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.security.RunAsOperation;
-import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.util.RandomStringUtils;
+import org.richfaces.component.util.Strings;
 
 import br.com.infox.core.exception.BusinessException;
 import br.com.infox.core.persistence.DAOException;
@@ -29,6 +28,22 @@ public class PasswordService {
     
     @In private AccessMailService accessMailService;
     @In private UsuarioLoginManager usuarioLoginManager;
+
+    public void requisitarNovaSenha(final boolean usingLogin, final String value) throws LoginException, BusinessException, DAOException {
+        if (Strings.isEmpty(value)) {
+            throw new LoginException("É preciso informar o login ou o e-mail do usuário");
+        }
+        UsuarioLogin usuario;
+        String mode;
+        if (usingLogin) {
+            usuario = usuarioLoginManager.getUsuarioLoginByLogin(value);
+            mode = "login";
+        } else {
+            usuario = usuarioLoginManager.getUsuarioLoginByEmail(value);
+            mode = "email";
+        }
+        recoverUsuario(usuario, mode);
+    }
     
     public void requisitarNovaSenha(final String email, final String login) throws LoginException, BusinessException, DAOException {
         UsuarioLogin usuario;
@@ -61,14 +76,9 @@ public class PasswordService {
             password = RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH);
         }
         usuario.setSenha(password);
-        new RunAsOperation(true) {
-            @Override
-            public void execute() {
-                IdentityManager.instance().changePassword(usuario.getLogin(), password);
-            }
-        }.run();
+        new ChangePasswordOperation(usuario, password).run();
         usuarioLoginManager.update(usuario);
         return password;
     }
-
+    
 }
