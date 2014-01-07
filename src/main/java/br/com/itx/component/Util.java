@@ -206,7 +206,7 @@ public class Util implements Serializable {
 	
 	public String event(String event) {
 		Context eventContext = Contexts.getEventContext();
-		if (event != null && !event.equals("")) {
+		if (event != null && !"".equals(event)) {
 			eventContext.set("event", event);
 			((Events)Component.getInstance("org.jboss.seam.core.events")).raiseEvent(event);
 		}
