@@ -41,6 +41,7 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
     @NamedNativeQuery(name=NOVAS_TAREFAS, query=NOVAS_TAREFAS_QUERY)
 })
 @NamedQueries({
+    @NamedQuery(name=TAREFA_BY_TAREFA_AND_FLUXO, query=TAREFA_BY_TAREFA_AND_FLUXO_QUERY),
     @NamedQuery(name=TAREFA_BY_ID_JBPM_TASK, query=TAREFA_BY_ID_JBPM_TASK_QUERY)
 })
 public class Tarefa implements java.io.Serializable {
