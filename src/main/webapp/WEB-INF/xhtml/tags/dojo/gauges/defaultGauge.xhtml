@@ -63,7 +63,11 @@
     	<div id="#{id}DefaultGaugeHeader" class="rf-p-h">#{label}</div>
         <div id="#{id}DefaultGauge" class="gauge"></div>
         <s:div id="gaugeAjaxDiv#{id}">
-	        <span >#{wi:get(indicatorLabel, '')}: #{value}</span>
+	        <span >#{wi:get(indicatorLabel, '')}: 
+		        <h:outputText value="#{value}">
+		            <f:convertNumber maxFractionDigits="2" />
+		        </h:outputText>
+	        </span>
 	        <script type="text/javascript">
 	        	invoke(["infox.DefaultGauge.instance.#{id}DefaultGauge"],function(Gauge) {
 		        	try {
