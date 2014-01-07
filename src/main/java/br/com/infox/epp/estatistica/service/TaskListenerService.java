@@ -1,7 +1,5 @@
 package br.com.infox.epp.estatistica.service;
 
-import static br.com.infox.ibpm.util.JbpmUtil.getTarefa;
-
 import java.util.Date;
 
 import org.jboss.seam.annotations.In;
@@ -24,6 +22,7 @@ import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.ibpm.util.JbpmUtil;
 
@@ -38,6 +37,7 @@ public class TaskListenerService extends GenericManager {
 	
 	@In
 	private ProcessoEpaTarefaManager processoEpaTarefaManager;
+	@In TarefaManager tarefaManager;
 	
 	@Observer(IniciarProcessoService.ON_CREATE_PROCESS)
 	public void onStartProcess(TaskInstance taskInstance, Processo processo) { 
@@ -57,7 +57,7 @@ public class TaskListenerService extends GenericManager {
 		String taskName = taskInstance.getTask().getName();
 		String procDefName = taskInstance.getProcessInstance()
                 .getProcessDefinition().getName();
-		Tarefa tarefa = getTarefa(taskName, procDefName);
+		Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
 		
 		ProcessoEpaTarefa pEpaTarefa = new ProcessoEpaTarefa();
         pEpaTarefa.setProcessoEpa(find(ProcessoEpa.class, processo.getIdProcesso()));
