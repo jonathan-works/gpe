@@ -213,7 +213,7 @@ public class JbpmUtil {
 		String type = var.getMappedName().split(":")[0];
 		Object variable = taskInstance.getVariable(var.getMappedName());
 		
-		if (type.startsWith("textEditCombo") || type.equals("textEditSignature")){
+		if (isTypeEditor(type)){
 			Integer id = (Integer) variable;
 			if (id != null){
 				ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, id);
@@ -336,7 +336,7 @@ public class JbpmUtil {
 	}	
 	
 	public static boolean isTypeEditor(String type) {
-		return type.startsWith("textEditCombo") || type.equals("textEditSignature");
+		return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
 	}
 	
 	public static boolean isUsuarioLogadoResponsavelLocalizacao(){
