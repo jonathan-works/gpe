@@ -160,7 +160,7 @@ public class TaskHandler implements Serializable {
 	
 	private boolean checkNullVariables() {
 		for(VariableAccessHandler vah : variables) {
-			if(vah.getType().equals("null")) {
+			if("null".equals(vah.getType())) {
 				FacesMessages.instance().add("É obrigatório selecionar um tipo!");
 				return true;
 			}
