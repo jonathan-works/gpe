@@ -223,7 +223,7 @@ public class Util implements Serializable {
 	 * @return Texto com a primeira letra maiuscula.
 	 */
 	public String upperFirst(String text) {
-		if (text == null || text.equals("")) {
+		if (text == null || "".equals(text)) {
 			return "";
 		}
 		return text.substring(0,1).toUpperCase() + text.substring(1);
