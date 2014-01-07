@@ -55,6 +55,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
             final String afterSaveExceptionMsg = "afterSave(ret)";
             try {
                 passwordService.requisitarNovaSenha(Boolean.FALSE, usuario.getEmail());
+                getMessagesHandler().add("Senha gerada com sucesso.");
             } catch (BusinessException be){
             	LOG.warn(afterSaveExceptionMsg, be);
                 getMessagesHandler().add(be.getLocalizedMessage());
