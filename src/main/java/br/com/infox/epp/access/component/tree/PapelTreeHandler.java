@@ -11,11 +11,11 @@ import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 
-@Name("papelTree")
+@Name(PapelTreeHandler.NAME)
 @Scope(ScopeType.PAGE)
 @BypassInterceptors
 public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
-
+    public static final String NAME = "papelTree";
 	public static final String PAPEL_TREE_EVENT = "papelTreeHandlerSelected";
 
 	private static final long serialVersionUID = 1L;
