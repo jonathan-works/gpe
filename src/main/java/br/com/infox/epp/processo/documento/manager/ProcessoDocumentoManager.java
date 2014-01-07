@@ -22,8 +22,13 @@ public class ProcessoDocumentoManager extends GenericManager {
 
     public static final String NAME = "processoDocumentoManager";
     private static final long serialVersionUID = 1L;
+    private static final Class<ProcessoDocumento> CLASS = ProcessoDocumento.class;
     
     @In private ProcessoDocumentoDAO processoDocumentoDAO;
+    
+    public ProcessoDocumento find(Integer idProcessoDocumento){
+        return find(CLASS, idProcessoDocumento);
+    }
     
     public Object getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
         return processoDocumentoDAO.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
