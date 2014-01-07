@@ -33,6 +33,10 @@ public class ProcessoDocumentoManager extends GenericManager {
     public Object getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
         return processoDocumentoDAO.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
     }
+    
+    public String valorProcessoDocumento(Integer idProcessoDocumento){
+        return find(idProcessoDocumento).getProcessoDocumentoBin().getModeloDocumento();
+    }
 
     public ProcessoDocumento createProcessoDocumento(Processo processo, String label, ProcessoDocumentoBin bin, TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
         ProcessoDocumento doc = new ProcessoDocumento();
