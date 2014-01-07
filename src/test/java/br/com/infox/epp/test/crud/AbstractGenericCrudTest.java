@@ -8,6 +8,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -15,13 +16,15 @@ import junit.framework.AssertionFailedError;
 
 import org.jboss.seam.contexts.TestLifecycle;
 import org.jboss.seam.core.Expressions;
+import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.mock.JUnitSeamTest;
 import org.jboss.seam.servlet.ServletSessionMap;
 import org.junit.Test;
 
+import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.crud.Crudable;
+
 public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
-    private static final String ENT_EXP = "'#{'{0}.instance.{1}'}'";
-    private static final String COMP_EXP = "'#{'{0}.{1}'}'";
     private static final String ATIVO = "ativo";
     protected static final String SERVLET_3_0 = "Servlet 3.0";
     
@@ -40,6 +43,8 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         return sb.substring(0, topLength);
     }
     
+    private final CrudActions<T> crudActions = new CrudActions<>(getComponentName());
+    
     /**
      * Call a method binding
      */
@@ -54,20 +59,10 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         return Expressions.instance().createValueExpression(valueExpression).getValue();
     }
 
-    protected final Object getComponentValue(final String componentName, final String fieldName) {
-        final String valueExpression = format(COMP_EXP, componentName, fieldName);
-        return Expressions.instance().createValueExpression(valueExpression).getValue();
-    }
-
     /**
      * Set a value binding
      */
     protected final void setValue(final String valueExpression, final Object value) {
-        Expressions.instance().createValueExpression(valueExpression).setValue(value);
-    }
-
-    protected final void setComponentValue(final String componentName, final String fieldName, final Object value) {
-        final String valueExpression = format(COMP_EXP, componentName, fieldName);
         Expressions.instance().createValueExpression(valueExpression).setValue(value);
     }
 
@@ -129,7 +124,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     }
     
     protected boolean compareEntityValues(final T entity) {
-        final Object entityInstance = getInstance();
+        final Object entityInstance = crudActions.getInstance();
         return entityInstance == entity || (entityInstance != null && entityInstance.equals(entity));
     }
 
@@ -254,129 +249,97 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
     }
 
-    protected void setEntityValue(final String fieldName, final Object codigoDocumento) {
-        setValue(format(ENT_EXP, getComponentName(), fieldName), codigoDocumento);
-    }
-    
-    protected Object getEntityValue(final String fieldName) {
-        return getValue(format(ENT_EXP, getComponentName(), fieldName));
+    protected CrudActions<T> getCrudActions() {
+        return this.crudActions;
     }
 
     protected abstract String getComponentName();
 
-    protected void newInstance() {
-        invokeMethod(format(COMP_EXP,getComponentName(),"newInstance"));
-    }
-    
-    protected Object getInstance() {
-        return getComponentValue(getComponentName(), "instance");
-    }
-    
-    protected Object save() {
-        return invokeMethod(format(COMP_EXP,getComponentName(), "save"));
-    }
-    
-    protected Object remove() {
-        return invokeMethod(format(COMP_EXP,getComponentName(), "remove"));
-    }
-    
-    protected Object inactivate() {
-        return invokeMethod(format("'#{'{0}.inactive({0}.instance)'}'", getComponentName()));
-    }
-    
-    protected Object getId() {
-        return getComponentValue(getComponentName(), "id");
-    }
-
-    protected void setId(Object value) {
-        setComponentValue(getComponentName(), "id", value);
-    }
-
     protected void persistFailTest(final T entity) {
-        newInstance();
+        crudActions.newInstance();
         initEntity(entity);
-        assert !PERSISTED.equals(save());
-        Object id = getId();
+        assert !PERSISTED.equals(crudActions.save());
+        Object id = crudActions.getId();
         assertNull(id);
     }
     
     protected void persistSuccessTest(final T entity) {      
-        newInstance();
+        crudActions.newInstance();
         initEntity(entity);
-        final Object persistResult = save();
+        final Object persistResult = crudActions.save();
         assertEquals(PERSISTED, persistResult);
         
-        Object id = getId();
+        Integer id = crudActions.getId();
         assertNotNull(id);
-        newInstance();
-        Object nullId = getId();
+        crudActions.newInstance();
+        Integer nullId = crudActions.getId();
         assertNull(nullId);
-        setId(id);
+        crudActions.setId(id);
         assert compareEntityValues(entity);
     }
 
     protected void inactivateSuccessTest(final T entity) {
-        newInstance();
+        crudActions.newInstance();
         initEntity(entity);
-        assert PERSISTED.equals(save());
-        assert getId() != null;
-        assert Boolean.TRUE.equals(getEntityValue(ATIVO));
-        assert UPDATED.equals(inactivate());
-        assert Boolean.FALSE.equals(getEntityValue(ATIVO));
+        assert PERSISTED.equals(crudActions.save());
+        assert crudActions.getId() != null;
+        assert Boolean.TRUE.equals(crudActions.getEntityValue(ATIVO));
+        assert UPDATED.equals(crudActions.inactivate());
+        assert Boolean.FALSE.equals(crudActions.getEntityValue(ATIVO));
     }
 
     protected void inactivateFailTest(final T entity) {
-        newInstance();
+        crudActions.newInstance();
         initEntity(entity);
-        assert PERSISTED.equals(save());
-        assert getId() != null;
-        assert Boolean.TRUE.equals(getEntityValue(ATIVO));
-        assert !UPDATED.equals(inactivate());
-        assert Boolean.TRUE.equals(getEntityValue(ATIVO));
+        assert PERSISTED.equals(crudActions.save());
+        assert crudActions.getId() != null;
+        assert Boolean.TRUE.equals(crudActions.getEntityValue(ATIVO));
+        assert !UPDATED.equals(crudActions.inactivate());
+        assert Boolean.TRUE.equals(crudActions.getEntityValue(ATIVO));
     }
     
     protected void removeSuccessTest(final T entity) {
-        newInstance();
+        crudActions.newInstance();
         initEntity(entity);
-        assert PERSISTED.equals(save());
-        assert getId() != null;
-        assert REMOVED.equals(remove());
+        assert PERSISTED.equals(crudActions.save());
+        assert crudActions.getId() != null;
+        assert REMOVED.equals(crudActions.remove());
     }
     
     protected void removeFailTest(final T entity) {
-        newInstance();
+        crudActions.newInstance();
         initEntity(entity);
-        assert getId() == null;
-        assert PERSISTED.equals(save());
-        assert REMOVED.equals(remove());
+        assert crudActions.getId() == null;
+        assert PERSISTED.equals(crudActions.save());
+        assert REMOVED.equals(crudActions.remove());
     }
     
     protected void updateSuccessTest(final EntityActionContainer<T> entityActionContainer) {
-        newInstance();
+        crudActions.newInstance();
         initEntity(entityActionContainer.getEntity());
-        assert PERSISTED.equals(save());
-        final Object id = getId();
+        assert PERSISTED.equals(crudActions.save());
+        final Integer id = crudActions.getId();
         assert id != null;
         
-        newInstance();
-        setId(id);
+        crudActions.newInstance();
+        crudActions.setId(id);
         entityActionContainer.execute();
-        assert UPDATED.equals(save());
-        newInstance();
-        setId(id);
+        assert UPDATED.equals(crudActions.save());
+        crudActions.newInstance();
+        crudActions.setId(id);
         assert !compareEntityValues(entityActionContainer.getEntity());
     }
     
     protected void updateFailTest(final EntityActionContainer<T> entityActionContainer) {
-        newInstance();
+        crudActions.newInstance();
         initEntity(entityActionContainer.getEntity());
-        assert PERSISTED.equals(save());
-        final Object id = getId();
+        assert PERSISTED.equals(crudActions.save());
+        final Integer id = crudActions.getId();
         assert id != null;
         entityActionContainer.execute();
-        assert !UPDATED.equals(save());
-        newInstance();
-        setId(id);
+        assert !UPDATED.equals(crudActions.save());
+        crudActions.newInstance();
+        crudActions.setId(id);
         assert compareEntityValues(entityActionContainer.getEntity());
     }
     
@@ -396,5 +359,113 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             return entity;
         }
         
+    }
+    
+    public final class CrudActions<E> implements Crudable<E> {
+        private static final String INACTIVATE = "inactive";
+        private static final String ID = "id";
+        private static final String REMOVE = "remove";
+        private static final String SAVE = "save";
+        private static final String INSTANCE = "instance";
+        private static final String NEW_INSTANCE = "newInstance";
+        private static final String COMP_EXP = "'#{'{0}.{1}'}'";
+        private static final String ENT_EXP = "'#{'{0}.instance.{1}'}'";
+        private final String componentName;
+        
+        public CrudActions(final String componentName) {
+            this.componentName = componentName;
+        }
+
+        public final void setEntityValue(final String field, final Object value) {
+            final String valueExpression = format(ENT_EXP, this.componentName, field);
+            createValueExpression(valueExpression).setValue(value);
+        }
+
+        private ValueExpression<Object> createValueExpression(final String valueExpression) {
+            return Expressions.instance().createValueExpression(valueExpression);
+        }
+        
+        @SuppressWarnings(WarningConstants.UNCHECKED)
+        public final <R> R getEntityValue(final String field) {
+            final String valueExpression = format(ENT_EXP, this.componentName, field);
+            return (R) createValueExpression(valueExpression).getValue();
+        }
+        
+        public final void setComponentValue(final String field, final Object value) {
+            final String valueExpression = format(COMP_EXP, this.componentName, field);
+            createValueExpression(valueExpression).setValue(value);
+        }
+        
+        @SuppressWarnings(WarningConstants.UNCHECKED)
+        public final <R> R getComponentValue(final String field) {
+            final String valueExpression = format(COMP_EXP, this.componentName, field);
+            return (R) createValueExpression(valueExpression).getValue();
+        }
+        
+        public final Object invokeMethod(final String methodName, final Object... args) {
+            return Expressions.instance().createMethodExpression(format(COMP_EXP, this.componentName, methodName)).invoke(args);
+        }
+        
+        public final <R> R invokeMethod(final String methodName, final Class<R> returnType, final Object... args) {
+            final ArrayList<Class<?>> classList = new ArrayList<>();
+            for (Object object : args) {
+                classList.add(object.getClass());
+            }
+            final Expressions expressionFactory = Expressions.instance();
+            final String expressionString = format(COMP_EXP, this.componentName, methodName);
+            final Class<?>[] types = classList.toArray(new Class<?>[classList.size()]);
+            return expressionFactory.createMethodExpression(expressionString, returnType, types).invoke(args);
+        }
+        
+        public final void newInstance() {
+            this.invokeMethod(NEW_INSTANCE);
+        }
+        
+        @SuppressWarnings(WarningConstants.UNCHECKED)
+        public final E getInstance() {
+            return (E) getComponentValue(INSTANCE);
+        }
+        public void setInstance(final E value) {
+            setComponentValue(INSTANCE, value);
+        }
+        
+        public final String save() {
+            return (String) this.invokeMethod(SAVE);
+        }
+        
+        public final String remove() {
+            return (String) this.invokeMethod(REMOVE);
+        }
+        
+        public final String remove(final E entity) {
+            return this.invokeMethod(REMOVE, String.class, entity);
+        }
+        
+        public final String inactivate() {
+            return this.invokeMethod(INACTIVATE, String.class, this.getInstance());
+        }
+        
+        public final Integer getId() {
+            return (Integer) getComponentValue(ID);
+        }
+
+        public final void setId(Object value) {
+            setComponentValue(ID, value);
+        }
+
+        @Override
+        public String getTab() {
+            return (String) this.getComponentValue("tab");
+        }
+
+        @Override
+        public void setTab(final String value) {
+            this.setComponentValue("tab", value);
+        }
+
+        @Override
+        public boolean isManaged() {
+            return this.invokeMethod("isManaged", Boolean.class);
+        }
     }        
 }
