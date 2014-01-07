@@ -42,18 +42,6 @@ public class UserHandler {
     private TaskInstance taskInstance;
     private String usuarioProcesso, usuarioTarefa;
 
-    public String getNomeUsuario(TaskInstance task) {
-        String login = task.getActorId();
-        if (login == null || login.equals("")) {
-            return getLocalizacao(task);
-        }
-        UsuarioLogin u = getUsuario(login);
-        if (u != null) {
-            return u.getLogin();
-        }
-        return null;
-    }
-
     public String getActorIdTarefaAtual(Integer idProcesso) {
         if (this.idProcesso == null || !this.idProcesso.equals(idProcesso)) {
             try {
@@ -124,12 +112,6 @@ public class UserHandler {
     	this.usuarioProcesso = null;
     	this.usuarioTarefa = null;
     	this.taskInstance = null;
-    }
-
-    private String getLocalizacao(TaskInstance task) {
-        String localizacao = JbpmUtil.instance().getLocalizacao(task)
-                .getCaminhoCompleto();
-        return "Local: " + localizacao;
     }
 
 }
