@@ -52,39 +52,15 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
         return NAME;
     }
     
-    private UsuarioLogin createUsuarioPersistValues(final String nomeUsuario,
-            final String email, final String login) {
-        final UsuarioLogin usuario = new UsuarioLogin();
-        usuario.setNomeUsuario(nomeUsuario);
-        usuario.setEmail(email);
-        usuario.setLogin(login);
-        usuario.setTipoUsuario(UsuarioEnum.H);
-        usuario.setAtivo(Boolean.TRUE);
-        usuario.setProvisorio(Boolean.FALSE);
-        return usuario;
-    }
-    
-    private UsuarioLogin createUsuarioPersistValues(final String nomeUsuario,
-            final String email, final String login,
-            final UsuarioEnum tipoUsuario, final Boolean ativo) {
-        final UsuarioLogin usuario = new UsuarioLogin();
-        usuario.setNomeUsuario(nomeUsuario);
-        usuario.setEmail(email);
-        usuario.setLogin(login);
-        usuario.setTipoUsuario(tipoUsuario);
-        usuario.setAtivo(ativo);
-        usuario.setProvisorio(Boolean.FALSE);
-        return usuario;
-    }
-
     @Override
     protected void initEntity(final UsuarioLogin entity) {
-        setEntityValue("nomeUsuario", entity.getNomeUsuario());
-        setEntityValue("email", entity.getEmail());
-        setEntityValue("login", entity.getLogin());
-        setEntityValue("tipoUsuario", entity.getTipoUsuario());
-        setEntityValue("ativo", entity.getAtivo());
-        setEntityValue("provisorio", entity.getProvisorio());
+        final CrudActions<UsuarioLogin> crudActions = getCrudActions();
+        crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
+        getCrudActions().setEntityValue("email", entity.getEmail());
+        getCrudActions().setEntityValue("login", entity.getLogin());
+        getCrudActions().setEntityValue("tipoUsuario", entity.getTipoUsuario());
+        getCrudActions().setEntityValue("ativo", entity.getAtivo());
+        getCrudActions().setEntityValue("provisorio", entity.getProvisorio());
     }
     
     @Override
@@ -92,7 +68,7 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
         final ArrayList<UsuarioLogin> list = new ArrayList<>();
         
         for (int i = 0; i < 30; i++) {
-            list.add(createUsuarioPersistValues("Usuario Login Persist"+i, MessageFormat.format("usr-login-pers{0}@infox.com.br", i), MessageFormat.format("usr-login-pers{0}", i)));
+            list.add(new UsuarioLogin("Usuario Login Persist"+i, MessageFormat.format("usr-login-pers{0}@infox.com.br", i), MessageFormat.format("usr-login-pers{0}", i)));
         }
         
         return list;
@@ -101,14 +77,14 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     @Override
     protected List<UsuarioLogin> getPersistFailList() {
         final ArrayList<UsuarioLogin> list = new ArrayList<>();
-        list.add(createUsuarioPersistValues(null, "usr-login-pers-fail1@infox.com.br", "usr-login-pers-fail"));
-        list.add(createUsuarioPersistValues(fillStr("usr-login-pers-fail2@infox.com.br",LengthConstants.NOME_ATRIBUTO+1), "usr-login-pers-fail2@infox.com.br", "usr-login-pers-fail2"));
+        list.add(new UsuarioLogin(null, "usr-login-pers-fail1@infox.com.br", "usr-login-pers-fail"));
+        list.add(new UsuarioLogin(fillStr("usr-login-pers-fail2@infox.com.br",LengthConstants.NOME_ATRIBUTO+1), "usr-login-pers-fail2@infox.com.br", "usr-login-pers-fail2"));
         
-        list.add(createUsuarioPersistValues("Usuario Login", null, "usr-login-pers-fail3"));
-        list.add(createUsuarioPersistValues("Usuario Login", fillStr("usr-login-pers-fail4@infox.com.br",LengthConstants.DESCRICAO_PADRAO+1), "usr-login-pers-fail"));
+        list.add(new UsuarioLogin("Usuario Login", null, "usr-login-pers-fail3"));
+        list.add(new UsuarioLogin("Usuario Login", fillStr("usr-login-pers-fail4@infox.com.br",LengthConstants.DESCRICAO_PADRAO+1), "usr-login-pers-fail"));
         
-        list.add(createUsuarioPersistValues("Usuario Login", "usr-login-pers-fail5@infox.com.br", null));
-        list.add(createUsuarioPersistValues("Usuario Login", "usr-login-pers-fail6@infox.com.br", fillStr("usr-login-pers-fail6",LengthConstants.DESCRICAO_PADRAO+1)));
+        list.add(new UsuarioLogin("Usuario Login", "usr-login-pers-fail5@infox.com.br", null));
+        list.add(new UsuarioLogin("Usuario Login", "usr-login-pers-fail6@infox.com.br", fillStr("usr-login-pers-fail6",LengthConstants.DESCRICAO_PADRAO+1)));
         return list;
     }
 
@@ -116,7 +92,7 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     protected List<UsuarioLogin> getInactivateSuccessList() {
         final ArrayList<UsuarioLogin> list = new ArrayList<UsuarioLogin>();
         for (int i = 0; i < 32; i++) {
-            list.add(createUsuarioPersistValues("Usuario Login Inactive", "usr-login-inac"+i+"@infox.com.br", "usr-login-inac"+i, UsuarioEnum.H, Boolean.TRUE));
+            list.add(new UsuarioLogin("Usuario Login Inactive", "usr-login-inac"+i+"@infox.com.br", "usr-login-inac"+i, UsuarioEnum.H, Boolean.TRUE));
         }
         return list;
     }
@@ -125,11 +101,11 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     protected List<EntityActionContainer<UsuarioLogin>> getUpdateSuccessList() {
         final ArrayList<EntityActionContainer<UsuarioLogin>> list = new ArrayList<EntityActionContainer<UsuarioLogin>>();
         for (int i = 0; i < 30; i++) {
-            list.add(new EntityActionContainer<UsuarioLogin>(createUsuarioPersistValues("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i))) {
+            list.add(new EntityActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i))) {
                 @Override
                 public void execute() {
                     final String updatedNomeUsuario = getEntity().getNomeUsuario()+"(updated)";
-                    setEntityValue("nomeUsuario", updatedNomeUsuario);
+                    getCrudActions().setEntityValue("nomeUsuario", updatedNomeUsuario);
                 }
             });
         }
@@ -140,11 +116,11 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     protected List<EntityActionContainer<UsuarioLogin>> getUpdateFailList() {
         final ArrayList<EntityActionContainer<UsuarioLogin>> list = new ArrayList<EntityActionContainer<UsuarioLogin>>();
         for (int i = 0; i < 30; i++) {
-            list.add(new EntityActionContainer<UsuarioLogin>(createUsuarioPersistValues("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i))) {
+            list.add(new EntityActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i))) {
                 @Override
                 public void execute() {
                   final String updatedNomeUsuario = fillStr(getEntity().getNomeUsuario()+"(updated)", LengthConstants.NOME_ATRIBUTO+1);
-                  setEntityValue("nomeUsuario", updatedNomeUsuario);
+                  getCrudActions().setEntityValue("nomeUsuario", updatedNomeUsuario);
                 }
             });
         }
@@ -157,11 +133,12 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     
     @Override
     protected boolean compareEntityValues(final UsuarioLogin entity) {
-        return areEquals(getEntityValue("nomeUsuario"), entity.getNomeUsuario())
-                    && areEquals(getEntityValue("email"), entity.getEmail())
-                    && areEquals(getEntityValue("login"), entity.getLogin())
-                    && areEquals(getEntityValue("tipoUsuario"), entity.getTipoUsuario())
-                    && areEquals(getEntityValue("ativo"), entity.getAtivo())
-                    && areEquals(getEntityValue("provisorio"), entity.getProvisorio());
+        final CrudActions<UsuarioLogin> crudActions = getCrudActions();
+        return areEquals(crudActions.getEntityValue("nomeUsuario"), entity.getNomeUsuario())
+                    && areEquals(crudActions.getEntityValue("email"), entity.getEmail())
+                    && areEquals(crudActions.getEntityValue("login"), entity.getLogin())
+                    && areEquals(crudActions.getEntityValue("tipoUsuario"), entity.getTipoUsuario())
+                    && areEquals(crudActions.getEntityValue("ativo"), entity.getAtivo())
+                    && areEquals(crudActions.getEntityValue("provisorio"), entity.getProvisorio());
     }
 }

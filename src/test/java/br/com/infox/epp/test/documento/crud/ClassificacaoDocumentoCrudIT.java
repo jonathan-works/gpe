@@ -64,16 +64,17 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
     }
 
     protected void initEntity(final TipoProcessoDocumento entity) {
-        setEntityValue("codigoDocumento", entity.getCodigoDocumento());
-        setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
-        setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
-        setEntityValue("visibilidade", entity.getVisibilidade());
-        setEntityValue("numera", entity.getNumera());
-        setEntityValue("tipoNumeracao", entity.getTipoNumeracao());
-        setEntityValue("sistema", entity.getSistema());
-        setEntityValue("publico", entity.getPublico());
-        setEntityValue("ativo", entity.getAtivo());
-        setEntityValue("tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
+        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
+        crudActions.setEntityValue("codigoDocumento", entity.getCodigoDocumento());
+        crudActions.setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
+        crudActions.setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
+        crudActions.setEntityValue("visibilidade", entity.getVisibilidade());
+        crudActions.setEntityValue("numera", entity.getNumera());
+        crudActions.setEntityValue("tipoNumeracao", entity.getTipoNumeracao());
+        crudActions.setEntityValue("sistema", entity.getSistema());
+        crudActions.setEntityValue("publico", entity.getPublico());
+        crudActions.setEntityValue("ativo", entity.getAtivo());
+        crudActions.setEntityValue("tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
     }
     
     private boolean areEquals(final Object obj1, final Object obj2) {
@@ -82,30 +83,32 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
     
     @Override
     protected boolean compareEntityValues(TipoProcessoDocumento entity) {
-        return areEquals(getEntityValue("codigoDocumento"),entity.getCodigoDocumento())
-                && areEquals(getEntityValue("tipoProcessoDocumento"),entity.getTipoProcessoDocumento())
-                && areEquals(getEntityValue("inTipoDocumento"),entity.getInTipoDocumento())
-                && areEquals(getEntityValue("visibilidade"),entity.getVisibilidade())
-                && areEquals(getEntityValue("numera"),entity.getNumera())
-                && areEquals(getEntityValue("tipoNumeracao"),entity.getTipoNumeracao())
-                && areEquals(getEntityValue("sistema"),entity.getSistema())
-                && areEquals(getEntityValue("publico"),entity.getPublico())
-                && areEquals(getEntityValue("ativo"),entity.getAtivo())
-                && areEquals(getEntityValue("tipoProcessoDocumentoObservacao"),entity.getTipoProcessoDocumentoObservacao());
+        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
+        return areEquals(crudActions.getEntityValue("codigoDocumento"),entity.getCodigoDocumento())
+                && areEquals(crudActions.getEntityValue("tipoProcessoDocumento"),entity.getTipoProcessoDocumento())
+                && areEquals(crudActions.getEntityValue("inTipoDocumento"),entity.getInTipoDocumento())
+                && areEquals(crudActions.getEntityValue("visibilidade"),entity.getVisibilidade())
+                && areEquals(crudActions.getEntityValue("numera"),entity.getNumera())
+                && areEquals(crudActions.getEntityValue("tipoNumeracao"),entity.getTipoNumeracao())
+                && areEquals(crudActions.getEntityValue("sistema"),entity.getSistema())
+                && areEquals(crudActions.getEntityValue("publico"),entity.getPublico())
+                && areEquals(crudActions.getEntityValue("ativo"),entity.getAtivo())
+                && areEquals(crudActions.getEntityValue("tipoProcessoDocumentoObservacao"),entity.getTipoProcessoDocumentoObservacao());
     }
     
     @Override
     protected List<EntityActionContainer<TipoProcessoDocumento>> getUpdateFailList() {
         final ArrayList<EntityActionContainer<TipoProcessoDocumento>> list = new ArrayList<>();
         TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
+        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
         list.add(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
             @Override
             public void execute() {
-                final Object id = getId();
+                final Object id = crudActions.getId();
                 assert id != null;
-                newInstance();
+                crudActions.newInstance();
                 initEntity(getEntity());
-                setEntityValue("idTipoProcessoDocumento", ((int) id) + 1);
+                crudActions.setEntityValue("idTipoProcessoDocumento", ((int) id) + 1);
             }
         });
         return list;
@@ -115,15 +118,16 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
     protected ArrayList<EntityActionContainer<TipoProcessoDocumento>> getUpdateSuccessList() {
         final ArrayList<EntityActionContainer<TipoProcessoDocumento>> list = new ArrayList<>();
         TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
+        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
         list.add(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
             @Override
             public void execute() {
-                final Object id = getId();
+                final Integer id = crudActions.getId();
                 assert id != null;
-                newInstance();
-                setId(id);
+                crudActions.newInstance();
+                crudActions.setId(id);
                 
-                setEntityValue("codigoDocumento", fillStr("updateCodigoDocumento", 25));                
+                crudActions.setEntityValue("codigoDocumento", fillStr("updateCodigoDocumento", 25));                
             }
         });
         return list;
