@@ -9,6 +9,8 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaJuridica;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 
 @Name(PessoaManager.NAME)
 @AutoCreate
@@ -20,17 +22,17 @@ public class PessoaManager extends GenericManager {
 	@In private PessoaFisicaDAO pessoaFisicaDAO;
 	@In private PessoaJuridicaDAO pessoaJuridicaDAO;
 	
-	public void carregaPessoa(String tipoPessoa, String codigo){
-		if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
-			Events.instance().raiseEvent(PessoaFisica.EVENT_LOAD, pessoaFisicaDAO.searchByCpf(codigo));
-		} else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")){
-			Events.instance().raiseEvent("evtCarregarPessoaJuridica", pessoaJuridicaDAO.searchByCnpj(codigo));
-		} else {
-		    return;
+	public void carregaPessoa(final TipoPessoaEnum tipoPessoa, final String codigo){
+		final Events events = Events.instance();
+		
+        if (TipoPessoaEnum.F.equals(tipoPessoa)) {
+			events.raiseEvent(PessoaFisica.EVENT_LOAD, pessoaFisicaDAO.searchByCpf(codigo));
+		} else if (TipoPessoaEnum.J.equals(tipoPessoa)) {
+			events.raiseEvent(PessoaJuridica.EVENT_LOAD, pessoaJuridicaDAO.searchByCnpj(codigo));
 		}
 	}
 	
-	public PessoaFisica getPessoaFisicaByCpf(String cpf){
+	public PessoaFisica getPessoaFisicaByCpf(final String cpf){
 		return pessoaFisicaDAO.searchByCpf(cpf);
 	}
 

@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.mail.command;
 
+import static java.text.MessageFormat.format;
+
 import java.security.Security;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -28,26 +30,28 @@ import org.jboss.seam.log.Logging;
 
 public class SendmailCommand  {
 	
-	private static final LogProvider LOG = Logging.getLogProvider(SendmailCommand.class);
+	private static final String SENDMAIL_LOG_PATTERN = ".execute(sendmail): {0}";
+    private static final LogProvider LOG = Logging.getLogProvider(SendmailCommand.class);
 
-	public void execute(String templateFile) {
-		StopWatch sw = new StopWatch();
+	public void execute(final String templateFile) {
+		final StopWatch sw = new StopWatch();
 		sw.start();
-		Renderer renderer = Renderer.instance();
-		FacesMessages fm = FacesMessages.instance();
+		final FacesMessages messages = FacesMessages.instance();
 		try {
-			String name = SSLSocketFactory.class.getName();
-			Security.setProperty( "ssl.SocketFactory.provider", name);
-			renderer.render(templateFile);
-			String msg = "Email enviado com sucesso.";
-			fm.add(msg);
-			LOG.info(".execute(sendmail): " + sw.getTime());
+			setProperty(SSLSocketFactory.class.getName());
+			Renderer.instance().render(templateFile);
+			messages.add("Email enviado com sucesso.");
+			LOG.info(format(SENDMAIL_LOG_PATTERN, sw.getTime()));
 		} catch (Exception e) {
-			fm.add("Erro ao enviar eMail", e);
-			LOG.error(".execute(sendmail): " + sw.getTime(), e);
+			messages.add("Erro ao enviar eMail", e);
+			LOG.error(format(SENDMAIL_LOG_PATTERN, sw.getTime()), e);
 		} finally {
-			Security.setProperty("ssl.SocketFactory.provider", "");
+			setProperty("");
 		}
 	}
+
+    private void setProperty(final String value) {
+        Security.setProperty("ssl.SocketFactory.provider", value);
+    }
 	
 }

@@ -315,38 +315,34 @@
 			<wi:dataForm
 				formId="bloqueioUsuarioForm"
 				formTitle="#{messages['form.title']}"
-				home="#{bloqueioUsuarioCrudAction}">
-				<wi:selectBooleanRadio
+				home="#{bloqueioUsuarioCrudAction}"
+				requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
+				<wi:outputText
 					id="bloqueio"
-					value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-					label="#{messages['usuario.bloqueio']}">
-					<a:ajax
-						event="change"
-						execute="@this"
-						limitRender="true"
-						render="blockDiv, buttons" />
-				</wi:selectBooleanRadio>
-				<s:div id="blockDiv">
-					<wi:inputDate
-						id="dataDesbloqueio"
-						label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
-						value="#{bloqueioUsuarioCrudAction.instance.dataPrevisaoDesbloqueio}"
-						rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-						future="true"
-						required="false" />
-					<wi:inputText
-						id="motivoBloqueio"
-						label="#{messages['bloqueioUsuario.motivoBloqueio']}"
-						value="#{bloqueioUsuarioCrudAction.instance.motivoBloqueio}"
-						rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-						required="true"
-						showRequired="true"
-						maxlength="50" />
-				</s:div>
+					value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? 'Sim': 'Não'}"
+					label="#{messages['usuario.bloqueio']}" />
+				<wi:inputDate
+					id="dataDesbloqueio"
+					label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+					value="#{bloqueioUsuarioCrudAction.instance.dataPrevisaoDesbloqueio}"
+					rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+					future="true"
+					required="false" />
+				<wi:inputText
+					id="motivoBloqueio"
+					label="#{messages['bloqueioUsuario.motivoBloqueio']}"
+					value="#{bloqueioUsuarioCrudAction.instance.motivoBloqueio}"
+					rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+					required="true"
+					showRequired="true"
+					maxlength="50" />
 				<ui:define name="buttons">
-				    <s:div id="buttons">
-					   <wi:commandButtonSave rendered="#{bloqueioUsuarioCrudAction.usuarioAtualBloqueado or bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"/>
-					</s:div>
+				   <wi:commandButton id="bloqueioButton" rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+				       value="#{messages['usuario.bloquear']}" action="bloqueioUsuarioCrudAction.bloquear"
+				       reRender="historicoBloqueioUsuario, pageBodyDialogMessage"/>
+				   <wi:commandButton id="desbloqueioButton" rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+				       value="#{messages['usuario.desbloquear']}" action="bloqueioUsuarioCrudAction.desbloquear"
+				       reRender="historicoBloqueioUsuario, pageBodyDialogMessage"/>
 				</ui:define>
 			</wi:dataForm>
 			<s:div>

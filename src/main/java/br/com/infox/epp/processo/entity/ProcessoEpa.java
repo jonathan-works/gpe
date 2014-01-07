@@ -1,6 +1,22 @@
 package br.com.infox.epp.processo.entity;
 
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,8 +27,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -21,12 +35,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
-import static br.com.infox.epp.processo.query.ProcessoEpaQuery.*;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
 @Entity
@@ -37,11 +51,9 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
     @NamedQuery(name=PROCESSO_EPA_BY_ID_JBPM, query=PROCESSO_EPA_BY_ID_JBPM_QUERY),
     @NamedQuery(name=COUNT_PARTES_ATIVAS_DO_PROCESSO, query=COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
     @NamedQuery(name=ITEM_DO_PROCESSO, query=ITEM_DO_PROCESSO_QUERY),
-    @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY)
-})
-@NamedNativeQueries(value={
-    @NamedNativeQuery(name=DATA_INICIO_PRIMEIRA_TAREFA, query=DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
-    @NamedNativeQuery(name=TEMPO_GASTO_PROCESSO_EPP, query=TEMPO_GASTO_PROCESSO_EPP_QUERY)
+    @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY),
+    @NamedQuery(name=DATA_INICIO_PRIMEIRA_TAREFA, query=DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
+    @NamedQuery(name=TEMPO_GASTO_PROCESSO_EPP, query=TEMPO_GASTO_PROCESSO_EPP_QUERY)
 })
 public class ProcessoEpa extends Processo {
 
@@ -59,6 +71,23 @@ public class ProcessoEpa extends Processo {
 	
 	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
 	private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
+	
+	public ProcessoEpa() {
+	    super();
+    }
+	
+	public ProcessoEpa(final SituacaoPrazoEnum situacaoPrazo, final Date dataInicio, 
+	        final String numeroProcesso, final UsuarioLogin usuarioLogado, 
+	        final NaturezaCategoriaFluxo naturezaCategoriaFluxo,
+	        final Localizacao localizacao, final Item itemDoProcesso) {
+	    this.setSituacaoPrazo(situacaoPrazo);
+        this.setDataInicio(dataInicio);
+        this.setNumeroProcesso(numeroProcesso);
+        this.setUsuarioCadastroProcesso(usuarioLogado);
+        this.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
+        this.setLocalizacao(localizacao);
+        this.setItemDoProcesso(itemDoProcesso);
+	}
 	
 	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
 		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;

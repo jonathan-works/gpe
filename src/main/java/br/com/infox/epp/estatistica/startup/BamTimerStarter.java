@@ -65,18 +65,9 @@ public class BamTimerStarter {
     
     private void initTimerProcessor(final String cronExpression, final String idTimer, final String description, final BamTimerProcessor processor, final BamTimerManager bamTimerManager) {
         try {
-            String idIniciarFluxoTimer = null;
-            try {
-                idIniciarFluxoTimer = bamTimerManager.getParametro(idTimer);
-            } catch (IllegalArgumentException e) {
-                LOG.error("TarefaTimerStarter.init()", e);
-            }
-            if (idIniciarFluxoTimer == null) {
-                bamTimerManager.createTimerInstance(cronExpression, idTimer, description, processor);
-            }
+            bamTimerManager.createTimerInstance(cronExpression, idTimer, description, processor);
         } catch (SchedulerException | DAOException e) {
             LOG.error(e);
         }
     }
-    
 }

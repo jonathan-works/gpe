@@ -61,7 +61,7 @@
                     <a:commandLink 
                         action="#{taskInstanceHome.removeUsuario(task)}"
                         execute="@this"
-                        render="usuarioTarefaDiv"
+                        render="usuarioTarefaDiv, pageBodyDialogMessage"
                         onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
                         limitRender="true"
                         oncomplete="close()"

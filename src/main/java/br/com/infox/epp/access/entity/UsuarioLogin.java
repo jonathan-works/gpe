@@ -114,6 +114,27 @@ public class UsuarioLogin implements Serializable {
 		dataExpiracao = null;
 	}
 	
+	public UsuarioLogin(final String nomeUsuario,
+            final String email, final String login) {
+	    this.nomeUsuario = nomeUsuario;
+	    this.email = email;
+	    this.login = login;
+	    this.tipoUsuario = UsuarioEnum.H;
+	    this.ativo = Boolean.TRUE;
+	    this.provisorio = Boolean.FALSE;
+	}
+	
+	public UsuarioLogin(final String nomeUsuario,
+            final String email, final String login,
+            final UsuarioEnum tipoUsuario, final Boolean ativo){
+	    this.nomeUsuario = nomeUsuario;
+        this.email = email;
+        this.login = login;
+        this.tipoUsuario = tipoUsuario;
+        this.ativo = ativo;
+        this.provisorio = Boolean.FALSE;
+	}
+	
 	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO)
     @Id
     @GeneratedValue(generator=GENERATOR)

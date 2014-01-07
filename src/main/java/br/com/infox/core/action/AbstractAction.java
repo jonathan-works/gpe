@@ -1,6 +1,7 @@
 package br.com.infox.core.action;
 
-import java.text.MessageFormat;
+import static java.text.MessageFormat.format;
+
 import java.util.List;
 
 import javax.validation.ConstraintViolation;
@@ -63,7 +64,6 @@ public abstract class AbstractAction <T> {
 	@Transactional
 	private String flushObject(T t, boolean isPersist) {
 		String ret = null;
-		String msg = isPersist ? "persist()" : "update()";
 		try {
 			if(isPersist) {
 				genericManager.persist(t);
@@ -72,7 +72,8 @@ public abstract class AbstractAction <T> {
 				genericManager.update(t);
 				ret = UPDATED;
 			}
-        } catch (DAOException daoException) {
+        } catch (final DAOException daoException) {
+            final String msg = isPersist ? "persist()" : "update()";
         	LOG.error(msg, daoException);
         	ret = handleDAOException(daoException);
         }
@@ -80,29 +81,31 @@ public abstract class AbstractAction <T> {
 		return ret;
 	}
 	
-	private String handleBeanViolationException(ConstraintViolationException e) {
-	    getMessagesHandler().clear();
+	private String handleBeanViolationException(final ConstraintViolationException e) {
+	    final StatusMessages messages = getMessagesHandler();
+        messages.clear();
 		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-			final String message = MessageFormat.format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());
-			getMessagesHandler().add(message);
+			final String message = format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());
+			messages.add(message);
 		}
 		return null;
 	}
 
-	private String handleDAOException(DAOException daoException) {
+	private String handleDAOException(final DAOException daoException) {
 		this.daoException = daoException;
-		PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
-		if (errorCode != null) {
-			String ret = errorCode.toString();
-			getMessagesHandler().clearGlobalMessages();
-			getMessagesHandler().add(daoException.getLocalizedMessage());
+		final PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+		final StatusMessages messages = getMessagesHandler();
+        if (errorCode != null) {
+			final String ret = errorCode.toString();
+			messages.clearGlobalMessages();
+			messages.add(daoException.getLocalizedMessage());
 			return ret;
 		} else {
-			Throwable cause = daoException.getCause();
+			final Throwable cause = daoException.getCause();
 			if (cause instanceof ConstraintViolationException) {
 				return handleBeanViolationException((ConstraintViolationException) cause);
 			} else {
-			    getMessagesHandler().add(StatusMessage.Severity.ERROR, "Erro ao gravar: " + cause.getMessage(), cause);
+			    messages.add(StatusMessage.Severity.ERROR, format("Erro ao gravar: {0}",cause.getMessage()), cause);
 			}
 		}
 		return null;
@@ -157,25 +160,26 @@ public abstract class AbstractAction <T> {
 		String ret = null;
 		StopWatch sw = new StopWatch();
 		sw.start();
-		if(EntityUtil.isEntity(t)) {
-			try {
+		final StatusMessages messages = getMessagesHandler();
+        if(EntityUtil.isEntity(t)) {
+			final String objectClassName = getObjectClassName(t);
+            try {
 			    if (t instanceof Recursive) {
                     inactiveRecursive((Recursive<?>) t);
 			    } else {
 			    	ComponentUtil.setValue(t, "ativo", false);
 			    }
 				ret = flushObject(t, false);
-				getMessagesHandler().add(StatusMessage.Severity.INFO, "Registro inativado com sucesso.");
-				LOG.info(".inactive(" + t + ")" + getObjectClassName(t) + 
-						"): " + sw.getTime());
-			} catch(Exception e) {
+				messages.add("Registro inativado com sucesso.");
+				final String message = format(".inactive({0}){1}): {2}", t,objectClassName,sw.getTime());
+				LOG.info(message);
+			} catch(final Exception e) {
 			    LOG.error(".inactive()", e);
-				getMessagesHandler().add(StatusMessage.Severity.INFO, "Erro ao definir a propriedade " +
-                        "ativo na entidade: "+getObjectClassName(t)+". Verifique se esse " +
-                        "campo existe.");
+			    final String message = format("Erro ao definir a propriedade ativo na entidade: {0}. Verifique se esse campo existe.", objectClassName);
+				messages.add(StatusMessage.Severity.ERROR, message);
 			}
 		} else {
-		    getMessagesHandler().add(StatusMessage.Severity.INFO, "Objeto informado não é uma entidade.");
+		    messages.add("Objeto informado não é uma entidade.");
 		}
 		return ret;
 	}
@@ -213,10 +217,6 @@ public abstract class AbstractAction <T> {
 	protected final GenericManager getGenericManager() {
         return genericManager;
     }
-	
-	protected final void setGenericManager(final GenericManager genericManager) {
-	    this.genericManager=genericManager;
-	}
 	
 	protected DAOException getDaoException() {
 		return this.daoException;
