@@ -277,17 +277,6 @@ public class JbpmUtil {
 		return null;
 	}
 	
-	/**
-	 * Resume a instancia de uma tarefa e devolve o taskInstance da mesma.
-	 * @param idTaskInstance
-	 * @return
-	 */
-	public static TaskInstance resumeTask(Long idTaskInstance) {
-		BusinessProcess.instance().setTaskId(idTaskInstance);
-		BusinessProcess.instance().resumeTask(idTaskInstance);
-		return org.jboss.seam.bpm.TaskInstance.instance();
-	}
-	
 	public static boolean isTypeEditor(String type) {
 		return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
 	}
