@@ -15,8 +15,9 @@
 */
 package br.com.infox.ibpm.util;
 
-import static br.com.infox.ibpm.util.JbpmQueries.*;
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.ibpm.util.JbpmQueries.ALL_TASKS_QUERY;
+import static br.com.infox.ibpm.util.JbpmQueries.PROCESS_NAMES_QUERY;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,6 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
