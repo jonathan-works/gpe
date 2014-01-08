@@ -288,23 +288,6 @@ public class JbpmUtil {
 		return org.jboss.seam.bpm.TaskInstance.instance();
 	}
 	
-	/**
-	 * Verifica se uam transição de destino está disponível
-	 * @param taskInstance
-	 * @param transitionDestino
-	 * @return
-	 */
-	@SuppressWarnings(UNCHECKED)
-	public static boolean canTransitTo(TaskInstance taskInstance, String transitionDestino) {
-		List<Transition> availableTransitions = taskInstance.getAvailableTransitions();
-		for (Transition transition : availableTransitions) {
-			if (transition.getName().equals(transitionDestino)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public static boolean isTypeEditor(String type) {
 		return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
 	}
