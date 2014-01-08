@@ -264,8 +264,7 @@ public class InfoxMailNode extends MailNode {
 		}
 		
 		if (idGrupo == 0) {
-		    ListaEmailManager listaEmailManager = ComponentUtil.getComponent(ListaEmailManager.NAME);
-			Integer singleResult = listaEmailManager.getMaxIdGrupoEmailInListaEmail();
+			Integer singleResult = listaEmailManager().getMaxIdGrupoEmailInListaEmail();
 			if(singleResult != null) {
 				idGrupo = singleResult;
 			}
@@ -293,6 +292,10 @@ public class InfoxMailNode extends MailNode {
 		treeHandler.clearTree();
 		createAction();
 	}
+
+    private ListaEmailManager listaEmailManager() {
+        return ComponentUtil.getComponent(ListaEmailManager.NAME);
+    }
 	
 	@Override
 	public boolean equals(Object obj) {
