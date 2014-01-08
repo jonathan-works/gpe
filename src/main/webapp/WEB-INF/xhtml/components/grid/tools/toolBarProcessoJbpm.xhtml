@@ -59,13 +59,13 @@
 		</a:commandLink>
 			
     	<h:graphicImage url="/img/role.gif"
-      		rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and !jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}"
+      		rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and !authenticator.isUsuarioAtualResponsavel())}"
       		title="Processo bloqueado pelo servidor #{owner}" />
       			
 		<a:commandLink action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}" execute="@this"
 		    render="painelProcessos, pageBodyDialogMessage" onclick="if (!confirm('Liberar tarefa?')) return false;"
 			limitRender="true"
-		    rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and jbpmUtil.isUsuarioLogadoResponsavelLocalizacao())}">
+		    rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and authenticator.isUsuarioAtualResponsavel())}">
 		    
 			<h:graphicImage url="/img/role.gif" title="Liberar tarefa bloqueada pelo servidor #{owner}" />
 			

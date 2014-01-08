@@ -65,7 +65,7 @@
                         onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
                         limitRender="true"
                         oncomplete="close()"
-                        rendered="#{jbpmUtil.isUsuarioLogadoResponsavelLocalizacao() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
+                        rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
                         <h:graphicImage
                             url="/img/unlocked.gif"
                             title="#{messages['movimentar.liberarTarefa']}" />
