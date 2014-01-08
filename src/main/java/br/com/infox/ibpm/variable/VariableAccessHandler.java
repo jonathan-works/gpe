@@ -15,7 +15,8 @@
 */
 package br.com.infox.ibpm.variable;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.File;
 import java.io.Serializable;
@@ -42,7 +43,6 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
@@ -363,9 +363,22 @@ public class VariableAccessHandler implements Serializable {
 		String labelAuxiliar = label.trim();
 		if (! labelAuxiliar.equals(this.label) && !"".equals(labelAuxiliar)) {
 			this.label = labelAuxiliar;
-			JbpmUtil.instance().storeLabel(name, labelAuxiliar);
+			storeLabel(name, labelAuxiliar);
 		}
 	}
+	
+	//TODO verificar por que tem registro duplicado na base
+    private void storeLabel(String name, String label) {
+        Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
+        String old = map.get(name);
+        if (!label.equals(old)) {
+            map.put(name, label);
+            JbpmVariavelLabel j = new JbpmVariavelLabel();
+            j.setNomeVariavel(name);
+            j.setLabelVariavel(label);
+            EntityUtil.getEntityManager().persist(j);
+        }
+    }
 
 	public String getLabel() {
 		if (!"".equals(name)) {

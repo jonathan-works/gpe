@@ -138,19 +138,6 @@ public class JbpmUtil {
 		return messagesMap;
 	}
 	
-	//TODO verificar por que tem registro duplicado na base
-	public void storeLabel(String name, String label) {
-		Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
-		String old = map.get(name);
-		if (!label.equals(old)) {
-			map.put(name, label);
-			JbpmVariavelLabel j = new JbpmVariavelLabel();
-			j.setNomeVariavel(name);
-			j.setLabelVariavel(label);
-			EntityUtil.getEntityManager().persist(j);
-		}
-	}
-
     @SuppressWarnings(UNCHECKED)
     public List<String> getProcessNames() {
         return getJbpmSession().createQuery(PROCESS_NAMES_QUERY).list();
