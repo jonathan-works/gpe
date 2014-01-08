@@ -339,8 +339,4 @@ public class JbpmUtil {
 		return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
 	}
 	
-	public static boolean isUsuarioLogadoResponsavelLocalizacao(){
-		return Authenticator.getUsuarioLocalizacaoAtual().getResponsavelLocalizacao();
-	}
-	
 }
