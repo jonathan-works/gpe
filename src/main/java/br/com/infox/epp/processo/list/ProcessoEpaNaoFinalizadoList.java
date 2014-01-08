@@ -97,19 +97,6 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 		this.fluxo = fluxo;
 	}
 	
-	public Integer getMaxTempoGasto() {
-	    final String hql = "select max(pEpa.tempoGasto) " +
-	    		"from ProcessoEpa pEpa " +
-	    		"inner join pEpa.naturezaCategoriaFluxo ncf " +
-	    		"where ncf.fluxo=:fluxo " +
-	    		"and pEpa.dataFim is null " +
-	    		"group by ncf.fluxo";
-	    Query query = EntityUtil.createQuery(hql)
-	            .setParameter("fluxo", fluxo);
-	    Integer result = EntityUtil.getSingleResult(query);
-	    return result == null ? 0 : result;
-	}
-	
 	public Double getMediaTempoGasto() {
 	    final String hql = "select avg(pEpa.tempoGasto) " +
 	    		"from ProcessoEpa pEpa " +
@@ -125,14 +112,6 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 	    return EntityUtil.getSingleResult(query);
 	}
 	
-	public boolean contemTarefaForaPrazo(ProcessoEpa processoEpa) {
-		Query query = EntityUtil.createQuery("select count(o) from ProcessoEpaTarefa o " +
-											 "where o.processoEpa = :processoEpa " +
-											 "  and o.porcentagem > 100");
-		query.setParameter("processoEpa", processoEpa);
-		return (Long) query.getSingleResult() > 0;
-	}
-
 	public List<SituacaoPrazoEnum> getTiposSituacaoPrazo() {
 	    return Arrays.asList(SituacaoPrazoEnum.values());
 	}
