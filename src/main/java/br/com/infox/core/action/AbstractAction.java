@@ -43,8 +43,6 @@ public abstract class AbstractAction <T> {
 	protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
-	
-	private DAOException daoException;
 
 	protected T find(Class<T> c, Object id) {
 		return genericManager.find(c, id);
@@ -92,7 +90,6 @@ public abstract class AbstractAction <T> {
 	}
 
 	private String handleDAOException(final DAOException daoException) {
-		this.daoException = daoException;
 		final PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
 		final StatusMessages messages = getMessagesHandler();
         if (errorCode != null) {
@@ -218,8 +215,6 @@ public abstract class AbstractAction <T> {
         return genericManager;
     }
 	
-	protected DAOException getDaoException() {
-		return this.daoException;
 	}
 	
 }
