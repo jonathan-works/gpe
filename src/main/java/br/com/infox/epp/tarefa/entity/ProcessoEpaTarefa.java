@@ -47,7 +47,6 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
     @NamedQuery(name = FORA_PRAZO_FLUXO, query=FORA_PRAZO_FLUXO_QUERY),
     @NamedQuery(name=FORA_PRAZO_TAREFA, query=FORA_PRAZO_TAREFA_QUERY),
     @NamedQuery(name=TAREFA_PROXIMA_LIMITE, query=TAREFA_PROXIMA_LIMITE_QUERY),
-    @NamedQuery(name=TEMPO_MAXIMO_GASTO, query=TEMPO_MAXIMO_GASTO_QUERY),
     @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY) })
 public class ProcessoEpaTarefa implements Serializable {
 
