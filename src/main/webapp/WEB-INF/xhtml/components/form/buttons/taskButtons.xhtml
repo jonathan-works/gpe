@@ -72,7 +72,7 @@
 			styleClass="buttons"
 			action="#{taskInstanceHome.persist(home)}" />
 
-		<h:outputText
+		<h:outputText styleClass="texto-painel-padrao"
 			value="Próxima ação:" />
 		<c:if test="#{taskInstanceHome.transitions.size gt 3}">
 			<h:selectOneMenu

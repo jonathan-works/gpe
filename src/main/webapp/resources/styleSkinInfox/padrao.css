@@ -588,3 +588,6 @@ div.rf-trn {
 .tree-inactive {
 	text-decoration:line-through;
 }
+.texto-painel-padrao {
+	font-size: 11px;
+}

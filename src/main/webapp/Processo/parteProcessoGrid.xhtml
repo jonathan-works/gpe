@@ -27,7 +27,7 @@
 				xmlns:wi="http://www.itx.com.br/jsf">
 	<ui:param name="isUsuarioAtualResponsavel" value="#{authenticator.isUsuarioAtualResponsavel() ? true : false}" />
 	<s:div id="partesDiv">
-   		<h:form id="partesForm">
+   		<h:form id="partesForm" styleClass="texto-painel-padrao">
    			<wi:selectOneRadioEnum id="tipoPessoaEnum"
 								   items="#{pessoaHome.getTipoPessoaItens()}"
 								   value="#{pessoaHome.tipoPessoa}"
