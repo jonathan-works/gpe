@@ -305,23 +305,6 @@ public class JbpmUtil {
 		return false;
 	}
 	
-	/**
-	 * Verifica se uam transição de destino existe. Ela pode não estar disponível.
-	 * @param taskInstance
-	 * @param transitionDestino
-	 * @return
-	 */
-	@SuppressWarnings(UNCHECKED)
-	public static boolean transitionExists(TaskInstance taskInstance, String transitionDestino) {
-		List<Transition> transitionList = taskInstance.getTask().getTaskNode().getLeavingTransitions();
-		for (Transition transition : transitionList) {
-			if (transition.getName().equals(transitionDestino)) {
-				return true;
-			}
-		}
-		return false;
-	}	
-	
 	public static boolean isTypeEditor(String type) {
 		return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
 	}
