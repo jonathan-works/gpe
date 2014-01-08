@@ -167,17 +167,6 @@ public class JbpmUtil {
     private static ContextInstance getConxtextInstance() {
         return org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance();
     }
-	
-	/**
-	 * Retorna as tarefas (from / to) de uma transição
-	 * Pode ocorrer null quando algum dos nós não é de tarefa
-	 */
-	public static Task[] getTasksFromTransition(Transition t) {
-		Task[] ret = new Task[2];
-		ret[0] = getTaskFromNode(t.getFrom());
-		ret[1] = getTaskFromNode(t.getTo());
-		return ret;
-	}
 
 	/**
 	 * Retorna a tarefas de um nó
