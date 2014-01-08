@@ -1,6 +1,10 @@
 package br.com.infox.epp.mail.dao;
 
-import static br.com.infox.epp.mail.query.ListaEmailQuery.MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -17,6 +21,12 @@ public class ListaEmailDAO extends GenericDAO {
     
     public Integer getMaxIdGrupoEmailInListaEmail(){
         return getNamedSingleResult(MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL);
+    }
+    
+    public List<ListaEmail> getListaEmailByIdGrupoEmail(Integer idGrupoEmail){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_GRUPO_EMAIL_PARAM, idGrupoEmail);
+        return getNamedResultList(LISTA_EMAIL_BY_ID_GRUPO, parameters);
     }
 
 }
