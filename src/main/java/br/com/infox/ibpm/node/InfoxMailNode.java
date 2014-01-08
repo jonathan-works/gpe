@@ -224,7 +224,6 @@ public class InfoxMailNode extends MailNode {
 		createAction();
 	}
 	
-	@SuppressWarnings(UNCHECKED)
 	public List<ListaEmail> getListaEmail() {
 		if (listaEmail == null && to != null) {
 			String result = to.substring(1, to.length()-1);
@@ -233,10 +232,7 @@ public class InfoxMailNode extends MailNode {
 				if (att.length < 2) {
 					continue;
 				} else if ("idGrupo".equals(att[0])) {
-					listaEmail = EntityUtil.createQuery("select o from ListaEmail o " +
-							"where o.idGrupoEmail = :idGrupo")
-							.setParameter("idGrupo", Integer.parseInt(att[1]))
-							.getResultList();
+				    listaEmail = listaEmailManager().getListaEmailByIdGrupoEmail(Integer.parseInt(att[1]));
 				}
 			}
 		}
