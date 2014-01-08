@@ -162,4 +162,8 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 		return natCatFluxoLocalizacaoDAO.listByNaturezaCategoriaFluxo(ncf);
 	}
 	
+	public boolean existsNatCatFluxoLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao localizacao) {
+		return natCatFluxoLocalizacaoDAO.existsNatCatFluxoLocalizacao(ncf, localizacao);
+	}
+	
 }
