@@ -38,13 +38,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
-import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Node.NodeType;
-import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
-import org.jbpm.graph.node.TaskNode;
-import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -167,21 +162,6 @@ public class JbpmUtil {
     private static ContextInstance getConxtextInstance() {
         return org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance();
     }
-
-	/**
-	 * Retorna a tarefas de um nó
-	 * Pode ocorrer null quando o nó não é de tarefa
-	 */
-	public static Task getTaskFromNode(Node node) {
-		Task t = null;
-		if (node.getNodeType().equals(NodeType.Task)) {
-			TaskNode tn = (TaskNode) JbpmUtil.getJbpmSession().load(TaskNode.class, node.getId());
-			if (!tn.getTasks().isEmpty()) {
-				t = (Task) tn.getTasks().iterator().next(); 
-			}
-		}
-		return t;
-	}
 	
 	public Object getConteudo(VariableAccess var, TaskInstance taskInstance){
 		String type = var.getMappedName().split(":")[0];
