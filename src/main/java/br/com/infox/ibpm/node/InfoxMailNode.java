@@ -15,7 +15,7 @@
 */
 package br.com.infox.ibpm.node;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.StringReader;
 import java.text.MessageFormat;
@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.Query;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -48,7 +46,9 @@ import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.mail.entity.ListaEmail;
 import br.com.infox.epp.mail.home.ListaEmailHome;
+import br.com.infox.epp.mail.manager.ListaEmailManager;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 public class InfoxMailNode extends MailNode {
@@ -264,11 +264,10 @@ public class InfoxMailNode extends MailNode {
 		}
 		
 		if (idGrupo == 0) {
-			String q = "select max(o.idGrupoEmail) from ListaEmail o";
-			Query query = EntityUtil.getEntityManager().createQuery(q);
-			Object singleResult = EntityUtil.getSingleResult(query);
+		    ListaEmailManager listaEmailManager = ComponentUtil.getComponent(ListaEmailManager.NAME);
+			Integer singleResult = listaEmailManager.getMaxIdGrupoEmailInListaEmail();
 			if(singleResult != null) {
-				idGrupo = (Integer) singleResult;
+				idGrupo = singleResult;
 			}
 			idGrupo++;
 		}
