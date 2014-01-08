@@ -241,15 +241,6 @@ public class JbpmUtil {
 	 * @param processo
 	 * @return Retorna o nome da tarefa anterior no fluxo
 	 */
-	public String getNomeTarefaAnterior(Processo processo) {
-		Tarefa tarefaAnterior = getTarefaAnterior(processo);
-		return tarefaAnterior != null ? tarefaAnterior.getTarefa() : null;
-	}
-	
-	/**
-	 * @param processo
-	 * @return Retorna o nome da tarefa anterior no fluxo
-	 */
 	@Factory(scope=ScopeType.EVENT, value=VAR_NOME_TAREFA_ANTERIOR)
 	public String getNomeTarefaAnterior() {
 		Processo processo = JbpmUtil.getProcesso();
