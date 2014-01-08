@@ -22,6 +22,8 @@ import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_GRUPO_EMAIL;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_LISTA_EMAIL;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_LOCALIZACAO;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_PAPEL;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.LISTA_EMAIL_BY_ID_GRUPO;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.LISTA_EMAIL_BY_ID_GRUPO_QUERY;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.SEQUENCE_LISTA_EMAIL;
@@ -47,6 +49,7 @@ import br.com.infox.epp.access.entity.Papel;
 @Entity
 @Table(name = TABLE_LISTA_EMAIL, schema=PUBLIC)
 @NamedQueries({
+    @NamedQuery(name=LISTA_EMAIL_BY_ID_GRUPO, query=LISTA_EMAIL_BY_ID_GRUPO_QUERY),
     @NamedQuery(name=MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL, query=MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY)
 })
 public class ListaEmail implements java.io.Serializable {
