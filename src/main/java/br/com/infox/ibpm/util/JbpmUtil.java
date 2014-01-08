@@ -32,7 +32,6 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -42,7 +41,6 @@ import org.jbpm.db.GraphSession;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.graph.node.TaskNode;
@@ -267,14 +265,6 @@ public class JbpmUtil {
 			}
 		}
 		return false;
-	}
-	
-	public Transition getCurrentTransition() {
-		ExecutionContext currentExecutionContext = ExecutionContext.currentExecutionContext();
-		if (currentExecutionContext != null) {
-			return currentExecutionContext.getTransition();
-		} 
-		return null;
 	}
 	
 	public static boolean isTypeEditor(String type) {
