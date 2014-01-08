@@ -214,7 +214,4 @@ public abstract class AbstractAction <T> {
 	protected final GenericManager getGenericManager() {
         return genericManager;
     }
-	
-	}
-	
 }
