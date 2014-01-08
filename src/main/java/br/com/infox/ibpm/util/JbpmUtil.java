@@ -257,16 +257,6 @@ public class JbpmUtil {
 		return tarefaAnterior != null ? tarefaAnterior.getTarefa() : null;
 	}	
 	
-	public boolean checkNomeTarefaAnterior(String... nomeTarefas) {
-		String nomeTarefaAnterior = getNomeTarefaAnterior();
-		for (String tarefa : nomeTarefas) {
-			if (tarefa.equals(nomeTarefaAnterior)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public static boolean isTypeEditor(String type) {
 		return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
 	}
