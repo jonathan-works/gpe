@@ -303,8 +303,6 @@ public class ProcessBuilder implements Serializable {
 
 	public void clearDefinition() {
 		fluxo.setXml(null);
-		clear();
-		createInstance();
 		load(fluxo);
 	}
 
