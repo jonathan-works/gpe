@@ -13,7 +13,7 @@ import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED_
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
@@ -47,6 +47,7 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
     @NamedQuery(name = FORA_PRAZO_FLUXO, query=FORA_PRAZO_FLUXO_QUERY),
     @NamedQuery(name=FORA_PRAZO_TAREFA, query=FORA_PRAZO_TAREFA_QUERY),
     @NamedQuery(name=TAREFA_PROXIMA_LIMITE, query=TAREFA_PROXIMA_LIMITE_QUERY),
+    @NamedQuery(name=TEMPO_MAXIMO_GASTO, query=TEMPO_MAXIMO_GASTO_QUERY),
     @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY) })
 public class ProcessoEpaTarefa implements Serializable {
 

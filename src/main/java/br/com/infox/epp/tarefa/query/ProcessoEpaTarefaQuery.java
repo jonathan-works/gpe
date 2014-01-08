@@ -44,5 +44,11 @@ public interface ProcessoEpaTarefaQuery {
             "from ProcessoEpaTarefa pet " +
             "where pet.tarefa.idTarefa=:" + PARAM_ID_TAREFA + 
             " and pet.processoEpa.idProcesso=:" + PARAM_ID_PROCESSO;
+    
+    String FLUXO_PARAM = "fluxo";
+    String TEMPO_MAXIMO_GASTO = "tempoMaximoGasto";
+    String TEMPO_MAXIMO_GASTO_QUERY = "select max(pEpa.tempoGasto) from ProcessoEpa pEpa "
+            + "inner join pEpa.naturezaCategoriaFluxo ncf where ncf.fluxo=:" + FLUXO_PARAM +
+            " and pEpa.dataFim is null group by ncf.fluxo";
 
 }
