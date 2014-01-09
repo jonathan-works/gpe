@@ -1,10 +1,13 @@
 package br.com.infox.epp.fluxo.dao;
 
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_DESCRICAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICACAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.PARAM_CODIGO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.PARAM_DESCRICAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.PARAM_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.PARAM_NOME;
@@ -65,4 +68,15 @@ public class FluxoDAO extends GenericDAO {
         return getNamedSingleResult(COUNT_PROCESSOS_BY_FLUXO, parameters);
     }
 
+	public boolean existeFluxoComCodigo(String codigo) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(PARAM_CODIGO, codigo);
+        return (Long) getNamedSingleResult(COUNT_FLUXO_BY_CODIGO, parameters) > 0;
+	}
+
+	public boolean existeFluxoComDescricao(String descricao) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(PARAM_DESCRICAO, descricao);
+        return (Long) getNamedSingleResult(COUNT_FLUXO_BY_DESCRICAO, parameters) > 0;
+	}
 }

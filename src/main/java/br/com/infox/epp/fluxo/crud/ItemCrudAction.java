@@ -29,16 +29,15 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
         }
         return super.save();
     }
-    
+
     @Override
-    protected void afterSave() {
-        limparTrees();
-        super.afterSave();
+    public void newInstance() {
+    	super.newInstance();
+    	limparTrees();
     }
     
     protected void limparTrees(){
         ItemTreeHandler ith = ComponentUtil.getComponent(ItemTreeHandler.NAME);
         ith.clearTree();
     }
-    
 }
