@@ -1,5 +1,7 @@
 package br.com.infox.epp.system.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -21,4 +23,8 @@ public class ParametroManager extends GenericManager {
 		return parametroDAO.getParametroByNomeVariavel(nome);
 	}
 	
+    public List<Parametro> listParametrosAtivos() {
+        return parametroDAO.listParametrosAtivos();
+    }
+
 }
