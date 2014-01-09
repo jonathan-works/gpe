@@ -46,6 +46,7 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -188,7 +189,7 @@ public class JbpmUtil {
 	
 	public static Processo getProcesso() {
 		Integer idProcesso = JbpmUtil.getProcessVariable("processo");
-		return idProcesso != null ? EntityUtil.find(Processo.class, idProcesso) : null;
+		return idProcesso != null ? processoManager().find(idProcesso) : null;
 	}		
 
 	public static boolean isTypeEditor(String type) {
@@ -201,6 +202,10 @@ public class JbpmUtil {
 	
 	private LocalizacaoManager localizacaoManager(){
 	    return ComponentUtil.getComponent(LocalizacaoManager.NAME);
+	}
+	
+	private static ProcessoManager processoManager(){
+	    return ComponentUtil.getComponent(ProcessoManager.NAME);
 	}
 	
 }
