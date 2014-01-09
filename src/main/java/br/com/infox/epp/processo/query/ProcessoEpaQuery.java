@@ -43,4 +43,12 @@ public interface ProcessoEpaQuery {
     String ITEM_DO_PROCESSO = "getItemDoProcessoByIdProcesso";
     String ITEM_DO_PROCESSO_QUERY = "select o.itemDoProcesso from ProcessoEpa o where o.idProcesso =:" 
             + PARAM_ID_PROCESSO;
+    
+    String PARAM_SITUACAO = "situacao";
+    String TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO = "mediaTempoGasto";
+    String TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY = "select avg(pEpa.tempoGasto) from ProcessoEpa pEpa " +
+            "inner join pEpa.naturezaCategoriaFluxo ncf where ncf.fluxo=:" + PARAM_FLUXO +
+            " and pEpa.dataFim is null and pEpa.contabilizar=true and pEpa.situacaoPrazo=:" + PARAM_SITUACAO +
+            " group by ncf.fluxo";
+    
 }
