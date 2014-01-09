@@ -51,6 +51,7 @@ import br.com.infox.epp.processo.entity.Processo;
 @Table(name = "tb_processo_documento", schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
 @NamedQueries({
+    @NamedQuery(name=LIST_ANEXOS_PUBLICOS, query=LIST_ANEXOS_PUBLICOS_QUERY),
     @NamedQuery(name=NEXT_SEQUENCIAL, query=NEXT_SEQUENCIAL_QUERY)
 })
 public class ProcessoDocumento implements java.io.Serializable {
