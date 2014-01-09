@@ -44,10 +44,12 @@ import br.com.infox.epp.access.component.tree.EstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.ListaEmail;
 import br.com.infox.epp.mail.home.ListaEmailHome;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
+import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -122,12 +124,20 @@ public class InfoxMailNode extends MailNode {
 			if (att.length < 2) {
 				continue;
 			} else if ("idModeloDocumento".equals(att[0])) {
-				modeloDocumento = EntityUtil.find(ModeloDocumento.class, Integer.parseInt(att[1]));
+				modeloDocumento = modeloDocumentoManager().find(Integer.parseInt(att[1]));
 			} else if ("idTwitterTemplate".equals(att[0]))	{
-				modeloTwitter = EntityUtil.find(TwitterTemplate.class, Integer.parseInt(att[1]));
+				modeloTwitter = twitterTemplateManager().find(Integer.parseInt(att[1]));
 				usaTwitter = true;
 			}
 		}
+	}
+	
+	private ModeloDocumentoManager modeloDocumentoManager(){
+	    return ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+	}
+	
+	private TwitterTemplateManager twitterTemplateManager(){
+	    return ComponentUtil.getComponent(TwitterTemplateManager.NAME);
 	}
 	
 	/**
