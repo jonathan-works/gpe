@@ -15,7 +15,7 @@
 */
 package br.com.infox.ibpm.node;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.StringReader;
 import java.text.MessageFormat;
@@ -264,13 +264,18 @@ public class InfoxMailNode extends MailNode {
 		}
 		
 		if (idGrupo == 0) {
-			String q = "select max(o.idGrupoEmail) from ListaEmail o";
-			Query query = EntityUtil.getEntityManager().createQuery(q);
-			Object singleResult = EntityUtil.getSingleResult(query);
-			if(singleResult != null) {
-				idGrupo = (Integer) singleResult;
+			getListaEmail();
+			if (this.listaEmail != null && !this.listaEmail.isEmpty()) {
+				idGrupo = this.listaEmail.get(0).getIdGrupoEmail();
+			} else {
+				String q = "select max(o.idGrupoEmail) from ListaEmail o";
+				Query query = EntityUtil.getEntityManager().createQuery(q);
+				Object singleResult = EntityUtil.getSingleResult(query);
+				if(singleResult != null) {
+					idGrupo = (Integer) singleResult;
+				}
+				idGrupo++;
 			}
-			idGrupo++;
 		}
 		currentListaEmail.setIdGrupoEmail(idGrupo);
 		if(listaEmail == null) {
@@ -282,9 +287,7 @@ public class InfoxMailNode extends MailNode {
 		home.persist();
 		
 		currentListaEmail = new ListaEmail();
-		if (to == null || "".equals(to)) {
-			to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
-		}
+		to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
 		
 		TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
 		treeHandler.clearTree();
