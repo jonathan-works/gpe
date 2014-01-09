@@ -419,4 +419,8 @@ public final class TwitterUtil {
 		}
 		return result;
 	}
+
+    private static ContaTwitterManager contaTwitterManager() {
+        return ComponentUtil.getComponent(ContaTwitterManager.NAME);
+    }
 }
