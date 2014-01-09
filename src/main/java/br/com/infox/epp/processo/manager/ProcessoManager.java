@@ -38,12 +38,17 @@ public class ProcessoManager extends GenericManager {
 	
 	private static final long serialVersionUID = 8095772422429350875L;
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
+    private static final Class<Processo> CLASS = Processo.class;
 	public static final String NAME = "processoManager";
 	
 	@In private ProcessoDAO processoDAO;
 	@In private ProcessoEpaDAO processoEpaDAO;
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	@In private ProcessoDocumentoManager processoDocumentoManager;
+	
+    public Processo find(Integer id) {
+        return find(CLASS, id);
+    }
 	
 	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
