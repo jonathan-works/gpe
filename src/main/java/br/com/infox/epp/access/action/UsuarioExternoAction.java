@@ -17,8 +17,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -42,7 +42,7 @@ public class UsuarioExternoAction {
 	@In
 	private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
 	
-	@In private UsuarioLoginManager usuarioLoginManager;
+	@In private GenericManager genericManager;
 	
 	@In(create = true)
 	private TaskInstanceHome taskInstanceHome;
@@ -85,28 +85,28 @@ public class UsuarioExternoAction {
 	}
 	
 	public void setIdCategoria(Integer idCategoria) {
-		this.categoria = usuarioLoginManager.find(Categoria.class, idCategoria);
+		this.categoria = genericManager.find(Categoria.class, idCategoria);
 	}
 	public Integer getIdCategoria() {
 	    return this.categoria.getIdCategoria();
 	}
 
 	public void setIdFluxo(Integer idFluxo) {
-		this.fluxo = usuarioLoginManager.find(Fluxo.class, idFluxo);
+		this.fluxo = genericManager.find(Fluxo.class, idFluxo);
 	}
 	public Integer getIdFluxo() {
 	    return this.fluxo.getIdFluxo();
 	}
 	
 	public void setIdNatureza(Integer idNatureza) {
-		this.natureza = usuarioLoginManager.find(Natureza.class, idNatureza);
+		this.natureza = genericManager.find(Natureza.class, idNatureza);
 	}
 	public Integer getIdNatureza() {
         return this.natureza.getIdNatureza();
     }
 	
 	public void setIdItem(Integer idItem) {
-		this.item = usuarioLoginManager.find(Item.class, idItem);
+		this.item = genericManager.find(Item.class, idItem);
 	}
 	public Integer getIdItem() {
         return this.item.getIdItem();
