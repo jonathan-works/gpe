@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Factory;
@@ -46,8 +44,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.tarefa.entity.Tarefa;
-import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -65,7 +61,6 @@ public class JbpmUtil {
 	public static final String NAME = "jbpmUtil";
 	public static final int FROM_TASK_TRANSITION = 0;	
 	public static final int TO_TASK_TRANSITION = 1;
-	private static final String VAR_NOME_TAREFA_ANTERIOR = "nomeTarefaAnterior";
 	private static Map<String, String> messagesMap;	
 	
 	/**
@@ -194,29 +189,6 @@ public class JbpmUtil {
 		return idProcesso != null ? EntityUtil.find(Processo.class, idProcesso) : null;
 	}		
 
-    /**
-     * 
-     * @param processo
-     * @return Retorna a tarefa anterior do processo
-     */
-    public static Tarefa getTarefaAnterior(Processo processo) {
-        Query query = EntityUtil.createQuery("select o.idPreviousTask from SituacaoProcesso o where o.idProcesso = :idProcesso");
-        Integer idJbpmTaskAnterior = EntityUtil.getSingleResult(query.setParameter("idProcesso", processo.getIdProcesso()));
-        TarefaManager tarefaManager = ComponentUtil.getComponent(TarefaManager.NAME);
-        return idJbpmTaskAnterior != null ? tarefaManager.getTarefa(idJbpmTaskAnterior.longValue()) : null;
-    }
-	
-	/**
-	 * @param processo
-	 * @return Retorna o nome da tarefa anterior no fluxo
-	 */
-	@Factory(scope=ScopeType.EVENT, value=VAR_NOME_TAREFA_ANTERIOR)
-	public String getNomeTarefaAnterior() {
-		Processo processo = JbpmUtil.getProcesso();
-		Tarefa tarefaAnterior = getTarefaAnterior(processo);
-		return tarefaAnterior != null ? tarefaAnterior.getTarefa() : null;
-	}	
-	
 	public static boolean isTypeEditor(String type) {
 		return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
 	}
