@@ -216,22 +216,6 @@ public final class EntityUtil implements Serializable {
 				|| ComponentUtil.hasAnnotation(pd,OneToMany.class));
 	}	
 	
-	/**
-	 * Retorna o primeiro objeto do resultado da query
-	 * 
-	 * @param query
-	 * @return
-	 */
-	@SuppressWarnings(UNCHECKED)
-	public static <T> T getSingleResult(Query query) {
-		query.setMaxResults(1);
-		List<?> list = query.getResultList();
-		if (list == null || list.size() == 0) {
-			return null;
-		}
-		return (T) list.get(0);
-	}
-	
 	public static EntityManager getEntityManager(){
 		return ComponentUtil.getComponent(ENTITY_MANAGER_NAME);
 	}
