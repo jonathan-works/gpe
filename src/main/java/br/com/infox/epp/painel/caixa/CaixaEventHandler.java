@@ -19,7 +19,6 @@ import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 
 @Name(CaixaEventHandler.NAME)
@@ -41,7 +40,7 @@ public class CaixaEventHandler {
 	 */
 	@Observer(Event.EVENTTYPE_TRANSITION)
  	public void filtrarProcessos(final ExecutionContext context) {
-		final Processo proc = EntityUtil.find(Processo.class, getIdProcesso());
+		final Processo proc = processoManager.find(getIdProcesso());
 		if(proc != null) {
 			final List<Caixa> caixaResList = getCaixaResultList(context);
 			if(caixaResList != null && !caixaResList.isEmpty()) {
