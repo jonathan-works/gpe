@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -63,6 +64,10 @@ public class ProcessoDocumentoManager extends GenericManager {
             }
         }
         return result;
+    }
+    
+    public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask){
+        return processoDocumentoDAO.getAnexosPublicos(idJbpmTask);
     }
 
 }

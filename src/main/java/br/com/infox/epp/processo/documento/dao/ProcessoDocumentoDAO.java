@@ -1,10 +1,13 @@
 package br.com.infox.epp.processo.documento.dao;
 
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.ID_JDBPM_TASK_PARAM;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_TIPO_PROCESSO;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -35,5 +38,11 @@ public class ProcessoDocumentoDAO extends GenericDAO {
             return processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
         }
         return null;
+    }
+    
+    public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_JDBPM_TASK_PARAM, idJbpmTask);
+        return getNamedResultList(LIST_ANEXOS_PUBLICOS, parameters);
     }
 }
