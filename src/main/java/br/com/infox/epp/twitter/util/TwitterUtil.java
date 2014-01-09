@@ -345,21 +345,18 @@ public final class TwitterUtil {
 		return factory;
 	}
 	
-	/**
-	 * @param usuario
-	 * @return a conta do twitter do usuário passado como parametro ou null caso ela não exista 
-	 */
-	public ContaTwitter getContaTwitter(UsuarioLogin usuario){
-		ContaTwitter conta = null;
-		if (usuario.getTemContaTwitter()){
-			String hql = "select o from ContaTwitter o where o.usuario = :usuario";
-			conta = (ContaTwitter) EntityUtil.createQuery(hql)
-					.setParameter("usuario", usuario)
-					.getSingleResult();
-		}
-		return conta;
-	}
-	
+    /**
+     * @param usuario
+     * @return a conta do twitter do usuário passado como parametro ou null caso
+     *         ela não exista
+     */
+    public ContaTwitter getContaTwitter(UsuarioLogin usuario) {
+        if (usuario.getTemContaTwitter()) {
+            return contaTwitterManager().getContaTwitterByUsuario(usuario);
+        }
+        return null;
+    }
+
     /**
      * @param usuario
      * @return a conta do twitter da localização passada como parametro ou null
