@@ -15,7 +15,7 @@
  */
 package br.com.infox.ibpm.process.definition;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -62,6 +62,7 @@ import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
+import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.process.definition.fitter.EventFitter;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 import br.com.infox.ibpm.process.definition.fitter.SwimlaneFitter;
@@ -71,6 +72,8 @@ import br.com.infox.ibpm.process.definition.fitter.TypeFitter;
 import br.com.infox.ibpm.process.definition.graphical.ProcessBuilderGraph;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
+
+import com.google.common.base.Strings;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -187,6 +190,7 @@ public class ProcessBuilder implements Serializable {
 		try {
 			validateJsfTree();
 			validateJbpmGraph();
+			validateMailNode();
 		} catch (IllegalStateException e) {
 			FacesMessages.instance().clearGlobalMessages();
 			FacesMessages.instance().add(e.getMessage());
@@ -196,6 +200,19 @@ public class ProcessBuilder implements Serializable {
 		
 		context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
 		context.getRenderIds().add(messages.getClientId(facesContext));
+	}
+
+	@SuppressWarnings(UNCHECKED)
+	private void validateMailNode() {
+		List<Node> nodes = getInstance().getNodes();
+		for (Node node : nodes) {
+			if (node instanceof InfoxMailNode) {
+				InfoxMailNode mailNode = (InfoxMailNode) node;
+				if (Strings.isNullOrEmpty(mailNode.getTo())) {
+					throw new IllegalStateException("O nó de email deve possuir pelo menos um destinatário.");
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings(UNCHECKED)
