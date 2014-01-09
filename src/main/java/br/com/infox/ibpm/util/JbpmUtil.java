@@ -43,6 +43,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.itx.util.ComponentUtil;
@@ -165,7 +166,7 @@ public class JbpmUtil {
 		if (isTypeEditor(type)){
 			Integer id = (Integer) variable;
 			if (id != null){
-				ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, id);
+				ProcessoDocumento processoDocumento = processoDocumentoManager().find(id);
 				if (processoDocumento == null) {
 					LOG.warn("ProcessoDocumento não encontrado: " + id);
 				} else {
@@ -191,6 +192,10 @@ public class JbpmUtil {
 
 	public static boolean isTypeEditor(String type) {
 		return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
+	}
+	
+	private ProcessoDocumentoManager processoDocumentoManager(){
+	    return ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
 	}
 	
 }
