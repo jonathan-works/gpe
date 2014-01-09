@@ -13,13 +13,20 @@ import br.com.infox.epp.access.entity.Localizacao;
 @Name(LocalizacaoManager.NAME)
 @AutoCreate
 public class LocalizacaoManager extends GenericManager {
-	
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "localizacaoManager";
-	@In private LocalizacaoDAO localizacaoDAO;
-	
-	public List<Localizacao> getLocalizacoesEstrutura(){
-		return localizacaoDAO.getLocalizacoesEstrutura();
-	}
+
+    private static final long serialVersionUID = 1L;
+    private static final Class<Localizacao> CLASS = Localizacao.class;
+    public static final String NAME = "localizacaoManager";
+
+    @In
+    private LocalizacaoDAO localizacaoDAO;
+    
+    public Localizacao find(Integer id){
+        return find(CLASS, id);
+    }
+
+    public List<Localizacao> getLocalizacoesEstrutura() {
+        return localizacaoDAO.getLocalizacoesEstrutura();
+    }
 
 }

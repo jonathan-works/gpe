@@ -42,6 +42,7 @@ import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -84,7 +85,7 @@ public class JbpmUtil {
 				localizacaoId = localizacaoId.replaceAll("'", "");
 				localizacaoId = localizacaoId.split(":")[0];
 			}
-			return EntityUtil.find(Localizacao.class, Integer.valueOf(localizacaoId));
+			return localizacaoManager().find(Integer.valueOf(localizacaoId));
 		}
 		return null;
 	}
@@ -196,6 +197,10 @@ public class JbpmUtil {
 	
 	private ProcessoDocumentoManager processoDocumentoManager(){
 	    return ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+	}
+	
+	private LocalizacaoManager localizacaoManager(){
+	    return ComponentUtil.getComponent(LocalizacaoManager.NAME);
 	}
 	
 }
