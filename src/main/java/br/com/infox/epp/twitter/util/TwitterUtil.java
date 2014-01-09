@@ -14,6 +14,8 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
+import br.com.infox.epp.twitter.manager.ContaTwitterManager;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 import twitter4j.DirectMessage;
 import twitter4j.Status;
@@ -358,20 +360,17 @@ public final class TwitterUtil {
 		return conta;
 	}
 	
-	/**
-	 * @param usuario
-	 * @return a conta do twitter da localização passada como parametro ou null caso a conta não exista 
-	 */
-	public ContaTwitter getContaTwitter(Localizacao localizacao){
-		ContaTwitter conta = null;
-		if (localizacao.getTemContaTwitter()){
-			String hql = "select o from ContaTwitter o where o.localizacao = :localizacao";
-			conta = (ContaTwitter) EntityUtil.createQuery(hql)
-					.setParameter("localizacao", localizacao)
-					.getSingleResult();
-		}
-		return conta;
-	}
+    /**
+     * @param usuario
+     * @return a conta do twitter da localização passada como parametro ou null
+     *         caso a conta não exista
+     */
+    public ContaTwitter getContaTwitter(Localizacao localizacao) {
+        if (localizacao.getTemContaTwitter()) {
+            return contaTwitterManager().getContaTwitterByLocalizacao(localizacao);
+        }
+        return null;
+    }
 	
 /*	
     ================================== Métodos Inicializadores e Auxiliares Públicos ========================================
