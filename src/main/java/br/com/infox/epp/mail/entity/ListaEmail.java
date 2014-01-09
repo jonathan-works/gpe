@@ -15,8 +15,20 @@
 */
 package br.com.infox.epp.mail.entity;
 
-import static br.com.infox.epp.mail.query.ListaEmailQuery.*;
-import static br.com.infox.core.persistence.ORConstants.*;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_ESTRUTURA;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_GRUPO_EMAIL;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_LISTA_EMAIL;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_LOCALIZACAO;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_PAPEL;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.LISTA_EMAIL_BY_ID_GRUPO;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.LISTA_EMAIL_BY_ID_GRUPO_QUERY;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.SEQUENCE_LISTA_EMAIL;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.TABLE_LISTA_EMAIL;
+
 import java.text.MessageFormat;
 
 import javax.persistence.Column;
@@ -26,6 +38,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -34,6 +48,10 @@ import br.com.infox.epp.access.entity.Papel;
 
 @Entity
 @Table(name = TABLE_LISTA_EMAIL, schema=PUBLIC)
+@NamedQueries({
+    @NamedQuery(name=LISTA_EMAIL_BY_ID_GRUPO, query=LISTA_EMAIL_BY_ID_GRUPO_QUERY),
+    @NamedQuery(name=MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL, query=MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY)
+})
 public class ListaEmail implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

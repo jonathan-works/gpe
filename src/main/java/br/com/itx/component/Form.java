@@ -50,7 +50,7 @@ public class Form implements Serializable {
 		this.fields = fieldList;
 		String currentTab = null;
 		for (FormField field : fields) {
-			if (field.getType().equals("tab")) {
+			if ("tab".equals(field.getType())) {
 				currentTab = field.getId();
 				rootFields.add(field);
 			} else if (currentTab == null) {

@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.jboss.seam.Component;
@@ -48,7 +46,9 @@ import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.mail.entity.ListaEmail;
 import br.com.infox.epp.mail.home.ListaEmailHome;
+import br.com.infox.epp.mail.manager.ListaEmailManager;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
+import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 public class InfoxMailNode extends MailNode {
@@ -224,7 +224,6 @@ public class InfoxMailNode extends MailNode {
 		createAction();
 	}
 	
-	@SuppressWarnings(UNCHECKED)
 	public List<ListaEmail> getListaEmail() {
 		if (listaEmail == null && to != null) {
 			String result = to.substring(1, to.length()-1);
@@ -233,10 +232,7 @@ public class InfoxMailNode extends MailNode {
 				if (att.length < 2) {
 					continue;
 				} else if ("idGrupo".equals(att[0])) {
-					listaEmail = EntityUtil.createQuery("select o from ListaEmail o " +
-							"where o.idGrupoEmail = :idGrupo")
-							.setParameter("idGrupo", Integer.parseInt(att[1]))
-							.getResultList();
+				    listaEmail = listaEmailManager().getListaEmailByIdGrupoEmail(Integer.parseInt(att[1]));
 				}
 			}
 		}
@@ -257,46 +253,48 @@ public class InfoxMailNode extends MailNode {
 	}
 
 	public void addNewEmail() {
-		if (currentListaEmail == null || (currentListaEmail.getEstrutura() == null && currentListaEmail.getLocalizacao() == null && currentListaEmail.getPapel() == null)) {
-			FacesMessages.instance().clearGlobalMessages();
-			FacesMessages.instance().add("Pelo menos um dos campos de destinatário é obrigatório");
-			return;
-		}
-		
-		if (idGrupo == 0) {
-			getListaEmail();
-			if (this.listaEmail != null && !this.listaEmail.isEmpty()) {
-				idGrupo = this.listaEmail.get(0).getIdGrupoEmail();
-			} else {
-				String q = "select max(o.idGrupoEmail) from ListaEmail o";
-				Query query = EntityUtil.getEntityManager().createQuery(q);
-				Object singleResult = EntityUtil.getSingleResult(query);
-				if(singleResult != null) {
-					idGrupo = (Integer) singleResult;
-				}
-				idGrupo++;
-			}
-		}
-		currentListaEmail.setIdGrupoEmail(idGrupo);
-		if(listaEmail == null) {
-			listaEmail = new ArrayList<ListaEmail>();
-		}
-		this.listaEmail.add(currentListaEmail);
-		ListaEmailHome home = ListaEmailHome.instance();
-		home.setInstance(currentListaEmail);
-		home.persist();
-		
-		currentListaEmail = new ListaEmail();
-		to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
-		
-		TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
-		treeHandler.clearTree();
-		treeHandler = (TreeHandler<?>) Component.getInstance(LocalizacaoTreeHandler.NAME);
-		treeHandler.clearTree();
-		treeHandler = (TreeHandler<?>) Component.getInstance(PapelTreeHandler.class);
-		treeHandler.clearTree();
-		createAction();
-	}
+        if (currentListaEmail == null || (currentListaEmail.getEstrutura() == null && currentListaEmail.getLocalizacao() == null && currentListaEmail.getPapel() == null)) {
+            FacesMessages.instance().clearGlobalMessages();
+            FacesMessages.instance().add("Pelo menos um dos campos de destinatário é obrigatório");
+            return;
+        }
+        
+        if (idGrupo == 0) {
+            getListaEmail();
+            if (this.listaEmail != null && !this.listaEmail.isEmpty()) {
+                idGrupo = this.listaEmail.get(0).getIdGrupoEmail();
+            } else {
+                Integer singleResult = listaEmailManager().getMaxIdGrupoEmailInListaEmail();
+                if(singleResult != null) {
+                    idGrupo = singleResult;
+                }
+                idGrupo++;
+            }
+        }
+        currentListaEmail.setIdGrupoEmail(idGrupo);
+        if(listaEmail == null) {
+            listaEmail = new ArrayList<ListaEmail>();
+        }
+        this.listaEmail.add(currentListaEmail);
+        ListaEmailHome home = ListaEmailHome.instance();
+        home.setInstance(currentListaEmail);
+        home.persist();
+        
+        currentListaEmail = new ListaEmail();
+        to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
+        
+        TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
+        treeHandler.clearTree();
+        treeHandler = (TreeHandler<?>) Component.getInstance(LocalizacaoTreeHandler.NAME);
+        treeHandler.clearTree();
+        treeHandler = (TreeHandler<?>) Component.getInstance(PapelTreeHandler.class);
+        treeHandler.clearTree();
+        createAction();
+    }
+
+    private ListaEmailManager listaEmailManager() {
+        return ComponentUtil.getComponent(ListaEmailManager.NAME);
+    }
 	
 	@Override
 	public boolean equals(Object obj) {

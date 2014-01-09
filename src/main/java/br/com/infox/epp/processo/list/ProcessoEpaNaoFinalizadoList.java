@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -21,7 +19,6 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
-import br.com.itx.util.EntityUtil;
 
 /**
  * EntityList que consulta todos os processos não finalizados de um determinado fluxo
@@ -97,42 +94,10 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 		this.fluxo = fluxo;
 	}
 	
-	public Integer getMaxTempoGasto() {
-	    final String hql = "select max(pEpa.tempoGasto) " +
-	    		"from ProcessoEpa pEpa " +
-	    		"inner join pEpa.naturezaCategoriaFluxo ncf " +
-	    		"where ncf.fluxo=:fluxo " +
-	    		"and pEpa.dataFim is null " +
-	    		"group by ncf.fluxo";
-	    Query query = EntityUtil.createQuery(hql)
-	            .setParameter("fluxo", fluxo);
-	    Integer result = EntityUtil.getSingleResult(query);
-	    return result == null ? 0 : result;
-	}
-	
 	public Double getMediaTempoGasto() {
-	    final String hql = "select avg(pEpa.tempoGasto) " +
-	    		"from ProcessoEpa pEpa " +
-	    		"inner join pEpa.naturezaCategoriaFluxo ncf " +
-	    		"where ncf.fluxo=:fluxo " +
-	    		"and pEpa.dataFim is null " +
-	    		"and pEpa.contabilizar=true " +
-	    		"and pEpa.situacaoPrazo=:situacao " +
-	    		"group by ncf.fluxo";
-	    Query query = EntityUtil.createQuery(hql)
-                .setParameter("fluxo", fluxo)
-                .setParameter("situacao", getEntity().getProcessoEpa().getSituacaoPrazo());
-	    return EntityUtil.getSingleResult(query);
+	    return processoEpaManager.getMediaTempoGasto(fluxo, getEntity().getProcessoEpa().getSituacaoPrazo());
 	}
 	
-	public boolean contemTarefaForaPrazo(ProcessoEpa processoEpa) {
-		Query query = EntityUtil.createQuery("select count(o) from ProcessoEpaTarefa o " +
-											 "where o.processoEpa = :processoEpa " +
-											 "  and o.porcentagem > 100");
-		query.setParameter("processoEpa", processoEpa);
-		return (Long) query.getSingleResult() > 0;
-	}
-
 	public List<SituacaoPrazoEnum> getTiposSituacaoPrazo() {
 	    return Arrays.asList(SituacaoPrazoEnum.values());
 	}

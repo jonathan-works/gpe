@@ -14,6 +14,8 @@ import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_I
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,6 +55,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
     @NamedQuery(name=ITEM_DO_PROCESSO, query=ITEM_DO_PROCESSO_QUERY),
     @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY),
     @NamedQuery(name=DATA_INICIO_PRIMEIRA_TAREFA, query=DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
+    @NamedQuery(name=TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query=TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
     @NamedQuery(name=TEMPO_GASTO_PROCESSO_EPP, query=TEMPO_GASTO_PROCESSO_EPP_QUERY)
 })
 public class ProcessoEpa extends Processo {

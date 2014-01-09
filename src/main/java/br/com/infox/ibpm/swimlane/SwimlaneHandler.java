@@ -196,7 +196,7 @@ public class SwimlaneHandler implements Serializable {
 							idPapel = splitted[1];
 							papel = EntityUtil.getEntityManager().find(Papel.class, 
 									Integer.parseInt(idPapel));
-							if(splitted[2].equals("true")) {
+							if("true".equals(splitted[2])) {
 								sh.setContabilizar(true);
 							} else {
 								sh.setContabilizar(false);

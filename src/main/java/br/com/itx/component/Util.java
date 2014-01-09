@@ -196,7 +196,7 @@ public class Util implements Serializable {
 		eventContext.set("homeActionType", type);
 		eventContext.set("home", home);
 		eventContext.set("instance", home.getInstance());
-		if (event == null || event.equals("")) {
+		if (event == null || "".equals(event)) {
 			String exp = "#{home." + type + "}";
 			Expressions e = Expressions.instance();
 			return (String)e.createMethodExpression(exp).invoke();
@@ -206,7 +206,7 @@ public class Util implements Serializable {
 	
 	public String event(String event) {
 		Context eventContext = Contexts.getEventContext();
-		if (event != null && !event.equals("")) {
+		if (event != null && !"".equals(event)) {
 			eventContext.set("event", event);
 			((Events)Component.getInstance("org.jboss.seam.core.events")).raiseEvent(event);
 		}
@@ -223,7 +223,7 @@ public class Util implements Serializable {
 	 * @return Texto com a primeira letra maiuscula.
 	 */
 	public String upperFirst(String text) {
-		if (text == null || text.equals("")) {
+		if (text == null || "".equals(text)) {
 			return "";
 		}
 		return text.substring(0,1).toUpperCase() + text.substring(1);

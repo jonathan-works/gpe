@@ -20,9 +20,9 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.epp.tarefa.entity.Tarefa;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.task.manager.JbpmTaskManager;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.EntityUtil;
 
 @Name(TaskFitter.NAME)
@@ -41,6 +41,7 @@ public class TaskFitter extends Fitter implements Serializable {
 	private boolean currentJbpmTaskPersisted;
 	
 	@In private JbpmTaskManager jbpmTaskManager;
+	@In private TarefaManager tarefaManager;
 	
 	public void addTask() {
 		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
@@ -88,7 +89,7 @@ public class TaskFitter extends Fitter implements Serializable {
 	
 	public Tarefa getTarefaAtual() {
 		if (this.tarefaAtual == null && getCurrentTask() != null && isCurrentJbpmTaskPersisted()) {
-			this.tarefaAtual = JbpmUtil.getTarefa(getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName()).longValue());
+			this.tarefaAtual = tarefaManager.getTarefa(getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName()).longValue());
 		}
 		return tarefaAtual;
 	}

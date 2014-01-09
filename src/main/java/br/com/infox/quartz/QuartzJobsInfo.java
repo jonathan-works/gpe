@@ -207,15 +207,6 @@ public class QuartzJobsInfo implements Serializable {
 						"Jobs apagados com sucesso. Reinicie o servidor para que os Jobs sejam refeitos.");
 	}
 
-	public void apagarHistoricoEstatisticaEventoProcesso() {
-		String hql = "delete from HistoricoEstatisticaEventoProcesso o where cast(o.dtUltimaAtualizacao as date) = current_date";
-		FacesMessages
-				.instance()
-				.add(Severity.INFO,
-						"HistoricoEstatisticaEventoProcesso para o dia atual foi apagado com sucesso.");
-		EntityUtil.createQuery(hql).executeUpdate();
-	}
-
 	@SuppressWarnings(UNCHECKED)
 	public List<Map<String, Object>> getMapParametroTriggers()
 			throws SchedulerException {
