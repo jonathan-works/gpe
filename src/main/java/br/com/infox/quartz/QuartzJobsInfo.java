@@ -37,6 +37,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import br.com.infox.epp.system.entity.Parametro;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -207,23 +208,14 @@ public class QuartzJobsInfo implements Serializable {
 						"Jobs apagados com sucesso. Reinicie o servidor para que os Jobs sejam refeitos.");
 	}
 
-	@SuppressWarnings(UNCHECKED)
-	public List<Map<String, Object>> getMapParametroTriggers()
-			throws SchedulerException {
-		List<String> triggersNames = getTriggersNames();
-		if (triggersNames.isEmpty()) {
-			return Collections.emptyList();
-		}
-		String hql = "select new map(o.nomeVariavel as nomeVariavel, "
-				+ "o.descricaoVariavel as descricaoVariavel, "
-				+ "o.valorVariavel as valorVariavel, "
-				+ "o.idParametro as idParametro,"
-				+ "case when o.valorVariavel in (:triggersNames) then true else false end as valido) "
-				+ "from Parametro o where o.valorVariavel like '________:___________:_____'";
-		Query query = EntityUtil.createQuery(hql);
-		query.setParameter("triggersNames", triggersNames);
-		return query.getResultList();
-	}
+    public List<Map<String, Object>> getMapParametroTriggers() throws SchedulerException {
+        List<String> triggersNames = getTriggersNames();
+        if (triggersNames.isEmpty()) {
+            return Collections.emptyList();
+        }
+        ParametroManager parametroManager = ComponentUtil.getComponent(ParametroManager.NAME);
+        return parametroManager.getMapParametroTriggers(triggersNames);
+    }
 
 	public void removeParametro(int idParametro) {
 		EntityManager em = EntityUtil.getEntityManager();
