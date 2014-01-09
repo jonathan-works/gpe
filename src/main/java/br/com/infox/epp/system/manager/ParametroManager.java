@@ -1,7 +1,6 @@
 package br.com.infox.epp.system.manager;
 
 import java.util.List;
-import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -26,10 +25,6 @@ public class ParametroManager extends GenericManager {
 	
     public List<Parametro> listParametrosAtivos() {
         return parametroDAO.listParametrosAtivos();
-    }
-    
-    public List<Map<String, Object>> getMapParametroTriggers(List<String> triggersNames){
-        return parametroDAO.getMapParametroTriggers(triggersNames);
     }
 
 }

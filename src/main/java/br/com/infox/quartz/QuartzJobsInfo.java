@@ -1,12 +1,8 @@
 package br.com.infox.quartz;
 
-import static br.com.infox.core.constants.WarningConstants.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +33,6 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import br.com.infox.epp.system.entity.Parametro;
-import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -208,31 +203,11 @@ public class QuartzJobsInfo implements Serializable {
 						"Jobs apagados com sucesso. Reinicie o servidor para que os Jobs sejam refeitos.");
 	}
 
-    public List<Map<String, Object>> getMapParametroTriggers() throws SchedulerException {
-        List<String> triggersNames = getTriggersNames();
-        if (triggersNames.isEmpty()) {
-            return Collections.emptyList();
-        }
-        ParametroManager parametroManager = ComponentUtil.getComponent(ParametroManager.NAME);
-        return parametroManager.getMapParametroTriggers(triggersNames);
-    }
-
 	public void removeParametro(int idParametro) {
 		EntityManager em = EntityUtil.getEntityManager();
 		Parametro parametro = em.find(Parametro.class, idParametro);
 		em.remove(parametro);
 		em.flush();
-	}
-
-	private List<String> getTriggersNames() throws SchedulerException {
-		Scheduler scheduler = getScheduler();
-		String[] groupNames = scheduler.getTriggerGroupNames();
-		List<String> list = new ArrayList<String>();
-		for (String groupName : groupNames) {
-			String[] triggerNames = scheduler.getTriggerNames(groupName);
-			list.addAll(Arrays.asList(triggerNames));
-		}
-		return list;
 	}
 
 }

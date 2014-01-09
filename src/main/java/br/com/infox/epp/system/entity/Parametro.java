@@ -16,7 +16,8 @@
 package br.com.infox.epp.system.entity;
 // Feito dia 17/11/2008, por Hiran
 
-import static br.com.infox.epp.system.query.ParametroQuery.*;
+import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS;
+import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS_QUERY;
 
 import java.util.Date;
 
@@ -33,8 +34,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -43,7 +44,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @Entity
 @Table(name = "tb_parametro", schema="public")
 @NamedQueries({
-    @NamedQuery(name=MAP_PARAMETRO_TRIGGERS, query=MAP_PARAMETRO_TRIGGERS_QUERY),
     @NamedQuery(name=LIST_PARAMETROS_ATIVOS, query=LIST_PARAMETROS_ATIVOS_QUERY)
 })
 public class Parametro implements java.io.Serializable {
