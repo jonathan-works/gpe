@@ -6,5 +6,9 @@ public interface ContaTwitterQuery {
     String CONTA_TWITTER_BY_LOCALIZACAO = "getContaTwitterByLocalizacao";
     String CONTA_TWITTER_BY_LOCALIZACAO_QUERY = "select o from ContaTwitter o where o.localizacao = :" 
             + LOCALIZACAO_PARAM;
+    
+    String USUARIO_PARAM = "usuario";
+    String CONTA_TWITTER_BY_USUARIO = "getContaTwitterByUsuario";
+    String CONTA_TWITTER_BY_USUARIO_QUERY = "select o from ContaTwitter o where o.usuario = :" + USUARIO_PARAM;
 
 }
