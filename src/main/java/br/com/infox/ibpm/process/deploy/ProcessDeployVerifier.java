@@ -15,7 +15,7 @@
 */
 package br.com.infox.ibpm.process.deploy;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.StringReader;
 import java.text.MessageFormat;
@@ -40,10 +40,11 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.xml.sax.InputSource;
 
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.itx.util.EntityUtil;
+import br.com.itx.util.ComponentUtil;
 
 
 /**
@@ -84,7 +85,8 @@ public class ProcessDeployVerifier {
 		for (ProcessDefinition p : definitions) {
 			processNames.add(p.getName());
 		}
-		List<Fluxo> list = EntityUtil.getEntityList(Fluxo.class);
+		FluxoManager fluxoManager = ComponentUtil.getComponent(FluxoManager.NAME);
+		List<Fluxo> list = fluxoManager.findAll();
 		for (Fluxo f : list) {
 			if (verify(processNames, f)) {
 				ProcessDefinition instance = parseInstance(f.getXml());
