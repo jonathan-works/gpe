@@ -5,15 +5,16 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.itx.util.EntityUtil;
 
 @Name(NaturezaCategoriaFluxoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -25,11 +26,13 @@ public class NaturezaCategoriaFluxoCrudAction extends AbstractCrudAction<Naturez
     private List<Categoria> categoriaList;
     private List<Fluxo> fluxoList;
     
+    @In private GenericManager genericManager;
+    
     @PostConstruct
     public void init() {
-        naturezaList = EntityUtil.getEntityList(Natureza.class);
-        categoriaList = EntityUtil.getEntityList(Categoria.class);
-        fluxoList = EntityUtil.getEntityList(Fluxo.class);
+        naturezaList = genericManager.findAll(Natureza.class);
+        categoriaList = genericManager.findAll(Categoria.class);
+        fluxoList = genericManager.findAll(Fluxo.class);
         
     }
 
