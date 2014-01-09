@@ -26,5 +26,9 @@ public class ContaTwitterManager extends GenericManager {
     public ContaTwitter getContaTwitterByUsuario(UsuarioLogin usuario){
         return contaTwitterDAO.getContaTwitterByUsuario(usuario);
     }
+    
+    public ContaTwitter getContaTwitterByIdUsuario(Integer idUsuario) {
+        return contaTwitterDAO.getContaTwitterByIdUsuario(idUsuario);
+    }
 
 }

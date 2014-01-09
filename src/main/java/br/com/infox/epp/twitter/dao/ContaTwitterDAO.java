@@ -3,7 +3,7 @@ package br.com.infox.epp.twitter.dao;
 import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_LOCALIZACAO;
 import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_USUARIO;
 import static br.com.infox.epp.twitter.query.ContaTwitterQuery.LOCALIZACAO_PARAM;
-import static br.com.infox.epp.twitter.query.ContaTwitterQuery.USUARIO_PARAM;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +33,12 @@ public class ContaTwitterDAO extends GenericDAO {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(USUARIO_PARAM, usuario);
         return getNamedSingleResult(CONTA_TWITTER_BY_USUARIO, parameters);
+    }
+    
+    public ContaTwitter getContaTwitterByIdUsuario(Integer idUsuario) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_USUARIO_PARAM, idUsuario);
+        return getNamedSingleResult(CONTA_TWITTER_BY_ID_USUARIO, parameters);
     }
 
 }
