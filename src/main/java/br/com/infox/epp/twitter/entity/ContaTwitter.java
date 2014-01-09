@@ -29,6 +29,7 @@ import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 @Table(name=ContaTwitter.NAME, schema="public")
 @NamedQueries({
     @NamedQuery(name=CONTA_TWITTER_BY_USUARIO, query=CONTA_TWITTER_BY_USUARIO_QUERY),
+    @NamedQuery(name=CONTA_TWITTER_BY_ID_USUARIO, query=CONTA_TWITTER_BY_ID_USUARIO_QUERY),
     @NamedQuery(name=CONTA_TWITTER_BY_LOCALIZACAO, query=CONTA_TWITTER_BY_LOCALIZACAO_QUERY)
 })
 public class ContaTwitter implements Serializable {
