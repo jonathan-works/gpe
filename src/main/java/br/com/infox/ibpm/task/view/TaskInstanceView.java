@@ -15,7 +15,7 @@
  */
 package br.com.infox.ibpm.task.view;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -33,11 +33,12 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.itx.component.Form;
 import br.com.itx.component.FormField;
 import br.com.itx.component.Template;
-import br.com.itx.util.EntityUtil;
+import br.com.itx.util.ComponentUtil;
 
 
 /**
@@ -104,7 +105,7 @@ public class TaskInstanceView implements Serializable{
 					if(type.startsWith("textEdit")) {
 						ff.setType("textEditComboReadonly");
 						if (value != null) {
-							ProcessoDocumento processoDocumento = EntityUtil.find(ProcessoDocumento.class, value);
+							ProcessoDocumento processoDocumento = processoDocumentoManager().find((Integer) value);
 							if(processoDocumento != null){
 								properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
 								properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
@@ -136,5 +137,9 @@ public class TaskInstanceView implements Serializable{
 			form = null;
 		}
 		taskInstance = newInstance;
+	}
+	
+	private ProcessoDocumentoManager processoDocumentoManager(){
+	    return ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
 	}
 }
