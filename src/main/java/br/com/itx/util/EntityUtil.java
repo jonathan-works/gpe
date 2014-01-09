@@ -242,21 +242,6 @@ public final class EntityUtil implements Serializable {
 		return getEntityManager().createQuery(sb.toString()).getResultList();
 	}
 	
-	/**
-	 * Atalho para busca de entidades pelo id
-	 * 
-	 * @param <E>
-	 * @param clazz classe da entidade a ser pesquisada
-	 * @param id
-	 * @return
-	 */
-	public static <E> E find(Class<E> clazz, Object id) {
-		if(id == null) {
-			return null;
-		}
-		return getEntityManager().find(clazz, id);
-	}
-
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;
