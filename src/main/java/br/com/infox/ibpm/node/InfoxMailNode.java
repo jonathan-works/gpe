@@ -253,41 +253,44 @@ public class InfoxMailNode extends MailNode {
 	}
 
 	public void addNewEmail() {
-		if (currentListaEmail == null || (currentListaEmail.getEstrutura() == null && currentListaEmail.getLocalizacao() == null && currentListaEmail.getPapel() == null)) {
-			FacesMessages.instance().clearGlobalMessages();
-			FacesMessages.instance().add("Pelo menos um dos campos de destinatário é obrigatório");
-			return;
-		}
-		
-		if (idGrupo == 0) {
-			Integer singleResult = listaEmailManager().getMaxIdGrupoEmailInListaEmail();
-			if(singleResult != null) {
-				idGrupo = singleResult;
-			}
-			idGrupo++;
-		}
-		currentListaEmail.setIdGrupoEmail(idGrupo);
-		if(listaEmail == null) {
-			listaEmail = new ArrayList<ListaEmail>();
-		}
-		this.listaEmail.add(currentListaEmail);
-		ListaEmailHome home = ListaEmailHome.instance();
-		home.setInstance(currentListaEmail);
-		home.persist();
-		
-		currentListaEmail = new ListaEmail();
-		if (to == null || "".equals(to)) {
-			to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
-		}
-		
-		TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
-		treeHandler.clearTree();
-		treeHandler = (TreeHandler<?>) Component.getInstance(LocalizacaoTreeHandler.NAME);
-		treeHandler.clearTree();
-		treeHandler = (TreeHandler<?>) Component.getInstance(PapelTreeHandler.class);
-		treeHandler.clearTree();
-		createAction();
-	}
+        if (currentListaEmail == null || (currentListaEmail.getEstrutura() == null && currentListaEmail.getLocalizacao() == null && currentListaEmail.getPapel() == null)) {
+            FacesMessages.instance().clearGlobalMessages();
+            FacesMessages.instance().add("Pelo menos um dos campos de destinatário é obrigatório");
+            return;
+        }
+        
+        if (idGrupo == 0) {
+            getListaEmail();
+            if (this.listaEmail != null && !this.listaEmail.isEmpty()) {
+                idGrupo = this.listaEmail.get(0).getIdGrupoEmail();
+            } else {
+                Integer singleResult = listaEmailManager().getMaxIdGrupoEmailInListaEmail();
+                if(singleResult != null) {
+                    idGrupo = singleResult;
+                }
+                idGrupo++;
+            }
+        }
+        currentListaEmail.setIdGrupoEmail(idGrupo);
+        if(listaEmail == null) {
+            listaEmail = new ArrayList<ListaEmail>();
+        }
+        this.listaEmail.add(currentListaEmail);
+        ListaEmailHome home = ListaEmailHome.instance();
+        home.setInstance(currentListaEmail);
+        home.persist();
+        
+        currentListaEmail = new ListaEmail();
+        to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
+        
+        TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
+        treeHandler.clearTree();
+        treeHandler = (TreeHandler<?>) Component.getInstance(LocalizacaoTreeHandler.NAME);
+        treeHandler.clearTree();
+        treeHandler = (TreeHandler<?>) Component.getInstance(PapelTreeHandler.class);
+        treeHandler.clearTree();
+        createAction();
+    }
 
     private ListaEmailManager listaEmailManager() {
         return ComponentUtil.getComponent(ListaEmailManager.NAME);

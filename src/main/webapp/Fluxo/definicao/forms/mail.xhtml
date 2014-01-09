@@ -21,7 +21,7 @@
  
 			<ui:define name="toolBar">
 				
-				<h:graphicImage title="Excluir destinatário" url="/img/remove.png">
+				<h:graphicImage title="Excluir destinatário" url="/img/remove.png" style="cursor: pointer">
 					
 					<a:ajax event="click"
 						 listener="#{nodeFitter.currentNode.removeListaEmail(row)}"
@@ -66,12 +66,12 @@
 						
 					 	<rich:column>
 							
-							<h:graphicImage title="Adicionar destinatários" id="novoLocPapel" url="/img/add.gif">
+							<h:graphicImage title="Adicionar destinatários" id="novoLocPapel" url="/img/add.gif" style="cursor: pointer">
 									
 								<a:ajax event="click"
 										listener="#{nodeFitter.currentNode.addNewEmail()}"
 										execute="@this"
-										render="mailDiv, :processDefinitionButtonsForm:processDefinitionButtonsFormDialogMessage"
+										render="mailDiv, pageBodyDialogMessage"
 										limitRender="true" />
 							
 							</h:graphicImage>
