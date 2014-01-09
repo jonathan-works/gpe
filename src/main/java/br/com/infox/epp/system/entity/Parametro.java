@@ -43,6 +43,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @Entity
 @Table(name = "tb_parametro", schema="public")
 @NamedQueries({
+    @NamedQuery(name=MAP_PARAMETRO_TRIGGERS, query=MAP_PARAMETRO_TRIGGERS_QUERY),
     @NamedQuery(name=LIST_PARAMETROS_ATIVOS, query=LIST_PARAMETROS_ATIVOS_QUERY)
 })
 public class Parametro implements java.io.Serializable {
