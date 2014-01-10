@@ -50,7 +50,7 @@ public class ProcessoManager extends GenericManager {
         return find(CLASS, id);
     }
 	
-	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
+	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) throws DAOException {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
 		bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
 		bin.setDataInclusao(new Date());
@@ -58,7 +58,7 @@ public class ProcessoManager extends GenericManager {
 		bin.setUsuario(Authenticator.getUsuarioLogado());
 		bin.setCertChain(certChain);
 		bin.setSignature(signature);
-		EntityUtil.getEntityManager().persist(bin);
+		persist(bin);
 		return bin;
 	}
 	
