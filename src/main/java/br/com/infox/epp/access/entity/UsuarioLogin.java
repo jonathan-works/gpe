@@ -6,6 +6,8 @@ import static br.com.infox.core.constants.LengthConstants.NOME_ATRIBUTO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.BLOQUEIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.DATA_EXPIRACAO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.EMAIL;
@@ -48,6 +50,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -74,12 +78,16 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
 
 @Entity
-@Table(name=TABLE_USUARIO_LOGIN, schema=PUBLIC , uniqueConstraints = @UniqueConstraint(columnNames = LOGIN))
-@NamedQueries(value={
-	@NamedQuery(name=USUARIO_LOGIN_NAME, query=USUARIO_LOGIN_QUERY),
-	@NamedQuery(name=USUARIO_BY_LOGIN_TASK_INSTANCE, query=USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY),
-	@NamedQuery(name=USUARIO_BY_EMAIL, query=USUARIO_LOGIN_EMAIL_QUERY),
-	@NamedQuery(name=INATIVAR_USUARIO, query=INATIVAR_USUARIO_QUERY)
+@Table(name = TABLE_USUARIO_LOGIN, schema = PUBLIC,
+        uniqueConstraints = @UniqueConstraint(columnNames = LOGIN))
+@NamedQueries(value = {
+    @NamedQuery(name = USUARIO_LOGIN_NAME, query = USUARIO_LOGIN_QUERY),
+    @NamedQuery(name = USUARIO_BY_LOGIN_TASK_INSTANCE, query = USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY),
+    @NamedQuery(name = USUARIO_BY_EMAIL, query = USUARIO_LOGIN_EMAIL_QUERY),
+    @NamedQuery(name = INATIVAR_USUARIO, query = INATIVAR_USUARIO_QUERY) 
+})
+@NamedNativeQueries({
+    @NamedNativeQuery(name=ACTORID_TAREFA_ATUAL_BY_PROCESSO, query=ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY)
 })
 public class UsuarioLogin implements Serializable {
 

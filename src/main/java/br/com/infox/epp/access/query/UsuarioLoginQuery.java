@@ -35,4 +35,12 @@ public interface UsuarioLoginQuery {
     String INATIVAR_USUARIO = "inativarUsuario";
     String INATIVAR_USUARIO_QUERY = "UPDATE UsuarioLogin u SET u.ativo = false WHERE u.idUsuarioLogin = :"
             + PARAM_ID;
+    
+    String ID_PROCESSO_PARAM = "idProcesso";
+    String ACTORID_TAREFA_ATUAL_BY_PROCESSO = "getActorIdTarefaAtualByProcesso";
+    String ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY = "SELECT DISTINCT ul.nm_usuario "
+            + "FROM tb_usuario_login ul "
+            + "JOIN tb_usuario_taskinstance uti ON (ul.id_usuario_login=uti.id_usuario_login) "
+            + "JOIN vs_situacao_processo sp ON (uti.id_taskinstance = sp.id_task_instance) "
+            + "WHERE id_processo=:" + ID_PROCESSO_PARAM;
 }
