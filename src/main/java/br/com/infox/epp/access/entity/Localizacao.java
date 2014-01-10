@@ -28,14 +28,17 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.IN_ESTRUTURA;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI_ATTRIBUTE;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_ESTRUTURA;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_ESTRUTURA_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.SEQUENCE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TABLE_LOCALIZACAO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.TWITTER;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,11 +72,11 @@ import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 @NamedQueries(value={
     @NamedQuery(name=LOCALIZACOES_ESTRUTURA, query=LOCALIZACOES_ESTRUTURA_QUERY)
 })
-public class Localizacao implements java.io.Serializable, Recursive<Localizacao> {
+public class Localizacao implements Serializable, Recursive<Localizacao> {
 
 	private static final long serialVersionUID = 1L;
 
-	private int idLocalizacao;
+	private Integer idLocalizacao;
 	private String localizacao;
 	private Boolean ativo;
 	private Localizacao localizacaoPai;
@@ -86,20 +89,39 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 	private List<Localizacao> localizacaoList = new ArrayList<Localizacao>(0);
 	
 	private String caminhoCompleto;
-	private Boolean temContaTwitter=false;
+	private Boolean temContaTwitter;
 
 	public Localizacao() {
+	    temContaTwitter=Boolean.FALSE;
+	}
+	
+	public Localizacao(final String localizacao, final Boolean estrutura, final Boolean ativo) {
+        this();
+        this.localizacao = localizacao;
+        this.ativo = ativo;
+        this.estrutura = estrutura;
+        this.localizacaoPai = null;
+        this.estruturaFilho = null;
+    }
+	
+	public Localizacao(final String localizacao, final Boolean estrutura, final Boolean ativo, final Localizacao localizacaoPai, final Localizacao estruturaFilho) {
+	    this();
+        this.localizacao = localizacao;
+        this.ativo = ativo;
+        this.estrutura = estrutura;
+        this.localizacaoPai = localizacaoPai;
+        this.estruturaFilho = estruturaFilho;
 	}
 
 	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO)
 	@Id
 	@GeneratedValue(generator = GENERATOR)
 	@Column(name = ID_LOCALIZACAO, unique = true, nullable = false)
-	public int getIdLocalizacao() {
+	public Integer getIdLocalizacao() {
 		return this.idLocalizacao;
 	}
 
-	public void setIdLocalizacao(int idLocalizacao) {
+	public void setIdLocalizacao(Integer idLocalizacao) {
 		this.idLocalizacao = idLocalizacao;
 	}
 	
@@ -229,7 +251,7 @@ public class Localizacao implements java.io.Serializable, Recursive<Localizacao>
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + getIdLocalizacao();
+        result = prime * result + (this.idLocalizacao == null ? 0 : this.idLocalizacao);
 		return result;
 	}
 
