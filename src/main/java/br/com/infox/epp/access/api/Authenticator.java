@@ -338,11 +338,7 @@ public class Authenticator {
     }
     
     public static boolean isUsuarioAtualResponsavel() {
-        UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(
-                USUARIO_LOCALIZACAO_ATUAL);
-        usuarioLocalizacao = getGenericDAO().find(UsuarioLocalizacao.class, 
-                usuarioLocalizacao.getIdUsuarioLocalizacao());
-        return usuarioLocalizacao.getResponsavelLocalizacao();
+        return getUsuarioLocalizacaoAtual().getResponsavelLocalizacao();
     }
 
     private static GenericDAO getGenericDAO() {

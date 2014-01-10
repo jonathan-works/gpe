@@ -16,10 +16,9 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.processo.home.ProcessoHome;
-import br.com.infox.epp.twitter.entity.TwitterTemplate;
+import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
 import br.com.infox.epp.twitter.util.TwitterUtil;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 public class JbpmMail extends org.jbpm.mail.Mail {
 	private static final long serialVersionUID = 1L;
@@ -91,7 +90,8 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 		if (parameters.containsKey("idTwitterTemplate")) {
 			int idTemplate = Integer.parseInt(parameters.get("idTwitterTemplate"));
 			int idGrupo = Integer.parseInt(parameters.get("idGrupo"));
-			String mensagem = MessageFormat.format("[{1}] {0}", EntityUtil.find(TwitterTemplate.class, idTemplate).getMensagem(),
+			TwitterTemplateManager twitterTemplateManager = ComponentUtil.getComponent(TwitterTemplateManager.NAME);
+			String mensagem = MessageFormat.format("[{1}] {0}", twitterTemplateManager.find(idTemplate).getMensagem(),
 					ProcessoHome.instance().getInstance().getNumeroProcesso());
 			try {
 				TwitterUtil.getInstance().sendMessage(MailResolver.instance().listaContasTwitter(idGrupo), mensagem);

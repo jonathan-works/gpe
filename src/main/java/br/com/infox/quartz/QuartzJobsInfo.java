@@ -1,12 +1,8 @@
 package br.com.infox.quartz;
 
-import static br.com.infox.core.constants.WarningConstants.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
@@ -192,64 +187,11 @@ public class QuartzJobsInfo implements Serializable {
 		}
 	}
 
-	public void apagarJobs() {
-		String sql = "delete from qrtz_cron_triggers; "
-				+ "delete from qrtz_fired_triggers; "
-				+ "delete from qrtz_triggers; "
-				+ "delete from qrtz_job_details; "
-				+ "delete from core.tb_parametro "
-				+ "where vl_variavel like '________:___________:_____';";
-		Query query = EntityUtil.getEntityManager().createNativeQuery(sql);
-		query.executeUpdate();
-		FacesMessages
-				.instance()
-				.add(Severity.INFO,
-						"Jobs apagados com sucesso. Reinicie o servidor para que os Jobs sejam refeitos.");
-	}
-
-	public void apagarHistoricoEstatisticaEventoProcesso() {
-		String hql = "delete from HistoricoEstatisticaEventoProcesso o where cast(o.dtUltimaAtualizacao as date) = current_date";
-		FacesMessages
-				.instance()
-				.add(Severity.INFO,
-						"HistoricoEstatisticaEventoProcesso para o dia atual foi apagado com sucesso.");
-		EntityUtil.createQuery(hql).executeUpdate();
-	}
-
-	@SuppressWarnings(UNCHECKED)
-	public List<Map<String, Object>> getMapParametroTriggers()
-			throws SchedulerException {
-		List<String> triggersNames = getTriggersNames();
-		if (triggersNames.isEmpty()) {
-			return Collections.emptyList();
-		}
-		String hql = "select new map(o.nomeVariavel as nomeVariavel, "
-				+ "o.descricaoVariavel as descricaoVariavel, "
-				+ "o.valorVariavel as valorVariavel, "
-				+ "o.idParametro as idParametro,"
-				+ "case when o.valorVariavel in (:triggersNames) then true else false end as valido) "
-				+ "from Parametro o where o.valorVariavel like '________:___________:_____'";
-		Query query = EntityUtil.createQuery(hql);
-		query.setParameter("triggersNames", triggersNames);
-		return query.getResultList();
-	}
-
 	public void removeParametro(int idParametro) {
 		EntityManager em = EntityUtil.getEntityManager();
 		Parametro parametro = em.find(Parametro.class, idParametro);
 		em.remove(parametro);
 		em.flush();
-	}
-
-	private List<String> getTriggersNames() throws SchedulerException {
-		Scheduler scheduler = getScheduler();
-		String[] groupNames = scheduler.getTriggerGroupNames();
-		List<String> list = new ArrayList<String>();
-		for (String groupName : groupNames) {
-			String[] triggerNames = scheduler.getTriggerNames(groupName);
-			list.addAll(Arrays.asList(triggerNames));
-		}
-		return list;
 	}
 
 }

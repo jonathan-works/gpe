@@ -18,6 +18,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 public class FluxoManager extends GenericManager{
 
 	private static final long serialVersionUID = -6521661616139554331L;
+	private static final Class<Fluxo> CLASS = Fluxo.class;
 
 	public static final String NAME = "fluxoManager";
 
@@ -30,6 +31,10 @@ public class FluxoManager extends GenericManager{
 	 */
 	public List<Fluxo> getFluxoList() {
 		return fluxoDAO.getFluxoList();
+	}
+	
+	public List<Fluxo> findAll(){
+	    return findAll(CLASS);
 	}
 
 	public boolean contemProcessoAtrasado(Fluxo fluxo) {
@@ -44,4 +49,11 @@ public class FluxoManager extends GenericManager{
 		return fluxoDAO.getQuantidadeDeProcessoAssociadosAFluxo(fluxo) > 0;
 	}
 	
+	public boolean existeFluxoComDescricao(String descricao) {
+		return fluxoDAO.existeFluxoComDescricao(descricao);
+	}
+	
+	public boolean existeFluxoComCodigo(String codigo) {
+		return fluxoDAO.existeFluxoComCodigo(codigo);
+	}
 }

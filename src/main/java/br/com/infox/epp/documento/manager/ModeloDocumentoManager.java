@@ -31,12 +31,17 @@ import br.com.infox.epp.documento.entity.Variavel;
 public class ModeloDocumentoManager extends GenericManager{
 	private static final long serialVersionUID = 4455754174682600299L;
 	private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoManager.class);
+	private static final Class<ModeloDocumento> CLASS = ModeloDocumento.class;
 	public static final String NAME = "modeloDocumentoManager";
 
 	@In
 	private ModeloDocumentoDAO modeloDocumentoDAO;
 	
 	@In private VariavelDAO variavelDAO;
+	
+    public ModeloDocumento find(Integer idModeloDocumento) {
+        return find(CLASS, idModeloDocumento);
+    }
 	
 	public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento){
 		if(modeloDocumento != null) {

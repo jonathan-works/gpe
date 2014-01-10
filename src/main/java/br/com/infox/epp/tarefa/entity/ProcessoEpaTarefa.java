@@ -13,7 +13,7 @@ import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED_
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
 
 import java.io.Serializable;
 import java.text.MessageFormat;

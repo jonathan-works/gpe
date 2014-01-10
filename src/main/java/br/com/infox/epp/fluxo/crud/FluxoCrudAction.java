@@ -12,16 +12,13 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.infox.epp.fluxo.query.FluxoQuery;
 import br.com.itx.util.EntityUtil;
 
 @Name(FluxoCrudAction.NAME)
@@ -34,42 +31,38 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     
     @In private FluxoManager fluxoManager;
     
-    private boolean isReplica = false;
+    private boolean replica = false;
     
     public String criarReplica() {
-    	this.isReplica = true;
+    	this.replica = true;
+    	if (!verificarReplica()) {
+    		return null;
+    	}
         Fluxo fluxo = getInstance();
         fluxoManager.detach(fluxo);
         fluxo.setIdFluxo(null);
         setId(null);
         String ret = save();
-        
-        if (PostgreSQLErrorCode.UNIQUE_VIOLATION.toString().equals(ret)) {
-        	handleReplicaUniqueViolation();
-        } else if (PERSISTED.equals(ret)) {
-        	this.isReplica = false;
+        if (PERSISTED.equals(ret)) {
+        	this.replica = false;
         }
         return ret;
     }
 
-	private void handleReplicaUniqueViolation() {
-		String sqlMessage = getDaoException().getSqlException().getMessage();
-		FacesMessage message = null;
-		String componentId = null;
-		StatusMessages messages = getMessagesHandler();
+	private boolean verificarReplica() {
+		boolean existeFluxoComCodigo = fluxoManager.existeFluxoComCodigo(getInstance().getCodFluxo());
+		boolean existeFluxoComDescricao = fluxoManager.existeFluxoComDescricao(getInstance().getFluxo());
 		
-		if (sqlMessage.contains(FluxoQuery.CODIGO_FLUXO)) {
-			message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.codigoDuplicado']}");
-			componentId = COD_FLUXO_COMPONENT_ID;
-		} else if (sqlMessage.contains(FluxoQuery.DESCRICAO_FLUXO)) {
-			message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.descricaoDuplicada']}");
-			componentId = DESCRICAO_FLUXO_COMPONENT_ID;
+		if (existeFluxoComCodigo) {
+			FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.codigoDuplicado']}");
+			FacesContext.getCurrentInstance().addMessage(COD_FLUXO_COMPONENT_ID, message);
+		}
+		if (existeFluxoComDescricao) {
+			FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.descricaoDuplicada']}");
+			FacesContext.getCurrentInstance().addMessage(DESCRICAO_FLUXO_COMPONENT_ID, message);
 		}
 		
-		if (message != null && componentId != null) {
-			messages.clear();
-			FacesContext.getCurrentInstance().addMessage(componentId, message);
-		}
+		return !existeFluxoComCodigo && !existeFluxoComDescricao;
 	}
     
     @Override
@@ -131,10 +124,9 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, message);
             return null;
         }
-        
     }
     
     public boolean isReplica() {
-		return this.isReplica;
+		return replica;
 	}
 }

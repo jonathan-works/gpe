@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -22,11 +23,20 @@ public class ProcessoDocumentoManager extends GenericManager {
 
     public static final String NAME = "processoDocumentoManager";
     private static final long serialVersionUID = 1L;
+    private static final Class<ProcessoDocumento> CLASS = ProcessoDocumento.class;
     
     @In private ProcessoDocumentoDAO processoDocumentoDAO;
     
+    public ProcessoDocumento find(Integer idProcessoDocumento){
+        return find(CLASS, idProcessoDocumento);
+    }
+    
     public Object getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
         return processoDocumentoDAO.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
+    }
+    
+    public String valorProcessoDocumento(Integer idProcessoDocumento){
+        return find(idProcessoDocumento).getProcessoDocumentoBin().getModeloDocumento();
     }
 
     public ProcessoDocumento createProcessoDocumento(Processo processo, String label, ProcessoDocumentoBin bin, TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
@@ -54,6 +64,10 @@ public class ProcessoDocumentoManager extends GenericManager {
             }
         }
         return result;
+    }
+    
+    public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask){
+        return processoDocumentoDAO.getAnexosPublicos(idJbpmTask);
     }
 
 }

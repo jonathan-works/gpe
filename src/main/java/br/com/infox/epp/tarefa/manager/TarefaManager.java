@@ -29,4 +29,12 @@ public class TarefaManager extends GenericManager {
 		tarefaDAO.encontrarNovasTarefas();
 	}
 
+    public Tarefa getTarefa(long idJbpmTask) {
+        return tarefaDAO.getTarefa(idJbpmTask);
+    }
+    
+    public Tarefa getTarefa(String tarefa, String fluxo) {
+        return tarefaDAO.getTarefa(tarefa, fluxo);
+    }
+
 }

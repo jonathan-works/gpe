@@ -158,13 +158,13 @@
 	                id="definicao"
 	                action="#{processBuilder.load(fluxoCrudAction.instance)}"
 	                value="Definição"
-	                rendered="#{fluxoCrudAction.managed}"
+	                rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
 	                oncomplete="openPopUp('processDefinition', '#{util.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);" />
 	            
 	            <wi:commandButton
 	                id="importarXPDL"
 	                value="#{messages['importarXPDL.button']}"
-	                rendered="#{fluxoCrudAction.managed}"
+	                rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
 	                onclick="openPopUp('importarXPDL', '#{util.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);" />
 			
 			</ui:define>
@@ -180,7 +180,7 @@
 			 value="#{fluxoPapelAction}" />
 		<infox:tab
 			 id="fluxoPapelTab"
-			 rendered="#{home.isManaged()}"
+			 rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
 			 action="#{action.init(fluxoCrudAction.instance)}"
 			 title="#{messages['fluxoPapel.titleTab']}"
 			 name="fluxoPapelTab">
@@ -246,7 +246,7 @@
 	
 		<infox:tab id="natCatFluxoLoc"
 			name="natCatFluxoLoc"
-			rendered="#{home.managed}"
+			rendered="#{home.managed and not fluxoCrudAction.replica}"
 			title="#{messages['localizacao.localizacao']}">
 			<s:div id="natCatFluxoLocDiv">
 				<div>

@@ -4,8 +4,6 @@ package br.com.infox.epp.processo.consulta.home;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
@@ -18,7 +16,6 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.processo.consulta.bean.ConsultaProcesso;
-import br.com.itx.util.EntityUtil;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(ConsultaProcessoHome.NAME)
@@ -51,10 +48,6 @@ public class ConsultaProcessoHome implements Serializable {
 	
 	public void setInstance(ConsultaProcesso instance) {
 		this.instance = instance;
-	}
-	
-	public EntityManager getEntityManager(){
-		return EntityUtil.getEntityManager();
 	}
 	
 	public boolean isEditable() {

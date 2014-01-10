@@ -21,7 +21,6 @@ import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -65,22 +64,23 @@ public final class EntityUtil implements Serializable {
 		return getId(cl);
 	}
 	
-	/**
-	 * Metodo que recebe um Class e devolve o PropertyDescriptor do campo id
-	 * procurando pela anotações @id e @EmbeddedId
-	 * @param objId Entidade
-	 * @return
-	 */	
-	public static PropertyDescriptor getId(Class<?> clazz) {
-		PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(clazz);
-		for (int i = 0; i < pds.length; i++) {
-			PropertyDescriptor pd = pds[i];
-			if (isId(pd)) {
-				return pd;
-			}
-		}
-		return null;		
-	}
+    /**
+     * Metodo que recebe um Class e devolve o PropertyDescriptor do campo id
+     * procurando pela anotações @id e @EmbeddedId
+     * 
+     * @param objId Entidade
+     * @return
+     */
+    private static PropertyDescriptor getId(Class<?> clazz) {
+        PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(clazz);
+        for (int i = 0; i < pds.length; i++) {
+            PropertyDescriptor pd = pds[i];
+            if (isId(pd)) {
+                return pd;
+            }
+        }
+        return null;
+    }
 	
 	/**
 	 * Testa se o objeto possui a anotação @Entity
@@ -92,18 +92,20 @@ public final class EntityUtil implements Serializable {
 		return isEntity(cl);
 	}
 	
-	/**
-	 * Testa se a classe possui a anotação @Entity
-	 * @param obj
-	 * @return
-	 */
-	public static boolean isEntity(Class<?> cl) {
-		if (cl.isPrimitive() || String.class.getPackage().equals(cl.getPackage())) {
-			return false;
-		} else {
-			return cl.isAnnotationPresent(Entity.class);
-		}
-	}	
+    /**
+     * Testa se a classe possui a anotação @Entity
+     * 
+     * @param obj
+     * @return
+     */
+    private static boolean isEntity(Class<?> cl) {
+        if (cl.isPrimitive()
+                || String.class.getPackage().equals(cl.getPackage())) {
+            return false;
+        } else {
+            return cl.isAnnotationPresent(Entity.class);
+        }
+    }	
 	
 	public static boolean isAnnotationPresent(Object obj, Class<? extends Annotation> clazz) {
 		Class<?> cl = getEntityClass(obj);
@@ -216,22 +218,6 @@ public final class EntityUtil implements Serializable {
 				|| ComponentUtil.hasAnnotation(pd,OneToMany.class));
 	}	
 	
-	/**
-	 * Retorna o primeiro objeto do resultado da query
-	 * 
-	 * @param query
-	 * @return
-	 */
-	@SuppressWarnings(UNCHECKED)
-	public static <T> T getSingleResult(Query query) {
-		query.setMaxResults(1);
-		List<?> list = query.getResultList();
-		if (list == null || list.size() == 0) {
-			return null;
-		}
-		return (T) list.get(0);
-	}
-	
 	public static EntityManager getEntityManager(){
 		return ComponentUtil.getComponent(ENTITY_MANAGER_NAME);
 	}
@@ -243,35 +229,6 @@ public final class EntityUtil implements Serializable {
 	public static void flush(){
 		getEntityManager().flush();
 	} 
-
-	/**
-	 * Devolve um List com todos os elementos de uma determinada entidade.
-	 * Ex: <code>List{@literal <E>} resultList = EntityUtil.getEntityList(Parametro.class)<code>;
-	 * @param <E> O type da Entidade
-	 * @param clazz
-	 * @return
-	 */
-	@SuppressWarnings(UNCHECKED)
-	public static <E> List<E> getEntityList(Class<E> clazz) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select o from ").append(clazz.getName()).append(" o");
-		return getEntityManager().createQuery(sb.toString()).getResultList();
-	}
-	
-	/**
-	 * Atalho para busca de entidades pelo id
-	 * 
-	 * @param <E>
-	 * @param clazz classe da entidade a ser pesquisada
-	 * @param id
-	 * @return
-	 */
-	public static <E> E find(Class<E> clazz, Object id) {
-		if(id == null) {
-			return null;
-		}
-		return getEntityManager().find(clazz, id);
-	}
 
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {

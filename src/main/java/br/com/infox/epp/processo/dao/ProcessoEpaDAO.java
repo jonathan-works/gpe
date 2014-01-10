@@ -18,6 +18,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -129,5 +130,12 @@ public class ProcessoEpaDAO extends GenericDAO {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_PROCESSO_EPA, processoEpa);
         return getNamedSingleResult(DATA_INICIO_PRIMEIRA_TAREFA, parameters);
+    }
+    
+    public Double getMediaTempoGasto(Fluxo fluxo, SituacaoPrazoEnum prazoEnum) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_FLUXO, fluxo);
+        parameters.put(PARAM_SITUACAO, prazoEnum);
+        return getNamedSingleResult(TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, parameters);
     }
 }

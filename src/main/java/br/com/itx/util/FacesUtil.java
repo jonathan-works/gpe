@@ -93,7 +93,7 @@ public final class FacesUtil {
         } else {
         	response.setHeader("Cache-Control", "max-age=60");
         }
-        if (name != null && !name.equals("")) {
+        if (name != null && !"".equals(name)) {
         	String disposition = "inline; filename=\"" + name + "\"";
         	response.setHeader("Content-disposition", disposition);
         }	

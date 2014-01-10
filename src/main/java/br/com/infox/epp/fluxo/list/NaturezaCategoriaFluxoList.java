@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.itx.util.EntityUtil;
 
 @Name(NaturezaCategoriaFluxoList.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -22,6 +23,8 @@ public class NaturezaCategoriaFluxoList extends EntityList<NaturezaCategoriaFlux
 	private static final String DEFAULT_EJBQL = "select o from NaturezaCategoriaFluxo o";
 	private static final String DEFAULT_ORDER = "fluxo";
 	public static final String NAME = "naturezaCategoriaFluxoList";
+	
+	@In private GenericManager genericManager;
 
 	@Override
 	protected void addSearchFields() {
@@ -46,15 +49,15 @@ public class NaturezaCategoriaFluxoList extends EntityList<NaturezaCategoriaFlux
 	}
 	
 	public List<Natureza> getNaturezaList() {
-		return EntityUtil.getEntityList(Natureza.class);
+		return genericManager.findAll(Natureza.class);
 	}
 	
 	public List<Categoria> getCategoriaList() {
-		return EntityUtil.getEntityList(Categoria.class);
+		return genericManager.findAll(Categoria.class);
 	}
 	
 	public List<Fluxo> getFluxoList() {
-		return EntityUtil.getEntityList(Fluxo.class);
+		return genericManager.findAll(Fluxo.class);
 	}
 
 }

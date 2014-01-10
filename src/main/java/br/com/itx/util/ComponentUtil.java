@@ -91,8 +91,7 @@ public final class ComponentUtil {
 			PropertyDescriptor[] pds = getPropertyDescriptors(component);		
 			for (int i = 0; i < pds.length; i++) {
 				PropertyDescriptor pd = pds[i];
-				if (!pd.getName().equals("class") && 
-						!pd.getName().equals("bytes")) {
+				if (!"class".equals(pd.getName()) && !"bytes".equals(pd.getName())) {
 					resp.add(pd);
 				}
 			}

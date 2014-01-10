@@ -9,12 +9,6 @@ import javax.persistence.NoResultException;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.infox.epp.twitter.entity.ContaTwitter;
-import br.com.infox.epp.twitter.entity.TwitterTemplate;
-import br.com.itx.util.EntityUtil;
 import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -22,6 +16,13 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.epp.twitter.entity.ContaTwitter;
+import br.com.infox.epp.twitter.entity.TwitterTemplate;
+import br.com.infox.epp.twitter.manager.ContaTwitterManager;
+import br.com.itx.util.ComponentUtil;
 
 /**
  * @author jonas
@@ -343,35 +344,29 @@ public final class TwitterUtil {
 		return factory;
 	}
 	
-	/**
-	 * @param usuario
-	 * @return a conta do twitter do usuário passado como parametro ou null caso ela não exista 
-	 */
-	public ContaTwitter getContaTwitter(UsuarioLogin usuario){
-		ContaTwitter conta = null;
-		if (usuario.getTemContaTwitter()){
-			String hql = "select o from ContaTwitter o where o.usuario = :usuario";
-			conta = (ContaTwitter) EntityUtil.createQuery(hql)
-					.setParameter("usuario", usuario)
-					.getSingleResult();
-		}
-		return conta;
-	}
-	
-	/**
-	 * @param usuario
-	 * @return a conta do twitter da localização passada como parametro ou null caso a conta não exista 
-	 */
-	public ContaTwitter getContaTwitter(Localizacao localizacao){
-		ContaTwitter conta = null;
-		if (localizacao.getTemContaTwitter()){
-			String hql = "select o from ContaTwitter o where o.localizacao = :localizacao";
-			conta = (ContaTwitter) EntityUtil.createQuery(hql)
-					.setParameter("localizacao", localizacao)
-					.getSingleResult();
-		}
-		return conta;
-	}
+    /**
+     * @param usuario
+     * @return a conta do twitter do usuário passado como parametro ou null caso
+     *         ela não exista
+     */
+    public ContaTwitter getContaTwitter(UsuarioLogin usuario) {
+        if (usuario.getTemContaTwitter()) {
+            return contaTwitterManager().getContaTwitterByUsuario(usuario);
+        }
+        return null;
+    }
+
+    /**
+     * @param usuario
+     * @return a conta do twitter da localização passada como parametro ou null
+     *         caso a conta não exista
+     */
+    public ContaTwitter getContaTwitter(Localizacao localizacao) {
+        if (localizacao.getTemContaTwitter()) {
+            return contaTwitterManager().getContaTwitterByLocalizacao(localizacao);
+        }
+        return null;
+    }
 	
 /*	
     ================================== Métodos Inicializadores e Auxiliares Públicos ========================================
@@ -384,15 +379,12 @@ public final class TwitterUtil {
 /*	
     =================================== Métodos Inicializadores e Auxiliares Privados ========================================
 */	
-	
-	private void loadApplicationTwitter() {
-		Integer idUsuarioSistema = Integer.valueOf(ParametroUtil.getParametro("idUsuarioSistema"));
-		String hql = "select o from ContaTwitter o where o.usuario.idUsuarioLogin = :usuario";
-		ContaTwitter ct = (ContaTwitter) EntityUtil.createQuery(hql)
-				.setParameter("usuario", idUsuarioSistema)
-				.getSingleResult();
-		aplicacao = factory.getInstance(ct.getAccessToken());
-	}
+
+    private void loadApplicationTwitter() {
+        Integer idUsuarioSistema = Integer.valueOf(ParametroUtil.getParametro("idUsuarioSistema"));
+        ContaTwitter ct = contaTwitterManager().getContaTwitterByIdUsuario(idUsuarioSistema);
+        aplicacao = factory.getInstance(ct.getAccessToken());
+    }
 	
 	private Twitter createTwitter(ContaTwitter contaTwitter){
 		Twitter twitter = factory.getInstance();
@@ -419,4 +411,8 @@ public final class TwitterUtil {
 		}
 		return result;
 	}
+
+    private static ContaTwitterManager contaTwitterManager() {
+        return ComponentUtil.getComponent(ContaTwitterManager.NAME);
+    }
 }

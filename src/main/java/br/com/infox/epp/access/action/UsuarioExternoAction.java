@@ -17,6 +17,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -27,7 +28,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.processo.action.IniciarProcessoAction;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.itx.util.EntityUtil;
+//import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioExternoAction.NAME)
 @Scope(ScopeType.EVENT)
@@ -40,6 +41,8 @@ public class UsuarioExternoAction {
 	
 	@In
 	private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
+	
+	@In private GenericManager genericManager;
 	
 	@In(create = true)
 	private TaskInstanceHome taskInstanceHome;
@@ -82,28 +85,28 @@ public class UsuarioExternoAction {
 	}
 	
 	public void setIdCategoria(Integer idCategoria) {
-		this.categoria = EntityUtil.find(Categoria.class, idCategoria);
+		this.categoria = genericManager.find(Categoria.class, idCategoria);
 	}
 	public Integer getIdCategoria() {
 	    return this.categoria.getIdCategoria();
 	}
 
 	public void setIdFluxo(Integer idFluxo) {
-		this.fluxo = EntityUtil.find(Fluxo.class, idFluxo);
+		this.fluxo = genericManager.find(Fluxo.class, idFluxo);
 	}
 	public Integer getIdFluxo() {
 	    return this.fluxo.getIdFluxo();
 	}
 	
 	public void setIdNatureza(Integer idNatureza) {
-		this.natureza = EntityUtil.find(Natureza.class, idNatureza);
+		this.natureza = genericManager.find(Natureza.class, idNatureza);
 	}
 	public Integer getIdNatureza() {
         return this.natureza.getIdNatureza();
     }
 	
 	public void setIdItem(Integer idItem) {
-		this.item = EntityUtil.find(Item.class, idItem);
+		this.item = genericManager.find(Item.class, idItem);
 	}
 	public Integer getIdItem() {
         return this.item.getIdItem();

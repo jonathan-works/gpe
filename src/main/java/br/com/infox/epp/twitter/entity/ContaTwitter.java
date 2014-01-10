@@ -1,8 +1,22 @@
 package br.com.infox.epp.twitter.entity;
 
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_LOCALIZACAO;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.*;
+
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import twitter4j.auth.AccessToken;
@@ -13,6 +27,11 @@ import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 
 @Entity
 @Table(name=ContaTwitter.NAME, schema="public")
+@NamedQueries({
+    @NamedQuery(name=CONTA_TWITTER_BY_USUARIO, query=CONTA_TWITTER_BY_USUARIO_QUERY),
+    @NamedQuery(name=CONTA_TWITTER_BY_ID_USUARIO, query=CONTA_TWITTER_BY_ID_USUARIO_QUERY),
+    @NamedQuery(name=CONTA_TWITTER_BY_LOCALIZACAO, query=CONTA_TWITTER_BY_LOCALIZACAO_QUERY)
+})
 public class ContaTwitter implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

@@ -15,7 +15,7 @@
 */
 package br.com.infox.epp.processo.handler;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,9 +42,9 @@ import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.variable.VariableHandler;
-import br.com.itx.util.EntityUtil;
 
 
 @Name(ProcessoHandler.NAME)
@@ -63,6 +63,7 @@ public class ProcessoHandler implements Serializable {
 	
 	@In private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	@In private ProcessoEpaManager processoEpaManager;
+	@In private ProcessoDocumentoManager processoDocumentoManager;
 	
 	@SuppressWarnings(UNCHECKED)
 	public List<TaskInstance> getTaskInstanceList() {
@@ -111,20 +112,9 @@ public class ProcessoHandler implements Serializable {
 		return taskDocumentList ;
 	}
 	
-	@SuppressWarnings(UNCHECKED)
     public List<ProcessoDocumento> getAnexosPublicos(TaskInstance task) {
-	    List<ProcessoDocumento> anexoList;
-        final String hql = "select o " +
-                "from ProcessoDocumento o " +
-                "inner join o.tipoProcessoDocumento tpd " +
-                "where o.idJbpmTask = :id " +
-                "and (tpd.visibilidade='A' " +
-                "or tpd.visibilidade='E')";
-        anexoList = EntityUtil.createQuery(hql)
-                .setParameter("id", task.getId())
-                .getResultList();
-        return anexoList ;
-	}
+        return processoDocumentoManager.getAnexosPublicos(task.getId());
+    }
 	
 	public List<ProcessoDocumento> getAnexos(TaskInstance task) {
 		List<ProcessoDocumento> anexoList = anexoMap.get(task);

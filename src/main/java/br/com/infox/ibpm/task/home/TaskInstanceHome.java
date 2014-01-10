@@ -169,7 +169,7 @@ public class TaskInstanceHome implements Serializable {
     
     private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
         String s = modelo.split(",")[0].trim();
-        return EntityUtil.getEntityManager().find(ModeloDocumento.class, Integer.parseInt(s));
+        return modeloDocumentoManager.find(Integer.parseInt(s));
     }
 
     private void putVariable(TaskVariableRetriever variableRetriever){
@@ -456,6 +456,7 @@ public class TaskInstanceHome implements Serializable {
         if (taskInstance != null) {
             try {
                 taskInstanceManager.removeUsuario(taskInstance.getId());
+                afterLiberarTarefa();
             } catch (DAOException e) {
                 LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
             }
@@ -465,6 +466,7 @@ public class TaskInstanceHome implements Serializable {
     public void removeUsuario(final Long idTaskInstance) {
         try {
             taskInstanceManager.removeUsuario(idTaskInstance);
+            afterLiberarTarefa();
         } catch (Exception e) {
             LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
         }
@@ -474,9 +476,7 @@ public class TaskInstanceHome implements Serializable {
         try {
             final Map<String,Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
             taskInstanceManager.removeUsuario((Long)result.get("idTaskInstance"));
-            userHandler.clear();
-            FacesMessages.instance().clear();
-            FacesMessages.instance().add("Tarefa liberada com sucesso.");
+            afterLiberarTarefa();
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
@@ -489,11 +489,18 @@ public class TaskInstanceHome implements Serializable {
             Util.rollbackTransactionIfNeeded();
         }
     }
+
+	private void afterLiberarTarefa() {
+		userHandler.clear();
+		FacesMessages.instance().clear();
+		FacesMessages.instance().add("Tarefa liberada com sucesso.");
+	}
     
     public void removeUsuario() {
         if (BusinessProcess.instance().hasCurrentTask()) {
             try {
                 taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
+                afterLiberarTarefa();
             } catch (DAOException e) {
                 LOG.error(".removeUsuario() - ", e);
             }    

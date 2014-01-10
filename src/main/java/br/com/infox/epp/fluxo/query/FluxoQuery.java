@@ -23,6 +23,7 @@ public interface FluxoQuery {
     String PARAM_FLUXO = "fluxo";
     String PARAM_DESCRICAO = "descricao";
     String PARAM_NOME = "nomeFluxo";
+    String PARAM_CODIGO = "codFluxo";
     
     String FLUXO_BY_DESCRICACAO = "fluxoByDescricao";
     String FLUXO_BY_DESCRICAO_QUERY = "select o from Fluxo o where o.fluxo like :" + PARAM_DESCRICAO;
@@ -43,4 +44,9 @@ public interface FluxoQuery {
             + "  and o.situacaoPrazo != 'SAT'"
             + "  and o.naturezaCategoriaFluxo.fluxo = :" + PARAM_FLUXO;
 
+    String COUNT_FLUXO_BY_DESCRICAO = "countFluxoByDescricao";
+    String COUNT_FLUXO_BY_DESCRICAO_QUERY = "select count(o) from Fluxo o where o.fluxo like :" + PARAM_DESCRICAO;
+    
+    String COUNT_FLUXO_BY_CODIGO = "countFluxoByCodigo";
+    String COUNT_FLUXO_BY_CODIGO_QUERY = "select count(o) from Fluxo o where o.codFluxo = :" + PARAM_CODIGO;
 }

@@ -9,5 +9,13 @@ public interface ListaEmailQuery {
     String ID_LOCALIZACAO = "id_localizacao";
     String ID_PAPEL = "id_papel";
     String ID_ESTRUTURA = "id_estrutura";
+    
+    String MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL = "maxIdGrupoEmailInListaEmail";
+    String MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY = "select max(o.idGrupoEmail) from ListaEmail o";
+    
+    String ID_GRUPO_EMAIL_PARAM = "idGrupo";
+    String LISTA_EMAIL_BY_ID_GRUPO = "listListaEmailByIdGrupoEmail";
+    String LISTA_EMAIL_BY_ID_GRUPO_QUERY = "select o from ListaEmail o where o.idGrupoEmail = :" 
+            + ID_GRUPO_EMAIL_PARAM;
 
 }

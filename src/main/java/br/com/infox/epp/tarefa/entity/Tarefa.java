@@ -3,7 +3,7 @@ package br.com.infox.epp.tarefa.entity;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS_QUERY;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES;
-import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES_QUERY;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
@@ -37,6 +39,10 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 @NamedNativeQueries({
     @NamedNativeQuery(name=PREVIOUS_NODES, query=PREVIOUS_NODES_QUERY),
     @NamedNativeQuery(name=NOVAS_TAREFAS, query=NOVAS_TAREFAS_QUERY)
+})
+@NamedQueries({
+    @NamedQuery(name=TAREFA_BY_TAREFA_AND_FLUXO, query=TAREFA_BY_TAREFA_AND_FLUXO_QUERY),
+    @NamedQuery(name=TAREFA_BY_ID_JBPM_TASK, query=TAREFA_BY_ID_JBPM_TASK_QUERY)
 })
 public class Tarefa implements java.io.Serializable {
 

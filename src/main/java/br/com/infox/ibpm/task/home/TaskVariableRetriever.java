@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.task.home;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
@@ -23,7 +24,7 @@ final class TaskVariableRetriever extends TaskVariable {
     }
     
     public boolean isEditor(){
-        return type.startsWith("textEditCombo") || type.equals("textEditSignature");
+        return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
     }
     
     public boolean isForm(){
@@ -89,7 +90,7 @@ final class TaskVariableRetriever extends TaskVariable {
     
     public TaskVariableRetriever evaluateWhenDocumentoAssinado() {
         Integer id = (Integer) taskInstance.getVariable(getMappedName());
-        AssinaturaDocumentoService documentoService = new AssinaturaDocumentoService();
+        AssinaturaDocumentoService documentoService = (AssinaturaDocumentoService) Component.getInstance(AssinaturaDocumentoService.NAME);
         if ((id != null) && (!documentoService.isDocumentoAssinado(id)) && isWritable()) {
             ProcessoHome.instance().carregarDadosFluxo(id);
             return this;

@@ -16,9 +16,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 
 @Name(CaixaEventHandler.NAME)
@@ -40,7 +40,7 @@ public class CaixaEventHandler {
 	 */
 	@Observer(Event.EVENTTYPE_TRANSITION)
  	public void filtrarProcessos(final ExecutionContext context) {
-		final Processo proc = EntityUtil.find(Processo.class, getIdProcesso());
+		final Processo proc = processoManager.find(getIdProcesso());
 		if(proc != null) {
 			final List<Caixa> caixaResList = getCaixaResultList(context);
 			if(caixaResList != null && !caixaResList.isEmpty()) {
@@ -62,7 +62,8 @@ public class CaixaEventHandler {
 
 	private Caixa getCaixa(final Transition transicao) {
 		Caixa caixa =  null;
-		final Tarefa destino = JbpmUtil.getTarefa(transicao.getTo().getName(), 
+		TarefaManager tarefaManager = ComponentUtil.getComponent(TarefaManager.NAME);
+		final Tarefa destino = tarefaManager.getTarefa(transicao.getTo().getName(), 
 				transicao.getTo().getProcessDefinition().getName());
 		if (destino != null) {
 			caixa = new Caixa();

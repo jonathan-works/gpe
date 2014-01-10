@@ -15,7 +15,7 @@
 */
 package br.com.infox.ibpm.swimlane;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,9 +33,9 @@ import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
 
@@ -189,22 +189,20 @@ public class SwimlaneHandler implements Serializable {
 							} else if("false".equals(idPapel)) {
 								sh.setContabilizar(false);
 							} else {
-								papel = EntityUtil.getEntityManager().find(Papel.class, 
-										Integer.parseInt(idPapel));
+								papel = papelManager().find(Integer.parseInt(idPapel));
 							}
 						} else if(splitted.length == 3) {
 							idPapel = splitted[1];
-							papel = EntityUtil.getEntityManager().find(Papel.class, 
+							papel = papelManager().find(Papel.class, 
 									Integer.parseInt(idPapel));
-							if(splitted[2].equals("true")) {
+							if("true".equals(splitted[2])) {
 								sh.setContabilizar(true);
 							} else {
 								sh.setContabilizar(false);
 							}
 						}
 					}
-					Localizacao loc = EntityUtil.getEntityManager().find(Localizacao.class, 
-							Integer.parseInt(local));
+					Localizacao loc = localizacaoManager().find(Integer.parseInt(local));
 					UsuarioLocalizacao u = new UsuarioLocalizacao();
 					u.setLocalizacao(loc);
 					u.setPapel(papel);
@@ -272,5 +270,13 @@ public class SwimlaneHandler implements Serializable {
 	public boolean getContabilizar() {
 		return contabilizar;
 	}
-	
+
+    private static LocalizacaoManager localizacaoManager() {
+        return ComponentUtil.getComponent(LocalizacaoManager.NAME);
+    }
+
+    private static PapelManager papelManager() {
+        return ComponentUtil.getComponent(PapelManager.NAME);
+    }
+
 }

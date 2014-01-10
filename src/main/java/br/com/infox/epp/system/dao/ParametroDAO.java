@@ -1,6 +1,9 @@
 package br.com.infox.epp.system.dao;
 
+import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS;
+
 import java.util.HashMap;
+import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -21,5 +24,9 @@ public class ParametroDAO extends GenericDAO {
 		parameters.put("nomeVariavel", nomeVariavel);
 		return getSingleResult(hql, parameters);
 	}
+
+    public List<Parametro> listParametrosAtivos() {
+        return getNamedResultList(LIST_PARAMETROS_ATIVOS);
+    }
 
 }

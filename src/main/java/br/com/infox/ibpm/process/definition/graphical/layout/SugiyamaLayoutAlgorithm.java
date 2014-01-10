@@ -1055,8 +1055,9 @@ public class SugiyamaLayoutAlgorithm
 
     double getEdgeCrossesIndicator()
     {
-      if(additions == 0)
+      if(additions == 0) {
         return 0;
+      }
       return edgeCrossesIndicator / additions;
     }
 

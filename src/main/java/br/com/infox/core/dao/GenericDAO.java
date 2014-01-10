@@ -202,5 +202,9 @@ public class GenericDAO implements Serializable {
     public <T> void detach(T o) {
     	entityManager.detach(o);
     }
+
+	public void clear() {
+		entityManager.clear();
+	}
     
 }

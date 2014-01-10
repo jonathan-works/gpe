@@ -38,6 +38,7 @@ public class ProcessoManager extends GenericManager {
 	
 	private static final long serialVersionUID = 8095772422429350875L;
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
+    private static final Class<Processo> CLASS = Processo.class;
 	public static final String NAME = "processoManager";
 	
 	@In private ProcessoDAO processoDAO;
@@ -45,7 +46,11 @@ public class ProcessoManager extends GenericManager {
 	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	@In private ProcessoDocumentoManager processoDocumentoManager;
 	
-	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) {
+    public Processo find(Integer id) {
+        return find(CLASS, id);
+    }
+	
+	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) throws DAOException {
 		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
 		bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
 		bin.setDataInclusao(new Date());
@@ -53,7 +58,7 @@ public class ProcessoManager extends GenericManager {
 		bin.setUsuario(Authenticator.getUsuarioLogado());
 		bin.setCertChain(certChain);
 		bin.setSignature(signature);
-		EntityUtil.getEntityManager().persist(bin);
+		persist(bin);
 		return bin;
 	}
 	

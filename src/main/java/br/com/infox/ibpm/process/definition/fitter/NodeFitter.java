@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -118,12 +118,15 @@ public class NodeFitter extends Fitter implements Serializable {
 				t.setName(to.getName());
 				t.setProcessDefinition(oldT.getProcessDefinition());
 
+				/* Não reordenar as linhas de código marcadas pelo bloco abaixo (ver tarefa #35099) 
+				 * A alteração dos atributos from e name da transição altera seu hashcode causando erros */
+				// INÍCIO BLOCO //
+				node.addLeavingTransition(t);		
 				to.removeArrivingTransition(oldT);
-				to.addArrivingTransition(t);
-
-				node.addLeavingTransition(t);
 				newNodeTransition.setName(node.getName());
 				node.addArrivingTransition(oldT);
+				to.addArrivingTransition(t);
+				// FIM BLOCO //
 				
 				if (oldT.getFrom().getNodeType().equals(NodeType.Fork) && to.getNodeType().equals(NodeType.Join)) {
 					getProcessBuilder().getTransitionFitter().connectNodes(oldT.getFrom(), to);

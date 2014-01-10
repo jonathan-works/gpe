@@ -23,6 +23,8 @@
 				 switchType="ajax"
 				 activeTab="#{home.tab}">
 				<h:form><infox:tabHeaders /></h:form>
+				
+				<infox:tabChangeListener listener="#{crudTabCleaner}" />
 
                 <infox:tab
 					 id="search"
