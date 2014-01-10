@@ -41,6 +41,7 @@ import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
@@ -49,7 +50,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 
 @Name(JbpmUtil.NAME)
@@ -121,7 +121,7 @@ public class JbpmUtil {
 	public static synchronized Map<String, String> getJbpmMessages() {
 		if (messagesMap == null) {
 			messagesMap = new HashMap<String, String>();
-			List<JbpmVariavelLabel> l = EntityUtil.getEntityList(JbpmVariavelLabel.class);
+			List<JbpmVariavelLabel> l = genericManager().findAll(JbpmVariavelLabel.class);
 			for (JbpmVariavelLabel j : l) {
 				messagesMap.put(j.getNomeVariavel(), j.getLabelVariavel());
 			}
@@ -206,6 +206,10 @@ public class JbpmUtil {
 	
 	private static ProcessoManager processoManager(){
 	    return ComponentUtil.getComponent(ProcessoManager.NAME);
+	}
+	
+	private static GenericManager genericManager(){
+	    return ComponentUtil.getComponent(GenericManager.NAME);
 	}
 	
 }
