@@ -14,30 +14,32 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @AutoCreate
 public class UsuarioLoginManager extends GenericManager {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "usuarioLoginManager";
-	
-	@In private UsuarioLoginDAO usuarioLoginDAO;
-	
-	public boolean usuarioExpirou(final UsuarioLogin usuarioLogin){
-	    boolean result = Boolean.FALSE;
-	    if (usuarioLogin != null) {
-	        final Date dataExpiracao = usuarioLogin.getDataExpiracao();
-            result = usuarioLogin.getProvisorio() && dataExpiracao != null && dataExpiracao.before(new Date());
-	    }
-		return result;
-	}
-	
-	public void inativarUsuario(final UsuarioLogin usuario){
-		usuarioLoginDAO.inativarUsuario(usuario);
-	}
-	
-	public UsuarioLogin getUsuarioLoginByEmail(final String email){
-		return usuarioLoginDAO.getUsuarioLoginByEmail(email);
-	}
-	
-	public UsuarioLogin getUsuarioLoginByLogin(final String login) {
-	    return usuarioLoginDAO.getUsuarioLoginByLogin(login);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "usuarioLoginManager";
+
+    @In
+    private UsuarioLoginDAO usuarioLoginDAO;
+
+    public boolean usuarioExpirou(final UsuarioLogin usuarioLogin) {
+        boolean result = Boolean.FALSE;
+        if (usuarioLogin != null) {
+            final Date dataExpiracao = usuarioLogin.getDataExpiracao();
+            result = usuarioLogin.getProvisorio() && dataExpiracao != null
+                    && dataExpiracao.before(new Date());
+        }
+        return result;
+    }
+
+    public void inativarUsuario(final UsuarioLogin usuario) {
+        usuarioLoginDAO.inativarUsuario(usuario);
+    }
+
+    public UsuarioLogin getUsuarioLoginByEmail(final String email) {
+        return usuarioLoginDAO.getUsuarioLoginByEmail(email);
+    }
+
+    public UsuarioLogin getUsuarioLoginByLogin(final String login) {
+        return usuarioLoginDAO.getUsuarioLoginByLogin(login);
+    }
 
 }
