@@ -16,7 +16,6 @@ import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.epp.system.manager.EntidadeLogManager;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
-import br.com.itx.util.EntityUtil;
 
 @Name(EntidadeLogList.NAME)
 @Scope(ScopeType.PAGE)
@@ -81,10 +80,10 @@ public class EntidadeLogList extends EntityList<EntityLog> {
 		setIdEntidade(null);
 		setNomePackage(null);
 	}
-	
-	public List<EntityLogDetail> getEntityLogDetailList(Integer idEntityLog) {
-		return EntityUtil.getEntityManager().find(EntityLog.class, idEntityLog).getLogDetalheList();
-	}
+
+    public List<EntityLogDetail> getEntityLogDetailList(Integer idEntityLog) {
+        return entidadeLogManager.find(idEntityLog).getLogDetalheList();
+    }
 
 	public ConsultaEntidadeLog getInstance() {
 		return instance;
