@@ -169,7 +169,7 @@ public class TaskInstanceHome implements Serializable {
     
     private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
         String s = modelo.split(",")[0].trim();
-        return EntityUtil.getEntityManager().find(ModeloDocumento.class, Integer.parseInt(s));
+        return modeloDocumentoManager.find(Integer.parseInt(s));
     }
 
     private void putVariable(TaskVariableRetriever variableRetriever){
