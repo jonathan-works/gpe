@@ -188,21 +188,6 @@ public class QuartzJobsInfo implements Serializable {
 		}
 	}
 
-	public void apagarJobs() {
-		String sql = "delete from qrtz_cron_triggers; "
-				+ "delete from qrtz_fired_triggers; "
-				+ "delete from qrtz_triggers; "
-				+ "delete from qrtz_job_details; "
-				+ "delete from core.tb_parametro "
-				+ "where vl_variavel like '________:___________:_____';";
-		Query query = EntityUtil.getEntityManager().createNativeQuery(sql);
-		query.executeUpdate();
-		FacesMessages
-				.instance()
-				.add(Severity.INFO,
-						"Jobs apagados com sucesso. Reinicie o servidor para que os Jobs sejam refeitos.");
-	}
-
 	public void removeParametro(int idParametro) {
 		EntityManager em = EntityUtil.getEntityManager();
 		Parametro parametro = em.find(Parametro.class, idParametro);
