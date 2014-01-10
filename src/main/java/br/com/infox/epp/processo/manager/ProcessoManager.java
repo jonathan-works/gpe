@@ -137,7 +137,7 @@ public class ProcessoManager extends GenericManager {
     	return result;
     }
     
-    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
+    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) throws DAOException {
         final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
     	final String actorId = Actor.instance().getId();
     	iniciaTask(processo, taskInstanceId);
@@ -147,9 +147,9 @@ public class ProcessoManager extends GenericManager {
     	}
     }
 
-	private void vinculaUsuario(Processo processo, String actorId) {
+	private void vinculaUsuario(Processo processo, String actorId) throws DAOException {
 		processo.setActorId(actorId);
-		processo = EntityUtil.getEntityManager().merge(processo);
+		processo = merge(processo);
 		EntityUtil.flush();
 	}
     
