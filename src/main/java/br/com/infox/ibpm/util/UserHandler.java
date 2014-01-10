@@ -21,6 +21,7 @@ import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
@@ -28,6 +29,7 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.itx.util.EntityUtil;
 
 @Name(UserHandler.NAME)
@@ -41,21 +43,14 @@ public class UserHandler {
     private Integer idProcesso;
     private TaskInstance taskInstance;
     private String usuarioProcesso, usuarioTarefa;
+    
+    @In private UsuarioLoginManager usuarioLoginManager;
 
     public String getActorIdTarefaAtual(Integer idProcesso) {
         if (this.idProcesso == null || !this.idProcesso.equals(idProcesso)) {
             try {
-                
-                String sql = "SELECT DISTINCT ul.nm_usuario "
-                        + "FROM tb_usuario_login ul "
-                        + "JOIN tb_usuario_taskinstance uti ON (ul.id_usuario_login=uti.id_usuario_login) "
-                        + "JOIN vs_situacao_processo sp ON (uti.id_taskinstance = sp.id_task_instance) "
-                        + "WHERE id_processo=:idProcesso";
-                Query query = EntityUtil.getEntityManager()
-                        .createNativeQuery(sql)
-                        .setParameter("idProcesso", idProcesso);
                 this.idProcesso = idProcesso;
-                this.usuarioProcesso = (String) query.getSingleResult();
+                this.usuarioProcesso = usuarioLoginManager.getActorIdTarefaAtual(idProcesso);
             } catch (NoResultException e) {
                 this.usuarioProcesso = "";
                 LOG.debug("Não houve resultado. UserHandler.getActorIdTarefaAtual(Integer)", e);
