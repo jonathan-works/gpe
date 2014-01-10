@@ -13,10 +13,9 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
-import br.com.itx.util.EntityUtil;
 
 @Name(DefinicaoVariavelProcessoAction.NAME)
 @Scope(ScopeType.PAGE)
@@ -77,7 +76,13 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
     
     @Override
     public String remove(DefinicaoVariavelProcesso obj) {
-    	String ret = super.remove(EntityUtil.getEntityManager().merge(obj));
+    	String ret;
+        try {
+            ret = super.remove(getGenericManager().merge(obj));
+        } catch (DAOException e) {
+            LOG.error("Não foi possível remover a DefinicaoVariavelProcesso " + obj.getNome(), e);
+            ret = "UNMERGED";
+        }
     	if (AbstractAction.REMOVED.equals(ret)) {
     		this.variaveis = null;
     		FacesMessages.instance().add("#{messages['DefinicaoVariavelProcesso_deleted']}");
