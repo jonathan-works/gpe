@@ -466,6 +466,9 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	    if (Strings.isEmpty(certChainBase64Encoded)) {
             throw new ApplicationException("Não foi possível recuperar assinatura, verifique se seu cartão está corretamente configurado");
 	    }
+	    if (usuarioLogado.getPessoaFisica() == null) {
+	    	throw new ApplicationException("O usuário não possui pessoa física associada.");
+	    }
 		if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
 		    final Certificado certificado = new Certificado(certChainBase64Encoded);
 		    final String cpfCertificado = certificado.getCn().split(":")[1];
