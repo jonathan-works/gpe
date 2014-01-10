@@ -216,6 +216,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	 */
 	public void onClickSearchTab() {
 		newInstance();
+		getGenericManager().clear();
 	}
 	
 	/**
