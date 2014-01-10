@@ -21,7 +21,6 @@ import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -228,20 +227,6 @@ public final class EntityUtil implements Serializable {
 		getEntityManager().flush();
 	} 
 
-	/**
-	 * Devolve um List com todos os elementos de uma determinada entidade.
-	 * Ex: <code>List{@literal <E>} resultList = EntityUtil.getEntityList(Parametro.class)<code>;
-	 * @param <E> O type da Entidade
-	 * @param clazz
-	 * @return
-	 */
-	@SuppressWarnings(UNCHECKED)
-	public static <E> List<E> getEntityList(Class<E> clazz) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select o from ").append(clazz.getName()).append(" o");
-		return getEntityManager().createQuery(sb.toString()).getResultList();
-	}
-	
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;
