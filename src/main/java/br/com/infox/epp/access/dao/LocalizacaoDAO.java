@@ -1,6 +1,6 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_ESTRUTURA;
 
 import java.util.List;
 

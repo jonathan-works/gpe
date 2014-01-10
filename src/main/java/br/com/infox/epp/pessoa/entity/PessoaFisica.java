@@ -32,8 +32,8 @@ public class PessoaFisica extends Pessoa {
 		setTipoPessoa(TipoPessoaEnum.F);
 	}
 	
-	public PessoaFisica(String cpf, String nome, Date dataNascimento, boolean ativo) {
-	    super();
+	public PessoaFisica(final String cpf, final String nome, final Date dataNascimento, final boolean ativo) {
+        setTipoPessoa(TipoPessoaEnum.F);
 	    this.cpf = cpf;
 	    this.dataNascimento = dataNascimento;
 	    setNome(nome);
