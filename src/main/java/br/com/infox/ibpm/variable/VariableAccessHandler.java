@@ -42,6 +42,7 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -268,8 +269,9 @@ public class VariableAccessHandler implements Serializable {
 	public List<ModeloDocumento> getModeloDocumentoList() {
 		if (modeloDocumentoList == null && modeloList != null) {
 			modeloDocumentoList = new ArrayList<ModeloDocumento>();
+			ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
 			for (Integer id : modeloList) {
-				modeloDocumentoList.add(EntityUtil.getEntityManager().find(ModeloDocumento.class, id));
+				modeloDocumentoList.add(modeloDocumentoManager.find(id));
 			}
 		}
 		return modeloDocumentoList;

@@ -19,9 +19,14 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 public class PapelManager extends GenericManager {
 
 	private static final long serialVersionUID = 1L;
+    private static final Class<Papel> CLASS = Papel.class;
 	public static final String NAME = "papelManager";
 	
 	@In private PapelDAO papelDAO;
+	
+    public Papel find(Integer idPapel) {
+        return find(CLASS, idPapel);
+    }
 	
 	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento){
 		return papelDAO.getPapeisNaoAssociadosATipoModeloDocumento(tipoModeloDocumento);

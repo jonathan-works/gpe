@@ -206,15 +206,16 @@ public class ProcessoHome extends AbstractHome<Processo> {
 			tipoProcessoDocumento = tipoProcessoDocumentoDAO.getTipoProcessoDocumentoFluxo();
 		}
 	}
-	
-	//Método para Inserir o documento do fluxo
-	private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado) throws CertificadoException{
-		if (validacaoCertificadoBemSucedida(assinado)) {
-			Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
-			ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue, certChain, signature);
-			label = label == null ? "-" : label;
-			ProcessoDocumento doc;
+
+    // Método para Inserir o documento do fluxo
+    private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado) 
+            throws CertificadoException {
+        if (validacaoCertificadoBemSucedida(assinado)) {
             try {
+                Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
+                ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue, certChain, signature);
+                label = label == null ? "-" : label;
+                ProcessoDocumento doc;
                 doc = processoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
                 setIdProcessoDocumento(doc.getIdProcessoDocumento());
                 return doc.getIdProcessoDocumento();

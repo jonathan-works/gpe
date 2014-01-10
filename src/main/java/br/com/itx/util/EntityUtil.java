@@ -64,22 +64,23 @@ public final class EntityUtil implements Serializable {
 		return getId(cl);
 	}
 	
-	/**
-	 * Metodo que recebe um Class e devolve o PropertyDescriptor do campo id
-	 * procurando pela anotações @id e @EmbeddedId
-	 * @param objId Entidade
-	 * @return
-	 */	
-	public static PropertyDescriptor getId(Class<?> clazz) {
-		PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(clazz);
-		for (int i = 0; i < pds.length; i++) {
-			PropertyDescriptor pd = pds[i];
-			if (isId(pd)) {
-				return pd;
-			}
-		}
-		return null;		
-	}
+    /**
+     * Metodo que recebe um Class e devolve o PropertyDescriptor do campo id
+     * procurando pela anotações @id e @EmbeddedId
+     * 
+     * @param objId Entidade
+     * @return
+     */
+    private static PropertyDescriptor getId(Class<?> clazz) {
+        PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(clazz);
+        for (int i = 0; i < pds.length; i++) {
+            PropertyDescriptor pd = pds[i];
+            if (isId(pd)) {
+                return pd;
+            }
+        }
+        return null;
+    }
 	
 	/**
 	 * Testa se o objeto possui a anotação @Entity
@@ -91,18 +92,20 @@ public final class EntityUtil implements Serializable {
 		return isEntity(cl);
 	}
 	
-	/**
-	 * Testa se a classe possui a anotação @Entity
-	 * @param obj
-	 * @return
-	 */
-	public static boolean isEntity(Class<?> cl) {
-		if (cl.isPrimitive() || String.class.getPackage().equals(cl.getPackage())) {
-			return false;
-		} else {
-			return cl.isAnnotationPresent(Entity.class);
-		}
-	}	
+    /**
+     * Testa se a classe possui a anotação @Entity
+     * 
+     * @param obj
+     * @return
+     */
+    private static boolean isEntity(Class<?> cl) {
+        if (cl.isPrimitive()
+                || String.class.getPackage().equals(cl.getPackage())) {
+            return false;
+        } else {
+            return cl.isAnnotationPresent(Entity.class);
+        }
+    }	
 	
 	public static boolean isAnnotationPresent(Object obj, Class<? extends Annotation> clazz) {
 		Class<?> cl = getEntityClass(obj);

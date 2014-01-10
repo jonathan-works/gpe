@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
@@ -186,21 +185,6 @@ public class QuartzJobsInfo implements Serializable {
 		if (scheduler.getGlobalTriggerListeners().isEmpty()) {
 			scheduler.addGlobalTriggerListener(new TriggerListenerLog());
 		}
-	}
-
-	public void apagarJobs() {
-		String sql = "delete from qrtz_cron_triggers; "
-				+ "delete from qrtz_fired_triggers; "
-				+ "delete from qrtz_triggers; "
-				+ "delete from qrtz_job_details; "
-				+ "delete from core.tb_parametro "
-				+ "where vl_variavel like '________:___________:_____';";
-		Query query = EntityUtil.getEntityManager().createNativeQuery(sql);
-		query.executeUpdate();
-		FacesMessages
-				.instance()
-				.add(Severity.INFO,
-						"Jobs apagados com sucesso. Reinicie o servidor para que os Jobs sejam refeitos.");
 	}
 
 	public void removeParametro(int idParametro) {
