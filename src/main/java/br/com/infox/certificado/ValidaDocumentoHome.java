@@ -17,10 +17,8 @@ package br.com.infox.certificado;
 
 import java.math.BigInteger;
 
-import javax.persistence.EntityManager;
-
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
@@ -32,11 +30,10 @@ import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(ValidaDocumentoHome.NAME)
-@BypassInterceptors
 public class ValidaDocumentoHome {
 	
 	public static final String NAME = "validaDocumentoHome";
@@ -46,6 +43,7 @@ public class ValidaDocumentoHome {
 	private Certificado dadosCertificado;
 	
 	private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoHome.class);
+	@In private ProcessoDocumentoManager processoDocumentoManager;
 	
 
 	@Deprecated
@@ -101,16 +99,12 @@ public class ValidaDocumentoHome {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Id do documento não informado");
 			return;
 		}
-		ProcessoDocumento processoDocumento = getEntityManager().find(ProcessoDocumento.class, idDocumento);
+		ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDocumento);
 		if (processoDocumento == null) {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Documento não encontrado.");
 			return;
 		}		
 		validaDocumento(processoDocumento);
-	}
-
-	private EntityManager getEntityManager() {
-		return EntityUtil.getEntityManager();
 	}
 
 	public ProcessoDocumento getDocumento() {
