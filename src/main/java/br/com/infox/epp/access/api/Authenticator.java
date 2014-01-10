@@ -44,6 +44,7 @@ import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.operation.ChangePasswordOperation;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -51,7 +52,6 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
-import br.com.infox.epp.access.service.ChangePasswordOperation;
 import br.com.infox.epp.system.util.ParametroUtil;
 
 @Name(Authenticator.NAME)
@@ -164,7 +164,7 @@ public class Authenticator {
 	
 	private void trocarSenhaUsuario(final UsuarioLogin usuario) throws LoginException, DAOException {
 		if (newPassword1.equals(newPassword2)){
-		    new ChangePasswordOperation(usuario, newPassword1).run();
+		    new ChangePasswordOperation(usuario.getLogin(), newPassword1).run();
 			usuario.setProvisorio(false);
 			getGenericDAO().update(usuario);
 			getMessagesHandler().add("Senha alterada com sucesso.");
