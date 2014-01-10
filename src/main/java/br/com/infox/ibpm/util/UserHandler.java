@@ -91,9 +91,7 @@ public class UserHandler {
         }
         UsuarioLogin u = null;
         try {
-            String sql = "select u from UsuarioLogin u where login=:login";
-            u = (UsuarioLogin) EntityUtil.getEntityManager().createQuery(sql)
-                    .setParameter("login", login).getSingleResult();
+            u = usuarioLoginManager.getUsuarioLoginByLogin(login);
         } catch (NoResultException e) {
             LOG.warn("Usuário não encontrado. Login: " + login, e);
         } catch (Exception e) {
