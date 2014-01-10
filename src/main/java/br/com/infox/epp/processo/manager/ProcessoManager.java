@@ -172,7 +172,7 @@ public class ProcessoManager extends GenericManager {
 	 * @param actorId				 
 	 * */
 	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao, final Papel papel){
-        if (EntityUtil.getEntityManager().find(UsuarioTaskInstance.class, idTaskInstance) == null){
+        if (find(UsuarioTaskInstance.class, idTaskInstance) == null){
             EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
         }
 	}
