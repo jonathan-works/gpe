@@ -170,10 +170,11 @@ public class ProcessoManager extends GenericManager {
 	 * histórico de Movimentação do Processo
 	 * @param idTaskInstance
 	 * @param actorId				 
+	 * @throws DAOException 
 	 * */
-	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao, final Papel papel){
+	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao, final Papel papel) throws DAOException{
         if (find(UsuarioTaskInstance.class, idTaskInstance) == null){
-            EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
+            persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
         }
 	}
 	
