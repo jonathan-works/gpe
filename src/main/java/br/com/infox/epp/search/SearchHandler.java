@@ -31,7 +31,6 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.hibernate.Session;
-import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -48,10 +47,10 @@ import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.Variavel;
-import br.com.itx.util.EntityUtil;
 
 
 @Name("search")
@@ -68,6 +67,7 @@ public class SearchHandler implements Serializable {
 	private static final LogProvider LOG = Logging.getLogProvider(SearchHandler.class);
 	
 	@In private ProcessoDocumentoManager processoDocumentoManager;
+	@In private ProcessoManager processoManager;
 	
 	public String getSearchText() {
 		return searchText;
@@ -77,10 +77,6 @@ public class SearchHandler implements Serializable {
 		page = 0;
 		this.searchText = searchText;
 	}
-	
-	private FullTextEntityManager getEntityManager() {
-		return (FullTextEntityManager) EntityUtil.getEntityManager();
-	}	
 	
 	public List<Map<String, Object>> getSearchResult() {
 		return searchResult;
@@ -98,7 +94,7 @@ public class SearchHandler implements Serializable {
 		}	catch (NumberFormatException e) {
 			LOG.debug(e.getMessage(), e);
 		}
-		return getEntityManager().find(Processo.class, prc);
+		return processoManager.find(prc);
 	}
 	
 	/**
