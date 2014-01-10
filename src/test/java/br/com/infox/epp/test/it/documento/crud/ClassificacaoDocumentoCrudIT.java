@@ -1,14 +1,13 @@
-package br.com.infox.epp.test.documento.crud;
+package br.com.infox.epp.test.it.documento.crud;
 
 import static br.com.infox.epp.documento.crud.ClassificacaoDocumentoCrudAction.NAME;
-
-import java.util.ArrayList;
-import java.util.List;
+import static java.text.MessageFormat.format;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
@@ -27,13 +26,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
-                .addPackages("br.com.infox.core", "br.com.itx")
                 .addClasses(ClassificacaoDocumentoCrudAction.class)
-                .setArchiveName("epp-test.war")
-                .setMockWebXMLPath("src/test/resources/mock-web.xml")
-                .setMockComponentsXMLPath("src/test/resources/mock-components.xml")
-                .setMockPersistenceXMLPath("src/test/resources/mock-persistence.xml")
-                .setPomPath("pom.xml")
                 .createDeployment();
     }
 
@@ -95,13 +88,12 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
                 && areEquals(crudActions.getEntityValue("ativo"),entity.getAtivo())
                 && areEquals(crudActions.getEntityValue("tipoProcessoDocumentoObservacao"),entity.getTipoProcessoDocumentoObservacao());
     }
-    
-    @Override
-    protected List<EntityActionContainer<TipoProcessoDocumento>> getUpdateFailList() {
-        final ArrayList<EntityActionContainer<TipoProcessoDocumento>> list = new ArrayList<>();
+
+    @Test
+    public void updateFailTest() throws Exception {
         TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
         final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
-        list.add(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
+        updateFail.runTest(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
             @Override
             public void execute() {
                 final Object id = crudActions.getId();
@@ -111,71 +103,48 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
                 crudActions.setEntityValue("idTipoProcessoDocumento", ((int) id) + 1);
             }
         });
-        return list;
     }
 
-    @Override
-    protected ArrayList<EntityActionContainer<TipoProcessoDocumento>> getUpdateSuccessList() {
-        final ArrayList<EntityActionContainer<TipoProcessoDocumento>> list = new ArrayList<>();
+    @Test
+    public void updateSuccessTest() throws Exception {
         TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
-        list.add(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
-            @Override
-            public void execute() {
-                final Integer id = crudActions.getId();
-                assert id != null;
-                crudActions.newInstance();
-                crudActions.setId(id);
-                
-                crudActions.setEntityValue("codigoDocumento", fillStr("updateCodigoDocumento", 25));                
-            }
-        });
-        return list;
+        TipoProcessoDocumento processoDocumento = persistSuccess.runTest(createdEntity);
+        System.out.println(format("ENTITY = {0}", processoDocumento.getIdTipoProcessoDocumento()));
+//        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
+//        updateSuccess.runTest(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
+//            @Override
+//            public void execute() {
+//                crudActions.setEntityValue("codigoDocumento", fillStr("updateCodigoDocumento", 25));                
+//            }
+//        });
     }
 
-    @Override
-    protected ArrayList<TipoProcessoDocumento> getRemoveSuccessList() {
-        final ArrayList<TipoProcessoDocumento> list = new ArrayList<>();
+    @Test
+    public void persistSuccessTest() throws Exception {
+        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", LengthConstants.DESCRICAO_PADRAO), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", 0), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+
+        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", LengthConstants.CODIGO_DOCUMENTO), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 0), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
         for (int i = 0; i < 25; i++) {
-            list.add(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i
+            persistSuccess.runTest(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i
                     + ""));
         }
-        return list;
     }
 
-    @Override
-    protected ArrayList<TipoProcessoDocumento> getPersistSuccessList() {
-        final ArrayList<TipoProcessoDocumento> list = new ArrayList<>();
-        list.add(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", LengthConstants.DESCRICAO_PADRAO), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
-        list.add(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", 0), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+    @Test
+    public void persistFailTest() throws Exception {
+        persistFail.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", LengthConstants.DESCRICAO_PADRAO + 1), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+        persistFail.runTest(createInstance(fillStr("codigoDocumento", 12), null, TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
 
-        list.add(createInstance(fillStr("codigoDocumento", LengthConstants.CODIGO_DOCUMENTO), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
-        list.add(createInstance(fillStr("codigoDocumento", 0), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+        persistFail.runTest(createInstance(fillStr("codigoDocumento", LengthConstants.CODIGO_DOCUMENTO + 1), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+    }
+
+    @Test
+    public void inactivateSuccessTest() throws Exception {
         for (int i = 0; i < 25; i++) {
-            list.add(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i
-                    + ""));
+            inactivateSuccess.runTest(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i+ ""));
         }
-        return list;
-    }
-
-    @Override
-    protected ArrayList<TipoProcessoDocumento> getPersistFailList() {
-        final ArrayList<TipoProcessoDocumento> list = new ArrayList<>();
-
-        list.add(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", LengthConstants.DESCRICAO_PADRAO + 1), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
-        list.add(createInstance(fillStr("codigoDocumento", 12), null, TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
-
-        list.add(createInstance(fillStr("codigoDocumento", LengthConstants.CODIGO_DOCUMENTO + 1), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
-        return list;
-    }
-
-    @Override
-    protected List<TipoProcessoDocumento> getInactivateSuccessList() {
-        final ArrayList<TipoProcessoDocumento> list = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
-            list.add(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i+ ""));
-        }
-        return list;
     }
 
 }
