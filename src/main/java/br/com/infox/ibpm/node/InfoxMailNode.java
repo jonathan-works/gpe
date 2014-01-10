@@ -39,6 +39,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.persistence.db.DbPersistenceService;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.tree.TreeHandler;
 import br.com.infox.epp.access.component.tree.EstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
@@ -51,7 +52,6 @@ import br.com.infox.epp.mail.manager.ListaEmailManager;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 public class InfoxMailNode extends MailNode {
 
@@ -254,8 +254,11 @@ public class InfoxMailNode extends MailNode {
 	}
 
 	public void removeListaEmail(ListaEmail listaEmail) {
-		EntityUtil.getEntityManager().remove(listaEmail);
-		EntityUtil.getEntityManager().flush();
+		try {
+            listaEmailManager().remove(listaEmail);
+        } catch (DAOException e) {
+            LOG.error("Erro ao remover Lista de Email", e);
+        }
 		this.listaEmail.remove(listaEmail);
 		if (this.listaEmail.isEmpty()) {
 			to = "";
