@@ -66,6 +66,10 @@ public class GenericManager implements Serializable {
 		genericDAO.detach(o);
 	}
 	
+	public void clear() {
+		genericDAO.clear();
+	}
+	
 	protected final void setGenericDAO(GenericDAO genericDAO) {
 	    this.genericDAO = genericDAO;
 	}
