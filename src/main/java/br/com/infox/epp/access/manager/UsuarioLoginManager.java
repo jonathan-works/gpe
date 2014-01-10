@@ -41,5 +41,9 @@ public class UsuarioLoginManager extends GenericManager {
     public UsuarioLogin getUsuarioLoginByLogin(final String login) {
         return usuarioLoginDAO.getUsuarioLoginByLogin(login);
     }
+    
+    public String getActorIdTarefaAtual(Integer idProcesso){
+        return usuarioLoginDAO.getActorIdTarefaAtual(idProcesso);
+    }
 
 }

@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.ID_PROCESSO_PARAM;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID;
@@ -48,6 +50,12 @@ public class UsuarioLoginDAO extends GenericDAO {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_LOGIN, login);
         return getNamedSingleResult(USUARIO_LOGIN_NAME, parameters);
+    }
+    
+    public String getActorIdTarefaAtual(Integer idProcesso){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_PROCESSO_PARAM, idProcesso);
+        return getNamedSingleResult(ACTORID_TAREFA_ATUAL_BY_PROCESSO, parameters);
     }
 
 }
