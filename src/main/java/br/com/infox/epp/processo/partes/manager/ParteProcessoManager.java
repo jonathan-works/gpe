@@ -40,7 +40,7 @@ public class ParteProcessoManager extends GenericManager {
 	
 	public void incluir(Processo processo, String tipoPessoa) throws DAOException{
 		ProcessoEpa processoEpa = processoEpaDAO.getProcessoEpaByProcesso(processo);
-		if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
+		if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
 			PessoaFisicaHome pf = (PessoaFisicaHome) Component.getInstance("pessoaFisicaHome");
 			PessoaFisica p = pf.getInstance();
 			if (p.getAtivo() == null){
@@ -57,7 +57,7 @@ public class ParteProcessoManager extends GenericManager {
 			}
 			pf.setInstance(null);
 		}
-		else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
+		else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
 			PessoaJuridicaHome pj = (PessoaJuridicaHome) Component.getInstance("pessoaJuridicaHome");
 			PessoaJuridica p = pj.getInstance();
 			if (p.getAtivo() == null){
