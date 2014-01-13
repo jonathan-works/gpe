@@ -39,18 +39,18 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extend
         final E curRecursive = getInstance();
         final E oldRecursive = oldInstance;
         if (!isManaged()
-                ||!curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor()) 
+                ||(curRecursive.getPathDescriptor() != null && !curRecursive.getPathDescriptor().equals(oldRecursive.getPathDescriptor())) 
                 || (curRecursive.getParent()!=null && !curRecursive.getParent().equals(oldRecursive.getParent()))
                 || (oldRecursive != null && oldRecursive.getParent()!=null && !oldRecursive.getParent().equals(curRecursive.getParent()))) {
             updateRecursive(curRecursive);
         }
     }
     
-    private void updateRecursive(E recursive) {
+    private void updateRecursive(final E recursive) {
         RecursiveManager.refactor(recursive);
-        final List<E> childList = recursive.getChildList();
-        for(int i=0,l=childList.size();i<l;i++) {
-            updateRecursive(childList.get(i));
+        final List<E> children = recursive.getChildList();
+        for(int i=0,l=children.size();i<l;i++) {
+            updateRecursive(children.get(i));
         }
     }
     
