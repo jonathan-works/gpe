@@ -30,8 +30,9 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     protected boolean beforeSave() {
         final Localizacao localizacao = getInstance();
         
-        if (localizacao.getEstrutura() != null) {
-            if (localizacao.getEstrutura()){
+        final Boolean isEstrutura = localizacao.getEstrutura();
+        if (isEstrutura != null) {
+            if (isEstrutura){
                 localizacao.setEstruturaFilho(null);
                 localizacao.setLocalizacaoPai(null);
             } else {
@@ -58,7 +59,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     protected String update() {
         String ret = null;
         final Localizacao localizacao = getInstance();
-        if (localizacao.getAtivo() || inativarFilhos(localizacao)) {
+        if ((localizacao.getAtivo() != null) && (localizacao.getAtivo() || inativarFilhos(localizacao))) {
             ret = super.update();
         }
         return ret;
