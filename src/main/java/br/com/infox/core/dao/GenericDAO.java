@@ -10,15 +10,19 @@ import java.util.Map.Entry;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.hibernate.internal.SessionImpl;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.transaction.Transaction;
 
+import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
-import br.com.itx.component.Util;
+//import br.com.itx.component.Util;
+//import br.com.itx.util.EntityUtil;
 
 /**
  * DAO generico para consultas, persistencia
@@ -130,7 +134,7 @@ public class GenericDAO implements Serializable {
 	    } catch (Exception e) {
 	        throw new DAOException(e);
 	    } finally {
-	        Util.rollbackTransactionIfNeeded();
+	        rollbackTransactionIfNeeded();
 	    }
 	}
 
@@ -143,7 +147,7 @@ public class GenericDAO implements Serializable {
         } catch (Exception e) {
             throw new DAOException(e);
         } finally {
-            Util.rollbackTransactionIfNeeded();
+            rollbackTransactionIfNeeded();
         }
 	}
 	
@@ -156,7 +160,7 @@ public class GenericDAO implements Serializable {
     	} catch (Exception e) {
             throw new DAOException(e);
         } finally {
-            Util.rollbackTransactionIfNeeded();
+            rollbackTransactionIfNeeded();
         }
 	}
 	
@@ -166,7 +170,7 @@ public class GenericDAO implements Serializable {
 	    } catch (Exception e) {
             throw new DAOException(e);
         } finally {
-            Util.rollbackTransactionIfNeeded();
+            rollbackTransactionIfNeeded();
         }
 	}
 
@@ -209,6 +213,24 @@ public class GenericDAO implements Serializable {
     
     public void flush(){
         entityManager.flush();
+    }
+    
+    public  void rollbackTransactionIfNeeded() {
+        try {
+            org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
+            if(ut != null && ut.isMarkedRollback()) {
+                SessionImpl session = entityManager.unwrap(SessionImpl.class);
+                // Aborta o batch JDBC, possivelmente relacionado ao bug HHH-7689. Ver https://hibernate.atlassian.net/browse/HHH-7689
+                session.getTransactionCoordinator().getJdbcCoordinator().abortBatch();
+                ut.rollback();
+            }
+        } catch (Exception e) {
+            throw new ApplicationException(ApplicationException.
+                    createMessage("rollback da transação", 
+                                  "rollbackTransaction()", 
+                                  "Util", 
+                                  "ePP"), e);
+        }
     }
 
 }

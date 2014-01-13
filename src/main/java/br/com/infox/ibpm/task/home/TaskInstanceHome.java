@@ -485,9 +485,7 @@ public class TaskInstanceHome implements Serializable {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
         } catch (DAOException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - ", e);
-        } finally {
-            Util.rollbackTransactionIfNeeded();
-        }
+        } 
     }
 
 	private void afterLiberarTarefa() {
