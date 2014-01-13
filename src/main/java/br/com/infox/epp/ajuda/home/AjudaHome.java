@@ -50,7 +50,7 @@ import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.util.EntityUtil;
+//import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
 @Name(AjudaHome.NAME)
@@ -149,7 +149,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	
 				getEntityManager().remove(anterior);
 				getEntityManager().persist(historico);
-				EntityUtil.flush();
+				ajudaManager.flush();
 			}
 			newInstance();
 		}
@@ -165,7 +165,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		page.setUrl(viewId);
 		page.setDescricao(viewId);
 		getEntityManager().persist(page);
-		EntityUtil.flush();
+		ajudaManager.flush();
 		return getEntityManager().find(page.getClass(), page.getIdPagina());
 	}
 
