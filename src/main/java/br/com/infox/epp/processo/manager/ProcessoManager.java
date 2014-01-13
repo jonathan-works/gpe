@@ -30,7 +30,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.itx.util.Crypto;
-import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoManager.NAME)
 @AutoCreate
@@ -150,7 +149,7 @@ public class ProcessoManager extends GenericManager {
 	private void vinculaUsuario(Processo processo, String actorId) throws DAOException {
 		processo.setActorId(actorId);
 		processo = merge(processo);
-		EntityUtil.flush();
+		flush();
 	}
     
 	private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc, final Processo processo, final Long idTarefa) {
