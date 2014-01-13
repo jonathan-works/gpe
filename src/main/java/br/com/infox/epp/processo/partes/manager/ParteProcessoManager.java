@@ -46,8 +46,8 @@ public class ParteProcessoManager extends GenericManager {
 			if (p.getAtivo() == null){
 				p.setAtivo(true);
 				p.setTipoPessoa(TipoPessoaEnum.F);
-				EntityUtil.getEntityManager().persist(p);
-				EntityUtil.getEntityManager().flush();
+				persist(p);
+				flush();
 			}
 			if (processoEpa.getPartes().contains(p)) {
 			    FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
