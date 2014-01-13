@@ -222,10 +222,6 @@ public final class EntityUtil implements Serializable {
 		return ComponentUtil.getComponent(ENTITY_MANAGER_NAME);
 	}
 	
-	public static Query createQuery(String hql) {
-		return getEntityManager().createQuery(hql);
-	}
-
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;

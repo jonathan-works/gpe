@@ -27,6 +27,5 @@ public interface ListaEmailQuery {
             + "(ul.estrutura = o.estrutura or o.estrutura is null)) or (ul.estrutura = o.estrutura and "
             + "(ul.localizacao = o.localizacao or o.localizacao is null) and "
             + "(ul.papel = o.papel or o.papel is null))))";
-;
 
 }
