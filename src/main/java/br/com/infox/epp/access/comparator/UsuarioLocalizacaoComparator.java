@@ -26,7 +26,7 @@ public class UsuarioLocalizacaoComparator implements Comparator<UsuarioLocalizac
 	}
 	
 	private boolean isAdmin(UsuarioLocalizacao ul) {
-		return getPapelId(ul).equals("admin") || getPapelId(ul).equals("administrador");
+		return "admin".equals(getPapelId(ul)) || "administrador".equals(getPapelId(ul));
 	}
 
 	private String getPapelId(UsuarioLocalizacao ul) {
