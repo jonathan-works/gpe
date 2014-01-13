@@ -17,7 +17,6 @@ package br.com.infox.ibpm.util;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -30,7 +29,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.itx.util.EntityUtil;
 
 @Name(UserHandler.NAME)
 @Scope(ScopeType.EVENT)
@@ -66,13 +64,8 @@ public class UserHandler {
     public String getUsuarioByTarefa(TaskInstance taskInstance) {
         if (this.taskInstance == null || !this.taskInstance.equals(taskInstance)) {
             try {
-                String sql = "SELECT DISTINCT ul.ds_login FROM tb_usuario_login ul "
-                        + "JOIN tb_usuario_taskinstance uti ON (uti.id_usuario_login = ul.id_usuario_login) "
-                        + "WHERE id_taskinstance = :idTaskInstance";
-                Query query = EntityUtil.getEntityManager().createNativeQuery(sql)
-                        .setParameter("idTaskInstance", taskInstance.getId());
                 this.taskInstance = taskInstance;
-                this.usuarioTarefa = (String) query.getSingleResult();
+                this.usuarioTarefa = usuarioLoginManager.getUsuarioByTarefa(taskInstance);
             } catch (NoResultException e) {
                 this.usuarioTarefa = "";
                 LOG.warn("Não houve resultado. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
