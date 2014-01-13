@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -13,6 +14,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.documento.component.tree.LocalizacaoFisicaTreeHandler;
 import br.com.infox.epp.documento.entity.DocumentoFisico;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.epp.documento.list.LocalizacaoFisicaList;
@@ -46,6 +48,8 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	protected void afterSave() {
 		newInstance();
 		listByProcesso();
+		LocalizacaoFisicaTreeHandler tree = (LocalizacaoFisicaTreeHandler) Component.getInstance(LocalizacaoFisicaTreeHandler.NAME);
+		tree.clearTree();
 	}
 
 	@Override
