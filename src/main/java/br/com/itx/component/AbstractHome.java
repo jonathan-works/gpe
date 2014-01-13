@@ -32,6 +32,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.AssertionFailure;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.internal.SessionImpl;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -41,6 +42,7 @@ import org.jboss.seam.framework.EntityHome;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.exception.ApplicationException;
@@ -207,7 +209,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			fm.add(StatusMessage.Severity.ERROR, getRemoveError());
 			LOG.error(".remove()", e);
 		} finally {
-			Util.rollbackTransactionIfNeeded();
+			rollbackTransactionIfNeeded();
 		}
 		if ("removed".equals(ret)) {
 		    FacesMessages fm = instance();
@@ -273,7 +275,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             LOG.error(getPersistLogMessage(), e);
 		}
 		if (!PERSISTED.equals(ret)) {
-			Util.rollbackTransactionIfNeeded();
+			rollbackTransactionIfNeeded();
 			 // Caso ocorra algum erro, é criada uma copia do instance sem o Id e os List
 			try {
 				setInstance((T) EntityUtil.cloneEntity(getInstance(), false));
@@ -352,7 +354,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 			}
 		}  
 		LOG.info(msg + sw.getTime());
-		Util.rollbackTransactionIfNeeded();
+		rollbackTransactionIfNeeded();
 		String name = getEntityClass().getName() + "." + "afterUpdate";
 		super.raiseEvent(name, getInstance(), oldEntity);
 		if (ret != null) {
@@ -530,4 +532,20 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 	public void setLockedFields(List<String> lockedFields) {
 		this.lockedFields = lockedFields;
 	}
+	
+    private void rollbackTransactionIfNeeded() {
+        try {
+            org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
+            if (ut != null && ut.isMarkedRollback()) {
+                SessionImpl session = getEntityManager().unwrap(SessionImpl.class);
+                // Aborta o batch JDBC, possivelmente relacionado ao bug
+                // HHH-7689. Ver https://hibernate.atlassian.net/browse/HHH-7689
+                session.getTransactionCoordinator().getJdbcCoordinator().abortBatch();
+                ut.rollback();
+            }
+        } catch (Exception e) {
+            throw new ApplicationException(ApplicationException.createMessage("rollback da transação", 
+                    "rollbackTransaction()", "Util", "ePP"), e);
+        }
+    }
 }
