@@ -15,6 +15,7 @@ import twitter4j.TwitterException;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
+import br.com.infox.epp.mail.manager.ListaEmailManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
@@ -74,7 +75,8 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 		String idGrupo = parameters.get("idGrupo");
 		List<String> recipList = null;
 		if (idGrupo != null) {
-			 recipList = MailResolver.instance().resolve(Integer.parseInt(parameters.get("idGrupo")));
+		    ListaEmailManager listaEmailManager = ComponentUtil.getComponent(ListaEmailManager.NAME);
+			 recipList = listaEmailManager.resolve(Integer.parseInt(parameters.get("idGrupo")));
 		}
 		if (parameters.containsKey("mailList")) {
 			if (recipList == null) {
