@@ -21,12 +21,15 @@ import static br.com.infox.core.constants.WarningConstants.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
+import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.util.ArrayUtil;
-import br.com.itx.util.EntityUtil;
+import br.com.itx.util.ComponentUtil;
 
 
 public class EntityNode<E> implements Serializable {
@@ -95,11 +98,13 @@ public class EntityNode<E> implements Serializable {
 		return ArrayUtil.copyOf(queryChildrenList);
 	}
 	
-	@SuppressWarnings(UNCHECKED)
-	protected List<E> getChildrenList(String hql, E entity) {
-		Query query = EntityUtil.createQuery(hql);
-		return (List<E>) query.setParameter(PARENT_NODE, entity).getResultList();
-	}
+    @SuppressWarnings(UNCHECKED)
+    protected List<E> getChildrenList(String hql, E entity) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARENT_NODE, entity);
+        GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
+        return (List<E>) genericDAO.getResultList(hql, parameters);
+    }
 
 	protected EntityNode<E> createChildNode(E n) {
 		return new EntityNode<E>(this, n, this.queryChildrenList);
