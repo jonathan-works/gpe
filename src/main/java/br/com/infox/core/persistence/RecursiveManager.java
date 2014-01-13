@@ -1,8 +1,5 @@
 package br.com.infox.core.persistence;
 
-import static br.com.infox.core.constants.WarningConstants.*;
-
-import java.text.MessageFormat;
 import java.util.List;
 
 import javax.management.modelmbean.InvalidTargetObjectTypeException;
@@ -15,7 +12,6 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.exception.RecursiveException;
 import br.com.itx.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 /**
  * Classe que gerencia a consistência dos valores no campo que possui o caminho
@@ -124,38 +120,11 @@ public final class RecursiveManager {
 		return false;
 	}
 	
-	/**
-	 * Método util para popular todos os registro da entidade no banco com seus 
-	 * fullPaths.
-	 * @param clazz Entidade que se deseja atualizar todos os registros.
-	 */
-	public static <E extends Recursive<E>> void populateAllHierarchicalPaths(Class<E> clazz) {
-		List<E> entityList = getEntityListNullHierarchicalPath(clazz);
-		for(E o : entityList){
-			try {
-				if (isFullPathEmpty(o)) {
-					refactorFieldPath(o);
-				}
-			} catch (AnnotationException e) {
-			    LOG.error(".populateAllHierarchicalPaths()", e);
-			}
-		}
-	}
-	
-	
 	public static <E extends Recursive<E>> boolean isFullPathEmpty(E object) {
 		String currentFullPath = object.getHierarchicalPath();
 		return currentFullPath == null || "".equals(currentFullPath);
 	}
 	
-	@SuppressWarnings(UNCHECKED)
-	private static <E> List<E> getEntityListNullHierarchicalPath(Class<E> clazz) {
-		String annotationField = "hierarchicalPath";
-		String template = "select o from {0} o where o.{1} is null or o.{1} = ''''";
-		String sql = MessageFormat.format(template, clazz.getName(), annotationField);
-		return EntityUtil.createQuery(sql).getResultList();
-	}
-
 	/**
 	 * Método para inativar recursivamente todos os filhos do objeto passado
 	 * @param obj raiz da sub-árvore que será inativada
