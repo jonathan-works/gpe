@@ -53,7 +53,8 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Table(name = "tb_tipo_processo_documento", schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
 @NamedQueries({
-    @NamedQuery(name=TIPO_PROCESSO_DOCUMENTO_INTERNO, query=TIPO_PROCESSO_DOCUMENTO_INTERNO_QUERY)
+    @NamedQuery(name=TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO, query=TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO_QUERY),
+    @NamedQuery(name=TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO, query=TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO_QUERY)
 })
 public class TipoProcessoDocumento implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
