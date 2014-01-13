@@ -26,7 +26,6 @@ import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.task.manager.JbpmTaskManager;
-import br.com.itx.util.EntityUtil;
 
 @Name(TaskFitter.NAME)
 @AutoCreate
@@ -191,7 +190,7 @@ public class TaskFitter extends Fitter implements Serializable {
                 LOG.error("Erro ao dar merge na tarefa " + tarefa, e);
             }
 		}
-		EntityUtil.flush();
+		tarefaManager.flush();
 	}
 	
 	public boolean isCurrentJbpmTaskPersisted() {
