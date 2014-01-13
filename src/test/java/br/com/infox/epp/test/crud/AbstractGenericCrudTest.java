@@ -276,7 +276,6 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             }
             final Expressions expressionFactory = Expressions.instance();
             final String expressionString = format(COMP_EXP, this.componentName, methodName);
-            System.out.println("==|FLAG "+expressionString);
             final Class<?>[] types = classList.toArray(new Class<?>[classList.size()]);
             return expressionFactory.createMethodExpression(expressionString, returnType, types).invoke(args);
         }
@@ -285,6 +284,17 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             this.invokeMethod(NEW_INSTANCE);
         }
 
+        public final E createInstance() {
+            this.newInstance();
+            return this.getInstance();
+        }
+        
+        public final E resetInstance(Object id) {
+            this.newInstance();
+            this.setId(id);
+            return this.getInstance();
+        }
+        
         @SuppressWarnings(WarningConstants.UNCHECKED)
         public final E getInstance() {
             return (E) getComponentValue(INSTANCE);
