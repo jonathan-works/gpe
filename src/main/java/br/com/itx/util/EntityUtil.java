@@ -226,10 +226,6 @@ public final class EntityUtil implements Serializable {
 		return getEntityManager().createQuery(hql);
 	}
 
-	public static void flush(){
-		getEntityManager().flush();
-	} 
-
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;
