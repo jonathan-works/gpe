@@ -216,7 +216,7 @@ public class TaskInstanceHome implements Serializable {
         // Necessário para gravar a prioridade do processo ao clicar no botão Gravar
         // Não pode usar ProcessoHome.instance().update() porque por algum motivo dá um NullPointerException
         // ao finalizar a tarefa, algo relacionado às mensagens do Seam
-        EntityUtil.flush();
+        taskInstanceManager.flush();
     }
 
     private boolean possuiTask() {
