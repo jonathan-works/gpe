@@ -1,13 +1,12 @@
 package br.com.infox.epp.documento.dao;
 
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO;
 
 import java.util.HashMap;
 import java.util.List;
-
-import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -31,21 +30,12 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
             return getNamedResultList(TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO);
         }
     }
-	
-	//Retorna um TipoProcessoDocumento ~aleatório
-	@SuppressWarnings(UNCHECKED)
-	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
-		String sql = "select o from TipoProcessoDocumento o ";
-		Query q = getEntityManager().createQuery(sql);
-		q.setMaxResults(1);
-		List<TipoProcessoDocumento> resultList = q.getResultList();
-		TipoProcessoDocumento result = null;
-		if (resultList.size()>0) {
-		    result = resultList.get(0);
-		}
-		return result;	
-	}
-	
+
+    // Retorna um TipoProcessoDocumento ~aleatório
+    public TipoProcessoDocumento getTipoProcessoDocumentoFluxo() {
+        return getNamedSingleResult(LIST_TIPO_PROCESSO_DOCUMENTO);
+    }
+
 	@SuppressWarnings(UNCHECKED)
     public boolean isAssinaturaObrigatoria(TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
 	    HashMap<String,Object> params = new HashMap<String,Object>(0);
