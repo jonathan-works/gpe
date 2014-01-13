@@ -71,6 +71,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	private Map<BigInteger, String> modifiedNodes = new HashMap<BigInteger, String>();
 	
 	@In private JbpmNodeManager jbpmNodeManager;
+	@In private TransitionFitter transitionFitter;
 		
 	@SuppressWarnings(UNCHECKED)
 	public void addNewNode() {
@@ -228,6 +229,8 @@ public class NodeFitter extends Fitter implements Serializable {
 		if (join != null) {
 			removeNode(join);
 		}
+		
+		transitionFitter.clear();
 	}
 	
 	public void moveUp(Node node) {

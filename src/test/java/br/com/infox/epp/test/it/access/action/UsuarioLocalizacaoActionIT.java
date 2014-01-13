@@ -10,6 +10,7 @@ import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.infox.core.exception.BusinessException;
@@ -42,14 +43,6 @@ public class UsuarioLocalizacaoActionIT  extends AbstractGenericCrudTest<Usuario
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
-            .addClasses(UsuarioLocalizacaoAction.class, UsuarioLocalizacaoManager.class,
-                    LocalizacaoEstruturaTreeHandler.class,PapelTreeHandler.class,
-                    UsuarioLocalizacaoDAO.class, Authenticator.class,
-                    UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
-                    UsuarioLoginManager.class,BusinessException.class,
-                    ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
-                    ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-                    ParametroManager.class,ParametroDAO.class)
             .createDeployment();
     }
     
@@ -90,4 +83,8 @@ public class UsuarioLocalizacaoActionIT  extends AbstractGenericCrudTest<Usuario
         return UsuarioLocalizacaoAction.NAME;
     }
     
+    @Test
+    public void test() {
+    	
+    }
 }
