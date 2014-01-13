@@ -32,7 +32,6 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -146,12 +145,17 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 		setIdProcessoDocumento(idDoc);
 		Integer result = idDoc;
-		if (processoDocumento != null) {
-                atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
-		} else {
-            result = inserirProcessoDocumentoFluxo(value, label, assinado);
+		try {
+			if (processoDocumento != null) {
+	            atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
+			} else {
+	            result = inserirProcessoDocumentoFluxo(value, label, assinado);
+			}
+			FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
+		} catch (DAOException e) {
+			FacesMessages.instance().add(e.getMessage());
+			result = null;
 		}
-		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 		return result;
 	}
 
@@ -160,7 +164,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 	
 	//Método para Atualizar o documento do fluxo
-	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado) throws CertificadoException{
+	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado) throws CertificadoException, DAOException{
 		if (validacaoCertificadoBemSucedida(assinado)) {
 			ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 			ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
@@ -209,7 +213,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     // Método para Inserir o documento do fluxo
     private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado) 
-            throws CertificadoException {
+            throws CertificadoException, DAOException {
         if (validacaoCertificadoBemSucedida(assinado)) {
             try {
                 Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
@@ -228,7 +232,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		}
 	}
 	
-	private boolean validacaoCertificadoBemSucedida(boolean assinado) throws CertificadoException{
+	private boolean validacaoCertificadoBemSucedida(boolean assinado) throws CertificadoException, DAOException{
 		if (assinado){
 		    verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
 		}
@@ -462,9 +466,12 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return String.valueOf(idProcesso);
 	}
 	
-	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws CertificadoException {
+	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws CertificadoException, DAOException {
 	    if (Strings.isEmpty(certChainBase64Encoded)) {
-            throw new ApplicationException("Não foi possível recuperar assinatura, verifique se seu cartão está corretamente configurado");
+            throw new DAOException("Não foi possível recuperar assinatura, verifique se seu cartão está corretamente configurado");
+	    }
+	    if (usuarioLogado.getPessoaFisica() == null) {
+	    	throw new DAOException("O usuário não possui pessoa física associada.");
 	    }
 		if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
 		    final Certificado certificado = new Certificado(certChainBase64Encoded);
@@ -472,12 +479,12 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		    if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf().replace(".", "").replace("-", ""))) {
 		        usuarioLogado.getPessoaFisica().setCertChain(certChainBase64Encoded);
 		    } else {
-    			throw new ApplicationException("O cadastro do usuário não está assinado.");
+    			throw new DAOException("O cadastro do usuário não está assinado.");
 		    }
 		}
 		if (!usuarioLogado.getPessoaFisica().checkCertChain(certChainBase64Encoded)) {
 			limparAssinatura();
-			throw new ApplicationException("O certificado não é o mesmo do cadastro do usuario");
+			throw new DAOException("O certificado não é o mesmo do cadastro do usuario");
 		}
 	}
 

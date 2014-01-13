@@ -293,7 +293,7 @@
 	                            <wi:commandButton
 									 id="saveDocumentoFisicoButton"
 									 action="localizacaoDocumentoFisicoCrudAction.save"
-									 reRender="documentoFisicoForm, documentoFisicoDiv"
+									 reRender="documentoFisicoForm, documentoFisicoDiv, pageBodyDialogMessage"
 									 value="#{messages['crud.persist']}" />
 	                        
 							</ui:define>
@@ -307,19 +307,13 @@
 								rows="10"
 								searchFormStyleClass="hidden">
 								<ui:define name="toolBar">
-									<wi:toolBarRemove
+									<wi:toolBarInactive
 										id="toolBarInactivate"
-										reRender="documentoFisicoDiv"
-										actionRemove="localizacaoDocumentoFisicoCrudAction.inactive(row)"
+										reRender="documentoFisicoDiv, pageBodyDialogMessage"
+										actionInactive="localizacaoDocumentoFisicoCrudAction.inactive(row)"
 										/>
 								</ui:define>
-								<ui:define name="headerToolBar">
-									<wi:toolBarRemove
-										id="headerInactivate"
-										reRender="documentoFisicoDiv"
-										actionRemove="localizacaoDocumentoFisicoCrudAction.inactiveAll()"
-										title="Inativar todos os Registros" />
-								</ui:define>
+								<ui:define name="headerToolBar" />
 								<wi:columnOutputText
 									columnId="localizacaoFisica"
 									columnHeader="#{messages['documentoFisico.localizacaoFisica']}"

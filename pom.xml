@@ -16,6 +16,13 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>1.1.2.Final</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -101,7 +108,7 @@
 			<groupId>br.com.infox.epp</groupId>
 			<artifactId>taskpage</artifactId>
 			<type>jar</type>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -262,13 +269,6 @@
 			<version>5.13.0.0</version>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian</groupId>
-			<artifactId>arquillian-bom</artifactId>
-			<version>1.1.2.Final</version>
-			<scope>import</scope>
-			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
