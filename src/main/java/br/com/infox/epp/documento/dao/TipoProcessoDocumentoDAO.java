@@ -1,6 +1,8 @@
 package br.com.infox.epp.documento.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +16,6 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery;
-import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 
 @Name(TipoProcessoDocumentoDAO.NAME)
 @AutoCreate
@@ -23,20 +24,13 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoProcessoDocumentoDAO";
 	
-	@SuppressWarnings(UNCHECKED)
-	public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo){
-		String restricaoDeTipo = "'";
-		if (isModelo){
-			restricaoDeTipo += (TipoDocumentoEnum.P).toString();
-		} else{
-			restricaoDeTipo += (TipoDocumentoEnum.D).toString();
-		}
-		restricaoDeTipo += "'";
-		String hql = "select o from TipoProcessoDocumento o " +
-				"where o.ativo = true and (o.visibilidade = 'I' OR o.visibilidade = 'A') and " +
-				"(o.inTipoDocumento = " + restricaoDeTipo + " OR o.inTipoDocumento = 'T')";
-		return getEntityManager().createQuery(hql).getResultList();
-	}
+    public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo) {
+        if (isModelo) {
+            return getNamedResultList(TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO);
+        } else {
+            return getNamedResultList(TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO);
+        }
+    }
 	
 	//Retorna um TipoProcessoDocumento ~aleatório
 	@SuppressWarnings(UNCHECKED)
