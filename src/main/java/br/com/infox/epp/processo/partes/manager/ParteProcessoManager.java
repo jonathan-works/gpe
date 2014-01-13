@@ -20,7 +20,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.HistoricoParteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.itx.util.EntityUtil;
+//import br.com.itx.util.EntityUtil;
 
 @Name(ParteProcessoManager.NAME)
 @AutoCreate
@@ -63,8 +63,8 @@ public class ParteProcessoManager extends GenericManager {
 			if (p.getAtivo() == null){
 				p.setAtivo(true);
 				p.setTipoPessoa(TipoPessoaEnum.J);
-				EntityUtil.getEntityManager().persist(p);
-				EntityUtil.getEntityManager().flush();
+				persist(p);
+				flush();
 			}
 			if (processoEpa.getPartes().contains(p)) {
 			    FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
