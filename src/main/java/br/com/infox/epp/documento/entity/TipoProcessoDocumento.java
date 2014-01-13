@@ -53,6 +53,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Table(name = "tb_tipo_processo_documento", schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
 @NamedQueries({
+    @NamedQuery(name=LIST_TIPO_PROCESSO_DOCUMENTO, query=LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
     @NamedQuery(name=TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO, query=TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO_QUERY),
     @NamedQuery(name=TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO, query=TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO_QUERY)
 })
