@@ -45,7 +45,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	public void changeTransition(TransitionHandler th, String type) {
 		Node oldNodeTransition = getProcessBuilder().getNodeFitter().getOldNodeTransition();
 		Transition t = th.getTransition();
-		if (type.equals("from")) {
+		if ("from".equals(type)) {
 			if (t.getFrom() != null) {
 				t.getFrom().addLeavingTransition(t);
 			}
@@ -62,7 +62,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 			}
 			t.setTo(to);
 		}
-		if (t.getName() == null || t.getName().equals("")) {
+		if (t.getName() == null || "".equals(t.getName())) {
 			try {
 				t.setName(t.getTo().getName());
 			} catch (Exception e) {
@@ -96,13 +96,13 @@ public class TransitionFitter extends Fitter implements Serializable {
 	public void addTransition(String type) {
 		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		Transition t = new Transition("");
-		if (type.equals("from")) {
+		if ("from".equals(type)) {
 			currentNode.addArrivingTransition(t);
 			if (arrivingTransitions == null) {
 				arrivingTransitions = new ArrayList<TransitionHandler>();
 			}
 			arrivingTransitions.add(new TransitionHandler(t));
-		} else if (type.equals("to")) {
+		} else if ("to".equals(type)) {
 			currentNode.addLeavingTransition(t);
 			if (leavingTransitions == null) {
 				leavingTransitions = new ArrayList<TransitionHandler>();
@@ -115,9 +115,9 @@ public class TransitionFitter extends Fitter implements Serializable {
 	public void removeTransition(TransitionHandler th, String type) {
 		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
 		Transition t = th.getTransition();
-		if (type.equals("from") && t.getFrom() != null) {
+		if ("from".equals(type) && t.getFrom() != null) {
 			t.getFrom().removeLeavingTransition(t);
-		} else if (type.equals("to") && t.getTo() != null) {
+		} else if ("to".equals(type) && t.getTo() != null) {
 			t.getTo().removeArrivingTransition(t);
 		}
 		clearArrivingAndLeavingTransitions();
@@ -276,7 +276,7 @@ public class TransitionFitter extends Fitter implements Serializable {
 	}
 	
 	public boolean hasOperationalTransition(String type) {
-		if (!type.equals("to")) {
+		if (!"to".equals(type)) {
 			return false;
 		}
 		
