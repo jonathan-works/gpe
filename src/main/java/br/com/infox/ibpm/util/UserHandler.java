@@ -1,17 +1,16 @@
 /*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
+ * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
+ * Tecnologia da Informação Ltda.
+ * 
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
+ * Software Foundation; versão 2 da Licença. Este programa é distribuído na
+ * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
+ * ESPECÍFICA.
+ * 
+ * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
+ * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
  */
 package br.com.infox.ibpm.util;
 
@@ -34,14 +33,14 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class UserHandler {
-    private static final LogProvider LOG = Logging
-            .getLogProvider(UserHandler.class);
-    public static final String NAME = "userHandler";
     
+    private static final LogProvider LOG = Logging.getLogProvider(UserHandler.class);
+    public static final String NAME = "userHandler";
+
     private Integer idProcesso;
     private TaskInstance taskInstance;
     private String usuarioProcesso, usuarioTarefa;
-    
+
     @In private UsuarioLoginManager usuarioLoginManager;
 
     public String getActorIdTarefaAtual(Integer idProcesso) {
@@ -62,7 +61,8 @@ public class UserHandler {
     }
 
     public String getUsuarioByTarefa(TaskInstance taskInstance) {
-        if (this.taskInstance == null || !this.taskInstance.equals(taskInstance)) {
+        if (this.taskInstance == null
+                || !this.taskInstance.equals(taskInstance)) {
             try {
                 this.taskInstance = taskInstance;
                 this.usuarioTarefa = usuarioLoginManager.getUsuarioByTarefa(taskInstance);
@@ -92,12 +92,12 @@ public class UserHandler {
         }
         return u;
     }
-    
+
     public void clear() {
-    	this.idProcesso = null;
-    	this.usuarioProcesso = null;
-    	this.usuarioTarefa = null;
-    	this.taskInstance = null;
+        this.idProcesso = null;
+        this.usuarioProcesso = null;
+        this.usuarioTarefa = null;
+        this.taskInstance = null;
     }
 
 }
