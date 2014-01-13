@@ -296,7 +296,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	private void removePapeisImplicitos(final String papel, List<String> list) {
 		for (final String p : IdentityManager.instance().getRoleGroups(papel)) {
 			list.remove(p);
-			EntityUtil.getEntityManager().flush();
+			getGenericManager().flush();
 			removePapeisImplicitos(p, list);
 		}
 	}
