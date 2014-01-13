@@ -16,6 +16,7 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
 import br.com.infox.epp.twitter.util.TwitterUtil;
 import br.com.itx.util.ComponentUtil;
@@ -94,7 +95,8 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 			String mensagem = MessageFormat.format("[{1}] {0}", twitterTemplateManager.find(idTemplate).getMensagem(),
 					ProcessoHome.instance().getInstance().getNumeroProcesso());
 			try {
-				TwitterUtil.getInstance().sendMessage(MailResolver.instance().listaContasTwitter(idGrupo), mensagem);
+			    ContaTwitterManager contaTwitterManager = ComponentUtil.getComponent(ContaTwitterManager.NAME);
+				TwitterUtil.getInstance().sendMessage(contaTwitterManager.listaContasTwitter(idGrupo), mensagem);
 			} catch (TwitterException e) {
 			    LOG.error(".sendTwitter()", e);
 			}
