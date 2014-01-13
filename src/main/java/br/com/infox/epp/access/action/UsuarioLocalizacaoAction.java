@@ -3,6 +3,7 @@ package br.com.infox.epp.access.action;
 
 import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -18,7 +19,6 @@ import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLocalizacaoManager;
-import br.com.itx.util.ComponentUtil;
 
 @Name(UsuarioLocalizacaoAction.NAME)
 @Scope(ScopeType.PAGE)
@@ -37,21 +37,21 @@ public class UsuarioLocalizacaoAction {
 		return instance;
 	}
 	
-	public void setInstance(UsuarioLocalizacao instance) {
+	public void setInstance(final UsuarioLocalizacao instance) {
 		this.instance = instance;
 	}
 	
 	@SuppressWarnings(RAWTYPES)
     private void limparArvores() {
-        AbstractTreeHandler tree = ComponentUtil.getComponent(LocalizacaoEstruturaTreeHandler.class);
+        AbstractTreeHandler tree = (AbstractTreeHandler)Component.getInstance(LocalizacaoEstruturaTreeHandler.NAME);
         tree.clearTree();
-        tree = ComponentUtil.getComponent(PapelTreeHandler.class);
+        tree = (AbstractTreeHandler)Component.getInstance(PapelTreeHandler.NAME);
         tree.clearTree();
 	}
 	
 	public void newInstance() {
 		this.instance = new UsuarioLocalizacao();
-		this.instance.setResponsavelLocalizacao(false);
+		this.instance.setResponsavelLocalizacao(Boolean.FALSE);
 		this.instance.setUsuario(usuarioGerenciado);
 		limparArvores();
 	}
@@ -65,7 +65,7 @@ public class UsuarioLocalizacaoAction {
 		}
 	}
 	
-	public void remove(UsuarioLocalizacao usuarioLocalizacao) {
+	public void remove(final UsuarioLocalizacao usuarioLocalizacao) {
 		setInstance(usuarioLocalizacao);
 		try {
 			usuarioLocalizacaoManager.remove(instance);
@@ -75,7 +75,7 @@ public class UsuarioLocalizacaoAction {
 		}
 	}
 
-    private void processDAOException(DAOException e, String message) {
+    private void processDAOException(final DAOException e, final String message) {
         LOG.error(message, e);
         FacesMessages facesMessages = FacesMessages.instance();
         facesMessages.clear();
@@ -90,7 +90,7 @@ public class UsuarioLocalizacaoAction {
         return usuarioGerenciado;
     }
 
-    public void setUsuarioGerenciado(UsuarioLogin usuarioGerenciado) {
+    public void setUsuarioGerenciado(final UsuarioLogin usuarioGerenciado) {
         this.usuarioGerenciado = usuarioGerenciado;
         this.instance.setUsuario(usuarioGerenciado);
     }

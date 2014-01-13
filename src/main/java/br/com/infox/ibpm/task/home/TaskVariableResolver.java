@@ -49,7 +49,7 @@ final class TaskVariableResolver extends TaskVariable {
     
     public void resolveWhenEditor(boolean assinar) throws CertificadoException {
         Integer valueInt = salvarProcessoDocumento(assinar);
-        if (valueInt != 0) {
+        if (valueInt != null && valueInt != 0) {
             this.value = valueInt;
             atribuirValorDaVariavelNoContexto();
             if (assinar) {

@@ -4,7 +4,7 @@ import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.List;
 
-import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -59,11 +59,12 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extend
     	try {
     		updateRecursivePath();
     	} catch (RecursiveException e) {
-    		FacesMessages.instance().clear();
-    		FacesMessages.instance().add(e.getMessage());
-    		return false;
+    	    final StatusMessages messagesHandler = getMessagesHandler();
+            messagesHandler.clear();
+            messagesHandler.add(e.getMessage());
+    		return Boolean.FALSE;
     	}
-        return true;
+        return Boolean.TRUE;
     }
     
     @Override

@@ -5,7 +5,7 @@ import java.util.List;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
@@ -23,48 +23,56 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     public void newInstance() {
         limparTrees();
         super.newInstance();
-        getInstance().setEstrutura(false);
+        getInstance().setEstrutura(Boolean.FALSE);
     }
     
     @Override
     protected boolean beforeSave() {
-        Localizacao localizacao = getInstance();
-        if (localizacao.getEstrutura()){
-            localizacao.setEstruturaFilho(null);
-            localizacao.setLocalizacaoPai(null);
-        } else if (localizacao.getLocalizacaoPai() != null && localizacao.getLocalizacaoPai().equals(localizacao.getEstruturaFilho())) {
-        	FacesMessages.instance().clear();
-        	FacesMessages.instance().add("#{messages['localizacao.localizacaoPaiIgualEstruturaFilho']}");
-        	return false;
+        final Localizacao localizacao = getInstance();
+        
+        if (localizacao.getEstrutura() != null) {
+            if (localizacao.getEstrutura()){
+                localizacao.setEstruturaFilho(null);
+                localizacao.setLocalizacaoPai(null);
+            } else {
+                final Localizacao localizacaoPai = localizacao.getLocalizacaoPai();
+                if (localizacaoPai != null && localizacaoPai.equals(localizacao.getEstruturaFilho())) {
+                	final StatusMessages messagesHandler = getMessagesHandler();
+                    messagesHandler.clear();
+                	messagesHandler.add("#{messages['localizacao.localizacaoPaiIgualEstruturaFilho']}");
+                	return Boolean.FALSE;
+                }
+            }
         }
         return super.beforeSave();
     }
     
     protected void limparTrees(){
         final LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
-        ret.clearTree();
+        if (ret != null) {
+            ret.clearTree();
+        }
     }
     
     @Override
     protected String update() {
         String ret = null;
-        Localizacao localizacao = getInstance();
+        final Localizacao localizacao = getInstance();
         if (localizacao.getAtivo() || inativarFilhos(localizacao)) {
             ret = super.update();
         }
         return ret;
     }
     
-    private boolean inativarFilhos(Localizacao localizacao) {
+    private boolean inativarFilhos(final Localizacao localizacao) {
         if (localizacao.getItemTipoDocumentoList().size() <= 0) {
-            localizacao.setAtivo(false);
+            localizacao.setAtivo(Boolean.FALSE);
             for (int i = 0, quantidadeFilhos = localizacao.getLocalizacaoList().size(); i < quantidadeFilhos; i++) {
                 inativarFilhos(localizacao.getLocalizacaoList().get(i));
             }
-            return true;
-        } else {
-            return false;
+            return Boolean.TRUE;
         }
+        return Boolean.FALSE;
     }
     
     public List<Localizacao> getLocalizacoesEstrutura(){

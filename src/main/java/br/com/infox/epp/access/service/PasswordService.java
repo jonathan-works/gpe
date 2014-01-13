@@ -11,6 +11,7 @@ import org.jboss.seam.util.RandomStringUtils;
 import org.richfaces.component.util.Strings;
 
 import br.com.infox.core.exception.BusinessException;
+import br.com.infox.core.operation.ChangePasswordOperation;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
@@ -21,7 +22,6 @@ import br.com.infox.epp.system.util.ParametroUtil;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class PasswordService {
-    
     public static final String NAME = "passwordService";
     
     private static final int PASSWORD_LENGTH = 8;
@@ -69,16 +69,15 @@ public class PasswordService {
     }
     
     private String gerarNovaSenha(final UsuarioLogin usuario) throws DAOException {
-        final String password;
         if (ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
-            password = "";
+            usuario.setSenha("");
         } else {
-            password = RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH);
+            usuario.setSenha(RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH));
         }
-        usuario.setSenha(password);
-        new ChangePasswordOperation(usuario, password).run();
+        
+        new ChangePasswordOperation(usuario.getLogin(), usuario.getSenha()).run();
         usuarioLoginManager.update(usuario);
-        return password;
+        return usuario.getSenha();
     }
     
 }

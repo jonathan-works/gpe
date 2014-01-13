@@ -5,7 +5,13 @@ import static javax.persistence.FetchType.LAZY;
 import java.text.DateFormat;
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -32,8 +38,8 @@ public class PessoaFisica extends Pessoa {
 		setTipoPessoa(TipoPessoaEnum.F);
 	}
 	
-	public PessoaFisica(String cpf, String nome, Date dataNascimento, boolean ativo) {
-	    super();
+	public PessoaFisica(final String cpf, final String nome, final Date dataNascimento, final boolean ativo) {
+        setTipoPessoa(TipoPessoaEnum.F);
 	    this.cpf = cpf;
 	    this.dataNascimento = dataNascimento;
 	    setNome(nome);
@@ -94,11 +100,11 @@ public class PessoaFisica extends Pessoa {
 		    return false;
 		}
 		PessoaFisica other = (PessoaFisica) obj;
-		if (cpf == null) {
-			if (other.cpf != null) {
+		if (getCpf() == null) {
+			if (other.getCpf() != null) {
 			    return false;
 			}
-		} else if (!cpf.equals(other.cpf)) {
+		} else if (!getCpf().equals(other.getCpf())) {
 		    return false;
 		}
 		return true;

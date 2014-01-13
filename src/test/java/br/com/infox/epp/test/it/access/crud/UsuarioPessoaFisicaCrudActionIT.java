@@ -1,4 +1,4 @@
-package br.com.infox.epp.test.access.crud;
+package br.com.infox.epp.test.it.access.crud;
 
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
 import static br.com.infox.core.action.AbstractAction.REMOVED;
@@ -7,15 +7,14 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.infox.core.exception.BusinessException;
@@ -90,27 +89,30 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
     
     private static int usr_id=0;
     
-    @Override
-    protected void persistSuccessTest(final PessoaFisica entity) {
-        UsuarioLogin user = createUser(entity);
-        
-        final CrudActions<PessoaFisica> crudActions = getCrudActions();
-        crudActions.newInstance();
-        initEntity(entity);
-        final String persistResult = crudActions.save();
-        assertEquals(PERSISTED, persistResult);
-        
-        final Integer id = crudActions.getId();
-        assertNotNull(id);
-        crudActions.newInstance();
-        final Integer nullId = crudActions.getId();
-        assertNull(nullId);
-        crudActions.setId(id);
-        assert compareEntityValues(entity);
-        
-        assert user.getPessoaFisica() != null;
-        assert user.getPessoaFisica().equals(crudActions.getInstance());
-    }
+    private final RunnableTest<PessoaFisica> persistSuccess = new RunnableTest<PessoaFisica>() {
+        @Override
+        protected void testComponent() throws Exception {
+            final PessoaFisica entity = getEntity();
+            UsuarioLogin user = createUser(entity);
+
+            final CrudActions<PessoaFisica> crudActions = getCrudActions();
+            crudActions.newInstance();
+            initEntity(entity);
+            final String persistResult = crudActions.save();
+            assertEquals(PERSISTED, persistResult);
+
+            final Integer id = crudActions.getId();
+            assertNotNull(id);
+            crudActions.newInstance();
+            final Integer nullId = crudActions.getId();
+            assertNull(nullId);
+            crudActions.setId(id);
+            assert compareEntityValues(entity);
+
+            assert user.getPessoaFisica() != null;
+            assert user.getPessoaFisica().equals(crudActions.getInstance());
+        }
+    };
 
     private UsuarioLogin createUser(final PessoaFisica entity) {
         crudActionsUsuarioLogin.newInstance();
@@ -126,43 +128,41 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
         return created;
     }
     
-    @Override
-    protected List<PessoaFisica> getPersistSuccessList() {
-        final ArrayList<PessoaFisica> list = new ArrayList<>();
-        list.add(new PessoaFisica("", "", new GregorianCalendar(1960,11,10).getTime(), Boolean.TRUE));
-        return list;
+    @Test
+    public void persistSuccessTest() throws Exception {
+        persistSuccess.runTest(new PessoaFisica("", "", new GregorianCalendar(1960,11,10).getTime(), Boolean.TRUE));
     }
     
-    @Override
-    protected void removeSuccessTest(final PessoaFisica entity) {
-        UsuarioLogin user = createUser(entity);
-        
-        final CrudActions<PessoaFisica> crudActions = getCrudActions();
-        crudActions.newInstance();
-        initEntity(entity);
-        assert PERSISTED.equals(crudActions.save());
-        assert crudActions.getId() != null;
-        
-        crudActionsUsuarioLogin.newInstance();
-        crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
-        user = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
-        assert user.getPessoaFisica() != null;
-        System.out.println("==|FLAG");
-        assert REMOVED.equals(crudActions.remove(user.getPessoaFisica()));
-        
-        crudActionsUsuarioLogin.newInstance();
-        crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
-        user = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
-        assert user.getPessoaFisica() == null;
-    }
+    private final RunnableTest<PessoaFisica> removeSuccess = new RunnableTest<PessoaFisica>() {
+        @Override
+        protected void testComponent() throws Exception {
+            final PessoaFisica entity = getEntity();
+            UsuarioLogin user = createUser(entity);
+            
+            final CrudActions<PessoaFisica> crudActions = getCrudActions();
+            crudActions.newInstance();
+            initEntity(entity);
+            assert PERSISTED.equals(crudActions.save());
+            assert crudActions.getId() != null;
+            
+            crudActionsUsuarioLogin.newInstance();
+            crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
+            user = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
+            assert user.getPessoaFisica() != null;
+            assert REMOVED.equals(crudActions.remove(user.getPessoaFisica()));
+            
+            crudActionsUsuarioLogin.newInstance();
+            crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
+            user = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
+            assert user.getPessoaFisica() == null;
+        }
+    };
     
-    @Override
-    protected List<PessoaFisica> getRemoveSuccessList() {
-        final ArrayList<PessoaFisica> list = new ArrayList<>();
-        list.add(new PessoaFisica("111111111","",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
-        list.add(new PessoaFisica("324789655","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
-        list.add(new PessoaFisica("123332123","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
-        return list;
+    @Test
+    public void removeSuccessTest() throws Exception {
+        removeSuccess.runTest(new PessoaFisica("111111111","",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
+        removeSuccess.runTest(new PessoaFisica("324789655","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
+        removeSuccess.runTest(new PessoaFisica("123332123","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
     }
     
 }
