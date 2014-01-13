@@ -43,4 +43,9 @@ public interface UsuarioLoginQuery {
             + "JOIN tb_usuario_taskinstance uti ON (ul.id_usuario_login=uti.id_usuario_login) "
             + "JOIN vs_situacao_processo sp ON (uti.id_taskinstance = sp.id_task_instance) "
             + "WHERE id_processo=:" + ID_PROCESSO_PARAM;
+    
+    String USUARIO_BY_ID_TASK_INSTANCE = "getUsuarioByIdTaskInstance";
+    String USUARIO_BY_ID_TASK_INSTANCE_QUERY = "SELECT DISTINCT ul.ds_login FROM tb_usuario_login ul "
+            + "JOIN tb_usuario_taskinstance uti ON (uti.id_usuario_login = ul.id_usuario_login) "
+            + "WHERE id_taskinstance = :" + PARAM_ID_TASK_INSTANCE;
 }
