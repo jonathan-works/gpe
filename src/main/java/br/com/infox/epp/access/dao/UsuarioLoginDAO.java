@@ -8,6 +8,7 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_LOGIN;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_EMAIL;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
 
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -56,6 +58,12 @@ public class UsuarioLoginDAO extends GenericDAO {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_PROCESSO_PARAM, idProcesso);
         return getNamedSingleResult(ACTORID_TAREFA_ATUAL_BY_PROCESSO, parameters);
+    }
+    
+    public String getUsuarioByTarefa(TaskInstance taskInstance) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_TASK_INSTANCE, taskInstance.getId());
+        return getNamedSingleResult(USUARIO_BY_ID_TASK_INSTANCE, parameters);
     }
 
 }
