@@ -31,32 +31,12 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
     protected String getQueryRoots() {
         return TAREFAS_TREE_QUERY_ROOTS;
     }
-	
-	@Override
-	protected String getQueryChildren() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select new map(max(s.idSituacaoProcesso) as id, ");
-		sb.append("s.nomeTarefa as nomeTarefa, ");
-		sb.append("max(s.idTask) as idTask, ");
-		sb.append("max(s.idTaskInstance) as idTaskInstance, ");
-		sb.append("max(s.idTarefa) as idTarefa, ");
-		sb.append("count(s.nomeCaixa) as qtdEmCaixa, ");
-		sb.append("count(s.idProcesso) as qtd, ");
-		sb.append("'");
-		sb.append(getTreeType());
-		sb.append("' as tree, ");
-		sb.append("'Task' as type) ");
-		sb.append("from SituacaoProcesso s ");
-		sb.append("where s.idFluxo = :idFluxo ");
-		sb.append("group by s.nomeTarefa ");
-		sb.append("order by s.nomeTarefa");
-		return sb.toString();
-	}
-	
-	protected String getTreeType() {
-		return "caixa";
-	}
-	
+
+    @Override
+    protected String getQueryChildren() {
+        return TAREFAS_TREE_QUERY_CHILDREN;
+    }
+
 	protected String getQueryCaixas() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select new map(c.idCaixa as idCaixa, ");
