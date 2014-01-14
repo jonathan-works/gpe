@@ -28,6 +28,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.core.Expressions;
@@ -37,6 +38,7 @@ import org.richfaces.component.UICollapsiblePanel;
 import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
+import br.com.infox.core.dao.GenericDAO;
 import br.com.itx.util.EntityUtil;
 
 @Scope(ScopeType.PAGE)
@@ -54,6 +56,8 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 	private boolean folderSelectable = true;
 	private String expression;
 	private List<EntityNode<E>> selectedNodesList = new ArrayList<EntityNode<E>>(0);
+	
+	@In GenericDAO genericDAO;
 
 	@Override
 	public void clearTree() {
@@ -80,7 +84,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		if (rootList == null) {
 			StopWatch sw = new StopWatch();
 			sw.start();
-			Query queryRoots = getEntityManager().createQuery(getQueryRoots());
+			Query queryRoots = genericDAO.createQuery(getQueryRoots(), null);
 			EntityNode<E> entityNode = createNode();
 			entityNode.setIgnore(getEntityToIgnore());
 			rootList = entityNode.getRoots(queryRoots);
