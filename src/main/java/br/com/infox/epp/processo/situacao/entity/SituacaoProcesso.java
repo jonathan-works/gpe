@@ -24,6 +24,7 @@ import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 @Entity
 @Table(name = SituacaoProcesso.TABLE_NAME, schema="public")
 @NamedQueries({
+    @NamedQuery(name=TAREFAS_TREE_ROOTS, query=TAREFAS_TREE_QUERY_ROOTS),
     @NamedQuery(name=COUNT_TAREFAS_ATIVAS_BY_TASK_ID, query=COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY)
 })
 @FilterDefs({ 

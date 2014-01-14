@@ -1,5 +1,6 @@
 package br.com.infox.epp.tarefa.component.tree;
 
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,17 +27,10 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	private static final long serialVersionUID = 1L;
 	private List<TarefasEntityNode<Map<String,Object>>> rootList;		
 	 
-	@Override
-	protected String getQueryRoots() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select new map(s.nomeFluxo as nomeFluxo, ");
-		sb.append("max(s.idFluxo) as idFluxo, ");
-		sb.append("'Fluxo' as type) ");
-		sb.append("from SituacaoProcesso s ");
-		sb.append("group by s.nomeFluxo ");
-		sb.append("order by s.nomeFluxo");
-		return sb.toString();
-	}
+    @Override
+    protected String getQueryRoots() {
+        return TAREFAS_TREE_QUERY_ROOTS;
+    }
 	
 	@Override
 	protected String getQueryChildren() {
