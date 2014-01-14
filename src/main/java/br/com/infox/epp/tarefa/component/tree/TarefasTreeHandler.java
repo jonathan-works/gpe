@@ -38,14 +38,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
     }
 
 	protected String getQueryCaixas() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select new map(c.idCaixa as idCaixa, ");
-		sb.append("c.tarefa.idTarefa as idTarefa, ");
-		sb.append("c.nomeCaixa as nomeCaixa, ");
-		sb.append("'Caixa' as type, ");
-		sb.append("(select count(distinct sp.idProcesso) from SituacaoProcesso sp where sp.idCaixa = c.idCaixa) as qtd) ");
-		sb.append("from Caixa c where c.tarefa.idTarefa = :taskId order by c.nomeCaixa");
-		return sb.toString();
+		return TAREFAS_TREE_QUERY_CAIXAS;
 	}
 	
 	@Override
