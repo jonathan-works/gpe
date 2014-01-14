@@ -1,6 +1,6 @@
 package br.com.infox.epp.access.service;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
@@ -31,7 +30,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
-import br.com.itx.util.EntityUtil;
 
 @Name(AuthenticatorService.NAME)
 @AutoCreate
@@ -144,8 +142,7 @@ public class AuthenticatorService extends GenericManager {
 		Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
 		if (listUsuarioLoc.size() > 0) {
 			UsuarioLocalizacao loc = listUsuarioLoc.get(0);
-			EntityManager em = EntityUtil.getEntityManager();
-			return em.getReference(UsuarioLocalizacao.class, loc.getIdUsuarioLocalizacao());
+			return processoDAO.getReference(UsuarioLocalizacao.class, loc.getIdUsuarioLocalizacao());
 		} 
 		throw new LoginException("O usuário " + usuario + " não possui Localização");
 	}
