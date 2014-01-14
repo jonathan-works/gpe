@@ -215,6 +215,10 @@ public class GenericDAO implements Serializable {
         entityManager.flush();
     }
     
+    public <T> void refresh(T o){
+        entityManager.refresh(o);
+    }
+    
     public  void rollbackTransactionIfNeeded() {
         try {
             org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();

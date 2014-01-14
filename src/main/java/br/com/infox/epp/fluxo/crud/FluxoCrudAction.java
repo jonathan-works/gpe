@@ -19,7 +19,6 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.itx.util.EntityUtil;
 
 @Name(FluxoCrudAction.NAME)
 public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
@@ -101,7 +100,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
                 List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
                         .getFluxoList();
                 if (!usuarioPublicacaoList.contains(getInstance())) {
-                    EntityUtil.getEntityManager().refresh(usuarioPublicacao);
+                    fluxoManager.refresh(usuarioPublicacao);
                 }
             }
             return ret;
