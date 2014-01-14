@@ -22,6 +22,8 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.SEQUENCE_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.TABLE_USUARIO_LOGIN;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.TIPO_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_EMAIL;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_ID_TASK_INSTANCE;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_ID_TASK_INSTANCE_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_EMAIL_QUERY;
@@ -87,6 +89,7 @@ import br.com.infox.epp.system.entity.EntityLog;
     @NamedQuery(name = INATIVAR_USUARIO, query = INATIVAR_USUARIO_QUERY) 
 })
 @NamedNativeQueries({
+    @NamedNativeQuery(name=USUARIO_BY_ID_TASK_INSTANCE, query=USUARIO_BY_ID_TASK_INSTANCE_QUERY),
     @NamedNativeQuery(name=ACTORID_TAREFA_ATUAL_BY_PROCESSO, query=ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY)
 })
 public class UsuarioLogin implements Serializable {

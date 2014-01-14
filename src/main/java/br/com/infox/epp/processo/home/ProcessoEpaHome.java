@@ -42,9 +42,9 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
 	}
     
     private TipoPessoaEnum convertTipoPessoaEnum(final String tipoPessoa) {
-        if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
+        if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
             return TipoPessoaEnum.F;
-        } else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
+        } else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
             return TipoPessoaEnum.J;
         }
         return null;

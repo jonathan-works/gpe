@@ -28,5 +28,11 @@ public class ListaEmailDAO extends GenericDAO {
         parameters.put(ID_GRUPO_EMAIL_PARAM, idGrupoEmail);
         return getNamedResultList(LISTA_EMAIL_BY_ID_GRUPO, parameters);
     }
+    
+    public List<String> resolve(int idGrupoEmail) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_GRUPO_EMAIL_PARAM, idGrupoEmail);
+        return getNamedResultList(RESOLVE_LISTA_EMAIL_BY_ID_GRUPO, parameters);
+    }
 
 }

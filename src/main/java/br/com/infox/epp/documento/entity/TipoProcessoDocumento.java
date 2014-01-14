@@ -15,6 +15,8 @@
 */
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -48,6 +52,11 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Entity
 @Table(name = "tb_tipo_processo_documento", schema="public")
 @Inheritance(strategy=InheritanceType.JOINED)
+@NamedQueries({
+    @NamedQuery(name=LIST_TIPO_PROCESSO_DOCUMENTO, query=LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
+    @NamedQuery(name=TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO, query=TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO_QUERY),
+    @NamedQuery(name=TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO, query=TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO_QUERY)
+})
 public class TipoProcessoDocumento implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 

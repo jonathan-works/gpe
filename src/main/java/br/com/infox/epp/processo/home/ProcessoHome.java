@@ -106,9 +106,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	public void iniciarTarefaProcesso() {
 	    try {
 	        processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
-	    }catch(java.lang.NullPointerException e) {
+	    } catch(java.lang.NullPointerException e) {
 	        LOG.error("ProcessoHome.iniciarTarefaProcesso()", e);
-	    }
+	    } catch (DAOException e) {
+            LOG.error("Erro ao vincular Usuario", e);
+        }
 	}
 	
 	public void visualizarTarefaProcesso(){

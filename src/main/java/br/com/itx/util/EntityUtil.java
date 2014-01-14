@@ -30,7 +30,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Query;
 import javax.persistence.Transient;
 
 import org.jboss.seam.log.LogProvider;
@@ -222,14 +221,6 @@ public final class EntityUtil implements Serializable {
 		return ComponentUtil.getComponent(ENTITY_MANAGER_NAME);
 	}
 	
-	public static Query createQuery(String hql) {
-		return getEntityManager().createQuery(hql);
-	}
-
-	public static void flush(){
-		getEntityManager().flush();
-	} 
-
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;

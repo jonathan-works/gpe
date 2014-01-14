@@ -26,5 +26,9 @@ public class ListaEmailManager extends GenericManager {
     public List<ListaEmail> getListaEmailByIdGrupoEmail(Integer idGrupoEmail){
         return listaEmailDAO.getListaEmailByIdGrupoEmail(idGrupoEmail);
     }
+    
+    public List<String> resolve(int idGrupoEmail) {
+        return listaEmailDAO.resolve(idGrupoEmail);
+    }
 
 }

@@ -34,7 +34,7 @@ public abstract class BamTimerProcessor {
             try {
                 getProcessoEpaTarefamanager().updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), d);
             } catch (DAOException e) {
-                LOG.error(e);
+                LOG.error(".updateTarefasNaoFinalizadas(d)", e);
             }
         }
         return null;

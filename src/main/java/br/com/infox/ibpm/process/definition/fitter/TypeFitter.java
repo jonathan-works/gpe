@@ -51,10 +51,10 @@ public class TypeFitter extends Fitter implements Serializable{
 
 					@Override
 					public int compare(String o1, String o2) {
-						if (o1.equals("null")) {
+						if ("null".equals(o1)) {
 							return -1;
 						}
-						if (o2.equals("null")) {
+						if ("null".equals(o2)) {
 							return 1;
 						}
 						return types.getProperty(o1).compareTo(
@@ -93,7 +93,7 @@ public class TypeFitter extends Fitter implements Serializable{
 					removeDifferentType(
 							TaskPageAction.TASK_PAGE_COMPONENT_NAME, tList);
 					break;
-				} else if (!vah.getType().equals("null")) {
+				} else if (!"null".equals(vah.getType())) {
 					break;
 				}
 			}

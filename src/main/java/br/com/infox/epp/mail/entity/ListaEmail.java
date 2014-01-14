@@ -26,6 +26,8 @@ import static br.com.infox.epp.mail.query.ListaEmailQuery.LISTA_EMAIL_BY_ID_GRUP
 import static br.com.infox.epp.mail.query.ListaEmailQuery.LISTA_EMAIL_BY_ID_GRUPO_QUERY;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.RESOLVE_LISTA_EMAIL_BY_ID_GRUPO;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.RESOLVE_LISTA_EMAIL_BY_ID_GRUPO_QUERY;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.SEQUENCE_LISTA_EMAIL;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.TABLE_LISTA_EMAIL;
 
@@ -50,6 +52,7 @@ import br.com.infox.epp.access.entity.Papel;
 @Table(name = TABLE_LISTA_EMAIL, schema=PUBLIC)
 @NamedQueries({
     @NamedQuery(name=LISTA_EMAIL_BY_ID_GRUPO, query=LISTA_EMAIL_BY_ID_GRUPO_QUERY),
+    @NamedQuery(name=RESOLVE_LISTA_EMAIL_BY_ID_GRUPO, query=RESOLVE_LISTA_EMAIL_BY_ID_GRUPO_QUERY),
     @NamedQuery(name=MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL, query=MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY)
 })
 public class ListaEmail implements java.io.Serializable {

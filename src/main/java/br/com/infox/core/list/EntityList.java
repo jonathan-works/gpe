@@ -129,7 +129,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		visitFields(new FieldCommandImpl(getEntityName(), sb));
 		if (sb.length() != 0) {
 		    sb.insert(0, ":\n");
-	        sb.insert(0,(getRestrictionLogicOperator().equals("and") ?
+	        sb.insert(0,("and".equals(getRestrictionLogicOperator()) ?
 	                "Todas as expressões" : "Qualquer expressão"));
 		}
 		sb.append("Classificado por: ");
@@ -138,7 +138,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 		sb.append(Messages.instance().get(MessageFormat.format(
 				"{0}.{1}", getEntityName(), s[0])));
 		sb.append(" ");
-		sb.append(s.length > 1 && s[1].equals("desc") ? "decrescente" : "crescente");
+		sb.append(s.length > 1 && "desc".equals(s[1]) ? "decrescente" : "crescente");
 				
 		return sb.toString();
 	}

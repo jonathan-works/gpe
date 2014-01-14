@@ -30,7 +30,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.itx.util.Crypto;
-import br.com.itx.util.EntityUtil;
 
 @Name(ProcessoManager.NAME)
 @AutoCreate
@@ -137,7 +136,7 @@ public class ProcessoManager extends GenericManager {
     	return result;
     }
     
-    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) {
+    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) throws DAOException {
         final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
     	final String actorId = Actor.instance().getId();
     	iniciaTask(processo, taskInstanceId);
@@ -147,10 +146,10 @@ public class ProcessoManager extends GenericManager {
     	}
     }
 
-	private void vinculaUsuario(Processo processo, String actorId) {
+	private void vinculaUsuario(Processo processo, String actorId) throws DAOException {
 		processo.setActorId(actorId);
-		processo = EntityUtil.getEntityManager().merge(processo);
-		EntityUtil.flush();
+		processo = merge(processo);
+		flush();
 	}
     
 	private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc, final Processo processo, final Long idTarefa) {
@@ -170,10 +169,11 @@ public class ProcessoManager extends GenericManager {
 	 * histórico de Movimentação do Processo
 	 * @param idTaskInstance
 	 * @param actorId				 
+	 * @throws DAOException 
 	 * */
-	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao, final Papel papel){
-        if (EntityUtil.getEntityManager().find(UsuarioTaskInstance.class, idTaskInstance) == null){
-            EntityUtil.getEntityManager().persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
+	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao, final Papel papel) throws DAOException{
+        if (find(UsuarioTaskInstance.class, idTaskInstance) == null){
+            persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
         }
 	}
 	
