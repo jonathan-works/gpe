@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
@@ -32,12 +33,15 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
+import br.com.infox.epp.processo.documento.AssinaturaException;
 import br.com.infox.epp.processo.documento.api.IProcessoDocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.FileHome;
 import br.com.itx.util.ComponentUtil;
@@ -60,6 +64,9 @@ public class ProcessoDocumentoBinHome
     private boolean isModelo;
     private boolean ignoraConteudoDocumento = Boolean.FALSE;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoBinHome.class);
+    
+    @In
+    private AssinaturaDocumentoService assinaturaDocumentoService;
 	
 	public static ProcessoDocumentoBinHome instance() {
 		return ComponentUtil.getComponent("processoDocumentoBinHome");
@@ -81,33 +88,27 @@ public class ProcessoDocumentoBinHome
 		return certChain;
 	}
 
-	private boolean isValidSignature() {
-	    if (signature == null) {
-	        return false;
-	    }
-	    if (certChain == null) {
-	        return false;
-	    }
-	    return !"".equals(signature.trim()) && !"".equals(certChain.trim());
-	}
 	
 	public void assinarDocumento(ProcessoDocumento processoDocumento) {
 	    FacesMessages.instance().clear();
-	    if (isValidSignature()) {
-	        setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
-            processoDocumento.setLocalizacao(Authenticator.getLocalizacaoAtual());
-            processoDocumento.setPapel(Authenticator.getPapelAtual());
-            instance.setUsuarioUltimoAssinar(Authenticator.getUsuarioLogado().getNomeUsuario());
-            instance.setSignature(signature);
-            instance.setCertChain(certChain);
-            instance.setDataInclusao(new Date());
-            processoDocumento.setProcessoDocumentoBin(instance);
-            getEntityManager().merge(processoDocumento);
-            getEntityManager().flush();
-            FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
-	    } else {
-            FacesMessages.instance().add(Messages.instance().get("assinatura.falhaAssinatura"));
-	    }
+	    try {
+			assinaturaDocumentoService.verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
+		} catch (CertificadoException | AssinaturaException e) {
+			FacesMessages.instance().clear();
+			FacesMessages.instance().add(e.getMessage());
+			return;
+		}
+        setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
+        processoDocumento.setLocalizacao(Authenticator.getLocalizacaoAtual());
+        processoDocumento.setPapel(Authenticator.getPapelAtual());
+        instance.setUsuarioUltimoAssinar(Authenticator.getUsuarioLogado().getNomeUsuario());
+        instance.setSignature(signature);
+        instance.setCertChain(certChain);
+        instance.setDataInclusao(new Date());
+        processoDocumento.setProcessoDocumentoBin(instance);
+        getEntityManager().merge(processoDocumento);
+        getEntityManager().flush();
+        FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
 	}
 	
 	public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
