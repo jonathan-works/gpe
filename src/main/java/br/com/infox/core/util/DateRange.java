@@ -68,13 +68,10 @@ public class DateRange {
             switch (intervalFormat) {
                 case DAYS:
                     divisor *= 24;
-                    break;
                 case HOURS:
                     divisor *= 60; 
-                    break;
                 case MINUTES:
                     divisor *= 60;
-                    break;
                 case SECONDS:
                     divisor *= 1000;
                     break;
