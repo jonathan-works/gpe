@@ -178,7 +178,7 @@ public class Certificado {
             final String[] split = linha.split("=");
             String key = split[0];
             String value = split[1];
-            if (key.equals("OU")) {
+            if ("OU".equals(key)) {
                 key += i++;
             }
             map.put(key, value);

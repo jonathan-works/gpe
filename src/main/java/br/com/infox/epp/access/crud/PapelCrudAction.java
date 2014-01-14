@@ -35,7 +35,6 @@ import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(PapelCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -296,7 +295,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	private void removePapeisImplicitos(final String papel, List<String> list) {
 		for (final String p : IdentityManager.instance().getRoleGroups(papel)) {
 			list.remove(p);
-			EntityUtil.getEntityManager().flush();
+			getGenericManager().flush();
 			removePapeisImplicitos(p, list);
 		}
 	}
@@ -370,7 +369,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 			}
 		} 
 		else {
-			EntityUtil.flush();
+			getGenericManager().flush();
 			if (identificador.startsWith("/")) {
 				IdentityManager.instance().addRoleToGroup("admin", identificador);
 			}
@@ -379,7 +378,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		setInstance(papelManager.getPapelByIdentificador(getRoleaction().getRole()));
 		getInstance().setNome(nome);
 		updatePermissions();
-		EntityUtil.flush();
+		getGenericManager().flush();
 		clear();
 		return save;
 	}

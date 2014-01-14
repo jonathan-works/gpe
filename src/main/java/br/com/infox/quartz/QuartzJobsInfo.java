@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.persistence.EntityManager;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Install;
@@ -31,9 +29,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
-import br.com.infox.epp.system.entity.Parametro;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(QuartzJobsInfo.NAME)
 @Scope(ScopeType.APPLICATION)
@@ -185,13 +181,6 @@ public class QuartzJobsInfo implements Serializable {
 		if (scheduler.getGlobalTriggerListeners().isEmpty()) {
 			scheduler.addGlobalTriggerListener(new TriggerListenerLog());
 		}
-	}
-
-	public void removeParametro(int idParametro) {
-		EntityManager em = EntityUtil.getEntityManager();
-		Parametro parametro = em.find(Parametro.class, idParametro);
-		em.remove(parametro);
-		em.flush();
 	}
 
 }

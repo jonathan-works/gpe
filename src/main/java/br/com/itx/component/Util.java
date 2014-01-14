@@ -15,7 +15,7 @@
 */
 package br.com.itx.component;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.File;
 import java.io.Serializable;
@@ -38,7 +38,6 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.LazyInitializationException;
-import org.hibernate.internal.SessionImpl;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -61,7 +60,6 @@ import org.richfaces.context.ExtendedPartialViewContext;
 
 import br.com.infox.core.exception.ApplicationException;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 import br.com.itx.util.FacesUtil;
 
 @Scope(ScopeType.APPLICATION)
@@ -464,24 +462,6 @@ public class Util implements Serializable {
 								  "beginTransaction()", 
 								  "RegistraEventoAction", 
 								  "BPM"), e);
-		}
-	}
-	
-	public static void rollbackTransactionIfNeeded() {
-		try {
-			org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
-			if(ut != null && ut.isMarkedRollback()) {
-				SessionImpl session = EntityUtil.getEntityManager().unwrap(SessionImpl.class);
-				// Aborta o batch JDBC, possivelmente relacionado ao bug HHH-7689. Ver https://hibernate.atlassian.net/browse/HHH-7689
-				session.getTransactionCoordinator().getJdbcCoordinator().abortBatch();
-				ut.rollback();
-			}
-		} catch (Exception e) {
-			throw new ApplicationException(ApplicationException.
-					createMessage("rollback da transação", 
-								  "rollbackTransaction()", 
-								  "Util", 
-								  "ePP"), e);
 		}
 	}
 	

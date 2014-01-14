@@ -1,8 +1,9 @@
 package br.com.infox.epp.tarefa.component.tree;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,8 +11,9 @@ import javax.persistence.Query;
 
 import org.jboss.seam.core.Events;
 
+import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.EntityNode;
-import br.com.itx.util.EntityUtil;
+import br.com.itx.util.ComponentUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	
@@ -108,13 +110,13 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 		return new TarefasEntityNode<Map<String,Object>>(null, n, getQueryChildren(), queryCaixas);
 	}
 	
-	@SuppressWarnings(UNCHECKED)
-	@Override
-	protected List<Map<String,Object>> getChildrenList(String hql, Map<String,Object> entity) {
-		Query query = EntityUtil.createQuery(hql);
-		return query.setParameter("idFluxo", entity.get("idFluxo"))
-				.getResultList();
-	}
+    @Override
+    protected List<Map<String, Object>> getChildrenList(String hql, Map<String, Object> entity) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("idFluxo", entity.get("idFluxo"));
+        GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
+        return genericDAO.getResultList(hql, parameters);
+    }
 	
 	@SuppressWarnings(UNCHECKED)
 	protected List<Map<String,Object>> getCaixasList(Query query, Map<String,Object> entity) {

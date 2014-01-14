@@ -20,7 +20,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.HistoricoParteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.itx.util.EntityUtil;
+//import br.com.itx.util.EntityUtil;
 
 @Name(ParteProcessoManager.NAME)
 @AutoCreate
@@ -40,14 +40,14 @@ public class ParteProcessoManager extends GenericManager {
 	
 	public void incluir(Processo processo, String tipoPessoa) throws DAOException{
 		ProcessoEpa processoEpa = processoEpaDAO.getProcessoEpaByProcesso(processo);
-		if (tipoPessoa.equals("F") || tipoPessoa.equals("f")) {
+		if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
 			PessoaFisicaHome pf = (PessoaFisicaHome) Component.getInstance("pessoaFisicaHome");
 			PessoaFisica p = pf.getInstance();
 			if (p.getAtivo() == null){
 				p.setAtivo(true);
 				p.setTipoPessoa(TipoPessoaEnum.F);
-				EntityUtil.getEntityManager().persist(p);
-				EntityUtil.getEntityManager().flush();
+				persist(p);
+				flush();
 			}
 			if (processoEpa.getPartes().contains(p)) {
 			    FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
@@ -57,14 +57,14 @@ public class ParteProcessoManager extends GenericManager {
 			}
 			pf.setInstance(null);
 		}
-		else if (tipoPessoa.equals("J") || tipoPessoa.equals("j")) {
+		else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
 			PessoaJuridicaHome pj = (PessoaJuridicaHome) Component.getInstance("pessoaJuridicaHome");
 			PessoaJuridica p = pj.getInstance();
 			if (p.getAtivo() == null){
 				p.setAtivo(true);
 				p.setTipoPessoa(TipoPessoaEnum.J);
-				EntityUtil.getEntityManager().persist(p);
-				EntityUtil.getEntityManager().flush();
+				persist(p);
+				flush();
 			}
 			if (processoEpa.getPartes().contains(p)) {
 			    FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");

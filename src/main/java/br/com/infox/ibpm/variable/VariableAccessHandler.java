@@ -31,6 +31,8 @@ import org.jboss.seam.Component;
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.Access;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Action;
@@ -39,13 +41,14 @@ import org.jbpm.graph.def.GraphElement;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.list.EntityList;
+import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 import br.com.itx.util.ReflectionsUtil;
 
 
@@ -53,6 +56,7 @@ public class VariableAccessHandler implements Serializable {
 
 	private static final long serialVersionUID = -4113688503786103974L;
 	private static final String PREFIX = "#{modeloDocumento.set('";
+	private static final LogProvider LOG = Logging.getLogProvider(VariableAccessHandler.class);
 	private VariableAccess variableAccess;
 	private String name;
 	private String label;
@@ -378,7 +382,11 @@ public class VariableAccessHandler implements Serializable {
             JbpmVariavelLabel j = new JbpmVariavelLabel();
             j.setNomeVariavel(name);
             j.setLabelVariavel(label);
-            EntityUtil.getEntityManager().persist(j);
+            try {
+                genericManager().persist(j);
+            } catch (DAOException e) {
+                LOG.error("Não foi possível gravar a JbpmVariavelLabel: " + j, e);
+            }
         }
     }
 
@@ -388,4 +396,8 @@ public class VariableAccessHandler implements Serializable {
 		}
 		return this.label;
 	}
+
+    public GenericManager genericManager() {
+        return ComponentUtil.getComponent(GenericManager.NAME);
+    }
 }

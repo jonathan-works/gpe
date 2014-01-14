@@ -1,5 +1,7 @@
 package br.com.infox.epp.twitter.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -29,6 +31,10 @@ public class ContaTwitterManager extends GenericManager {
     
     public ContaTwitter getContaTwitterByIdUsuario(Integer idUsuario) {
         return contaTwitterDAO.getContaTwitterByIdUsuario(idUsuario);
+    }
+    
+    public List<ContaTwitter> listaContasTwitter(int idGrupoEmail) {
+        return contaTwitterDAO.listaContasTwitter(idGrupoEmail);
     }
 
 }

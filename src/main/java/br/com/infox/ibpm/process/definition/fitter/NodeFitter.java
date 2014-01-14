@@ -308,10 +308,10 @@ public class NodeFitter extends Fitter implements Serializable {
 		List<Node> nodeList = new ArrayList<Node>(nodes);
 		for (Iterator<Node> iterator = nodeList.iterator(); iterator.hasNext();) {
 			Node n = iterator.next();
-			if (type.equals("from") && (n instanceof EndState)) {
+			if ("from".equals(type) && (n instanceof EndState)) {
 				iterator.remove();
 			}
-			if (type.equals("to") && (n instanceof StartState)) {
+			if ("to".equals(type) && (n instanceof StartState)) {
 				iterator.remove();
 			}
 		}
@@ -469,7 +469,7 @@ public class NodeFitter extends Fitter implements Serializable {
 	}
 	
 	public void setCurrentNode(TransitionHandler t, String type) {
-		if (type.equals("from")) {
+		if ("from".equals(type)) {
 			setCurrentNode(t.getTransition().getFrom());
 		} else {
 			setCurrentNode(t.getTransition().getTo());

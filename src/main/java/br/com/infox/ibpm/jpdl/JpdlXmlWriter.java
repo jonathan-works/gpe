@@ -377,7 +377,7 @@ public class JpdlXmlWriter {
 		if ((transitionEvent != null) && (transitionEvent.hasActions())) {
 			writeActions(transitionElement, transitionEvent.getActions());
 		}
-		if (transition.getCondition() != null && !transition.getCondition().trim().equals("")) {
+		if (transition.getCondition() != null && !"".equals(transition.getCondition().trim())) {
 			Element condition = transitionElement.addElement("condition");
 			condition.addAttribute("expression", transition.getCondition());
 		}
@@ -459,7 +459,7 @@ public class JpdlXmlWriter {
 		if (action instanceof Script) {
 			Script script = (Script) action;
 			String expression = script.getExpression();
-			if (expression != null && !expression.trim().equals("")) {
+			if (expression != null && !"".equals(expression.trim())) {
 				actionElement.addText(expression);
 				valid = true;
 			}

@@ -15,7 +15,8 @@
 */
 package br.com.infox.epp.ajuda.home;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +30,6 @@ import org.hibernate.CacheMode;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
-import org.hibernate.search.FullTextSession;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.jboss.seam.ScopeType;
@@ -50,8 +50,7 @@ import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.Util;
-import br.com.itx.util.EntityUtil;
+//import br.com.itx.util.EntityUtil;
 import br.com.itx.util.HibernateUtil;
 
 @Name(AjudaHome.NAME)
@@ -127,23 +126,6 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		scroll.close();
 		LOG.info(INDICES_CRIADOS);
 	}
-	
-	public void reindexNoTransaction() {
-		LOG.info(CRIANDO_INDICES);
-		Util.commitTransction();
-		FullTextEntityManager em = (FullTextEntityManager) EntityUtil.getEntityManager();
-		FullTextSession fullTextSession = (FullTextSession) em.getDelegate();
-		org.hibernate.Query query = fullTextSession.createQuery("select a from Ajuda a");
-		query.setCacheMode(CacheMode.IGNORE);
-		query.setFetchSize(50);
-		ScrollableResults scroll = query.scroll(ScrollMode.FORWARD_ONLY);		
-		while (scroll.next()) {
-			Ajuda a = (Ajuda) scroll.get(0);
-			fullTextSession.index(a);
-		}
-		scroll.close();
-		LOG.info(INDICES_CRIADOS);		
-	}
 
 	@Override
 	public String persist() {
@@ -167,7 +149,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	
 				getEntityManager().remove(anterior);
 				getEntityManager().persist(historico);
-				EntityUtil.flush();
+				ajudaManager.flush();
 			}
 			newInstance();
 		}
@@ -183,7 +165,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 		page.setUrl(viewId);
 		page.setDescricao(viewId);
 		getEntityManager().persist(page);
-		EntityUtil.flush();
+		ajudaManager.flush();
 		return getEntityManager().find(page.getClass(), page.getIdPagina());
 	}
 

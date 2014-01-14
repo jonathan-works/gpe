@@ -105,12 +105,12 @@ public class LocalizacaoAssignment implements Serializable {
 		if(localizacaoPapel[1] == null) {
 			q.setParameter("idPapel", null, new IntegerType());
 		} else {
-			if(localizacaoPapel[1].equals("true") || localizacaoPapel[1].equals("false")) {
+			if("true".equals(localizacaoPapel[1]) || "false".equals(localizacaoPapel[1])) {
 				q.setParameter("idPapel", null, new IntegerType());
 				q.setParameter("contabilizar", Boolean.getBoolean(localizacaoPapel[1]));
 			} else {
 				q.setParameter("idPapel", Integer.parseInt(localizacaoPapel[1]));
-				if(localizacaoPapel[2] == null || localizacaoPapel[2].equals("false")) {
+				if(localizacaoPapel[2] == null || "false".equals(localizacaoPapel[2])) {
 					q.setParameter("contabilizar", false);
 				} else {
 					q.setParameter("contabilizar", true);

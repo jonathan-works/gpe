@@ -69,4 +69,8 @@ public class GenericManager implements Serializable {
 	public void clear() {
 		genericDAO.clear();
 	}
+	
+	public void flush(){
+	    genericDAO.flush();
+	}
 }

@@ -40,7 +40,8 @@
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisaFluxoForm"
 							   formTitle="#{messages['searchForm.title']}"
-							   clearAction="produtividadeAction.clear">
+							   clearAction="produtividadeAction.clear"
+							   template="/WEB-INF/xhtml/components/templates/edit.xhtml">
 		                 
 			        <wi:selectOneMenuEntity id="comboFluxo"
 										    value="#{produtividadeAction.fluxo}"
@@ -49,7 +50,8 @@
 										    noSelectionLabel="Selecione..."/>
 			        <wi:suggest id="suggestUsuario" suggestProvider="#{usuarioSuggestBean}" required="true"
 			        	value="#{produtividadeAction.usuario}" label="#{messages['usuario.usuario']}"/>
-			        <wi:inputDataPeriodo id="periodo" valueDateFrom="#{produtividadeAction.dataInicio}" valueDateTo="#{produtividadeAction.dataFim}" />
+			        <wi:inputDataPeriodo id="periodo" valueDateFrom="#{produtividadeAction.dataInicio}" valueDateTo="#{produtividadeAction.dataFim}" 
+			             label="Período"/>
 				</wi:searchForm>
 			</ui:define>
 			<ui:define name="toolBar" />

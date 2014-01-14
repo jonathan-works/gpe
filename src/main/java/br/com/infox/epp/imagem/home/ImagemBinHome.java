@@ -48,9 +48,9 @@ public class ImagemBinHome extends AbstractHome<ImagemBin> {
 			return false;
 		}
 		String extensao = instance.getExtensao();
-		if( !(extensao.equalsIgnoreCase("JPG") 
-				|| extensao.equalsIgnoreCase("PNG") 
-				|| extensao.equalsIgnoreCase("JPEG"))  ) {
+		if( !("JPG".equalsIgnoreCase(extensao) 
+				|| "PNG".equalsIgnoreCase(extensao) 
+				|| "JPEG".equalsIgnoreCase(extensao))  ) {
 			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
 					"A imagem deve ser do tipo JPG, PNG ou JPEG.");
 			return false;

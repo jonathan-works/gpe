@@ -75,7 +75,7 @@ public class BamTimerStarter {
                 bamTimerManager.createTimerInstance(cronExpression, idTimer, description, processor);
             }
         } catch (SchedulerException | DAOException e) {
-            LOG.error(e);
+            LOG.error(".initTimerProcessor(cronExpression, idTimer, description, processor, bamTimerManager)", e);
         }
     }
     

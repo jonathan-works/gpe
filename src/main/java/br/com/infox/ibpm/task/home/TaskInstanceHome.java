@@ -216,7 +216,7 @@ public class TaskInstanceHome implements Serializable {
         // Necessário para gravar a prioridade do processo ao clicar no botão Gravar
         // Não pode usar ProcessoHome.instance().update() porque por algum motivo dá um NullPointerException
         // ao finalizar a tarefa, algo relacionado às mensagens do Seam
-        EntityUtil.flush();
+        taskInstanceManager.flush();
     }
 
     private boolean possuiTask() {
@@ -418,17 +418,17 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarBam() {
-    	ProcessoEpaTarefa pt = processoEpaTarefaManager.getByTaskInstance(taskInstance.getId());
-		Date dtFinalizacao = taskInstance.getEnd();
-		pt.setDataFim(dtFinalizacao);
-		try {
-			processoEpaTarefaManager.updateTempoGasto(dtFinalizacao, pt);
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
-	}
+        ProcessoEpaTarefa pt = processoEpaTarefaManager.getByTaskInstance(taskInstance.getId());
+        Date dtFinalizacao = taskInstance.getEnd();
+        pt.setDataFim(dtFinalizacao);
+        try {
+            processoEpaTarefaManager.updateTempoGasto(dtFinalizacao, pt);
+        } catch (DAOException e) {
+            LOG.error(".atualizarBam()", e);
+        }
+    }
 
-	private void limparEstado(ProcessoHome processoHome) {
+    private void limparEstado(ProcessoHome processoHome) {
         this.currentTaskInstance = null;
         processoHome.setIdProcessoDocumento(null);
     }
@@ -485,9 +485,7 @@ public class TaskInstanceHome implements Serializable {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
         } catch (DAOException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - ", e);
-        } finally {
-            Util.rollbackTransactionIfNeeded();
-        }
+        } 
     }
 
 	private void afterLiberarTarefa() {

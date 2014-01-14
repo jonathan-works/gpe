@@ -12,6 +12,8 @@ import java.util.Set;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
@@ -19,17 +21,18 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.task.manager.JbpmTaskManager;
-import br.com.itx.util.EntityUtil;
 
 @Name(TaskFitter.NAME)
 @AutoCreate
 public class TaskFitter extends Fitter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(TaskFitter.class);
 	public static final String NAME = "taskFitter";
 	
 	private TaskHandler startTaskHandler;
@@ -181,9 +184,13 @@ public class TaskFitter extends Fitter implements Serializable {
 	
 	public void updateTarefas() {
 		for (Tarefa tarefa : tarefasModificadas) {
-			EntityUtil.getEntityManager().merge(tarefa);
+			try {
+                tarefaManager.merge(tarefa);
+            } catch (DAOException e) {
+                LOG.error("Erro ao dar merge na tarefa " + tarefa, e);
+            }
 		}
-		EntityUtil.flush();
+		tarefaManager.flush();
 	}
 	
 	public boolean isCurrentJbpmTaskPersisted() {
