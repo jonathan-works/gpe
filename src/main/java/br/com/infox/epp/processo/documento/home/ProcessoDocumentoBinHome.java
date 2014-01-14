@@ -65,6 +65,8 @@ public class ProcessoDocumentoBinHome
     private boolean ignoraConteudoDocumento = Boolean.FALSE;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoBinHome.class);
     
+    private boolean houveErroAoAssinar = false;
+    
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
 	
@@ -96,6 +98,7 @@ public class ProcessoDocumentoBinHome
 		} catch (CertificadoException | AssinaturaException e) {
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(e.getMessage());
+			this.houveErroAoAssinar = true;
 			return;
 		}
         setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
@@ -291,4 +294,7 @@ public class ProcessoDocumentoBinHome
         return ignoraConteudoDocumento;
     }
 	
+    public boolean isHouveErroAoAssinar() {
+		return houveErroAoAssinar;
+	}
 }
