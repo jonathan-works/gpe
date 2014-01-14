@@ -475,6 +475,17 @@
 				<log.hibernate.sql>INFO</log.hibernate.sql>
 			</properties>
 		</profile>
+		<profile>
+			<id>as7.1</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.jboss.as</groupId>
+					<artifactId>jboss-as-arquillian-container-managed</artifactId>
+					<version>7.1.3.Final</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
 	</profiles>
 	<organization>
 		<name>Infox</name>
