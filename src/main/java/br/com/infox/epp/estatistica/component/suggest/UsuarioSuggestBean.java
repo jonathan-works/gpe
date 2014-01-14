@@ -22,11 +22,11 @@ public class UsuarioSuggestBean extends AbstractSuggestBean<UsuarioLogin> {
 	@Override
 	public String getEjbql() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idPessoa, o.nome) from UsuarioLogin o ");
-		sb.append("where lower(o.nome) like lower(concat (:");
+		sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idUsuarioLogin, o.nomeUsuario) from UsuarioLogin o ");
+		sb.append("where lower(o.nomeUsuario) like lower(concat (:");
 		sb.append(INPUT_PARAMETER);
 		sb.append(", '%')) ");
-		sb.append("order by o.nome");
+		sb.append("order by o.nomeUsuario");
 		return sb.toString();
 	}
 }
