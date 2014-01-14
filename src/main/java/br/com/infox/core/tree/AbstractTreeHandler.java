@@ -27,7 +27,6 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.core.Expressions;
@@ -38,6 +37,7 @@ import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.itx.util.ComponentUtil;
 
 @Scope(ScopeType.PAGE)
 public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable {
@@ -55,8 +55,6 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 	private String expression;
 	private List<EntityNode<E>> selectedNodesList = new ArrayList<EntityNode<E>>(0);
 	
-	@In GenericDAO genericDAO;
-
 	@Override
 	public void clearTree() {
 		selectedNodesList = new ArrayList<EntityNode<E>>();
@@ -82,7 +80,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		if (rootList == null) {
 			StopWatch sw = new StopWatch();
 			sw.start();
-			Query queryRoots = genericDAO.createQuery(getQueryRoots(), null);
+			Query queryRoots = genericDAO().createQuery(getQueryRoots(), null);
 			EntityNode<E> entityNode = createNode();
 			entityNode.setIgnore(getEntityToIgnore());
 			rootList = entityNode.getRoots(queryRoots);
@@ -298,5 +296,9 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		if (panel != null) {
 			panel.setExpanded(false);
 		}
+	}
+	
+	private GenericDAO genericDAO(){
+	    return ComponentUtil.getComponent(GenericDAO.NAME);
 	}
 }
