@@ -1,6 +1,9 @@
 package br.com.infox.epp.tarefa.component.tree;
 
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.*;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +16,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
 
+import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.AbstractTreeHandler;
-import br.com.itx.util.EntityUtil;
+import br.com.itx.util.ComponentUtil;
 
 @Name(TarefasTreeHandler.NAME)
 @Install(precedence=Install.FRAMEWORK)
@@ -69,7 +73,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	public List<TarefasEntityNode<Map<String,Object>>> getTarefasRoots() {
 		if (rootList == null || rootList.isEmpty()) {
 			Events.instance().raiseEvent(FILTER_TAREFAS_TREE);
-			Query query = EntityUtil.getEntityManager().createQuery(getQueryRoots());
+			Query query = genericDAO().createQuery(getQueryRoots());
 			TarefasEntityNode<Map<String,Object>> entityNode = createNode();
 			rootList = entityNode.getRootsFluxos(query);
 		}
@@ -84,7 +88,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	
 	private List<Query> getQueryCaixasList() {
 		List<Query> list = new ArrayList<Query>();
-		Query query = getEntityManager().createQuery(getQueryCaixas());
+		Query query = genericDAO().createQuery(getQueryCaixas());
 		list.add(query);
 		return list;
 	}
@@ -95,4 +99,8 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 		rootList = null;
 		super.clearTree();
 	}
+
+    private GenericDAO genericDAO() {
+        return ComponentUtil.getComponent(GenericDAO.NAME);
+    }
 }
