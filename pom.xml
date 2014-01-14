@@ -398,7 +398,7 @@
 							<goal>clean</goal>
 						</goals>
 						<configuration>
-						    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
 							<filesets>
 								<fileset>
 									<directory>${env.JBOSS_HOME}/standalone/deployments</directory>
