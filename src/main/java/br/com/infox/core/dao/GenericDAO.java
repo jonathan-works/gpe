@@ -178,6 +178,10 @@ public class GenericDAO implements Serializable {
         return entityManager;
     }
     
+    public Query createQuery(final String query) {
+        return createQuery(query, null);
+    }
+    
     public Query createQuery(final String query, final Map<String,Object> parameters) {
         final Query q = entityManager.createQuery(query);
         if(parameters != null) {
