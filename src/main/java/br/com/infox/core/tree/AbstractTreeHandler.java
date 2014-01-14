@@ -15,7 +15,7 @@
  */
 package br.com.infox.core.tree;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -39,7 +38,6 @@ import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.itx.util.EntityUtil;
 
 @Scope(ScopeType.PAGE)
 public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable {
@@ -108,10 +106,6 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 		String[] children = new String[1];
 		children[0] = getQueryChildren();
 		return children;
-	}
-
-	protected EntityManager getEntityManager() {
-		return EntityUtil.getEntityManager();
 	}
 
 	@Override
