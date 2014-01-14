@@ -65,7 +65,12 @@ public class Papel implements java.io.Serializable {
 	private List<Papel> grupos;
 
 	public Papel() {
-	}
+    }
+	
+	public Papel(final String nome, final String identificador) {
+	    this.nome = nome;
+	    this.identificador = identificador;
+    }
 
 	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
 	@Id
