@@ -182,6 +182,10 @@ public class GenericDAO implements Serializable {
         return createQuery(query, null);
     }
     
+    public <T> T getReference(Class<T> entitClass, Object primaryKey){
+        return entityManager.getReference(entitClass, primaryKey);
+    }
+    
     public Query createQuery(final String query, final Map<String,Object> parameters) {
         final Query q = entityManager.createQuery(query);
         if(parameters != null) {
