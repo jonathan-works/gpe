@@ -26,6 +26,7 @@ import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 @NamedQueries({
     @NamedQuery(name=TAREFAS_TREE_ROOTS, query=TAREFAS_TREE_QUERY_ROOTS),
     @NamedQuery(name=TAREFAS_TREE_CHILDREN, query=TAREFAS_TREE_QUERY_CHILDREN),
+    @NamedQuery(name=TAREFAS_TREE_CAIXAS, query=TAREFAS_TREE_QUERY_CAIXAS),
     @NamedQuery(name=COUNT_TAREFAS_ATIVAS_BY_TASK_ID, query=COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY)
 })
 @FilterDefs({ 

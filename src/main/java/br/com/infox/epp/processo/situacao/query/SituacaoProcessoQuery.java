@@ -18,5 +18,13 @@ public interface SituacaoProcessoQuery {
             + "max(s.idTarefa) as idTarefa, count(s.nomeCaixa) as qtdEmCaixa, "
             + "count(s.idProcesso) as qtd, 'caixa' as tree, 'Task' as type) from SituacaoProcesso s "
             + "where s.idFluxo = :idFluxo group by s.nomeTarefa order by s.nomeTarefa";
+    
+    String TAREFAS_TREE_CAIXAS = "tarefasTreeQueryCaixas";
+    String TAREFAS_TREE_QUERY_CAIXAS = "select new map(c.idCaixa as idCaixa, "
+            + "c.tarefa.idTarefa as idTarefa, "
+            + "c.nomeCaixa as nomeCaixa, "
+            + "'Caixa' as type, "
+            + "(select count(distinct sp.idProcesso) from SituacaoProcesso sp where sp.idCaixa = c.idCaixa) as qtd) "
+                + "from Caixa c where c.tarefa.idTarefa = :taskId order by c.nomeCaixa";
 
 }
