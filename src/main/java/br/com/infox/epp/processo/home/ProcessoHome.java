@@ -157,6 +157,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 			}
 			FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
 		} catch (AssinaturaException e) {
+		    LOG.error("Não foi possível salvar o ProcessoDocumento " + idDoc, e);
 			FacesMessages.instance().add(e.getMessage());
 			result = null;
 		}
@@ -244,6 +245,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 				if (e.getMotivo() == Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO) {
 					limparAssinatura();
 				}
+				LOG.error("Não foi possível verificar o certificado do usuário " + Authenticator.getUsuarioLogado(), e);
 				throw e;
 			}
 		}
