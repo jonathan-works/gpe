@@ -59,6 +59,7 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extend
     	try {
     		updateRecursivePath();
     	} catch (RecursiveException e) {
+    	    LOG.error("Não foi possível atualizar o caminho completo da entidade " + getInstance(), e);
     	    final StatusMessages messagesHandler = getMessagesHandler();
             messagesHandler.clear();
             messagesHandler.add(e.getMessage());

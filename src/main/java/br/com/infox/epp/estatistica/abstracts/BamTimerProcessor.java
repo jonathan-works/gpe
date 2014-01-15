@@ -28,7 +28,7 @@ public abstract class BamTimerProcessor {
         try {
             trigger = handle.getTrigger();
         } catch (SchedulerException e) {
-            LOG.error(e);
+            LOG.error("Não foi possivel obter a trigger do Quartz", e);
         }
         if (trigger != null) {
             try {
