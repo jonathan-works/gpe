@@ -29,7 +29,7 @@ public class PasswordService {
     @In private AccessMailService accessMailService;
     @In private UsuarioLoginManager usuarioLoginManager;
 
-    public void requisitarNovaSenha(final boolean usingLogin, final String value) throws LoginException, DAOException {
+    public void requisitarNovaSenha(final boolean usingLogin, final String value) throws LoginException, BusinessException, DAOException {
         if (Strings.isEmpty(value)) {
             throw new LoginException("É preciso informar o login ou o e-mail do usuário");
         }
