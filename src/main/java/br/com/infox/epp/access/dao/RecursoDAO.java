@@ -1,10 +1,13 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.query.RecursoQuery.COUNT_RECURSO_BY_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.RecursoQuery.IDENTIFICADOR_PARAM;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-
-import javax.persistence.Query;
+import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -21,9 +24,9 @@ public class RecursoDAO extends GenericDAO {
     public static final String NAME = "recursoDAO";
     
     public boolean existsRecurso(String identificador){
-        String hql = "select count(o) from Recurso o where o.identificador = :identificador";
-        Query query = getEntityManager().createQuery(hql).setParameter("identificador", identificador);
-        return ((Long) query.getSingleResult()) > 0;
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(IDENTIFICADOR_PARAM, identificador);
+        return ((Long)getNamedSingleResult(COUNT_RECURSO_BY_IDENTIFICADOR, parameters)) > 0;
     }
     
     public List<Recurso> getRecursosFromPermissoes(List<Permissao> permissoes){
