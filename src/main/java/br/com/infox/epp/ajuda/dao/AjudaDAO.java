@@ -16,13 +16,13 @@ import br.com.infox.epp.ajuda.entity.Ajuda;
 @AutoCreate
 public class AjudaDAO extends GenericDAO {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "ajudaDAO";
-	
-	public Ajuda getAjudaByPaginaUrl(String url){
-	    Map<String, Object> parameters = new HashMap<>();
-	    parameters.put(PARAM_URL, url);
-	    return getNamedSingleResult(AJUDA_BY_URL, parameters);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "ajudaDAO";
+
+    public Ajuda getAjudaByPaginaUrl(String url) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_URL, url);
+        return getNamedSingleResult(AJUDA_BY_URL, parameters);
+    }
 
 }
