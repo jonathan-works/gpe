@@ -217,10 +217,6 @@ public final class EntityUtil implements Serializable {
 				|| ComponentUtil.hasAnnotation(pd,OneToMany.class));
 	}	
 	
-	public static EntityManager getEntityManager(){
-		return ComponentUtil.getComponent(ENTITY_MANAGER_NAME);
-	}
-	
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
 		Class<E> entityClass;
