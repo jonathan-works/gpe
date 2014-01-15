@@ -9,12 +9,8 @@ import java.util.regex.Pattern;
 
 import javax.naming.NamingException;
 
-import org.hibernate.Session;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.internal.SessionImpl;
-import org.hibernate.service.jdbc.connections.internal.DatasourceConnectionProviderImpl;
-
-import br.com.itx.util.EntityUtil;
+import br.com.itx.util.ComponentUtil;
+import br.com.itx.util.SessionAssistant;
 
 public class SequenceUtil {
 	private static final Pattern SEQUENCE_PATTERN = Pattern.compile("nextval\\('(.*?)'::regclass\\)", Pattern.CASE_INSENSITIVE);
@@ -23,7 +19,7 @@ public class SequenceUtil {
 	
 	public void fixSequences() throws SQLException, NamingException {
 		try (
-		        Connection con = getConnection();
+		        Connection con = sessionAssistant().getConnection();
 		        Statement st = con.createStatement();
 		        ResultSet rs = st.executeQuery(COLUMN_INFORMATION_QUERY);
 		) {
@@ -49,16 +45,9 @@ public class SequenceUtil {
 		}
 	}
 	
-	private Connection getConnection() throws NamingException, SQLException {
-		SessionImpl sessionImpl = (SessionImpl) EntityUtil.getEntityManager().unwrap(Session.class);
-		SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) sessionImpl.getSessionFactory();
-		DatasourceConnectionProviderImpl provider = (DatasourceConnectionProviderImpl) sessionFactoryImpl.getConnectionProvider();
-		return provider.getDataSource().getConnection();
-	}
-	
 	private long getMaxValue(String tableName, String columnName) throws NamingException, SQLException {
 		try (
-		        Connection con = getConnection();
+		        Connection con = sessionAssistant().getConnection();
 		        Statement st = con.createStatement();
 		        ResultSet rs = st.executeQuery("select max(" + columnName + ") from " + tableName);
 		) {
@@ -70,4 +59,8 @@ public class SequenceUtil {
 			return value;
 		}
 	}
+	
+    private SessionAssistant sessionAssistant() {
+        return ComponentUtil.getComponent(SessionAssistant.NAME);
+    }
 }
