@@ -1,9 +1,14 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.epp.access.query.RecursoQuery.*;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.access.query.RecursoQuery.COUNT_RECURSO_BY_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.RecursoQuery.COUNT_RECURSO_BY_IDENTIFICADOR_QUERY;
+import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES;
+import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES_QUERY;
+import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_NOT_IN_IDENTIFICADORES;
+import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_NOT_IN_IDENTIFICADORES_QUERY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +26,8 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "tb_recurso", schema=PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))
 @NamedQueries({
+    @NamedQuery(name=RECURSOS_FROM_IDENTIFICADORES, query=RECURSOS_FROM_IDENTIFICADORES_QUERY),
+    @NamedQuery(name=RECURSOS_NOT_IN_IDENTIFICADORES, query=RECURSOS_NOT_IN_IDENTIFICADORES_QUERY),
     @NamedQuery(name=COUNT_RECURSO_BY_IDENTIFICADOR, query=COUNT_RECURSO_BY_IDENTIFICADOR_QUERY)
 })
 public class Recurso implements java.io.Serializable {
