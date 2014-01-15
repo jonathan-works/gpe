@@ -90,7 +90,7 @@ public class TaskHandlerVisitor {
 
 	@SuppressWarnings(UNCHECKED)
 	private void addTaskNodeVariables(TaskNode tn) {
-		boolean filtered = types != null && types.size() > 0;
+		boolean filtered = types != null && !types.isEmpty();
 		for (Object o : tn.getTasks()) {
 			Task tsk = (Task) o;
 			TaskController tc = tsk.getTaskController();

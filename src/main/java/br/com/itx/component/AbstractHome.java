@@ -150,7 +150,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 		
 		getEntityManager().clear();
 				
-		if(lockedFields.size() > 0){
+		if(!lockedFields.isEmpty()){
 			try {
 				clearUnlocked();
 			} catch (Exception e) {
