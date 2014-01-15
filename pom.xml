@@ -398,7 +398,7 @@
 							<goal>clean</goal>
 						</goals>
 						<configuration>
-						    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
 							<filesets>
 								<fileset>
 									<directory>${env.JBOSS_HOME}/standalone/deployments</directory>
@@ -474,6 +474,17 @@
 				<log.jbpm>INFO</log.jbpm>
 				<log.hibernate.sql>INFO</log.hibernate.sql>
 			</properties>
+		</profile>
+		<profile>
+			<id>as7.1</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.jboss.as</groupId>
+					<artifactId>jboss-as-arquillian-container-managed</artifactId>
+					<version>7.1.3.Final</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
 		</profile>
 	</profiles>
 	<organization>

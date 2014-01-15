@@ -28,9 +28,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.seam.util.Strings;
 
-import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -40,9 +38,12 @@ import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.processo.documento.AssinaturaException;
+import br.com.infox.epp.processo.documento.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.home.ProcessoDocumentoHome;
+import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
@@ -67,6 +68,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	
 	@In private ProcessoManager processoManager;
 	@In private ProcessoEpaManager processoEpaManager;
+	@In private AssinaturaDocumentoService assinaturaDocumentoService;
 
 	private ModeloDocumento modeloDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumento;
@@ -154,7 +156,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	            result = inserirProcessoDocumentoFluxo(value, label, assinado);
 			}
 			FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
-		} catch (DAOException e) {
+		} catch (AssinaturaException e) {
 			FacesMessages.instance().add(e.getMessage());
 			result = null;
 		}
@@ -166,7 +168,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 	}
 	
 	//Método para Atualizar o documento do fluxo
-	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado) throws CertificadoException, DAOException{
+	private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc, Boolean assinado) throws CertificadoException, AssinaturaException {
 		if (validacaoCertificadoBemSucedida(assinado)) {
 			ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
 			ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
@@ -215,7 +217,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     // Método para Inserir o documento do fluxo
     private Integer inserirProcessoDocumentoFluxo(Object value, String label, Boolean assinado) 
-            throws CertificadoException, DAOException {
+            throws CertificadoException, AssinaturaException {
         if (validacaoCertificadoBemSucedida(assinado)) {
             try {
                 Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
@@ -234,9 +236,16 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		}
 	}
 	
-	private boolean validacaoCertificadoBemSucedida(boolean assinado) throws CertificadoException, DAOException{
-		if (assinado){
-		    verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
+	private boolean validacaoCertificadoBemSucedida(boolean assinado) throws CertificadoException, AssinaturaException {
+		if (assinado) {
+			try {
+				assinaturaDocumentoService.verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
+			} catch (AssinaturaException e) {
+				if (e.getMotivo() == Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO) {
+					limparAssinatura();
+				}
+				throw e;
+			}
 		}
 		return true;
 	}
@@ -468,28 +477,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 		return String.valueOf(idProcesso);
 	}
 	
-	public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, UsuarioLogin usuarioLogado) throws CertificadoException, DAOException {
-	    if (Strings.isEmpty(certChainBase64Encoded)) {
-            throw new DAOException("Não foi possível recuperar assinatura, verifique se seu cartão está corretamente configurado");
-	    }
-	    if (usuarioLogado.getPessoaFisica() == null) {
-	    	throw new DAOException("O usuário não possui pessoa física associada.");
-	    }
-		if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
-		    final Certificado certificado = new Certificado(certChainBase64Encoded);
-		    final String cpfCertificado = certificado.getCn().split(":")[1];
-		    if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf().replace(".", "").replace("-", ""))) {
-		        usuarioLogado.getPessoaFisica().setCertChain(certChainBase64Encoded);
-		    } else {
-    			throw new DAOException("O cadastro do usuário não está assinado.");
-		    }
-		}
-		if (!usuarioLogado.getPessoaFisica().checkCertChain(certChainBase64Encoded)) {
-			limparAssinatura();
-			throw new DAOException("O certificado não é o mesmo do cadastro do usuario");
-		}
-	}
-
 	public Boolean getPodeInativarParteProcesso() {
 		if (podeInativarParteProcesso == null){
 			podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);

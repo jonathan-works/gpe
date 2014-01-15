@@ -16,8 +16,8 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.security.Role;
 import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
@@ -25,7 +25,6 @@ import org.jboss.seam.security.management.action.RoleAction;
 import org.jboss.seam.security.permission.Permission;
 import org.jboss.seam.security.permission.PermissionManager;
 
-import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.api.RolesMap;
@@ -40,7 +39,10 @@ import br.com.itx.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	
-	private static final String RECURSOS_TAB_ID = "recursosTab";
+	private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
+    private static final String ACCESS = "access";
+    private static final String CONSTRAINT_VIOLATION_UNIQUE_VIOLATION = "#{messages['constraintViolation.uniqueViolation']}";
+    private static final String RECURSOS_TAB_ID = "recursosTab";
     private static final String PAPEIS_TAB_ID = "papeisTab";
     private static final String MEMBROS_TAB_ID = "herdeirosTab";
 
@@ -60,11 +62,20 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	private List<String> recursos;
 	
 	private String activeInnerTab;
-	private boolean acceptChange=false;
+	private boolean acceptChange=Boolean.FALSE;
 	
 	@In private PapelManager papelManager;
 	@In private RecursoManager recursoManager;
-	
+    
+	private final Comparator<String> papelComparator = new Comparator<String>(){
+        @Override
+        public int compare(final String o1, final String o2) {
+            final String n1 = papelMap.get(o1).toString();
+            final String n2 = papelMap.get(o2).toString();
+            return n1.compareTo(n2);
+        }
+    };
+    
 	public Integer getPapelId() {
 		return (Integer) getId();
 	}
@@ -78,16 +89,15 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		identificador = null;
 	}
 
-	public void setPapelId(Integer id) {
-		Object oid = getId();
+	public void setPapelId(final Integer id) {
+		final Object oid = getId();
 		if (oid == null || !oid.equals(id)) {
 			super.setId(id);
 			Conversation.instance().end();
 			clear();
-			Papel p = getInstance();
-			identificador = p.getIdentificador();
-			RoleAction action = getRoleaction();
-			action.editRole(p.getIdentificador());
+			
+			this.identificador = getInstance().getIdentificador();
+			getRoleaction().editRole(this.identificador);
 		}
 	}
 
@@ -96,7 +106,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 			membros = new ArrayList<String>();
 			membrosMap = new HashMap<String, Papel>();
 			final List<Principal> list = new ArrayList<Principal>();
-			new RunAsOperation(true) {
+			
+			new RunAsOperation(Boolean.TRUE) {
 				@Override
 				public void execute() {
 					list.addAll(IdentityManager.instance().listMembers(
@@ -106,13 +117,13 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 			if (list.isEmpty()) {
 				return new ArrayList<String>();
 			}
-			List<String> idPapeis = new ArrayList<String>();
-			for (Principal principal : list) {
+			final List<String> idPapeis = new ArrayList<String>();
+			for (final Principal principal : list) {
 				idPapeis.add(principal.getName());
 			}
-			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(idPapeis);
-			for (Papel papel : papelList) {
-				String id = papel.getIdentificador();
+			final List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(idPapeis);
+			for (final Papel papel : papelList) {
+				final String id = papel.getIdentificador();
 				membros.add(id);
 				membrosMap.put(id, papel);
 			}
@@ -121,44 +132,44 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		return membros;
 	}
 	
-	public void setMembros(List<String> membros){
+	public void setMembros(final List<String> membros){
 	    if (acceptChange || MEMBROS_TAB_ID.equals(activeInnerTab)) {
-	        acceptChange=false;
+	        acceptChange=Boolean.FALSE;
 	        this.membros = membros;
 	    }
 	}
 	
 	private RoleAction getRoleaction() {
-		return ComponentUtil.getComponent("org.jboss.seam.security.management.roleAction");
+		return ComponentUtil.getComponent(ROLE_ACTION);
 	}
 	
 	@Override
 	public void newInstance() {
 		super.newInstance();
 		clear();
-		Contexts.removeFromAllContexts("org.jboss.seam.security.management.roleAction");
+		Contexts.removeFromAllContexts(ROLE_ACTION);
 	}
 	
 	@Override
-	public String remove(Papel p) {
+	public String remove(final Papel p) {
 		setInstance(p);
-		String ret = super.remove();
+		final String ret = super.remove();
 		newInstance();
 		RolesMap.instance().clear();
-		if (AbstractAction.REMOVED.equals(ret)) {
-			FacesMessages.instance().add("#{messages['Papel_deleted']}");
+		if (REMOVED.equals(ret)) {
+			getMessagesHandler().add(MSG_REGISTRO_REMOVIDO);
 		}
 		return ret;
 	}
 	
-	public String getNome(String identificador) {
+	public String getNome(final String identificador) {
 		if (papelMap != null && papelMap.containsKey(identificador)) {
 			return papelMap.get(identificador).toString();
 		}
 		return null;
 	}
 	
-	public String getNomeRecurso(String identificador){
+	public String getNomeRecurso(final String identificador){
 	    if (recursoMap != null && recursoMap.containsKey(identificador)){
 	        return recursoMap.get(identificador).getNome();
 	    }
@@ -175,9 +186,9 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		return papeis;
 	}
 
-	public void setPapeis(List<String> papeis) {
+	public void setPapeis(final List<String> papeis) {
 	    if (acceptChange || PAPEIS_TAB_ID.equals(activeInnerTab)) {
-	        acceptChange=false;
+	        acceptChange=Boolean.FALSE;
 	        this.papeis = papeis;
 	    }
 	}
@@ -189,12 +200,12 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	 * 
 	 * @return
 	 */
-	public List<String> getPapeisDisponiveis(boolean removeMembros) {
+	public List<String> getPapeisDisponiveis(final boolean removeMembros) {
 		if (papeisDisponiveis == null) {
 			papeisDisponiveis = new HashMap<Boolean, List<String>>();
 		}
 		if (!papeisDisponiveis.containsKey(removeMembros)) {
-			List<String> assignableRoles = getRoleaction().getAssignableRoles();
+			final List<String> assignableRoles = getRoleaction().getAssignableRoles();
 			papeisDisponiveis.put(removeMembros, assignableRoles);
 			removePapeisImplicitos(assignableRoles, getPapeis());
 			removeRecursos(assignableRoles);
@@ -206,18 +217,11 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 			if (papelMap == null) {
 				papelMap = new HashMap<String, Papel>();
 			}
-			List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(assignableRoles);
-			for (Papel p : papelList) {
+			final List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(assignableRoles);
+			for (final Papel p : papelList) {
 				papelMap.put(p.getIdentificador(), p);
 			}
-			Collections.sort(assignableRoles, new Comparator<String>(){
-				@Override
-				public int compare(String o1, String o2) {
-					String n1 = papelMap.get(o1).toString();
-					String n2 = papelMap.get(o2).toString();
-					return n1.compareTo(n2);
-				}
-			});
+            Collections.sort(assignableRoles, papelComparator);
 		}
 		return papeisDisponiveis.get(removeMembros);
 	}
@@ -225,8 +229,10 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	@SuppressWarnings(WarningConstants.UNCHECKED)
     public List<String> getRecursos() {
 		if (recursos == null) {
-			if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
-                List<Permissao> permissoes = (List<Permissao>) PermissionManager.instance().getPermissoesFromRole(new Role(getInstance().getIdentificador()));
+			final String identificador_ = getInstance().getIdentificador();
+            if (IdentityManager.instance().roleExists(identificador_)) {
+                final Role role = new Role(identificador_);
+                final List<Permissao> permissoes = (List<Permissao>) PermissionManager.instance().getPermissoesFromRole(role);
 				recursos = recursoManager.getIdentificadorRecursosFromPermissoes(permissoes);
 			} else {
 				recursos = new ArrayList<String>();
@@ -235,9 +241,9 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		return recursos;
 	}
 	
-	public void setRecursos(List<String> recursos) {
+	public void setRecursos(final List<String> recursos) {
 	    if (acceptChange || RECURSOS_TAB_ID.equals(activeInnerTab)) {
-	        acceptChange=false;
+	        acceptChange=Boolean.FALSE;
 	        this.recursos = recursos;
 	    }
 	}
@@ -246,8 +252,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
         return activeInnerTab;
     }
 
-    public void setActiveInnerTab(String activeInnerTab) {
-        this.acceptChange = true;
+    public void setActiveInnerTab(final String activeInnerTab) {
+        this.acceptChange = Boolean.TRUE;
         this.activeInnerTab = activeInnerTab;
     }
 
@@ -255,27 +261,28 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
         if (recursosDisponiveis == null) {
             recursosDisponiveis = new ArrayList<>();
             if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
-                List<Recurso> listaRecursos = recursoManager.findAll(Recurso.class);
+                final List<Recurso> listaRecursos = recursoManager.findAll(Recurso.class);
                 recursoMap = new HashMap<>();
-                for (Recurso recurso : listaRecursos){
-                    recursosDisponiveis.add(recurso.getIdentificador());
-                    recursoMap.put(recurso.getIdentificador(), recurso);
+                for (final Recurso recurso : listaRecursos){
+                    final String identificadorRecurso = recurso.getIdentificador();
+                    recursosDisponiveis.add(identificadorRecurso);
+                    recursoMap.put(identificadorRecurso, recurso);
                 }
             } 
         }
 		return recursosDisponiveis;
 	}
 
-	private void removeRecursos(List<String> roles) {
-		for (Iterator<String> iterator = roles.iterator(); iterator.hasNext();) {
-			String papelId = iterator.next();
+	private void removeRecursos(final List<String> roles) {
+		for (final Iterator<String> iterator = roles.iterator(); iterator.hasNext();) {
+			final String papelId = iterator.next();
 			if (papelId.startsWith("/")) {
 				iterator.remove();
 			}
 		}
 	}
 	
-	private void removePapeisImplicitos(List<String> list, List<String> from) {
+	private void removePapeisImplicitos(final List<String> list, List<String> from) {
 		if (from == null) {
 			return;
 		}
@@ -283,7 +290,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		if (from.equals(list)) {
 			from = new ArrayList<String>(list);
 		}
-		for (String papel : from) {
+		for (final String papel : from) {
 			removePapeisImplicitos(papel, list);
 		}
 	}
@@ -292,7 +299,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	 * Remove o papel da lista, recursivamente
 	 * @param papel
 	 */
-	private void removePapeisImplicitos(final String papel, List<String> list) {
+	private void removePapeisImplicitos(final String papel, final List<String> list) {
 		for (final String p : IdentityManager.instance().getRoleGroups(papel)) {
 			list.remove(p);
 			getGenericManager().flush();
@@ -300,33 +307,34 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		}
 	}
 	
-	private void removeMembros(final String papel, List<String> roles) {
+	private void removeMembros(final String papel, final List<String> roles) {
 		final List<Principal> listMembers = new ArrayList<Principal>();
-		new RunAsOperation(true) {
+		new RunAsOperation(Boolean.TRUE) {
 			@Override
 			public void execute() {
 				listMembers.addAll(IdentityManager.instance().listMembers(papel));
 			}
 		}.run();
-		for (Principal p : listMembers) {
+		for (final Principal p : listMembers) {
 			if (p instanceof Role) {
-				roles.remove(p.getName());
-				removeMembros(p.getName(), roles);
+				final String roleName = p.getName();
+                roles.remove(roleName);
+				removeMembros(roleName, roles);
 			}
 		}
 	}
 
 	public String save() {
-		FacesMessages messages = FacesMessages.instance();
-		
-		if (IdentityManager.instance().roleExists(getInstance().getIdentificador()) && !isManaged()) {
-			messages.add("#{messages['constraintViolation.uniqueViolation']}");
+		final StatusMessages messages = getMessagesHandler();
+        
+		final boolean managed = isManaged();
+        if (IdentityManager.instance().roleExists(getInstance().getIdentificador()) && !managed) {
+			messages.add(CONSTRAINT_VIOLATION_UNIQUE_VIOLATION);
 			return null;
 		}
 
 		final StringBuilder ret = new StringBuilder();
-		boolean wasManaged = isManaged();
-		new RunAsOperation(true) {
+		new RunAsOperation(Boolean.TRUE) {
 			@Override
 			public void execute() {
 				ret.append(saveOp());
@@ -335,13 +343,13 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		RolesMap.instance().clear();
 		
 		if ("success".equals(ret.toString())) {
-			if (wasManaged) {
-				messages.add("#{messages['entity_updated']}");
+			if (managed) {
+				messages.add(MSG_REGISTRO_ALTERADO);
 			} else {
-				messages.add("#{messages['entity_created']}");
+				messages.add(MSG_REGISTRO_CRIADO);
 			}
 		} else {
-		    messages.add("#{messages['constraintViolation.uniqueViolation']}");
+		    messages.add(CONSTRAINT_VIOLATION_UNIQUE_VIOLATION);
 		}
 		
 		return ret.toString();
@@ -353,17 +361,17 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		papeis = new ArrayList<String>(getPapeis());
 		removePapeisImplicitos(papeis, papeis);
 		getRoleaction().setGroups(papeis);
-		String save = getRoleaction().save();
+		final String save = getRoleaction().save();
 		if (isManaged()) {
 			if (membros != null) {
-				List<String> incluirMembros = new ArrayList<String>(membros);
+				final List<String> incluirMembros = new ArrayList<String>(membros);
 				incluirMembros.removeAll(membrosMap.keySet());
-				for (String membro : incluirMembros) {
+				for (final String membro : incluirMembros) {
 					IdentityManager.instance().addRoleToGroup(membro, identificador);
 				}
-				List<String> excluirMembros = new ArrayList<String>(membrosMap.keySet());
+				final List<String> excluirMembros = new ArrayList<String>(membrosMap.keySet());
 				excluirMembros.removeAll(membros);
-				for (String membro : excluirMembros) {
+				for (final String membro : excluirMembros) {
 					IdentityManager.instance().removeRoleFromGroup(membro, identificador);
 				}
 			}
@@ -374,7 +382,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 				IdentityManager.instance().addRoleToGroup("admin", identificador);
 			}
 		}
-		String nome = getInstance().getNome();
+		final String nome = getInstance().getNome();
 		setInstance(papelManager.getPapelByIdentificador(getRoleaction().getRole()));
 		getInstance().setNome(nome);
 		updatePermissions();
@@ -387,24 +395,26 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		if (recursosDisponiveis == null) {
 	    	return;
 	    }
-	    List<Permission> permissions = new ArrayList<>();
-	    for (String recurso : recursosDisponiveis) {
-	        permissions.add(new Permission(recurso, "access", new Role(getInstance().getIdentificador())));
-	    }
-	    PermissionManager.instance().revokePermissions(permissions);
-	    permissions.clear();
-        for (String recurso : recursos) {
-            permissions.add(new Permission(recurso, "access", new Role(getInstance().getIdentificador())));
-        }
-        PermissionManager.instance().grantPermissions(permissions);
+	    final String identificador_ = getInstance().getIdentificador();
+	    final PermissionManager permissionManager = PermissionManager.instance();
+        permissionManager.revokePermissions(addPermissions(identificador_, recursosDisponiveis));
+        permissionManager.grantPermissions(addPermissions(identificador_, recursos));
 	}
+
+    private List<Permission> addPermissions(final String identificador, final List<String> permissionsToAdd) {
+        final List<Permission> result = new ArrayList<>();
+        for (final String recurso : permissionsToAdd) {
+            result.add(new Permission(recurso, ACCESS, new Role(identificador)));
+        }
+        return result;
+    }
 	
 	@Observer("roleTreeHandlerSelected")
-	public void treeSelected(Papel papel) {
+	public void treeSelected(final Papel papel) {
 		setPapelId(papel.getIdPapel());
 		setTab("form");
 		if (papel.getIdentificador().startsWith("/")) {
-			Redirect redirect = Redirect.instance();
+			final Redirect redirect = Redirect.instance();
 			redirect.setViewId("/useradmin/recursoListView.xhtml");
 			redirect.execute();
 		}

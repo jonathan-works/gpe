@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.com/products/seam/taglib"
+				xmlns:s="http://jboss.org/schema/seam/taglib"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
 				xmlns:f="http://java.sun.com/jsf/core"
 				xmlns:h="http://java.sun.com/jsf/html"
@@ -25,6 +25,9 @@
 -->   
 	<ui:define name="baseBody"> 
 	<s:div id="pageBody" styleClass="pageBody">
+	   <wi:messages
+           formId="pageBody"
+           globalOnly="true"/>
 		<ui:param name="home" value="#{processoDocumentoHome}" />
 		<ui:param name="pd" value="#{home.instance}" />
 		<ui:param name="isBinario" value="#{pd.processoDocumentoBin.isBinario()}" />
@@ -48,14 +51,14 @@
 			};
 		</script>
 		
-		<rich:panel>
+		<rich:panel id="painel">
 	        <f:facet name="header">Informações: </f:facet>
 	        <f:view 
 	        	form="#{processoDocumentoView}" 
 	        	columns="1" title="Documento"
 	        	opened="false"/>
 	        
-	        <s:div rendered="#{processoDocumentoHome.liberaCertificacao()}" id="certificadoDigitalDiv">	        
+	        <s:div rendered="#{processoDocumentoHome.liberaCertificacao() and not processoDocumentoBinHome.houveErroAoAssinar}" id="certificadoDigitalDiv">	        
 		        <div id="divApplet">
 			        <wi:appletAssinatura
 						id="certificacao"
@@ -86,9 +89,10 @@
 		            <a:jsFunction
 		            	name="submitForm"
 		            	action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
-		            	oncomplete="close()"
+		            	oncomplete="if (!event.data) close();"
 		            	execute="@form"
-		            	render="formValidar, pageBodyDialogMessage"/>
+		            	data="#{processoDocumentoBinHome.houveErroAoAssinar}"
+		            	render="painel, pageBodyDialogMessage"/>
 				</h:form>
 			</s:div>
 		</rich:panel>
