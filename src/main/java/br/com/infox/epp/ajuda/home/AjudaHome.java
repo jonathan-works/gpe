@@ -50,8 +50,7 @@ import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
 import br.com.infox.epp.ajuda.util.HelpUtil;
 import br.com.itx.component.AbstractHome;
-//import br.com.itx.util.EntityUtil;
-import br.com.itx.util.HibernateUtil;
+import br.com.itx.util.SessionAssistant;
 
 @Name(AjudaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -74,6 +73,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	
 	@In private PaginaManager paginaManager;
 	@In private AjudaManager ajudaManager;
+	@In private SessionAssistant sessionAssistant;
 	
 	@Override
 	public Ajuda createInstance() {
@@ -114,7 +114,7 @@ public class AjudaHome extends AbstractHome<Ajuda>  {
 	public void reindex() {
 		LOG.info(CRIANDO_INDICES);
 		FullTextEntityManager em = (FullTextEntityManager) getEntityManager();
-		Session session = HibernateUtil.getSession();
+		Session session = sessionAssistant.getSession();
 		org.hibernate.Query query = session.createQuery("select a from Ajuda a");
 		query.setCacheMode(CacheMode.IGNORE);
 		query.setFetchSize(50);
