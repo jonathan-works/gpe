@@ -2,6 +2,7 @@ package br.com.infox.epp.access.crud;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,17 +18,17 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.security.Role;
-import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.action.RoleAction;
-import org.jboss.seam.security.permission.Permission;
 import org.jboss.seam.security.permission.PermissionManager;
 
 import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.operation.PopulateRoleMembersListOperation;
+import br.com.infox.core.operation.UpdateRolesOperation;
 import br.com.infox.epp.access.api.RolesMap;
+import br.com.infox.epp.access.component.tree.RolesTreeHandler;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
@@ -38,9 +39,7 @@ import br.com.itx.util.ComponentUtil;
 @Name(PapelCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class PapelCrudAction extends AbstractCrudAction<Papel> {
-	
 	private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
-    private static final String ACCESS = "access";
     private static final String CONSTRAINT_VIOLATION_UNIQUE_VIOLATION = "#{messages['constraintViolation.uniqueViolation']}";
     private static final String RECURSOS_TAB_ID = "recursosTab";
     private static final String PAPEIS_TAB_ID = "papeisTab";
@@ -54,8 +53,6 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 
 	private List<String> membros;
 	private Map<String, Papel> membrosMap;
-
-	private String identificador;
 
 	private List<String> recursosDisponiveis;
 	private List<String> papeis;
@@ -86,7 +83,6 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		recursosDisponiveis = null;
 		papeisDisponiveis = null;
 		membros = null;
-		identificador = null;
 	}
 
 	public void setPapelId(final Integer id) {
@@ -96,26 +92,18 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 			Conversation.instance().end();
 			clear();
 			
-			this.identificador = getInstance().getIdentificador();
-			getRoleaction().editRole(this.identificador);
+			getRoleaction().editRole(getInstance().getIdentificador());
 		}
 	}
 
 	public List<String> getMembros() {
 		if (membros == null) {
-			membros = new ArrayList<String>();
-			membrosMap = new HashMap<String, Papel>();
+			membros = new ArrayList<>();
+			membrosMap = new HashMap<>();
 			final List<Principal> list = new ArrayList<Principal>();
-			
-			new RunAsOperation(Boolean.TRUE) {
-				@Override
-				public void execute() {
-					list.addAll(IdentityManager.instance().listMembers(
-							getInstance().getIdentificador()));
-				}
-			}.run();
+			new PopulateRoleMembersListOperation(getInstance().getIdentificador(), list).run();
 			if (list.isEmpty()) {
-				return new ArrayList<String>();
+				return new ArrayList<>();
 			}
 			final List<String> idPapeis = new ArrayList<String>();
 			for (final Principal principal : list) {
@@ -180,7 +168,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		if (papeis == null) {
 			papeis = getRoleaction().getGroups();
 			if (papeis == null) {
-				papeis = new ArrayList<String>();
+				papeis = new ArrayList<>();
 			}
 		}
 		return papeis;
@@ -202,7 +190,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	 */
 	public List<String> getPapeisDisponiveis(final boolean removeMembros) {
 		if (papeisDisponiveis == null) {
-			papeisDisponiveis = new HashMap<Boolean, List<String>>();
+			papeisDisponiveis = new HashMap<>();
 		}
 		if (!papeisDisponiveis.containsKey(removeMembros)) {
 			final List<String> assignableRoles = getRoleaction().getAssignableRoles();
@@ -215,7 +203,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 				assignableRoles.removeAll(papeis);
 			}
 			if (papelMap == null) {
-				papelMap = new HashMap<String, Papel>();
+				papelMap = new HashMap<>();
 			}
 			final List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(assignableRoles);
 			for (final Papel p : papelList) {
@@ -308,108 +296,43 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	}
 	
 	private void removeMembros(final String papel, final List<String> roles) {
-		final List<Principal> listMembers = new ArrayList<Principal>();
-		new RunAsOperation(Boolean.TRUE) {
-			@Override
-			public void execute() {
-				listMembers.addAll(IdentityManager.instance().listMembers(papel));
-			}
-		}.run();
+		final List<Principal> listMembers = new ArrayList<>();
+		new PopulateRoleMembersListOperation(papel, listMembers).run();
 		for (final Principal p : listMembers) {
 			if (p instanceof Role) {
-				final String roleName = p.getName();
-                roles.remove(roleName);
-				removeMembros(roleName, roles);
+                roles.remove(p.getName());
+				removeMembros(p.getName(), roles);
 			}
 		}
 	}
 
-	public String save() {
-		final StatusMessages messages = getMessagesHandler();
-        
-		final boolean managed = isManaged();
-        if (IdentityManager.instance().roleExists(getInstance().getIdentificador()) && !managed) {
-			messages.add(CONSTRAINT_VIOLATION_UNIQUE_VIOLATION);
-			return null;
-		}
-
-		final StringBuilder ret = new StringBuilder();
-		new RunAsOperation(Boolean.TRUE) {
-			@Override
-			public void execute() {
-				ret.append(saveOp());
-			}
-		}.run();
-		RolesMap.instance().clear();
-		
-		if ("success".equals(ret.toString())) {
-			if (managed) {
-				messages.add(MSG_REGISTRO_ALTERADO);
-			} else {
-				messages.add(MSG_REGISTRO_CRIADO);
-			}
-		} else {
-		    messages.add(CONSTRAINT_VIOLATION_UNIQUE_VIOLATION);
-		}
-		
-		return ret.toString();
-	}
-	
-	public String saveOp() {
-		identificador = getInstance().getIdentificador();
-		getRoleaction().setRole(identificador);
-		papeis = new ArrayList<String>(getPapeis());
-		removePapeisImplicitos(papeis, papeis);
-		getRoleaction().setGroups(papeis);
-		final String save = getRoleaction().save();
-		if (isManaged()) {
-			if (membros != null) {
-				final List<String> incluirMembros = new ArrayList<String>(membros);
-				incluirMembros.removeAll(membrosMap.keySet());
-				for (final String membro : incluirMembros) {
-					IdentityManager.instance().addRoleToGroup(membro, identificador);
-				}
-				final List<String> excluirMembros = new ArrayList<String>(membrosMap.keySet());
-				excluirMembros.removeAll(membros);
-				for (final String membro : excluirMembros) {
-					IdentityManager.instance().removeRoleFromGroup(membro, identificador);
-				}
-			}
-		} 
-		else {
-			getGenericManager().flush();
-			if (identificador.startsWith("/")) {
-				IdentityManager.instance().addRoleToGroup("admin", identificador);
-			}
-		}
-		final String nome = getInstance().getNome();
-		setInstance(papelManager.getPapelByIdentificador(getRoleaction().getRole()));
-		getInstance().setNome(nome);
-		updatePermissions();
-		getGenericManager().flush();
-		clear();
-		return save;
-	}
-	
-	private void updatePermissions(){
-		if (recursosDisponiveis == null) {
-	    	return;
-	    }
-	    final String identificador_ = getInstance().getIdentificador();
-	    final PermissionManager permissionManager = PermissionManager.instance();
-        permissionManager.revokePermissions(addPermissions(identificador_, recursosDisponiveis));
-        permissionManager.grantPermissions(addPermissions(identificador_, recursos));
-	}
-
-    private List<Permission> addPermissions(final String identificador, final List<String> permissionsToAdd) {
-        final List<Permission> result = new ArrayList<>();
-        for (final String recurso : permissionsToAdd) {
-            result.add(new Permission(recurso, ACCESS, new Role(identificador)));
+	@Override
+	protected boolean beforeSave() {
+	    boolean result = Boolean.TRUE;
+	    if (IdentityManager.instance().roleExists(getInstance().getIdentificador()) && !isManaged()) {
+	        getMessagesHandler().clear();
+	        getMessagesHandler().add(CONSTRAINT_VIOLATION_UNIQUE_VIOLATION);
+            result = Boolean.FALSE;
         }
-        return result;
+	    return result;
+	}
+	
+    @Override
+    protected void afterSave(final String ret) {
+        if (UPDATED.equals(ret)) {
+            final String role = getInstance().getIdentificador();
+            final List<String> roleGroup = papeis;
+            final Collection<String> rolesToInclude = membros;
+            final Collection<String> rolesToExclude = membrosMap.keySet();
+            final Collection<String> availableResourcesList = recursosDisponiveis;
+            final Collection<String> selectedResourcesList = recursos;
+            final UpdateRolesOperation operation = new UpdateRolesOperation(roleGroup, role, rolesToInclude, rolesToExclude, availableResourcesList, selectedResourcesList);
+            operation.run();
+            getGenericManager().flush();
+        }
     }
 	
-	@Observer("roleTreeHandlerSelected")
+	@Observer(RolesTreeHandler.ROLE_TREE_EVENT)
 	public void treeSelected(final Papel papel) {
 		setPapelId(papel.getIdPapel());
 		setTab("form");
