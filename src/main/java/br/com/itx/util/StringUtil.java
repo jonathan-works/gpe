@@ -33,7 +33,7 @@ public final class StringUtil {
     private static final String US_CHARS = "aAeEiIoOuUaAeEiIoOuUaAeEiIoOuUaAeEiIoOuUaAoOcCnN";
 
     public static String changeChar(String text, char c1, String c2) {
-        StringBuffer aux = new StringBuffer();
+        StringBuilder aux = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (c == c1) {
@@ -47,7 +47,7 @@ public final class StringUtil {
 
     public static String changeChars(String text, String oldChars,
             String newChars) {
-        StringBuffer aux = new StringBuffer();
+        StringBuilder aux = new StringBuilder();
         char let;
         for (int i = 0; i < text.length(); i++) {
             let = text.charAt(i);
@@ -106,7 +106,7 @@ public final class StringUtil {
     }
 
     public static String replace(String subject, String find, String replace) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int lengthSubject = find.length();
         int posAux = 0;
         int posFind = subject.indexOf(find);
