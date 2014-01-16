@@ -13,15 +13,14 @@
  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
  veja em http://www.gnu.org/licenses/   
 */
-package br.com.infox.epp.ajuda.component;
+package br.com.infox.epp.imagem.component;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.uploader.AbstractUploader;
 import br.com.itx.util.ComponentUtil;
 
 @Name(HelpFileUploader.NAME)
-public class HelpFileUploader extends AbstractUploader {
+public class HelpFileUploader extends AbstractImageUploader {
 	public static final String NAME = "helpFileUploader";
 
 	public static final HelpFileUploader instance() {

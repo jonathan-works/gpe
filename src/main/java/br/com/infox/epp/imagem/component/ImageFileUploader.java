@@ -17,10 +17,8 @@ package br.com.infox.epp.imagem.component;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.uploader.AbstractUploader;
-
 @Name(ImageFileUploader.NAME)
-public class ImageFileUploader extends AbstractUploader {
+public class ImageFileUploader extends AbstractImageUploader {
 	public static final String NAME = "imageFileUploader";
     public static final String IMAGE_RELATIVE_PATH = "/img/imageFile/";
 
