@@ -49,7 +49,7 @@ public class ProcessoEpaTarefaManagerTest {
     	    Calendar fim = new GregorianCalendar(2013, 5, 15, 13, 00);
             
     	    DateRange result = assertIncrementoByLocalizacaoTurno(fim, inicio, inicioTurno, fimTurno);
-    	    Assert.assertEquals(2400, result.get(DateRange.MINUTES));
+    	    Assert.assertEquals(240, result.get(DateRange.MINUTES));
 	    }
         {
             Calendar inicio = new GregorianCalendar(2013, 5, 15, 8, 45);
