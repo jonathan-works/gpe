@@ -455,6 +455,7 @@
 						<configuration>
 							<systemPropertyVariables>
 								<arquillian.launch>jbossas-community-managed</arquillian.launch>
+								<jboss_port_offset>0</jboss_port_offset>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -519,6 +520,7 @@
 						<configuration>
 							<systemPropertyVariables>
 								<arquillian.launch>jbossas-managed</arquillian.launch>
+								<jboss_port_offset>0</jboss_port_offset>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
