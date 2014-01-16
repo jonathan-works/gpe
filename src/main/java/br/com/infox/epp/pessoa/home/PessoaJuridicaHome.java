@@ -10,14 +10,14 @@ import br.com.itx.component.AbstractHome;
 
 @Name(PessoaJuridicaHome.NAME)
 @Scope(ScopeType.PAGE)
-public class PessoaJuridicaHome extends AbstractHome<PessoaJuridica>{
-	private static final long serialVersionUID = 1L;
+public class PessoaJuridicaHome extends AbstractHome<PessoaJuridica> {
+    private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "pessoaJuridicaHome";
-	
-	@Observer("evtCarregarPessoaJuridica")
-	public void setPessoaJuridica(PessoaJuridica pessoa){
-		setInstance(pessoa);
-	}
-	
+    public static final String NAME = "pessoaJuridicaHome";
+
+    @Observer("evtCarregarPessoaJuridica")
+    public void setPessoaJuridica(PessoaJuridica pessoa) {
+        setInstance(pessoa);
+    }
+
 }

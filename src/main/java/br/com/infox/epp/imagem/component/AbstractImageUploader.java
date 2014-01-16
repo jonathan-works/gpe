@@ -1,4 +1,4 @@
-package br.com.infox.core.uploader;
+package br.com.infox.epp.imagem.component;
 
 import java.io.IOException;
 import java.util.Date;
@@ -20,8 +20,8 @@ import br.com.infox.core.util.ArrayUtil;
 import br.com.itx.util.Crypto;
 
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractUploader implements FileUploadListener {
-	public static final LogProvider LOG = Logging.getLogProvider(AbstractUploader.class);
+public abstract class AbstractImageUploader implements FileUploadListener {
+	public static final LogProvider LOG = Logging.getLogProvider(AbstractImageUploader.class);
 		
 	private String fileName;
 	private Integer fileSize;
