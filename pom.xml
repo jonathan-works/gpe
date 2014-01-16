@@ -469,8 +469,7 @@
 								<goals>
 									<goal>clean</goal>
 								</goals>
-                                <configuration>
-                                    <skip>clean</skip>
+								<configuration>
 									<excludeDefaultDirectories>true</excludeDefaultDirectories>
 									<filesets>
 										<fileset>
@@ -535,7 +534,6 @@
 									<goal>clean</goal>
 								</goals>
 								<configuration>
-                                    <skip>true</skip>
 									<excludeDefaultDirectories>true</excludeDefaultDirectories>
 									<filesets>
 										<fileset>
