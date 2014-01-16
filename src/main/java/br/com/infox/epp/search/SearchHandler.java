@@ -1,18 +1,17 @@
 /*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
+ * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
+ * Tecnologia da Informação Ltda.
+ * 
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
+ * Software Foundation; versão 2 da Licença. Este programa é distribuído na
+ * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
+ * ESPECÍFICA.
+ * 
+ * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
+ * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
+ */
 package br.com.infox.epp.search;
 
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
@@ -51,176 +50,174 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.Variavel;
 
-
 @Name("search")
 @Scope(ScopeType.CONVERSATION)
 public class SearchHandler implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private String searchText;
-	private List<Map<String,Object>> searchResult;
-	private Integer resultSize;
-	private int pageSize = 8;
-	private int page;
-	private int maxPageSize = 100;
-	private static final LogProvider LOG = Logging.getLogProvider(SearchHandler.class);
-	
-	@In private ProcessoDocumentoManager processoDocumentoManager;
-	@In private ProcessoManager processoManager;
-	
-	public String getSearchText() {
-		return searchText;
-	}
-	
-	public void setSearchText(String searchText) {
-		page = 0;
-		this.searchText = searchText;
-	}
-	
-	public List<Map<String, Object>> getSearchResult() {
-		return searchResult;
-	}
-	 
-	/**
-	 * Busca o processo pelo seu id
-	 * 
-	 * @return	Processo cuja id seja igual o valor buscado, ou null
-	 */
-	private Processo searchIdProcesso()	{
-		int prc = -1;
-		try {
-			prc = Integer.parseInt(searchText);
-		}	catch (NumberFormatException e) {
-			LOG.debug(e.getMessage(), e);
-		}
-		return processoManager.find(prc);
-	}
-	
-	/**
-	 * Método realiza busca de processos no sistema
-	 * 
-	 * 		Caso o texto de busca seja número de processo realiza uma busca
-	 * 	por este valor {@link #searchNrProcesso()}, caso não seja,
-	 * 	tenta uma busca de processo pelo ID {@link #searchIdProcesso()}
-	 * 
-	 * 		Se qualquer dos métodos de busca retornar um processo, este
-	 * 	é chamado na página {@link #visualizarProcesso(Processo)}
-	 * 
-	 * @return	TRUE se o resultado for um processo, FALSE do contrário
-	 */
-	public boolean searchProcesso()	{
-		Processo processo = searchIdProcesso();
-		boolean hasProcesso = processo != null;
-		if (hasProcesso) {
-			visualizarProcesso(processo);
-		}
-		return hasProcesso;
-	}
-	
-	/**
-	 * 	Método redireciona para visualização do processo escolhido no paginador
-	 * 
-	 * @param processo	Processo a ser visualizado no paginador
-	 */
-	public void visualizarProcesso(Processo processo)	{
-		Redirect.instance().setConversationPropagationEnabled(false);
-		Redirect.instance().setViewId("/Processo/Consulta/list.xhtml");
-		Redirect.instance().setParameter("id", processo.getIdProcesso());
-		Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
-		Redirect.instance().execute();
-	}
-	
-	/**
-	 * Método que realiza a busca indexada pelo conteúdo do site
-	 * 
-	 * @throws IOException		Ao construir o Indexer
-	 * @throws ParseException	Ao retornar a busca no método getQuery do Indexer
-	 */
-	private void searchIndexer() throws IOException, ParseException	{
-		searchResult = new ArrayList<Map<String,Object>>();
-		Indexer indexer = new Indexer();
-		String[] fields = new String[]{"conteudo", "texto"};
-		Query query = indexer.getQuery(searchText, fields);
-		List<Document> search = indexer.search(searchText, fields, 200);
-		Session session = ManagedJbpmContext.instance().getSession();
-		
-		for (Document d : search) {
-			long taskId = Long.parseLong(d.get("id"));
-			TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
-			
-			if (ti == null) {
-				LOG.warn("Task não encontrada: " + taskId);
-			} else {
-				String s = HelpUtil.getBestFragments(query, getConteudo(ti));
-				Map<String, Object> m = new HashMap<String, Object>();
-				m.put("texto", s);
-				m.put("taskName", ti.getTask().getName());
-				m.put("taskId", ti.getId());
-				m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
-				searchResult.add(m);
-			}
-		}
-		resultSize = searchResult.size();
-	}
-	
-	/**
-	 * Método que realiza busca no sistema de acordo com o texto contido
-	 * 
-	 *   Analisa se existe texto a ser buscado e confere se o texto a ser
-	 *   buscado é Numero de Processo, Id de Processo ({@link #searchProcesso()}),
-	 *   ou se é texto normal ({@link #searchIndexer()})
-	 */
-	public void search() {
-		if (searchText == null || "".equals(searchText.trim())) {
-			return;
-		}
-		
-		boolean isProcesso = searchProcesso();
-		
-		if (!isProcesso)	{
-			try {
-				searchIndexer();
-			} catch (IOException | ParseException e) {
-				LOG.debug(e.getMessage(), e);
-			}
-		}
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public static String getConteudo(TaskInstance ti) {
-		StringBuilder sb = new StringBuilder();
-		TaskController taskController = ti.getTask().getTaskController();
-		if (taskController != null) {
-			List<VariableAccess> vaList = taskController.getVariableAccesses();
-			for (VariableAccess v : vaList) {
-				Object conteudo = ti.getVariable(v.getMappedName());
-				if (v.isWritable() && conteudo != null) {
-					conteudo = JbpmUtil.instance().getConteudo(v, ti);
-					sb.append(VariableHandler.getLabel(v.getVariableName()))
-						.append(": ")
-						.append(conteudo)
-						.append("\n");
-				}
-			}
-		}
-		return sb.toString();
-	}
-	
-	public int getResultSize() {
-		if (resultSize == null) {
-			search();
-		}
-		return resultSize;
-	}
+    private static final long serialVersionUID = 1L;
+    private String searchText;
+    private List<Map<String, Object>> searchResult;
+    private Integer resultSize;
+    private int pageSize = 8;
+    private int page;
+    private int maxPageSize = 100;
+    private static final LogProvider LOG = Logging.getLogProvider(SearchHandler.class);
 
-	public int getPage() {
-		return page;
-	}
+    @In
+    private ProcessoDocumentoManager processoDocumentoManager;
+    @In
+    private ProcessoManager processoManager;
 
-	public void setPage(int page) {
-		this.page = page;
-	}
-	
+    public String getSearchText() {
+        return searchText;
+    }
+
+    public void setSearchText(String searchText) {
+        page = 0;
+        this.searchText = searchText;
+    }
+
+    public List<Map<String, Object>> getSearchResult() {
+        return searchResult;
+    }
+
+    /**
+     * Busca o processo pelo seu id
+     * 
+     * @return Processo cuja id seja igual o valor buscado, ou null
+     */
+    private Processo searchIdProcesso() {
+        int prc = -1;
+        try {
+            prc = Integer.parseInt(searchText);
+        } catch (NumberFormatException e) {
+            LOG.debug(e.getMessage(), e);
+        }
+        return processoManager.find(prc);
+    }
+
+    /**
+     * Método realiza busca de processos no sistema
+     * 
+     * Caso o texto de busca seja número de processo realiza uma busca por este
+     * valor {@link #searchNrProcesso()}, caso não seja, tenta uma busca de
+     * processo pelo ID {@link #searchIdProcesso()}
+     * 
+     * Se qualquer dos métodos de busca retornar um processo, este é chamado na
+     * página {@link #visualizarProcesso(Processo)}
+     * 
+     * @return TRUE se o resultado for um processo, FALSE do contrário
+     */
+    public boolean searchProcesso() {
+        Processo processo = searchIdProcesso();
+        boolean hasProcesso = processo != null;
+        if (hasProcesso) {
+            visualizarProcesso(processo);
+        }
+        return hasProcesso;
+    }
+
+    /**
+     * Método redireciona para visualização do processo escolhido no paginador
+     * 
+     * @param processo Processo a ser visualizado no paginador
+     */
+    public void visualizarProcesso(Processo processo) {
+        Redirect.instance().setConversationPropagationEnabled(false);
+        Redirect.instance().setViewId("/Processo/Consulta/list.xhtml");
+        Redirect.instance().setParameter("id", processo.getIdProcesso());
+        Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
+        Redirect.instance().execute();
+    }
+
+    /**
+     * Método que realiza a busca indexada pelo conteúdo do site
+     * 
+     * @throws IOException Ao construir o Indexer
+     * @throws ParseException Ao retornar a busca no método getQuery do Indexer
+     */
+    private void searchIndexer() throws IOException, ParseException {
+        searchResult = new ArrayList<Map<String, Object>>();
+        Indexer indexer = new Indexer();
+        String[] fields = new String[] { "conteudo", "texto" };
+        Query query = indexer.getQuery(searchText, fields);
+        List<Document> search = indexer.search(searchText, fields, 200);
+        Session session = ManagedJbpmContext.instance().getSession();
+
+        for (Document d : search) {
+            long taskId = Long.parseLong(d.get("id"));
+            TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
+
+            if (ti == null) {
+                LOG.warn("Task não encontrada: " + taskId);
+            } else {
+                String s = HelpUtil.getBestFragments(query, getConteudo(ti));
+                Map<String, Object> m = new HashMap<String, Object>();
+                m.put("texto", s);
+                m.put("taskName", ti.getTask().getName());
+                m.put("taskId", ti.getId());
+                m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
+                searchResult.add(m);
+            }
+        }
+        resultSize = searchResult.size();
+    }
+
+    /**
+     * Método que realiza busca no sistema de acordo com o texto contido
+     * 
+     * Analisa se existe texto a ser buscado e confere se o texto a ser buscado
+     * é Numero de Processo, Id de Processo ({@link #searchProcesso()}), ou se é
+     * texto normal ({@link #searchIndexer()})
+     */
+    public void search() {
+        if (searchText == null || "".equals(searchText.trim())) {
+            return;
+        }
+
+        boolean isProcesso = searchProcesso();
+
+        if (!isProcesso) {
+            try {
+                searchIndexer();
+            } catch (IOException | ParseException e) {
+                LOG.debug(e.getMessage(), e);
+            }
+        }
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public static String getConteudo(TaskInstance ti) {
+        StringBuilder sb = new StringBuilder();
+        TaskController taskController = ti.getTask().getTaskController();
+        if (taskController != null) {
+            List<VariableAccess> vaList = taskController.getVariableAccesses();
+            for (VariableAccess v : vaList) {
+                Object conteudo = ti.getVariable(v.getMappedName());
+                if (v.isWritable() && conteudo != null) {
+                    conteudo = JbpmUtil.instance().getConteudo(v, ti);
+                    sb.append(VariableHandler.getLabel(v.getVariableName())).append(": ").append(conteudo).append("\n");
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    public int getResultSize() {
+        if (resultSize == null) {
+            search();
+        }
+        return resultSize;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
     public void nextPage() {
         page++;
         search();
@@ -251,6 +248,7 @@ public class SearchHandler implements Serializable {
     public boolean isPreviousPageAvailable() {
         return page > 0;
     }
+
     public int getPageSize() {
         return pageSize;
     }
@@ -264,43 +262,42 @@ public class SearchHandler implements Serializable {
     }
 
     public long getLastRow() {
-        return (page * pageSize + pageSize) > resultSize
-                ? resultSize
-                : page * pageSize + pageSize;
+        return (page * pageSize + pageSize) > resultSize ? resultSize : page
+                * pageSize + pageSize;
     }
-    
-	public String getTextoDestacado(Variavel v) {
-		Object value = v.getValue();
-		if (value == null){
-			return null;
-		}
-		
-		String texto = null;
-		String type = v.getType();
-		if (JbpmUtil.isTypeEditor(type)){
-			texto = processoDocumentoManager.valorProcessoDocumento((Integer) value);
-		} else if("sim_nao".equals(type)) {
-			texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
-		} else if ("numberMoney".equalsIgnoreCase(type)){
+
+    public String getTextoDestacado(Variavel v) {
+        Object value = v.getValue();
+        if (value == null) {
+            return null;
+        }
+
+        String texto = null;
+        String type = v.getType();
+        if (JbpmUtil.isTypeEditor(type)) {
+            texto = processoDocumentoManager.valorProcessoDocumento((Integer) value);
+        } else if ("sim_nao".equals(type)) {
+            texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
+        } else if ("numberMoney".equalsIgnoreCase(type)) {
             texto = String.format(FloatFormatConstants.F2, value);
         } else {
-			texto = value.toString();
-		}
-		
-		if (searchText != null) {
-			String[] fields = new String[]{"conteudo"};
-			QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, HelpUtil.getAnalyzer());
-			try {
-				org.apache.lucene.search.Query query = parser.parse(searchText);
-				String highlighted = HelpUtil.highlightText(query, texto, false);
-				if (!"".equals(highlighted)) {
-					texto = highlighted;
-				}
-			} catch (ParseException e) {
-				LOG.debug(e.getMessage(), e);
-			}
-		}
-		return texto;
-	}
-	
+            texto = value.toString();
+        }
+
+        if (searchText != null) {
+            String[] fields = new String[] { "conteudo" };
+            QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, HelpUtil.getAnalyzer());
+            try {
+                org.apache.lucene.search.Query query = parser.parse(searchText);
+                String highlighted = HelpUtil.highlightText(query, texto, false);
+                if (!"".equals(highlighted)) {
+                    texto = highlighted;
+                }
+            } catch (ParseException e) {
+                LOG.debug(e.getMessage(), e);
+            }
+        }
+        return texto;
+    }
+
 }
