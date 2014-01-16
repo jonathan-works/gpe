@@ -16,24 +16,25 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 @AutoCreate
 public class PessoaManager extends GenericManager {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "pessoaManager";
-	
-	@In private PessoaFisicaDAO pessoaFisicaDAO;
-	@In private PessoaJuridicaDAO pessoaJuridicaDAO;
-	
-	public void carregaPessoa(final TipoPessoaEnum tipoPessoa, final String codigo){
-		final Events events = Events.instance();
-		
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "pessoaManager";
+
+    @In private PessoaFisicaDAO pessoaFisicaDAO;
+    @In private PessoaJuridicaDAO pessoaJuridicaDAO;
+
+    public void carregaPessoa(final TipoPessoaEnum tipoPessoa,
+            final String codigo) {
+        final Events events = Events.instance();
+
         if (TipoPessoaEnum.F.equals(tipoPessoa)) {
-			events.raiseEvent(PessoaFisica.EVENT_LOAD, pessoaFisicaDAO.searchByCpf(codigo));
-		} else if (TipoPessoaEnum.J.equals(tipoPessoa)) {
-			events.raiseEvent(PessoaJuridica.EVENT_LOAD, pessoaJuridicaDAO.searchByCnpj(codigo));
-		}
-	}
-	
-	public PessoaFisica getPessoaFisicaByCpf(final String cpf){
-		return pessoaFisicaDAO.searchByCpf(cpf);
-	}
+            events.raiseEvent(PessoaFisica.EVENT_LOAD, pessoaFisicaDAO.searchByCpf(codigo));
+        } else if (TipoPessoaEnum.J.equals(tipoPessoa)) {
+            events.raiseEvent(PessoaJuridica.EVENT_LOAD, pessoaJuridicaDAO.searchByCnpj(codigo));
+        }
+    }
+
+    public PessoaFisica getPessoaFisicaByCpf(final String cpf) {
+        return pessoaFisicaDAO.searchByCpf(cpf);
+    }
 
 }
