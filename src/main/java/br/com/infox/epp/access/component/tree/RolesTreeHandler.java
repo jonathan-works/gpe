@@ -16,7 +16,7 @@ public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 
 	public static final String ROLES_TREE = "rolesTree";
 
-    private static final String ROLE_TREE_EVENT = "roleTreeHandlerSelected";
+    public static final String ROLE_TREE_EVENT = "roleTreeHandlerSelected";
 
 	private static final long serialVersionUID = 1L;
 
