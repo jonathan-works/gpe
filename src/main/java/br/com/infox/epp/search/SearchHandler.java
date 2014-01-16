@@ -151,7 +151,7 @@ public class SearchHandler implements Serializable {
             if (ti == null) {
                 LOG.warn("Task não encontrada: " + taskId);
             } else {
-                String s = HelpUtil.getBestFragments(query, getConteudo(ti));
+                String s = SearchUtil.getBestFragments(query, getConteudo(ti));
                 Map<String, Object> m = new HashMap<String, Object>();
                 m.put("texto", s);
                 m.put("taskName", ti.getTask().getName());
@@ -286,10 +286,10 @@ public class SearchHandler implements Serializable {
 
         if (searchText != null) {
             String[] fields = new String[] { "conteudo" };
-            QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, HelpUtil.getAnalyzer());
+            QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, SearchUtil.getAnalyzer());
             try {
                 org.apache.lucene.search.Query query = parser.parse(searchText);
-                String highlighted = HelpUtil.highlightText(query, texto, false);
+                String highlighted = SearchUtil.highlightText(query, texto, false);
                 if (!"".equals(highlighted)) {
                     texto = highlighted;
                 }

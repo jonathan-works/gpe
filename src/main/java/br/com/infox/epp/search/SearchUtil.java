@@ -35,12 +35,12 @@ import org.jboss.seam.log.Logging;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public final class HelpUtil {
+public final class SearchUtil {
 
     private static final String SEPARATOR = "<b> &#183;&#183;&#183;</b>";
-    private static final LogProvider LOG = Logging.getLogProvider(HelpUtil.class);
+    private static final LogProvider LOG = Logging.getLogProvider(SearchUtil.class);
 
-    private HelpUtil() {
+    private SearchUtil() {
     }
 
     private static final String BEGIN_TAG = "<span class='highlight'>";

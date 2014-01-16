@@ -58,7 +58,7 @@ import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
-import br.com.infox.epp.search.HelpUtil;
+import br.com.infox.epp.search.SearchUtil;
 import br.com.infox.epp.search.Indexer;
 import br.com.infox.epp.search.Reindexer;
 import br.com.infox.epp.search.SearchHandler;
@@ -108,7 +108,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractGenericCrudTest<Usuario
                     DocumentoBinHome.class,SituacaoProcessoManager.class,Indexer.class,Reindexer.class,
                     SearchHandler.class,ProcessoEpaTarefaManager.class,TaskPageAction.class,
                     TaskInstanceManager.class,UserHandler.class,SituacaoProcessoDAO.class,
-                    HelpUtil.class,VariableHandler.class, Variavel.class,ProcessoEpaTarefaDAO.class,
+                    SearchUtil.class,VariableHandler.class, Variavel.class,ProcessoEpaTarefaDAO.class,
                     LocalizacaoTurnoDAO.class,TaskInstanceDAO.class,TarefasTreeHandler.class,
                     LocalizacaoNode.class,LocalizacaoNodeSearch.class,VariableAccessHandler.class,
                     TarefasEntityNode.class)
