@@ -455,8 +455,11 @@
 						<configuration>
 							<systemPropertyVariables>
 								<arquillian.launch>jbossas-community-managed</arquillian.launch>
-								<jboss_port_offset>0</jboss_port_offset>
 							</systemPropertyVariables>
+							<environmentVariables>
+								<jboss_management_port>9999</jboss_management_port>
+								<jboss_port_offset>0</jboss_port_offset>
+							</environmentVariables>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -520,8 +523,11 @@
 						<configuration>
 							<systemPropertyVariables>
 								<arquillian.launch>jbossas-managed</arquillian.launch>
-								<jboss_port_offset>0</jboss_port_offset>
 							</systemPropertyVariables>
+							<environmentVariables>
+								<jboss_management_port>9999</jboss_management_port>
+								<jboss_port_offset>0</jboss_port_offset>
+							</environmentVariables>
 						</configuration>
 					</plugin>
 					<plugin>

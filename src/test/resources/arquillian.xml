@@ -9,13 +9,15 @@
     <container qualifier="jbossas-managed">
         <configuration>
             <property name="jbossHome">${env.JBOSS_HOME}</property>
-            <property name="javaVmArguments">-Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=${jboss_port_offset}</property>
+            <property name="javaVmArguments">-Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=${env.jboss_port_offset}</property>
+            <property name="managementPort">${env.jboss_management_port}</property>
         </configuration>
     </container>
     <container qualifier="jbossas-community-managed">
         <configuration>
             <property name="jbossHome">${env.JBOSS_COMMUNITY_HOME}</property>
-            <property name="javaVmArguments">-Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=${jboss_port_offset}</property>
+            <property name="javaVmArguments">-Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=${env.jboss_port_offset}</property>
+            <property name="managementPort">${env.jboss_management_port}</property>
         </configuration>
     </container>
 </arquillian>
