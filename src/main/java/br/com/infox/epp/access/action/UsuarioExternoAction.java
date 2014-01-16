@@ -28,7 +28,6 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.processo.action.IniciarProcessoAction;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
-//import br.com.itx.util.EntityUtil;
 
 @Name(UsuarioExternoAction.NAME)
 @Scope(ScopeType.EVENT)

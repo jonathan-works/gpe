@@ -67,7 +67,7 @@ public class Crypto {
      * @return o texto no formato DES.
      */
     public String encodeDES(String text) {
-        StringBuffer resp = new StringBuffer();
+        StringBuilder resp = new StringBuilder();
         if (text != null) {
             try {
                 Cipher cipher = Cipher.getInstance("DES", "SunJCE");
@@ -137,7 +137,7 @@ public class Crypto {
      * @return o texto no formato MD5.
      */
     public static String encodeMD5(byte[] bytes) {
-        StringBuffer resp = new StringBuffer();
+        StringBuilder resp = new StringBuilder();
         if (bytes != null) {
             try {
                 MessageDigest digest = MessageDigest.getInstance("MD5");

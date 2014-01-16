@@ -71,7 +71,7 @@ public class ProcessoDocumentoBinHome
     private AssinaturaDocumentoService assinaturaDocumentoService;
 	
 	public static ProcessoDocumentoBinHome instance() {
-		return ComponentUtil.getComponent("processoDocumentoBinHome");
+		return ComponentUtil.getComponent(NAME);
 	}
 
 	public String getSignature() {
@@ -96,6 +96,7 @@ public class ProcessoDocumentoBinHome
 	    try {
 			assinaturaDocumentoService.verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
 		} catch (CertificadoException | AssinaturaException e) {
+		    LOG.error("Não foi possível verificar o certificado do usuário " + Authenticator.getUsuarioLogado(), e);
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(e.getMessage());
 			this.houveErroAoAssinar = true;

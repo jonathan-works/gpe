@@ -179,7 +179,7 @@ public final class FileUtil {
 	}
 
 	public static String readText(File file) throws IOException {
-		StringBuffer text = new StringBuffer();
+		StringBuilder text = new StringBuilder();
 		FileReader in = null;
 		BufferedReader br = null;
 		try {

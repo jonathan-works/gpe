@@ -73,4 +73,8 @@ public class GenericManager implements Serializable {
 	public void flush(){
 	    genericDAO.flush();
 	}
+	
+	public <T> void refresh(T o){
+	    genericDAO.refresh(o);
+	}
 }

@@ -21,8 +21,6 @@ import org.jboss.seam.transaction.Transaction;
 
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
-//import br.com.itx.component.Util;
-//import br.com.itx.util.EntityUtil;
 
 /**
  * DAO generico para consultas, persistencia
@@ -178,7 +176,15 @@ public class GenericDAO implements Serializable {
         return entityManager;
     }
     
-    protected Query createQuery(final String query, final Map<String,Object> parameters) {
+    public Query createQuery(final String query) {
+        return createQuery(query, null);
+    }
+    
+    public <T> T getReference(Class<T> entitClass, Object primaryKey){
+        return entityManager.getReference(entitClass, primaryKey);
+    }
+    
+    public Query createQuery(final String query, final Map<String,Object> parameters) {
         final Query q = entityManager.createQuery(query);
         if(parameters != null) {
             for (Entry<String, Object> e : parameters.entrySet()) {
@@ -213,6 +219,10 @@ public class GenericDAO implements Serializable {
     
     public void flush(){
         entityManager.flush();
+    }
+    
+    public <T> void refresh(T o){
+        entityManager.refresh(o);
     }
     
     public  void rollbackTransactionIfNeeded() {

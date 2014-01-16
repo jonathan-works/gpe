@@ -1,5 +1,9 @@
 package br.com.infox.epp.tarefa.component.tree;
 
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +16,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
 
+import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.AbstractTreeHandler;
-import br.com.itx.util.EntityUtil;
+import br.com.itx.util.ComponentUtil;
 
 @Name(TarefasTreeHandler.NAME)
 @Install(precedence=Install.FRAMEWORK)
@@ -26,52 +31,18 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	private static final long serialVersionUID = 1L;
 	private List<TarefasEntityNode<Map<String,Object>>> rootList;		
 	 
-	@Override
-	protected String getQueryRoots() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select new map(s.nomeFluxo as nomeFluxo, ");
-		sb.append("max(s.idFluxo) as idFluxo, ");
-		sb.append("'Fluxo' as type) ");
-		sb.append("from SituacaoProcesso s ");
-		sb.append("group by s.nomeFluxo ");
-		sb.append("order by s.nomeFluxo");
-		return sb.toString();
-	}
-	
-	@Override
-	protected String getQueryChildren() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select new map(max(s.idSituacaoProcesso) as id, ");
-		sb.append("s.nomeTarefa as nomeTarefa, ");
-		sb.append("max(s.idTask) as idTask, ");
-		sb.append("max(s.idTaskInstance) as idTaskInstance, ");
-		sb.append("max(s.idTarefa) as idTarefa, ");
-		sb.append("count(s.nomeCaixa) as qtdEmCaixa, ");
-		sb.append("count(s.idProcesso) as qtd, ");
-		sb.append("'");
-		sb.append(getTreeType());
-		sb.append("' as tree, ");
-		sb.append("'Task' as type) ");
-		sb.append("from SituacaoProcesso s ");
-		sb.append("where s.idFluxo = :idFluxo ");
-		sb.append("group by s.nomeTarefa ");
-		sb.append("order by s.nomeTarefa");
-		return sb.toString();
-	}
-	
-	protected String getTreeType() {
-		return "caixa";
-	}
-	
+    @Override
+    protected String getQueryRoots() {
+        return TAREFAS_TREE_QUERY_ROOTS;
+    }
+
+    @Override
+    protected String getQueryChildren() {
+        return TAREFAS_TREE_QUERY_CHILDREN;
+    }
+
 	protected String getQueryCaixas() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select new map(c.idCaixa as idCaixa, ");
-		sb.append("c.tarefa.idTarefa as idTarefa, ");
-		sb.append("c.nomeCaixa as nomeCaixa, ");
-		sb.append("'Caixa' as type, ");
-		sb.append("(select count(distinct sp.idProcesso) from SituacaoProcesso sp where sp.idCaixa = c.idCaixa) as qtd) ");
-		sb.append("from Caixa c where c.tarefa.idTarefa = :taskId order by c.nomeCaixa");
-		return sb.toString();
+		return TAREFAS_TREE_QUERY_CAIXAS;
 	}
 	
 	@Override
@@ -102,7 +73,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	public List<TarefasEntityNode<Map<String,Object>>> getTarefasRoots() {
 		if (rootList == null || rootList.isEmpty()) {
 			Events.instance().raiseEvent(FILTER_TAREFAS_TREE);
-			Query query = EntityUtil.getEntityManager().createQuery(getQueryRoots());
+			Query query = genericDAO().createQuery(getQueryRoots());
 			TarefasEntityNode<Map<String,Object>> entityNode = createNode();
 			rootList = entityNode.getRootsFluxos(query);
 		}
@@ -117,7 +88,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 	
 	private List<Query> getQueryCaixasList() {
 		List<Query> list = new ArrayList<Query>();
-		Query query = getEntityManager().createQuery(getQueryCaixas());
+		Query query = genericDAO().createQuery(getQueryCaixas());
 		list.add(query);
 		return list;
 	}
@@ -128,4 +99,8 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String,Object>> 
 		rootList = null;
 		super.clearTree();
 	}
+
+    private GenericDAO genericDAO() {
+        return ComponentUtil.getComponent(GenericDAO.NAME);
+    }
 }

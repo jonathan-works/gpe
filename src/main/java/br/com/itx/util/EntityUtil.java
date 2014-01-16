@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -216,10 +215,6 @@ public final class EntityUtil implements Serializable {
 		return pd != null && (ComponentUtil.hasAnnotation(pd,ManyToMany.class) 
 				|| ComponentUtil.hasAnnotation(pd,OneToMany.class));
 	}	
-	
-	public static EntityManager getEntityManager(){
-		return ComponentUtil.getComponent(ENTITY_MANAGER_NAME);
-	}
 	
 	@SuppressWarnings(UNCHECKED)
 	public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {

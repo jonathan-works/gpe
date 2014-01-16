@@ -20,7 +20,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.HistoricoParteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-//import br.com.itx.util.EntityUtil;
 
 @Name(ParteProcessoManager.NAME)
 @AutoCreate

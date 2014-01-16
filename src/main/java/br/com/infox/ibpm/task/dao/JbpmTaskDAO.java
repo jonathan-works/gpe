@@ -19,7 +19,7 @@ public class JbpmTaskDAO extends GenericDAO {
 	public static final String NAME = "jbpmTaskDAO";
 	
 	public void atualizarTarefasModificadas(Map<BigInteger, String> modifiedTasks){
-		if (modifiedTasks.size() > 0) {
+		if (!modifiedTasks.isEmpty()) {
 			String update = "update jbpm_task set name_ = :taskName where id_ = :taskId";
 			Query q = JbpmUtil.getJbpmSession().createSQLQuery(update);
 			for (Entry<BigInteger, String> e : modifiedTasks.entrySet()) {

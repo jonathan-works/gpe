@@ -17,7 +17,7 @@ public final class HibernateUtil {
 	private HibernateUtil() {}
 	
 	public static void disableFilters(String...names) {
-		Session session = getSession();
+		Session session = sessionAssistant().getSession();
 		for (String name : names) {
 			session.disableFilter(name);
 		}
@@ -25,7 +25,7 @@ public final class HibernateUtil {
 
 
 	public static void enableFilters(String...names) {
-		Session session = getSession();
+		Session session = sessionAssistant().getSession();
 		for (String name : names) {
 			session.enableFilter(name);
 		}
@@ -50,20 +50,16 @@ public final class HibernateUtil {
 	}	
 	
 	public static Filter getEnabledFilter(String filterName) {
-		Filter enabledFilter = getSession().getEnabledFilter(filterName);
+		Filter enabledFilter = sessionAssistant().getSession().getEnabledFilter(filterName);
 		if (enabledFilter == null) {
-			getSession().enableFilter(filterName);
-			enabledFilter = getSession().getEnabledFilter(filterName);
+		    sessionAssistant().getSession().enableFilter(filterName);
+			enabledFilter = sessionAssistant().getSession().getEnabledFilter(filterName);
 		}
 		return enabledFilter;
 	}
 
-	public static Session getSession() {
-		return (Session) EntityUtil.getEntityManager().getDelegate();
-	}
-
 	public static void disableAllFilters() {
-		FullTextHibernateSessionProxy session = (FullTextHibernateSessionProxy) getSession();
+		FullTextHibernateSessionProxy session = (FullTextHibernateSessionProxy) sessionAssistant().getSession();
 		LoadQueryInfluencers loadQueryInfluencers = session.getLoadQueryInfluencers();
 		
 		// Dividido em dois fors para evitar o erro de acesso concorrente ao Map que contém os filtros ativos
@@ -82,6 +78,10 @@ public final class HibernateUtil {
 		}
 		return object;
 	}
+	
+    private static SessionAssistant sessionAssistant() {
+        return ComponentUtil.getComponent(SessionAssistant.NAME);
+    }
 
 	
 }
