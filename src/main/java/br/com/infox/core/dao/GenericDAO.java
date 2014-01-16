@@ -21,8 +21,6 @@ import org.jboss.seam.transaction.Transaction;
 
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
-//import br.com.itx.component.Util;
-//import br.com.itx.util.EntityUtil;
 
 /**
  * DAO generico para consultas, persistencia

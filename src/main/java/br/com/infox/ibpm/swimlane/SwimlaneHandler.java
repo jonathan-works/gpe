@@ -121,8 +121,7 @@ public class SwimlaneHandler implements Serializable {
 			boolean mesmoPapel = false;
 			if (p == null) {
 				mesmoPapel = u.getPapel() == null;
-			}
-			else {
+			} else {
 				mesmoPapel = p.equals(u.getPapel());
 			}
 			if (l.equals(u.getLocalizacao()) && mesmoPapel) {

@@ -112,7 +112,7 @@ public class VariableAccessHandler implements Serializable {
 			.append(name)
 			.append("',");
 		Action action = getAction(newExpression.toString());
-		if (modeloList.size() > 0) {
+		if (!modeloList.isEmpty()) {
 			for (int i = 0; i < modeloList.size(); i++) {
 				Integer id = modeloList.get(i);
 				newExpression.append(id);

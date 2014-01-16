@@ -342,7 +342,7 @@ public class Util implements Serializable {
     		}
 			sb.append(object.toString());
 		}
-    	return list.size() > 0 ? sb.toString() : valueOnEmptyList;
+    	return !list.isEmpty() ? sb.toString() : valueOnEmptyList;
     }
     
     public String listToString(List<?> list) {

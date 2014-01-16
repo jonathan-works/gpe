@@ -556,7 +556,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private boolean hasAvailableTransitions() {
-        return availableTransitions != null && availableTransitions.size() == 0
+        return availableTransitions != null && availableTransitions.isEmpty()
                 && taskInstance != null;
     }
 

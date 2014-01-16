@@ -195,8 +195,7 @@ public final class ComponentUtil {
 			f.setAccessible(true);
 			returnObj = f.get(component);
 			f.setAccessible(false);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOG.warn("Exception ao tentar ler atributo privado", e);
 		}
 		return returnObj;
