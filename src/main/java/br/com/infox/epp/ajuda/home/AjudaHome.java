@@ -47,7 +47,7 @@ import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
-import br.com.infox.epp.ajuda.util.HelpUtil;
+import br.com.infox.epp.search.SearchUtil;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.SessionAssistant;
 
@@ -98,7 +98,7 @@ public class AjudaHome extends AbstractHome<Ajuda> {
             resultado = new ArrayList();
             FullTextEntityManager em = (FullTextEntityManager) getEntityManager();
             String[] fields = new String[] { "texto" };
-            MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, HelpUtil.getAnalyzer());
+            MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, SearchUtil.getAnalyzer());
             parser.setAllowLeadingWildcard(true);
             org.apache.lucene.search.Query query = parser.parse("+"
                     + getTextoPesquisa() + "+");
@@ -107,7 +107,7 @@ public class AjudaHome extends AbstractHome<Ajuda> {
 
             for (Object o : textQuery.getResultList()) {
                 Ajuda a = (Ajuda) o;
-                String s = HelpUtil.getBestFragments(query, a.getTexto());
+                String s = SearchUtil.getBestFragments(query, a.getTexto());
                 resultado.add(new Object[] { a, s });
             }
         }
@@ -215,10 +215,10 @@ public class AjudaHome extends AbstractHome<Ajuda> {
             texto = instance.getTexto();
 
             if (textoPesquisa != null && texto != null) {
-                QueryParser parser = new QueryParser(Version.LUCENE_36, "texto", HelpUtil.getAnalyzer());
+                QueryParser parser = new QueryParser(Version.LUCENE_36, "texto", SearchUtil.getAnalyzer());
                 try {
                     org.apache.lucene.search.Query query = parser.parse(textoPesquisa);
-                    String highlighted = HelpUtil.highlightText(query, texto, false);
+                    String highlighted = SearchUtil.highlightText(query, texto, false);
                     if (!highlighted.equals("")) {
                         texto = highlighted;
                     }
