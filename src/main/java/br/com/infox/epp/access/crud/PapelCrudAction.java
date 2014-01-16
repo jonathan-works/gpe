@@ -100,7 +100,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 		if (membros == null) {
 			membros = new ArrayList<>();
 			membrosMap = new HashMap<>();
-			final List<Principal> list = new ArrayList<Principal>();
+			final List<Principal> list = new ArrayList<>();
 			new PopulateRoleMembersListOperation(getInstance().getIdentificador(), list).run();
 			if (list.isEmpty()) {
 				return new ArrayList<>();
@@ -321,18 +321,17 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
     protected void afterSave(final String ret) {
         if (UPDATED.equals(ret)) {
             final String role = getInstance().getIdentificador();
-            final List<String> roleGroup = papeis;
-            final Collection<String> rolesToInclude = membros;
+            final List<String> roleGroup = getPapeis();
+            final Collection<String> rolesToInclude = getMembros();
             final Collection<String> rolesToExclude = membrosMap.keySet();
-            final Collection<String> availableResourcesList = recursosDisponiveis;
-            final Collection<String> selectedResourcesList = recursos;
+            final Collection<String> availableResourcesList = getRecursosDisponiveis();
+            final Collection<String> selectedResourcesList = getRecursos();
             final UpdateRolesOperation operation = new UpdateRolesOperation(roleGroup, role, rolesToInclude, rolesToExclude, availableResourcesList, selectedResourcesList);
             operation.run();
-            getGenericManager().flush();
         }
     }
-	
-	@Observer(RolesTreeHandler.ROLE_TREE_EVENT)
+
+    @Observer(RolesTreeHandler.ROLE_TREE_EVENT)
 	public void treeSelected(final Papel papel) {
 		setPapelId(papel.getIdPapel());
 		setTab("form");
