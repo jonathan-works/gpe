@@ -455,6 +455,8 @@
 						<configuration>
 							<systemPropertyVariables>
 								<arquillian.launch>jbossas-community-managed</arquillian.launch>
+								<jboss_management_port>9999</jboss_management_port>
+                                <jboss_port_offset>0</jboss_port_offset>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -469,8 +471,7 @@
 								<goals>
 									<goal>clean</goal>
 								</goals>
-                                <configuration>
-                                    <skip>clean</skip>
+								<configuration>
 									<excludeDefaultDirectories>true</excludeDefaultDirectories>
 									<filesets>
 										<fileset>
@@ -520,6 +521,8 @@
 						<configuration>
 							<systemPropertyVariables>
 								<arquillian.launch>jbossas-managed</arquillian.launch>
+								<jboss_management_port>9999</jboss_management_port>
+                                <jboss_port_offset>0</jboss_port_offset>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -535,7 +538,6 @@
 									<goal>clean</goal>
 								</goals>
 								<configuration>
-                                    <skip>true</skip>
 									<excludeDefaultDirectories>true</excludeDefaultDirectories>
 									<filesets>
 										<fileset>
