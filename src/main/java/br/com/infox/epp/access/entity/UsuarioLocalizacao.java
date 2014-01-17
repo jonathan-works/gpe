@@ -51,10 +51,28 @@ public class UsuarioLocalizacao implements java.io.Serializable {
 	private Boolean responsavelLocalizacao;
 	private Papel papel;
 	private Localizacao estrutura;
-	private boolean contabilizar;
+	private Boolean contabilizar;
 
 	public UsuarioLocalizacao() {
+	    this.contabilizar = Boolean.TRUE;
 	}
+
+    public UsuarioLocalizacao(final UsuarioLogin usuario, final Localizacao localizacao, final Localizacao estrutura, final Papel papel, final boolean contabilizar, final boolean responsavelLocalizacao) {
+        this.usuario = usuario;
+        this.localizacao = localizacao;
+        this.estrutura = estrutura;
+        this.papel = papel;
+        this.contabilizar = Boolean.valueOf(contabilizar);
+        this.responsavelLocalizacao = Boolean.valueOf(responsavelLocalizacao);
+    }
+	
+	public UsuarioLocalizacao(final UsuarioLogin usuario, final Localizacao localizacao, final Localizacao estrutura, final Papel papel) {
+	    this(usuario, localizacao, estrutura, papel, Boolean.TRUE, Boolean.FALSE);
+	}
+    
+    public UsuarioLocalizacao(final UsuarioLogin usuario, final Localizacao localizacao, final Localizacao estrutura, final Papel papel, final boolean responsavelLocalizacao) {
+        this(usuario, localizacao, estrutura, papel, Boolean.TRUE, responsavelLocalizacao);
+    }
 
 	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO_LOCALIZACAO)
 	@Id
@@ -79,7 +97,8 @@ public class UsuarioLocalizacao implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = PAPEL)	
+	@JoinColumn(name = PAPEL)
+	@NotNull
 	public Papel getPapel() {
 		return papel;
 	}
@@ -155,12 +174,12 @@ public class UsuarioLocalizacao implements java.io.Serializable {
 		return result;
 	}
 
-	public void setContabilizar(boolean contabilizar) {
+	public void setContabilizar(Boolean contabilizar) {
 		this.contabilizar = contabilizar;
 	}
 
 	@Column(name=CONTABILIZAR, nullable=false)
-	public boolean getContabilizar() {
+	public Boolean getContabilizar() {
 		return contabilizar;
 	}
 
