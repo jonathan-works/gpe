@@ -56,7 +56,7 @@ public class SugiyamaLayoutAlgorithm {
      * Const to add Attributes at the Nodes
      * 
      */
-    public static final String SUGIYAMA_VISITED = "SugiyamaVisited"/* #Frozen */;
+    public static final String SUGIYAMA_VISITED = "SugiyamaVisited";
 
     /**
      * Const to add the Cell Wrapper to the Nodes
@@ -193,12 +193,12 @@ public class SugiyamaLayoutAlgorithm {
         for (int i = 0; i < levels.size() - 1; i++) {
             // Get the current level
             List currentLevel = (List) levels.get(i);
-            System.out.print("Level (" + i + "):"/* #Frozen */);
+            System.out.print("Level (" + i + "):");
             for (int j = 0; j < currentLevel.size(); j++) {
                 CellWrapper sourceWrapper = (CellWrapper) currentLevel.get(j);
 
                 System.out.print(NumberFormat.getNumberInstance().format(sourceWrapper.getEdgeCrossesIndicator())
-                        + " - "/* #Frozen */);
+                        + " - ");
             }
             System.out.println();
         }
@@ -209,12 +209,12 @@ public class SugiyamaLayoutAlgorithm {
      */
     protected void displayGridPositions(List levels) {
 
-        System.out.println("----------------GridPositions"/* #Frozen */);
+        System.out.println("----------------GridPositions");
 
         for (int i = 0; i < levels.size() - 1; i++) {
             // Get the current level
             List currentLevel = (List) levels.get(i);
-            System.out.print("Level (" + i + "):"/* #Frozen */);
+            System.out.print("Level (" + i + "):");
             for (int j = 0; j < currentLevel.size(); j++) {
                 CellWrapper sourceWrapper = (CellWrapper) currentLevel.get(j);
                 System.out.print(sourceWrapper.getVertexView().getCell() + " ");
@@ -230,12 +230,12 @@ public class SugiyamaLayoutAlgorithm {
      */
     protected void displayPriorities(List levels) {
 
-        System.out.println("----------------down Priorities"/* #Frozen */);
+        System.out.println("----------------down Priorities");
 
         for (int i = 0; i < levels.size() - 1; i++) {
             // Get the current level
             List currentLevel = (List) levels.get(i);
-            System.out.print("Level (" + i + "):"/* #Frozen */);
+            System.out.print("Level (" + i + "):");
             for (int j = 0; j < currentLevel.size(); j++) {
                 CellWrapper sourceWrapper = (CellWrapper) currentLevel.get(j);
                 System.out.print(sourceWrapper.getPriority() + " - ");
@@ -713,7 +713,6 @@ public class SugiyamaLayoutAlgorithm {
             if (verbose) {
                 System.out.println("----------------Grid Pos after bottom up");
                 displayGridPositions(levels);
-                // displayDownPriorities();
                 System.out.println("=======================================");
             }
 
@@ -803,7 +802,7 @@ public class SugiyamaLayoutAlgorithm {
                                 + " NewGridPos: " + newGridPosition
                                 + " exact: "
                                 + NumberFormat.getInstance().format(tmp)
-                                + "..."/* #Frozen */);
+                                + "...");
                         System.out.println(moved ? "success": "can't move");
 
                     }
