@@ -56,8 +56,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
         return instance;
     }
 
-    protected void initEntity(final TipoProcessoDocumento entity) {
-        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
+    protected void initEntity(final TipoProcessoDocumento entity, final CrudActions<TipoProcessoDocumento> crudActions) {
         crudActions.setEntityValue("codigoDocumento", entity.getCodigoDocumento());
         crudActions.setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
         crudActions.setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
@@ -75,8 +74,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
     }
     
     @Override
-    protected boolean compareEntityValues(TipoProcessoDocumento entity) {
-        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
+    protected boolean compareEntityValues(TipoProcessoDocumento entity, CrudActions<TipoProcessoDocumento> crudActions) {
         return areEquals(crudActions.getEntityValue("codigoDocumento"),entity.getCodigoDocumento())
                 && areEquals(crudActions.getEntityValue("tipoProcessoDocumento"),entity.getTipoProcessoDocumento())
                 && areEquals(crudActions.getEntityValue("inTipoDocumento"),entity.getInTipoDocumento())
@@ -92,14 +90,13 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
     @Test
     public void updateFailTest() throws Exception {
         TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
         updateFail.runTest(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
             @Override
-            public void execute() {
+            public void execute(final CrudActions<TipoProcessoDocumento> crudActions) {
                 final Object id = crudActions.getId();
                 assert id != null;
                 crudActions.newInstance();
-                initEntity(getEntity());
+                initEntity(getEntity(), crudActions);
                 crudActions.setEntityValue("idTipoProcessoDocumento", ((int) id) + 1);
             }
         });

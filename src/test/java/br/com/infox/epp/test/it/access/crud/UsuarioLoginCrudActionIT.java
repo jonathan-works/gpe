@@ -52,8 +52,7 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     }
     
     @Override
-    protected void initEntity(final UsuarioLogin entity) {
-        final CrudActions<UsuarioLogin> crudActions = getCrudActions();
+    protected void initEntity(final UsuarioLogin entity, final CrudActions<UsuarioLogin> crudActions) {
         crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
         crudActions.setEntityValue("email", entity.getEmail());
         crudActions.setEntityValue("login", entity.getLogin());
@@ -93,9 +92,9 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
         for (int i = 0; i < 30; i++) {
             updateSuccess.runTest(new EntityActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i))) {
                 @Override
-                public void execute() {
+                public void execute(final CrudActions<UsuarioLogin> crudActions) {
                     final String updatedNomeUsuario = getEntity().getNomeUsuario()+"(updated)";
-                    getCrudActions().setEntityValue("nomeUsuario", updatedNomeUsuario);
+                    crudActions.setEntityValue("nomeUsuario", updatedNomeUsuario);
                 }
             });
         }
@@ -106,17 +105,16 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
         for (int i = 0; i < 30; i++) {
             updateFail.runTest(new EntityActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i))) {
                 @Override
-                public void execute() {
+                public void execute(final CrudActions<UsuarioLogin> crudActions) {
                   final String updatedNomeUsuario = fillStr(getEntity().getNomeUsuario()+"(updated)", LengthConstants.NOME_ATRIBUTO+1);
-                  getCrudActions().setEntityValue("nomeUsuario", updatedNomeUsuario);
+                  crudActions.setEntityValue("nomeUsuario", updatedNomeUsuario);
                 }
             });
         }
     }
     
     @Override
-    protected boolean compareEntityValues(final UsuarioLogin entity) {
-        final CrudActions<UsuarioLogin> crudActions = getCrudActions();
+    protected boolean compareEntityValues(final UsuarioLogin entity, final CrudActions<UsuarioLogin> crudActions) {
         return compareValues(crudActions.getEntityValue("nomeUsuario"), entity.getNomeUsuario())
                     && compareValues(crudActions.getEntityValue("email"), entity.getEmail())
                     && compareValues(crudActions.getEntityValue("login"), entity.getLogin())

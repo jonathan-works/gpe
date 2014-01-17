@@ -59,8 +59,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
     
     //TODO: listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
     @Override
-    protected void initEntity(final PessoaFisica entity) {
-        final CrudActions<PessoaFisica> crudActions = getCrudActions();
+    protected void initEntity(final PessoaFisica entity, final CrudActions<PessoaFisica> crudActions) {
         crudActions.setEntityValue("cpf",entity.getCpf());
         crudActions.setEntityValue("nome",entity.getNome());
         crudActions.setEntityValue("dataNascimento",entity.getDataNascimento());
@@ -93,11 +92,11 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
         @Override
         protected void testComponent() throws Exception {
             final PessoaFisica entity = getEntity();
-            UsuarioLogin user = createUser(entity);
+            final UsuarioLogin user = createUser(entity);
 
-            final CrudActions<PessoaFisica> crudActions = getCrudActions();
             crudActions.newInstance();
-            initEntity(entity);
+            initEntity(entity, this.crudActions);
+            crudActions.setComponentValue("usuarioAssociado", user);
             final String persistResult = crudActions.save();
             assertEquals(PERSISTED, persistResult);
 
@@ -107,7 +106,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
             final Integer nullId = crudActions.getId();
             assertNull(nullId);
             crudActions.setId(id);
-            assert compareEntityValues(entity);
+            assert compareEntityValues(entity, this.crudActions);
 
             assert user.getPessoaFisica() != null;
             assert user.getPessoaFisica().equals(crudActions.getInstance());
@@ -123,9 +122,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
         final Integer id = crudActionsUsuarioLogin.getId();
         crudActionsUsuarioLogin.newInstance();
         crudActionsUsuarioLogin.setId(id);
-        final UsuarioLogin created = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
-        getCrudActions().setComponentValue("usuarioAssociado", created);
-        return created;
+        return crudActionsUsuarioLogin.getInstance();
     }
     
     @Test
@@ -139,9 +136,10 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
             final PessoaFisica entity = getEntity();
             UsuarioLogin user = createUser(entity);
             
-            final CrudActions<PessoaFisica> crudActions = getCrudActions();
+            crudActions.setComponentValue("usuarioAssociado", user);
+            
             crudActions.newInstance();
-            initEntity(entity);
+            initEntity(entity, crudActions);
             assert PERSISTED.equals(crudActions.save());
             assert crudActions.getId() != null;
             
