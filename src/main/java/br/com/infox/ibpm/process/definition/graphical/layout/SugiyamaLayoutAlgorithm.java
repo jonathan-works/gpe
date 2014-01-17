@@ -61,10 +61,7 @@ public class SugiyamaLayoutAlgorithm {
     /**
      * Const to add the Cell Wrapper to the Nodes
      */
-    public static final String SUGIYAMA_CELL_WRAPPER = "SugiyamaCellWrapper"/*
-                                                                             * #
-                                                                             * Frozen
-                                                                             */;
+    public static final String SUGIYAMA_CELL_WRAPPER = "SugiyamaCellWrapper";
 
     /**
      * represents the size of the grid in horizontal grid elements
@@ -727,15 +724,9 @@ public class SugiyamaLayoutAlgorithm {
             }
 
             if (verbose) {
-                System.out.println("----------------Grid Pos after top down"/*
-                                                                             * #
-                                                                             * Frozen
-                                                                             */);
+                System.out.println("----------------Grid Pos after top down");
                 displayGridPositions(levels);
-                System.out.println("======================================="/*
-                                                                             * #
-                                                                             * Frozen
-                                                                             */);
+                System.out.println("=======================================");
             }
 
             // bottom up
@@ -750,10 +741,7 @@ public class SugiyamaLayoutAlgorithm {
                                                                               */);
                 displayGridPositions(levels);
                 // displayDownPriorities();
-                System.out.println("======================================="/*
-                                                                             * #
-                                                                             * Frozen
-                                                                             */);
+                System.out.println("=======================================");
             }
 
             this.updateProgress4Movements();
