@@ -188,9 +188,7 @@ public class SugiyamaLayoutAlgorithm {
      * Debugdisplay for the edge crosses indicators on the System out
      */
     protected void displayEdgeCrossesValues(List levels) {
-        System.out.println("----------------Edge Crosses Indicator Values"/*
-                                                                           * #Frozen
-                                                                           */);
+        System.out.println("----------------Edge Crosses Indicator Values");
 
         for (int i = 0; i < levels.size() - 1; i++) {
             // Get the current level
@@ -221,7 +219,7 @@ public class SugiyamaLayoutAlgorithm {
                 CellWrapper sourceWrapper = (CellWrapper) currentLevel.get(j);
                 System.out.print(sourceWrapper.getVertexView().getCell() + " ");
                 System.out.print(NumberFormat.getNumberInstance().format(sourceWrapper.getGridPosition())
-                        + " - "/* #Frozen */);
+                        + " - ");
             }
             System.out.println();
         }
@@ -240,13 +238,7 @@ public class SugiyamaLayoutAlgorithm {
             System.out.print("Level (" + i + "):"/* #Frozen */);
             for (int j = 0; j < currentLevel.size(); j++) {
                 CellWrapper sourceWrapper = (CellWrapper) currentLevel.get(j);
-                System.out.print(sourceWrapper.getPriority() + /*
-                                                                * " (" +
-                                                                * sourceWrapper.
-                                                                * nearestDownNeighborLevel
-                                                                * + ") " +
-                                                                */
-                " - "/* #Frozen */);
+                System.out.print(sourceWrapper.getPriority() + " - ");
             }
             System.out.println();
         }
@@ -286,14 +278,8 @@ public class SugiyamaLayoutAlgorithm {
 
         // Error Msg if the graph has no roots
         if (roots.size() == 0) {
-            JOptionPane.showMessageDialog(null, "The Graph is not a DAG. Can't use Sugiyama Algorithm!"/*
-                                                                                                        * #
-                                                                                                        * Finished
-                                                                                                        * :
-                                                                                                        * Original
-                                                                                                        * =
-                                                                                                        * "The Graph is not a DAG. Can't use Sugiyama Algorithm!"
-                                                                                                        */, null, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "The Graph is not a DAG. Can't use Sugiyama Algorithm!", 
+                    null, JOptionPane.ERROR_MESSAGE);
         }
         return roots;
     }
@@ -320,7 +306,6 @@ public class SugiyamaLayoutAlgorithm {
         GraphModel model = jgraph.getModel();
 
         // get all Ports and search the relations at the ports
-        // List vertexPortViewList = new ArrayList() ;
 
         Object vertex = vertexViewToInspect.getCell();
 
@@ -531,9 +516,7 @@ public class SugiyamaLayoutAlgorithm {
             movementsCurrentLoop = 0;
 
             if (verbose) {
-                System.out.println("---------------------------- vor Sort"/*
-                                                                           * #Frozen
-                                                                           */);
+                System.out.println("---------------------------- vor Sort");
                 displayEdgeCrossesValues(levels);
             }
 
@@ -548,10 +531,7 @@ public class SugiyamaLayoutAlgorithm {
             }
 
             if (verbose) {
-                System.out.println("---------------------------- nach Sort"/*
-                                                                            * #
-                                                                            * Frozen
-                                                                            */);
+                System.out.println("---------------------------- nach Sort");
                 displayEdgeCrossesValues(levels);
             }
 
@@ -696,14 +676,10 @@ public class SugiyamaLayoutAlgorithm {
         }
         // if(true) return;
         if (verbose) {
-            System.out.println("----------------Grid Pos before top down"/*
-                                                                          * #Frozen
-                                                                          */);
+            System.out.println("----------------Grid Pos before top down");
             displayPriorities(levels);
             displayGridPositions(levels);
-            System.out.println("======================================="/*
-                                                                         * #Frozen
-                                                                         */);
+            System.out.println("=======================================");
         }
 
         movements = new ArrayList(100);
@@ -735,10 +711,7 @@ public class SugiyamaLayoutAlgorithm {
             }
 
             if (verbose) {
-                System.out.println("----------------Grid Pos after bottom up"/*
-                                                                              * #
-                                                                              * Frozen
-                                                                              */);
+                System.out.println("----------------Grid Pos after bottom up");
                 displayGridPositions(levels);
                 // displayDownPriorities();
                 System.out.println("=======================================");
@@ -831,10 +804,7 @@ public class SugiyamaLayoutAlgorithm {
                                 + " exact: "
                                 + NumberFormat.getInstance().format(tmp)
                                 + "..."/* #Frozen */);
-                        System.out.println(moved ? "success"/* #Frozen */: "can't move"/*
-                                                                                        * #
-                                                                                        * Frozen
-                                                                                        */);
+                        System.out.println(moved ? "success": "can't move");
 
                     }
                 }
