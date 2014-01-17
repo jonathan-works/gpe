@@ -3,9 +3,10 @@ package br.com.infox.core.manager;
 import java.io.Serializable;
 import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -31,8 +32,12 @@ public class GenericManager implements Serializable {
 
 	public static final String NAME = "genericManager";
 	
-	@In
 	private GenericDAO genericDAO;
+	
+	@Create
+	public void init() {
+		this.genericDAO = (GenericDAO) Component.getInstance(getDaoName());
+	}
 	
 	public <T> T persist(T o) throws DAOException {
 		return genericDAO.persist(o);
@@ -76,5 +81,13 @@ public class GenericManager implements Serializable {
 	
 	public <T> void refresh(T o){
 	    genericDAO.refresh(o);
+	}
+	
+	protected GenericDAO getDao() {
+		return this.genericDAO;
+	}
+	
+	protected String getDaoName() {
+		return GenericDAO.NAME;
 	}
 }
