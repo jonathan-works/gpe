@@ -1,19 +1,18 @@
 /*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
-package br.com.infox.epp.ajuda.util;
+ * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
+ * Tecnologia da Informação Ltda.
+ * 
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
+ * Software Foundation; versão 2 da Licença. Este programa é distribuído na
+ * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
+ * ESPECÍFICA.
+ * 
+ * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
+ * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
+ */
+package br.com.infox.epp.search;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,12 +20,12 @@ import java.util.Map;
 final class Entities {
 
     private static final Map<String, String> DECODER = new HashMap<String, String>(300);
-    
+
     // Corresponde a 256 caracteres
-    private static final int NUMERO_DE_CARACTERES = 0x100; 
-    
+    private static final int NUMERO_DE_CARACTERES = 0x100;
+
     private static final String[] ENCODER = new String[NUMERO_DE_CARACTERES];
-    
+
     private Entities() {
     }
 
@@ -284,37 +283,37 @@ final class Entities {
         add("&rsaquo", 8250);
         add("&euro", 8364);
     }
-    
+
     public static String decodeEntity(String entity) {
-		String auxiliarEntity = removeSemicolon(entity);
-		if (auxiliarEntity.charAt(1) == '#') {
-			int start = 2;
-			int radix = 10;
-			if ((auxiliarEntity.charAt(2) == 'X') || (auxiliarEntity.charAt(2) == 'x')) {
-				start++;
-				radix = 16;
-			}
-			Character c = Character.valueOf((char) Integer.parseInt(
-					auxiliarEntity.substring(start), radix));
-			return c.toString();
-		}
-		String s = DECODER.get(auxiliarEntity);
-		if (s != null) {
-			return s;
-		}
-		return "";
-	}
+        String auxiliarEntity = removeSemicolon(entity);
+        if (auxiliarEntity.charAt(1) == '#') {
+            int start = 2;
+            int radix = 10;
+            if ((auxiliarEntity.charAt(2) == 'X')
+                    || (auxiliarEntity.charAt(2) == 'x')) {
+                start++;
+                radix = 16;
+            }
+            Character c = Character.valueOf((char) Integer.parseInt(auxiliarEntity.substring(start), radix));
+            return c.toString();
+        }
+        String s = DECODER.get(auxiliarEntity);
+        if (s != null) {
+            return s;
+        }
+        return "";
+    }
 
     private static String removeSemicolon(String entity) {
         if (entity.charAt(entity.length() - 1) == ';') {
-			return entity.substring(0, entity.length() - 1);
-		}
+            return entity.substring(0, entity.length() - 1);
+        }
         return entity;
     }
 
     public static String encode(String s) {
         int length = s.length();
-        StringBuffer buffer = new StringBuffer(length * 2);
+        StringBuilder buffer = new StringBuilder(length * 2);
         for (int i = 0; i < length; i++) {
             char c = s.charAt(i);
             int j = c;
@@ -336,37 +335,36 @@ final class Entities {
     }
 
     public static String decode(String text) {
-		int length = text.length();
+        int length = text.length();
         StringBuilder buffer = new StringBuilder(length * 2);
         int from = 0;
-    	int begin = 0;
-    	int to = 0;
+        int begin = 0;
+        int to = 0;
         while (from > -1 && to > -1) {
             from = text.indexOf('&', to);
             if (from > -1) {
-        		buffer.append(text.substring(begin, from));
-	        	to = text.indexOf(';', from);
-	        	if (to > -1) {
-	        		String s = decodeEntity(text.substring(from, to));
-	        		if ("".equals(s)) {
-		        		buffer.append(text.substring(from, to));
-	        		} else {
-	        			buffer.append(s);
-	        		}
-	        		begin = to + 1;
-	        	}
+                buffer.append(text.substring(begin, from));
+                to = text.indexOf(';', from);
+                if (to > -1) {
+                    String s = decodeEntity(text.substring(from, to));
+                    if ("".equals(s)) {
+                        buffer.append(text.substring(from, to));
+                    } else {
+                        buffer.append(s);
+                    }
+                    begin = to + 1;
+                }
             }
         }
         buffer.append(text.substring(begin, length));
         return buffer.toString();
     }
-    
+
     private static void add(String entity, int value) {
         DECODER.put(entity, Character.valueOf((char) value).toString());
         if (value < 0x100) {
             ENCODER[value] = entity;
         }
     }
-    
-    
+
 }

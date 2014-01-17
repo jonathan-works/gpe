@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -32,8 +33,12 @@ public class GenericManager implements Serializable {
 
 	public static final String NAME = "genericManager";
 	
-	@In
 	private GenericDAO genericDAO;
+	
+	@Create
+	public void init() {
+		this.genericDAO = (GenericDAO) Component.getInstance(getDaoName());
+	}
 	
 	public <T> T persist(T o) throws DAOException {
 		return genericDAO.persist(o);
@@ -82,4 +87,12 @@ public class GenericManager implements Serializable {
     public Long getSingleResult(final String query, final Map<String, Object> params) {
         return genericDAO.getSingleResult(query, params);
     }
+	
+	protected GenericDAO getDao() {
+		return this.genericDAO;
+	}
+	
+	protected String getDaoName() {
+		return GenericDAO.NAME;
+	}
 }

@@ -6,7 +6,6 @@
       login-required="true">
 
 	<begin-conversation join="true" />
-	<param name="ajuda.firstResult" value="#{ajudaGrid.firstResult}"/>
 	<param name="tab" value="#{ajudaHome.tab}"/>
 	
 </page>
