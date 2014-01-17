@@ -2,6 +2,7 @@ package br.com.infox.core.manager;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -77,4 +78,8 @@ public class GenericManager implements Serializable {
 	public <T> void refresh(T o){
 	    genericDAO.refresh(o);
 	}
+
+    public Long getSingleResult(final String query, final Map<String, Object> params) {
+        return genericDAO.getSingleResult(query, params);
+    }
 }
