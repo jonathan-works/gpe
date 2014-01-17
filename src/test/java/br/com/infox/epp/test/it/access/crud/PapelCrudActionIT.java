@@ -1,4 +1,4 @@
-package br.com.infox.epp.access.crud;
+package br.com.infox.epp.test.it.access.crud;
 
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
 import static br.com.infox.core.action.AbstractAction.REMOVED;
@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.api.RolesMap;
+import br.com.infox.epp.access.crud.PapelCrudAction;
 import br.com.infox.epp.access.dao.PapelDAO;
 import br.com.infox.epp.access.dao.RecursoDAO;
 import br.com.infox.epp.access.entity.Papel;
@@ -42,9 +43,9 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
     }
 
     @Override
-    protected void initEntity(final Papel entity) {
-        getCrudActions().setEntityValue("identificador", entity.getIdentificador()); //req
-        getCrudActions().setEntityValue("nome", entity.getNome()); // req
+    protected void initEntity(final Papel entity, CrudActions<Papel> crudActions) {
+        crudActions.setEntityValue("identificador", entity.getIdentificador()); //req
+        crudActions.setEntityValue("nome", entity.getNome()); // req
     }
 
     @Override
@@ -57,23 +58,21 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
             
-            CrudActions<Papel> crudActions = getCrudActions();
-            
-            crudActions.newInstance();
-            initEntity(entity);
-            assertEquals("persisted", PERSISTED, crudActions.save());
+            this.crudActions.newInstance();
+            initEntity(entity, this.crudActions);
+            assertEquals("persisted", PERSISTED, this.crudActions.save());
 
-            final Integer id = crudActions.getId();
+            final Integer id = this.crudActions.getId();
             assertNotNull("id", id);
-            crudActions.newInstance();
-            assertNull("nullId", crudActions.getId());
-            crudActions.setId(id);
-            assertEquals("Compare", true, compareEntityValues(entity));
+            this.crudActions.newInstance();
+            assertNull("nullId", this.crudActions.getId());
+            this.crudActions.setId(id);
+            assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
             
             boolean roleExists = IdentityManager.instance().roleExists(entity.getIdentificador());
             assertEquals("roleExists", true, roleExists);
             
-            setEntity(crudActions.getInstance());
+            setEntity(this.crudActions.getInstance());
         }
     };
     
@@ -94,14 +93,13 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
     private final RunnableTest<Papel> persistFail = new RunnableTest<Papel>() {
         @Override
         protected void testComponent() throws Exception {
-            final CrudActions<Papel> crudActions = getCrudActions();
             final Papel entity = getEntity();
-            crudActions.newInstance();
-            initEntity(entity);
+            this.crudActions.newInstance();
+            initEntity(entity, this.crudActions);
             
-            assertEquals("persisted", true, !PERSISTED.equals(crudActions.save()));
+            assertEquals("persisted", true, !PERSISTED.equals(this.crudActions.save()));
 
-            final Integer id = crudActions.getId();
+            final Integer id = this.crudActions.getId();
             assertNull("id", id);
             assertEquals("roleExists", true, !IdentityManager.instance().roleExists(entity.getIdentificador()));
         }
@@ -112,10 +110,10 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
             
-            getCrudActions().resetInstance(entity.getIdPapel());
-            getCrudActions().setEntityValue("nome", entity.getNome()+".changed");
-            assertEquals("updateNome", UPDATED, getCrudActions().save());
-            assertEquals("ends with .changed", true, getCrudActions().getInstance().getNome().endsWith(".changed"));
+            this.crudActions.resetInstance(entity.getIdPapel());
+            this.crudActions.setEntityValue("nome", entity.getNome()+".changed");
+            assertEquals("updateNome", UPDATED, this.crudActions.save());
+            assertEquals("ends with .changed", true, this.crudActions.getInstance().getNome().endsWith(".changed"));
         }
     };
 
@@ -124,10 +122,9 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
     private final RunnableTest<Papel> removeSuccess = new RunnableTest<Papel>() {
         @Override
         protected void testComponent() throws Exception {
-            final CrudActions<Papel> crudActions = getCrudActions();
             final Papel entity = getEntity();
-            crudActions.resetInstance(entity.getIdPapel());
-            assertEquals("removed",true, REMOVED.equals(crudActions.remove(entity)));
+            this.crudActions.resetInstance(entity.getIdPapel());
+            assertEquals("removed",true, REMOVED.equals(this.crudActions.remove(entity)));
             
             assertEquals("roleExists", false, IdentityManager.instance().roleExists(entity.getIdentificador()));
         }
@@ -137,16 +134,15 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         new RunnableTest<Papel>() {
             @Override
             protected void testComponent() throws Exception {
-                final CrudActions<Papel> crudActions = getCrudActions();
-                crudActions.resetInstance(getEntity().getIdPapel());
-                crudActions.setComponentValue("activeInnerTab", "herdeirosTab");
-                final ArrayList<String> membros = new ArrayList<String>((List<String>)crudActions.getComponentValue("membros"));
+                this.crudActions.resetInstance(getEntity().getIdPapel());
+                this.crudActions.setComponentValue("activeInnerTab", "herdeirosTab");
+                final ArrayList<String> membros = new ArrayList<String>((List<String>)this.crudActions.getComponentValue("membros"));
                 for (String string : herdeiros) {
                     membros.add(string);    
                 }
-                crudActions.setComponentValue("membros", membros);
-                assertEquals("updated", true, UPDATED.equals(crudActions.save()));
-                setEntity(crudActions.resetInstance(getEntity().getIdPapel()));
+                this.crudActions.setComponentValue("membros", membros);
+                assertEquals("updated", true, UPDATED.equals(this.crudActions.save()));
+                setEntity(this.crudActions.resetInstance(getEntity().getIdPapel()));
             }
         }.runTest(papel);
     }
@@ -155,14 +151,13 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         new RunnableTest<Papel>() {
             @Override
             protected void testComponent() throws Exception {
-                final CrudActions<Papel> crudActions = getCrudActions();
-                crudActions.setComponentValue("activeInnerTab", "herdeirosTab");
-                final ArrayList<String> membros = new ArrayList<>((List<String>)crudActions.getComponentValue("membros"));
+                this.crudActions.setComponentValue("activeInnerTab", "herdeirosTab");
+                final ArrayList<String> membros = new ArrayList<>((List<String>)this.crudActions.getComponentValue("membros"));
                 for (String string : herdeiros) {
                     membros.add(string);    
                 }
-                crudActions.setComponentValue("membros", membros);
-                crudActions.save();
+                this.crudActions.setComponentValue("membros", membros);
+                this.crudActions.save();
             }
         }.runTest(papel);
     }
@@ -195,26 +190,26 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
 
-            getCrudActions().resetInstance(entity.getIdPapel());
-            getCrudActions().setEntityValue("nome", fillStr(entity.getNome()+".changed",LengthConstants.NOME_PADRAO+1));
-            assertEquals("updateNome", false, UPDATED.equals(getCrudActions().save()));
-            assertEquals("ends with .changed", false, getCrudActions().getInstance().getNome().endsWith(".changed"));
+            this.crudActions.resetInstance(entity.getIdPapel());
+            this.crudActions.setEntityValue("nome", fillStr(entity.getNome()+".changed",LengthConstants.NOME_PADRAO+1));
+            assertEquals("updateNome", false, UPDATED.equals(this.crudActions.save()));
+            assertEquals("ends with .changed", false, this.crudActions.getInstance().getNome().endsWith(".changed"));
 
-            getCrudActions().resetInstance(entity.getIdPapel());
-            getCrudActions().setEntityValue("identificador", fillStr(entity.getIdentificador()+".changed",LengthConstants.DESCRICAO_PADRAO+1));
-            assertEquals("updateIdentificador", false, UPDATED.equals(getCrudActions().save()));
-            assertEquals("ends with .changed", false, getCrudActions().getInstance().getNome().endsWith(".changed"));
+            this.crudActions.resetInstance(entity.getIdPapel());
+            this.crudActions.setEntityValue("identificador", fillStr(entity.getIdentificador()+".changed",LengthConstants.DESCRICAO_PADRAO+1));
+            assertEquals("updateIdentificador", false, UPDATED.equals(this.crudActions.save()));
+            assertEquals("ends with .changed", false, this.crudActions.getInstance().getNome().endsWith(".changed"));
 
-            getCrudActions().resetInstance(entity.getIdPapel());
-            getCrudActions().setEntityValue("identificador", null);
-            assertEquals("updateIdentificador", false, UPDATED.equals(getCrudActions().save()));
-            assertEquals("ends with .changed", false, getCrudActions().getInstance().getNome().endsWith(".changed"));
+            this.crudActions.resetInstance(entity.getIdPapel());
+            this.crudActions.setEntityValue("identificador", null);
+            assertEquals("updateIdentificador", false, UPDATED.equals(this.crudActions.save()));
+            assertEquals("ends with .changed", false, this.crudActions.getInstance().getNome().endsWith(".changed"));
 
-//            getCrudActions().resetInstance(entity.getIdPapel());
-//            getCrudActions().setEntityValue("identificador", entity.getIdentificador()+".changed");
-//            assertEquals("isManaged", Boolean.TRUE, getCrudActions().invokeMethod("isManaged", Boolean.class));
-//            assertEquals("updateIdentificador regular", false, UPDATED.equals(getCrudActions().save()));
-//            assertEquals("ends with .changed", false, getCrudActions().getInstance().getNome().endsWith(".changed"));
+//            crudActions.resetInstance(entity.getIdPapel());
+//            crudActions.setEntityValue("identificador", entity.getIdentificador()+".changed");
+//            assertEquals("isManaged", Boolean.TRUE, crudActions.invokeMethod("isManaged", Boolean.class));
+//            assertEquals("updateIdentificador regular", false, UPDATED.equals(crudActions.save()));
+//            assertEquals("ends with .changed", false, crudActions.getInstance().getNome().endsWith(".changed"));
         }
     };
     
