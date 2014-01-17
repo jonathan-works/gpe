@@ -10,6 +10,8 @@ import static junit.framework.Assert.assertNull;
 
 import java.util.ArrayList;
 
+import junit.framework.Assert;
+
 import org.jboss.seam.contexts.TestLifecycle;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.ValueExpression;
@@ -37,7 +39,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         return sb.substring(0, topLength);
     }
 
-    private final CrudActions<T> crudActions = new CrudActions<>(getComponentName());
+//    private final CrudActions<T> crudActions = new CrudActions<>(getComponentName());
 
     protected final void executeTest(final Runnable componentTest) throws Exception {
         TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
@@ -51,18 +53,12 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     protected final boolean compareValues(final Object obj1, final Object obj2) {
         return (obj1 == obj2 || ((obj1 != null) && obj1.equals(obj2)));
     }
-    
-    protected boolean compareEntityValues(final T entity) {
-        final Object entityInstance = crudActions.getInstance();
-        return entityInstance == entity
-                || (entityInstance != null && entity != null);
-    }
 
-    protected abstract void initEntity(T entity);
+    protected abstract void initEntity(T entity, CrudActions<T> crudActions);
 
-    protected CrudActions<T> getCrudActions() {
-        return this.crudActions;
-    }
+//    protected CrudActions<T> getCrudActions() {
+//        return this.crudActions;
+//    }
 
     protected abstract String getComponentName();
 
@@ -71,30 +67,27 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected void testComponent() {
             final T entity = getEntity();
             crudActions.newInstance();
-            initEntity(entity);
+            initEntity(entity, this.crudActions);
             assertEquals("PERSISTED",false,PERSISTED.equals(crudActions.save()));
             assertNull("ASSERT NOT NULL ID",crudActions.getId());
         }
     };
 
-    private T persistSuccessMethod(final T entity) {
-        crudActions.newInstance();
-        initEntity(entity);
-        assertEquals("persisted", PERSISTED, crudActions.save());
-
-        final Integer id = crudActions.getId();
-        assertNotNull("id", id);
-        crudActions.newInstance();
-        assertNull("nullId", crudActions.getId());
-        crudActions.setId(id);
-        assertEquals("Compare", true, compareEntityValues(entity));
-        return crudActions.getInstance();
-    }
-    
     protected final RunnableTest<T> persistSuccess = new RunnableTest<T>() {
         @Override
         protected void testComponent() throws Exception {
-            setEntity(persistSuccessMethod(getEntity()));
+            final T entity = getEntity(); 
+            crudActions.newInstance();
+            initEntity(entity, this.crudActions);
+            assertEquals("persisted", PERSISTED, crudActions.save());
+
+            final Integer id = crudActions.getId();
+            assertNotNull("id", id);
+            crudActions.newInstance();
+            assertNull("nullId", crudActions.getId());
+            crudActions.setId(id);
+            assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
+            setEntity(crudActions.getInstance());
         }
     };
 
@@ -103,7 +96,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected void testComponent() throws Exception {
             final T entity = getEntity();
             crudActions.newInstance();
-            initEntity(entity);
+            initEntity(entity, this.crudActions);
             assert PERSISTED.equals(crudActions.save());
             assert crudActions.getId() != null;
             assert Boolean.TRUE.equals(crudActions.getEntityValue(ATIVO));
@@ -117,7 +110,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected void testComponent() throws Exception {
             final T entity = getEntity();
             crudActions.newInstance();
-            initEntity(entity);
+            initEntity(entity, this.crudActions);
             //TODO: Ajustar assertions para retornar mensagens
             assert PERSISTED.equals(crudActions.save());
             assert crudActions.getId() != null;
@@ -133,10 +126,10 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected void testComponent() throws Exception {
             final T entity = getEntity();
             crudActions.newInstance();
-            initEntity(entity);
-            assert PERSISTED.equals(crudActions.save());
-            assert crudActions.getId() != null;
-            assert REMOVED.equals(crudActions.remove());
+            initEntity(entity, this.crudActions);
+            Assert.assertEquals("persist", true, PERSISTED.equals(crudActions.save()));
+            Assert.assertEquals("id!=null", true, crudActions.getId() != null);
+            Assert.assertEquals("remove", true, REMOVED.equals(crudActions.remove(crudActions.getInstance())));
         }
     };
 
@@ -145,37 +138,59 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected void testComponent() throws Exception {
             final T entity = getEntity();
             crudActions.newInstance();
-            initEntity(entity);
+            initEntity(entity, this.crudActions);
             assert crudActions.getId() == null;
             assert PERSISTED.equals(crudActions.save());
             assert REMOVED.equals(crudActions.remove());
         }
     };
     
-    protected final RunnableTest<EntityActionContainer<T>> updateSuccess = new RunnableTest<EntityActionContainer<T>>() {
+    protected final RunnableTest<T> updateSuccess = new RunnableTest<T>() {
         @Override
         public void testComponent() throws Exception {
-            final EntityActionContainer<T> entityActionContainer = this.getEntity();
+            final T entity = this.getEntity();
             
-            persistSuccessMethod(entityActionContainer.getEntity());
-            entityActionContainer.execute();
+            crudActions.newInstance();
+            initEntity(entity, crudActions);
+            assertEquals("persisted", PERSISTED, crudActions.save());
+
+            final Integer id = crudActions.getId();
+            assertNotNull("id", id);
+            crudActions.newInstance();
+            assertNull("nullId", crudActions.getId());
+            crudActions.setId(id);
+            assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
+            
+            executeAction();
+            
             assertEquals("UPDATED true ",UPDATED, crudActions.save());
         }
     };
     
-    protected final RunnableTest<EntityActionContainer<T>> updateFail = new RunnableTest<EntityActionContainer<T>>() {
+    protected final RunnableTest<T> updateFail = new RunnableTest<T>() {
+        
         @Override
         protected void testComponent() throws Exception {
-            final EntityActionContainer<T> entityActionContainer = getEntity();
-            final T entity = entityActionContainer.getEntity();
-            persistSuccessMethod(entity);
+            final T entity = getEntity();
+
+            crudActions.newInstance();
+            initEntity(entity, new CrudActions<T>(getComponentName()));
+            assertEquals("persisted", PERSISTED, crudActions.save());
+
+            final Integer id = crudActions.getId();
+            assertNotNull("id", id);
+            crudActions.newInstance();
+            assertNull("nullId", crudActions.getId());
+            crudActions.setId(id);
+            assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
             
-            entityActionContainer.execute();
+            executeAction();
+            
             assertEquals("updateFail update", false, UPDATED.equals(crudActions.save())); 
         }
     };
 
-    public abstract class EntityActionContainer<E> {
+    protected abstract class EntityActionContainer<E> {
         private final E entity;
 
         public EntityActionContainer(final E entity) {
@@ -185,21 +200,56 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             this.entity = entity;
         }
 
-        public abstract void execute();
+        public abstract void execute(final CrudActions<E> crudActions);
 
         public E getEntity() {
             return entity;
         }
 
     }
+
+
+    protected boolean compareEntityValues(final T entity, final CrudActions<T> crudActions) {
+        final Object entityInstance = crudActions.getInstance();
+        return entityInstance == entity
+                || (entityInstance != null && entity != null);
+    }
     
     protected abstract class RunnableTest<E> {
         private E entity;
+        private EntityActionContainer<E> actionContainer;
+        protected final CrudActions<E> crudActions;
+        
+        public RunnableTest() {
+            this.crudActions = new CrudActions<>(getComponentName());
+        }
+        
+        public RunnableTest(final String componentName) {
+            this.crudActions = new CrudActions<>(componentName);
+        }
         
         protected abstract void testComponent() throws Exception;
         
+        public final void executeAction() {
+            if (this.actionContainer != null) {
+                this.actionContainer.execute(this.crudActions);
+            }
+        }
+        
         public final E runTest(final E entity) throws Exception {
             this.entity = entity;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                testComponent();
+            } finally {
+                TestLifecycle.endTest();
+            }
+            return this.entity;
+        }
+        
+        public final E runTest(final EntityActionContainer<E> actionContainer) throws Exception {
+            this.actionContainer = actionContainer;
+            this.entity = actionContainer.getEntity();
             try {
                 TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
                 testComponent();
@@ -219,7 +269,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         
     }
 
-    public final class CrudActions<E> {
+    protected final class CrudActions<E> {
         private static final String METHOD_EXPR = "{0}({1}.instance)";
         private static final String INACTIVATE = "inactive";
         private static final String ID = "id";
