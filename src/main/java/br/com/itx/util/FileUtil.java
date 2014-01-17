@@ -49,7 +49,7 @@ public final class FileUtil {
                 }
             }
         }
-        return (dir.delete());
+        return dir.delete();
     }
 
     /**
