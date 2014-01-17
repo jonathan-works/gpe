@@ -17,14 +17,14 @@ public class UpdateRolesOperation extends RunAsOperation {
     private static final String ACCESS = "access";
     private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
     
-    final private IdentityManager identityManager = IdentityManager.instance();
-    final private RoleAction roleaction = ComponentUtil.getComponent(ROLE_ACTION);
-    final private List<String> roleGroup;
-    final private String role;
-    final private Collection<String> rolesToInclude;
-    final private Collection<String> rolesToExclude;
-    final private Collection<String> availableResourcesList;
-    final private Collection<String> selectedResourcesList;
+    private final IdentityManager identityManager = IdentityManager.instance();
+    private final RoleAction roleaction = ComponentUtil.getComponent(ROLE_ACTION);
+    private final List<String> roleGroup;
+    private final String role;
+    private final Collection<String> rolesToInclude;
+    private final Collection<String> rolesToExclude;
+    private final Collection<String> availableResourcesList;
+    private final Collection<String> selectedResourcesList;
 
     public UpdateRolesOperation(final List<String> roleGroup,
             final String role, final Collection<String> rolesToInclude,

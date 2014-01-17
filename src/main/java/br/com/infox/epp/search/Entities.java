@@ -313,7 +313,7 @@ final class Entities {
 
     public static String encode(String s) {
         int length = s.length();
-        StringBuffer buffer = new StringBuffer(length * 2);
+        StringBuilder buffer = new StringBuilder(length * 2);
         for (int i = 0; i < length; i++) {
             char c = s.charAt(i);
             int j = c;

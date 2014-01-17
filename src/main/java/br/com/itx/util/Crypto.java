@@ -46,7 +46,7 @@ public class Crypto {
      * @param key a chave que será usada no DES.
      */
     public Crypto(String key) {
-        String strKey = (key == null ? "" : key);
+        String strKey = key == null ? "" : key;
         try {
             KeyGenerator kg = KeyGenerator.getInstance("DES", "SunJCE");
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
