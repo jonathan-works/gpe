@@ -1,18 +1,21 @@
 package br.com.infox.epp.access.crud;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 
 @Name(BloqueioUsuarioCrudAction.NAME)
-public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario> {
-    
+public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     public static final String NAME = "bloqueioUsuarioCrudAction";
     
     private UsuarioLogin usuarioAtual;
@@ -23,42 +26,53 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
         return usuarioAtual;
     }
 
-    public void setUsuarioAtual(UsuarioLogin usuarioAtual) {
+    public void setUsuarioAtual(final UsuarioLogin usuarioAtual) {
         this.usuarioAtual = usuarioAtual;
         if (existeBloqueioAtivo()){
-            setInstance(bloqueioUsuarioManager.getUltimoBloqueio(usuarioAtual));
+            final BloqueioUsuario ultimoBloqueio = bloqueioUsuarioManager.getUltimoBloqueio(usuarioAtual);
+            setInstanceId(ultimoBloqueio.getIdBloqueioUsuario());
         } else {
             newInstance();
+            getInstance().setUsuario(this.usuarioAtual);
         }
     }
     
     @Override
     protected boolean beforeSave() {
-        if (!usuarioAtual.getBloqueio() && getInstance().getDataBloqueio() != null){
-            getInstance().setDataDesbloqueio(new Date());
+        final BloqueioUsuario bloqueioUsuario = getInstance();
+        if (!this.usuarioAtual.getBloqueio() && bloqueioUsuario.getDataBloqueio() != null){
+            bloqueioUsuario.setDataDesbloqueio(new Date());
         } else {
-            getInstance().setUsuario(usuarioAtual);
-            getInstance().setDataBloqueio(new Date());
+            bloqueioUsuario.setUsuario(this.usuarioAtual);
+            bloqueioUsuario.setDataBloqueio(new Date());
         }
-        return super.beforeSave();
+        return Boolean.TRUE;
     }
     
     private boolean existeBloqueioAtivo(){
-        BloqueioUsuario ultimoBloqueio = bloqueioUsuarioManager.getUltimoBloqueio(usuarioAtual);
-        if (ultimoBloqueio != null){
-            return ultimoBloqueio.getDataDesbloqueio() == null;
-        } else {
-            return false;
-        }
+        final BloqueioUsuario ultimoBloqueio = bloqueioUsuarioManager.getUltimoBloqueio(this.usuarioAtual);
+        return ultimoBloqueio != null && ultimoBloqueio.getDataDesbloqueio() == null;
     }
     
     public String desbloquear() {
-    	usuarioAtual.setBloqueio(false);
+        this.usuarioAtual.setBloqueio(Boolean.FALSE);
     	return save();
     }
     
     public String bloquear() {
-    	usuarioAtual.setBloqueio(true);
-    	return save();
+    	this.usuarioAtual.setBloqueio(Boolean.TRUE);
+        return save();
     }
+    
+    @Override
+    protected void afterSave(final String ret) {
+        if (UPDATED.equals(ret) || PERSISTED.equals(ret)) {
+            try {
+                bloqueioUsuarioManager.update(this.usuarioAtual);
+            } catch (DAOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
 }

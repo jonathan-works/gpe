@@ -272,7 +272,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     protected final class CrudActions<E> {
         private static final String METHOD_EXPR = "{0}({1}.instance)";
         private static final String INACTIVATE = "inactive";
-        private static final String ID = "id";
+        private static final String ID = "instanceId";
         private static final String REMOVE = "remove";
         private static final String SAVE = "save";
         private static final String INSTANCE = "instance";
