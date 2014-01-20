@@ -8,8 +8,10 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ajuda.dao.AjudaDAO;
 import br.com.infox.epp.ajuda.entity.Ajuda;
+import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 
 @Name(AjudaManager.NAME)
 @AutoCreate
@@ -28,6 +30,20 @@ public class AjudaManager extends GenericManager {
     @SuppressWarnings("rawtypes")
     public List pesquisar(String textoPesquisa) throws ParseException{
         return ajudaDAO.pesquisar(textoPesquisa);
+    }
+    
+    public void gravarHistorico(Ajuda oldInstance) throws DAOException {
+        HistoricoAjuda historico = new HistoricoAjuda();
+        historico.setDataRegistro(oldInstance.getDataRegistro());
+        historico.setPagina(oldInstance.getPagina());
+        historico.setTexto(oldInstance.getTexto());
+        historico.setUsuario(oldInstance.getUsuario());
+        try {
+            remove(oldInstance);
+            persist(historico);
+        } catch (DAOException e) {
+            throw new DAOException("Não foi possível atualizar o histórico da ajuda", e);
+        }
     }
 
 }

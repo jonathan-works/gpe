@@ -23,7 +23,6 @@ public class AjudaView {
     public static final String NAME = "ajudaView";
     
     private Ajuda instance;
-//    private Ajuda oldInstance;
     
     private String tab;
     private String viewId;

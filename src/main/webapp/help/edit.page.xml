@@ -8,5 +8,6 @@ login-required="true">
     <begin-conversation join="true" />
     <param name="tab" value="#{ajudaCrudAction.tab}"/>
     <action execute="#{ajudaCrudAction.setInstance(ajudaView.instance)}"/>
+    <action execute="#{ajudaCrudAction.setViewId(ajudaView.viewId)}"/>
 
 </page>
