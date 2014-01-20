@@ -45,7 +45,7 @@
                 <h:panelGroup>
                     <h:outputLabel value="Pesquisar: " for="searchText" />
                     <h:inputText id="searchText"
-                        value="#{ajudaHome.textoPesquisa}" />
+                        value="#{ajudaView.textoPesquisa}" />
                 </h:panelGroup>
                 <a:commandButton render="resultado" limitRender="true"
                     image="/img/grid/arrow-next-off.gif"
@@ -55,14 +55,14 @@
 
         <s:div id="resultado">
             <h:outputText value="Nenhum resultado encontrado."
-                rendered="#{empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}"
+                rendered="#{empty ajudaView.resultadoPesquisa and !empty ajudaView.textoPesquisa}"
                 styleClass="sem-resultado-ajuda" />
             <rich:tabPanel id="helpPanel" height="650px"
-                switchType="client" activeItem="#{ajudaHome.tab}">
+                switchType="client" activeItem="#{ajudaView.tab}">
                 <rich:tab id="help" header="Ajuda" name="help">
                     <s:div id="helpLink" styleClass="help-link">
                         <h:outputLink
-                            value="#{util.contextPath}/help/show.seam?viewId=#{ajudaHome.viewId}">
+                            value="#{util.contextPath}/help/show.seam?viewId=#{ajudaView.viewId}">
                             <h:graphicImage url="link.gif"
                                 title="Utilize esse link para fazer referência a essa página" />
                         </h:outputLink>
@@ -73,17 +73,17 @@
                     </s:div>
                     <h:outputText id="helpText" escape="false"
                         rendered="#{! canEdit}"
-                        value="#{ajudaHome.texto}" />
+                        value="#{ajudaView.texto}" />
                 </rich:tab>
 
                 <rich:tab id="search"
-                    rendered="#{!empty ajudaHome.resultadoPesquisa and !empty ajudaHome.textoPesquisa}"
+                    rendered="#{!empty ajudaView.resultadoPesquisa and !empty ajudaView.textoPesquisa}"
                     header="Resultado da pesquisa" name="search">
 
                     <h:form>
                         <h:dataTable id="helpResult"
-                            rendered="#{! empty ajudaHome.textoPesquisa}"
-                            value="#{ajudaHome.resultadoPesquisa}"
+                            rendered="#{! empty ajudaView.textoPesquisa}"
+                            value="#{ajudaView.resultadoPesquisa}"
                             var="v">
                             <h:column>
                                 <div class="resultado-pesquisa-ajuda">
@@ -92,10 +92,10 @@
                                         render="helpText, helpLink"
                                         limitRender="true"
                                         oncomplete="#{rich:component('helpPanel')}.switchToItem('help');"
-                                        action="#{ajudaHome.setViewId(v[0].pagina.url, false)}"
+                                        action="#{ajudaView.setViewId(v[0].pagina.url, false)}"
                                         style="color: blue; font-size: 13px;">
                                         <f:param name="queryString"
-                                            value="#{ajudaHome.textoPesquisa}" />
+                                            value="#{ajudaView.textoPesquisa}" />
                                     </a:commandLink>
                                     <div>
                                         <h:outputText value="#{v[1]}"
