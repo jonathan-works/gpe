@@ -9,5 +9,15 @@ import org.jboss.seam.annotations.Scope;
 public class AjudaView <Ajuda>{
     
     public static final String NAME = "ajudaView";
+    
+    private String tab;
+    
+    public String getTab() {
+        return tab;
+    }
+
+    public void setTab(String tab) {
+        this.tab = tab;
+    }
 
 }
