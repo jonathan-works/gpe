@@ -1,18 +1,17 @@
 /*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
+ * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
+ * Tecnologia da Informação Ltda.
+ * 
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
+ * Software Foundation; versão 2 da Licença. Este programa é distribuído na
+ * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
+ * ESPECÍFICA.
+ * 
+ * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
+ * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
+ */
 package br.com.infox.certificado;
 
 import java.math.BigInteger;
@@ -35,119 +34,120 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(ValidaDocumentoHome.NAME)
 public class ValidaDocumentoHome {
-	
-	public static final String NAME = "validaDocumentoHome";
-	private ProcessoDocumento documento;
-	private ProcessoDocumentoBin processoDocumentoBin;
-	private Boolean valido;
-	private Certificado dadosCertificado;
-	
-	private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoHome.class);
-	@In private ProcessoDocumentoManager processoDocumentoManager;
-	
 
-	@Deprecated
-	public void validaDocumento(ProcessoDocumento documento) {
-		this.documento = documento;
-		ProcessoDocumentoBin bin = documento.getProcessoDocumentoBin();
-		validaDocumento(bin, bin.getCertChain(), bin.getSignature());
-	}
-	
-	/**
-	 * Valida a assinatura de um ProcessoDocumento. Quando o documento é do tipo
-	 * modelo as quebras de linha são retiradas.
-	 * @param id
-	 */
-	public void validaDocumento(ProcessoDocumentoBin bin, String certChain, String signature) {
-		processoDocumentoBin = bin;
-		setValido(false);
-		setDadosCertificado(null);
-		byte[] data = null;
-		
-		if (Strings.isEmpty(bin.getCertChain()) || Strings.isEmpty(bin.getSignature())) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-					"O documento não está assinado");
-			return;
-		}
-		
-		if (!bin.isBinario()) {
-			data = ValidaDocumento.removeBR(bin.getModeloDocumento()).getBytes();
-		} else {
-			try {
-				data = DocumentoBinHome.instance().getData(bin.getIdProcessoDocumentoBin()); 
-			} catch (Exception e) {
-				throw new IllegalArgumentException("Erro ao obter os dados do binário", e);
-			}
-		}
-		if (data == null) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, 
-				"Documento inválido");
-			return;
-		}
-		try {
-			ValidaDocumento validaDocumento = new ValidaDocumento(data, certChain, signature);
-			setValido(validaDocumento.verificaAssinaturaDocumento());
-			setDadosCertificado(validaDocumento.getDadosCertificado());
-		} catch (ValidaDocumentoException | CertificadoException e) {
-			LOG.error(".validaDocumento(bin, certChain, signature)", e);;
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getMessage());
-		}
-	}	
-	
-	public void validaDocumentoId(Integer idDocumento) {
-		if (idDocumento == null) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Id do documento não informado");
-			return;
-		}
-		ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDocumento);
-		if (processoDocumento == null) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Documento não encontrado.");
-			return;
-		}		
-		validaDocumento(processoDocumento);
-	}
+    public static final String NAME = "validaDocumentoHome";
+    private ProcessoDocumento documento;
+    private ProcessoDocumentoBin processoDocumentoBin;
+    private Boolean valido;
+    private Certificado dadosCertificado;
 
-	public ProcessoDocumento getDocumento() {
-		return documento;
-	}
-	
-	public void setDocumento(ProcessoDocumento documento) {
-		this.documento = documento;
-	}
+    private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoHome.class);
+    @In
+    private ProcessoDocumentoManager processoDocumentoManager;
 
-	public void setValido(Boolean valido) {
-		this.valido = valido;
-	}
+    @Deprecated
+    public void validaDocumento(ProcessoDocumento documento) {
+        this.documento = documento;
+        ProcessoDocumentoBin bin = documento.getProcessoDocumentoBin();
+        validaDocumento(bin, bin.getCertChain(), bin.getSignature());
+    }
 
-	public Boolean getValido() {
-		return valido;
-	}
+    /**
+     * Valida a assinatura de um ProcessoDocumento. Quando o documento é do tipo
+     * modelo as quebras de linha são retiradas.
+     * 
+     * @param id
+     */
+    public void validaDocumento(ProcessoDocumentoBin bin, String certChain,
+            String signature) {
+        processoDocumentoBin = bin;
+        setValido(false);
+        setDadosCertificado(null);
+        byte[] data = null;
 
-	public void setDadosCertificado(Certificado dadosCertificado) {
-		this.dadosCertificado = dadosCertificado;
-	}
+        if (Strings.isEmpty(bin.getCertChain())
+                || Strings.isEmpty(bin.getSignature())) {
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento não está assinado");
+            return;
+        }
 
-	public Certificado getDadosCertificado() {
-		return dadosCertificado;
-	}
+        if (!bin.isBinario()) {
+            data = ValidaDocumento.removeBR(bin.getModeloDocumento()).getBytes();
+        } else {
+            try {
+                data = DocumentoBinHome.instance().getData(bin.getIdProcessoDocumentoBin());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Erro ao obter os dados do binário", e);
+            }
+        }
+        if (data == null) {
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Documento inválido");
+            return;
+        }
+        try {
+            ValidaDocumento validaDocumento = new ValidaDocumento(data, certChain, signature);
+            setValido(validaDocumento.verificaAssinaturaDocumento());
+            setDadosCertificado(validaDocumento.getDadosCertificado());
+        } catch (ValidaDocumentoException | CertificadoException e) {
+            LOG.error(".validaDocumento(bin, certChain, signature)", e);;
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getMessage());
+        }
+    }
 
-	public ProcessoDocumentoBin getProcessoDocumentoBin() {
-		return processoDocumentoBin;
-	}
-	
-	public String getNomeCertificadora() {
-		return dadosCertificado == null ? null : dadosCertificado.getNomeCertificadora();
-	}
-	
-	public String getNome() {
-		return dadosCertificado == null ? null : dadosCertificado.getNome();
-	}
-	
-	public BigInteger getSerialNumber() {
-		return dadosCertificado == null ? null : dadosCertificado.getSerialNumber();
-	}	
-	
-	public static ValidaDocumentoHome instance() {
-		return ComponentUtil.getComponent(NAME);
-	}
+    public void validaDocumentoId(Integer idDocumento) {
+        if (idDocumento == null) {
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Id do documento não informado");
+            return;
+        }
+        ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDocumento);
+        if (processoDocumento == null) {
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Documento não encontrado.");
+            return;
+        }
+        validaDocumento(processoDocumento);
+    }
+
+    public ProcessoDocumento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(ProcessoDocumento documento) {
+        this.documento = documento;
+    }
+
+    public void setValido(Boolean valido) {
+        this.valido = valido;
+    }
+
+    public Boolean getValido() {
+        return valido;
+    }
+
+    public void setDadosCertificado(Certificado dadosCertificado) {
+        this.dadosCertificado = dadosCertificado;
+    }
+
+    public Certificado getDadosCertificado() {
+        return dadosCertificado;
+    }
+
+    public ProcessoDocumentoBin getProcessoDocumentoBin() {
+        return processoDocumentoBin;
+    }
+
+    public String getNomeCertificadora() {
+        return dadosCertificado == null ? null : dadosCertificado.getNomeCertificadora();
+    }
+
+    public String getNome() {
+        return dadosCertificado == null ? null : dadosCertificado.getNome();
+    }
+
+    public BigInteger getSerialNumber() {
+        return dadosCertificado == null ? null : dadosCertificado.getSerialNumber();
+    }
+
+    public static ValidaDocumentoHome instance() {
+        return ComponentUtil.getComponent(NAME);
+    }
 }

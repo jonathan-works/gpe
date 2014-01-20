@@ -17,8 +17,8 @@ import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.util.ArrayUtil;
 
 public class Certificado {
-	
-	private static final int HEX_NUMBER = 16;
+
+    private static final int HEX_NUMBER = 16;
 
     private String c = null;
     private String cn = null;
