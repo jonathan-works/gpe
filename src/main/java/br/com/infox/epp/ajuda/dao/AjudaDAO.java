@@ -3,7 +3,7 @@ package br.com.infox.epp.ajuda.dao;
 import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL;
-import static br.com.infox.epp.ajuda.query.AjudaQuery.PARAM_URL;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,7 +81,7 @@ public class AjudaDAO extends GenericDAO {
     public void reindexarAjuda(){
         LOG.info(CRIANDO_INDICES);
         Session session = sessionAssistant.getSession();
-        org.hibernate.Query query = session.createQuery("select a from Ajuda a");
+        org.hibernate.Query query = session.createQuery(AJUDA_FIND_ALL_QUERY);
         query.setCacheMode(CacheMode.IGNORE);
         query.setFetchSize(50);
         ScrollableResults scroll = query.scroll(ScrollMode.FORWARD_ONLY);
