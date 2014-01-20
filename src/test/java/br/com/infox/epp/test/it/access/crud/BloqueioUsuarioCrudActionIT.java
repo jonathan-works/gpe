@@ -219,11 +219,8 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
             assertEquals("persisted", false, PERSISTED.equals(bloquearRet) || UPDATED.equals(bloquearRet));
 
             final Integer id = this.crudActions.getId();
-            if (this.bloqueadoStartValue) {
-                assertNotNull("id", id);
-            } else {
-                assertNull("id", id);
-            }
+            
+            assertEquals("id", bloqueadoStartValue, Boolean.valueOf(id != null));
             
             setEntity(crudActions.getInstance());
             
