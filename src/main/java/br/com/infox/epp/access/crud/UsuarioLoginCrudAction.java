@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.crud;
 
+import java.io.Serializable;
+
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.annotations.In;
@@ -15,9 +17,10 @@ import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.access.type.UsuarioEnum;
 
 @Name(UsuarioLoginCrudAction.NAME)
-public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
-    public static final String NAME = "usuarioLoginCrudAction";
+public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginCrudAction.class);
+    public static final String NAME = "usuarioLoginCrudAction";
     
     @In private PasswordService passwordService;
 
