@@ -12,6 +12,7 @@ import org.apache.lucene.util.Version;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
@@ -20,6 +21,8 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.home.AjudaHome;
+import br.com.infox.epp.ajuda.manager.AjudaManager;
+import br.com.infox.epp.ajuda.manager.PaginaManager;
 import br.com.infox.epp.search.SearchUtil;
 import br.com.itx.util.ComponentUtil;
 
@@ -31,6 +34,7 @@ public class AjudaView {
     private static final LogProvider LOG = Logging.getLogProvider(AjudaView.class);
     
     private Ajuda instance;
+    private Ajuda oldInstance;
     
     private String tab;
     private String viewId;
@@ -38,6 +42,8 @@ public class AjudaView {
     private String textoPesquisa;
     private List resultado;
     
+    @In private AjudaManager ajudaManager;
+    @In private PaginaManager paginaManager;
     
     public String getTab() {
         return tab;
@@ -62,10 +68,32 @@ public class AjudaView {
     public void setViewId(String viewId, boolean clearSearch) {
         this.viewId = viewId;
         this.pagina = null;
-//        createInstance();
+        createInstance();
         if (clearSearch) {
             setTextoPesquisa(null);
         }
+    }
+    
+    private Ajuda createInstance() {
+        instance = new Ajuda();
+        Ajuda ajuda = ajudaManager.getAjudaByPaginaUrl(viewId);
+        if (ajuda != null) {
+            instance.setTexto(ajuda.getTexto());
+            oldInstance = ajuda;
+        }
+        instance.setPagina(getPagina());
+        return instance;
+    }
+    
+    private Pagina getPagina() {
+        if (pagina == null) {
+            return verificaPagina();
+        }
+        return pagina;
+    }
+    
+    private Pagina verificaPagina() {
+        return paginaManager.getPaginaByUrl(viewId);
     }
     
     public String getTextoPesquisa() {
