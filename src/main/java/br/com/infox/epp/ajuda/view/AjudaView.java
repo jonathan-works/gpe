@@ -1,21 +1,25 @@
 package br.com.infox.epp.ajuda.view;
 
-import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.core.constants.WarningConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.util.Version;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
+import br.com.infox.epp.ajuda.home.AjudaHome;
 import br.com.infox.epp.search.SearchUtil;
 import br.com.itx.util.ComponentUtil;
 
@@ -24,6 +28,9 @@ import br.com.itx.util.ComponentUtil;
 public class AjudaView {
     
     public static final String NAME = "ajudaView";
+    private static final LogProvider LOG = Logging.getLogProvider(AjudaView.class);
+    
+    private Ajuda instance;
     
     private String tab;
     private String viewId;
@@ -42,6 +49,10 @@ public class AjudaView {
 
     public String getView() {
         return null;
+    }
+    
+    public String getViewId() {
+        return viewId;
     }
     
     public void setView(String view) {
@@ -66,7 +77,7 @@ public class AjudaView {
         this.textoPesquisa = textoPesquisa;
     }
     
-    @SuppressWarnings(RAWTYPES)
+    @SuppressWarnings({RAWTYPES, UNCHECKED})
     public List getResultadoPesquisa() throws ParseException {
         if (getTextoPesquisa() == null) {
             return null;
@@ -90,6 +101,27 @@ public class AjudaView {
             }
         }
         return resultado;
+    }
+    
+    public String getTexto() {
+        String texto = null;
+        if (instance != null) {
+            texto = instance.getTexto();
+
+            if (textoPesquisa != null && texto != null) {
+                QueryParser parser = new QueryParser(Version.LUCENE_36, "texto", SearchUtil.getAnalyzer());
+                try {
+                    org.apache.lucene.search.Query query = parser.parse(textoPesquisa);
+                    String highlighted = SearchUtil.highlightText(query, texto, false);
+                    if (!highlighted.equals("")) {
+                        texto = highlighted;
+                    }
+                } catch (ParseException e) {
+                    LOG.error(".getTexto()", e);
+                }
+            }
+        }
+        return texto;
     }
 
 }
