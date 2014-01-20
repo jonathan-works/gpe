@@ -63,7 +63,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 	 * inserção ou atualização dos dados. 
 	 */
 	protected boolean beforeSave() {
-		return true;
+		return Boolean.TRUE;
 	}
 	
 	protected void afterSave() {
@@ -83,16 +83,27 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 		this.tab = tab;
 	}
 	
-	@SuppressWarnings(UNCHECKED)
 	@Override
-	public void setId(Object id) {
+	public void setId(final Object id) {
 		if(id != null && !id.equals(this.id)) {
-			this.id = id;
-			setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
-			tab = TAB_FORM;
+		    setInstanceId(id);
+	        tab = TAB_FORM;
 		} else if (id == null) {
 			this.id = null;
 		}
+	}
+	
+	@SuppressWarnings(UNCHECKED)
+	public void setId(Object id, boolean switchTab) {
+	    if(id != null && !id.equals(this.id)) {
+            this.id = id;
+            setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
+            if (switchTab) {
+                tab = TAB_FORM;
+            }
+        } else if (id == null) {
+            this.id = null;
+        }
 	}
 	
 	@Override
@@ -147,7 +158,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 			
 	        if (PERSISTED.equals(ret)){
                 try {
-                    setId(EntityUtil.getId(instance).getReadMethod().invoke(instance));
+                    setInstanceId(EntityUtil.getId(instance).getReadMethod().invoke(instance));
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     LOG.error(".save()",e);
                 }
@@ -167,6 +178,16 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T>
 		}
 		return ret;
 	}
+
+    @SuppressWarnings(UNCHECKED)
+    public void setInstanceId(final Object id) {
+        this.id = id;
+        setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
+    }
+    
+    public Object getInstanceId() {
+        return this.id;
+    }
     
 	/**
 	 * Wrapper para o método persist(), pois é necessario definir que
