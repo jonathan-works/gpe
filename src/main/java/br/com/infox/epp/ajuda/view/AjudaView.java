@@ -23,7 +23,7 @@ import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
-import br.com.infox.epp.search.SearchUtil;
+import br.com.infox.epp.search.SearchService;
 import br.com.itx.util.ComponentUtil;
 
 @Name(AjudaView.NAME)
@@ -45,6 +45,7 @@ public class AjudaView {
     
     @In private AjudaManager ajudaManager;
     @In private PaginaManager paginaManager;
+    @In private SearchService searchService;
     
     public String getTab() {
         return tab;
@@ -116,7 +117,7 @@ public class AjudaView {
             
             FullTextEntityManager em = (FullTextEntityManager) ComponentUtil.getComponent("entityManager");
             String[] fields = new String[] { "texto" };
-            MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, SearchUtil.getAnalyzer());
+            MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, SearchService.getAnalyzer());
             parser.setAllowLeadingWildcard(true);
             org.apache.lucene.search.Query query = parser.parse("+"
                     + getTextoPesquisa() + "+");
@@ -125,7 +126,7 @@ public class AjudaView {
 
             for (Object o : textQuery.getResultList()) {
                 Ajuda a = (Ajuda) o;
-                String s = SearchUtil.getBestFragments(query, a.getTexto());
+                String s = SearchService.getBestFragments(query, a.getTexto());
                 resultado.add(new Object[] { a, s });
             }
         }
@@ -136,18 +137,8 @@ public class AjudaView {
         String texto = null;
         if (instance != null) {
             texto = instance.getTexto();
-
             if (textoPesquisa != null && texto != null) {
-                QueryParser parser = new QueryParser(Version.LUCENE_36, "texto", SearchUtil.getAnalyzer());
-                try {
-                    org.apache.lucene.search.Query query = parser.parse(textoPesquisa);
-                    String highlighted = SearchUtil.highlightText(query, texto, false);
-                    if (!highlighted.equals("")) {
-                        texto = highlighted;
-                    }
-                } catch (ParseException e) {
-                    LOG.error(".getTexto()", e);
-                }
+                return searchService.pesquisaEmTexto(textoPesquisa, texto);
             }
         }
         return texto;
