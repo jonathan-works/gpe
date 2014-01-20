@@ -1,5 +1,7 @@
 package br.com.infox.epp.ajuda.manager;
 
+import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
+
 import java.util.List;
 
 import org.apache.lucene.queryParser.ParseException;
@@ -22,28 +24,32 @@ public class AjudaManager extends GenericManager {
 
     @In
     private AjudaDAO ajudaDAO;
-
+    
     public Ajuda getAjudaByPaginaUrl(String url) {
         return ajudaDAO.getAjudaByPaginaUrl(url);
     }
     
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings(RAWTYPES)
     public List pesquisar(String textoPesquisa) throws ParseException{
         return ajudaDAO.pesquisar(textoPesquisa);
     }
     
-    public void gravarHistorico(Ajuda oldInstance) throws DAOException {
+    public void gravarHistorico(Ajuda oldAjuda) throws DAOException {
         HistoricoAjuda historico = new HistoricoAjuda();
-        historico.setDataRegistro(oldInstance.getDataRegistro());
-        historico.setPagina(oldInstance.getPagina());
-        historico.setTexto(oldInstance.getTexto());
-        historico.setUsuario(oldInstance.getUsuario());
+        historico.setDataRegistro(oldAjuda.getDataRegistro());
+        historico.setPagina(oldAjuda.getPagina());
+        historico.setTexto(oldAjuda.getTexto());
+        historico.setUsuario(oldAjuda.getUsuario());
         try {
-            remove(oldInstance);
+            remove(oldAjuda);
             persist(historico);
         } catch (DAOException e) {
             throw new DAOException("Não foi possível atualizar o histórico da ajuda", e);
         }
+    }
+    
+    public void reindexarAjuda(){
+        ajudaDAO.reindexarAjuda();
     }
 
 }

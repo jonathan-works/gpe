@@ -23,7 +23,7 @@ public class HistoricoAjudaList extends EntityList<HistoricoAjuda> {
     private static final String DEFAULT_EJBQL = "select o from HistoricoAjuda o";
     private static final String DEFAULT_ORDER = "dataRegistro desc";
 
-    private static final String R1 = "pagina.url = #{ajudaHome.viewId}";
+    private static final String R1 = "pagina.url = #{ajudaCrudAction.viewId}";
 
     protected void addSearchFields() {
         addSearchField("pagina.url", SearchCriteria.IGUAL, R1);

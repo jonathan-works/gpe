@@ -11,6 +11,7 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.ajuda.entity.Ajuda;
+import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
@@ -88,4 +89,8 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda> {
         return pagina;
     }
     
+    public void recuperar(HistoricoAjuda historico){
+        getInstance().setTexto(historico.getTexto());
+        save();
+    }
 }
