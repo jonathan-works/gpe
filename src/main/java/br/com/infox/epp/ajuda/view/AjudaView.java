@@ -36,6 +36,14 @@ public class AjudaView {
     @In private PaginaManager paginaManager;
     @In private SearchService searchService;
     
+    public Ajuda getInstance() {
+        return instance;
+    }
+
+    public void setInstance(Ajuda instance) {
+        this.instance = instance;
+    }
+
     public String getTab() {
         return tab;
     }

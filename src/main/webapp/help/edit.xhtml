@@ -32,12 +32,12 @@
             <wi:dataForm formId="ajudaForm" formTitle="Texto de ajuda">
 
                 <wi:editor id="texto" label="Texto" width="660"
-                    height="450" value="#{ajudaHome.instance.texto}" />
+                    height="450" value="#{ajudaCrudAction.instance.texto}" />
 
                 <ui:define name="buttons">
 
                     <wi:commandButton id="ajudaPersistButton"
-                        action="ajudaHome.persist"
+                        action="ajudaCrudAction.save"
                         value="#{messages['crud.update']}"
                         reRender="gridAjuda">
                     </wi:commandButton>
@@ -65,7 +65,7 @@
                     <wi:toolBar id="recuperarRevisao"
                         url="/img/grid/copyLeft.gif"
                         title="Recuperar revisão" reRender="formAjuda"
-                        action="ajudaHome.instance.setTexto(row.texto)"
+                        action="ajudaCrudAction.instance.setTexto(row.texto)"
                         limitToList="true" />
                     <wi:toolBarTextPreview value="#{row.texto}" />
                 </ui:define>

@@ -6,6 +6,7 @@ xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/s
 login-required="true">
 
     <begin-conversation join="true" />
-    <param name="tab" value="#{ajudaHome.tab}"/>
+    <param name="tab" value="#{ajudaCrudAction.tab}"/>
+    <action execute="#{ajudaCrudAction.setInstance(ajudaView.instance)}"/>
 
 </page>
