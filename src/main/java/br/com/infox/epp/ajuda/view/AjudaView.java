@@ -27,7 +27,7 @@ import br.com.infox.epp.search.SearchUtil;
 import br.com.itx.util.ComponentUtil;
 
 @Name(AjudaView.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class AjudaView {
     
     public static final String NAME = "ajudaView";
