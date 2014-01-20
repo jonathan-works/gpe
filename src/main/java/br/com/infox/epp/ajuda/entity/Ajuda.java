@@ -24,7 +24,7 @@ import static br.com.infox.epp.ajuda.query.AjudaQuery.PAGINA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.SEQUENCE_AJUDA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.TABLE_AJUDA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.TEXTO;
-import static br.com.infox.epp.ajuda.query.AjudaQuery.USUARIO;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.*;
 
 import java.util.Date;
 
@@ -56,8 +56,9 @@ import br.com.infox.epp.search.Reindexer;
 
 @Entity
 @Table(name = TABLE_AJUDA, schema = PUBLIC)
-@NamedQueries(value = { @NamedQuery(name = AJUDA_BY_URL,
-        query = AJUDA_BY_URL_QUERY) })
+@NamedQueries(value = { 
+    @NamedQuery(name = AJUDA_FIND_ALL, query=AJUDA_FIND_ALL_QUERY),
+    @NamedQuery(name = AJUDA_BY_URL, query = AJUDA_BY_URL_QUERY) })
 @Analyzer(impl = BrazilianAnalyzer.class)
 @Indexed
 public class Ajuda implements java.io.Serializable {

@@ -14,5 +14,8 @@ public interface AjudaQuery {
     String AJUDA_BY_URL = "ajudaByUrl";
     String AJUDA_BY_URL_QUERY = "select a from Ajuda a where a.pagina.url = :" + PARAM_URL 
                                     + " order by a.dataRegistro desc";
+    
+    String AJUDA_FIND_ALL = "findAllAjuda";
+    String AJUDA_FIND_ALL_QUERY = "select a from Ajuda a";
 
 }
