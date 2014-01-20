@@ -1,5 +1,8 @@
 package br.com.infox.epp.ajuda.manager;
 
+import java.util.List;
+
+import org.apache.lucene.queryParser.ParseException;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -20,6 +23,11 @@ public class AjudaManager extends GenericManager {
 
     public Ajuda getAjudaByPaginaUrl(String url) {
         return ajudaDAO.getAjudaByPaginaUrl(url);
+    }
+    
+    @SuppressWarnings("rawtypes")
+    public List pesquisar(String textoPesquisa) throws ParseException{
+        return ajudaDAO.pesquisar(textoPesquisa);
     }
 
 }

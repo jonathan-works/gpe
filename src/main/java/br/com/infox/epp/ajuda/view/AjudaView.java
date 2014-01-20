@@ -1,17 +1,10 @@
 package br.com.infox.epp.ajuda.view;
 
 import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.util.Version;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -24,7 +17,6 @@ import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
 import br.com.infox.epp.search.SearchService;
-import br.com.itx.util.ComponentUtil;
 
 @Name(AjudaView.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -107,28 +99,13 @@ public class AjudaView {
         this.textoPesquisa = textoPesquisa;
     }
     
-    @SuppressWarnings({RAWTYPES, UNCHECKED})
+    @SuppressWarnings({RAWTYPES})
     public List getResultadoPesquisa() throws ParseException {
         if (getTextoPesquisa() == null) {
             return null;
         }
         if (resultado == null) {
-            resultado = new ArrayList();
-            
-            FullTextEntityManager em = (FullTextEntityManager) ComponentUtil.getComponent("entityManager");
-            String[] fields = new String[] { "texto" };
-            MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, SearchService.getAnalyzer());
-            parser.setAllowLeadingWildcard(true);
-            org.apache.lucene.search.Query query = parser.parse("+"
-                    + getTextoPesquisa() + "+");
-
-            FullTextQuery textQuery = em.createFullTextQuery(query, Ajuda.class);
-
-            for (Object o : textQuery.getResultList()) {
-                Ajuda a = (Ajuda) o;
-                String s = SearchService.getBestFragments(query, a.getTexto());
-                resultado.add(new Object[] { a, s });
-            }
+            resultado = ajudaManager.pesquisar(textoPesquisa);
         }
         return resultado;
     }
