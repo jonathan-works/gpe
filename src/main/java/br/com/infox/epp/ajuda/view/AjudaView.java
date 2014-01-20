@@ -1,6 +1,7 @@
 package br.com.infox.epp.ajuda.view;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
-import br.com.infox.epp.ajuda.home.AjudaHome;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
 import br.com.infox.epp.search.SearchUtil;
@@ -34,12 +34,13 @@ public class AjudaView {
     private static final LogProvider LOG = Logging.getLogProvider(AjudaView.class);
     
     private Ajuda instance;
-    private Ajuda oldInstance;
+//    private Ajuda oldInstance;
     
     private String tab;
     private String viewId;
     private Pagina pagina;
     private String textoPesquisa;
+    @SuppressWarnings(RAWTYPES)
     private List resultado;
     
     @In private AjudaManager ajudaManager;
@@ -79,7 +80,7 @@ public class AjudaView {
         Ajuda ajuda = ajudaManager.getAjudaByPaginaUrl(viewId);
         if (ajuda != null) {
             instance.setTexto(ajuda.getTexto());
-            oldInstance = ajuda;
+//            oldInstance = ajuda;
         }
         instance.setPagina(getPagina());
         return instance;
