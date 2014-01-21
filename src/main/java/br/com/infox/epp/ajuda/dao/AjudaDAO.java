@@ -69,8 +69,7 @@ public class AjudaDAO extends GenericDAO {
         String[] fields = new String[] { "texto" };
         MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, SearchService.getAnalyzer());
         parser.setAllowLeadingWildcard(true);
-        Query query = parser.parse("+" + textoPesquisa + "+");
-        return query;
+        return parser.parse("+" + textoPesquisa + "+");
     }
     
     @Override
