@@ -1,7 +1,13 @@
 package br.com.infox.epp.twitter.entity;
 
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_ID_USUARIO;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_ID_USUARIO_QUERY;
 import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_LOCALIZACAO;
-import static br.com.infox.epp.twitter.query.ContaTwitterQuery.*;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_USUARIO;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_USUARIO_QUERY;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.LIST_TWITTER_BY_ID_GRUPO_EMAIL;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.LIST_TWITTER_BY_ID_GRUPO_EMAIL_QUERY;
 
 import java.io.Serializable;
 
@@ -17,7 +23,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Size;
 
 import twitter4j.auth.AccessToken;
 import br.com.infox.core.constants.LengthConstants;
@@ -80,7 +85,6 @@ public class ContaTwitter implements Serializable {
 	}
 	
 	@Column(name="tp_conta_twitter", nullable=false, columnDefinition="varchar(1)", length=LengthConstants.FLAG)
-	@Size(max=LengthConstants.FLAG)
 	@Enumerated(EnumType.STRING)
 	public TipoTwitterEnum getTipoTwitter() {
 		return tipoTwitter;
