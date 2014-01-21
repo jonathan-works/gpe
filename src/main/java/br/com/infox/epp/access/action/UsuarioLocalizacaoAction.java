@@ -33,9 +33,6 @@ import br.com.infox.epp.access.manager.UsuarioLocalizacaoManager;
 public class UsuarioLocalizacaoAction extends AbstractCrudAction<UsuarioLocalizacao>{
 	public static final String NAME = "usuarioLocalizacaoAction";
 	
-	@In
-	private UsuarioLocalizacaoManager usuarioLocalizacaoManager;
-	
 	private UsuarioLogin usuarioGerenciado;
 	
 	@SuppressWarnings(UNCHECKED)
