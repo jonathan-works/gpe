@@ -45,6 +45,9 @@ public class ValidaDocumentoHome {
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
+    /**
+     * @deprecated
+     * */
     @Deprecated
     public void validaDocumento(ProcessoDocumento documento) {
         this.documento = documento;
