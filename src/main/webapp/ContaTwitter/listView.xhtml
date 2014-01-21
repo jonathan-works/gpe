@@ -30,7 +30,7 @@
 	<ui:define name="title">#{messages['contaTwitter.titlePage']}</ui:define>
 	
 	<ui:param name="showSearchTab" value="false"/>
-	<ui:param name="home" value="#{contaTwitterHome}" />
+	<ui:param name="home" value="#{contaTwitterCrudAction}" />
 	
 	<ui:define name="body">
 		<rich:panel>
@@ -39,16 +39,16 @@
 					<wi:dataForm formId="contaTwitterForm"
 								 formTitle="#{messages['form.title']}"
 								 requiredForm="false">
-						<rich:dataTable rendered="#{contaTwitterHome.managed}" >
+						<rich:dataTable rendered="#{contaTwitterCrudAction.managed}" >
 							<f:facet name="header">
 								<h:outputText value="#{messages['contaTwitter.contaCadastrada']}"/>
 							</f:facet>
 							<rich:column >
 								<f:facet name="header">
 									<wi:commandLink id="recadastrarLink"
-									                rendered="#{contaTwitterHome.managed}"
+									                rendered="#{contaTwitterCrudAction.managed}"
 												    onclick="if(!confirm('Deseja inativar este registro?')) return false;"
-												    action="contaTwitterHome.remove()"
+												    action="contaTwitterCrudAction.remove()"
 												    reRender="contaTwitterForm">
 										<wi:toolBarGraphicImage url="/img/remove.png"/>
 									</wi:commandLink>

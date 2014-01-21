@@ -26,13 +26,13 @@ import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 import br.com.infox.epp.twitter.util.TwitterUtil;
 
-@Name(ContaTwitterHome.NAME)
+@Name(ContaTwitterCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ContaTwitterHome extends AbstractCrudAction<ContaTwitter> {
+public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
 
     private static final int UNAUTHORIZED = 401;
-    public static final String NAME = "contaTwitterHome";
-    private static final LogProvider LOG = Logging.getLogProvider(ContaTwitterHome.class);
+    public static final String NAME = "contaTwitterCrudAction";
+    private static final LogProvider LOG = Logging.getLogProvider(ContaTwitterCrudAction.class);
 
     private Twitter twitter = TwitterUtil.getInstance().getFactory().getInstance();
     private RequestToken requestToken;
