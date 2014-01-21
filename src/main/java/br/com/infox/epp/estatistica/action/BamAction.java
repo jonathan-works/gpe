@@ -33,7 +33,7 @@ import br.com.itx.util.ComponentUtil;
  */
 @Name(BamAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class BamAction extends AbstractController{
+public class BamAction extends AbstractController {
 
     public static final String NAME = "bamAction";
 
@@ -129,16 +129,15 @@ public class BamAction extends AbstractController{
             instance().add(Severity.ERROR, "forceUpdateProcesso()", e);
         }
     }
-    
+
     public void onClickSearchTab() {
         ProcessoEpaTarefaList instance = ComponentUtil.getComponent(ProcessoEpaTarefaList.NAME);
-        instance.newInstance(); 
+        instance.newInstance();
     }
 
     @Override
     public void onClickFormTab() {
         // TODO Auto-generated method stub
     }
-    
 
 }
