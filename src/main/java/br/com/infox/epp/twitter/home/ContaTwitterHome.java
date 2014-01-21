@@ -1,9 +1,9 @@
 package br.com.infox.epp.twitter.home;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
@@ -15,21 +15,22 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
+import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 import br.com.infox.epp.twitter.util.TwitterUtil;
-import br.com.itx.component.AbstractHome;
 
 @Name(ContaTwitterHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ContaTwitterHome extends AbstractHome<ContaTwitter> {
+public class ContaTwitterHome extends AbstractCrudAction<ContaTwitter> {
 
     private static final int UNAUTHORIZED = 401;
-    private static final long serialVersionUID = 1L;
     public static final String NAME = "contaTwitterHome";
     private static final LogProvider LOG = Logging.getLogProvider(ContaTwitterHome.class);
 
@@ -40,6 +41,8 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter> {
     private UsuarioLogin usuario;
     private String pin;
     private boolean requesting = false;
+    
+    @In ContaTwitterManager contaTwitterManager;
 
     public boolean usuarioLogadoHasTwitter() {
         return Authenticator.getUsuarioLogado().getTemContaTwitter();
@@ -70,39 +73,51 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter> {
     }
 
     @Override
-    protected boolean beforePersistOrUpdate() {
-        this.instance.setAccessToken(accessToken);
-        this.instance.setUsuario(usuario);
-        this.instance.setLocalizacao(localizacao);
+    protected boolean beforeSave() {
+        this.getInstance().setAccessToken(accessToken);
+        this.getInstance().setUsuario(usuario);
+        this.getInstance().setLocalizacao(localizacao);
         return true;
     }
 
     @Override
-    protected String afterPersistOrUpdate(String ret) {
+    protected void afterSave(String ret) {
         if ("persisted".equals(ret) || "updated".equals(ret)) {
-            EntityManager em = getEntityManager();
-            switch (this.instance.getTipoTwitter()) {
+            switch (this.getInstance().getTipoTwitter()) {
                 case U:
                     if (!usuario.getTemContaTwitter()) {
                         usuario.setTemContaTwitter(true);
-                        em.merge(usuario);
+                        try {
+                            contaTwitterManager.merge(usuario);
+                        } catch (DAOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                     }
                 break;
                 case S:
                     if (!usuario.getTemContaTwitter()) {
                         usuario.setTemContaTwitter(true);
-                        em.merge(usuario);
+                        try {
+                            contaTwitterManager.merge(usuario);
+                        } catch (DAOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                         TwitterUtil.restart();
                     }
                 break;
                 case L:
                     localizacao.setTemContaTwitter(true);
-                    em.merge(localizacao);
+                    try {
+                        contaTwitterManager.merge(localizacao);
+                    } catch (DAOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 break;
             }
-            em.flush();
         }
-        return ret;
     }
 
     public void getAutorizacao(String tipoAutorizacao) {
@@ -111,7 +126,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter> {
             try {
                 accessToken = getAccessToken(pin);
                 TipoTwitterEnum tipo = Enum.valueOf(TipoTwitterEnum.class, tipoAutorizacao);
-                this.instance.setTipoTwitter(tipo);
+                this.getInstance().setTipoTwitter(tipo);
                 switch (tipo) {
                     case L:
                     // TODO implement this
@@ -120,7 +135,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter> {
                         usuario = Authenticator.getUsuarioLogado();
                     break;
                     case S:
-                        usuario = getEntityManager().find(UsuarioLogin.class, Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
+                        usuario = contaTwitterManager.find(UsuarioLogin.class, Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
                     break;
                 }
                 persist();
@@ -147,21 +162,29 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter> {
     @Override
     public String remove() {
         if ("removed".equals(super.remove())) {
-            EntityManager em = getEntityManager();
-            switch (instance.getTipoTwitter()) {
+            switch (getInstance().getTipoTwitter()) {
                 case U:
                 case S:
-                    UsuarioLogin usr = instance.getUsuario();
+                    UsuarioLogin usr = getInstance().getUsuario();
                     usr.setTemContaTwitter(false);
-                    em.merge(usr);
+                    try {
+                        contaTwitterManager.merge(usr);
+                    } catch (DAOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 break;
                 case L:
-                    Localizacao loc = instance.getLocalizacao();
+                    Localizacao loc = getInstance().getLocalizacao();
                     loc.setTemContaTwitter(false);
-                    em.merge(loc);
+                    try {
+                        contaTwitterManager.merge(loc);
+                    } catch (DAOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 break;
             }
-            em.flush();
         }
         newInstance();
         return "removed";
@@ -181,7 +204,7 @@ public class ContaTwitterHome extends AbstractHome<ContaTwitter> {
                 usuario = Authenticator.getUsuarioLogado();
             break;
             case S:
-                usuario = getEntityManager().find(UsuarioLogin.class, Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
+                usuario = contaTwitterManager.find(UsuarioLogin.class, Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
             break;
             default:
             break;
