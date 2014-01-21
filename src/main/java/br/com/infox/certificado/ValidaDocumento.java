@@ -117,8 +117,7 @@ public class ValidaDocumento {
 
     private boolean isReceivedSignatureValid() throws ValidaDocumentoException {
         try {
-            boolean signatureValid = DigitalSignatureUtils.verifyDocumentSignature(documento, mCertificate, mSignature);
-            return signatureValid;
+            return DigitalSignatureUtils.verifyDocumentSignature(documento, mCertificate, mSignature);
         } catch (GeneralSecurityException e) {
             throw new ValidaDocumentoException("Erro ao verificar a assinatura "
                     + "do documento: " + e.getMessage(), e);
