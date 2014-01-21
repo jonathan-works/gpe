@@ -2,6 +2,7 @@ package br.com.infox.epp.ajuda.view;
 
 import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.queryParser.ParseException;
@@ -105,7 +106,7 @@ public class AjudaView {
     @SuppressWarnings({RAWTYPES})
     public List getResultadoPesquisa() throws ParseException {
         if (getTextoPesquisa() == null) {
-            return null;
+            return new ArrayList<>();
         }
         if (resultado == null) {
             resultado = ajudaManager.pesquisar(textoPesquisa);
