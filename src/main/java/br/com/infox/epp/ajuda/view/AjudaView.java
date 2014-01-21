@@ -77,7 +77,6 @@ public class AjudaView {
         Ajuda ajuda = ajudaManager.getAjudaByPaginaUrl(viewId);
         if (ajuda != null) {
             instance.setTexto(ajuda.getTexto());
-//            oldInstance = ajuda;
         }
         instance.setPagina(getPagina());
         return instance;
