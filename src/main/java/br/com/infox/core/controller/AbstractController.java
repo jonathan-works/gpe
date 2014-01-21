@@ -7,7 +7,7 @@ public abstract class AbstractController implements Controller {
 
     @Override
     public String getTab() {
-        return tab != null ? tab : TAB_FORM;
+        return tab;
     }
 
     @Override
