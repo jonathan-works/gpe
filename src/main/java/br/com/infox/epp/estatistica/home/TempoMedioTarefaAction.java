@@ -2,17 +2,14 @@ package br.com.infox.epp.estatistica.home;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.estatistica.entity.TempoMedioProcesso;
 import br.com.infox.epp.estatistica.manager.TempoMedioProcessoManager;
 
 @Name(TempoMedioTarefaAction.NAME)
-@Scope(ScopeType.CONVERSATION)
 public class TempoMedioTarefaAction extends AbstractController {
     public static final String NAME = "tempoMedioTarefaAction";
     
