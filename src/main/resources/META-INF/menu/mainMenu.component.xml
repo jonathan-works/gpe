@@ -21,7 +21,6 @@
             <value>menu.documentos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
             
             <value>menu.cadBasicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
-            <value>menu.cadBasicos/cep.menuText:/Cep/listView.seam</value>
             <value>menu.cadBasicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
             <value>menu.cadBasicos/pj.menuText:/PessoaJuridica/listView.seam</value>
             
