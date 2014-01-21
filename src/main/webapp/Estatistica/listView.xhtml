@@ -34,7 +34,7 @@
 	            value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}" />
 	        <ui:param
 	            name="home"
-	            value="#{tempoMedioTarefaHome}" />
+	            value="#{tempoMedioTarefaAction}" />
 	        <wi:dataTable
 	            values="#{tempoMedioTarefaList.list(15)}"
 	            bean="#{tempoMedioTarefaList}"
@@ -51,7 +51,7 @@
 	                        id="naturezaCategoriaFluxo"
 	                        label="#{messages['tempoMedioTarefaList.tempoMedioProcesso']}"
 	                        value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}"
-	                        items="#{tempoMedioTarefaHome.listTempoMedioProcesso}"
+	                        items="#{tempoMedioTarefaAction.listTempoMedioProcesso}"
 	                        showLabel="#{messages['tempoMedioProcesso.tempoMedioProcessoListCombo']}" />
 	                </wi:searchForm>
 	            </ui:define>

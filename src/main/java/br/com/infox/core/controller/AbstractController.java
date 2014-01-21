@@ -1,5 +1,9 @@
 package br.com.infox.core.controller;
 
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Scope;
+
+@Scope(ScopeType.CONVERSATION)
 public abstract class AbstractController implements Controller {
     
     private String tab;
@@ -24,5 +28,5 @@ public abstract class AbstractController implements Controller {
     public void setId(Object id) {
         this.id = id;
     }
-
+    
 }

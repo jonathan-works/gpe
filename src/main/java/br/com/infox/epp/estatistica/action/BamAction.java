@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -32,7 +30,6 @@ import br.com.itx.util.ComponentUtil;
  * @author tassio
  */
 @Name(BamAction.NAME)
-@Scope(ScopeType.CONVERSATION)
 public class BamAction extends AbstractController {
 
     public static final String NAME = "bamAction";
@@ -135,9 +132,5 @@ public class BamAction extends AbstractController {
         instance.newInstance();
     }
 
-    @Override
-    public void onClickFormTab() {
-        // TODO Auto-generated method stub
-    }
 
 }
