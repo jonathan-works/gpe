@@ -14,14 +14,17 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.list.ProcessoEpaTarefaList;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
+import br.com.itx.util.ComponentUtil;
 
 /**
  * Classe Action para o BAM
@@ -30,7 +33,7 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
  */
 @Name(BamAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class BamAction {
+public class BamAction extends AbstractController{
 
     public static final String NAME = "bamAction";
 
@@ -126,4 +129,16 @@ public class BamAction {
             instance().add(Severity.ERROR, "forceUpdateProcesso()", e);
         }
     }
+    
+    public void onClickSearchTab() {
+        ProcessoEpaTarefaList instance = ComponentUtil.getComponent(ProcessoEpaTarefaList.NAME);
+        instance.newInstance(); 
+    }
+
+    @Override
+    public void onClickFormTab() {
+        // TODO Auto-generated method stub
+    }
+    
+
 }
