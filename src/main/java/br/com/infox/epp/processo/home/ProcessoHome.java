@@ -185,7 +185,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
             processoDocumento.setPapel(usuarioLocalizacao.getPapel());
             processoDocumento.setLocalizacao(usuarioLocalizacao.getLocalizacao());
             atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento, usuarioLocalizacao.getUsuario());
-            inicializarTipoProcessoDocumento();
             gravarAlteracoes(processoDocumento, processoDocumentoBin);
         }
     }
@@ -214,17 +213,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
         processoDocumentoBin.setCertChain(certChain);
         processoDocumentoBin.setSignature(signature);
         processoDocumentoBin.setUsuarioUltimoAssinar(assinante.getNomeUsuario());
-    }
-
-    /**
-     * Se o tipoProcessoDocumento for nulo (caso o componente utilizado seja o
-     * editor sem assinatura digital, o tipoProcessoDOcumento será setado
-     * automaticamente com um valor aleatorio
-     */
-    private void inicializarTipoProcessoDocumento() {
-        if (tipoProcessoDocumento == null) {
-            tipoProcessoDocumento = tipoProcessoDocumentoDAO.getTipoProcessoDocumentoFluxo();
-        }
     }
 
     // Método para Inserir o documento do fluxo
@@ -399,9 +387,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public TipoProcessoDocumento getTipoProcessoDocumento() {
-        if (tipoProcessoDocumento == null) {
-            tipoProcessoDocumento = tipoProcessoDocumentoDAO.getTipoProcessoDocumentoFluxo();
-        }
         return tipoProcessoDocumento;
     }
 
