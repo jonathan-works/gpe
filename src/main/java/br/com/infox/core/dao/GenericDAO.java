@@ -217,6 +217,7 @@ public class GenericDAO implements Serializable {
         entityManager.clear();
     }
     
+    @Transactional
     public void flush(){
         entityManager.flush();
     }
