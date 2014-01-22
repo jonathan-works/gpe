@@ -32,7 +32,8 @@
          onbeforeshow="#{onbeforeshow}"
          onshow="#{onshow}"
          showWhenRendered="#{showWhenRendered}"
-         rendered="#{wi:get(rendered, true)}">
+         rendered="#{wi:get(rendered, true)}"
+         onbeforehide="#{onbeforehide}">
 			<c:if
              test="#{not empty labelHeader}">
 				<f:facet

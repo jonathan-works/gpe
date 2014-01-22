@@ -48,6 +48,8 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
+import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
+import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.ReflectionsUtil;
 
@@ -66,7 +68,8 @@ public class VariableAccessHandler implements Serializable {
 	private List<ModeloDocumento> modeloDocumentoList;
 	private Task task;
 	private boolean mudouModelo;
-	private String itensCombo;
+	private DominioVariavelTarefa dominioVariavelTarefa;
+	private boolean possuiDominio = false;
 
 	public VariableAccessHandler(VariableAccess variableAccess, Task task) {
 		this.task = task;
@@ -76,7 +79,8 @@ public class VariableAccessHandler implements Serializable {
 			String[] tokens = mappedName.split(":");
 			this.type = tokens[0];
 			if (tokens.length >= 3) {
-				this.itensCombo = tokens[2];
+				DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+				this.dominioVariavelTarefa = dominioVariavelTarefaManager.getDominioVariavelTarefa(Integer.valueOf(tokens[2]));
 			}
 		} else {
 			this.type = "default";
@@ -86,6 +90,11 @@ public class VariableAccessHandler implements Serializable {
 		access[0] = variableAccess.isReadable();
 		access[1] = variableAccess.isWritable();
 		access[2] = variableAccess.isRequired();
+		this.possuiDominio = tipoPossuiDominio(this.type);
+	}
+
+	private boolean tipoPossuiDominio(String type) {
+		return "enumeracao".equals(type);
 	}
 
 	public String getName() {
@@ -104,15 +113,13 @@ public class VariableAccessHandler implements Serializable {
 		}
 	}
 	
-	public String getItensCombo() {
-		return itensCombo;
+	public DominioVariavelTarefa getDominioVariavelTarefa() {
+		return dominioVariavelTarefa;
 	}
 	
-	public void setItensCombo(String itensCombo) {
-		if ("enumeracao".equals(type) && !itensCombo.equals(this.itensCombo)) {
-			this.itensCombo = itensCombo;
-			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + name + ":" + itensCombo);
-		}
+	public void setDominioVariavelTarefa(DominioVariavelTarefa dominioVariavelTarefa) {
+		this.dominioVariavelTarefa = dominioVariavelTarefa;
+		ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + name + ":" + this.dominioVariavelTarefa.getId());
 	}
 	
 	public VariableAccess update() {
@@ -212,6 +219,7 @@ public class VariableAccessHandler implements Serializable {
 			return;
 		}
 		ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + name);
+		this.possuiDominio = tipoPossuiDominio(type);
 	}
 	
 	public boolean isReadable() {
@@ -416,4 +424,8 @@ public class VariableAccessHandler implements Serializable {
     public GenericManager genericManager() {
         return ComponentUtil.getComponent(GenericManager.NAME);
     }
+    
+    public boolean isPossuiDominio() {
+		return possuiDominio;
+	}
 }
