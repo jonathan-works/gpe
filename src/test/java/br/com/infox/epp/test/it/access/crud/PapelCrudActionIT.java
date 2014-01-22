@@ -155,8 +155,8 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
-            this.resetInstance(entity.getIdPapel());
-            assertEquals("removed",true, REMOVED.equals(this.remove(entity)));
+            final Papel instance = this.resetInstance(entity.getIdPapel());
+            assertEquals("removed",true, REMOVED.equals(this.remove(instance)));
             
             assertEquals("roleExists", false, IdentityManager.instance().roleExists(entity.getIdentificador()));
         }
@@ -276,12 +276,13 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         addHerdeiros(vendedor, gestor);
         addHerdeiros(colaborador, comprador, vendedor);
 
+
         removeSuccess.runTest(admin);
-        removeSuccess.runTest(colaborador);
-        removeSuccess.runTest(vendedor);
-        removeSuccess.runTest(comprador);
         removeSuccess.runTest(gestor);
         removeSuccess.runTest(redator);
+        removeSuccess.runTest(vendedor);
+        removeSuccess.runTest(comprador);
+        removeSuccess.runTest(colaborador);
     }
     
     private final RunnableTest<Papel> updateFail = new RunnableTest<Papel>() {
