@@ -231,11 +231,18 @@
 							execute="true"
 							status=":status"
 							listener="#{t.clearHasTaskPage()}"
-							render="addVarDiv"
+							render="addVarDiv, @form"
 							limitRender="true" />
 				
 				</wi:selectOneMenu>
-					
+				
+				<s:div id="propriedadesEnumeracao" rendered="#{var.type eq 'enumeracao'}">
+					<wi:inputText id="itensCombo" value="#{var.itensCombo}" label="Itens" 
+					    title="Informe os itens da combo separados por ; na forma valor=texto">
+					    <f:validator validatorId="itensComboFluxoValidator" />
+					    <a:ajax event="change" execute="@this" limitRender="true" render="propriedadesEnumeracao" />
+					</wi:inputText>
+				</s:div>
 			</h:form>
 		
 		</rich:column>

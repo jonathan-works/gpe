@@ -20,15 +20,6 @@ public class TipoProcessoDocumentoManager extends GenericManager {
 	private TipoProcessoDocumento tipoProcessoDocumentoRO;
 	@In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
 	
-	/**
-	 * Se o tipoProcessoDocumento for nulo (caso o componente utilizado seja
-	 * o editor sem assinatura digital, o tipoProcessoDOcumento será setado
-	 * automaticamente com um valor aleatorio
-	 **/
-	public TipoProcessoDocumento getTipoProcessoDocumentoFluxo(){
-		return tipoProcessoDocumentoDAO.getTipoProcessoDocumentoFluxo();
-	}
-	
 	public void limpar(){
 		tipoProcessoDocumento = null;
 	}

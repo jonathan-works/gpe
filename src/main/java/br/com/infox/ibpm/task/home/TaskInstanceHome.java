@@ -349,7 +349,7 @@ public class TaskInstanceHome implements Serializable {
         if (checkAccess()) {
             checkCurrentTask();
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
-            if (faltaAssinatura(processoHome.getTipoProcessoDocumento())) {
+            if (processoHome.getTipoProcessoDocumento() != null && faltaAssinatura(processoHome.getTipoProcessoDocumento())) {
                 acusarFaltaDeAssinatura();
                 return null;
             }

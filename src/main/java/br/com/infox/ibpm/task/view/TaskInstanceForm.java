@@ -18,9 +18,12 @@ package br.com.infox.ibpm.task.view;
 import static br.com.infox.core.constants.WarningConstants.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.model.SelectItem;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -154,6 +157,14 @@ public class TaskInstanceForm implements Serializable{
 						Map<String, Object> props = new HashMap<String, Object>();
 						props.put(urlParamName, url);
 						ff.setProperties(props);
+					} else if ("enumeracao".equals(type)) {
+						String[] itens = tokens[2].split(";");
+						List<SelectItem> selectItens = new ArrayList<>();
+						for (String item : itens) {
+							String[] pair = item.split("=");
+							selectItens.add(new SelectItem(pair[0], pair[1]));
+						}
+						ff.getProperties().put("items", selectItens);
 					}
 				}
 			}

@@ -1,7 +1,6 @@
 package br.com.infox.epp.documento.dao;
 
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.PAPEL_PARAM;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO;
@@ -30,11 +29,6 @@ public class TipoProcessoDocumentoDAO extends GenericDAO {
         } else {
             return getNamedResultList(TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO);
         }
-    }
-
-    // Retorna um TipoProcessoDocumento ~aleatório
-    public TipoProcessoDocumento getTipoProcessoDocumentoFluxo() {
-        return getNamedSingleResult(LIST_TIPO_PROCESSO_DOCUMENTO);
     }
 
     public boolean isAssinaturaObrigatoria(TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
