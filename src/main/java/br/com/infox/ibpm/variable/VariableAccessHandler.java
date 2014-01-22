@@ -66,13 +66,18 @@ public class VariableAccessHandler implements Serializable {
 	private List<ModeloDocumento> modeloDocumentoList;
 	private Task task;
 	private boolean mudouModelo;
+	private String itensCombo;
 
 	public VariableAccessHandler(VariableAccess variableAccess, Task task) {
 		this.task = task;
 		this.variableAccess = variableAccess;
 		String mappedName = variableAccess.getMappedName();
 		if (mappedName.indexOf(':') > 0) {
-			this.type = mappedName.split(":")[0];
+			String[] tokens = mappedName.split(":");
+			this.type = tokens[0];
+			if (tokens.length >= 3) {
+				this.itensCombo = tokens[2];
+			}
 		} else {
 			this.type = "default";
 		}
@@ -96,6 +101,17 @@ public class VariableAccessHandler implements Serializable {
 			}
 			ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
 			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + auxiliarName);
+		}
+	}
+	
+	public String getItensCombo() {
+		return itensCombo;
+	}
+	
+	public void setItensCombo(String itensCombo) {
+		if ("enumeracao".equals(type) && !itensCombo.equals(this.itensCombo)) {
+			this.itensCombo = itensCombo;
+			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + name + ":" + itensCombo);
 		}
 	}
 	

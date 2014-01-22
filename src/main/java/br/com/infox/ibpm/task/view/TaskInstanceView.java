@@ -18,9 +18,12 @@ package br.com.infox.ibpm.task.view;
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.model.SelectItem;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -114,6 +117,16 @@ public class TaskInstanceView implements Serializable{
 					} else if ("numberMoney".equalsIgnoreCase(type)){
 						ff.setType(type);
 						ff.setValue(String.format(FloatFormatConstants.F2, value));
+					} else if ("enumeracao".equals(type)) {
+						ff.setType(type);
+						ff.setValue(value);
+						String[] itens = tokens[2].split(";");
+						List<SelectItem> selectItens = new ArrayList<>();
+						for (String item : itens) {
+							String[] pair = item.split("=");
+							selectItens.add(new SelectItem(pair[0], pair[1]));
+						}
+						properties.put("items", selectItens);
 					} else {
 						ff.setType(type);
 						ff.setValue(value);
