@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.crud;
 
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,8 +39,9 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(PapelCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class PapelCrudAction extends AbstractCrudAction<Papel> {
-	private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
+public class PapelCrudAction extends AbstractCrudAction<Papel> implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
     private static final String CONSTRAINT_VIOLATION_UNIQUE_VIOLATION = "#{messages['constraintViolation.uniqueViolation']}";
     private static final String RECURSOS_TAB_ID = "recursosTab";
     private static final String PAPEIS_TAB_ID = "papeisTab";
@@ -328,6 +330,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
             final Collection<String> selectedResourcesList = getRecursos();
             final UpdateRolesOperation operation = new UpdateRolesOperation(roleGroup, role, rolesToInclude, rolesToExclude, availableResourcesList, selectedResourcesList);
             operation.run();
+            getGenericManager().flush();
         }
     }
 

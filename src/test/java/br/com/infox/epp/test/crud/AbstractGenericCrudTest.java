@@ -21,6 +21,15 @@ import org.jboss.seam.servlet.ServletSessionMap;
 import br.com.infox.core.constants.WarningConstants;
 
 public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
+    private static final String INACTIVATE = "inactive";
+    private static final String ID = "instanceId";
+    private static final String REMOVE = "remove";
+    private static final String SAVE = "save";
+    private static final String INSTANCE = "instance";
+    private static final String NEW_INSTANCE = "newInstance";
+    private static final String COMP_EXP = "'#{'{0}.{1}'}'";
+    private static final String COMP_METHOD_EXP = "'#{'{0}.{1}'}'";
+    private static final String ENT_EXP = "'#{'{0}.instance.{1}'}'";
     private static final String ATIVO = "ativo";
     protected static final String SERVLET_3_0 = "Servlet 3.0";
 
@@ -221,11 +230,14 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected final CrudActions<E> crudActions;
         
         public RunnableTest() {
-            this.crudActions = new CrudActions<>(getComponentName());
+            final String name = getComponentName();
+            this.crudActions = new CrudActions<>(name);
+            this.componentName = name;
         }
         
         public RunnableTest(final String componentName) {
             this.crudActions = new CrudActions<>(componentName);
+            this.componentName = componentName;
         }
         
         protected abstract void testComponent() throws Exception;
@@ -234,6 +246,16 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             if (this.actionContainer != null) {
                 this.actionContainer.execute(this.crudActions);
             }
+        }
+        
+        public final E runTest() throws Exception {
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                testComponent();
+            } finally {
+                TestLifecycle.endTest();
+            }
+            return null;
         }
         
         public final E runTest(final E entity) throws Exception {
@@ -259,26 +281,121 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             return this.entity;
         }
 
-        public E getEntity() {
+        public final E getEntity() {
             return entity;
         }
 
-        public void setEntity(E entity) {
+        public final void setEntity(E entity) {
             this.entity = entity;
         }
+        private final String componentName;
+
+        public final void setEntityValue(final String field, final Object value) {
+            final String valueExpression = format(ENT_EXP, this.componentName, field);
+            createValueExpression(valueExpression).setValue(value);
+        }
+
+        private ValueExpression<Object> createValueExpression(
+                final String valueExpression) {
+            return Expressions.instance().createValueExpression(valueExpression);
+        }
+
+        @SuppressWarnings(WarningConstants.UNCHECKED)
+        public final <R> R getEntityValue(final String field) {
+            final String valueExpression = format(ENT_EXP, this.componentName, field);
+            return (R) createValueExpression(valueExpression).getValue();
+        }
+
+        public final void setComponentValue(final String field,
+                final Object value) {
+            final String valueExpression = format(COMP_EXP, this.componentName, field);
+            createValueExpression(valueExpression).setValue(value);
+        }
+
+        @SuppressWarnings(WarningConstants.UNCHECKED)
+        public final <R> R getComponentValue(final String field) {
+            final String valueExpression = format(COMP_EXP, this.componentName, field);
+            return (R) createValueExpression(valueExpression).getValue();
+        }
+
+        public final Object invokeMethod(final String methodName,
+                final Object... args) {
+            return Expressions.instance().createMethodExpression(format(COMP_METHOD_EXP, this.componentName, methodName)).invoke(args);
+        }
+
+        public final <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args) {
+            final ArrayList<Class<?>> classList = new ArrayList<>();
+            for (Object object : args) {
+                classList.add(object.getClass());
+            }
+            final Expressions expressionFactory = Expressions.instance();
+            final String expressionString = format(COMP_METHOD_EXP, this.componentName, methodName);
+            return expressionFactory.createMethodExpression(expressionString, returnType, paramTypes).invoke(args);
+        }
+
+        public final <R> R invokeMethod(final String methodName,
+                final Class<R> returnType, final Object... args) {
+            final ArrayList<Class<?>> classList = new ArrayList<>();
+            for (Object object : args) {
+                classList.add(object.getClass());
+            }
+            final Expressions expressionFactory = Expressions.instance();
+            final String expressionString = format(COMP_METHOD_EXP, this.componentName, methodName);
+            final Class<?>[] types = classList.toArray(new Class<?>[classList.size()]);
+            return expressionFactory.createMethodExpression(expressionString, returnType, types).invoke(args);
+        }
+
+        public final void newInstance() {
+            this.invokeMethod(NEW_INSTANCE);
+        }
+
+        public final E createInstance() {
+            this.newInstance();
+            return this.getInstance();
+        }
         
+        public final E resetInstance(Object id) {
+            this.newInstance();
+            this.setId(id);
+            return this.getInstance();
+        }
+        
+        @SuppressWarnings(WarningConstants.UNCHECKED)
+        public final E getInstance() {
+            return (E) getComponentValue(INSTANCE);
+        }
+
+        public void setInstance(final E value) {
+            setComponentValue(INSTANCE, value);
+        }
+
+        public final String save() {
+            return this.invokeMethod(SAVE, String.class);
+        }
+
+        public final String remove() {
+            return this.invokeMethod(REMOVE, String.class);
+        }
+
+        public final String remove(final E entity) {
+            final Class<?>[] paramTypes = {Object.class};
+            return this.invokeMethod(REMOVE, String.class, paramTypes, entity);
+        }
+
+        public final String inactivate() {
+            return this.invokeMethod(INACTIVATE, String.class);
+        }
+
+        public final Integer getId() {
+            return getComponentValue(ID);
+        }
+
+        public final void setId(Object value) {
+            setComponentValue(ID, value);
+        }
     }
 
     protected final class CrudActions<E> {
-        private static final String METHOD_EXPR = "{0}({1}.instance)";
-        private static final String INACTIVATE = "inactive";
-        private static final String ID = "instanceId";
-        private static final String REMOVE = "remove";
-        private static final String SAVE = "save";
-        private static final String INSTANCE = "instance";
-        private static final String NEW_INSTANCE = "newInstance";
-        private static final String COMP_EXP = "'#{'{0}.{1}'}'";
-        private static final String ENT_EXP = "'#{'{0}.instance.{1}'}'";
         private final String componentName;
 
         public CrudActions(final String componentName) {
@@ -315,7 +432,17 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
 
         public final Object invokeMethod(final String methodName,
                 final Object... args) {
-            return Expressions.instance().createMethodExpression(format(COMP_EXP, this.componentName, methodName)).invoke(args);
+            return Expressions.instance().createMethodExpression(format(COMP_METHOD_EXP, this.componentName, methodName)).invoke(args);
+        }
+
+        public final <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args) {
+            final ArrayList<Class<?>> classList = new ArrayList<>();
+            for (Object object : args) {
+                classList.add(object.getClass());
+            }
+            final Expressions expressionFactory = Expressions.instance();
+            final String expressionString = format(COMP_METHOD_EXP, this.componentName, methodName);
+            return expressionFactory.createMethodExpression(expressionString, returnType, paramTypes).invoke(args);
         }
 
         public final <R> R invokeMethod(final String methodName,
@@ -325,7 +452,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
                 classList.add(object.getClass());
             }
             final Expressions expressionFactory = Expressions.instance();
-            final String expressionString = format(COMP_EXP, this.componentName, methodName);
+            final String expressionString = format(COMP_METHOD_EXP, this.componentName, methodName);
             final Class<?>[] types = classList.toArray(new Class<?>[classList.size()]);
             return expressionFactory.createMethodExpression(expressionString, returnType, types).invoke(args);
         }
@@ -355,23 +482,24 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
 
         public final String save() {
-            return (String) this.invokeMethod(SAVE);
+            return this.invokeMethod(SAVE, String.class);
         }
 
         public final String remove() {
-            return (String) this.invokeMethod(REMOVE);
+            return this.invokeMethod(REMOVE, String.class);
         }
 
-        public final Object remove(final E entity) {
-            return this.invokeMethod(format(METHOD_EXPR, REMOVE, this.componentName));
+        public final String remove(final E entity) {
+            final Class<?>[] paramTypes = {Object.class};
+            return this.invokeMethod(REMOVE, String.class, paramTypes, entity);
         }
 
-        public final Object inactivate() {
-            return this.invokeMethod(format(METHOD_EXPR, INACTIVATE, this.componentName));
+        public final String inactivate() {
+            return this.invokeMethod(INACTIVATE, String.class);
         }
 
         public final Integer getId() {
-            return (Integer) getComponentValue(ID);
+            return getComponentValue(ID);
         }
 
         public final void setId(Object value) {
