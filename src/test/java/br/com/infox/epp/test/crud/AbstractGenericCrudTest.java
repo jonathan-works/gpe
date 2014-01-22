@@ -383,7 +383,8 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
 
         public final String inactivate() {
-            return this.invokeMethod(INACTIVATE, String.class);
+            final Class<?>[] paramTypes = {Object.class};
+            return this.invokeMethod(INACTIVATE, String.class, paramTypes, getInstance());
         }
 
         public final Integer getId() {
@@ -495,7 +496,8 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
 
         public final String inactivate() {
-            return this.invokeMethod(INACTIVATE, String.class);
+            final Class<?>[] paramTypes = {Object.class};
+            return this.invokeMethod(INACTIVATE, String.class, paramTypes, getInstance());
         }
 
         public final Integer getId() {
