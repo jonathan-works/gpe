@@ -20,6 +20,8 @@ import java.io.StringReader;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.highlight.Formatter;
 import org.apache.lucene.search.highlight.Highlighter;
@@ -30,18 +32,23 @@ import org.apache.lucene.search.highlight.Scorer;
 import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.util.Version;
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public final class SearchUtil {
+@Name(SearchService.NAME)
+@Scope(ScopeType.EVENT)
+@AutoCreate
+public class SearchService {
 
+    public static final String NAME = "searchService";
     private static final String SEPARATOR = "<b> &#183;&#183;&#183;</b>";
-    private static final LogProvider LOG = Logging.getLogProvider(SearchUtil.class);
-
-    private SearchUtil() {
-    }
+    private static final LogProvider LOG = Logging.getLogProvider(SearchService.class);
 
     private static final String BEGIN_TAG = "<span class='highlight'>";
     private static final String END_TAG = "</span>";
@@ -52,6 +59,18 @@ public final class SearchUtil {
     public static String getBestFragments(Query query, String text) {
         Document doc = Jsoup.parse(text);
         return highlightText(query, doc.body().text(), true);
+    }
+    
+    public String pesquisaEmTexto(String textoPesquisa, String texto){
+        QueryParser parser = new QueryParser(Version.LUCENE_36, "texto", SearchService.getAnalyzer());
+        try {
+            Query query = parser.parse(textoPesquisa);
+            return SearchService.highlightText(query, texto, false);
+        } catch (ParseException e) {
+            LOG.error("Não foi possível fazer parser do texto { Pesquisa por " + textoPesquisa 
+                    + " em " + texto + "}", e);
+            return "";
+        }
     }
 
     public static String highlightText(Query query, String text,

@@ -15,31 +15,31 @@ import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 @BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class HistoricoAjudaList extends EntityList<HistoricoAjuda> {
-	
-	public static final String NAME = "historicoAjudaList";
 
-	private static final long serialVersionUID = 1L;
-	
-	private static final String DEFAULT_EJBQL = "select o from HistoricoAjuda o";
-	private static final String DEFAULT_ORDER = "dataRegistro desc";
-	
-	private static final String R1 = "pagina.url = #{ajudaHome.viewId}";
+    public static final String NAME = "historicoAjudaList";
 
-	protected void addSearchFields() {
-		addSearchField("pagina.url", SearchCriteria.IGUAL, R1);
-	}
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    private static final String DEFAULT_EJBQL = "select o from HistoricoAjuda o";
+    private static final String DEFAULT_ORDER = "dataRegistro desc";
 
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String R1 = "pagina.url = #{ajudaCrudAction.viewId}";
 
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    protected void addSearchFields() {
+        addSearchField("pagina.url", SearchCriteria.IGUAL, R1);
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
 
 }

@@ -22,40 +22,40 @@ import br.com.infox.componentes.tabs.TabPanel;
 @RequestScoped
 public class CrudTabCleaner implements TabChangeListener {
 
-	private static final String SEARCH_TAB_NAME = "search";
+    private static final String SEARCH_TAB_NAME = "search";
 
-	@Override
-	public void processTabChange(TabChangeEvent event) {
-		Tab newTab = event.getNewTab();
-		if (newTab.getName().equals(SEARCH_TAB_NAME)) {
-			clearValueHolders(newTab.getTabPanel());
-		}
-	}
-	
-	private void clearValueHolders(TabPanel tabPanel) {
-		Set<VisitHint> hints = new HashSet<>();
-		hints.add(VisitHint.SKIP_TRANSIENT);
-		hints.add(VisitHint.SKIP_ITERATION);
-		
-		VisitContext context = VisitContext.createVisitContext(FacesContext.getCurrentInstance(), null, hints);
-		ClearValueHoldersCallback clearValueHoldersCallback = new ClearValueHoldersCallback();
+    @Override
+    public void processTabChange(TabChangeEvent event) {
+        Tab newTab = event.getNewTab();
+        if (newTab.getName().equals(SEARCH_TAB_NAME)) {
+            clearValueHolders(newTab.getTabPanel());
+        }
+    }
 
-		for (Tab tab : tabPanel.getTabs()) {
-			if (!tab.getName().equals(SEARCH_TAB_NAME)) {
-				tab.visitTree(context, clearValueHoldersCallback);
-			}
-		}
-	}
+    private void clearValueHolders(TabPanel tabPanel) {
+        Set<VisitHint> hints = new HashSet<>();
+        hints.add(VisitHint.SKIP_TRANSIENT);
+        hints.add(VisitHint.SKIP_ITERATION);
 
-	private static class ClearValueHoldersCallback implements VisitCallback {
+        VisitContext context = VisitContext.createVisitContext(FacesContext.getCurrentInstance(), null, hints);
+        ClearValueHoldersCallback clearValueHoldersCallback = new ClearValueHoldersCallback();
 
-		@Override
-		public VisitResult visit(VisitContext context, UIComponent target) {
-			if (target instanceof EditableValueHolder) {
-				EditableValueHolder valueHolder = (EditableValueHolder) target;
-				valueHolder.resetValue();
-			}
-			return VisitResult.ACCEPT;
-		}
-	}
+        for (Tab tab : tabPanel.getTabs()) {
+            if (!tab.getName().equals(SEARCH_TAB_NAME)) {
+                tab.visitTree(context, clearValueHoldersCallback);
+            }
+        }
+    }
+
+    private static class ClearValueHoldersCallback implements VisitCallback {
+
+        @Override
+        public VisitResult visit(VisitContext context, UIComponent target) {
+            if (target instanceof EditableValueHolder) {
+                EditableValueHolder valueHolder = (EditableValueHolder) target;
+                valueHolder.resetValue();
+            }
+            return VisitResult.ACCEPT;
+        }
+    }
 }

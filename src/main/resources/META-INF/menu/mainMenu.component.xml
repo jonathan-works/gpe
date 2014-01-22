@@ -2,49 +2,48 @@
 
 <!-- $Id: mainMenu.component.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
 
-<components xmlns="http://jboss.org/schema/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.org/schema/seam/core http://jboss.org/schema/seam/core-2.3.xsd                   http://jboss.org/schema/seam/security http://jboss.org/schema/seam/security-2.3.xsd                  http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">	
-	<component name="mainMenu" class="br.com.infox.epp.access.component.menu.Menu" scope="session">
+<components xmlns="http://jboss.org/schema/seam/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.org/schema/seam/core http://jboss.org/schema/seam/core-2.3.xsd                   http://jboss.org/schema/seam/security http://jboss.org/schema/seam/security-2.3.xsd                  http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">
+    <component name="mainMenu" class="br.com.infox.epp.access.component.menu.Menu" scope="session">
 
-		<property name="items">
-			<value>menu.fluxos/categoria.menuText:/Categoria/listView.seam</value>
-			<value>menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
-			<value>menu.fluxos/item.menuText:/Item/listView.seam</value>
-			<value>menu.fluxos/natureza.menuText:/Natureza/listView.seam</value>
-			<value>menu.fluxos/naturezaCategoriaFluxo.menuText:/NaturezaCategoriaFluxo/listView.seam</value>
-			
-			<value>menu.documentos/menu.modeloDocumento/grupoModeloDocumento.menuText:/GrupoModeloDocumento/listView.seam</value>
-			<value>menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>
-			<value>menu.documentos/menu.modeloDocumento/modeloDocumento.menuText:/ModeloDocumento/listView.seam</value>
-			<value>menu.documentos/menu.modeloDocumento/twitterTemplate.menuText:/ModeloDocumento/TwitterTemplate/listView.xhtml</value>
-			<value>menu.documentos/tipoProcessoDocumento.menuText:/ClassificacaoDocumento/listView.seam</value>
-			<value>menu.documentos/variavel.menuText:/Variavel/listView.seam</value>
-			<value>menu.documentos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
-			
-			<value>menu.cadBasicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
-			<value>menu.cadBasicos/cep.menuText:/Cep/listView.seam</value>
-			<value>menu.cadBasicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
-			<value>menu.cadBasicos/pj.menuText:/PessoaJuridica/listView.seam</value>
-			
-			<value>menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>		
-			<value>menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
-			<value>menu.contAcesso/usuario.menuText:/Usuario/listView.seam</value>
-			<value>menu.contAcesso/localizacao.menuText:/Localizacao/listView.seam</value>			
-			
-			<value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>
-			<value>menu.administracao/log.menuText:/Consulta/Log/list.seam</value>
-			<value>menu.administracao/contaTwitter.twitterSysMenuText:/ContaTwitter/Sistema/listView.seam</value>
-			
-			<value>menu.painel/painel.menuText:/Painel/list.seam</value>
-			<value>menu.painel/bam.menuText:/BAM/listView.seam</value>
-			<value>menu.painel/relatorios.menuText/temposMedios.menuText:/Estatistica/listView.seam</value>
-			<value>menu.painel/produtividade.menuText:/BAM/Produtividade/listView.seam</value>
-			
-			<value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
-			<value>menu.processo/processo.consultarMenuText:/Processo/Consulta/listView.seam</value>
-			
-			<value>menu.usuario/contaTwitter.twitterMenuText:/ContaTwitter/listView.seam</value>
-			<!-- <value>menu.processo/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value> -->
-			
-		</property>
-	</component>
+        <property name="items">
+            <value>menu.fluxos/categoria.menuText:/Categoria/listView.seam</value>
+            <value>menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
+            <value>menu.fluxos/item.menuText:/Item/listView.seam</value>
+            <value>menu.fluxos/natureza.menuText:/Natureza/listView.seam</value>
+            <value>menu.fluxos/naturezaCategoriaFluxo.menuText:/NaturezaCategoriaFluxo/listView.seam</value>
+            
+            <value>menu.documentos/menu.modeloDocumento/grupoModeloDocumento.menuText:/GrupoModeloDocumento/listView.seam</value>
+            <value>menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>
+            <value>menu.documentos/menu.modeloDocumento/modeloDocumento.menuText:/ModeloDocumento/listView.seam</value>
+            <value>menu.documentos/menu.modeloDocumento/twitterTemplate.menuText:/ModeloDocumento/TwitterTemplate/listView.xhtml</value>
+            <value>menu.documentos/tipoProcessoDocumento.menuText:/ClassificacaoDocumento/listView.seam</value>
+            <value>menu.documentos/variavel.menuText:/Variavel/listView.seam</value>
+            <value>menu.documentos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
+            
+            <value>menu.cadBasicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
+            <value>menu.cadBasicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
+            <value>menu.cadBasicos/pj.menuText:/PessoaJuridica/listView.seam</value>
+            
+            <value>menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>
+            <value>menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
+            <value>menu.contAcesso/usuario.menuText:/Usuario/listView.seam</value>
+            <value>menu.contAcesso/localizacao.menuText:/Localizacao/listView.seam</value>
+            
+            <value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>
+            <value>menu.administracao/log.menuText:/Consulta/Log/list.seam</value>
+            <value>menu.administracao/contaTwitter.twitterSysMenuText:/ContaTwitter/Sistema/listView.seam</value>
+            
+            <value>menu.painel/painel.menuText:/Painel/list.seam</value>
+            <value>menu.painel/bam.menuText:/BAM/listView.seam</value>
+            <value>menu.painel/relatorios.menuText/temposMedios.menuText:/Estatistica/listView.seam</value>
+            <value>menu.painel/produtividade.menuText:/BAM/Produtividade/listView.seam</value>
+            
+            <value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
+            <value>menu.processo/processo.consultarMenuText:/Processo/Consulta/listView.seam</value>
+            <value>menu.processo/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value>
+            
+            <value>menu.usuario/contaTwitter.twitterMenuText:/ContaTwitter/listView.seam</value>
+
+        </property>
+    </component>
 </components>

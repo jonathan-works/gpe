@@ -23,16 +23,17 @@ import br.com.infox.ibpm.util.JbpmUtil;
 @AutoCreate
 public class SituacaoProcessoDAO extends GenericDAO {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "situacaoProcessoDAO";
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "situacaoProcessoDAO";
+
     public Long getQuantidadeTarefasAtivasByTaskId(long taskId) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_TASKINSTANCE, taskId);
         return getNamedSingleResult(COUNT_TAREFAS_ATIVAS_BY_TASK_ID, parameters);
     }
 
-    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
+    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa,
+            Map<String, Object> selected) {
         String namedQuery = getTreeTypeRestriction(selected);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_TAREFA_PARAM, idTarefa);

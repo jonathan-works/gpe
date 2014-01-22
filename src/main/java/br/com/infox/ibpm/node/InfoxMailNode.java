@@ -47,7 +47,6 @@ import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.ListaEmail;
-import br.com.infox.epp.mail.home.ListaEmailHome;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
@@ -289,9 +288,12 @@ public class InfoxMailNode extends MailNode {
             listaEmail = new ArrayList<ListaEmail>();
         }
         this.listaEmail.add(currentListaEmail);
-        ListaEmailHome home = ListaEmailHome.instance();
-        home.setInstance(currentListaEmail);
-        home.persist();
+
+        try {
+            listaEmailManager().persist(currentListaEmail);
+        } catch (DAOException e) {
+            LOG.error("Não foi possível gravar a Lista de Email " + currentListaEmail, e);
+        }
         
         currentListaEmail = new ListaEmail();
         to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);

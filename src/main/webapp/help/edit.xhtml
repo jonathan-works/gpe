@@ -17,70 +17,60 @@
 -->
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-                xmlns:f="http://java.sun.com/jsf/core"
-		        xmlns:a="http://richfaces.org/a4j"
-                xmlns:rich="http://richfaces.org/rich"
-                template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-                
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+
     <ui:define name="title">Ajuda</ui:define>
 
-	<ui:define name="baseBody">
-		<s:div id="formAjuda" >
-			<wi:dataForm formId="ajudaForm" 
-									formTitle="Texto de ajuda">
-									
-				<wi:editor  id="texto" 
-								   label="Texto"
-								   width="660"
-								   height="450"
-								   value="#{ajudaHome.instance.texto}"/>
-								   
-				<ui:define name="buttons">
-				
-					<wi:commandButton id="ajudaPersistButton"
-													  action="ajudaHome.persist"
-													  value="#{messages['crud.update']}"
-													  reRender="gridAjuda">
-					</wi:commandButton>
-	
-				</ui:define>
-				<wi:imageUpload imageBean="#{helpFileUploader}"
-							/>
-			</wi:dataForm>
-		</s:div>
-		
-		<s:div id="gridAjuda" >
-			<wi:dataTable values="#{historicoAjudaList.list(15)}"
-									bean="#{historicoAjudaList}"
-									tableTitle="Histórico das revisões"
-									id="historicoAjudaId"
-									rowId="#{row.idHistoricoAjuda}"
-									toolBar="ajuda"
-									panelWidth="100%">
-									
-				<wi:columnDateTime columnId="dataRegistro"
-													columnHeader="Data"
-													value="#{row.dataRegistro}"
-													showTime="true"/>	
-									 
-				<wi:columnOutputText columnId="usuario"
-													 columnHeader="Usuário"
-													 value="#{row.usuario}" />
+    <ui:define name="baseBody">
+        <s:div id="formAjuda">
+            <wi:dataForm formId="ajudaForm" formTitle="Texto de ajuda">
 
-				<ui:define name="toolBar">
-					<wi:toolBar id="recuperarRevisao"
-										url="/img/grid/copyLeft.gif" 
-										title="Recuperar revisão"
-										reRender="formAjuda"
-										action="ajudaHome.instance.setTexto(row.texto)"
-										limitToList="true"/>
-						<wi:toolBarTextPreview value="#{row.texto}" />
-				</ui:define>
-			</wi:dataTable>
-		</s:div>
+                <wi:editor id="texto" label="Texto" width="660"
+                    height="450" value="#{ajudaCrudAction.instance.texto}" />
 
-	</ui:define> 
+                <ui:define name="buttons">
+
+                    <wi:commandButton id="ajudaPersistButton"
+                        action="ajudaCrudAction.save"
+                        value="#{messages['crud.update']}"
+                        reRender="gridAjuda">
+                    </wi:commandButton>
+
+                </ui:define>
+                <wi:imageUpload imageBean="#{helpFileUploader}" />
+            </wi:dataForm>
+        </s:div>
+
+        <s:div id="gridAjuda">
+            <wi:dataTable values="#{historicoAjudaList.list(15)}"
+                bean="#{historicoAjudaList}"
+                tableTitle="Histórico das revisões"
+                id="historicoAjudaId" rowId="#{row.idHistoricoAjuda}"
+                toolBar="ajuda" panelWidth="100%">
+
+                <wi:columnDateTime columnId="dataRegistro"
+                    columnHeader="Data" value="#{row.dataRegistro}"
+                    showTime="true" />
+
+                <wi:columnOutputText columnId="usuario"
+                    columnHeader="Usuário" value="#{row.usuario}" />
+
+                <ui:define name="toolBar">
+                    <wi:toolBar id="recuperarRevisao"
+                        url="/img/grid/copyLeft.gif"
+                        title="Recuperar revisão" reRender="formAjuda"
+                        action="ajudaCrudAction.recuperar(row)"
+                        limitToList="true" />
+                    <wi:toolBarTextPreview value="#{row.texto}" />
+                </ui:define>
+            </wi:dataTable>
+        </s:div>
+
+    </ui:define>
 </ui:composition>

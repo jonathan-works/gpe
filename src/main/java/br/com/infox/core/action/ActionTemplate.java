@@ -1,17 +1,16 @@
 /*
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
+ * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
+ * Tecnologia da Informação Ltda.
+ * 
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
+ * Software Foundation; versão 2 da Licença. Este programa é distribuído na
+ * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
+ * ESPECÍFICA.
+ * 
+ * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
+ * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
  */
 package br.com.infox.core.action;
 
@@ -25,67 +24,59 @@ import java.util.StringTokenizer;
 
 import org.jboss.seam.annotations.Create;
 
-
 public abstract class ActionTemplate implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	public static Set<Class<? extends ActionTemplate>> templates = new HashSet<Class<? extends ActionTemplate>>();
+    private static final long serialVersionUID = 1L;
 
-	private Object[] parameters;
-	
+    public static Set<Class<? extends ActionTemplate>> templates = new HashSet<Class<? extends ActionTemplate>>();
+
+    private Object[] parameters;
+
     public abstract String getFileName();
-	
-	public abstract String getExpression();
 
-	public abstract String getLabel();
-	
-	public abstract void extractParameters(String expression);
+    public abstract String getExpression();
 
-	
-	protected String[] getExpressionParameters(String expression) {
-		if (expression == null || expression.equals("")) {
-			return new String[0];
-		}
-		int i = expression.indexOf('(');
-		String texto = expression.substring(i + 1);
-		StringTokenizer st = new StringTokenizer(texto, ",')}");
-		List<String> list = new ArrayList<String>();
-		while(st.hasMoreTokens()) {
-			list.add(st.nextToken().trim());
-		}
-		String[] ret = new String[list.size()];
-		return list.toArray(ret);
-	}
+    public abstract String getLabel();
 
+    public abstract void extractParameters(String expression);
 
-	public Object[] getParameters() {
-		return parameters;
-	}
-	
-	protected void setParameters(Object[] parameters) {
+    protected String[] getExpressionParameters(String expression) {
+        if (expression == null || expression.equals("")) {
+            return new String[0];
+        }
+        int i = expression.indexOf('(');
+        String texto = expression.substring(i + 1);
+        StringTokenizer st = new StringTokenizer(texto, ",')}");
+        List<String> list = new ArrayList<String>();
+        while (st.hasMoreTokens()) {
+            list.add(st.nextToken().trim());
+        }
+        String[] ret = new String[list.size()];
+        return list.toArray(ret);
+    }
+
+    public Object[] getParameters() {
+        return parameters;
+    }
+
+    protected void setParameters(Object[] parameters) {
         this.parameters = Arrays.copyOf(parameters, parameters.length);
     }
 
-	public boolean isPublic() {
-		return true;
-	}
-	
-	@Create
-	public void init() {
-		templates.add(this.getClass());
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getFileName())
-			.append("=")
-			.append(getExpression())
-			.append(",")
-			.append(getLabel());
-		return sb.toString();
-	}
-	
+    public boolean isPublic() {
+        return true;
+    }
+
+    @Create
+    public void init() {
+        templates.add(this.getClass());
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getFileName()).append("=").append(getExpression()).append(",").append(getLabel());
+        return sb.toString();
+    }
 
 }

@@ -7,8 +7,8 @@
 	  
 	<begin-conversation join="true" />
 
-	<param name="id" value="#{prioridadeProcessoHome.id}"
+	<param name="id" value="#{prioridadeProcessoCrudAction.id}"
 		   converterId="integerConverter" />
-	<param name="tab" value="#{prioridadeProcessoHome.tab}" />
+	<param name="tab" value="#{prioridadeProcessoCrudAction.tab}" />
 		   
 </page>

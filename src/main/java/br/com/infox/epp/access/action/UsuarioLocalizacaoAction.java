@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -26,15 +25,11 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.manager.UsuarioLocalizacaoManager;
 
 @Name(UsuarioLocalizacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class UsuarioLocalizacaoAction extends AbstractCrudAction<UsuarioLocalizacao>{
 	public static final String NAME = "usuarioLocalizacaoAction";
-	
-	@In
-	private UsuarioLocalizacaoManager usuarioLocalizacaoManager;
 	
 	private UsuarioLogin usuarioGerenciado;
 	

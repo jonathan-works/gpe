@@ -28,7 +28,7 @@
 	
 	<ui:param
          name="home"
-         value="#{prioridadeProcessoHome}" />
+         value="#{prioridadeProcessoCrudAction}" />
 	
 	<ui:define
          name="searchGrid">   
@@ -82,20 +82,20 @@
              formTitle="#{messages['form.title']}">
 			<wi:inputNumber
                  id="peso"
-                 value="#{prioridadeProcessoHome.instance.peso}"
+                 value="#{prioridadeProcessoCrudAction.instance.peso}"
                  required="true"
                  label="#{messages['prioridadeProcesso.peso']}" />
 			<wi:inputText
                  id="descricaoPrioridade"
                  label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
                  required="true"
-                 value="#{prioridadeProcessoHome.instance.descricaoPrioridade}"
+                 value="#{prioridadeProcessoCrudAction.instance.descricaoPrioridade}"
                  maxlength="150" />
 			<wi:selectSituacaoRadio
                  id="ativo"
                  label="#{messages['field.situacao']}"
                  required="true"
-                 value="#{prioridadeProcessoHome.instance.ativo}" />
+                 value="#{prioridadeProcessoCrudAction.instance.ativo}" />
 		</wi:dataForm>
 	</ui:define>
 

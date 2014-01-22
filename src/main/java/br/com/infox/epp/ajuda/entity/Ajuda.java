@@ -1,18 +1,17 @@
 /*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
+ * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
+ * Tecnologia da Informação Ltda.
+ * 
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
+ * Software Foundation; versão 2 da Licença. Este programa é distribuído na
+ * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
+ * ESPECÍFICA.
+ * 
+ * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
+ * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
+ */
 package br.com.infox.epp.ajuda.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
@@ -25,7 +24,7 @@ import static br.com.infox.epp.ajuda.query.AjudaQuery.PAGINA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.SEQUENCE_AJUDA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.TABLE_AJUDA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.TEXTO;
-import static br.com.infox.epp.ajuda.query.AjudaQuery.USUARIO;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.*;
 
 import java.util.Date;
 
@@ -56,80 +55,80 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.search.Reindexer;
 
 @Entity
-@Table(name = TABLE_AJUDA, schema=PUBLIC)
-@NamedQueries(value={
-    @NamedQuery(name=AJUDA_BY_URL, query=AJUDA_BY_URL_QUERY)
-})
+@Table(name = TABLE_AJUDA, schema = PUBLIC)
+@NamedQueries(value = { 
+    @NamedQuery(name = AJUDA_FIND_ALL, query=AJUDA_FIND_ALL_QUERY),
+    @NamedQuery(name = AJUDA_BY_URL, query = AJUDA_BY_URL_QUERY) })
 @Analyzer(impl = BrazilianAnalyzer.class)
 @Indexed
 public class Ajuda implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Integer idAjuda;
-	private Date dataRegistro;
-	private String texto;
-	private Pagina pagina;
-	private UsuarioLogin usuario;
+    private Integer idAjuda;
+    private Date dataRegistro;
+    private String texto;
+    private Pagina pagina;
+    private UsuarioLogin usuario;
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_AJUDA)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_AJUDA, unique = true, nullable = false)
-	public Integer getIdAjuda() {
-		return idAjuda;
-	}
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_AJUDA)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_AJUDA, unique = true, nullable = false)
+    public Integer getIdAjuda() {
+        return idAjuda;
+    }
 
-	public void setIdAjuda(Integer idAjuda) {
-		this.idAjuda = idAjuda;
-	}
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = DATA_REGISTRO, nullable = false, length = 0)
-	@NotNull
-	public Date getDataRegistro() {
-		return dataRegistro;
-	}
-		
-	public void setDataRegistro(Date dataRegistro) {
-		this.dataRegistro = dataRegistro;
-	}
+    public void setIdAjuda(Integer idAjuda) {
+        this.idAjuda = idAjuda;
+    }
 
-	@Column(name = TEXTO)
-	public String getTexto() {
-		return texto;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = DATA_REGISTRO, nullable = false, length = 0)
+    @NotNull
+    public Date getDataRegistro() {
+        return dataRegistro;
+    }
 
-	public void setTexto(String texto) {
-		this.texto = texto;
-	}
+    public void setDataRegistro(Date dataRegistro) {
+        this.dataRegistro = dataRegistro;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = PAGINA, nullable = false)
-	@NotNull
-	public Pagina getPagina() {
-		return pagina;
-	}
+    @Column(name = TEXTO)
+    public String getTexto() {
+        return texto;
+    }
 
-	public void setPagina(Pagina pagina) {
-		this.pagina = pagina;
-	}
+    public void setTexto(String texto) {
+        this.texto = texto;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = USUARIO, nullable = false)
-	@NotNull
-	public UsuarioLogin getUsuario() {
-		return usuario;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = PAGINA, nullable = false)
+    @NotNull
+    public Pagina getPagina() {
+        return pagina;
+    }
 
-	public void setUsuario(UsuarioLogin usuario) {
-		this.usuario = usuario;
-	}
+    public void setPagina(Pagina pagina) {
+        this.pagina = pagina;
+    }
 
-	@Transient
-	@Field(index=Index.YES, store=Store.NO, name="texto")	
-	public String getTextoIndexavel() {
-		return Reindexer.getTextoIndexavel(texto);
-	}
-	
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = USUARIO, nullable = false)
+    @NotNull
+    public UsuarioLogin getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioLogin usuario) {
+        this.usuario = usuario;
+    }
+
+    @Transient
+    @Field(index = Index.YES, store = Store.NO, name = "texto")
+    public String getTextoIndexavel() {
+        return Reindexer.getTextoIndexavel(texto);
+    }
+
 }

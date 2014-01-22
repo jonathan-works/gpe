@@ -12,22 +12,26 @@
  * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
  * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
  */
-package br.com.infox.core.jsf;
+package br.com.infox.epp.ajuda.home;
 
-public final class JsfFunctions {
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 
-    private JsfFunctions() {
-    }
+import br.com.infox.epp.ajuda.manager.AjudaManager;
 
-    public static Object get(Object value, Object defaultValue) {
-        return value == null ? defaultValue : value;
-    }
+@Name(AjudaReindexer.NAME)
+@Scope(ScopeType.PAGE)
+public class AjudaReindexer {
+    
+    public static final String NAME = "ajudaReindexer";
 
-    public static Integer splitLength(String obj, String token) {
-        if (obj == null) {
-            return 0;
-        }
-        return obj.split(token).length;
+    @In
+    private AjudaManager ajudaManager;
+    
+    public void reindex() {
+        ajudaManager.reindexarAjuda();
     }
 
 }

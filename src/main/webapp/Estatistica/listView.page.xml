@@ -7,7 +7,7 @@
 	<begin-conversation join="true" />
 	<restrict>#{security.checkPage()}</restrict>
 
-	<param name="id" value="#{tempoMedioTarefaHome.id}" converterId="integerConverter" />
-	<param name="tab" value="#{tempoMedioTarefaHome.tab}" />
+	<param name="id" value="#{tempoMedioTarefaAction.id}" converterId="integerConverter" />
+	<param name="tab" value="#{tempoMedioTarefaAction.tab}" />
 
 </page>
