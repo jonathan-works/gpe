@@ -48,8 +48,6 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         return sb.substring(0, topLength);
     }
 
-//    private final CrudActions<T> crudActions = new CrudActions<>(getComponentName());
-
     protected final void executeTest(final Runnable componentTest) throws Exception {
         TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
         try {
@@ -64,10 +62,6 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     }
 
     protected abstract void initEntity(T entity, CrudActions<T> crudActions);
-
-//    protected CrudActions<T> getCrudActions() {
-//        return this.crudActions;
-//    }
 
     protected abstract String getComponentName();
 
@@ -104,13 +98,16 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity();
-            crudActions.newInstance();
+            newInstance();
             initEntity(entity, this.crudActions);
-            assert PERSISTED.equals(crudActions.save());
-            assert crudActions.getId() != null;
-            assert Boolean.TRUE.equals(crudActions.getEntityValue(ATIVO));
-            assert UPDATED.equals(crudActions.inactivate());
-            assert Boolean.FALSE.equals(crudActions.getEntityValue(ATIVO));
+            assertEquals("persisted", PERSISTED, save());
+            final Integer id = getId();
+            assertNotNull("id not null", id);
+            resetInstance(id);
+            assertEquals("is active", Boolean.TRUE, getEntityValue(ATIVO));
+            assertEquals("inactivate", UPDATED, inactivate());
+            assertEquals("is inactive",Boolean.FALSE, getEntityValue(ATIVO));
+            setEntity(resetInstance(id));
         }
     };
 
@@ -118,14 +115,18 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity();
-            crudActions.newInstance();
+            newInstance();
             initEntity(entity, this.crudActions);
-            //TODO: Ajustar assertions para retornar mensagens
-            assert PERSISTED.equals(crudActions.save());
-            assert crudActions.getId() != null;
-            assert Boolean.TRUE.equals(crudActions.getEntityValue(ATIVO));
-            assert !UPDATED.equals(crudActions.inactivate());
-            assert Boolean.TRUE.equals(crudActions.getEntityValue(ATIVO));
+
+            assertEquals("persisted", PERSISTED, save());
+            final Integer id = getId();
+            assertNotNull("id not null", id);
+            resetInstance(id);
+            
+            assertEquals("active", Boolean.TRUE,getEntityValue(ATIVO));
+            assertEquals("updated", false, UPDATED.equals(crudActions.inactivate()));
+            assertEquals("active", Boolean.TRUE,getEntityValue(ATIVO));
+            setEntity(resetInstance(id));
         }
         
     };
@@ -170,9 +171,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             crudActions.setId(id);
             assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
             
-            executeAction();
-            
-            assertEquals("UPDATED true ",UPDATED, crudActions.save());
+            setEntity(resetInstance(id));
         }
     };
     
@@ -193,9 +192,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             crudActions.setId(id);
             assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
             
-            executeAction();
-            
-            assertEquals("updateFail update", false, UPDATED.equals(crudActions.save())); 
+            setEntity(resetInstance(id));
         }
     };
 
@@ -242,12 +239,6 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         
         protected abstract void testComponent() throws Exception;
         
-        public final void executeAction() {
-            if (this.actionContainer != null) {
-                this.actionContainer.execute(this.crudActions);
-            }
-        }
-        
         public final E runTest() throws Exception {
             try {
                 TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
@@ -275,6 +266,9 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             try {
                 TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
                 testComponent();
+                if (this.actionContainer != null) {
+                    this.actionContainer.execute(this.crudActions);
+                }
             } finally {
                 TestLifecycle.endTest();
             }
