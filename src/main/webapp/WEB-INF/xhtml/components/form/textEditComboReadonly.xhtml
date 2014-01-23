@@ -28,7 +28,7 @@
          >
 		<wi:selectOneMenuEntity
              id="#{id}TipoProcDoc"
-             label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+             label="#{messages['processoDocumento.classificacaoDocumento']}"
              value="#{props.tipoProcessoDocumentoRO}"
              items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
              required="true"

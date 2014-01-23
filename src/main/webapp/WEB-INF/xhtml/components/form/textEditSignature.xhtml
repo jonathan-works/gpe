@@ -32,7 +32,7 @@
 	<s:div id="#{f.id}TipoDocDiv">
 		<wi:selectOneMenuEntity
 			id="tipoProcessoDocumento"
-			label="#{processoDocumentoHome.labelTipoProcessoDocumento()}"
+			label="#{messages['processoDocumento.classificacaoDocumento']}"
 			value="#{processoHome.tipoProcessoDocumento}"
 			items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
 			required="true"
