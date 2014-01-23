@@ -62,7 +62,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     private ModeloDocumento modeloDocumentoCombo;
     private boolean isModelo = Boolean.TRUE;
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
-    private Integer idDocumentoRerender;
     private String numeroHash;
     private String documento;
     private Boolean renderEventTree = Boolean.FALSE;
@@ -160,7 +159,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
 
         String ret = super.persist();
         if (ret != null) {
-            setIdDocumentoRerender(instance.getIdProcessoDocumento());
             if (isModelo) {
                 @SuppressWarnings(UNCHECKED) List<Integer> lista = (List<Integer>) Contexts.getSessionContext().get(PETICAO_INSERIDA);
                 if (lista == null) {
@@ -222,14 +220,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
             return modeloProcessado.toString();
         }
         return modelo;
-    }
-
-    public void setIdDocumentoRerender(Integer idDocumentoRerender) {
-        this.idDocumentoRerender = idDocumentoRerender;
-    }
-
-    public Integer getIdDocumentoRerender() {
-        return idDocumentoRerender;
     }
 
     private boolean isCodDataValido(String codIni, ProcessoDocumento pd) {
