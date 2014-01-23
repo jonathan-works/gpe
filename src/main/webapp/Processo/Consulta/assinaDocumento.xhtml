@@ -56,7 +56,7 @@
                     title="Documento" opened="false" />
 
                 <s:div
-                    rendered="#{processoDocumentoHome.liberaCertificacao() and not processoDocumentoBinHome.houveErroAoAssinar}"
+                    rendered="#{not processoDocumentoBinHome.houveErroAoAssinar}"
                     id="certificadoDigitalDiv">
                     <div id="divApplet">
                         <wi:appletAssinatura id="certificacao"

@@ -87,10 +87,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         super.newInstance();
     }
 
-    public boolean liberaCertificacao() {
-        return true;
-    }
-
     // Vindo do AbstractProcessoDocumentoHome
 
     public boolean getModelo() {
