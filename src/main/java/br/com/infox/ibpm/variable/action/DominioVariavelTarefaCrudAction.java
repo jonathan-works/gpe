@@ -19,5 +19,19 @@ public class DominioVariavelTarefaCrudAction extends AbstractCrudAction<DominioV
 	
 	public void setCurrentVariable(VariableAccessHandler currentVariable) {
 		this.currentVariable = currentVariable;
+		if (this.currentVariable.getDominioVariavelTarefa() != null) {
+			setInstance(this.currentVariable.getDominioVariavelTarefa());
+			setTab("form");
+		}
+	}
+	
+	public void selecionarDominio() {
+		this.currentVariable.setDominioVariavelTarefa(getInstance());
+		reset();
+	}
+	
+	public void reset() {
+		newInstance();
+		setTab("search");
 	}
 }

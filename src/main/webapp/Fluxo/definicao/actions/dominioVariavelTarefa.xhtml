@@ -28,9 +28,45 @@
                  immediate="true"
                  status=":status"
                  title="#{messages['template.abaPesquisaText']}"
-                 action="#{home.onClickSearchTab}">
+                 action="#{home.onClickSearchTab}"
+                 style="border-style: solid; border-width: 1px; border-color: lightgray">
                  <a:region>
                     <s:div id="searchGridRegion">
+                        <wi:dataTable id="dominioVariavelTarefaList"
+                            values="#{dominioVariavelTarefaList.list(10)}"
+                            bean="#{dominioVariavelTarefaList}"
+                            rowId="#{row.id}"
+                            tableTitle="#{messages['dominioVariavelTarefa.list']}">
+                            
+                            <ui:define name="searchForm">
+                                <wi:searchForm formId="pesquisarDominioVariavelTarefaForm" formTitle="#{messages['dominioVariavelTarefa.form']}">
+                                    <wi:inputText id="nome" label="#{messages['dominioVariavelTarefa.nome']}"
+                                        value="#{dominioVariavelTarefaList.entity.nome}" />
+                                </wi:searchForm>
+                            </ui:define>
+                            
+                            <ui:define name="headerToolBar" />
+                            <ui:define name="toolBar">
+                                <h:form>
+	                                <a:commandLink execute="@this" render="defaultTabPanel" limitRender="true">
+	                                   <h:graphicImage url="#{a4jSkin.imgIconEdit}" title="Editar" />
+								       <f:setPropertyActionListener
+								            target="#{dominioVariavelTarefaCrudAction.id}" value="#{row.id}" />
+								       <f:setPropertyActionListener
+								            target="#{dominioVariavelTarefaCrudAction.tab}" value="form" />
+								    </a:commandLink>
+                                    <a:commandLink action="#{dominioVariavelTarefaCrudAction.selecionarDominio}"
+                                        onbegin="showLoading()" execute="@this" limitRender="true" 
+                                        oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()">
+                                        <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.instance}" value="#{row}" />
+                                        <h:graphicImage url="#{a4jSkin.imgIconView}" title="#{messages['dominioVariavelTarefa.select']}" />
+                                    </a:commandLink>
+                                </h:form>
+                            </ui:define>
+                            
+                            <wi:columnOutputText columnId="nome" columnHeader="#{messages['dominioVariavelTarefa.nome']}" value="#{row.nome}" />
+                            
+                        </wi:dataTable>
                     </s:div>
                  </a:region>
             </infox:tab>
@@ -41,8 +77,27 @@
                  immediate="true"
                  status=":status"
                  title="#{messages['template.abaFormularioText']}"
-                 action="#{home.onClickFormTab}">
+                 action="#{home.onClickFormTab}"
+                 style="border-style: solid; border-width: 1px; border-color: lightgray">
                 <a:region>
+                    <wi:dataForm formId="dominioVariavelTarefaForm" formTitle="#{messages['dominioVariavelTarefa.form']}">
+                        <wi:inputText id="nome" label="#{messages['dominioVariavelTarefa.nome']}"
+                                    value="#{dominioVariavelTarefaCrudAction.instance.nome}" required="true"/>
+                        <wi:inputTextarea id="dominio" label="#{messages['dominioVariavelTarefa.dominio']}"
+                            required="true" value="#{dominioVariavelTarefaCrudAction.instance.dominio}" 
+                            showCounter="false"/>
+                            
+                        <ui:define name="buttons">
+                            <wi:commandButtonSave reRender="defaultTabPanel pageBodyDialogMessage" />
+                            <wi:commandButtonNew reRender="defaultTabPanel pageBodyDialogMessage" />
+                            <a:commandButton action="#{dominioVariavelTarefaCrudAction.selecionarDominio}"
+								onbegin="showLoading()" execute="@this" limitRender="true" 
+								oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()" 
+								value="#{messages['dominioVariavelTarefa.select']}" 
+								rendered="#{dominioVariavelTarefaCrudAction.managed}"
+								styleClass="buttons"/> 
+                        </ui:define>
+                    </wi:dataForm>
                 </a:region>
         </infox:tab>
     </infox:tabPanel>

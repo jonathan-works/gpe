@@ -237,7 +237,9 @@
 				
 				</wi:selectOneMenu>
 				
-				<a:jsFunction name="renderDominio" execute="@this" render="definicaoDominio" limitRender="true" oncomplete="hideLoading();" onbegin="showLoading();"/>
+				<a:jsFunction name="renderDominio" execute="@this" render="definicaoDominio" 
+				    limitRender="true" oncomplete="hideLoading();" onbegin="showLoading();"
+				    action="#{dominioVariavelTarefaCrudAction.reset}"/>
 				
 				<rich:panel id="definicaoDominio" rendered="#{var.possuiDominio}">
 				    <ui:param name="dominio" value="#{var.dominioVariavelTarefa}" />
@@ -246,13 +248,19 @@
 				    <f:facet name="header"><h:outputText value="Domínio"/></f:facet>
 				   
 				    <wi:outputText id="dominioAtual" label="Domínio atual" 
-				        value="#{empty var.dominioVariavelTarefa ? 'Nenhum' : var.dominioVariavelTarefa.name}" />
+				        value="#{empty var.dominioVariavelTarefa ? 'Nenhum' : var.dominioVariavelTarefa.nome}" />
 				        
 				    <a:commandLink value="Configurar domínio" onclick="showLoading()"
 				        limitRender="true" render="dominioVariavelTarefaPanel" execute="@this"
-				        oncomplete="hideLoading();#{rich:component('dominioVariavelTarefaPanel')}.show()">
+				        oncomplete="hideLoading();#{rich:component('dominioVariavelTarefaPanel')}.show()"
+				        style="padding-right: 5px">
 				        <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.currentVariable}" value="#{var}" />
 				    </a:commandLink>
+				    
+				    <a:commandLink value="Remover domínio" onclick="showLoading()"
+                        limitRender="true" render="definicaoDominio" execute="@this" oncomplete="hideLoading();">
+                        <f:setPropertyActionListener target="#{var.dominioVariavelTarefa}" value="#{null}" />
+                    </a:commandLink>
 				</rich:panel>
 			</h:form>
 		

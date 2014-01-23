@@ -119,7 +119,11 @@ public class VariableAccessHandler implements Serializable {
 	
 	public void setDominioVariavelTarefa(DominioVariavelTarefa dominioVariavelTarefa) {
 		this.dominioVariavelTarefa = dominioVariavelTarefa;
-		ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + name + ":" + this.dominioVariavelTarefa.getId());
+		if (this.dominioVariavelTarefa != null) {
+			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + name + ":" + this.dominioVariavelTarefa.getId());
+		} else {
+			ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":" + name);
+		}
 	}
 	
 	public VariableAccess update() {
