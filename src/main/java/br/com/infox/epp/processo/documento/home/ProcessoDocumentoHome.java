@@ -60,7 +60,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     public static final String PETICAO_INSERIDA = "peticaoInseridaMap";
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoHome.class);
     private ModeloDocumento modeloDocumentoCombo;
-    private boolean isTruePanelRecibo = Boolean.FALSE;
     private boolean isModelo = Boolean.TRUE;
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
     private Integer idDocumentoRerender;
@@ -102,14 +101,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
 
     public void setModelo(boolean isModelo) {
         this.isModelo = isModelo;
-    }
-
-    public void setIsTruePanelRecibo(boolean isTruePanelRecibo) {
-        this.isTruePanelRecibo = isTruePanelRecibo;
-    }
-
-    public Boolean getIsTruePanelRecibo() {
-        return isTruePanelRecibo;
     }
 
     public ModeloDocumento getModeloDocumentoCombo() {
