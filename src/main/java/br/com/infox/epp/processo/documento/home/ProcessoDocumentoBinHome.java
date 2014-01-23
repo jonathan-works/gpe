@@ -37,7 +37,6 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.AssinaturaException;
-import br.com.infox.epp.processo.documento.api.IProcessoDocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
@@ -48,7 +47,7 @@ import br.com.itx.util.Crypto;
 
 @Name(ProcessoDocumentoBinHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin> implements IProcessoDocumentoBinHome {
+public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin> {
 
     private static final long serialVersionUID = 1L;
     private String certChain;

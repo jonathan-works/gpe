@@ -15,7 +15,7 @@
 */
 package br.com.infox.epp.processo.documento.home;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -38,8 +38,6 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
-import br.com.infox.epp.processo.documento.api.IProcessoDocumentoBinHome;
-import br.com.infox.epp.processo.documento.api.IProcessoDocumentoHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
@@ -51,8 +49,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(ProcessoDocumentoHome.NAME)
 public class ProcessoDocumentoHome
-	extends AbstractHome<ProcessoDocumento>
-	implements IProcessoDocumentoHome{
+	extends AbstractHome<ProcessoDocumento> {
 
 	public static final String NAME = "processoDocumentoHome";
 
@@ -73,7 +70,7 @@ public class ProcessoDocumentoHome
     private Boolean renderEventTree = Boolean.FALSE;
     private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
-	public static IProcessoDocumentoHome instance() {
+	public static ProcessoDocumentoHome instance() {
 		return ComponentUtil.getComponent(NAME);
 	}
 	
@@ -89,7 +86,7 @@ public class ProcessoDocumentoHome
 	public void newInstance() {
 	    setModelo(false);
 		setModeloDocumentoCombo(null);
-		IProcessoDocumentoBinHome procDocBin = getProcessoDocumentoBinHome();
+		ProcessoDocumentoBinHome procDocBin = getProcessoDocumentoBinHome();
         procDocBin.newInstance();
         super.newInstance();
 	}
@@ -163,7 +160,7 @@ public class ProcessoDocumentoHome
 
     private String persistDetalhesDoDocumento()
     {
-        IProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
+        ProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
         procDocBinHome.isModelo(isModelo);
         if (procDocBinHome.persist() == null) {
             return null;
@@ -204,12 +201,12 @@ public class ProcessoDocumentoHome
     public void processarModelo(){
         if (modeloDocumentoCombo != null) {
             ModeloDocumento modeloDocumento = getEntityManager().merge(modeloDocumentoCombo);
-            IProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
+            ProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
             procDocBinHome.getInstance().setModeloDocumento(processarModelo(modeloDocumento.getModeloDocumento()));
         }
     }
 
-    private IProcessoDocumentoBinHome getProcessoDocumentoBinHome() {
+    private ProcessoDocumentoBinHome getProcessoDocumentoBinHome() {
         return getComponent(PROCESSO_DOCUMENTO_BIN_HOME_NAME);
     }
     
@@ -327,7 +324,7 @@ public class ProcessoDocumentoHome
     @Override
     public String update() {
         String ret = null;
-        IProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
+        ProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
         if (procDocBinHome.update() != null) {
             ret = super.update();
         }
