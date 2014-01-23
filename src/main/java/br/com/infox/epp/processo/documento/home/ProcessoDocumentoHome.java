@@ -308,8 +308,4 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     public void setDocumento(String documento) {
         this.documento = documento;
     }
-
-    public String labelTipoProcessoDocumento() {
-        return "Tipo do Documento";
-    }
 }
