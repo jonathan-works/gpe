@@ -337,10 +337,15 @@ public class VariableAccessHandler implements Serializable {
 		TaskHandlerVisitor visitor = new TaskHandlerVisitor(true);
 		visitor.visit(task);
 		for (String v : visitor.getVariables()) {
-			if (v.endsWith(":" + name)) {
+			String[] tokens = v.split(":");
+			if (tokens.length > 1 && tokens[1].equals(name)) {
 				this.label = getLabel();
-				setType( v.split(":")[0]);
+				setType(tokens[0]);
 				setWritable(false);
+				if (tokens.length >= 3) {
+					DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+					setDominioVariavelTarefa(dominioVariavelTarefaManager.getDominioVariavelTarefa(Integer.valueOf(tokens[2])));
+				}
 			}
 		}
 	}

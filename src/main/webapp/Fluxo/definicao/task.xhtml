@@ -147,13 +147,13 @@
 	                    <a:ajax status=":status"
 								listener="#{var.copyVariable()}"
 								event="blur"
-								render="varDiv,writable,type,varLabel"
+								render="varDiv,writable,varLabel,formVariableType"
 								limitRender="true" />
 								 
 						<a:ajax status=":status"
 								listener="#{var.copyVariable()}"
 								event="selectitem"
-								render="varDiv,writable,type,varLabel"
+								render="varDiv,writable,varLabel,formVariableType"
 								limitRender="true" />
 					
 					</rich:autocomplete>
@@ -220,7 +220,7 @@
 				
 			<f:facet name="header">Tipo</f:facet>
 			
-			<h:form>
+			<h:form id="formVariableType">
 			
 				<wi:selectOneMenu id="type"
 						 value="#{var.type}"
