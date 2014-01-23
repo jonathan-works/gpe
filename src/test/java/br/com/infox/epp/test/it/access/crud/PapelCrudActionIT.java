@@ -245,20 +245,26 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         }.runTest();
     }
     
-    private final void removeHerdeiro(final Papel papel, final String... herdeiros) throws Exception {
+    private final void removeHerdeiros(final Papel papel, final Papel... herdeiros) throws Exception {
         new RunnableTest<Papel>() {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
                 this.setComponentValue("activeInnerTab", "herdeirosTab");
+                int idPapel = papel.getIdPapel();
+                resetInstance(idPapel);
                 final ArrayList<String> membros = new ArrayList<>((List<String>)this.getComponentValue("membros"));
-                for (final String string : herdeiros) {
-                    membros.add(string);    
+                for (final Papel herdeiro : herdeiros) {
+                    membros.remove(herdeiro.getIdentificador());
                 }
                 this.setComponentValue("membros", membros);
-                this.save();
+                assertEquals("updated", true, UPDATED.equals(save()));
+                for (final Papel herdeiro : herdeiros) {
+                    assertEquals("herdeiroRecebePermissão", Boolean.FALSE, Boolean.valueOf(IdentityManager.instance().getRoleGroups(herdeiro.getIdentificador()).contains(papel.getIdentificador())));
+                }
+                setEntity(resetInstance(idPapel));
             }
-        }.runTest(papel);
+        }.runTest();
     }
     
     @Test
@@ -276,13 +282,14 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
         addHerdeiros(vendedor, gestor);
         addHerdeiros(colaborador, comprador, vendedor);
 
-
+        removeHerdeiros(colaborador, comprador);
+        
         removeSuccess.runTest(admin);
         removeSuccess.runTest(gestor);
         removeSuccess.runTest(redator);
         removeSuccess.runTest(vendedor);
-        removeSuccess.runTest(comprador);
         removeSuccess.runTest(colaborador);
+        removeSuccess.runTest(comprador);
     }
     
     private final RunnableTest<Papel> updateFail = new RunnableTest<Papel>() {
