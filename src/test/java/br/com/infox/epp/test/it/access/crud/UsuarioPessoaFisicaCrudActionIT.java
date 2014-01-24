@@ -55,11 +55,11 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
         .createDeployment();
     }
 
-    private final CrudActions<UsuarioLogin> crudActionsUsuarioLogin = new CrudActions<>(UsuarioLoginCrudAction.NAME);
+    private final ICrudActions<UsuarioLogin> crudActionsUsuarioLogin = new CrudActions<>(UsuarioLoginCrudAction.NAME);
     
     //TODO: listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
     @Override
-    protected void initEntity(final PessoaFisica entity, final CrudActions<PessoaFisica> crudActions) {
+    protected void initEntity(final PessoaFisica entity, final ICrudActions<PessoaFisica> crudActions) {
         crudActions.setEntityValue("cpf",entity.getCpf());
         crudActions.setEntityValue("nome",entity.getNome());
         crudActions.setEntityValue("dataNascimento",entity.getDataNascimento());

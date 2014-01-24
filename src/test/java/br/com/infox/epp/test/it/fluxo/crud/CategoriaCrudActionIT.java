@@ -37,7 +37,7 @@ public class CategoriaCrudActionIT extends AbstractGenericCrudTest<Categoria> {
     }
     
     @Override
-    protected void initEntity(final Categoria entity, final CrudActions<Categoria> crudActions) {
+    protected void initEntity(final Categoria entity, final ICrudActions<Categoria> crudActions) {
         crudActions.setEntityValue("categoria", entity.getCategoria());
         crudActions.setEntityValue("ativo", entity.getAtivo());
         
@@ -83,7 +83,7 @@ public class CategoriaCrudActionIT extends AbstractGenericCrudTest<Categoria> {
     public void updateSuccessTest() throws Exception {
         int i=0;
         persistSuccess.runTest(new EntityActionContainer<Categoria>(new Categoria(format("categoria-upd-suc-{0}", i),TRUE)) {
-            public void execute(final CrudActions<Categoria> crudActions) {
+            public void execute(final ICrudActions<Categoria> crudActions) {
                 final Integer id = crudActions.getId();
                 assertNotNull("id not null", id);
                 final Categoria oldEntity = getEntity();
