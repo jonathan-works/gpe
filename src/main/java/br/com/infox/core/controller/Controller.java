@@ -7,6 +7,6 @@ public interface Controller {
     
     Object getId();
     void setId(Object id);
-    
-
+    void onClickSearchTab();
+    void onClickFormTab();
 }
