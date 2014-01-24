@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.org/schema/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:rich="http://richfaces.org/rich"
-				xmlns:a="http://richfaces.org/a4j"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-				template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-<!--
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+    <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -22,16 +22,15 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->   
-	<ui:define name="baseBody"> 
-	<s:div id="pageBody" styleClass="pageBody">
-	   <wi:messages
-           formId="pageBody"
-           globalOnly="true"/>
-		<ui:param name="home" value="#{processoDocumentoHome}" />
-		<ui:param name="pd" value="#{home.instance}" />
-		<ui:param name="isBinario" value="#{pd.processoDocumentoBin.isBinario()}" />
-		<script>
+-->
+    <ui:define name="baseBody">
+        <s:div id="pageBody" styleClass="pageBody">
+            <wi:messages formId="pageBody" globalOnly="true" />
+            <ui:param name="home" value="#{processoDocumentoHome}" />
+            <ui:param name="pd" value="#{home.instance}" />
+            <ui:param name="isBinario"
+                value="#{pd.processoDocumentoBin.isBinario()}" />
+            <script>
 			var documento= {
 					useBase64:function useBase64() {
 						return 'true';
@@ -50,53 +49,49 @@
 					}
 			};
 		</script>
-		
-		<rich:panel id="painel">
-	        <f:facet name="header">Informações: </f:facet>
-	        <f:view 
-	        	form="#{processoDocumentoView}" 
-	        	columns="1" title="Documento"
-	        	opened="false"/>
-	        
-	        <s:div rendered="#{processoDocumentoHome.liberaCertificacao() and not processoDocumentoBinHome.houveErroAoAssinar}" id="certificadoDigitalDiv">	        
-		        <div id="divApplet">
-			        <wi:appletAssinatura
-						id="certificacao"
-						urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
-						formId="formValidar"
-						certificationChainField="#{rich:clientId('certChain')}"
-						signatureField="#{rich:clientId('signature')}"
-						getDataFunction="documento.getData()"
-						functionPreSign="showLoading()"
-						functionPosSign="hideLoading();documento.postValidate();"
-						debug="false"
-						loginMode="false"
-						useProviderDll="false"
-					>
-					</wi:appletAssinatura>
-		        </div>
-				<h:form id="formValidar">
-					<script>
+
+            <rich:panel id="painel">
+                <f:facet name="header">Informações: </f:facet>
+                <f:view form="#{processoDocumentoView}" columns="1"
+                    title="Documento" opened="false" />
+
+                <s:div
+                    rendered="#{not processoDocumentoBinHome.houveErroAoAssinar}"
+                    id="certificadoDigitalDiv">
+                    <div id="divApplet">
+                        <wi:appletAssinatura id="certificacao"
+                            urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
+                            formId="formValidar"
+                            certificationChainField="#{rich:clientId('certChain')}"
+                            signatureField="#{rich:clientId('signature')}"
+                            getDataFunction="documento.getData()"
+                            functionPreSign="showLoading()"
+                            functionPosSign="hideLoading();documento.postValidate();"
+                            debug="false" loginMode="false"
+                            useProviderDll="false">
+                        </wi:appletAssinatura>
+                    </div>
+                    <h:form id="formValidar">
+                        <script>
 						if (!(#{empty pd.processoDocumentoBin.signature or empty pd.processoDocumentoBin.certChain})) {
 							opener.location.reload();
 						}
-					</script>
-					<h:inputHidden id="certChain"
-						value="#{processoDocumentoBinHome.certChain}"/>
-					<h:inputHidden id="signature"
-						value="#{processoDocumentoBinHome.signature}"/>
-				
-		            <a:jsFunction
-		            	name="submitForm"
-		            	action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
-		            	oncomplete="if (!event.data) close();"
-		            	execute="@form"
-		            	data="#{processoDocumentoBinHome.houveErroAoAssinar}"
-		            	render="painel, pageBodyDialogMessage"/>
-				</h:form>
-			</s:div>
-		</rich:panel>
-	</s:div>
-	</ui:define>
-	
+						</script>
+                        <h:inputHidden id="certChain"
+                            value="#{processoDocumentoBinHome.certChain}" />
+                        <h:inputHidden id="signature"
+                            value="#{processoDocumentoBinHome.signature}" />
+
+                        <a:jsFunction name="submitForm"
+                            action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
+                            oncomplete="if (!event.data) close();"
+                            execute="@form"
+                            data="#{processoDocumentoBinHome.houveErroAoAssinar}"
+                            render="painel, pageBodyDialogMessage" />
+                    </h:form>
+                </s:div>
+            </rich:panel>
+        </s:div>
+    </ui:define>
+
 </ui:composition>
