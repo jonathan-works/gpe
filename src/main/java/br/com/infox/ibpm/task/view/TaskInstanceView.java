@@ -18,13 +18,11 @@ package br.com.infox.ibpm.task.view;
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.model.SelectItem;
-
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -38,6 +36,8 @@ import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.variable.VariableHandler;
+import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
+import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.itx.component.Form;
 import br.com.itx.component.FormField;
 import br.com.itx.component.Template;
@@ -118,15 +118,20 @@ public class TaskInstanceView implements Serializable{
 						ff.setType(type);
 						ff.setValue(String.format(FloatFormatConstants.F2, value));
 					} else if ("enumeracao".equals(type)) {
-						ff.setType(type);
+						ff.setType("default");
 						ff.setValue(value);
-						String[] itens = tokens[2].split(";");
-						List<SelectItem> selectItens = new ArrayList<>();
+						DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+						Integer id = Integer.valueOf(tokens[2]);
+						DominioVariavelTarefa dominio = dominioVariavelTarefaManager.getDominioVariavelTarefa(id);
+						
+						String[] itens = dominio.getDominio().split(";");
 						for (String item : itens) {
 							String[] pair = item.split("=");
-							selectItens.add(new SelectItem(pair[0], pair[1]));
+							if (pair[0].equals(value)) {
+								ff.setValue(pair[1]);
+								break;
+							}
 						}
-						properties.put("items", selectItens);
 					} else {
 						ff.setType(type);
 						ff.setValue(value);

@@ -1,5 +1,6 @@
 package br.com.infox.epp.fluxo.crud;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -21,9 +22,10 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(CategoriaCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class CategoriaCrudAction extends AbstractCrudAction<Categoria> {
+public class CategoriaCrudAction extends AbstractCrudAction<Categoria> implements Serializable {
 	
-	private static final LogProvider LOG = Logging.getLogProvider(CategoriaCrudAction.class);
+    private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(CategoriaCrudAction.class);
     
     public static final String NAME = "categoriaCrudAction";
     
@@ -41,7 +43,7 @@ public class CategoriaCrudAction extends AbstractCrudAction<Categoria> {
     }
     
     public void addCategoriaItem(){
-    	List<CategoriaItem> list = categoriaItemManager.createCategoriaItemList(getInstance(), itemManager.getFolhas(itemASerAdicionado));
+    	final List<CategoriaItem> list = categoriaItemManager.createCategoriaItemList(getInstance(), itemManager.getFolhas(itemASerAdicionado));
 	    getInstance().getCategoriaItemList().addAll(list);
         limparTreeDeItem();
     }

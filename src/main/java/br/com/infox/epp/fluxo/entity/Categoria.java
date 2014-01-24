@@ -44,8 +44,14 @@ public class Categoria implements Serializable{
 	private String categoria;
 	private Boolean ativo;
 	
-	private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList = new ArrayList<NaturezaCategoriaFluxo>(0);
-	private List<CategoriaItem> categoriaItemList = new ArrayList<CategoriaItem>();
+	private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList = new ArrayList<>(0);
+	private List<CategoriaItem> categoriaItemList = new ArrayList<>();
+	
+	public Categoria() {}
+	public Categoria(final String categoria, final Boolean ativo) {
+	    this.categoria = categoria;
+	    this.ativo = ativo;
+	}
 	
 	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA)
 	@Id
@@ -54,18 +60,18 @@ public class Categoria implements Serializable{
 	public int getIdCategoria() {
 		return idCategoria;
 	}
-	public void setIdCategoria(int idCategoria) {
+	public void setIdCategoria(final int idCategoria) {
 		this.idCategoria = idCategoria;
 	}
 	
 	@Column(name=DESCRICAO_CATEGORIA, length=LengthConstants.DESCRICAO_PEQUENA, nullable=false)
-	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
+	@Size(min=1,max=LengthConstants.DESCRICAO_PEQUENA)
 	@NotNull
 	public String getCategoria() {
 		return categoria;
 	}
 	
-	public void setCategoria(String categoria) {
+	public void setCategoria(final String categoria) {
 		this.categoria = categoria;
 	}
 	
@@ -75,7 +81,7 @@ public class Categoria implements Serializable{
 		return ativo;
 	}
 	
-	public void setAtivo(Boolean ativo) {
+	public void setAtivo(final Boolean ativo) {
 		this.ativo = ativo;
 	}
 	
@@ -88,12 +94,12 @@ public class Categoria implements Serializable{
 	public List<CategoriaItem> getCategoriaItemList() {
 		return categoriaItemList;
 	}
-	public void setCategoriaItemList(List<CategoriaItem> categoriaItemList) {
+	public void setCategoriaItemList(final List<CategoriaItem> categoriaItemList) {
 		this.categoriaItemList = categoriaItemList;
 	}
 	
 	public void setNaturezaCategoriaFluxoList(
-			List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
+			final List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
 		this.naturezaCategoriaFluxoList = naturezaCategoriaFluxoList;
 	}
 	
@@ -109,7 +115,7 @@ public class Categoria implements Serializable{
         return result;
     }
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -119,7 +125,7 @@ public class Categoria implements Serializable{
         if (!(obj instanceof Categoria)) {
             return false;
         }
-        Categoria other = (Categoria) HibernateUtil.removeProxy(obj);
+        final Categoria other = (Categoria) HibernateUtil.removeProxy(obj);
         if (idCategoria != other.idCategoria) {
             return false;
         }
