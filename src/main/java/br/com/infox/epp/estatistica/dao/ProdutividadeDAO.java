@@ -19,6 +19,7 @@ import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_TEMPO_
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_TIPO_PRAZO_TAREFA;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_USUARIO;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INNER_JOIN_FLUXO;
+import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.ORDER_BY;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_COUNT;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_DATA_FIM;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_DATA_INICIO;
@@ -92,6 +93,7 @@ public class ProdutividadeDAO extends GenericDAO {
 			sb.append(CONDICAO_DATA_FIM);
 		}
 		sb.append(GROUP_BY);
+		sb.append(ORDER_BY);
 		return sb.toString();
 	}
 	

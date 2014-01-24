@@ -25,6 +25,7 @@ public interface ProdutividadeQuery {
 	
 	String GROUP_BY = " GROUP BY t.id_tarefa, pet.nr_tempo_previsto, l.ds_localizacao, p.ds_nome, pes.nm_pessoa";
 	
+	String ORDER_BY = " ORDER BY pes.nm_pessoa";
 	
 	String CONDICAO_FIXA = " WHERE 1=1";
 	
