@@ -65,6 +65,17 @@ public class Item implements Serializable, Recursive<Item> {
 	
 	public Item() {
 	}
+	public Item(final String codigoItem, final String descricaoItem, final Boolean ativo) {
+	    this.codigoItem = codigoItem;
+	    this.descricaoItem = descricaoItem;
+	    this.ativo = ativo;
+	}
+	public Item(final String codigoItem, final String descricaoItem, final Item itemPai, final Boolean ativo) {
+	    this.codigoItem = codigoItem;
+	    this.descricaoItem = descricaoItem;
+	    this.itemPai = itemPai;
+	    this.ativo = ativo;
+	}
 
 	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_ITEM)
 	@Id
@@ -88,7 +99,9 @@ public class Item implements Serializable, Recursive<Item> {
 		this.itemPai = itemPai;
 	}
 
-	@Column(name = CODIGO_ITEM, length=LengthConstants.DESCRICAO_PEQUENA)
+	@Column(name = CODIGO_ITEM, length=LengthConstants.DESCRICAO_PEQUENA, nullable=false)
+	@Size(min=1,max=LengthConstants.DESCRICAO_PEQUENA)
+	@NotNull
 	public String getCodigoItem() {
 		return this.codigoItem;
 	}
@@ -98,7 +111,7 @@ public class Item implements Serializable, Recursive<Item> {
 	}
 
 	@Column(name = DESCRICAO_ITEM, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
+	@Size(min=1,max=LengthConstants.DESCRICAO_PADRAO)
 	@NotNull
 	public String getDescricaoItem() {
 		return this.descricaoItem;
