@@ -67,6 +67,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.ForeignKey;
+import org.jboss.seam.annotations.security.management.PasswordSalt;
 import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
@@ -100,6 +101,7 @@ public class UsuarioLogin implements Serializable {
 	private String email;
 	private String senha;
 	private String login;
+	private String salt;
 	private String nomeUsuario;
 	private Boolean ativo;
 	private Boolean bloqueio;
@@ -373,6 +375,16 @@ public class UsuarioLogin implements Serializable {
 
 	public void setTemContaTwitter(Boolean temContaTwitter) {
 		this.temContaTwitter = temContaTwitter;
+	}
+	
+	@Column(name = "ds_salt", length = 4, nullable = false)
+	@PasswordSalt
+	public String getSalt() {
+		return salt;
+	}
+	
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 	
 	@Override
