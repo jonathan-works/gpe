@@ -1,5 +1,7 @@
 package br.com.infox.core.crud;
 
+import br.com.infox.core.controller.Controller;
+
 /**
  * Interface que deve ser implementada para os Beans que serão controller de
  * páginas CRUD.
@@ -7,7 +9,7 @@ package br.com.infox.core.crud;
  * @author Daniel
  * 
  */
-public interface Crudable<T> {
+public interface Crudable<T> extends Controller {
 
     /**
      * Id na página para a tab de pesquisa no tabPanel.
