@@ -377,7 +377,7 @@ public class UsuarioLogin implements Serializable {
 		this.temContaTwitter = temContaTwitter;
 	}
 	
-	@Column(name = "ds_salt", length = 4, nullable = false)
+	@Column(name = "ds_salt", length = 16)
 	@PasswordSalt
 	public String getSalt() {
 		return salt;
