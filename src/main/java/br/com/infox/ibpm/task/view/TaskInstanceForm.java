@@ -40,6 +40,8 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
+import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
+import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.itx.component.Form;
 import br.com.itx.component.FormField;
 import br.com.itx.component.Template;
@@ -158,7 +160,11 @@ public class TaskInstanceForm implements Serializable{
 						props.put(urlParamName, url);
 						ff.setProperties(props);
 					} else if ("enumeracao".equals(type)) {
-						String[] itens = tokens[2].split(";");
+						DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+						Integer id = Integer.valueOf(tokens[2]);
+						DominioVariavelTarefa dominio = dominioVariavelTarefaManager.getDominioVariavelTarefa(id);
+						
+						String[] itens = dominio.getDominio().split(";");
 						List<SelectItem> selectItens = new ArrayList<>();
 						for (String item : itens) {
 							String[] pair = item.split("=");

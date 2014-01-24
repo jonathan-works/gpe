@@ -147,13 +147,13 @@
 	                    <a:ajax status=":status"
 								listener="#{var.copyVariable()}"
 								event="blur"
-								render="varDiv,writable,type,varLabel"
+								render="varDiv,writable,varLabel,formVariableType"
 								limitRender="true" />
 								 
 						<a:ajax status=":status"
 								listener="#{var.copyVariable()}"
 								event="selectitem"
-								render="varDiv,writable,type,varLabel"
+								render="varDiv,writable,varLabel,formVariableType"
 								limitRender="true" />
 					
 					</rich:autocomplete>
@@ -220,7 +220,8 @@
 				
 			<f:facet name="header">Tipo</f:facet>
 			
-			<h:form>
+			<h:form id="formVariableType">
+			
 				<wi:selectOneMenu id="type"
 						 value="#{var.type}"
 						 items="#{typeFitter.typeList}"
@@ -236,13 +237,31 @@
 				
 				</wi:selectOneMenu>
 				
-				<s:div id="propriedadesEnumeracao" rendered="#{var.type eq 'enumeracao'}">
-					<wi:inputText id="itensCombo" value="#{var.itensCombo}" label="Itens" 
-					    title="Informe os itens da combo separados por ; na forma valor=texto">
-					    <f:validator validatorId="itensComboFluxoValidator" />
-					    <a:ajax event="change" execute="@this" limitRender="true" render="propriedadesEnumeracao" />
-					</wi:inputText>
-				</s:div>
+				<a:jsFunction name="renderDominio" execute="@this" render="definicaoDominio" 
+				    limitRender="true" oncomplete="hideLoading();" onbegin="showLoading();"
+				    action="#{dominioVariavelTarefaCrudAction.reset}"/>
+				
+				<rich:panel id="definicaoDominio" rendered="#{var.possuiDominio}">
+				    <ui:param name="dominio" value="#{var.dominioVariavelTarefa}" />
+				    <ui:param name="params" value="#{not empty dominio ? '?id='.concat(dominio.id).concat('&amp;tab=form') : ''}" />
+				   
+				    <f:facet name="header"><h:outputText value="Domínio"/></f:facet>
+				   
+				    <wi:outputText id="dominioAtual" label="Domínio atual" 
+				        value="#{empty var.dominioVariavelTarefa ? 'Nenhum' : var.dominioVariavelTarefa.nome}" />
+				        
+				    <a:commandLink value="Configurar domínio" onclick="showLoading()"
+				        limitRender="true" render="dominioVariavelTarefaPanel" execute="@this"
+				        oncomplete="hideLoading();#{rich:component('dominioVariavelTarefaPanel')}.show()"
+				        style="padding-right: 5px">
+				        <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.currentVariable}" value="#{var}" />
+				    </a:commandLink>
+				    
+				    <a:commandLink value="Remover domínio" onclick="showLoading()"
+                        limitRender="true" render="definicaoDominio" execute="@this" oncomplete="hideLoading();">
+                        <f:setPropertyActionListener target="#{var.dominioVariavelTarefa}" value="#{null}" />
+                    </a:commandLink>
+				</rich:panel>
 			</h:form>
 		
 		</rich:column>
