@@ -10,8 +10,6 @@ import static junit.framework.Assert.assertNull;
 
 import java.util.ArrayList;
 
-import junit.framework.Assert;
-
 import org.jboss.seam.contexts.TestLifecycle;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.ValueExpression;
@@ -137,9 +135,9 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             final T entity = getEntity();
             newInstance();
             initEntity(entity, this);
-            Assert.assertEquals("persist", true, PERSISTED.equals(save()));
-            Assert.assertEquals("id!=null", true, getId() != null);
-            Assert.assertEquals("remove", true, REMOVED.equals(remove(getInstance())));
+            assertEquals("persist", true, PERSISTED.equals(save()));
+            assertEquals("id!=null", true, getId() != null);
+            assertEquals("remove", true, REMOVED.equals(remove(getInstance())));
         }
     };
 
@@ -149,9 +147,9 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             final T entity = getEntity();
             newInstance();
             initEntity(entity, this);
-            assert getId() == null;
-            assert PERSISTED.equals(save());
-            assert REMOVED.equals(remove());
+            assertEquals("persist", true, PERSISTED.equals(save()));
+            assertEquals("id!=null", true, getId() != null);
+            assertEquals("remove", false, REMOVED.equals(remove(getInstance())));
         }
     };
     
@@ -221,6 +219,27 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         final Object entityInstance = crudActions.getInstance();
         return entityInstance == entity
                 || (entityInstance != null && entity != null);
+    }
+    
+    public interface ICrudActions<E> {
+        void setEntityValue(final String field, final Object value);
+        <R> R getEntityValue(final String field);
+        void setComponentValue(final String field, final Object value);
+        <R> R getComponentValue(final String field);
+        Object invokeMethod(final String methodName, final Object... args);
+        <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args);
+        <R> R invokeMethod(final String methodName, final Class<R> returnType, final Object... args);
+        void newInstance();
+        E createInstance();
+        E resetInstance(Object id);
+        E getInstance();
+        void setInstance(final E value);
+        String save();
+        String remove();
+        String remove(final E entity);
+        String inactivate();
+        Integer getId();
+        void setId(Object value);
     }
     
     protected abstract class RunnableTest<E> extends AbstractCrudActions<E>{
