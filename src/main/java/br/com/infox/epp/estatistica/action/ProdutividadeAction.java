@@ -210,7 +210,9 @@ public class ProdutividadeAction implements Serializable {
 		Map<String, Object> params = new HashMap<>();
 		params.put(ProdutividadeQuery.PARAM_START, this.maxResults * (this.page - 1));
 		params.put(ProdutividadeQuery.PARAM_COUNT, this.maxResults);
-		params.put(ProdutividadeQuery.PARAM_USUARIO, this.usuario);
+		if (this.usuario != null) {
+			params.put(ProdutividadeQuery.PARAM_USUARIO, this.usuario);
+		}
 		if (this.fluxo != null) {
 			params.put(ProdutividadeQuery.PARAM_FLUXO, this.fluxo);	
 		}
