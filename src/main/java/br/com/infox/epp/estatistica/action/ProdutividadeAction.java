@@ -183,6 +183,7 @@ public class ProdutividadeAction implements Serializable {
 	}
 	
 	public void exportarXLS() {
+		setPage(1);
         List<ProdutividadeBean> beanList = list(10000);
         try {
             if (beanList == null || beanList.isEmpty()) {
