@@ -35,7 +35,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
@@ -44,8 +43,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.search.ProcessoSearcher;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.Variavel;
@@ -66,7 +64,7 @@ public class SearchHandler implements Serializable {
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
     @In
-    private ProcessoManager processoManager;
+    private ProcessoSearcher processoSearcher;
 
     public String getSearchText() {
         return searchText;
@@ -79,55 +77,6 @@ public class SearchHandler implements Serializable {
 
     public List<Map<String, Object>> getSearchResult() {
         return searchResult;
-    }
-
-    /**
-     * Busca o processo pelo seu id
-     * 
-     * @return Processo cuja id seja igual o valor buscado, ou null
-     */
-    private Processo searchIdProcesso() {
-        int prc = -1;
-        try {
-            prc = Integer.parseInt(searchText);
-        } catch (NumberFormatException e) {
-            LOG.debug(e.getMessage(), e);
-        }
-        return processoManager.find(prc);
-    }
-
-    /**
-     * Método realiza busca de processos no sistema
-     * 
-     * Caso o texto de busca seja número de processo realiza uma busca por este
-     * valor {@link #searchNrProcesso()}, caso não seja, tenta uma busca de
-     * processo pelo ID {@link #searchIdProcesso()}
-     * 
-     * Se qualquer dos métodos de busca retornar um processo, este é chamado na
-     * página {@link #visualizarProcesso(Processo)}
-     * 
-     * @return TRUE se o resultado for um processo, FALSE do contrário
-     */
-    public boolean searchProcesso() {
-        Processo processo = searchIdProcesso();
-        boolean hasProcesso = processo != null;
-        if (hasProcesso) {
-            visualizarProcesso(processo);
-        }
-        return hasProcesso;
-    }
-
-    /**
-     * Método redireciona para visualização do processo escolhido no paginador
-     * 
-     * @param processo Processo a ser visualizado no paginador
-     */
-    public void visualizarProcesso(Processo processo) {
-        Redirect.instance().setConversationPropagationEnabled(false);
-        Redirect.instance().setViewId("/Processo/Consulta/list.xhtml");
-        Redirect.instance().setParameter("id", processo.getIdProcesso());
-        Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
-        Redirect.instance().execute();
     }
 
     /**
@@ -175,7 +124,7 @@ public class SearchHandler implements Serializable {
             return;
         }
 
-        boolean isProcesso = searchProcesso();
+        boolean isProcesso = processoSearcher.searchProcesso(searchText);
 
         if (!isProcesso) {
             try {
