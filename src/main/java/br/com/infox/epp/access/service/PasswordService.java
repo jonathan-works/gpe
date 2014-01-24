@@ -64,20 +64,22 @@ public class PasswordService {
         if (usuario == null) {
             throw new LoginException("Usuário não encontrado");
         }
-        final String password = gerarNovaSenha(usuario);
-        accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, password);
+        final String plainTextPassword = gerarNovaSenha(usuario);
+        accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, plainTextPassword);
     }
     
     private String gerarNovaSenha(final UsuarioLogin usuario) throws DAOException {
+    	String senha;
         if (ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
-            usuario.setSenha("");
+            senha = "";
         } else {
-            usuario.setSenha(RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH));
+            senha = RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH);
         }
         
+        usuario.setSenha(senha);
         new ChangePasswordOperation(usuario.getLogin(), usuario.getSenha()).run();
         usuarioLoginManager.update(usuario);
-        return usuario.getSenha();
+        return senha;
     }
     
 }
