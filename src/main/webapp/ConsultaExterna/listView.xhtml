@@ -52,12 +52,7 @@
 
                     <ui:define name="toolBar">
                         <wi:toolBar url="#{a4jSkin.imgIconView}"
-                            title="Selecionar" action="#{consultaExternaController.selectProcesso(row)}">
-                            <f:param name="id" value="#{rowId}" />
-                            <f:param name="idJbpm" value="#{row.idJbpm}" />
-                            <f:param name="tab"
-                                value="processoExternoView" />
-                        </wi:toolBar>
+                            title="Selecionar" action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
                     <wi:columnOutputText columnId="numeroProcesso"
@@ -110,13 +105,8 @@
                     </ui:define>
 
                     <ui:define name="toolBar">
-                        <wi:toolBar url="#{a4jSkin.imgIconView}"
-                            title="Selecionar">
-                            <f:param name="id" value="#{rowId}" />
-                            <f:param name="idJbpm" value="#{row.idJbpm}" />
-                            <f:param name="tab"
-                                value="processoExternoView" />
-                        </wi:toolBar>
+                        <wi:toolBar url="#{a4jSkin.imgIconView}" title="Selecionar" 
+                            action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
                     <wi:columnOutputText columnId="numeroProcesso"
