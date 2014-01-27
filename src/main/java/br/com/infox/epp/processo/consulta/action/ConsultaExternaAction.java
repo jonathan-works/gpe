@@ -4,19 +4,12 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.controller.AbstractController;
+
 @Name(ConsultaExternaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ConsultaExternaAction {
+public class ConsultaExternaAction extends AbstractController {
     
     public static final String NAME = "consultaExternaAction";
     
-    private String tab;
-
-    public String getTab() {
-        return tab;
-    }
-
-    public void setTab(String tab) {
-        this.tab = tab;
-    }
 }
