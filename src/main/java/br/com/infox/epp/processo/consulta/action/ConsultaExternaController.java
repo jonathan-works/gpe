@@ -6,10 +6,10 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.controller.AbstractController;
 
-@Name(ConsultaExternaAction.NAME)
+@Name(ConsultaExternaController.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ConsultaExternaAction extends AbstractController {
+public class ConsultaExternaController extends AbstractController {
     
-    public static final String NAME = "consultaExternaAction";
+    public static final String NAME = "consultaExternaController";
     
 }
