@@ -10,8 +10,6 @@ import static junit.framework.Assert.assertNull;
 
 import java.util.ArrayList;
 
-import junit.framework.Assert;
-
 import org.jboss.seam.contexts.TestLifecycle;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.ValueExpression;
@@ -61,7 +59,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         return (obj1 == obj2 || ((obj1 != null) && obj1.equals(obj2)));
     }
 
-    protected abstract void initEntity(T entity, CrudActions<T> crudActions);
+    protected abstract void initEntity(T entity, ICrudActions<T> crudActions);
 
     protected abstract String getComponentName();
 
@@ -69,10 +67,10 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         @Override
         protected void testComponent() {
             final T entity = getEntity();
-            crudActions.newInstance();
-            initEntity(entity, this.crudActions);
-            assertEquals("PERSISTED",false,PERSISTED.equals(crudActions.save()));
-            assertNull("ASSERT NOT NULL ID",crudActions.getId());
+            newInstance();
+            initEntity(entity, this);
+            assertEquals("PERSISTED",false,PERSISTED.equals(save()));
+            assertNull("ASSERT NOT NULL ID",getId());
         }
     };
 
@@ -80,17 +78,17 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity(); 
-            crudActions.newInstance();
-            initEntity(entity, this.crudActions);
-            assertEquals("persisted", PERSISTED, crudActions.save());
+            newInstance();
+            initEntity(entity, this);
+            assertEquals("persisted", PERSISTED, save());
 
-            final Integer id = crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            crudActions.newInstance();
-            assertNull("nullId", crudActions.getId());
-            crudActions.setId(id);
-            assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
-            setEntity(crudActions.getInstance());
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
+            assertEquals("Compare", true, compareEntityValues(entity, this));
+            setEntity(getInstance());
         }
     };
 
@@ -99,7 +97,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected void testComponent() throws Exception {
             final T entity = getEntity();
             newInstance();
-            initEntity(entity, this.crudActions);
+            initEntity(entity, this);
             assertEquals("persisted", PERSISTED, save());
             final Integer id = getId();
             assertNotNull("id not null", id);
@@ -116,7 +114,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected void testComponent() throws Exception {
             final T entity = getEntity();
             newInstance();
-            initEntity(entity, this.crudActions);
+            initEntity(entity, this);
 
             assertEquals("persisted", PERSISTED, save());
             final Integer id = getId();
@@ -124,7 +122,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             resetInstance(id);
             
             assertEquals("active", Boolean.TRUE,getEntityValue(ATIVO));
-            assertEquals("updated", false, UPDATED.equals(crudActions.inactivate()));
+            assertEquals("updated", false, UPDATED.equals(inactivate()));
             assertEquals("active", Boolean.TRUE,getEntityValue(ATIVO));
             setEntity(resetInstance(id));
         }
@@ -135,11 +133,11 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity();
-            crudActions.newInstance();
-            initEntity(entity, this.crudActions);
-            Assert.assertEquals("persist", true, PERSISTED.equals(crudActions.save()));
-            Assert.assertEquals("id!=null", true, crudActions.getId() != null);
-            Assert.assertEquals("remove", true, REMOVED.equals(crudActions.remove(crudActions.getInstance())));
+            newInstance();
+            initEntity(entity, this);
+            assertEquals("persist", true, PERSISTED.equals(save()));
+            assertEquals("id!=null", true, getId() != null);
+            assertEquals("remove", true, REMOVED.equals(remove(getInstance())));
         }
     };
 
@@ -147,11 +145,11 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity();
-            crudActions.newInstance();
-            initEntity(entity, this.crudActions);
-            assert crudActions.getId() == null;
-            assert PERSISTED.equals(crudActions.save());
-            assert REMOVED.equals(crudActions.remove());
+            newInstance();
+            initEntity(entity, this);
+            assertEquals("persist", true, PERSISTED.equals(save()));
+            assertEquals("id!=null", true, getId() != null);
+            assertEquals("remove", false, REMOVED.equals(remove(getInstance())));
         }
     };
     
@@ -160,16 +158,16 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         public void testComponent() throws Exception {
             final T entity = this.getEntity();
             
-            crudActions.newInstance();
+            newInstance();
             initEntity(entity, crudActions);
-            assertEquals("persisted", PERSISTED, crudActions.save());
+            assertEquals("persisted", PERSISTED, save());
 
-            final Integer id = crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            crudActions.newInstance();
-            assertNull("nullId", crudActions.getId());
-            crudActions.setId(id);
-            assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
+            assertEquals("Compare", true, compareEntityValues(entity, this));
             
             setEntity(resetInstance(id));
         }
@@ -181,24 +179,28 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         protected void testComponent() throws Exception {
             final T entity = getEntity();
 
-            crudActions.newInstance();
+            newInstance();
             initEntity(entity, new CrudActions<T>(getComponentName()));
-            assertEquals("persisted", PERSISTED, crudActions.save());
+            assertEquals("persisted", PERSISTED, save());
 
-            final Integer id = crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            crudActions.newInstance();
-            assertNull("nullId", crudActions.getId());
-            crudActions.setId(id);
-            assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
+            assertEquals("Compare", true, compareEntityValues(entity, this));
             
             setEntity(resetInstance(id));
         }
     };
 
     protected abstract class EntityActionContainer<E> {
-        private final E entity;
+        private E entity;
 
+        public EntityActionContainer() {
+            entity = null;
+        }
+        
         public EntityActionContainer(final E entity) {
             if (entity == null) {
                 throw new NullPointerException("Null entity not allowed for EntityActionContainer");
@@ -206,68 +208,84 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             this.entity = entity;
         }
 
-        public abstract void execute(final CrudActions<E> crudActions);
+        public abstract void execute(final ICrudActions<E> crudActions);
 
         public E getEntity() {
             return entity;
         }
-
     }
 
-
-    protected boolean compareEntityValues(final T entity, final CrudActions<T> crudActions) {
+    protected boolean compareEntityValues(final T entity, final ICrudActions<T> crudActions) {
         final Object entityInstance = crudActions.getInstance();
         return entityInstance == entity
                 || (entityInstance != null && entity != null);
     }
     
-    protected abstract class RunnableTest<E> {
+    public interface ICrudActions<E> {
+        void setEntityValue(final String field, final Object value);
+        <R> R getEntityValue(final String field);
+        void setComponentValue(final String field, final Object value);
+        <R> R getComponentValue(final String field);
+        Object invokeMethod(final String methodName, final Object... args);
+        <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args);
+        <R> R invokeMethod(final String methodName, final Class<R> returnType, final Object... args);
+        void newInstance();
+        E createInstance();
+        E resetInstance(Object id);
+        E getInstance();
+        void setInstance(final E value);
+        String save();
+        String remove();
+        String remove(final E entity);
+        String inactivate();
+        Integer getId();
+        void setId(Object value);
+    }
+    
+    protected abstract class RunnableTest<E> extends AbstractCrudActions<E>{
         private E entity;
         private EntityActionContainer<E> actionContainer;
-        protected final CrudActions<E> crudActions;
+        protected final ICrudActions<E> crudActions;
+        //private HttpSession session;
+        //private ServletContext servletContext;
         
         public RunnableTest() {
-            final String name = getComponentName();
-            this.crudActions = new CrudActions<>(name);
-            this.componentName = name;
+            super(getComponentName());
+            this.crudActions = this;
+            //this.session = AbstractGenericCrudTest.super.session;
+            //this.servletContext = AbstractGenericCrudTest.super.servletContext;
         }
         
         public RunnableTest(final String componentName) {
-            this.crudActions = new CrudActions<>(componentName);
-            this.componentName = componentName;
+            super(componentName);
+            this.crudActions = this;
+            //this.session = AbstractGenericCrudTest.super.session;
+            //this.servletContext = AbstractGenericCrudTest.super.servletContext;
         }
         
         protected abstract void testComponent() throws Exception;
         
         public final E runTest() throws Exception {
-            try {
-                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
-                testComponent();
-            } finally {
-                TestLifecycle.endTest();
-            }
-            return null;
+            return this.runTest(null, null);
         }
         
         public final E runTest(final E entity) throws Exception {
-            this.entity = entity;
-            try {
-                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
-                testComponent();
-            } finally {
-                TestLifecycle.endTest();
-            }
-            return this.entity;
+            return this.runTest(null, entity);
         }
         
         public final E runTest(final EntityActionContainer<E> actionContainer) throws Exception {
+            return this.runTest(actionContainer, actionContainer.getEntity());
+        }
+        
+        public final E runTest(final EntityActionContainer<E> actionContainer, final E entity) throws Exception {
+            this.entity = entity;
             this.actionContainer = actionContainer;
-            this.entity = actionContainer.getEntity();
             try {
                 TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
                 testComponent();
                 if (this.actionContainer != null) {
-                    this.actionContainer.execute(this.crudActions);
+                    this.actionContainer.entity = entity;
+                    this.actionContainer.execute(this);
                 }
             } finally {
                 TestLifecycle.endTest();
@@ -282,118 +300,18 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         public final void setEntity(E entity) {
             this.entity = entity;
         }
-        private final String componentName;
-
-        public final void setEntityValue(final String field, final Object value) {
-            final String valueExpression = format(ENT_EXP, this.componentName, field);
-            createValueExpression(valueExpression).setValue(value);
-        }
-
-        private ValueExpression<Object> createValueExpression(
-                final String valueExpression) {
-            return Expressions.instance().createValueExpression(valueExpression);
-        }
-
-        @SuppressWarnings(WarningConstants.UNCHECKED)
-        public final <R> R getEntityValue(final String field) {
-            final String valueExpression = format(ENT_EXP, this.componentName, field);
-            return (R) createValueExpression(valueExpression).getValue();
-        }
-
-        public final void setComponentValue(final String field,
-                final Object value) {
-            final String valueExpression = format(COMP_EXP, this.componentName, field);
-            createValueExpression(valueExpression).setValue(value);
-        }
-
-        @SuppressWarnings(WarningConstants.UNCHECKED)
-        public final <R> R getComponentValue(final String field) {
-            final String valueExpression = format(COMP_EXP, this.componentName, field);
-            return (R) createValueExpression(valueExpression).getValue();
-        }
-
-        public final Object invokeMethod(final String methodName,
-                final Object... args) {
-            return Expressions.instance().createMethodExpression(format(COMP_METHOD_EXP, this.componentName, methodName)).invoke(args);
-        }
-
-        public final <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args) {
-            final ArrayList<Class<?>> classList = new ArrayList<>();
-            for (Object object : args) {
-                classList.add(object.getClass());
-            }
-            final Expressions expressionFactory = Expressions.instance();
-            final String expressionString = format(COMP_METHOD_EXP, this.componentName, methodName);
-            return expressionFactory.createMethodExpression(expressionString, returnType, paramTypes).invoke(args);
-        }
-
-        public final <R> R invokeMethod(final String methodName,
-                final Class<R> returnType, final Object... args) {
-            final ArrayList<Class<?>> classList = new ArrayList<>();
-            for (Object object : args) {
-                classList.add(object.getClass());
-            }
-            final Expressions expressionFactory = Expressions.instance();
-            final String expressionString = format(COMP_METHOD_EXP, this.componentName, methodName);
-            final Class<?>[] types = classList.toArray(new Class<?>[classList.size()]);
-            return expressionFactory.createMethodExpression(expressionString, returnType, types).invoke(args);
-        }
-
-        public final void newInstance() {
-            this.invokeMethod(NEW_INSTANCE);
-        }
-
-        public final E createInstance() {
-            this.newInstance();
-            return this.getInstance();
-        }
-        
-        public final E resetInstance(Object id) {
-            this.newInstance();
-            this.setId(id);
-            return this.getInstance();
-        }
-        
-        @SuppressWarnings(WarningConstants.UNCHECKED)
-        public final E getInstance() {
-            return (E) getComponentValue(INSTANCE);
-        }
-
-        public void setInstance(final E value) {
-            setComponentValue(INSTANCE, value);
-        }
-
-        public final String save() {
-            return this.invokeMethod(SAVE, String.class);
-        }
-
-        public final String remove() {
-            return this.invokeMethod(REMOVE, String.class);
-        }
-
-        public final String remove(final E entity) {
-            final Class<?>[] paramTypes = {Object.class};
-            return this.invokeMethod(REMOVE, String.class, paramTypes, entity);
-        }
-
-        public final String inactivate() {
-            final Class<?>[] paramTypes = {Object.class};
-            return this.invokeMethod(INACTIVATE, String.class, paramTypes, getInstance());
-        }
-
-        public final Integer getId() {
-            return getComponentValue(ID);
-        }
-
-        public final void setId(Object value) {
-            setComponentValue(ID, value);
+    }
+    
+    protected final class CrudActions<E> extends AbstractCrudActions<E> {
+        public CrudActions(final String componentName) {
+            super(componentName);
         }
     }
-
-    protected final class CrudActions<E> {
+    
+    private abstract class AbstractCrudActions<E> implements ICrudActions<E> {
         private final String componentName;
 
-        public CrudActions(final String componentName) {
+        public AbstractCrudActions(final String componentName) {
             this.componentName = componentName;
         }
 

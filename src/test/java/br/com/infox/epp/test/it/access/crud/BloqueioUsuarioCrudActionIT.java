@@ -86,7 +86,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
 */
     @Override
     protected void initEntity(final BloqueioUsuario entity,
-            final CrudActions<BloqueioUsuario> crudActions) {
+            final ICrudActions<BloqueioUsuario> crudActions) {
         // TODO Auto-generated method stub
         //dataPrevisaoDesbloqueio
         crudActions.setEntityValue("dataPrevisaoDesbloqueio", entity.getDataPrevisaoDesbloqueio());
@@ -156,7 +156,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
     
     private final class PersistDesbloqueioUsuarioTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
-        private final CrudActions<UsuarioLogin> usrCrudActions;
+        private final ICrudActions<UsuarioLogin> usrCrudActions;
         
         public PersistDesbloqueioUsuarioTest(final UsuarioLogin usuario) {
             super(BloqueioUsuarioCrudAction.NAME);
@@ -190,7 +190,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
     
     private final class PersistBloqueioFailTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
-        private final CrudActions<UsuarioLogin> usrCrudActions;
+        private final ICrudActions<UsuarioLogin> usrCrudActions;
         private final Boolean bloqueadoStartValue;
         
         public PersistBloqueioFailTest(final UsuarioLogin usuario, final Boolean bloqueadoStartValue) {
@@ -231,7 +231,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
     
     private final class PersistBloqueioUsuarioTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
-        private final CrudActions<UsuarioLogin> usrCrudActions;
+        private final ICrudActions<UsuarioLogin> usrCrudActions;
         
         public PersistBloqueioUsuarioTest(final UsuarioLogin usuario) {
             super(BloqueioUsuarioCrudAction.NAME);

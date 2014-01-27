@@ -72,10 +72,10 @@ import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
-import br.com.infox.epp.search.SearchService;
 import br.com.infox.epp.search.Indexer;
 import br.com.infox.epp.search.Reindexer;
 import br.com.infox.epp.search.SearchHandler;
+import br.com.infox.epp.search.SearchService;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -142,7 +142,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractGenericCrudTest<Usuario
     }
     
     @Override
-    protected void initEntity(final UsuarioLocalizacao entity, final CrudActions<UsuarioLocalizacao> crudActions) {
+    protected void initEntity(final UsuarioLocalizacao entity, final ICrudActions<UsuarioLocalizacao> crudActions) {
         crudActions.setComponentValue("usuarioGerenciado", entity.getUsuario());//req
         crudActions.setEntityValue("localizacao", entity.getLocalizacao());//req
         crudActions.setEntityValue("papel", entity.getPapel());//req

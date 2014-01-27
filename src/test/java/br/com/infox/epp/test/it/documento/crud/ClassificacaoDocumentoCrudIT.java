@@ -56,7 +56,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
         return instance;
     }
 
-    protected void initEntity(final TipoProcessoDocumento entity, final CrudActions<TipoProcessoDocumento> crudActions) {
+    protected void initEntity(final TipoProcessoDocumento entity, final ICrudActions<TipoProcessoDocumento> crudActions) {
         crudActions.setEntityValue("codigoDocumento", entity.getCodigoDocumento());
         crudActions.setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
         crudActions.setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
@@ -74,7 +74,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
     }
     
     @Override
-    protected boolean compareEntityValues(TipoProcessoDocumento entity, CrudActions<TipoProcessoDocumento> crudActions) {
+    protected boolean compareEntityValues(TipoProcessoDocumento entity, ICrudActions<TipoProcessoDocumento> crudActions) {
         return areEquals(crudActions.getEntityValue("codigoDocumento"),entity.getCodigoDocumento())
                 && areEquals(crudActions.getEntityValue("tipoProcessoDocumento"),entity.getTipoProcessoDocumento())
                 && areEquals(crudActions.getEntityValue("inTipoDocumento"),entity.getInTipoDocumento())
@@ -92,7 +92,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractGenericCrudTest<TipoPr
         TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
         updateFail.runTest(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
             @Override
-            public void execute(final CrudActions<TipoProcessoDocumento> crudActions) {
+            public void execute(final ICrudActions<TipoProcessoDocumento> crudActions) {
                 final Object id = crudActions.getId();
                 assert id != null;
                 crudActions.newInstance();

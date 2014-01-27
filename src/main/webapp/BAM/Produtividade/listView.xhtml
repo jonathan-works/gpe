@@ -29,7 +29,6 @@
 			    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
                        
 	<ui:define name="title">#{messages['produtividade.pageTitle']}</ui:define>
-	<ui:param name="showGrid" value="#{not empty produtividadeAction.usuario}" />
 	
 	<ui:define name="body">
 		<wi:dataTable values="#{produtividadeAction.list(15)}"
@@ -40,15 +39,14 @@
 			<ui:define name="searchForm">
 				<wi:searchForm formId="pesquisaFluxoForm"
 							   formTitle="#{messages['searchForm.title']}"
-							   clearAction="produtividadeAction.clear"
-							   template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+							   clearAction="produtividadeAction.clear">
 		                 
 			        <wi:selectOneMenuEntity id="comboFluxo"
 										    value="#{produtividadeAction.fluxo}"
 										    label="#{messages['naturezaCategoriaFluxo.fluxo']}"
 										    items="#{produtividadeAction.fluxoList}"
 										    noSelectionLabel="Selecione..."/>
-			        <wi:suggest id="suggestUsuario" suggestProvider="#{usuarioSuggestBean}" required="true"
+			        <wi:suggest id="suggestUsuario" suggestProvider="#{usuarioSuggestBean}"
 			        	value="#{produtividadeAction.usuario}" label="#{messages['usuario.usuario']}"/>
 			        <wi:inputDataPeriodo id="periodo" valueDateFrom="#{produtividadeAction.dataInicio}" valueDateTo="#{produtividadeAction.dataFim}" 
 			             label="Período"/>

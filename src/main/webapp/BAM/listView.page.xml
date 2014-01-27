@@ -10,4 +10,5 @@ login-required="true"
     <begin-conversation join="true" />
     <restrict>#{security.checkPage()}</restrict>
     <param name="id" value="#{bamAction.id}" converterId="integerConverter" />
+    <param name="tab" value="#{bamAction.tab}"/>
 </page>

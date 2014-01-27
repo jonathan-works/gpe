@@ -50,7 +50,7 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
     }
 
     @Override
-    protected void initEntity(final Papel entity, final CrudActions<Papel> crudActions) {
+    protected void initEntity(final Papel entity, final ICrudActions<Papel> crudActions) {
         crudActions.setEntityValue("identificador", entity.getIdentificador()); //req
         crudActions.setEntityValue("nome", entity.getNome()); // req
     }

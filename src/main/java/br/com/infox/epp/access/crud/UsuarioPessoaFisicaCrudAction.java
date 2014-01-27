@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.crud;
 
+import java.io.Serializable;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.international.StatusMessages;
@@ -14,8 +16,9 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
 
 @Name(UsuarioPessoaFisicaCrudAction.NAME)
-public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica> {
-    
+public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioPessoaFisicaCrudAction.class);
     
     private static final String PESSOA_JA_ASSOCIADA = "#{messages['usuario.pessoaJaCadastrada']}";

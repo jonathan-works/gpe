@@ -16,18 +16,26 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
     public static final String NAME = "itemCrudAction";
     
     protected boolean beforeSave() {
-        if (getInstance().getItemPai() != null && !getInstance().getItemPai().getAtivo()){
-            getInstance().setAtivo(false);
+        final Item item = getInstance();
+        final Item itemPai = item.getItemPai();
+        if (itemPai != null && !itemPai.getAtivo()){
+            item.setAtivo(Boolean.FALSE);
         }
         return super.beforeSave();
     }
     
     @Override
     public String save() {
-        if (!getInstance().getAtivo()){
-            inactiveRecursive(getInstance());
+        final Item item = getInstance();
+
+        String save = null;
+        if (item.getAtivo() != null) {
+            if (!item.getAtivo()){
+                inactiveRecursive(item);
+            }
+            save = super.save();
         }
-        return super.save();
+        return save;
     }
 
     @Override
@@ -37,7 +45,9 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
     }
     
     protected void limparTrees(){
-        ItemTreeHandler ith = ComponentUtil.getComponent(ItemTreeHandler.NAME);
-        ith.clearTree();
+        final ItemTreeHandler ith = ComponentUtil.getComponent(ItemTreeHandler.NAME);
+        if (ith != null) {
+            ith.clearTree();   
+        }
     }
 }

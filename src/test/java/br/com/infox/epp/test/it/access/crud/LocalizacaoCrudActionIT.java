@@ -74,7 +74,7 @@ public class LocalizacaoCrudActionIT extends AbstractGenericCrudTest<Localizacao
         return persistIfNotOnMap(entity, persistSuccess);
     }
 
-    protected void initEntity(final Localizacao entity, final CrudActions<Localizacao> crudActions) {
+    protected void initEntity(final Localizacao entity, final ICrudActions<Localizacao> crudActions) {
         crudActions.setEntityValue("localizacao", entity.getLocalizacao());// required
         crudActions.setEntityValue("estrutura", entity.getEstrutura());// required
         crudActions.setEntityValue("localizacaoPai", entity.getLocalizacaoPai());
@@ -169,7 +169,7 @@ public class LocalizacaoCrudActionIT extends AbstractGenericCrudTest<Localizacao
 
     };
 
-    private void updateValueAndTest(final Integer id, final String field, final Object value, boolean wasSuccessful, final CrudActions<Localizacao> crudActions) {
+    private void updateValueAndTest(final Integer id, final String field, final Object value, boolean wasSuccessful, final ICrudActions<Localizacao> crudActions) {
         crudActions.resetInstance(id);
         crudActions.setEntityValue(field, value);
         assertEquals("updated", wasSuccessful, UPDATED.equals(crudActions.save()));
