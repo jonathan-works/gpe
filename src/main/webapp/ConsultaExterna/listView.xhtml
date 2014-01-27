@@ -150,7 +150,8 @@
                 <h:form id="processoView">
                     <rich:collapsiblePanel switchType="client"
                         expanded="true">
-                        <h:panelGrid columns="2" width="100%" columnClasses="viewColumn">
+                        <h:panelGrid columns="2" width="100%"
+                            columnClasses="viewColumn">
                             <wi:outputText id="dataInicio"
                                 label="Data de Início"
                                 value="#{processoHome.instance.dataInicio}">
@@ -162,76 +163,88 @@
                                 value="#{processoHome.instance.usuarioCadastroProcesso.nomeUsuario}" />
                         </h:panelGrid>
                     </rich:collapsiblePanel>
-                
 
-                <infox:tabPanel switchType="ajax">
-                    <infox:tabHeaders/>
 
-                    <infox:tab id="form" name="form"
-                        title="#{messages['acaoProcesso.menuText']}"
-                        immediate="true" status=":status" style="border-style: solid; border-width: 1px; border-color: lightgray">
+                    <infox:tabPanel switchType="ajax">
+                        <infox:tabHeaders />
 
-                        <rich:dataTable
-                            value="#{processoHandler.taskInstanceList}"
-                            rowKeyVar="key" var="task">
-                            <rich:column styleClass="defaultCell">
-                                <f:facet name="header">Tarefa</f:facet>
-                                <h:outputText value="#{task.name}" />
-                            </rich:column>
+                        <infox:tab id="form" name="form"
+                            title="#{messages['acaoProcesso.menuText']}"
+                            immediate="true" status=":status"
+                            style="border-style: solid; border-width: 1px; border-color: lightgray">
 
-                            <rich:column style="text-align: center"
-                                styleClass="defaultCell">
-                                <f:facet name="header">Término</f:facet>
-                                <h:outputText value="#{task.end}">
-                                    <s:convertDateTime
-                                        pattern="dd/MM/yy kk:mm:ss" />
-                                </h:outputText>
-                            </rich:column>
-                            <rich:column style="text-align:center"
-                                styleClass="defaultCell">
-                                <f:facet name="header">Documentos</f:facet>
-                                <rich:dataTable
-                                    value="#{processoHandler.getAnexosPublicos(task)}"
-                                    rowKeyVar="key" var="doc">
-                                    <rich:column>
-                                        <s:link
-                                            view="/Painel/documentoHTML.seam"
-                                            onclick="openPopUp('PopUpDocumentoBin', '')"
-                                            rendered="#{! empty doc.processoDocumentoBin.modeloDocumento}"
-                                            target="PopUpDocumentoBin">
-                                            <s:conversationPropagation
-                                                type="none" />
-                                            <f:param name="idBin"
-                                                value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}" />
-                                            <f:param
-                                                name="idProcessoDoc"
-                                                value="#{doc.idProcessoDocumento}" />
-                                            <h:graphicImage
-                                                title="Visualizar"
-                                                url="/img/view.gif" />
-                                        </s:link>
+                            <rich:dataTable
+                                value="#{processoHandler.taskInstanceList}"
+                                rowKeyVar="key" var="task">
+                                <rich:column styleClass="defaultCell">
+                                    <f:facet name="header">Tarefa</f:facet>
+                                    <h:outputText value="#{task.name}" />
+                                </rich:column>
 
-                                        <s:link target="idPdf#{row}"
-                                            rendered="#{empty doc.processoDocumentoBin.modeloDocumento}"
-                                            action="#{processoDocumentoBinHome.setDownloadInstance()}"
-                                            onclick="openPopUp('idPdf#{row}', 'about:blank');">
-                                            <h:graphicImage
-                                                value="/img/pdf.gif"
-                                                title="#{doc.processoDocumentoBin.nomeArquivo} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />
-                                            <f:param
-                                                value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}"
-                                                name="idBin" />
-                                        </s:link>
-                                    </rich:column>
-                                </rich:dataTable>
-                            </rich:column>
-                        </rich:dataTable>
-                    </infox:tab>
+                                <rich:column style="text-align: center"
+                                    styleClass="defaultCell">
+                                    <f:facet name="header">Término</f:facet>
+                                    <h:outputText value="#{task.end}">
+                                        <s:convertDateTime
+                                            pattern="dd/MM/yy kk:mm:ss" />
+                                    </h:outputText>
+                                </rich:column>
+                                <rich:column style="text-align:center"
+                                    styleClass="defaultCell">
+                                    <f:facet name="header">Documentos</f:facet>
+                                    <rich:dataTable
+                                        value="#{processoHandler.getAnexosPublicos(task)}"
+                                        rowKeyVar="key" var="doc">
+                                        <rich:column>
+                                            <s:link
+                                                view="/Painel/documentoHTML.seam"
+                                                onclick="openPopUp('PopUpDocumentoBin', '')"
+                                                rendered="#{! empty doc.processoDocumentoBin.modeloDocumento}"
+                                                target="PopUpDocumentoBin">
+                                                <s:conversationPropagation
+                                                    type="none" />
+                                                <f:param name="idBin"
+                                                    value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}" />
+                                                <f:param
+                                                    name="idProcessoDoc"
+                                                    value="#{doc.idProcessoDocumento}" />
+                                                <h:graphicImage
+                                                    title="Visualizar"
+                                                    url="/img/view.gif" />
+                                            </s:link>
 
-                </infox:tabPanel>
+                                            <s:link target="idPdf#{row}"
+                                                rendered="#{empty doc.processoDocumentoBin.modeloDocumento}"
+                                                action="#{processoDocumentoBinHome.setDownloadInstance()}"
+                                                onclick="openPopUp('idPdf#{row}', 'about:blank');">
+                                                <h:graphicImage
+                                                    value="/img/pdf.gif"
+                                                    title="#{doc.processoDocumentoBin.nomeArquivo} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />
+                                                <f:param
+                                                    value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}"
+                                                    name="idBin" />
+                                            </s:link>
+                                        </rich:column>
+                                        <rich:column>
+                                            <h:outputText
+                                                value="#{doc.processoDocumento}" />
+                                        </rich:column>
+                                        <rich:column>
+                                            <h:outputText
+                                                value="#{doc.processoDocumentoBin.dataInclusao}">
+                                                <s:convertDateTime
+                                                    pattern="dd/MM/yy" />
+                                            </h:outputText>
+                                        </rich:column>
+                                    </rich:dataTable>
+                                </rich:column>
+                            </rich:dataTable>
+                        </infox:tab>
+
+                    </infox:tabPanel>
                 </h:form>
             </infox:tab>
-            
+
         </infox:tabPanel>
     </ui:define>
 
