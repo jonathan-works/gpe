@@ -13,6 +13,7 @@
 
     <ui:define name="title">#{messages['consultaExterna.titlePage']}</ui:define>
     <ui:param name="showMenu" value="false" />
+    <ui:param name="controller" value="#{consultaExternaController}"/>
     <ui:define name="body">
 
         <infox:tabPanel switchType="ajax"
@@ -25,7 +26,7 @@
             <infox:tab id="searchNumeroProcesso"
                 name="searchNumeroProcesso"
                 title="#{messages['consultaProcesso.porNumeroProcesso']}"
-                status=":status" action="#{processoHome.setId(null)}">
+                status=":status" action="#{controller.onClickSearchNumeroTab()}">
                 <wi:dataTable
                     values="#{consultaProcessoExterno.list(15)}"
                     bean="#{consultaProcessoExterno}"
@@ -51,7 +52,7 @@
 
                     <ui:define name="toolBar">
                         <wi:toolBar url="#{a4jSkin.imgIconView}"
-                            title="Selecionar">
+                            title="Selecionar" action="#{consultaExternaController.selectProcesso(row)}">
                             <f:param name="id" value="#{rowId}" />
                             <f:param name="idJbpm" value="#{row.idJbpm}" />
                             <f:param name="tab"
@@ -83,7 +84,7 @@
             <infox:tab id="searchParteProcesso"
                 name="searchParteProcesso"
                 title="#{messages['consultaProcesso.porParteProcesso']}"
-                status=":status" action="#{processoHome.setId(null)}">
+                status=":status" action="#{controller.onClickSearchParteTab()}">
                 <wi:dataTable
                     values="#{consultaProcessoExternoPorPartes.list(15)}"
                     bean="#{consultaProcessoExternoPorPartes}"
@@ -142,7 +143,7 @@
             <infox:tab id="processoExternoView"
                 name="processoExternoView"
                 title="#{messages['consultaProcesso.view']}"
-                status=":status" rendered="#{not empty processoHome.id}">
+                status=":status" rendered="#{not empty controller.processoEpa}">
 
                 <h:messages globalOnly="true" styleClass="message"
                     id="globalMessages" />
@@ -154,13 +155,13 @@
                             columnClasses="viewColumn">
                             <wi:outputText id="dataInicio"
                                 label="Data de Início"
-                                value="#{processoHome.instance.dataInicio}">
+                                value="#{controller.processoEpa.dataInicio}">
                                 <f:convertDateTime
                                     pattern="dd/MM/yyyy kk:mm" />
                             </wi:outputText>
                             <wi:outputText id="usuarioCadastroProcesso"
                                 label="Usuário Cadastro Processo"
-                                value="#{processoHome.instance.usuarioCadastroProcesso.nomeUsuario}" />
+                                value="#{controller.processoEpa.usuarioCadastroProcesso.nomeUsuario}" />
                         </h:panelGrid>
                     </rich:collapsiblePanel>
 
@@ -174,17 +175,26 @@
                             style="border-style: solid; border-width: 1px; border-color: lightgray">
 
                             <rich:dataTable
-                                value="#{processoHandler.taskInstanceList}"
+                                value="#{controller.processoEpa.processoEpaTarefaList}"
                                 rowKeyVar="key" var="task">
                                 <rich:column styleClass="defaultCell">
                                     <f:facet name="header">Tarefa</f:facet>
-                                    <h:outputText value="#{task.name}" />
+                                    <h:outputText value="#{task.tarefa}" />
+                                </rich:column>
+
+                                <rich:column style="text-align: center"
+                                    styleClass="defaultCell">
+                                    <f:facet name="header">Início</f:facet>
+                                    <h:outputText value="#{task.dataInicio}">
+                                        <s:convertDateTime
+                                            pattern="dd/MM/yy kk:mm:ss" />
+                                    </h:outputText>
                                 </rich:column>
 
                                 <rich:column style="text-align: center"
                                     styleClass="defaultCell">
                                     <f:facet name="header">Término</f:facet>
-                                    <h:outputText value="#{task.end}">
+                                    <h:outputText value="#{task.dataFim}">
                                         <s:convertDateTime
                                             pattern="dd/MM/yy kk:mm:ss" />
                                     </h:outputText>
@@ -193,7 +203,7 @@
                                     styleClass="defaultCell">
                                     <f:facet name="header">Documentos</f:facet>
                                     <rich:dataTable
-                                        value="#{processoHandler.getAnexosPublicos(task)}"
+                                        value="#{controller.getAnexosPublicos(task)}"
                                         rowKeyVar="key" var="doc">
                                         <rich:column>
                                             <s:link
