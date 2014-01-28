@@ -213,17 +213,17 @@
                                                     url="/img/view.gif" />
                                             </s:link>
 
-                                            <s:link target="idPdf#{row}"
+                                            <h:commandLink target="idPdf#{row}"
                                                 rendered="#{empty doc.processoDocumentoBin.modeloDocumento}"
-                                                action="#{processoDocumentoBinHome.setDownloadInstance()}"
+                                                action="#{processoDocumentoDownloader.setDownloadInstance(doc)}"
                                                 onclick="openPopUp('idPdf#{row}', 'about:blank');">
                                                 <h:graphicImage
                                                     value="/img/pdf.gif"
-                                                    title="#{doc.processoDocumentoBin.nomeArquivo} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />
+                                                    title="#{doc.processoDocumentoBin.nomeArquivo} #{doc} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />
                                                 <f:param
                                                     value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}"
                                                     name="idBin" />
-                                            </s:link>
+                                            </h:commandLink>
                                         </rich:column>
                                         <rich:column>
                                             <h:outputText
