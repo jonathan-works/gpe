@@ -219,8 +219,7 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         return dfCodData.format(pd.getDataInclusao());
     }
 
-    public String getUrlDownloadProcessoDocumento(
-            ProcessoDocumento processoDocumento) {
+    public String getUrlDownloadProcessoDocumento(ProcessoDocumento processoDocumento) {
         String retorno = MessageFormat.format(URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION, Integer.toString(processoDocumento.getIdProcessoDocumento()), getCodData(processoDocumento), processoDocumento.getProcessoDocumentoBin().getMd5Documento());
         return new Util().getUrlProject() + retorno;
     }
