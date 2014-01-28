@@ -16,12 +16,7 @@ import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.fluxo.crud.CategoriaCrudAction;
-import br.com.infox.epp.fluxo.crud.ItemCrudAction;
-import br.com.infox.epp.fluxo.dao.CategoriaItemDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
-import br.com.infox.epp.fluxo.manager.CategoriaItemManager;
-import br.com.infox.epp.fluxo.manager.ItemManager;
-import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
