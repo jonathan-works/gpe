@@ -196,22 +196,15 @@
                                         value="#{controller.getAnexosPublicos(task)}"
                                         rowKeyVar="key" var="doc">
                                         <rich:column>
-                                            <s:link
-                                                view="/Painel/documentoHTML.seam"
+                                            <h:commandLink
+                                                action="#{processoDocumentoHtmlView.setViewInstance(doc)}"
                                                 onclick="openPopUp('PopUpDocumentoBin', '')"
                                                 rendered="#{! empty doc.processoDocumentoBin.modeloDocumento}"
                                                 target="PopUpDocumentoBin">
-                                                <s:conversationPropagation
-                                                    type="none" />
-                                                <f:param name="idBin"
-                                                    value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}" />
-                                                <f:param
-                                                    name="idProcessoDoc"
-                                                    value="#{doc.idProcessoDocumento}" />
                                                 <h:graphicImage
                                                     title="Visualizar"
                                                     url="/img/view.gif" />
-                                            </s:link>
+                                            </h:commandLink>
 
                                             <h:commandLink target="idPdf#{row}"
                                                 rendered="#{empty doc.processoDocumentoBin.modeloDocumento}"

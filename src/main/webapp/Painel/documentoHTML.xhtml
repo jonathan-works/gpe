@@ -16,13 +16,9 @@
             }
         }
     </style>
-    <ui:param name="bin" value="#{empty bin ? c.value : bin}" />
-    <ui:param name="isModelo"
-        value="#{not empty bin.modeloDocumento ? false : true}" />
-    <c:if test="#{isModelo}">
-
+    
         <h:outputText
-            value="#{processoDocumentoBinHome.instance.modeloDocumento}"
+            value="#{processoDocumentoHtmlView.getConteudo()}"
             escape="false" />
         <br />
 
@@ -30,6 +26,5 @@
             <button id="btnimprimir" onclick="window.print();">Imprimir</button>
         </center>
 
-    </c:if>
 
 </ui:composition>

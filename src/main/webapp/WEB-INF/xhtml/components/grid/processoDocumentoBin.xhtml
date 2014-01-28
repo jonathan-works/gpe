@@ -31,15 +31,14 @@
     <div id="teste">
 
         <span class="#{var.ativo ? '' : 'inativo'}" />
-        <a:commandLink 
-            onclick="infox.openPopUp('PopUpDocumentoBin', '#{util.contextPath}/Painel/documentoHTML.seam?idBin=#{var.processoDocumentoBin.idProcessoDocumentoBin}&amp;idProcessoDoc=#{var.idProcessoDocumento}'); return false;"
+
+        <h:commandLink
+            action="#{processoDocumentoHtmlView.setViewInstance(var)}"
+            onclick="openPopUp('PopUpDocumentoBin', '')"
             rendered="#{not empty bin.modeloDocumento}"
             target="PopUpDocumentoBin">
-
-            <s:conversationPropagation type="none" />
-            <h:graphicImage title="Visualizar - #{var}" url="/img/view.gif" />
-
-        </a:commandLink>
+            <h:graphicImage title="Visualizar" url="/img/view.gif" />
+        </h:commandLink>
 
         <s:link target="idPdf#{var}" rendered="#{!isModelo}"
             action="#{processoDocumentoBinHome.setDownloadInstance()}"
