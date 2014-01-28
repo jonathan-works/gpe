@@ -31,7 +31,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.epp.access.api.Authenticator;
