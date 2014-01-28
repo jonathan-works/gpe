@@ -3,6 +3,7 @@ package br.com.infox.epp.test.crud;
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
 import static br.com.infox.core.action.AbstractAction.REMOVED;
 import static br.com.infox.core.action.AbstractAction.UPDATED;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 import static java.text.MessageFormat.format;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -16,52 +17,254 @@ import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.mock.JUnitSeamTest;
 import org.jboss.seam.servlet.ServletSessionMap;
 
-import br.com.infox.core.constants.WarningConstants;
 
 public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
+    private class AbstractCrudActions<E> implements ICrudActions<E> {
+        private final String componentName;
+
+        public AbstractCrudActions(final String componentName) {
+            this.componentName = componentName;
+        }
+
+        private ValueExpression<Object> createValueExpression(
+                final String valueExpression) {
+            return Expressions.instance().createValueExpression(valueExpression);
+        }
+
+        public final E createInstance() {
+            this.newInstance();
+            return this.getInstance();
+        }
+
+        @SuppressWarnings(UNCHECKED)
+        public final <R> R getComponentValue(final String field) {
+            final String valueExpression = format(COMP_EXP, this.componentName, field);
+            return (R) createValueExpression(valueExpression).getValue();
+        }
+
+        @SuppressWarnings(UNCHECKED)
+        public final <R> R getEntityValue(final String field) {
+            final String valueExpression = format(ENT_EXP, this.componentName, field);
+            return (R) createValueExpression(valueExpression).getValue();
+        }
+        
+        public final Integer getId() {
+            return getComponentValue(ID);
+        }
+        
+        @SuppressWarnings(UNCHECKED)
+        public final E getInstance() {
+            return (E) getComponentValue(INSTANCE);
+        }
+        
+        public final String inactivate() {
+            final Class<?>[] paramTypes = {Object.class};
+            return this.invokeMethod(INACTIVATE, String.class, paramTypes, getInstance());
+        }
+
+        public final Object invokeMethod(final String methodName) {
+            return this.invokeMethod(componentName, methodName, Object.class, new Class<?>[]{}, new Object[]{});
+        }
+
+        public final <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args) {
+            return this.invokeMethod(this.componentName, methodName, returnType, paramTypes, args);
+        }
+
+        public final <R> R invokeMethod(final String methodName,
+                final Class<R> returnType, final Object... args) {
+            return this.invokeMethod(this.componentName, methodName, returnType, args);
+        }
+
+        @Override
+        public Object invokeMethod(final String componentName, final String methodName) {
+            return this.invokeMethod(this.componentName, methodName, Object.class, new Class<?>[]{}, new Object[]{});
+        }
+        
+        @Override
+        public <R> R invokeMethod(final String componentName, final String methodName,
+                final Class<R> returnType, final Class<?>[] paramTypes, final Object... args) {
+            final Expressions expressionFactory = Expressions.instance();
+            final String expressionString = format(COMP_METHOD_EXP, componentName, methodName);
+            return expressionFactory.createMethodExpression(expressionString, returnType, paramTypes).invoke(args);
+        }
+        
+        @Override
+        public <R> R invokeMethod(final String componentName, final String methodName,
+                final Class<R> returnType, final Object... args) {
+            final ArrayList<Class<?>> classList = new ArrayList<>();
+            for (final Object object : args) {
+                classList.add(object.getClass());
+            }
+            final Class<?>[] types = classList.toArray(new Class<?>[classList.size()]);
+            return this.invokeMethod(componentName, methodName, returnType, types, args);
+        }
+
+        public final void newInstance() {
+            this.invokeMethod(NEW_INSTANCE);
+        }
+
+        public final String remove() {
+            return this.invokeMethod(REMOVE, String.class);
+        }
+
+        public final String remove(final E entity) {
+            final Class<?>[] paramTypes = {Object.class};
+            return this.invokeMethod(REMOVE, String.class, paramTypes, entity);
+        }
+
+        public final E resetInstance(final Object id) {
+            this.newInstance();
+            this.setId(id);
+            return this.getInstance();
+        }
+
+        public final String save() {
+            return this.invokeMethod(SAVE, String.class);
+        }
+
+        public final void setComponentValue(final String field,
+                final Object value) {
+            final String valueExpression = format(COMP_EXP, this.componentName, field);
+            createValueExpression(valueExpression).setValue(value);
+        }
+
+        public final void setEntityValue(final String field, final Object value) {
+            final String valueExpression = format(ENT_EXP, this.componentName, field);
+            createValueExpression(valueExpression).setValue(value);
+        }
+
+        public final void setId(final Object value) {
+            setComponentValue(ID, value);
+        }
+
+        public void setInstance(final E value) {
+            setComponentValue(INSTANCE, value);
+        }
+
+    }
+    protected final class CrudActions<E> extends AbstractCrudActions<E> {
+        public CrudActions(final String componentName) {
+            super(componentName);
+        }
+    }
+    protected abstract class EntityActionContainer<E> {
+        private E entity;
+
+        public EntityActionContainer() {
+            entity = null;
+        }
+        
+        public EntityActionContainer(final E entity) {
+            if (entity == null) {
+                throw new NullPointerException("Null entity not allowed for EntityActionContainer");
+            }
+            this.entity = entity;
+        }
+
+        public abstract void execute(final ICrudActions<E> crudActions);
+
+        public E getEntity() {
+            return entity;
+        }
+    }
+    protected abstract class RunnableTest<E> extends AbstractCrudActions<E>{
+        private E entity;
+        private EntityActionContainer<E> actionContainer;
+        protected final ICrudActions<E> crudActions;
+        //private HttpSession session;
+        //private ServletContext servletContext;
+        
+        public RunnableTest() {
+            super(getComponentName());
+            this.crudActions = this;
+            //this.session = AbstractGenericCrudTest.super.session;
+            //this.servletContext = AbstractGenericCrudTest.super.servletContext;
+        }
+        
+        public RunnableTest(final String componentName) {
+            super(componentName);
+            this.crudActions = this;
+            //this.session = AbstractGenericCrudTest.super.session;
+            //this.servletContext = AbstractGenericCrudTest.super.servletContext;
+        }
+        
+        protected abstract void testComponent() throws Exception;
+        
+        public final E getEntity() {
+            return entity;
+        }
+        
+        public final E runTest() throws Exception {
+            return this.runTest(null, null);
+        }
+        
+        public final E runTest(final E entity) throws Exception {
+            return this.runTest(null, entity);
+        }
+        
+        public final E runTest(final EntityActionContainer<E> actionContainer) throws Exception {
+            return this.runTest(actionContainer, actionContainer.getEntity());
+        }
+
+        public final E runTest(final EntityActionContainer<E> actionContainer, final E entity) throws Exception {
+            this.entity = entity;
+            this.actionContainer = actionContainer;
+            try {
+                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+                testComponent();
+                if (this.actionContainer != null) {
+                    this.actionContainer.entity = entity;
+                    this.actionContainer.execute(this);
+                }
+            } finally {
+                TestLifecycle.endTest();
+            }
+            return this.entity;
+        }
+
+        public final void setEntity(final E entity) {
+            this.entity = entity;
+        }
+    }
+    public interface ICrudActions<E> {
+        E createInstance();
+        <R> R getComponentValue(final String field);
+        <R> R getEntityValue(final String field);
+        Integer getId();
+        E getInstance();
+        String inactivate();
+        Object invokeMethod(final String methodName);
+        <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args);
+        <R> R invokeMethod(final String methodName, final Class<R> returnType, final Object... args);
+        Object invokeMethod(final String componentName, final String methodName);
+        <R> R invokeMethod(final String componentName, final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args);
+        <R> R invokeMethod(final String componentName, final String methodName, final Class<R> returnType, final Object... args);
+        void newInstance();
+        String remove();
+        String remove(final E entity);
+        E resetInstance(Object id);
+        String save();
+        void setComponentValue(final String field, final Object value);
+        void setEntityValue(final String field, final Object value);
+        void setId(Object value);
+        void setInstance(final E value);
+    }
     private static final String INACTIVATE = "inactive";
     private static final String ID = "instanceId";
     private static final String REMOVE = "remove";
     private static final String SAVE = "save";
     private static final String INSTANCE = "instance";
     private static final String NEW_INSTANCE = "newInstance";
+
     private static final String COMP_EXP = "'#{'{0}.{1}'}'";
+
     private static final String COMP_METHOD_EXP = "'#{'{0}.{1}'}'";
-    private static final String ENT_EXP = "'#{'{0}.instance.{1}'}'";
-    private static final String ATIVO = "ativo";
-    protected static final String SERVLET_3_0 = "Servlet 3.0";
-
-    protected final String fillStr(String string, final int topLength) {
-        if (string == null || string.length() < 1) {
-            string = "-";
-        }
-
-        final StringBuilder sb = new StringBuilder(string);
-        int length = string.length();
-        if (length < topLength) {
-            for (int i = 0, l = topLength - length; i < l; i++) {
-                sb.append(string.charAt(0));
-            }
-        }
-        return sb.substring(0, topLength);
-    }
-
-    protected final void executeTest(final Runnable componentTest) throws Exception {
-        TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
-        try {
-            componentTest.run();
-        } finally {
-            TestLifecycle.endTest();
-        }
-    }
     
-    protected final boolean compareValues(final Object obj1, final Object obj2) {
-        return (obj1 == obj2 || ((obj1 != null) && obj1.equals(obj2)));
-    }
+    private static final String ENT_EXP = "'#{'{0}.instance.{1}'}'";
 
-    protected abstract void initEntity(T entity, ICrudActions<T> crudActions);
+    private static final String ATIVO = "ativo";
 
-    protected abstract String getComponentName();
+    protected static final String SERVLET_3_0 = "Servlet 3.0";
 
     protected final RunnableTest<T> persistFail = new RunnableTest<T>() {
         @Override
@@ -194,231 +397,41 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
     };
 
-    protected abstract class EntityActionContainer<E> {
-        private E entity;
-
-        public EntityActionContainer() {
-            entity = null;
-        }
-        
-        public EntityActionContainer(final E entity) {
-            if (entity == null) {
-                throw new NullPointerException("Null entity not allowed for EntityActionContainer");
-            }
-            this.entity = entity;
-        }
-
-        public abstract void execute(final ICrudActions<E> crudActions);
-
-        public E getEntity() {
-            return entity;
-        }
-    }
-
     protected boolean compareEntityValues(final T entity, final ICrudActions<T> crudActions) {
         final Object entityInstance = crudActions.getInstance();
         return entityInstance == entity
                 || (entityInstance != null && entity != null);
     }
-    
-    public interface ICrudActions<E> {
-        void setEntityValue(final String field, final Object value);
-        <R> R getEntityValue(final String field);
-        void setComponentValue(final String field, final Object value);
-        <R> R getComponentValue(final String field);
-        Object invokeMethod(final String methodName, final Object... args);
-        <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args);
-        <R> R invokeMethod(final String methodName, final Class<R> returnType, final Object... args);
-        void newInstance();
-        E createInstance();
-        E resetInstance(Object id);
-        E getInstance();
-        void setInstance(final E value);
-        String save();
-        String remove();
-        String remove(final E entity);
-        String inactivate();
-        Integer getId();
-        void setId(Object value);
+
+    protected final boolean compareValues(final Object obj1, final Object obj2) {
+        return (obj1 == obj2 || ((obj1 != null) && obj1.equals(obj2)));
     }
     
-    protected abstract class RunnableTest<E> extends AbstractCrudActions<E>{
-        private E entity;
-        private EntityActionContainer<E> actionContainer;
-        protected final ICrudActions<E> crudActions;
-        //private HttpSession session;
-        //private ServletContext servletContext;
-        
-        public RunnableTest() {
-            super(getComponentName());
-            this.crudActions = this;
-            //this.session = AbstractGenericCrudTest.super.session;
-            //this.servletContext = AbstractGenericCrudTest.super.servletContext;
+    protected final void executeTest(final Runnable componentTest) throws Exception {
+        TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
+        try {
+            componentTest.run();
+        } finally {
+            TestLifecycle.endTest();
         }
-        
-        public RunnableTest(final String componentName) {
-            super(componentName);
-            this.crudActions = this;
-            //this.session = AbstractGenericCrudTest.super.session;
-            //this.servletContext = AbstractGenericCrudTest.super.servletContext;
+    }
+    
+    protected final String fillStr(String string, final int topLength) {
+        if (string == null || string.length() < 1) {
+            string = "-";
         }
-        
-        protected abstract void testComponent() throws Exception;
-        
-        public final E runTest() throws Exception {
-            return this.runTest(null, null);
-        }
-        
-        public final E runTest(final E entity) throws Exception {
-            return this.runTest(null, entity);
-        }
-        
-        public final E runTest(final EntityActionContainer<E> actionContainer) throws Exception {
-            return this.runTest(actionContainer, actionContainer.getEntity());
-        }
-        
-        public final E runTest(final EntityActionContainer<E> actionContainer, final E entity) throws Exception {
-            this.entity = entity;
-            this.actionContainer = actionContainer;
-            try {
-                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
-                testComponent();
-                if (this.actionContainer != null) {
-                    this.actionContainer.entity = entity;
-                    this.actionContainer.execute(this);
-                }
-            } finally {
-                TestLifecycle.endTest();
+
+        final StringBuilder sb = new StringBuilder(string);
+        final int length = string.length();
+        if (length < topLength) {
+            for (int i = 0, l = topLength - length; i < l; i++) {
+                sb.append(string.charAt(0));
             }
-            return this.entity;
         }
-
-        public final E getEntity() {
-            return entity;
-        }
-
-        public final void setEntity(E entity) {
-            this.entity = entity;
-        }
+        return sb.substring(0, topLength);
     }
     
-    protected final class CrudActions<E> extends AbstractCrudActions<E> {
-        public CrudActions(final String componentName) {
-            super(componentName);
-        }
-    }
+    protected abstract String getComponentName();
     
-    private abstract class AbstractCrudActions<E> implements ICrudActions<E> {
-        private final String componentName;
-
-        public AbstractCrudActions(final String componentName) {
-            this.componentName = componentName;
-        }
-
-        public final void setEntityValue(final String field, final Object value) {
-            final String valueExpression = format(ENT_EXP, this.componentName, field);
-            createValueExpression(valueExpression).setValue(value);
-        }
-
-        private ValueExpression<Object> createValueExpression(
-                final String valueExpression) {
-            return Expressions.instance().createValueExpression(valueExpression);
-        }
-
-        @SuppressWarnings(WarningConstants.UNCHECKED)
-        public final <R> R getEntityValue(final String field) {
-            final String valueExpression = format(ENT_EXP, this.componentName, field);
-            return (R) createValueExpression(valueExpression).getValue();
-        }
-
-        public final void setComponentValue(final String field,
-                final Object value) {
-            final String valueExpression = format(COMP_EXP, this.componentName, field);
-            createValueExpression(valueExpression).setValue(value);
-        }
-
-        @SuppressWarnings(WarningConstants.UNCHECKED)
-        public final <R> R getComponentValue(final String field) {
-            final String valueExpression = format(COMP_EXP, this.componentName, field);
-            return (R) createValueExpression(valueExpression).getValue();
-        }
-
-        public final Object invokeMethod(final String methodName,
-                final Object... args) {
-            return Expressions.instance().createMethodExpression(format(COMP_METHOD_EXP, this.componentName, methodName)).invoke(args);
-        }
-
-        public final <R> R invokeMethod(final String methodName, final Class<R> returnType, final Class<?>[] paramTypes, final Object...args) {
-            final ArrayList<Class<?>> classList = new ArrayList<>();
-            for (Object object : args) {
-                classList.add(object.getClass());
-            }
-            final Expressions expressionFactory = Expressions.instance();
-            final String expressionString = format(COMP_METHOD_EXP, this.componentName, methodName);
-            return expressionFactory.createMethodExpression(expressionString, returnType, paramTypes).invoke(args);
-        }
-
-        public final <R> R invokeMethod(final String methodName,
-                final Class<R> returnType, final Object... args) {
-            final ArrayList<Class<?>> classList = new ArrayList<>();
-            for (Object object : args) {
-                classList.add(object.getClass());
-            }
-            final Expressions expressionFactory = Expressions.instance();
-            final String expressionString = format(COMP_METHOD_EXP, this.componentName, methodName);
-            final Class<?>[] types = classList.toArray(new Class<?>[classList.size()]);
-            return expressionFactory.createMethodExpression(expressionString, returnType, types).invoke(args);
-        }
-
-        public final void newInstance() {
-            this.invokeMethod(NEW_INSTANCE);
-        }
-
-        public final E createInstance() {
-            this.newInstance();
-            return this.getInstance();
-        }
-        
-        public final E resetInstance(Object id) {
-            this.newInstance();
-            this.setId(id);
-            return this.getInstance();
-        }
-        
-        @SuppressWarnings(WarningConstants.UNCHECKED)
-        public final E getInstance() {
-            return (E) getComponentValue(INSTANCE);
-        }
-
-        public void setInstance(final E value) {
-            setComponentValue(INSTANCE, value);
-        }
-
-        public final String save() {
-            return this.invokeMethod(SAVE, String.class);
-        }
-
-        public final String remove() {
-            return this.invokeMethod(REMOVE, String.class);
-        }
-
-        public final String remove(final E entity) {
-            final Class<?>[] paramTypes = {Object.class};
-            return this.invokeMethod(REMOVE, String.class, paramTypes, entity);
-        }
-
-        public final String inactivate() {
-            final Class<?>[] paramTypes = {Object.class};
-            return this.invokeMethod(INACTIVATE, String.class, paramTypes, getInstance());
-        }
-
-        public final Integer getId() {
-            return getComponentValue(ID);
-        }
-
-        public final void setId(Object value) {
-            setComponentValue(ID, value);
-        }
-
-    }
+    protected abstract void initEntity(T entity, ICrudActions<T> crudActions);
 }

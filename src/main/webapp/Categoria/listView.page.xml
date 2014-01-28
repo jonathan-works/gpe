@@ -11,5 +11,7 @@
 	<param name="id" value="#{categoriaCrudAction.id}"
 		   converterId="integerConverter" />
 	<param name="tab" value="#{categoriaCrudAction.tab}" />
-		   
+	
+	<action execute="#{categoriaItemCrudAction.setCategoria(categoriaCrudAction.instance)}" 
+            if="#{categoriaCrudAction.isManaged()}"/>
 </page>

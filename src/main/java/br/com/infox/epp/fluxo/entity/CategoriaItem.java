@@ -36,10 +36,10 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name=LIST_BY_CATEGORIA, query=LIST_BY_CATEGORIA_QUERY),
     @NamedQuery(name=COUNT_BY_CATEGORIA_ITEM, query=COUNT_BY_CATEGORIA_ITEM_QUERY)
 })
-public class CategoriaItem implements Serializable{
+public class CategoriaItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private int idCategoriaItem;
+	private Integer idCategoriaItem;
 	private Categoria categoria;
 	private Item item;
 	
@@ -56,11 +56,11 @@ public class CategoriaItem implements Serializable{
 	@Id
 	@GeneratedValue(generator = GENERATOR)
 	@Column(name = ID_CATEGORIA_ITEM, unique = true, nullable = false)
-	public int getIdCategoriaItem() {
+	public Integer getIdCategoriaItem() {
 		return idCategoriaItem;
 	}
 	
-	public void setIdCategoriaItem(int idCategoriaItem) {
+	public void setIdCategoriaItem(Integer idCategoriaItem) {
 		this.idCategoriaItem = idCategoriaItem;
 	}
 	
@@ -84,5 +84,26 @@ public class CategoriaItem implements Serializable{
 	public Categoria getCategoria() {
 		return categoria;
 	}
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((idCategoriaItem == null) ? 0 : idCategoriaItem.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        CategoriaItem other = (CategoriaItem) obj;
+        if (idCategoriaItem == null) {
+            if (other.idCategoriaItem != null) return false;
+        } else if (!idCategoriaItem.equals(other.idCategoriaItem)) return false;
+        return true;
+    }
 	
 }

@@ -40,7 +40,7 @@ import br.com.itx.util.HibernateUtil;
 public class Categoria implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private int idCategoria;
+	private Integer idCategoria;
 	private String categoria;
 	private Boolean ativo;
 	
@@ -57,10 +57,10 @@ public class Categoria implements Serializable{
 	@Id
 	@GeneratedValue(generator = GENERATOR)
 	@Column(name = ID_CATEGORIA, unique = true, nullable = false)
-	public int getIdCategoria() {
+	public Integer getIdCategoria() {
 		return idCategoria;
 	}
-	public void setIdCategoria(final int idCategoria) {
+	public void setIdCategoria(final Integer idCategoria) {
 		this.idCategoria = idCategoria;
 	}
 	
@@ -111,7 +111,7 @@ public class Categoria implements Serializable{
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + idCategoria;
+        result = prime * result + ((idCategoria == null) ? 0 : idCategoria.hashCode());
         return result;
     }
     @Override
@@ -131,5 +131,5 @@ public class Categoria implements Serializable{
         }
         return true;
     }
-	
+
 }
