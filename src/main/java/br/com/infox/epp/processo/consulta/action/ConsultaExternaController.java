@@ -36,7 +36,6 @@ public class ConsultaExternaController extends AbstractController {
     public void selectProcesso(ProcessoEpa processoEpa){
         setTab(TAB_VIEW);
         setProcessoEpa(processoEpa);
-        System.out.println(processoEpa.getProcessoEpaTarefaList());
     }
     
     public List<ProcessoDocumento> getAnexosPublicos(ProcessoEpaTarefa processoEpaTarefa){
