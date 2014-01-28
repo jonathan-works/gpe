@@ -98,14 +98,14 @@
                     formTitle="#{messages['form.title']} #{crudAction.instance.categoria}">
                     <wi:tree
                         id="itemTree"
-                        assignTo="categoriaCrudAction.itemASerAdicionado"
+                        assignTo="categoriaItemCrudAction.item"
                         tree="#{itemTree}"
                         required="true"
                         label="#{messages['categoriaItem.item']}" />
                     <ui:define name="buttons">
                         <wi:commandButton
                             id="saveButton"
-                            action="categoriaCrudAction.addCategoriaItem()"
+                            action="categoriaItemCrudAction.save()"
                             reRender="categoriaItemFormDiv, categoriaItemDiv, categoriaItemTab"
                             value="#{messages['crud.persist']}" />
                     </ui:define>
@@ -126,7 +126,7 @@
                         <wi:toolBarRemove
                             id="toolBarRemove"
                             reRender="categoriaItemFormDiv, categoriaItemDiv"
-                            actionRemove="categoriaCrudAction.removeCategoriaItem(row)" />
+                            actionRemove="categoriaItemCrudAction.remove(row)" />
                     </ui:define>
                     <wi:columnOutputText
                         columnId="item"
