@@ -230,6 +230,7 @@ public class NodeFitter extends Fitter implements Serializable {
 			removeNode(join);
 		}
 		
+		this.nodesItems = null;
 		transitionFitter.clear();
 	}
 	

@@ -1,12 +1,16 @@
 package br.com.infox.epp.fluxo.manager;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.infox.epp.fluxo.query.ItemQuery;
 
 @Name(ItemManager.NAME)
 @AutoCreate
@@ -15,23 +19,20 @@ public class ItemManager extends GenericManager {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "itemManager";
     
-    public Set<Item> getFolhas(Integer idPai) {
-        Item pai = find(Item.class, idPai);
+    public Set<Item> getFolhas(final Integer idPai) {
+        final Item pai = find(Item.class, idPai);
         return getFolhas(pai);
     }
     
-    public Set<Item> getFolhas(Item pai) {
+    public Set<Item> getFolhas(final Item pai) {
         Set<Item> result = null;
         if (pai != null) {
-            Set<Item> set = new HashSet<Item>(pai.getItemList());
-            result = new HashSet<Item>();
-            if (set.size() == 0) {
-                result.add(pai);
-            } else {
-                for (Item filho : set) {
-                    result.addAll(getFolhas(filho));
-                }
-            }
+            final HashMap<String, Object> params = new HashMap<>();
+            params.put(ItemQuery.CAMINHO_COMPLETO, pai.getCaminhoCompleto());
+            final List<Item> itemList = this.getDao().getResultList(ItemQuery.GET_FOLHAS_QUERY, params);
+            result = new HashSet<>(itemList);
+        } else {
+            result = new HashSet<>();
         }
         return result;
     }
