@@ -266,15 +266,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
                 + ".html");
     }
 
-    public String getDocumentoBase64() {
-        if (getInstance() == null
-                || !getInstance().getProcessoDocumentoBin().isBinario()) {
-            return null;
-        }
-        byte[] binario = DocumentoBinHome.instance().getData(getInstance().getProcessoDocumentoBin().getIdProcessoDocumentoBin());
-        return binario != null ? Base64.encodeBytes(binario) : null;
-    }
-
     public void setNumeroHash(String numeroHash) {
         this.numeroHash = numeroHash;
     }
