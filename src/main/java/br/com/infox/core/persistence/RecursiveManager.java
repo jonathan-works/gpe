@@ -111,7 +111,7 @@ public final class RecursiveManager {
 	    E dad = o.getParent();
 		if(dad != null) {
 			Integer id = (Integer) AnnotationUtil.getValue(dad, Id.class);
-			if(id.equals(checkId)) {
+			if(id!=null && id.equals(checkId)) {
 				return true;
 			}
 			
