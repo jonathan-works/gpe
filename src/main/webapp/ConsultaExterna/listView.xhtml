@@ -219,10 +219,7 @@
                                                 onclick="openPopUp('idPdf#{row}', 'about:blank');">
                                                 <h:graphicImage
                                                     value="/img/pdf.gif"
-                                                    title="#{doc.processoDocumentoBin.nomeArquivo} #{doc} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />
-                                                <f:param
-                                                    value="#{doc.processoDocumentoBin.idProcessoDocumentoBin}"
-                                                    name="idBin" />
+                                                    title="#{doc.processoDocumentoBin.nomeArquivo} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />
                                             </h:commandLink>
                                         </rich:column>
                                         <rich:column>
