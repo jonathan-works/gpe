@@ -32,7 +32,7 @@
 			 styleClass="tabelaVariaveis"
 			 var="transition">
 			
-		<rich:column styleClass="dr-table-subheader rich-table-subheader" rendered="#{transitionFitter.hasOperationalTransition(type)}">
+		<rich:column styleClass="dr-table-subheader rich-table-subheader" rendered="#{type eq 'to'}">
 				
 			<f:facet name="header">
 			
@@ -87,7 +87,7 @@
 						</h:graphicImage>
 						
 						<h:graphicImage title="Excluir transição" url="/img/remove.png" styleClass="opacityHover"
-							rendered="#{type eq 'to' and transitionFitter.canAddLeavingTransition()}">
+							rendered="#{type eq 'to'}">
 								
 							<a:ajax event="click"
 									listener="#{transitionFitter.removeTransition(transition, type)}"
