@@ -4,6 +4,7 @@ import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.BASE_QUERY;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_DATA_FIM;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_DATA_INICIO;
+import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_FIXA;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_FLUXO;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_USUARIO;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.GROUP_BY;
@@ -18,6 +19,7 @@ import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_TEMPO_
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_TIPO_PRAZO_TAREFA;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_USUARIO;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INNER_JOIN_FLUXO;
+import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.ORDER_BY;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_COUNT;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_DATA_FIM;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_DATA_INICIO;
@@ -77,7 +79,10 @@ public class ProdutividadeDAO extends GenericDAO {
 		if (params.containsKey(PARAM_FLUXO)) {
 			sb.append(INNER_JOIN_FLUXO);
 		}
-		sb.append(CONDICAO_USUARIO);
+		sb.append(CONDICAO_FIXA);
+		if (params.containsKey(PARAM_USUARIO)) {
+			sb.append(CONDICAO_USUARIO);
+		}
 		if (params.containsKey(PARAM_FLUXO)) {
 			sb.append(CONDICAO_FLUXO);
 		}
@@ -88,11 +93,14 @@ public class ProdutividadeDAO extends GenericDAO {
 			sb.append(CONDICAO_DATA_FIM);
 		}
 		sb.append(GROUP_BY);
+		sb.append(ORDER_BY);
 		return sb.toString();
 	}
 	
 	private Query setParameters(Map<String, Object> params, Query base) {
-		base.setParameter(PARAM_USUARIO, params.get(PARAM_USUARIO));
+		if (params.containsKey(PARAM_USUARIO)) {
+			base.setParameter(PARAM_USUARIO, params.get(PARAM_USUARIO));
+		}
 		if (params.containsKey(PARAM_FLUXO)) {
 			base.setParameter(PARAM_FLUXO, params.get(PARAM_FLUXO));
 		}

@@ -29,4 +29,11 @@ public abstract class AbstractController implements Controller {
         this.id = id;
     }
     
+    @Override
+    public void onClickFormTab() {
+    }
+    
+    @Override
+    public void onClickSearchTab() {
+    }
 }

@@ -155,7 +155,9 @@ public class ProdutividadeAction implements Serializable {
 	public String getCriteria() {
 		StringBuilder sb = new StringBuilder("Usuário: ");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		sb.append(this.usuario.getNomeUsuario());
+		if (usuario != null) {
+			sb.append(this.usuario.getNomeUsuario());
+		}
 		if (fluxo != null) {
 			sb.append("\nFluxo: ");
 			sb.append(this.fluxo.getFluxo());
@@ -181,6 +183,7 @@ public class ProdutividadeAction implements Serializable {
 	}
 	
 	public void exportarXLS() {
+		setPage(1);
         List<ProdutividadeBean> beanList = list(10000);
         try {
             if (beanList == null || beanList.isEmpty()) {
@@ -210,7 +213,9 @@ public class ProdutividadeAction implements Serializable {
 		Map<String, Object> params = new HashMap<>();
 		params.put(ProdutividadeQuery.PARAM_START, this.maxResults * (this.page - 1));
 		params.put(ProdutividadeQuery.PARAM_COUNT, this.maxResults);
-		params.put(ProdutividadeQuery.PARAM_USUARIO, this.usuario);
+		if (this.usuario != null) {
+			params.put(ProdutividadeQuery.PARAM_USUARIO, this.usuario);
+		}
 		if (this.fluxo != null) {
 			params.put(ProdutividadeQuery.PARAM_FLUXO, this.fluxo);	
 		}

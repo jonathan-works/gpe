@@ -38,7 +38,7 @@
                             
                             <h:outputText rendered="#{node.entity.qtdEmCaixa gt 0}" value=" (Em caixas: #{node.entity.qtdEmCaixa})" />
                             
-                            <rich:contextMenu mode="ajax" target="taskNode" id="menuTaskNode" rendered="#{s:hasRole('/pages/Caixa/listView.seam')}">
+                            <rich:contextMenu mode="ajax" target="taskNode" id="menuTaskNode" rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
                             
                                 <rich:menuItem label="Nova caixa" icon="/img/add.gif" onclick="#{rich:component('novaCaixaPanel')}.show()" />
                                 
@@ -54,7 +54,7 @@
                                 
                                 <h:outputText value="(#{node.entity.qtd})" />
                                 
-                                <rich:contextMenu id="menuCaixa" mode="ajax" target="caixaNode" rendered="#{s:hasRole('/pages/Caixa/listView.seam')}">
+                                <rich:contextMenu id="menuCaixa" mode="ajax" target="caixaNode" rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
                                 
                                     <rich:menuItem label="Editar caixa" icon="/img/edit.gif" action="#{painelUsuarioHome.editaCaixa()}" />
                                     

@@ -25,7 +25,11 @@ public interface ProdutividadeQuery {
 	
 	String GROUP_BY = " GROUP BY t.id_tarefa, pet.nr_tempo_previsto, l.ds_localizacao, p.ds_nome, pes.nm_pessoa";
 	
-	String CONDICAO_USUARIO = " WHERE ut.id_usuario_login = :" + PARAM_USUARIO;
+	String ORDER_BY = " ORDER BY pes.nm_pessoa";
+	
+	String CONDICAO_FIXA = " WHERE 1=1";
+	
+	String CONDICAO_USUARIO = " AND ut.id_usuario_login = :" + PARAM_USUARIO;
 	String CONDICAO_FLUXO = " AND ncf.id_fluxo = :" + PARAM_FLUXO;
 	String CONDICAO_DATA_INICIO = " AND pet.dt_inicio >= :" + PARAM_DATA_INICIO;
 	String CONDICAO_DATA_FIM = " AND pet.dt_fim <= :" + PARAM_DATA_FIM;

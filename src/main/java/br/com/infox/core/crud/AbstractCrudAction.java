@@ -234,17 +234,13 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
         return ret;
     }
 
-    /**
-     * Ao mudar para a aba de pesquisa é criada uma nova instancia.
-     */
+    @Override
     public void onClickSearchTab() {
         newInstance();
         getGenericManager().clear();
     }
 
-    /**
-     * Ação executada ao entrar na aba de formulário.
-     */
+    @Override
     public void onClickFormTab() {
         // Caso haja alguma ação a ser executada assim que a navegação for para
         // a aba de formulário,

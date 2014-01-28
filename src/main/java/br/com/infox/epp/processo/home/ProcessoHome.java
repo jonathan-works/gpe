@@ -33,7 +33,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -64,8 +63,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     @In
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-    @In
-    private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
 
     @In
     private ProcessoManager processoManager;
@@ -360,8 +357,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------------
-    // -------------------------------------------- Getters e Setters
-    // --------------------------------------------------------
+    // -------------------------------------------- Getters e Setters --------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------------
 
     public void setProcessoIdProcesso(Integer id) {
