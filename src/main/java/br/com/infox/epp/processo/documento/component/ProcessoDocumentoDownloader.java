@@ -20,12 +20,13 @@ import br.com.itx.component.FileHome;
 @AutoCreate
 public class ProcessoDocumentoDownloader {
 
+    private static final String PAGINA_DOWNLOAD = "/download.xhtml";
     public static final String NAME = "processoDocumentoDownloader";
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoDownloader.class);
 
     public String setDownloadInstance(ProcessoDocumento doc) {
         exportData(doc.getProcessoDocumentoBin());
-        return "/download.xhtml";
+        return PAGINA_DOWNLOAD;
     }
     
     public void exportData(ProcessoDocumentoBin doc) {

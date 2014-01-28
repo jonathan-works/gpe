@@ -12,13 +12,15 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @AutoCreate
 public class ProcessoDocumentoHtmlView {
     
+    private static final String PAGINA_VISUALIZACAO = "/Painel/documentoHTML.seam";
+
     public static final String NAME = "processoDocumentoHtmlView";
     
     private ProcessoDocumento viewInstance;
     
     public String setViewInstance(ProcessoDocumento processoDocumento) {
         viewInstance = processoDocumento;
-        return "/Painel/documentoHTML.seam";
+        return PAGINA_VISUALIZACAO;
     }
     
     public String getConteudo(){
