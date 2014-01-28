@@ -86,8 +86,6 @@ public class ItemCrudActionIT extends AbstractGenericCrudTest<Item> {
         
             persistFail.runTest(new Item(baseCode, baseCode, new Item("d","s",null,ativo), ativo));
         }
-        
-        persistFail.runTest(new Item(baseCode, baseCode, null, null));
     }
     
     @Test
