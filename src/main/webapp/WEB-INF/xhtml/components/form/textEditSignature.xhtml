@@ -14,74 +14,55 @@
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
 -->
-<ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf"
->
-	<ui:param name="editorId" value="#{id}Editor" />
-	<ui:param name="idSignature" value="#{id}signature" />
-	<ui:param name="idCertChain" value="#{id}certChain" />
-	
-	<s:div id="#{f.id}TipoDocDiv">
-		<wi:selectOneMenuEntity
-			id="tipoProcessoDocumento"
-			label="#{messages['processoDocumento.classificacaoDocumento']}"
-			value="#{processoHome.tipoProcessoDocumento}"
-			items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
-			required="true"
-			noSelectionLabel="Selecione..."
-		>
-		</wi:selectOneMenuEntity>
-	</s:div>
-		
-	<s:div id="#{id}EditorDiv">
-		<wi:editor
-			id="#{editorId}"
-			value="#{home.instance[id]}"
-		/>
-	</s:div>
-	
-	<a:jsFunction
-		name="submitForm"
-		action="#{home.assinarDocumento()}"
-		render="signatureDiv pageBodyDialogMessage"
-		oncomplete="infox.editor['#{id}Editor'].postSign()"
-	/>
-	<s:div id="signatureDiv">
-		<h:inputHidden
-			id="#{idCertChain}"
-			value="#{processoHome.certChain}"
-		/>
-		<h:inputHidden
-			id="#{idSignature}"
-			value="#{processoHome.signature}"
-		/>
-	</s:div>
-	<s:div id="appletDiv" styleClass="applet-div">
-		<wi:appletAssinatura
-			id="#{id}"
-			urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
-			formId="#{rich:clientId('taskInstanceForm')}"
-			certificationChainField="#{rich:clientId(idCertChain)}"
-			signatureField="#{rich:clientId(idSignature)}"
-			getDataFunction="infox.editor['#{editorId}'].instance.getData()"
-			useBase64Function="infox.editor['#{editorId}'].useBase64()"
-			functionPreSign="infox.showLoading();"
-			functionPosSign="submitForm()"
-			debug="false"
-			loginMode="false"
-			useProviderDll="false"
-		>
-		</wi:appletAssinatura>
-	</s:div>
-		<script type="text/javascript">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="editorId" value="#{id}Editor" />
+    <ui:param name="idSignature" value="#{id}signature" />
+    <ui:param name="idCertChain" value="#{id}certChain" />
+
+    <s:div id="#{f.id}TipoDocDiv">
+        <wi:selectOneMenuEntity id="tipoProcessoDocumento"
+            label="#{messages['processoDocumento.classificacaoDocumento']}"
+            value="#{processoHome.tipoProcessoDocumento}"
+            items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+            required="true" noSelectionLabel="Selecione...">
+        </wi:selectOneMenuEntity>
+    </s:div>
+
+    <s:div id="#{id}EditorDiv">
+        <wi:editor id="#{editorId}" value="#{home.instance[id]}" />
+    </s:div>
+
+    <a:jsFunction name="submitForm" action="#{home.assinarDocumento()}"
+        render="signatureDiv pageBodyDialogMessage"
+        oncomplete="infox.editor['#{id}Editor'].postSign()" />
+    <s:div id="signatureDiv">
+        <h:inputHidden id="#{idCertChain}"
+            value="#{processoHome.certChain}" />
+        <h:inputHidden id="#{idSignature}"
+            value="#{processoHome.signature}" />
+    </s:div>
+    <s:div id="appletDiv" styleClass="applet-div">
+        <wi:appletAssinatura id="#{id}"
+            urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
+            formId="#{rich:clientId('taskInstanceForm')}"
+            certificationChainField="#{rich:clientId(idCertChain)}"
+            signatureField="#{rich:clientId(idSignature)}"
+            getDataFunction="infox.editor['#{editorId}'].instance.getData()"
+            useBase64Function="infox.editor['#{editorId}'].useBase64()"
+            functionPreSign="infox.showLoading();"
+            functionPosSign="submitForm()" debug="false"
+            loginMode="false" useProviderDll="false">
+        </wi:appletAssinatura>
+    </s:div>
+    <script type="text/javascript">
 			namespace("infox.editor.#{editorId}",{
 				useBase64:function useBase64() {
 					return "true";
