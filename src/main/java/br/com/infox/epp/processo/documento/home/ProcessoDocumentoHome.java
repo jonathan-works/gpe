@@ -105,14 +105,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         this.modeloDocumentoCombo = modeloDocumentoCombo;
     }
 
-    public void setProcessoDocumentoIdProcessoDocumento(Integer id) {
-        setId(id);
-    }
-
-    public Integer getProcessoDocumentoIdProcessoDocumento() {
-        return (Integer) getId();
-    }
-
     @Override
     protected ProcessoDocumento createInstance() {
         ProcessoDocumento processoDocumento = new ProcessoDocumento();
