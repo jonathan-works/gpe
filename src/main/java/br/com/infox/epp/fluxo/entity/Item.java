@@ -1,18 +1,17 @@
 /*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
+ * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
+ * Tecnologia da Informação Ltda.
+ * 
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
+ * Software Foundation; versão 2 da Licença. Este programa é distribuído na
+ * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
+ * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
+ * ESPECÍFICA.
+ * 
+ * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
+ * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
+ */
 package br.com.infox.epp.fluxo.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
@@ -39,6 +38,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -48,153 +49,162 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.persistence.Recursive;
+import br.com.infox.epp.fluxo.query.ItemQuery;
 
 @Entity
-@Table(name = TABLE_ITEM, schema=PUBLIC)
+@Table(name = TABLE_ITEM, schema = PUBLIC)
+@NamedQueries(value={ @NamedQuery(name = ItemQuery.GET_FOLHAS,
+        query = ItemQuery.GET_FOLHAS_QUERY) })
 public class Item implements Serializable, Recursive<Item> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private int idItem;
-	private Item itemPai;
-	private String codigoItem;
-	private String descricaoItem;
-	private Boolean ativo;
-	private String caminhoCompleto;
-	private List<Item> itemList;
-	
-	public Item() {
-	}
-	public Item(final String codigoItem, final String descricaoItem, final Boolean ativo) {
-	    this.codigoItem = codigoItem;
-	    this.descricaoItem = descricaoItem;
-	    this.ativo = ativo;
-	}
-	public Item(final String codigoItem, final String descricaoItem, final Item itemPai, final Boolean ativo) {
-	    this.codigoItem = codigoItem;
-	    this.descricaoItem = descricaoItem;
-	    this.itemPai = itemPai;
-	    this.ativo = ativo;
-	}
+    private Integer idItem;
+    private Item itemPai;
+    private String codigoItem;
+    private String descricaoItem;
+    private Boolean ativo;
+    private String caminhoCompleto;
+    private List<Item> itemList;
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_ITEM)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_ITEM, unique = true, nullable = false)
-	public int getIdItem() {
-		return this.idItem;
-	}
+    public Item() {
+        this(null, null, null, null);
+    }
 
-	public void setIdItem(int idItem) {
-		this.idItem = idItem;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_ITEM_PAI)
-	public Item getItemPai() {
-		return this.itemPai;
-	}
+    public Item(final String codigoItem, final String descricaoItem,
+            final Boolean ativo) {
+        this(codigoItem, descricaoItem, null, ativo);
+    }
 
-	public void setItemPai(Item itemPai) {
-		this.itemPai = itemPai;
-	}
+    public Item(final String codigoItem, final String descricaoItem,
+            final Item itemPai, final Boolean ativo) {
+        this.codigoItem = codigoItem;
+        this.descricaoItem = descricaoItem;
+        this.itemPai = itemPai;
+        this.ativo = ativo;
+    }
 
-	@Column(name = CODIGO_ITEM, length=LengthConstants.DESCRICAO_PEQUENA, nullable=false)
-	@Size(min=1,max=LengthConstants.DESCRICAO_PEQUENA)
-	@NotNull
-	public String getCodigoItem() {
-		return this.codigoItem;
-	}
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_ITEM)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_ITEM, unique = true, nullable = false)
+    public Integer getIdItem() {
+        return this.idItem;
+    }
 
-	public void setCodigoItem(String codigoItem) {
-		this.codigoItem = codigoItem;
-	}
+    public void setIdItem(final Integer idItem) {
+        this.idItem = idItem;
+    }
 
-	@Column(name = DESCRICAO_ITEM, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(min=1,max=LengthConstants.DESCRICAO_PADRAO)
-	@NotNull
-	public String getDescricaoItem() {
-		return this.descricaoItem;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_ITEM_PAI)
+    public Item getItemPai() {
+        return this.itemPai;
+    }
 
-	public void setDescricaoItem(String descricaoItem) {
-		this.descricaoItem = descricaoItem;
-	}
+    public void setItemPai(final Item itemPai) {
+        this.itemPai = itemPai;
+    }
 
-	@Column(name = ATIVO, nullable = false)
-	@NotNull
-	public Boolean getAtivo() {
-		return this.ativo;
-	}
+    @Column(name = CODIGO_ITEM, length = LengthConstants.DESCRICAO_PEQUENA,
+            nullable = false)
+    @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA)
+    @NotNull
+    public String getCodigoItem() {
+        return this.codigoItem;
+    }
 
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
+    public void setCodigoItem(final String codigoItem) {
+        this.codigoItem = codigoItem;
+    }
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = ITEM_PAI_ATTRIBUTE)
-	public List<Item> getItemList() {
-		return this.itemList;
-	}
+    @Column(name = DESCRICAO_ITEM, nullable = false,
+            length = LengthConstants.DESCRICAO_PADRAO)
+    @Size(min = 1, max = LengthConstants.DESCRICAO_PADRAO)
+    @NotNull
+    public String getDescricaoItem() {
+        return this.descricaoItem;
+    }
 
-	public void setItemList(List<Item> itemList) {
-		this.itemList = itemList;
-	}
+    public void setDescricaoItem(final String descricaoItem) {
+        this.descricaoItem = descricaoItem;
+    }
 
-	@Column(name=CAMINHO_COMPLETO, unique=true)
-	public String getCaminhoCompleto() {
-		return caminhoCompleto;
-	}
-	
-	public void setCaminhoCompleto(String caminhoCompleto) {
-		this.caminhoCompleto = caminhoCompleto;
-	}
-	
-	public String caminhoCompletoToString()	{
-		return caminhoCompleto.replace('|', '/').substring(0, caminhoCompleto.length()-1);
-	}
-	
-	@Override
-	public String toString() {
-		return descricaoItem;
-	}
-	
-	@Transient
-	public List<Item> getListItemAtePai() {
-		List<Item> list = new ArrayList<Item>();
-		Item pai = getItemPai();
-		while (pai != null) {
-			list.add(pai);
-			pai = pai.getItemPai();
-		}
-		return list;
-	}
+    @Column(name = ATIVO, nullable = false)
+    @NotNull
+    public Boolean getAtivo() {
+        return this.ativo;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Item)) {
-			return false;
-		}
-		Item other = (Item) obj;
-		if (getIdItem() != other.getIdItem()) {
-			return false;
-		}
-		return true;
-	}
+    public void setAtivo(final Boolean ativo) {
+        this.ativo = ativo;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdItem();
-		return result;
-	}
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+        CascadeType.REFRESH }, fetch = FetchType.LAZY,
+            mappedBy = ITEM_PAI_ATTRIBUTE)
+    public List<Item> getItemList() {
+        return this.itemList;
+    }
+
+    public void setItemList(final List<Item> itemList) {
+        this.itemList = itemList;
+    }
+
+    @Column(name = CAMINHO_COMPLETO, unique = true)
+    public String getCaminhoCompleto() {
+        return caminhoCompleto;
+    }
+
+    public void setCaminhoCompleto(final String caminhoCompleto) {
+        this.caminhoCompleto = caminhoCompleto;
+    }
+
+    public String caminhoCompletoToString() {
+        return caminhoCompleto.replace('|', '/').substring(0, caminhoCompleto.length() - 1);
+    }
+
+    @Override
+    public String toString() {
+        return descricaoItem;
+    }
+
+    @Transient
+    public List<Item> getListItemAtePai() {
+        final List<Item> list = new ArrayList<Item>();
+        Item pai = getItemPai();
+        while (pai != null) {
+            list.add(pai);
+            pai = pai.getItemPai();
+        }
+        return list;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Item)) {
+            return false;
+        }
+        final Item other = (Item) obj;
+        if (getIdItem() != other.getIdItem()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (idItem == null ? 0 : idItem.hashCode());
+        return result;
+    }
 
     @Override
     @Transient
@@ -203,7 +213,7 @@ public class Item implements Serializable, Recursive<Item> {
     }
 
     @Override
-    public void setParent(Item parent) {
+    public void setParent(final Item parent) {
         this.setItemPai(parent);
     }
 
@@ -214,7 +224,7 @@ public class Item implements Serializable, Recursive<Item> {
     }
 
     @Override
-    public void setHierarchicalPath(String path) {
+    public void setHierarchicalPath(final String path) {
         this.setCaminhoCompleto(path);
     }
 
@@ -225,22 +235,22 @@ public class Item implements Serializable, Recursive<Item> {
     }
 
     @Override
-    public void setPathDescriptor(String pathDescriptor) {
+    public void setPathDescriptor(final String pathDescriptor) {
         this.setDescricaoItem(pathDescriptor);
     }
 
     @Override
     @Transient
     public List<Item> getChildList() {
-    	List<Item> ret = getItemList();
-    	if (ret != null){
-    		return ret;
-    	}
-    	else return new ArrayList<>();
+        List<Item> ret = getItemList();
+        if (ret == null) {
+            ret = new ArrayList<>();
+        }
+        return ret;
     }
 
     @Override
-    public void setChildList(List<Item> childList) {
+    public void setChildList(final List<Item> childList) {
         this.setItemList(childList);
     }
 
