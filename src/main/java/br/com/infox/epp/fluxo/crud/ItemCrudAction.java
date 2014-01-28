@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.crud;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -11,8 +13,9 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(ItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
+public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     public static final String NAME = "itemCrudAction";
     
     protected boolean beforeSave() {
@@ -27,7 +30,6 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> {
     @Override
     public String save() {
         final Item item = getInstance();
-
         String save = null;
         if (item.getAtivo() != null) {
             if (!item.getAtivo()){
