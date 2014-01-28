@@ -62,7 +62,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     private ModeloDocumento modeloDocumentoCombo;
     private boolean isModelo = Boolean.TRUE;
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
-    private String numeroHash;
     private String documento;
     private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
@@ -264,14 +263,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         fileHome.setData(data);
         fileHome.setFileName(isBin ? bin.getNomeArquivo() : pd.getProcessoDocumento()
                 + ".html");
-    }
-
-    public void setNumeroHash(String numeroHash) {
-        this.numeroHash = numeroHash;
-    }
-
-    public String getNumeroHash() {
-        return numeroHash;
     }
 
     @Override
