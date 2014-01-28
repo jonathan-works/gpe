@@ -9,6 +9,5 @@ login-required="true"
     <param name="id" value="#{processoHome.processoIdProcesso}"/>
     <param name="tab" value="#{processoHome.tab}"/>
     <param name="idJbpm" value="#{org.jboss.seam.bpm.businessProcess.processId}" />
-    <param name="idBin" value="#{processoDocumentoBinHome.processoDocumentoBinIdProcessoDocumentoBin}"/>
 
 </page>
