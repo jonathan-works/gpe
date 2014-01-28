@@ -8,6 +8,5 @@ xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/produc
     <param name="id" value="#{consultaExternaController.id}"
     converterId="integerConverter" />
     <param name="tab" value="#{consultaExternaController.tab}" />
-    <param name="idBin" value="#{processoDocumentoBinHome.processoDocumentoBinIdProcessoDocumentoBin}"/>
 
 </page>

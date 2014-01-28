@@ -35,20 +35,17 @@
         <h:commandLink
             action="#{processoDocumentoHtmlView.setViewInstance(var)}"
             onclick="openPopUp('PopUpDocumentoBin', '')"
-            rendered="#{not empty bin.modeloDocumento}"
-            target="PopUpDocumentoBin">
+            rendered="#{isModelo}" target="PopUpDocumentoBin">
             <h:graphicImage title="Visualizar" url="/img/view.gif" />
         </h:commandLink>
 
-        <s:link target="idPdf#{var}" rendered="#{!isModelo}"
-            action="#{processoDocumentoBinHome.setDownloadInstance()}"
-            onclick="openPopUp('idPdf#{var}', 'about:blank');">
-
+        <h:commandLink target="idPdf#{row}" rendered="#{!isModelo}"
+            action="#{processoDocumentoDownloader.setDownloadInstance(var)}"
+            onclick="openPopUp('idPdf#{row}', 'about:blank');">
             <h:graphicImage value="/img/pdf.gif"
                 title="#{bin.nomeArquivo} (#{util.getFormattedKb(bin.size)})" />
-            <f:param value="#{bin.idProcessoDocumentoBin}" name="idBin" />
+        </h:commandLink>
 
-        </s:link>
         <s:link target="idJan#{var.idProcessoDocumento}"
             rendered="#{not empty bin.signature}"
             view="/Processo/Consulta/validaDocumento.xhtml"
