@@ -18,26 +18,28 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> implements
     private static final long serialVersionUID = 1L;
     public static final String NAME = "itemCrudAction";
     
-    protected boolean beforeSave() {
-        final Item item = getInstance();
-        final Item itemPai = item.getItemPai();
-        if (itemPai != null && !itemPai.getAtivo()){
-            item.setAtivo(Boolean.FALSE);
-        }
-        return super.beforeSave();
-    }
-    
     @Override
     public String save() {
-        final Item item = getInstance();
-        String save = null;
-        if (item.getAtivo() != null) {
-            if (!item.getAtivo()){
-                inactiveRecursive(item);
-            }
-            save = super.save();
+        getInstance().setAtivo(paiPermiteAtivo() && isAtivo());
+        inativaFilhosSeInativo();
+        return super.save();
+    }
+
+    private boolean isAtivo() {
+        final Boolean ativo = getInstance().getAtivo();
+        return ativo == null || ativo;
+    }
+
+    private boolean paiPermiteAtivo() {
+        final Item itemPai = getInstance().getItemPai();
+        return itemPai == null || itemPai.getAtivo();
+    }
+
+    private void inativaFilhosSeInativo() {
+        final Item instance = getInstance();
+        if (!instance.getAtivo()){
+            inactiveRecursive(instance);
         }
-        return save;
     }
 
     @Override
