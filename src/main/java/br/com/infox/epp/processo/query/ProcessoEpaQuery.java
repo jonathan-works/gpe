@@ -16,7 +16,7 @@ public interface ProcessoEpaQuery {
             + " and o.dataFim is null";
 
     String TEMPO_GASTO_PROCESSO_EPP = "tempoGastoPeloProcesso";
-    String TEMPO_GASTO_PROCESSO_EPP_QUERY = "select new map( sum(pet.tempoGasto) as horas, ( select sum(pet2.tempoGasto) "
+    String TEMPO_GASTO_PROCESSO_EPP_QUERY = "select new map( sum(pet.tempoGasto) / 60 as horas, ( select sum(pet2.tempoGasto) "
             + "from ProcessoEpaTarefa pet2 inner join pet2.tarefa t2 "
             + "where t2.tipoPrazo != 'H' and "
             + "pet2.processoEpa.idProcesso = pet.processoEpa.idProcesso "
