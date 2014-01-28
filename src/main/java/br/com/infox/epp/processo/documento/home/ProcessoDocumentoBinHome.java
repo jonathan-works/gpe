@@ -219,14 +219,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         return true;
     }
 
-    public void setProcessoDocumentoBinIdProcessoDocumentoBin(Integer id) {
-        setId(id);
-    }
-
-    public Integer getProcessoDocumentoBinIdProcessoDocumentoBin() {
-        return (Integer) getId();
-    }
-
     @Override
     protected ProcessoDocumentoBin createInstance() {
         ProcessoDocumentoBin processoDocumentoBin = new ProcessoDocumentoBin();
