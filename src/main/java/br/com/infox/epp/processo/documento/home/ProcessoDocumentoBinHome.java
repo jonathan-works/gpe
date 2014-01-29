@@ -245,30 +245,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         return getInstance() == null ? null : getInstance().getProcessoDocumentoList();
     }
 
-    public String setDownloadInstance() {
-        exportData();
-        return "/download.xhtml";
-    }
-
-    public void exportData() {
-        FileHome file = FileHome.instance();
-        String fileName = "ProcessoDocumentoBin";
-        String key = Messages.instance().get("processoDocumentoBin.textColumn");
-        if (key != null) {
-            String expression = "#{processoDocumentoBinHome.instance." + key
-                    + "}";
-            fileName = (String) Expressions.instance().createValueExpression(expression).getValue();
-        }
-        file.setFileName(fileName);
-        try {
-            file.setData(DocumentoBinHome.instance().getData(getInstance().getIdProcessoDocumentoBin()));
-        } catch (Exception e) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao descarregar o documento.");
-            LOG.error(".exportData()", e);
-        }
-        Contexts.getConversationContext().set("fileHome", file);
-    }
-
     public void setIgnoraConteudoDocumento(boolean ignoraConteudoDocumento) {
         this.ignoraConteudoDocumento = ignoraConteudoDocumento;
     }
