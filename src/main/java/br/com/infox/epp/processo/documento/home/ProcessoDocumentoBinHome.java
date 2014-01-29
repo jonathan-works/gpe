@@ -54,7 +54,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
 
     private static final int TAMANHO_MAXIMO_ARQUIVO = 1572864;
     private boolean isModelo;
-    private boolean ignoraConteudoDocumento = Boolean.FALSE;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoBinHome.class);
 
     private boolean houveErroAoAssinar = false;
@@ -136,17 +135,15 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
 
     @Override
     protected boolean beforePersistOrUpdate() {
-        boolean ret = true;
         if (isModelo) {
-            if (!ignoraConteudoDocumento && isModeloVazio()) {
-                ret = false;
-            }
-            if (ret) {
+            if (!isModeloVazio()) {
                 getInstance().setUsuario(Authenticator.getUsuarioLogado());
                 getInstance().setMd5Documento(Crypto.encodeMD5(getInstance().getModeloDocumento()));
+            } else {
+                return false;
             }
         }
-        return ret;
+        return true;
     }
 
     @Override
@@ -223,14 +220,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
 
     public List<ProcessoDocumento> getProcessoDocumentoList() {
         return getInstance() == null ? null : getInstance().getProcessoDocumentoList();
-    }
-
-    public void setIgnoraConteudoDocumento(boolean ignoraConteudoDocumento) {
-        this.ignoraConteudoDocumento = ignoraConteudoDocumento;
-    }
-
-    public boolean isIgnoraConteudoDocumento() {
-        return ignoraConteudoDocumento;
     }
 
     public boolean isHouveErroAoAssinar() {
