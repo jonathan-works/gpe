@@ -6,8 +6,8 @@ import br.com.infox.core.manager.GenericManager;
 
 @Name(ProcessoDocumentoBinManager.NAME)
 @AutoCreate
-public class ProcessoDocumentoBinManager extends GenericManager{
+public class ProcessoDocumentoBinManager extends GenericManager {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "processoDocumentoBinManager";	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "processoDocumentoBinManager";
 }
