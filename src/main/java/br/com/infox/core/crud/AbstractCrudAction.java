@@ -63,10 +63,13 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
      * Devem ser escritas aqui as ações que serão executadas antes da inserção
      * ou atualização dos dados.
      */
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         return Boolean.TRUE;
     }
 
+    protected void beforeSave() {
+    }
+    
     protected void afterSave() {
 
     }
@@ -140,6 +143,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
         return currentId != null && !"".equals(currentId);
     }
 
+    
+    
     /**
      * Registra ou altera a instância atual.
      * 
@@ -150,7 +155,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
     public String save() {
         String ret = null;
         final boolean wasManaged = isManaged();
-        if (beforeSave()) {
+        if (isInstanceValid()) {
+            beforeSave();
             ret = wasManaged ? update() : persist();
         }
         final boolean persistFailed = ret == null
