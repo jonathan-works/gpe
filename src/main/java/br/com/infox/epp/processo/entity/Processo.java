@@ -31,7 +31,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.DURACAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO_CONEXO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_USUARIO_CADASTRO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY;
@@ -47,7 +46,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_C
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO_CONEXAO;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -65,8 +63,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
@@ -119,8 +115,6 @@ public class Processo implements java.io.Serializable {
     private Long idJbpm;
 
     private List<ProcessoDocumento> processoDocumentoList = new ArrayList<ProcessoDocumento>(0);
-    private List<Processo> processoConexoListForIdProcesso = new ArrayList<Processo>(0);
-    private List<Processo> processoConexoListForIdProcessoConexo = new ArrayList<Processo>(0);
 
     private String actorId;
 
@@ -213,36 +207,6 @@ public class Processo implements java.io.Serializable {
     public void setProcessoDocumentoList(
             List<ProcessoDocumento> processoDocumentoList) {
         this.processoDocumentoList = processoDocumentoList;
-    }
-
-    @ManyToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY)
-    @JoinTable(name = TABLE_PROCESSO_CONEXAO, schema = PUBLIC,
-            joinColumns = { @JoinColumn(name = ID_PROCESSO, nullable = false,
-                    updatable = false) }, inverseJoinColumns = { @JoinColumn(
-                    name = ID_PROCESSO_CONEXO, nullable = false,
-                    updatable = false) })
-    public List<Processo> getProcessoConexoListForIdProcesso() {
-        return processoConexoListForIdProcesso;
-    }
-
-    public void setProcessoConexoListForIdProcesso(
-            List<Processo> processoConexoListForIdProcesso) {
-        this.processoConexoListForIdProcesso = processoConexoListForIdProcesso;
-    }
-
-    @ManyToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY)
-    @JoinTable(name = TABLE_PROCESSO_CONEXAO, schema = PUBLIC,
-            joinColumns = { @JoinColumn(name = ID_PROCESSO_CONEXO,
-                    nullable = false, updatable = false) },
-            inverseJoinColumns = { @JoinColumn(name = ID_PROCESSO,
-                    nullable = false, updatable = false) })
-    public List<Processo> getProcessoConexoListForIdProcessoConexo() {
-        return processoConexoListForIdProcessoConexo;
-    }
-
-    public void setProcessoConexoListForIdProcessoConexo(
-            List<Processo> processoConexoListForIdProcessoConexo) {
-        this.processoConexoListForIdProcessoConexo = processoConexoListForIdProcessoConexo;
     }
 
     @Override

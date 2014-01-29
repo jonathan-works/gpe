@@ -53,12 +53,6 @@ public class ConsultaProcessoHome implements Serializable {
         return true;
     }
 
-    /**
-     * Retorna os resultados do grid
-     * 
-     * @return lista de processos
-     */
-
     public String getHomeName() {
         return NAME;
     }
