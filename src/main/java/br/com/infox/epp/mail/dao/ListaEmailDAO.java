@@ -1,6 +1,9 @@
 package br.com.infox.epp.mail.dao;
 
-import static br.com.infox.epp.mail.query.ListaEmailQuery.*;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_GRUPO_EMAIL_PARAM;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.LISTA_EMAIL_BY_ID_GRUPO;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL;
+import static br.com.infox.epp.mail.query.ListaEmailQuery.RESOLVE_LISTA_EMAIL_BY_ID_GRUPO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,12 +12,12 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.mail.entity.ListaEmail;
 
 @Name(ListaEmailDAO.NAME)
 @AutoCreate
-public class ListaEmailDAO extends GenericDAO {
+public class ListaEmailDAO extends DAO<ListaEmail, Integer> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "listaEmailDAO";

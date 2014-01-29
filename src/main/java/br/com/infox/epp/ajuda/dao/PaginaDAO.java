@@ -9,12 +9,12 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.ajuda.entity.Pagina;
 
 @Name(PaginaDAO.NAME)
 @AutoCreate
-public class PaginaDAO extends GenericDAO {
+public class PaginaDAO extends DAO<Pagina, Integer> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "paginaDAO";

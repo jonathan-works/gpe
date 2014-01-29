@@ -20,17 +20,18 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 
 @Name(ProcessoLocalizacaoIbpmDAO.NAME)
 @AutoCreate
-public class ProcessoLocalizacaoIbpmDAO extends GenericDAO {
+public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm, Integer> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoLocalizacaoIbpmDAO";
 

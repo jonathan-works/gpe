@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.manager;
 
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -26,8 +28,9 @@ public class UsuarioLocalizacaoManager extends GenericManager {
 		return usuarioLocalizacaoDAO.existeUsuarioLocalizacao(usuarioLocalizacao);
 	}
 	
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public <T> T persist(T o) throws DAOException {
-		return usuarioLocalizacaoDAO.persist(o);
+		return (T) usuarioLocalizacaoDAO.persist((UsuarioLocalizacao) o);
 	}
 }

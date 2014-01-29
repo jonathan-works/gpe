@@ -1,6 +1,19 @@
 package br.com.infox.epp.processo.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_FLUXO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_ID_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_SITUACAO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.QUERY_PARAM_PROCESSO_EPA;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +30,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -27,7 +40,6 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import static br.com.infox.epp.processo.query.ProcessoEpaQuery.*;
 import br.com.itx.util.HibernateUtil;
 
 /**
@@ -38,7 +50,7 @@ import br.com.itx.util.HibernateUtil;
  */
 @Name(ProcessoEpaDAO.NAME)
 @AutoCreate
-public class ProcessoEpaDAO extends GenericDAO {
+public class ProcessoEpaDAO extends DAO<ProcessoEpa, Integer> {
 
     private static final long serialVersionUID = 8899227886410190168L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoEpaDAO.class);
@@ -55,7 +67,7 @@ public class ProcessoEpaDAO extends GenericDAO {
     }
 
     public ProcessoEpa getProcessoEpaByProcesso(Processo processo) {
-        return find(ProcessoEpa.class, processo.getIdProcesso());
+        return find(processo.getIdProcesso());
     }
 
     private ProcessoEpa getProcessoEpaByIdJbpm(Long idJbpm) {

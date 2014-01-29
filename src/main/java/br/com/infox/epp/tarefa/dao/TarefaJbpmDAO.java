@@ -5,11 +5,12 @@ import static br.com.infox.epp.tarefa.query.TarefaJbpmQuery.INSERT_TAREFA_VERSIO
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.tarefa.entity.TarefaJbpm;
 
 @Name(TarefaJbpmDAO.NAME)
 @AutoCreate
-public class TarefaJbpmDAO extends GenericDAO {
+public class TarefaJbpmDAO extends DAO<TarefaJbpm, Integer> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tarefaJbpmDAO";

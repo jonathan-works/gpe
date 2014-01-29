@@ -29,7 +29,7 @@ public final class TimerUtil {
 			final HashMap<String,Object> params = new HashMap<>();
 			params.put("nome", nome);
 		    final String hql = "select p from Parametro p where nomeVariavel = :nome";
-		    final Parametro result = dao.getSingleResult(hql, params);
+		    final Parametro result = (Parametro) dao.getSingleResult(hql, params);
 			if (result != null) {
 				valor = result.getValorVariavel();
 				Contexts.getApplicationContext().set(nome, valor);

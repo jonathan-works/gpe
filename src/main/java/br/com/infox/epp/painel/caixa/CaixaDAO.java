@@ -9,11 +9,11 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 
 @Name(CaixaDAO.NAME)
 @AutoCreate
-public class CaixaDAO extends GenericDAO {
+public class CaixaDAO extends DAO<Caixa, Integer> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "caixaDAO";

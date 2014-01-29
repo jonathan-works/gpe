@@ -12,13 +12,13 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 
 @Name(TipoProcessoDocumentoDAO.NAME)
 @AutoCreate
-public class TipoProcessoDocumentoDAO extends GenericDAO {
+public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento, Integer> {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoProcessoDocumentoDAO";
