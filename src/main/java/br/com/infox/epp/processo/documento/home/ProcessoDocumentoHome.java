@@ -61,7 +61,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     private ModeloDocumento modeloDocumentoCombo;
     private boolean isModelo = Boolean.TRUE;
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
-    private String documento;
     private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
     public static ProcessoDocumentoHome instance() {
@@ -269,11 +268,4 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         return ret;
     }
 
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
 }
