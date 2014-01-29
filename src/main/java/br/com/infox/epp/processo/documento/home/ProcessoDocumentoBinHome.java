@@ -53,7 +53,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
     public static final String NAME = "processoDocumentoBinHome";
 
     private static final int TAMANHO_MAXIMO_ARQUIVO = 1572864;
-    private ProcessoDocumento processoDocumento;
     private boolean isModelo;
     private boolean ignoraConteudoDocumento = Boolean.FALSE;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoBinHome.class);
@@ -102,14 +101,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         getEntityManager().merge(processoDocumento);
         getEntityManager().flush();
         FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
-    }
-
-    public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
-        this.processoDocumento = processoDocumento;
-    }
-
-    public ProcessoDocumento getProcessoDocumento() {
-        return processoDocumento;
     }
 
     public boolean isModelo() {
