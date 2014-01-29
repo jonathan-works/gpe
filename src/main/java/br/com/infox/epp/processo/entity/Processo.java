@@ -40,7 +40,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_ORIGEM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY;
@@ -106,7 +105,6 @@ public class Processo implements java.io.Serializable {
     private int idProcesso;
     private UsuarioLogin usuarioCadastroProcesso;
     private String numeroProcesso;
-    private String numeroProcessoOrigem;
     private Date dataInicio;
     private Date dataFim;
     private Long duracao;
@@ -153,16 +151,6 @@ public class Processo implements java.io.Serializable {
 
     public void setNumeroProcesso(String numeroProcesso) {
         this.numeroProcesso = numeroProcesso;
-    }
-
-    @Column(name = NUMERO_PROCESSO_ORIGEM, length = NUMERACAO_PROCESSO)
-    @Size(max = NUMERACAO_PROCESSO)
-    public String getNumeroProcessoOrigem() {
-        return this.numeroProcessoOrigem;
-    }
-
-    public void setNumeroProcessoOrigem(String numeroProcessoOrigem) {
-        this.numeroProcessoOrigem = numeroProcessoOrigem;
     }
 
     @Temporal(TIMESTAMP)
