@@ -33,9 +33,9 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> {
 	private Fluxo fluxo;
 	
 	@Override
-	protected boolean beforeSave() {
+	protected boolean isInstanceValid() {
 		getInstance().setFluxo(fluxo);
-		return super.beforeSave();
+		return super.isInstanceValid();
 	}
 	
 	@Override

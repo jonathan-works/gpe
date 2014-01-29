@@ -27,7 +27,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     }
     
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         final Localizacao localizacao = getInstance();
         
         final Boolean isEstrutura = localizacao.getEstrutura();
@@ -45,7 +45,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
                 }
             }
         }
-        return super.beforeSave();
+        return super.isInstanceValid();
     }
     
     protected void limparTrees(){

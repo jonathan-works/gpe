@@ -52,9 +52,9 @@ public class CalendarioEventosCrudAction extends AbstractCrudAction<CalendarioEv
     }
     
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         setData();
-        return super.beforeSave();
+        return super.isInstanceValid();
     }
 
 }

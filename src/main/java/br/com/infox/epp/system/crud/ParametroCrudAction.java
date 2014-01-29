@@ -14,10 +14,10 @@ public class ParametroCrudAction extends AbstractCrudAction<Parametro> {
     public static final String NAME = "parametroCrudAction";
     
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         getInstance().setUsuarioModificacao(Authenticator.getUsuarioLogado());
         getInstance().setDataAtualizacao(new Date());
-        return super.beforeSave();
+        return super.isInstanceValid();
     }
 
 }

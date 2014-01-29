@@ -38,9 +38,9 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	private DocumentoFisicoManager documentoFisicoManager;
 
 	@Override
-	protected boolean beforeSave() {
+	protected boolean isInstanceValid() {
 		getInstance().setProcesso(processo);
-		return super.beforeSave();
+		return super.isInstanceValid();
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
     }
 
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         validarPermanencia();
         return Boolean.TRUE;
     }

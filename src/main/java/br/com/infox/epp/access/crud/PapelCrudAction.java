@@ -308,7 +308,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	}
 
 	@Override
-	protected boolean beforeSave() {
+	protected boolean isInstanceValid() {
 	    boolean result = Boolean.TRUE;
 	    if (IdentityManager.instance().roleExists(getInstance().getIdentificador()) && !isManaged()) {
 	        getMessagesHandler().clear();

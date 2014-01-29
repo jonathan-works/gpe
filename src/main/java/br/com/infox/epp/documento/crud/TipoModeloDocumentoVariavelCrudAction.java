@@ -25,9 +25,9 @@ public class TipoModeloDocumentoVariavelCrudAction extends
 	}
 	
 	@Override
-	protected boolean beforeSave() {
+	protected boolean isInstanceValid() {
 		getInstance().setTipoModeloDocumento(tipoModeloDocumentoAtual);
-		return super.beforeSave();
+		return super.isInstanceValid();
 	}
 	
 	@Override

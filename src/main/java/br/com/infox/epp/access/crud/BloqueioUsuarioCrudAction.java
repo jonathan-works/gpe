@@ -42,7 +42,7 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     }
 
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         final BloqueioUsuario bloqueioUsuario = getInstance();
         if (!this.usuarioAtual.getBloqueio()
                 && bloqueioUsuario.getDataBloqueio() != null) {

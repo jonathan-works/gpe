@@ -21,11 +21,11 @@ public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<Loc
     }
     
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         if (getInstance().getLocalizacaoFisicaPai() != null && !getInstance().getLocalizacaoFisicaPai().getAtivo()){
             getInstance().setAtivo(false);
         }
-        return super.beforeSave();
+        return super.isInstanceValid();
     }
     
     @Override

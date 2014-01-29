@@ -73,11 +73,11 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
     }
 
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         this.getInstance().setAccessToken(accessToken);
         this.getInstance().setUsuario(usuario);
         this.getInstance().setLocalizacao(localizacao);
-        return super.beforeSave();
+        return super.isInstanceValid();
     }
 
     @Override

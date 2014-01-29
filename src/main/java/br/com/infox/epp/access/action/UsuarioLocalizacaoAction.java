@@ -77,7 +77,7 @@ public class UsuarioLocalizacaoAction extends AbstractCrudAction<UsuarioLocaliza
     }
 	
 	@Override
-	protected boolean beforeSave() {
+	protected boolean isInstanceValid() {
 		GenericDAO usuarioLocalizacaoDAO = (GenericDAO) Component.getInstance(UsuarioLocalizacaoDAO.NAME);
 		try {
 			usuarioLocalizacaoDAO.persist(getInstance());

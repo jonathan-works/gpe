@@ -55,7 +55,7 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extend
     }
     
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
     	try {
     		updateRecursivePath();
     	} catch (RecursiveException e) {

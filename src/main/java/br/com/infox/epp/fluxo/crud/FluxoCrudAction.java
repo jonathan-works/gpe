@@ -66,7 +66,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
 	}
     
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         final Date dataFimPublicacao = getInstance().getDataFimPublicacao();
         if (isValidaDataFimPublicacao(dataFimPublicacao)){
             FacesMessages.instance().add(Severity.ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
@@ -74,7 +74,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
         }
         
         verificaPublicacao();
-        return super.beforeSave();
+        return super.isInstanceValid();
     }
     
     private boolean isValidaDataFimPublicacao(final Date dataFimPublicacao) {

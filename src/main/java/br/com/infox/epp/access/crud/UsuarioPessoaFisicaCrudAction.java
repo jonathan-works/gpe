@@ -52,7 +52,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
     }
     
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         final PessoaFisica entityInstance = getInstance();
         if (entityInstance != null && entityInstance.getAtivo() == null){
             entityInstance.setAtivo(Boolean.TRUE);
