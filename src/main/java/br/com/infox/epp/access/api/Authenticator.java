@@ -43,9 +43,10 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.operation.ChangePasswordOperation;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
+import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -166,7 +167,7 @@ public class Authenticator {
 		if (newPassword1.equals(newPassword2)){
 		    new ChangePasswordOperation(usuario.getLogin(), newPassword1).run();
 			usuario.setProvisorio(false);
-			getGenericDAO().update(usuario);
+			getUsuarioLoginDAO().update(usuario);
 			getMessagesHandler().add("Senha alterada com sucesso.");
 		} else {
 		    throw new LoginException("Nova senha não confere com a confirmação!");
@@ -332,8 +333,7 @@ public class Authenticator {
     public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
         UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(
                 USUARIO_LOCALIZACAO_ATUAL);
-        usuarioLocalizacao = getGenericDAO().find(UsuarioLocalizacao.class, 
-                usuarioLocalizacao.getIdUsuarioLocalizacao());
+        usuarioLocalizacao = getUsuarioLocalizacaoDAO().find(usuarioLocalizacao.getIdUsuarioLocalizacao());
         return usuarioLocalizacao;
     }
     
@@ -341,8 +341,12 @@ public class Authenticator {
         return getUsuarioLocalizacaoAtual().getResponsavelLocalizacao();
     }
 
-    private static GenericDAO getGenericDAO() {
-        return (GenericDAO) Component.getInstance(GenericDAO.NAME);
+    private static UsuarioLoginDAO getUsuarioLoginDAO() {
+        return (UsuarioLoginDAO) Component.getInstance(UsuarioLoginDAO.NAME);
+    }
+    
+    private static UsuarioLocalizacaoDAO getUsuarioLocalizacaoDAO() {
+        return (UsuarioLocalizacaoDAO) Component.getInstance(UsuarioLocalizacaoDAO.NAME);
     }
 	
 	/**
@@ -371,7 +375,7 @@ public class Authenticator {
 	 */
 	public static UsuarioLogin getUsuarioLogado() {
 		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
-		return getGenericDAO().find(usuario.getClass(), usuario.getIdUsuarioLogin());
+		return getUsuarioLoginDAO().find(usuario.getIdUsuarioLogin());
 	}
 	
 	public void setLogin(String login) {

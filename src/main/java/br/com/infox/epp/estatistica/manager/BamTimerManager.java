@@ -49,7 +49,7 @@ public class BamTimerManager extends GenericManager {
             final String hql = "select p from Parametro p where nomeVariavel = :nome";
             
             final GenericDAO dao = ComponentUtil.getComponent(GenericDAO.NAME);
-            final Parametro result = dao.getSingleResult(hql, params);
+            final Parametro result = (Parametro) dao.getSingleResult(hql, params);
             if (result != null) {
                 valor = result.getValorVariavel();
                 Contexts.getApplicationContext().set(nome, valor);

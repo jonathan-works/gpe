@@ -15,13 +15,14 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Events;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(SituacaoProcessoDAO.NAME)
 @AutoCreate
-public class SituacaoProcessoDAO extends GenericDAO {
+public class SituacaoProcessoDAO extends DAO<SituacaoProcesso, Long> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "situacaoProcessoDAO";

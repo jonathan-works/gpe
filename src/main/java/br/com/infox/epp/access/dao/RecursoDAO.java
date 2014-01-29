@@ -15,13 +15,13 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
 
 @Name(RecursoDAO.NAME)
 @AutoCreate
-public class RecursoDAO extends GenericDAO {
+public class RecursoDAO extends DAO<Recurso, Integer> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "recursoDAO";

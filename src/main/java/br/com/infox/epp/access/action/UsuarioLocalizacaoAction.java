@@ -18,9 +18,12 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
+import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -75,7 +78,15 @@ public class UsuarioLocalizacaoAction extends AbstractCrudAction<UsuarioLocaliza
 	
 	@Override
 	protected boolean beforeSave() {
-	    return !existeUsuarioLocalizacao(getInstance());
+		GenericDAO usuarioLocalizacaoDAO = (GenericDAO) Component.getInstance(UsuarioLocalizacaoDAO.NAME);
+		try {
+			usuarioLocalizacaoDAO.persist(getInstance());
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+//	    return !existeUsuarioLocalizacao(getInstance());
 	}
 	
 	@Override

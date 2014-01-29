@@ -1,20 +1,25 @@
 package br.com.infox.epp.fluxo.dao;
 
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.COUNT_BY_CATEGORIA_ITEM;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.LIST_BY_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.QUERY_PARAM_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.QUERY_PARAM_ITEM;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.core.dao.GenericDAO;
+
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
-import static br.com.infox.epp.fluxo.query.CategoriaItemQuery.*;
 
 @Name(CategoriaItemDAO.NAME)
 @AutoCreate
-public class CategoriaItemDAO extends GenericDAO {
+public class CategoriaItemDAO extends DAO<CategoriaItem, Integer> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "categoriaItemDAO";

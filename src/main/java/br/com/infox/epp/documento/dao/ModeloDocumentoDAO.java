@@ -16,14 +16,14 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 
 @Name(ModeloDocumentoDAO.NAME)
 @AutoCreate
-public class ModeloDocumentoDAO extends GenericDAO {
+public class ModeloDocumentoDAO extends DAO<ModeloDocumento, Integer> {
     private static final long serialVersionUID = -39703831180567768L;
     public static final String NAME = "modeloDocumentoDAO";
 

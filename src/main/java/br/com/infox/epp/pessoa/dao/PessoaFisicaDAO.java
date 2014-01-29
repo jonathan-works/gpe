@@ -5,12 +5,12 @@ import java.util.HashMap;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(PessoaFisicaDAO.NAME)
 @AutoCreate
-public class PessoaFisicaDAO extends GenericDAO {
+public class PessoaFisicaDAO extends DAO<PessoaFisica, Integer> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "pessoaFisicaDAO";

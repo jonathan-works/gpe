@@ -15,14 +15,14 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 
 @Name(UsuarioLocalizacaoDAO.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class UsuarioLocalizacaoDAO extends GenericDAO {
+public class UsuarioLocalizacaoDAO extends DAO<UsuarioLocalizacao, Integer> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioLocalizacaoDAO";
@@ -47,14 +47,10 @@ public class UsuarioLocalizacaoDAO extends GenericDAO {
 	}
 	
 	@Override
-	public <T> T persist(final T object) throws DAOException {
-	    //TODO: Essa verificação é mesmo necessária?
-		if (object instanceof UsuarioLocalizacao) {
-			final UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) object;
-			if (existeUsuarioLocalizacao(usuarioLocalizacao)) {
-				throw new DAOException("#{messages['constraintViolation.uniqueViolation']}");
-			}
+	public UsuarioLocalizacao persist(final UsuarioLocalizacao usuarioLocalizacao) throws DAOException {
+		if (existeUsuarioLocalizacao(usuarioLocalizacao)) {
+			throw new DAOException("#{messages['constraintViolation.uniqueViolation']}");
 		}
-		return super.persist(object);
+		return super.persist(usuarioLocalizacao);
 	}
 }

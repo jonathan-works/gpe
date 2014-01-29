@@ -10,13 +10,13 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 
 @Name(VariavelDAO.NAME)
 @AutoCreate
-public class VariavelDAO extends GenericDAO {
+public class VariavelDAO extends DAO<Variavel, Integer> {
 
 	public static final String NAME = "variavelDAO";
 	private static final long serialVersionUID = 1L;

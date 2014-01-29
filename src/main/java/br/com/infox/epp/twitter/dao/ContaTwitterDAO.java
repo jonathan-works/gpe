@@ -1,6 +1,13 @@
 package br.com.infox.epp.twitter.dao;
 
-import static br.com.infox.epp.twitter.query.ContaTwitterQuery.*;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_ID_USUARIO;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_LOCALIZACAO;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.CONTA_TWITTER_BY_USUARIO;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.ID_GRUPO_EMAIL_PARAM;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.ID_USUARIO_PARAM;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.LIST_TWITTER_BY_ID_GRUPO_EMAIL;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.LOCALIZACAO_PARAM;
+import static br.com.infox.epp.twitter.query.ContaTwitterQuery.USUARIO_PARAM;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,14 +16,14 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 
 @Name(ContaTwitterDAO.NAME)
 @AutoCreate
-public class ContaTwitterDAO extends GenericDAO {
+public class ContaTwitterDAO extends DAO<ContaTwitter, Long> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "contaTwitterDAO";

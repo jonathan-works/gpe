@@ -22,14 +22,14 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.TransactionPropagationType;
 import org.jboss.seam.annotations.Transactional;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(ProcessoDAO.NAME)
 @AutoCreate
-public class ProcessoDAO extends GenericDAO {
+public class ProcessoDAO extends DAO<Processo, Integer> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoDAO";
