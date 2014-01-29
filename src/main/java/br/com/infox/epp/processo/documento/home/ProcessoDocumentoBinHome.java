@@ -218,10 +218,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         return ret;
     }
 
-    public List<ProcessoDocumento> getProcessoDocumentoList() {
-        return getInstance() == null ? null : getInstance().getProcessoDocumentoList();
-    }
-
     public boolean isHouveErroAoAssinar() {
         return houveErroAoAssinar;
     }
