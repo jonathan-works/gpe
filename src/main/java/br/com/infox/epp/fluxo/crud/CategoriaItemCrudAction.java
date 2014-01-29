@@ -1,6 +1,5 @@
 package br.com.infox.epp.fluxo.crud;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import org.jboss.seam.Component;
@@ -18,7 +17,7 @@ import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 
 @Name(CategoriaItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem> implements Serializable {
+public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem> {
     private static final long serialVersionUID = 1L;
     
     public static final String NAME = "categoriaItemCrudAction";

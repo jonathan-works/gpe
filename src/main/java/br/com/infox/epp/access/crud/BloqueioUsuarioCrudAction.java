@@ -1,6 +1,5 @@
 package br.com.infox.epp.access.crud;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.jboss.seam.annotations.In;
@@ -15,7 +14,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 
 @Name(BloqueioUsuarioCrudAction.NAME)
-public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario> implements Serializable {
+public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario> {
     
     private static final long serialVersionUID = 1L;
 
@@ -76,7 +75,7 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
         if (UPDATED.equals(ret) || PERSISTED.equals(ret)) {
             try {
                 bloqueioUsuarioManager.update(this.usuarioAtual);
-            } catch (DAOException e) {
+            } catch (final DAOException e) {
                 LOG.error("Não foi possível atualizar as modificações em " + usuarioAtual, e);
             }
         }

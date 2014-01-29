@@ -1,6 +1,5 @@
 package br.com.infox.epp.fluxo.crud;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,7 +19,7 @@ import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
 
 @Name(FluxoPapelAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements Serializable {
+public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(FluxoPapelAction.class);
 
@@ -46,8 +45,8 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 	}
 	
 	@Override
-	public String remove(FluxoPapel obj) {
-		String remove = super.remove(obj);
+	public String remove(final FluxoPapel obj) {
+		final String remove = super.remove(obj);
 		if(remove != null) {
 			getFluxoPapelList().remove(obj);
 		}
@@ -55,11 +54,11 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 	}
 
 	public void removeAll() {
-		for (Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
-			FluxoPapel nl = iterator.next();
+		for (final Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
+			final FluxoPapel nl = iterator.next();
 			try {
 				getGenericManager().remove(nl);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 			    LOG.error(".removeAll()", e);
 			}
 			iterator.remove();
@@ -67,7 +66,7 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 		FacesMessages.instance().add("Registros removidos com sucesso!");
 	}
 		
-	public void init(Fluxo fluxo) {
+	public void init(final Fluxo fluxo) {
 		this.fluxo = fluxo;
 		listByNatureza();
 	}
@@ -76,7 +75,7 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 		setFluxoPapelList(fluxoPapelManager.listByFluxo(fluxo));
 	}
 
-	public void setPapelTreeHandler(PapelTreeHandler papelTreeHandler) {
+	public void setPapelTreeHandler(final PapelTreeHandler papelTreeHandler) {
 		this.papelTreeHandler = papelTreeHandler;
 	}
 
@@ -84,7 +83,7 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> implements 
 		return papelTreeHandler;
 	}
 
-	public void setFluxoPapelList(List<FluxoPapel> fluxoPapelList) {
+	public void setFluxoPapelList(final List<FluxoPapel> fluxoPapelList) {
 		this.fluxoPapelList = fluxoPapelList;
 	}
 

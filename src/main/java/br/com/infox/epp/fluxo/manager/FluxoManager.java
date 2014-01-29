@@ -5,6 +5,7 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -15,7 +16,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
  */
 @Name(FluxoManager.NAME)
 @AutoCreate
-public class FluxoManager extends GenericManager{
+public class FluxoManager extends GenericManager {
 
 	private static final long serialVersionUID = -6521661616139554331L;
 	private static final Class<Fluxo> CLASS = Fluxo.class;
@@ -37,23 +38,23 @@ public class FluxoManager extends GenericManager{
 	    return findAll(CLASS);
 	}
 
-	public boolean contemProcessoAtrasado(Fluxo fluxo) {
+	public boolean contemProcessoAtrasado(final Fluxo fluxo) {
 		return fluxoDAO.quantidadeProcessosAtrasados(fluxo) > 0;
 	}
 	
-	public Fluxo getFluxoByDescricao(String descricao){
+	public Fluxo getFluxoByDescricao(final String descricao){
 		return fluxoDAO.getFluxoByDescricao(descricao);
 	}
 	
-	public boolean existemProcessosAssociadosAFluxo(Fluxo fluxo){
+	public boolean existemProcessosAssociadosAFluxo(final Fluxo fluxo){
 		return fluxoDAO.getQuantidadeDeProcessoAssociadosAFluxo(fluxo) > 0;
 	}
 	
-	public boolean existeFluxoComDescricao(String descricao) {
+	public boolean existeFluxoComDescricao(final String descricao) {
 		return fluxoDAO.existeFluxoComDescricao(descricao);
 	}
 	
-	public boolean existeFluxoComCodigo(String codigo) {
+	public boolean existeFluxoComCodigo(final String codigo) {
 		return fluxoDAO.existeFluxoComCodigo(codigo);
 	}
 }
