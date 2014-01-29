@@ -1,6 +1,8 @@
 package br.com.infox.core.controller;
 
-public interface Controller {
+import java.io.Serializable;
+
+public interface Controller extends Serializable {
     
     /**
      * Id na página para a tab de pesquisa no tabPanel.
