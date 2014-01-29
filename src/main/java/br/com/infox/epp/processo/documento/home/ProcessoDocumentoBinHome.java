@@ -37,6 +37,7 @@ import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.FileHome;
@@ -52,7 +53,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
 
     public static final String NAME = "processoDocumentoBinHome";
 
-    private static final int TAMANHO_MAXIMO_ARQUIVO = 1572864;
     private boolean isModelo;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoBinHome.class);
 
@@ -60,6 +60,8 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
 
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In
+    private ProcessoDocumentoBinManager processoDocumentoBinManager;
 
     public String getSignature() {
         return signature;
@@ -153,7 +155,7 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
             ret = super.persist();
         } else {
             FileHome file = FileHome.instance();
-            if (isDocumentoBinValido(file)) {
+            if (processoDocumentoBinManager.isDocumentoBinValido(file)) {
                 ProcessoDocumentoBin instance = getInstance();
                 instance.setUsuario(Authenticator.getUsuarioLogado());
                 instance.setExtensao(file.getFileType());
@@ -178,22 +180,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
             }
         }
         return ret;
-    }
-
-    private boolean isDocumentoBinValido(FileHome file) {
-        if (file == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Nenhum documento selecionado.");
-            return false;
-        }
-        if (!file.getFileType().equalsIgnoreCase("PDF")) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ser do tipo PDF.");
-            return false;
-        }
-        if (file.getSize() != null && file.getSize() > TAMANHO_MAXIMO_ARQUIVO) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de 1.5MB!");
-            return false;
-        }
-        return true;
     }
 
     @Override
