@@ -30,7 +30,7 @@
                 <wi:dataTable
                     values="#{consultaProcessoExterno.list(15)}"
                     bean="#{consultaProcessoExterno}"
-                    tableTitle="#{messages['consultaExterna.titleGrid']}"
+                    tableTitle="#{messages['consultaExterna.tableTitle']}"
                     id="consultaProcessoExterno"
                     rowId="#{row.idProcesso}"
                     showGrid="#{consultaProcessoExterno.exibirTable}">
@@ -83,7 +83,7 @@
                 <wi:dataTable
                     values="#{consultaProcessoExternoPorPartes.list(15)}"
                     bean="#{consultaProcessoExternoPorPartes}"
-                    tableTitle="#{messages['consultaExternaPorPartes.titleGrid']}"
+                    tableTitle="#{messages['consultaExternaPorPartes.tableTitle']}"
                     id="consultaProcessoExternoPorPartes"
                     rowId="#{row.idProcesso}"
                     showGrid="#{consultaProcessoExternoPorPartes.exibirTable}">

@@ -36,7 +36,7 @@
 		<wi:dataTable
 			values="#{usuarioLoginList.list(15)}"
 			bean="#{usuarioLoginList}"
-			tableTitle="#{messages['usuario.titleGrid']}"
+			tableTitle="#{messages['usuario.tableTitle']}"
 			id="usuarioLoginList"
 			rowId="#{row.idUsuarioLogin}">
 
@@ -349,7 +349,7 @@
 				<wi:dataTable
 					values="#{bloqueioUsuarioList.list(15)}"
 					bean="#{bloqueioUsuarioList}"
-					tableTitle="#{messages['bloqueioUsuario.titleGrid']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
+					tableTitle="#{messages['bloqueioUsuario.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
 					id="bloqueioUsuarioList"
 					rowId="#{row.idBloqueioUsuario}"
 					showToolbarColumn="false">

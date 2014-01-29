@@ -68,12 +68,12 @@
                                     valueDateFrom="#{home.instance.dataInicio}"
                                     valueDateTo="#{home.instance.dataFim}" />
                                 <wi:selectOneMenuEntity id="natureza"
-                                    label="#{messages['natureza.titleGrid']}"
+                                    label="#{messages['natureza.tableTitle']}"
                                     value="#{home.instance.natureza}"
                                     noSelectionLabel="#{messages['crud.select.select']}"
                                     items="#{home.naturezaList}" />
                                 <wi:selectOneMenuEntity id="categoria"
-                                    label="#{messages['categoria.titleGrid']}"
+                                    label="#{messages['categoria.tableTitle']}"
                                     value="#{home.instance.categoria}"
                                     noSelectionLabel="#{messages['crud.select.select']}"
                                     inNewLine="true"
@@ -101,7 +101,7 @@
                             value="#{row.itemDoProcesso}" />
                         <wi:columnOutputText
                             columnId="prioridadeProcesso"
-                            columnHeader="#{messages['prioridadeProcesso.titleGrid']}"
+                            columnHeader="#{messages['prioridadeProcesso.tableTitle']}"
                             value="#{row.prioridadeProcesso}" />
 
                         <infox:dynamicColumns

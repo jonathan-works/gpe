@@ -37,7 +37,7 @@
         <wi:dataTable
             values="#{tipoModeloDocumentoList.list(15)}"
             bean="#{tipoModeloDocumentoList}"
-            tableTitle="#{messages['tipoModeloDocumento.titleGrid']}"
+            tableTitle="#{messages['tipoModeloDocumento.tableTitle']}"
             id="tipoModeloDocumentoList"
             rowId="#{row.idTipoModeloDocumento}">
             <ui:define name="searchForm">
@@ -154,7 +154,7 @@
 				<wi:dataTable
 				    values="#{associatedVariavelTipoModeloList.list(15)}"
 				    bean="#{associatedVariavelTipoModeloList}"
-				    tableTitle="#{messages['associatedVariavelTipoModelo.titleGrid']}"
+				    tableTitle="#{messages['associatedVariavelTipoModelo.tableTitle']}"
 				    id="associatedVariavelTipoModeloList"
 				    rowId="#{row.idVariavelTipoModelo}"
 				    panelStyleClass="picklist"
@@ -188,7 +188,7 @@
 				<wi:dataTable
 				    values="#{associativeVariavelList.list(15)}"
 				    bean="#{associativeVariavelList}"
-				    tableTitle="#{messages['associativeVariavel.titleGrid']}"
+				    tableTitle="#{messages['associativeVariavel.tableTitle']}"
 				    id="associativeVariavelList"
 				    rowId="#{row.idVariavel}"
 				    panelStyleClass="picklist"
@@ -267,7 +267,7 @@
             <wi:dataTable
                 values="#{tipoModeloDocumentoPapelList.list(15)}"
                 bean="#{tipoModeloDocumentoPapelList}"
-                tableTitle="#{messages['tipoModeloDocumentoPapel.titleGrid']}"
+                tableTitle="#{messages['tipoModeloDocumentoPapel.tableTitle']}"
                 id="tipoModeloDocumentoPapelList"
                 rowId="#{row.idTipoModeloDocumentoPapel}"
 				searchFormStyleClass="hidden"
