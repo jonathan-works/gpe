@@ -14,7 +14,6 @@
  */
 package br.com.infox.epp.processo.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
@@ -26,7 +25,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.APAGA_ACTOR_ID_DO_PR
 import static br.com.infox.epp.processo.query.ProcessoQuery.APAGA_ACTOR_ID_DO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.COMPLEMENTO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DURACAO;
@@ -113,7 +111,6 @@ public class Processo implements java.io.Serializable {
     private UsuarioLogin usuarioCadastroProcesso;
     private String numeroProcesso;
     private String numeroProcessoOrigem;
-    private String complemento;
     private Date dataInicio;
     private Date dataFim;
     private Long duracao;
@@ -172,16 +169,6 @@ public class Processo implements java.io.Serializable {
 
     public void setNumeroProcessoOrigem(String numeroProcessoOrigem) {
         this.numeroProcessoOrigem = numeroProcessoOrigem;
-    }
-
-    @Column(name = COMPLEMENTO, length = DESCRICAO_PADRAO)
-    @Size(max = DESCRICAO_PADRAO)
-    public String getComplemento() {
-        return this.complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
     }
 
     @Temporal(TIMESTAMP)

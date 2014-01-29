@@ -11,7 +11,6 @@ public interface ProcessoQuery {
     String ID_USUARIO_CADASTRO_PROCESSO = "id_usuario_cadastro_processo";
     String NUMERO_PROCESSO = "nr_processo";
     String NUMERO_PROCESSO_ORIGEM = "nr_processo_origem";
-    String COMPLEMENTO = "ds_complemento";
     String DATA_INICIO = "dt_inicio";
     String DATA_FIM = "dt_fim";
     String DURACAO = "nr_duracao";

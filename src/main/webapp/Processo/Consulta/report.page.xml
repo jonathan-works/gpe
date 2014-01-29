@@ -12,7 +12,6 @@
 
 <!-- Parametros do searchField -->
 	<param name="numeroProcesso" value="#{processoSearch.numeroProcesso}"/>		
-	<param name="complemento" value="#{processoSearch.complemento}"/>			
 	<param name="fluxo" value="#{fluxoSearch.fluxo}"/>	
 	<param name="dataInicio" value="#{processoSearch.dataInicio}"/>
 	<param value="#{solicitacaoPorProcessoGrid.visibleColumnList}"/>		
