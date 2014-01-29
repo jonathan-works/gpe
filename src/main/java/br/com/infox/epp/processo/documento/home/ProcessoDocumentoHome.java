@@ -156,10 +156,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         return ret;
     }
 
-    public String persistSemLista() {
-        return super.persist();
-    }
-
     protected void setJbpmTask() {
         if (TaskInstance.instance() != null) {
             long idJbpmTask = TaskInstance.instance().getId();

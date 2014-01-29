@@ -199,10 +199,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         return ret;
     }
 
-    public String persistSemLista() {
-        return super.persist();
-    }
-
     private boolean isDocumentoBinValido(FileHome file) {
         if (file == null) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Nenhum documento selecionado.");
