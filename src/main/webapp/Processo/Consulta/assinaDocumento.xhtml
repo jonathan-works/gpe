@@ -31,24 +31,24 @@
             <ui:param name="isBinario"
                 value="#{pd.processoDocumentoBin.isBinario()}" />
             <script>
-			var documento= {
-					useBase64:function useBase64() {
-						return 'true';
-					},
-					getData:function getData() {
-						return "#{pd.processoDocumentoBin.md5Documento}";		
-					},
-					hasSignature:function hasSignature() {
-						return #{rich:jQuery("signature")}.val() != ''
-					},
-					postValidate:function postValidate() {
-						try {
-							submitForm();
-						}catch(e){
-						}
-					}
-			};
-		</script>
+            var documento= {
+                    useBase64:function useBase64() {
+                        return 'true';
+                    },
+                    getData:function getData() {
+                        return "#{pd.processoDocumentoBin.md5Documento}";        
+                    },
+                    hasSignature:function hasSignature() {
+                        return #{rich:jQuery("signature")}.val() != ''
+                    },
+                    postValidate:function postValidate() {
+                        try {
+                            submitForm();
+                        }catch(e){
+                        }
+                    }
+            };
+        </script>
 
             <rich:panel id="painel">
                 <f:facet name="header">Informações: </f:facet>
@@ -73,10 +73,10 @@
                     </div>
                     <h:form id="formValidar">
                         <script>
-						if (!(#{empty pd.processoDocumentoBin.signature or empty pd.processoDocumentoBin.certChain})) {
-							opener.location.reload();
-						}
-						</script>
+                        if (!(#{empty pd.processoDocumentoBin.signature or empty pd.processoDocumentoBin.certChain})) {
+                            opener.location.reload();
+                        }
+                        </script>
                         <h:inputHidden id="certChain"
                             value="#{processoDocumentoBinHome.certChain}" />
                         <h:inputHidden id="signature"
