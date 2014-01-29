@@ -117,7 +117,7 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         super.newInstance();
     }
 
-    public boolean isModeloVazio() {
+    private boolean isModeloVazio() {
         boolean modeloVazio = isModeloVazio(getInstance());
         if (modeloVazio) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O modelo está vazio.");
@@ -125,7 +125,7 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         return modeloVazio;
     }
 
-    public static boolean isModeloVazio(ProcessoDocumentoBin bin) {
+    private static boolean isModeloVazio(ProcessoDocumentoBin bin) {
         return bin == null || Strings.isEmpty(bin.getModeloDocumento())
                 || Strings.isEmpty(removeTags(bin.getModeloDocumento()));
     }
