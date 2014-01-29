@@ -16,7 +16,7 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
@@ -24,7 +24,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 
 @Name(NatCatFluxoLocalizacaoDAO.NAME)
 @AutoCreate
-public class NatCatFluxoLocalizacaoDAO extends GenericDAO {
+public class NatCatFluxoLocalizacaoDAO extends DAO<NatCatFluxoLocalizacao, Integer> {
 
     private static final long serialVersionUID = -4306540893162078405L;
     public static final String NAME = "natCatFluxoLocalizacaoDAO";

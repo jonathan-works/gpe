@@ -15,13 +15,13 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Name(BloqueioUsuarioDAO.NAME)
 @AutoCreate
-public class BloqueioUsuarioDAO extends GenericDAO {
+public class BloqueioUsuarioDAO extends DAO<BloqueioUsuario, Integer> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "bloqueioUsuarioDAO";

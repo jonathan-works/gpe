@@ -1,5 +1,7 @@
 package br.com.infox.core.manager;
 
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.dao.DAO;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.persistence.DAOException;
 
@@ -40,20 +43,23 @@ public class GenericManager implements Serializable {
 		this.genericDAO = (GenericDAO) Component.getInstance(getDaoName());
 	}
 	
+	@SuppressWarnings(UNCHECKED)
 	public <T> T persist(T o) throws DAOException {
-		return genericDAO.persist(o);
+		return (T) genericDAO.persist(o);
 	}
 	
+	@SuppressWarnings(UNCHECKED)
 	public <T> T update(T o) throws DAOException {
-		return genericDAO.update(o);
+		return (T) genericDAO.update(o);
 	}
 	
+	@SuppressWarnings(UNCHECKED)
 	public <T> T remove(T o) throws DAOException {
-		return genericDAO.remove(o);
+		return (T) genericDAO.remove(o);
 	}
 	
 	public <T> T find(Class<T> c, Object id) {
-		return genericDAO.find(c, id);
+		return (T) genericDAO.find(c, id);
 	}
 	
 	public <T> List<T> findAll(Class<T> clazz) {
@@ -64,8 +70,9 @@ public class GenericManager implements Serializable {
 		return genericDAO.contains(o);
 	}
 	
+	@SuppressWarnings(UNCHECKED)
 	public <T> T merge(T o) throws DAOException {
-		return genericDAO.merge(o);
+		return (T) genericDAO.merge(o);
 	}
 	
 	public <T> void detach(T o) {
@@ -85,10 +92,10 @@ public class GenericManager implements Serializable {
 	}
 
     public Long getSingleResult(final String query, final Map<String, Object> params) {
-        return genericDAO.getSingleResult(query, params);
+        return (Long) genericDAO.getSingleResult(query, params);
     }
 	
-	protected GenericDAO getDao() {
+	protected DAO<?, ?> getDao() {
 		return this.genericDAO;
 	}
 	

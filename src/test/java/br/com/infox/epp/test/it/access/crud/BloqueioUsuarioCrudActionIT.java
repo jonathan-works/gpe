@@ -87,7 +87,6 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
     @Override
     protected void initEntity(final BloqueioUsuario entity,
             final ICrudActions<BloqueioUsuario> crudActions) {
-        // TODO Auto-generated method stub
         //dataPrevisaoDesbloqueio
         crudActions.setEntityValue("dataPrevisaoDesbloqueio", entity.getDataPrevisaoDesbloqueio());
         crudActions.setEntityValue("motivoBloqueio", entity.getMotivoBloqueio());

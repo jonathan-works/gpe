@@ -1,5 +1,8 @@
 package br.com.infox.ibpm.variable.dao;
 
+import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.NAMED_QUERY_GET_DOMINIO;
+import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.PARAM_ID;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,14 +11,13 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.*;
 
 @Name(DominioVariavelTarefaDAO.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class DominioVariavelTarefaDAO extends GenericDAO {
+public class DominioVariavelTarefaDAO extends DAO<DominioVariavelTarefa, Integer> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "dominioVariavelTarefaDAO";

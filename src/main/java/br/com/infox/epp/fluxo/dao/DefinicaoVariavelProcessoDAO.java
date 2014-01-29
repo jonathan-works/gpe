@@ -1,6 +1,6 @@
 package br.com.infox.epp.fluxo.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_FLUXO;
@@ -18,14 +18,14 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 
 @Scope(ScopeType.EVENT)
 @AutoCreate
 @Name(DefinicaoVariavelProcessoDAO.NAME)
-public class DefinicaoVariavelProcessoDAO extends GenericDAO {
+public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso, Long> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "definicaoVariavelProcessoDAO";

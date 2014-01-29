@@ -6,14 +6,15 @@ import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.core.dao.GenericDAO;
+
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.documento.entity.DocumentoFisico;
 import br.com.infox.epp.documento.query.DocumentoFisicoQuery;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Name(DocumentoFisicoDAO.NAME)
 @AutoCreate
-public class DocumentoFisicoDAO extends GenericDAO {
+public class DocumentoFisicoDAO extends DAO<DocumentoFisico, Integer> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoFisicoDAO";

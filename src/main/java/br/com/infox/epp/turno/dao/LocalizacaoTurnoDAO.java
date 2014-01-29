@@ -1,5 +1,22 @@
 package br.com.infox.epp.turno.dao;
 
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.DELETE_TURNOS_ANTERIORES;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_ANO;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_DIA;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_IDPROCESSO;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_ID_TASK_INSTANCE;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_LOCALIZACAO;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_MES;
+
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,11 +28,10 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
-import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.*;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 /**
@@ -25,7 +41,7 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
  */
 @Name(LocalizacaoTurnoDAO.NAME)
 @AutoCreate
-public class LocalizacaoTurnoDAO extends GenericDAO {
+public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno, Integer> {
 
 	private static final long serialVersionUID = 4917008814431859631L;
 	public static final String NAME = "localizacaoTurnoDAO";

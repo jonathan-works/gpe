@@ -7,11 +7,12 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.fluxo.entity.Categoria;
 
 @Name(CategoriaDAO.NAME)
 @AutoCreate
-public class CategoriaDAO extends GenericDAO {
+public class CategoriaDAO extends DAO<Categoria, Integer> {
 
     private static final long serialVersionUID = -7175831474709085125L;
     public static final String NAME = "categoriaDAO";

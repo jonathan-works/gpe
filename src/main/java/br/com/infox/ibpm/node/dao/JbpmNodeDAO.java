@@ -8,12 +8,12 @@ import org.hibernate.SQLQuery;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(JbpmNodeDAO.NAME)
 @AutoCreate
-public class JbpmNodeDAO extends GenericDAO {
+public class JbpmNodeDAO extends DAO<Void, Void> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "jbpmNodeDAO";

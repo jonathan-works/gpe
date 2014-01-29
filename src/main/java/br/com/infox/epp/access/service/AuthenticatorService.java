@@ -25,6 +25,7 @@ import org.jboss.seam.security.management.IdentityManager;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
+import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
@@ -41,6 +42,7 @@ public class AuthenticatorService extends GenericManager {
 	@In private UsuarioLoginManager usuarioLoginManager;
 	@In private BloqueioUsuarioManager bloqueioUsuarioManager;
 	
+	@In private UsuarioLocalizacaoDAO usuarioLocalizacaoDAO;
 	@In private ProcessoDAO processoDAO;
 	
 	private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
@@ -142,7 +144,7 @@ public class AuthenticatorService extends GenericManager {
 		Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
 		if (listUsuarioLoc.size() > 0) {
 			UsuarioLocalizacao loc = listUsuarioLoc.get(0);
-			return processoDAO.getReference(UsuarioLocalizacao.class, loc.getIdUsuarioLocalizacao());
+			return usuarioLocalizacaoDAO.getReference(loc.getIdUsuarioLocalizacao());
 		} 
 		throw new LoginException("O usuário " + usuario + " não possui Localização");
 	}

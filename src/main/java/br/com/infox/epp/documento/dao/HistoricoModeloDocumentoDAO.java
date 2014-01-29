@@ -1,6 +1,8 @@
 package br.com.infox.epp.documento.dao;
 
-import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.*;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.LIST_MODELO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.LIST_USUARIO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.LIST_USUARIO_PARAM_MODELO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,13 +11,14 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 
 @Name(HistoricoModeloDocumentoDAO.NAME)
 @AutoCreate
-public class HistoricoModeloDocumentoDAO extends GenericDAO {
+public class HistoricoModeloDocumentoDAO extends DAO<HistoricoModeloDocumento, Integer> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "historicoModeloDocumentoDAO";

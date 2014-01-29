@@ -13,14 +13,14 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Name(ProcessoDocumentoDAO.NAME)
 @AutoCreate
-public class ProcessoDocumentoDAO extends GenericDAO {
+public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento, Integer> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
@@ -33,7 +33,7 @@ public class ProcessoDocumentoDAO extends GenericDAO {
     }
     
     public Object getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
-        ProcessoDocumento processoDocumento = find(ProcessoDocumento.class, idProcessoDocumento);
+        ProcessoDocumento processoDocumento = find(idProcessoDocumento);
         if (processoDocumento != null) {
             return processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
         }

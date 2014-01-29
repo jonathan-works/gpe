@@ -9,7 +9,7 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.epp.imagem.query.ImagemBinQuery;
@@ -17,7 +17,7 @@ import br.com.itx.util.FileUtil;
 
 @Name(ImagemBinDAO.NAME)
 @AutoCreate
-public class ImagemBinDAO extends GenericDAO {
+public class ImagemBinDAO extends DAO<ImagemBin, Integer> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "imagemBinDAO";

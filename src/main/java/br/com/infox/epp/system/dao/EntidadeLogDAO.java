@@ -1,18 +1,19 @@
 package br.com.infox.epp.system.dao;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.system.entity.EntityLog;
 
 @Name(EntidadeLogDAO.NAME)
 @AutoCreate
-public class EntidadeLogDAO extends GenericDAO {
+public class EntidadeLogDAO extends DAO<EntityLog, Integer> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "entidadeLogDAO";
