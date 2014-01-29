@@ -40,7 +40,6 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.FileHome;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.Crypto;
 
 @Name(ProcessoDocumentoBinHome.NAME)
@@ -63,10 +62,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
 
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
-
-    public static ProcessoDocumentoBinHome instance() {
-        return ComponentUtil.getComponent(NAME);
-    }
 
     public String getSignature() {
         return signature;
