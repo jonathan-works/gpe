@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
+import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
@@ -21,9 +23,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.core.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
@@ -32,7 +34,7 @@ public class Natureza implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int idNatureza;
+	private Integer idNatureza;
 	private String natureza;
 	private Boolean hasPartes;
 	private Boolean ativo;
@@ -40,43 +42,55 @@ public class Natureza implements java.io.Serializable {
 	private List<NaturezaCategoriaFluxo> natCatFluxoList = 
 		new ArrayList<NaturezaCategoriaFluxo>(0);
 	
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATUREZA)
+	public Natureza() {
+	}
+	
+	public Natureza(final String natureza, final Boolean hasPartes, final Boolean ativo) {
+        this.natureza = natureza;
+        this.hasPartes = hasPartes;
+        this.ativo = ativo;
+    }
+
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATUREZA)
 	@Id
 	@GeneratedValue(generator = GENERATOR)
 	@Column(name = ID_NATUREZA, unique = true, nullable = false)
-	public int getIdNatureza() {
+	public Integer getIdNatureza() {
 		return idNatureza;
 	}
-	public void setIdNatureza(int idNatureza) {
+	public void setIdNatureza(final Integer idNatureza) {
 		this.idNatureza = idNatureza;
 	}
 	
-	@Column(name=DESCRICAO_NATUREZA, length=LengthConstants.DESCRICAO_PEQUENA, nullable=false, unique=true)
-	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
+	@Column(name=DESCRICAO_NATUREZA, length=DESCRICAO_PEQUENA, nullable=false, unique=true)
+	@Size(min=FLAG,max=DESCRICAO_PEQUENA)
 	public String getNatureza() {
 		return natureza;
 	}
 	
-	public void setNatureza(String natureza) {
+	public void setNatureza(final String natureza) {
 		this.natureza = natureza;
 	}
 	
 	@Column(name=OBRIGATORIO_PARTES, nullable=false)
+	@NotNull
 	public Boolean getHasPartes() {
 		return hasPartes;
 	}
-	public void setHasPartes(Boolean hasPartes) {
+	public void setHasPartes(final Boolean hasPartes) {
 		this.hasPartes = hasPartes;
 	}
+	
 	@Column(name=ATIVO, nullable=false)
+	@NotNull
 	public Boolean getAtivo() {
 		return ativo;
 	}
 	
-	public void setAtivo(Boolean ativo) {
+	public void setAtivo(final Boolean ativo) {
 		this.ativo = ativo;
 	}
-	public void setNatCatFluxoList(List<NaturezaCategoriaFluxo> natCatFluxoList) {
+	public void setNatCatFluxoList(final List<NaturezaCategoriaFluxo> natCatFluxoList) {
 		this.natCatFluxoList = natCatFluxoList;
 	}
 
@@ -94,11 +108,11 @@ public class Natureza implements java.io.Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + idNatureza;
+        result = prime * result + (idNatureza == null ? 0 : idNatureza.hashCode());
         return result;
     }
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -108,7 +122,7 @@ public class Natureza implements java.io.Serializable {
         if (!(obj instanceof Natureza)) {
             return false;
         }
-        Natureza other = (Natureza) HibernateUtil.removeProxy(obj);
+        final Natureza other = (Natureza) HibernateUtil.removeProxy(obj);
         if (idNatureza != other.idNatureza) {
             return false;
         }
