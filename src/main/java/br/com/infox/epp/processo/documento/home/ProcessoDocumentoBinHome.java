@@ -22,8 +22,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Expressions;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
