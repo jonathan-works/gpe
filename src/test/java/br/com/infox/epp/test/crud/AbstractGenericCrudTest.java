@@ -305,10 +305,10 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             final Integer id = getId();
             assertNotNull("id not null", id);
             resetInstance(id);
-            assertEquals("is active", Boolean.TRUE, getEntityValue(ATIVO));
             assertEquals("inactivate", UPDATED, inactivate());
+            final T newInstance = resetInstance(id);
             assertEquals("is inactive",Boolean.FALSE, getEntityValue(ATIVO));
-            setEntity(resetInstance(id));
+            setEntity(newInstance);
         }
     };
 
@@ -324,10 +324,10 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             assertNotNull("id not null", id);
             resetInstance(id);
             
-            assertEquals("active", Boolean.TRUE,getEntityValue(ATIVO));
             assertEquals("updated", false, UPDATED.equals(inactivate()));
+            final T instance = resetInstance(id);
             assertEquals("active", Boolean.TRUE,getEntityValue(ATIVO));
-            setEntity(resetInstance(id));
+            setEntity(instance);
         }
         
     };
