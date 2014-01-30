@@ -8,6 +8,10 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 @Name(PessoaFisicaCrudAction.NAME)
 public class PessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica> {
 	
-	public static final String NAME = "pessoaFisicaCrudAction";
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "pessoaFisicaCrudAction";
 
 }

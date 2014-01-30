@@ -13,7 +13,12 @@ import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class DominioVariavelTarefaCrudAction extends AbstractCrudAction<DominioVariavelTarefa> {
-	public static final String NAME = "dominioVariavelTarefaCrudAction";
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public static final String NAME = "dominioVariavelTarefaCrudAction";
 	
 	private VariableAccessHandler currentVariable;
 	

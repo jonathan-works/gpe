@@ -9,6 +9,10 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 public class PessoaJuridicaCrudAction extends
 		AbstractCrudAction<PessoaJuridica> {
 	
-	public static final String NAME = "pessoaJuridicaCrudAction";
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "pessoaJuridicaCrudAction";
 
 }

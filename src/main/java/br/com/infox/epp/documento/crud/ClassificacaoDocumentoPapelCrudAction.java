@@ -14,6 +14,11 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
 @Name(ClassificacaoDocumentoPapelCrudAction.NAME)
 public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<TipoProcessoDocumentoPapel> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public static final String NAME = "classificacaoDocumentoPapelCrudAction";
     
     @In private PapelManager papelManager;

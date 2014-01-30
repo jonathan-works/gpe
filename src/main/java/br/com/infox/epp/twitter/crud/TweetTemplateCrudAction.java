@@ -8,6 +8,10 @@ import br.com.infox.epp.twitter.entity.TwitterTemplate;
 @Name(TweetTemplateCrudAction.NAME)
 public class TweetTemplateCrudAction extends AbstractCrudAction<TwitterTemplate> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static final String NAME = "tweetTemplateCrudAction";
 
 }

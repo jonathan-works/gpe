@@ -11,6 +11,10 @@ import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 @Scope(ScopeType.PAGE)
 public class GrupoModeloDocumentoCrudAtion extends AbstractCrudAction<GrupoModeloDocumento> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static final String NAME = "grupoModeloDocumentoCrudAtion";
 
 }

@@ -9,6 +9,11 @@ import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 @Name(LocalizacaoTipoModeloDocumentoCrudAction.NAME)
 public class LocalizacaoTipoModeloDocumentoCrudAction extends AbstractCrudAction<ItemTipoDocumento> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public static final String NAME = "localizacaoTipoModeloDocumentoCrudAction";
     
     private Localizacao localizacaoAtual;

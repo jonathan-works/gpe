@@ -28,6 +28,11 @@ import br.com.itx.util.EntityUtil;
 @Scope(ScopeType.CONVERSATION)
 public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocumento> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public static final String NAME = "modeloDocumentoCrudAction";
     
     private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoCrudAction.class);

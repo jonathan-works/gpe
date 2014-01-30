@@ -32,6 +32,11 @@ import br.com.itx.util.ComponentUtil;
 @Name(BamAction.NAME)
 public class BamAction extends AbstractController {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public static final String NAME = "bamAction";
 
     @In

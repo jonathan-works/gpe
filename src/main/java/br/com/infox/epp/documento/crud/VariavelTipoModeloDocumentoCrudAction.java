@@ -12,7 +12,12 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 public class VariavelTipoModeloDocumentoCrudAction extends
 		AbstractCrudAction<VariavelTipoModelo> {
 	
-	public static final String NAME = "variavelTipoModeloDocumentoCrudAction";
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public static final String NAME = "variavelTipoModeloDocumentoCrudAction";
 	
 	private Variavel variavelAtual;
 

@@ -18,6 +18,11 @@ import br.com.itx.util.ComponentUtil;
 @Name(NatCatFluxoLocalizacaoCrudAction.NAME)
 public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLocalizacao> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public static final String NAME = "natCatFluxoLocalizacaoCrudAction";
     
     private NaturezaCategoriaFluxo naturezaCategoriaFluxoCorrente;

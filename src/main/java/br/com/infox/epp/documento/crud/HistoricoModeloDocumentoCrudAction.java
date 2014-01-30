@@ -17,6 +17,11 @@ import br.com.infox.epp.documento.manager.HistoricoModeloDocumentoManager;
 @Scope(ScopeType.CONVERSATION)
 public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<HistoricoModeloDocumento> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public static final String NAME = "historicoModeloDocumentoCrudAction";
     
     @In HistoricoModeloDocumentoManager historicoModeloDocumentoManager;

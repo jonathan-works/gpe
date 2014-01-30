@@ -13,6 +13,10 @@ import br.com.itx.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<LocalizacaoFisica> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static final String NAME = "localizacaoFisicaCrudAction";
     
     public String inactive(LocalizacaoFisica localizacaoFisica) {

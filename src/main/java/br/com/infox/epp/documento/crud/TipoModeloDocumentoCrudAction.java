@@ -13,7 +13,12 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 @Name(TipoModeloDocumentoCrudAction.NAME)
 public class TipoModeloDocumentoCrudAction extends AbstractCrudAction<TipoModeloDocumento> {
     
-	public static final String NAME = "tipoModeloDocumentoCrudAction";
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public static final String NAME = "tipoModeloDocumentoCrudAction";
 	
 	@In private ModeloDocumentoManager modeloDocumentoManager;
 	

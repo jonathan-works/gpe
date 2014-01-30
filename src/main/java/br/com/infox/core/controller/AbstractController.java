@@ -6,6 +6,10 @@ import org.jboss.seam.annotations.Scope;
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractController implements Controller {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private String tab;
     private Object id;
 

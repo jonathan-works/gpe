@@ -32,7 +32,12 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @Name(UsuarioLocalizacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class UsuarioLocalizacaoAction extends AbstractCrudAction<UsuarioLocalizacao>{
-	public static final String NAME = "usuarioLocalizacaoAction";
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public static final String NAME = "usuarioLocalizacaoAction";
 	
 	private UsuarioLogin usuarioGerenciado;
 	

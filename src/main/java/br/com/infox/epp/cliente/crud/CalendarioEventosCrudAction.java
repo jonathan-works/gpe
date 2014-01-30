@@ -12,6 +12,10 @@ import br.com.infox.epp.cliente.entity.CalendarioEventos;
 @Name(CalendarioEventosCrudAction.NAME)
 public class CalendarioEventosCrudAction extends AbstractCrudAction<CalendarioEventos> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static final String NAME = "calendarioEventosCrudAction";
     
     private void setData()  {

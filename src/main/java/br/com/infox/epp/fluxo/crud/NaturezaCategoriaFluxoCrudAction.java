@@ -17,6 +17,11 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 @Scope(ScopeType.CONVERSATION)
 public class NaturezaCategoriaFluxoCrudAction extends AbstractCrudAction<NaturezaCategoriaFluxo> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public static final String NAME = "naturezaCategoriaFluxoCrudAction";
     
     private List<Natureza> naturezaList;

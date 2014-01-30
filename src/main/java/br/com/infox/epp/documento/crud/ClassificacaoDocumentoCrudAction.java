@@ -8,6 +8,10 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 @Name(ClassificacaoDocumentoCrudAction.NAME)
 public class ClassificacaoDocumentoCrudAction extends AbstractCrudAction<TipoProcessoDocumento> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static final String NAME = "classificacaoDocumentoCrudAction";
     
     @Override

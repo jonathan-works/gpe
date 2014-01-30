@@ -19,6 +19,10 @@ import br.com.infox.epp.ajuda.manager.PaginaManager;
 @Name(AjudaCrudAction.NAME)
 public class AjudaCrudAction extends AbstractCrudAction<Ajuda> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static final String NAME = "ajudaCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(AjudaCrudAction.class);
     

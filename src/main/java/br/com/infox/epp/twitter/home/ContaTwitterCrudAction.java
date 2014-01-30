@@ -30,6 +30,10 @@ import br.com.infox.epp.twitter.util.TwitterUtil;
 @Scope(ScopeType.CONVERSATION)
 public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private static final int UNAUTHORIZED = 401;
     public static final String NAME = "contaTwitterCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(ContaTwitterCrudAction.class);

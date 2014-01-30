@@ -17,6 +17,11 @@ import br.com.itx.util.EntityUtil;
 public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extends 
                             AbstractCrudAction<E> {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     private static final LogProvider LOG = Logging.getLogProvider(AbstractRecursiveCrudAction.class);
     
     private E oldInstance;

@@ -12,7 +12,12 @@ import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 @Name(DocumentoFisicoCrudAction.NAME)
 public class DocumentoFisicoCrudAction extends AbstractCrudAction<DocumentoFisico> {
 	
-	public static final String NAME = "documentoFisicoCrudAction";
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public static final String NAME = "documentoFisicoCrudAction";
 	
 	private List<DocumentoFisico> documentoFisicoList;
 	
