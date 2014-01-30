@@ -14,32 +14,17 @@
  */
 package br.com.infox.epp.processo.documento.home;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
-
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.TaskInstance;
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.util.Strings;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.FileHome;
-import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ProcessoDocumentoHome.NAME)
@@ -53,11 +38,8 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     private ProcessoDocumentoManager processoDocumentoManager;
 
     private static final String PROCESSO_DOCUMENTO_BIN_HOME_NAME = "processoDocumentoBinHome";
-    public static final String PETICAO_INSERIDA = "peticaoInseridaMap";
     private ModeloDocumento modeloDocumentoCombo;
     private boolean isModelo = Boolean.TRUE;
-    private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
-    private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
     public static ProcessoDocumentoHome instance() {
         return ComponentUtil.getComponent(NAME);
@@ -137,18 +119,7 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         instance.setProcesso(ProcessoHome.instance().getInstance());
         setJbpmTask();
 
-        String ret = super.persist();
-        if (ret != null) {
-            if (isModelo) {
-                @SuppressWarnings(UNCHECKED) List<Integer> lista = (List<Integer>) Contexts.getSessionContext().get(PETICAO_INSERIDA);
-                if (lista == null) {
-                    lista = new ArrayList<Integer>();
-                }
-                lista.add(instance.getProcesso().getIdProcesso());
-                Contexts.getSessionContext().set(PETICAO_INSERIDA, lista);
-            }
-        }
-        return ret;
+        return super.persist();
     }
 
     protected void setJbpmTask() {
@@ -160,62 +131,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
 
     private ProcessoDocumentoBinHome getProcessoDocumentoBinHome() {
         return getComponent(PROCESSO_DOCUMENTO_BIN_HOME_NAME);
-    }
-
-    private boolean isCodDataValido(String codIni, ProcessoDocumento pd) {
-        String codData = getCodData(pd);
-        if (Strings.isEmpty(codIni) || Strings.isEmpty(codData)) {
-            return false;
-        }
-        return codData.equals(codIni);
-    }
-
-    public String getCodData(ProcessoDocumento pd) {
-        return dfCodData.format(pd.getDataInclusao());
-    }
-
-    public String getUrlDownloadProcessoDocumento(ProcessoDocumento processoDocumento) {
-        String retorno = MessageFormat.format(URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION, Integer.toString(processoDocumento.getIdProcessoDocumento()), getCodData(processoDocumento), processoDocumento.getProcessoDocumentoBin().getMd5Documento());
-        return new Util().getUrlProject() + retorno;
-    }
-
-    /**
-     * Faz validações de segurança antes de baixar do documento e preencher os
-     * dados do fileHome.
-     * 
-     * @param id - id do ProcessoDocumento
-     * @param codIni - String da data de inclusao no formato
-     *        <code>HHmmssSSS</code>
-     * @param md5 - Md5 do ProcessoDocumentoBin
-     * @throws Exception
-     */
-    public void downloadDocumento(Integer id, String codIni, String md5) {
-        FileHome fileHome = FileHome.instance();
-        ProcessoDocumento pd = getEntityManager().find(ProcessoDocumento.class, id);
-        if (pd == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Processo não encontrado: "
-                    + id);
-            return;
-        } else if (!isCodDataValido(codIni, pd)) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Codigo de verificação inválido.");
-            return;
-        }
-        ProcessoDocumentoBin bin = pd.getProcessoDocumentoBin();
-        if (!bin.getMd5Documento().equals(md5)) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O md5 não bate com o do documento.");
-            return;
-        }
-
-        byte[] data = null;
-        boolean isBin = bin.isBinario();
-        if (bin.isBinario()) {
-            data = DocumentoBinHome.instance().getData(pd.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
-        } else {
-            data = bin.getModeloDocumento().getBytes();
-        }
-        fileHome.setData(data);
-        fileHome.setFileName(isBin ? bin.getNomeArquivo() : pd.getProcessoDocumento()
-                + ".html");
     }
 
     @Override

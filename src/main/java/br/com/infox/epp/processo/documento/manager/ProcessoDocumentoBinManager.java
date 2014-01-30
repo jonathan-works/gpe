@@ -21,7 +21,7 @@ public class ProcessoDocumentoBinManager extends GenericManager {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Nenhum documento selecionado.");
             return false;
         }
-        if (!file.getFileType().equalsIgnoreCase("PDF")) {
+        if (!"PDF".equalsIgnoreCase(file.getFileType())) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ser do tipo PDF.");
             return false;
         }

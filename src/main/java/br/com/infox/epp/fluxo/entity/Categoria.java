@@ -33,87 +33,95 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
-@Table(name=TABLE_CATEGORIA, schema=PUBLIC)
-@NamedQueries(value={
-    @NamedQuery(name=LIST_PROCESSO_EPP_BY_CATEGORIA, query=LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY)
-})
-public class Categoria implements Serializable{
-	private static final long serialVersionUID = 1L;
+@Table(name = TABLE_CATEGORIA, schema = PUBLIC)
+@NamedQueries(value = { @NamedQuery(name = LIST_PROCESSO_EPP_BY_CATEGORIA,
+        query = LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY) })
+public class Categoria implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	private Integer idCategoria;
-	private String categoria;
-	private Boolean ativo;
-	
-	private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList = new ArrayList<>(0);
-	private List<CategoriaItem> categoriaItemList = new ArrayList<>();
-	
-	public Categoria() {}
-	public Categoria(final String categoria, final Boolean ativo) {
-	    this.categoria = categoria;
-	    this.ativo = ativo;
-	}
-	
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_CATEGORIA, unique = true, nullable = false)
-	public Integer getIdCategoria() {
-		return idCategoria;
-	}
-	public void setIdCategoria(final Integer idCategoria) {
-		this.idCategoria = idCategoria;
-	}
-	
-	@Column(name=DESCRICAO_CATEGORIA, length=LengthConstants.DESCRICAO_PEQUENA, nullable=false)
-	@Size(min=1,max=LengthConstants.DESCRICAO_PEQUENA)
-	@NotNull
-	public String getCategoria() {
-		return categoria;
-	}
-	
-	public void setCategoria(final String categoria) {
-		this.categoria = categoria;
-	}
-	
-	@Column(name=ATIVO, nullable=false)
-	@NotNull
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	
-	public void setAtivo(final Boolean ativo) {
-		this.ativo = ativo;
-	}
-	
-	@Override
-	public String toString() {
-		return categoria;
-	}
+    private Integer idCategoria;
+    private String categoria;
+    private Boolean ativo;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = CATEGORIA_ATTRIBUTE, cascade = CascadeType.ALL)
-	public List<CategoriaItem> getCategoriaItemList() {
-		return categoriaItemList;
-	}
-	public void setCategoriaItemList(final List<CategoriaItem> categoriaItemList) {
-		this.categoriaItemList = categoriaItemList;
-	}
-	
-	public void setNaturezaCategoriaFluxoList(
-			final List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
-		this.naturezaCategoriaFluxoList = naturezaCategoriaFluxoList;
-	}
-	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy=CATEGORIA_ATTRIBUTE)
-	public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
-		return naturezaCategoriaFluxoList;
-	}
+    private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList = new ArrayList<>(0);
+    private List<CategoriaItem> categoriaItemList = new ArrayList<>();
+
+    public Categoria() {
+    }
+
+    public Categoria(final String categoria, final Boolean ativo) {
+        this.categoria = categoria;
+        this.ativo = ativo;
+    }
+
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_CATEGORIA, unique = true, nullable = false)
+    public Integer getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(final Integer idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    @Column(name = DESCRICAO_CATEGORIA,
+            length = LengthConstants.DESCRICAO_PEQUENA, nullable = false)
+    @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA)
+    @NotNull
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(final String categoria) {
+        this.categoria = categoria;
+    }
+
+    @Column(name = ATIVO, nullable = false)
+    @NotNull
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(final Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    @Override
+    public String toString() {
+        return categoria;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = CATEGORIA_ATTRIBUTE,
+            cascade = CascadeType.ALL)
+    public List<CategoriaItem> getCategoriaItemList() {
+        return categoriaItemList;
+    }
+
+    public void setCategoriaItemList(final List<CategoriaItem> categoriaItemList) {
+        this.categoriaItemList = categoriaItemList;
+    }
+
+    public void setNaturezaCategoriaFluxoList(
+            final List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
+        this.naturezaCategoriaFluxoList = naturezaCategoriaFluxoList;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = CATEGORIA_ATTRIBUTE)
+    public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
+        return naturezaCategoriaFluxoList;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((idCategoria == null) ? 0 : idCategoria.hashCode());
+        result = prime * result
+                + ((idCategoria == null) ? 0 : idCategoria.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
