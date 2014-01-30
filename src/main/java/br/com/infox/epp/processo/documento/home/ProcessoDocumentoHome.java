@@ -26,12 +26,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Expressions;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
-import org.jboss.seam.util.Base64;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.epp.access.api.Authenticator;
@@ -58,12 +54,9 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
 
     private static final String PROCESSO_DOCUMENTO_BIN_HOME_NAME = "processoDocumentoBinHome";
     public static final String PETICAO_INSERIDA = "peticaoInseridaMap";
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoHome.class);
     private ModeloDocumento modeloDocumentoCombo;
     private boolean isModelo = Boolean.TRUE;
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
-    private String numeroHash;
-    private String documento;
     private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
     public static ProcessoDocumentoHome instance() {
@@ -103,14 +96,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
 
     public void setModeloDocumentoCombo(ModeloDocumento modeloDocumentoCombo) {
         this.modeloDocumentoCombo = modeloDocumentoCombo;
-    }
-
-    public void setProcessoDocumentoIdProcessoDocumento(Integer id) {
-        setId(id);
-    }
-
-    public Integer getProcessoDocumentoIdProcessoDocumento() {
-        return (Integer) getId();
     }
 
     @Override
@@ -166,10 +151,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         return ret;
     }
 
-    public String persistSemLista() {
-        return super.persist();
-    }
-
     protected void setJbpmTask() {
         if (TaskInstance.instance() != null) {
             long idJbpmTask = TaskInstance.instance().getId();
@@ -177,44 +158,8 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         }
     }
 
-    public void processarModelo() {
-        if (modeloDocumentoCombo != null) {
-            ModeloDocumento modeloDocumento = getEntityManager().merge(modeloDocumentoCombo);
-            ProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
-            procDocBinHome.getInstance().setModeloDocumento(processarModelo(modeloDocumento.getModeloDocumento()));
-        }
-    }
-
     private ProcessoDocumentoBinHome getProcessoDocumentoBinHome() {
         return getComponent(PROCESSO_DOCUMENTO_BIN_HOME_NAME);
-    }
-
-    /**
-     * Processa um modelo avaliando linha a linha.
-     * 
-     * @param modelo
-     * @return
-     */
-    public static String processarModelo(String modelo) {
-        if (modelo != null) {
-            StringBuilder modeloProcessado = new StringBuilder();
-            String[] linhas = modelo.split("\n");
-            for (int i = 0; i < linhas.length; i++) {
-                if (modeloProcessado.length() > 0) {
-                    modeloProcessado.append('\n');
-                }
-                Object o = null;
-                try {
-                    o = Expressions.instance().createValueExpression(linhas[i]).getValue();
-                } catch (RuntimeException e) {
-                    LOG.warn("Erro ao avaliar expressão na linha: '"
-                            + linhas[i] + "': " + e.getMessage(), e);
-                }
-                modeloProcessado.append(o);
-            }
-            return modeloProcessado.toString();
-        }
-        return modelo;
     }
 
     private boolean isCodDataValido(String codIni, ProcessoDocumento pd) {
@@ -229,8 +174,7 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         return dfCodData.format(pd.getDataInclusao());
     }
 
-    public String getUrlDownloadProcessoDocumento(
-            ProcessoDocumento processoDocumento) {
+    public String getUrlDownloadProcessoDocumento(ProcessoDocumento processoDocumento) {
         String retorno = MessageFormat.format(URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION, Integer.toString(processoDocumento.getIdProcessoDocumento()), getCodData(processoDocumento), processoDocumento.getProcessoDocumentoBin().getMd5Documento());
         return new Util().getUrlProject() + retorno;
     }
@@ -274,23 +218,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
                 + ".html");
     }
 
-    public String getDocumentoBase64() {
-        if (getInstance() == null
-                || !getInstance().getProcessoDocumentoBin().isBinario()) {
-            return null;
-        }
-        byte[] binario = DocumentoBinHome.instance().getData(getInstance().getProcessoDocumentoBin().getIdProcessoDocumentoBin());
-        return binario != null ? Base64.encodeBytes(binario) : null;
-    }
-
-    public void setNumeroHash(String numeroHash) {
-        this.numeroHash = numeroHash;
-    }
-
-    public String getNumeroHash() {
-        return numeroHash;
-    }
-
     @Override
     public String update() {
         String ret = null;
@@ -301,11 +228,4 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         return ret;
     }
 
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
 }

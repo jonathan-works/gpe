@@ -46,151 +46,161 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
 @Entity
-@Table(name=ProcessoEpa.TABLE_NAME, schema="public")
+@Table(name = ProcessoEpa.TABLE_NAME, schema = "public")
 @PrimaryKeyJoinColumn
-@NamedQueries(value={
-    @NamedQuery(name=LIST_ALL_NOT_ENDED, query=LIST_ALL_NOT_ENDED_QUERY),
-    @NamedQuery(name=PROCESSO_EPA_BY_ID_JBPM, query=PROCESSO_EPA_BY_ID_JBPM_QUERY),
-    @NamedQuery(name=COUNT_PARTES_ATIVAS_DO_PROCESSO, query=COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
-    @NamedQuery(name=ITEM_DO_PROCESSO, query=ITEM_DO_PROCESSO_QUERY),
-    @NamedQuery(name=LIST_NOT_ENDED_BY_FLUXO, query=LIST_NOT_ENDED_BY_FLUXO_QUERY),
-    @NamedQuery(name=DATA_INICIO_PRIMEIRA_TAREFA, query=DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
-    @NamedQuery(name=TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query=TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
-    @NamedQuery(name=TEMPO_GASTO_PROCESSO_EPP, query=TEMPO_GASTO_PROCESSO_EPP_QUERY)
-})
+@NamedQueries(value = {
+    @NamedQuery(name = LIST_ALL_NOT_ENDED, query = LIST_ALL_NOT_ENDED_QUERY),
+    @NamedQuery(name = PROCESSO_EPA_BY_ID_JBPM,
+            query = PROCESSO_EPA_BY_ID_JBPM_QUERY),
+    @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO,
+            query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
+    @NamedQuery(name = ITEM_DO_PROCESSO, query = ITEM_DO_PROCESSO_QUERY),
+    @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO,
+            query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
+    @NamedQuery(name = DATA_INICIO_PRIMEIRA_TAREFA,
+            query = DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
+    @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO,
+            query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
+    @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP,
+            query = TEMPO_GASTO_PROCESSO_EPP_QUERY) })
 public class ProcessoEpa extends Processo {
 
-	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "tb_processo_epa";
+    private static final long serialVersionUID = 1L;
+    public static final String TABLE_NAME = "tb_processo_epa";
 
-	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
-	private Localizacao localizacao;
-	private Integer tempoGasto;
-	private Integer porcentagem;
-	private Item itemDoProcesso;
-	private SituacaoPrazoEnum situacaoPrazo;
-	private Boolean contabilizar = Boolean.TRUE;
-	private PrioridadeProcesso prioridadeProcesso;
-	
-	private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
-	private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
-	
-	public ProcessoEpa() {
-	    super();
+    private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
+    private Localizacao localizacao;
+    private Integer tempoGasto;
+    private Integer porcentagem;
+    private Item itemDoProcesso;
+    private SituacaoPrazoEnum situacaoPrazo;
+    private Boolean contabilizar = Boolean.TRUE;
+    private PrioridadeProcesso prioridadeProcesso;
+
+    private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
+    private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
+
+    public ProcessoEpa() {
+        super();
     }
-	
-	public ProcessoEpa(final SituacaoPrazoEnum situacaoPrazo, final Date dataInicio, 
-	        final String numeroProcesso, final UsuarioLogin usuarioLogado, 
-	        final NaturezaCategoriaFluxo naturezaCategoriaFluxo,
-	        final Localizacao localizacao, final Item itemDoProcesso) {
-	    this.setSituacaoPrazo(situacaoPrazo);
+
+    public ProcessoEpa(final SituacaoPrazoEnum situacaoPrazo,
+            final Date dataInicio, final String numeroProcesso,
+            final UsuarioLogin usuarioLogado,
+            final NaturezaCategoriaFluxo naturezaCategoriaFluxo,
+            final Localizacao localizacao, final Item itemDoProcesso) {
+        this.setSituacaoPrazo(situacaoPrazo);
         this.setDataInicio(dataInicio);
         this.setNumeroProcesso(numeroProcesso);
         this.setUsuarioCadastroProcesso(usuarioLogado);
         this.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
         this.setLocalizacao(localizacao);
         this.setItemDoProcesso(itemDoProcesso);
-	}
-	
-	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
-		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
-	}
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_natureza_categoria_fluxo", nullable=false)
-	@NotNull
-	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
-		return naturezaCategoriaFluxo;
-	}
-	
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_localizacao", nullable=false)
-	@NotNull
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
+    }
 
-	public void setProcessoEpaTarefaList(List<ProcessoEpaTarefa> processoEpaTarefaList) {
-		this.processoEpaTarefaList = processoEpaTarefaList;
-	}
+    public void setNaturezaCategoriaFluxo(
+            NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
+        this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
+    }
 
-	@OneToMany(mappedBy="processoEpa", fetch=FetchType.LAZY)
-	public List<ProcessoEpaTarefa> getProcessoEpaTarefaList() {
-		return processoEpaTarefaList;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_natureza_categoria_fluxo", nullable = false)
+    @NotNull
+    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
+        return naturezaCategoriaFluxo;
+    }
 
-	public void setTempoGasto(Integer tempoGasto) {
-		this.tempoGasto = tempoGasto;
-	}
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 
-	@Column(name="nr_tempo_gasto")
-	public Integer getTempoGasto() {
-		return tempoGasto;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_localizacao", nullable = false)
+    @NotNull
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
 
-	public void setPorcentagem(Integer porcentagem) {
-		this.porcentagem = porcentagem;
-	}
+    public void setProcessoEpaTarefaList(
+            List<ProcessoEpaTarefa> processoEpaTarefaList) {
+        this.processoEpaTarefaList = processoEpaTarefaList;
+    }
 
-	@Column(name="nr_porcentagem")
-	public Integer getPorcentagem() {
-		return porcentagem;
-	}
+    @OneToMany(mappedBy = "processoEpa", fetch = FetchType.LAZY)
+    public List<ProcessoEpaTarefa> getProcessoEpaTarefaList() {
+        return processoEpaTarefaList;
+    }
 
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_item_processo", nullable=false)
-	public Item getItemDoProcesso() {
-		return itemDoProcesso;
-	}
+    public void setTempoGasto(Integer tempoGasto) {
+        this.tempoGasto = tempoGasto;
+    }
 
-	public void setItemDoProcesso(Item itemDoProcesso) {
-		this.itemDoProcesso = itemDoProcesso;
-	}
+    @Column(name = "nr_tempo_gasto")
+    public Integer getTempoGasto() {
+        return tempoGasto;
+    }
 
-	@Enumerated(EnumType.STRING)
-	@Column(name="st_prazo", nullable=false)
-	@NotNull
-	public SituacaoPrazoEnum getSituacaoPrazo() {
-		return situacaoPrazo;
-	}
+    public void setPorcentagem(Integer porcentagem) {
+        this.porcentagem = porcentagem;
+    }
 
-	public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
-		this.situacaoPrazo = situacaoPrazo;
-	}
-	
-	@Column(name="in_contabilizar", nullable=false)
-	@NotNull
-	public Boolean getContabilizar() {
-		return contabilizar;
-	}
-	public void setContabilizar(Boolean contabilizar) {
-		this.contabilizar = contabilizar;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
-	@JoinColumn(name = "id_prioridade_processo", nullable = true)
-	public PrioridadeProcesso getPrioridadeProcesso() {
-		return prioridadeProcesso;
-	}
-	
-	public void setPrioridadeProcesso(PrioridadeProcesso prioridadeProcesso) {
-		this.prioridadeProcesso = prioridadeProcesso;
-	}
+    @Column(name = "nr_porcentagem")
+    public Integer getPorcentagem() {
+        return porcentagem;
+    }
 
-	public boolean hasPartes(){
-		return naturezaCategoriaFluxo.getNatureza().getHasPartes();
-	}
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_item_processo", nullable = false)
+    public Item getItemDoProcesso() {
+        return itemDoProcesso;
+    }
 
-	@OneToMany(mappedBy="processo", fetch=FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	public List<ParteProcesso> getPartes() {
-		return partes;
-	}
+    public void setItemDoProcesso(Item itemDoProcesso) {
+        this.itemDoProcesso = itemDoProcesso;
+    }
 
-	public void setPartes(List<ParteProcesso> partes) {
-		this.partes = partes;
-	}
+    @Enumerated(EnumType.STRING)
+    @Column(name = "st_prazo", nullable = false)
+    @NotNull
+    public SituacaoPrazoEnum getSituacaoPrazo() {
+        return situacaoPrazo;
+    }
+
+    public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
+        this.situacaoPrazo = situacaoPrazo;
+    }
+
+    @Column(name = "in_contabilizar", nullable = false)
+    @NotNull
+    public Boolean getContabilizar() {
+        return contabilizar;
+    }
+
+    public void setContabilizar(Boolean contabilizar) {
+        this.contabilizar = contabilizar;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_prioridade_processo", nullable = true)
+    public PrioridadeProcesso getPrioridadeProcesso() {
+        return prioridadeProcesso;
+    }
+
+    public void setPrioridadeProcesso(PrioridadeProcesso prioridadeProcesso) {
+        this.prioridadeProcesso = prioridadeProcesso;
+    }
+
+    public boolean hasPartes() {
+        return naturezaCategoriaFluxo.getNatureza().getHasPartes();
+    }
+
+    @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {
+        CascadeType.PERSIST, CascadeType.REMOVE })
+    public List<ParteProcesso> getPartes() {
+        return partes;
+    }
+
+    public void setPartes(List<ParteProcesso> partes) {
+        this.partes = partes;
+    }
 }

@@ -34,182 +34,182 @@ import br.com.itx.util.Crypto;
 @Name(ProcessoManager.NAME)
 @AutoCreate
 public class ProcessoManager extends GenericManager {
-	
-	private static final long serialVersionUID = 8095772422429350875L;
-	private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
+
+    private static final long serialVersionUID = 8095772422429350875L;
+    private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
     private static final Class<Processo> CLASS = Processo.class;
-	public static final String NAME = "processoManager";
-	
-	@In private ProcessoDAO processoDAO;
-	@In private ProcessoEpaDAO processoEpaDAO;
-	@In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-	@In private ProcessoDocumentoManager processoDocumentoManager;
-	
+    public static final String NAME = "processoManager";
+
+    @In
+    private ProcessoDAO processoDAO;
+    @In
+    private ProcessoEpaDAO processoEpaDAO;
+    @In
+    private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
+    @In
+    private ProcessoDocumentoManager processoDocumentoManager;
+
     public Processo find(Integer id) {
         return find(CLASS, id);
     }
-	
-	public ProcessoDocumentoBin createProcessoDocumentoBin(Object value, String certChain, String signature) throws DAOException {
-		ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
-		bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
-		bin.setDataInclusao(new Date());
-		bin.setMd5Documento(Crypto.encodeMD5(String.valueOf(value)));
-		bin.setUsuario(Authenticator.getUsuarioLogado());
-		bin.setCertChain(certChain);
-		bin.setSignature(signature);
-		persist(bin);
-		return bin;
-	}
-	
-	public ProcessoDocumento createProcessoDocumento(Processo processo, String label, ProcessoDocumentoBin bin, TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
-		return processoDocumentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);
-	}
+
+    public ProcessoDocumentoBin createProcessoDocumentoBin(Object value,
+            String certChain, String signature) throws DAOException {
+        ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
+        bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
+        bin.setDataInclusao(new Date());
+        bin.setMd5Documento(Crypto.encodeMD5(String.valueOf(value)));
+        bin.setUsuario(Authenticator.getUsuarioLogado());
+        bin.setCertChain(certChain);
+        bin.setSignature(signature);
+        persist(bin);
+        return bin;
+    }
+
+    public ProcessoDocumento createProcessoDocumento(Processo processo,
+            String label, ProcessoDocumentoBin bin,
+            TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
+        return processoDocumentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);
+    }
 
     private String getDescricaoModeloDocumentoByValue(Object value) {
-		String modeloDocumento = String.valueOf(value);
-		if (Strings.isEmpty(modeloDocumento)){
-			modeloDocumento = " ";
-		}
-		return modeloDocumento;
-	}
-	
-	/**
-	 * Retorna, se houver, o novo valor do ModeloDocumento. Se nao houver, retorna o valor o valor
-	 * inicial inalterado
-	 * @param value - valor da variável modeloDocumento no contexto jBPM
-	 * */
-	public Object getAlteracaoModeloDocumento(ProcessoDocumentoBin processoDocumentoBinAtual, Object value) {
-		if(processoDocumentoBinAtual.getModeloDocumento() != null) {
-			return processoDocumentoBinAtual.getModeloDocumento();
-		} else {
-		    return value;
-		}
-	}
-	
-	public void addProcessoConexoForIdProcesso(Processo processoAtual, Processo processoConexo) {
-		processoAtual.getProcessoConexoListForIdProcesso().add(processoConexo);
-	}
-	
-	public void removeProcessoConexoForIdProcesso(Processo processoAtual, Processo processoConexo) {
-		processoAtual.getProcessoConexoListForIdProcesso().remove(processoConexo);
-	}
-	
-	public void addProcessoConexoForIdProcessoConexo(Processo processoAtual, Processo processoConexo) throws DAOException{
-		processoAtual.getProcessoConexoListForIdProcessoConexo().add(processoConexo);
-		update(processoAtual);
-	}
-	
-	public void removeProcessoConexoForIdProcessoConexo(Processo processoAtual, Processo processoConexo) throws DAOException{
-		processoAtual.getProcessoConexoListForIdProcessoConexo().remove(processoConexo);
-		update(processoAtual);
-	}
-	
-	public boolean hasPartes(Processo processo){
-		return processoEpaDAO.hasPartes(processo);
-	}
-	
-    public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc){
+        String modeloDocumento = String.valueOf(value);
+        if (Strings.isEmpty(modeloDocumento)) {
+            modeloDocumento = " ";
+        }
+        return modeloDocumento;
+    }
+
+    /**
+     * Retorna, se houver, o novo valor do ModeloDocumento. Se nao houver,
+     * retorna o valor o valor inicial inalterado
+     * 
+     * @param value - valor da variável modeloDocumento no contexto jBPM
+     * */
+    public Object getAlteracaoModeloDocumento(
+            ProcessoDocumentoBin processoDocumentoBinAtual, Object value) {
+        if (processoDocumentoBinAtual.getModeloDocumento() != null) {
+            return processoDocumentoBinAtual.getModeloDocumento();
+        } else {
+            return value;
+        }
+    }
+
+    public boolean hasPartes(Processo processo) {
+        return processoEpaDAO.hasPartes(processo);
+    }
+
+    public void visualizarTask(final Processo processo, final Long idTarefa,
+            final UsuarioLocalizacao usrLoc) {
         final BusinessProcess bp = BusinessProcess.instance();
-		if (!processo.getIdJbpm().equals(bp.getProcessId())) {            
+        if (!processo.getIdJbpm().equals(bp.getProcessId())) {
             final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
-            
+
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
         }
     }
-	
+
     public boolean iniciaTask(final Processo processo, final Long taskInstanceId) {
-    	boolean result = false;
-    	final BusinessProcess bp = BusinessProcess.instance();
-		if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-        	bp.setProcessId(processo.getIdJbpm());
+        boolean result = false;
+        final BusinessProcess bp = BusinessProcess.instance();
+        if (!processo.getIdJbpm().equals(bp.getProcessId())) {
+            bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
             try {
-            	bp.startTask();
-            	result = true;
+                bp.startTask();
+                result = true;
             } catch (IllegalStateException e) {
-                // Caso já exista deve-se ignorar este trecho, outras illegalstate devem ser averiguadas
-                // TODO Ideal para processos já iniciados seria chamar o método resumeTask
+                // Caso já exista deve-se ignorar este trecho, outras
+                // illegalstate devem ser averiguadas
+                // TODO Ideal para processos já iniciados seria chamar o método
+                // resumeTask
                 LOG.warn(".iniciaTask()", e);
             }
         }
-    	return result;
-    }
-    
-    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioLocalizacao usrLoc) throws DAOException {
-        final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
-    	final String actorId = Actor.instance().getId();
-    	iniciaTask(processo, taskInstanceId);
-    	if (taskInstanceId != null) {
-        	storeUsuario(taskInstanceId, usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel());
-        	vinculaUsuario(processo, actorId);
-    	}
+        return result;
     }
 
-	private void vinculaUsuario(Processo processo, String actorId) throws DAOException {
-		processo.setActorId(actorId);
-		processo = merge(processo);
-		flush();
-	}
-    
-	private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc, final Processo processo, final Long idTarefa) {
-        Long result;
-		if (idTarefa != null) {
-        	result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
-        } else {
-        	result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo);
+    public void iniciarTask(final Processo processo, final Long idTarefa,
+            final UsuarioLocalizacao usrLoc) throws DAOException {
+        final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+        final String actorId = Actor.instance().getId();
+        iniciaTask(processo, taskInstanceId);
+        if (taskInstanceId != null) {
+            storeUsuario(taskInstanceId, usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel());
+            vinculaUsuario(processo, actorId);
         }
-		return result;
     }
-	
-	/**
-	 * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os usuários das tarefas em execução, 
-	 * apagando o usuário sempre que a tarefa é finalizada (ver tabela jbpm_taskinstance, campo actorid_)
-	 * Porém surgiu a necessidade de armazenar os usuários das tarefas já finalizas para exibir no 
-	 * histórico de Movimentação do Processo
-	 * @param idTaskInstance
-	 * @param actorId				 
-	 * @throws DAOException 
-	 * */
-	private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao, final Papel papel) throws DAOException{
-        if (find(UsuarioTaskInstance.class, idTaskInstance) == null){
+
+    private void vinculaUsuario(Processo processo, String actorId) throws DAOException {
+        processo.setActorId(actorId);
+        processo = merge(processo);
+        flush();
+    }
+
+    private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc,
+            final Processo processo, final Long idTarefa) {
+        Long result;
+        if (idTarefa != null) {
+            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+        } else {
+            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo);
+        }
+        return result;
+    }
+
+    /**
+     * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os
+     * usuários das tarefas em execução, apagando o usuário sempre que a tarefa
+     * é finalizada (ver tabela jbpm_taskinstance, campo actorid_) Porém surgiu
+     * a necessidade de armazenar os usuários das tarefas já finalizas para
+     * exibir no histórico de Movimentação do Processo
+     * 
+     * @param idTaskInstance
+     * @param actorId
+     * @throws DAOException
+     * */
+    private void storeUsuario(final Long idTaskInstance,
+            final UsuarioLogin user, final Localizacao localizacao,
+            final Papel papel) throws DAOException {
+        if (find(UsuarioTaskInstance.class, idTaskInstance) == null) {
             persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
         }
-	}
-	
-	public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
-		processoDAO.moverProcessosParaCaixa(idList, caixa);
-	}
-	
-	public void moverProcessoParaCaixa(Caixa caixa, Processo processo){
-		processoDAO.moverProcessoParaCaixa(caixa, processo);
-	}
-	
-	public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo){
-		Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
-		processoDAO.moverProcessoParaCaixa(caixaEscolhida, processo);
-	}
-	
-	/*
-	 * Atualmente a regra para escolher a caixa é simplesmente pegar a primeira
-	 * */
-	private Caixa escolherCaixaParaAlocarProcesso(List<Caixa> caixaList){
-		return caixaList.get(0);		
-	}
-	
-	public void removerProcessoDaCaixaAtual(Processo processo){
-		processoDAO.removerProcessoDaCaixaAtual(processo);
-	}
-	
-	public void apagarActorIdDoProcesso(Processo processo){
-		processoDAO.apagarActorIdDoProcesso(processo);
-	}
-	
-	public void atualizarProcessos(){
-		processoDAO.atualizarProcessos();
-	}
-	
-	public boolean checkAccess(int idProcesso, String login){
-	    return !processoDAO.findProcessosByIdProcessoAndActorId(idProcesso, login).isEmpty();
-	}
+    }
+
+    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
+        processoDAO.moverProcessosParaCaixa(idList, caixa);
+    }
+
+    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
+        processoDAO.moverProcessoParaCaixa(caixa, processo);
+    }
+
+    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) {
+        Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
+        processoDAO.moverProcessoParaCaixa(caixaEscolhida, processo);
+    }
+
+    /*
+     * Atualmente a regra para escolher a caixa é simplesmente pegar a primeira
+     */
+    private Caixa escolherCaixaParaAlocarProcesso(List<Caixa> caixaList) {
+        return caixaList.get(0);
+    }
+
+    public void removerProcessoDaCaixaAtual(Processo processo) {
+        processoDAO.removerProcessoDaCaixaAtual(processo);
+    }
+
+    public void apagarActorIdDoProcesso(Processo processo) {
+        processoDAO.apagarActorIdDoProcesso(processo);
+    }
+
+    public void atualizarProcessos() {
+        processoDAO.atualizarProcessos();
+    }
+
+    public boolean checkAccess(int idProcesso, String login) {
+        return !processoDAO.findProcessosByIdProcessoAndActorId(idProcesso, login).isEmpty();
+    }
 }

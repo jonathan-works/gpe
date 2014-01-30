@@ -14,7 +14,6 @@
  */
 package br.com.infox.epp.processo.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
@@ -26,14 +25,12 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.APAGA_ACTOR_ID_DO_PR
 import static br.com.infox.epp.processo.query.ProcessoQuery.APAGA_ACTOR_ID_DO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.COMPLEMENTO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DURACAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO_CONEXO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_USUARIO_CADASTRO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY;
@@ -43,13 +40,11 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_ORIGEM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO_CONEXAO;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -67,8 +62,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
@@ -112,8 +105,6 @@ public class Processo implements java.io.Serializable {
     private int idProcesso;
     private UsuarioLogin usuarioCadastroProcesso;
     private String numeroProcesso;
-    private String numeroProcessoOrigem;
-    private String complemento;
     private Date dataInicio;
     private Date dataFim;
     private Long duracao;
@@ -122,8 +113,6 @@ public class Processo implements java.io.Serializable {
     private Long idJbpm;
 
     private List<ProcessoDocumento> processoDocumentoList = new ArrayList<ProcessoDocumento>(0);
-    private List<Processo> processoConexoListForIdProcesso = new ArrayList<Processo>(0);
-    private List<Processo> processoConexoListForIdProcessoConexo = new ArrayList<Processo>(0);
 
     private String actorId;
 
@@ -162,26 +151,6 @@ public class Processo implements java.io.Serializable {
 
     public void setNumeroProcesso(String numeroProcesso) {
         this.numeroProcesso = numeroProcesso;
-    }
-
-    @Column(name = NUMERO_PROCESSO_ORIGEM, length = NUMERACAO_PROCESSO)
-    @Size(max = NUMERACAO_PROCESSO)
-    public String getNumeroProcessoOrigem() {
-        return this.numeroProcessoOrigem;
-    }
-
-    public void setNumeroProcessoOrigem(String numeroProcessoOrigem) {
-        this.numeroProcessoOrigem = numeroProcessoOrigem;
-    }
-
-    @Column(name = COMPLEMENTO, length = DESCRICAO_PADRAO)
-    @Size(max = DESCRICAO_PADRAO)
-    public String getComplemento() {
-        return this.complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
     }
 
     @Temporal(TIMESTAMP)
@@ -226,36 +195,6 @@ public class Processo implements java.io.Serializable {
     public void setProcessoDocumentoList(
             List<ProcessoDocumento> processoDocumentoList) {
         this.processoDocumentoList = processoDocumentoList;
-    }
-
-    @ManyToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY)
-    @JoinTable(name = TABLE_PROCESSO_CONEXAO, schema = PUBLIC,
-            joinColumns = { @JoinColumn(name = ID_PROCESSO, nullable = false,
-                    updatable = false) }, inverseJoinColumns = { @JoinColumn(
-                    name = ID_PROCESSO_CONEXO, nullable = false,
-                    updatable = false) })
-    public List<Processo> getProcessoConexoListForIdProcesso() {
-        return processoConexoListForIdProcesso;
-    }
-
-    public void setProcessoConexoListForIdProcesso(
-            List<Processo> processoConexoListForIdProcesso) {
-        this.processoConexoListForIdProcesso = processoConexoListForIdProcesso;
-    }
-
-    @ManyToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY)
-    @JoinTable(name = TABLE_PROCESSO_CONEXAO, schema = PUBLIC,
-            joinColumns = { @JoinColumn(name = ID_PROCESSO_CONEXO,
-                    nullable = false, updatable = false) },
-            inverseJoinColumns = { @JoinColumn(name = ID_PROCESSO,
-                    nullable = false, updatable = false) })
-    public List<Processo> getProcessoConexoListForIdProcessoConexo() {
-        return processoConexoListForIdProcessoConexo;
-    }
-
-    public void setProcessoConexoListForIdProcessoConexo(
-            List<Processo> processoConexoListForIdProcessoConexo) {
-        this.processoConexoListForIdProcessoConexo = processoConexoListForIdProcessoConexo;
     }
 
     @Override

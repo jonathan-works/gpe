@@ -31,25 +31,21 @@
     <div id="teste">
 
         <span class="#{var.ativo ? '' : 'inativo'}" />
-        <a:commandLink 
-            onclick="infox.openPopUp('PopUpDocumentoBin', '#{util.contextPath}/Painel/documentoHTML.seam?idBin=#{var.processoDocumentoBin.idProcessoDocumentoBin}&amp;idProcessoDoc=#{var.idProcessoDocumento}'); return false;"
-            rendered="#{not empty bin.modeloDocumento}"
-            target="PopUpDocumentoBin">
 
-            <s:conversationPropagation type="none" />
-            <h:graphicImage title="Visualizar - #{var}" url="/img/view.gif" />
+        <h:commandLink
+            action="#{processoDocumentoHtmlView.setViewInstance(var)}"
+            onclick="openPopUp('PopUpDocumentoBin', '')"
+            rendered="#{isModelo}" target="PopUpDocumentoBin">
+            <h:graphicImage title="Visualizar" url="/img/view.gif" />
+        </h:commandLink>
 
-        </a:commandLink>
-
-        <s:link target="idPdf#{var}" rendered="#{!isModelo}"
-            action="#{processoDocumentoBinHome.setDownloadInstance()}"
-            onclick="openPopUp('idPdf#{var}', 'about:blank');">
-
+        <h:commandLink target="idPdf#{row}" rendered="#{!isModelo}"
+            action="#{processoDocumentoDownloader.setDownloadInstance(var)}"
+            onclick="openPopUp('idPdf#{row}', 'about:blank');">
             <h:graphicImage value="/img/pdf.gif"
                 title="#{bin.nomeArquivo} (#{util.getFormattedKb(bin.size)})" />
-            <f:param value="#{bin.idProcessoDocumentoBin}" name="idBin" />
+        </h:commandLink>
 
-        </s:link>
         <s:link target="idJan#{var.idProcessoDocumento}"
             rendered="#{not empty bin.signature}"
             view="/Processo/Consulta/validaDocumento.xhtml"

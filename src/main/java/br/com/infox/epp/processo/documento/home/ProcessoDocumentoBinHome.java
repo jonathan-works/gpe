@@ -22,8 +22,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Expressions;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
@@ -39,10 +37,10 @@ import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.FileHome;
-import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.Crypto;
 
 @Name(ProcessoDocumentoBinHome.NAME)
@@ -55,20 +53,15 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
 
     public static final String NAME = "processoDocumentoBinHome";
 
-    private static final int TAMANHO_MAXIMO_ARQUIVO = 1572864;
-    private ProcessoDocumento processoDocumento;
     private boolean isModelo;
-    private boolean ignoraConteudoDocumento = Boolean.FALSE;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoBinHome.class);
 
     private boolean houveErroAoAssinar = false;
 
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
-
-    public static ProcessoDocumentoBinHome instance() {
-        return ComponentUtil.getComponent(NAME);
-    }
+    @In
+    private ProcessoDocumentoBinManager processoDocumentoBinManager;
 
     public String getSignature() {
         return signature;
@@ -111,14 +104,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
     }
 
-    public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
-        this.processoDocumento = processoDocumento;
-    }
-
-    public ProcessoDocumento getProcessoDocumento() {
-        return processoDocumento;
-    }
-
     public boolean isModelo() {
         return isModelo;
     }
@@ -133,7 +118,7 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         super.newInstance();
     }
 
-    public boolean isModeloVazio() {
+    private boolean isModeloVazio() {
         boolean modeloVazio = isModeloVazio(getInstance());
         if (modeloVazio) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O modelo está vazio.");
@@ -141,7 +126,7 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         return modeloVazio;
     }
 
-    public static boolean isModeloVazio(ProcessoDocumentoBin bin) {
+    private static boolean isModeloVazio(ProcessoDocumentoBin bin) {
         return bin == null || Strings.isEmpty(bin.getModeloDocumento())
                 || Strings.isEmpty(removeTags(bin.getModeloDocumento()));
     }
@@ -152,17 +137,15 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
 
     @Override
     protected boolean beforePersistOrUpdate() {
-        boolean ret = true;
         if (isModelo) {
-            if (!ignoraConteudoDocumento && isModeloVazio()) {
-                ret = false;
-            }
-            if (ret) {
+            if (!isModeloVazio()) {
                 getInstance().setUsuario(Authenticator.getUsuarioLogado());
                 getInstance().setMd5Documento(Crypto.encodeMD5(getInstance().getModeloDocumento()));
+            } else {
+                return false;
             }
         }
-        return ret;
+        return true;
     }
 
     @Override
@@ -172,7 +155,7 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
             ret = super.persist();
         } else {
             FileHome file = FileHome.instance();
-            if (isDocumentoBinValido(file)) {
+            if (processoDocumentoBinManager.isDocumentoBinValido(file)) {
                 ProcessoDocumentoBin instance = getInstance();
                 instance.setUsuario(Authenticator.getUsuarioLogado());
                 instance.setExtensao(file.getFileType());
@@ -199,34 +182,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         return ret;
     }
 
-    public String persistSemLista() {
-        return super.persist();
-    }
-
-    private boolean isDocumentoBinValido(FileHome file) {
-        if (file == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Nenhum documento selecionado.");
-            return false;
-        }
-        if (!file.getFileType().equalsIgnoreCase("PDF")) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ser do tipo PDF.");
-            return false;
-        }
-        if (file.getSize() != null && file.getSize() > TAMANHO_MAXIMO_ARQUIVO) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de 1.5MB!");
-            return false;
-        }
-        return true;
-    }
-
-    public void setProcessoDocumentoBinIdProcessoDocumentoBin(Integer id) {
-        setId(id);
-    }
-
-    public Integer getProcessoDocumentoBinIdProcessoDocumentoBin() {
-        return (Integer) getId();
-    }
-
     @Override
     protected ProcessoDocumentoBin createInstance() {
         ProcessoDocumentoBin processoDocumentoBin = new ProcessoDocumentoBin();
@@ -247,42 +202,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         String ret = super.remove();
         newInstance();
         return ret;
-    }
-
-    public List<ProcessoDocumento> getProcessoDocumentoList() {
-        return getInstance() == null ? null : getInstance().getProcessoDocumentoList();
-    }
-
-    public String setDownloadInstance() {
-        exportData();
-        return "/download.xhtml";
-    }
-
-    public void exportData() {
-        FileHome file = FileHome.instance();
-        String fileName = "ProcessoDocumentoBin";
-        String key = Messages.instance().get("processoDocumentoBin.textColumn");
-        if (key != null) {
-            String expression = "#{processoDocumentoBinHome.instance." + key
-                    + "}";
-            fileName = (String) Expressions.instance().createValueExpression(expression).getValue();
-        }
-        file.setFileName(fileName);
-        try {
-            file.setData(DocumentoBinHome.instance().getData(getInstance().getIdProcessoDocumentoBin()));
-        } catch (Exception e) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao descarregar o documento.");
-            LOG.error(".exportData()", e);
-        }
-        Contexts.getConversationContext().set("fileHome", file);
-    }
-
-    public void setIgnoraConteudoDocumento(boolean ignoraConteudoDocumento) {
-        this.ignoraConteudoDocumento = ignoraConteudoDocumento;
-    }
-
-    public boolean isIgnoraConteudoDocumento() {
-        return ignoraConteudoDocumento;
     }
 
     public boolean isHouveErroAoAssinar() {

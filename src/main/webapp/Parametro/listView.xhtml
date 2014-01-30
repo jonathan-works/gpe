@@ -31,14 +31,14 @@
 	    <wi:dataTable
              values="#{parametroList.list(15)}"
              bean="#{parametroList}"
-             tableTitle="#{messages['parametro.titleGrid']}"
+             tableTitle="#{messages['parametro.tableTitle']}"
              id="parametroList"
              rowId="#{row.idParametro}">
 			<ui:define
                  name="searchForm">
 				<wi:searchForm
                      formId="parametroSearchForm"
-                     formTitle="#{messages['parametro.titleGrid']}">
+                     formTitle="#{messages['parametro.tableTitle']}">
 					<wi:inputText
                          id="nomeVariavel"
                          label="#{messages['parametro.nomeVariavel']}"

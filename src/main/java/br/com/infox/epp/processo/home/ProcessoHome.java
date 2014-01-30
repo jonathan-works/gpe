@@ -298,60 +298,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
         return getInstance() == null ? null : getInstance().getProcessoDocumentoList();
     }
 
-    /**
-     * Metodo que adiciona o processo passado como parâmetro a lista dos
-     * processos que são conexos ao processo da instância.
-     * 
-     * @param processoConexo
-     * @param gridId
-     */
-    public void addProcessoConexoForIdProcesso(Processo processoConexo,
-            String gridId) {
-        if (getInstance() != null) {
-            processoManager.addProcessoConexoForIdProcesso(getInstance(), processoConexo);
-        }
-    }
-
-    public void removeProcessoConexoForIdProcesso(Processo processoConexo,
-            String gridId) {
-        if (getInstance() != null) {
-            processoManager.removeProcessoConexoForIdProcesso(getInstance(), processoConexo);
-        }
-    }
-
-    /**
-     * Metodo que adiciona o processo passado como parâmetro à lista dos
-     * processos que o processo da instância é conexo.
-     * 
-     * @param processo
-     * @param gridId
-     */
-    public void addProcessoConexoForIdProcessoConexo(Processo processo,
-            String gridId) {
-        if (getInstance() != null) {
-            try {
-                processoManager.addProcessoConexoForIdProcessoConexo(getInstance(), processo);
-            } catch (DAOException e) {
-                LOG.error(".addProcessoConexoForIdProcessoConexo()", e);
-                FacesMessages.instance().clear();
-                FacesMessages.instance().add(e.getLocalizedMessage());
-            }
-        }
-    }
-
-    public void removeProcessoConexoForIdProcessoConexo(Processo processo,
-            String gridId) {
-        if (getInstance() != null) {
-            try {
-                processoManager.removeProcessoConexoForIdProcessoConexo(getInstance(), processo);
-            } catch (DAOException e) {
-                LOG.error(".removeProcessoConexoForIdProcessoConexo()", e);
-                FacesMessages.instance().clear();
-                FacesMessages.instance().add(e.getLocalizedMessage());
-            }
-        }
-    }
-
     public boolean hasPartes() {
         return processoManager.hasPartes(getInstance());
     }
