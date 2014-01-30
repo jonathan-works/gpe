@@ -162,6 +162,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
         final boolean persistFailed = ret == null
                 || (!PERSISTED.equals(ret) && !wasManaged);
         if (ret != null) {
+            //TODO: assim que os testes de crud estiverem prontos, jogar essas duas invocações para fora desse if
             afterSave();
             afterSave(ret);
 
