@@ -17,6 +17,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 @Scope(ScopeType.CONVERSATION)
 public class ConsultaExternaController extends AbstractController {
     
+    private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaExternaController";
     public static final String TAB_VIEW = "processoExternoView";
     
