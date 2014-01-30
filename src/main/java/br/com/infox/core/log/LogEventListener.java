@@ -91,7 +91,7 @@ public class LogEventListener implements PostUpdateEventListener, PostInsertEven
         }
         Object test = eventContext.get(ENABLE_LOG_VAR_NAME);
         try {
-            return test == null || test.toString().equalsIgnoreCase("true");
+            return test == null || "true".equalsIgnoreCase(test.toString());
         } catch (Exception e) {
             LOG.warn(".isLogEnabled()", e);
             return true;
