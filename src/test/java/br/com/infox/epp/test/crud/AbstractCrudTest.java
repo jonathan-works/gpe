@@ -76,8 +76,8 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
 
         @Override
-        public Object invokeMethod(final String componentName, final String methodName) {
-            return this.invokeMethod(this.componentName, methodName, Object.class, new Class<?>[]{}, new Object[]{});
+        public final Object invokeMethod(final String componentName, final String methodName) {
+            return this.invokeMethod(componentName, methodName, Object.class, new Class<?>[]{}, new Object[]{});
         }
         
         @Override
@@ -113,7 +113,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
 
         public final E resetInstance(final Object id) {
-            this.newInstance();
+            invokeMethod("onClickSearchTab");
             this.setId(id);
             return this.getInstance();
         }
