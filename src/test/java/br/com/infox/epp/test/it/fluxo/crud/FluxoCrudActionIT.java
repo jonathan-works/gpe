@@ -6,7 +6,9 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.text.MessageFormat.format;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -259,7 +261,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
                 crudActions.resetInstance(id);
                 assertFalse("entidade diferente", compareEntityValues(baseEntity, crudActions));
                 final F entityValue = crudActions.getEntityValue(fieldName);
-                assertEquals("boolean are equal", entityValue, newValue);
+                assertEquals("aren't equal", newValue, entityValue);
                 return entityValue;
             }
         };
@@ -311,7 +313,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
                 assertTrue("entidade não é igual", compareEntityValues(baseEntity, crudActions));
                 final F entityValue = crudActions.getEntityValue(fieldName);
                 
-                assertFalse("valores não são iguais", compareObjects(entityValue, newValue));
+                assertFalse("valores não são iguais", compareObjects(newValue, entityValue));
                 return entityValue;
             }
         };
