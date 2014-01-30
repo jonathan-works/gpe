@@ -41,9 +41,6 @@
             value="#{home.instance.tipoProcessoDocumento}"
             items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(false)}"
             required="true" noSelectionLabel="Selecione...">
-            <a:ajax event="change"
-                action="#{processoDocumentoHome.onSelectProcessoDocumento()}"
-                execute="@this" render="tipoDocumentoDiv" />
         </wi:selectOneMenuEntity>
     </s:div>
 
@@ -73,7 +70,7 @@
                 <wi:editor id="modeloDocumento" label="Modelo"
                     value="#{processoDocumentoBinHome.instance.modeloDocumento}"
                     requiredField="false" required="false"
-                    showVariables="false" onchange="clearSign()">
+                    showVariables="false">
                 </wi:editor>
 
                 <wi:imageUpload style=""
