@@ -4,7 +4,6 @@ import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -53,8 +52,7 @@ public abstract class DAO<T, K> implements Serializable {
 	@SuppressWarnings(UNCHECKED)
 	protected Class<T> getEntityClass() {
 		ParameterizedType superType = (ParameterizedType) getClass().getGenericSuperclass();
-		Type entityType = superType.getActualTypeArguments()[0];
-		return (Class<T>) entityType;
+		return (Class<T>) superType.getActualTypeArguments()[0];
 	}
 
 	/**
