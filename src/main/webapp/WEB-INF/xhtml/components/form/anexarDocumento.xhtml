@@ -56,13 +56,6 @@
 
             <s:div id="usarModeloDiv" rendered="#{home.modelo}">
 
-                <wi:selectOneMenuEntity id="modeloDocumentoCombo"
-                    label="#{messages['modeloDocumento.modeloDocumento']}"
-                    value="#{processoDocumentoHome.modeloDocumentoCombo}"
-                    items="#{modeloDocumentoPeticaoItems}"
-                    noSelectionLabel="Selecione...">
-                </wi:selectOneMenuEntity>
-
                 <wi:editor id="modeloDocumento" label="Modelo"
                     value="#{processoDocumentoBinHome.instance.modeloDocumento}"
                     requiredField="false" required="false"
