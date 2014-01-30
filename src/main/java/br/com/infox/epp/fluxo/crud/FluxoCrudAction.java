@@ -1,8 +1,10 @@
 package br.com.infox.epp.fluxo.crud;
 
+import static org.jboss.seam.international.StatusMessage.Severity.ERROR;
+import static java.lang.Boolean.*;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -10,13 +12,10 @@ import javax.faces.context.FacesContext;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 
@@ -67,61 +66,59 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     
     @Override
     protected boolean isInstanceValid() {
-        final Date dataFimPublicacao = getInstance().getDataFimPublicacao();
-        if (isValidaDataFimPublicacao(dataFimPublicacao)){
-            FacesMessages.instance().add(Severity.ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
-            return Boolean.FALSE;
+        final Fluxo fluxo = getInstance();
+        final Date dataFimPublicacao = fluxo.getDataFimPublicacao();
+        final Date dataInicioPublicacao = fluxo.getDataInicioPublicacao();
+        final boolean instanceValid = dataInicioPublicacao != null && (dataFimPublicacao == null || !dataFimPublicacao.before(dataInicioPublicacao));
+        if (!instanceValid) {
+            getMessagesHandler().add(ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
         }
-        
-        verificaPublicacao();
-        return super.isInstanceValid();
-    }
-    
-    private boolean isValidaDataFimPublicacao(final Date dataFimPublicacao) {
-        return dataFimPublicacao != null && dataFimPublicacao.before(getInstance().getDataInicioPublicacao());
-    }
-    
-    private void verificaPublicacao(){
-        final Date data = new Date();
-        final SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        final String dataHoje = formato.format(data);
-        final String dataInicio = formato.format(getInstance().getDataInicioPublicacao());
-        
-        if (dataHoje.equals(dataInicio)){
-            getInstance().setPublicado(Boolean.TRUE);
-        }
+        return instanceValid;
     }
     
     @Override
-    public String save() {
-        try {
-            final String ret = super.save();
-            final UsuarioLogin usuarioPublicacao = getInstance().getUsuarioPublicacao();
-            if (usuarioPublicacao != null) {
-                final List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
-                        .getFluxoList();
-                if (!usuarioPublicacaoList.contains(getInstance())) {
-                    fluxoManager.refresh(usuarioPublicacao);
-                }
-            }
-            return ret;
-        } catch (final Exception e){
-            LOG.error(e.getMessage(), e);
-            return null;
+    protected void beforeSave() {
+        final SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        final String dataHoje = formato.format(new Date());
+        final Fluxo fluxo = getInstance();
+        final String dataInicio = formato.format(fluxo.getDataInicioPublicacao());
+        
+        if (dataHoje.equals(dataInicio)){
+            fluxo.setPublicado(TRUE);
         }
     }
+    
+    //TODO: rever como proceder em relação a usuarioPublicado. Esta implementação estava fora de uso
+//    @Override
+//    public String save() {
+//        try {
+//            final String ret = super.save();
+//            final UsuarioLogin usuarioPublicacao = getInstance().getUsuarioPublicacao();
+//            if (usuarioPublicacao != null) {
+//                final List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
+//                        .getFluxoList();
+//                if (!usuarioPublicacaoList.contains(getInstance())) {
+//                    fluxoManager.refresh(usuarioPublicacao);
+//                }
+//            }
+//            return ret;
+//        } catch (final Exception e){
+//            LOG.error(e.getMessage(), e);
+//            return null;
+//        }
+//    }
     
     @Override
     public String inactive(final Fluxo fluxo) {
-        setInstance((Fluxo) fluxo);
+        setInstanceId(fluxo.getIdFluxo());
         if (!fluxoManager.existemProcessosAssociadosAFluxo(fluxo)) {
             final String ret = super.inactive(fluxo);
             newInstance();
             return ret;
         } else {
             final String message = "#{messages['fluxo.remocaoProibida']}";
-            LOG.warn(message);
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, message);
+            LOG.error(message);
+            getMessagesHandler().add(ERROR, message);
             return null;
         }
     }
