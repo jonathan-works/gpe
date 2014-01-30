@@ -29,11 +29,11 @@ import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.manager.CategoriaItemManager;
 import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class CategoriaItemCrudActionIT extends AbstractGenericCrudTest<CategoriaItem>{
+public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
 
     @Deployment
     @OverProtocol(SERVLET_3_0)
@@ -50,7 +50,7 @@ public class CategoriaItemCrudActionIT extends AbstractGenericCrudTest<Categoria
     }
 
     @Override
-    protected void initEntity(final CategoriaItem entity,final ICrudActions<CategoriaItem> crudActions) {
+    protected void initEntity(final CategoriaItem entity,final CrudActions<CategoriaItem> crudActions) {
         crudActions.setComponentValue("categoria", entity.getCategoria());
         crudActions.setComponentValue("item", entity.getItem());
     }

@@ -34,11 +34,11 @@ import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
+public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
 
     @Deployment
     @OverProtocol(SERVLET_3_0)
@@ -50,7 +50,7 @@ public class PapelCrudActionIT extends AbstractGenericCrudTest<Papel>{
     }
 
     @Override
-    protected void initEntity(final Papel entity, final ICrudActions<Papel> crudActions) {
+    protected void initEntity(final Papel entity, final CrudActions<Papel> crudActions) {
         crudActions.setEntityValue("identificador", entity.getIdentificador()); //req
         crudActions.setEntityValue("nome", entity.getNome()); // req
     }
