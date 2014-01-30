@@ -14,18 +14,13 @@
  */
 package br.com.infox.epp.processo.documento.home;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
-
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.TaskInstance;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.util.Strings;
@@ -53,7 +48,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     private ProcessoDocumentoManager processoDocumentoManager;
 
     private static final String PROCESSO_DOCUMENTO_BIN_HOME_NAME = "processoDocumentoBinHome";
-    public static final String PETICAO_INSERIDA = "peticaoInseridaMap";
     private ModeloDocumento modeloDocumentoCombo;
     private boolean isModelo = Boolean.TRUE;
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
@@ -137,18 +131,7 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         instance.setProcesso(ProcessoHome.instance().getInstance());
         setJbpmTask();
 
-        String ret = super.persist();
-        if (ret != null) {
-            if (isModelo) {
-                @SuppressWarnings(UNCHECKED) List<Integer> lista = (List<Integer>) Contexts.getSessionContext().get(PETICAO_INSERIDA);
-                if (lista == null) {
-                    lista = new ArrayList<Integer>();
-                }
-                lista.add(instance.getProcesso().getIdProcesso());
-                Contexts.getSessionContext().set(PETICAO_INSERIDA, lista);
-            }
-        }
-        return ret;
+        return super.persist();
     }
 
     protected void setJbpmTask() {
