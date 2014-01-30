@@ -32,7 +32,6 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
@@ -187,21 +186,6 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
         ProcessoDocumentoBin processoDocumentoBin = new ProcessoDocumentoBin();
         processoDocumentoBin.setUsuario(Authenticator.getUsuarioLogado());
         return processoDocumentoBin;
-    }
-
-    @Override
-    public String remove() {
-        UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
-        usuarioLogin.getProcessoDocumentoBinList().remove(instance);
-        return super.remove();
-    }
-
-    @Override
-    public String remove(ProcessoDocumentoBin obj) {
-        setInstance(obj);
-        String ret = super.remove();
-        newInstance();
-        return ret;
     }
 
     public boolean isHouveErroAoAssinar() {
