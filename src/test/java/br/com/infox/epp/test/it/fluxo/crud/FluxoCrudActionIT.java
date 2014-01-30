@@ -1,12 +1,12 @@
 package br.com.infox.epp.test.it.fluxo.crud;
 
+import static br.com.infox.core.action.AbstractAction.UPDATED;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.text.MessageFormat.format;
 import static org.junit.Assert.*;
-import static br.com.infox.core.action.AbstractAction.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -219,8 +219,8 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
     protected boolean compareEntityValues(final Fluxo entity,final CrudActions<Fluxo> crudActions) {
         final SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         final String dataHoje = formato.format(new Date());
-        final String dataInicio = formato.format(crudActions.getEntityValue(FIELD_DT_INICIO));
-        if (dataHoje.equals(dataInicio)){
+        final Date dataInicio = crudActions.getEntityValue(FIELD_DT_INICIO);
+        if (dataInicio != null && dataHoje.equals(formato.format(dataInicio))){
             entity.setPublicado(TRUE);
         }
         
@@ -238,79 +238,45 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         final ActionContainer<Fluxo> actionContainer = new ActionContainer<Fluxo>() {
             @Override
             public void execute(final CrudActions<Fluxo> crudActions) {
-                final Fluxo baseEntity = getEntity();
+                final Fluxo entity = getEntity();
                 final Integer id = crudActions.getId();
                 crudActions.resetInstance(id);
-                baseEntity.setCodFluxo(updateStringField(crudActions, baseEntity, id, FIELD_CODIGO));
-                baseEntity.setFluxo(updateStringField(crudActions, baseEntity, id, FIELD_DESC));
-                baseEntity.setQtPrazo(updateIntegerField(crudActions, baseEntity, id, FIELD_PRAZO));
-                baseEntity.setDataInicioPublicacao(updateDateField(crudActions, baseEntity, id, FIELD_DT_INICIO, Calendar.DAY_OF_YEAR, -5));
-                baseEntity.setDataFimPublicacao(updateDateField(crudActions, baseEntity, id, FIELD_DT_FIM, Calendar.DAY_OF_YEAR, 5));
-                baseEntity.setPublicado(updateBooleanField(crudActions, baseEntity, id, FIELD_PUBLICADO));
-                baseEntity.setAtivo(updateBooleanField(crudActions, baseEntity, id, FIELD_ATIVO));
+                entity.setCodFluxo(updateField(crudActions, entity, id, FIELD_CODIGO, entity.getCodFluxo()+".changed"));
+                entity.setFluxo(updateField(crudActions, entity, id, FIELD_DESC, entity.getFluxo()+".changed"));
+                entity.setQtPrazo(updateField(crudActions, entity, id, FIELD_PRAZO, entity.getQtPrazo()+5));
+                entity.setDataInicioPublicacao(updateField(crudActions, entity, id, FIELD_DT_INICIO, getIncrementedDate(entity.getDataInicioPublicacao(), Calendar.DAY_OF_YEAR, -5)));
+                entity.setDataFimPublicacao(updateField(crudActions, entity, id, FIELD_DT_FIM, getIncrementedDate(entity.getDataFimPublicacao(), Calendar.DAY_OF_YEAR, 5)));
+                entity.setPublicado(updateField(crudActions, entity, id, FIELD_PUBLICADO, !entity.getPublicado()));
+                entity.setPublicado(updateField(crudActions, entity, id, FIELD_PUBLICADO, !entity.getPublicado()));
+                entity.setAtivo(updateField(crudActions, entity, id, FIELD_ATIVO, !entity.getAtivo()));
+                entity.setAtivo(updateField(crudActions, entity, id, FIELD_ATIVO, !entity.getAtivo()));
             }
-
-            private Boolean updateBooleanField(final CrudActions<Fluxo> crudActions,
-                    final Fluxo baseEntity, final Integer id, final String fieldName) {
+            
+            private <F> F updateField(final CrudActions<Fluxo> crudActions, final Fluxo baseEntity, final Integer id, final String fieldName, final F newValue) {
                 assertTrue("entidade igual", compareEntityValues(baseEntity, crudActions));
-                final Boolean newValue = !((Boolean)crudActions.getEntityValue(fieldName));
                 crudActions.setEntityValue(fieldName, newValue);
                 assertEquals(UPDATED, UPDATED, crudActions.save());
                 crudActions.resetInstance(id);
                 assertFalse("entidade diferente", compareEntityValues(baseEntity, crudActions));
-                final Boolean entityValue = crudActions.getEntityValue(fieldName);
+                final F entityValue = crudActions.getEntityValue(fieldName);
                 assertEquals("boolean are equal", entityValue, newValue);
-                return newValue;
-            }
-            
-            private Date updateDateField(final CrudActions<Fluxo> crudActions,
-                    final Fluxo baseEntity, final Integer id, final String fieldName,
-                    final int dateField, final int increment) {
-                assertTrue("entidade igual", compareEntityValues(baseEntity, crudActions));
-                final Date entityValue = crudActions.getEntityValue(fieldName);
-                final Date newEntityValue = getIncrementedDate(entityValue, dateField, increment);
-                crudActions.setEntityValue(fieldName, newEntityValue);
-                assertEquals(UPDATED, UPDATED, crudActions.save());
-                crudActions.resetInstance(id);
-                assertFalse("entidade igual", compareEntityValues(baseEntity, crudActions));
-                assertEquals("valor de data correto", crudActions.getEntityValue(fieldName), newEntityValue);
-                return newEntityValue;
-            }
-            
-            private Integer updateIntegerField(final CrudActions<Fluxo> crudActions,
-                    final Fluxo baseEntity, final Integer id, final String fieldName) {
-                assertTrue("entidade igual", compareEntityValues(baseEntity, crudActions));
-                final Integer novoPrazo = ((Integer)crudActions.getEntityValue(fieldName))+5;
-                crudActions.setEntityValue(fieldName, novoPrazo);
-                assertEquals(UPDATED, UPDATED, crudActions.save());
-                crudActions.resetInstance(id);
-                assertFalse("entidade diferente", compareEntityValues(baseEntity, crudActions));
-                assertEquals("valor de prazo correto", crudActions.getEntityValue(fieldName), novoPrazo);
-                return novoPrazo;
-            }
-
-            private String updateStringField(final CrudActions<Fluxo> crudActions,
-                    final Fluxo baseEntity, final Integer id,
-                    final String fieldName) {
-                assertTrue("entidade igual", compareEntityValues(baseEntity, crudActions));
-                final String suffix = ".changed";
-                crudActions.setEntityValue(fieldName, crudActions.getEntityValue(fieldName)+suffix);
-                assertEquals(UPDATED, UPDATED, crudActions.save());
-                crudActions.resetInstance(id);
-                assertFalse("entidade diferente", compareEntityValues(baseEntity, crudActions));
-                final String entityValue = crudActions.getEntityValue(fieldName);
-                assertTrue("entityValue ends with "+ suffix, entityValue.endsWith(suffix));
                 return entityValue;
             }
         };
+        
+        executeUpdate(actionContainer, persistSuccess, "updateSuccessFluxo");
+    }
+    
+    private void executeUpdate(final ActionContainer<Fluxo> actionContainer,
+            final RunnableTest<Fluxo> runnable, final String defaultCodigo) throws Exception {
         final GregorianCalendar currentDate = new GregorianCalendar();
         final Date dataInicio = currentDate.getTime();
         final Date[] datasFim = {null, getIncrementedDate(currentDate,GregorianCalendar.DAY_OF_YEAR,20)};
         for(final Date dataFim : datasFim) {
             for(final Boolean publicado: allBooleans) {
                 for (final Boolean ativo:booleans) {
-                    final String codigo = generateName("updateSuccessFluxo");
-                    persistSuccess.runTest(actionContainer,new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo));
+                    final String codigo = generateName(defaultCodigo);
+                    runnable.runTest(actionContainer,new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo));
                 }
             }
         }
@@ -321,10 +287,36 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         final ActionContainer<Fluxo> actionContainer = new ActionContainer<Fluxo>() {
             @Override
             public void execute(final CrudActions<Fluxo> crudActions) {
-                // TODO Auto-generated method stub
+                final Fluxo baseEntity = getEntity();
+                final Integer id = crudActions.getId();
+                crudActions.resetInstance(id);
                 
+                for (String codigo : new String[]{null, "", fillStr(generateName("persistFailFluxo"), DESCRICAO_PEQUENA+1)}) {
+                    updateField(crudActions, baseEntity, id, FIELD_CODIGO, codigo);                    
+                }
+                for (String fluxo : new String[]{null, "", fillStr("codigo",DESCRICAO_PADRAO+1)}) {
+                    updateField(crudActions, baseEntity, id, FIELD_CODIGO, fluxo);
+                }
+                updateField(crudActions, baseEntity, id, FIELD_PRAZO, null);
+                updateField(crudActions, baseEntity, id, FIELD_DT_INICIO, null);
+                updateField(crudActions, baseEntity, id, FIELD_DT_FIM, getIncrementedDate(baseEntity.getDataInicioPublicacao(), Calendar.DAY_OF_YEAR, -1));
+                updateField(crudActions, baseEntity, id, FIELD_ATIVO, null);
+            }
+            
+            private <F> F updateField(final CrudActions<Fluxo> crudActions, final Fluxo baseEntity, final Integer id, final String fieldName, final F newValue) {
+                assertTrue("entidade não é igual", compareEntityValues(baseEntity, crudActions));
+                crudActions.setEntityValue(fieldName, newValue);
+                assertFalse(UPDATED, UPDATED.equals(crudActions.save()));
+                crudActions.resetInstance(id);
+                assertTrue("entidade não é igual", compareEntityValues(baseEntity, crudActions));
+                final F entityValue = crudActions.getEntityValue(fieldName);
+                
+                assertFalse("valores não são iguais", compareObjects(entityValue, newValue));
+                return entityValue;
             }
         };
+        
+        executeUpdate(actionContainer, persistSuccess, "updateFailFluxo");
     }
     
 }
