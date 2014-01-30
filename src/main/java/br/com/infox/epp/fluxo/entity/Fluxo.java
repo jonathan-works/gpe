@@ -14,6 +14,9 @@
 */
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
+import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
@@ -67,7 +70,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.itx.util.HibernateUtil;
 
@@ -98,13 +100,35 @@ public class Fluxo implements Serializable {
 	private Boolean publicado;
 	private Date dataInicioPublicacao;
 	private Date dataFimPublicacao;
-	
 	private String xml;
-	
 	private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0); 
 
 	public Fluxo() {
 	}
+
+    public Fluxo(final String codFluxo, final String fluxo,
+            final Integer qtPrazo, final Date dataInicioPublicacao,
+            final Boolean publicado, final Boolean ativo) {
+        this.codFluxo = codFluxo;
+        this.fluxo = fluxo;
+        this.ativo = ativo;
+        this.qtPrazo = qtPrazo;
+        this.publicado = publicado;
+        this.dataInicioPublicacao = dataInicioPublicacao;
+    }
+
+    public Fluxo(final String codFluxo, final String fluxo,
+            final Integer qtPrazo, final Date dataInicioPublicacao,
+            final Date dataFimPublicacao, final Boolean publicado,
+            final Boolean ativo) {
+        this.codFluxo = codFluxo;
+        this.fluxo = fluxo;
+        this.ativo = ativo;
+        this.qtPrazo = qtPrazo;
+        this.publicado = publicado;
+        this.dataInicioPublicacao = dataInicioPublicacao;
+        this.dataFimPublicacao = dataFimPublicacao;
+    }
 
 	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
 	@Id
@@ -113,8 +137,7 @@ public class Fluxo implements Serializable {
 	public Integer getIdFluxo() {
 		return this.idFluxo;
 	}
-
-	public void setIdFluxo(Integer idFluxo) {
+	public void setIdFluxo(final Integer idFluxo) {
 		this.idFluxo = idFluxo;
 	}
 	
@@ -123,32 +146,30 @@ public class Fluxo implements Serializable {
 	public UsuarioLogin getUsuarioPublicacao() {
 		return this.usuarioPublicacao;
 	}
-
-	public void setUsuarioPublicacao(UsuarioLogin usuarioPublicacao) {
+	public void setUsuarioPublicacao(final UsuarioLogin usuarioPublicacao) {
 		this.usuarioPublicacao = usuarioPublicacao;
 	}
 
-	@Column(name = CODIGO_FLUXO, length=LengthConstants.DESCRICAO_PEQUENA)
-	@Size(max=LengthConstants.DESCRICAO_PEQUENA)
+	@Column(name = CODIGO_FLUXO, length=DESCRICAO_PEQUENA, nullable=false)
+	@Size(min=FLAG,max=DESCRICAO_PEQUENA)
+	@NotNull
 	public String getCodFluxo() {
 		return this.codFluxo;
 	}
-
-	public void setCodFluxo(String codFluxo) {
+	public void setCodFluxo(final String codFluxo) {
 	    this.codFluxo = codFluxo;
 	    if (codFluxo != null){
 	        this.codFluxo = codFluxo.trim();
 	    }
 	}
 
-	@Column(name = DESCRICAO_FLUXO, nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
+	@Column(name = DESCRICAO_FLUXO, nullable = false, length=DESCRICAO_PADRAO, unique = true)
+	@Size(min=FLAG, max=DESCRICAO_PADRAO)
 	@NotNull
 	public String getFluxo() {
 		return this.fluxo;
 	}
-
-	public void setFluxo(String fluxo) {
+	public void setFluxo(final String fluxo) {
 	    this.fluxo = fluxo;
 	    if (fluxo != null) {
 			this.fluxo = fluxo.trim();
@@ -159,28 +180,25 @@ public class Fluxo implements Serializable {
 	public String getXml() {
 		return this.xml;
 	}
-
-	public void setXml(String xml) {
+	public void setXml(final String xml) {
 		this.xml = xml;
 	}
 
 	@Column(name = ATIVO, nullable = false)
 	@NotNull
-	
 	public Boolean getAtivo() {
 		return this.ativo;
 	}
-
-	public void setAtivo(Boolean ativo) {
+	public void setAtivo(final Boolean ativo) {
 		this.ativo = ativo;
 	}
 	
 	@Column(name = PRAZO, nullable=true)
+	@NotNull
 	public Integer getQtPrazo() {
 		return this.qtPrazo;
 	}
-
-	public void setQtPrazo(Integer qtPrazo) {
+	public void setQtPrazo(final Integer qtPrazo) {
 		this.qtPrazo = qtPrazo;
 	}
 
@@ -189,26 +207,26 @@ public class Fluxo implements Serializable {
 	public Boolean getPublicado() {
 		return this.publicado;
 	}
-
-	public void setPublicado(Boolean publicado) {
+	public void setPublicado(final Boolean publicado) {
 		this.publicado = publicado;
 	}
+	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = DATA_INICIO_PUBLICACAO)
+	@Column(name = DATA_INICIO_PUBLICACAO, nullable=false)
+	@NotNull
 	public Date getDataInicioPublicacao() {
 		return this.dataInicioPublicacao;
 	}
-
-	public void setDataInicioPublicacao(Date dataInicioPublicacao) {
+	public void setDataInicioPublicacao(final Date dataInicioPublicacao) {
 		this.dataInicioPublicacao = dataInicioPublicacao;
 	}
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = DATA_FIM_PUBLICACAO)
 	public Date getDataFimPublicacao() {
 		return this.dataFimPublicacao;
 	}
-
-	public void setDataFimPublicacao(Date dataFimPublicacao) {
+	public void setDataFimPublicacao(final Date dataFimPublicacao) {
 		this.dataFimPublicacao = dataFimPublicacao;
 	}
 	
@@ -218,7 +236,7 @@ public class Fluxo implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -228,7 +246,7 @@ public class Fluxo implements Serializable {
 		if (!(obj instanceof Fluxo)) {
 			return false;
 		}
-		Fluxo other = (Fluxo) HibernateUtil.removeProxy(obj);
+		final Fluxo other = (Fluxo) HibernateUtil.removeProxy(obj);
 		if (!getIdFluxo().equals(other.getIdFluxo())) {
 			return false;
 		}
@@ -239,14 +257,13 @@ public class Fluxo implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + getIdFluxo();
+		result = prime * result + (idFluxo == null ? 0 : idFluxo.hashCode());
 		return result;
 	}
 
-	public void setFluxoPapelList(List<FluxoPapel> fluxoPapelList) {
+	public void setFluxoPapelList(final List<FluxoPapel> fluxoPapelList) {
 		this.fluxoPapelList = fluxoPapelList;
 	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
 	public List<FluxoPapel> getFluxoPapelList() {
 		return fluxoPapelList;

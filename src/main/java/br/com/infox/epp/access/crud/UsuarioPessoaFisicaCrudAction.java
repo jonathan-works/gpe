@@ -1,6 +1,5 @@
 package br.com.infox.epp.access.crud;
 
-import java.io.Serializable;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -16,7 +15,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
 
 @Name(UsuarioPessoaFisicaCrudAction.NAME)
-public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica> implements Serializable {
+public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica> {
     private static final long serialVersionUID = 1L;
 
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioPessoaFisicaCrudAction.class);
@@ -53,7 +52,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
     }
     
     @Override
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         final PessoaFisica entityInstance = getInstance();
         if (entityInstance != null && entityInstance.getAtivo() == null){
             entityInstance.setAtivo(Boolean.TRUE);
@@ -69,7 +68,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
             usuarioAssociado.setPessoaFisica(getInstance());
             try {
                 getGenericManager().update(usuarioAssociado);
-            } catch (DAOException e) {
+            } catch (final DAOException e) {
                 final String logMessagePattern = ".save()";
                 if (e.getPostgreSQLErrorCode() == PostgreSQLErrorCode.UNIQUE_VIOLATION){
                     final StatusMessages messagesHandler = getMessagesHandler();
@@ -104,7 +103,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
                 messages.clear();
     			messages.add(MSG_REGISTRO_REMOVIDO);
                 ret = REMOVED;
-            } catch (DAOException e) {
+            } catch (final DAOException e) {
                 LOG.error(".remove()", e);
             }
         }

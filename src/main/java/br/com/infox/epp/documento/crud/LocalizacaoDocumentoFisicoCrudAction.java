@@ -1,6 +1,5 @@
 package br.com.infox.epp.documento.crud;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import br.com.infox.epp.processo.home.ProcessoHome;
 @Name(LocalizacaoDocumentoFisicoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class LocalizacaoDocumentoFisicoCrudAction extends
-		AbstractCrudAction<DocumentoFisico> implements Serializable{
+		AbstractCrudAction<DocumentoFisico> {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoDocumentoFisicoCrudAction.class);
 
@@ -39,22 +38,22 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	private DocumentoFisicoManager documentoFisicoManager;
 
 	@Override
-	protected boolean beforeSave() {
+	protected boolean isInstanceValid() {
 		getInstance().setProcesso(processo);
-		return super.beforeSave();
+		return super.isInstanceValid();
 	}
 
 	@Override
 	protected void afterSave() {
 		newInstance();
 		listByProcesso();
-		LocalizacaoFisicaTreeHandler tree = (LocalizacaoFisicaTreeHandler) Component.getInstance(LocalizacaoFisicaTreeHandler.NAME);
+		final LocalizacaoFisicaTreeHandler tree = (LocalizacaoFisicaTreeHandler) Component.getInstance(LocalizacaoFisicaTreeHandler.NAME);
 		tree.clearTree();
 	}
 
 	@Override
-	public String inactive(DocumentoFisico obj) {
-		String inactive = super.inactive(obj);
+	public String inactive(final DocumentoFisico obj) {
+		final String inactive = super.inactive(obj);
 		if (inactive != null) {
 			getDocumentoFisicoList().remove(obj);
 		}
@@ -62,13 +61,13 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	}
 	
 	public void inactiveAll() {
-		for (Iterator<DocumentoFisico> iterator = getDocumentoFisicoList()
+		for (final Iterator<DocumentoFisico> iterator = getDocumentoFisicoList()
 				.iterator(); iterator.hasNext();) {
-			DocumentoFisico nl = iterator.next();
+			final DocumentoFisico nl = iterator.next();
 			try {
 				nl.setAtivo(false);
 				getGenericManager().update(nl);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 			    LOG.error(".inactiveAll()", e);
 			}
 			iterator.remove();
@@ -77,7 +76,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	}
 
 	public void init() {
-		ProcessoHome processoHome = ProcessoHome.instance();
+		final ProcessoHome processoHome = ProcessoHome.instance();
 		processo = processoHome.getInstance();
 		localizacaoFisicaList = new LocalizacaoFisicaList().getResultList();
 		listByProcesso();
@@ -92,11 +91,11 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	}
 
 	public void setLocalizacaoFisicaList(
-			List<LocalizacaoFisica> localizacaoFisicaList) {
+			final List<LocalizacaoFisica> localizacaoFisicaList) {
 		this.localizacaoFisicaList = localizacaoFisicaList;
 	}
 
-	public void setDocumentoFisicoList(List<DocumentoFisico> documentoFisicoList) {
+	public void setDocumentoFisicoList(final List<DocumentoFisico> documentoFisicoList) {
 		this.documentoFisicoList = documentoFisicoList;
 	}
 

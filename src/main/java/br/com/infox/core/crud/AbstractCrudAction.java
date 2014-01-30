@@ -2,6 +2,7 @@ package br.com.infox.core.crud;
 
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 import org.jboss.seam.ScopeType;
@@ -28,8 +29,9 @@ import br.com.itx.util.EntityUtil;
  * @param <T> Entity principal, onde devem ser realizadas as alterações.
  */
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements Crudable<T> {
+public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements Crudable<T>, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String tab;
     private Object id;
 
@@ -45,7 +47,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
     private T instance;
 
     @Override
-    public void setInstance(T instance) {
+    public void setInstance(final T instance) {
         this.instance = instance;
     }
 
@@ -61,15 +63,18 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
      * Devem ser escritas aqui as ações que serão executadas antes da inserção
      * ou atualização dos dados.
      */
-    protected boolean beforeSave() {
+    protected boolean isInstanceValid() {
         return Boolean.TRUE;
     }
 
+    protected void beforeSave() {
+    }
+    
     protected void afterSave() {
 
     }
 
-    protected void afterSave(String ret) {
+    protected void afterSave(final String ret) {
     }
 
     @Override
@@ -78,7 +83,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
     }
 
     @Override
-    public void setTab(String tab) {
+    public void setTab(final String tab) {
         this.tab = tab;
     }
 
@@ -93,7 +98,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
     }
 
     @SuppressWarnings(UNCHECKED)
-    public void setId(Object id, boolean switchTab) {
+    public void setId(final Object id, final boolean switchTab) {
         if (id != null && !id.equals(this.id)) {
             this.id = id;
             setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
@@ -127,17 +132,19 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
         if (activeEntity != null && isIdDefined() && !contains(activeEntity)) {
             try {
                 setInstance(getGenericManager().merge(activeEntity));
-            } catch (DAOException e) {
+            } catch (final DAOException e) {
                 getMessagesHandler().add(Severity.ERROR, "Merge Entity Error", e);
             }
         }
     }
 
     private boolean isIdDefined() {
-        Object currentId = getId();
+        final Object currentId = getId();
         return currentId != null && !"".equals(currentId);
     }
 
+    
+    
     /**
      * Registra ou altera a instância atual.
      * 
@@ -147,11 +154,12 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
     @Override
     public String save() {
         String ret = null;
-        boolean wasManaged = isManaged();
-        if (beforeSave()) {
+        final boolean wasManaged = isManaged();
+        if (isInstanceValid()) {
+            beforeSave();
             ret = wasManaged ? update() : persist();
         }
-        boolean persistFailed = ret == null
+        final boolean persistFailed = ret == null
                 || (!PERSISTED.equals(ret) && !wasManaged);
         if (ret != null) {
             afterSave();
@@ -225,8 +233,8 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
     }
 
     @Override
-    public String remove(T obj) {
-        String ret = super.remove(obj);
+    public String remove(final T obj) {
+        final String ret = super.remove(obj);
         if (REMOVED.equals(ret)) {
             getMessagesHandler().clear();
             getMessagesHandler().add(MSG_REGISTRO_REMOVIDO);
@@ -249,15 +257,15 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
 
     public String getHomeName() {
         String name = null;
-        Name nameAnnotation = this.getClass().getAnnotation(Name.class);
+        final Name nameAnnotation = this.getClass().getAnnotation(Name.class);
         if (nameAnnotation != null) {
             name = nameAnnotation.value();
         }
         return name;
     }
 
-    protected void onDAOExcecption(DAOException daoException) {
-        PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+    protected void onDAOExcecption(final DAOException daoException) {
+        final PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
         if (errorCode != null) {
             getMessagesHandler().clear();
             getMessagesHandler().add(daoException.getLocalizedMessage());

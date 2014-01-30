@@ -1,6 +1,5 @@
 package br.com.infox.epp.access.crud;
 
-import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +38,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(PapelCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class PapelCrudAction extends AbstractCrudAction<Papel> implements Serializable {
+public class PapelCrudAction extends AbstractCrudAction<Papel> {
     private static final long serialVersionUID = 1L;
     private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
     private static final String CONSTRAINT_VIOLATION_UNIQUE_VIOLATION = "#{messages['constraintViolation.uniqueViolation']}";
@@ -309,7 +308,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> implements Serial
 	}
 
 	@Override
-	protected boolean beforeSave() {
+	protected boolean isInstanceValid() {
 	    boolean result = Boolean.TRUE;
 	    if (IdentityManager.instance().roleExists(getInstance().getIdentificador()) && !isManaged()) {
 	        getMessagesHandler().clear();

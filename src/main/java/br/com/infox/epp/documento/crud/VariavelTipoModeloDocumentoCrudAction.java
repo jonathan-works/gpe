@@ -25,9 +25,9 @@ public class VariavelTipoModeloDocumentoCrudAction extends
 	}
 	
 	@Override
-	protected boolean beforeSave() {
+	protected boolean isInstanceValid() {
 		getInstance().setVariavel(variavelAtual);
-		return super.beforeSave();
+		return super.isInstanceValid();
 	}
 	
 	@Override

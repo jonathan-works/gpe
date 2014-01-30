@@ -23,10 +23,11 @@ import br.com.infox.epp.fluxo.manager.FluxoManager;
 @Name(FluxoCrudAction.NAME)
 public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
 
-	public static final String NAME = "fluxoCrudAction";
+    private static final long serialVersionUID = 1L;
     private static final String DESCRICAO_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:descricaoFluxoDecoration:descricaoFluxo";
 	private static final String COD_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:codFluxoDecoration:codFluxo";
     private static final LogProvider LOG = Logging.getLogProvider(FluxoCrudAction.class);
+    public static final String NAME = "fluxoCrudAction";
     
     @In private FluxoManager fluxoManager;
     
@@ -37,11 +38,11 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     	if (!verificarReplica()) {
     		return null;
     	}
-        Fluxo fluxo = getInstance();
+        final Fluxo fluxo = getInstance();
         fluxoManager.detach(fluxo);
         fluxo.setIdFluxo(null);
         setId(null);
-        String ret = save();
+        final String ret = save();
         if (PERSISTED.equals(ret)) {
         	this.replica = false;
         }
@@ -49,15 +50,15 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     }
 
 	private boolean verificarReplica() {
-		boolean existeFluxoComCodigo = fluxoManager.existeFluxoComCodigo(getInstance().getCodFluxo());
-		boolean existeFluxoComDescricao = fluxoManager.existeFluxoComDescricao(getInstance().getFluxo());
+		final boolean existeFluxoComCodigo = fluxoManager.existeFluxoComCodigo(getInstance().getCodFluxo());
+		final boolean existeFluxoComDescricao = fluxoManager.existeFluxoComDescricao(getInstance().getFluxo());
 		
 		if (existeFluxoComCodigo) {
-			FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.codigoDuplicado']}");
+			final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.codigoDuplicado']}");
 			FacesContext.getCurrentInstance().addMessage(COD_FLUXO_COMPONENT_ID, message);
 		}
 		if (existeFluxoComDescricao) {
-			FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.descricaoDuplicada']}");
+			final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.descricaoDuplicada']}");
 			FacesContext.getCurrentInstance().addMessage(DESCRICAO_FLUXO_COMPONENT_ID, message);
 		}
 		
@@ -65,26 +66,26 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
 	}
     
     @Override
-    protected boolean beforeSave() {
-        Date dataFimPublicacao = getInstance().getDataFimPublicacao();
+    protected boolean isInstanceValid() {
+        final Date dataFimPublicacao = getInstance().getDataFimPublicacao();
         if (isValidaDataFimPublicacao(dataFimPublicacao)){
             FacesMessages.instance().add(Severity.ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
             return Boolean.FALSE;
         }
         
         verificaPublicacao();
-        return super.beforeSave();
+        return super.isInstanceValid();
     }
     
-    private boolean isValidaDataFimPublicacao(Date dataFimPublicacao) {
+    private boolean isValidaDataFimPublicacao(final Date dataFimPublicacao) {
         return dataFimPublicacao != null && dataFimPublicacao.before(getInstance().getDataInicioPublicacao());
     }
     
     private void verificaPublicacao(){
-        Date data = new Date();
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        String dataHoje = formato.format(data);
-        String dataInicio = formato.format(getInstance().getDataInicioPublicacao());
+        final Date data = new Date();
+        final SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        final String dataHoje = formato.format(data);
+        final String dataInicio = formato.format(getInstance().getDataInicioPublicacao());
         
         if (dataHoje.equals(dataInicio)){
             getInstance().setPublicado(Boolean.TRUE);
@@ -94,27 +95,27 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     @Override
     public String save() {
         try {
-            String ret = super.save();
-            UsuarioLogin usuarioPublicacao = getInstance().getUsuarioPublicacao();
+            final String ret = super.save();
+            final UsuarioLogin usuarioPublicacao = getInstance().getUsuarioPublicacao();
             if (usuarioPublicacao != null) {
-                List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
+                final List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
                         .getFluxoList();
                 if (!usuarioPublicacaoList.contains(getInstance())) {
                     fluxoManager.refresh(usuarioPublicacao);
                 }
             }
             return ret;
-        } catch (Exception e){
+        } catch (final Exception e){
             LOG.error(e.getMessage(), e);
             return null;
         }
     }
     
     @Override
-    public String inactive(Fluxo fluxo) {
+    public String inactive(final Fluxo fluxo) {
         setInstance((Fluxo) fluxo);
         if (!fluxoManager.existemProcessosAssociadosAFluxo(fluxo)) {
-            String ret = super.inactive(fluxo);
+            final String ret = super.inactive(fluxo);
             newInstance();
             return ret;
         } else {
