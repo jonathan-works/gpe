@@ -97,7 +97,7 @@ public abstract class DAO<T, K> implements Serializable {
             final Map<String, Object> parameters) {
         Query q = getNamedQuery(namedQuery, parameters).setMaxResults(1);
         List<X> list = q.getResultList();
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return null;
         }
         return list.get(0);
@@ -208,7 +208,7 @@ public abstract class DAO<T, K> implements Serializable {
             final Map<String, Object> parameters) {
         final Query q = createQuery(query, parameters).setMaxResults(1);
         final List<X> list = q.getResultList();
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return null;
         }
         return list.get(0);
