@@ -18,8 +18,8 @@ import org.jboss.seam.mock.JUnitSeamTest;
 import org.jboss.seam.servlet.ServletSessionMap;
 
 
-public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
-    private class AbstractCrudActions<E> implements ICrudActions<E> {
+public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
+    private class AbstractCrudActions<E> implements CrudActions<E> {
         private final String componentName;
 
         public AbstractCrudActions(final String componentName) {
@@ -142,26 +142,26 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
 
     }
-    protected final class CrudActions<E> extends AbstractCrudActions<E> {
-        public CrudActions(final String componentName) {
+    protected final class CrudActionsImpl<E> extends AbstractCrudActions<E> {
+        public CrudActionsImpl(final String componentName) {
             super(componentName);
         }
     }
-    protected abstract class EntityActionContainer<E> {
+    protected abstract class ActionContainer<E> {
         private E entity;
 
-        public EntityActionContainer() {
+        public ActionContainer() {
             entity = null;
         }
         
-        public EntityActionContainer(final E entity) {
+        public ActionContainer(final E entity) {
             if (entity == null) {
                 throw new NullPointerException("Null entity not allowed for EntityActionContainer");
             }
             this.entity = entity;
         }
 
-        public abstract void execute(final ICrudActions<E> crudActions);
+        public abstract void execute(final CrudActions<E> crudActions);
 
         public E getEntity() {
             return entity;
@@ -169,8 +169,8 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     }
     protected abstract class RunnableTest<E> extends AbstractCrudActions<E>{
         private E entity;
-        private EntityActionContainer<E> actionContainer;
-        protected final ICrudActions<E> crudActions;
+        private ActionContainer<E> actionContainer;
+        protected final CrudActions<E> crudActions;
         //private HttpSession session;
         //private ServletContext servletContext;
         
@@ -202,11 +202,11 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             return this.runTest(null, entity);
         }
         
-        public final E runTest(final EntityActionContainer<E> actionContainer) throws Exception {
+        public final E runTest(final ActionContainer<E> actionContainer) throws Exception {
             return this.runTest(actionContainer, actionContainer.getEntity());
         }
 
-        public final E runTest(final EntityActionContainer<E> actionContainer, final E entity) throws Exception {
+        public final E runTest(final ActionContainer<E> actionContainer, final E entity) throws Exception {
             this.entity = entity;
             this.actionContainer = actionContainer;
             try {
@@ -226,7 +226,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             this.entity = entity;
         }
     }
-    public interface ICrudActions<E> {
+    public interface CrudActions<E> {
         E createInstance();
         <R> R getComponentValue(final String field);
         <R> R getEntityValue(final String field);
@@ -383,7 +383,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
             final T entity = getEntity();
 
             newInstance();
-            initEntity(entity, new CrudActions<T>(getComponentName()));
+            initEntity(entity, new CrudActionsImpl<T>(getComponentName()));
             assertEquals("persisted", PERSISTED, save());
 
             final Integer id = getId();
@@ -397,7 +397,7 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
         }
     };
 
-    protected boolean compareEntityValues(final T entity, final ICrudActions<T> crudActions) {
+    protected boolean compareEntityValues(final T entity, final CrudActions<T> crudActions) {
         final Object entityInstance = crudActions.getInstance();
         return entityInstance == entity
                 || (entityInstance != null && entity != null);
@@ -433,5 +433,5 @@ public abstract class AbstractGenericCrudTest<T> extends JUnitSeamTest {
     
     protected abstract String getComponentName();
     
-    protected abstract void initEntity(T entity, ICrudActions<T> crudActions);
+    protected abstract void initEntity(T entity, CrudActions<T> crudActions);
 }

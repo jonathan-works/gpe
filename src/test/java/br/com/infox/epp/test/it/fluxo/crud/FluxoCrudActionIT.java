@@ -24,11 +24,11 @@ import br.com.infox.epp.fluxo.crud.FluxoCrudAction;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
+public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
     
     private static final String FIELD_ATIVO = "ativo";
     private static final String FIELD_PUBLICADO = "publicado";
@@ -54,7 +54,7 @@ public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
     }
 
     @Override
-    protected void initEntity(final Fluxo entity, final ICrudActions<Fluxo> crudActions) {
+    protected void initEntity(final Fluxo entity, final CrudActions<Fluxo> crudActions) {
         crudActions.setEntityValue(FIELD_CODIGO, entity.getCodFluxo());//* validator
         crudActions.setEntityValue(FIELD_DESC, entity.getFluxo()); //*
         crudActions.setEntityValue(FIELD_PRAZO, entity.getQtPrazo()); //*
@@ -216,7 +216,7 @@ public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
     }
     
     @Override
-    protected boolean compareEntityValues(final Fluxo entity,final ICrudActions<Fluxo> crudActions) {
+    protected boolean compareEntityValues(final Fluxo entity,final CrudActions<Fluxo> crudActions) {
         final SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         final String dataHoje = formato.format(new Date());
         final String dataInicio = formato.format(crudActions.getEntityValue(FIELD_DT_INICIO));
@@ -235,9 +235,9 @@ public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
     
     @Test
     public void updateSuccessTest() throws Exception {
-        final EntityActionContainer<Fluxo> actionContainer = new EntityActionContainer<Fluxo>() {
+        final ActionContainer<Fluxo> actionContainer = new ActionContainer<Fluxo>() {
             @Override
-            public void execute(final ICrudActions<Fluxo> crudActions) {
+            public void execute(final CrudActions<Fluxo> crudActions) {
                 final Fluxo baseEntity = getEntity();
                 final Integer id = crudActions.getId();
                 crudActions.resetInstance(id);
@@ -250,7 +250,7 @@ public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
                 baseEntity.setAtivo(updateBooleanField(crudActions, baseEntity, id, FIELD_ATIVO));
             }
 
-            private Boolean updateBooleanField(final ICrudActions<Fluxo> crudActions,
+            private Boolean updateBooleanField(final CrudActions<Fluxo> crudActions,
                     final Fluxo baseEntity, final Integer id, final String fieldName) {
                 assertTrue("entidade igual", compareEntityValues(baseEntity, crudActions));
                 final Boolean newValue = !((Boolean)crudActions.getEntityValue(fieldName));
@@ -263,7 +263,7 @@ public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
                 return newValue;
             }
             
-            private Date updateDateField(final ICrudActions<Fluxo> crudActions,
+            private Date updateDateField(final CrudActions<Fluxo> crudActions,
                     final Fluxo baseEntity, final Integer id, final String fieldName,
                     final int dateField, final int increment) {
                 assertTrue("entidade igual", compareEntityValues(baseEntity, crudActions));
@@ -277,7 +277,7 @@ public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
                 return newEntityValue;
             }
             
-            private Integer updateIntegerField(final ICrudActions<Fluxo> crudActions,
+            private Integer updateIntegerField(final CrudActions<Fluxo> crudActions,
                     final Fluxo baseEntity, final Integer id, final String fieldName) {
                 assertTrue("entidade igual", compareEntityValues(baseEntity, crudActions));
                 final Integer novoPrazo = ((Integer)crudActions.getEntityValue(fieldName))+5;
@@ -289,7 +289,7 @@ public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
                 return novoPrazo;
             }
 
-            private String updateStringField(final ICrudActions<Fluxo> crudActions,
+            private String updateStringField(final CrudActions<Fluxo> crudActions,
                     final Fluxo baseEntity, final Integer id,
                     final String fieldName) {
                 assertTrue("entidade igual", compareEntityValues(baseEntity, crudActions));
@@ -318,9 +318,9 @@ public class FluxoCrudActionIT extends AbstractGenericCrudTest<Fluxo> {
     
     @Test
     public void updateFailTest() throws Exception {
-        final EntityActionContainer<Fluxo> actionContainer = new EntityActionContainer<Fluxo>() {
+        final ActionContainer<Fluxo> actionContainer = new ActionContainer<Fluxo>() {
             @Override
-            public void execute(final ICrudActions<Fluxo> crudActions) {
+            public void execute(final CrudActions<Fluxo> crudActions) {
                 // TODO Auto-generated method stub
                 
             }

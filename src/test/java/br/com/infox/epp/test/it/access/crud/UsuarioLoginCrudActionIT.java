@@ -27,11 +27,11 @@ import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLogin> {
+public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
 
     @Deployment
     @OverProtocol(SERVLET_3_0)
@@ -52,7 +52,7 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     }
     
     @Override
-    protected void initEntity(final UsuarioLogin entity, final ICrudActions<UsuarioLogin> crudActions) {
+    protected void initEntity(final UsuarioLogin entity, final CrudActions<UsuarioLogin> crudActions) {
         crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
         crudActions.setEntityValue("email", entity.getEmail());
         crudActions.setEntityValue("login", entity.getLogin());
@@ -90,9 +90,9 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     @Test
     public void getUpdateSuccessList() throws Exception {
         for (int i = 0; i < 30; i++) {
-            updateSuccess.runTest(new EntityActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i))) {
+            updateSuccess.runTest(new ActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i))) {
                 @Override
-                public void execute(final ICrudActions<UsuarioLogin> crudActions) {
+                public void execute(final CrudActions<UsuarioLogin> crudActions) {
                     final String updatedNomeUsuario = getEntity().getNomeUsuario()+"(updated)";
                     crudActions.setEntityValue("nomeUsuario", updatedNomeUsuario);
                 }
@@ -103,9 +103,9 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     @Test
     public void getUpdateFailList() throws Exception {
         for (int i = 0; i < 30; i++) {
-            updateFail.runTest(new EntityActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i))) {
+            updateFail.runTest(new ActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i))) {
                 @Override
-                public void execute(final ICrudActions<UsuarioLogin> crudActions) {
+                public void execute(final CrudActions<UsuarioLogin> crudActions) {
                   final String updatedNomeUsuario = fillStr(getEntity().getNomeUsuario()+"(updated)", LengthConstants.NOME_ATRIBUTO+1);
                   crudActions.setEntityValue("nomeUsuario", updatedNomeUsuario);
                 }
@@ -114,7 +114,7 @@ public class UsuarioLoginCrudActionIT extends AbstractGenericCrudTest<UsuarioLog
     }
     
     @Override
-    protected boolean compareEntityValues(final UsuarioLogin entity, final ICrudActions<UsuarioLogin> crudActions) {
+    protected boolean compareEntityValues(final UsuarioLogin entity, final CrudActions<UsuarioLogin> crudActions) {
         return compareValues(crudActions.getEntityValue("nomeUsuario"), entity.getNomeUsuario())
                     && compareValues(crudActions.getEntityValue("email"), entity.getEmail())
                     && compareValues(crudActions.getEntityValue("login"), entity.getLogin())

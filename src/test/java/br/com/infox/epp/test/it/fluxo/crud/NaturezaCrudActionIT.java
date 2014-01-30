@@ -14,11 +14,11 @@ import org.junit.runner.RunWith;
 
 import br.com.infox.epp.fluxo.crud.NaturezaCrudAction;
 import br.com.infox.epp.fluxo.entity.Natureza;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class NaturezaCrudActionIT extends AbstractGenericCrudTest<Natureza>{
+public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
     
     private static final String DEFAULT_VALUE = "natureza-p";
 
@@ -36,7 +36,7 @@ public class NaturezaCrudActionIT extends AbstractGenericCrudTest<Natureza>{
     }
 
     @Override
-    protected void initEntity(final Natureza entity, final ICrudActions<Natureza> crudActions) {
+    protected void initEntity(final Natureza entity, final CrudActions<Natureza> crudActions) {
         crudActions.setEntityValue("natureza", entity.getNatureza()); //*
         crudActions.setEntityValue("hasPartes", entity.getHasPartes());
         crudActions.setEntityValue("ativo", entity.getAtivo());
@@ -92,7 +92,7 @@ public class NaturezaCrudActionIT extends AbstractGenericCrudTest<Natureza>{
     }
     
     @Override
-    protected boolean compareEntityValues(final Natureza entity, final ICrudActions<Natureza> crudActions) {
+    protected boolean compareEntityValues(final Natureza entity, final CrudActions<Natureza> crudActions) {
         return compareObjects(entity.getNatureza(), crudActions.getEntityValue("natureza")) &&
                 compareObjects(entity.getHasPartes(), crudActions.getEntityValue("hasPartes")) &&
                 compareObjects(entity.getAtivo(), crudActions.getEntityValue("ativo"));
@@ -100,9 +100,9 @@ public class NaturezaCrudActionIT extends AbstractGenericCrudTest<Natureza>{
     
     @Test
     public void updateSuccessTest() throws Exception {
-        final EntityActionContainer<Natureza> actionContainer = new EntityActionContainer<Natureza>() {
+        final ActionContainer<Natureza> actionContainer = new ActionContainer<Natureza>() {
             @Override
-            public void execute(final ICrudActions<Natureza> crudActions) {
+            public void execute(final CrudActions<Natureza> crudActions) {
                 final Natureza entity = getEntity();
                 final Integer id = crudActions.getId();
                 assertNotNull("id not null", id);
@@ -149,9 +149,9 @@ public class NaturezaCrudActionIT extends AbstractGenericCrudTest<Natureza>{
     
     @Test
     public void updateFailTest() throws Exception {
-        final EntityActionContainer<Natureza> actionContainer = new EntityActionContainer<Natureza>() {
+        final ActionContainer<Natureza> actionContainer = new ActionContainer<Natureza>() {
             @Override
-            public void execute(final ICrudActions<Natureza> crudActions) {
+            public void execute(final CrudActions<Natureza> crudActions) {
                 final Natureza entity = getEntity();
                 final Integer id = crudActions.getId();
                 assertNotNull("id not null", id);

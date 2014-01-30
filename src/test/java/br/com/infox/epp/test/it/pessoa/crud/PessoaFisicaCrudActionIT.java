@@ -14,11 +14,11 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.pessoa.crud.PessoaFisicaCrudAction;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.validator.CpfValidator;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisica> {
+public class PessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisica> {
     
     @Deployment
     @OverProtocol(SERVLET_3_0)
@@ -29,7 +29,7 @@ public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisi
     }
     
     @Override
-    protected void initEntity(final PessoaFisica entity,final ICrudActions<PessoaFisica> crudActions) {
+    protected void initEntity(final PessoaFisica entity,final CrudActions<PessoaFisica> crudActions) {
         crudActions.setEntityValue("cpf", entity.getCpf());
         crudActions.setEntityValue("nome", entity.getNome());
         if (entity.getDataNascimento() != null) {
@@ -52,7 +52,7 @@ public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisi
     }
     
     protected boolean compareEntityValues(final PessoaFisica entity) {
-        final ICrudActions<PessoaFisica> crudActions = new CrudActions<>("");
+        final CrudActions<PessoaFisica> crudActions = new CrudActionsImpl<>("");
         return compareValues(crudActions.getEntityValue("cpf"), entity.getCpf()) &&
                 compareValues(crudActions.getEntityValue("dataNascimento"), entity.getDataNascimento()) &&
                 compareValues(crudActions.getEntityValue("nome"), entity.getNome()) &&
@@ -88,25 +88,25 @@ public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisi
     
     @Test
     public void updateSuccessTest() throws Exception {
-        updateSuccess.runTest(new EntityActionContainer<PessoaFisica>(new PessoaFisica("023.123.321-32","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
+        updateSuccess.runTest(new ActionContainer<PessoaFisica>(new PessoaFisica("023.123.321-32","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
-            public void execute(final ICrudActions<PessoaFisica> crudActions) {
+            public void execute(final CrudActions<PessoaFisica> crudActions) {
                 crudActions.setEntityValue("cpf", "000.123.321-32");
                 crudActions.setEntityValue("nome", "Nova Pessoa");
             }
         });
         
-        updateSuccess.runTest(new EntityActionContainer<PessoaFisica>(new PessoaFisica("1jkjkjkj11","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
+        updateSuccess.runTest(new ActionContainer<PessoaFisica>(new PessoaFisica("1jkjkjkj11","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
-            public void execute(final ICrudActions<PessoaFisica> crudActions) {
+            public void execute(final CrudActions<PessoaFisica> crudActions) {
                 crudActions.setEntityValue("cpf", "031.123.321-32");
                 crudActions.setEntityValue("nome", "xxxxxPessoa");
             }
         });
         
-        updateSuccess.runTest(new EntityActionContainer<PessoaFisica>(new PessoaFisica("1klzdjfbm1","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
+        updateSuccess.runTest(new ActionContainer<PessoaFisica>(new PessoaFisica("1klzdjfbm1","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE)) {
             @Override
-            public void execute(final ICrudActions<PessoaFisica> crudActions) {
+            public void execute(final CrudActions<PessoaFisica> crudActions) {
                 crudActions.setEntityValue("cpf", "578.123.321-32");
                 crudActions.setEntityValue("nome", "Novaxxxxxxx");
             }
@@ -115,33 +115,33 @@ public class PessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisi
     
     @Test
     public void updateFailTest() throws Exception {
-        updateFail.runTest(new EntityActionContainer<PessoaFisica>(new PessoaFisica("9123993111","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
+        updateFail.runTest(new ActionContainer<PessoaFisica>(new PessoaFisica("9123993111","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
             @Override
-            public void execute(final ICrudActions<PessoaFisica> crudActions) {
+            public void execute(final CrudActions<PessoaFisica> crudActions) {
                 crudActions.setEntityValue("cpf", fillStr("000.123.321-322",LengthConstants.NUMERO_CPF+1));
             }
         });
-        updateFail.runTest(new EntityActionContainer<PessoaFisica>(new PessoaFisica("9332asdds1","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
+        updateFail.runTest(new ActionContainer<PessoaFisica>(new PessoaFisica("9332asdds1","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
             @Override
-            public void execute(final ICrudActions<PessoaFisica> crudActions) {
+            public void execute(final CrudActions<PessoaFisica> crudActions) {
                 crudActions.setEntityValue("cpf", null);
             }
         });
-        updateFail.runTest(new EntityActionContainer<PessoaFisica>(new PessoaFisica("asd1236asw","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
+        updateFail.runTest(new ActionContainer<PessoaFisica>(new PessoaFisica("asd1236asw","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
             @Override
-            public void execute(final ICrudActions<PessoaFisica> crudActions) {
+            public void execute(final CrudActions<PessoaFisica> crudActions) {
                 crudActions.setEntityValue("nome", null);
             }
         });
-        updateFail.runTest(new EntityActionContainer<PessoaFisica>(new PessoaFisica("asdq23ds41","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
+        updateFail.runTest(new ActionContainer<PessoaFisica>(new PessoaFisica("asdq23ds41","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
             @Override
-            public void execute(final ICrudActions<PessoaFisica> crudActions) {
+            public void execute(final CrudActions<PessoaFisica> crudActions) {
                 crudActions.setEntityValue("nome", fillStr("Pessoa",LengthConstants.NOME_ATRIBUTO+1));
             }
         });
-        updateFail.runTest(new EntityActionContainer<PessoaFisica>(new PessoaFisica("sdd00d1000","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
+        updateFail.runTest(new ActionContainer<PessoaFisica>(new PessoaFisica("sdd00d1000","Pessoa",new GregorianCalendar(1992,11,9).getTime(),Boolean.TRUE)) {
             @Override
-            public void execute(final ICrudActions<PessoaFisica> crudActions) {
+            public void execute(final CrudActions<PessoaFisica> crudActions) {
                 crudActions.setEntityValue("dataNascimento", null);
             }
         });

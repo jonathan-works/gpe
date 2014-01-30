@@ -35,11 +35,11 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<PessoaFisica>{
+public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisica>{
 
     @Deployment
     @OverProtocol(SERVLET_3_0)
@@ -55,11 +55,11 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractGenericCrudTest<Pes
         .createDeployment();
     }
 
-    private final ICrudActions<UsuarioLogin> crudActionsUsuarioLogin = new CrudActions<>(UsuarioLoginCrudAction.NAME);
+    private final CrudActions<UsuarioLogin> crudActionsUsuarioLogin = new CrudActionsImpl<>(UsuarioLoginCrudAction.NAME);
     
     //TODO: listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
     @Override
-    protected void initEntity(final PessoaFisica entity, final ICrudActions<PessoaFisica> crudActions) {
+    protected void initEntity(final PessoaFisica entity, final CrudActions<PessoaFisica> crudActions) {
         crudActions.setEntityValue("cpf",entity.getCpf());
         crudActions.setEntityValue("nome",entity.getNome());
         crudActions.setEntityValue("dataNascimento",entity.getDataNascimento());

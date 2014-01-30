@@ -83,7 +83,7 @@ import br.com.infox.epp.tarefa.component.tree.TarefasEntityNode;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.ibpm.task.action.TaskPageAction;
@@ -97,7 +97,7 @@ import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.Variavel;
 
 @RunWith(Arquillian.class)
-public class UsuarioLocalizacaoActionIT  extends AbstractGenericCrudTest<UsuarioLocalizacao> {
+public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocalizacao> {
 
     private static final String EMPRESA_Y = "Empresa Y";
     private static final String EMPRESA_X = "Empresa X";
@@ -142,7 +142,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractGenericCrudTest<Usuario
     }
     
     @Override
-    protected void initEntity(final UsuarioLocalizacao entity, final ICrudActions<UsuarioLocalizacao> crudActions) {
+    protected void initEntity(final UsuarioLocalizacao entity, final CrudActions<UsuarioLocalizacao> crudActions) {
         crudActions.setComponentValue("usuarioGerenciado", entity.getUsuario());//req
         crudActions.setEntityValue("localizacao", entity.getLocalizacao());//req
         crudActions.setEntityValue("papel", entity.getPapel());//req

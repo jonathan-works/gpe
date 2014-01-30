@@ -21,11 +21,11 @@ import org.junit.runner.RunWith;
 import br.com.infox.epp.fluxo.crud.ItemCrudAction;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class ItemCrudActionIT extends AbstractGenericCrudTest<Item> {
+public class ItemCrudActionIT extends AbstractCrudTest<Item> {
 
     private static final String FIELD_ATIVO = "ativo";
     private static final String FIELD_DESCRICAO_ITEM = "descricaoItem";
@@ -40,7 +40,7 @@ public class ItemCrudActionIT extends AbstractGenericCrudTest<Item> {
 
     @Override
     protected void initEntity(final Item entity,
-            final ICrudActions<Item> crudActions) {
+            final CrudActions<Item> crudActions) {
         crudActions.setEntityValue(FIELD_CODIGO_ITEM, entity.getCodigoItem());// *
         crudActions.setEntityValue(FIELD_DESCRICAO_ITEM, entity.getDescricaoItem());// *
         crudActions.setEntityValue("itemPai", entity.getItemPai());
@@ -108,9 +108,9 @@ public class ItemCrudActionIT extends AbstractGenericCrudTest<Item> {
     
     @Test
     public void updateFailTest() throws Exception {
-        final EntityActionContainer<Item> updateFailAction = new EntityActionContainer<Item>() {
+        final ActionContainer<Item> updateFailAction = new ActionContainer<Item>() {
             @Override
-            public void execute(final ICrudActions<Item> crudActions) {
+            public void execute(final CrudActions<Item> crudActions) {
                 final Object id = crudActions.getId();
                 assertNotNull("id not null",id);
 
@@ -151,9 +151,9 @@ public class ItemCrudActionIT extends AbstractGenericCrudTest<Item> {
     
     @Test
     public void updateSuccessTest() throws Exception {
-        final EntityActionContainer<Item> updateAction = new EntityActionContainer<Item>() {
+        final ActionContainer<Item> updateAction = new ActionContainer<Item>() {
             @Override
-            public void execute(final ICrudActions<Item> crudActions) {
+            public void execute(final CrudActions<Item> crudActions) {
                 final Object id = crudActions.getId();
                 assertNotNull("id not null",id);
                 Item instance = crudActions.resetInstance(id);

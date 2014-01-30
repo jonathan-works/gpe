@@ -17,11 +17,11 @@ import org.junit.runner.RunWith;
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.fluxo.crud.CategoriaCrudAction;
 import br.com.infox.epp.fluxo.entity.Categoria;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class CategoriaCrudActionIT extends AbstractGenericCrudTest<Categoria> {
+public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
 
     @Deployment
     @OverProtocol(SERVLET_3_0)
@@ -31,7 +31,7 @@ public class CategoriaCrudActionIT extends AbstractGenericCrudTest<Categoria> {
 
     @Override
     protected void initEntity(final Categoria entity,
-            final ICrudActions<Categoria> crudActions) {
+            final CrudActions<Categoria> crudActions) {
         crudActions.setEntityValue("categoria", entity.getCategoria());
         crudActions.setEntityValue("ativo", entity.getAtivo());
     }
@@ -75,8 +75,8 @@ public class CategoriaCrudActionIT extends AbstractGenericCrudTest<Categoria> {
     @Test
     public void updateSuccessTest() throws Exception {
         final int i = 0;
-        persistSuccess.runTest(new EntityActionContainer<Categoria>(new Categoria(format("categoria-upd-suc-{0}", i), TRUE)) {
-            public void execute(final ICrudActions<Categoria> crudActions) {
+        persistSuccess.runTest(new ActionContainer<Categoria>(new Categoria(format("categoria-upd-suc-{0}", i), TRUE)) {
+            public void execute(final CrudActions<Categoria> crudActions) {
                 final Integer id = crudActions.getId();
                 assertNotNull("id not null", id);
                 final Categoria oldEntity = getEntity();

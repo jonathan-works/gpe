@@ -37,11 +37,11 @@ import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
-import br.com.infox.epp.test.crud.AbstractGenericCrudTest;
+import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<BloqueioUsuario> {
+public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuario> {
 
     @Deployment
     @OverProtocol(SERVLET_3_0)
@@ -86,7 +86,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
 */
     @Override
     protected void initEntity(final BloqueioUsuario entity,
-            final ICrudActions<BloqueioUsuario> crudActions) {
+            final CrudActions<BloqueioUsuario> crudActions) {
         //dataPrevisaoDesbloqueio
         crudActions.setEntityValue("dataPrevisaoDesbloqueio", entity.getDataPrevisaoDesbloqueio());
         crudActions.setEntityValue("motivoBloqueio", entity.getMotivoBloqueio());
@@ -155,12 +155,12 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
     
     private final class PersistDesbloqueioUsuarioTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
-        private final ICrudActions<UsuarioLogin> usrCrudActions;
+        private final CrudActions<UsuarioLogin> usrCrudActions;
         
         public PersistDesbloqueioUsuarioTest(final UsuarioLogin usuario) {
             super(BloqueioUsuarioCrudAction.NAME);
             this.usuario = usuario;
-            this.usrCrudActions = new CrudActions<>(UsuarioLoginCrudAction.NAME);
+            this.usrCrudActions = new CrudActionsImpl<>(UsuarioLoginCrudAction.NAME);
         }
         
         @Override
@@ -189,20 +189,20 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
     
     private final class PersistBloqueioFailTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
-        private final ICrudActions<UsuarioLogin> usrCrudActions;
+        private final CrudActions<UsuarioLogin> usrCrudActions;
         private final Boolean bloqueadoStartValue;
         
         public PersistBloqueioFailTest(final UsuarioLogin usuario, final Boolean bloqueadoStartValue) {
             super(BloqueioUsuarioCrudAction.NAME);
             this.usuario = usuario;
-            this.usrCrudActions = new CrudActions<>(UsuarioLoginCrudAction.NAME);
+            this.usrCrudActions = new CrudActionsImpl<>(UsuarioLoginCrudAction.NAME);
             this.bloqueadoStartValue = bloqueadoStartValue;
         }
         
         public PersistBloqueioFailTest(final UsuarioLogin usuario) {
             super(BloqueioUsuarioCrudAction.NAME);
             this.usuario = usuario;
-            this.usrCrudActions = new CrudActions<>(UsuarioLoginCrudAction.NAME);
+            this.usrCrudActions = new CrudActionsImpl<>(UsuarioLoginCrudAction.NAME);
             this.bloqueadoStartValue = Boolean.FALSE;
         }
         
@@ -230,12 +230,12 @@ public class BloqueioUsuarioCrudActionIT extends AbstractGenericCrudTest<Bloquei
     
     private final class PersistBloqueioUsuarioTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
-        private final ICrudActions<UsuarioLogin> usrCrudActions;
+        private final CrudActions<UsuarioLogin> usrCrudActions;
         
         public PersistBloqueioUsuarioTest(final UsuarioLogin usuario) {
             super(BloqueioUsuarioCrudAction.NAME);
             this.usuario = usuario;
-            this.usrCrudActions = new CrudActions<>(UsuarioLoginCrudAction.NAME);
+            this.usrCrudActions = new CrudActionsImpl<>(UsuarioLoginCrudAction.NAME);
         }
         
         @Override
