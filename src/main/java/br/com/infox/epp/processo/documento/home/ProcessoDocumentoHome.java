@@ -26,11 +26,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Expressions;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.epp.access.api.Authenticator;
@@ -57,7 +54,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
 
     private static final String PROCESSO_DOCUMENTO_BIN_HOME_NAME = "processoDocumentoBinHome";
     public static final String PETICAO_INSERIDA = "peticaoInseridaMap";
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoHome.class);
     private ModeloDocumento modeloDocumentoCombo;
     private boolean isModelo = Boolean.TRUE;
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
@@ -162,44 +158,8 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
         }
     }
 
-    public void processarModelo() {
-        if (modeloDocumentoCombo != null) {
-            ModeloDocumento modeloDocumento = getEntityManager().merge(modeloDocumentoCombo);
-            ProcessoDocumentoBinHome procDocBinHome = getProcessoDocumentoBinHome();
-            procDocBinHome.getInstance().setModeloDocumento(processarModelo(modeloDocumento.getModeloDocumento()));
-        }
-    }
-
     private ProcessoDocumentoBinHome getProcessoDocumentoBinHome() {
         return getComponent(PROCESSO_DOCUMENTO_BIN_HOME_NAME);
-    }
-
-    /**
-     * Processa um modelo avaliando linha a linha.
-     * 
-     * @param modelo
-     * @return
-     */
-    public static String processarModelo(String modelo) {
-        if (modelo != null) {
-            StringBuilder modeloProcessado = new StringBuilder();
-            String[] linhas = modelo.split("\n");
-            for (int i = 0; i < linhas.length; i++) {
-                if (modeloProcessado.length() > 0) {
-                    modeloProcessado.append('\n');
-                }
-                Object o = null;
-                try {
-                    o = Expressions.instance().createValueExpression(linhas[i]).getValue();
-                } catch (RuntimeException e) {
-                    LOG.warn("Erro ao avaliar expressão na linha: '"
-                            + linhas[i] + "': " + e.getMessage(), e);
-                }
-                modeloProcessado.append(o);
-            }
-            return modeloProcessado.toString();
-        }
-        return modelo;
     }
 
     private boolean isCodDataValido(String codIni, ProcessoDocumento pd) {

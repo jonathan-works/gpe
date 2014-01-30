@@ -61,10 +61,6 @@
                     value="#{processoDocumentoHome.modeloDocumentoCombo}"
                     items="#{modeloDocumentoPeticaoItems}"
                     noSelectionLabel="Selecione...">
-                    <a:ajax render="modeloDocumento" event="change"
-                        action="#{processoDocumentoHome.processarModelo()}"
-                        execute="@this" onsubmit="showLoading()"
-                        oncomplete="hideLoading()" />
                 </wi:selectOneMenuEntity>
 
                 <wi:editor id="modeloDocumento" label="Modelo"
