@@ -21,7 +21,7 @@ import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.exception.BusinessException;
-import br.com.infox.epp.access.action.UsuarioLocalizacaoAction;
+import br.com.infox.epp.access.action.UsuarioLocalizacaoCrudAction;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.api.RolesMap;
 import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
@@ -113,7 +113,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
             .addPackages("br.com.infox.ibpm.task")
-            .addClasses(UsuarioLocalizacaoAction.class, UsuarioLocalizacaoManager.class,
+            .addClasses(UsuarioLocalizacaoCrudAction.class, UsuarioLocalizacaoManager.class,
                     LocalizacaoEstruturaTreeHandler.class,PapelTreeHandler.class,
                     UsuarioLocalizacaoDAO.class, Authenticator.class,
                     UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
@@ -152,7 +152,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
     
     @Override
     protected String getComponentName() {
-        return UsuarioLocalizacaoAction.NAME;
+        return UsuarioLocalizacaoCrudAction.NAME;
     }
     
     private final RunnableTest<Localizacao> persistLocalizacao = new RunnableTest<Localizacao>(LocalizacaoCrudAction.NAME) {
