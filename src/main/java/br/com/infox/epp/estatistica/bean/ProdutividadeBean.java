@@ -6,17 +6,17 @@ public class ProdutividadeBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Long quantidadeTarefas;
-	private Integer tempoPrevisto;
+	private String tempoPrevisto;
 	private String localizacao;
 	private String papel;
 	private String usuario;
 	private String tarefa;
-	private Double mediaTempoGasto;
-	private Integer minimoTempoGasto;
-	private Integer maximoTempoGasto;
+	private String mediaTempoGasto;
+	private String minimoTempoGasto;
+	private String maximoTempoGasto;
 
-	public ProdutividadeBean(Integer tempoPrevisto, String localizacao, String papel, String usuario, String tarefa, 
-			Double mediaTempoGasto, Integer minimoTempoGasto, Integer maximoTempoGasto, Long quantidadeTarefas) {
+	public ProdutividadeBean(String tempoPrevisto, String localizacao, String papel, String usuario, String tarefa, 
+			String mediaTempoGasto, String minimoTempoGasto, String maximoTempoGasto, Long quantidadeTarefas) {
 		this.tempoPrevisto = tempoPrevisto;
 		this.localizacao = localizacao;
 		this.papel = papel;
@@ -39,11 +39,11 @@ public class ProdutividadeBean implements Serializable {
 		this.quantidadeTarefas = quantidadeTarefas;
 	}
 
-	public Integer getTempoPrevisto() {
+	public String getTempoPrevisto() {
 		return tempoPrevisto;
 	}
 
-	public void setTempoPrevisto(Integer tempoPrevisto) {
+	public void setTempoPrevisto(String tempoPrevisto) {
 		this.tempoPrevisto = tempoPrevisto;
 	}
 
@@ -79,27 +79,27 @@ public class ProdutividadeBean implements Serializable {
 		this.tarefa = tarefa;
 	}
 
-	public Double getMediaTempoGasto() {
+	public String getMediaTempoGasto() {
 		return mediaTempoGasto;
 	}
 
-	public void setMediaTempoGasto(Double mediaTempoGasto) {
+	public void setMediaTempoGasto(String mediaTempoGasto) {
 		this.mediaTempoGasto = mediaTempoGasto;
 	}
 
-	public Integer getMinimoTempoGasto() {
+	public String getMinimoTempoGasto() {
 		return minimoTempoGasto;
 	}
 
-	public void setMinimoTempoGasto(Integer minimoTempoGasto) {
+	public void setMinimoTempoGasto(String minimoTempoGasto) {
 		this.minimoTempoGasto = minimoTempoGasto;
 	}
 
-	public Integer getMaximoTempoGasto() {
+	public String getMaximoTempoGasto() {
 		return maximoTempoGasto;
 	}
 
-	public void setMaximoTempoGasto(Integer maximoTempoGasto) {
+	public void setMaximoTempoGasto(String maximoTempoGasto) {
 		this.maximoTempoGasto = maximoTempoGasto;
 	}
 }

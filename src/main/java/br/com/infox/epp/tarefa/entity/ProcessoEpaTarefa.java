@@ -13,10 +13,9 @@ import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_ENDED_
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE;
-import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.*;
+import static br.com.infox.epp.tarefa.query.ProcessoEpaTarefaQuery.TAREFA_PROXIMA_LIMITE_QUERY;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -35,8 +34,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name=ProcessoEpaTarefa.TABLE_NAME, schema="public")
@@ -152,23 +151,7 @@ public class ProcessoEpaTarefa implements Serializable {
 	
 	@Transient
 	public String getTempoGastoFormatado() {
-		PrazoEnum tipoPrazo = tarefa.getTipoPrazo();
-		String result = "";
-		if (tipoPrazo == null) {
-		    result = MessageFormat.format("{0}", tempoGasto);
-		} else {
-    		switch (tipoPrazo) {
-    		case H:
-    		{
-    			result = MessageFormat.format("{0}h {1}m", tempoGasto/60,tempoGasto%60);
-    		}
-    			break;
-    		case D:
-    			result = MessageFormat.format("{0}d", tempoGasto);
-    			break;
-    		}
-		}
-		return result;
+		return DateUtil.formatTempo(tempoGasto, tarefa.getTipoPrazo());
 	}
 
 	public void setTempoPrevisto(Integer tempoPrevisto) {

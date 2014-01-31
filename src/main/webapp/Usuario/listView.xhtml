@@ -218,7 +218,7 @@
 			id="localizacaoUsuario"
 			status=":status"
 			rendered="#{home.managed}"
-			action="#{usuarioLocalizacaoAction.newInstance}"
+			action="#{usuarioLocalizacaoCrudAction.newInstance}"
 			title="#{messages['localizacao.usuarioLocalizacaoList']}"
 			name="localizacaoUsuario">
 
@@ -231,11 +231,11 @@
 						<wi:dataForm
 							formId="localizacaoUsuarioForm"
 							formTitle="#{messages['form.title']}"
-							home="#{usuarioLocalizacaoAction}">
+							home="#{usuarioLocalizacaoCrudAction}">
 
 							<wi:tree
 								id="localizacao"
-								assignTo="usuarioLocalizacaoAction.instance.localizacao"
+								assignTo="usuarioLocalizacaoCrudAction.instance.localizacao"
 								tree="#{localizacaoEstruturaTree}"
 								icon="/img/nivelTree.gif"
 								iconLeaf="/img/file.gif"
@@ -243,7 +243,7 @@
 								required="true" />
 							<wi:tree
 								id="papel"
-								assignTo="usuarioLocalizacaoAction.instance.papel"
+								assignTo="usuarioLocalizacaoCrudAction.instance.papel"
 								tree="#{papelTree}"
 								icon="/img/nivelTree.gif"
 								iconLeaf="/img/file.gif"
@@ -251,13 +251,13 @@
 								required="true" />
 							<wi:selectBooleanRadio
 								id="responsavelLocalizacao"
-								value="#{usuarioLocalizacaoAction.instance.responsavelLocalizacao}"
+								value="#{usuarioLocalizacaoCrudAction.instance.responsavelLocalizacao}"
 								label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}" />
 							<ui:define name="buttons">
 
 								<wi:commandButton
 									id="saveButton"
-									action="usuarioLocalizacaoAction.save"
+									action="usuarioLocalizacaoCrudAction.save"
 									reRender="localizacaoUsuario, pageBodyDialogMessage"
 									value="#{messages['crud.persist']}" />
 							</ui:define>
@@ -277,7 +277,7 @@
 						<ui:define name="headerToolBar" />
 						<ui:define name="toolBar">
 							<wi:toolBar
-								action="usuarioLocalizacaoAction.remove(row)"
+								action="usuarioLocalizacaoCrudAction.remove(row)"
 								rendered="true"
 								limitToList="true"
 								status=":status"

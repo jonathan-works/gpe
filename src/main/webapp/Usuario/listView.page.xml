@@ -16,7 +16,7 @@
     <action execute="#{usuarioPessoaFisicaList.setUsuario(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica'}"/>
 	
-	<action execute="#{usuarioLocalizacaoAction.setUsuarioGerenciado(usuarioLoginCrudAction.instance)}" 
+	<action execute="#{usuarioLocalizacaoCrudAction.setUsuarioGerenciado(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
     <action execute="#{usuarioLocalizacaoEntityList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>

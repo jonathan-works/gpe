@@ -14,6 +14,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
@@ -94,12 +95,16 @@ public class BamAction extends AbstractController {
             pt.setPorcentagem(0);
             try {
                 processoEpaTarefaManager.updateTempoGasto(pt.getDataFim(), pt);
+                corrigirSituacaoPrazoProcesso(pt.getProcessoEpa(), pt.getPorcentagem());
             } catch (DAOException e) {
                 instance().add(Severity.ERROR, "forceUpdateFinalizadas()", e);
             }
         }
         try {
             processoEpaManager.updateTempoGastoProcessoEpa();
+            for (ProcessoEpa processo : processoEpaManager.listAllNotEnded()) {
+            	corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
+            }
         } catch (DAOException e) {
             instance().add(Severity.ERROR, "forceUpdateFinalizadasProcesso()", e);
         }
@@ -113,6 +118,7 @@ public class BamAction extends AbstractController {
             pt.setPorcentagem(0);
             try {
                 processoEpaTarefaManager.updateTempoGasto(fireTime, pt);
+                corrigirSituacaoPrazoProcesso(pt.getProcessoEpa(), pt.getPorcentagem());
             } catch (DAOException e) {
                 instance().add(Severity.ERROR, "forceUpdate(H)", e);
             }
@@ -121,12 +127,16 @@ public class BamAction extends AbstractController {
             pt.setUltimoDisparo(pt.getDataInicio());
             try {
                 processoEpaTarefaManager.updateTempoGasto(fireTime, pt);
+                corrigirSituacaoPrazoProcesso(pt.getProcessoEpa(), pt.getPorcentagem());
             } catch (DAOException e) {
                 instance().add(Severity.ERROR, "forceUpdate(D)", e);
             }
         }
         try {
             processoEpaManager.updateTempoGastoProcessoEpa();
+            for (ProcessoEpa processo : processoEpaManager.listAllNotEnded()) {
+            	corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
+            }
         } catch (DAOException e) {
             instance().add(Severity.ERROR, "forceUpdateProcesso()", e);
         }
@@ -137,5 +147,28 @@ public class BamAction extends AbstractController {
         instance.newInstance();
     }
 
-
+    public void updateBAM() {
+    	forceUpdateTarefasFinalizadas();
+    	forceUpdateTarefasNaoFinalizadas();
+    }
+    
+    private void corrigirSituacaoPrazoProcesso(ProcessoEpa processo, Integer porcentagem) throws DAOException {
+		if (porcentagem != null && porcentagem > 100) {
+			return;
+		}
+		
+		if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.TAT) {
+			processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+		} else if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.PAT) {
+			processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+			for (ProcessoEpaTarefa tarefa : processo.getProcessoEpaTarefaList()) {
+				if (tarefa.getPorcentagem() > 100) {
+					processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
+					break;
+				}
+			}
+		}
+		
+		processoEpaManager.update(processo);
+	}
 }
