@@ -15,8 +15,6 @@
 
 package br.com.infox.epp.documento.home;
 
-import javax.persistence.EntityManager;
-
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -37,12 +35,6 @@ public class DocumentoBinHome extends AbstractHome<DocumentoBin> {
     @Override
     protected String getPersistenceContextName() {
         return "entityManagerBin";
-    }
-
-    public byte[] getData(int idDocumentoBin) {
-        EntityManager em = getEntityManager();
-        DocumentoBin docBin = em.find(DocumentoBin.class, idDocumentoBin);
-        return docBin.getDocumentoBin();
     }
 
     /**
