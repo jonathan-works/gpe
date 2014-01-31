@@ -2,14 +2,19 @@ package br.com.infox.epp.processo.list;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.TypedQuery;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
@@ -31,10 +36,10 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
     private static final long serialVersionUID = 1L;
 	private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o " +
 												   "inner join o.processoEpa p " +
-	                                               "inner join p.naturezaCategoriaFluxo.fluxo f "+
+	                                               "inner join p.naturezaCategoriaFluxo ncf "+
 												   "where o.dataFim is null";
 	private static final String DEFAULT_ORDER = "p.idProcesso";
-	private static final String R1 = "p.naturezaCategoriaFluxo.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
+	private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
     
     private static final Map<String,String> CUSTOM_ORDER_MAP;
@@ -56,7 +61,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("processoEpa.naturezaCategoriaFluxo.fluxo", SearchCriteria.IGUAL, R1);
+		addSearchField("ncf.fluxo", SearchCriteria.IGUAL, R1);
 		addSearchField("processoEpa.situacaoPrazo",SearchCriteria.IGUAL);
 	}
 
@@ -94,8 +99,33 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 		this.fluxo = fluxo;
 	}
 	
-	public Double getMediaTempoGasto() {
-	    return processoEpaManager.getMediaTempoGasto(fluxo, getEntity().getProcessoEpa().getSituacaoPrazo());
+	public long getMediaTempoGastoDesdeInicioProcesso() {
+		long media = 0;
+	    StringBuilder hql = new StringBuilder("select p.dataInicio from ProcessoEpa p ");
+        hql.append("inner join p.naturezaCategoriaFluxo ncf ");
+        hql.append("where p.dataFim is null and p.contabilizar = true ");
+        if (getFluxo() != null) {
+        	hql.append("and ncf.fluxo = :fluxo ");
+        }
+        if (getEntity().getProcessoEpa().getSituacaoPrazo() != null) {
+        	hql.append("and p.situacaoPrazo = :situacaoPrazo ");
+        }
+        TypedQuery<Date> query = getEntityManager().createQuery(hql.toString(), Date.class);
+        if (getFluxo() != null) {
+        	query.setParameter("fluxo", getFluxo());
+        }
+        if (getEntity().getProcessoEpa().getSituacaoPrazo() != null) {
+        	query.setParameter("situacaoPrazo", getEntity().getProcessoEpa().getSituacaoPrazo());
+        }
+        
+        LocalDate now = LocalDate.now();
+        List<Date> result = query.getResultList();
+		for (Date dataInicio : result) {
+        	LocalDate data = LocalDate.fromDateFields(dataInicio);
+        	media += Days.daysBetween(data, now).getDays();
+        }
+	    
+	    return !result.isEmpty() ? media / result.size() : 0;
 	}
 	
 	public List<SituacaoPrazoEnum> getTiposSituacaoPrazo() {

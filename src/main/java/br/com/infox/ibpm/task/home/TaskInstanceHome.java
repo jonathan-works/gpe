@@ -422,6 +422,7 @@ public class TaskInstanceHome implements Serializable {
         Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
         try {
+        	processoEpaTarefaManager.update(pt);
             processoEpaTarefaManager.updateTempoGasto(dtFinalizacao, pt);
         } catch (DAOException e) {
             LOG.error(".atualizarBam()", e);

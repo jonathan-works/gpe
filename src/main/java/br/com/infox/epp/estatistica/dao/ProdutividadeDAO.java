@@ -41,6 +41,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
+import static br.com.infox.core.util.DateUtil.formatTempo;
 import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
@@ -125,22 +126,22 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean, Void> {
 	
 	private ProdutividadeBean buildProdutividade(Object[] o) {
 		ProdutividadeBean produtividade = new ProdutividadeBean();
+		
+		Character c = (Character) o[INDEX_TIPO_PRAZO_TAREFA];
+		PrazoEnum tipoPrazo = null;
+		if (c != null) {
+			tipoPrazo = PrazoEnum.valueOf(c.toString());
+		}
+		
 		produtividade.setLocalizacao((String) o[INDEX_LOCALIZACAO]);
-		produtividade.setMaximoTempoGasto((Integer) o[INDEX_MAXIMO_TEMPO_GASTO]);
-		produtividade.setMediaTempoGasto(((BigDecimal) o[INDEX_MEDIA_TEMPO_GASTO]).doubleValue());
-		produtividade.setMinimoTempoGasto((Integer) o[INDEX_MINIMO_TEMPO_GASTO]);
+		produtividade.setMaximoTempoGasto(formatTempo((Integer) o[INDEX_MAXIMO_TEMPO_GASTO], tipoPrazo));
+		produtividade.setMediaTempoGasto(formatTempo(((BigDecimal) o[INDEX_MEDIA_TEMPO_GASTO]).intValue(), tipoPrazo));
+		produtividade.setMinimoTempoGasto(formatTempo((Integer) o[INDEX_MINIMO_TEMPO_GASTO], tipoPrazo));
 		produtividade.setPapel((String) o[INDEX_PAPEL]);
 		produtividade.setQuantidadeTarefas(((BigInteger) o[INDEX_QUANTIDADE_TAREFAS]).longValue());
 		produtividade.setTarefa((String) o[INDEX_TAREFA]);
-		produtividade.setTempoPrevisto((Integer) o[INDEX_TEMPO_PREVISTO]);
+		produtividade.setTempoPrevisto(formatTempo((Integer) o[INDEX_TEMPO_PREVISTO], tipoPrazo));
 		produtividade.setUsuario((String) o[INDEX_USUARIO]);
-		Character c = (Character) o[INDEX_TIPO_PRAZO_TAREFA];
-		if (c != null) {
-			PrazoEnum tipoPrazo = PrazoEnum.valueOf(c.toString());
-			if (tipoPrazo == PrazoEnum.D) {
-				produtividade.setTempoPrevisto(produtividade.getTempoPrevisto() * 24);
-			}
-		}
 		return produtividade;
 	}
 }

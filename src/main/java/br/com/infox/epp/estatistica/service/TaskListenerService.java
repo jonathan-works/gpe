@@ -11,11 +11,9 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.exception.ApplicationException;
-import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
@@ -23,7 +21,6 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(TaskListenerService.NAME)
@@ -72,12 +69,8 @@ public class TaskListenerService extends GenericManager {
 		}
 		pEpaTarefa.setTaskInstance(taskInstance.getId());
 		
-		UsuarioLocalizacao usrLoc = Authenticator.getUsuarioLocalizacaoAtual();
-		UsuarioTaskInstance uti = new UsuarioTaskInstance(taskInstance.getId(), usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel());
-
 		try {
 			persist(pEpaTarefa);
-			persist(uti);
 		} catch (DAOException e) {
 			LOG.error(".createProcessoEpa(processo, taskInstance)", e);
 		}
