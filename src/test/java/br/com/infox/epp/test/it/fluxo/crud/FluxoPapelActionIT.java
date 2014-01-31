@@ -1,10 +1,15 @@
 package br.com.infox.epp.test.it.fluxo.crud;
 
-import static br.com.infox.core.action.AbstractAction.*;
+import static br.com.infox.core.action.AbstractAction.PERSISTED;
+import static br.com.infox.core.action.AbstractAction.REMOVED;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.text.MessageFormat.format;
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,10 +82,10 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
             final FluxoPapel entity= getEntity();
             newInstance();
             initEntity(entity, this);
-            assertEquals("persisted", PERSISTED, save());
+            assertEquals("persist failed", PERSISTED, save());
 
             final Integer id = getId();
-            assertNull("id is null", id);
+            assertNull("id not null", id);
         }
     };
     
@@ -183,12 +188,12 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
             final Fluxo entity = getEntity(); 
             newInstance();
             this.initEntity(entity);
-            assertEquals("persisted", PERSISTED, save());
+            assertEquals("persist failed", PERSISTED, save());
 
             final Integer id = getId();
-            assertNotNull("id", id);
+            assertNotNull("nullid", id);
             newInstance();
-            assertNull("nullId", getId());
+            assertNull("Id not null", getId());
             setEntity(resetInstance(id));
         }
         
@@ -209,16 +214,16 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
             final Papel entity = getEntity();
             newInstance();
             initEntity(entity);
-            assertEquals("persisted", PERSISTED, save());
+            assertEquals("persist failed", PERSISTED, save());
 
             final Integer id = getId();
-            assertNotNull("id", id);
+            assertNotNull("id null", id);
             newInstance();
-            assertNull("nullId", getId());
+            assertNull("Id not null", getId());
             setId(id);
             
             boolean roleExists = IdentityManager.instance().roleExists(entity.getIdentificador());
-            assertEquals("roleExists", true, roleExists);
+            assertEquals("role doesn't Exist", true, roleExists);
             
             setEntity(getInstance());
         }
@@ -243,20 +248,16 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         final Date dataInicio = currentDate.getTime();
         final Date[] datasFim = {null, getIncrementedDate(currentDate,GregorianCalendar.DAY_OF_YEAR,20)};
         final ArrayList<Fluxo> fluxos = new ArrayList<>();
+        int id=0;
         for(final Date dataFim : datasFim) {
             for(final Boolean publicado: allBooleans) {
                 for (final Boolean ativo:booleans) {
-                    final String codigo = generateName("Fluxo"+suffix);
+                    final String codigo = format("Fluxo.{0}.{1}", ++id, suffix);
                     fluxos.add(persistFluxo.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo)));
                 }
             }
         }
         return fluxos;
-    }
-    private static int id=0;
-    
-    private String generateName(final String baseString) {
-        return format("{0}.{1}", baseString, ++id);
     }
     
     private Date getIncrementedDate(final GregorianCalendar currentDate, final int field, final int ammount) {
