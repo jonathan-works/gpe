@@ -293,10 +293,10 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
                 final Integer id = crudActions.getId();
                 crudActions.resetInstance(id);
                 
-                for (String codigo : new String[]{null, "", fillStr(generateName("persistFailFluxo"), DESCRICAO_PEQUENA+1)}) {
+                for (final String codigo : new String[]{null, "", fillStr(generateName("persistFailFluxo"), DESCRICAO_PEQUENA+1)}) {
                     updateField(crudActions, baseEntity, id, FIELD_CODIGO, codigo);                    
                 }
-                for (String fluxo : new String[]{null, "", fillStr("codigo",DESCRICAO_PADRAO+1)}) {
+                for (final String fluxo : new String[]{null, "", fillStr("codigo",DESCRICAO_PADRAO+1)}) {
                     updateField(crudActions, baseEntity, id, FIELD_CODIGO, fluxo);
                 }
                 updateField(crudActions, baseEntity, id, FIELD_PRAZO, null);

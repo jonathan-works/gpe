@@ -9,6 +9,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -89,12 +90,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
 
     @Override
     public void setId(final Object id) {
-        if (id != null && !id.equals(this.id)) {
-            setInstanceId(id);
-            tab = TAB_FORM;
-        } else if (id == null) {
-            this.id = null;
-        }
+        this.setId(id, true);
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -168,16 +164,13 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
 
             if (PERSISTED.equals(ret)) {
                 try {
-                    setInstanceId(EntityUtil.getId(instance).getReadMethod().invoke(instance));
+                    final Object id = EntityUtil.getId(getInstance()).getReadMethod().invoke(getInstance());
+                    setId(id, false);
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     LOG.error(".save()", e);
                 }
-                getMessagesHandler().clear();
-                getMessagesHandler().add(MSG_REGISTRO_CRIADO);
-            } else if (UPDATED.equals(ret)) {
-                getMessagesHandler().clear();
-                getMessagesHandler().add(MSG_REGISTRO_ALTERADO);
             }
+            resolveStatusMessage(ret);
         }
         if (persistFailed) {
             try {
@@ -189,14 +182,24 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
         return ret;
     }
 
-    @SuppressWarnings(UNCHECKED)
+    protected void resolveStatusMessage(String ret) {
+        final StatusMessages messages = getMessagesHandler();
+        messages.clear();
+        if (PERSISTED.equals(ret)) {
+            messages.add(MSG_REGISTRO_CRIADO);
+        } else if (UPDATED.equals(ret)) {
+            messages.add(MSG_REGISTRO_ALTERADO);
+        } else if (REMOVED.equals(ret)) {
+            messages.add(MSG_REGISTRO_REMOVIDO);
+        }
+    }
+    
     public void setInstanceId(final Object id) {
-        this.id = id;
-        setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
+        setId(id, false);
     }
 
     public Object getInstanceId() {
-        return this.id;
+        return this.getId();
     }
 
     /**
@@ -236,10 +239,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
     @Override
     public String remove(final T obj) {
         final String ret = super.remove(obj);
-        if (REMOVED.equals(ret)) {
-            getMessagesHandler().clear();
-            getMessagesHandler().add(MSG_REGISTRO_REMOVIDO);
-        }
+        resolveStatusMessage(ret);
         return ret;
     }
 
