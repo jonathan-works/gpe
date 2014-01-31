@@ -44,7 +44,7 @@ public abstract class DAO<T, K> implements Serializable {
             return null;
         }
         Class<T> entityClass = getEntityClass();
-        return entityManager.find(entityClass, id);
+        return getEntityManager().find(entityClass, id);
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -60,7 +60,7 @@ public abstract class DAO<T, K> implements Serializable {
      * @return true se contiver.
      */
     public boolean contains(final Object o) {
-        return entityManager.contains(o);
+        return getEntityManager().contains(o);
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class DAO<T, K> implements Serializable {
         Class<T> clazz = getEntityClass();
         final StringBuilder sb = new StringBuilder();
         sb.append("select o from ").append(clazz.getName()).append(" o");
-        return entityManager.createQuery(sb.toString(), clazz).getResultList();
+        return getEntityManager().createQuery(sb.toString(), clazz).getResultList();
     }
 
     protected <X> List<X> getNamedResultList(final String namedQuery) {
@@ -105,7 +105,7 @@ public abstract class DAO<T, K> implements Serializable {
 
     protected Query getNamedQuery(final String namedQuery,
             final Map<String, Object> parameters) {
-        final Query q = entityManager.createNamedQuery(namedQuery);
+        final Query q = getEntityManager().createNamedQuery(namedQuery);
         if (parameters != null) {
             for (Entry<String, Object> e : parameters.entrySet()) {
                 q.setParameter(e.getKey(), e.getValue());
@@ -126,8 +126,8 @@ public abstract class DAO<T, K> implements Serializable {
     @Transactional
     public T persist(final T object) throws DAOException {
         try {
-            entityManager.persist(object);
-            entityManager.flush();
+            getEntityManager().persist(object);
+            getEntityManager().flush();
             return object;
         } catch (Exception e) {
             throw new DAOException(e);
@@ -139,8 +139,8 @@ public abstract class DAO<T, K> implements Serializable {
     @Transactional
     public T update(final T object) throws DAOException {
         try {
-            final T res = entityManager.merge(object);
-            entityManager.flush();
+            final T res = getEntityManager().merge(object);
+            getEntityManager().flush();
             return res;
         } catch (Exception e) {
             throw new DAOException(e);
@@ -152,8 +152,8 @@ public abstract class DAO<T, K> implements Serializable {
     @Transactional
     public T remove(final T object) throws DAOException {
         try {
-            entityManager.remove(object);
-            entityManager.flush();
+            getEntityManager().remove(object);
+            getEntityManager().flush();
             return object;
         } catch (Exception e) {
             throw new DAOException(e);
@@ -164,7 +164,7 @@ public abstract class DAO<T, K> implements Serializable {
 
     public T merge(final T object) throws DAOException {
         try {
-            return entityManager.merge(object);
+            return getEntityManager().merge(object);
         } catch (Exception e) {
             throw new DAOException(e);
         } finally {
@@ -182,13 +182,13 @@ public abstract class DAO<T, K> implements Serializable {
     }
 
     public T getReference(K primaryKey) {
-        return entityManager.getReference(getEntityClass(), primaryKey);
+        return getEntityManager().getReference(getEntityClass(), primaryKey);
     }
 
     // TODO: Ajeitar trees que chamam isso
     public Query createQuery(final String query,
             final Map<String, Object> parameters) {
-        final Query q = entityManager.createQuery(query);
+        final Query q = getEntityManager().createQuery(query);
         if (parameters != null) {
             for (Entry<String, Object> e : parameters.entrySet()) {
                 q.setParameter(e.getKey(), e.getValue());
@@ -215,27 +215,27 @@ public abstract class DAO<T, K> implements Serializable {
     }
 
     public void detach(T o) {
-        entityManager.detach(o);
+        getEntityManager().detach(o);
     }
 
     public void clear() {
-        entityManager.clear();
+        getEntityManager().clear();
     }
 
     @Transactional
     public void flush() {
-        entityManager.flush();
+        getEntityManager().flush();
     }
 
     public void refresh(T o) {
-        entityManager.refresh(o);
+        getEntityManager().refresh(o);
     }
 
     protected void rollbackTransactionIfNeeded() {
         try {
             org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
             if (ut != null && ut.isMarkedRollback()) {
-                SessionImpl session = entityManager.unwrap(SessionImpl.class);
+                SessionImpl session = getEntityManager().unwrap(SessionImpl.class);
                 // Aborta o batch JDBC, possivelmente relacionado ao bug
                 // HHH-7689. Ver https://hibernate.atlassian.net/browse/HHH-7689
                 session.getTransactionCoordinator().getJdbcCoordinator().abortBatch();
