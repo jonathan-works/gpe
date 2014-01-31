@@ -259,16 +259,6 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         return format("{0}.{1}", baseString, ++id);
     }
     
-    private Date getIncrementedDate(final Date currentDate, final int field, final int ammount) {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        if (currentDate == null) {
-            calendar.setTime(new Date());
-        } else {
-            calendar.setTime(currentDate);
-        }
-        return getIncrementedDate(calendar, field, ammount);
-    }
-    
     private Date getIncrementedDate(final GregorianCalendar currentDate, final int field, final int ammount) {
         currentDate.add(field, ammount);
         return currentDate.getTime();
