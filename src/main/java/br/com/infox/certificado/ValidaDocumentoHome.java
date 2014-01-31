@@ -26,9 +26,9 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
-import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.itx.util.ComponentUtil;
 
@@ -44,6 +44,8 @@ public class ValidaDocumentoHome {
     private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoHome.class);
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
+    @In
+    private DocumentoBinManager documentoBinManager;
 
     /**
      * @deprecated
@@ -78,7 +80,7 @@ public class ValidaDocumentoHome {
             data = ValidaDocumento.removeBR(bin.getModeloDocumento()).getBytes();
         } else {
             try {
-                data = DocumentoBinHome.instance().getData(bin.getIdProcessoDocumentoBin());
+                data = documentoBinManager.getData(bin.getIdProcessoDocumentoBin());
             } catch (Exception e) {
                 throw new IllegalArgumentException("Erro ao obter os dados do binário", e);
             }
