@@ -2,14 +2,19 @@ package br.com.infox.epp.processo.list;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.TypedQuery;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
@@ -94,8 +99,33 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 		this.fluxo = fluxo;
 	}
 	
-	public Double getMediaTempoGasto() {
-	    return processoEpaManager.getMediaTempoGasto(fluxo, getEntity().getProcessoEpa().getSituacaoPrazo());
+	public long getMediaTempoGastoDesdeInicioProcesso() {
+		long media = 0;
+	    StringBuilder hql = new StringBuilder("select p.dataInicio from ProcessoEpa p ");
+        hql.append("inner join p.naturezaCategoriaFluxo ncf ");
+        hql.append("where p.dataFim is null and p.contabilizar = true ");
+        if (getFluxo() != null) {
+        	hql.append("and ncf.fluxo = :fluxo ");
+        }
+        if (getEntity().getProcessoEpa().getSituacaoPrazo() != null) {
+        	hql.append("and p.situacaoPrazo = :situacaoPrazo ");
+        }
+        TypedQuery<Date> query = getEntityManager().createQuery(hql.toString(), Date.class);
+        if (getFluxo() != null) {
+        	query.setParameter("fluxo", getFluxo());
+        }
+        if (getEntity().getProcessoEpa().getSituacaoPrazo() != null) {
+        	query.setParameter("situacaoPrazo", getEntity().getProcessoEpa().getSituacaoPrazo());
+        }
+        
+        LocalDate now = LocalDate.now();
+        List<Date> result = query.getResultList();
+		for (Date dataInicio : result) {
+        	LocalDate data = LocalDate.fromDateFields(dataInicio);
+        	media += Days.daysBetween(data, now).getDays();
+        }
+	    
+	    return !result.isEmpty() ? media / result.size() : 0;
 	}
 	
 	public List<SituacaoPrazoEnum> getTiposSituacaoPrazo() {

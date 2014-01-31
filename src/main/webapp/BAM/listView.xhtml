@@ -73,7 +73,7 @@
 					label="#{messages['bam.medidorProcSel']}"
 					draggable="false"
 					indicatorLabel="#{messages['bam.tempoMedio']} (dias)"
-					value="#{processoEpaNaoFinalizadoList.getMediaTempoGasto()}"
+					value="#{processoEpaNaoFinalizadoList.mediaTempoGastoDesdeInicioProcesso}"
 				/>
 			</ui:define>
 			<ui:define name="headerToolBar" />
@@ -190,8 +190,8 @@
 										barWidth="60"
 										barHeight="13"
 										min="0"
-										max="#{row.tempoPrevisto}"
-										value="#{row.tempoGasto / 60}"
+										max="100"
+										value="#{row.porcentagem}"
 										hideTicks="true"
 										>
 				</dojo:progressBarGauge>
@@ -256,7 +256,7 @@
 			label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
 			draggable="true"
 			indicatorLabel="#{messages['processoEpa.tempoGasto']} (dias)"
-			value="#{processoEpaTarefaList.entity.processoEpa.tempoGasto}"/>
+			value="#{processoEpaTarefaList.diasDesdeInicioProcesso}"/>
 	</ui:define>
 	 
 </ui:composition>

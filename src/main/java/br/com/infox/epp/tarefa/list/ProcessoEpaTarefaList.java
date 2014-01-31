@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.itx.util.StringUtil;
 
@@ -27,6 +29,9 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 	
 	private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o";
 	private static final String DEFAULT_ORDER = "o.idProcessoTarefa";
+	
+	@In
+	private ProcessoEpaManager processoEpaManager;
 	
 	@Override
 	protected void addSearchFields() {
@@ -55,5 +60,9 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 			}
 		}
 		return StringUtil.concatList(classes, ",");
+	}
+	
+	public int getDiasDesdeInicioProcesso() {
+		return processoEpaManager.getDiasDesdeInicioProcesso(getEntity().getProcessoEpa());
 	}
 }
