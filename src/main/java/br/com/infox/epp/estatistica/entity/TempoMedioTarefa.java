@@ -1,7 +1,13 @@
 package br.com.infox.epp.estatistica.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.estatistica.query.TempoMedioTarefaQuery.*;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.estatistica.query.TempoMedioTarefaQuery.ID_NATUREZA_CATEGORIA_FLUXO;
+import static br.com.infox.epp.estatistica.query.TempoMedioTarefaQuery.ID_TAREFA;
+import static br.com.infox.epp.estatistica.query.TempoMedioTarefaQuery.PRAZO;
+import static br.com.infox.epp.estatistica.query.TempoMedioTarefaQuery.TEMPO_MEDIO;
+import static br.com.infox.epp.estatistica.query.TempoMedioTarefaQuery.TIPO_PRAZO;
+import static br.com.infox.epp.estatistica.query.TempoMedioTarefaQuery.VIEW_TEMPO_MEDIO_TAREFA;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -16,7 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import br.com.infox.core.constants.FloatFormatConstants;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
@@ -24,8 +30,6 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 @Table(name=VIEW_TEMPO_MEDIO_TAREFA, schema=PUBLIC)
 public class TempoMedioTarefa implements Serializable {
 	
-	private static final int MINUTES_OF_HOUR = 60;
-    private static final int MINUTES_OF_DAY = 1440;
     private static final long serialVersionUID = 1L;
 
 	private Integer idTarefa;
@@ -83,13 +87,7 @@ public class TempoMedioTarefa implements Serializable {
 	
 	@Transient
 	public String getTempoMedioFormatado() {
-	    float resultTempo = tempoMedio;
-	    if(PrazoEnum.D.equals(tipoPrazo)) {
-	        resultTempo = resultTempo / MINUTES_OF_DAY;
-	    } else if (PrazoEnum.H.equals(tipoPrazo)) {
-	        resultTempo = resultTempo / MINUTES_OF_HOUR;
-	    }
-	    return String.format(FloatFormatConstants.F2_S, resultTempo, tipoPrazo == null ? "":tipoPrazo.getLabel());
+		return DateUtil.formatTempo(tempoMedio.intValue(), tipoPrazo);
 	}
 	
 	@Column(name=TIPO_PRAZO)
