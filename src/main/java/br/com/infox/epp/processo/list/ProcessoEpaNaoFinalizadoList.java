@@ -31,10 +31,10 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
     private static final long serialVersionUID = 1L;
 	private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o " +
 												   "inner join o.processoEpa p " +
-	                                               "inner join p.naturezaCategoriaFluxo.fluxo f "+
+	                                               "inner join p.naturezaCategoriaFluxo ncf "+
 												   "where o.dataFim is null";
 	private static final String DEFAULT_ORDER = "p.idProcesso";
-	private static final String R1 = "p.naturezaCategoriaFluxo.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
+	private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
     
     private static final Map<String,String> CUSTOM_ORDER_MAP;
@@ -56,7 +56,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 	
 	@Override
 	protected void addSearchFields() {
-		addSearchField("processoEpa.naturezaCategoriaFluxo.fluxo", SearchCriteria.IGUAL, R1);
+		addSearchField("ncf.fluxo", SearchCriteria.IGUAL, R1);
 		addSearchField("processoEpa.situacaoPrazo",SearchCriteria.IGUAL);
 	}
 
