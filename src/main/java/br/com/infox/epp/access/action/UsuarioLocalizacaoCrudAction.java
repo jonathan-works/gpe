@@ -1,6 +1,5 @@
 package br.com.infox.epp.access.action;
 
-
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.ESTRUTURA_CONDITION;
 import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.ESTRUTURA_NULL_CONDITION;
@@ -18,58 +17,54 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
-import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
-@Name(UsuarioLocalizacaoAction.NAME)
+@Name(UsuarioLocalizacaoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class UsuarioLocalizacaoAction extends AbstractCrudAction<UsuarioLocalizacao>{
-	/**
-     * 
-     */
+public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLocalizacao> {
+
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "usuarioLocalizacaoAction";
-	
-	private UsuarioLogin usuarioGerenciado;
-	
-	@SuppressWarnings(UNCHECKED)
+    public static final String NAME = "usuarioLocalizacaoCrudAction";
+
+    private UsuarioLogin usuarioGerenciado;
+
+    @SuppressWarnings(UNCHECKED)
     private void limparArvores() {
-	    clearTree((AbstractTreeHandler<Localizacao>) Component.getInstance(LocalizacaoEstruturaTreeHandler.NAME));
+        clearTree((AbstractTreeHandler<Localizacao>) Component.getInstance(LocalizacaoEstruturaTreeHandler.NAME));
         clearTree((AbstractTreeHandler<Papel>) Component.getInstance(PapelTreeHandler.NAME));
-	}
-	
-	private <T> void clearTree(final AbstractTreeHandler<T> handler) {
-	    if (handler != null) {
-	        handler.clearTree();
-	    }
-	}
-	
-	@Override
-	public void newInstance() {
-	    super.newInstance();
-		final UsuarioLocalizacao instance = getInstance();
-		instance.setResponsavelLocalizacao(Boolean.FALSE);
-		instance.setUsuario(usuarioGerenciado);
-		limparArvores();
-	}
-	
-	public boolean existeUsuarioLocalizacao(final UsuarioLocalizacao usuarioLocalizacao) {
+    }
+
+    private <T> void clearTree(final AbstractTreeHandler<T> handler) {
+        if (handler != null) {
+            handler.clearTree();
+        }
+    }
+
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        final UsuarioLocalizacao instance = getInstance();
+        instance.setResponsavelLocalizacao(Boolean.FALSE);
+        instance.setUsuario(usuarioGerenciado);
+        limparArvores();
+    }
+
+    public boolean existeUsuarioLocalizacao(
+            final UsuarioLocalizacao usuarioLocalizacao) {
         final StringBuilder hql = new StringBuilder(EXISTE_USUARIO_LOCALIZACAO_QUERY);
         if (usuarioLocalizacao.getEstrutura() != null) {
             hql.append(ESTRUTURA_CONDITION);
         } else {
             hql.append(ESTRUTURA_NULL_CONDITION);
         }
-        
+
         final HashMap<String, Object> params = new HashMap<>();
         params.put(PARAM_USUARIO, usuarioLocalizacao.getUsuario());
         params.put(PARAM_PAPEL, usuarioLocalizacao.getPapel());
@@ -77,37 +72,29 @@ public class UsuarioLocalizacaoAction extends AbstractCrudAction<UsuarioLocaliza
         if (usuarioLocalizacao.getEstrutura() != null) {
             params.put(PARAM_ESTRUTURA, usuarioLocalizacao.getEstrutura());
         }
-        
+
         return (Long) getGenericManager().getSingleResult(hql.toString(), params) > 0;
     }
-	
-	@Override
-	protected boolean isInstanceValid() {
-		GenericDAO usuarioLocalizacaoDAO = (GenericDAO) Component.getInstance(UsuarioLocalizacaoDAO.NAME);
-		try {
-			usuarioLocalizacaoDAO.persist(getInstance());
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-//	    return !existeUsuarioLocalizacao(getInstance());
-	}
-	
-	@Override
-	protected void afterSave(String ret) {
-	    if (PERSISTED.equals(ret)) {
-	        newInstance();
-	    }
-	}
-	
-	@Override
-	public String remove(final UsuarioLocalizacao usuarioLocalizacao) {
+
+    @Override
+    protected boolean isInstanceValid() {
+        return !existeUsuarioLocalizacao(getInstance());
+    }
+
+    @Override
+    protected void afterSave(String ret) {
+        if (PERSISTED.equals(ret)) {
+            newInstance();
+        }
+    }
+
+    @Override
+    public String remove(final UsuarioLocalizacao usuarioLocalizacao) {
         setInstance(usuarioLocalizacao);
-	    final String ret = super.remove(getInstance());
-		newInstance();
-		return ret;
-	}
+        final String ret = super.remove(getInstance());
+        newInstance();
+        return ret;
+    }
 
     public UsuarioLogin getUsuarioGerenciado() {
         return usuarioGerenciado;
