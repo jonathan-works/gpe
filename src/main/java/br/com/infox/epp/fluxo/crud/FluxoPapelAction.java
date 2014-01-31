@@ -3,11 +3,9 @@ package br.com.infox.epp.fluxo.crud;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -18,7 +16,6 @@ import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
 
 @Name(FluxoPapelAction.NAME)
-@Scope(ScopeType.CONVERSATION)
 public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(FluxoPapelAction.class);
@@ -33,9 +30,8 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> {
 	private Fluxo fluxo;
 	
 	@Override
-	protected boolean isInstanceValid() {
-		getInstance().setFluxo(fluxo);
-		return super.isInstanceValid();
+	protected void beforeSave() {
+	    getInstance().setFluxo(fluxo);
 	}
 	
 	@Override
@@ -48,22 +44,31 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> {
 	public String remove(final FluxoPapel obj) {
 		final String remove = super.remove(obj);
 		if(remove != null) {
-			getFluxoPapelList().remove(obj);
+		    listByNatureza();
 		}
 		return remove;
 	}
 
 	public void removeAll() {
+	    boolean allValid = true;
 		for (final Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
 			final FluxoPapel nl = iterator.next();
 			try {
 				getGenericManager().remove(nl);
 			} catch (final Exception e) {
 			    LOG.error(".removeAll()", e);
+			    allValid = false;
 			}
 			iterator.remove();
 		}
-		FacesMessages.instance().add("Registros removidos com sucesso!");
+		final StatusMessages messages = getMessagesHandler();
+		messages.clear();
+        if (allValid) {
+		    messages.add("Registros removidos com sucesso!");
+		} else {
+		    messages.add("Houve erro na remoção de alguns dos itens");
+		}
+        listByNatureza();
 	}
 		
 	public void init(final Fluxo fluxo) {
