@@ -10,6 +10,7 @@ import org.richfaces.event.FileUploadListener;
 
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Name(ProcessoDocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -17,8 +18,17 @@ public class ProcessoDocumentoUploader implements FileUploadListener{
 
     public static final String NAME = "processoDocumentoUploader";
     
+    private Processo processo;
     private ProcessoDocumento processoDocumento;
     private List<ProcessoDocumento> processoDocumentosDaSessao;
+
+    public Processo getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
+    }
 
     public ProcessoDocumento getProcessoDocumento() {
         return processoDocumento;
@@ -50,12 +60,11 @@ public class ProcessoDocumentoUploader implements FileUploadListener{
         
     }
     
+    private void createProcessoDocumento(){
+        processoDocumento.setProcesso(processo);
+    }
+    
     public void persist(){
-        System.out.println(processoDocumento);
-        System.out.println(processoDocumento.getProcessoDocumentoBin());
-        System.out.println(processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
-        System.out.println("--------------------");
-        System.out.println("persisted");
-        
+        createProcessoDocumento();
     }
 }
