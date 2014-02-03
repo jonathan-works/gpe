@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="home" value="processoDocumentoUploader" />
+    <s:div style="clear: both">
+        <wi:inputText id="#{f.id}inputProcessoDocumento"
+            value="#{processoDocumentoUploader.processoDocumento.processoDocumento}"
+            disabled="false" required="true"
+            label="#{messages['processo.anexarDocumentoDescricao']}">
+        </wi:inputText>
+    </s:div>
+    <s:div id="divTipoDocumento">
+        <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
+            label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+            value="#{processoDocumentoUploader.processoDocumento.tipoProcessoDocumento}"
+            items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(false)}"
+            required="true" noSelectionLabel="Selecione...">
+        </wi:selectOneMenuEntity>
+    </s:div>
+    <wi:selectBooleanCheckbox id="documentoSigiloso" inNewLine="true"
+        value="#{processoDocumentoUploader.processoDocumento.documentoSigiloso}"
+        label="#{messages['processoDocumento.documentoSigiloso']}" />
+    <s:div id="tipoDocumentoDiv">
+        <wi:editor id="modeloDocumento" label="Modelo"
+            value="#{processoDocumentoUploader.processoDocumento.processoDocumentoBin.modeloDocumento}"
+            requiredField="false" required="false" showVariables="false">
+        </wi:editor>
+
+    </s:div>
+    <s:div id="buttonsDiv">
+        <wi:commandButton id="botaoAnexarDocumento"
+            action="processoDocumentoUploader.persist()"
+            value="#{messages['processo.anexarDocumentoBtn']}"
+            execute="@form" reRender="@form,pageBodyDialogMessage"
+            styleClass="buttons">
+        </wi:commandButton>
+    </s:div>
+</ui:composition>

@@ -165,6 +165,21 @@
 
 
             </infox:tab>
+            
+            <infox:tab id="tabAnexar2" name="tabAnexar2"
+                rendered="#{processoHome.managed}" status=":status"
+                title="#{messages['processoDocumento.anexarDocumento']}2"
+                action="#{processoDocumentoUploader.onClickTabAnexar()}">
+                <wi:dataForm formId="anexarDocumentosForm2"
+                    formTitle="#{messages['form.title']}"
+                    isUploadForm="true">
+                    <ui:include
+                        src="anexarDocumentos.xhtml" />
+                    <ui:define name="buttons" />
+                </wi:dataForm>
+
+
+            </infox:tab>
 
             <infox:tab id="tabAnexos" name="tabAnexos"
                 rendered="#{processoHome.managed}" status=":status"
