@@ -36,4 +36,22 @@
             styleClass="buttons">
         </wi:commandButton>
     </s:div>
+
+    <wi:dataTable
+        values="#{processoDocumentoUploader.processoDocumentosDaSessao}"
+        tableTitle="#{messages['processoDocumento.titleView']}"
+        id="processoDocumentoDaSessao"
+        rowId="#{row.idProcessoDocumento}">
+        <wi:columnOutputText columnId="usuarioInclusao"
+            columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+            value="#{row.usuarioInclusao}" />
+        <wi:columnDateTime columnId="dataInclusao"
+            columnHeader="#{messages['processoDocumento.dataInclusao']}"
+            value="#{row.dataInclusao}" />
+        <wi:columnOutputText columnId="processoDocumento"
+            columnHeader="#{messages['processoDocumentoBin.documento']}"
+            value="#{row.processoDocumento}" />
+        <ui:define name="headerToolBar"/>
+        <ui:define name="toolBar"/>
+    </wi:dataTable>
 </ui:composition>
