@@ -54,7 +54,6 @@ import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.dao.VariavelDAO;
-import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.mail.entity.EMailData;
@@ -128,7 +127,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
                     ProcessoHome.class,Certificado.class,CertificadoException.class,
                     TipoProcessoDocumentoDAO.class,ProcessoDocumentoHome.class,
                     ProcessoEpaManager.class,TaskInstanceHome.class,DigitalSignatureUtils.class,
-                    DocumentoBinHome.class,SituacaoProcessoManager.class,Indexer.class,Reindexer.class,
+                    SituacaoProcessoManager.class,Indexer.class,Reindexer.class,
                     SearchHandler.class,ProcessoEpaTarefaManager.class,TaskPageAction.class,
                     TaskInstanceManager.class,UserHandler.class,SituacaoProcessoDAO.class,
                     SearchService.class,VariableHandler.class, Variavel.class,ProcessoEpaTarefaDAO.class,
