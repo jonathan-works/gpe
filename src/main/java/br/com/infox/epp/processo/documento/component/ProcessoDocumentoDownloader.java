@@ -15,9 +15,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.itx.component.FileHome;
 import br.com.itx.component.Util;
@@ -29,6 +29,9 @@ public class ProcessoDocumentoDownloader {
 
     @In
     ProcessoDocumentoManager processoDocumentoManager;
+    
+    @In
+    DocumentoBinManager documentoBinManager;
 
     public static final String NAME = "processoDocumentoDownloader";
     private static final String PAGINA_DOWNLOAD = "/download.xhtml";
@@ -45,7 +48,7 @@ public class ProcessoDocumentoDownloader {
         FileHome file = FileHome.instance();
         file.setFileName(doc.getNomeArquivo());
         try {
-            file.setData(DocumentoBinHome.instance().getData(doc.getIdProcessoDocumentoBin()));
+            file.setData(documentoBinManager.getData(doc.getIdProcessoDocumentoBin()));
         } catch (Exception e) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao descarregar o documento.");
             LOG.error(".exportData()", e);
@@ -83,7 +86,7 @@ public class ProcessoDocumentoDownloader {
         byte[] data = null;
         boolean isBin = bin.isBinario();
         if (bin.isBinario()) {
-            data = DocumentoBinHome.instance().getData(pd.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
+            data = documentoBinManager.getData(pd.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
         } else {
             data = bin.getModeloDocumento().getBytes();
         }

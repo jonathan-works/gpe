@@ -31,11 +31,12 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.documento.home.DocumentoBinHome;
 import br.com.infox.epp.processo.documento.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
 import br.com.itx.component.AbstractHome;
@@ -61,6 +62,8 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private ProcessoDocumentoBinManager processoDocumentoBinManager;
+    @In
+    private DocumentoBinManager documentoBinManager;
 
     public String getSignature() {
         return signature;
@@ -163,8 +166,12 @@ public class ProcessoDocumentoBinHome extends AbstractHome<ProcessoDocumentoBin>
                 instance.setSize(file.getSize());
                 instance.setModeloDocumento(null);
                 ret = super.persist();
-
-                DocumentoBinHome.instance().setData(instance.getIdProcessoDocumentoBin(), file.getData());
+                try {
+                    documentoBinManager.salvarBinario(instance.getIdProcessoDocumentoBin(), file.getData());
+                } catch (DAOException e) {
+                    LOG.error("Não foi possível gravar o binário do documento " + instance, e);
+                    ret = null;
+                }
             }
         }
         if (ret == null) {
