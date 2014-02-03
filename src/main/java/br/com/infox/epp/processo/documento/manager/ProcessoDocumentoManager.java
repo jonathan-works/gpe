@@ -66,6 +66,10 @@ public class ProcessoDocumentoManager extends GenericManager {
         return result;
     }
     
+    public Integer getNextNumeracao(ProcessoDocumento processoDocumento) {
+        return getNextNumeracao(processoDocumento.getTipoProcessoDocumento(), processoDocumento.getProcesso());
+    }
+    
     public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask){
         return processoDocumentoDAO.getAnexosPublicos(idJbpmTask);
     }

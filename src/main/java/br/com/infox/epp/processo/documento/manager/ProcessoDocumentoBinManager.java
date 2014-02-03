@@ -6,7 +6,12 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.itx.component.FileHome;
+import br.com.itx.util.Crypto;
 
 @Name(ProcessoDocumentoBinManager.NAME)
 @AutoCreate
@@ -32,4 +37,10 @@ public class ProcessoDocumentoBinManager extends GenericManager {
         return true;
     }
     
+    public ProcessoDocumentoBin createProcessoDocumentoBin(ProcessoDocumento processoDocumento) throws DAOException{
+        ProcessoDocumentoBin bin = processoDocumento.getProcessoDocumentoBin();
+        bin.setUsuario(Authenticator.getUsuarioLogado());
+        bin.setMd5Documento(Crypto.encodeMD5(processoDocumento.getProcessoDocumentoBin().getModeloDocumento()));
+        return persist(bin);
+    }
 }

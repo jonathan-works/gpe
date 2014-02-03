@@ -20,7 +20,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.TaskInstance;
 
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
