@@ -36,6 +36,7 @@ import br.com.infox.epp.pessoa.manager.PessoaManager;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)

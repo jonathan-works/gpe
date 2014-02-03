@@ -27,6 +27,7 @@ import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)

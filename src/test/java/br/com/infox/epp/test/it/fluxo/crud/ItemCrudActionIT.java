@@ -22,6 +22,7 @@ import br.com.infox.epp.fluxo.crud.ItemCrudAction;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)

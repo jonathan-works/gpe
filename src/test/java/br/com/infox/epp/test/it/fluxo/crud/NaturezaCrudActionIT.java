@@ -1,9 +1,10 @@
 package br.com.infox.epp.test.it.fluxo.crud;
 
+import static br.com.infox.core.action.AbstractAction.UPDATED;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static java.text.MessageFormat.format;
-import static br.com.infox.core.action.AbstractAction.UPDATED;
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 import br.com.infox.epp.fluxo.crud.NaturezaCrudAction;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)

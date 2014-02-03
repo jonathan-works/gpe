@@ -35,6 +35,7 @@ import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)

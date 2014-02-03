@@ -15,6 +15,7 @@ import br.com.infox.epp.pessoa.crud.PessoaFisicaCrudAction;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.validator.CpfValidator;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
