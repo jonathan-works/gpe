@@ -16,8 +16,16 @@
 package br.com.infox.epp.documento.entity;
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.*;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ABREVIACAO;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ID_GRUPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ID_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.SEQUENCE_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.TABLE_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.TIPO_MODELO_DOCUMENTO_ATTRIBUTE;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,10 +42,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.itx.util.HibernateUtil;
@@ -56,7 +63,6 @@ public class TipoModeloDocumento implements Serializable {
 	private String tipoModeloDocumento;
 	private String abreviacao;
 	private Boolean ativo;
-	private TipoModeloDocumento tipoModeloDocumentoCombo;
 	
 	private List<ModeloDocumento> modeloDocumentoList = new ArrayList<ModeloDocumento>(0);
 	
@@ -139,15 +145,6 @@ public class TipoModeloDocumento implements Serializable {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
-	}
-	
-	@Transient
-	public TipoModeloDocumento getTipoModeloDocumentoCombo(){
-		return tipoModeloDocumentoCombo;
-	}
-	
-	public void setTipoModeloDocumentoCombo(TipoModeloDocumento tipoModeloDocumentoCombo){
-		this.tipoModeloDocumentoCombo = tipoModeloDocumentoCombo;
 	}
 	
 	@Override

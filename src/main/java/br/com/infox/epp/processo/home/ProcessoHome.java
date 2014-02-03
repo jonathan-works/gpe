@@ -320,14 +320,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
         super.setId(id);
     }
 
-    public void setModeloDocumentoCombo(ModeloDocumento modeloDocumentoCombo) {
-        this.modeloDocumento = modeloDocumentoCombo;
-    }
-
-    public ModeloDocumento getModeloDocumentoCombo() {
-        return modeloDocumento;
-    }
-
     public TipoProcessoDocumento getTipoProcessoDocumento() {
         return tipoProcessoDocumento;
     }

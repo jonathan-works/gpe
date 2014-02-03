@@ -38,7 +38,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     private ProcessoDocumentoManager processoDocumentoManager;
 
     private static final String PROCESSO_DOCUMENTO_BIN_HOME_NAME = "processoDocumentoBinHome";
-    private ModeloDocumento modeloDocumentoCombo;
     private boolean isModelo = Boolean.TRUE;
 
     public static ProcessoDocumentoHome instance() {
@@ -56,7 +55,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
     @Override
     public void newInstance() {
         setModelo(false);
-        setModeloDocumentoCombo(null);
         ProcessoDocumentoBinHome procDocBin = getProcessoDocumentoBinHome();
         procDocBin.newInstance();
         super.newInstance();
@@ -70,14 +68,6 @@ public class ProcessoDocumentoHome extends AbstractHome<ProcessoDocumento> {
 
     public void setModelo(boolean isModelo) {
         this.isModelo = isModelo;
-    }
-
-    public ModeloDocumento getModeloDocumentoCombo() {
-        return modeloDocumentoCombo;
-    }
-
-    public void setModeloDocumentoCombo(ModeloDocumento modeloDocumentoCombo) {
-        this.modeloDocumentoCombo = modeloDocumentoCombo;
     }
 
     @Override
