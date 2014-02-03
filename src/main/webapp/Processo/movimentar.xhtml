@@ -153,17 +153,14 @@
                 rendered="#{processoHome.managed}" status=":status"
                 title="#{messages['processoDocumento.anexarDocumento']}"
                 action="#{processoDocumentoHome.newInstance()}">
-
                 <wi:dataForm formId="anexarDocumentosForm"
                     formTitle="#{messages['form.title']}"
                     isUploadForm="true">
-
                     <ui:include
                         src="/WEB-INF/xhtml/components/form/anexarDocumento.xhtml" />
                     <ui:include
                         src="/WEB-INF/xhtml/components/form/buttons/anexarDocumentoButtons.xhtml" />
                     <ui:define name="buttons" />
-
                 </wi:dataForm>
 
 
