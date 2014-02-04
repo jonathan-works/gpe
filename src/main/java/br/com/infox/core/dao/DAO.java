@@ -24,7 +24,7 @@ import br.com.infox.core.persistence.DAOException;
 
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public abstract class DAO<T, K> implements Serializable {
+public abstract class DAO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,7 +39,7 @@ public abstract class DAO<T, K> implements Serializable {
      * @param id do registro
      * @return objeto encontrado.
      */
-    public T find(final K id) {
+    public T find(final Object id) {
         if (id == null) {
             return null;
         }
@@ -181,7 +181,7 @@ public abstract class DAO<T, K> implements Serializable {
         return createQuery(query, null);
     }
 
-    public T getReference(K primaryKey) {
+    public T getReference(Object primaryKey) {
         return getEntityManager().getReference(getEntityClass(), primaryKey);
     }
 

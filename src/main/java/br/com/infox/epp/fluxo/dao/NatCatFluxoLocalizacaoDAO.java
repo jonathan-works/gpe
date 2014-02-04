@@ -24,7 +24,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 
 @Name(NatCatFluxoLocalizacaoDAO.NAME)
 @AutoCreate
-public class NatCatFluxoLocalizacaoDAO extends DAO<NatCatFluxoLocalizacao, Integer> {
+public class NatCatFluxoLocalizacaoDAO extends DAO<NatCatFluxoLocalizacao> {
 
     private static final long serialVersionUID = -4306540893162078405L;
     public static final String NAME = "natCatFluxoLocalizacaoDAO";

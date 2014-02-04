@@ -13,8 +13,9 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
+
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.dao.CategoriaItemDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
@@ -23,7 +24,7 @@ import br.com.itx.component.Util;
 
 @Name(CategoriaItemManager.NAME)
 @AutoCreate
-public class CategoriaItemManager extends GenericManager{
+public class CategoriaItemManager extends Manager<CategoriaItemDAO, CategoriaItem> {
 
 	private static final long serialVersionUID = -3580636874720809514L;
 
@@ -59,20 +60,6 @@ public class CategoriaItemManager extends GenericManager{
         return categoriaItemList;
 	}
 	
-	@Override
-	public <T> T remove(T o) {
-	    T result;
-		try {
-			result = super.remove(o);
-		} catch (DAOException e) {
-			LOG.error(null, e);
-			result = null;
-		}
-		
-		conclusionMessage("#{messages['entity_deleted']}","Falha ao remover", result != null);
-	    return result;
-	}
-    
     private void conclusionMessage(String successMessage, String errorMessage,boolean successful) {
         FacesMessages fm = instance();
         fm.clear();

@@ -2,6 +2,7 @@ package br.com.infox.epp.access.service;
 
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +24,6 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
 
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
 import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -34,7 +34,7 @@ import br.com.infox.epp.processo.dao.ProcessoDAO;
 
 @Name(AuthenticatorService.NAME)
 @AutoCreate
-public class AuthenticatorService extends GenericManager {
+public class AuthenticatorService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "authenticatorService";

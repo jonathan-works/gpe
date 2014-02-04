@@ -7,11 +7,12 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.documento.component.tree.LocalizacaoFisicaTreeHandler;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
+import br.com.infox.epp.documento.manager.LocalizacaoFisicaManager;
 import br.com.itx.util.ComponentUtil;
 
 @Name(LocalizacaoFisicaCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<LocalizacaoFisica> {
+public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<LocalizacaoFisica, LocalizacaoFisicaManager> {
     
     /**
      * 

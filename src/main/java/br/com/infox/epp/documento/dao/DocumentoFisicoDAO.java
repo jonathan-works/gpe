@@ -14,7 +14,7 @@ import br.com.infox.epp.processo.entity.Processo;
 
 @Name(DocumentoFisicoDAO.NAME)
 @AutoCreate
-public class DocumentoFisicoDAO extends DAO<DocumentoFisico, Integer> {
+public class DocumentoFisicoDAO extends DAO<DocumentoFisico> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoFisicoDAO";

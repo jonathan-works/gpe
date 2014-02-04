@@ -12,7 +12,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -33,25 +34,20 @@ import br.com.itx.util.Crypto;
 
 @Name(ProcessoManager.NAME)
 @AutoCreate
-public class ProcessoManager extends GenericManager {
+public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     private static final long serialVersionUID = 8095772422429350875L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
-    private static final Class<Processo> CLASS = Processo.class;
     public static final String NAME = "processoManager";
 
-    @In
-    private ProcessoDAO processoDAO;
     @In
     private ProcessoEpaDAO processoEpaDAO;
     @In
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
     @In
+    private GenericDAO genericDAO;
+    @In
     private ProcessoDocumentoManager processoDocumentoManager;
-
-    public Processo find(Integer id) {
-        return find(CLASS, id);
-    }
 
     public ProcessoDocumentoBin createProcessoDocumentoBin(Object value,
             String certChain, String signature) throws DAOException {
@@ -62,7 +58,7 @@ public class ProcessoManager extends GenericManager {
         bin.setUsuario(Authenticator.getUsuarioLogado());
         bin.setCertChain(certChain);
         bin.setSignature(signature);
-        persist(bin);
+        genericDAO.persist(bin);
         return bin;
     }
 
@@ -172,22 +168,22 @@ public class ProcessoManager extends GenericManager {
     private void storeUsuario(final Long idTaskInstance,
             final UsuarioLogin user, final Localizacao localizacao,
             final Papel papel) throws DAOException {
-        if (find(UsuarioTaskInstance.class, idTaskInstance) == null) {
-            persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
+        if (genericDAO.find(UsuarioTaskInstance.class, idTaskInstance) == null) {
+            genericDAO.persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
         }
     }
 
     public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
-        processoDAO.moverProcessosParaCaixa(idList, caixa);
+        getDao().moverProcessosParaCaixa(idList, caixa);
     }
 
     public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
-        processoDAO.moverProcessoParaCaixa(caixa, processo);
+        getDao().moverProcessoParaCaixa(caixa, processo);
     }
 
     public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) {
         Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
-        processoDAO.moverProcessoParaCaixa(caixaEscolhida, processo);
+        getDao().moverProcessoParaCaixa(caixaEscolhida, processo);
     }
 
     /*
@@ -198,18 +194,18 @@ public class ProcessoManager extends GenericManager {
     }
 
     public void removerProcessoDaCaixaAtual(Processo processo) {
-        processoDAO.removerProcessoDaCaixaAtual(processo);
+        getDao().removerProcessoDaCaixaAtual(processo);
     }
 
     public void apagarActorIdDoProcesso(Processo processo) {
-        processoDAO.apagarActorIdDoProcesso(processo);
+        getDao().apagarActorIdDoProcesso(processo);
     }
 
     public void atualizarProcessos() {
-        processoDAO.atualizarProcessos();
+        getDao().atualizarProcessos();
     }
 
     public boolean checkAccess(int idProcesso, String login) {
-        return !processoDAO.findProcessosByIdProcessoAndActorId(idProcesso, login).isEmpty();
+        return !getDao().findProcessosByIdProcessoAndActorId(idProcesso, login).isEmpty();
     }
 }

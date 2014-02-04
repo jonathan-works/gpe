@@ -5,9 +5,10 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.documento.entity.ItemTipoDocumento;
+import br.com.infox.epp.documento.manager.ItemTipoDocumentoManager;
 
 @Name(LocalizacaoTipoModeloDocumentoCrudAction.NAME)
-public class LocalizacaoTipoModeloDocumentoCrudAction extends AbstractCrudAction<ItemTipoDocumento> {
+public class LocalizacaoTipoModeloDocumentoCrudAction extends AbstractCrudAction<ItemTipoDocumento, ItemTipoDocumentoManager> {
     
     /**
      * 

@@ -14,7 +14,7 @@ import br.com.infox.epp.ajuda.entity.Pagina;
 
 @Name(PaginaDAO.NAME)
 @AutoCreate
-public class PaginaDAO extends DAO<Pagina, Integer> {
+public class PaginaDAO extends DAO<Pagina> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "paginaDAO";

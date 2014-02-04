@@ -12,19 +12,20 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 
 @Name(BloqueioUsuarioCrudAction.NAME)
-public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario> {
+public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario, BloqueioUsuarioManager> {
     
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "bloqueioUsuarioCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(BloqueioUsuarioCrudAction.class);
+    
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
 
     private UsuarioLogin usuarioAtual;
-
-    @In
-    private BloqueioUsuarioManager bloqueioUsuarioManager;
 
     public UsuarioLogin getUsuarioAtual() {
         return usuarioAtual;
@@ -33,7 +34,7 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     public void setUsuarioAtual(final UsuarioLogin usuarioAtual) {
         this.usuarioAtual = usuarioAtual;
         if (existeBloqueioAtivo()) {
-            final BloqueioUsuario ultimoBloqueio = bloqueioUsuarioManager.getUltimoBloqueio(usuarioAtual);
+            final BloqueioUsuario ultimoBloqueio = getManager().getUltimoBloqueio(usuarioAtual);
             setInstanceId(ultimoBloqueio.getIdBloqueioUsuario());
         } else {
             newInstance();
@@ -55,7 +56,7 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     }
 
     private boolean existeBloqueioAtivo() {
-        final BloqueioUsuario ultimoBloqueio = bloqueioUsuarioManager.getUltimoBloqueio(this.usuarioAtual);
+        final BloqueioUsuario ultimoBloqueio = getManager().getUltimoBloqueio(this.usuarioAtual);
         return ultimoBloqueio != null
                 && ultimoBloqueio.getDataDesbloqueio() == null;
     }
@@ -74,7 +75,7 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     protected void afterSave(final String ret) {
         if (UPDATED.equals(ret) || PERSISTED.equals(ret)) {
             try {
-                bloqueioUsuarioManager.update(this.usuarioAtual);
+            	usuarioLoginManager.update(this.usuarioAtual);
             } catch (final DAOException e) {
                 LOG.error("Não foi possível atualizar as modificações em " + usuarioAtual, e);
             }

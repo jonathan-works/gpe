@@ -20,7 +20,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.infox.epp.fluxo.crud.NaturezaCrudAction;
+import br.com.infox.epp.fluxo.dao.NaturezaDAO;
 import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.PersistSuccessTest;
@@ -36,7 +38,7 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
-            .addClasses(NaturezaCrudAction.class)
+            .addClasses(NaturezaCrudAction.class, NaturezaManager.class, NaturezaDAO.class)
         .createDeployment();
     }
 

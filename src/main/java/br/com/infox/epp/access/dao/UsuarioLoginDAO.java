@@ -24,7 +24,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Name(UsuarioLoginDAO.NAME)
 @AutoCreate
-public class UsuarioLoginDAO extends DAO<UsuarioLogin, Integer> {
+public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginDAO";

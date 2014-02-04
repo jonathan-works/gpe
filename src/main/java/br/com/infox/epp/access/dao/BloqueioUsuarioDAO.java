@@ -21,7 +21,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Name(BloqueioUsuarioDAO.NAME)
 @AutoCreate
-public class BloqueioUsuarioDAO extends DAO<BloqueioUsuario, Integer> {
+public class BloqueioUsuarioDAO extends DAO<BloqueioUsuario> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "bloqueioUsuarioDAO";

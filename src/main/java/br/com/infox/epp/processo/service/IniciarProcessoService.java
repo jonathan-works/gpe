@@ -26,6 +26,7 @@ import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
 /**
@@ -43,6 +44,9 @@ public class IniciarProcessoService {
 
 	@In
 	private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+	
+	@In
+	private ProcessoEpaManager processoEpaManager;
 	
 	public static final String ON_CREATE_PROCESS = 
 		"br.com.infox.epp.IniciarProcessoService.ONCREATEPROCESS";
@@ -103,7 +107,7 @@ public class IniciarProcessoService {
     }
 
 	private void createJbpmVariables(Processo processo, ContextInstance contextInstance) {
-		ProcessoEpa processoEpa = definicaoVariavelProcessoManager.find(ProcessoEpa.class, processo.getIdProcesso());
+		ProcessoEpa processoEpa = processoEpaManager.find(processo.getIdProcesso());
 		List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
 		for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
 			contextInstance.setVariable(variavelProcesso.getNome(), null);

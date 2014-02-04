@@ -48,7 +48,7 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 @AutoCreate
 @Scope(ScopeType.EVENT)
 @Name(ProdutividadeDAO.NAME)
-public class ProdutividadeDAO extends DAO<ProdutividadeBean, Void> {
+public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "produtividadeDAO";

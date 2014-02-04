@@ -38,7 +38,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(PapelCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class PapelCrudAction extends AbstractCrudAction<Papel> {
+public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     private static final long serialVersionUID = 1L;
     private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
     private static final String CONSTRAINT_VIOLATION_UNIQUE_VIOLATION = "#{messages['constraintViolation.uniqueViolation']}";
@@ -62,7 +62,6 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	private String activeInnerTab;
 	private boolean acceptChange=Boolean.FALSE;
 	
-	@In private PapelManager papelManager;
 	@In private RecursoManager recursoManager;
     
 	private final Comparator<String> papelComparator = new Comparator<String>(){
@@ -110,7 +109,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 			for (final Principal principal : list) {
 				idPapeis.add(principal.getName());
 			}
-			final List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(idPapeis);
+			final List<Papel> papelList = getManager().getPapeisByListaDeIdentificadores(idPapeis);
 			for (final Papel papel : papelList) {
 				final String id = papel.getIdentificador();
 				membros.add(id);
@@ -206,7 +205,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 			if (papelMap == null) {
 				papelMap = new HashMap<>();
 			}
-			final List<Papel> papelList = papelManager.getPapeisByListaDeIdentificadores(assignableRoles);
+			final List<Papel> papelList = getManager().getPapeisByListaDeIdentificadores(assignableRoles);
 			for (final Papel p : papelList) {
 				papelMap.put(p.getIdentificador(), p);
 			}
@@ -250,7 +249,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
         if (recursosDisponiveis == null) {
             recursosDisponiveis = new ArrayList<>();
             if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
-                final List<Recurso> listaRecursos = recursoManager.findAll(Recurso.class);
+                final List<Recurso> listaRecursos = recursoManager.findAll();
                 recursoMap = new HashMap<>();
                 for (final Recurso recurso : listaRecursos){
                     final String identificadorRecurso = recurso.getIdentificador();
@@ -291,7 +290,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
 	private void removePapeisImplicitos(final String papel, final List<String> list) {
 		for (final String p : IdentityManager.instance().getRoleGroups(papel)) {
 			list.remove(p);
-			getGenericManager().flush();
+			getManager().flush();
 			removePapeisImplicitos(p, list);
 		}
 	}
@@ -329,7 +328,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel> {
             final Collection<String> selectedResourcesList = getRecursos();
             final UpdateRolesOperation operation = new UpdateRolesOperation(roleGroup, role, rolesToInclude, rolesToExclude, availableResourcesList, selectedResourcesList);
             operation.run();
-            getGenericManager().flush();
+            getManager().flush();
         }
     }
 

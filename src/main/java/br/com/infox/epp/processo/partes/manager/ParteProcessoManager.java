@@ -8,8 +8,11 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
+import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.home.PessoaFisicaHome;
@@ -18,23 +21,28 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.partes.dao.HistoricoParteProcessoDAO;
+import br.com.infox.epp.processo.partes.dao.ParteProcessoDAO;
 import br.com.infox.epp.processo.partes.entity.HistoricoParteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 
 @Name(ParteProcessoManager.NAME)
 @AutoCreate
-public class ParteProcessoManager extends GenericManager {
+public class ParteProcessoManager extends Manager<ParteProcessoDAO, ParteProcesso> {
 
 	public static final String NAME = "parteProcessoManager";
 	private static final long serialVersionUID = 1L;
 	
 	@In private ProcessoEpaDAO processoEpaDAO; 
+	@In private PessoaFisicaDAO pessoaFisicaDAO;
+	@In private PessoaJuridicaDAO pessoaJuridicaDAO;
+	@In private HistoricoParteProcessoDAO historicoParteProcessoDAO;
 	
 	public void alternarAtividade(ParteProcesso parteProcesso, String motivoModificacao) throws DAOException{
 		HistoricoParteProcesso hpp = new HistoricoParteProcesso(parteProcesso, motivoModificacao);
 		parteProcesso.setAtivo(!parteProcesso.getAtivo());
 		update(parteProcesso);
-		persist(hpp);
+		historicoParteProcessoDAO.persist(hpp);
 	}
 	
 	public void incluir(Processo processo, String tipoPessoa) throws DAOException{
@@ -45,7 +53,7 @@ public class ParteProcessoManager extends GenericManager {
 			if (p.getAtivo() == null){
 				p.setAtivo(true);
 				p.setTipoPessoa(TipoPessoaEnum.F);
-				persist(p);
+				pessoaFisicaDAO.persist(p);
 				flush();
 			}
 			if (processoEpa.getPartes().contains(p)) {
@@ -62,7 +70,7 @@ public class ParteProcessoManager extends GenericManager {
 			if (p.getAtivo() == null){
 				p.setAtivo(true);
 				p.setTipoPessoa(TipoPessoaEnum.J);
-				persist(p);
+				pessoaJuridicaDAO.persist(p);
 				flush();
 			}
 			if (processoEpa.getPartes().contains(p)) {
@@ -83,7 +91,7 @@ public class ParteProcessoManager extends GenericManager {
 		}
 		
 		HistoricoParteProcesso novoHistorico = new HistoricoParteProcesso(parteProcessoAtual, motivoRestauracao);
-		persist(novoHistorico);
+		historicoParteProcessoDAO.persist(novoHistorico);
 		parteProcessoAtual.setAtivo(parteProcessoAtual.getAtivo());
 		update(parteProcessoAtual);
 		return novoHistorico;

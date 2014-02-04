@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
@@ -23,8 +22,7 @@ import br.com.infox.epp.processo.home.ProcessoHome;
 
 @Name(LocalizacaoDocumentoFisicoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class LocalizacaoDocumentoFisicoCrudAction extends
-		AbstractCrudAction<DocumentoFisico> {
+public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<DocumentoFisico, DocumentoFisicoManager> {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoDocumentoFisicoCrudAction.class);
 
@@ -33,9 +31,6 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	private List<LocalizacaoFisica> localizacaoFisicaList;
 	private List<DocumentoFisico> documentoFisicoList;
 	private Processo processo;
-
-	@In
-	private DocumentoFisicoManager documentoFisicoManager;
 
 	@Override
 	protected boolean isInstanceValid() {
@@ -66,7 +61,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 			final DocumentoFisico nl = iterator.next();
 			try {
 				nl.setAtivo(false);
-				getGenericManager().update(nl);
+				getManager().update(nl);
 			} catch (final Exception e) {
 			    LOG.error(".inactiveAll()", e);
 			}
@@ -83,7 +78,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends
 	}
 
 	private void listByProcesso() {
-		setDocumentoFisicoList(documentoFisicoManager.listByProcesso(processo));
+		setDocumentoFisicoList(getManager().listByProcesso(processo));
 	}
 
 	public List<LocalizacaoFisica> getLocalizacaoFisicaList() {

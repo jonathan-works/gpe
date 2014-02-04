@@ -28,7 +28,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
  */
 @Name(NaturezaCategoriaFluxoDAO.NAME)
 @AutoCreate
-public class NaturezaCategoriaFluxoDAO extends DAO<NaturezaCategoriaFluxo, Integer> {
+public class NaturezaCategoriaFluxoDAO extends DAO<NaturezaCategoriaFluxo> {
 
     private static final long serialVersionUID = -1456893293816945596L;
     public static final String NAME = "naturezaCategoriaFluxoDAO";

@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateRange;
 import br.com.infox.core.util.DateUtil;
@@ -28,7 +28,7 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 @Name(ProcessoEpaTarefaManager.NAME)
 @AutoCreate
-public class ProcessoEpaTarefaManager extends GenericManager {
+public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, ProcessoEpaTarefa> {
 
     private static final int PORCENTAGEM_MAXIMA = 100;
     private static final int HOURS_OF_DAY = 24;
@@ -37,36 +37,35 @@ public class ProcessoEpaTarefaManager extends GenericManager {
 
 	public static final String NAME = "processoEpaTarefaManager";
 
-	@In private ProcessoEpaTarefaDAO processoEpaTarefaDAO;
 	@In private LocalizacaoTurnoDAO localizacaoTurnoDAO;
 	@In private ProcessoEpaDAO processoEpaDAO;
 	
 	public ProcessoEpaTarefa getByTaskInstance(Long taskInstance) {
-		return processoEpaTarefaDAO.getByTaskInstance(taskInstance);
+		return getDao().getByTaskInstance(taskInstance);
 	}
 	
 	public List<ProcessoEpaTarefa> getTarefaEnded() {
-	    return processoEpaTarefaDAO.getTarefaEnded();
+	    return getDao().getTarefaEnded();
 	}
 	
 	public List<ProcessoEpaTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
-		return processoEpaTarefaDAO.getTarefaNotEnded(tipoPrazo);
+		return getDao().getTarefaNotEnded(tipoPrazo);
 	}
 	
 	public List<Object[]> listForaPrazoFluxo(Categoria c) {
-		return processoEpaTarefaDAO.listForaPrazoFluxo(c);
+		return getDao().listForaPrazoFluxo(c);
 	}
 	
 	public List<Object[]> listForaPrazoTarefa(Categoria c) {
-		return processoEpaTarefaDAO.listForaPrazoTarefa(c);
+		return getDao().listForaPrazoTarefa(c);
 	}
 	
 	public List<Object[]> listTarefaPertoLimite() {
-		return processoEpaTarefaDAO.listTarefaPertoLimite();
+		return getDao().listTarefaPertoLimite();
 	}
 	
 	public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(final Integer idProcesso, final Integer idTarefa) {
-	    return processoEpaTarefaDAO.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
+	    return getDao().findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
 	}
 	
 	/**

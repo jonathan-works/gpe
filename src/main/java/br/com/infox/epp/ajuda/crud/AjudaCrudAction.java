@@ -17,7 +17,7 @@ import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
 
 @Name(AjudaCrudAction.NAME)
-public class AjudaCrudAction extends AbstractCrudAction<Ajuda> {
+public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
     
     /**
      * 

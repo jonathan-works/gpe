@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -24,7 +23,7 @@ import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 
 @Name(ProcessoEpaManager.NAME)
 @AutoCreate
-public class ProcessoEpaManager extends GenericManager {
+public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
 
     private static final int PORCENTAGEM = 100;
 
@@ -34,15 +33,12 @@ public class ProcessoEpaManager extends GenericManager {
 
     public static final String NAME = "processoEpaManager";
 
-    @In
-    private ProcessoEpaDAO processoEpaDAO;
-
     public List<ProcessoEpa> listAllNotEnded() {
-        return processoEpaDAO.listAllNotEnded();
+        return getDao().listAllNotEnded();
     }
 
     public List<ProcessoEpa> listNotEnded(Fluxo fluxo) {
-        return processoEpaDAO.listNotEnded(fluxo);
+        return getDao().listNotEnded(fluxo);
     }
 
     public void incluirParteProcesso(ProcessoEpa processoEpa, Pessoa pessoa) throws DAOException {
@@ -57,17 +53,17 @@ public class ProcessoEpaManager extends GenericManager {
     }
 
     public Boolean podeInativarPartesDoProcesso(Processo processo) {
-        return processoEpaDAO.podeInativarPartes(processoEpaDAO.getProcessoEpaByProcesso(processo));
+        return getDao().podeInativarPartes(getDao().getProcessoEpaByProcesso(processo));
     }
 
     public boolean podeInativarPartesDoProcesso(ProcessoEpa processoEpa) {
-        return processoEpaDAO.podeInativarPartes(processoEpa);
+        return getDao().podeInativarPartes(processoEpa);
     }
 
     public void updateTempoGastoProcessoEpa() throws DAOException {
         List<ProcessoEpa> listAllNotEnded = listAllNotEnded();
         for (ProcessoEpa processoEpa : listAllNotEnded) {
-            Map<String, Object> result = processoEpaDAO.getTempoGasto(processoEpa);
+            Map<String, Object> result = getDao().getTempoGasto(processoEpa);
 
             if (result != null) {
                 Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
@@ -85,38 +81,38 @@ public class ProcessoEpaManager extends GenericManager {
                 if (processoEpa.getPorcentagem() > PORCENTAGEM) {
                     processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
                 }
-                processoEpaDAO.update(processoEpa);
+                getDao().update(processoEpa);
             }
         }
     }
 
     public Item getItemDoProcesso(int idProcesso) {
-        return processoEpaDAO.getItemDoProcesso(idProcesso);
+        return getDao().getItemDoProcesso(idProcesso);
     }
 
     public boolean hasPartes(Processo processo) {
-        return processoEpaDAO.hasPartes(processo);
+        return getDao().hasPartes(processo);
     }
 
     public boolean hasPartes(Long idJbpm) {
-        return processoEpaDAO.hasPartes(idJbpm);
+        return getDao().hasPartes(idJbpm);
     }
 
     public List<PessoaFisica> getPessoaFisicaList() {
-        return processoEpaDAO.getPessoaFisicaList();
+        return getDao().getPessoaFisicaList();
     }
 
     public List<PessoaJuridica> getPessoaJuridicaList() {
-        return processoEpaDAO.getPessoaJuridicaList();
+        return getDao().getPessoaJuridicaList();
     }
 
     public int getDiasDesdeInicioProcesso(ProcessoEpa processoEpa) {
-        LocalDate dataInicio = LocalDate.fromDateFields(processoEpaDAO.getDataInicioPrimeiraTarefa(processoEpa));
+        LocalDate dataInicio = LocalDate.fromDateFields(getDao().getDataInicioPrimeiraTarefa(processoEpa));
         LocalDate now = LocalDate.now();
         return Days.daysBetween(dataInicio, now).getDays();
     }
 
     public Double getMediaTempoGasto(Fluxo fluxo, SituacaoPrazoEnum prazoEnum) {
-        return processoEpaDAO.getMediaTempoGasto(fluxo, prazoEnum);
+        return getDao().getMediaTempoGasto(fluxo, prazoEnum);
     }
 }

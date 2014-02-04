@@ -10,7 +10,7 @@ import br.com.infox.epp.tarefa.entity.TarefaJbpm;
 
 @Name(TarefaJbpmDAO.NAME)
 @AutoCreate
-public class TarefaJbpmDAO extends DAO<TarefaJbpm, Integer> {
+public class TarefaJbpmDAO extends DAO<TarefaJbpm> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tarefaJbpmDAO";

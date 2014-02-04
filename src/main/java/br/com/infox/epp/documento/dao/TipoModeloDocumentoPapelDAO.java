@@ -16,7 +16,7 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 
 @Name(TipoModeloDocumentoPapelDAO.NAME)
 @AutoCreate
-public class TipoModeloDocumentoPapelDAO extends DAO<TipoModeloDocumentoPapel, Integer> {
+public class TipoModeloDocumentoPapelDAO extends DAO<TipoModeloDocumentoPapel> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tipoModeloDocumentoPapelDAO";

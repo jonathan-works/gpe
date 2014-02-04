@@ -5,7 +5,8 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.core.manager.GenericManager;
+
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.fluxo.dao.NaturezaCategoriaFluxoDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -14,7 +15,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 
 @Name(NaturezaCategoriaFluxoManager.NAME)
 @AutoCreate
-public class NaturezaCategoriaFluxoManager extends GenericManager {
+public class NaturezaCategoriaFluxoManager extends Manager<NaturezaCategoriaFluxoDAO, NaturezaCategoriaFluxo> {
 
 	private static final long serialVersionUID = -1441750117108371132L;
 

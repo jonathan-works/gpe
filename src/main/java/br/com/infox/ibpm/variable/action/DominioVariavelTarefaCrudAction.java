@@ -8,11 +8,12 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
+import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 
 @Name(DominioVariavelTarefaCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class DominioVariavelTarefaCrudAction extends AbstractCrudAction<DominioVariavelTarefa> {
+public class DominioVariavelTarefaCrudAction extends AbstractCrudAction<DominioVariavelTarefa, DominioVariavelTarefaManager> {
 	/**
      * 
      */

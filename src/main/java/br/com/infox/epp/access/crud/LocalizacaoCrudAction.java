@@ -3,7 +3,6 @@ package br.com.infox.epp.access.crud;
 import java.util.List;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.international.StatusMessages;
 
@@ -13,7 +12,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 
 @Name(LocalizacaoCrudAction.NAME)
-public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizacao> {
+public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizacao, LocalizacaoManager> {
     
     /**
      * 
@@ -21,8 +20,6 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "localizacaoCrudAction";
-    
-    @In private LocalizacaoManager localizacaoManager;
     
     @Override
     public void newInstance() {
@@ -82,7 +79,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     }
     
     public List<Localizacao> getLocalizacoesEstrutura(){
-        return localizacaoManager.getLocalizacoesEstrutura();
+        return getManager().getLocalizacoesEstrutura();
     }
 
 }

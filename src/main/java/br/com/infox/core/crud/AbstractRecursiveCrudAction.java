@@ -8,14 +8,16 @@ import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.dao.DAO;
 import br.com.infox.core.exception.RecursiveException;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.persistence.RecursiveManager;
 import br.com.itx.util.EntityUtil;
 
 @SuppressWarnings(UNCHECKED)
-public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>> extends 
-                            AbstractCrudAction<E> {
+public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>, M extends Manager<? extends DAO<E>, E>> extends 
+                            AbstractCrudAction<E, M> {
     
     /**
      * 

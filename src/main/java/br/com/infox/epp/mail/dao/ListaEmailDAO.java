@@ -17,7 +17,7 @@ import br.com.infox.epp.mail.entity.ListaEmail;
 
 @Name(ListaEmailDAO.NAME)
 @AutoCreate
-public class ListaEmailDAO extends DAO<ListaEmail, Integer> {
+public class ListaEmailDAO extends DAO<ListaEmail> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "listaEmailDAO";

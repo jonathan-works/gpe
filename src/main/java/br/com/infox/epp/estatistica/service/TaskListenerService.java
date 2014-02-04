@@ -1,5 +1,6 @@
 package br.com.infox.epp.estatistica.service;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.jboss.seam.annotations.In;
@@ -12,10 +13,10 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.exception.ApplicationException;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.entity.Tarefa;
@@ -24,7 +25,7 @@ import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(TaskListenerService.NAME)
-public class TaskListenerService extends GenericManager {
+public class TaskListenerService implements Serializable {
 	
 	private static final LogProvider LOG = Logging.getLogProvider(TaskListenerService.class);
 
@@ -35,6 +36,8 @@ public class TaskListenerService extends GenericManager {
 	@In
 	private ProcessoEpaTarefaManager processoEpaTarefaManager;
 	@In TarefaManager tarefaManager;
+	@In private ProcessoEpaManager processoEpaManager;
+	@In private ProcessoManager processoManager;
 	
 	@Observer(IniciarProcessoService.ON_CREATE_PROCESS)
 	public void onStartProcess(TaskInstance taskInstance, Processo processo) { 
@@ -57,7 +60,7 @@ public class TaskListenerService extends GenericManager {
 		Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
 		
 		ProcessoEpaTarefa pEpaTarefa = new ProcessoEpaTarefa();
-        pEpaTarefa.setProcessoEpa(find(ProcessoEpa.class, processo.getIdProcesso()));
+        pEpaTarefa.setProcessoEpa(processoEpaManager.find(processo.getIdProcesso()));
 		pEpaTarefa.setTarefa(tarefa);
 		pEpaTarefa.setDataInicio(taskInstance.getCreate());
 		pEpaTarefa.setUltimoDisparo(new Date());
@@ -70,7 +73,7 @@ public class TaskListenerService extends GenericManager {
 		pEpaTarefa.setTaskInstance(taskInstance.getId());
 		
 		try {
-			persist(pEpaTarefa);
+			processoEpaTarefaManager.persist(pEpaTarefa);
 		} catch (DAOException e) {
 			LOG.error(".createProcessoEpa(processo, taskInstance)", e);
 		}
@@ -83,7 +86,7 @@ public class TaskListenerService extends GenericManager {
 			throw new ApplicationException("Erro ao criar o processo. Verifique a configuração das raias na definição do fluxo.");
 		}
 		processo.setDataFim(new Date());
-		processoEpaTarefaManager.update(processo);
+		processoManager.update(processo);
 	}
 	
 }

@@ -19,7 +19,7 @@ import br.com.infox.epp.fluxo.entity.Item;
 
 @Name(CategoriaItemDAO.NAME)
 @AutoCreate
-public class CategoriaItemDAO extends DAO<CategoriaItem, Integer> {
+public class CategoriaItemDAO extends DAO<CategoriaItem> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "categoriaItemDAO";

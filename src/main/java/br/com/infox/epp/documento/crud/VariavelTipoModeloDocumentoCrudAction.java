@@ -7,10 +7,10 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
+import br.com.infox.epp.documento.manager.VariavelTipoModeloManager;
 
 @Name(VariavelTipoModeloDocumentoCrudAction.NAME)
-public class VariavelTipoModeloDocumentoCrudAction extends
-		AbstractCrudAction<VariavelTipoModelo> {
+public class VariavelTipoModeloDocumentoCrudAction extends AbstractCrudAction<VariavelTipoModelo, VariavelTipoModeloManager> {
 	
 	/**
      * 

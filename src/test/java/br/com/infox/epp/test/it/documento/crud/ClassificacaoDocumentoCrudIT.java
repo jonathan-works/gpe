@@ -12,7 +12,9 @@ import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.documento.crud.ClassificacaoDocumentoCrudAction;
+import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
@@ -29,6 +31,8 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
                 .addClasses(ClassificacaoDocumentoCrudAction.class)
+                .addClasses(TipoProcessoDocumentoManager.class)
+                .addClass(TipoProcessoDocumentoDAO.class)
                 .createDeployment();
     }
 

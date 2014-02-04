@@ -9,7 +9,7 @@ import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 
 @AutoCreate
 @Name(TaskInstanceDAO.NAME)
-public class TaskInstanceDAO extends DAO<UsuarioTaskInstance, Long> {
+public class TaskInstanceDAO extends DAO<UsuarioTaskInstance> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceDAO";

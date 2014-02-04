@@ -4,13 +4,11 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 
 @Name(PessoaFisicaCrudAction.NAME)
-public class PessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica> {
+public class PessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica, PessoaFisicaManager> {
 	
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pessoaFisicaCrudAction";
 

@@ -22,7 +22,7 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 @Name(UsuarioLocalizacaoDAO.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class UsuarioLocalizacaoDAO extends DAO<UsuarioLocalizacao, Integer> {
+public class UsuarioLocalizacaoDAO extends DAO<UsuarioLocalizacao> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioLocalizacaoDAO";

@@ -5,19 +5,18 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 
 @Name(LocalizacaoTurnoManager.NAME)
 @AutoCreate
-public class LocalizacaoTurnoManager extends GenericManager {
+public class LocalizacaoTurnoManager extends Manager<LocalizacaoTurnoDAO, LocalizacaoTurno> {
 
 	private static final int MINUTES_OF_HOUR = 60;
 
@@ -25,16 +24,13 @@ public class LocalizacaoTurnoManager extends GenericManager {
 
 	public static final String NAME = "localizacaoTurnoManager";
 
-	@In
-	private LocalizacaoTurnoDAO localizacaoTurnoDAO;
-	
 	/**
 	 * Lista todos os turnos da localização
 	 * @param localizacao
 	 * @return lista de turnos
 	 */
 	public List<LocalizacaoTurno> listByLocalizacao(Localizacao localizacao) {
-		return localizacaoTurnoDAO.listByLocalizacao(localizacao);
+		return getDao().listByLocalizacao(localizacao);
 	}
 	
 	/**
@@ -82,6 +78,6 @@ public class LocalizacaoTurnoManager extends GenericManager {
 	}
 	
 	public void removerTurnosAnteriores(Localizacao localizacao){
-		localizacaoTurnoDAO.removerTurnosAnteriores(localizacao);
+		getDao().removerTurnosAnteriores(localizacao);
 	}
 }

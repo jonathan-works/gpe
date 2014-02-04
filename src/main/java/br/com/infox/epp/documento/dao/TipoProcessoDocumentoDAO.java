@@ -18,7 +18,7 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 
 @Name(TipoProcessoDocumentoDAO.NAME)
 @AutoCreate
-public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento, Integer> {
+public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento> {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoProcessoDocumentoDAO";

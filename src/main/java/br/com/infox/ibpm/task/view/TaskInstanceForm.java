@@ -162,7 +162,7 @@ public class TaskInstanceForm implements Serializable{
 					} else if ("enumeracao".equals(type)) {
 						DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
 						Integer id = Integer.valueOf(tokens[2]);
-						DominioVariavelTarefa dominio = dominioVariavelTarefaManager.getDominioVariavelTarefa(id);
+						DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
 						
 						String[] itens = dominio.getDominio().split(";");
 						List<SelectItem> selectItens = new ArrayList<>();

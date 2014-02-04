@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
@@ -19,7 +18,7 @@ import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 
 @Name(DefinicaoVariavelProcessoAction.NAME)
 @Scope(ScopeType.PAGE)
-public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVariavelProcesso> {
+public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVariavelProcesso, DefinicaoVariavelProcessoManager> {
     
     public static final String NAME = "definicaoVariavelProcessoAction";
     private static final Log LOG = Logging.getLog(DefinicaoVariavelProcessoAction.class);
@@ -29,9 +28,6 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
     private List<DefinicaoVariavelProcesso> variaveis;
     private int page = 1;
     private int maxPages;
-    
-    @In
-    private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
     
     public void setFluxo(Fluxo fluxo) {
 		this.fluxo = fluxo;
@@ -62,14 +58,14 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
     
     public boolean isPersisted() {
     	if (variavel != null && variavel.getId() != null) {
-    		if (!getGenericManager().contains(variavel)) {
+    		if (!getManager().contains(variavel)) {
     			try {
-					getGenericManager().merge(variavel);
+    				getManager().merge(variavel);
 				} catch (DAOException e) {
 					LOG.error(".isPersisted()", e);
 				}
     		}
-    		return getGenericManager().contains(variavel);
+    		return getManager().contains(variavel);
     	}
     	return false;
     }
@@ -78,7 +74,7 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
     public String remove(DefinicaoVariavelProcesso obj) {
     	String ret;
         try {
-            ret = super.remove(getGenericManager().merge(obj));
+            ret = super.remove(getManager().merge(obj));
         } catch (DAOException e) {
             LOG.error("Não foi possível remover a DefinicaoVariavelProcesso " + obj.getNome(), e);
             ret = "UNMERGED";
@@ -95,10 +91,10 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
     
     public List<DefinicaoVariavelProcesso> listVariaveis(int maxResults) {
     	if (this.variaveis == null) {
-    		int total = definicaoVariavelProcessoManager.getTotalVariaveisByFluxo(fluxo).intValue();
+    		int total = getManager().getTotalVariaveisByFluxo(fluxo).intValue();
     		calcMaxPages(maxResults, total);
     		int start = calcStart(maxResults);
-    		this.variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo, start, maxResults);
+    		this.variaveis = getManager().listVariaveisByFluxo(fluxo, start, maxResults);
     	}
     	return Collections.unmodifiableList(this.variaveis);
 	}
@@ -144,7 +140,7 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
 	}
     
     public String getNomeAmigavel(DefinicaoVariavelProcesso variavel) {
-    	return definicaoVariavelProcessoManager.getNomeAmigavel(variavel);
+    	return getManager().getNomeAmigavel(variavel);
     }
     
     public String getNomeAmigavel() {
@@ -152,6 +148,6 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
     }
     
     public void setNomeAmigavel(String nomeAmigavel) {
-    	definicaoVariavelProcessoManager.setNome(variavel, nomeAmigavel);
+    	getManager().setNome(variavel, nomeAmigavel);
     }
 }

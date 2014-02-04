@@ -12,7 +12,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.abstracts.BamTimerProcessor;
 import br.com.infox.epp.system.entity.Parametro;
@@ -20,7 +20,7 @@ import br.com.itx.util.ComponentUtil;
 
 @Name(BamTimerManager.NAME)
 @AutoCreate
-public class BamTimerManager extends GenericManager {
+public class BamTimerManager extends Manager<GenericDAO, Object> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "bamTimerManager";
     

@@ -3,7 +3,6 @@ package br.com.infox.epp.documento.crud;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -15,7 +14,7 @@ import br.com.infox.epp.documento.manager.HistoricoModeloDocumentoManager;
 
 @Name(HistoricoModeloDocumentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<HistoricoModeloDocumento> {
+public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<HistoricoModeloDocumento, HistoricoModeloDocumentoManager> {
 
     /**
      * 
@@ -23,8 +22,6 @@ public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<Histo
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "historicoModeloDocumentoCrudAction";
-    
-    @In HistoricoModeloDocumentoManager historicoModeloDocumentoManager;
     
     private HistoricoModeloDocumento selecionado;
     
@@ -40,8 +37,8 @@ public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<Histo
     }
     
     public void setModeloDocumento(ModeloDocumento modeloDocumento) {
-        setModeloDocumentoList(historicoModeloDocumentoManager.listModelosDoHistorico());
-        setUsuarioAlteracaoList(historicoModeloDocumentoManager.listUsuariosQueAlteraramModelo(modeloDocumento));
+        setModeloDocumentoList(getManager().listModelosDoHistorico());
+        setUsuarioAlteracaoList(getManager().listUsuariosQueAlteraramModelo(modeloDocumento));
     }
     
     public List<UsuarioLogin> getUsuarioAlteracaoList() {

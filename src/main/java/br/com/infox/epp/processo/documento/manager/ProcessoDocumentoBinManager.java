@@ -5,12 +5,14 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.itx.component.FileHome;
 
 @Name(ProcessoDocumentoBinManager.NAME)
 @AutoCreate
-public class ProcessoDocumentoBinManager extends GenericManager {
+public class ProcessoDocumentoBinManager extends Manager<ProcessoDocumentoBinDAO, ProcessoDocumentoBin> {
 
     private static final long serialVersionUID = 1L;
     private static final int TAMANHO_MAXIMO_ARQUIVO = 1572864;

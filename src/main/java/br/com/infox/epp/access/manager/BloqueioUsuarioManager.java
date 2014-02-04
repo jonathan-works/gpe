@@ -6,14 +6,14 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.dao.BloqueioUsuarioDAO;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Name(BloqueioUsuarioManager.NAME)
 @AutoCreate
-public class BloqueioUsuarioManager extends GenericManager {
+public class BloqueioUsuarioManager extends Manager<BloqueioUsuarioDAO, BloqueioUsuario> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "bloqueioUsuarioManager";

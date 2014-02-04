@@ -17,7 +17,7 @@ import br.com.itx.util.FileUtil;
 
 @Name(ImagemBinDAO.NAME)
 @AutoCreate
-public class ImagemBinDAO extends DAO<ImagemBin, Integer> {
+public class ImagemBinDAO extends DAO<ImagemBin> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "imagemBinDAO";
