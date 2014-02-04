@@ -10,8 +10,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.richfaces.event.FileUploadEvent;
-import org.richfaces.event.FileUploadListener;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -23,7 +21,7 @@ import br.com.infox.epp.processo.entity.Processo;
 
 @Name(ProcessoDocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoDocumentoUploader implements FileUploadListener {
+public class ProcessoDocumentoUploader {
 
     public static final String NAME = "processoDocumentoUploader";
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoUploader.class);
@@ -60,12 +58,6 @@ public class ProcessoDocumentoUploader implements FileUploadListener {
     public void setProcessoDocumentosDaSessao(
             List<ProcessoDocumento> processoDocumentosDaSessao) {
         this.processoDocumentosDaSessao = processoDocumentosDaSessao;
-    }
-
-    @Override
-    public void processFileUpload(FileUploadEvent arg0) {
-        // TODO Auto-generated method stub
-
     }
 
     public void onClickTabAnexar() {
