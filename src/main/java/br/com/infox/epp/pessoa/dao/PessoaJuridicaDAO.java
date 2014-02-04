@@ -10,7 +10,7 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 
 @Name(PessoaJuridicaDAO.NAME)
 @AutoCreate
-public class PessoaJuridicaDAO extends DAO<PessoaJuridica, Integer> {
+public class PessoaJuridicaDAO extends DAO<PessoaJuridica> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "pessoaJuridicaDAO";

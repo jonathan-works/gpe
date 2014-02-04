@@ -1,23 +1,21 @@
 package br.com.infox.epp.tarefa.manager;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.tarefa.dao.TarefaJbpmDAO;
+import br.com.infox.epp.tarefa.entity.TarefaJbpm;
 
 @Name(TarefaJbpmManager.NAME)
 @AutoCreate
-public class TarefaJbpmManager extends GenericManager {
+public class TarefaJbpmManager extends Manager<TarefaJbpmDAO, TarefaJbpm> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tarefaJbpmManager";
 	
-	@In private TarefaJbpmDAO tarefaJbpmDAO;
-	
 	public void inserirVersoesTarefas() {
-		tarefaJbpmDAO.inserirVersoesTarefas();
+		getDao().inserirVersoesTarefas();
 	}
 
 }

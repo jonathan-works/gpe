@@ -1,6 +1,5 @@
 package br.com.infox.epp.fluxo.crud;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
@@ -16,7 +15,7 @@ import br.com.infox.epp.fluxo.manager.NatCatFluxoLocalizacaoManager;
 import br.com.itx.util.ComponentUtil;
 
 @Name(NatCatFluxoLocalizacaoCrudAction.NAME)
-public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLocalizacao> {
+public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLocalizacao, NatCatFluxoLocalizacaoManager> {
     
     /**
      * 
@@ -26,7 +25,6 @@ public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatF
     public static final String NAME = "natCatFluxoLocalizacaoCrudAction";
     
     private NaturezaCategoriaFluxo naturezaCategoriaFluxoCorrente;
-    @In private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
     
     private static final Log LOG = Logging.getLog(NatCatFluxoLocalizacaoCrudAction.class);
     
@@ -45,7 +43,7 @@ public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatF
     public String save() {
         if (getInstance().getHeranca()) {
         	try {
-				natCatFluxoLocalizacaoManager.persistWithChildren(getInstance());
+				getManager().persistWithChildren(getInstance());
 			} catch (DAOException e) {
 				LOG.error(null, e);
 				FacesMessages.instance().clear();
@@ -53,7 +51,7 @@ public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatF
 				return e.getPostgreSQLErrorCode().toString();
 			}
         }
-        if (natCatFluxoLocalizacaoManager.existsNatCatFluxoLocalizacao(getInstance().getNaturezaCategoriaFluxo(), getInstance().getLocalizacao())) {
+        if (getManager().existsNatCatFluxoLocalizacao(getInstance().getNaturezaCategoriaFluxo(), getInstance().getLocalizacao())) {
         	FacesMessages.instance().clear();
         	FacesMessages.instance().add("#{messages['constraintViolation.uniqueViolation']}");
         	return PostgreSQLErrorCode.UNIQUE_VIOLATION.toString();

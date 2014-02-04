@@ -2,7 +2,7 @@
 
 package br.com.infox.epp.painel;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,9 +23,11 @@ import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.painel.caixa.Caixa;
+import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoEpaList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
@@ -51,6 +53,8 @@ public class PainelUsuarioHome implements Serializable {
 	@In private SituacaoProcessoManager situacaoProcessoManager;
 	@In private VariavelProcessoService variavelProcessoService;
 	@In private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+	@In private CaixaManager caixaManager;
+	@In private ProcessoEpaManager processoEpaManager;
 	
 	@Observer("selectedTarefasTree")
 	public void onSelected(Object obj){
@@ -82,7 +86,7 @@ public class PainelUsuarioHome implements Serializable {
 	}
 
 	public void processoCaixa(DropEvent evt) {
-		Caixa caixa = processoManager.find(Caixa.class, evt.getDropValue());
+		Caixa caixa = caixaManager.find((Integer) evt.getDropValue());
 		setProcessoCaixa(getProcessoIdList(evt.getDragValue()), caixa);
 		this.processoIdList = null;
 	}
@@ -168,7 +172,7 @@ public class PainelUsuarioHome implements Serializable {
 		List<Integer> idsProcesso = getProcessoIdList();
 		
 		if (idsProcesso != null && (idsProcesso.size() > 1 || (idsProcesso.size() == 1 && idsProcesso.get(0) != -1))) {
-			ProcessoEpa processoEpa = processoManager.find(ProcessoEpa.class, idsProcesso.get(0));
+			ProcessoEpa processoEpa = processoEpaManager.find(idsProcesso.get(0));
 			Fluxo fluxo = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
 			
 			List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo);

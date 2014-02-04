@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Scope;
 @Name(GenericDAO.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class GenericDAO extends DAO<Object, Object> {
+public class GenericDAO extends DAO<Object> {
 
     public static final String NAME = "genericDAO";
     private static final long serialVersionUID = 2513102779632819212L;

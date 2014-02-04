@@ -20,7 +20,7 @@ import br.com.infox.epp.processo.entity.Processo;
 
 @Name(ProcessoDocumentoDAO.NAME)
 @AutoCreate
-public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento, Integer> {
+public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
@@ -32,7 +32,7 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento, Integer> {
         return getNamedSingleResult(NEXT_SEQUENCIAL, parameters);
     }
     
-    public Object getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
+    public String getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
         ProcessoDocumento processoDocumento = find(idProcessoDocumento);
         if (processoDocumento != null) {
             return processoDocumento.getProcessoDocumentoBin().getModeloDocumento();

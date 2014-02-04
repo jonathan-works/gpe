@@ -8,19 +8,20 @@ import java.util.Set;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.fluxo.dao.ItemDAO;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.query.ItemQuery;
 
 @Name(ItemManager.NAME)
 @AutoCreate
-public class ItemManager extends GenericManager {
+public class ItemManager extends Manager<ItemDAO, Item> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "itemManager";
     
     public Set<Item> getFolhas(final Integer idPai) {
-        final Item pai = find(Item.class, idPai);
+        final Item pai = find(idPai);
         return getFolhas(pai);
     }
     

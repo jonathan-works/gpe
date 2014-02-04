@@ -16,8 +16,11 @@ import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.fluxo.crud.CategoriaCrudAction;
+import br.com.infox.epp.fluxo.dao.CategoriaDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.manager.CategoriaManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -26,7 +29,8 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
     @Deployment
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
-        return new ArquillianSeamTestSetup().addClasses(CategoriaCrudAction.class).createDeployment();
+        return new ArquillianSeamTestSetup().addClasses(CategoriaCrudAction.class,CategoriaDAO.class,CategoriaManager.class)
+        		.createDeployment();
     }
 
     @Override

@@ -14,7 +14,7 @@ import org.jboss.seam.core.Expressions;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.dao.VariavelDAO;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
@@ -28,20 +28,12 @@ import br.com.infox.epp.documento.entity.Variavel;
  */
 @Name(ModeloDocumentoManager.NAME)
 @AutoCreate
-public class ModeloDocumentoManager extends GenericManager{
+public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDocumento>{
 	private static final long serialVersionUID = 4455754174682600299L;
 	private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoManager.class);
-	private static final Class<ModeloDocumento> CLASS = ModeloDocumento.class;
 	public static final String NAME = "modeloDocumentoManager";
 
-	@In
-	private ModeloDocumentoDAO modeloDocumentoDAO;
-	
 	@In private VariavelDAO variavelDAO;
-	
-    public ModeloDocumento find(Integer idModeloDocumento) {
-        return find(CLASS, idModeloDocumento);
-    }
 	
 	public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento){
 		if(modeloDocumento != null) {
@@ -56,15 +48,15 @@ public class ModeloDocumentoManager extends GenericManager{
 	 * @return lista de modelos de documento ativos
 	 */
 	public List<ModeloDocumento> getModeloDocumentoList() {
-		return modeloDocumentoDAO.getModeloDocumentoList();
+		return getDao().getModeloDocumentoList();
 	}
 	
 	public ModeloDocumento getModeloDocumentoByTitulo(String titulo){
-		return modeloDocumentoDAO.getModeloDocumentoByTitulo(titulo);
+		return getDao().getModeloDocumentoByTitulo(titulo);
 	}
 	
 	public List<ModeloDocumento> getModeloDocumentoByGrupoAndTipo(GrupoModeloDocumento grupo, TipoModeloDocumento tipo){
-		return modeloDocumentoDAO.getModeloDocumentoByGrupoAndTipo(grupo, tipo);
+		return getDao().getModeloDocumentoByGrupoAndTipo(grupo, tipo);
 	}
 	
 	public List<ModeloDocumento> getModelosDocumentoInListaModelo(String listaModelos){
@@ -73,7 +65,7 @@ public class ModeloDocumentoManager extends GenericManager{
 		for (String token : tokens) {
 			ids.add(Integer.valueOf(token));
 		}
-		return modeloDocumentoDAO.getModelosDocumentoInListaModelos(ids);
+		return getDao().getModelosDocumentoInListaModelos(ids);
 	}
 	
 	/**
@@ -148,7 +140,7 @@ public class ModeloDocumentoManager extends GenericManager{
 	}
 
     public String getConteudo(int idModeloDocumento)	{
-    	final ModeloDocumento modeloDocumento = find(ModeloDocumento.class, idModeloDocumento);
+    	final ModeloDocumento modeloDocumento = find(idModeloDocumento);
         return evaluateModeloDocumento(modeloDocumento);
     }
 

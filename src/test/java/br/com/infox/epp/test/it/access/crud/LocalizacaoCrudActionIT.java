@@ -20,6 +20,7 @@ import br.com.infox.epp.access.dao.LocalizacaoDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)

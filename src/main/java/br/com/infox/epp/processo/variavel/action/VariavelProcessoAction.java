@@ -48,7 +48,7 @@ public class VariavelProcessoAction implements Serializable {
 	}
 	
 	public void setProcesso(Processo processo) {
-		this.processoEpa = processoEpaManager.find(ProcessoEpa.class, processo.getIdProcesso());
+		this.processoEpa = processoEpaManager.find(processo.getIdProcesso());
 	}
 	
 	public void save() {

@@ -9,13 +9,11 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
 
 @Name(TipoModeloDocumentoCrudAction.NAME)
-public class TipoModeloDocumentoCrudAction extends AbstractCrudAction<TipoModeloDocumento> {
+public class TipoModeloDocumentoCrudAction extends AbstractCrudAction<TipoModeloDocumento, TipoModeloDocumentoManager> {
     
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "tipoModeloDocumentoCrudAction";

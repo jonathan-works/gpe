@@ -19,9 +19,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.infox.epp.fluxo.crud.ItemCrudAction;
+import br.com.infox.epp.fluxo.dao.ItemDAO;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -35,7 +38,8 @@ public class ItemCrudActionIT extends AbstractCrudTest<Item> {
     @Deployment
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
-        return new ArquillianSeamTestSetup().addClasses(ItemCrudAction.class,ItemTreeHandler.class).createDeployment();
+        return new ArquillianSeamTestSetup().addClasses(ItemCrudAction.class,ItemTreeHandler.class,ItemDAO.class,ItemManager.class)
+        		.createDeployment();
     }
 
     @Override

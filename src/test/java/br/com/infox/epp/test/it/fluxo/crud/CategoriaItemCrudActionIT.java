@@ -22,14 +22,18 @@ import org.junit.runner.RunWith;
 import br.com.infox.epp.fluxo.crud.CategoriaCrudAction;
 import br.com.infox.epp.fluxo.crud.CategoriaItemCrudAction;
 import br.com.infox.epp.fluxo.crud.ItemCrudAction;
+import br.com.infox.epp.fluxo.dao.CategoriaDAO;
 import br.com.infox.epp.fluxo.dao.CategoriaItemDAO;
+import br.com.infox.epp.fluxo.dao.ItemDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.manager.CategoriaItemManager;
+import br.com.infox.epp.fluxo.manager.CategoriaManager;
 import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -41,7 +45,9 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
         return new ArquillianSeamTestSetup().addClasses(CategoriaItemCrudAction.class,
                 ItemManager.class, ItemTreeHandler.class,ItemCrudAction.class,
                 CategoriaCrudAction.class,CategoriaItemManager.class,
-                CategoriaItemDAO.class).createDeployment();
+                CategoriaItemDAO.class,CategoriaDAO.class,CategoriaManager.class,
+                ItemDAO.class,CategoriaItemDAO.class,CategoriaItemManager.class)
+                .createDeployment();
     }
     
     @Override

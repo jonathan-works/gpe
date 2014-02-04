@@ -4,8 +4,6 @@ import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.COLUMN_DOMINIO;
 import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.COLUMN_ID;
 import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.COLUMN_NOME;
-import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.NAMED_QUERY_GET_DOMINIO;
-import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.QUERY_GET_DOMINIO;
 import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.SEQUENCE_NAME;
 import static br.com.infox.ibpm.variable.query.DominioVariavelTarefaQuery.TABLE_NAME;
 
@@ -16,7 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -24,7 +21,6 @@ import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = TABLE_NAME)
-@NamedQuery(name = NAMED_QUERY_GET_DOMINIO, query = QUERY_GET_DOMINIO)
 public class DominioVariavelTarefa implements Serializable {
 
 	private static final long serialVersionUID = 1L;

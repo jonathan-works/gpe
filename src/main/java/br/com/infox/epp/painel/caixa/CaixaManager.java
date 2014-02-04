@@ -6,22 +6,21 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Name(CaixaManager.NAME)
 @AutoCreate
-public class CaixaManager extends GenericManager {
+public class CaixaManager extends Manager<CaixaDAO, Caixa> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "caixaManager";
 	
-	@In private CaixaDAO caixaDAO;
 	@In private ProcessoDAO processoDAO;
 	
 	public void removeCaixaByIdCaixa(int idCaixa){
-		caixaDAO.removeCaixaByIdCaixa(idCaixa);
+		getDao().removeCaixaByIdCaixa(idCaixa);
 	}
 	
 	/**

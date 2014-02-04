@@ -18,7 +18,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 
 @Name(HistoricoModeloDocumentoDAO.NAME)
 @AutoCreate
-public class HistoricoModeloDocumentoDAO extends DAO<HistoricoModeloDocumento, Integer> {
+public class HistoricoModeloDocumentoDAO extends DAO<HistoricoModeloDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "historicoModeloDocumentoDAO";

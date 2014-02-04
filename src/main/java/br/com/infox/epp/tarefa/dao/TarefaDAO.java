@@ -24,7 +24,7 @@ import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Name(TarefaDAO.NAME)
 @AutoCreate
-public class TarefaDAO extends DAO<Tarefa, Integer> {
+public class TarefaDAO extends DAO<Tarefa> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tarefaDAO";

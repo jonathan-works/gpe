@@ -50,7 +50,7 @@ import br.com.itx.util.HibernateUtil;
  */
 @Name(ProcessoEpaDAO.NAME)
 @AutoCreate
-public class ProcessoEpaDAO extends DAO<ProcessoEpa, Integer> {
+public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
 
     private static final long serialVersionUID = 8899227886410190168L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoEpaDAO.class);

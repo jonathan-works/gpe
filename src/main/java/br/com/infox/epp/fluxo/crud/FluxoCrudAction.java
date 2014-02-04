@@ -1,7 +1,7 @@
 package br.com.infox.epp.fluxo.crud;
 
+import static java.lang.Boolean.TRUE;
 import static org.jboss.seam.international.StatusMessage.Severity.ERROR;
-import static java.lang.Boolean.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,7 +9,6 @@ import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
@@ -20,15 +19,13 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 
 @Name(FluxoCrudAction.NAME)
-public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
+public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
 
     private static final long serialVersionUID = 1L;
     private static final String DESCRICAO_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:descricaoFluxoDecoration:descricaoFluxo";
 	private static final String COD_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:codFluxoDecoration:codFluxo";
     private static final LogProvider LOG = Logging.getLogProvider(FluxoCrudAction.class);
     public static final String NAME = "fluxoCrudAction";
-    
-    @In private FluxoManager fluxoManager;
     
     private boolean replica = false;
     
@@ -38,7 +35,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     		return null;
     	}
         final Fluxo fluxo = getInstance();
-        fluxoManager.detach(fluxo);
+        getManager().detach(fluxo);
         fluxo.setIdFluxo(null);
         setId(null);
         final String ret = save();
@@ -49,8 +46,8 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     }
 
 	private boolean verificarReplica() {
-		final boolean existeFluxoComCodigo = fluxoManager.existeFluxoComCodigo(getInstance().getCodFluxo());
-		final boolean existeFluxoComDescricao = fluxoManager.existeFluxoComDescricao(getInstance().getFluxo());
+		final boolean existeFluxoComCodigo = getManager().existeFluxoComCodigo(getInstance().getCodFluxo());
+		final boolean existeFluxoComDescricao = getManager().existeFluxoComDescricao(getInstance().getFluxo());
 		
 		if (existeFluxoComCodigo) {
 			final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.codigoDuplicado']}");
@@ -111,7 +108,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo> {
     @Override
     public String inactive(final Fluxo fluxo) {
         setInstanceId(fluxo.getIdFluxo());
-        if (!fluxoManager.existemProcessosAssociadosAFluxo(fluxo)) {
+        if (!getManager().existemProcessosAssociadosAFluxo(fluxo)) {
             final String ret = super.inactive(fluxo);
             newInstance();
             return ret;

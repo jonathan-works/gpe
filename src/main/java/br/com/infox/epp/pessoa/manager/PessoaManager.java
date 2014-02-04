@@ -5,16 +5,18 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Events;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.pessoa.dao.PessoaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
+import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 
 @Name(PessoaManager.NAME)
 @AutoCreate
-public class PessoaManager extends GenericManager {
+public class PessoaManager extends Manager<PessoaDAO, Pessoa> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pessoaManager";
@@ -32,9 +34,4 @@ public class PessoaManager extends GenericManager {
             events.raiseEvent(PessoaJuridica.EVENT_LOAD, pessoaJuridicaDAO.searchByCnpj(codigo));
         }
     }
-
-    public PessoaFisica getPessoaFisicaByCpf(final String cpf) {
-        return pessoaFisicaDAO.searchByCpf(cpf);
-    }
-
 }

@@ -34,7 +34,7 @@ import br.com.itx.util.SessionAssistant;
 
 @Name(AjudaDAO.NAME)
 @AutoCreate
-public class AjudaDAO extends DAO<Ajuda, Integer> {
+public class AjudaDAO extends DAO<Ajuda> {
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(AjudaDAO.class);

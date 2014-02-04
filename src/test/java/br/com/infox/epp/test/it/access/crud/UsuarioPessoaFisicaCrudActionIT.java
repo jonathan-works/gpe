@@ -29,13 +29,16 @@ import br.com.infox.epp.documento.dao.VariavelDAO;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
+import br.com.infox.epp.pessoa.dao.PessoaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -51,7 +54,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
                 UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
                 ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
                 ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-                ParametroManager.class,ParametroDAO.class)
+                ParametroManager.class,ParametroDAO.class, PessoaDAO.class,PessoaFisicaManager.class)
         .createDeployment();
     }
 

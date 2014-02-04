@@ -38,7 +38,7 @@ public class CaixaHome extends AbstractHome<Caixa> {
     }
 
     public List<SelectItem> getPreviousNodes(Integer idTarefa) {
-        return tarefaManager.getPreviousNodes(tarefaManager.find(Tarefa.class, idTarefa));
+        return tarefaManager.getPreviousNodes(tarefaManager.find(idTarefa));
     }
 
     public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
@@ -54,7 +54,7 @@ public class CaixaHome extends AbstractHome<Caixa> {
     }
 
     public void addCaixa(int idTarefa) {
-        instance.setTarefa(caixaManager.find(Tarefa.class, idTarefa));
+        instance.setTarefa(tarefaManager.find(idTarefa));
         instance.setNomeIndice(MessageFormat.format("{0}-{1}", instance.getNomeCaixa(), idTarefa));
         persist();
 
@@ -114,7 +114,7 @@ public class CaixaHome extends AbstractHome<Caixa> {
         if (idCaixa == 0) {
             return;
         }
-        instance = caixaManager.find(Caixa.class, idCaixa);
+        instance = caixaManager.find(idCaixa);
         if (instance != null) {
             remove();
         } else {

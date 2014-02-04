@@ -13,7 +13,7 @@ import br.com.infox.core.dao.DAO;
 
 @Name(CaixaDAO.NAME)
 @AutoCreate
-public class CaixaDAO extends DAO<Caixa, Integer> {
+public class CaixaDAO extends DAO<Caixa> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "caixaDAO";

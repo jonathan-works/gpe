@@ -62,13 +62,16 @@ import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.documento.AssinaturaException;
 import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
+import br.com.infox.epp.processo.documento.home.ProcessoDocumentoBinHome;
 import br.com.infox.epp.processo.documento.home.ProcessoDocumentoHome;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.search.ProcessoSearcher;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.search.Indexer;
@@ -83,6 +86,7 @@ import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
+import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.ibpm.task.action.TaskPageAction;
@@ -136,7 +140,8 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
                     TarefasEntityNode.class, AssinaturaException.class,LocalizacaoCrudAction.class, 
                     LocalizacaoTreeHandler.class,PapelCrudAction.class,RolesMap.class,PapelManager.class,
                     RecursoManager.class,PapelDAO.class,RecursoDAO.class,LogProvider.class,
-                    AssinaturaDocumentoService.class)
+                    AssinaturaDocumentoService.class,ProcessoDocumentoBinHome.class,
+                    ProcessoDocumentoBinManager.class, ProcessoSearcher.class)
             .createDeployment();
     }
     

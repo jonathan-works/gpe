@@ -14,6 +14,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.dao.DAO;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.itx.util.EntityUtil;
@@ -30,7 +32,7 @@ import br.com.itx.util.EntityUtil;
  * @param <T> Entity principal, onde devem ser realizadas as alterações.
  */
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements Crudable<T>, Serializable {
+public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, T>> extends AbstractAction<T, M> implements Crudable<T>, Serializable {
 
     private static final long serialVersionUID = 1L;
     private String tab;
@@ -93,11 +95,10 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
         this.setId(id, true);
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void setId(final Object id, final boolean switchTab) {
         if (id != null && !id.equals(this.id)) {
             this.id = id;
-            setInstance(find((Class<T>) EntityUtil.getParameterizedTypeClass(getClass()), this.id));
+            setInstance(getManager().find(this.id));
             if (switchTab) {
                 tab = TAB_FORM;
             }
@@ -127,7 +128,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
         final T activeEntity = getInstance();
         if (activeEntity != null && isIdDefined() && !contains(activeEntity)) {
             try {
-                setInstance(getGenericManager().merge(activeEntity));
+                setInstance(getManager().merge(activeEntity));
             } catch (final DAOException e) {
                 getMessagesHandler().add(Severity.ERROR, "Merge Entity Error", e);
             }
@@ -246,7 +247,7 @@ public abstract class AbstractCrudAction<T> extends AbstractAction<T> implements
     @Override
     public void onClickSearchTab() {
         newInstance();
-        getGenericManager().clear();
+        getManager().clear();
     }
 
     @Override

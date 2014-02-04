@@ -12,8 +12,9 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.imagem.dao.ImagemBinDAO;
@@ -22,18 +23,16 @@ import br.com.infox.epp.imagem.util.ImageUtil;
 
 @Name(ImagemBinManager.NAME)
 @AutoCreate
-public class ImagemBinManager extends GenericManager {
+public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(ImagemBinManager.class); 
 	public static final String NAME = "imagemBinManager";
 	
-	@In
-    private ImagemBinDAO imagemBinDAO;
 	@In 
 	private ImageUtil imageUtil;
 
     public void persistImageBin(ImagemBin imagemBin) throws DAOException {
-    	imagemBinDAO.persistImageBin(imagemBin);
+    	getDao().persistImageBin(imagemBin);
     }
 
     private String[] getImagesDir(final String path,
@@ -90,7 +89,7 @@ public class ImagemBinManager extends GenericManager {
                 throw new IOException(MessageFormat.format("Arquivo já existente: {0}{1}", fileDestino.getAbsolutePath(),fileDestino.getName()));
             }
         }
-        imagemBinDAO.saveFile(bytesOrigem, fileDestino);
+        getDao().saveFile(bytesOrigem, fileDestino);
         LOG.info(MessageFormat.format("Arquivo instanciado com sucesso: {0}{1}", fileDestino.getAbsolutePath(),fileDestino.getName()));
     }
     
@@ -125,7 +124,7 @@ public class ImagemBinManager extends GenericManager {
     }
 
     public void createImageFiles() {
-        final List<ImagemBin> list = imagemBinDAO.getTodasAsImagens();
+        final List<ImagemBin> list = getDao().getTodasAsImagens();
         
         for (ImagemBin imagemBin : list) {
             String imagemDir = imageUtil.getRealPath(imagemBin.getFilePath());

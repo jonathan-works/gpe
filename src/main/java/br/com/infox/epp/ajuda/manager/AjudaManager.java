@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ajuda.dao.AjudaDAO;
 import br.com.infox.epp.ajuda.entity.Ajuda;
@@ -17,21 +18,21 @@ import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 
 @Name(AjudaManager.NAME)
 @AutoCreate
-public class AjudaManager extends GenericManager {
+public class AjudaManager extends Manager<AjudaDAO, Ajuda> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "ajudaManager";
-
-    @In
-    private AjudaDAO ajudaDAO;
     
+    @In
+    private GenericManager genericManager;
+
     public Ajuda getAjudaByPaginaUrl(String url) {
-        return ajudaDAO.getAjudaByPaginaUrl(url);
+        return getDao().getAjudaByPaginaUrl(url);
     }
     
     @SuppressWarnings(RAWTYPES)
     public List pesquisar(String textoPesquisa) throws ParseException{
-        return ajudaDAO.pesquisar(textoPesquisa);
+        return getDao().pesquisar(textoPesquisa);
     }
     
     public void gravarHistorico(Ajuda oldAjuda) throws DAOException {
@@ -42,14 +43,14 @@ public class AjudaManager extends GenericManager {
         historico.setUsuario(oldAjuda.getUsuario());
         try {
             remove(oldAjuda);
-            persist(historico);
+            genericManager.persist(historico);
         } catch (DAOException e) {
             throw new DAOException("Não foi possível atualizar o histórico da ajuda", e);
         }
     }
     
     public void reindexarAjuda(){
-        ajudaDAO.reindexarAjuda();
+        getDao().reindexarAjuda();
     }
 
 }

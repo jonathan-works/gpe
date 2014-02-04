@@ -19,6 +19,8 @@ import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 import br.com.infox.epp.documento.entity.Variavel;
+import br.com.infox.epp.documento.manager.HistoricoModeloDocumentoManager;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoPapelManager;
 import br.com.infox.epp.documento.manager.VariavelManager;
 import br.com.itx.util.ComponentUtil;
@@ -26,7 +28,7 @@ import br.com.itx.util.EntityUtil;
 
 @Name(ModeloDocumentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocumento> {
+public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocumento, ModeloDocumentoManager> {
     
     /**
      * 
@@ -41,6 +43,7 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
     
     @In private VariavelManager variavelManager;
     @In private TipoModeloDocumentoPapelManager tipoModeloDocumentoPapelManager;
+    @In private HistoricoModeloDocumentoManager historicoModeloDocumentoManager;
     
     @Override
     public void newInstance() {
@@ -84,7 +87,7 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
             historico.setModeloDocumento(getInstance());
             historico.setUsuarioAlteracao((UsuarioLogin) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
             try {
-				getGenericManager().persist(historico);
+				historicoModeloDocumentoManager.persist(historico);
 			} catch (DAOException e) {
 				LOG.error(".gravarHistorico()", e);
 			}

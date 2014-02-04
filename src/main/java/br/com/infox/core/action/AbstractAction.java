@@ -2,13 +2,16 @@ package br.com.infox.core.action;
 
 import static java.text.MessageFormat.format;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.jboss.seam.annotations.In;
+import org.jboss.seam.Component;
+import org.jboss.seam.annotations.Create;
+import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -16,7 +19,9 @@ import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.core.dao.DAO;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
@@ -30,27 +35,33 @@ import br.com.itx.util.EntityUtil;
  * entityManager.
  * 
  * @author Daniel
+ * @param <K>
  * 
  */
-public abstract class AbstractAction<T> {
+public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> {
 
     public static final String PERSISTED = "persisted";
     public static final String UPDATED = "updated";
     public static final String REMOVED = "removed";
 
-    @In
-    private GenericManager genericManager;
+    private M manager;
 
     protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
     private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
 
-    protected T find(Class<T> c, Object id) {
-        return genericManager.find(c, id);
+    @SuppressWarnings(WarningConstants.UNCHECKED)
+	@Create
+    public void init() {
+    	this.manager = (M) Component.getInstance(getManagerName());
+    }
+    
+    protected T find(Object id) {
+        return getManager().find(id);
     }
 
     protected boolean contains(T t) {
-        return genericManager.contains(t);
+        return getManager().contains(t);
     }
 
     /**
@@ -66,10 +77,10 @@ public abstract class AbstractAction<T> {
         String ret = null;
         try {
             if (isPersist) {
-                genericManager.persist(t);
+                getManager().persist(t);
                 ret = PERSISTED;
             } else {
-                genericManager.update(t);
+                getManager().update(t);
                 ret = UPDATED;
             }
         } catch (final DAOException daoException) {
@@ -141,7 +152,7 @@ public abstract class AbstractAction<T> {
     public String remove(T t) {
         String ret = null;
         try {
-            genericManager.remove(t);
+            getManager().remove(t);
             ret = REMOVED;
         } catch (DAOException daoException) {
             LOG.error(".remove()", daoException);
@@ -220,7 +231,15 @@ public abstract class AbstractAction<T> {
         return t != null ? t.getClass().getName() : "";
     }
 
-    protected final GenericManager getGenericManager() {
-        return genericManager;
+    protected M getManager() {
+        return manager;
+    }
+    
+    @SuppressWarnings(WarningConstants.UNCHECKED)
+	protected String getManagerName() {
+    	ParameterizedType superType = (ParameterizedType) getClass().getGenericSuperclass();
+		Class<M> managerClass = (Class<M>) superType.getActualTypeArguments()[1];
+		Name name = managerClass.getAnnotation(Name.class);
+		return name.value();
     }
 }

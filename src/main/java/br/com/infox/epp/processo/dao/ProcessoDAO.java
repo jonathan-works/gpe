@@ -29,7 +29,7 @@ import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(ProcessoDAO.NAME)
 @AutoCreate
-public class ProcessoDAO extends DAO<Processo, Integer> {
+public class ProcessoDAO extends DAO<Processo> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoDAO";

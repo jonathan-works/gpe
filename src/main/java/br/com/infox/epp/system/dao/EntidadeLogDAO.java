@@ -13,7 +13,7 @@ import br.com.infox.epp.system.entity.EntityLog;
 
 @Name(EntidadeLogDAO.NAME)
 @AutoCreate
-public class EntidadeLogDAO extends DAO<EntityLog, Integer> {
+public class EntidadeLogDAO extends DAO<EntityLog> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "entidadeLogDAO";

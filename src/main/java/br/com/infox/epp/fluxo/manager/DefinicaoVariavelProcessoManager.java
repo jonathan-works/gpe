@@ -4,41 +4,37 @@ import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.fluxo.dao.DefinicaoVariavelProcessoDAO;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 
 @Name(DefinicaoVariavelProcessoManager.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class DefinicaoVariavelProcessoManager extends GenericManager {
+public class DefinicaoVariavelProcessoManager extends Manager<DefinicaoVariavelProcessoDAO, DefinicaoVariavelProcesso> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "definicaoVariavelProcessoManager";
 	public static final String JBPM_VARIABLE_TYPE = "processo";
 	
-	@In
-	private DefinicaoVariavelProcessoDAO definicaoVariavelProcessoDAO;
-	
 	public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo) {
-		return definicaoVariavelProcessoDAO.listVariaveisByFluxo(fluxo);
+		return getDao().listVariaveisByFluxo(fluxo);
 	}
 	
 	public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo, int start, int count) {
-		return definicaoVariavelProcessoDAO.listVariaveisByFluxo(fluxo, start, count);
+		return getDao().listVariaveisByFluxo(fluxo, start, count);
 	}
 	
 	public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
-		return definicaoVariavelProcessoDAO.getTotalVariaveisByFluxo(fluxo);
+		return getDao().getTotalVariaveisByFluxo(fluxo);
 	}
 	
 	public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
-		return definicaoVariavelProcessoDAO.getDefinicao(fluxo, nome);
+		return getDao().getDefinicao(fluxo, nome);
 	}
 	
 	public String getNomeAmigavel(DefinicaoVariavelProcesso variavelProcesso) {

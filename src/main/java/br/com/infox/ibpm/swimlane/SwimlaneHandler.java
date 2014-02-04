@@ -192,8 +192,7 @@ public class SwimlaneHandler implements Serializable {
 							}
 						} else if(splitted.length == 3) {
 							idPapel = splitted[1];
-							papel = papelManager().find(Papel.class, 
-									Integer.parseInt(idPapel));
+							papel = papelManager().find(Integer.parseInt(idPapel));
 							if("true".equals(splitted[2])) {
 								sh.setContabilizar(true);
 							} else {

@@ -8,12 +8,13 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ItemCrudAction extends AbstractRecursiveCrudAction<Item> implements Serializable {
+public class ItemCrudAction extends AbstractRecursiveCrudAction<Item, ItemManager> implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "itemCrudAction";

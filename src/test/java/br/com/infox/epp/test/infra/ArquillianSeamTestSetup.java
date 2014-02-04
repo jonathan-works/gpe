@@ -16,8 +16,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
 
-import br.com.infox.epp.test.crud.AbstractCrudTest;
-
 public class ArquillianSeamTestSetup {
 
     private static final String DOT = ".";
@@ -41,7 +39,8 @@ public class ArquillianSeamTestSetup {
         this.mockPersistenceXMLPath = "src/test/resources/mock-persistence.xml";
         this.mockWebXMLPath = "src/test/resources/mock-web.xml";
         this.pomPath = "pom.xml";
-        this.classes.add(AbstractCrudTest.class);
+        addClasses(br.com.infox.epp.test.crud.AbstractCrudTest.class,br.com.infox.epp.test.crud.CrudActions.class,
+                br.com.infox.epp.test.crud.AbstractCrudActions.class);
     }
     
     public ArquillianSeamTestSetup addPackages(final String... packages) {

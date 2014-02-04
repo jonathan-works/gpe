@@ -20,6 +20,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.infox.epp.twitter.manager.ContaTwitterManager;
@@ -28,7 +30,7 @@ import br.com.infox.epp.twitter.util.TwitterUtil;
 
 @Name(ContaTwitterCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
+public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, ContaTwitterManager> {
 
     /**
      * 
@@ -46,8 +48,11 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
     private String pin;
     private boolean requesting = false;
     
-    @In ContaTwitterManager contaTwitterManager;
-
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
+    @In
+    private LocalizacaoManager localizacaoManager;
+    
     public boolean usuarioLogadoHasTwitter() {
         return Authenticator.getUsuarioLogado().getTemContaTwitter();
     }
@@ -93,7 +98,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
                     if (!usuario.getTemContaTwitter()) {
                         usuario.setTemContaTwitter(true);
                         try {
-                            contaTwitterManager.merge(usuario);
+                            usuarioLoginManager.merge(usuario);
                         } catch (DAOException e) {
                             LOG.error("Não foi possível associar o twitter " + getInstance().getScreenName() 
                                     + " ao usuário " + usuario, e);
@@ -104,7 +109,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
                     if (!usuario.getTemContaTwitter()) {
                         usuario.setTemContaTwitter(true);
                         try {
-                            contaTwitterManager.merge(usuario);
+                        	usuarioLoginManager.merge(usuario);
                         } catch (DAOException e) {
                             LOG.error("Não foi possível associar o twitter " + getInstance().getScreenName() 
                                     + " ao usuário " + usuario, e);
@@ -115,7 +120,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
                 case L:
                     localizacao.setTemContaTwitter(true);
                     try {
-                        contaTwitterManager.merge(localizacao);
+                        localizacaoManager.merge(localizacao);
                     } catch (DAOException e) {
                         LOG.error("Não foi possível associar o twitter " + getInstance().getScreenName() 
                                 + " à localização " + localizacao, e);
@@ -140,7 +145,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
                         usuario = Authenticator.getUsuarioLogado();
                     break;
                     case S:
-                        usuario = contaTwitterManager.find(UsuarioLogin.class, Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
+                        usuario = usuarioLoginManager.find(Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
                     break;
                 }
                 save();
@@ -173,7 +178,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
                     UsuarioLogin usr = getInstance().getUsuario();
                     usr.setTemContaTwitter(false);
                     try {
-                        contaTwitterManager.merge(usr);
+                        usuarioLoginManager.merge(usr);
                     } catch (DAOException e) {
                         LOG.error("Não foi possível remover o twitter do usuário " + usr, e);
                     }
@@ -182,7 +187,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
                     Localizacao loc = getInstance().getLocalizacao();
                     loc.setTemContaTwitter(false);
                     try {
-                        contaTwitterManager.merge(loc);
+                        localizacaoManager.merge(loc);
                     } catch (DAOException e) {
                         LOG.error("Não foi possível remover o twitter da localização" + loc, e);
                     }
@@ -207,7 +212,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter> {
                 usuario = Authenticator.getUsuarioLogado();
             break;
             case S:
-                usuario = contaTwitterManager.find(UsuarioLogin.class, Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
+                usuario = usuarioLoginManager.find(Integer.parseInt(ParametroUtil.getParametro("idUsuarioSistema")));
             break;
             default:
             break;
