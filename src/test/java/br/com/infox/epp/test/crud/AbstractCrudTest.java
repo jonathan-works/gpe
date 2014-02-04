@@ -19,92 +19,40 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
     }
     
-    protected abstract class ActionContainer<E> {
-        private E entity;
-
-        public ActionContainer() {
-            entity = null;
-        }
+    @Deprecated
+    protected abstract class InternalRunnableTest<E> extends RunnableTest<E> {
         
-        public ActionContainer(final E entity) {
-            if (entity == null) {
-                throw new NullPointerException("Null entity not allowed for EntityActionContainer");
-            }
-            this.entity = entity;
-        }
-
-        public abstract void execute(final CrudActions<E> crudActions);
-
-        public E getEntity() {
-            return entity;
-        }
-    }
-    
-    protected abstract class RunnableTest<E> extends AbstractCrudActions<E> {
-        private E entity;
-        private ActionContainer<E> actionContainer;
-        protected final CrudActions<E> crudActions;
-        //private HttpSession session;
-        //private ServletContext servletContext;
-        
-        public RunnableTest() {
+        public InternalRunnableTest() {
             super(getComponentName());
-            this.crudActions = this;
-            //this.session = AbstractGenericCrudTest.super.session;
-            //this.servletContext = AbstractGenericCrudTest.super.servletContext;
         }
         
-        public RunnableTest(final String componentName) {
+        public InternalRunnableTest(final String componentName) {
             super(componentName);
-            this.crudActions = this;
-            //this.session = AbstractGenericCrudTest.super.session;
-            //this.servletContext = AbstractGenericCrudTest.super.servletContext;
-        }
-        
-        protected abstract void testComponent() throws Exception;
-        
-        public final E getEntity() {
-            return entity;
         }
         
         public final E runTest() throws Exception {
-            return this.runTest(null, null);
+            return this.runTest(null, null, servletContext, session);
         }
         
         public final E runTest(final E entity) throws Exception {
-            return this.runTest(null, entity);
+            return this.runTest(null, entity, servletContext, session);
         }
         
         public final E runTest(final ActionContainer<E> actionContainer) throws Exception {
-            return this.runTest(actionContainer, actionContainer.getEntity());
+            return this.runTest(actionContainer, actionContainer.getEntity(), servletContext, session);
         }
 
         public final E runTest(final ActionContainer<E> actionContainer, final E entity) throws Exception {
-            this.entity = entity;
-            this.actionContainer = actionContainer;
-            try {
-                TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
-                testComponent();
-                if (this.actionContainer != null) {
-                    this.actionContainer.entity = entity;
-                    this.actionContainer.execute(this);
-                }
-            } finally {
-                TestLifecycle.endTest();
-            }
-            return this.entity;
+            return this.runTest(actionContainer, entity, servletContext, session);
         }
 
-        public final void setEntity(final E entity) {
-            this.entity = entity;
-        }
     }
 
     private static final String ATIVO = "ativo";
 
     protected static final String SERVLET_3_0 = "Servlet 3.0";
 
-    protected final RunnableTest<T> persistFail = new RunnableTest<T>() {
+    protected final InternalRunnableTest<T> persistFail = new InternalRunnableTest<T>() {
         @Override
         protected void testComponent() {
             final T entity = getEntity();
@@ -115,7 +63,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
     };
 
-    protected final RunnableTest<T> persistSuccess = new RunnableTest<T>() {
+    protected final InternalRunnableTest<T> persistSuccess = new InternalRunnableTest<T>() {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity(); 
@@ -133,7 +81,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
     };
 
-    protected final RunnableTest<T> inactivateSuccess = new RunnableTest<T>() {
+    protected final InternalRunnableTest<T> inactivateSuccess = new InternalRunnableTest<T>() {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity();
@@ -150,7 +98,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
     };
 
-    protected final RunnableTest<T> inactivateFail = new RunnableTest<T>() {
+    protected final InternalRunnableTest<T> inactivateFail = new InternalRunnableTest<T>() {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity();
@@ -170,7 +118,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         
     };
 
-    protected final RunnableTest<T> removeSuccess = new RunnableTest<T>() {
+    protected final InternalRunnableTest<T> removeSuccess = new InternalRunnableTest<T>() {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity();
@@ -182,7 +130,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
     };
 
-    protected final RunnableTest<T> removeFail = new RunnableTest<T>() {
+    protected final InternalRunnableTest<T> removeFail = new InternalRunnableTest<T>() {
         @Override
         protected void testComponent() throws Exception {
             final T entity = getEntity();
@@ -194,7 +142,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
     };
     
-    protected final RunnableTest<T> updateSuccess = new RunnableTest<T>() {
+    protected final InternalRunnableTest<T> updateSuccess = new InternalRunnableTest<T>() {
         @Override
         public void testComponent() throws Exception {
             final T entity = this.getEntity();
@@ -214,7 +162,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         }
     };
     
-    protected final RunnableTest<T> updateFail = new RunnableTest<T>() {
+    protected final InternalRunnableTest<T> updateFail = new InternalRunnableTest<T>() {
         
         @Override
         protected void testComponent() throws Exception {
@@ -245,7 +193,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
         return (obj1 == obj2 || ((obj1 != null) && obj1.equals(obj2)));
     }
     
-    protected final void executeTest(final RunnableTest<T> componentTest) throws Exception {
+    protected final void executeTest(final InternalRunnableTest<T> componentTest) throws Exception {
         TestLifecycle.beginTest(servletContext, new ServletSessionMap(session));
         try {
             componentTest.runTest();
