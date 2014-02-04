@@ -61,7 +61,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         return PapelCrudAction.NAME;
     }
     
-    private final RunnableTest<Papel> persistSuccess = new RunnableTest<Papel>() {
+    private final InternalRunnableTest<Papel> persistSuccess = new InternalRunnableTest<Papel>() {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -98,7 +98,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         return format("'{'id:{0},nome:{1},role:{2},ativo:{3}'}'", papel.getIdPapel(), papel.getNome(), papel.getIdentificador(), papel.getAtivo());
     }
     */
-    private final RunnableTest<Papel> persistFail = new RunnableTest<Papel>() {
+    private final InternalRunnableTest<Papel> persistFail = new InternalRunnableTest<Papel>() {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -113,7 +113,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         }
     };
     
-    private final RunnableTest<Papel> updateSuccess = new RunnableTest<Papel>() {
+    private final InternalRunnableTest<Papel> updateSuccess = new InternalRunnableTest<Papel>() {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -125,7 +125,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         }
     };
 
-    private final RunnableTest<Recurso> createRoles = new RunnableTest<Recurso>(RecursoManager.NAME) {
+    private final InternalRunnableTest<Recurso> createRoles = new InternalRunnableTest<Recurso>(RecursoManager.NAME) {
         @Override
         protected void testComponent() throws Exception {
             for (int i = 0; i < 25; i++) {
@@ -152,7 +152,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         }
     };
     
-    private final RunnableTest<Papel> removeSuccess = new RunnableTest<Papel>() {
+    private final InternalRunnableTest<Papel> removeSuccess = new InternalRunnableTest<Papel>() {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -165,7 +165,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     
     
     private final void addRecursos(final Papel papel, final String... recursos) throws Exception {
-        new RunnableTest<Papel>() {
+        new InternalRunnableTest<Papel>() {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
@@ -202,7 +202,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     }
     
     private final void addLicenciadores(final Papel papel, final Papel... licenciadores) throws Exception {
-        new RunnableTest<Papel>() {
+        new InternalRunnableTest<Papel>() {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
@@ -223,7 +223,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     }
     
     private final void addHerdeiros(final Papel entity, final Papel... herdeiros) throws Exception {
-        new RunnableTest<Papel>() {
+        new InternalRunnableTest<Papel>() {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
@@ -247,7 +247,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     }
     
     private final void removeHerdeiros(final Papel papel, final Papel... herdeiros) throws Exception {
-        new RunnableTest<Papel>() {
+        new InternalRunnableTest<Papel>() {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
@@ -293,7 +293,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         removeSuccess.runTest(comprador);
     }
     
-    private final RunnableTest<Papel> updateFail = new RunnableTest<Papel>() {
+    private final InternalRunnableTest<Papel> updateFail = new InternalRunnableTest<Papel>() {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();

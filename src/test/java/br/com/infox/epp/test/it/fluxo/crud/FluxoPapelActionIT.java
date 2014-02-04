@@ -77,7 +77,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         crudActions.setEntityValue("papel", entity.getPapel());
     }
     
-    private final RunnableTest<FluxoPapel> persistSuccess = new RunnableTest<FluxoPapel>() {
+    private final InternalRunnableTest<FluxoPapel> persistSuccess = new InternalRunnableTest<FluxoPapel>() {
         @Override
         protected void testComponent() throws Exception {
             final FluxoPapel entity= getEntity();
@@ -147,7 +147,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         }
     }
     
-    private final RunnableTest<FluxoPapel> removeSuccess = new RunnableTest<FluxoPapel>() {
+    private final InternalRunnableTest<FluxoPapel> removeSuccess = new InternalRunnableTest<FluxoPapel>() {
         @Override
         protected void testComponent() throws Exception {
             final FluxoPapel entity = getEntity();
@@ -165,7 +165,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         }
     };
     
-    private final RunnableTest<FluxoPapel> removeFail = new RunnableTest<FluxoPapel>() {
+    private final InternalRunnableTest<FluxoPapel> removeFail = new InternalRunnableTest<FluxoPapel>() {
         @Override
         protected void testComponent() throws Exception {
             final FluxoPapel entity = getEntity();
@@ -183,7 +183,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         }
     };
     
-    private final RunnableTest<Fluxo> persistFluxo = new RunnableTest<Fluxo>(FluxoCrudAction.NAME) {
+    private final InternalRunnableTest<Fluxo> persistFluxo = new InternalRunnableTest<Fluxo>(FluxoCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Fluxo entity = getEntity(); 
@@ -209,7 +209,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         }
     };
     
-    private final RunnableTest<Papel> persistPapel = new RunnableTest<Papel>(PapelCrudAction.NAME) {
+    private final InternalRunnableTest<Papel> persistPapel = new InternalRunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();

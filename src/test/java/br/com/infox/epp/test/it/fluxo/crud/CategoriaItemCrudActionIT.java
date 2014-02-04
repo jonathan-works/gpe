@@ -56,7 +56,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
         crudActions.setComponentValue("item", entity.getItem());
     }
 
-    private final RunnableTest<Item> persistItem = new RunnableTest<Item>(ItemCrudAction.NAME) {
+    private final InternalRunnableTest<Item> persistItem = new InternalRunnableTest<Item>(ItemCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Item entity = getEntity();
@@ -113,7 +113,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
                 + suffix, "Inspiron 14" + suffix, dell, Boolean.TRUE)));
     }
     
-    private final RunnableTest<CategoriaItem> addCategoriaItemSuccess = new RunnableTest<CategoriaItem>(CategoriaItemCrudAction.NAME) {
+    private final InternalRunnableTest<CategoriaItem> addCategoriaItemSuccess = new InternalRunnableTest<CategoriaItem>(CategoriaItemCrudAction.NAME) {
         @Override
         @SuppressWarnings(UNCHECKED)
         protected void testComponent() throws Exception {
@@ -156,7 +156,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
         }
     };
 
-    private final RunnableTest<CategoriaItem> removeCategoriaItemSuccess = new RunnableTest<CategoriaItem>(CategoriaItemCrudAction.NAME) {
+    private final InternalRunnableTest<CategoriaItem> removeCategoriaItemSuccess = new InternalRunnableTest<CategoriaItem>(CategoriaItemCrudAction.NAME) {
         @Override
         @SuppressWarnings(UNCHECKED)
         protected void testComponent() throws Exception {
@@ -174,7 +174,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
         }
     };
     
-    private final RunnableTest<Categoria> persistCategoria = new RunnableTest<Categoria>(CategoriaCrudAction.NAME) {
+    private final InternalRunnableTest<Categoria> persistCategoria = new InternalRunnableTest<Categoria>(CategoriaCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Categoria entity = getEntity(); 

@@ -11,9 +11,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -28,6 +33,8 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.PersistSuccessTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -51,6 +58,46 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         .createDeployment();
     }
 
+    private static final ActionContainer<Fluxo> initEntityAction = new ActionContainer<Fluxo>() {
+        @Override
+        public void execute(final CrudActions<Fluxo> crudActions) {
+            final Fluxo entity = getEntity();
+            crudActions.setEntityValue("codFluxo", entity.getCodFluxo());//* validator
+            crudActions.setEntityValue("fluxo", entity.getFluxo()); //*
+            crudActions.setEntityValue("qtPrazo", entity.getQtPrazo()); //*
+            crudActions.setEntityValue("dataInicioPublicacao", entity.getDataInicioPublicacao());//*
+            crudActions.setEntityValue("dataFimPublicacao", entity.getDataFimPublicacao());
+            crudActions.setEntityValue("publicado", entity.getPublicado());//*
+            crudActions.setEntityValue("ativo", entity.getAtivo());//*
+        }
+    };
+    
+    public static ActionContainer<Fluxo> getInitEntityAction() {
+        return initEntityAction;
+    }
+    
+    public static List<Fluxo> persistFluxo(final String suffix, ServletContext servletContext, HttpSession session) throws Exception {
+        final GregorianCalendar currentDate = new GregorianCalendar();
+        final Date dataInicio = currentDate.getTime();
+        currentDate.add(GregorianCalendar.DAY_OF_YEAR, 20);
+        final Date[] datasFim = { null, currentDate.getTime() };
+        int id = 0;
+        final List<Fluxo> fluxos = new ArrayList<Fluxo>();
+        final ActionContainer<Fluxo> initEntityAction = FluxoCrudActionIT.getInitEntityAction();
+        final PersistSuccessTest<Fluxo> persistSuccessTest = new PersistSuccessTest<Fluxo>(FluxoCrudAction.NAME, initEntityAction);
+        for (final Date dataFim : datasFim) {
+            for (final Boolean publicado : allBooleans) {
+                for (final Boolean ativo : booleans) {
+                    final String nome = format("Fluxo {0} {1}", suffix, ++id);
+                    final Fluxo prePersisted = new Fluxo(nome.replace(' ', '.'), nome, 5, dataInicio, dataFim, publicado, ativo);
+                    final Fluxo afterPersisted = persistSuccessTest.runTest(prePersisted, servletContext, session);
+                    fluxos.add(afterPersisted);
+                }
+            }
+        }
+        return fluxos;
+    }
+    
     @Override
     protected String getComponentName() {
         return FluxoCrudAction.NAME;
@@ -58,13 +105,9 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
 
     @Override
     protected void initEntity(final Fluxo entity, final CrudActions<Fluxo> crudActions) {
-        crudActions.setEntityValue(FIELD_CODIGO, entity.getCodFluxo());//* validator
-        crudActions.setEntityValue(FIELD_DESC, entity.getFluxo()); //*
-        crudActions.setEntityValue(FIELD_PRAZO, entity.getQtPrazo()); //*
-        crudActions.setEntityValue(FIELD_DT_INICIO, entity.getDataInicioPublicacao());//*
-        crudActions.setEntityValue(FIELD_DT_FIM, entity.getDataFimPublicacao());
-        crudActions.setEntityValue(FIELD_PUBLICADO, entity.getPublicado());//*
-        crudActions.setEntityValue(FIELD_ATIVO, entity.getAtivo());//*
+        final ActionContainer<Fluxo> initEntityAction = getInitEntityAction();
+        initEntityAction.setEntity(entity);
+        initEntityAction.execute(crudActions);
     }
     
     private static int id=0;
@@ -75,17 +118,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
     
     @Test
     public void persistSuccessTest() throws Exception {
-        final GregorianCalendar currentDate = new GregorianCalendar();
-        final Date dataInicio = currentDate.getTime();
-        final Date[] datasFim = {null, getIncrementedDate(currentDate,GregorianCalendar.DAY_OF_YEAR,20)};
-        for(final Date dataFim : datasFim) {
-            for(final Boolean publicado: allBooleans) {
-                for (final Boolean ativo:booleans) {
-                    final String codigo = generateName("persistSuccessFluxo");
-                    persistSuccess.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo));
-                }
-            }
-        }
+        persistFluxo("persist-success", servletContext, session);
     }
     
     @Test
@@ -271,7 +304,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
     }
     
     private void executeUpdate(final ActionContainer<Fluxo> actionContainer,
-            final RunnableTest<Fluxo> runnable, final String defaultCodigo) throws Exception {
+            final InternalRunnableTest<Fluxo> runnable, final String defaultCodigo) throws Exception {
         final GregorianCalendar currentDate = new GregorianCalendar();
         final Date dataInicio = currentDate.getTime();
         final Date[] datasFim = {null, getIncrementedDate(currentDate,GregorianCalendar.DAY_OF_YEAR,20)};

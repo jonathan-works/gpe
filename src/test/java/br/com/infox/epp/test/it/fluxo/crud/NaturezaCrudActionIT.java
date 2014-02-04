@@ -6,6 +6,12 @@ import static java.text.MessageFormat.format;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
@@ -17,6 +23,8 @@ import br.com.infox.epp.fluxo.crud.NaturezaCrudAction;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.PersistSuccessTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -39,20 +47,37 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
 
     @Override
     protected void initEntity(final Natureza entity, final CrudActions<Natureza> crudActions) {
-        crudActions.setEntityValue("natureza", entity.getNatureza()); //*
-        crudActions.setEntityValue("hasPartes", entity.getHasPartes());
-        crudActions.setEntityValue("ativo", entity.getAtivo());
+        initEntityAction.setEntity(entity);
+        initEntityAction.execute(crudActions);
     }
 
+    private static final ActionContainer<Natureza> initEntityAction = new ActionContainer<Natureza>() {
+        @Override
+        public void execute(final CrudActions<Natureza> crudActions) {
+            final Natureza entity = getEntity();
+            crudActions.setEntityValue("natureza", entity.getNatureza()); //*
+            crudActions.setEntityValue("hasPartes", entity.getHasPartes());
+            crudActions.setEntityValue("ativo", entity.getAtivo());
+        }
+    };
+    
+    public static final List<Natureza> getSuccessfullyPersisted(final ActionContainer<Natureza> action, final String suffix,final ServletContext servletContext, final HttpSession session) throws Exception {
+        final PersistSuccessTest<Natureza> persistSuccessTest = new PersistSuccessTest<>(NaturezaCrudAction.NAME, initEntityAction);
+        final ArrayList<Natureza> naturezas = new ArrayList<>();
+        int i=0;
+        for(final Boolean hasParte : booleans) {
+            for(final Boolean ativo : booleans) {
+                persistSuccessTest.runTest(action, new Natureza(format("Natureza{0}{1}",suffix,++i), hasParte, ativo), servletContext, session);
+            }    
+        }
+        return naturezas;
+    }
+    
     private static int i = 0;
     
     @Test
     public void persistSuccessTest() throws Exception {
-        for(final Boolean hasParte : booleans) {
-            for(final Boolean ativo : booleans) {
-                persistSuccess.runTest(new Natureza(getDescription(DEFAULT_VALUE), hasParte, ativo));
-            }    
-        }
+        getSuccessfullyPersisted(null, "persist-suc", servletContext, session);
     }
 
     private String getDescription(final String defaultValue) {
@@ -141,12 +166,8 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
                 assertEquals("afterUpdated equals passed instance", false, compareEntityValues(entity, crudActions));
             }
         };
-        
-        for(final Boolean hasParte : booleans) {
-            for(final Boolean ativo : booleans) {
-                persistSuccess.runTest(actionContainer, new Natureza(getDescription(DEFAULT_VALUE), hasParte, ativo));
-            }    
-        }
+
+        getSuccessfullyPersisted(actionContainer, "update-suc", servletContext, session);
     }
     
     @Test
@@ -184,12 +205,7 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
                 assertEquals("afterUpdated equals passed instance", true, compareEntityValues(entity, crudActions));
             }
         };
-        
-        for(final Boolean hasParte : booleans) {
-            for(final Boolean ativo : booleans) {
-                persistSuccess.runTest(actionContainer, new Natureza(getDescription(DEFAULT_VALUE), hasParte, ativo));
-            }    
-        }
+        getSuccessfullyPersisted(actionContainer, "update-fail", servletContext, session);
     }
     
 }
