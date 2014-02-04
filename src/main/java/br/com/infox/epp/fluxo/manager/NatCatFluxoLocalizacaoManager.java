@@ -3,10 +3,10 @@ package br.com.infox.epp.fluxo.manager;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
@@ -22,15 +22,12 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
  */
 @Name(NatCatFluxoLocalizacaoManager.NAME)
 @AutoCreate
-public class NatCatFluxoLocalizacaoManager extends GenericManager {
+public class NatCatFluxoLocalizacaoManager extends Manager<NatCatFluxoLocalizacaoDAO, NatCatFluxoLocalizacao> {
 
 	private static final long serialVersionUID = -9025640498790727799L;
 
 	public static final String NAME = "natCatFluxoLocalizacaoManager";
 
-	@In
-	private NatCatFluxoLocalizacaoDAO natCatFluxoLocalizacaoDAO;
-	
 	/**
 	 * Persiste o registro e para cada localizacao filha a localizacao contida
 	 * no parametro <code>natCatFluxoLocalizacao</code> também é inseirdo um 
@@ -53,7 +50,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 		if(localizacao.getLocalizacaoList() != null && localizacao.getLocalizacaoList().size() > 0) {
 			for(Localizacao l : localizacao.getLocalizacaoList()) {
 				persistChildren(l, natCatFluxoLocalizacao);
-				if(natCatFluxoLocalizacaoDAO.existsNatCatFluxoLocalizacao
+				if(getDao().existsNatCatFluxoLocalizacao
 						(natCatFluxoLocalizacao.getNaturezaCategoriaFluxo(), l)) {
 					continue;
 				}
@@ -130,7 +127,7 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 		if(localizacao.getLocalizacaoList() != null && localizacao.getLocalizacaoList().size() > 0) {
 			for(Localizacao l : localizacao.getLocalizacaoList()) {
 				updateChildren(l, oldNCF, newNCF);
-				NatCatFluxoLocalizacao needUpdate = natCatFluxoLocalizacaoDAO.
+				NatCatFluxoLocalizacao needUpdate = getDao().
 					getByNatCatFluxoAndLocalizacao(oldNCF, l);
 				needUpdate.setNaturezaCategoriaFluxo(newNCF);
 				update(needUpdate);
@@ -148,22 +145,22 @@ public class NatCatFluxoLocalizacaoManager extends GenericManager {
 		if(localizacao.getLocalizacaoList() != null && localizacao.getLocalizacaoList().size() > 0) {
 			for(Localizacao l : localizacao.getLocalizacaoList()) {
 				removeChildren(l, ncfl);
-				natCatFluxoLocalizacaoDAO.deleteByNatCatFluxoAndLocalizacao
+				getDao().deleteByNatCatFluxoAndLocalizacao
 										  (ncfl.getNaturezaCategoriaFluxo(), l);
 			}
 		}
 	}
 	
 	public List<NaturezaCategoriaFluxo> listByLocalizacaoAndPapel(Localizacao l, Papel p) {
-		return natCatFluxoLocalizacaoDAO.listByLocalizacaoAndPapel(l, p);
+		return getDao().listByLocalizacaoAndPapel(l, p);
 	}
 	
 	public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(NaturezaCategoriaFluxo ncf) {
-		return natCatFluxoLocalizacaoDAO.listByNaturezaCategoriaFluxo(ncf);
+		return getDao().listByNaturezaCategoriaFluxo(ncf);
 	}
 	
 	public boolean existsNatCatFluxoLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao localizacao) {
-		return natCatFluxoLocalizacaoDAO.existsNatCatFluxoLocalizacao(ncf, localizacao);
+		return getDao().existsNatCatFluxoLocalizacao(ncf, localizacao);
 	}
 	
 }

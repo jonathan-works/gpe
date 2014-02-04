@@ -8,9 +8,10 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
+import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 
 @Name(CalendarioEventosCrudAction.NAME)
-public class CalendarioEventosCrudAction extends AbstractCrudAction<CalendarioEventos> {
+public class CalendarioEventosCrudAction extends AbstractCrudAction<CalendarioEventos, CalendarioEventosManager> {
     
     /**
      * 

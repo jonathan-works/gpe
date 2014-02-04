@@ -23,7 +23,7 @@ import br.com.infox.epp.twitter.entity.ContaTwitter;
 
 @Name(ContaTwitterDAO.NAME)
 @AutoCreate
-public class ContaTwitterDAO extends DAO<ContaTwitter, Long> {
+public class ContaTwitterDAO extends DAO<ContaTwitter> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "contaTwitterDAO";

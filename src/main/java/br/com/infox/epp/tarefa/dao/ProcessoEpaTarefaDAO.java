@@ -27,7 +27,7 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Name(ProcessoEpaTarefaDAO.NAME)
 @AutoCreate
-public class ProcessoEpaTarefaDAO extends DAO<ProcessoEpaTarefa, Integer> {
+public class ProcessoEpaTarefaDAO extends DAO<ProcessoEpaTarefa> {
 
     private static final long serialVersionUID = 4132828408460655332L;
     public static final String NAME = "processoEpaTarefaDAO";

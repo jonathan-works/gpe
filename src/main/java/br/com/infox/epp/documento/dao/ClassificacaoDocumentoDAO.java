@@ -12,7 +12,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
 @Name(ClassificacaoDocumentoDAO.NAME)
 @AutoCreate
-public class ClassificacaoDocumentoDAO extends DAO<TipoProcessoDocumento, Integer> {
+public class ClassificacaoDocumentoDAO extends DAO<TipoProcessoDocumento> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "classificacaoDocumentoDAO";

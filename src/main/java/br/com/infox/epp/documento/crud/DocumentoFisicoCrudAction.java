@@ -2,7 +2,6 @@ package br.com.infox.epp.documento.crud;
 
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
@@ -10,7 +9,7 @@ import br.com.infox.epp.documento.entity.DocumentoFisico;
 import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 
 @Name(DocumentoFisicoCrudAction.NAME)
-public class DocumentoFisicoCrudAction extends AbstractCrudAction<DocumentoFisico> {
+public class DocumentoFisicoCrudAction extends AbstractCrudAction<DocumentoFisico, DocumentoFisicoManager> {
 	
 	/**
      * 
@@ -21,11 +20,9 @@ public class DocumentoFisicoCrudAction extends AbstractCrudAction<DocumentoFisic
 	
 	private List<DocumentoFisico> documentoFisicoList;
 	
-	@In private DocumentoFisicoManager documentoFisicoManager;
-	
 	public List<DocumentoFisico> getDocumentoFisicoList() {
 		if (documentoFisicoList == null){
-			setDocumentoFisicoList(documentoFisicoManager.findAll());
+			setDocumentoFisicoList(getManager().findAll());
 		}
 		return documentoFisicoList;
 	}

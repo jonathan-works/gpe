@@ -13,7 +13,7 @@ import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(JbpmNodeDAO.NAME)
 @AutoCreate
-public class JbpmNodeDAO extends DAO<Void, Void> {
+public class JbpmNodeDAO extends DAO<Void> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "jbpmNodeDAO";

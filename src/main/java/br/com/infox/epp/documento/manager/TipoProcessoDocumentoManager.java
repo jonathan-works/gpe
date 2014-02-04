@@ -3,22 +3,21 @@ package br.com.infox.epp.documento.manager;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.core.manager.GenericManager;
+
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 
 @Name(TipoProcessoDocumentoManager.NAME)
 @AutoCreate
-public class TipoProcessoDocumentoManager extends GenericManager {
+public class TipoProcessoDocumentoManager extends Manager<TipoProcessoDocumentoDAO, TipoProcessoDocumento> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoProcessoDocumentoManager";
 	
 	private TipoProcessoDocumento tipoProcessoDocumento;
 	private TipoProcessoDocumento tipoProcessoDocumentoRO;
-	@In private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
 	
 	public void limpar(){
 		tipoProcessoDocumento = null;
@@ -42,6 +41,6 @@ public class TipoProcessoDocumentoManager extends GenericManager {
 	}
 	
 	public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo){
-		return tipoProcessoDocumentoDAO.getTipoProcessoDocumentoInterno(isModelo);
+		return getDao().getTipoProcessoDocumentoInterno(isModelo);
 	}
 }

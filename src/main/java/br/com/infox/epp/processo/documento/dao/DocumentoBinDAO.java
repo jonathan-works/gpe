@@ -12,7 +12,7 @@ import br.com.infox.epp.documento.entity.DocumentoBin;
 
 @Name(DocumentoBinDAO.NAME)
 @AutoCreate
-public class DocumentoBinDAO extends DAO<DocumentoBin, Integer> {
+public class DocumentoBinDAO extends DAO<DocumentoBin> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoBinDAO";

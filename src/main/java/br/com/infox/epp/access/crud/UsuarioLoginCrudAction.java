@@ -11,11 +11,12 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.exception.BusinessException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.access.type.UsuarioEnum;
 
 @Name(UsuarioLoginCrudAction.NAME)
-public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin> {
+public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, UsuarioLoginManager> {
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginCrudAction.class);
     public static final String NAME = "usuarioLoginCrudAction";

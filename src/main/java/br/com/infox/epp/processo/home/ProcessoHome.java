@@ -41,6 +41,7 @@ import br.com.infox.epp.processo.documento.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.home.ProcessoDocumentoHome;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.documento.service.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
@@ -70,6 +71,9 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private ProcessoEpaManager processoEpaManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
+    
+    @In
+    private ProcessoDocumentoManager processoDocumentoManager;
 
     private ModeloDocumento modeloDocumento;
     private TipoProcessoDocumento tipoProcessoDocumento;
@@ -168,7 +172,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     private ProcessoDocumento buscarProcessoDocumento(Integer idDoc) {
-        return processoManager.find(ProcessoDocumento.class, idDoc);
+        return processoDocumentoManager.find(idDoc);
     }
 
     // Método para Atualizar o documento do fluxo
@@ -420,7 +424,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public String getNumeroProcesso(int idProcesso) {
-        Processo processo = processoManager.find(Processo.class, idProcesso);
+        Processo processo = processoManager.find(idProcesso);
         if (processo != null) {
             return processo.getNumeroProcesso();
         }

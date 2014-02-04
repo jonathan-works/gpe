@@ -4,31 +4,29 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 
 @Name(SituacaoProcessoManager.NAME)
 @AutoCreate
-public class SituacaoProcessoManager extends GenericManager {
+public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, SituacaoProcesso> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "situacaoProcessoManager";
 	
-	@In private SituacaoProcessoDAO situacaoProcessoDAO;
-	
 	public boolean existemTarefasEmAberto(long taskId){
-		return situacaoProcessoDAO.getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
+		return getDao().getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
 	}
 	
 	public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
-		return situacaoProcessoDAO.getProcessosAbertosByIdTarefa(idTarefa, selected);
+		return getDao().getProcessosAbertosByIdTarefa(idTarefa, selected);
 	}
 	
 	public boolean canOpenTask(long currentTaskId) {
-	    return situacaoProcessoDAO.canOpenTask(currentTaskId);
+	    return getDao().canOpenTask(currentTaskId);
 	}
 
 }

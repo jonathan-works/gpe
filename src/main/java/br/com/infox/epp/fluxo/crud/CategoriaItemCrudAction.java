@@ -12,12 +12,13 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
+import br.com.infox.epp.fluxo.manager.CategoriaItemManager;
 import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 
 @Name(CategoriaItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem> {
+public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, CategoriaItemManager> {
     private static final long serialVersionUID = 1L;
     
     public static final String NAME = "categoriaItemCrudAction";

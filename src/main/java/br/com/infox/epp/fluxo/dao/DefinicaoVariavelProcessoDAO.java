@@ -25,7 +25,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 @Name(DefinicaoVariavelProcessoDAO.NAME)
-public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso, Long> {
+public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "definicaoVariavelProcessoDAO";

@@ -12,7 +12,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(LocalizacaoDAO.NAME)
 @AutoCreate
-public class LocalizacaoDAO extends DAO<Localizacao, Integer> {
+public class LocalizacaoDAO extends DAO<Localizacao> {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "localizacaoDAO";

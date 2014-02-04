@@ -122,7 +122,7 @@ public class TaskInstanceView implements Serializable{
 						ff.setValue(value);
 						DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
 						Integer id = Integer.valueOf(tokens[2]);
-						DominioVariavelTarefa dominio = dominioVariavelTarefaManager.getDominioVariavelTarefa(id);
+						DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
 						
 						String[] itens = dominio.getDominio().split(";");
 						for (String item : itens) {

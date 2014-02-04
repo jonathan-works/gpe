@@ -24,10 +24,11 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLocalizacaoManager;
 
 @Name(UsuarioLocalizacaoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLocalizacao> {
+public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLocalizacao, UsuarioLocalizacaoManager> {
 
     private static final long serialVersionUID = 1L;
 
@@ -73,7 +74,7 @@ public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLoca
             params.put(PARAM_ESTRUTURA, usuarioLocalizacao.getEstrutura());
         }
 
-        return (Long) getGenericManager().getSingleResult(hql.toString(), params) > 0;
+        return (Long) getManager().getSingleResult(hql.toString(), params) > 0;
     }
 
     @Override

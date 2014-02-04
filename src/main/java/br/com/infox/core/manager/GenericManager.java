@@ -1,21 +1,13 @@
 package br.com.infox.core.manager;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
-
-import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.dao.DAO;
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.core.persistence.DAOException;
 
 /**
  * Classe que acessa o GenericDAO e disponibiliza
@@ -30,76 +22,21 @@ import br.com.infox.core.persistence.DAOException;
 @Name(GenericManager.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class GenericManager implements Serializable {
+public class GenericManager extends Manager<GenericDAO, Object> {
 
 	private static final long serialVersionUID = -5694962568615133171L;
 
 	public static final String NAME = "genericManager";
 	
-	private GenericDAO genericDAO;
-	
-	@Create
-	public void init() {
-		this.genericDAO = (GenericDAO) Component.getInstance(getDaoName());
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public <T> T persist(T o) throws DAOException {
-		return (T) genericDAO.persist(o);
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public <T> T update(T o) throws DAOException {
-		return (T) genericDAO.update(o);
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public <T> T remove(T o) throws DAOException {
-		return (T) genericDAO.remove(o);
-	}
-	
-	public <T> T find(Class<T> c, Object id) {
-		return (T) genericDAO.find(c, id);
-	}
-	
-	public <T> List<T> findAll(Class<T> clazz) {
-		return genericDAO.findAll(clazz);
-	}
-	
-	public boolean contains(Object o) {
-		return genericDAO.contains(o);
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public <T> T merge(T o) throws DAOException {
-		return (T) genericDAO.merge(o);
-	}
-	
-	public <T> void detach(T o) {
-		genericDAO.detach(o);
-	}
-	
-	public void clear() {
-		genericDAO.clear();
-	}
-	
-	public void flush(){
-	    genericDAO.flush();
-	}
-	
-	public <T> void refresh(T o){
-	    genericDAO.refresh(o);
-	}
-
-    public Long getSingleResult(final String query, final Map<String, Object> params) {
-        return (Long) genericDAO.getSingleResult(query, params);
+	public <T> T find(Class<T> entityClass, Object id) {
+		return getDao().find(entityClass, id);
     }
-	
-	protected DAO<?, ?> getDao() {
-		return this.genericDAO;
-	}
-	
-	protected String getDaoName() {
-		return GenericDAO.NAME;
-	}
+
+    public <T> List<T> findAll(Class<T> entityClass) {
+    	return getDao().findAll(entityClass);
+    }
+
+    public <T> T getReference(Class<T> entityClass, Object id) {
+    	return getDao().getReference(entityClass, id);
+    }
 }

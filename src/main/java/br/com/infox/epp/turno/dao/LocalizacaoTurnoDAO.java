@@ -41,7 +41,7 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
  */
 @Name(LocalizacaoTurnoDAO.NAME)
 @AutoCreate
-public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno, Integer> {
+public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
 
 	private static final long serialVersionUID = 4917008814431859631L;
 	public static final String NAME = "localizacaoTurnoDAO";

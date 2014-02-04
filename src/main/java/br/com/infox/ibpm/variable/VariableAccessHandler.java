@@ -80,7 +80,7 @@ public class VariableAccessHandler implements Serializable {
 			this.type = tokens[0];
 			if (tokens.length >= 3) {
 				DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-				this.dominioVariavelTarefa = dominioVariavelTarefaManager.getDominioVariavelTarefa(Integer.valueOf(tokens[2]));
+				this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
 			}
 		} else {
 			this.type = "default";
@@ -344,7 +344,7 @@ public class VariableAccessHandler implements Serializable {
 				setWritable(false);
 				if (tokens.length >= 3) {
 					DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-					setDominioVariavelTarefa(dominioVariavelTarefaManager.getDominioVariavelTarefa(Integer.valueOf(tokens[2])));
+					setDominioVariavelTarefa(dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2])));
 				}
 			}
 		}

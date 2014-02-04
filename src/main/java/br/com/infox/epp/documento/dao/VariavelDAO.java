@@ -16,7 +16,7 @@ import br.com.infox.epp.documento.entity.Variavel;
 
 @Name(VariavelDAO.NAME)
 @AutoCreate
-public class VariavelDAO extends DAO<Variavel, Integer> {
+public class VariavelDAO extends DAO<Variavel> {
 
 	public static final String NAME = "variavelDAO";
 	private static final long serialVersionUID = 1L;

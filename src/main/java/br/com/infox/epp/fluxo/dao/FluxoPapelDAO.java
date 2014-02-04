@@ -16,7 +16,7 @@ import br.com.infox.epp.fluxo.entity.FluxoPapel;
 
 @Name(FluxoPapelDAO.NAME)
 @AutoCreate
-public class FluxoPapelDAO extends DAO<FluxoPapel, Integer> {
+public class FluxoPapelDAO extends DAO<FluxoPapel> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "fluxoPapelDAO";
 

@@ -3,7 +3,6 @@ package br.com.infox.epp.fluxo.crud;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
@@ -16,15 +15,12 @@ import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
 
 @Name(FluxoPapelAction.NAME)
-public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> {
+public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel, FluxoPapelManager> {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(FluxoPapelAction.class);
 
 	public static final String NAME = "fluxoPapelAction";
 
-	@In
-	private FluxoPapelManager fluxoPapelManager; 
-	
 	private PapelTreeHandler papelTreeHandler = new PapelTreeHandler();
 	private List<FluxoPapel> fluxoPapelList;
 	private Fluxo fluxo;
@@ -54,7 +50,7 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> {
 		for (final Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
 			final FluxoPapel nl = iterator.next();
 			try {
-				getGenericManager().remove(nl);
+				getManager().remove(nl);
 			} catch (final Exception e) {
 			    LOG.error(".removeAll()", e);
 			    allValid = false;
@@ -77,7 +73,7 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel> {
 	}
 
 	private void listByNatureza() {
-		setFluxoPapelList(fluxoPapelManager.listByFluxo(fluxo));
+		setFluxoPapelList(getManager().listByFluxo(fluxo));
 	}
 
 	public void setPapelTreeHandler(final PapelTreeHandler papelTreeHandler) {

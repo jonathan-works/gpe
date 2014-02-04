@@ -10,11 +10,12 @@ import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.itx.util.ComponentUtil;
 
 @Name(FluxoLocalizacaoCrudAction.NAME)
-public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLocalizacao> {
+public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLocalizacao, NatCatFluxoLocalizacaoManager> {
 
     /**
      * 

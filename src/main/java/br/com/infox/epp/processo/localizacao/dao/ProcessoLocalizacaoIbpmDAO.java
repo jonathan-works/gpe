@@ -31,7 +31,7 @@ import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 
 @Name(ProcessoLocalizacaoIbpmDAO.NAME)
 @AutoCreate
-public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm, Integer> {
+public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoLocalizacaoIbpmDAO";
 

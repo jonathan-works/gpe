@@ -5,36 +5,33 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.tarefa.dao.TarefaDAO;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Name(TarefaManager.NAME)
 @AutoCreate
-public class TarefaManager extends GenericManager {
+public class TarefaManager extends Manager<TarefaDAO, Tarefa> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tarefaManager";
 	
-	@In private TarefaDAO tarefaDAO;
-	
 	public List<SelectItem> getPreviousNodes(Tarefa tarefa){
-		return tarefaDAO.getPreviousNodes(tarefa);
+		return getDao().getPreviousNodes(tarefa);
 	}
 	
 	public void encontrarNovasTarefas(){
-		tarefaDAO.encontrarNovasTarefas();
+		getDao().encontrarNovasTarefas();
 	}
 
     public Tarefa getTarefa(long idJbpmTask) {
-        return tarefaDAO.getTarefa(idJbpmTask);
+        return getDao().getTarefa(idJbpmTask);
     }
     
     public Tarefa getTarefa(String tarefa, String fluxo) {
-        return tarefaDAO.getTarefa(tarefa, fluxo);
+        return getDao().getTarefa(tarefa, fluxo);
     }
 
 }

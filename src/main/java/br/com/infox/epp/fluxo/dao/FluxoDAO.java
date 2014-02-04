@@ -30,7 +30,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
  */
 @Name(FluxoDAO.NAME)
 @AutoCreate
-public class FluxoDAO extends DAO<Fluxo, Integer> {
+public class FluxoDAO extends DAO<Fluxo> {
 
     private static final long serialVersionUID = -4180114886888382915L;
     public static final String NAME = "fluxoDAO";

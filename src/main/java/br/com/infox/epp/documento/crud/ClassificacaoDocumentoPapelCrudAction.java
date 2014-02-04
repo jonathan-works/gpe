@@ -10,9 +10,10 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
+import br.com.infox.epp.documento.manager.TipoProcessoDocumentoPapelManager;
 
 @Name(ClassificacaoDocumentoPapelCrudAction.NAME)
-public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<TipoProcessoDocumentoPapel> {
+public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<TipoProcessoDocumentoPapel, TipoProcessoDocumentoPapelManager> {
     
     /**
      * 

@@ -21,7 +21,7 @@ import br.com.infox.epp.access.entity.Recurso;
 
 @Name(RecursoDAO.NAME)
 @AutoCreate
-public class RecursoDAO extends DAO<Recurso, Integer> {
+public class RecursoDAO extends DAO<Recurso> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "recursoDAO";

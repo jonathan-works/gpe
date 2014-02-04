@@ -4,10 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
@@ -19,20 +18,13 @@ import br.com.infox.epp.processo.entity.Processo;
 
 @Name(ProcessoDocumentoManager.NAME)
 @AutoCreate
-public class ProcessoDocumentoManager extends GenericManager {
+public class ProcessoDocumentoManager extends Manager<ProcessoDocumentoDAO, ProcessoDocumento> {
 
     public static final String NAME = "processoDocumentoManager";
     private static final long serialVersionUID = 1L;
-    private static final Class<ProcessoDocumento> CLASS = ProcessoDocumento.class;
     
-    @In private ProcessoDocumentoDAO processoDocumentoDAO;
-    
-    public ProcessoDocumento find(Integer idProcessoDocumento){
-        return find(CLASS, idProcessoDocumento);
-    }
-    
-    public Object getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
-        return processoDocumentoDAO.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
+    public String getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
+        return getDao().getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
     }
     
     public String valorProcessoDocumento(Integer idProcessoDocumento){
@@ -49,14 +41,14 @@ public class ProcessoDocumentoManager extends GenericManager {
     	doc.setProcessoDocumento(label);
     	doc.setTipoProcessoDocumento(tipoProcessoDocumento);
     	doc.setNumeroDocumento(getNextNumeracao(tipoProcessoDocumento,processo));
-    	return processoDocumentoDAO.persist(doc);
+    	return getDao().persist(doc);
     }
 
     public Integer getNextNumeracao(TipoProcessoDocumento tipoProcessoDoc, Processo processo) {
         Integer result = null;
         if (tipoProcessoDoc.getNumera() 
                 && tipoProcessoDoc.getTipoNumeracao().equals(TipoNumeracaoEnum.S)) {
-            Integer next = processoDocumentoDAO.getNextSequencial(processo);
+            Integer next = getDao().getNextSequencial(processo);
             if (next == null) {
                 result = 1;
             } else {
@@ -67,7 +59,7 @@ public class ProcessoDocumentoManager extends GenericManager {
     }
     
     public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask){
-        return processoDocumentoDAO.getAnexosPublicos(idJbpmTask);
+        return getDao().getAnexosPublicos(idJbpmTask);
     }
 
 }

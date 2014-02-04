@@ -11,11 +11,12 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.pessoa.manager.PessoaManager;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 
 @Name(UsuarioPessoaFisicaCrudAction.NAME)
-public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica> {
+public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica, PessoaFisicaManager> {
     private static final long serialVersionUID = 1L;
 
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioPessoaFisicaCrudAction.class);
@@ -25,9 +26,10 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
     public static final String NAME = "usuarioPessoaFisicaCrudAction";
     
     private UsuarioLogin usuarioAssociado;
-
-    @In private PessoaManager pessoaManager;
     
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
+
     public UsuarioLogin getUsuarioAssociado() {
         return usuarioAssociado;
     }
@@ -43,7 +45,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
     
     public void searchByCpf(final String cpf){
         newInstance();
-        final PessoaFisica pf = pessoaManager.getPessoaFisicaByCpf(cpf);
+        final PessoaFisica pf = getManager().getByCpf(cpf);
         if (pf != null){
             setInstance(pf);
         } else {
@@ -67,7 +69,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
         if (PERSISTED.equals(ret) || UPDATED.equals(ret)){
             usuarioAssociado.setPessoaFisica(getInstance());
             try {
-                getGenericManager().update(usuarioAssociado);
+                usuarioLoginManager.update(usuarioAssociado);
             } catch (final DAOException e) {
                 final String logMessagePattern = ".save()";
                 if (e.getPostgreSQLErrorCode() == PostgreSQLErrorCode.UNIQUE_VIOLATION){
@@ -97,7 +99,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
         if (t!= null && usuarioAssociado != null && t.equals(usuarioAssociado.getPessoaFisica())) {
             usuarioAssociado.setPessoaFisica(null);
             try {
-                getGenericManager().update(usuarioAssociado);
+                usuarioLoginManager.update(usuarioAssociado);
                 newInstance();
     			final StatusMessages messages = getMessagesHandler();
                 messages.clear();
