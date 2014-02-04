@@ -40,7 +40,8 @@ public class ArquillianSeamTestSetup {
         this.mockWebXMLPath = "src/test/resources/mock-web.xml";
         this.pomPath = "pom.xml";
         addClasses(br.com.infox.epp.test.crud.AbstractCrudTest.class,br.com.infox.epp.test.crud.CrudActions.class,
-                br.com.infox.epp.test.crud.AbstractCrudActions.class);
+                br.com.infox.epp.test.crud.AbstractCrudActions.class,br.com.infox.epp.test.crud.RunnableTest.class,
+                br.com.infox.epp.test.crud.PersistSuccessTest.class);
     }
     
     public ArquillianSeamTestSetup addPackages(final String... packages) {
