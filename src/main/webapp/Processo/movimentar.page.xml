@@ -17,7 +17,7 @@ login-required="true"
     <param name="idProcesso" value="#{processoHome.processoIdProcesso}" />
     <param name="tarefaId" value="#{processoHome.tarefaId}" />
     <action execute="#{processoHome.iniciarTarefaProcesso()}" if="#{not util.ajaxRequest}"/>
-    <action execute="#{processoDocumentoUploader.setProcesso(processoHome.instance)}" if="#{processoHome.tab eq 'tabAnexar2'}"/>
+    <action execute="#{processoDocumentoEditor.setProcesso(processoHome.instance)}" if="#{processoHome.tab eq 'tabAnexar2'}"/>
     <action execute="#{variavelProcessoAction.setProcesso(processoHome.instance)}" on-postback="false"/>
 
 </page>

@@ -19,12 +19,12 @@ import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(ProcessoDocumentoUploader.NAME)
+@Name(ProcessoDocumentoEditor.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoDocumentoUploader {
+public class ProcessoDocumentoEditor {
 
-    public static final String NAME = "processoDocumentoUploader";
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoUploader.class);
+    public static final String NAME = "processoDocumentoEditor";
+    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoEditor.class);
 
     private Processo processo;
     private ProcessoDocumento processoDocumento;
