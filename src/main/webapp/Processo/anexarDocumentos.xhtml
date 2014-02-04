@@ -4,8 +4,6 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:rich="http://richfaces.org/rich">
 
-    <ui:param name="home" value="processoDocumentoEditor" />
-
     <s:div style="clear: both">
         <wi:inputText id="#{f.id}inputProcessoDocumento"
             value="#{processoDocumentoEditor.processoDocumento.processoDocumento}"
@@ -39,10 +37,44 @@
             styleClass="buttons">
         </wi:commandButton>
     </s:div>
-    <br/>
-    <rich:collapsiblePanel switchType="client" expanded="false" header="Upload">
+    <br />
+    <rich:collapsiblePanel switchType="client" expanded="false"
+        header="Upload">
+        <s:div style="clear: both">
+            <wi:inputText id="#{f.id}inputProcessoDocumentoPdf"
+                value="#{processoDocumentoUploader.processoDocumento.processoDocumento}"
+                disabled="false" required="true"
+                label="#{messages['processo.anexarDocumentoDescricao']}">
+            </wi:inputText>
+        </s:div>
+        <s:div id="divTipoDocumentoPdf">
+            <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumentoPdf"
+                label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                value="#{processoDocumentoUploader.processoDocumento.tipoProcessoDocumento}"
+                items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(false)}"
+                required="true" noSelectionLabel="Selecione...">
+            </wi:selectOneMenuEntity>
+        </s:div>
+        <wi:selectBooleanCheckbox id="documentoSigilosoPdf"
+            inNewLine="true"
+            value="#{processoDocumentoUploader.processoDocumento.documentoSigiloso}"
+            label="#{messages['processoDocumento.documentoSigiloso']}" />
+        <s:div id="tipoDocumentoDivPdf">
+            <wi:fileUpload id="uploadArquivo"
+                label="Arquivo">
+            </wi:fileUpload>
+
+        </s:div>
+        <s:div id="buttonsPdfDiv">
+            <wi:commandButton id="botaoAnexarDocumentoPdf"
+                action="processoDocumentoUploader.persist()"
+                value="#{messages['processo.anexarDocumentoBtn']}"
+                execute="@form" reRender="@form,pageBodyDialogMessage"
+                styleClass="buttons">
+            </wi:commandButton>
+        </s:div>
     </rich:collapsiblePanel>
-    <br/>
+    <br />
     <s:div id="documentosDaSessao">
         <wi:dataTable
             values="#{processoDocumentoEditor.processoDocumentosDaSessao}"
