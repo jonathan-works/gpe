@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich">
+
     <ui:param name="home" value="processoDocumentoEditor" />
+
     <s:div style="clear: both">
         <wi:inputText id="#{f.id}inputProcessoDocumento"
             value="#{processoDocumentoEditor.processoDocumento.processoDocumento}"
@@ -36,22 +39,27 @@
             styleClass="buttons">
         </wi:commandButton>
     </s:div>
-
-    <wi:dataTable
-        values="#{processoDocumentoEditor.processoDocumentosDaSessao}"
-        tableTitle="#{messages['processoDocumento.titleView']}"
-        id="processoDocumentoDaSessao"
-        rowId="#{row.idProcessoDocumento}">
-        <wi:columnOutputText columnId="usuarioInclusao"
-            columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-            value="#{row.usuarioInclusao}" />
-        <wi:columnDateTime columnId="dataInclusao"
-            columnHeader="#{messages['processoDocumento.dataInclusao']}"
-            value="#{row.dataInclusao}" />
-        <wi:columnOutputText columnId="processoDocumento"
-            columnHeader="#{messages['processoDocumentoBin.documento']}"
-            value="#{row.processoDocumento}" />
-        <ui:define name="headerToolBar"/>
-        <ui:define name="toolBar"/>
-    </wi:dataTable>
+    <br/>
+    <rich:collapsiblePanel switchType="client" expanded="false" header="Upload">
+    </rich:collapsiblePanel>
+    <br/>
+    <s:div id="documentosDaSessao">
+        <wi:dataTable
+            values="#{processoDocumentoEditor.processoDocumentosDaSessao}"
+            tableTitle="#{messages['processoDocumento.titleView']}"
+            id="processoDocumentoDaSessao"
+            rowId="#{row.idProcessoDocumento}">
+            <wi:columnOutputText columnId="usuarioInclusao"
+                columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+                value="#{row.usuarioInclusao}" />
+            <wi:columnDateTime columnId="dataInclusao"
+                columnHeader="#{messages['processoDocumento.dataInclusao']}"
+                value="#{row.dataInclusao}" />
+            <wi:columnOutputText columnId="processoDocumento"
+                columnHeader="#{messages['processoDocumentoBin.documento']}"
+                value="#{row.processoDocumento}" />
+            <ui:define name="headerToolBar" />
+            <ui:define name="toolBar" />
+        </wi:dataTable>
+    </s:div>
 </ui:composition>
