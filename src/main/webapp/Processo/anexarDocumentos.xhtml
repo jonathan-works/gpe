@@ -47,7 +47,7 @@
         <s:div id="uploaderDiv">
             <s:div style="clear: both">
                 <wi:inputText id="#{f.id}inputProcessoDocumentoPdf"
-                    value="#{processoDocumentoUploader.processoDocumento.processoDocumento}"
+                    value="#{documentoUploader.processoDocumento.processoDocumento}"
                     disabled="false" required="true"
                     label="#{messages['processo.anexarDocumentoDescricao']}">
                 </wi:inputText>
@@ -56,14 +56,14 @@
                 <wi:selectOneMenuEntity
                     id="#{f.id}tipoProcessoDocumentoPdf"
                     label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-                    value="#{processoDocumentoUploader.processoDocumento.tipoProcessoDocumento}"
+                    value="#{documentoUploader.processoDocumento.tipoProcessoDocumento}"
                     items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(false)}"
                     required="true" noSelectionLabel="Selecione...">
                 </wi:selectOneMenuEntity>
             </s:div>
             <wi:selectBooleanCheckbox id="documentoSigilosoPdf"
                 inNewLine="true"
-                value="#{processoDocumentoUploader.processoDocumento.documentoSigiloso}"
+                value="#{documentoUploader.processoDocumento.documentoSigiloso}"
                 label="#{messages['processoDocumento.documentoSigiloso']}" />
             <s:div id="tipoDocumentoDivPdf">
                 <wi:fileUpload id="uploadArquivo" label="Arquivo">
@@ -72,7 +72,7 @@
             </s:div>
             <s:div id="buttonsPdfDiv">
                 <wi:commandButton id="botaoAnexarDocumentoPdf"
-                    action="processoDocumentoUploader.persist()"
+                    action="documentoUploader.persist()"
                     value="#{messages['processo.anexarDocumentoBtn']}"
                     execute="uploaderDiv"
                     reRender="@form,pageBodyDialogMessage"
@@ -103,7 +103,7 @@
     </s:div>
     <s:div id="documentosDaSessao2">
         <wi:dataTable
-            values="#{processoDocumentoUploader.documentosDaSessao}"
+            values="#{documentoUploader.documentosDaSessao}"
             tableTitle="#{messages['processoDocumento.titleView']}"
             id="documentoDaSessao2"
             rowId="#{row.idProcessoDocumento}">

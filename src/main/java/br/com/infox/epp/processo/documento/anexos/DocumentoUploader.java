@@ -22,11 +22,11 @@ import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.itx.util.Crypto;
 
-@Name(ProcessoDocumentoUploader.NAME)
+@Name(DocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoDocumentoUploader implements FileUploadListener {
+public class DocumentoUploader implements FileUploadListener {
 
-    public static final String NAME = "processoDocumentoUploader";
+    public static final String NAME = "documentoUploader";
     
     @In private ProcessoDocumentoManager processoDocumentoManager;
     @In private DocumentoBinManager documentoBinManager;
