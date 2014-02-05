@@ -9,6 +9,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -19,28 +21,20 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.itx.util.Crypto;
 
 @Name(DocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class DocumentoUploader implements FileUploadListener {
+public class DocumentoUploader extends DocumentoCreator implements FileUploadListener {
 
     public static final String NAME = "documentoUploader";
+    
+    private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
     
     @In private ProcessoDocumentoManager processoDocumentoManager;
     @In private DocumentoBinManager documentoBinManager;
 
-    private ProcessoDocumento processoDocumento = new ProcessoDocumento();
     private List<ProcessoDocumento> documentosDaSessao = new ArrayList<>();
-
-    public ProcessoDocumento getProcessoDocumento() {
-        return processoDocumento;
-    }
-
-    public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
-        this.processoDocumento = processoDocumento;
-    }
 
     public List<ProcessoDocumento> getDocumentosDaSessao() {
         return documentosDaSessao;
@@ -52,6 +46,7 @@ public class DocumentoUploader implements FileUploadListener {
 
     @Override
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
+        clear();
         final UploadedFile ui = fileUploadEvent.getUploadedFile();
         bin().setUsuario(Authenticator.getUsuarioLogado());
         bin().setNomeArquivo(ui.getName());
@@ -64,10 +59,10 @@ public class DocumentoUploader implements FileUploadListener {
     }
     
     private ProcessoDocumentoBin bin(){
-        if (processoDocumento.getProcessoDocumentoBin() == null) {
-            processoDocumento.setProcessoDocumentoBin(new ProcessoDocumentoBin());
+        if (getProcessoDocumento().getProcessoDocumentoBin() == null) {
+            getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
         }
-        return processoDocumento.getProcessoDocumentoBin();
+        return getProcessoDocumento().getProcessoDocumentoBin();
     }
     
     private String getFileType(String nomeArquivo) {
@@ -84,11 +79,18 @@ public class DocumentoUploader implements FileUploadListener {
     
     public void persist() {
         try {
-            processoDocumentoManager.gravarDocumentoNoProcesso(ProcessoHome.instance().getInstance(), processoDocumento);
-            documentoBinManager.salvarBinario(processoDocumento.getIdProcessoDocumento(), bin().getProcessoDocumento());
+            documentosDaSessao.add(processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento()));
+            documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
+            clear();
         } catch (DAOException e) {
-            e.printStackTrace();
+            LOG.error("Não foi possível gravar o documento do processo " + getProcessoDocumento(), e);
         }
+    }
+
+    @Override
+    public ProcessoDocumento notificarCriacaoDeDocumento() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -2,7 +2,10 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:rich="http://richfaces.org/rich">
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns="http://www.w3.org/1999/xhtml">
+    
     <s:div id="editorDiv">
         <s:div style="clear: both">
             <wi:inputText id="#{f.id}inputProcessoDocumento"
@@ -41,7 +44,7 @@
             </wi:commandButton>
         </s:div>
     </s:div>
-    <br />
+    <br/>
     <rich:collapsiblePanel switchType="client" expanded="false"
         header="Upload">
         <s:div id="uploaderDiv">
@@ -81,11 +84,11 @@
             </s:div>
         </s:div>
     </rich:collapsiblePanel>
-    <br />
+    <br/>
     <s:div id="documentosDaSessao">
         <wi:dataTable
             values="#{documentoEditor.processoDocumentosDaSessao}"
-            tableTitle="#{messages['processoDocumento.titleView']}"
+            tableTitle="#{messages['documentoEditor.titleView']}"
             id="processoDocumentoDaSessao"
             rowId="#{row.idProcessoDocumento}">
             <wi:columnOutputText columnId="usuarioInclusao"
@@ -101,10 +104,11 @@
             <ui:define name="toolBar" />
         </wi:dataTable>
     </s:div>
+    <br/>
     <s:div id="documentosDaSessao2">
         <wi:dataTable
             values="#{documentoUploader.documentosDaSessao}"
-            tableTitle="#{messages['processoDocumento.titleView']}"
+            tableTitle="#{messages['documentoUploader.titleView']}"
             id="documentoDaSessao2"
             rowId="#{row.idProcessoDocumento}">
             <wi:columnOutputText columnId="usuarioInclusao"
