@@ -6,7 +6,7 @@
     <s:div id="editorDiv">
         <s:div style="clear: both">
             <wi:inputText id="#{f.id}inputProcessoDocumento"
-                value="#{processoDocumentoEditor.processoDocumento.processoDocumento}"
+                value="#{documentoEditor.processoDocumento.processoDocumento}"
                 disabled="false" required="true"
                 label="#{messages['processo.anexarDocumentoDescricao']}">
             </wi:inputText>
@@ -14,18 +14,18 @@
         <s:div id="divTipoDocumento">
             <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
                 label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-                value="#{processoDocumentoEditor.processoDocumento.tipoProcessoDocumento}"
+                value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
                 items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(false)}"
                 required="true" noSelectionLabel="Selecione...">
             </wi:selectOneMenuEntity>
         </s:div>
         <wi:selectBooleanCheckbox id="documentoSigiloso"
             inNewLine="true"
-            value="#{processoDocumentoEditor.processoDocumento.documentoSigiloso}"
+            value="#{documentoEditor.processoDocumento.documentoSigiloso}"
             label="#{messages['processoDocumento.documentoSigiloso']}" />
         <s:div id="tipoDocumentoDiv">
             <wi:editor id="modeloDocumento" label="Modelo"
-                value="#{processoDocumentoEditor.processoDocumento.processoDocumentoBin.modeloDocumento}"
+                value="#{documentoEditor.processoDocumento.processoDocumentoBin.modeloDocumento}"
                 requiredField="false" required="false"
                 showVariables="false">
             </wi:editor>
@@ -33,10 +33,10 @@
         </s:div>
         <s:div id="buttonsDiv">
             <wi:commandButton id="botaoAnexarDocumento"
-                action="processoDocumentoEditor.persist()"
+                action="documentoEditor.persist()"
                 value="#{messages['processo.anexarDocumentoBtn']}"
                 execute="editorDiv"
-                reRender="@form,pageBodyDialogMessage"
+                reRender="@form,pageBodyDialogMessage, buttonsDiv"
                 styleClass="buttons">
             </wi:commandButton>
         </s:div>
@@ -84,7 +84,7 @@
     <br />
     <s:div id="documentosDaSessao">
         <wi:dataTable
-            values="#{processoDocumentoEditor.processoDocumentosDaSessao}"
+            values="#{documentoEditor.processoDocumentosDaSessao}"
             tableTitle="#{messages['processoDocumento.titleView']}"
             id="processoDocumentoDaSessao"
             rowId="#{row.idProcessoDocumento}">

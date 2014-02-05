@@ -16,12 +16,12 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(ProcessoDocumentoEditor.NAME)
+@Name(DocumentoEditor.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoDocumentoEditor {
+public class DocumentoEditor {
 
-    public static final String NAME = "processoDocumentoEditor";
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoEditor.class);
+    public static final String NAME = "documentoEditor";
+    private static final LogProvider LOG = Logging.getLogProvider(DocumentoEditor.class);
 
     private Processo processo;
     private ProcessoDocumento processoDocumento;
@@ -67,7 +67,8 @@ public class ProcessoDocumentoEditor {
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento do processo " + processoDocumento, e);
         }
-        processoDocumento = new ProcessoDocumento();
+        setProcessoDocumento(new ProcessoDocumento());
+        getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
     }
     
 }
