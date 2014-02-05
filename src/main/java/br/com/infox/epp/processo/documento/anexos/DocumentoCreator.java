@@ -25,11 +25,11 @@ abstract class DocumentoCreator {
         this.processoDocumento = processoDocumento;
     }
     
-    public void clear() {
+    protected void newInstance() {
         setProcessoDocumento(new ProcessoDocumento());
         getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
     }
     
-    public abstract ProcessoDocumento notificarCriacaoDeDocumento();
+    public abstract void clear();
 
 }

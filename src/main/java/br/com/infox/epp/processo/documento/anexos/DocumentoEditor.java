@@ -34,25 +34,20 @@ public class DocumentoEditor extends DocumentoCreator {
             List<ProcessoDocumento> processoDocumentosDaSessao) {
         this.processoDocumentosDaSessao = processoDocumentosDaSessao;
     }
-
-    public void onClickTabAnexar() {
-        clear();
-        processoDocumentosDaSessao = new ArrayList<>();
-    }
-
+    
     public void persist() {
         try {
             processoDocumentosDaSessao.add(processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento()));
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento do processo " + getProcessoDocumento(), e);
         }
-        clear();
+        newInstance();
     }
 
     @Override
-    public ProcessoDocumento notificarCriacaoDeDocumento() {
-        // TODO Auto-generated method stub
-        return null;
+    public void clear() {
+        processoDocumentosDaSessao = new ArrayList<>();
+        newInstance();
     }
     
 }

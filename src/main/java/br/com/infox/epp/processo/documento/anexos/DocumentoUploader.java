@@ -46,7 +46,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     @Override
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
-        clear();
+        newInstance();
         final UploadedFile ui = fileUploadEvent.getUploadedFile();
         bin().setUsuario(Authenticator.getUsuarioLogado());
         bin().setNomeArquivo(ui.getName());
@@ -81,16 +81,16 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         try {
             documentosDaSessao.add(processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento()));
             documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
-            clear();
+            newInstance();
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento do processo " + getProcessoDocumento(), e);
         }
     }
-
+    
     @Override
-    public ProcessoDocumento notificarCriacaoDeDocumento() {
-        // TODO Auto-generated method stub
-        return null;
+    public void clear() {
+        documentosDaSessao= new ArrayList<>();
+        newInstance();
     }
 
 }

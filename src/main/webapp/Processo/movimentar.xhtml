@@ -135,8 +135,8 @@
             <infox:tab id="tabAnexar" name="tabAnexar"
                 rendered="#{processoHome.managed}" status=":status"
                 title="#{messages['processoDocumento.anexarDocumento']}"
-                action="#{documentoEditor.onClickTabAnexar()}">
-                <wi:dataForm formId="anexarDocumentosForm2"
+                action="#{anexoController.onClickTabAnexar(processoHome.instance)}">
+                <wi:dataForm formId="anexarDocumentosForm"
                     formTitle="#{messages['form.title']}"
                     isUploadForm="true">
                     <ui:include
