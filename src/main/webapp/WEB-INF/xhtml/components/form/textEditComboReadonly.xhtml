@@ -30,7 +30,7 @@
              id="#{id}TipoProcDoc"
              label="#{messages['processoDocumento.classificacaoDocumento']}"
              value="#{props.tipoProcessoDocumentoRO}"
-             items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+             items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(true)}"
              required="true"
              disabled="#{readonly ? true : false}"
              noSelectionLabel="Selecione...">

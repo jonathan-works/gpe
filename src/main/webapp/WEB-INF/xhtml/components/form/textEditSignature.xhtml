@@ -31,7 +31,7 @@
         <wi:selectOneMenuEntity id="tipoProcessoDocumento"
             label="#{messages['processoDocumento.classificacaoDocumento']}"
             value="#{processoHome.tipoProcessoDocumento}"
-            items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(processoDocumentoHome.modelo)}"
+            items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(true)}"
             required="true" noSelectionLabel="Selecione...">
         </wi:selectOneMenuEntity>
     </s:div>
