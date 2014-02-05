@@ -76,7 +76,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         return initEntityAction;
     }
     
-    public static List<Fluxo> persistFluxo(final String suffix, ServletContext servletContext, HttpSession session) throws Exception {
+    public static List<Fluxo> getSuccessfullyPersisted(final ActionContainer<Fluxo> action, final String suffix, ServletContext servletContext, HttpSession session) throws Exception {
         final GregorianCalendar currentDate = new GregorianCalendar();
         final Date dataInicio = currentDate.getTime();
         currentDate.add(GregorianCalendar.DAY_OF_YEAR, 20);
@@ -118,7 +118,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
     
     @Test
     public void persistSuccessTest() throws Exception {
-        persistFluxo("persist-success", servletContext, session);
+        getSuccessfullyPersisted(null, "persist-success", servletContext, session);
     }
     
     @Test
