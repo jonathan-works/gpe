@@ -8,6 +8,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 
 @Name(DocumentoEditor.NAME)
@@ -20,13 +21,14 @@ public class DocumentoEditor extends DocumentoCreator {
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
-    public void persist() {
-        try {
-            getDocumentosDaSessao().add(processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento()));
-        } catch (DAOException e) {
-            LOG.error("Não foi possível gravar o documento do processo " + getProcessoDocumento(), e);
-        }
-        newInstance();
+    @Override
+    protected LogProvider getLogger() {
+        return LOG;
+    }
+
+    @Override
+    protected ProcessoDocumento gravarDocumento() throws DAOException {
+        return processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
     }
     
 }

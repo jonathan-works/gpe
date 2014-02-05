@@ -14,6 +14,7 @@ import org.richfaces.model.UploadedFile;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
@@ -63,14 +64,16 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         return Crypto.encodeMD5(data);
     }
     
-    public void persist() {
-        try {
-            getDocumentosDaSessao().add(processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento()));
-            documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
-        } catch (DAOException e) {
-            LOG.error("Não foi possível gravar o documento do processo " + getProcessoDocumento(), e);
-        }
-        newInstance();
+    @Override
+    protected LogProvider getLogger() {
+        return LOG;
+    }
+
+    @Override
+    protected ProcessoDocumento gravarDocumento() throws DAOException {
+        ProcessoDocumento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+        documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
+        return pd;
     }
     
 
