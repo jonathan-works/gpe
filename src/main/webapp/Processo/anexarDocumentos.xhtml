@@ -85,7 +85,7 @@
         </s:div>
     </rich:collapsiblePanel>
     <br/>
-    <s:div id="documentosDaSessao">
+    <s:div id="documentosRedigidosDaSessao">
         <wi:dataTable
             values="#{documentoEditor.processoDocumentosDaSessao}"
             tableTitle="#{messages['documentoEditor.titleView']}"
@@ -105,11 +105,11 @@
         </wi:dataTable>
     </s:div>
     <br/>
-    <s:div id="documentosDaSessao2">
+    <s:div id="documentosDaSessao">
         <wi:dataTable
             values="#{documentoUploader.documentosDaSessao}"
             tableTitle="#{messages['documentoUploader.titleView']}"
-            id="documentoDaSessao2"
+            id="documentoDaSessao"
             rowId="#{row.idProcessoDocumento}">
             <wi:columnOutputText columnId="usuarioInclusao"
                 columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
