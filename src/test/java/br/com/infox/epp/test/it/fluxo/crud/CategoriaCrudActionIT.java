@@ -7,6 +7,12 @@ import static java.text.MessageFormat.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
@@ -21,6 +27,7 @@ import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.manager.CategoriaManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.PersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
@@ -34,11 +41,20 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
         		.createDeployment();
     }
 
+    private static final ActionContainer<Categoria> initEntityAction = new ActionContainer<Categoria>() {
+        @Override
+        public void execute(final CrudActions<Categoria> crudActions) {
+            final Categoria entity = getEntity();
+            crudActions.setEntityValue("categoria", entity.getCategoria());
+            crudActions.setEntityValue("ativo", entity.getAtivo());
+        }
+    };
+    
     @Override
     protected void initEntity(final Categoria entity,
             final CrudActions<Categoria> crudActions) {
-        crudActions.setEntityValue("categoria", entity.getCategoria());
-        crudActions.setEntityValue("ativo", entity.getAtivo());
+        initEntityAction.setEntity(entity);
+        initEntityAction.execute(crudActions);
     }
 
     @Override
@@ -46,12 +62,19 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
         return CategoriaCrudAction.NAME;
     }
 
+    public static final List<Categoria> getSuccessfullyPersisted(final ActionContainer<Categoria> action, final String suffix,final ServletContext servletContext, final HttpSession session) throws Exception {
+        final ArrayList<Categoria> categorias = new ArrayList<>();
+        final PersistSuccessTest<Categoria> persistSuccessTest = new PersistSuccessTest<>(CategoriaCrudAction.NAME, initEntityAction);
+        int i=0;
+        for(final Boolean ativo : new Boolean[]{TRUE, FALSE}) {
+            persistSuccessTest.runTest(action, new Categoria(format("Categoria {0} {1}", ++i, suffix), ativo), servletContext, session);
+        }
+        return categorias;
+    }
+    
     @Test
     public void persistSuccessTest() throws Exception {
-        for (int i = 0; i < 20; i++) {
-            final String categoria = format("categoria-pers-suc-{0}", i);
-            persistSuccess.runTest(new Categoria(categoria, i % 2 == 0 ? TRUE : FALSE));
-        }
+        getSuccessfullyPersisted(null, "pers-suc", servletContext, session);
     }
 
     @Test
@@ -80,7 +103,7 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
     @Test
     public void updateSuccessTest() throws Exception {
         final int i = 0;
-        persistSuccess.runTest(new ActionContainer<Categoria>(new Categoria(format("categoria-upd-suc-{0}", i), TRUE)) {
+        final ActionContainer<Categoria> action = new ActionContainer<Categoria>(new Categoria(format("categoria-upd-suc-{0}", i), TRUE)) {
             public void execute(final CrudActions<Categoria> crudActions) {
                 final Integer id = crudActions.getId();
                 assertNotNull("id not null", id);
@@ -101,6 +124,7 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
                     assertEquals("ativo differs", false, oldEntity.getAtivo().equals(newEntity.getAtivo()));
                 }
             };
-        });
+        };
+        getSuccessfullyPersisted(action, "upd-suc", servletContext, session);
     }
 }
