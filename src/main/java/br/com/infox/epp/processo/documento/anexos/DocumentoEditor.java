@@ -12,39 +12,19 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.infox.epp.processo.entity.Processo;
 
 @Name(DocumentoEditor.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class DocumentoEditor {
+public class DocumentoEditor extends DocumentoCreator {
 
     public static final String NAME = "documentoEditor";
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoEditor.class);
 
-    private Processo processo;
-    private ProcessoDocumento processoDocumento;
     private List<ProcessoDocumento> processoDocumentosDaSessao;
 
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
-
-    public Processo getProcesso() {
-        return processo;
-    }
-
-    public void setProcesso(Processo processo) {
-        this.processo = processo;
-    }
-
-    public ProcessoDocumento getProcessoDocumento() {
-        return processoDocumento;
-    }
-
-    public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
-        this.processoDocumento = processoDocumento;
-    }
 
     public List<ProcessoDocumento> getProcessoDocumentosDaSessao() {
         return processoDocumentosDaSessao;
@@ -56,19 +36,23 @@ public class DocumentoEditor {
     }
 
     public void onClickTabAnexar() {
-        setProcessoDocumento(new ProcessoDocumento());
-        getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+        clear();
         processoDocumentosDaSessao = new ArrayList<>();
     }
 
     public void persist() {
         try {
-            processoDocumentosDaSessao.add(processoDocumentoManager.gravarDocumentoNoProcesso(processo, processoDocumento));
+            processoDocumentosDaSessao.add(processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento()));
         } catch (DAOException e) {
-            LOG.error("Não foi possível gravar o documento do processo " + processoDocumento, e);
+            LOG.error("Não foi possível gravar o documento do processo " + getProcessoDocumento(), e);
         }
-        setProcessoDocumento(new ProcessoDocumento());
-        getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+        clear();
+    }
+
+    @Override
+    public ProcessoDocumento notificarCriacaoDeDocumento() {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }
