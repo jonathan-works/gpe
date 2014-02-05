@@ -1,19 +1,26 @@
 package br.com.infox.epp.processo.documento.component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.itx.util.Crypto;
 
 @Name(ProcessoDocumentoUploader.NAME)
@@ -23,8 +30,10 @@ public class ProcessoDocumentoUploader implements FileUploadListener {
     public static final String NAME = "processoDocumentoUploader";
     
     @In private ProcessoDocumentoManager processoDocumentoManager;
+    @In private DocumentoBinManager documentoBinManager;
 
     private ProcessoDocumento processoDocumento = new ProcessoDocumento();
+    private List<ProcessoDocumento> documentosDaSessao = new ArrayList<>();
 
     public ProcessoDocumento getProcessoDocumento() {
         return processoDocumento;
@@ -32,6 +41,14 @@ public class ProcessoDocumentoUploader implements FileUploadListener {
 
     public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
         this.processoDocumento = processoDocumento;
+    }
+
+    public List<ProcessoDocumento> getDocumentosDaSessao() {
+        return documentosDaSessao;
+    }
+
+    public void setDocumentosDaSessao(List<ProcessoDocumento> documentosDaSessao) {
+        this.documentosDaSessao = documentosDaSessao;
     }
 
     @Override
@@ -42,6 +59,7 @@ public class ProcessoDocumentoUploader implements FileUploadListener {
         bin().setExtensao(getFileType(ui.getName()));
         bin().setMd5Documento(getMD5(ui.getData()));
         bin().setSize(Long.valueOf(ui.getSize()).intValue());
+        bin().setProcessoDocumento(ui.getData());
         bin().setModeloDocumento(null);
         FacesMessages.instance().add(Messages.instance().get("processoDocumento.doneLabel"));
     }
@@ -66,12 +84,12 @@ public class ProcessoDocumentoUploader implements FileUploadListener {
     }
     
     public void persist() {
-        System.out.println(bin());
-        System.out.println(bin().getDataInclusao());
-        System.out.println(bin().getNomeArquivo());
-        System.out.println(bin().getMd5Documento());
-        System.out.println(bin().getProcessoDocumento());
-        System.out.println(bin().getSize());
+        try {
+            processoDocumentoManager.gravarDocumentoNoProcesso(ProcessoHome.instance().getInstance(), processoDocumento);
+            documentoBinManager.salvarBinario(processoDocumento.getIdProcessoDocumento(), bin().getProcessoDocumento());
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
