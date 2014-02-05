@@ -57,7 +57,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         .createDeployment();
     }
     
-    private final RunnableTest<UsuarioLogin> persistUsuario = new PersistUsuarioTest();    
+    private final InternalRunnableTest<UsuarioLogin> persistUsuario = new PersistUsuarioTest();    
     /*
     <action execute="#{bloqueioUsuarioCrudAction.setUsuarioAtual(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'historicoBloqueioUsuario'}"/>        
@@ -154,7 +154,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         return usuarioLogin;
     }
     
-    private final class PersistDesbloqueioUsuarioTest extends RunnableTest<BloqueioUsuario> {
+    private final class PersistDesbloqueioUsuarioTest extends InternalRunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
         private final CrudActions<UsuarioLogin> usrCrudActions;
         
@@ -188,7 +188,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         }
     }
     
-    private final class PersistBloqueioFailTest extends RunnableTest<BloqueioUsuario> {
+    private final class PersistBloqueioFailTest extends InternalRunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
         private final CrudActions<UsuarioLogin> usrCrudActions;
         private final Boolean bloqueadoStartValue;
@@ -229,7 +229,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         }
     }
     
-    private final class PersistBloqueioUsuarioTest extends RunnableTest<BloqueioUsuario> {
+    private final class PersistBloqueioUsuarioTest extends InternalRunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
         private final CrudActions<UsuarioLogin> usrCrudActions;
         
@@ -261,7 +261,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         
     }
     
-    private final class PersistUsuarioTest extends RunnableTest<UsuarioLogin> {
+    private final class PersistUsuarioTest extends InternalRunnableTest<UsuarioLogin> {
         
         public PersistUsuarioTest() {
             super(UsuarioLoginCrudAction.NAME);

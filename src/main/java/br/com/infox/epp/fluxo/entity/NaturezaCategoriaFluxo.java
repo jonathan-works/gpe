@@ -15,6 +15,7 @@ import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_R
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.SEQUENCE_NATRUEZA_CATEGORIA_FLUXO;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.TABLE_NATUREZA_CATEGORIA_FLUXO;
+import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class NaturezaCategoriaFluxo implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
-	private int idNaturezaCategoriaFluxo;
+	private Integer idNaturezaCategoriaFluxo;
 	private Natureza natureza;
 	private Categoria categoria;
 	private Fluxo fluxo;
@@ -63,7 +64,17 @@ public class NaturezaCategoriaFluxo implements Serializable{
 	private List<NatCatFluxoLocalizacao> natCatFluxoLocalizacaoList = 
 		new ArrayList<NatCatFluxoLocalizacao>(0);
 	
-	public void setIdNaturezaCategoriaFluxo(int idNaturezaCategoriaFluxo) {
+	public NaturezaCategoriaFluxo() {
+	}
+	
+	public NaturezaCategoriaFluxo(final Natureza natureza, final Categoria categoria, final Fluxo fluxo) {
+	    this.natureza = natureza;
+	    this.categoria = categoria;
+	    this.fluxo = fluxo;
+	}
+	
+	
+	public void setIdNaturezaCategoriaFluxo(Integer idNaturezaCategoriaFluxo) {
 		this.idNaturezaCategoriaFluxo = idNaturezaCategoriaFluxo;
 	}
 
@@ -71,7 +82,7 @@ public class NaturezaCategoriaFluxo implements Serializable{
 	@Id
 	@GeneratedValue(generator = GENERATOR)
 	@Column(name = ID_NATUREZA_CATEGORIA_FLUXO, unique = true, nullable = false)
-	public int getIdNaturezaCategoriaFluxo() {
+	public Integer getIdNaturezaCategoriaFluxo() {
 		return idNaturezaCategoriaFluxo;
 	}
 	
@@ -119,20 +130,14 @@ public class NaturezaCategoriaFluxo implements Serializable{
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(natureza)
-		  .append(" - ")
-		  .append(categoria)
-		  .append(" - ")
-		  .append(fluxo);
-		return sb.toString();
+		return format("{0} - {1} - {2}", natureza, categoria, fluxo);
 	}
 	
 	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + idNaturezaCategoriaFluxo;
+        result = prime * result + (idNaturezaCategoriaFluxo==null ? 0 : idNaturezaCategoriaFluxo.hashCode());
         return result;
     }
 

@@ -37,7 +37,7 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
 
     private final HashMap<String, Localizacao> localizacoes = new HashMap<>();
 
-    private Localizacao persistIfNotOnMap(final Localizacao entity, final RunnableTest<Localizacao> runnable) throws Exception {
+    private Localizacao persistIfNotOnMap(final Localizacao entity, final InternalRunnableTest<Localizacao> runnable) throws Exception {
         Localizacao result;
         final String key = entity.getLocalizacao();
         if (localizacoes.containsKey(key)) {
@@ -49,7 +49,7 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
         return result;
     }
     
-    private Localizacao persistEstruturaFilho(final Localizacao entity, final RunnableTest<Localizacao> runnable) throws Exception {
+    private Localizacao persistEstruturaFilho(final Localizacao entity, final InternalRunnableTest<Localizacao> runnable) throws Exception {
         Localizacao result = null;
         if (entity != null) {
             entity.setEstruturaFilho(persistEstruturaFilho(entity.getEstruturaFilho(), runnable));
@@ -58,7 +58,7 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
         return result;
     }
 
-    private Localizacao persistParent(final Localizacao entity, final RunnableTest<Localizacao> runnable) throws Exception {
+    private Localizacao persistParent(final Localizacao entity, final InternalRunnableTest<Localizacao> runnable) throws Exception {
         Localizacao result = null;
         if (entity != null) {
             entity.setParent(persistParent(entity.getParent(),runnable));
@@ -129,7 +129,7 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
         return !result;
     }
     
-    private final RunnableTest<Localizacao> inactivateSuccess = new RunnableTest<Localizacao>() {
+    private final InternalRunnableTest<Localizacao> inactivateSuccess = new InternalRunnableTest<Localizacao>() {
         @Override
         protected void testComponent() throws Exception {
             final Localizacao entity = getEntity();
@@ -156,7 +156,7 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
         inactivateSuccess.runTest(estruturaEmpresa);
     }
     
-    final RunnableTest<Localizacao> updateSuccess = new RunnableTest<Localizacao>() {
+    final InternalRunnableTest<Localizacao> updateSuccess = new InternalRunnableTest<Localizacao>() {
         @Override
         protected void testComponent() throws Exception {
             final Localizacao entity = getEntity();
@@ -176,7 +176,7 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
         assertEquals("updated", wasSuccessful, UPDATED.equals(crudActions.save()));
     }
     
-    final RunnableTest<Localizacao> updateFail = new RunnableTest<Localizacao>() {
+    final InternalRunnableTest<Localizacao> updateFail = new InternalRunnableTest<Localizacao>() {
         @Override
         protected void testComponent() throws Exception {
             final Localizacao entity = getEntity();

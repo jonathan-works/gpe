@@ -91,7 +91,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
     
     private static int usr_id=0;
     
-    private final RunnableTest<PessoaFisica> persistSuccess = new RunnableTest<PessoaFisica>() {
+    private final InternalRunnableTest<PessoaFisica> persistSuccess = new InternalRunnableTest<PessoaFisica>() {
         @Override
         protected void testComponent() throws Exception {
             final PessoaFisica entity = getEntity();
@@ -133,7 +133,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
         persistSuccess.runTest(new PessoaFisica("", "", new GregorianCalendar(1960,11,10).getTime(), Boolean.TRUE));
     }
     
-    private final RunnableTest<PessoaFisica> removeSuccess = new RunnableTest<PessoaFisica>() {
+    private final InternalRunnableTest<PessoaFisica> removeSuccess = new InternalRunnableTest<PessoaFisica>() {
         @Override
         protected void testComponent() throws Exception {
             final PessoaFisica entity = getEntity();

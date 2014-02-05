@@ -159,7 +159,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
         return UsuarioLocalizacaoCrudAction.NAME;
     }
     
-    private final RunnableTest<Localizacao> persistLocalizacao = new RunnableTest<Localizacao>(LocalizacaoCrudAction.NAME) {
+    private final InternalRunnableTest<Localizacao> persistLocalizacao = new InternalRunnableTest<Localizacao>(LocalizacaoCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             this.crudActions.newInstance();
@@ -183,7 +183,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
         }
     };
     
-    private final RunnableTest<Papel> persistPapel = new RunnableTest<Papel>(PapelCrudAction.NAME) {
+    private final InternalRunnableTest<Papel> persistPapel = new InternalRunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -209,7 +209,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
         }
     };
 
-    private final RunnableTest<UsuarioLogin> persistUsuario = new RunnableTest<UsuarioLogin>(UsuarioLoginCrudAction.NAME) {
+    private final InternalRunnableTest<UsuarioLogin> persistUsuario = new InternalRunnableTest<UsuarioLogin>(UsuarioLoginCrudAction.NAME) {
         private void initEntity(final UsuarioLogin entity) {
             this.crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
             this.crudActions.setEntityValue("email", entity.getEmail());
