@@ -13,7 +13,6 @@ abstract class DocumentoCreator {
     private ProcessoDocumento processoDocumento;
     private List<ProcessoDocumento> documentosDaSessao;
 
-    
     public Processo getProcesso() {
         return processo;
     }

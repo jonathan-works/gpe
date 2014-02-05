@@ -104,17 +104,14 @@
             <infox:tab id="tabAnexar" name="tabAnexar" immediate="true"
                 status=":status" title="Anexar Documento"
                 rendered="#{empty processoHome.instance.dataFim}"
-                action="#{processoDocumentoHome.newInstance()}">
+                action="#{anexoController.onClickTabAnexar(processoHome.instance)}">
 
                 <wi:ajaxDiv id="divAnexarDocumentos">
 
                     <wi:dataForm formId="anexarDocumentosForm"
                         formTitle="#{messages['processoDocumento.anexarDocumento']}">
-
                         <ui:include
-                            src="/WEB-INF/xhtml/components/form/anexarDocumento.xhtml" />
-                        <ui:include
-                            src="/WEB-INF/xhtml/components/form/buttons/anexarDocumentoButtons.xhtml" />
+                            src="/Processo/anexarDocumentos.xhtml" />
                         <ui:define name="buttons" />
 
                     </wi:dataForm>
