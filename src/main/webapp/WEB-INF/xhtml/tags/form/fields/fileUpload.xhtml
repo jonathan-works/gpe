@@ -37,7 +37,7 @@
         <ui:define name="label">#{label}</ui:define>
         <rich:fileUpload id="#{id}" execute="@this" status=":status"
             limitRender="true" required="#{wi:get(required, false)}"
-            fileUploadListener="#{fileHome.processFileUpload}"
+            fileUploadListener="#{processoDocumentoUploader.processFileUpload}"
             addLabel="#{messages['processoDocumento.addLabel']}"
             clearAllLabel="#{messages['processoDocumento.clearAllLabel']}"
             clearLabel="#{messages['processoDocumento.clearLabel']}"
