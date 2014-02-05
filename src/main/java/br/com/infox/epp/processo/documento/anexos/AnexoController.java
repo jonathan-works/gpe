@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.documento.component;
+package br.com.infox.epp.processo.documento.anexos;
 
 import java.util.List;
 
