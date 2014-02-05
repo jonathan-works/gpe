@@ -1,8 +1,5 @@
 package br.com.infox.epp.processo.documento.anexos;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -17,7 +14,6 @@ import org.richfaces.model.UploadedFile;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
@@ -33,16 +29,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     
     @In private ProcessoDocumentoManager processoDocumentoManager;
     @In private DocumentoBinManager documentoBinManager;
-
-    private List<ProcessoDocumento> documentosDaSessao = new ArrayList<>();
-
-    public List<ProcessoDocumento> getDocumentosDaSessao() {
-        return documentosDaSessao;
-    }
-
-    public void setDocumentosDaSessao(List<ProcessoDocumento> documentosDaSessao) {
-        this.documentosDaSessao = documentosDaSessao;
-    }
 
     @Override
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
@@ -79,18 +65,13 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     
     public void persist() {
         try {
-            documentosDaSessao.add(processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento()));
+            getDocumentosDaSessao().add(processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento()));
             documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
-            newInstance();
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento do processo " + getProcessoDocumento(), e);
         }
-    }
-    
-    @Override
-    public void clear() {
-        documentosDaSessao= new ArrayList<>();
         newInstance();
     }
+    
 
 }
