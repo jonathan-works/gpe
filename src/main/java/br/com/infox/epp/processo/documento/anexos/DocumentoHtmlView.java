@@ -7,14 +7,14 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
-@Name(ProcessoDocumentoHtmlView.NAME)
+@Name(DocumentoHtmlView.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class ProcessoDocumentoHtmlView {
+public class DocumentoHtmlView {
     
     private static final String PAGINA_VISUALIZACAO = "/Painel/documentoHTML.seam";
 
-    public static final String NAME = "processoDocumentoHtmlView";
+    public static final String NAME = "documentoHtmlView";
     
     private ProcessoDocumento viewInstance;
     

@@ -33,7 +33,7 @@
         <span class="#{var.ativo ? '' : 'inativo'}" />
 
         <h:commandLink
-            action="#{processoDocumentoHtmlView.setViewInstance(var)}"
+            action="#{documentoHtmlView.setViewInstance(var)}"
             onclick="openPopUp('PopUpDocumentoBin', '')"
             rendered="#{isModelo}" target="PopUpDocumentoBin">
             <h:graphicImage title="Visualizar" url="/img/view.gif" />
