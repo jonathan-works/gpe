@@ -22,10 +22,10 @@ import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.itx.component.FileHome;
 import br.com.itx.component.Util;
 
-@Name(ProcessoDocumentoDownloader.NAME)
+@Name(DocumentoDownloader.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class ProcessoDocumentoDownloader {
+public class DocumentoDownloader {
 
     @In
     ProcessoDocumentoManager processoDocumentoManager;
@@ -33,10 +33,10 @@ public class ProcessoDocumentoDownloader {
     @In
     DocumentoBinManager documentoBinManager;
 
-    public static final String NAME = "processoDocumentoDownloader";
+    public static final String NAME = "documentoDownloader";
     private static final String PAGINA_DOWNLOAD = "/download.xhtml";
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoDownloader.class);
+    private static final LogProvider LOG = Logging.getLogProvider(DocumentoDownloader.class);
     private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
     public String setDownloadInstance(ProcessoDocumento doc) {
